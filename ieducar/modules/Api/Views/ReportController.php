@@ -72,33 +72,43 @@ class ReportController extends ApiCoreController
         if ($this->canGetBoletim()) {
             $dadosMatricula = $this->loadDadosForMatricula($this->getRequest()->matricula_id);
 
-            $boletimReport = new BoletimReport();
-
-            $boletimReport->addArg('matricula', (int)$dadosMatricula['id']);
-            $boletimReport->addArg('ano', (int)$dadosMatricula['ano']);
-            $boletimReport->addArg('instituicao', (int)$dadosMatricula['instituicao_id']);
-            $boletimReport->addArg('escola', (int)$dadosMatricula['escola_id']);
-            $boletimReport->addArg('curso', (int)$dadosMatricula['curso_id']);
-            $boletimReport->addArg('serie', (int)$dadosMatricula['serie_id']);
-            $boletimReport->addArg('turma', (int)$dadosMatricula['turma_id']);
-            $boletimReport->addArg('situacao_matricula', 10);
-            $boletimReport->addArg('situacao', (int)$dadosMatricula['situacao'] ?? 0);
-            $boletimReport->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
-
-            if ($this->getRequest()->etapa) {
-                $boletimReport->addArg('etapa', (int)$this->getRequest()->etapa);
-            }
-
-            $encoding = 'base64';
-            $dumpsOptions = ['options' => ['encoding' => $encoding]];
-            $encoded = $boletimReport->dumps($dumpsOptions);
+            $encoded = $this->generationBoletion($dadosMatricula);
 
             return [
                 'matricula_id' => $this->getRequest()->matricula_id,
-                'encoding' => $encoding,
+                'encoding' => 'base64',
                 'encoded' => base64_encode($encoded)
             ];
         }
+    }
+
+    protected function generationBoletion($dadosMatricula)
+    {
+        if (class_exists(BoletimReport::class) === false) {
+            return '';
+        }
+
+        $boletimReport =  new BoletimReport();
+
+        $boletimReport->addArg('matricula', (int)$dadosMatricula['id']);
+        $boletimReport->addArg('ano', (int)$dadosMatricula['ano']);
+        $boletimReport->addArg('instituicao', (int)$dadosMatricula['instituicao_id']);
+        $boletimReport->addArg('escola', (int)$dadosMatricula['escola_id']);
+        $boletimReport->addArg('curso', (int)$dadosMatricula['curso_id']);
+        $boletimReport->addArg('serie', (int)$dadosMatricula['serie_id']);
+        $boletimReport->addArg('turma', (int)$dadosMatricula['turma_id']);
+        $boletimReport->addArg('situacao_matricula', 10);
+        $boletimReport->addArg('situacao', (int)$dadosMatricula['situacao'] ?? 0);
+        $boletimReport->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
+
+        if ($this->getRequest()->etapa) {
+            $boletimReport->addArg('etapa', (int)$this->getRequest()->etapa);
+        }
+
+        $encoding = 'base64';
+        $dumpsOptions = ['options' => ['encoding' => $encoding]];
+
+        return $boletimReport->dumps($dumpsOptions);
     }
 
     protected function getBoletimProfessor()

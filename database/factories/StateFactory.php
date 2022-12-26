@@ -26,7 +26,7 @@ class StateFactory extends Factory
             'country_id' => CountryFactory::new()->create(),
             'name' => Str::ucfirst($month = $this->faker->monthName()) . ' ' . Str::ucfirst($color = $this->faker->colorName()),
             'abbreviation' => Str::substr($month, 0, 1) . ' ' . Str::substr($color, 0, 1),
-            'ibge_code' => $this->faker->numerify('########'),
+            'ibge_code' => (int) $this->faker->numerify('########'),
         ];
     }
 }

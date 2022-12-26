@@ -13,7 +13,7 @@ class LegacyPeriodFactory extends Factory
     {
         return [
             'nome' => 'Turno ' . substr($this->faker->colorName(), 0, 9),
-            'ativo' => true,
+            'ativo' => 1,
         ];
     }
 }

@@ -18,8 +18,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $obj_matricula = new clsPmieducarMatricula($this->cod_matricula, null, null, null, $this->pessoa_logada, null, null, 6);
-
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
         $this->breadcrumb('Registro do falecimento do aluno', [

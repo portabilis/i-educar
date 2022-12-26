@@ -188,11 +188,19 @@ class LegacyBuilder extends Builder
     {
         $data = [];
         foreach ($filters as $key => $value) {
-            if ((!is_array($value) && $value !== null && $value !== '') || (is_array($value) && count(array_filter($value)) > 0)) {
-                $data[$this->getFilterName($key)] = $value;
+            $filter = $this->getFilterName($key);
+            if ($this->checkWhereParameters($value, $filter)) {
+                $data[$filter] = $value;
             }
+            $this->filters = $data;
         }
-        $this->filters = $data;
+    }
+
+    public function checkWhereParameters($value, $filter)
+    {
+        return ((!is_array($value) && $value !== null && $value !== '') ||
+                (is_array($value) && count(array_filter($value)) > 0)) &&
+            method_exists($this, 'where' . $filter);
     }
 
     /**
@@ -217,6 +225,64 @@ class LegacyBuilder extends Builder
     public function whereLimit(int $limit = null): self
     {
         return $this->when($limit, fn ($q) => $q->limit($limit));
+    }
+
+    /**
+     * Filtra por nome e id do país
+     *
+     * @param string $search
+     *
+     * @return $this
+     */
+    public function whereSearch(string $search): self
+    {
+        return $this->where(function ($q) use ($search) {
+            if (is_numeric($search) || str_contains($search, ',')) {
+                $q->whereIn($this->model->getKeyName(), explode(',', $search));
+            } else {
+                $q->whereName($search);
+            }
+        });
+    }
+
+    public function whereFilter(string $filters): self
+    {
+        $filters = array_filter(explode('|', $filters));
+        $groupRelations = new Collection();
+        foreach ($filters as $filter) {
+            //relacionamentos
+            if (str_contains($filter, '.')) {
+                $relation = substr($filter, 0, strrpos($filter, '.'));
+                $column = substr($filter, (strrpos($filter, '.') + 1));
+                $groupRelations->push([$relation, $column]);
+
+                continue;
+            }
+
+            //filtros
+            $data = array_filter(explode(',', $filter));
+            $method = 'where' . $this->getFilterName($data[0]);
+            if (method_exists($this, $method)) {
+                $parameter = $data[1] ?? null;
+                if ($parameter !== null) {
+                    $this->{$method}($data[1]);
+                }
+            } else {
+                //normal
+                $this->where(...$data);
+            }
+        }
+
+        //execução agrupada dos relacionamentos
+        foreach ($groupRelations->groupBy(0) as $groupRelation => $groupRows) {
+            $this->whereHas($groupRelation, static function ($q) use ($groupRows) {
+                foreach ($groupRows as $groupRow) {
+                    $q->where(...array_filter(explode(',', $groupRow[1])));
+                }
+            });
+        }
+
+        return $this;
     }
 
     /**
@@ -325,7 +391,11 @@ class LegacyBuilder extends Builder
             $columns[$key] = $this->getLegacyColumn($column);
         }
 
-        return parent::find($this->getLegacyColumn($id), $columns);
+        if (is_string($id)) {
+            $id = $this->getLegacyColumn($id);
+        }
+
+        return parent::find($id, $columns);
     }
 
     public function findOrFail($id, $columns = ['*'])

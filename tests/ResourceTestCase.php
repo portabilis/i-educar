@@ -2,10 +2,16 @@
 
 namespace Tests;
 
+use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use Database\Factories\LegacyUserFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
+use OpenApiGenerator\Attributes\Info;
+use OpenApiGenerator\Attributes\Server;
 
+#[Info('API i-EDUCAR', '1.0.0', 'Documentação de acesso a nossa API', 'API para Integração ao i-EDUCAR')]
+#[Server('https://ieducar.com.br', 'Endereço do servidor da Aplicação')]
 class ResourceTestCase extends TestCase
 {
     use DatabaseTransactions;
@@ -125,7 +131,11 @@ class ResourceTestCase extends TestCase
             'data' => $model->toArray(),
         ]);
 
-        $this->assertDatabaseMissing($this->model, $model->getAttributes());
+        if (in_array(SoftDeletes::class, class_uses($model), true) || in_array(LegacySoftDeletes::class, class_uses($model), true)) {
+            $this->assertSoftDeleted($this->model, deletedAtColumn: $model->getDeletedAtColumn());
+        } else {
+            $this->assertDatabaseMissing($this->model, $model->getAttributes());
+        }
 
         return $response;
     }

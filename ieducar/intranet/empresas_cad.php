@@ -135,6 +135,12 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (! $this->validaDadosTelefones()) {
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         $this->insc_est = idFederal2int($this->insc_est);
         $this->idpes_cad = $this->pessoa_logada;
 

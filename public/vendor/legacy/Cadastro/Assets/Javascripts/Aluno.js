@@ -2523,7 +2523,7 @@ function canShowParentsFields() {
       );
       $j("#dialog-form-pessoa-aluno").dialog("open");
       $j("#postal_code").val("");
-      permiteEditarEndereco();
+
       checkTipoNacionalidade();
 
       $j(".ui-widget-overlay").click(function () {
@@ -2628,7 +2628,6 @@ function canShowParentsFields() {
 
       editar_pessoa = true;
 
-      permiteEditarEndereco();
       checkTipoNacionalidade();
     });
 

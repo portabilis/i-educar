@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.7.2",
+    "version": "2.7.4",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -26,7 +26,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^3.12",
         "intervention/image": "^2.6",
-        "laravel/framework": "^9.00",
+        "laravel/framework": "^9.3",
         "laravel/horizon": "^v6.7.9",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.6",
@@ -48,7 +48,6 @@
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.7",
         "brianium/paratest": "^6.3",
-        "captainhook/captainhook": "^5.10",
         "fakerphp/faker": "^1.15",
         "filp/whoops": "^2.14",
         "friendsofphp/php-cs-fixer": "^3.2",
@@ -105,7 +104,7 @@
     "scripts": {
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
-        "openapi": "vendor/uderline/openapi-php-attributes/opag tests/Feature public/openapi.json",
+        "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "npm": "yarn install",
         "new-install": [
@@ -114,7 +113,7 @@
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --seed --force --ansi",
+            "@php artisan migrate --force --ansi",
             "@npm"
         ],
         "update-install": [
@@ -126,7 +125,13 @@
             "@npm"
         ],
         "post-install-cmd": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
+            "chmod ug+x .git/hooks/*"
+        ],
+        "post-update-cmd": [
+            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
+            "chmod ug+x .git/hooks/*"
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"

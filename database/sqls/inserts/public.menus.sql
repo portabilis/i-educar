@@ -3,7 +3,6 @@ INSERT INTO public.menus VALUES (2, NULL, 'Pessoas', NULL, '/intranet/educar_pes
 INSERT INTO public.menus VALUES (3, NULL, 'Escola', NULL, '/intranet/educar_index.php', 'fa-leanpub', 4, 1, 55, 55, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (4, NULL, 'Servidores', NULL, '/intranet/educar_servidores_index.php', 'fa-users', 5, 1, 71, 71, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (5, NULL, 'Educacenso', NULL, '/intranet/educar_educacenso_index.php', 'fa-bar-chart', 6, 1, 70, 70, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (6, NULL, 'Transporte escolar', NULL, '/intranet/educar_transporte_escolar_index.php', 'fa-bus', 7, 1, 69, 69, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (8, NULL, 'Configurações', NULL, '/intranet/educar_configuracoes_index.php', 'fa-gear', 9, 1, 25, 25, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (9, 2, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999929, 7, true, NULL, NULL);
 INSERT INTO public.menus VALUES (74, 13, 'Atualização de matrículas', 'Atualização de matrículas', '/module/Avaliacao/Promocao', NULL, 2, 3, 644, 644, 999910, true, NULL, NULL);
@@ -31,13 +30,7 @@ INSERT INTO public.menus VALUES (31, 5, 'Importações', NULL, NULL, NULL, 1, 2,
 INSERT INTO public.menus VALUES (32, 4, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999911, 71, true, NULL, NULL);
 INSERT INTO public.menus VALUES (33, 4, 'Relatórios', NULL, NULL, NULL, 2, 2, NULL, 999913, 71, true, NULL, NULL);
 INSERT INTO public.menus VALUES (34, 21, 'Tipos', 'Autores de obras', NULL, NULL, 1, 3, NULL, 999900, 15858, true, NULL, NULL);
-INSERT INTO public.menus VALUES (44, 27, 'Empresas', 'Empresas do transporte', '/intranet/transporte_empresa_lst.php', NULL, 0, 3, 21235, 21235, 20710, true, NULL, NULL);
-INSERT INTO public.menus VALUES (45, 27, 'Motoristas', 'Motoristas do transporte', '/intranet/transporte_motorista_lst.php', NULL, 0, 3, 21236, 21236, 20710, true, NULL, NULL);
-INSERT INTO public.menus VALUES (46, 27, 'Pontos', 'Rotas do transporte', '/intranet/transporte_ponto_lst.php', NULL, 0, 3, 21238, 21238, 20710, true, NULL, NULL);
-INSERT INTO public.menus VALUES (47, 27, 'Rotas', 'Pontos do transporte', '/intranet/transporte_rota_lst.php', NULL, 0, 3, 21239, 21239, 20710, true, NULL, NULL);
-INSERT INTO public.menus VALUES (48, 27, 'Veículos', 'Veículos do transporte', '/intranet/transporte_veiculo_lst.php', NULL, 0, 3, 21237, 21237, 20710, true, NULL, NULL);
 INSERT INTO public.menus VALUES (49, 28, 'Processos', NULL, NULL, NULL, 0, 3, NULL, 21244, 20711, true, NULL, NULL);
-INSERT INTO public.menus VALUES (50, 28, 'Usuários de transporte', 'Usuários de transporte', '/intranet/transporte_pessoa_lst.php', NULL, 0, 3, 21240, 21240, 20711, true, NULL, NULL);
 INSERT INTO public.menus VALUES (51, 14, 'Tipos', NULL, NULL, NULL, 1, 3, NULL, 999917, 21122, true, NULL, NULL);
 INSERT INTO public.menus VALUES (52, 14, 'Alunos', 'Alunos', '/intranet/educar_aluno_lst.php', NULL, 2, 3, 578, 21205, 21122, true, NULL, NULL);
 INSERT INTO public.menus VALUES (53, 14, 'Escolas', 'Escolas', '/intranet/educar_escola_lst.php', NULL, 3, 3, 561, 21198, 21122, true, NULL, NULL);
@@ -77,10 +70,8 @@ INSERT INTO public.menus VALUES (90, 25, 'Distritos', 'Distritos', '/intranet/pu
 INSERT INTO public.menus VALUES (97, 30, '1ª fase - Matrícula inicial', 'Exportação do educacenso - 1ª fase', '/intranet/educar_exportacao_educacenso.php', NULL, 1, 3, 846, 846, 999932, true, NULL, NULL);
 INSERT INTO public.menus VALUES (98, 31, 'Importação educacenso', 'Importação educacenso', '/intranet/educar_importacao_educacenso.php', NULL, 0, 3, 9998849, 9998849, 9998848, true, NULL, NULL);
 INSERT INTO public.menus VALUES (99, 10, 'Unificações', NULL, NULL, NULL, 1, 3, NULL, 9998877, 9998876, true, NULL, NULL);
-INSERT INTO public.menus VALUES (100, 49, 'Cópia de rotas', 'Cópia de rotas do transporte', '/intranet/transporte_copia_rotas.php', NULL, 0, 4, 21246, 21246, 21244, true, NULL, NULL);
 INSERT INTO public.menus VALUES (104, 75, 'Funções', 'Funções do servidor', '/intranet/educar_funcao_lst.php', NULL, 1, 4, 634, 21153, 999912, true, NULL, NULL);
 INSERT INTO public.menus VALUES (105, 75, 'Escolaridade', 'Escolaridade do servidor', '/intranet/educar_escolaridade_lst.php', NULL, 2, 4, 632, 21146, 999912, true, NULL, NULL);
-INSERT INTO public.menus VALUES (106, 75, 'Categoria ou níveis', 'Categoria ou níveis do servidor', '/intranet/educar_categoria_nivel_lst.php', NULL, 3, 4, 829, 21156, 999912, true, NULL, NULL);
 INSERT INTO public.menus VALUES (107, 75, 'Motivos de afastamento', 'Motivos de afastamento do servidor', '/intranet/educar_motivo_afastamento_lst.php', NULL, 4, 4, 633, 21151, 999912, true, NULL, NULL);
 INSERT INTO public.menus VALUES (108, 75, 'Vínculos da alocação', 'Vínculos da alocação', '/intranet/funcionario_vinculo_lst.php', NULL, 5, 4, 190, 190, 999912, true, NULL, NULL);
 INSERT INTO public.menus VALUES (109, 51, 'Alunos', NULL, NULL, NULL, 0, 4, NULL, 21171, 999917, true, NULL, NULL);

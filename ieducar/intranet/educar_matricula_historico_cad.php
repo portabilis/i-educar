@@ -6,6 +6,7 @@ return new class extends clsCadastro {
     public $ref_cod_matricula;
     public $ref_cod_turma;
     public $sequencial;
+    public $matricula_situacao;
 
     public function Inicializar()
     {
@@ -24,8 +25,7 @@ return new class extends clsCadastro {
         $this->breadcrumb('Histórico de enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-        $link = route('enrollments.enrollment-history', ['id' => $this->ref_cod_matricula]);
-        $this->url_cancelar = $link;
+        $this->url_cancelar = route('enrollments.enrollment-history', ['id' => $this->ref_cod_matricula]);
 
         return $retorno;
     }
@@ -80,13 +80,51 @@ return new class extends clsCadastro {
         $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => '']);
         $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saída', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => $required]);
 
-        $this->campoCheck('transferido','Transferido', dbBool($enturmacao['transferido']));
-        $this->campoCheck('remanejado','Remanejado', dbBool($enturmacao['remanejado']));
-        $this->campoCheck('reclassificado','Reclassificado', dbBool($enturmacao['reclassificado']));
-        $this->campoCheck('abandono','Abandono', dbBool($enturmacao['abandono']));
-        $this->campoCheck('falecido','Falecido', dbBool($enturmacao['falecido']));
+        $situacoesMatricula = [
+            '' => 'Selecione',
+            'transferido' => 'Transferido',
+            'remanejado' => 'Remanejado',
+            'reclassificado' => 'Reclassificado',
+            'abandono' => 'Abandono',
+            'falecido' => 'Falecido',
+        ];
+
+        $options = [
+            'label' => 'Situação',
+            'value' => $this->buscaSituacao($enturmacao),
+            'resources' => $situacoesMatricula,
+            'inline' => true,
+            'required' => false
+        ];
+
+        $this->inputsHelper()->select('matricula_situacao', $options);
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/vendor/legacy/intranet/scripts/extra/matricua-historico.js');
+    }
+
+    public function buscaSituacao(array $enturmacao): string
+    {
+        if (dbBool($enturmacao['transferido'])) {
+            return 'transferido';
+        }
+
+        if (dbBool($enturmacao['remanejado'])) {
+            return 'remanejado';
+        }
+
+        if (dbBool($enturmacao['reclassificado'])) {
+            return 'reclassificado';
+        }
+
+        if (dbBool($enturmacao['abandono'])) {
+            return 'abandono';
+        }
+
+        if (dbBool($enturmacao['falecido'])) {
+            return 'falecido';
+        }
+
+        return '';
     }
 
     public function Editar()
@@ -99,11 +137,11 @@ return new class extends clsCadastro {
         $enturmacao->data_enturmacao = dataToBanco($this->data_enturmacao);
         $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
 
-        $enturmacao->transferido = !is_null($this->transferido);
-        $enturmacao->remanejado = !is_null($this->remanejado);
-        $enturmacao->reclassificado = !is_null($this->reclassificado);
-        $enturmacao->abandono = !is_null($this->abandono);
-        $enturmacao->falecido = !is_null($this->falecido);
+        $enturmacao->transferido = $this->matricula_situacao === 'transferido';
+        $enturmacao->remanejado = $this->matricula_situacao === 'remanejado';
+        $enturmacao->reclassificado = $this->matricula_situacao === 'reclassificado';
+        $enturmacao->abandono = $this->matricula_situacao === 'abandono';
+        $enturmacao->falecido = $this->matricula_situacao === 'falecido';
 
         $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
         $dataEntradaEnturmacaoSeguinte = $enturmacao->getDataEntradaEnturmacaoSeguinte($this->ref_cod_matricula, $this->sequencial);

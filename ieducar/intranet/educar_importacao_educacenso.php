@@ -34,6 +34,7 @@ return new class extends clsCadastro {
             '2019' => '2019',
             '2020' => '2020',
             '2021' => '2021',
+            '2022' => '2022',
         ];
 
         $options = [
@@ -61,12 +62,10 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        return;
     }
 
     public function Editar()
     {
-        return;
     }
 
     public function Formular()

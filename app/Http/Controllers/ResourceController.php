@@ -109,13 +109,9 @@ abstract class ResourceController extends Controller
 
     protected function filter(Builder $builder, Request $request): void
     {
-        $filter = $request->query('filter');
-        if (empty($filter)) {
-            return;
+        if (method_exists($builder, 'filter')) {
+            $builder->filter($request->except('only', 'include', 'order', 'page'));
         }
-
-        $filters = array_filter(explode(',', $filter));
-        $builder->filter($request->only($filters));
     }
 
     public function all(Model $model, Request $request): JsonResource
@@ -155,14 +151,17 @@ abstract class ResourceController extends Controller
     {
         $this->can('view');
 
-        if ($class && is_int($model)) {
+        if ($model instanceof Model) {
+            $id = $model->id;
+            $query = $model->newQuery();
+        } else {
+            $id = $model;
             $query = (new $class())->newQuery();
-
-            $this->columns($request, $query);
-            $this->include($request, $query);
-
-            $model = $query->find($model);
         }
+
+        $this->columns($request, $query);
+        $this->include($request, $query);
+        $model = $query->findOrFail($id);
 
         return $this->newResource($model);
     }

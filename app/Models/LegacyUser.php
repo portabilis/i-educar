@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\User as DefaultUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyUser extends DefaultUser
@@ -36,19 +39,33 @@ class LegacyUser extends DefaultUser
         'ativo',
     ];
 
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected $dispatchesEvents = [
+        'updated' => UserUpdated::class,
+        'deleted' => UserDeleted::class,
+    ];
+
+    protected function id(): Attribute
     {
-        return $this->cod_usuario;
+        return Attribute::make(
+            get: fn () => $this->cod_usuario,
+        );
     }
 
     /**
      * @return BelongsTo
      */
-    public function type()
+    public function type(): BelongsTo
     {
-        return $this->belongsTo(LegacyUserType::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
+        return $this->belongsTo(LegacyUserType::class, 'ref_cod_tipo_usuario');
+    }
+
+    public function createdByEmployee(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEmployee::class, 'ref_funcionario_cad');
+    }
+
+    public function deletedByEmployee(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEmployee::class, 'ref_funcionario_exc');
     }
 }

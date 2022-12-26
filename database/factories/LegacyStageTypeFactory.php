@@ -25,7 +25,7 @@ class LegacyStageTypeFactory extends Factory
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_tipo' => $this->faker->word,
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
             'num_etapas' => $this->faker->numberBetween(1, 4),
         ];
     }
@@ -39,7 +39,7 @@ class LegacyStageTypeFactory extends Factory
                 $stageType = LegacyStageTypeFactory::new()->create();
             }
 
-            return $stageType->toArray();
+            return $stageType->getAttributes();
         });
     }
 }

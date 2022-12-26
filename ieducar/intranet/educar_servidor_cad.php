@@ -112,9 +112,7 @@ return new class extends clsCadastro {
                     $cargaHoraria = $cargaHoraria['sum'];
                 }
 
-                $cargaHoraria = str_pad($cargaHoraria, 2, 0, STR_PAD_LEFT);
-
-                $this->total_horas_alocadas = $cargaHoraria;
+                $this->total_horas_alocadas = str_pad($cargaHoraria, 2, 0, STR_PAD_LEFT);
 
                 // Funções
                 $obj_funcoes = new clsPmieducarServidorFuncao();
@@ -168,8 +166,6 @@ return new class extends clsCadastro {
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-
         $this->breadcrumb('Funções do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
@@ -197,7 +193,7 @@ return new class extends clsCadastro {
         $opcoes = ['' => 'Para procurar, clique na lupa ao lado.'];
         if ($this->cod_servidor) {
             $servidor = new clsFuncionario($this->cod_servidor);
-            $detalhe = $servidor->detalhe();
+            $servidor->detalhe();
             //$detalhe = $detalhe['idpes']->detalhe();
 
             $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
@@ -417,12 +413,6 @@ return new class extends clsCadastro {
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $resources = [
-            null => 'Selecione',
-            1 => 'Concluído',
-            2 => 'Em andamento'
-        ];
-
         $opcoesComplementacaoPedagogica = ComponenteCurricular_Model_CodigoEducacenso::getDescriptiveValues();
         /** Desconsidera opções */
         unset($opcoesComplementacaoPedagogica[32]);
@@ -478,8 +468,6 @@ JS;
         $timesep = explode(':', $this->carga_horaria);
         $hour = (int) $timesep[0] + ((int) ($timesep[1] / 60));
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
-
-        $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
         $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
@@ -551,7 +539,6 @@ JS;
         $timesep = explode(':', $this->carga_horaria);
         $hour = $timesep[0] + ((int) ($timesep[1] / 60));
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
-        $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
         $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
@@ -829,7 +816,7 @@ JS;
                     $obj_curso_servidor = new clsPmieducarServidorCursoMinistra($curso, $this->ref_cod_instituicao, $this->cod_servidor);
 
                     if (!$obj_curso_servidor->existe()) {
-                        $det_curso_servidor = $obj_curso_servidor->cadastra();
+                        $obj_curso_servidor->cadastra();
                     }
                 }
             }

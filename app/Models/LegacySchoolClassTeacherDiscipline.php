@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolClassTeacherDiscipline extends Model
 {
     public $incrementing = false;
-
-    public $primaryKey = null;
 
     protected $fillable = [
         'professor_turma_id',
@@ -25,7 +24,7 @@ class LegacySchoolClassTeacherDiscipline extends Model
      */
     public $timestamps = false;
 
-    public function schoolClassTeacher()
+    public function schoolClassTeacher(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolClassTeacher::class, 'professor_turma_id');
     }

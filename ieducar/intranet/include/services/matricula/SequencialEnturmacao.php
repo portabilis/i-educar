@@ -116,9 +116,7 @@ class SequencialEnturmacao
 
         $novoSequencial = DB::selectOne($sql)->sequencial;
 
-        $novoSequencial = $novoSequencial ? $novoSequencial : 1;
-
-        return $novoSequencial;
+        return $novoSequencial ? $novoSequencial : 1;
     }
 
     private function sequencialAlunoAntesData()
@@ -147,9 +145,7 @@ class SequencialEnturmacao
 
         $novoSequencial = DB::selectOne($sql)->sequencial;
 
-        $novoSequencial = $novoSequencial ? $novoSequencial : 1;
-
-        return $novoSequencial;
+        return $novoSequencial ? $novoSequencial : 1;
     }
 
     private function sequencialAlunoDependencia()

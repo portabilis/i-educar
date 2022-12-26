@@ -26,7 +26,7 @@ return new class extends clsDetalhe {
 
         $this->cod_tipo_regime = $_GET['cod_tipo_regime'];
 
-        $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->toArray();
+        $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->getAttributes();
 
         if (!$registro) {
             $this->simpleRedirect('educar_tipo_regime_lst.php');

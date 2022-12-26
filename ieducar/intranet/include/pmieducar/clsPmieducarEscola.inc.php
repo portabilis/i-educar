@@ -185,7 +185,7 @@ class clsPmieducarEscola extends Model
         $bloquear_lancamento_diario_anos_letivos_encerrados = null,
         $utiliza_regra_diferenciada = false
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola';
 
@@ -1313,9 +1313,8 @@ class clsPmieducarEscola extends Model
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
-            $recordId = $db->InsertId("{$this->_tabela}_cod_escola_seq");
 
-            return $recordId;
+            return $db->InsertId("{$this->_tabela}_cod_escola_seq");
         } else {
             echo "<Hbr><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_string($this->sigla )";
         }
@@ -2530,7 +2529,7 @@ class clsPmieducarEscola extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_escola = null,
@@ -2731,7 +2730,7 @@ class clsPmieducarEscola extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -2765,7 +2764,7 @@ class clsPmieducarEscola extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

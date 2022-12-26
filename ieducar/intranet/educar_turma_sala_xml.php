@@ -17,7 +17,6 @@ if (is_numeric($_GET['inst']) && is_numeric($_GET['esc']) && is_numeric($_GET['c
                   WHERE t.ref_cod_instituicao = {$_GET['inst']}
                     AND t.ref_ref_cod_escola = {$_GET['esc']}
                     AND t.ref_ref_cod_serie = {$_GET['ser']}
-                    AND t.ref_cod_infra_predio_comodo = {$_GET['com']}
                     AND t.ref_cod_curso = {$_GET['cur']}
                     $not_turma
                     AND t.ativo = 1
