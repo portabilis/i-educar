@@ -32,9 +32,9 @@ class Portabilis_View_Helper_DynamicInput_Frequencia extends Portabilis_View_Hel
 
             while ($db->ProximoRegistro()) {
                 if ($db->Campo('nome') != null)
-                    $resources[$db->Campo('id')] = dataToBrasil($db->Campo('data')) . ' - ' . $db->Campo('teste') . ' (' . $db->Campo('nome') . ')';
+                    $resources[$db->Campo('id')] = dataToBrasil($db->Campo('data')) . ' - ' . $db->Campo('nm_turma') . ' (' . $db->Campo('nome') . ')';
                 else
-                    $resources[$db->Campo('id')] = dataToBrasil($db->Campo('data')) . ' - ' . $db->Campo('teste');
+                    $resources[$db->Campo('id')] = dataToBrasil($db->Campo('data')) . ' - ' . $db->Campo('nm_turma');
             }
         }
 

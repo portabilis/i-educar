@@ -28,7 +28,6 @@ return new class extends clsCadastro {
     public $conteudos;
     public $planejamento_aula_ids;
     public $componente_curricular_registro_individual;
-    public $registra_diario_individual;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -235,7 +234,6 @@ return new class extends clsCadastro {
 
 
             $objFrequencia = new clsModulesFrequencia();
-
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
 
@@ -248,22 +246,7 @@ return new class extends clsCadastro {
                 $conteudo .= '  <tr>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $aluno['nome'] . '</p></td>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $qtdFaltasGravadas . '</p></td>';
-
-                if($tipo_presenca == 1 && !$this->registra_diario_individual) {
-                    $conteudo .= "  <td class='sizeFont colorFont'>
-                                    <input
-                                        type='checkbox'
-                                        onchange='presencaMudou(this)'
-                                        id='alunos[]'
-                                        name={$name}
-                                        value={$id}
-                                        {$checked}
-                                        autocomplete='off'
-                                    >
-                                    </td>";
-                }
-
-                if ($tipo_presenca == 1 && $this->registra_diario_individual) {
+                if ($tipo_presenca == 1) {
                     $aulasFaltou = '';
                     $qtdFaltas = 0;
 
@@ -410,6 +393,26 @@ return new class extends clsCadastro {
         if ($obrigatorioConteudo && $utilizar_planejamento_aula) {
             $this->adicionarConteudosMultiplaEscolha();
         }
+
+         // Componente Curricular.
+
+      
+         $selectOptionsComponente = [];
+
+       
+       
+     
+         
+             $selectOptionsComponente[1] = ' 3 dias letivos  ';
+         
+        
+        
+ 
+         $selectOptionsComponente = Portabilis_Array_Utils::sortByValue($selectOptionsComponente);
+         $selectOptionsComponente = array_replace([null => '3 dias letivos'], $selectOptionsComponente);
+         $this->campoLista('componente_curricular_id', 'TOTAL DE DIAS LETIVOS ', $selectOptionsComponente, $this->componente_curricular_id, '', false, '', '', '', '');
+        
+         //end componente
 
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
@@ -583,8 +586,7 @@ return new class extends clsCadastro {
             $this->fase_etapa,
             $this->justificativa,
             $servidor_id,
-            $this->ordens_aulas,
-            (!empty($this->componente_curricular_registro_individual) ? true : null)
+            $this->ordens_aulas
         );
 
         $existe = $obj->existe();
@@ -630,6 +632,7 @@ return new class extends clsCadastro {
         $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
         $serie = $turmaDetalhes['ref_ref_cod_serie'];
 
+
         $obj = new clsModulesFrequencia(
             $this->id,
             null,
@@ -645,12 +648,9 @@ return new class extends clsCadastro {
             null,
             $this->fase_etapa,
             $this->justificativa,
-            null,
-            null,
-            $this->registra_diario_individual
         );
 
-        $editou = $obj->edita();
+        $editou = $obj->edita($this->ref_cod_componente_curricular);
 
         $obj = new clsModulesComponenteMinistrado();
         $componenteMinistrado = $obj->lista(
@@ -810,7 +810,7 @@ return new class extends clsCadastro {
         parent::__construct();
         $this->loadAssets();
     }
-
+  
     public function loadAssets () {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',

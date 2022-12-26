@@ -17,7 +17,7 @@
     }
 
     var updateTodasTurmas = function(){
-      resetSelect($turmaField);
+      resetSelect($turmaField); 
 
       if ($anoField.val() && $anoField.is(':enabled')) {
         $turmaField.children().first().html('Aguarde, carregando...');
