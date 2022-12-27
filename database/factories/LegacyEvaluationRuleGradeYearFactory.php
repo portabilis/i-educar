@@ -24,7 +24,7 @@ class LegacyEvaluationRuleGradeYearFactory extends Factory
         return [
             'serie_id' => fn () => LegacyGradeFactory::new()->create(),
             'regra_avaliacao_id' => fn () => LegacyEvaluationRuleFactory::new()->create(),
-            'regra_avaliacao_diferenciada_id' => null,
+            'regra_avaliacao_diferenciada_id' => fn () => LegacyEvaluationRuleFactory::new()->create(),
             'ano_letivo' => now()->format('Y'),
         ];
     }
