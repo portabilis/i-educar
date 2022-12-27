@@ -230,6 +230,20 @@ class Portabilis_View_Helper_Input_Core
         return null;
     }
 
+    
+    protected function getComponenteCurricularId($componenteCurricularId = null)
+    {
+        if (!is_null($componenteCurricularId) && is_numeric($componenteCurricularId)) {
+            return $componenteCurricularId;
+        }
+
+        if (isset($this->viewInstance->ref_cod_componente_curricular) && is_numeric($this->viewInstance->ref_cod_componente_curricular)) {
+            return $this->viewInstance->ref_cod_componente_curricular;
+        }
+
+        return null;
+    }
+
     protected function getEscolaridadesId($escolaridadeId = null)
     {
         if (!is_null($escolaridadeId) && is_numeric($escolaridadeId)) {

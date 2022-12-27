@@ -462,12 +462,14 @@ class DiarioApiController extends ApiCoreController
             }
         }
         $tipo_recuperacao_paralela = -1;
+        $tipo_nota = -1;
         $regra_avaliacoes = RegraAvaliacao::where('id', $regra_avaliacao_id)->get();
         foreach($regra_avaliacoes as $regra_av) {
              $tipo_recuperacao_paralela = $regra_av->tipo_recuperacao_paralela;
+             $tipo_nota = $regra_av->tipo_nota;
         }
        
-        if($tipo_recuperacao_paralela==2){
+        if($tipo_recuperacao_paralela==2 && $tipo_nota!=3){
                         
                     if($substitui_menor_nota==1){
 
@@ -673,7 +675,7 @@ class DiarioApiController extends ApiCoreController
 
                     }
         
-        }elseif($tipo_recuperacao_paralela==1){
+        }elseif($tipo_recuperacao_paralela==1 && $tipo_nota!=3){
 
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
@@ -752,69 +754,69 @@ class DiarioApiController extends ApiCoreController
 
 
         }else{
-
-                $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
-                foreach($nota_alunos as $nota_aluno) {
-            
-                $contador =0;
-                $soma_notas =0;
-                $nota_componente_curricular = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'not like', 'Rc')->get();
-                foreach($nota_componente_curricular as $list) {
-                    $contador++;
-                    $nota = $list->nota;
-                    $soma_notas = $soma_notas + $nota;
+                if($tipo_nota!=3){
+                        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+                        foreach($nota_alunos as $nota_aluno) {
                     
-                }
-                $media = $soma_notas / $contador;
-                $nota_exame = 0;
-                $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', '=', 'Rc')->get();
-                foreach($nota_exames as $nota_ex) {
+                        $contador =0;
+                        $soma_notas =0;
+                        $nota_componente_curricular = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'not like', 'Rc')->get();
+                        foreach($nota_componente_curricular as $list) {
+                            $contador++;
+                            $nota = $list->nota;
+                            $soma_notas = $soma_notas + $nota;
+                            
+                        }
+                        $media = $soma_notas / $contador;
+                        $nota_exame = 0;
+                        $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', '=', 'Rc')->get();
+                        foreach($nota_exames as $nota_ex) {
+                            
+                            $nota_exame = $nota_ex->nota_arredondada;
+                        }
                     
-                    $nota_exame = $nota_ex->nota_arredondada;
-                }
-            
-                if(!empty($nota_exame)){
-                    $media = ($media + $nota_exame)/2;   
-                }
-                $media = round($media , 2);
-                if($this->getRequest()->etapa==4 and $media<5){
-                  //atualiza a nota que falta no exame final
-                    $nota_falta_exame = 10 - $media;
-                   
-                        $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_falta_exame);
-                        $this->appendResponse('nota_necessaria_exame', $nota_falta_exame);
-                 }else {
-                        $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-                  
-                     }
+                        if(!empty($nota_exame)){
+                            $media = ($media + $nota_exame)/2;   
+                        }
+                        $media = round($media , 2);
+                        if($this->getRequest()->etapa==4 and $media<5){
+                        //atualiza a nota que falta no exame final
+                            $nota_falta_exame = 10 - $media;
+                        
+                                $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_falta_exame);
+                                $this->appendResponse('nota_necessaria_exame', $nota_falta_exame);
+                        }else {
+                                $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                        
+                            }
 
-                $existe_media_2 = 0;
-                $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
-                foreach($existe as $sim){
-                    $existe_media_2 = 1;    
-                }
-                if($existe_media_2 == 1){
-                LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
-                    'media' => $media,
-                    'media_arredondada' => $media,
-                    'etapa' => $this->getRequest()->etapa
-
-                
-                ]);
-                    }else{
-                        LegacyDisciplineScoreAverage::create( [
+                        $existe_media_2 = 0;
+                        $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+                        foreach($existe as $sim){
+                            $existe_media_2 = 1;    
+                        }
+                        if($existe_media_2 == 1){
+                        LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
                             'media_arredondada' => $media,
-                            'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
-                            'nota_aluno_id' => $nota_aluno->id,
-                            'situacao' => 3,
-                            'etapa' => $this->getRequest()->etapa,
-                            'bloqueada' => false
-                            ]);
-                    }
-            }
+                            'etapa' => $this->getRequest()->etapa
 
-            }
+                        
+                        ]);
+                            }else{
+                                LegacyDisciplineScoreAverage::create( [
+                                    'media' => $media,
+                                    'media_arredondada' => $media,
+                                    'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
+                                    'nota_aluno_id' => $nota_aluno->id,
+                                    'situacao' => 3,
+                                    'etapa' => $this->getRequest()->etapa,
+                                    'bloqueada' => false
+                                    ]);
+                            }
+                    }
+
+         } }
 
 
     }
