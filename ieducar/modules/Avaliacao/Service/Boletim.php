@@ -3051,6 +3051,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
 
             // Salva a média
+            
+            $componenteId = $this->getCurrentComponenteCurricular();
+            if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+                
+                return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
+            }
+
+            $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
            
         } else {
             $turmaId = $this->getOption('ref_cod_turma');
@@ -3148,6 +3156,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     }
 
                     // Salva a média
+                    $componenteId = $this->getCurrentComponenteCurricular();
+                    if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+                        
+                        return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
+                    }
 
                     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();
