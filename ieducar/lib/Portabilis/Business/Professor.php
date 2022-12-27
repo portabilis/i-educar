@@ -68,7 +68,7 @@ class Portabilis_Business_Professor
                 INNER JOIN pmieducar.escola e
                 ON (e.cod_escola = qhh.ref_cod_escola)
                 WHERE e.ref_cod_instituicao = $1
-                AND qhh.ref_servidor = $2
+                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
                 AND qh.ativo = 1
                 AND qhh.ativo = 1
                 ORDER BY nome
@@ -122,7 +122,7 @@ class Portabilis_Business_Professor
                 INNER JOIN pmieducar.curso c
                 ON (c.cod_curso = s.ref_cod_curso)
                 WHERE qhh.ref_cod_escola = $1
-                AND qhh.ref_servidor = $2
+                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
                 ORDER BY c.nm_curso
@@ -180,7 +180,7 @@ class Portabilis_Business_Professor
                 WHERE e.ref_cod_instituicao = $1
                 AND e.cod_escola = $2
                 AND s.ref_cod_curso = $3
-                AND qhh.ref_servidor = $4
+                AND (qhh.ref_servidor = $4 OR qhh.ref_cod_servidor_substituto_1 = $4 OR qhh.ref_cod_servidor_substituto_2 = $4)
                 ORDER BY s.nm_serie
             ';
 
@@ -208,7 +208,7 @@ class Portabilis_Business_Professor
                 ON (t.cod_turma = qh.ref_cod_turma)
                 WHERE qhh.ref_cod_escola = $1
                 AND qhh.ref_cod_serie = $2
-                AND qhh.ref_servidor = $3
+                AND (qhh.ref_servidor = $3 OR qhh.ref_cod_servidor_substituto_1 = $3 OR qhh.ref_cod_servidor_substituto_2 = $3)
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
                 ORDER BY t.nm_turma ASC
