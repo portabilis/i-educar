@@ -422,7 +422,7 @@ class DiarioApiController extends ApiCoreController
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
-            $this->updateMedia();
+           
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
 
