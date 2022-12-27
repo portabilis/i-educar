@@ -246,7 +246,7 @@ class LegacySchoolClass extends Model
      */
     public function grades(): BelongsToMany
     {
-        return $this->belongsToMany(LegacyGrade::class, 'turma_serie', 'turma_id', 'serie_id');
+        return $this->belongsToMany(LegacyGrade::class, 'pmieducar.turma_serie', 'turma_id', 'serie_id');
     }
 
     /**
