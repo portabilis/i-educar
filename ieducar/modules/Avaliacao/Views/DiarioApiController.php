@@ -422,6 +422,15 @@ class DiarioApiController extends ApiCoreController
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
+
+            $serie_id = '';
+            $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+            foreach($serie as $id) {
+                $serie_id = $id->ref_ref_cod_serie;
+               
+            }
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+            echo "<script> alert('tipo de nota: ".$tipoNota."');</script>"
             $this->updateMedia();
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
