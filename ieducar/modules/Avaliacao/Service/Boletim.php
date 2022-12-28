@@ -3057,7 +3057,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $serieId = $infosMatricula['ref_ref_cod_serie'];
             $componenteId = $this->getCurrentComponenteCurricular();
             $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
-          
+            echo "<script> alert('tipo de nota: ".$tipoNota."');</script>";
             if ($tipoNota==2) {
                 
                 return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
@@ -3165,6 +3165,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $serieId = $infosMatricula['ref_ref_cod_serie'];
                     $componenteId = $this->getCurrentComponenteCurricular();
                     $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
+                    echo "<script> alert('tipo de nota: ".$tipoNota."');</script>";
                 
                     if ($tipoNota==2) {
                         
