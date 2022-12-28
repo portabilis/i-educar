@@ -422,7 +422,18 @@ class DiarioApiController extends ApiCoreController
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
-            $this->updateMedia();
+
+            $serie_id = '';
+            $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+            foreach($serie as $id) {
+                $serie_id = $id->ref_ref_cod_serie;
+               
+            }
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+            if($tipoNota==1){
+                $this->updateMedia();
+            }
+           
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
 
@@ -838,7 +849,16 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
-        $this->updateMedia();
+        $serie_id = '';
+        $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+        foreach($serie as $id) {
+            $serie_id = $id->ref_ref_cod_serie;
+           
+        }
+        $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+        if($tipoNota==1){
+            $this->updateMedia();
+        }
     }
 
     protected function postMedia()
@@ -859,7 +879,16 @@ class DiarioApiController extends ApiCoreController
 
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->updateMedia();
+        $serie_id = '';
+        $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+        foreach($serie as $id) {
+            $serie_id = $id->ref_ref_cod_serie;
+           
+        }
+        $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+        if($tipoNota==1){
+            $this->updateMedia();
+        }
     }
 
     protected function postMediaDesbloqueia()
@@ -883,7 +912,16 @@ class DiarioApiController extends ApiCoreController
                 $this->messenger->append('Média matrícula ' . $this->getRequest()->matricula_id . ' inexistente ou já removida.', 'notice');
             } else {
                
+                $serie_id = '';
+            $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+            foreach($serie as $id) {
+                $serie_id = $id->ref_ref_cod_serie;
+               
+            }
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+            if($tipoNota==1){
                 $this->updateMedia();
+            }
                 $this->messenger->append('Média matrícula ' . $this->getRequest()->matricula_id . ' removida com sucesso.', 'success');
             }
         }
@@ -941,7 +979,16 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
        
-        $this->updateMedia();
+        $serie_id = '';
+            $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+            foreach($serie as $id) {
+                $serie_id = $id->ref_ref_cod_serie;
+               
+            }
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+            if($tipoNota==1){
+                $this->updateMedia();
+            }
     }
 
     protected function postNotaRecuperacaoEspecifica()
@@ -961,7 +1008,16 @@ class DiarioApiController extends ApiCoreController
         $this->serviceBoletim()->addNota($nota);
         $this->trySaveServiceBoletim();
         $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
-        $this->updateMedia();
+        $serie_id = '';
+            $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+            foreach($serie as $id) {
+                $serie_id = $id->ref_ref_cod_serie;
+               
+            }
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+            if($tipoNota==1){
+                $this->updateMedia();
+            }
     }
         // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
         $this->appendResponse('should_show_recuperacao_especifica', true);
@@ -1051,8 +1107,16 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
 
-         $this->updateMedia();
-
+        $serie_id = '';
+        $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+        foreach($serie as $id) {
+            $serie_id = $id->ref_ref_cod_serie;
+           
+        }
+        $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+        if($tipoNota==1){
+            $this->updateMedia();
+        }
 
     }
 
@@ -1080,7 +1144,16 @@ class DiarioApiController extends ApiCoreController
 
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->updateMedia();
+        $serie_id = '';
+            $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+            foreach($serie as $id) {
+                $serie_id = $id->ref_ref_cod_serie;
+               
+            }
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+            if($tipoNota==1){
+                $this->updateMedia();
+            }
     }
 
     protected function deleteNotaRecuperacaoEspecifica()
@@ -1107,7 +1180,16 @@ class DiarioApiController extends ApiCoreController
 
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-         $this->updateMedia();
+        $serie_id = '';
+        $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+        foreach($serie as $id) {
+            $serie_id = $id->ref_ref_cod_serie;
+           
+        }
+        $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+        if($tipoNota==1){
+            $this->updateMedia();
+        }
     }
 
     protected function deleteFalta()
@@ -1170,11 +1252,22 @@ class DiarioApiController extends ApiCoreController
         $this->serviceBoletim()->deleteNotaGeral($this->getRequest()->etapa);
 
         $this->trySaveServiceBoletim();
+        $serie_id = '';
+        $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+        foreach($serie as $id) {
+            $serie_id = $id->ref_ref_cod_serie;
+           
+        }
+        $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+        if($tipoNota==1){
+            $this->updateMedia();
+        }
 
         $this->messenger->append('Nota geral da matrícula ' . $this->getRequest()->matricula_id . ' removida com sucesso.', 'success');
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente());
+
     }
 
     // get
