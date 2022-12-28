@@ -1,61 +1,46 @@
-<?php
+(function($){
+  $(document).ready(function(){
 
-class Portabilis_View_Helper_DynamicInput_ComponenteCurricularTurma extends Portabilis_View_Helper_DynamicInput_CoreSelect
-{
-    protected function inputName()
-    {
-        return 'ref_cod_componente_curricular_turma';
+    var $anoField                  = getElementFor('ano');
+    var $turmaField                = getElementFor('turma');
+    var $componenteCurricularField = getElementFor('componente_curricular');
+    var $etapaField                = getElementFor('etapa');
+
+    var handleGetComponentesCurriculares = function(response) {
+      var selectOptions = jsonResourcesToSelectOptions(response['options'], false);
+      updateSelect($componenteCurricularField, selectOptions, "Selecione um componente curricular");
     }
 
-    protected function inputOptions($options)
-    {
-        $resources = $options['resources'];
-        $componenteId = $this->getComponenteCurricularId($options['componenteCurricularId'] ?? null);
+    var updateComponentesCurriculares = function(){
+      resetSelect($componenteCurricularField);
 
-        $userId = $this->getCurrentUserId();
+      if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
+        $componenteCurricularField.children().first().html('Aguarde carregando...');
 
-        if ($resources and empty($resources)) {
-            $sql = "
-                SELECT
-                cc.carga_horaria
-                FROM
-                    modules.componente_curricular_turma cc
-                WHERE cc.componente_curricular_id = {$componenteId}
-                ORDER BY T.componente_curricular_id ASC
-            ";
+        var data = {
+          ano      : $anoField.attr('value'),
+          turma_id : $turmaField.attr('value'),
+          etapa    : $etapaField.attr('value')
+        };
 
-            $db = new clsBanco();
-            $db->Consulta($sql);
+        var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
+          '/module/DynamicInput/componenteCurricular', 'componentesCurricularesForDiario', data
+        );
 
-            $data = [];
+        var options = {
+          url : urlForGetComponentesCurriculares,
+          dataType : 'json',
+          success  : handleGetComponentesCurriculares
+        };
 
-            while($db->ProximoRegistro()) {
-                $data[0] = [
-                    'carga_horaria' => $db->Campo('carga_horaria'),
-                    
-                ];
-            }
+        getResources(options);
+      }
 
-            
-                $resources[1] = $data[0]['carga_horaria'];
-                $unidade++;
-            
-        }
+      $componenteCurricularField.change();
+    };
 
-        return $this->insertOption(null, $data[0]['carga_horaria'], $resources);
-    }
+    // bind onchange event
+    $etapaField.change(updateComponentesCurriculares);
 
-    protected function defaultOptions()
-    {
-        return [
-            'id' => null,
-            'options' => ['label' => 'Carga horaria'],
-            'resources' => []
-        ];
-    }
-
-    public function componenteCurricularTurma($options = [])
-    {
-        parent::select($options);
-    }
-}
+  }); // ready
+})(jQuery);
