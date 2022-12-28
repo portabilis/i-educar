@@ -3051,9 +3051,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
 
             // Salva a média
-            
+            $infosMatricula = $this->getOption('matriculaData');
+           
+
+            $serieId = $infosMatricula['ref_ref_cod_serie'];
             $componenteId = $this->getCurrentComponenteCurricular();
-            if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
+          
+            if ($tipoNota==2) {
                 
                 return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
             }
@@ -3156,12 +3161,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     }
 
                     // Salva a média
+                    $infosMatricula = $this->getOption('matriculaData');
+                    $serieId = $infosMatricula['ref_ref_cod_serie'];
                     $componenteId = $this->getCurrentComponenteCurricular();
-                    if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+                    $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
+                
+                    if ($tipoNota==2) {
                         
                         return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
                     }
-
                     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();
                     $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
