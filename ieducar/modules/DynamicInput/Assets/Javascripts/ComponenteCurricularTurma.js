@@ -1,60 +1,63 @@
 (function($){
-    $(document).ready(function(){
-  
-      var $anoField                  = getElementFor('ano');
-      var $turmaField                = getElementFor('ref_cod_turma');
-      var id                         = document.getElementById('id');
-  
-      // var $turmaOcultaField          = document.getElementById("ref_cod_turma");
-  
-      if (id.value != '') {
-        return;
+  $(document).ready(function(){
+
+    var $anoField                  = getElementFor('ano');
+    var $turmaField                = getElementFor('turma');
+    var $componenteCurricularField = getElementFor('componente_curricular_turma');
+
+    var $componenteCurricularTitleField =  $componenteCurricularField[0].parentElement.parentElement.parentElement.children[0].children[0];
+
+    var handleGetComponentesCurriculares = function(response) {
+      var selectOptions = jsonResourcesToSelectOptions(response['options']);
+      updateSelect($componenteCurricularField, selectOptions, "Selecione um componente curricular");
+
+      let tipoPresenca = $turmaField.attr('tipo_presenca');
+
+      if (tipoPresenca == 1 || tipoPresenca == '1') {
+        $componenteCurricularField.prop('disabled', true);
       }
-  
-      var handleGetTodasTurmas = function(response) {
-        var selectOptions = jsonResourcesToSelectOptions(response['options']);
-        updateSelect($turmaField, selectOptions, "Selecione uma turma");
+    }
+
+    function getResultado(xml) {
+      $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Componente curricular' : 'Campo de experiência';
+    }
+
+    var xml = new ajax(getResultado);
+    xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
+
+    var updateComponentesCurriculares = function(){
+      resetSelect($componenteCurricularField);
+      $componenteCurricularField.prop('disabled', false);
+
+      if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
+        $componenteCurricularField.children().first().html('Aguarde, carregando...');
+
+        var xml = new ajax(getResultado);
+        xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
+
+        var data = {
+          ano      : $anoField.attr('value'),
+          turma_id : $turmaField.attr('value')
+        };
+
+        var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
+          '/module/DynamicInput/componenteCurricularTurma', 'componentesCurricularesTurma', data
+        );
+
+        var options = {
+          url : urlForGetComponentesCurriculares,
+          dataType : 'json',
+          success  : handleGetComponentesCurriculares
+        };
+
+        getResources(options);
       }
-  
-      var updateTodasTurmas = function(){
-        resetSelect($turmaField);
-  
-        if ($anoField.val() && $anoField.is(':enabled')) {
-          $turmaField.children().first().html('Aguarde, carregando...');
-  
-          var data = {
-            ano      : $anoField.attr('value')
-          };
-  
-          var urlForGetTodasTurmas = getResourceUrlBuilder.buildUrl(
-            '/module/DynamicInput/todasTurmas', 'todasTurmas', data
-          );
-  
-          var options = {
-            url : urlForGetTodasTurmas,
-            dataType : 'json',
-            success  : handleGetTodasTurmas
-          };
-  
-          getResources(options);
-        }
-  
-        $turmaField.change();
-      };
-  
-      // var updateTurmaOculta = function(){
-      //   $turmaOcultaField.value = $turmaField.val();
-      //   console.log($turmaOcultaField.value);
-  
-      //   var evt = document.createEvent('HTMLEvents');
-      //   evt.initEvent('change', false, true);
-      //   $turmaOcultaField.dispatchEvent(evt);
-      // };
-  
-      // bind onchange event
-      $anoField.change(updateTodasTurmas);
-      // $turmaField.change(updateTurmaOculta);
-  
-    }); // ready
-  })(jQuery);
-  
+
+      $componenteCurricularField.change();
+    };
+
+    // bind onchange event
+    $turmaField.change(updateComponentesCurriculares);
+
+  }); // ready
+})(jQuery);
