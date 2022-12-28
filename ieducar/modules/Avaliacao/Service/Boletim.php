@@ -3166,7 +3166,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);    
                     if ($tipoNota==2) {
                         
-                        $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
+                        $this->getMediaGeralDataMapper()->save($notaComponenteCurricularMedia);
                     }
                     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();
