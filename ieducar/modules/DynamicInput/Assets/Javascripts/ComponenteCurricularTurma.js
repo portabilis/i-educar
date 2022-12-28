@@ -19,7 +19,7 @@
     }
 
     function getResultado(xml) {
-      $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Componente curricular' : 'Campo de experiência';
+      $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Componente turma' : 'componenteTurma';
     }
 
     var xml = new ajax(getResultado);
