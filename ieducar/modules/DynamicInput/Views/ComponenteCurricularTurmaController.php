@@ -2,7 +2,7 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-class ComponenteCurricularController extends ApiCoreController
+class ComponenteCurricularTurmaController extends ApiCoreController
 {
     protected function canGetComponentesCurriculares()
     {
@@ -330,7 +330,7 @@ class ComponenteCurricularController extends ApiCoreController
     {
         if ($this->isRequestFor('get', 'componentesCurriculares')) {
             $this->appendResponse($this->getComponentesCurriculares());
-        }elseif ($this->isRequestFor('get', 'componentesCurriculareTurma')) {
+        }elseif ($this->isRequestFor('get', 'componentesCurricularesTurma')) {
             $this->appendResponse($this->getComponentesCurricularesTurma());
         } elseif ($this->isRequestFor('get', 'componentesCurricularesForDiario')) {
             $this->appendResponse($this->getComponentesCurricularesForDiario());
