@@ -98,14 +98,15 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricularTurma extends Port
                     }
                 }
             }
-
+            $ultimo_nome ='';
             foreach ($componentesCurriculares as $key => $componentesCurricular) {
                 $resources[$componentesCurricular['id']] = $componentesCurricular['nome'];
+                $ultimo_nome = $componentesCurricular['nome'];
             }
             
         } 
 
-        return $this->insertOption(null, 'Selecione um componente curricular', $resources);
+        return $this->insertOption(null,  $ultimo_nome, $resources);
     }
 
     protected function defaultOptions()
