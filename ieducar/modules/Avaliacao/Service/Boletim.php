@@ -3057,13 +3057,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $serieId = $infosMatricula['ref_ref_cod_serie'];
             $componenteId = $this->getCurrentComponenteCurricular();
             $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
-            echo "<script> alert('tipo de nota: ".$tipoNota."');</script>";
             if ($tipoNota==2) {
                 
-                return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
+                $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
             }
 
-            $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
+            
            
         } else {
             $turmaId = $this->getOption('ref_cod_turma');
@@ -3164,12 +3163,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $infosMatricula = $this->getOption('matriculaData');
                     $serieId = $infosMatricula['ref_ref_cod_serie'];
                     $componenteId = $this->getCurrentComponenteCurricular();
-                    $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
-                    echo "<script> alert('tipo de nota: ".$tipoNota."');</script>";
-                
+                    $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);    
                     if ($tipoNota==2) {
                         
-                        return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
+                        $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
                     }
                     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();
