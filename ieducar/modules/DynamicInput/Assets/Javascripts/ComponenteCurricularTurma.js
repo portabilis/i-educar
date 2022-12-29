@@ -29,8 +29,10 @@
     var updateComponentesCurriculares = function(){
       resetSelect($componenteCurricularTurmaField);
       $componenteCurricularTurmaField.prop('disabled', false);
-      alert($componenteCurricularField.attr('value'));
-      if ($anoField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
+    
+
+      $("#ref_cod_componente_curricular").change(function(){
+        alert($componenteCurricularField.attr('value'));
         $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
         var xml = new ajax(getResultado);
@@ -53,7 +55,9 @@
         };
 
         getResources(options);
-      }
+
+      });
+     
 
       $componenteCurricularTurmaField.change();
     };
