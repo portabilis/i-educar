@@ -4,7 +4,6 @@
       var $anoField                  = getElementFor('ano');
       var $turmaField                = getElementFor('turma');
       var $diaLetivoField = getElementFor('dia_letivo');
-      var $componenteCurricularField = getElementFor('componente_curricular');
   
       var $componenteCurricularTitleField =  $diaLetivoField[0].parentElement.parentElement.parentElement.children[0].children[0];
   
@@ -28,7 +27,7 @@
   
       var updateDiasLetivos = function(){
         resetSelect($diaLetivoField);
-        
+        $diaLetivoField.prop('disabled', false);
   
         if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
          
@@ -38,8 +37,7 @@
   
           var data = {
             ano      : $anoField.attr('value'),
-            turma_id : $turmaField.attr('value'),
-            componente_id : $componenteCurricularField.attr('value')
+            turma_id : $turmaField.attr('value')
           };
   
           var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
