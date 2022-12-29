@@ -31,10 +31,10 @@ class DiaLetivoController extends ApiCoreController
             }
 
             $serie_id = 0;
-            $serie_turma = TurmaSerie::where('turma_id', $turmaId)->get(); 
+            $serie_turma = TurmaSerie::where('cod_turma', $turmaId)->get(); 
             foreach($serie_turma as $serie){
 
-                $serieid = $serie->serie_id;
+                $serieid = $serie->ref_ref_cod_serie;
                 
             }
           

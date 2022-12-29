@@ -5,24 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TurmaSerie extends Model
+class SerieTurma extends Model
 {
     use HasFactory;
     /**
     * @var string
     */
-   protected $table = 'pmieducar.turma_serie';
+   protected $table = 'pmieducar.turma';
 
    /**
     * @var string
     */
-   protected $primaryKey = 'id';
+   protected $primaryKey = 'cod_serie';
 
    protected $fillable = [
-        'id',
-       'serie_id',
-       'turma_id'
-
+       'cod_turma',
+       'ref_ref_cod_serie'
        
    
    ];
