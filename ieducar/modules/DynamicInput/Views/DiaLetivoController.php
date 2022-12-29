@@ -1,6 +1,7 @@
 <?php
 use App\Models\Frequencia;
 use App\Models\SerieTurma;
+use App\Models\Serie;
 use App\Models\Turma;
 use App\Services\SchoolGradeDisciplineService;
 
@@ -40,7 +41,7 @@ class DiaLetivoController extends ApiCoreController
             $total_dias_letivos_turma = 0;
             $dias_series = Serie::where('cod_serie', $serie_id)->get(); 
             foreach($dias_series as $dia){
-                
+
                 $total_dias_letivos_turma = $dia->dias_letivos;
                 
             }
