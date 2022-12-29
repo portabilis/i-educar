@@ -25,6 +25,7 @@ class ComponenteCurricularTurmaController extends ApiCoreController
                     '__' . 1
                 ] = [
                     'value' => mb_strtoupper('18h', 'UTF-8'),
+                    'checked' => "checked",
                     'group' => ''
                 ];
            // }
