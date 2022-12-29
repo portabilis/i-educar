@@ -27,7 +27,7 @@
   
       var updateDiasLetivos = function(){
         resetSelect($diaLetivoField);
-        $diaLetivoField.prop('disabled', false);
+        
   
         if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
          

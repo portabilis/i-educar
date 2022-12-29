@@ -28,7 +28,7 @@
   
       var updateComponentesCurriculares = function(){
         resetSelect($frequenciaComponenteField);
-        $frequenciaComponenteField.prop('disabled', false);
+       
        
   
        

@@ -28,7 +28,6 @@
 
     var updateComponentesCurriculares = function(){
       resetSelect($componenteCurricularTurmaField);
-      $componenteCurricularTurmaField.prop('disabled', false);
      
 
      
