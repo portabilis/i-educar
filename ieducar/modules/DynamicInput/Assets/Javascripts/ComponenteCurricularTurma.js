@@ -2,14 +2,16 @@
 (function($){
   $(document).ready(function(){
         $("#ref_cod_componente_curricular").change(function(){
+          var $anoField                  = getElementFor('ano');
+          var $turmaField                = getElementFor('turma');
+          var $componenteCurricularField = getElementFor('componente_curricular');
+          var $componenteCurricularTurmaField = getElementFor('componente_curricular_turma');
+          //verifica se o componente foi escolhido
           if ($anoField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
             
       
 
-        var $anoField                  = getElementFor('ano');
-        var $turmaField                = getElementFor('turma');
-        var $componenteCurricularField = getElementFor('componente_curricular');
-        var $componenteCurricularTurmaField = getElementFor('componente_curricular_turma');
+       
 
         var $componenteCurricularTitleField =  $componenteCurricularTurmaField[0].parentElement.parentElement.parentElement.children[0].children[0];
 
