@@ -1,6 +1,6 @@
 <?php
 use App\Models\Frequencia;
-use App\Models\TurmaSerie;
+use App\Models\SerieTurma;
 use App\Models\Serie;
 use App\Models\Turma;
 use App\Services\SchoolGradeDisciplineService;
@@ -31,7 +31,7 @@ class DiaLetivoController extends ApiCoreController
             }
 
             $serie_id = 0;
-            $serie_turma = TurmaSerie::where('cod_turma', $turmaId)->get(); 
+            $serie_turma = SerieTurma::where('cod_turma', $turmaId)->get(); 
             foreach($serie_turma as $serie){
 
                 $serie_id = $serie->ref_ref_cod_serie;
