@@ -39,13 +39,13 @@ class FrequenciaComponenteController extends ApiCoreController
             } 
             $aula_restante = $carga_horaria-$total;
             if($carga_horaria ==0){
-                $aula_restante = "Componente sem Carga Horária.";
+                $aula_restante = " - ";
             }
            
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("Aulas ministradas: ".$total." - Aulas restantes: ".$aula_restante, 'UTF-8'),
+                    'value' => mb_strtoupper("Aulas ministradas: ".$total." | Aulas restantes: ".$aula_restante, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];
