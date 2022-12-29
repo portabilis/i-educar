@@ -39,7 +39,7 @@
           alert($componenteCurricularField.attr('value'));
 
         
-          if ($anoField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
+        
             $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
             var xml = new ajax(getResultado);
@@ -62,7 +62,7 @@
             };
 
             getResources(options);
-          }
+          
 
           $componenteCurricularTurmaField.change();
         };
