@@ -61,11 +61,11 @@
       });
 
       $componenteCurricularTurmaField.change();
-      $componenteCurricularTurmaField.val("0").change();
+     
     };
 
     // bind onchange event
     $turmaField.change(updateComponentesCurriculares);
-
+    $("#ref_cod_componente_curricular").val("0").change();
   }); // ready
 })(jQuery);
