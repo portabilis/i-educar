@@ -37,7 +37,7 @@ class DiaLetivoController extends ApiCoreController
                 $serie_id = $serie->cod_serie;
                 
             }
-            echo "<script>alert('id da serie: ".$serie_id."');</script>";
+          
             $total_dias_letivos_turma = 0;
             $dias_series = Serie::where('cod_serie', $serie_id)->get(); 
             foreach($dias_series as $dia){
@@ -47,7 +47,7 @@ class DiaLetivoController extends ApiCoreController
             }
             $restante =  $total_dias_letivos_turma-$total_dias_letivos_realizados;
             
-
+            echo "<script>alert('id da serie: $serie_id ')</script>";
          
            
                 $options[
