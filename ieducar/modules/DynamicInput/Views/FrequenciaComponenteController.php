@@ -37,7 +37,7 @@ class FrequenciaComponenteController extends ApiCoreController
                 $carga_horaria = $componente->carga_horaria;
                 $carga_horaria = round($carga_horaria, 3);
             } 
-            echo "<script>alert()</script>";
+           
                 $options[
                     '__' . 1
                 ] = [
