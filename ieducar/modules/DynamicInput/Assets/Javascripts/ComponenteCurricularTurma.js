@@ -61,6 +61,7 @@
       });
 
       $componenteCurricularTurmaField.change();
+      $componenteCurricularTurmaField.val("0").change();
     };
 
     // bind onchange event
