@@ -1,5 +1,5 @@
 <?php
-
+use App\Models\ComponenteCurricularTurma;
 use App\Services\SchoolGradeDisciplineService;
 
 class ComponenteCurricularTurmaController extends ApiCoreController
@@ -20,11 +20,16 @@ class ComponenteCurricularTurmaController extends ApiCoreController
 
 
            // foreach ($componentesCurriculares as $componenteCurricular) {
-            
+            $carga_horaria = 0;
+            $componentes = ComponenteCurricularTurma::where('componente_curricular_id', $ComponenteId)->where('turma_id', $turmaId)->get(); 
+            foreach($componentes as $componente){
+                $carga_horaria = $componente->carga_horaria;
+                $carga_horaria = round($carga_horaria, 3);
+            }
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper('18h', 'UTF-8'),
+                    'value' => mb_strtoupper($carga_horaria.'h', 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];

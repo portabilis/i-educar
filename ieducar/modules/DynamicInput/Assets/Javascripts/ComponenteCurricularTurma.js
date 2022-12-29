@@ -36,7 +36,7 @@
      
       $("#ref_cod_componente_curricular").change(function(){
         
-        $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
+     
 
         var xml = new ajax(getResultado);
         xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
