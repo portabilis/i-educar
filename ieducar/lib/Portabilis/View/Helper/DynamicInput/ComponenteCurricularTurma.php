@@ -100,7 +100,7 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricularTurma extends Port
             }
             $ultimo_nome ='';
             foreach ($componentesCurriculares as $key => $componentesCurricular) {
-                $resources[$componentesCurricular['id']] = $componentesCurricular['nome'];
+                $resources[$componentesCurricular['id']] = 'teste';
                 $ultimo_nome = $componentesCurricular['nome'];
             }
             
