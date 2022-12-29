@@ -17,7 +17,7 @@ class ComponenteCurricularTurmaController extends ApiCoreController
           
            
            
-            echo "<script>alert('Turmaid: ".$turmaId." ComponenteId: ".$ComponenteId."')</script>";
+           
 
            // foreach ($componentesCurriculares as $componenteCurricular) {
             $carga_horaria = 0;

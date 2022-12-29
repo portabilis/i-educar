@@ -17,7 +17,7 @@ class ComponenteCurricularTurma extends Model
    /**
     * @var string
     */
-   protected $primaryKey = 'id';
+   protected $primaryKey = 'componente_curricular_id';
 
    protected $fillable = [
        'componente_curricular_id',
