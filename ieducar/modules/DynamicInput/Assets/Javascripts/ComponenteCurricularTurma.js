@@ -1,13 +1,14 @@
 
-  jQuery('#ref_cod_componente_curricular').on('click', 'option', function (){
-        
+  $('#ref_cod_componente_curricular').change(function() {
+    var $componenteCurricularField = getElementFor('componente_curricular');    
+    if($componenteCurricularField.val() && $componenteCurricularField.is(':enabled')){ 
 
 (function($){
   $(document).ready(function(){
 
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('turma');
-    var $componenteCurricularField = getElementFor('componente_curricular');
+  
     var $componenteCurricularTurmaField = getElementFor('componente_curricular_turma');
 
     var $componenteCurricularTitleField =  $componenteCurricularTurmaField[0].parentElement.parentElement.parentElement.children[0].children[0];
@@ -36,7 +37,7 @@
       alert($componenteCurricularField.attr('value'));
 
     
-      if ($anoField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
+      if ($anoField.val()) {
         $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
         var xml = new ajax(getResultado);
@@ -69,5 +70,5 @@
 
   }); // ready
 })(jQuery);
-
+    }
 });
