@@ -1,3 +1,6 @@
+$("#ref_cod_componente_curricular").click(function(){
+        
+
 (function($){
   $(document).ready(function(){
 
@@ -29,10 +32,10 @@
     var updateComponentesCurriculares = function(){
       resetSelect($componenteCurricularTurmaField);
       $componenteCurricularTurmaField.prop('disabled', false);
-    
+      alert($componenteCurricularField.attr('value'));
 
-      $("#ref_cod_componente_curricular").change(function(){
-        alert($componenteCurricularField.attr('value'));
+    
+      if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
         $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
         var xml = new ajax(getResultado);
@@ -55,9 +58,7 @@
         };
 
         getResources(options);
-
-      });
-     
+      }
 
       $componenteCurricularTurmaField.change();
     };
@@ -67,3 +68,5 @@
 
   }); // ready
 })(jQuery);
+
+});
