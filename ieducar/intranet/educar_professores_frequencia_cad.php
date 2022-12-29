@@ -141,8 +141,8 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(['componenteCurricular', 'componenteCurricularTurma'], ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
-      
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('componenteCurricularTurma', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         if (empty($tipo_presenca) || $tipo_presenca == 2) {
@@ -829,6 +829,7 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
+            '/modules/DynamicInput/Assets/Javascripts/ComponenteCurricularTurma.js',
             '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
