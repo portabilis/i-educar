@@ -30,7 +30,7 @@
       resetSelect($componenteCurricularTurmaField);
       $componenteCurricularTurmaField.prop('disabled', false);
 
-      if ($anoField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
+      if ($anoField.val() && $componenteCurricularField.val() ) {
         $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
         var xml = new ajax(getResultado);
