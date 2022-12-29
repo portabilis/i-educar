@@ -29,8 +29,8 @@ function updateSelect($targetElement, options, emptyOptionHtml, optionSelected =
 
   if (options.length ==1) {
     $targetElement.removeAttr('disabled');
-    $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma opção");
-  }else if (options.length >0) {
+   
+  }else if (options.length >1) {
     $targetElement.removeAttr('disabled');
     $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma opção");
   } else {
