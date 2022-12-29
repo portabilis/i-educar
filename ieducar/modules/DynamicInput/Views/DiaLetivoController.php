@@ -34,13 +34,13 @@ class DiaLetivoController extends ApiCoreController
             $serie_turma = TurmaSerie::where('turma_id', $turmaId)->get(); 
             foreach($serie_turma as $serie){
 
-                $serie_id = $serie->serie_id;
+                $serieid = $serie->serie_id;
                 
             }
           
           
             $total_dias_letivos_turma = 0;
-            $dias_series = Serie::where('cod_serie', $serie_id)->get(); 
+            $dias_series = Serie::where('cod_serie', $serieid)->get(); 
             foreach($dias_series as $dia){
 
                 $total_dias_letivos_turma = $dia->dias_letivos;
