@@ -20,7 +20,7 @@
     }
 
     function getResultado(xml) {
-      $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Carga Horária do Componente' : 'Carga Horária do Componente';
+      $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Carga Horária do Componente:' : 'Carga Horária do Componente:';
     }
 
     var xml = new ajax(getResultado);

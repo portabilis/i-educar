@@ -1,6 +1,7 @@
 <?php
 use App\Models\Frequencia;
 use App\Models\ComponenteCurricularTurma;
+use App\Models\ComponenteCurricularAno;
 use App\Services\SchoolGradeDisciplineService;
 
 class FrequenciaComponenteController extends ApiCoreController
@@ -32,7 +33,7 @@ class FrequenciaComponenteController extends ApiCoreController
 
              // foreach ($componentesCurriculares as $componenteCurricular) {
             $carga_horaria = 0;
-            $componentes = ComponenteCurricularTurma::where('componente_curricular_id', $ComponenteId)->where('turma_id', $turmaId)->get(); 
+            $componentes = ComponenteCurricularAno::where('componente_curricular_id', $ComponenteId)->get(); 
             foreach($componentes as $componente){
                 $carga_horaria = $componente->carga_horaria;
                 $carga_horaria = round($carga_horaria, 3);
@@ -45,7 +46,7 @@ class FrequenciaComponenteController extends ApiCoreController
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("Aulas ministradas: ".$total." | Aulas restantes: ".$aula_restante, 'UTF-8'),
+                    'value' => mb_strtoupper("CH: ".$carga_horaria." | Aulas ministradas: ".$total." | Aulas restantes: ".$aula_restante, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];

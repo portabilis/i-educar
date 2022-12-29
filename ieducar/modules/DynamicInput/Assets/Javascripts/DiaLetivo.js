@@ -4,6 +4,7 @@
       var $anoField                  = getElementFor('ano');
       var $turmaField                = getElementFor('turma');
       var $diaLetivoField = getElementFor('dia_letivo');
+      var $componenteCurricularField = getElementFor('componente_curricular');
   
       var $componenteCurricularTitleField =  $diaLetivoField[0].parentElement.parentElement.parentElement.children[0].children[0];
   
@@ -19,7 +20,7 @@
       }
   
       function getResultado(xml) {
-        $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Dias Letivos' : 'Dias Letivos';
+        $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Dias Letivos:' : 'Dias Letivos:';
       }
   
       var xml = new ajax(getResultado);
@@ -37,7 +38,8 @@
   
           var data = {
             ano      : $anoField.attr('value'),
-            turma_id : $turmaField.attr('value')
+            turma_id : $turmaField.attr('value'),
+            componente_id : $componenteCurricularField.attr('value')
           };
   
           var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(

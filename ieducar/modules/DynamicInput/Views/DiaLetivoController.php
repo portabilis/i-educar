@@ -50,7 +50,7 @@ class DiaLetivoController extends ApiCoreController
             
             
          
-           
+           if(empty($ComponenteId)){
                 $options[
                     '__' . 1
                 ] = [
@@ -58,6 +58,7 @@ class DiaLetivoController extends ApiCoreController
                     'checked' => "checked",
                     'group' => ''
                 ];
+            }
          
 
             return ['options' => $options];
