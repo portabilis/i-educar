@@ -29,8 +29,8 @@
     var updateComponentesCurriculares = function(){
       resetSelect($componenteCurricularTurmaField);
       $componenteCurricularTurmaField.prop('disabled', false);
-
-      if ($anoField.val() && $componenteCurricularField.val() ) {
+      alert($componenteCurricularField.attr('value'));
+      if ($anoField.val() && $componenteCurricularField.attr('value')) {
         $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
         var xml = new ajax(getResultado);
