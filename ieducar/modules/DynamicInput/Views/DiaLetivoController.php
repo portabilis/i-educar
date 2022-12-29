@@ -47,7 +47,7 @@ class DiaLetivoController extends ApiCoreController
             }
             $restante =  $total_dias_letivos_turma-$total_dias_letivos_realizados;
             
-            echo "<script>alert('id da serie: $serie_id ')</script>";
+            
          
            
                 $options[
