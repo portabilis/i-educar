@@ -11,16 +11,18 @@ class SerieTurma extends Model
     /**
     * @var string
     */
-   protected $table = 'pmieducar.turma';
+   protected $table = 'pmieducar.turma_serie';
 
    /**
     * @var string
     */
-   protected $primaryKey = 'cod_serie';
+   protected $primaryKey = 'id';
 
    protected $fillable = [
-       'cod_turma',
-       'ref_ref_cod_serie'
+        'id',
+       'serie_id',
+       'turma_id'
+
        
    
    ];
