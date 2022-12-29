@@ -50,19 +50,17 @@ class DiaLetivoController extends ApiCoreController
             
             
          
-           if(empty($ComponenteId)){
+           
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("dias letivos: ".$total_dias_letivos_turma." | Realizados: ".$total_dias_letivos_realizados." | A realizar: ".$restante, 'UTF-8'),
+                    'value' => mb_strtoupper("Total: ".$total_dias_letivos_turma." | Realizados: ".$total_dias_letivos_realizados." | Restantes: ".$restante, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
-                    return ['options' => $options];
                 ];
-            }
          
 
-            
+            return ['options' => $options];
         
     }
 
