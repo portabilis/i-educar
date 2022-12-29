@@ -67,6 +67,6 @@
     // bind onchange event
     $turmaField.change(updateComponentesCurriculares);
 
-    $("#ref_cod_componente_curricular").val("1").change();
+    
   }); // ready
 })(jQuery);
