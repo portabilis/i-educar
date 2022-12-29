@@ -10,7 +10,7 @@
 
     var handleGetComponentesCurriculares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
-      updateSelect($componenteCurricularTurmaField, selectOptions, "Selecione um componente curricular");
+      updateSelect($componenteCurricularTurmaField, selectOptions);
 
       let tipoPresenca = $turmaField.attr('tipo_presenca');
 
