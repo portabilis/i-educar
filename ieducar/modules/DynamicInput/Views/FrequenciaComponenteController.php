@@ -39,7 +39,7 @@ class FrequenciaComponenteController extends ApiCoreController
             } 
             $aula_restante = $carga_horaria-$total;
             if($carga_horaria ==0){
-                $aula_restante = "Componente sem Carga Horária."
+                $aula_restante = "Componente sem Carga Horária.";
             }
            
                 $options[
