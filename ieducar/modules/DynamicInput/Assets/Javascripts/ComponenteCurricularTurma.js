@@ -3,18 +3,19 @@
 
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('turma');
-    var $componenteCurricularField = getElementFor('componente_curricular_turma');
+    var $componenteCurricularField = getElementFor('componente_curricular');
+    var $componenteCurricularTurmaField = getElementFor('componente_curricular_turma');
 
-    var $componenteCurricularTitleField =  $componenteCurricularField[0].parentElement.parentElement.parentElement.children[0].children[0];
+    var $componenteCurricularTitleField =  $componenteCurricularTurmaField[0].parentElement.parentElement.parentElement.children[0].children[0];
 
     var handleGetComponentesCurriculares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
-      updateSelect($componenteCurricularField, selectOptions, "Selecione um componente curricular");
+      updateSelect($componenteCurricularTurmaField, selectOptions, "Selecione um componente curricular");
 
       let tipoPresenca = $turmaField.attr('tipo_presenca');
 
       if (tipoPresenca == 1 || tipoPresenca == '1') {
-        $componenteCurricularField.prop('disabled', true);
+        $componenteCurricularTurmaField.prop('disabled', true);
       }
     }
 
@@ -26,18 +27,19 @@
     xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
 
     var updateComponentesCurriculares = function(){
-      resetSelect($componenteCurricularField);
-      $componenteCurricularField.prop('disabled', false);
+      resetSelect($componenteCurricularTurmaField);
+      $componenteCurricularTurmaField.prop('disabled', false);
 
-      if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
-        $componenteCurricularField.children().first().html('Aguarde, carregando...');
+      if ($anoField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
+        $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
         var xml = new ajax(getResultado);
         xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
 
         var data = {
           ano      : $anoField.attr('value'),
-          turma_id : $turmaField.attr('value')
+          turma_id : $turmaField.attr('value'),
+          componente_id : $componenteCurricularField.attr('value')
         };
 
         var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
@@ -53,7 +55,7 @@
         getResources(options);
       }
 
-      $componenteCurricularField.change();
+      $componenteCurricularTurmaField.change();
     };
 
     // bind onchange event
