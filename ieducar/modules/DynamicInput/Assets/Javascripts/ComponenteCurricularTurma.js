@@ -1,4 +1,5 @@
-$("#ref_cod_componente_curricular").click(function(){
+
+  jQuery('#ref_cod_componente_curricular').on('click', 'option', function (){
         
 
 (function($){
@@ -35,7 +36,7 @@ $("#ref_cod_componente_curricular").click(function(){
       alert($componenteCurricularField.attr('value'));
 
     
-      if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
+      if ($anoField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
         $componenteCurricularTurmaField.children().first().html('Aguarde, carregando...');
 
         var xml = new ajax(getResultado);
