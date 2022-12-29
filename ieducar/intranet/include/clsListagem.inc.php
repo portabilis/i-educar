@@ -111,7 +111,8 @@ class clsListagem extends clsCampos
         $intPaginasExibidas = 3,
         $var_alteranativa = false,
         $pag_modifier = 0,
-        $add_iniciolimit = false
+        $add_iniciolimit = false,
+        $intTotalRegistrosDuplicidade = 0
     ) {
         if ($intTotalRegistros > 0) {
             $getVar = "pagina_{$nome}";
@@ -161,10 +162,13 @@ class clsListagem extends clsCampos
                 }
             }
 
+            $totalRegistrosExibir =  ($intTotalRegistrosDuplicidade > 0 ? $intTotalRegistrosDuplicidade : $intTotalRegistros);
+
+
             $strReturn = <<<HTML
 <table class="paginacao">
   <tr>
-    <td>Total de registros: {$intTotalRegistros}</td>
+    <td>Total de registros: {$totalRegistrosExibir}</td>
   </tr>
 </table>
 HTML;
@@ -335,7 +339,7 @@ HTML;
         $retorno .=  "
             <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
                 <!-- listagem begin -->
-                
+
                 <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
                     <tr>
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
@@ -401,7 +405,7 @@ HTML;
                         $retorno .= $linha['conteudo'];
                         continue;
                     }
- 
+
                     reset($linha);
 
                     if (!empty($this->colunas)) {
@@ -433,7 +437,7 @@ HTML;
             <tr>
                 <td class='formdktd' colspan=\"{$ncols}\">&nbsp;</td>
             </tr></table>";
-            
+
 
         if (!empty($this->paginador2)) {
             $retorno .= "
