@@ -141,7 +141,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricularTurma', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
@@ -415,12 +415,7 @@ return new class extends clsCadastro {
            // Componente Curricular.
  
       
-           $this->campoTexto('carga_horaria_componente', 'Carga Horária do Componente', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_aulas_realizadas', 'Total de aulas realizadas', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_aulas_realizar', 'Total de aulas a realizar', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_dias_letivos', 'Total de dias letivos', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_dias_realizados', 'Total de dias realizados', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_dias_realizar', 'Total de dias a realizar', $this->habilidade, '50', '255', false);
+          
           
            //end componente
   
