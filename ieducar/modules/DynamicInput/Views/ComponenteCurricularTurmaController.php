@@ -22,7 +22,7 @@ class ComponenteCurricularTurmaController extends ApiCoreController
            // foreach ($componentesCurriculares as $componenteCurricular) {
             
                 $options[
-                    '__' . 0
+                    '__' . 1
                 ] = [
                     'value' => mb_strtoupper('18h', 'UTF-8'),
                     'group' => ''
@@ -44,7 +44,7 @@ class ComponenteCurricularTurmaController extends ApiCoreController
         } elseif ($this->isRequestFor('get', 'componentesCurricularesForDiario')) {
           
         } elseif ($this->isRequestFor('get', 'componentesCurricularesEscolaSerie')) {
-            
+
         } else {
             
         }
