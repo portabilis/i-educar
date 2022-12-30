@@ -56,7 +56,7 @@ class DiaLetivoController extends ApiCoreController
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("Acumulado: ".$total_dias_letivos_turma." | aulas realizadas: ".$total_dias_letivos_realizados." | a realizar: ".$restante, 'UTF-8'),
+                    'value' => mb_strtoupper("total: ".$total_dias_letivos_turma." | dias realizados: ".$total_dias_letivos_realizados." | dias a realizar: ".$restante, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];
