@@ -65,7 +65,7 @@ class DiaLetivoController extends ApiCoreController
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("Total: - | Realizados: - | Restantes: - ", 'UTF-8'),
+                    'value' => mb_strtoupper(" ", 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];
