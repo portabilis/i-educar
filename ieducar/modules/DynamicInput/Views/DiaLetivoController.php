@@ -51,7 +51,7 @@ class DiaLetivoController extends ApiCoreController
             }
             $restante =  $total_dias_letivos_turma-$total_dias_letivos_realizados;
             
-            if($etapa_curso<6){
+            if($etapa_curso_serie<6){
          
            
                 $options[
