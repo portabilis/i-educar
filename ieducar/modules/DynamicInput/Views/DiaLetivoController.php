@@ -31,7 +31,7 @@ class DiaLetivoController extends ApiCoreController
             }
 
            
-            $etapa_curso = 0;
+           
             $serie_turma = SerieTurma::where('cod_turma', $turmaId)->get(); 
             foreach($serie_turma as $serie){
 
@@ -39,14 +39,14 @@ class DiaLetivoController extends ApiCoreController
               
                 
             }
-          
+            $etapa_curso = 0;
             $serie_id = 0;
             $total_dias_letivos_turma = 0;
             $dias_series = Serie::where('cod_serie', $serie_id)->get(); 
             foreach($dias_series as $dia){
 
                 $total_dias_letivos_turma = $dia->dias_letivos;
-                $etapa_curso = $serie->etapa_curso;
+                $etapa_curso = $dia->etapa_curso;
                 
             }
             $restante =  $total_dias_letivos_turma-$total_dias_letivos_realizados;
