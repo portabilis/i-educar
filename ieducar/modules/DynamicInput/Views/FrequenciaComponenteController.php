@@ -17,7 +17,38 @@ class FrequenciaComponenteController extends ApiCoreController
 
             $options = [];
           
-           
+           if(empty($ComponenteId)){
+            echo "
+            <script>
+            (function($){
+                $(document).ready(function(){
+              
+
+                $('#tr_ref_cod_frequencia_componente').hide();
+                $('#tr_ref_cod_dia_letivo').show();
+                
+                 
+                }); // ready
+            })(jQuery);
+
+            </script>";
+           }else{
+
+            echo "
+            <script>
+            (function($){
+                $(document).ready(function(){
+              
+                    $('#tr_ref_cod_frequencia_componente').show();
+                    $('#tr_ref_cod_dia_letivo').hide();
+                
+                 
+                }); // ready
+            })(jQuery);
+
+            </script>";
+
+           }
            
            
 

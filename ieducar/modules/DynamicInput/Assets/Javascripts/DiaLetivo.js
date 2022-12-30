@@ -3,7 +3,7 @@
   
       var $anoField                  = getElementFor('ano');
       var $turmaField                = getElementFor('turma');
-      var $diaLetivoField = getElementFor('dia_letivo');
+      var $diaLetivoField            = getElementFor('dia_letivo');
   
       var $componenteCurricularTitleField =  $diaLetivoField[0].parentElement.parentElement.parentElement.children[0].children[0];
   
