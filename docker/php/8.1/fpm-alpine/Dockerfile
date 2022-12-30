@@ -2,6 +2,7 @@ FROM php:8.1-fpm-alpine
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
+ENV COMPOSER_VERSION=2.5.1
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_PROCESS_TIMEOUT 900
 ENV COMPOSER_DISABLE_XDEBUG_WARN=1
@@ -51,5 +52,4 @@ RUN apk del .phpize_deps
 
 RUN ln -s /var/www/ieducar/artisan /usr/local/bin/artisan
 
-ENV COMPOSER_VERSION=2.5.1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version="$COMPOSER_VERSION"
