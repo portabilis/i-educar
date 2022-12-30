@@ -1,5 +1,7 @@
 <?php
 use App\Models\Frequencia;
+use App\Models\ComponenteCurricularTurma;
+use App\Models\ComponenteCurricularAno;
 use App\Models\SerieTurma;
 use App\Models\Serie;
 use App\Models\Turma;
@@ -62,13 +64,36 @@ class DiaLetivoController extends ApiCoreController
                 ];
 
             }else{
-                $options[
-                    '__' . 1
-                ] = [
-                    'value' => mb_strtoupper(" ", 'UTF-8'),
-                    'checked' => "checked",
-                    'group' => ''
-                ];
+
+                    $carga_horaria = 0;
+                    $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->get(); 
+                    $total_aulas = '';
+                    foreach($frequencias as $aulas){
+                        $total_aulas .= $aulas->ordens_aulas.",";
+                        
+                    }
+                    $str_arr = preg_split ("/\,/", $total_aulas);
+                    $total = count($str_arr);
+        
+                    // foreach ($componentesCurriculares as $componenteCurricular) {
+                    $carga_horaria = 0;
+                    $componentes = ComponenteCurricularAno::where('componente_curricular_id', $ComponenteId)->get(); 
+                    foreach($componentes as $componente){
+                        $carga_horaria = $componente->carga_horaria;
+                        $carga_horaria = round($carga_horaria, 3);
+                    } 
+                    $aula_restante = $carga_horaria-$total;
+                    if($carga_horaria ==0){
+                        $aula_restante = " - ";
+                    }
+                
+                        $options[
+                            '__' . 1
+                        ] = [
+                            'value' => mb_strtoupper("ch : ".$carga_horaria." | aulas realizadas: ".$total." | aulas a realizar: ".$aula_restante, 'UTF-8'),
+                            'checked' => "checked",
+                            'group' => ''
+                        ];
 
             }
 
