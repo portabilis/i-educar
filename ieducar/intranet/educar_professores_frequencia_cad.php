@@ -414,7 +414,7 @@ return new class extends clsCadastro {
            // Componente Curricular.
 
           
-           $this->inputsHelper()->dynamic('frequenciaComponente', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
+           $this->inputsHelper()->dynamic('frequenciaComponente', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
           
       
           

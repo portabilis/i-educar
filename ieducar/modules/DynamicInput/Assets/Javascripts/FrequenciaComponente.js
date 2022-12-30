@@ -66,6 +66,7 @@
   
       // bind onchange event
       $turmaField.change(updateComponentesCurriculares);
+     
   
       
     }); // ready
