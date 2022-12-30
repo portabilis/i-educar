@@ -45,7 +45,7 @@ class FrequenciaComponenteController extends ApiCoreController
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("Total : ".$carga_horaria." | aulas realizadas: ".$total." | aulas a realizar: ".$aula_restante, 'UTF-8'),
+                    'value' => mb_strtoupper("ch : ".$carga_horaria." | aulas realizadas: ".$total." | aulas a realizar: ".$aula_restante, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];

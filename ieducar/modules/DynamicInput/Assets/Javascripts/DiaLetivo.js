@@ -19,7 +19,7 @@
       }
   
       function getResultado(xml) {
-        $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Dias Letivos:' : 'Dias Letivos:';
+        $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'INFORMACÕES:' : 'INFORMACÕES:';
       }
   
       var xml = new ajax(getResultado);
