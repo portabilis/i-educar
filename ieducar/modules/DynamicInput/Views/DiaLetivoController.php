@@ -21,7 +21,7 @@ class DiaLetivoController extends ApiCoreController
            
            
            
-
+        
             $total_dias_letivos_realizados = 0;
             $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->get(); 
             $total_aulas = '';
@@ -31,7 +31,7 @@ class DiaLetivoController extends ApiCoreController
             }
 
            
-           
+            $serie_id = 0;
             $serie_turma = SerieTurma::where('cod_turma', $turmaId)->get(); 
             foreach($serie_turma as $serie){
 
@@ -40,7 +40,6 @@ class DiaLetivoController extends ApiCoreController
                 
             }
             $etapa_curso_serie = 0;
-            $serie_id = 0;
             $total_dias_letivos_turma = 0;
             $dias_series = Serie::where('cod_serie', $serie_id)->get(); 
             foreach($dias_series as $dia){
