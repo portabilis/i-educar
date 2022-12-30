@@ -20,10 +20,9 @@ class FrequenciaComponenteController extends ApiCoreController
            if(empty($ComponenteId)){
             echo "
             <script>
-          
-                $('#tr_ref_cod_frequencia_componente').hide();
-                $('#tr_ref_cod_dia_letivo').show();
-        
+
+            document.getElementById('tr_ref_cod_frequencia_componente').style.display = 'none';
+            document.getElementById('tr_ref_cod_dia_letivo').style.display = 'block';
 
             </script>";
            }else{
@@ -31,9 +30,8 @@ class FrequenciaComponenteController extends ApiCoreController
             echo "
             <script>
         
-              
-                    $('#tr_ref_cod_frequencia_componente').show();
-                    $('#tr_ref_cod_dia_letivo').hide();
+           document.getElementById('tr_ref_cod_frequencia_componente').style.display = 'block';
+            document.getElementById('tr_ref_cod_dia_letivo').style.display = 'none';
 
             </script>";
 
