@@ -33,6 +33,7 @@ class LegacyCourseFactory extends Factory
             'carga_horaria' => 800,
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
             'hora_falta' => 0.75,
+            'ativo' => 1,
         ];
     }
 

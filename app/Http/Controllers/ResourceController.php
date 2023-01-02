@@ -151,14 +151,17 @@ abstract class ResourceController extends Controller
     {
         $this->can('view');
 
-        if ($class && is_int($model)) {
+        if ($model instanceof Model) {
+            $id = $model->id;
+            $query = $model->newQuery();
+        } else {
+            $id = $model;
             $query = (new $class())->newQuery();
-
-            $this->columns($request, $query);
-            $this->include($request, $query);
-
-            $model = $query->find($model);
         }
+
+        $this->columns($request, $query);
+        $this->include($request, $query);
+        $model = $query->findOrFail($id);
 
         return $this->newResource($model);
     }

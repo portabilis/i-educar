@@ -77,7 +77,6 @@ class LegacySchoolClass extends Model
         'ref_usuario_cad',
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
-        'ref_cod_infra_predio_comodo',
         'nm_turma',
         'sgl_turma',
         'max_aluno',
@@ -247,7 +246,7 @@ class LegacySchoolClass extends Model
      */
     public function grades(): BelongsToMany
     {
-        return $this->belongsToMany(LegacyGrade::class, 'turma_serie', 'turma_id', 'serie_id');
+        return $this->belongsToMany(LegacyGrade::class, 'pmieducar.turma_serie', 'turma_id', 'serie_id');
     }
 
     /**

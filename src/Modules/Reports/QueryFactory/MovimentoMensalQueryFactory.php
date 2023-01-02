@@ -52,8 +52,8 @@ class MovimentoMensalQueryFactory extends QueryFactory
             sum(case when feminino and matricula_ativa and entrada_reclassificado and entrou_durante then 1 else 0 end) as mat_reclassificadose_f,
             sum(case when masculino and matricula_ativa and entrou_durante and sequencial > 1 and mesma_turma = false then 1 else 0 end) as mat_trocae_m,
             sum(case when feminino and matricula_ativa and entrou_durante and sequencial > 1 and mesma_turma = false then 1 else 0 end) as mat_trocae_f,
-            sum(case when masculino and matricula_ativa and enturmacao_inativa and saiu_durante and sequencial < maior_sequencial and mesma_turma = false then 1 else 0 end) as mat_trocas_m,
-            sum(case when feminino and matricula_ativa and enturmacao_inativa and saiu_durante and sequencial < maior_sequencial and mesma_turma = false then 1 else 0 end) as mat_trocas_f,
+            sum(case when masculino and matricula_ativa and enturmacao_remanejado and enturmacao_inativa and saiu_durante and sequencial < maior_sequencial and mesma_turma = false then 1 else 0 end) as mat_trocas_m,
+            sum(case when feminino and matricula_ativa and enturmacao_remanejado and enturmacao_inativa and saiu_durante and sequencial < maior_sequencial and mesma_turma = false then 1 else 0 end) as mat_trocas_f,
             sum(case when masculino and matricula_ativa and sem_dependencia and entrou_antes_fim and saiu_depois_fim then 1 else 0 end) as mat_fim_m,
             sum(case when feminino and matricula_ativa and sem_dependencia and entrou_antes_fim and saiu_depois_fim then 1 else 0 end) as mat_fim_f,
             sum(case when matricula_ativa and sem_dependencia and entrou_antes_fim and saiu_depois_fim then 1 else 0 end) as mat_fim
@@ -76,6 +76,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                 ie.enrollment_active = false as enturmacao_inativa,
                 ie.enrollment_transferred as enturmacao_transferida,
                 ie.enrollment_abandoned as enturmacao_abandono,
+                ie.enrollment_relocated as enturmacao_remanejado,
                 ie.dependence = false as sem_dependencia,
                 ie.start_date < date(:data_inicial) as entrou_antes_inicio,
                 ie.start_date <= date(:data_final) as entrou_antes_fim,
