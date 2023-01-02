@@ -34,14 +34,14 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->ano = $ano_atual = date('Y');
+        $this->ano = $ano_atual = date(format: 'Y');
 
         $lim = 5;
-        for ($a = date('Y') ; $a < $ano_atual + $lim ; $a++) {
+        for ($a = date(format: 'Y') ; $a < $ano_atual + $lim ; $a++) {
             $anos["{$a}"] = "{$a}";
         }
 
-        $this->campoLista('ano', 'Ano', $anos, $this->ano, '', false);
+        $this->campoLista(nome: 'ano', campo: 'Ano', valor: $anos, default: $this->ano);
 
         $get_escola = true;
         $get_curso = true;
@@ -64,7 +64,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-rquadro-professores.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-rquadro-professores.js');
     }
 
     public function Formular()

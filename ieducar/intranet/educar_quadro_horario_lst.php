@@ -30,7 +30,7 @@ return new class {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->nivel_acesso($this->pessoa_logada) > 7) {
+        if ($obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada) > 7) {
             return $retorno . '
         <table width="100%" height="40%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">
           <tbody>
@@ -43,8 +43,8 @@ return new class {
         </table>';
         }
 
-        app(Breadcrumb::class)->current('Quadros de horários', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
+        app(abstract: Breadcrumb::class)->current(currentPage: 'Quadros de horários', pages: [
+        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
     ]);
 
         $retorno .= '
@@ -68,14 +68,14 @@ return new class {
             }
         }
 
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if (!$this->ref_cod_escola) {
-            $this->ref_cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
+            $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
         }
 
-        if (!is_numeric($this->ref_cod_instituicao)) {
-            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        if (!is_numeric(value: $this->ref_cod_instituicao)) {
+            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         }
 
         // Componente curricular
@@ -91,22 +91,17 @@ return new class {
         include 'educar_quadro_horarios_pesquisas.php';
 
         if ($this->busca == 'S') {
-            if (is_numeric($this->ref_cod_turma)) {
-                $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
+            if (is_numeric(value: $this->ref_cod_turma)) {
+                $obj_turma = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
                 $det_turma = $obj_turma->detalhe();
 
                 $obj_quadro = new clsPmieducarQuadroHorario(
-                    null,
-                    null,
-                    null,
-                    $this->ref_cod_turma,
-                    null,
-                    null,
-                    1
+                    ref_cod_turma: $this->ref_cod_turma,
+                    ativo: 1
                 );
                 $det_quadro = $obj_quadro->detalhe();
 
-                if (is_array($det_quadro)) {
+                if (is_array(value: $det_quadro)) {
                     $quadro_horario = "<table class='calendar' cellspacing='0' cellpadding='0' border='0'>
                             <tr>
                               <td class='cal_esq_qh' width='40px'><i class='fa fa-calendar' aria-hidden='true'></i></td>
@@ -130,22 +125,22 @@ return new class {
                     for ($c = 1; $c <= 7; $c++) {
                         $obj_horarios = new clsPmieducarQuadroHorarioHorarios();
                         $resultado    = $obj_horarios->retornaHorario(
-                            $this->ref_cod_instituicao,
-                            $this->ref_cod_escola,
-                            $this->ref_cod_serie,
-                            $this->ref_cod_turma,
-                            $c
+                            int_ref_cod_instituicao_servidor: $this->ref_cod_instituicao,
+                            int_ref_ref_cod_escola: $this->ref_cod_escola,
+                            int_ref_ref_cod_serie: $this->ref_cod_serie,
+                            int_ref_ref_cod_turma: $this->ref_cod_turma,
+                            int_dia_semana: $c
                         );
 
                         $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro['cod_quadro_horario']}, {$c}, {$this->ano} )'>";
                         $componente = new  stdClass();
-                        if (is_array($resultado)) {
-                            $resultado = $this->organizarHorariosIguais($resultado);
+                        if (is_array(value: $resultado)) {
+                            $resultado = $this->organizarHorariosIguais(valores: $resultado);
                             foreach ($resultado as $registro) {
                                 if ($registro['ref_cod_disciplina'] == 0) {
                                     $componente->abreviatura = 'EDUCAÇÃO INFANTIL';
                                 } else {
-                                    $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
+                                    $componente = $componenteMapper->find(pkey: $registro['ref_cod_disciplina']);
                                 }
 
                                 // Servidor
@@ -154,63 +149,35 @@ return new class {
                                 $det_servidor = null;
                                 if ($registro['ref_servidor_substituto']) {
                                     $servidor = $obj_servidor->lista(
-                                        $registro['ref_servidor_substituto'],
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        NULL,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        true
+                                        int_cod_servidor: $registro['ref_servidor_substituto'],
+                                        boo_professor: null,
+                                        bool_ordena_por_nome: true
                                     );
 
-                                    if (is_array($servidor)) {
-                                        $det_servidor = array_shift($servidor);
+                                    if (is_array(value: $servidor)) {
+                                        $det_servidor = array_shift(array: $servidor);
                                     }
                                 } else {
                                     $servidor = $obj_servidor->lista(
-                                        $registro['ref_servidor'],
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        true
+                                        int_cod_servidor: $registro['ref_servidor'],
+                                        boo_professor: null,
+                                        bool_ordena_por_nome: true
                                     );
-                                    if (is_array($servidor)) {
-                                        $det_servidor = array_shift($servidor);
+                                    if (is_array(value: $servidor)) {
+                                        $det_servidor = array_shift(array: $servidor);
                                     }
                                 }
 
-                                if (is_array($det_servidor)) {
-                                    $nomes = explode(' ', $det_servidor['nome']);
-                                    $det_servidor['nome'] = array_shift($nomes);
+                                if (is_array(value: $det_servidor)) {
+                                    $nomes = explode(separator: ' ', string: $det_servidor['nome']);
+                                    $det_servidor['nome'] = array_shift(array: $nomes);
                                 }
 
                                 //$texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>". substr($registro['hora_inicial'], 0, 5) . ' - ' . substr($registro['hora_final'], 0, 5) . " <br> {$componente->abreviatura} <br> {$det_servidor["nome"]}</div>";
                                 $detalhes = sprintf(
                                     '%s - %s<br />%s<br />%s',
-                                    substr($registro['hora_inicial'], 0, 5),
-                                    substr($registro['hora_final'], 0, 5),
+                                    substr(string: $registro['hora_inicial'], offset: 0, length: 5),
+                                    substr(string: $registro['hora_final'], offset: 0, length: 5),
                                     $componente->abreviatura,
                                     $det_servidor['nome']
                                 );
@@ -238,14 +205,14 @@ return new class {
             }
         }
 
-        if ($obj_permissoes->permissao_cadastra(641, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 641, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $retorno .= '<tr><td>&nbsp;</td></tr><tr>
             <td align="center" colspan="2">';
 
             if (!$det_quadro) {
                 $retorno .= "<input type=\"button\" value=\"Novo Quadro de Horários\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}'\" class=\"botaolistagem btn-green\"/>";
             } else {
-                if ($obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 641, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $retorno .= "<input type=\"button\" value=\"Excluir Quadro de Horários\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&ref_cod_quadro_horario={$det_quadro['cod_quadro_horario']}'\" class=\"botaolistagem\"/>";
                 }
             }
@@ -260,7 +227,7 @@ return new class {
     public function organizarHorariosIguais($valores)
     {
         $x = 1;
-        $quantidadeElementos = count($valores);
+        $quantidadeElementos = count(value: $valores);
         while ($x < $quantidadeElementos) {
             $mesmoHorario = (($valores[0]['hora_inicial'] == $valores[$x]['hora_inicial']) &&
                          ($valores[0]['hora_final'] == $valores[$x]['hora_final']));
@@ -277,7 +244,7 @@ return new class {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-quadro-horario-lst.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-quadro-horario-lst.js');
     }
 
     public function Formular()

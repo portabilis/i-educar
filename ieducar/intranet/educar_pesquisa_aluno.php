@@ -46,7 +46,7 @@ return new class extends clsListagem {
             $this->ref_cod_escola = $_POST['ref_cod_escola'];
         }
 
-        $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+        $this->campoOculto(nome: 'ref_cod_escola', valor: $this->ref_cod_escola);
 
         $this->titulo = 'Aluno - Listagem';
 
@@ -54,8 +54,8 @@ return new class extends clsListagem {
             'Aluno'
         ]);
 
-        $this->campoNumero('cod_aluno', 'Código Aluno', $this->cod_aluno, 8, 20, false);
-        $this->campoTexto('nm_aluno', 'Nome Aluno', $this->nm_aluno, 30, 255, false);
+        $this->campoNumero(nome: 'cod_aluno', campo: 'Código Aluno', valor: $this->cod_aluno, tamanhovisivel: 8, tamanhomaximo: 20);
+        $this->campoTexto(nome: 'nm_aluno', campo: 'Nome Aluno', valor: $this->nm_aluno, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
@@ -63,35 +63,20 @@ return new class extends clsListagem {
 
         $obj_aluno = new clsPmieducarAluno();
         $obj_aluno->setOrderby('nome_aluno ASC');
-        $obj_aluno->setLimite($this->limite, $this->offset);
+        $obj_aluno->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_aluno->lista(
-            $this->cod_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->nm_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_escola
+            int_cod_aluno: $this->cod_aluno,
+            int_ativo: 1,
+            str_nome_aluno: $this->nm_aluno,
+            int_ref_cod_escola: $this->ref_cod_escola
         );
 
         $total = $obj_aluno->_total;
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $registro['nome_aluno'] = str_replace('\'', '', $registro['nome_aluno']);
+                $registro['nome_aluno'] = str_replace(search: '\'', replace: '', subject: $registro['nome_aluno']);
                 $script = " onclick=\"addVal1('ref_cod_aluno','{$registro['cod_aluno']}'); addVal1('nm_aluno','{$registro['nome_aluno']}'); addVal1('nm_aluno_','{$registro['nome_aluno']}');fecha();\"";
 
                 $display = $registro['nome_aluno'];
@@ -105,7 +90,7 @@ return new class extends clsListagem {
                 ]);
             }
         }
-        $this->addPaginador2('educar_pesquisa_aluno.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_pesquisa_aluno.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $this->largura = '100%';
     }
 
