@@ -1,16 +1,16 @@
 <?php
 
-header('Content-type: text/xml charset=utf-8');
+header(header: 'Content-type: text/xml charset=utf-8');
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
-if (is_numeric($_GET['ins'])) {
+if (is_numeric(value: $_GET['ins'])) {
     $db = new clsBanco();
 
     // USUARIO ESCOLA
     $db->Consulta(
-        "
+        consulta: "
     SELECT
         u.cod_usuario
         , p.nome
@@ -35,7 +35,7 @@ if (is_numeric($_GET['ins'])) {
 
     // USUARIO BIBLIOTECA
     $db->Consulta(
-        "
+        consulta: "
     SELECT
         u.cod_usuario
         , p.nome
@@ -57,12 +57,12 @@ if (is_numeric($_GET['ins'])) {
         list($cod, $nome) = $db->Tupla();
         echo "  <usuario cod_usuario=\"{$cod}\">{$nome}</usuario>\n";
     }
-} elseif (is_numeric($_GET['esc'])) {
+} elseif (is_numeric(value: $_GET['esc'])) {
     $db = new clsBanco();
 
     // USUARIO ESCOLA
     $db->Consulta(
-        "
+        consulta: "
     SELECT
         u.cod_usuario
         , p.nome
@@ -89,7 +89,7 @@ if (is_numeric($_GET['ins'])) {
 
     // USUARIO BIBLIOTECA
     $db->Consulta(
-        "
+        consulta: "
     SELECT
         u.cod_usuario
         , p.nome

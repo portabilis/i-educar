@@ -13,7 +13,6 @@ return new class extends clsListagem {
     public $ref_usuario_cad;
     public $ref_ref_cod_serie;
     public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
     public $nm_turma;
     public $sgl_turma;
     public $max_aluno;
@@ -51,23 +50,24 @@ return new class extends clsListagem {
             'Situação'
         ];
 
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
         if ($this->ref_cod_escola) {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;
         }
 
         if (!isset($_GET['busca'])) {
-            $this->ano = date('Y');
+            $this->ano = date(format: 'Y');
         }
 
-        $this->inputsHelper()->dynamic('ano', ['ano' => $this->ano]);
+        $this->inputsHelper()->dynamic(helperNames: 'ano', inputOptions: ['ano' => $this->ano]);
         $obrigatorio = false;
         $get_escola = true;
         $get_curso = true;
         $get_serie = false;
         $get_escola_serie = true;
         $get_select_name_full = true;
+        $get_ano = $this->ano;
 
         include 'include/pmieducar/educar_campo_lista.php';
 
@@ -83,7 +83,7 @@ return new class extends clsListagem {
 
         // Editar
         if ($this->ref_cod_curso) {
-            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->get(['nm_serie','cod_serie']);
+            $series = LegacyGrade::where(column: 'ativo', operator: 1)->where(column: 'ref_cod_curso', operator: $this->ref_cod_curso)->orderBy('nm_serie')->get(columns: ['nm_serie','cod_serie']);
 
             foreach ($series as $serie) {
                 $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
@@ -91,24 +91,24 @@ return new class extends clsListagem {
         }
 
         $this->campoLista(
-            'ref_cod_serie',
-            'Série',
-            $opcoes_serie,
-            $this->ref_cod_serie,
+            nome: 'ref_cod_serie',
+            campo: 'Série',
+            valor: $opcoes_serie,
+            default: $this->ref_cod_serie,
             obrigatorio: false
         );
 
-        $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255);
-        $this->campoLista('visivel', 'Situação', ['' => 'Selecione', '1' => 'Ativo', '2' => 'Inativo'], $this->visivel, null, null, null, null, null, false);
-        $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
+        $this->campoTexto(nome: 'nm_turma', campo: 'Turma', valor: $this->nm_turma, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoLista(nome: 'visivel', campo: 'Situação', valor: ['' => 'Selecione', '1' => 'Ativo', '2' => 'Inativo'], default: $this->visivel, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
+        $this->inputsHelper()->turmaTurno(inputOptions: ['required' => false, 'label' => 'Turno']);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_turma = new clsPmieducarTurma();
-        $obj_turma->setOrderby('nm_turma ASC');
-        $obj_turma->setLimite($this->limite, $this->offset);
+        $obj_turma->setOrderby(strNomeCampo: 'nm_turma ASC');
+        $obj_turma->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         if ($this->visivel == 1) {
             $visivel = true;
@@ -118,12 +118,12 @@ return new class extends clsListagem {
             $visivel = null;
         }
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
             $obj_turma->codUsuario = $this->pessoa_logada;
         }
 
         $lista = LegacySchoolClass::query()
-            ->filter([
+            ->filter(data: [
                 'grade' => $this->ref_cod_serie,
                 'school' => $this->ref_cod_escola,
                 'school_user' => $obj_turma->codUsuario,
@@ -134,7 +134,7 @@ return new class extends clsListagem {
                 'visible' => $visivel,
                 'year_eq' => $this->ano
             ])
-            ->with([
+            ->with(relations: [
                 'school' => fn($q)=>$q->select('cod_escola','ref_idpes')->with('organization:idpes,fantasia'),
                 'course:cod_curso,nm_curso',
                 'grades'=> fn($q)=>$q->select('cod_serie','nm_serie','ref_cod_curso')->with('course:cod_curso,nm_curso')->orderBy('nm_serie'),
@@ -142,8 +142,8 @@ return new class extends clsListagem {
                 'period:id,nome'
             ])
             ->active()
-            ->orderBy('nm_turma')
-            ->paginate($this->limite, ['cod_turma', 'ano','nm_turma','ref_ref_cod_escola','turma_turno_id','ref_ref_cod_serie','ref_cod_curso','visivel','multiseriada'], 'pagina_' . $this->nome);
+            ->orderBy(column: 'nm_turma')
+            ->paginate(perPage: $this->limite, columns: ['cod_turma', 'ano','nm_turma','ref_ref_cod_escola','turma_turno_id','ref_ref_cod_serie','ref_cod_curso','visivel','multiseriada'], pageName: 'pagina_' . $this->nome);
 
         // monta a lista
         if ($lista->isNotEmpty()) {
@@ -182,26 +182,26 @@ return new class extends clsListagem {
                 } else {
                     $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">Inativo</a>";
                 }
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
 
-        $this->addPaginador2('educar_turma_lst.php', $lista->total(), $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_turma_lst.php', intTotalRegistros: $lista->total(), mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 586, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_turma_cad.php")';
             $this->nome_acao = 'Novo';
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de turmas', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Listagem de turmas', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function makeExtra()
     {
-        return file_get_contents(public_path('/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js'));
+        return file_get_contents(filename: public_path(path: '/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js'));
     }
 
     public function Formular()

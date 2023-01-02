@@ -9,6 +9,7 @@ use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
 use App\Models\Religion;
 use App\Models\TransportationProvider;
+use App\Models\UniformDistribution;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -41,7 +42,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        Session::forget(['reload_faixa_etaria', 'reload_reserva_vaga']);
+        Session::forget(keys: ['reload_faixa_etaria', 'reload_reserva_vaga']);
 
         // Verificação de permissão para cadastro.
         $this->obj_permissao = new clsPermissoes();
@@ -55,7 +56,7 @@ return new class extends clsDetalhe {
         if (empty($registro)) {
             throw new HttpResponseException(
                 response: new RedirectResponse(
-                    url: URL::to('intranet/educar_aluno_lst.php')
+                    url: URL::to(path: 'intranet/educar_aluno_lst.php')
                 )
             );
         }
@@ -733,15 +734,16 @@ return new class extends clsDetalhe {
             $this->addDetalhe(detalhe: ['Celular', $reg['responsavel_parentesco_celular']]);
         }
 
-        $objDistribuicaoUniforme = new clsPmieducarDistribuicaoUniforme(cod_distribuicao_uniforme: null, ref_cod_aluno: $this->cod_aluno, ano: date(format: 'Y'));
-        $reg = $objDistribuicaoUniforme->detalhePorAlunoAno();
+        $uniformDistribution = UniformDistribution::where('student_id', $this->cod_aluno)
+            ->where('year', now()->year)
+            ->first();
 
-        if ($reg) {
-            if (dbBool(val: $reg['kit_completo'])) {
+        if ($uniformDistribution) {
+            if ($uniformDistribution->complete_kit) {
                 $this->addDetalhe(detalhe: ['<span id=\'funiforme\'></span>Recebeu kit completo', 'Sim']);
                 $this->addDetalhe(detalhe: [
                     '<span id=\'ffuniforme\'></span>' . 'Data da distribuição',
-                    Portabilis_Date_Utils::pgSQLToBr(timestamp: $reg['data'])
+                    $uniformDistribution->distribution_date?->format('d/m/Y')
                 ]);
             } else {
                 $this->addDetalhe(detalhe: [
@@ -749,23 +751,25 @@ return new class extends clsDetalhe {
                     'Não'
                 ]);
                 $this->addDetalhe(detalhe: [
-                    'Data da distribuição',
-                    Portabilis_Date_Utils::pgSQLToBr(timestamp: $reg['data'])
+                    'Tipo',
+                    $uniformDistribution->type
                 ]);
                 $this->addDetalhe(detalhe: [
-                    'Quantidade de agasalhos (jaqueta e calça)',
-                    $reg['agasalho_qtd'] ?: '0'
+                    'Data da distribuição',
+                    $uniformDistribution->distribution_date?->format('d/m/Y')
                 ]);
-                $this->addDetalhe(detalhe: ['Quantidade de camisetas (manga curta)', $reg['camiseta_curta_qtd'] ?: '0']);
-                $this->addDetalhe(detalhe: ['Quantidade de camisetas (manga longa)', $reg['camiseta_longa_qtd'] ?: '0']);
-                $this->addDetalhe(detalhe: ['Quantidade de camisetas infantis (sem manga)', $reg['camiseta_infantil_qtd'] ?: '0']);
-                $this->addDetalhe(detalhe: ['Quantidade de calça jeans', $reg['calca_jeans_qtd'] ?: '0']);
-                $this->addDetalhe(detalhe: ['Quantidade de meias', $reg['meias_qtd'] ?: '0']);
-                $this->addDetalhe(detalhe: ['Bermudas tectels (masculino)', $reg['bermudas_tectels_qtd'] ?: '0']);
-                $this->addDetalhe(detalhe: ['Bermudas coton (feminino)', $reg['bermudas_coton_qtd'] ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de agasalhos (jaqueta)', $uniformDistribution->coat_jacket_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de agasalhos (calça)', $uniformDistribution->coat_pants_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de camisetas (manga curta)', $uniformDistribution->shirt_short_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de camisetas (manga longa)', $uniformDistribution->shirt_long_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de camisetas infantis (sem manga)', $uniformDistribution->kids_shirt_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de calça jeans', $uniformDistribution->pants_jeans_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de meias', $uniformDistribution->socks_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Bermudas tectels (masculino)', $uniformDistribution->shorts_tactel_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Bermudas coton (feminino)', $uniformDistribution->shorts_coton_qty ?: '0']);
                 $this->addDetalhe(detalhe: [
                     '<span id=\'ffuniforme\'></span>' . 'Quantidade de tênis',
-                    $reg['tenis_qtd'] ?: '0'
+                    $uniformDistribution->sneakers_qty ?: '0'
                 ]);
             }
         }
