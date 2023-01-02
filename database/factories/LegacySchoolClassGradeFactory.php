@@ -25,8 +25,8 @@ class LegacySchoolClassGradeFactory extends Factory
 
         return [
             'escola_id' => fn () => $schoolGrade->school_id,
-            'serie_id'  => fn () => $schoolGrade->grade_id,
-            'turma_id'  => fn () => LegacySchoolClassFactory::new()->create(),
+            'serie_id' => fn () => $schoolGrade->grade_id,
+            'turma_id' => fn () => LegacySchoolClassFactory::new()->create(),
             'boletim_id' => $this->faker->randomDigitNotZero(),
             'boletim_diferenciado_id' => $this->faker->randomDigitNotZero(),
         ];

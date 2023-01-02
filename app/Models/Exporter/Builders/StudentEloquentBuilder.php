@@ -211,4 +211,21 @@ class StudentEloquentBuilder extends Builder
 
         return $this;
     }
+
+    public function uniform_distributions($columns)
+    {
+        if (in_array('complete_kit', $columns)) {
+            unset($columns[array_search('complete_kit', $columns)]);
+
+            $this->addSelect(\DB::raw('CASE WHEN uniform_distributions.complete_kit THEN \'SIM\' ELSE \'NÃO\' END AS "Kit Completo"'));
+        }
+
+        $this->addSelect(
+            $this->joinColumns('uniform_distributions', $columns)
+        );
+
+        return $this->leftJoin('uniform_distributions', function (JoinClause $join) {
+            $join->on('exporter_student_grouped_registration.id', '=', 'uniform_distributions.student_id');
+        });
+    }
 }
