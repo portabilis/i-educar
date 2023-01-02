@@ -22,9 +22,9 @@ class LegacySchoolCourseFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
-            'ref_cod_curso' => LegacyCourseFactory::new()->create(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
+            'ref_cod_curso' => fn () => LegacyCourseFactory::new()->create(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
             'data_cadastro' => now(),
             'ativo' => 1,
             'autorizacao' => $this->faker->sentence,
