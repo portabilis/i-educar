@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyRegistration;
 use App\Process;
 
 return new class extends clsCadastro {
@@ -87,8 +89,22 @@ return new class extends clsCadastro {
         $cursos = [];
 
         $escolaAluno = $this->ref_ref_cod_escola;
+        $registration = LegacyRegistration::query()->find($this->cod_matricula);
 
-        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->whereSchool($escolaAluno)->orderBy('nm_curso')->get(['cod_curso','nm_curso','descricao']);
+        $lst_escola_curso = LegacyCourse::query()
+            ->active()
+            ->whereSchool(
+                school: $escolaAluno,
+                year:$registration->ano
+            )
+            ->orderBy('nm_curso')
+            ->get(
+                [
+                    'cod_curso',
+                    'nm_curso',
+                    'descricao'
+                ])
+        ;
 
         foreach ($lst_escola_curso as $escolaCurso) {
             $cursos[$escolaCurso->id] = $escolaCurso->name;
