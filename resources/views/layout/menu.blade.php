@@ -5,9 +5,9 @@
 <ul class="ieducar-sidebar-menu">
 @foreach($menu as $item)
     @if($item->hasLinkInSubmenu())
-    <li>
-        <a href="{{ $item->link }}"><i class="fa {{$item->icon}}"></i> <span>{{$item->title}}</span></a>
-    </li>
+        <li>
+            <a class="@if($root === $item->getKey()) {{ 'ieducar-sidebar-menu-active' }} @endif" href="{{ $item->link }}"> <i class="fa {{$item->icon}}"></i> <span>{{$item->title}}</span></a>
+        </li>
     @endif
 @endforeach
 </ul>
