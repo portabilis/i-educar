@@ -18,23 +18,23 @@ return new class extends clsDetalhe {
 
         $this->cod_modulo = $_GET['cod_modulo'];
 
-        $tmp_obj = new clsPmieducarModulo($this->cod_modulo);
+        $tmp_obj = new clsPmieducarModulo(cod_modulo: $this->cod_modulo);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
-            $this->simpleRedirect('educar_modulo_lst.php');
+            $this->simpleRedirect(url: 'educar_modulo_lst.php');
         }
 
-        $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+        $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
         $obj_instituicao_det = $obj_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Instituição',
                         "{$registro['ref_cod_instituicao']}"
                     ]
@@ -43,28 +43,28 @@ return new class extends clsDetalhe {
         }
         if ($registro['nm_tipo']) {
             $this->addDetalhe(
-                ['Etapa',
+                detalhe: ['Etapa',
                     "{$registro['nm_tipo']}"
                 ]
             );
         }
         if ($registro['descricao']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Descrição',
                     "{$registro['descricao']}"
                 ]
             );
         }
         $this->addDetalhe(
-            [
+            detalhe: [
                 'Número de etapas',
                 "{$registro['num_etapas']}"
             ]
         );
         if ($registro['num_meses']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Número de meses',
                     "{$registro['num_meses']}"
                 ]
@@ -72,13 +72,13 @@ return new class extends clsDetalhe {
         }
         if ($registro['num_semanas']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Número de semanas',
                     "{$registro['num_semanas']}"
                 ]
             );
         }
-        if ($obj_permissao->permissao_cadastra(584, $this->pessoa_logada, 3)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_modulo_cad.php';
             $this->url_editar = "educar_modulo_cad.php?cod_modulo={$registro['cod_modulo']}";
         }
@@ -86,8 +86,8 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_modulo_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da etapa', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Detalhe da etapa', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 

@@ -13,12 +13,12 @@ return new class extends clsDetalhe {
 
         $db = new clsBanco();
 
-        $db->Consulta("SELECT nm_vinculo, abreviatura FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = '$cod_func'");
+        $db->Consulta(consulta: "SELECT nm_vinculo, abreviatura FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = '$cod_func'");
 
         if ($db->ProximoRegistro()) {
             list($nm_vinculo, $abreviatura) = $db->Tupla();
-            $this->addDetalhe(['Nome', $nm_vinculo]);
-            $this->addDetalhe(['Abreviatura', $abreviatura]);
+            $this->addDetalhe(detalhe: ['Nome', $nm_vinculo]);
+            $this->addDetalhe(detalhe: ['Abreviatura', $abreviatura]);
         }
 
         $this->url_novo = 'funcionario_vinculo_cad.php';
@@ -26,7 +26,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'funcionario_vinculo_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do vínculo');
+        $this->breadcrumb(currentPage: 'Detalhe do vínculo');
     }
 
     public function Formular()
