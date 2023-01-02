@@ -41,6 +41,7 @@
   {
     setAttributes(campoSerie,'Carregando série');
     setAttributes(campoTurma,'Selecione uma Série antes');
+    getApiResource("/api/resource/course", getCurso,{school:campoEscola.value, year_eq:campoAno.value});
     getApiResource("/api/resource/grade",getSerie,{school:campoEscola.value,course:campoCurso.value});
   };
 
