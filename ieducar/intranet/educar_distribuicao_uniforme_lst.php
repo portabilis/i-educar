@@ -24,16 +24,16 @@ return new class extends clsListagem {
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
 
         if (!$this->ref_cod_aluno) {
-            $this->simpleRedirect('educar_aluno_lst.php');
+            $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 
-        $this->addCabecalhos([ 'Ano', 'Kit completo', 'Tipo', 'Data da Distribuição' ]);
+        $this->addCabecalhos(coluna: [ 'Ano', 'Kit completo', 'Tipo', 'Data da Distribuição' ]);
 
         $obj_permissao = new clsPermissoes();
-        $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
-        $student = LegacyStudent::find($this->ref_cod_aluno);
-        $nm_aluno = mb_strtoupper($student->name);
+        $student = LegacyStudent::find(id: $this->ref_cod_aluno);
+        $nm_aluno = mb_strtoupper(string: $student->name);
 
         if ($nm_aluno) {
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: "{$nm_aluno}");
@@ -43,11 +43,11 @@ return new class extends clsListagem {
 
         $query = UniformDistribution::orderBy('year', 'ASC');
 
-        if (request('ref_cod_aluno')) {
-            $query->where('student_id', request('ref_cod_aluno'));
+        if (request(key: 'ref_cod_aluno')) {
+            $query->where('student_id', request(key: 'ref_cod_aluno'));
         }
-        if (request('ano')) {
-            $query->where('year', request('ano'));
+        if (request(key: 'ano')) {
+            $query->where('year', request(key: 'ano'));
         }
 
         $result = $query->paginate(20, pageName: 'pagina_formulario');
@@ -56,7 +56,7 @@ return new class extends clsListagem {
         $total = $result->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $uniformDistribution) {
                 $complete_kit = $uniformDistribution->complete_kit ? 'SIM' : 'NÃO';
                 $lista_busca = [
@@ -66,22 +66,22 @@ return new class extends clsListagem {
                     "<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$uniformDistribution->student_id}&cod_distribuicao_uniforme={$uniformDistribution->id}\">{$uniformDistribution->distribution_date?->format('d/m/Y')}</a>"
                 ];
 
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
-        $this->addPaginador2('educar_distribuicao_uniforme_lst.php', $total, $_GET, $this->nome, 20);
+        $this->addPaginador2(strUrl: 'educar_distribuicao_uniforme_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: 20);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-            $this->acao = "go(\"educar_distribuicao_uniforme_cad.php?ref_cod_aluno=".request('ref_cod_aluno')."\")";
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
+            $this->acao = "go(\"educar_distribuicao_uniforme_cad.php?ref_cod_aluno=".request(key: 'ref_cod_aluno')."\")";
             $this->nome_acao = 'Novo';
         }
         $this->array_botao[] = 'Voltar';
-        $this->array_botao_url[] = "educar_aluno_det.php?cod_aluno=".request('ref_cod_aluno');
+        $this->array_botao_url[] = "educar_aluno_det.php?cod_aluno=".request(key: 'ref_cod_aluno');
 
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
-            url('intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
