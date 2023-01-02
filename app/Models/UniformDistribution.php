@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,8 +16,13 @@ class UniformDistribution extends Model
 
     protected $casts = [
         'complete_kit' => 'boolean',
-        'distribution_date' => 'date',
+        'distribution_date' => 'date:d/m/Y',
     ];
+
+    protected $dates = [
+        'distribution_date'
+    ];
+
     protected $fillable = [
         'student_id',
         'year',
@@ -55,5 +62,12 @@ class UniformDistribution extends Model
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'school_id');
+    }
+
+    protected function distributionDate(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => Carbon::createFromFormat('d/m/Y', $value),
+        );
     }
 }

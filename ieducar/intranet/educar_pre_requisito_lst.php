@@ -48,7 +48,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Nome',
             'Schema ',
             'Tabela',
@@ -58,52 +58,48 @@ return new class extends clsListagem {
         // Filtros de Foreign Keys
 
         // outros Filtros
-        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, false);
-        $this->campoTexto('schema_', 'Schema ', $this->schema_, 30, 255, false);
-        $this->campoTexto('tabela', 'Tabela', $this->tabela, 30, 255, false);
+        $this->campoTexto(nome: 'nome', campo: 'Nome', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'schema_', campo: 'Schema ', valor: $this->schema_, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'tabela', campo: 'Tabela', valor: $this->tabela, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_pre_requisito = new clsPmieducarPreRequisito();
-        $obj_pre_requisito->setOrderby('nome ASC');
-        $obj_pre_requisito->setLimite($this->limite, $this->offset);
+        $obj_pre_requisito->setOrderby(strNomeCampo: 'nome ASC');
+        $obj_pre_requisito->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_pre_requisito->lista(
-            $this->cod_pre_requisito,
-            null,
-            null,
-            $this->schema_,
-            $this->tabela,
-            $this->nome,
-            $this->sql,
-            null,
-            null,
-            1
+            int_cod_pre_requisito: $this->cod_pre_requisito,
+            str_schema_: $this->schema_,
+            str_tabela: $this->tabela,
+            str_nome: $this->nome,
+            str_sql: $this->sql,
+            date_data_exclusao_ini: 1
         );
 
         $total = $obj_pre_requisito->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 // muda os campos data
-                $registro['data_cadastro_time'] = strtotime(substr($registro['data_cadastro'], 0, 16));
-                $registro['data_cadastro_br'] = date('d/m/Y H:i', $registro['data_cadastro_time']);
+                $registro['data_cadastro_time'] = strtotime(datetime: substr(string: $registro['data_cadastro'], offset: 0, length: 16));
+                $registro['data_cadastro_br'] = date(format: 'd/m/Y H:i', timestamp: $registro['data_cadastro_time']);
 
-                $registro['data_exclusao_time'] = strtotime(substr($registro['data_exclusao'], 0, 16));
-                $registro['data_exclusao_br'] = date('d/m/Y H:i', $registro['data_exclusao_time']);
+                $registro['data_exclusao_time'] = strtotime(datetime: substr(string: $registro['data_exclusao'], offset: 0, length: 16));
+                $registro['data_exclusao_br'] = date(format: 'd/m/Y H:i', timestamp: $registro['data_exclusao_time']);
 
-                $obj_ref_usuario_exc = new clsPmieducarUsuario($registro['ref_usuario_exc']);
+                $obj_ref_usuario_exc = new clsPmieducarUsuario(cod_usuario: $registro['ref_usuario_exc']);
                 $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
                 $registro['ref_usuario_exc'] = $det_ref_usuario_exc['data_cadastro'];
 
-                $obj_ref_usuario_cad = new clsPmieducarUsuario($registro['ref_usuario_cad']);
+                $obj_ref_usuario_cad = new clsPmieducarUsuario(cod_usuario: $registro['ref_usuario_cad']);
                 $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
                 $registro['ref_usuario_cad'] = $det_ref_usuario_cad['data_cadastro'];
 
-                $this->addLinhas([
+                $this->addLinhas(linha: [
                     "<a href=\"educar_pre_requisito_det.php?cod_pre_requisito={$registro['cod_pre_requisito']}\">{$registro['nome']}</a>",
                     "<a href=\"educar_pre_requisito_det.php?cod_pre_requisito={$registro['cod_pre_requisito']}\">{$registro['schema_']}</a>",
                     "<a href=\"educar_pre_requisito_det.php?cod_pre_requisito={$registro['cod_pre_requisito']}\">{$registro['tabela']}</a>",
@@ -111,9 +107,9 @@ return new class extends clsListagem {
                 ]);
             }
         }
-        $this->addPaginador2('educar_pre_requisito_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_pre_requisito_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(601, $this->pessoa_logada, 3, null, true)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 601, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, super_usuario: true)) {
             $this->acao = 'go("educar_pre_requisito_cad.php")';
             $this->nome_acao = 'Novo';
         }

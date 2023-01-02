@@ -17,7 +17,7 @@ return new class extends clsCadastro {
         $this->titulo = 'i-Educar - Unificação de pessoas';
         $this->processoAp = '9998878';
 
-        $this->breadcrumb('Unificação de pessoas', [
+        $this->breadcrumb(currentPage: 'Unificação de pessoas', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
@@ -28,10 +28,10 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            9998878,
-            $this->pessoa_logada,
-            7,
-            'index.php'
+            int_processo_ap: 9998878,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'index.php'
         );
 
         return $retorno;
@@ -40,15 +40,15 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->acao_enviar = 'carregaDadosPessoas()';
-        $this->campoTabelaInicio('tabela_pessoas', '', ['Pessoa duplicada', 'Campo Pessoa duplicada'], $this->tabela_pessoas);
-            $this->campoRotulo('pessoa_label', '', 'Pessoa física a ser unificada <span class="campo_obrigatorio">*</span>');
-            $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoTabelaInicio(nome: 'tabela_pessoas', arr_campos: ['Pessoa duplicada', 'Campo Pessoa duplicada'], arr_valores: $this->tabela_pessoas);
+            $this->campoRotulo(nome: 'pessoa_label', campo: '', valor: 'Pessoa física a ser unificada <span class="campo_obrigatorio">*</span>');
+            $this->campoTexto(nome: 'pessoa_duplicada', campo: 'Pessoa duplicada', valor: $this->pessoa_duplicada, tamanhovisivel: 50, tamanhomaximo: 255, expressao: true, duplo: false);
         $this->campoTabelaFim();
 
         $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
         $scripts = ['/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js'];
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
     }
 
 
@@ -56,10 +56,10 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            9998878,
-            $this->pessoa_logada,
-            7,
-            'index.php'
+            int_processo_ap: 9998878,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'index.php'
         );
 
         if (empty($this->pessoas)) {
@@ -67,7 +67,7 @@ return new class extends clsCadastro {
         }
 
         try {
-            $pessoas = json_decode($this->pessoas, true, 512, JSON_THROW_ON_ERROR);
+            $pessoas = json_decode(json: $this->pessoas, associative: true, flags: JSON_THROW_ON_ERROR);
         } catch (TypeError $exception) {
             $this->mensagem = 'Informações inválidas para unificação';
             return false;
@@ -88,17 +88,17 @@ return new class extends clsCadastro {
 
         $validationData = new ValidationDataService();
 
-        if (! $validationData->verifyQuantityByKey($pessoas,'pessoa_principal', 0)) {
+        if (! $validationData->verifyQuantityByKey(data: $pessoas, key: 'pessoa_principal', quantity: 0)) {
             $this->mensagem = 'Pessoa principal não informada';
             return false;
         }
 
-        if ($validationData->verifyQuantityByKey($pessoas, 'pessoa_principal', 1)) {
+        if ($validationData->verifyQuantityByKey(data: $pessoas, key: 'pessoa_principal', quantity: 1)) {
             $this->mensagem = 'Não pode haver mais de uma pessoa principal';
             return false;
         }
 
-        if (! $validationData->verifyDataContainsDuplicatesByKey($pessoas, 'idpes')) {
+        if (! $validationData->verifyDataContainsDuplicatesByKey(data: $pessoas, key: 'idpes')) {
             $this->mensagem = 'Erro ao tentar unificar Pessoas, foi inserido cadastro duplicados';
             return false;
         }
@@ -108,8 +108,8 @@ return new class extends clsCadastro {
 
         DB::beginTransaction();
 
-        $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
-        $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), $unificationId);
+        $unificationId = $this->createLog(mainId: $codPessoaPrincipal, duplicatesId: $codPessoas, createdBy: $this->pessoa_logada);
+        $unificador = new App_Unificacao_Pessoa(codigoUnificador: $codPessoaPrincipal, codigosDuplicados: $codPessoas, codPessoaLogada: $this->pessoa_logada, db: new clsBanco(), unificationId: $unificationId);
 
         try {
             $unificador->unifica();
@@ -127,11 +127,11 @@ return new class extends clsCadastro {
     private function validaDadosDaUnificacao($pessoa)
     {
         foreach ($pessoa as $item) {
-            if (! array_key_exists('idpes',$item)) {
+            if (! array_key_exists(key: 'idpes', array: $item)) {
                 return false;
             }
 
-            if (! array_key_exists('pessoa_principal',$item)) {
+            if (! array_key_exists(key: 'pessoa_principal', array: $item)) {
                 return false;
             }
         }
@@ -141,15 +141,15 @@ return new class extends clsCadastro {
 
     private function buscaIdesDasPessoasParaUnificar($pessoas)
     {
-       return array_map(static fn ($item) => (int) $item['idpes'],
-            array_filter($pessoas, static fn ($pessoas) => $pessoas['pessoa_principal'] === false)
+       return array_map(callback: static fn ($item) => (int) $item['idpes'],
+           array: array_filter(array: $pessoas, callback: static fn ($pessoas) => $pessoas['pessoa_principal'] === false)
         );
     }
 
     private function buscaPessoaPrincipal($pessoas)
     {
-        $pessoas = array_values(array_filter($pessoas,
-                static fn ($pessoas) => $pessoas['pessoa_principal'] === true)
+        $pessoas = array_values(array_filter(array: $pessoas,
+                callback: static fn ($pessoas) => $pessoas['pessoa_principal'] === true)
         );
 
         return current($pessoas)['idpes'];

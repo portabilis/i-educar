@@ -20,7 +20,7 @@ class UniformDistributionFactory extends Factory
             'student_id' => LegacyStudentFactory::new()->create(),
             'school_id' => LegacySchoolFactory::new()->create(),
             'year' => now()->year,
-            'distribution_date' => now(),
+            'distribution_date' => now()->format('d/m/Y'),
             'complete_kit' => $this->faker->boolean,
             'coat_pants_qty' => $this->faker->randomDigitNotZero(),
             'coat_jacket_qty' => $this->faker->randomDigitNotZero(),
