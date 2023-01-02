@@ -47,7 +47,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Código Tipo Usuário',
             'Tipo Usuário',
             'Descrição',
@@ -62,9 +62,9 @@ return new class extends clsListagem {
         }
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, false);
-        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, false);
-        $this->campoLista('nivel', 'Nível', $array_nivel, $this->nivel, '', false, '', '', false, false);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Nome Tipo', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoLista(nome: 'nivel', campo: 'Nível', valor: $array_nivel, default: $this->nivel, obrigatorio: false);
 
         $this->nivel = $this->nivel == -1 ? '' : $this->nivel;
 
@@ -73,32 +73,27 @@ return new class extends clsListagem {
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_tipo_usuario = new clsPmieducarTipoUsuario();
-        $obj_tipo_usuario->setOrderby('nm_tipo ASC');
-        $obj_tipo_usuario->setLimite($this->limite, $this->offset);
+        $obj_tipo_usuario->setOrderby(strNomeCampo: 'nm_tipo ASC');
+        $obj_tipo_usuario->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_tipo_usuario->lista(
-            null,
-            null,
-            null,
-            $this->nm_tipo,
-            $this->descricao,
-            $this->nivel,
-            null,
-            null,
-            1,
-            $this->user()->type->level
+            str_nm_tipo: $this->nm_tipo,
+            str_descricao: $this->descricao,
+            int_nivel: $this->nivel,
+            int_ativo: 1,
+            int_nivel_menor: $this->user()->type->level
         );
 
         $total = $obj_tipo_usuario->_total;
 
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
 
                 // pega detalhes de foreign_keys
 
-                $url = route('usertype.show', ['userType' => $registro['cod_tipo_usuario']]);
+                $url = route(name: 'usertype.show', parameters: ['userType' => $registro['cod_tipo_usuario']]);
 
-                $this->addLinhas([
+                $this->addLinhas(linha: [
                     "<a href=\"{$url}\">{$registro['cod_tipo_usuario']}</a>",
                     "<a href=\"{$url}\">{$registro['nm_tipo']}</a>",
                     "<a href=\"{$url}\">{$registro['descricao']}</a>",
@@ -106,20 +101,20 @@ return new class extends clsListagem {
                 ]);
             }
         }
-        $this->addPaginador2('educar_tipo_usuario_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_tipo_usuario_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        if ($obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7, null, true)) {
-            $this->acao = 'go("' . route('usertype.new') . '")';
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 554, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true)) {
+            $this->acao = 'go("' . route(name: 'usertype.new') . '")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de tipo de usuário', [
-            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        $this->breadcrumb(currentPage: 'Listagem de tipo de usuário', breadcrumbs: [
+            url(path: 'intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
     }
 

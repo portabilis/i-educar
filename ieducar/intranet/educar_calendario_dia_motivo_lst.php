@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_calendario_dia_motivo;
     public $ref_cod_escola;
     public $ref_usuario_exc;
@@ -40,7 +16,6 @@ return new class extends clsListagem {
     public $data_exclusao;
     public $ativo;
     public $nm_motivo;
-
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -63,8 +38,8 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         // outros Filtros
-        $this->inputsHelper()->dynamic(['instituicao', 'escola'], ['required' => false]);
-        $this->campoTexto('nm_motivo', 'Motivo', $this->tipo, 30, 255);
+        $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola'], inputOptions: ['required' => false]);
+        $this->campoTexto(nome: 'nm_motivo', campo: 'Motivo', valor: $this->tipo, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
@@ -77,23 +52,13 @@ return new class extends clsListagem {
         }
 
         $obj_calendario_dia_motivo->setOrderby('nm_motivo ASC');
-        $obj_calendario_dia_motivo->setLimite($this->limite, $this->offset);
+        $obj_calendario_dia_motivo->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_calendario_dia_motivo->lista(
-            null,
-            $this->ref_cod_escola,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->nm_motivo,
-            $this->ref_cod_instituicao
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_ativo: 1,
+            str_nm_motivo: $this->nm_motivo,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         $total = $obj_calendario_dia_motivo->_total;
@@ -123,15 +88,15 @@ return new class extends clsListagem {
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2('educar_calendario_dia_motivo_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_calendario_dia_motivo_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        if ($obj_permissao->permissao_cadastra(576, $this->pessoa_logada, 7)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 576, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_calendario_dia_motivo_cad.php")';
             $this->nome_acao = 'Novo';
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Tipos de evento do calendário', [
+        $this->breadcrumb(currentPage: 'Tipos de evento do calendário', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
