@@ -1954,12 +1954,13 @@ class AlunoController extends ApiCoreController
     {
         $var1 = $this->getRequest()->id;
 
-        $sql = "SELECT relatorio.get_texto_sem_caracter_especial(bairro.nome) as nome
-                  FROM pmieducar.aluno
-            INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
-            INNER JOIN cadastro.endereco_pessoa ON (fisica.idpes = endereco_pessoa.idpes)
-            INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
-                 WHERE cod_aluno = $var1";
+        $sql = "
+            SELECT unaccent(upper(neighborhood)) AS nome
+            FROM addresses a
+            JOIN person_has_place php ON a.id = php.place_id
+            JOIN pmieducar.aluno al ON al.ref_idpes = php.person_id
+            WHERE al.cod_aluno = {$var1}
+        ";
 
         $bairro = $this->fetchPreparedQuery($sql);
 

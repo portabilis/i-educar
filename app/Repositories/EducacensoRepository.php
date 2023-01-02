@@ -88,35 +88,31 @@ class EducacensoRepository
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
             j.fantasia AS nome,
-            ep.cep AS cep,
-            municipio.cod_ibge AS "codigoIbgeMunicipio",
+            a.postal_code AS cep,
+            a.city_ibge_code AS "codigoIbgeMunicipio",
             districts.ibge_code AS "codigoIbgeDistrito",
-            l.nome AS logradouro,
-            ep.numero AS numero,
-            ep.complemento AS complemento,
-            bairro.nome AS bairro,
-            (SELECT COALESCE(
-              (SELECT min(fone_pessoa.ddd)
-                    FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes),
-              (SELECT min(ddd_telefone)
-                FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS ddd,
-            (SELECT COALESCE(
-              (SELECT min(fone_pessoa.fone)
-                    FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 1),
-              (SELECT min(telefone)
-                FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS telefone,
-            (SELECT COALESCE(
-              (SELECT min(fone_pessoa.fone)
-                    FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 2),
-              (SELECT min(fax)
-                FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS "telefoneOutro",
-            (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento WHERE ref_cod_escola = e.cod_escola))) AS email,
+            a.address AS logradouro,
+            a.number AS numero,
+            a.complement AS complemento,
+            a.neighborhood AS bairro,
+            (
+                SELECT min(fone_pessoa.ddd)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes
+            ) AS ddd,
+            (
+                SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes
+                AND fone_pessoa.tipo = 1
+            ) AS telefone,
+            (
+                SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes
+                AND fone_pessoa.tipo = 2
+            ) AS "telefoneOutro",
+            p.email AS email,
             i.orgao_regional AS "orgaoRegional",
             e.zona_localizacao AS "zonaLocalizacao",
             e.localizacao_diferenciada AS "localizacaoDiferenciada",
@@ -191,10 +187,10 @@ class EducacensoRepository
             e.orgao_vinculado_escola AS "orgaoVinculado",
             e.esfera_administrativa AS "esferaAdministrativa",
             e.cod_escola AS "idEscola",
-            municipio.idmun AS "idMunicipio",
+            a.city_id AS "idMunicipio",
             districts.id AS "idDistrito",
             i.cod_instituicao AS "idInstituicao",
-            uf.sigla_uf AS "siglaUf",
+            a.state_abbreviation AS "siglaUf",
             (SELECT EXTRACT(YEAR FROM min(ano_letivo_modulo.data_inicio))
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "anoInicioAnoLetivo",
@@ -207,13 +203,11 @@ class EducacensoRepository
             INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
             INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
             LEFT JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
-            LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-            LEFT JOIN public.bairro ON (bairro.idbai = ep.idbai)
-            LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
-            LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+            LEFT JOIN person_has_place php ON true
+                AND php.person_id = e.ref_idpes
+                AND php.type = 1
+            LEFT JOIN addresses a ON a.id = php.place_id
             LEFT JOIN public.districts ON (districts.id = e.iddis)
-            LEFT JOIN public.places places ON (places.id = ep.idbai AND places.id = ep.idlog AND places.postal_code = ep.cep)
-	        LEFT JOIN public.logradouro l ON (l.idlog = places.id)
             WHERE e.cod_escola = :school
 SQL;
 
@@ -437,8 +431,8 @@ SQL;
                 CASE WHEN fisica.sexo = 'M' THEN 1 ELSE 2 END AS "sexo",
                 raca.raca_educacenso AS "raca",
                 fisica.nacionalidade AS "nacionalidade",
-                CASE WHEN fisica.nacionalidade = 3 THEN pais.cod_ibge ELSE 76 END AS "paisNacionalidade",
-                municipio_nascimento.cod_ibge AS "municipioNascimento",
+                CASE WHEN fisica.nacionalidade = 3 THEN countries.ibge_code ELSE 76 END AS "paisNacionalidade",
+                municipio_nascimento.ibge_code AS "municipioNascimento",
                 CASE WHEN
                     true = (
                         SELECT true
@@ -461,8 +455,8 @@ SQL;
                 13 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
                 25 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
                 fisica.pais_residencia AS "paisResidencia",
-                endereco_pessoa.cep AS "cep",
-                municipio.cod_ibge AS "municipioResidencia",
+                addresses.postal_code AS "cep",
+                addresses.city_ibge_code AS "municipioResidencia",
                 fisica.zona_localizacao_censo AS "localizacaoResidencia",
                 fisica.localizacao_diferenciada AS "localizacaoDiferenciada",
                 dadosescola.nomeescola AS "nomeEscola",
@@ -478,11 +472,12 @@ SQL;
             ON fisica.idpes_mae = pessoa_mae.idpes
             LEFT JOIN cadastro.pessoa as pessoa_pai
             ON fisica.idpes_pai = pessoa_pai.idpes
-            LEFT JOIN public.municipio municipio_nascimento ON municipio_nascimento.idmun = fisica.idmun_nascimento
-            LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
-            LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
-            LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun
-            LEFT JOIN public.pais ON pais.idpais = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
+            LEFT JOIN public.cities municipio_nascimento ON municipio_nascimento.id = fisica.idmun_nascimento
+            LEFT JOIN person_has_place ON true
+                AND person_has_place.person_id = pessoa.idpes
+                AND person_has_place.type = 1
+            LEFT JOIN addresses ON addresses.id = person_has_place.place_id
+            LEFT JOIN public.countries ON countries.id = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
             LEFT JOIN LATERAL (
                  SELECT educacenso_cod_escola.cod_escola_inep,
                         educacenso_cod_escola.cod_escola,
