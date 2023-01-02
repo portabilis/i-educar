@@ -1,61 +1,50 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $ref_cod_instituicao;
     public $ref_cod_escola;
     public $ano;
     public $mes;
-
     public $nm_escola;
     public $nm_instituicao;
     public $ref_cod_curso;
     public $sequencial;
-
     public $pdf;
     public $pagina_atual = 1;
     public $total_paginas = 1;
-
     public $page_y = 125;
-
     public $cursos = [];
-
     public $array_disciplinas = [];
-
     public $get_link;
-
     public $ref_cod_modulo;
-
-    public $meses_do_ano = [
-                             '1' => 'JANEIRO'
-                            ,'2' => 'FEVEREIRO'
-                            ,'3' => 'MARÇO'
-                            ,'4' => 'ABRIL'
-                            ,'5' => 'MAIO'
-                            ,'6' => 'JUNHO'
-                            ,'7' => 'JULHO'
-                            ,'8' => 'AGOSTO'
-                            ,'9' => 'SETEMBRO'
-                            ,'10' => 'OUTUBRO'
-                            ,'11' => 'NOVEMBRO'
-                            ,'12' => 'DEZEMBRO'
-                        ];
-
+    /**
+     * @var string[]
+     */
     public $total_dias_uteis;
+    public $meses_do_ano = [
+        '1' => 'JANEIRO',
+        '2' => 'FEVEREIRO',
+        '3' => 'MARÇO',
+        '4' => 'ABRIL',
+        '5' => 'MAIO',
+        '6' => 'JUNHO',
+        '7' => 'JULHO',
+        '8' => 'AGOSTO',
+        '9' => 'SETEMBRO',
+        '10' => 'OUTUBRO',
+        '11' => 'NOVEMBRO',
+        '12' => 'DEZEMBRO'
+    ];
+
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->nivel_acesso($this->pessoa_logada) > 7) {
-            $this->simpleRedirect('index.php');
+        if ($obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada) > 7) {
+            $this->simpleRedirect(url: 'index.php');
         }
 
         return $retorno;
@@ -64,7 +53,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if ($_POST) {
             foreach ($_POST as $key => $value) {
@@ -72,21 +61,21 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->ano = $ano_atual = date('Y');
-        $this->mes = $mes_atual = date('n');
+        $this->ano = $ano_atual = date(format: 'Y');
+        $this->mes = $mes_atual = date(format: 'n');
 
-        $this->campoLista('mes', 'Mês', $this->meses_do_ano, $this->mes, '', false);
+        $this->campoLista(nome: 'mes', campo: 'Mês', valor: $this->meses_do_ano, default: $this->mes);
 
-        $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
+        $this->campoNumero(nome: 'ano', campo: 'Ano', valor: $this->ano, tamanhovisivel: 4, tamanhomaximo: 4, obrigatorio: true);
 
         $get_escola = true;
         $obrigatorio = true;
         $exibe_nm_escola = true;
 
-        $this->ref_cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
-        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
+        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         include('include/pmieducar/educar_campo_lista.php');
-        $this->campoRotulo('cursos_', 'Cursos', '<div id=\'cursos\'>Selecione uma escola</div>');
+        $this->campoRotulo(nome: 'cursos_', campo: 'Cursos', valor: '<div id=\'cursos\'>Selecione uma escola</div>');
 
         if ($nivel_usuario <=3) {
             echo '<script>
@@ -107,7 +96,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-alunos-defasados.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-alunos-defasados.js');
     }
 
     public function Formular()

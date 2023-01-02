@@ -66,18 +66,4 @@ class LegacyActiveLooking extends LegacyModel
     {
         return $this->data_fim ? $this->data_fim->format('Y-m-d') : null;
     }
-
-    public function toArray()
-    {
-        return [
-            'ref_cod_matricula' => $this->ref_cod_matricula,
-            'data_inicio' => $this->getStartDate(),
-            'data_fim' => $this->getEndDate(),
-            'observacoes' => $this->observacoes,
-            'resultado_busca_ativa' => $this->resultado_busca_ativa,
-            'updated_at' => $this->updated_at,
-            'created_at' => $this->created_at,
-            'deleted_at' => $this->deleted_at
-        ];
-    }
 }
