@@ -42,7 +42,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        Session::forget(['reload_faixa_etaria', 'reload_reserva_vaga']);
+        Session::forget(keys: ['reload_faixa_etaria', 'reload_reserva_vaga']);
 
         // Verificação de permissão para cadastro.
         $this->obj_permissao = new clsPermissoes();
@@ -56,7 +56,7 @@ return new class extends clsDetalhe {
         if (empty($registro)) {
             throw new HttpResponseException(
                 response: new RedirectResponse(
-                    url: URL::to('intranet/educar_aluno_lst.php')
+                    url: URL::to(path: 'intranet/educar_aluno_lst.php')
                 )
             );
         }
@@ -740,34 +740,34 @@ return new class extends clsDetalhe {
 
         if ($uniformDistribution) {
             if ($uniformDistribution->complete_kit) {
-                $this->addDetalhe(['<span id=\'funiforme\'></span>Recebeu kit completo', 'Sim']);
-                $this->addDetalhe([
+                $this->addDetalhe(detalhe: ['<span id=\'funiforme\'></span>Recebeu kit completo', 'Sim']);
+                $this->addDetalhe(detalhe: [
                     '<span id=\'ffuniforme\'></span>' . 'Data da distribuição',
                     $uniformDistribution->distribution_date?->format('d/m/Y')
                 ]);
             } else {
-                $this->addDetalhe([
+                $this->addDetalhe(detalhe: [
                     '<span id=\'funiforme\'></span>Recebeu kit completo',
                     'Não'
                 ]);
-                $this->addDetalhe([
+                $this->addDetalhe(detalhe: [
                     'Tipo',
                     $uniformDistribution->type
                 ]);
-                $this->addDetalhe([
+                $this->addDetalhe(detalhe: [
                     'Data da distribuição',
                     $uniformDistribution->distribution_date?->format('d/m/Y')
                 ]);
-                $this->addDetalhe(['Quantidade de agasalhos (jaqueta)', $uniformDistribution->coat_jacket_qty ?: '0']);
-                $this->addDetalhe(['Quantidade de agasalhos (calça)', $uniformDistribution->coat_pants_qty ?: '0']);
-                $this->addDetalhe(['Quantidade de camisetas (manga curta)', $uniformDistribution->shirt_short_qty ?: '0']);
-                $this->addDetalhe(['Quantidade de camisetas (manga longa)', $uniformDistribution->shirt_long_qty ?: '0']);
-                $this->addDetalhe(['Quantidade de camisetas infantis (sem manga)', $uniformDistribution->kids_shirt_qty ?: '0']);
-                $this->addDetalhe(['Quantidade de calça jeans', $uniformDistribution->pants_jeans_qty ?: '0']);
-                $this->addDetalhe(['Quantidade de meias', $uniformDistribution->socks_qty ?: '0']);
-                $this->addDetalhe(['Bermudas tectels (masculino)', $uniformDistribution->shorts_tactel_qty ?: '0']);
-                $this->addDetalhe(['Bermudas coton (feminino)', $uniformDistribution->shorts_coton_qty ?: '0']);
-                $this->addDetalhe([
+                $this->addDetalhe(detalhe: ['Quantidade de agasalhos (jaqueta)', $uniformDistribution->coat_jacket_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de agasalhos (calça)', $uniformDistribution->coat_pants_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de camisetas (manga curta)', $uniformDistribution->shirt_short_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de camisetas (manga longa)', $uniformDistribution->shirt_long_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de camisetas infantis (sem manga)', $uniformDistribution->kids_shirt_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de calça jeans', $uniformDistribution->pants_jeans_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Quantidade de meias', $uniformDistribution->socks_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Bermudas tectels (masculino)', $uniformDistribution->shorts_tactel_qty ?: '0']);
+                $this->addDetalhe(detalhe: ['Bermudas coton (feminino)', $uniformDistribution->shorts_coton_qty ?: '0']);
+                $this->addDetalhe(detalhe: [
                     '<span id=\'ffuniforme\'></span>' . 'Quantidade de tênis',
                     $uniformDistribution->sneakers_qty ?: '0'
                 ]);
