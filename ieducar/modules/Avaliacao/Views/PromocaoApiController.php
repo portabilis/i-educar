@@ -272,10 +272,9 @@ class PromocaoApiController extends ApiCoreController
                 }
 
                 foreach ($componentesCurriculares as $cc) {
-                    $nota = $this->getNota($etapa, $cc['id']);
                     $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
-                    if (!$hasNotaOrParecerInEtapa && (trim($nota) != '' || trim($parecer) != '')) {
+                    if (!$hasNotaOrParecerInEtapa && trim($parecer) != '') {
                         $hasNotaOrParecerInEtapa = true;
                         break;
                     }
