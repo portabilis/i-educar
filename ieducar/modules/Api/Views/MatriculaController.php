@@ -1018,7 +1018,19 @@ class MatriculaController extends ApiCoreController
             $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
         }
 
-        $buscaAtiva = $legacyActiveLooking->get()->toArray();
+        $buscaAtiva = $legacyActiveLooking->get()->map(function ($item) {
+            return [
+                'id' => $item->getKey(),
+                'ref_cod_matricula' => $item->ref_cod_matricula,
+                'data_inicio' => $item->getStartDate(),
+                'data_fim' => $item->getEndDate(),
+                'observacoes' => $item->observacoes,
+                'resultado_busca_ativa' => $item->resultado_busca_ativa,
+                'updated_at' => $item->updated_at,
+                'created_at' => $item->created_at,
+                'deleted_at' => $item->deleted_at
+            ];
+        });
 
         return ['busca_ativa' => $buscaAtiva];
     }
