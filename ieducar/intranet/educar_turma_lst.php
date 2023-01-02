@@ -13,7 +13,6 @@ return new class extends clsListagem {
     public $ref_usuario_cad;
     public $ref_ref_cod_serie;
     public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
     public $nm_turma;
     public $sgl_turma;
     public $max_aluno;
@@ -68,6 +67,7 @@ return new class extends clsListagem {
         $get_serie = false;
         $get_escola_serie = true;
         $get_select_name_full = true;
+        $get_ano = $this->ano;
 
         include 'include/pmieducar/educar_campo_lista.php';
 
