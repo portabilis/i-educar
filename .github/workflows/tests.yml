@@ -16,7 +16,7 @@ jobs:
 
     name: Unit, Integration and Pages
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       APP_URL: http://localhost:8000
