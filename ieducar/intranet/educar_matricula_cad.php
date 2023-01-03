@@ -362,10 +362,24 @@ return new class extends clsCadastro {
 
         if ($somente_do_bairro) {
             $db = new clsBanco();
-            $bairro_escola = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.escola where cod_escola = {$this->ref_cod_escola}))");
+            $bairro_escola = $db->CampoUnico("
+                SELECT neighborhood
+                FROM addresses a
+                JOIN person_has_place php ON true
+                    AND a.id = php.place_id
+                JOIN pmieducar.escola e ON e.ref_idpes = php.person_id
+                WHERE e.cod_escola = {$this->ref_cod_escola}
+            ");
 
             $db = new clsBanco();
-            $bairro_aluno = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.aluno where cod_aluno = {$this->ref_cod_aluno}))");
+            $bairro_aluno = $db->CampoUnico("
+                SELECT neighborhood
+                FROM addresses a
+                JOIN person_has_place php ON true
+                    AND a.id = php.place_id
+                JOIN pmieducar.aluno al ON al.ref_idpes = php.person_id
+                WHERE al.cod_aluno = {$this->ref_cod_aluno}
+            ");
 
             if (strcasecmp($bairro_aluno, $bairro_escola) != 0) {
                 $this->mensagem = 'O aluno deve morar no mesmo bairro da escola';
