@@ -24,10 +24,7 @@ class FrequenciaInformacoes extends Migration
             $table->integer('aulas_realizar')->nullable();
             $table->integer('tipo_turma')->nullable();
 
-            $table->foreign('ref_frequencia')
-                ->references('id')
-                ->on('modules.frequencia')
-                ->onDelete('cascade');
+       
 
            
         });   
