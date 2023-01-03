@@ -22,9 +22,9 @@ class LegacyEvaluationRuleGradeYearFactory extends Factory
     public function definition(): array
     {
         return [
-            'serie_id' => LegacyGradeFactory::new()->create(),
-            'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->create(),
-            'regra_avaliacao_diferenciada_id' => LegacyEvaluationRuleFactory::new()->create(),
+            'serie_id' => fn () => LegacyGradeFactory::new()->create(),
+            'regra_avaliacao_id' => fn () => LegacyEvaluationRuleFactory::new()->create(),
+            'regra_avaliacao_diferenciada_id' => fn () => LegacyEvaluationRuleFactory::new()->create(),
             'ano_letivo' => now()->format('Y'),
         ];
     }
