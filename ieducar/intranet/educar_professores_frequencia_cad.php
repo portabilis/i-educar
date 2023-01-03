@@ -685,8 +685,8 @@ return new class extends clsCadastro {
                                 'id' => $id_frequencia_informacao,
                                 'ref_frequencia' => $id_frequencia,
                                 'dias_letivos' => $total_dias_letivos_turma,
-                                'dias_realizados' => $total_dias_letivos_turma,
-                                'dias_realizar' => $total_dias_letivos_turma,
+                                'dias_realizados' => $total_dias_letivos_realizados,
+                                'dias_realizar' => $restante,
                                 'tipo_turma' => 1
                 
                             ] );
