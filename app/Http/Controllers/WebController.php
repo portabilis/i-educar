@@ -33,4 +33,13 @@ class WebController extends Controller
             'logo' => config('legacy.report.logo_file_name')
         ];
     }
+
+    public function fallback($uri)
+    {
+        if (str_starts_with($uri, 'web')) {
+            return redirect('intranet/educar_index.php');
+        }
+
+        return abort(404);
+    }
 }
