@@ -1,4 +1,5 @@
 <?php
+use App\Models\FrequenciaInformacoes;
 
 return new class extends clsDetalhe {
     public $titulo;
@@ -158,6 +159,13 @@ return new class extends clsDetalhe {
                 ]
             );
         }
+
+        $this->addDetalhe(
+            [
+                'Informações',
+                substr($aulas, 0, -2)
+            ]
+        );
 
         $this->montaListaFrequenciaAlunos(
             $registro['detalhes']['ref_cod_serie'],
