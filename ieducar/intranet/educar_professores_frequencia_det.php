@@ -160,12 +160,29 @@ return new class extends clsDetalhe {
             );
         }
 
-        $this->addDetalhe(
-            [
-                'Informações',
-                substr($aulas, 0, -2)
-            ]
-        );
+        $especificacao = EspecificacaoBncc::where('bncc_id', $bncc->id)->get();
+        foreach($especificacao as $list) {
+           if($list->tipo_turma==2){
+
+            $this->addDetalhe(
+                [
+                    'Informações',
+                    "CH: ".$list->ch."| AULAS REALIZADAS: ".$list->aulas_realizadas."| AULAS A REALIZAR: ".$list->aulas_realizar
+                ]
+            );
+
+           }else{
+
+            $this->addDetalhe(
+                [
+                    'Informações',
+                    "DIAS LETIVOS: ".$list->dias_letivos."| DIAS REALIZADOS: ".$list->dias_realizados."| DIAS A REALIZAR: ".$list->dias_realizar
+                ]
+            );
+
+           }
+        }
+       
 
         $this->montaListaFrequenciaAlunos(
             $registro['detalhes']['ref_cod_serie'],

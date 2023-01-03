@@ -996,7 +996,7 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
-            'required' => false,
+            'required' => true,
             'options' => [
                 'values' => $this->conteudos,
                 'all_values' => $todos_conteudos
