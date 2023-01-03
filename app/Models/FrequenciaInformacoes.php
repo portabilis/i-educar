@@ -10,7 +10,7 @@ class FrequenciaInformacoes extends Model
 /**
      * @var string
      */
-    protected $table = 'modules.frequencia_aluno';
+    protected $table = 'modules.frequencia_informacoes';
 
     /**
      * @var string
