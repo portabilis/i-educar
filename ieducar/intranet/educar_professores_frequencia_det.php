@@ -160,8 +160,8 @@ return new class extends clsDetalhe {
             );
         }
 
-        $especificacao = EspecificacaoBncc::where('bncc_id', $bncc->id)->get();
-        foreach($especificacao as $list) {
+        $info_freq = FrequenciaInformacoes::where('ref_frequencia', $_GET['id'])->get();
+        foreach($info_freq as $list) {
            if($list->tipo_turma==2){
 
             $this->addDetalhe(
