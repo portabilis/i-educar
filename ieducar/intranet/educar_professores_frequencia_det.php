@@ -1,4 +1,5 @@
 <?php
+use App\Models\FrequenciaInformacoes;
 
 return new class extends clsDetalhe {
     public $titulo;
@@ -158,6 +159,30 @@ return new class extends clsDetalhe {
                 ]
             );
         }
+
+        $info_freq = FrequenciaInformacoes::where('ref_frequencia', $_GET['id'])->get();
+        foreach($info_freq as $list) {
+           if($list->tipo_turma==2){
+
+            $this->addDetalhe(
+                [
+                    'Informações',
+                    "CH: ".$list->ch." | AULAS REALIZADAS: ".$list->aulas_realizadas." | AULAS A REALIZAR: ".$list->aulas_realizar
+                ]
+            );
+
+           }else{
+
+            $this->addDetalhe(
+                [
+                    'Informações',
+                    "DIAS LETIVOS: ".$list->dias_letivos."| DIAS REALIZADOS: ".$list->dias_realizados."| DIAS A REALIZAR: ".$list->dias_realizar
+                ]
+            );
+
+           }
+        }
+       
 
         $this->montaListaFrequenciaAlunos(
             $registro['detalhes']['ref_cod_serie'],
