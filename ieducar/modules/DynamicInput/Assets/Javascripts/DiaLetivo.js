@@ -3,7 +3,7 @@
   
       var $anoField                  = getElementFor('ano');
       var $turmaField                = getElementFor('turma');
-      var $diaLetivoField = getElementFor('dia_letivo');
+      var $diaLetivoField            = getElementFor('dia_letivo');
   
       var $componenteCurricularTitleField =  $diaLetivoField[0].parentElement.parentElement.parentElement.children[0].children[0];
   
@@ -19,7 +19,7 @@
       }
   
       function getResultado(xml) {
-        $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Dias Letivos' : 'Dias Letivos';
+        $componenteCurricularTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'INFORMACÕES:' : 'INFORMACÕES:';
       }
   
       var xml = new ajax(getResultado);
@@ -27,7 +27,7 @@
   
       var updateDiasLetivos = function(){
         resetSelect($diaLetivoField);
-        
+        $diaLetivoField.prop('disabled', false);
   
         if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
          

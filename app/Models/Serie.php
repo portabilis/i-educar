@@ -21,7 +21,8 @@ class Serie extends Model
     protected $fillable = [
         'cod_serie',
         'nm_serie',
-        'dias_letivos'
+        'dias_letivos',
+        'etapa_curso'
         
     
     ];

@@ -413,9 +413,9 @@ return new class extends clsCadastro {
 
            // Componente Curricular.
 
-           $this->inputsHelper()->dynamic('componenteCurricularTurma', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
+          
            $this->inputsHelper()->dynamic('frequenciaComponente', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
-           $this->inputsHelper()->dynamic('diaLetivo', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
+          
       
           
           
@@ -826,7 +826,6 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
-            '/modules/DynamicInput/Assets/Javascripts/ComponenteCurricularTurma.js',
             '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
