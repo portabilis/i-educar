@@ -1079,6 +1079,113 @@ class AlunoController extends ApiCoreController
         return $_historicoAlturaPeso;
     }
 
+    protected function get()
+    {
+        if ($this->canGet()) {
+            $id = $this->getRequest()->id;
+
+            $alunoDetalhe = (new clsPmieducarAluno($id))->detalhe();
+
+            $attrs = [
+                'cod_aluno' => 'id',
+                'ref_cod_aluno_beneficio' => 'beneficio_id',
+                'ref_idpes' => 'pessoa_id',
+                'tipo_responsavel' => 'tipo_responsavel',
+                'ref_usuario_exc' => 'destroyed_by',
+                'data_exclusao' => 'destroyed_at',
+                'analfabeto',
+                'ativo',
+                'aluno_estado_id',
+                'recursos_prova_inep',
+                'recebe_escolarizacao_em_outro_espaco',
+                'justificativa_falta_documentacao',
+                'veiculo_transporte_escolar',
+                'url_laudo_medico',
+                'url_documento',
+                'codigo_sistema',
+                'url_foto_aluno',
+                'autorizado_um',
+                'parentesco_um',
+                'autorizado_dois',
+                'parentesco_dois',
+                'autorizado_tres',
+                'parentesco_tres',
+                'autorizado_quatro',
+                'parentesco_quatro',
+                'autorizado_cinco',
+                'parentesco_cinco',
+                'emancipado',
+                'tipo_transporte'
+            ];
+
+            $aluno = Portabilis_Array_Utils::filter($alunoDetalhe, $attrs);
+
+            $aluno['nome'] = $this->loadNomeAluno($id);
+            $aluno['tipo_transporte'] = $this->loadTransporte($aluno['tipo_transporte']);
+            $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
+            $aluno['aluno_inep_id'] = $this->loadAlunoInepId($id);
+            $aluno['ativo'] = $aluno['ativo'] == 1;
+
+            $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
+            $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;
+            unset($aluno['analfabeto']);
+
+            // destroyed_by username
+            $dataMapper = $this->getDataMapperFor('usuario', 'funcionario');
+            $entity = $this->tryGetEntityOf($dataMapper, $aluno['destroyed_by']);
+
+            $aluno['destroyed_by'] = is_null($entity) ? null : $entity->get('matricula');
+            $aluno['destroyed_at'] = Portabilis_Date_Utils::pgSQLToBr($aluno['destroyed_at']);
+
+            $objFichaMedica = new clsModulesFichaMedicaAluno($id);
+
+            if ($objFichaMedica->existe()) {
+                $objFichaMedica = $objFichaMedica->detalhe();
+
+                foreach ($objFichaMedica as $chave => $value) {
+                    $objFichaMedica[$chave] = Portabilis_String_Utils::toUtf8($value);
+                }
+
+                $aluno = Portabilis_Array_Utils::merge($objFichaMedica, $aluno);
+            }
+
+            $objMoradia = new clsModulesMoradiaAluno($id);
+            if ($objMoradia->existe()) {
+                $objMoradia = $objMoradia->detalhe();
+                $aluno = Portabilis_Array_Utils::merge($objMoradia, $aluno);
+            }
+
+            // TODO remover no futuro #transport-package
+            if (class_exists(clsModulesPessoaTransporte::class)) {
+                $objPessoaTransporte = new clsModulesPessoaTransporte(null, null, $aluno['pessoa_id']);
+                $objPessoaTransporte = $objPessoaTransporte->detalhe();
+
+                if ($objPessoaTransporte) {
+                    $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
+                }
+            }
+
+            $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
+            $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
+
+            $aluno['sus'] = $camposFisica['sus'];
+            $aluno['observacao_aluno'] = $camposFisica['observacao'];
+            $aluno['religiao_id'] = $camposFisica['ref_cod_religiao'];
+            $aluno['beneficios'] = $this->loadBeneficios($id);
+            $aluno['projetos'] = $this->loadProjetos($id);
+            $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
+
+            $objFoto = new clsCadastroFisicaFoto($aluno['pessoa_id']);
+            $detalheFoto = $objFoto->detalhe();
+
+            if ($detalheFoto) {
+                $aluno['url_foto_aluno'] = $detalheFoto['caminho'];
+            }
+
+            return $aluno;
+        }
+    }
+
     protected function getTodosAlunos()
     {
         if ($this->canGetTodosAlunos()) {
@@ -1907,7 +2014,9 @@ class AlunoController extends ApiCoreController
 
     public function Gerar()
     {
-        if ($this->isRequestFor('get', 'aluno-search')) {
+        if ($this->isRequestFor('get', 'aluno')) {
+            $this->appendResponse($this->get());
+        } elseif ($this->isRequestFor('get', 'aluno-search')) {
             $this->appendResponse($this->search());
         } elseif ($this->isRequestFor('get', 'alunos-matriculados')) {
             $this->appendResponse($this->getAlunosMatriculados());
