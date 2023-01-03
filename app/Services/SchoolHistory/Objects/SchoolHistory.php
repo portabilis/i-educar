@@ -40,6 +40,9 @@ class SchoolHistory
 
         $discipline = $this->getDiscipline($data['cod_aluno'], $data['nm_disciplina']);
 
+        $discipline->registro_nascimento = $data['registro_nascimento'] ?? null;
+        $discipline->cod_rg = $data['cod_rg']?? null;
+        $discipline->cod_ra = $data['cod_ra'] ?? null;
         $discipline->nm_disciplina = $data['nm_disciplina'];
         $discipline->cod_aluno = $data['cod_aluno'];
         $discipline->nome_aluno = $data['nome_aluno'];
