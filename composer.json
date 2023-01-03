@@ -106,23 +106,20 @@
         "fix-style": "vendor/bin/php-cs-fixer fix",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
-        "npm": "yarn install",
         "new-install": [
             "@composer install",
             "@composer plug-and-play:install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan storage:link --ansi",
-            "@php artisan migrate --force --ansi",
-            "@npm"
+            "@php artisan migrate --force --ansi"
         ],
         "update-install": [
             "@composer update",
             "@composer plug-and-play:update",
             "@set-permissions",
             "@php artisan storage:link --ansi",
-            "@php artisan migrate --force --ansi",
-            "@npm"
+            "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
