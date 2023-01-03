@@ -740,7 +740,7 @@ return new class extends clsCadastro {
                         }
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_professores_frequencia_lst.php');
+            $this->simpleRedirect('educar_professores_frequencia_det.php?id='.$id_frequencia);
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -951,6 +951,9 @@ return new class extends clsCadastro {
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/frequencia_input.css'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
     protected function adicionarConteudosMultiplaEscolha() {
