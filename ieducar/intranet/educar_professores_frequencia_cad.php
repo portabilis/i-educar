@@ -645,7 +645,6 @@ return new class extends clsCadastro {
                     
                     
                         $total_dias_letivos_realizados = 0;
-                        $total_dias_letivos_realizados = $total_dias_letivos_realizados +1;
                         $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->get(); 
                         $total_aulas = '';
                         foreach($frequencias as $aulas){
@@ -706,22 +705,7 @@ return new class extends clsCadastro {
                                 $str_arr = preg_split ("/\,/", $total_aulas);
                                 $total = count($str_arr);
 
-                                if (isset($this->ordens_aulas1) && !empty($this->ordens_aulas1)){
-                                    $total++; 
-                                }
-                                if (isset($this->ordens_aulas2) && !empty($this->ordens_aulas2)){
-                                    $total++;   
-                                }
-                                if (isset($this->ordens_aulas3) && !empty($this->ordens_aulas3)){
-                                    $total++; 
-                                }
                                 
-                                if (isset($this->ordens_aulas4) && !empty($this->ordens_aulas4)){
-                                    $total++; 
-                                }
-                                if (isset($this->ordens_aulas5) && !empty($this->ordens_aulas5)){
-                                    $total++;  
-                                }
                     
                                 // foreach ($componentesCurriculares as $componenteCurricular) {
                                 $carga_horaria = 0;

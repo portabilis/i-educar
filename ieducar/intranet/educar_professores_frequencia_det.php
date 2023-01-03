@@ -167,7 +167,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(
                 [
                     'Informações',
-                    "CH: ".$list->ch."| AULAS REALIZADAS: ".$list->aulas_realizadas."| AULAS A REALIZAR: ".$list->aulas_realizar
+                    "CH: ".$list->ch." | AULAS REALIZADAS: ".$list->aulas_realizadas." | AULAS A REALIZAR: ".$list->aulas_realizar
                 ]
             );
 
