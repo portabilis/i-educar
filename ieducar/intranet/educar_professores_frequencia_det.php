@@ -231,6 +231,7 @@ return new class extends clsDetalhe {
                           $total_aulas .= $aulas->ordens_aulas.",";
                           
                       }
+                      $total_aulas = substr($total_aulas, 0, -1);
                       $str_arr = preg_split ("/\,/", $total_aulas);
                       $total = count($str_arr);
 
