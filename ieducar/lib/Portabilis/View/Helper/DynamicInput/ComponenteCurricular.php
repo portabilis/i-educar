@@ -102,8 +102,8 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
             foreach ($componentesCurriculares as $key => $componentesCurricular) {
                 $resources[$componentesCurricular['id']] = $componentesCurricular['nome'];
             }
-            
-        } 
+
+        }
 
         return $this->insertOption(null, 'Selecione um componente curricular', $resources);
     }

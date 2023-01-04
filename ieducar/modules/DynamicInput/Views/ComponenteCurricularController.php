@@ -147,9 +147,9 @@ class ComponenteCurricularController extends ApiCoreController
             if ($isOnlyProfessor) {
                 $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
             } else {
-                $sql = '
+                $sql = "
                     SELECT
-                        cc.id,
+                        DISTINCT cc.id,
                         cc.nome,
                         ac.nome as area_conhecimento,
                         ac.secao as area_conhecimento_secao,
@@ -164,7 +164,18 @@ class ComponenteCurricularController extends ApiCoreController
                         AND cct.turma_id = turma.cod_turma
                         AND cct.escola_id = turma.ref_ref_cod_escola
                         AND cct.componente_curricular_id = cc.id
-                        AND al.ano = $2
+                        AND (
+                            al.ano = $2
+                        OR
+                            (select data_fim
+                            from pmieducar.ano_letivo_modulo
+                            where
+                            ref_ref_cod_escola = esd.ref_ref_cod_escola
+                            AND date_part('year', data_fim) = $2
+                            ORDER BY
+                            data_fim DESC
+                            LIMIT 1) IS NOT NULL
+                        )
                         AND cct.escola_id = al.ref_cod_escola
                         AND cc.area_conhecimento_id = ac.id
                     ORDER BY
@@ -172,14 +183,14 @@ class ComponenteCurricularController extends ApiCoreController
                         ac.nome,
                         cc.ordenamento,
                         cc.nome
-                ';
+                ";
 
                 $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano]);
 
                 if (count($componentesCurriculares) < 1) {
-                    $sql = '
+                    $sql = "
                         SELECT
-                            cc.id,
+                            DISTINCT cc.id,
                             cc.nome,
                             ac.nome as area_conhecimento,
                             ac.secao as secao_area_conhecimento,
@@ -194,7 +205,18 @@ class ComponenteCurricularController extends ApiCoreController
                             AND esd.ref_ref_cod_escola = t.ref_ref_cod_escola
                             AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
                             AND esd.ref_cod_disciplina = cc.id
-                            AND al.ano = $2
+                            AND (
+                                al.ano = $2
+                            OR
+                                (select data_fim
+                                from pmieducar.ano_letivo_modulo
+                                where
+                                ref_ref_cod_escola = esd.ref_ref_cod_escola
+                                AND date_part('year', data_fim) = $2
+                                ORDER BY
+                                data_fim DESC
+                                LIMIT 1) IS NOT NULL
+                            )
                             AND esd.ref_ref_cod_escola = al.ref_cod_escola
                             AND t.ativo = 1
                             AND esd.ativo = 1
@@ -206,7 +228,7 @@ class ComponenteCurricularController extends ApiCoreController
                             ac.nome,
                             cc.ordenamento,
                             cc.nome
-                    ';
+                    ";
 
                     $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano]);
                 }

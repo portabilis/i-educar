@@ -340,9 +340,9 @@ class Portabilis_Business_Professor
 
     protected static function componentesCurricularesTurmaAlocado($turmaId, $anoLetivo, $userId)
     {
-        $sql = '
+        $sql = "
             select
-                cc.id,
+                DISTINCT cc.id,
                 cc.nome,
                 ac.nome as area_conhecimento,
                 ac.secao as secao_area_conhecimento
@@ -357,7 +357,18 @@ class Portabilis_Business_Professor
             and cct.turma_id = turma.cod_turma
             and cct.escola_id = turma.ref_ref_cod_escola
             and cct.componente_curricular_id = cc.id
-            and al.ano = $2
+            and (
+                al.ano = $2
+            OR
+                (select data_fim
+                from pmieducar.ano_letivo_modulo
+                where
+                ref_ref_cod_escola = turma.ref_ref_cod_escola
+                AND date_part('year', data_fim) = $2
+                ORDER BY
+                data_fim DESC
+                LIMIT 1) IS NOT NULL
+            )
             and cct.escola_id = al.ref_cod_escola
             and scc.ref_ref_cod_instituicao = turma.ref_cod_instituicao
             and scc.ref_cod_servidor = $3
@@ -365,7 +376,7 @@ class Portabilis_Business_Professor
             and scc.ref_cod_disciplina = cc.id
             and cc.area_conhecimento_id = ac.id
             order by ac.secao, ac.nome, cc.nome
-        ';
+        ";
 
         $options = ['params' => [$turmaId, $anoLetivo, $userId]];
 
@@ -374,9 +385,9 @@ class Portabilis_Business_Professor
 
     protected static function componentesCurricularesCursoAlocado($turmaId, $anoLetivo, $userId)
     {
-        $sql = '
+        $sql = "
             select
-                cc.id as id,
+                DISTINCT cc.id as id,
                 cc.nome as nome,
                 ac.nome as area_conhecimento,
                 ac.secao as secao_area_conhecimento
@@ -393,7 +404,18 @@ class Portabilis_Business_Professor
             and esd.ref_ref_cod_escola = turma.ref_ref_cod_escola
             and esd.ref_ref_cod_serie = serie.cod_serie
             and esd.ref_cod_disciplina = cc.id
-            and al.ano = $2
+            and (
+                al.ano = $2
+            OR
+                (select data_fim
+                from pmieducar.ano_letivo_modulo
+                where
+                ref_ref_cod_escola = esd.ref_ref_cod_escola
+                AND date_part('year', data_fim) = $2
+                ORDER BY
+                data_fim DESC
+                LIMIT 1) IS NOT NULL
+            )
             and esd.ref_ref_cod_escola = al.ref_cod_escola
             and serie.ativo = 1
             and esd.ativo = 1
@@ -404,7 +426,7 @@ class Portabilis_Business_Professor
             and scc.ref_cod_disciplina = cc.id
             and cc.area_conhecimento_id = ac.id
             order by ac.secao, ac.nome, cc.nome
-        ';
+        ";
 
         $options = ['params' => [$turmaId, $anoLetivo, $userId]];
 
