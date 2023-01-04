@@ -6,7 +6,7 @@ return new class () extends Migration {
     public function up()
     {
         DB::unprepared(
-            'DROP VIEW pmieducar.v_matricula_matricula_turma;'
+            'DROP VIEW IF EXISTS pmieducar.v_matricula_matricula_turma;'
         );
     }
 };
