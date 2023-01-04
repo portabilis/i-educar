@@ -2,6 +2,7 @@
     $(document).ready(function(){
   
       var $anoField                  = getElementFor('ano');
+      var $dataField                  = getElementFor('data');
       var $turmaField                = getElementFor('turma');
       var $componenteCurricularField = getElementFor('componente_curricular');
       var $frequenciaComponenteField = getElementFor('frequencia_componente');
@@ -44,7 +45,8 @@
           var data = {
             ano      : $anoField.attr('value'),
             turma_id : $turmaField.attr('value'),
-            componente_id : $componenteCurricularField.attr('value')
+            componente_id : $componenteCurricularField.attr('value'),
+            data_frequencia : $dataField.attr('value')
           };
   
           var urlForGetFrequenciaComponentes = getResourceUrlBuilder.buildUrl(

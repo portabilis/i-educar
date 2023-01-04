@@ -17,6 +17,7 @@ class FrequenciaComponenteController extends ApiCoreController
         $turmaId = $this->getRequest()->turma_id;
         $ComponenteId = $this->getRequest()->componente_id;
         $ano = $this->getRequest()->ano;
+        $data_freq = $this->getRequest()->data_frequencia;
 
             $options = [];
           
@@ -25,7 +26,7 @@ class FrequenciaComponenteController extends ApiCoreController
            
         
             $total_dias_letivos_realizados = 0;
-            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->get(); 
+            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->where('data','<=', $data_freq)->get(); 
             $total_aulas = '';
             foreach($frequencias as $aulas){
                 $total_dias_letivos_realizados++;
@@ -66,13 +67,14 @@ class FrequenciaComponenteController extends ApiCoreController
             }else{
 
                     $carga_horaria = 0;
-                    $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->get(); 
+                    $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->where('data','<=', $data_freq)->get(); 
                     $total_aulas = '';
                     foreach($frequencias as $aulas){
                         $total_aulas .= $aulas->ordens_aulas.",";
                         
                     }
                     $str_arr = preg_split ("/\,/", $total_aulas);
+                    $total_aulas = substr($total_aulas, 0, -1);
                     $total = count($str_arr);
         
                     // foreach ($componentesCurriculares as $componenteCurricular) {
