@@ -97,7 +97,8 @@ class clsModulesFrequencia extends Model {
             f.etapa_sequencial AS fase_etapa,
             pt.servidor_id AS cod_professor,
             pe.nome AS professor_turma,
-            pe_registro.nome AS professor_registro
+            pe_registro.nome AS professor_registro,
+            e.cod_escola
         ';
 
 

@@ -145,8 +145,18 @@ return new class extends clsListagem {
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
+            $anoLetivo = new clsPmieducarEscolaAnoLetivo();
+            $anoLetivo->ano = $this->ano;
+
             foreach ($lista as $registro) {
-                $bla++;
+                $anoLetivo->ref_cod_escola = $registro['cod_escola'];
+                $anoLetivo = $anoLetivo->detalhe();
+
+                if (!$anoLetivo) {
+                    $totalRemover++;
+                    continue;
+                }
+
                 $data_formatada = dataToBrasil($registro['data']);
 
                 if (!$eh_professor && (!empty($registro['professor_registro']) && $registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
