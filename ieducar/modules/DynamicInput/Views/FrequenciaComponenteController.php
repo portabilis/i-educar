@@ -78,6 +78,7 @@ class FrequenciaComponenteController extends ApiCoreController
                     $total_aulas = substr($total_aulas, 0, -1);
                     $str_arr = preg_split ("/\,/", $total_aulas);
                     $total = count($str_arr);
+                    
                     if($contador_frequencias<1){
                         $total =0;
                     }
