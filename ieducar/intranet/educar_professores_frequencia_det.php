@@ -160,28 +160,108 @@ return new class extends clsDetalhe {
             );
         }
 
-        $info_freq = FrequenciaInformacoes::where('ref_frequencia', $_GET['id'])->get();
-        foreach($info_freq as $list) {
-           if($list->tipo_turma==2){
+
+
+
+
+          //cadastra as informações no banco 
+                    
+                 
+            $turmaId = $registro['detalhes']['ref_cod_turma'];
+            $ComponenteId = $registro['detalhes']['ref_cod_componente_curricular'];
+          
+
+         
+          
+          
+          
+          
+          
+            $total_dias_letivos_realizados = 0;
+            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->get(); 
+            $total_aulas = '';
+            foreach($frequencias as $aulas){
+                  $total_dias_letivos_realizados++;
+                  
+              }
+
+          
+            $serie_id = 0;
+            $serie_turma = SerieTurma::where('cod_turma', $turmaId)->get(); 
+            foreach($serie_turma as $serie){
+
+                  $serie_id = $serie->ref_ref_cod_serie;
+              
+                  
+              }
+              $etapa_curso_serie = 0;
+              $total_dias_letivos_turma = 0;
+              $dias_series = Serie::where('cod_serie', $serie_id)->get(); 
+              foreach($dias_series as $dia){
+
+                  $total_dias_letivos_turma = $dia->dias_letivos;
+                  $etapa_curso_serie = $dia->etapa_curso;
+                  
+              }
+              $restante =  $total_dias_letivos_turma-$total_dias_letivos_realizados;
+              
+              if($etapa_curso_serie<6){
+ 
 
             $this->addDetalhe(
                 [
                     'Informações',
-                    "CH: ".$list->ch." | AULAS REALIZADAS: ".$list->aulas_realizadas." | AULAS A REALIZAR: ".$list->aulas_realizar
+                    "DIAS LETIVOS: ".$total_dias_letivos_turma."| DIAS REALIZADOS: ".$total_dias_letivos_realizados."| DIAS A REALIZAR: ".$restante
                 ]
             );
+                  
 
-           }else{
+              }else{
 
-            $this->addDetalhe(
-                [
-                    'Informações',
-                    "DIAS LETIVOS: ".$list->dias_letivos."| DIAS REALIZADOS: ".$list->dias_realizados."| DIAS A REALIZAR: ".$list->dias_realizar
-                ]
-            );
+                      $carga_horaria = 0;
+                      $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->get(); 
+                      $total_aulas = '';
+                      foreach($frequencias as $aulas){
+                          $total_aulas .= $aulas->ordens_aulas.",";
+                          
+                      }
+                      $str_arr = preg_split ("/\,/", $total_aulas);
+                      $total = count($str_arr);
 
-           }
-        }
+                      
+          
+                      
+                      $carga_horaria = 0;
+                      $componentes = ComponenteCurricularAno::where('componente_curricular_id', $ComponenteId)->get(); 
+                      foreach($componentes as $componente){
+                          $carga_horaria = $componente->carga_horaria;
+                          $carga_horaria = round($carga_horaria, 3);
+                      } 
+                      $aula_restante = $carga_horaria-$total;
+                      if($carga_horaria ==0){
+                          $aula_restante = 0;
+                      }
+                      
+                      $this->addDetalhe(
+                        [
+                            'Informações',
+                            "CH: ".$carga_horaria." | AULAS REALIZADAS: ".$total." | AULAS A REALIZAR: ".$aula_restante
+                        ]
+                    );
+
+                    
+
+                  
+                         
+              }
+
+
+
+
+
+
+
+
        
 
         $this->montaListaFrequenciaAlunos(
