@@ -265,59 +265,36 @@ class PromocaoApiController extends ApiCoreController
             // FIXME #parameters
 
             foreach ($etapas as $etapa) {
-                $hasNotaOrParecerInEtapa = false;
+                // FIXME #parameters
+                $falta = $this->boletimService()->getFalta($etapa) ? $this->boletimService()->getFalta($etapa)->quantidade : null;
 
-                if ($regraNaoUsaNota) {
-                    $hasNotaOrParecerInEtapa = true;
-                }
-
-                foreach ($componentesCurriculares as $cc) {
-                    $nota = $this->getNota($etapa, $cc['id']);
-                    $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
-
-                    if (!$hasNotaOrParecerInEtapa && (trim($nota) != '' || trim($parecer) != '')) {
-                        $hasNotaOrParecerInEtapa = true;
-                        break;
-                    }
-                }
-
-                if ($hasNotaOrParecerInEtapa) {
+                if (is_null($falta)) {
+                    $notaFalta = new Avaliacao_Model_FaltaGeral([
+                        'quantidade' => $defaultValue,
+                        'etapa' => $etapa
+                    ]);
                     // FIXME #parameters
-                    $falta = $this->boletimService()->getFalta($etapa) ? $this->boletimService()->getFalta($etapa)->quantidade : null;
-
-                    if (is_null($falta)) {
-                        $notaFalta = new Avaliacao_Model_FaltaGeral([
-                            'quantidade' => $defaultValue,
-                            'etapa' => $etapa
-                        ]);
-                        // FIXME #parameters
-                        $this->boletimService()->addFalta($notaFalta);
-                        $this->messenger->append("Lançado falta geral (valor $defaultValue) para etapa $etapa (matrícula $matriculaId)", 'notice');
-                    }
+                    $this->boletimService()->addFalta($notaFalta);
+                    $this->messenger->append("Lançado falta geral (valor $defaultValue) para etapa $etapa (matrícula $matriculaId)", 'notice');
                 }
             }//for etapa
         } elseif ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             // FIXME #parameters
             foreach ($etapas as $etapa) {
                 foreach ($componentesCurriculares as $cc) {
-                    $nota = $this->getNota($etapa, $cc['id']);
-                    $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
+                    // FIXME #parameters
+                    $falta = $this->boletimService()->getFalta($etapa, $cc['id'])->quantidade;
 
-                    if ($regraNaoUsaNota || trim($nota) != '' || trim($parecer) != '') {
+                    if (is_null($falta)) {
                         // FIXME #parameters
-                        $falta = $this->boletimService()->getFalta($etapa, $cc['id'])->quantidade;
+                        $this->boletimService()->addFalta(
+                            new Avaliacao_Model_FaltaComponente([
+                                'componenteCurricular' => $cc['id'],
+                                'quantidade' => $defaultValue,
+                                'etapa' => $etapa])
+                        );
 
-                        if (is_null($falta)) {
-                            // FIXME #parameters
-                            $this->boletimService()->addFalta(
-                                new Avaliacao_Model_FaltaComponente([
-                                    'componenteCurricular' => $cc['id'],
-                                    'quantidade' => $defaultValue,
-                                    'etapa' => $etapa])
-                            );
-
-                            $this->messenger->append(Portabilis_String_Utils::toUtf8("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)"), 'notice');
-                        }
+                        $this->messenger->append("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)", 'notice');
                     }
                 }
             }

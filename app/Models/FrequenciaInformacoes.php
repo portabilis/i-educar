@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Frequencia extends Model
+class FrequenciaInformacoes extends Model
 {
- /**
+/**
      * @var string
      */
-    protected $table = 'modules.frequencia';
+    protected $table = 'modules.frequencia_informacoes';
 
     /**
      * @var string
@@ -19,10 +19,14 @@ class Frequencia extends Model
 
     protected $fillable = [
         'id',
-        'data',
-        'ref_cod_turma',
-        'ref_componente_curricular',
-        'ordens_aulas'
+        'ref_frequencia',
+        'dias_letivos',
+        'dias_realizados',
+        'dias_realizar',
+        'ch',
+        'aulas_realizadas',
+        'aulas_realizar',
+        'tipo_turma'
     ];
 
     /**
@@ -30,5 +34,6 @@ class Frequencia extends Model
      */
     public $timestamps = false;
 
-    
-    use HasFactory;}
+    use HasFactory;
+
+}

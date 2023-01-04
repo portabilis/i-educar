@@ -26,7 +26,8 @@ class RegraAvaliacao extends Model
         'id',
         'media',
         'nome',
-        'tipo_recuperacao_paralela'
+        'tipo_recuperacao_paralela',
+        'tipo_nota'
     ];
 
     /**

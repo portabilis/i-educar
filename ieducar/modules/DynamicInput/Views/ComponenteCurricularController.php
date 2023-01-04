@@ -147,6 +147,116 @@ class ComponenteCurricularController extends ApiCoreController
             if ($isOnlyProfessor) {
                 $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
             } else {
+                $sql = "
+                    SELECT
+                        DISTINCT cc.id,
+                        cc.nome,
+                        ac.nome as area_conhecimento,
+                        ac.secao as area_conhecimento_secao,
+                        cc.ordenamento
+                    FROM
+                        pmieducar.turma,
+                        modules.componente_curricular_turma as cct,
+                        modules.componente_curricular as cc,
+                        modules.area_conhecimento as ac,
+                        pmieducar.escola_ano_letivo as al
+                    WHERE turma.cod_turma = $1
+                        AND cct.turma_id = turma.cod_turma
+                        AND cct.escola_id = turma.ref_ref_cod_escola
+                        AND cct.componente_curricular_id = cc.id
+                        AND (
+                            al.ano = $2
+                        OR
+                            (select data_fim
+                            from pmieducar.ano_letivo_modulo
+                            where
+                            ref_ref_cod_escola = esd.ref_ref_cod_escola
+                            AND date_part('year', data_fim) = $2
+                            ORDER BY
+                            data_fim DESC
+                            LIMIT 1) IS NOT NULL
+                        )
+                        AND cct.escola_id = al.ref_cod_escola
+                        AND cc.area_conhecimento_id = ac.id
+                    ORDER BY
+                        ac.secao,
+                        ac.nome,
+                        cc.ordenamento,
+                        cc.nome
+                ";
+
+                $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano]);
+
+                if (count($componentesCurriculares) < 1) {
+                    $sql = "
+                        SELECT
+                            DISTINCT cc.id,
+                            cc.nome,
+                            ac.nome as area_conhecimento,
+                            ac.secao as secao_area_conhecimento,
+                            cc.ordenamento
+                        FROM
+                            pmieducar.turma as t,
+                            pmieducar.escola_serie_disciplina as esd,
+                            modules.componente_curricular as cc,
+                            modules.area_conhecimento as ac,
+                            pmieducar.escola_ano_letivo as al
+                        WHERE t.cod_turma = $1
+                            AND esd.ref_ref_cod_escola = t.ref_ref_cod_escola
+                            AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
+                            AND esd.ref_cod_disciplina = cc.id
+                            AND (
+                                al.ano = $2
+                            OR
+                                (select data_fim
+                                from pmieducar.ano_letivo_modulo
+                                where
+                                ref_ref_cod_escola = esd.ref_ref_cod_escola
+                                AND date_part('year', data_fim) = $2
+                                ORDER BY
+                                data_fim DESC
+                                LIMIT 1) IS NOT NULL
+                            )
+                            AND esd.ref_ref_cod_escola = al.ref_cod_escola
+                            AND t.ativo = 1
+                            AND esd.ativo = 1
+                            AND al.ativo = 1
+                            AND $2 = ANY(esd.anos_letivos)
+                            AND cc.area_conhecimento_id = ac.id
+                        ORDER BY
+                            ac.secao,
+                            ac.nome,
+                            cc.ordenamento,
+                            cc.nome
+                    ";
+
+                    $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano]);
+                }
+            }
+
+            $options = [];
+            $options = $this->agrupaComponentesCurriculares($componentesCurriculares);
+            $objPlanoAula = new clsModulesPlanejamentoAula();
+            $habilidadesEspecificacoes = $objPlanoAula->getHabilidadesEspecificacoesUtilizados($turmaId, $ano, $userId);
+
+            return ['options' => $options,
+                    'utilizados' => $habilidadesEspecificacoes];
+        }
+    }
+
+    protected function getComponentesCurricularesTurma()
+    {
+        if ($this->canGetComponentesCurriculares()) {
+            $userId = \Illuminate\Support\Facades\Auth::id();
+            $instituicaoId = $this->getRequest()->instituicao_id || 1;
+            $turmaId = $this->getRequest()->turma_id;
+            $ano = $this->getRequest()->ano;
+
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
+
+            if ($isOnlyProfessor) {
+                $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
+            } else {
                 $sql = '
                     SELECT
                         cc.id,
@@ -242,6 +352,8 @@ class ComponenteCurricularController extends ApiCoreController
     {
         if ($this->isRequestFor('get', 'componentesCurriculares')) {
             $this->appendResponse($this->getComponentesCurriculares());
+        }elseif ($this->isRequestFor('get', 'componentesCurriculareTurma')) {
+            $this->appendResponse($this->getComponentesCurricularesTurma());
         } elseif ($this->isRequestFor('get', 'componentesCurricularesForDiario')) {
             $this->appendResponse($this->getComponentesCurricularesForDiario());
         } elseif ($this->isRequestFor('get', 'componentesCurricularesEscolaSerie')) {

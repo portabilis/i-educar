@@ -27,7 +27,11 @@ function updateSelect($targetElement, options, emptyOptionHtml, optionSelected =
   //   $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
   // }
 
-  if (options.length > 0) {
+  if (options.length ==1) {
+    $targetElement.removeAttr('disabled');
+    $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
+   
+  }else if (options.length >1) {
     $targetElement.removeAttr('disabled');
     $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma opção");
   } else {

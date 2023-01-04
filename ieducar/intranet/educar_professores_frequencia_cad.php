@@ -8,6 +8,13 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use App\Models\Frequencia;
+use App\Models\ComponenteCurricularTurma;
+use App\Models\ComponenteCurricularAno;
+use App\Models\SerieTurma;
+use App\Models\Serie;
+use App\Models\Turma;
+use App\Models\FrequenciaInformacoes;
 
 return new class extends clsCadastro {
     public $id;
@@ -28,6 +35,7 @@ return new class extends clsCadastro {
     public $conteudos;
     public $planejamento_aula_ids;
     public $componente_curricular_registro_individual;
+    public $registra_diario_individual;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -140,7 +148,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
 
@@ -236,6 +244,7 @@ return new class extends clsCadastro {
 
 
             $objFrequencia = new clsModulesFrequencia();
+
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
 
@@ -248,7 +257,22 @@ return new class extends clsCadastro {
                 $conteudo .= '  <tr>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $aluno['nome'] . '</p></td>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $qtdFaltasGravadas . '</p></td>';
-                if ($tipo_presenca == 1) {
+
+                if($tipo_presenca == 1 && !$this->registra_diario_individual) {
+                    $conteudo .= "  <td class='sizeFont colorFont'>
+                                    <input
+                                        type='checkbox'
+                                        onchange='presencaMudou(this)'
+                                        id='alunos[]'
+                                        name={$name}
+                                        value={$id}
+                                        {$checked}
+                                        autocomplete='off'
+                                    >
+                                    </td>";
+                }
+
+                if ($tipo_presenca == 1 && $this->registra_diario_individual) {
                     $aulasFaltou = '';
                     $qtdFaltas = 0;
 
@@ -396,7 +420,17 @@ return new class extends clsCadastro {
             $this->adicionarConteudosMultiplaEscolha();
         }
 
+           // Componente Curricular.
+
+          
+           $this->inputsHelper()->dynamic('frequenciaComponente', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
+          
       
+          
+          
+           //end componente
+  
+
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
@@ -569,7 +603,8 @@ return new class extends clsCadastro {
             $this->fase_etapa,
             $this->justificativa,
             $servidor_id,
-            $this->ordens_aulas
+            $this->ordens_aulas,
+            (!empty($this->componente_curricular_registro_individual) ? true : null)
         );
 
         $existe = $obj->existe();
@@ -595,12 +630,15 @@ return new class extends clsCadastro {
             );
 
             $obj->cadastra();
-
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_professores_frequencia_lst.php');
+            $this->simpleRedirect('educar_professores_frequencia_det.php?id='.$id_frequencia);
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
+
+        
+
 
         return false;
     }
@@ -614,7 +652,6 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarTurma();
         $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
         $serie = $turmaDetalhes['ref_ref_cod_serie'];
-
 
         $obj = new clsModulesFrequencia(
             $this->id,
@@ -631,9 +668,12 @@ return new class extends clsCadastro {
             null,
             $this->fase_etapa,
             $this->justificativa,
+            null,
+            null,
+            $this->registra_diario_individual
         );
 
-        $editou = $obj->edita($this->ref_cod_componente_curricular);
+        $editou = $obj->edita();
 
         $obj = new clsModulesComponenteMinistrado();
         $componenteMinistrado = $obj->lista(
@@ -802,6 +842,9 @@ return new class extends clsCadastro {
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/frequencia_input.css'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
     protected function adicionarConteudosMultiplaEscolha() {

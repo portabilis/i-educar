@@ -5,23 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ComponenteCurricularTurma extends Model
-{
-    use HasFactory;
+class ComponenteCurricularAno extends Model
+{  
+      use HasFactory;
 
     /**
     * @var string
     */
-   protected $table = 'modules.componente_curricular_turma';
+   protected $table = 'modules.componente_curricular_ano_escolar';
 
    /**
     * @var string
     */
-   protected $primaryKey = 'componente_curricular_id';
+   protected $primaryKey = 'id';
 
    protected $fillable = [
        'componente_curricular_id',
-       'turma_id',
        'carga_horaria'
        
    
@@ -31,6 +30,7 @@ class ComponenteCurricularTurma extends Model
     * @var bool
     */
    public $timestamps = false;
+
 
    
 }
