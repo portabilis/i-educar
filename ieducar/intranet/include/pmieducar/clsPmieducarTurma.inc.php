@@ -823,12 +823,6 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_bool($bool_tem_alunos_aguardando_nota)) {
-            if ($bool_tem_alunos_aguardando_nota) {
-                $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma mmt WHERE mmt.ref_cod_turma = t.cod_turma AND mmt.aprovado = 3 AND mmt.ativo = 1 ) > 0 ";
-                $whereAnd = ' AND ';
-            }
-        }
         if (is_bool($visivel)) {
             if ($visivel) {
                 $filtros .= "{$whereAnd} t.visivel = TRUE";
