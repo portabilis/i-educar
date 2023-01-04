@@ -37,12 +37,12 @@ class Portabilis_View_Helper_DynamicInput_TodasTurmas extends Portabilis_View_He
                     1          // Fixado na instituição de ID 1
                 );
 
-                $etapasObj = new clsPmieducarAnoLetivoModulo();
-                $etapasObj->setOrderBy('data_fim DESC');
-                $etapasObj->setLimite(1);
+                $objTurmaModulo      = new clsPmieducarTurmaModulo();
+                $objTurmaModulo->setOrderBy('data_fim DESC');
+                $objTurmaModulo->setLimite(1);
 
                 foreach ($professor_turmas as $key => $professor_turma) {
-                    $etapa = $etapasObj->lista(null, $professor_turma['ref_cod_escola']);
+                    $etapa = $objTurmaModulo->lista($professor_turma['ref_cod_turma']);
 
                     if ($etapa[0]) {
                         $anoEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
@@ -154,13 +154,13 @@ class Portabilis_View_Helper_DynamicInput_TodasTurmas extends Portabilis_View_He
 
                 $obj_escola = new clsPmieducarEscola();
 
-                $etapasObj = new clsPmieducarAnoLetivoModulo();
-                $etapasObj->setOrderBy('data_fim DESC');
-                $etapasObj->setLimite(1);
+                $objTurmaModulo      = new clsPmieducarTurmaModulo();
+                $objTurmaModulo->setOrderBy('data_fim DESC');
+                $objTurmaModulo->setLimite(1);
 
                 foreach ($turmas as $key => $turma) {
                     foreach ($turma as $key => $turma_item) {
-                        $etapa = $etapasObj->lista(null, $turma_item['ref_ref_cod_escola']);
+                        $etapa = $objTurmaModulo->lista($turma_item['cod_turma']);
 
                         if ($etapa[0]) {
                             $anoEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
