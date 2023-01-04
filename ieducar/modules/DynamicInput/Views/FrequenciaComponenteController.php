@@ -69,13 +69,18 @@ class FrequenciaComponenteController extends ApiCoreController
                     
                     $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->where('data','<=', $data_freq)->get(); 
                     $total_aulas = '';
+                    $contador_frequencias = 0;
                     foreach($frequencias as $aulas){
                         $total_aulas .= $aulas->ordens_aulas.",";
+                        $contador_frequencias++;
                         
                     }
                     $total_aulas = substr($total_aulas, 0, -1);
                     $str_arr = preg_split ("/\,/", $total_aulas);
                     $total = count($str_arr);
+                    if($contador_frequencias<1){
+                        $total =0;
+                    }
         
                     // foreach ($componentesCurriculares as $componenteCurricular) {
                     $carga_horaria = 0;
