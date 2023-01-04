@@ -1,4 +1,3 @@
 *.sqlite
 data
-redis/data
-postgresql/data
+data/*
