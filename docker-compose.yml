@@ -15,7 +15,7 @@ services:
     ports:
       - "5432"
     volumes:
-      - ./database/postgresql/data:/var/lib/postgresql/data
+      - ./database/data/postgresql/data:/var/lib/postgresql/data
 
   redis:
     image: redis:alpine
@@ -27,7 +27,7 @@ services:
     ports:
       - "6379"
     volumes:
-      - ./database/redis/data/redis:/data
+      - ./database/data/redis/data/redis:/data
 
   nginx:
     build: docker/nginx
