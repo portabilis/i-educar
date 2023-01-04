@@ -1,4 +1,10 @@
 <?php
+use App\Models\Frequencia;
+use App\Models\ComponenteCurricularTurma;
+use App\Models\ComponenteCurricularAno;
+use App\Models\SerieTurma;
+use App\Models\Serie;
+use App\Models\Turma;
 use App\Models\FrequenciaInformacoes;
 
 return new class extends clsDetalhe {
