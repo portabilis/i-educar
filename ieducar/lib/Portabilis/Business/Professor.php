@@ -361,9 +361,9 @@ class Portabilis_Business_Professor
                 al.ano = $2
             OR
                 (select data_fim
-                from pmieducar.ano_letivo_modulo
+                from pmieducar.turma_modulo
                 where
-                ref_ref_cod_escola = turma.ref_ref_cod_escola
+                ref_cod_turma = turma.cod_turma
                 AND date_part('year', data_fim) = $2
                 ORDER BY
                 data_fim DESC
@@ -408,9 +408,9 @@ class Portabilis_Business_Professor
                 al.ano = $2
             OR
                 (select data_fim
-                from pmieducar.ano_letivo_modulo
+                from pmieducar.turma_modulo
                 where
-                ref_ref_cod_escola = esd.ref_ref_cod_escola
+                ref_cod_turma = turma.cod_turma
                 AND date_part('year', data_fim) = $2
                 ORDER BY
                 data_fim DESC
@@ -428,8 +428,12 @@ class Portabilis_Business_Professor
             order by ac.secao, ac.nome, cc.nome
         ";
 
+
+        echo $sql;
+
         $options = ['params' => [$turmaId, $anoLetivo, $userId]];
 
+        var_dump($options);
         return self::fetchPreparedQuery($sql, $options);
     }
 
