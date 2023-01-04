@@ -17,7 +17,9 @@ class FrequenciaComponenteController extends ApiCoreController
         $turmaId = $this->getRequest()->turma_id;
         $ComponenteId = $this->getRequest()->componente_id;
         $ano = $this->getRequest()->ano;
+        
         $data_freq = $this->getRequest()->data_frequencia;
+        $data_freq = date("Y-m-d", strtotime($data_freq) );
 
             $options = [];
           
@@ -78,7 +80,7 @@ class FrequenciaComponenteController extends ApiCoreController
                     $total_aulas = substr($total_aulas, 0, -1);
                     $str_arr = preg_split ("/\,/", $total_aulas);
                     $total = count($str_arr);
-                    
+
                     if($contador_frequencias<1){
                         $total =0;
                     }
