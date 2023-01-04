@@ -184,7 +184,7 @@ return new class extends clsDetalhe {
           
           
             $total_dias_letivos_realizados = 0;
-            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->get(); 
+            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->where('data','<=', $registro['detalhes']['data'])->get(); 
             $total_aulas = '';
             foreach($frequencias as $aulas){
                   $total_dias_letivos_realizados++;
@@ -225,7 +225,7 @@ return new class extends clsDetalhe {
               }else{
 
                       $carga_horaria = 0;
-                      $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->get(); 
+                      $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->where('data','<=', $registro['detalhes']['data'])->get(); 
                       $total_aulas = '';
                       foreach($frequencias as $aulas){
                           $total_aulas .= $aulas->ordens_aulas.",";
