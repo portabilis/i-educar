@@ -428,10 +428,8 @@ class Portabilis_Business_Professor
             order by ac.secao, ac.nome, cc.nome
         ";
 
-
         $options = ['params' => [$turmaId, $anoLetivo, $userId]];
 
-        var_dump($options);
         return self::fetchPreparedQuery($sql, $options);
     }
 
