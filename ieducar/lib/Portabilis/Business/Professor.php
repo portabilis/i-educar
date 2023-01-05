@@ -429,8 +429,6 @@ class Portabilis_Business_Professor
         ";
 
 
-        echo $sql;
-
         $options = ['params' => [$turmaId, $anoLetivo, $userId]];
 
         var_dump($options);
