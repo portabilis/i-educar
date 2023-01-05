@@ -4,7 +4,6 @@ use Carbon\Carbon;
 
 class Portabilis_View_Helper_DynamicInput_TodasTurmas extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
-    
     protected function inputName()
     {
         return 'ref_cod_turma';
