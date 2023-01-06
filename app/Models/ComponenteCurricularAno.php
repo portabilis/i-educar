@@ -21,7 +21,8 @@ class ComponenteCurricularAno extends Model
 
    protected $fillable = [
        'componente_curricular_id',
-       'carga_horaria'
+       'carga_horaria',
+       'tipo_nota'
        
    
    ];

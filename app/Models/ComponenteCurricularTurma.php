@@ -22,7 +22,8 @@ class ComponenteCurricularTurma extends Model
    protected $fillable = [
        'componente_curricular_id',
        'turma_id',
-       'carga_horaria'
+       'carga_horaria',
+       'ano_escolar_id'
        
    
    ];

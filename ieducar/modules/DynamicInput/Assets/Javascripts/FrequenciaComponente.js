@@ -21,7 +21,7 @@
       }
   
       function getResultado(xml) {
-        $frequenciaComponenteTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'INFORMAÇÕES:' : 'INFORMAÇÕES:';
+        $frequenciaComponenteTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Informações:' : 'Informações:';
       }
   
       var xml = new ajax(getResultado);
