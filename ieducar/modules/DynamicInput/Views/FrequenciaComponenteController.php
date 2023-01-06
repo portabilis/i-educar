@@ -19,8 +19,7 @@ class FrequenciaComponenteController extends ApiCoreController
         $ano = $this->getRequest()->ano;
         
         $data_freq = $this->getRequest()->data_frequencia;
-        $data_freq =  implode("-",array_reverse(explode("/",$data_freq)));
-        
+       
 
             $options = [];
           
@@ -62,7 +61,7 @@ class FrequenciaComponenteController extends ApiCoreController
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("dias letivos: ".$total_dias_letivos_turma." | dias realizados: ".$total_dias_letivos_realizados." | dias a realizar: ".$restante, 'UTF-8'),
+                    'value' => mb_strtoupper("dias letivos: ".$total_dias_letivos_turma." | ".$data_freq." dias realizados: ".$total_dias_letivos_realizados." | dias a realizar: ".$restante, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];
