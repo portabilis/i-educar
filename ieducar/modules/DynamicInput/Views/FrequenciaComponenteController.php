@@ -19,7 +19,8 @@ class FrequenciaComponenteController extends ApiCoreController
         $ano = $this->getRequest()->ano;
         
         $data_freq = $this->getRequest()->data_frequencia;
-        $data_freq = date("Y-d-m", strtotime($data_freq) );
+        $data_freq =  implode("-",array_reverse(explode("/",$data_freq)));
+        
 
             $options = [];
           
@@ -87,7 +88,7 @@ class FrequenciaComponenteController extends ApiCoreController
         
                     // foreach ($componentesCurriculares as $componenteCurricular) {
                     $carga_horaria = 0;
-                    $componentes = ComponenteCurricularAno::where('componente_curricular_id', $ComponenteId)->get(); 
+                    $componentes = ComponenteCurricularAno::where('componente_curricular_id', $ComponenteId)->where('ano_escolar_id', $serie_id)->get(); 
                     foreach($componentes as $componente){
                         $carga_horaria = $componente->carga_horaria;
                         $carga_horaria = round($carga_horaria, 3);
