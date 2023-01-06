@@ -364,7 +364,7 @@ class Portabilis_Business_Professor
                 from pmieducar.turma_modulo
                 where
                 ref_cod_turma = turma.cod_turma
-                AND date_part('year', data_fim) = $2
+                AND  (date_part('year', data_inicio) = $2 OR date_part('year', data_fim) = $2)
                 ORDER BY
                 data_fim DESC
                 LIMIT 1) IS NOT NULL
@@ -411,7 +411,7 @@ class Portabilis_Business_Professor
                 from pmieducar.turma_modulo
                 where
                 ref_cod_turma = turma.cod_turma
-                AND date_part('year', data_fim) = $2
+                AND (date_part('year', data_inicio) = $2 OR date_part('year', data_fim) = $2)
                 ORDER BY
                 data_fim DESC
                 LIMIT 1) IS NOT NULL
