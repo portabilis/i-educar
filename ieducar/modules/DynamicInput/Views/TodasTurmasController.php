@@ -43,8 +43,10 @@ class TodasTurmasController extends ApiCoreController
                     $etapa = $objTurmaModulo->lista($professor_turma['ref_cod_turma']);
 
                     if ($etapa[0]) {
-                        $anoEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
-                        if ($anoEtapa == $ano) {
+                        $anoDataInicialEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_inicio'])->format('Y');
+                        $anoDataFinalEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
+
+                        if (($anoDataInicialEtapa == $ano) || ($anoDataFinalEtapa == $ano)) {
                             $options[$professor_turma['ref_cod_turma']] = $professor_turma['nm_turma'] . " (" . $professor_turma['nm_escola'] . ")";
                         }
                     }
@@ -159,9 +161,10 @@ class TodasTurmasController extends ApiCoreController
                         $etapa = $objTurmaModulo->lista($turma_item['cod_turma']);
 
                         if ($etapa[0]) {
-                            $anoEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
+                            $anoDataInicialEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_inicio'])->format('Y');
+                            $anoDataFinalEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
 
-                            if ($anoEtapa == $ano) {
+                            if (($anoDataInicialEtapa == $ano) || ($anoDataFinalEtapa == $ano)) {
                                 $nm_escola = $obj_escola->lista($turma_item['ref_ref_cod_escola'])[0]['nome'];
                                 $options[$turma_item['cod_turma']] = $turma_item['nm_turma'] . " (" . $nm_escola . ")";
                             }
