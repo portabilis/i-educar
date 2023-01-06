@@ -23,9 +23,9 @@ class FrequenciaComponenteController extends ApiCoreController
         $data_freq = implode("-",array_reverse(explode("/",$data_freq)));
             $options = [];
         $array = explode('-', $data_freq);
-        $tmp = $array[1];
-        $array[1] = $array[2];
-        $array[2] = $tmp;
+        $tmp = $array[2];
+        $array[2] = $array[1];
+        $array[1] = $tmp;
         unset($tmp);
         $date_2 = implode('-', $array);
           
