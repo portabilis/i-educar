@@ -19,16 +19,17 @@ class FrequenciaComponenteController extends ApiCoreController
         $ano = $this->getRequest()->ano;
         
         $data_freq = $this->getRequest()->data_frequencia;
-        $data_freq = date("Y-d-m", strtotime($data_freq) );
-
+      
+       $data_freq = implode("-",array_reverse(explode("/",$data_freq)));
             $options = [];
+       
           
            
            
            
         
             $total_dias_letivos_realizados = 0;
-            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->where('data','<=', $data_freq)->get(); 
+            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->where('data','<=', "'".$data_freq."'")->get(); 
             $total_aulas = '';
             foreach($frequencias as $aulas){
                 $total_dias_letivos_realizados++;
@@ -69,7 +70,7 @@ class FrequenciaComponenteController extends ApiCoreController
             }else{
                     $carga_horaria = 0;
                     
-                    $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->where('data','<=', $data_freq)->get(); 
+                    $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->where('data','<=',  "'".$data_freq."'")->get(); 
                     $total_aulas = '';
                     $contador_frequencias = 0;
                     foreach($frequencias as $aulas){
