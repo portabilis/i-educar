@@ -22,13 +22,19 @@ class FrequenciaComponenteController extends ApiCoreController
        
         $data_freq = implode("-",array_reverse(explode("/",$data_freq)));
             $options = [];
+        $array = explode('-', $data_freq);
+        $tmp = $array[1];
+        $array[1] = $array[2];
+        $array[2] = $tmp;
+        unset($tmp);
+        $date_2 = implode('-', $array);
           
            
            
            
         
             $total_dias_letivos_realizados = 0;
-            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->where('data','<=', $data_freq)->get(); 
+            $frequencias = Frequencia::where('ref_cod_turma', $turmaId)->where('data','<=', $date_2)->get(); 
             $total_aulas = '';
             foreach($frequencias as $aulas){
                 $total_dias_letivos_realizados++;
@@ -61,7 +67,7 @@ class FrequenciaComponenteController extends ApiCoreController
                 $options[
                     '__' . 1
                 ] = [
-                    'value' => mb_strtoupper("dias letivos: ".$total_dias_letivos_turma." | ".$data_freq." dias realizados: ".$total_dias_letivos_realizados." | dias a realizar: ".$restante, 'UTF-8'),
+                    'value' => mb_strtoupper("dias letivos: ".$total_dias_letivos_turma." | ".$date_2." dias realizados: ".$total_dias_letivos_realizados." | dias a realizar: ".$restante, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];
@@ -69,7 +75,7 @@ class FrequenciaComponenteController extends ApiCoreController
             }else{
                     $carga_horaria = 0;
                     
-                    $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->where('data','<=', $data_freq)->get(); 
+                    $frequencias = Frequencia::where('ref_componente_curricular', $ComponenteId)->where('ref_cod_turma', $turmaId)->where('data','<=', $date_2)->get(); 
                     $total_aulas = '';
                     $contador_frequencias = 0;
                     foreach($frequencias as $aulas){
