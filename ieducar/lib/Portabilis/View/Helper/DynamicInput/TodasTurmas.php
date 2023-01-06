@@ -44,9 +44,10 @@ class Portabilis_View_Helper_DynamicInput_TodasTurmas extends Portabilis_View_He
                     $etapa = $objTurmaModulo->lista($professor_turma['ref_cod_turma']);
 
                     if ($etapa[0]) {
-                        $anoEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
+                        $anoDataInicialEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_inicio'])->format('Y');
+                        $anoDataFinalEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
 
-                        if ($anoEtapa == $anoLetivo) {
+                        if (($anoDataInicialEtapa == $anoLetivo) || ($anoDataFinalEtapa == $anoLetivo)) {
                             $resources[$professor_turma['ref_cod_turma']] = $professor_turma['nm_turma'] . " (" . $professor_turma['nm_escola'] . ")";
                         }
                     }
@@ -162,9 +163,10 @@ class Portabilis_View_Helper_DynamicInput_TodasTurmas extends Portabilis_View_He
                         $etapa = $objTurmaModulo->lista($turma_item['cod_turma']);
 
                         if ($etapa[0]) {
-                            $anoEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
+                            $anoDataInicialEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_inicio'])->format('Y');
+                            $anoDataFinalEtapa = Carbon::createFromFormat('Y-m-d', $etapa[0]['data_fim'])->format('Y');
 
-                            if ($anoEtapa == $anoLetivo) {
+                            if (($anoDataInicialEtapa == $anoLetivo) || ($anoDataFinalEtapa == $anoLetivo)) {
                                 $nm_escola = $obj_escola->lista($turma_item['ref_ref_cod_escola'])[0]['nome'];
                                 $resources[$turma_item['cod_turma']] = $turma_item['nm_turma'] . " (" . $nm_escola . ")";
                             }
