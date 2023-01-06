@@ -1236,55 +1236,6 @@ class clsPmieducarMatricula extends Model
     }
 
     /**
-     * Retorna os dados de um registro.
-     *
-     * @return array
-     */
-    public function numModulo(
-        $int_ref_ref_cod_serie,
-        $int_ref_ref_cod_escola,
-        $int_ref_ref_cod_turma,
-        $int_ref_cod_turma,
-        $int_ref_ref_cod_matricula
-    ) {
-        $db = new clsBanco();
-        $sql = "SELECT CASE WHEN FLOOR((SELECT COUNT(*)
-                                          FROM pmieducar.nota_aluno
-                                         WHERE disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                           AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola}
-                                           AND disc_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                           AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                           AND ref_ref_cod_turma = {$int_ref_cod_turma}) / ((SELECT COUNT(*)
-                                                                                               FROM pmieducar.disciplina_serie
-                                                                                              WHERE ref_cod_serie = {$int_ref_ref_cod_serie}) - (SELECT COUNT(0)
-                                                                                                                                                   FROM pmieducar.dispensa_disciplina
-                                                                                                                                                  WHERE ref_ref_cod_turma = {$int_ref_cod_turma}
-                                                                                                                                                    AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                                                                                                                                    AND disc_ref_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                                                                                                                                    AND disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                                                                                                                                    AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola}))) = 0
-                            THEN 0
-                       ELSE FLOOR((SELECT COUNT(*)
-                                     FROM pmieducar.nota_aluno
-                                    WHERE disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                      AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola}
-                                      AND disc_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                      AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                      AND ref_ref_cod_turma = {$int_ref_cod_turma}) / ((SELECT COUNT(*)
-                                                                                          FROM pmieducar.disciplina_serie
-                                                                                         WHERE ref_cod_serie = {$int_ref_ref_cod_serie}) - (SELECT COUNT(0)
-                                                                                                                                              FROM pmieducar.dispensa_disciplina
-                                                                                                                                             WHERE ref_ref_cod_turma = {$int_ref_cod_turma}
-                                                                                                                                               AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                                                                                                                               AND disc_ref_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                                                                                                                               AND disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                                                                                                                               AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola})))
-                END";
-
-        return $db->CampoUnico($sql);
-    }
-
-    /**
      * Seta a matricula para abandono e seta a observação passada por parâmetro
      *
      * @return boolean
