@@ -18,8 +18,7 @@ class FrequenciaComponenteController extends ApiCoreController
         $ComponenteId = $this->getRequest()->componente_id;
         $ano = $this->getRequest()->ano;
         
-        $data_freq = $this->getRequest()->data_frequencia;
-        $data_freq  = strtotime($input);
+        $data_freq = "".$this->getRequest()->data_frequencia;
         $data_freq = date('Y-m-d',  $data_freq);
        
             $options = [];
