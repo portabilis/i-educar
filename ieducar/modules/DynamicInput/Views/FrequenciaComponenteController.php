@@ -19,9 +19,8 @@ class FrequenciaComponenteController extends ApiCoreController
         $ano = $this->getRequest()->ano;
         
         $data_freq = $this->getRequest()->data_frequencia;
-        $data_freq = DateTime::createFromFormat('d-m-Y', $data_freq);
-        $data_freq = $data_freq->format('Y/m/d');
-        
+      
+       $data_freq = implode("-",array_reverse(explode("/",$data_freq)));
             $options = [];
        
           

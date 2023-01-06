@@ -46,7 +46,7 @@
             ano      : $anoField.attr('value'),
             turma_id : $turmaField.attr('value'),
             componente_id : $componenteCurricularField.attr('value'),
-            data_frequencia : $dataField.attr('value')
+            data_frequencia : $dataField.attr('value').toString()
           };
   
           var urlForGetFrequenciaComponentes = getResourceUrlBuilder.buildUrl(
