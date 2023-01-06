@@ -168,10 +168,10 @@ class ComponenteCurricularController extends ApiCoreController
                             al.ano = $2
                         OR
                             (select data_fim
-                            from pmieducar.ano_letivo_modulo
+                            from pmieducar.turma_modulo
                             where
-                            ref_ref_cod_escola = esd.ref_ref_cod_escola
-                            AND date_part('year', data_fim) = $2
+                            ref_cod_turma = turma.cod_turma
+                            AND  (date_part('year', data_inicio) = $2 OR date_part('year', data_fim) = $2)
                             ORDER BY
                             data_fim DESC
                             LIMIT 1) IS NOT NULL
@@ -209,10 +209,10 @@ class ComponenteCurricularController extends ApiCoreController
                                 al.ano = $2
                             OR
                                 (select data_fim
-                                from pmieducar.ano_letivo_modulo
+                                from pmieducar.turma_modulo
                                 where
-                                ref_ref_cod_escola = esd.ref_ref_cod_escola
-                                AND date_part('year', data_fim) = $2
+                                ref_cod_turma = t.cod_turma
+                                AND  (date_part('year', data_inicio) = $2 OR date_part('year', data_fim) = $2)
                                 ORDER BY
                                 data_fim DESC
                                 LIMIT 1) IS NOT NULL
