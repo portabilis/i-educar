@@ -17,12 +17,13 @@ class ComponenteCurricularAno extends Model
    /**
     * @var string
     */
-   protected $primaryKey = 'id';
+   protected $primaryKey = 'componente_curricular_id';
 
    protected $fillable = [
        'componente_curricular_id',
        'carga_horaria',
-       'tipo_nota'
+       'tipo_nota',
+       'ano_escolar_id'
        
    
    ];
