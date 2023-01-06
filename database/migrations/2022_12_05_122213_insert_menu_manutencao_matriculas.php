@@ -15,7 +15,7 @@ class InsertMenuManutencaoMatriculas extends Migration
     {
         DB::table('public.menus')->insert(
             array(
-                'id' => 396,
+                'id' => 3956,
                 'parent_id' => 13,
                 'title' => 'Manutenção de Matrículas',
                 'description' => 'Manutenção de Matrículas',
