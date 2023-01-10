@@ -401,13 +401,13 @@ return new class extends clsDetalhe {
         }
 
         $this->tabela3 = '';
-        $componentes = collect($lista)->map(function ($disciplina) {
+        $componentes = collect(value: $lista)->map(callback: function ($disciplina) {
             return [
                 'id' => $disciplina->id,
                 'name' => $disciplina->nome,
                 'workload' => $disciplina->cargaHoraria !== null || $disciplina->cargaHoraria !== 0 ? $disciplina->cargaHoraria : null
             ];
-        })->sortByDesc('workload');
+        })->sortByDesc(callback: 'workload');
 
         if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
@@ -426,14 +426,14 @@ return new class extends clsDetalhe {
         } else {
             $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
         }
-        $this->addDetalhe(['Componentes curriculares',
+        $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
 
     public function montaListaComponentesMulti()
     {
         $this->tabela3 = '';
-        $componentes = $this->getComponentesTurmaMulti($this->cod_turma);
+        $componentes = $this->getComponentesTurmaMulti(turmaId: $this->cod_turma);
         if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
             $disciplinas .= '<tr>';
@@ -452,24 +452,24 @@ return new class extends clsDetalhe {
         } else {
             $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
         }
-        $this->addDetalhe(['Componentes curriculares',
+        $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
 
     public function makeCss()
     {
-        return file_get_contents(__DIR__ . '/styles/extra/educar-turma-det.css');
+        return file_get_contents(filename: __DIR__ . '/styles/extra/educar-turma-det.css');
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-turma-det.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-turma-det.js');
     }
 
     public function getComponentesTurma() {
 
         return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
-            ->whereSchool($this->ref_ref_cod_escola)
+            ->whereSchool(school: $this->ref_ref_cod_escola)
             ->whereYearEq($this->ano)
             ->active()
             ->get();
@@ -477,37 +477,37 @@ return new class extends clsDetalhe {
 
     public function getComponentesTurmaMulti($turmaId)
     {
-        $componentes = DB::table('pmieducar.turma as t')
-            ->selectRaw("cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
-            ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
-            ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
-            ->join('pmieducar.escola_serie as es', function ($join) {
+        $componentes = DB::table(table: 'pmieducar.turma as t')
+            ->selectRaw(expression: "cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
+            ->join(table: 'pmieducar.turma_serie as ts', first: 'ts.turma_id', operator: '=', second: 't.cod_turma')
+            ->leftJoin(table: 'pmieducar.serie as s', first: 's.cod_serie', operator: 'ts.serie_id')
+            ->join(table: 'pmieducar.escola_serie as es', first: function ($join) {
                 $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
                 $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
             })
-            ->join('pmieducar.escola_serie_disciplina as esd', function ($join) {
+            ->join(table: 'pmieducar.escola_serie_disciplina as esd', first: function ($join) {
                 $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
                 $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
             })
-            ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
-            ->join('modules.componente_curricular_ano_escolar as ccae', function ($join) {
+            ->join(table: 'modules.componente_curricular as cc', first: 'cc.id', operator: '=', second: 'esd.ref_cod_disciplina')
+            ->join(table: 'modules.componente_curricular_ano_escolar as ccae', first: function ($join) {
                 $join->on('ccae.componente_curricular_id', '=', 'cc.id');
                 $join->on('ccae.ano_escolar_id', '=', 'es.ref_cod_serie');
             })
-            ->where('t.cod_turma', $turmaId)
-            ->whereRaw('t.ano = ANY(esd.anos_letivos)')
-            ->where('t.multiseriada', 1)
+            ->where(column: 't.cod_turma', operator: $turmaId)
+            ->whereRaw(sql: 't.ano = ANY(esd.anos_letivos)')
+            ->where(column: 't.multiseriada', operator: 1)
             ->groupBy([
                 'cc.id',
                 'workload',
                 'name'
             ])
-            ->orderBy('workload','desc')
+            ->orderBy(column: 'workload', direction: 'desc')
             ->get();
 
-        return $componentes->each(function ($item) use ($componentes) {
-            $item->order = $componentes->where('id', $item->id)->max('workload');
-        })->sortBy([
+        return $componentes->each(callback: function ($item) use ($componentes) {
+            $item->order = $componentes->where(key: 'id', operator: $item->id)->max(callback: 'workload');
+        })->sortBy(callback: [
             ['order', 'desc' ],
             ['id', 'asc'],
             ['name', 'asc']
