@@ -93,11 +93,6 @@ class clsPessoaFisica extends clsPessoaFj
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric(value: $this->tipo_endereco)) {
-            // Interno
-            $where .= "{$whereAnd} p.idpes IN (SELECT idpes FROM cadastro.endereco_pessoa)";
-        }
-
         if ($inicio_limite !== false && $qtd_registros) {
             $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
         }
