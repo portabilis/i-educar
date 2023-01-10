@@ -574,28 +574,7 @@ return new class extends clsCadastro {
                         true
                     );
 
-                    $this->campoTextoInv(
-                        $campo['qtd_aulas_'] . '_qtd_aulas',
-                        '',
-                        "Qtd de aulas: ".$campo['qtd_aulas_'],
-                        5,
-                        255,
-                        false,
-                        false,
-                        true
-                    );
-                  if($campo['registra_diario_individual_']){
-                    $this->campoTextoInv(
-                        $campo['registra_diario_individual_'] . '_registra_diario_individual',
-                        '',
-                        "Registro Individual",
-                        5,
-                        255,
-                        false,
-                        false,
-                        true
-                    );
-                  }
+                  
                     $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
                     $componente = $componenteMapper->find($campo['ref_ref_cod_disciplina_']);
 
@@ -609,7 +588,17 @@ return new class extends clsCadastro {
                         false,
                         true
                     );
-
+                    $this->campoTextoInv(
+                        $campo['qtd_horario_'] . '_qtd_aulas',
+                        '',
+                        "Qtd de aulas: ".$campo['qtd_aulas_'],
+                        5,
+                        255,
+                        false,
+                        false,
+                        true
+                    );
+                  
                     $obj_pes = new clsPessoa_($campo['ref_servidor_']);
                     $det_pes = $obj_pes->detalhe();
 
@@ -626,6 +615,18 @@ return new class extends clsCadastro {
                             '',
                             ''
                         );
+                        if($campo['registra_diario_individual_']){
+                            $this->campoTextoInv(
+                                $campo['qtd_horario_'] . '_registra_diario_individual',
+                                '',
+                                "Registro Individual",
+                                5,
+                                255,
+                                false,
+                                false,
+                                true
+                            );
+                          }
                     } else {
                         $this->campoTextoInv(
                             $campo['qtd_horario_'] . '_ref_cod_servidor',
@@ -639,6 +640,19 @@ return new class extends clsCadastro {
                             '',
                             "<a href='#' onclick=\"getElementById('excluir_horario').value = '{$campo['qtd_horario_']}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>"
                         );
+
+                        if($campo['registra_diario_individual_']){
+                            $this->campoTextoInv(
+                                $campo['qtd_horario_'] . '_registra_diario_individual',
+                                '',
+                                "Registro Individual",
+                                5,
+                                255,
+                                false,
+                                false,
+                                true
+                            );
+                          }
                     }
                 }
 
