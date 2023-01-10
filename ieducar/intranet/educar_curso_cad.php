@@ -9,7 +9,6 @@ use App\Models\LegacyRegimeType;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_curso;
     public $ref_usuario_cad;
     public $ref_cod_tipo_regime;
@@ -30,12 +29,10 @@ return new class extends clsCadastro {
     public $ref_cod_instituicao;
     public $padrao_ano_escolar;
     public $hora_falta;
-
     public $incluir;
     public $excluir_;
     public $habilitacao_curso;
     public $curso_sem_avaliacao = true;
-
     public $multi_seriado;
     public $modalidade_curso;
     public $importar_curso_pre_matricula;
@@ -45,18 +42,18 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->cod_curso = $this->getQueryString('cod_curso');
+        $this->cod_curso = $this->getQueryString(name: 'cod_curso');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            566,
-            $this->pessoa_logada,
-            3,
-            'educar_curso_lst.php'
+            int_processo_ap: 566,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 3,
+            str_pagina_redirecionar: 'educar_curso_lst.php'
         );
 
-        if (is_numeric($this->cod_curso)) {
-            $obj = new clsPmieducarCurso($this->cod_curso);
+        if (is_numeric(value: $this->cod_curso)) {
+            $obj = new clsPmieducarCurso(cod_curso: $this->cod_curso);
             $registro = $obj->detalhe();
 
             if ($registro) {
@@ -66,9 +63,9 @@ return new class extends clsCadastro {
                 }
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(
-                    566,
-                    $this->pessoa_logada,
-                    3
+                    int_processo_ap: 566,
+                    int_idpes_usuario: $this->pessoa_logada,
+                    int_soma_nivel_acesso: 3
                 );
 
                 $retorno = 'Editar';
@@ -77,7 +74,7 @@ return new class extends clsCadastro {
         $this->url_cancelar = ($retorno == 'Editar') ?
             "educar_curso_det.php?cod_curso={$registro['cod_curso']}" : 'educar_curso_lst.php';
 
-        $this->breadcrumb('Cursos', ['educar_index.php' => 'Escola']);
+        $this->breadcrumb(currentPage: 'Cursos', breadcrumbs: ['educar_index.php' => 'Escola']);
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -93,15 +90,15 @@ return new class extends clsCadastro {
         }
 
         if ($_POST['habilitacao_curso']) {
-            $this->habilitacao_curso = unserialize(urldecode($_POST['habilitacao_curso']));
+            $this->habilitacao_curso = unserialize(urldecode($_POST['habilitacao_curso']),['stdclass']);
         }
 
-        $qtd_habilitacao = (is_array($this->habilitacao_curso) && count($this->habilitacao_curso) == 0) ?
-            1 : (is_array($this->habilitacao_curso) && count($this->habilitacao_curso) + 1);
+        $qtd_habilitacao = (is_array(value: $this->habilitacao_curso) && count(value: $this->habilitacao_curso) == 0) ?
+            1 : (is_array(value: $this->habilitacao_curso) && count(value: $this->habilitacao_curso) + 1);
 
-        if (is_numeric($this->cod_curso) && $_POST['incluir'] != 'S' && empty($_POST['excluir_'])) {
-            $obj = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
-            $registros = $obj->lista(null, $this->cod_curso);
+        if (is_numeric(value: $this->cod_curso) && $_POST['incluir'] != 'S' && empty($_POST['excluir_'])) {
+            $obj = new clsPmieducarHabilitacaoCurso(ref_cod_habilitacao: null, ref_cod_curso: $this->cod_curso);
+            $registros = $obj->lista(int_ref_cod_curso: $this->cod_curso);
 
             if ($registros) {
                 foreach ($registros as $campo) {
@@ -120,7 +117,7 @@ return new class extends clsCadastro {
         }
 
         // primary keys
-        $this->campoOculto('cod_curso', $this->cod_curso);
+        $this->campoOculto(nome: 'cod_curso', valor: $this->cod_curso);
 
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
@@ -130,11 +127,11 @@ return new class extends clsCadastro {
 
         if ($this->ref_cod_instituicao) {
             $opcoes = LegacyEducationLevel::query()
-                ->where('ativo', 1)
-                ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
-                ->orderBy('nm_nivel', 'ASC')
-                ->pluck('nm_nivel', 'cod_nivel_ensino')
-                ->prepend('Selecione', '');
+                ->where(column: 'ativo', operator: 1)
+                ->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao)
+                ->orderBy(column: 'nm_nivel', direction: 'ASC')
+                ->pluck(column: 'nm_nivel', key: 'cod_nivel_ensino')
+                ->prepend(value: 'Selecione', key: '');
         }
 
         $script = 'javascript:showExpansivelIframe(520, 230, \'educar_nivel_ensino_cad_pop.php\');';
@@ -145,14 +142,11 @@ return new class extends clsCadastro {
         }
 
         $this->campoLista(
-            'ref_cod_nivel_ensino',
-            'Nível Ensino',
-            $opcoes,
-            $this->ref_cod_nivel_ensino,
-            '',
-            false,
-            '',
-            $script
+            nome: 'ref_cod_nivel_ensino',
+            campo: 'Nível Ensino',
+            valor: $opcoes,
+            default: $this->ref_cod_nivel_ensino,
+            complemento: $script
         );
 
         // Tipo ensino
@@ -160,10 +154,10 @@ return new class extends clsCadastro {
 
         if ($this->ref_cod_instituicao) {
             $opcoes = LegacyEducationType::query()
-                ->where('ativo', 1)
-                ->orderBy('nm_tipo', 'ASC')
-                ->pluck('nm_tipo', 'cod_tipo_ensino')
-                ->prepend('Selecione', '');
+                ->where(column: 'ativo', operator: 1)
+                ->orderBy(column: 'nm_tipo', direction: 'ASC')
+                ->pluck(column: 'nm_tipo', key: 'cod_tipo_ensino')
+                ->prepend(value: 'Selecione', key: '');
         }
 
         $script = 'javascript:showExpansivelIframe(520, 150, \'educar_tipo_ensino_cad_pop.php\');';
@@ -174,14 +168,11 @@ return new class extends clsCadastro {
         }
 
         $this->campoLista(
-            'ref_cod_tipo_ensino',
-            'Tipo Ensino',
-            $opcoes,
-            $this->ref_cod_tipo_ensino,
-            '',
-            false,
-            '',
-            $script
+            nome: 'ref_cod_tipo_ensino',
+            campo: 'Tipo Ensino',
+            valor: $opcoes,
+            default: $this->ref_cod_tipo_ensino,
+            complemento: $script
         );
 
         // Tipo regime
@@ -189,11 +180,11 @@ return new class extends clsCadastro {
 
         if ($this->ref_cod_instituicao) {
             $opcoes = LegacyRegimeType::query()
-                ->where('ativo', 1)
-                ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
-                ->orderBy('nm_tipo', 'ASC')
-                ->pluck('nm_tipo', 'cod_tipo_regime')
-                ->prepend('Selecione', '');
+                ->where(column: 'ativo', operator: 1)
+                ->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao)
+                ->orderBy(column: 'nm_tipo', direction: 'ASC')
+                ->pluck(column: 'nm_tipo', key: 'cod_tipo_regime')
+                ->prepend(value: 'Selecione', key: '');
         }
 
         $script = 'javascript:showExpansivelIframe(520, 120, \'educar_tipo_regime_cad_pop.php\');';
@@ -205,70 +196,59 @@ return new class extends clsCadastro {
         }
 
         $this->campoLista(
-            'ref_cod_tipo_regime',
-            'Tipo Regime',
-            $opcoes,
-            $this->ref_cod_tipo_regime,
-            '',
-            false,
-            '',
-            $script,
-            false,
-            false
+            nome: 'ref_cod_tipo_regime',
+            campo: 'Tipo Regime',
+            valor: $opcoes,
+            default: $this->ref_cod_tipo_regime,
+            complemento: $script,
+            obrigatorio: false
         );
 
         // Outros campos
-        $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, true);
+        $this->campoTexto(nome: 'nm_curso', campo: 'Curso', valor: $this->nm_curso, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
-        $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, false);
-        $this->campoTexto('descricao', 'Descrição', $this->descricao, 15, 50, false, false, '', 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
-        $this->campoNumero('qtd_etapas', 'Quantidade Etapas', $this->qtd_etapas, 2, 2, true);
+        $this->campoTexto(nome: 'sgl_curso', campo: 'Sigla Curso', valor: $this->sgl_curso, tamanhovisivel: 15, tamanhomaximo: 15);
+        $this->campoTexto(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, tamanhovisivel: 15, tamanhomaximo: 50, duplo: '', descricao: 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
+        $this->campoNumero(nome: 'qtd_etapas', campo: 'Quantidade Etapas', valor: $this->qtd_etapas, tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true);
 
-        if (is_numeric($this->hora_falta)) {
+        if (is_numeric(value: $this->hora_falta)) {
             $this->campoMonetario(
-                'hora_falta',
-                'Hora Falta',
-                number_format($this->hora_falta, 2, ',', ''),
-                5,
-                5,
-                false,
-                '',
-                '',
-                ''
+                nome: 'hora_falta',
+                campo: 'Hora Falta',
+                valor: number_format(num: $this->hora_falta, decimals: 2, decimal_separator: ',', thousands_separator: ''),
+                tamanhovisivel: 5,
+                tamanhomaximo: 5,
+                evento: ''
             );
         } else {
             $this->campoMonetario(
-                'hora_falta',
-                'Hora Falta',
-                $this->hora_falta,
-                5,
-                5,
-                false,
-                '',
-                '',
-                ''
+                nome: 'hora_falta',
+                campo: 'Hora Falta',
+                valor: $this->hora_falta,
+                tamanhovisivel: 5,
+                tamanhomaximo: 5,
+                evento: ''
             );
         }
 
         $this->campoMonetario(
-            'carga_horaria',
-            'Carga Horária',
-            $this->carga_horaria,
-            7,
-            7,
-            true
+            nome: 'carga_horaria',
+            campo: 'Carga Horária',
+            valor: $this->carga_horaria,
+            tamanhovisivel: 7,
+            tamanhomaximo: 7,
+            obrigatorio: true
         );
 
         $this->campoTexto(
-            'ato_poder_publico',
-            'Ato Poder Público',
-            $this->ato_poder_publico,
-            30,
-            255,
-            false
+            nome: 'ato_poder_publico',
+            campo: 'Ato Poder Público',
+            valor: $this->ato_poder_publico,
+            tamanhovisivel: 30,
+            tamanhomaximo: 255
         );
 
-        $this->campoOculto('excluir_', '');
+        $this->campoOculto(nome: 'excluir_', valor: '');
         $qtd_habilitacao = 1;
         $aux = [];
 
@@ -283,16 +263,12 @@ return new class extends clsCadastro {
                     $nm_habilitacao = $obj_habilitacao_det['nm_tipo'];
 
                     $this->campoTextoInv(
-                        "ref_cod_habilitacao_{$campo['ref_cod_habilitacao_']}",
-                        '',
-                        $nm_habilitacao,
-                        30,
-                        255,
-                        false,
-                        false,
-                        false,
-                        '',
-                        "<a href='#' onclick=\"getElementById('excluir_').value = '{$campo['ref_cod_habilitacao_']}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>"
+                        nome: "ref_cod_habilitacao_{$campo['ref_cod_habilitacao_']}",
+                        campo: '',
+                        valor: $nm_habilitacao,
+                        tamanhovisivel: 30,
+                        tamanhomaximo: 255,
+                        descricao2: "<a href='#' onclick=\"getElementById('excluir_').value = '{$campo['ref_cod_habilitacao_']}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>"
                     );
 
                     $aux[$qtd_habilitacao]['ref_cod_habilitacao_'] = $campo['ref_cod_habilitacao_'];
@@ -305,56 +281,50 @@ return new class extends clsCadastro {
             $this->habilitacao_curso = $aux;
         }
 
-        $this->campoOculto('habilitacao_curso', serialize($this->habilitacao_curso));
+        $this->campoOculto(nome: 'habilitacao_curso', valor: serialize(value: $this->habilitacao_curso));
 
         // Habilitação
         $opcoes = LegacyQualification::query()
-            ->where('ativo', 1)
-            ->orderBy('nm_tipo', 'ASC')
-            ->pluck('nm_tipo', 'cod_habilitacao')
-            ->prepend('Selecione', '');
+            ->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nm_tipo', direction: 'ASC')
+            ->pluck(column: 'nm_tipo', key: 'cod_habilitacao')
+            ->prepend(value: 'Selecione', key: '');
 
         $script = 'javascript:showExpansivelIframe(520, 225, \'educar_habilitacao_cad_pop.php\');';
         $script = "<img id='img_habilitacao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 
         $this->campoLista(
-            'habilitacao',
-            'Habilitação',
-            $opcoes,
-            $this->habilitacao,
-            '',
-            false,
-            '',
-            "<a href='#' onclick=\"getElementById('incluir').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>{$script}",
-            false,
-            false
+            nome: 'habilitacao',
+            campo: 'Habilitação',
+            valor: $opcoes,
+            default: $this->habilitacao,
+            complemento: "<a href='#' onclick=\"getElementById('incluir').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>{$script}",
+            obrigatorio: false
         );
-        $this->campoOculto('incluir', '');
+        $this->campoOculto(nome: 'incluir', valor: '');
         $this->campoQuebra();
 
         // Padrão ano escolar
-        $this->campoCheck('padrao_ano_escolar', 'Padrão Ano Escolar', $this->padrao_ano_escolar);
+        $this->campoCheck(nome: 'padrao_ano_escolar', campo: 'Padrão Ano Escolar', valor: $this->padrao_ano_escolar);
 
-        $this->campoCheck('multi_seriado', 'Multisseriado', $this->multi_seriado);
+        $this->campoCheck(nome: 'multi_seriado', campo: 'Multisseriado', valor: $this->multi_seriado);
 
         // Objetivo do curso
         $this->campoMemo(
-            'objetivo_curso',
-            'Objetivo Curso',
-            $this->objetivo_curso,
-            60,
-            5,
-            false
+            nome: 'objetivo_curso',
+            campo: 'Objetivo Curso',
+            valor: $this->objetivo_curso,
+            colunas: 60,
+            linhas: 5
         );
 
         // Público alvo
         $this->campoMemo(
-            'publico_alvo',
-            'Público Alvo',
-            $this->publico_alvo,
-            60,
-            5,
-            false
+            nome: 'publico_alvo',
+            campo: 'Público Alvo',
+            valor: $this->publico_alvo,
+            colunas: 60,
+            linhas: 5
         );
 
         $resources = [
@@ -366,12 +336,12 @@ return new class extends clsCadastro {
         ];
 
         $options = ['label' => 'Modalidade do curso', 'resources' => $resources, 'value' => $this->modalidade_curso];
-        $this->inputsHelper()->select('modalidade_curso', $options);
+        $this->inputsHelper()->select(attrName: 'modalidade_curso', inputOptions: $options);
 
         $etapasEducacenso = LegacyEducacensoStages::getDescriptiveValues();
-        $etapas = $this->cod_curso ? LegacyCourseEducacensoStage::getIdsByCourse($this->cod_curso) : [];
+        $etapas = $this->cod_curso ? LegacyCourseEducacensoStage::getIdsByCourse(course: $this->cod_curso) : [];
 
-        $this->inputsHelper()->multipleSearchCustom('', [
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: [
             'label' => 'Etapas que o curso contém',
             'size' => 50,
             'required' => false,
@@ -379,68 +349,56 @@ return new class extends clsCadastro {
                 'values' => $etapas,
                 'all_values' => $etapasEducacenso
             ]
-        ], [
+        ], helperOptions: [
             'objectName' => 'etapacurso',
         ]);
 
-        $this->campoCheck('importar_curso_pre_matricula', 'Importar os dados do curso para o recurso de pré-matrícula digital?', $this->importar_curso_pre_matricula);
+        $this->campoCheck(nome: 'importar_curso_pre_matricula', campo: 'Importar os dados do curso para o recurso de pré-matrícula digital?', valor: $this->importar_curso_pre_matricula);
     }
 
     public function Novo()
     {
         if ($this->habilitacao_curso && $this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
-            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-            $this->hora_falta = str_replace('.', '', $this->hora_falta);
-            $this->hora_falta = str_replace(',', '.', $this->hora_falta);
+            $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
+            $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
+            $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
+            $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
 
-            $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
-            $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
-            $this->importar_curso_pre_matricula = is_null($this->importar_curso_pre_matricula) ? 0 : 1;
+            $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
+            $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
+            $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
-                null,
-                $this->pessoa_logada,
-                $this->ref_cod_tipo_regime,
-                $this->ref_cod_nivel_ensino,
-                $this->ref_cod_tipo_ensino,
-                null,
-                $this->nm_curso,
-                $this->sgl_curso,
-                $this->qtd_etapas,
-                null,
-                null,
-                null,
-                null,
-                $this->carga_horaria,
-                $this->ato_poder_publico,
-                null,
-                $this->objetivo_curso,
-                $this->publico_alvo,
-                null,
-                null,
-                1,
-                null,
-                $this->ref_cod_instituicao,
-                $this->padrao_ano_escolar,
-                $this->hora_falta,
-                null,
-                $this->multi_seriado,
-                $this->importar_curso_pre_matricula,
-                $this->descricao
+                ref_usuario_cad: $this->pessoa_logada,
+                ref_cod_tipo_regime: $this->ref_cod_tipo_regime,
+                ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino,
+                ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino,
+                nm_curso: $this->nm_curso,
+                sgl_curso: $this->sgl_curso,
+                carga_horaria: $this->carga_horaria,
+                ato_poder_publico: $this->ato_poder_publico,
+                objetivo_curso: $this->objetivo_curso,
+                publico_alvo: $this->publico_alvo,
+                ativo: 1,
+                ref_cod_instituicao: $this->ref_cod_instituicao,
+                padrao_ano_escolar: $this->padrao_ano_escolar,
+                hora_falta: $this->hora_falta,
+                multi_seriado: $this->multi_seriado,
+                importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
+                descricao: $this->descricao
             );
             $obj->modalidade_curso = $this->modalidade_curso;
 
             $this->cod_curso = $cadastrou = $obj->cadastra();
             if ($cadastrou) {
-                $this->gravaEtapacurso($cadastrou);
-                $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
+                $this->gravaEtapacurso(cod_curso: $cadastrou);
+                $this->habilitacao_curso = unserialize(data: urldecode(string: $this->habilitacao_curso), options: ['stdlass']);
 
                 if ($this->habilitacao_curso) {
                     foreach ($this->habilitacao_curso as $campo) {
                         $obj = new clsPmieducarHabilitacaoCurso(
-                            $campo['ref_cod_habilitacao_'],
-                            $cadastrou
+                            ref_cod_habilitacao: $campo['ref_cod_habilitacao_'],
+                            ref_cod_curso: $cadastrou
                         );
 
                         $cadastrou2 = $obj->cadastra();
@@ -454,7 +412,7 @@ return new class extends clsCadastro {
                 }
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                $this->simpleRedirect('educar_curso_lst.php');
+                $this->simpleRedirect(url: 'educar_curso_lst.php');
             }
 
             $this->mensagem = 'Cadastro não realizado.<br>';
@@ -468,45 +426,35 @@ return new class extends clsCadastro {
     public function Editar()
     {
         if ($this->habilitacao_curso && $this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
-            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-            $this->hora_falta = str_replace('.', '', $this->hora_falta);
-            $this->hora_falta = str_replace(',', '.', $this->hora_falta);
+            $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
+            $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
+            $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
+            $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
 
-            $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
-            $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
-            $this->importar_curso_pre_matricula = is_null($this->importar_curso_pre_matricula) ? 0 : 1;
+            $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
+            $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
+            $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
-                $this->cod_curso,
-                null,
-                $this->ref_cod_tipo_regime,
-                $this->ref_cod_nivel_ensino,
-                $this->ref_cod_tipo_ensino,
-                null,
-                $this->nm_curso,
-                $this->sgl_curso,
-                $this->qtd_etapas,
-                null,
-                null,
-                null,
-                null,
-                $this->carga_horaria,
-                $this->ato_poder_publico,
-                null,
-                $this->objetivo_curso,
-                $this->publico_alvo,
-                null,
-                null,
-                1,
-                $this->pessoa_logada,
-                $this->ref_cod_instituicao,
-                $this->padrao_ano_escolar,
-                $this->hora_falta,
-                null,
-                $this->multi_seriado,
-                $this->importar_curso_pre_matricula,
-                $this->descricao
+                cod_curso: $this->cod_curso,
+                ref_cod_tipo_regime: $this->ref_cod_tipo_regime,
+                ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino,
+                ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino,
+                nm_curso: $this->nm_curso,
+                sgl_curso: $this->sgl_curso,
+                qtd_etapas: $this->qtd_etapas,
+                carga_horaria: $this->carga_horaria,
+                ato_poder_publico: $this->ato_poder_publico,
+                objetivo_curso: $this->objetivo_curso,
+                publico_alvo: $this->publico_alvo,
+                ativo: 1,
+                ref_usuario_exc: $this->pessoa_logada,
+                ref_cod_instituicao: $this->ref_cod_instituicao,
+                padrao_ano_escolar: $this->padrao_ano_escolar,
+                hora_falta: $this->hora_falta,
+                multi_seriado: $this->multi_seriado,
+                importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
+                descricao: $this->descricao
             );
             $obj->modalidade_curso = $this->modalidade_curso;
 
@@ -514,17 +462,17 @@ return new class extends clsCadastro {
             $alterouPadraoAnoEscolar = $detalheAntigo['padrao_ano_escolar'] != $this->padrao_ano_escolar;
             $editou = $obj->edita();
             if ($editou) {
-                $this->gravaEtapacurso($this->cod_curso);
-                $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
-                $obj = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
+                $this->gravaEtapacurso(cod_curso: $this->cod_curso);
+                $this->habilitacao_curso = unserialize(data: urldecode(string: $this->habilitacao_curso), options: ['stdclass']);
+                $obj = new clsPmieducarHabilitacaoCurso(ref_cod_habilitacao: null, ref_cod_curso: $this->cod_curso);
                 $excluiu = $obj->excluirTodos();
 
                 if ($excluiu) {
                     if ($this->habilitacao_curso) {
                         foreach ($this->habilitacao_curso as $campo) {
                             $obj = new clsPmieducarHabilitacaoCurso(
-                                $campo['ref_cod_habilitacao_'],
-                                $this->cod_curso
+                                ref_cod_habilitacao: $campo['ref_cod_habilitacao_'],
+                                ref_cod_curso: $this->cod_curso
                             );
 
                             $cadastrou2 = $obj->cadastra();
@@ -539,11 +487,11 @@ return new class extends clsCadastro {
                 }
 
                 if ($alterouPadraoAnoEscolar) {
-                    $this->updateClassStepsForCourse($this->cod_curso, $this->padrao_ano_escolar, date('Y'));
+                    $this->updateClassStepsForCourse(courseCode: $this->cod_curso, standerdSchoolYear: $this->padrao_ano_escolar, currentYear: date(format: 'Y'));
                 }
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-                $this->simpleRedirect('educar_curso_lst.php');
+                $this->simpleRedirect(url: 'educar_curso_lst.php');
             }
 
             $this->mensagem = 'Edição não realizada.<br>';
@@ -557,34 +505,15 @@ return new class extends clsCadastro {
     public function Excluir()
     {
         $obj = new clsPmieducarCurso(
-            $this->cod_curso,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            0,
-            $this->pessoa_logada
+            cod_curso: $this->cod_curso,
+            ativo: 0,
+            ref_usuario_exc: $this->pessoa_logada
         );
 
         $excluiu = $obj->excluir();
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_curso_lst.php');
+            $this->simpleRedirect(url: 'educar_curso_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
@@ -603,15 +532,15 @@ return new class extends clsCadastro {
 
             $etapas[] = $etapaId;
 
-            LegacyCourseEducacensoStage::query()->updateOrCreate([
+            LegacyCourseEducacensoStage::query()->updateOrCreate(attributes: [
                 'etapa_id' => $etapaId,
                 'curso_id' => $cod_curso,
             ]);
         }
 
         LegacyCourseEducacensoStage::query()
-            ->where('curso_id', $cod_curso)
-            ->whereNotIn('etapa_id', $etapas)
+            ->where(column: 'curso_id', operator: $cod_curso)
+            ->whereNotIn(column: 'etapa_id', values: $etapas)
             ->delete();
     }
 
@@ -619,16 +548,16 @@ return new class extends clsCadastro {
     {
         $classStepsObject = new clsPmieducarTurmaModulo();
 
-        $classStepsObject->removeStepsOfClassesForCourseAndYear($courseCode, $currentYear);
+        $classStepsObject->removeStepsOfClassesForCourseAndYear(courseCode: $courseCode, year: $currentYear);
 
         if ($standerdSchoolYear == 0) {
-            $classStepsObject->copySchoolStepsIntoClassesForCourseAndYear($courseCode, $currentYear);
+            $classStepsObject->copySchoolStepsIntoClassesForCourseAndYear(courseCode: $courseCode, year: $currentYear);
         }
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-curso-cad.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-curso-cad.js');
     }
 
     public function Formular()

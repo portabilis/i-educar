@@ -1,14 +1,14 @@
 <?php
 
-    header('Content-type: text/xml');
+    header(header: 'Content-type: text/xml');
 
     Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    if (is_numeric($_GET['ins'])) {
+    if (is_numeric(value: $_GET['ins'])) {
         $db = new clsBanco();
-        $db->Consulta("
+        $db->Consulta(consulta: "
         SELECT
             cod_material_tipo
             , nm_tipo

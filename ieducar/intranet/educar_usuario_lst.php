@@ -12,31 +12,31 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos(['Nome', 'Matrícula', 'Matrícula Interna', 'Status', 'Tipo usuário', 'Nível de Acesso']);
+        $this->addCabecalhos(coluna: ['Nome', 'Matrícula', 'Matrícula Interna', 'Status', 'Tipo usuário', 'Nível de Acesso']);
 
         // Filtros de Busca
-        $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, 42, 255);
-        $this->campoTexto('matricula', 'Matrícula', $this->matricula, 20, 15);
-        $this->campoTexto('matricula_interna', 'Matrícula Interna', $this->matricula_interna, 20, 30);
+        $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: 42, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'matricula', campo: 'Matrícula', valor: $this->matricula, tamanhovisivel: 20, tamanhomaximo: 15);
+        $this->campoTexto(nome: 'matricula_interna', campo: 'Matrícula Interna', valor: $this->matricula_interna, tamanhovisivel: 20, tamanhomaximo: 30);
 
         $opcoes = ['' => 'Selecione'];
 
         $objTemp = new clsPmieducarTipoUsuario();
-        $objTemp->setOrderby('nm_tipo ASC');
-        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
-        if (is_array($lista) && count($lista)) {
+        $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
+        $lista = $objTemp->lista(int_ativo: 1);
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
             }
         }
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usuário', $opcoes, $this->ref_cod_tipo_usuario, null, null, null, null, null, false);
+        $this->campoLista(nome: 'ref_cod_tipo_usuario', campo: 'Tipo Usuário', valor: $opcoes, default: $this->ref_cod_tipo_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
 
-        $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
+        $obj_usuario = new clsPmieducarUsuario(cod_usuario: $this->pessoa_logada);
         $detalhe = $obj_usuario->detalhe();
 
         // filtro de nivel de acesso
-        $obj_tipo_usuario = new clsPmieducarTipoUsuario($detalhe['ref_cod_tipo_usuario']);
+        $obj_tipo_usuario = new clsPmieducarTipoUsuario(cod_tipo_usuario: $detalhe['ref_cod_tipo_usuario']);
         $tipo_usuario = $obj_tipo_usuario->detalhe();
 
         /** @var User $user */
@@ -51,10 +51,10 @@ return new class extends clsListagem {
         } elseif ($tipo_usuario['nivel'] == 4) {
             $opcoes = ['' => 'Selecione', '8' => 'Biblioteca'];
         }
-        $this->campoLista('ref_cod_nivel_usuario', 'Nível de Acesso', $opcoes, $this->ref_cod_nivel_usuario, null, null, null, null, null, false);
+        $this->campoLista(nome: 'ref_cod_nivel_usuario', campo: 'Nível de Acesso', valor: $opcoes, default: $this->ref_cod_nivel_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
 
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
+        $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
+        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
         $selectOptions = [
             0 => 'Selecione',
             1 => 'Inativo',
@@ -68,7 +68,7 @@ return new class extends clsListagem {
             'resources' => $selectOptions
         ];
 
-        $this->inputsHelper()->select('int_ativo', $options);
+        $this->inputsHelper()->select(attrName: 'int_ativo', inputOptions: $options);
         //gambiarra pois o inputsHelper está bugado
         switch ($this->int_ativo) {
             case 0:
@@ -86,17 +86,17 @@ return new class extends clsListagem {
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
         $obj_func = new clsFuncionario();
-        $obj_func->setOrderby('(nome) ASC');
-        $obj_func->setLimite($limite, $iniciolimit);
+        $obj_func->setOrderby(strNomeCampo: '(nome) ASC');
+        $obj_func->setLimite(intLimiteQtd: $limite, intLimiteOffset: $iniciolimit);
         $lst_func = $obj_func->listaFuncionarioUsuario(
-            pg_escape_string($_GET['matricula']),
-            pg_escape_string($_GET['nm_pessoa']),
-            pg_escape_string($_GET['matricula_interna']),
-            $this->ref_cod_escola,
-            $this->ref_cod_instituicao,
-            $this->ref_cod_tipo_usuario,
-            $this->ref_cod_nivel_usuario,
-            $this->int_ativo
+            str_matricula: pg_escape_string(connection: $_GET['matricula']),
+            str_nome: pg_escape_string(connection: $_GET['nm_pessoa']),
+            matricula_interna: pg_escape_string(connection: $_GET['matricula_interna']),
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao,
+            int_ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario,
+            int_nivel: $this->ref_cod_nivel_usuario,
+            int_ativo: $this->int_ativo
         );
 
         if ($lst_func) {
@@ -116,7 +116,7 @@ return new class extends clsListagem {
                     $nivel = '';
                 }
 
-                $this->addLinhas([
+                $this->addLinhas(linha: [
                     "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>",
                     "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula']}</a>",
                     "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula_interna']}</a>",
@@ -127,18 +127,18 @@ return new class extends clsListagem {
             }
         }
 
-        $this->addPaginador2('educar_usuario_lst.php', $total, $_GET, $this->nome, $limite);
+        $this->addPaginador2(strUrl: 'educar_usuario_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $limite);
 
         $obj_permissao = new clsPermissoes();
-        if ($obj_permissao->permissao_cadastra(555, $this->pessoa_logada, 7, null, true)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 555, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true)) {
             $this->acao = 'go("educar_usuario_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Usuários', [
-            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        $this->breadcrumb(currentPage: 'Usuários', breadcrumbs: [
+            url(path: 'intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
     }
 

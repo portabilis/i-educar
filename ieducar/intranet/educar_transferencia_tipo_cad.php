@@ -21,16 +21,16 @@ return new class extends clsCadastro {
         $this->cod_transferencia_tipo=$_GET['cod_transferencia_tipo'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(575, $this->pessoa_logada, 7, 'educar_transferencia_tipo_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 575, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_transferencia_tipo_lst.php');
 
-        if (is_numeric($this->cod_transferencia_tipo)) {
-            $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->getAttributes();
+        if (is_numeric(value: $this->cod_transferencia_tipo)) {
+            $registro = LegacyTransferType::find(id: $this->cod_transferencia_tipo)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
                 }
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir(575, $this->pessoa_logada, 7);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 575, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
                 $retorno = 'Editar';
             }
         }
@@ -38,8 +38,8 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' tipo de transferência', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: $nomeMenu . ' tipo de transferência', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -50,14 +50,14 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_transferencia_tipo', $this->cod_transferencia_tipo);
+        $this->campoOculto(nome: 'cod_transferencia_tipo', valor: $this->cod_transferencia_tipo);
 
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_tipo', 'Motivo Transferência', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('desc_tipo', 'Descrição', $this->desc_tipo, 60, 5, false);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Motivo Transferência', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMemo(nome: 'desc_tipo', campo: 'Descrição', valor: $this->desc_tipo, colunas: 60, linhas: 5);
     }
 
     public function Novo()
@@ -70,7 +70,7 @@ return new class extends clsCadastro {
 
         if ($object->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_transferencia_tipo_lst.php');
+            $this->simpleRedirect( url: 'educar_transferencia_tipo_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -80,7 +80,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $object = LegacyTransferType::find($this->cod_transferencia_tipo);
+        $object = LegacyTransferType::find(id: $this->cod_transferencia_tipo);
         $object->ativo = 1;
         $object->ref_usuario_exc = $this->pessoa_logada;
         $object->nm_tipo = $this->nm_tipo;
@@ -89,7 +89,7 @@ return new class extends clsCadastro {
 
         if ($object->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_transferencia_tipo_lst.php');
+            $this->simpleRedirect(url: 'educar_transferencia_tipo_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -98,13 +98,13 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $object = LegacyTransferType::find($this->cod_transferencia_tipo);
+        $object = LegacyTransferType::find(id: $this->cod_transferencia_tipo);
         $object->ativo = 0;
         $object->ref_usuario_exc = $this->pessoa_logada;
 
         if ($object->save()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_transferencia_tipo_lst.php');
+            $this->simpleRedirect(url: 'educar_transferencia_tipo_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

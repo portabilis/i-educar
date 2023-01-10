@@ -16,6 +16,7 @@ document.getElementById('ref_cod_escola').onchange = function () {
     let campoEscola;
     const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
     const campoCurso = document.getElementById('ref_cod_curso');
+    const campoAno = document.getElementById('ano').value;
     if (document.getElementById('ref_cod_escola')) {
       campoEscola = document.getElementById('ref_cod_escola').value;
     } else if (document.getElementById('ref_ref_cod_escola')) {
@@ -28,7 +29,7 @@ document.getElementById('ref_cod_escola').onchange = function () {
       campoCurso.disabled = true;
       campoCurso.options[0].text = 'Carregando cursos';
 
-      getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola});
+      getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola, year_eq:campoAno});
     } else {
       getApiResource("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao});
     }

@@ -3,13 +3,7 @@
 use App\Models\LegacyBenefit;
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_aluno_beneficio;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -28,22 +22,22 @@ return new class extends clsDetalhe {
         $registro = LegacyBenefit::find($this->cod_aluno_beneficio)?->getAttributes();
 
         if (! $registro) {
-            $this->simpleRedirect('educar_aluno_beneficio_lst.php');
+            $this->simpleRedirect(url: 'educar_aluno_beneficio_lst.php');
         }
 
         if ($registro['cod_aluno_beneficio']) {
-            $this->addDetalhe([ 'Código Benefício', "{$registro['cod_aluno_beneficio']}"]);
+            $this->addDetalhe(detalhe: [ 'Código Benefício', "{$registro['cod_aluno_beneficio']}"]);
         }
         if ($registro['nm_beneficio']) {
-            $this->addDetalhe([ 'Benefício', "{$registro['nm_beneficio']}"]);
+            $this->addDetalhe(detalhe: [ 'Benefício', "{$registro['nm_beneficio']}"]);
         }
         if ($registro['desc_beneficio']) {
-            $this->addDetalhe([ 'Descrição', nl2br("{$registro['desc_beneficio']}")]);
+            $this->addDetalhe(detalhe: [ 'Descrição', nl2br(string: "{$registro['desc_beneficio']}")]);
         }
 
         $obj_permissao = new clsPermissoes();
 
-        if ($obj_permissao->permissao_cadastra(581, $this->pessoa_logada, 3)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_aluno_beneficio_cad.php';
             $this->url_editar = "educar_aluno_beneficio_cad.php?cod_aluno_beneficio={$registro['cod_aluno_beneficio']}";
         }
@@ -51,8 +45,8 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_aluno_beneficio_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do benefício de alunos', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Detalhe do benefício de alunos', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
