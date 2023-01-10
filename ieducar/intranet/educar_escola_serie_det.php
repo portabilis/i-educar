@@ -23,7 +23,7 @@ return new class extends clsDetalhe {
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
         $tmp_obj = new clsPmieducarEscolaSerie();
-        $lst_obj = $tmp_obj->lista($this->ref_cod_escola, $this->ref_cod_serie);
+        $lst_obj = $tmp_obj->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
 
         if (!is_array($lst_obj)) {
             $this->mensagem .= 'Registro não localizado.<br>';
@@ -72,37 +72,37 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['hora_inicial']) {
-            $registro['hora_inicial'] = date('H:i', strtotime($registro['hora_inicial']));
+            $registro['hora_inicial'] = date(format: 'H:i', timestamp: strtotime($registro['hora_inicial']));
             $this->addDetalhe(['Hora Inicial', $registro['hora_inicial']]);
         }
 
         if ($registro['hora_final']) {
-            $registro['hora_final'] = date('H:i', strtotime($registro['hora_final']));
+            $registro['hora_final'] = date(format: 'H:i', timestamp: strtotime($registro['hora_final']));
             $this->addDetalhe(['Hora Final', $registro['hora_final']]);
         }
 
         if ($registro['hora_inicio_intervalo']) {
-            $registro['hora_inicio_intervalo'] = date('H:i', strtotime($registro['hora_inicio_intervalo']));
+            $registro['hora_inicio_intervalo'] = date(format: 'H:i', timestamp: strtotime($registro['hora_inicio_intervalo']));
             $this->addDetalhe(['Hora Início Intervalo', $registro['hora_inicio_intervalo']]);
         }
 
         if ($registro['hora_fim_intervalo']) {
-            $registro['hora_fim_intervalo'] = date('H:i', strtotime($registro['hora_fim_intervalo']));
+            $registro['hora_fim_intervalo'] = date(format: 'H:i', timestamp: strtotime($registro['hora_fim_intervalo']));
             $this->addDetalhe(['Hora Fim Intervalo', $registro['hora_fim_intervalo']]);
         }
 
         // Componentes da escola-série
         $componentes = [];
         try {
-            $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_cod_serie, $this->ref_cod_escola);
+            $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(serieId: $this->ref_cod_serie, escolaId: $this->ref_cod_escola);
         } catch (Exception) {
         }
 
         /** @var SchoolGradeDisciplineService $service */
         $service = app(SchoolGradeDisciplineService::class);
 
-        $disciplines = $service->getAllDisciplines($this->ref_cod_escola, $this->ref_cod_serie)
-            ->pluck('carga_horaria', 'ref_cod_disciplina');
+        $disciplines = $service->getAllDisciplines(school: $this->ref_cod_escola, grade: $this->ref_cod_serie)
+            ->pluck(value: 'carga_horaria', key: 'ref_cod_disciplina');
 
         if (0 < count($componentes)) {
             $tabela = '
@@ -143,7 +143,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Componentes curriculares', $tabela]);
         }
 
-        if ($obj_permissao->permissao_cadastra(585, $this->pessoa_logada, 7)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 585, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_escola_serie_cad.php';
             $this->url_editar = "educar_escola_serie_cad.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}";
         }
@@ -151,7 +151,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_escola_serie_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe dos vínculos entre escola e série', [
+        $this->breadcrumb(currentPage: 'Detalhe dos vínculos entre escola e série', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
