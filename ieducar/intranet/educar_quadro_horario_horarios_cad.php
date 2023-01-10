@@ -620,7 +620,7 @@ return new class extends clsCadastro {
                         $this->campoTextoInv(
                             $campo['qtd_horario_'] . '_ref_cod_servidor_substituto_1',
                             '',
-                            $det_pes['nome']." - professor substituto 1",
+                            $det_pes['nome']." - Professor Substituto 1",
                             5,
                             255,
                             false,
@@ -636,7 +636,7 @@ return new class extends clsCadastro {
                         $this->campoTextoInv(
                             $campo['qtd_horario_'] . '_ref_cod_servidor_substituto_2',
                             '',
-                            $det_pes['nome']." - professor substituto 2",
+                            $det_pes['nome']." - Professor Substituto 2",
                             5,
                             255,
                             false,
