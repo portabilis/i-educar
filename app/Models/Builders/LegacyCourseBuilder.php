@@ -94,7 +94,6 @@ class LegacyCourseBuilder extends LegacyBuilder
         });
     }
 
-
     /**
      * Filtra por modalidade
      *
