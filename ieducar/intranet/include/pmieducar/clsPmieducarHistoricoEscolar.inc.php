@@ -832,24 +832,14 @@ class clsPmieducarHistoricoEscolar extends Model
 
     protected static function dadosEscola($cod_escola, $cod_instituicao)
     {
-        $sql = "select
-
-            (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes
-            where esc.ref_cod_instituicao = {$cod_instituicao} and esc.cod_escola = {$cod_escola}
-            and pes.idpes = esc.ref_idpes) as nome,
-
-            (select municipio.nome from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = {$cod_escola}
-            ) as cidade,
-
-            (select municipio.sigla_uf from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = {$cod_escola}) as uf";
+        $sql = "
+            SELECT
+                nome,
+                municipio AS cidade,
+                uf_municipio AS uf
+            FROM relatorio.view_dados_escola
+            WHERE cod_escola = {$cod_escola}
+        ";
         $db = new clsBanco();
         $db->Consulta($sql);
         $db->ProximoRegistro();

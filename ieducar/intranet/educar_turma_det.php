@@ -3,6 +3,7 @@
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
+use App\Models\LegacySchoolGradeDiscipline;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe {
@@ -399,105 +400,118 @@ return new class extends clsDetalhe {
             $lista = array_intersect_key($lista, $componentes);
         }
 
-        if (is_array(value: $lista) && count(value: $lista)) {
-            $this->tabela3 .= '<div style="margin-bottom: 10px;">';
-            $this->tabela3 .= '  <span style="display: block; float: left; width: 250px; font-weight: bold">Nome</span>';
-            $this->tabela3 .= '  <span style="display: block; float: left; width: 100px; font-weight: bold">Carga horária</span>';
-            $this->tabela3 .= '</div>';
-            $this->tabela3 .= '<br style="clear: left" />';
+        $this->tabela3 = '';
+        $componentes = collect($lista)->map(function ($disciplina) {
+            return [
+                'id' => $disciplina->id,
+                'name' => $disciplina->nome,
+                'workload' => $disciplina->cargaHoraria !== null || $disciplina->cargaHoraria !== 0 ? $disciplina->cargaHoraria : null
+            ];
+        })->sortByDesc('workload');
 
-            foreach ($lista as $registro) {
-                if (!is_null(value: $componentes[$registro->id]->cargaHoraria) || 0 != $componentes[$registro->id]->cargaHoraria) {
-                    $registro->cargaHoraria = $componentes[$registro->id]->cargaHoraria;
-                }
+        if ($componentes->isNotEmpty()) {
+            $disciplinas = '<table id="table-disciplines">';
+            $disciplinas .= '<tr>';
+            $disciplinas .= '<td><b>Nome</b></td>';
+            $disciplinas .= '<td><b>Carga horária(h)</b></td>';
+            $disciplinas .= '</tr>';
 
-                $this->tabela3 .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-                $this->tabela3 .= "  <span style='display: block; float: left; width: 250px'>{$registro}</span>";
-                $this->tabela3 .= "  <span style='display: block; float: left; width: 100px'>{$registro->cargaHoraria}</span>";
-                $this->tabela3 .= '</div>';
-                $this->tabela3 .= '<br style="clear: left" />';
-
-                $registro->cargaHoraria = '';
+            foreach ($componentes as $componente) {
+                $disciplinas .= '<tr>';
+                $disciplinas .= "<td>{$componente['name']}</td>";
+                $disciplinas .= "<td style='text-align: center'>{$componente['workload']}</td>";
+                $disciplinas .= '</tr>';
             }
-
-            $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
-            $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
             $disciplinas .= '</table>';
         } else {
             $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
         }
-        $this->addDetalhe(
-            detalhe: [
-                'Componentes curriculares',
-                $disciplinas
-            ]
-        );
+        $this->addDetalhe(['Componentes curriculares',
+            '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
 
     public function montaListaComponentesMulti()
     {
         $this->tabela3 = '';
-        $componentes = $this->getComponentesTurmaMulti(turmaId: $this->cod_turma);
-
-        if (is_array(value: $componentes) && count(value: $componentes)) {
-            $this->tabela3 .= '<div style="margin-bottom: 10px;">';
-            $this->tabela3 .= '  <span style="display: block; float: left; width: 250px; font-weight: bold">Nome</span>';
-            $this->tabela3 .= '  <span style="display: block; float: left; width: 100px; font-weight: bold">Serie</span>';
-            $this->tabela3 .= '  <span style="display: block; float: left; width: 100px; font-weight: bold">Carga horária</span>';
-            $this->tabela3 .= '</div>';
-            $this->tabela3 .= '<br style="clear: left" />';
-
+        $componentes = $this->getComponentesTurmaMulti($this->cod_turma);
+        if ($componentes->isNotEmpty()) {
+            $disciplinas = '<table id="table-disciplines">';
+            $disciplinas .= '<tr>';
+            $disciplinas .= '<td><b>Nome</b></td>';
+            $disciplinas .= '<td><b>Série</b></td>';
+            $disciplinas .= '<td><b>Carga horária(h)</b></td>';
+            $disciplinas .= '</tr>';
             foreach ($componentes as $componente) {
-                $this->tabela3 .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-                $this->tabela3 .= "  <span style='display: block; float: left; width: 250px'>" . $componente->nome . "</span>";
-                $this->tabela3 .= "  <span style='display: block; float: left; width: 100px'>" . $componente->serie . "</span>";
-                $this->tabela3 .= "  <span style='display: block; float: left; width: 100px'>" . $componente->carga_horaria . "</span>";
-                $this->tabela3 .= '</div>';
-                $this->tabela3 .= '<br style="clear: left" />';
+                $disciplinas .= '<tr>';
+                $disciplinas .= "<td>{$componente->name}</td>";
+                $disciplinas .= "<td>{$componente->grade}</td>";
+                $disciplinas .= "<td style='text-align: center'>{$componente->workload}</td>";
+                $disciplinas .= '</tr>';
             }
-
-            $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
-            $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
             $disciplinas .= '</table>';
         } else {
             $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
         }
-        $this->addDetalhe(
-            detalhe: [
-                'Componentes curriculares',
-                $disciplinas
-            ]
-        );
+        $this->addDetalhe(['Componentes curriculares',
+            '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
+    }
+
+    public function makeCss()
+    {
+        return file_get_contents(__DIR__ . '/styles/extra/educar-turma-det.css');
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-turma-det.js');
+    }
+
+    public function getComponentesTurma() {
+
+        return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
+            ->whereSchool($this->ref_ref_cod_escola)
+            ->whereYearEq($this->ano)
+            ->active()
+            ->get();
     }
 
     public function getComponentesTurmaMulti($turmaId)
     {
-        return DB::table(table: 'pmieducar.turma as t')
-            ->selectRaw(expression: "cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS carga_horaria,s.nm_serie as serie")
-            ->join(table: 'pmieducar.turma_serie as ts', first: 'ts.turma_id', operator: '=', second: 't.cod_turma')
-            ->leftJoin(table: 'pmieducar.serie as s', first: 's.cod_serie', operator: 'ts.serie_id')
-            ->join(table: 'pmieducar.escola_serie as es', first: function ($join) {
+        $componentes = DB::table('pmieducar.turma as t')
+            ->selectRaw("cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
+            ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
+            ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
+            ->join('pmieducar.escola_serie as es', function ($join) {
                 $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
                 $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
             })
-            ->join(table: 'pmieducar.escola_serie_disciplina as esd', first: function ($join) {
+            ->join('pmieducar.escola_serie_disciplina as esd', function ($join) {
                 $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
                 $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
             })
-            ->join(table: 'modules.componente_curricular as cc', first: 'cc.id', operator: '=', second: 'esd.ref_cod_disciplina')
-            ->join(table: 'modules.componente_curricular_ano_escolar as ccae', first: function ($join) {
+            ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
+            ->join('modules.componente_curricular_ano_escolar as ccae', function ($join) {
                 $join->on('ccae.componente_curricular_id', '=', 'cc.id');
                 $join->on('ccae.ano_escolar_id', '=', 'es.ref_cod_serie');
             })
-            ->where(column: 't.cod_turma', operator: $turmaId)
-            ->whereRaw(sql: 't.ano = ANY(esd.anos_letivos)')
-            ->where(column: 't.multiseriada', operator: 1)
-            ->get()
-            ->unique(key: function ($item) {
-                return $item->id . $item->nome . $item->carga_horaria;
-            })
-            ->sortBy(callback: 'nome')
-            ->toArray();
+            ->where('t.cod_turma', $turmaId)
+            ->whereRaw('t.ano = ANY(esd.anos_letivos)')
+            ->where('t.multiseriada', 1)
+            ->groupBy([
+                'cc.id',
+                'workload',
+                'name'
+            ])
+            ->orderBy('workload','desc')
+            ->get();
+
+        return $componentes->each(function ($item) use ($componentes) {
+            $item->order = $componentes->where('id', $item->id)->max('workload');
+        })->sortBy([
+            ['order', 'desc' ],
+            ['id', 'asc'],
+            ['name', 'asc']
+        ]);
     }
 
     public function Formular()

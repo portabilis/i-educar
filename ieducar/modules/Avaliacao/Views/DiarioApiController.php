@@ -1517,6 +1517,10 @@ class DiarioApiController extends ApiCoreController
         $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->notaOriginal);
         $nota = str_replace(',', '.', $nota);
 
+        //validação para evitar a soma de valores da notaOriginal para string vazia
+        if ($nota === "") {
+            return 0;
+        }
         return $nota;
     }
 

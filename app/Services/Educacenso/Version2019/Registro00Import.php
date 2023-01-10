@@ -9,7 +9,6 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
-use App\Models\LegacyPersonAddress;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
@@ -145,7 +144,7 @@ class Registro00Import implements RegistroImportInterface
 
     private function createAddress($school)
     {
-        $personAddress = LegacyPersonAddress::where('idpes', $school->ref_idpes)->exists();
+        $personAddress = PersonHasPlace::where('person_id', $school->ref_idpes)->exists();
         if ($personAddress) {
             return;
         }

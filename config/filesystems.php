@@ -80,6 +80,13 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('intranet/fonts') => base_path('ieducar/intranet/fonts'),
+        public_path('intranet/imagens') => base_path('ieducar/intranet/imagens'),
+        public_path('intranet/scripts') => base_path('ieducar/intranet/scripts'),
+        public_path('intranet/static') => base_path('ieducar/intranet/static'),
+        public_path('intranet/styles') => base_path('ieducar/intranet/styles'),
+        public_path('intranet/tmp') => base_path('ieducar/intranet/tmp'),
+        public_path('modules') => base_path('ieducar/modules'),
     ],
 
 ];
