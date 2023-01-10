@@ -574,6 +574,7 @@ return new class extends clsCadastro {
                         true
                     );
 
+                  
                     $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
                     $componente = $componenteMapper->find($campo['ref_ref_cod_disciplina_']);
 
@@ -587,7 +588,63 @@ return new class extends clsCadastro {
                         false,
                         true
                     );
+                    if (is_numeric($campo['qtd_aulas_'])) {
+                    $this->campoTextoInv(
+                        $campo['qtd_horario_'] . '_qtd_aulas',
+                        '',
+                        "Qtd de aulas: ".$campo['qtd_aulas_'],
+                        5,
+                        255,
+                        false,
+                        false,
+                        true
+                    );
 
+                }
+                    if($campo['registra_diario_individual_']){
+                        $this->campoTextoInv(
+                            $campo['qtd_horario_'] . '_registra_diario_individual',
+                            '',
+                            "Registro Individual",
+                            5,
+                            255,
+                            false,
+                            false,
+                            true
+                        );
+                      }
+
+                    if(is_numeric($campo['ref_servidor_substituto_1_'])){
+                        $obj_pes = new clsPessoa_($campo['ref_servidor_substituto_1_']);
+                        $det_pes = $obj_pes->detalhe();
+                        $this->campoTextoInv(
+                            $campo['qtd_horario_'] . '_ref_cod_servidor_substituto_1',
+                            '',
+                            $det_pes['nome']." - Professor Substituto 1",
+                            5,
+                            255,
+                            false,
+                            false,
+                            true
+                        );
+                      }
+
+                 
+                      if(is_numeric($campo['ref_servidor_substituto_2_'])){
+                        $obj_pes = new clsPessoa_($campo['ref_servidor_substituto_2_']);
+                        $det_pes = $obj_pes->detalhe();
+                        $this->campoTextoInv(
+                            $campo['qtd_horario_'] . '_ref_cod_servidor_substituto_2',
+                            '',
+                            $det_pes['nome']." - Professor Substituto 2",
+                            5,
+                            255,
+                            false,
+                            false,
+                            true
+                        );
+                      }
+                  
                     $obj_pes = new clsPessoa_($campo['ref_servidor_']);
                     $det_pes = $obj_pes->detalhe();
 
@@ -604,7 +661,10 @@ return new class extends clsCadastro {
                             '',
                             ''
                         );
+                        
                     } else {
+
+
                         $this->campoTextoInv(
                             $campo['qtd_horario_'] . '_ref_cod_servidor',
                             '',
@@ -617,6 +677,8 @@ return new class extends clsCadastro {
                             '',
                             "<a href='#' onclick=\"getElementById('excluir_horario').value = '{$campo['qtd_horario_']}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>"
                         );
+
+                    
                     }
                 }
 
