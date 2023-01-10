@@ -43,4 +43,19 @@ class LegacyDisciplineScore extends Model
     {
         return $this->belongsTo(LegacyRegistrationScore::class, 'nota_aluno_id');
     }
+
+    public function discipline(): BelongsTo
+    {
+        return $this->belongsTo(LegacyDiscipline::class, 'componente_curricular_id');
+    }
+
+    public function score(int $decimalPlaces = 1): string|null
+    {
+        $score = $this->nota_arredondada;
+        if (!is_numeric($score) || empty($score)) {
+            return $score;
+        }
+
+        return str_replace('.', ',', bcdiv($score, 1, $decimalPlaces));
+    }
 }
