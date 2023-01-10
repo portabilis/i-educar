@@ -47,8 +47,8 @@ return new class extends clsDetalhe {
         ];
 
         $not_access = false;
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
-            $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where('cod_turma',$this->cod_turma)->doesntExist();
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
+            $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where(column: 'cod_turma', operator: $this->cod_turma)->doesntExist();
         }
 
         $lst_obj = (new clsPmieducarTurma())->lista(
@@ -61,46 +61,46 @@ return new class extends clsDetalhe {
 
 
         if (empty($lst_obj) || $not_access) {
-            $this->simpleRedirect('educar_turma_lst.php');
+            $this->simpleRedirect(url: 'educar_turma_lst.php');
         }
 
-        $registro = array_shift($lst_obj);
+        $registro = array_shift(array: $lst_obj);
 
         foreach ($registro as $key => $value) {
             $this->$key = $value;
         }
 
-        $registro['ref_cod_turma_tipo'] = LegacySchoolClassType::findOrFail($registro['ref_cod_turma_tipo'])->nm_tipo;
+        $registro['ref_cod_turma_tipo'] = LegacySchoolClassType::findOrFail(id: $registro['ref_cod_turma_tipo'])->nm_tipo;
 
         $obj_cod_instituicao = new clsPmieducarInstituicao(
-            $registro['ref_cod_instituicao']
+            cod_instituicao: $registro['ref_cod_instituicao']
         );
 
         $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
         $this->ref_ref_cod_escola = $registro['ref_ref_cod_escola'];
-        $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+        $obj_ref_cod_escola = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
-        $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+        $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
         $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
         $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
         $padrao_ano_escolar = $det_ref_cod_curso['padrao_ano_escolar'];
 
         $this->ref_ref_cod_serie = $registro['ref_ref_cod_serie'];
-        $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+        $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
         $det_ser = $obj_ser->detalhe();
         $registro['ref_ref_cod_serie'] = $det_ser['nm_serie'];
 
         $obj_permissoes = new clsPermissoes();
 
-        $this->addDetalhe(['Ano', $this->ano]);
+        $this->addDetalhe(detalhe: ['Ano', $this->ano]);
 
         if ($registro['ref_cod_instituicao']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Instituição',
                     $registro['ref_cod_instituicao']
                 ]
@@ -109,7 +109,7 @@ return new class extends clsDetalhe {
 
         if ($registro['ref_ref_cod_escola']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Escola',
                     $registro['ref_ref_cod_escola']
                 ]
@@ -118,30 +118,30 @@ return new class extends clsDetalhe {
 
         if ($registro['multiseriada'] == 1) {
             $seriesDaTurma = LegacySchoolClassGrade::query()
-                ->where('turma_id', $this->cod_turma)
-                ->with('grade')
+                ->where(column: 'turma_id', operator: $this->cod_turma)
+                ->with(relations: 'grade')
                 ->get()
-                ->map(function ($turmaSerie) {
+                ->map(callback: function ($turmaSerie) {
                     return $turmaSerie->grade->nm_serie;
                 })
-                ->implode('</br>');
+                ->implode(value: '</br>');
 
-            $this->addDetalhe(['Multisseriada', 'Sim']);
-            $this->addDetalhe(['Curso principal', $registro['ref_cod_curso']]);
-            $this->addDetalhe(['Série principal', $registro['ref_ref_cod_serie']]);
-            $this->addDetalhe(['Séries da turma', $seriesDaTurma]);
+            $this->addDetalhe(detalhe: ['Multisseriada', 'Sim']);
+            $this->addDetalhe(detalhe: ['Curso principal', $registro['ref_cod_curso']]);
+            $this->addDetalhe(detalhe: ['Série principal', $registro['ref_ref_cod_serie']]);
+            $this->addDetalhe(detalhe: ['Séries da turma', $seriesDaTurma]);
         } else {
-            $this->addDetalhe(['Multisseriada', 'Não']);
-            $this->addDetalhe(['Curso', $registro['ref_cod_curso']]);
-            $this->addDetalhe(['Série', $registro['ref_ref_cod_serie']]);
+            $this->addDetalhe(detalhe: ['Multisseriada', 'Não']);
+            $this->addDetalhe(detalhe: ['Curso', $registro['ref_cod_curso']]);
+            $this->addDetalhe(detalhe: ['Série', $registro['ref_ref_cod_serie']]);
         }
 
         if ($registro['ref_cod_regente']) {
-            $obj_pessoa = new clsPessoa_($registro['ref_cod_regente']);
+            $obj_pessoa = new clsPessoa_(int_idpes: $registro['ref_cod_regente']);
             $det = $obj_pessoa->detalhe();
 
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Professor/Regente',
                     $det['nome']
                 ]
@@ -150,7 +150,7 @@ return new class extends clsDetalhe {
 
         if ($registro['ref_cod_turma_tipo']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Tipo de Turma',
                     $registro['ref_cod_turma_tipo']
                 ]
@@ -159,7 +159,7 @@ return new class extends clsDetalhe {
 
         if ($registro['nm_turma']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Turma',
                     $registro['nm_turma']
                 ]
@@ -168,8 +168,8 @@ return new class extends clsDetalhe {
 
         if ($registro['sgl_turma']) {
             $this->addDetalhe(
-                [
-                    _cl('turma.detalhe.sigla'),
+                detalhe: [
+                    _cl(key: 'turma.detalhe.sigla'),
                     $registro['sgl_turma']
                 ]
             );
@@ -177,7 +177,7 @@ return new class extends clsDetalhe {
 
         if ($registro['max_aluno']) {
             $this->addDetalhe(
-                [
+                detalhe: [
                     'Máximo de Alunos',
                     $registro['max_aluno']
                 ]
@@ -185,17 +185,17 @@ return new class extends clsDetalhe {
         }
 
         $this->addDetalhe(
-            [
+            detalhe: [
                 'Situação',
-                dbBool($registro['visivel']) ? 'Ativo' : 'Desativo'
+                dbBool(val: $registro['visivel']) ? 'Ativo' : 'Desativo'
             ]
         );
 
         if ($padrao_ano_escolar == 1) {
             if ($registro['hora_inicial']) {
-                $registro['hora_inicial'] = date('H:i', strtotime($registro['hora_inicial']));
+                $registro['hora_inicial'] = date(format: 'H:i', timestamp: strtotime(datetime: $registro['hora_inicial']));
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Hora Inicial',
                         $registro['hora_inicial']
                     ]
@@ -203,9 +203,9 @@ return new class extends clsDetalhe {
             }
 
             if ($registro['hora_final']) {
-                $registro['hora_final'] = date('H:i', strtotime($registro['hora_final']));
+                $registro['hora_final'] = date(format: 'H:i', timestamp: strtotime(datetime: $registro['hora_final']));
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Hora Final',
                         $registro['hora_final']
                     ]
@@ -213,9 +213,9 @@ return new class extends clsDetalhe {
             }
 
             if ($registro['hora_inicio_intervalo']) {
-                $registro['hora_inicio_intervalo'] = date('H:i', strtotime($registro['hora_inicio_intervalo']));
+                $registro['hora_inicio_intervalo'] = date(format: 'H:i', timestamp: strtotime(datetime: $registro['hora_inicio_intervalo']));
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Hora Início Intervalo',
                         $registro['hora_inicio_intervalo']
                     ]
@@ -223,23 +223,23 @@ return new class extends clsDetalhe {
             }
 
             if ($registro['hora_fim_intervalo']) {
-                $registro['hora_fim_intervalo'] = date('H:i', strtotime($registro['hora_fim_intervalo']));
+                $registro['hora_fim_intervalo'] = date(format: 'H:i', timestamp: strtotime(datetime: $registro['hora_fim_intervalo']));
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Hora Fim Intervalo',
                         $registro['hora_fim_intervalo']
                     ]
                 );
             }
 
-            if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
-                $registro['dias_semana'] = explode(',', str_replace(['{', '}'], '', $registro['dias_semana']));
+            if (is_string(value: $registro['dias_semana']) && !empty($registro['dias_semana'])) {
+                $registro['dias_semana'] = explode(separator: ',', string: str_replace(search: ['{', '}'], replace: '', subject: $registro['dias_semana']));
                 $diasSemana = '';
                 foreach ($registro['dias_semana'] as $dia) {
                     $diasSemana .= $dias_da_semana[$dia] . '<br>';
                 }
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Dia da Semana',
                         $diasSemana
                     ]
@@ -247,8 +247,8 @@ return new class extends clsDetalhe {
             }
         } elseif ($padrao_ano_escolar == 0) {
             $obj = new clsPmieducarTurmaModulo();
-            $obj->setOrderby('sequencial ASC');
-            $lst = $obj->lista($this->cod_turma);
+            $obj->setOrderby(strNomeCampo: 'sequencial ASC');
+            $lst = $obj->lista(int_ref_cod_turma: $this->cod_turma);
 
             if ($lst) {
                 $tabela = '
@@ -269,12 +269,12 @@ return new class extends clsDetalhe {
                         $color = ' bgcolor="#FFFFFF" ';
                     }
 
-                    $obj_modulo = new clsPmieducarModulo($valor['ref_cod_modulo']);
+                    $obj_modulo = new clsPmieducarModulo(cod_modulo: $valor['ref_cod_modulo']);
                     $det_modulo = $obj_modulo->detalhe();
                     $nm_modulo = $det_modulo['nm_tipo'];
 
-                    $valor['data_inicio'] = dataFromPgToBr($valor['data_inicio']);
-                    $valor['data_fim'] = dataFromPgToBr($valor['data_fim']);
+                    $valor['data_inicio'] = dataFromPgToBr(data_original: $valor['data_inicio']);
+                    $valor['data_fim'] = dataFromPgToBr(data_original: $valor['data_fim']);
 
                     $tabela .= sprintf(
                         '
@@ -302,21 +302,21 @@ return new class extends clsDetalhe {
 
             if ($tabela) {
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Módulo',
                         $tabela
                     ]
                 );
             }
 
-            if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
-                $registro['dias_semana'] = explode(',', str_replace(['{', '}'], '', $registro['dias_semana']));
+            if (is_string(value: $registro['dias_semana']) && !empty($registro['dias_semana'])) {
+                $registro['dias_semana'] = explode(separator: ',', string: str_replace(search: ['{', '}'], replace: '', subject: $registro['dias_semana']));
                 $diasSemana = '';
                 foreach ($registro['dias_semana'] as $dia) {
                     $diasSemana .= $dias_da_semana[$dia] . '<br>';
                 }
                 $this->addDetalhe(
-                    [
+                    detalhe: [
                         'Dia da Semana',
                         $diasSemana
                     ]
@@ -330,7 +330,7 @@ return new class extends clsDetalhe {
             $this->montaListaComponentes();
         }
 
-        if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 586, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_turma_cad.php';
             $this->url_editar = 'educar_turma_cad.php?cod_turma=' . $registro['cod_turma'];
 
@@ -350,8 +350,8 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_turma_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da turma', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Detalhe da turma', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 
         $scripts = [
@@ -360,7 +360,7 @@ return new class extends clsDetalhe {
             '/vendor/legacy/Cadastro/Assets/Javascripts/TurmaDet.js'
         ];
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
     }
 
     public function montaListaComponentes()
@@ -369,13 +369,9 @@ return new class extends clsDetalhe {
 
         try {
             $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
-                $this->ref_ref_cod_serie,
-                $this->ref_ref_cod_escola,
-                null,
-                null,
-                null,
-                true,
-                $this->ano
+                serieId: $this->ref_ref_cod_serie,
+                escolaId: $this->ref_ref_cod_escola,
+                ano: $this->ano
             );
         } catch (Throwable $e) {
             $this->mensagem = $e->getMessage();
@@ -387,10 +383,9 @@ return new class extends clsDetalhe {
         $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
         $componentesTurma = [];
 
-        if (isset($this->cod_turma) && is_numeric($this->cod_turma)) {
+        if (isset($this->cod_turma) && is_numeric(value: $this->cod_turma)) {
             $componentesTurma = $componenteTurmaMapper->findAll(
-                [],
-                ['turma' => $this->cod_turma]
+                where: ['turma' => $this->cod_turma]
             );
         }
 
@@ -401,18 +396,18 @@ return new class extends clsDetalhe {
         unset($componentesTurma);
         $this->escola_serie_disciplina = [];
 
-        if (is_array($componentes) && !empty($componentes)) {
+        if (is_array(value: $componentes) && !empty($componentes)) {
             $lista = array_intersect_key($lista, $componentes);
         }
 
         $this->tabela3 = '';
-        $componentes = collect($lista)->map(function ($disciplina) {
+        $componentes = collect(value: $lista)->map(callback: function ($disciplina) {
             return [
                 'id' => $disciplina->id,
                 'name' => $disciplina->nome,
                 'workload' => $disciplina->cargaHoraria !== null || $disciplina->cargaHoraria !== 0 ? $disciplina->cargaHoraria : null
             ];
-        })->sortByDesc('workload');
+        })->sortByDesc(callback: 'workload');
 
         if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
@@ -431,14 +426,14 @@ return new class extends clsDetalhe {
         } else {
             $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
         }
-        $this->addDetalhe(['Componentes curriculares',
+        $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
 
     public function montaListaComponentesMulti()
     {
         $this->tabela3 = '';
-        $componentes = $this->getComponentesTurmaMulti($this->cod_turma);
+        $componentes = $this->getComponentesTurmaMulti(turmaId: $this->cod_turma);
         if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
             $disciplinas .= '<tr>';
@@ -457,24 +452,24 @@ return new class extends clsDetalhe {
         } else {
             $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
         }
-        $this->addDetalhe(['Componentes curriculares',
+        $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
 
     public function makeCss()
     {
-        return file_get_contents(__DIR__ . '/styles/extra/educar-turma-det.css');
+        return file_get_contents(filename: __DIR__ . '/styles/extra/educar-turma-det.css');
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-turma-det.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-turma-det.js');
     }
 
     public function getComponentesTurma() {
 
         return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
-            ->whereSchool($this->ref_ref_cod_escola)
+            ->whereSchool(school: $this->ref_ref_cod_escola)
             ->whereYearEq($this->ano)
             ->active()
             ->get();
@@ -482,37 +477,37 @@ return new class extends clsDetalhe {
 
     public function getComponentesTurmaMulti($turmaId)
     {
-        $componentes = DB::table('pmieducar.turma as t')
-            ->selectRaw("cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
-            ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
-            ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
-            ->join('pmieducar.escola_serie as es', function ($join) {
+        $componentes = DB::table(table: 'pmieducar.turma as t')
+            ->selectRaw(expression: "cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
+            ->join(table: 'pmieducar.turma_serie as ts', first: 'ts.turma_id', operator: '=', second: 't.cod_turma')
+            ->leftJoin(table: 'pmieducar.serie as s', first: 's.cod_serie', operator: 'ts.serie_id')
+            ->join(table: 'pmieducar.escola_serie as es', first: function ($join) {
                 $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
                 $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
             })
-            ->join('pmieducar.escola_serie_disciplina as esd', function ($join) {
+            ->join(table: 'pmieducar.escola_serie_disciplina as esd', first: function ($join) {
                 $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
                 $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
             })
-            ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
-            ->join('modules.componente_curricular_ano_escolar as ccae', function ($join) {
+            ->join(table: 'modules.componente_curricular as cc', first: 'cc.id', operator: '=', second: 'esd.ref_cod_disciplina')
+            ->join(table: 'modules.componente_curricular_ano_escolar as ccae', first: function ($join) {
                 $join->on('ccae.componente_curricular_id', '=', 'cc.id');
                 $join->on('ccae.ano_escolar_id', '=', 'es.ref_cod_serie');
             })
-            ->where('t.cod_turma', $turmaId)
-            ->whereRaw('t.ano = ANY(esd.anos_letivos)')
-            ->where('t.multiseriada', 1)
+            ->where(column: 't.cod_turma', operator: $turmaId)
+            ->whereRaw(sql: 't.ano = ANY(esd.anos_letivos)')
+            ->where(column: 't.multiseriada', operator: 1)
             ->groupBy([
                 'cc.id',
                 'workload',
                 'name'
             ])
-            ->orderBy('workload','desc')
+            ->orderBy(column: 'workload', direction: 'desc')
             ->get();
 
-        return $componentes->each(function ($item) use ($componentes) {
-            $item->order = $componentes->where('id', $item->id)->max('workload');
-        })->sortBy([
+        return $componentes->each(callback: function ($item) use ($componentes) {
+            $item->order = $componentes->where(key: 'id', operator: $item->id)->max(callback: 'workload');
+        })->sortBy(callback: [
             ['order', 'desc' ],
             ['id', 'asc'],
             ['name', 'asc']
