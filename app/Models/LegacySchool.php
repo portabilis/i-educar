@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolBuilder;
+use App\Models\View\SchoolData;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -190,6 +191,11 @@ class LegacySchool extends Model
         return $this->hasMany(LegacyUserSchool::class, 'ref_cod_escola', 'cod_escola');
     }
 
+    public function data(): BelongsTo
+    {
+        return $this->belongsTo(SchoolData::class, 'cod_escola');
+    }
+
     /**
      * @return HasMany
      */
@@ -203,7 +209,7 @@ class LegacySchool extends Model
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
     }
 
-    public function address(): BelongsToMany
+    public function addresses(): BelongsToMany
     {
         return $this->belongsToMany(
             Place::class,
@@ -212,5 +218,15 @@ class LegacySchool extends Model
             'place_id',
             'ref_idpes',
         );
+    }
+
+    public function director(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_idpes_gestor');
+    }
+
+    public function secretary(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_idpes_secretario_escolar');
     }
 }
