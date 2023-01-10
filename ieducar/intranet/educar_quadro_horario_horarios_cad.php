@@ -574,6 +574,28 @@ return new class extends clsCadastro {
                         true
                     );
 
+                    $this->campoTextoInv(
+                        $campo['qtd_aulas_'] . '_qtd_aulas',
+                        '',
+                        "Qtd de aulas: ".$campo['qtd_aulas_'],
+                        5,
+                        255,
+                        false,
+                        false,
+                        true
+                    );
+                  if($campo['registra_diario_individual_']){
+                    $this->campoTextoInv(
+                        $campo['registra_diario_individual_'] . '_registra_diario_individual',
+                        '',
+                        "Registro Individual",
+                        5,
+                        255,
+                        false,
+                        false,
+                        true
+                    );
+                  }
                     $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
                     $componente = $componenteMapper->find($campo['ref_ref_cod_disciplina_']);
 
@@ -595,7 +617,7 @@ return new class extends clsCadastro {
                         $this->campoTextoInv(
                             $campo['qtd_horario_'] . '_ref_cod_servidor',
                             '',
-                            $det_pes['nome'],
+                            $det_pes['nome']." - professor substituto ",
                             30,
                             255,
                             false,
