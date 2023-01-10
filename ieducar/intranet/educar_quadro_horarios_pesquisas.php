@@ -38,7 +38,7 @@
             $obj_instituicao = new clsPmieducarInstituicao();
             $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
             $obj_instituicao->setOrderby('nm_instituicao ASC');
-            $lista = $obj_instituicao->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
+            $lista = $obj_instituicao->lista(int_ativo: 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
                     $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
@@ -96,7 +96,7 @@
         if ($get_escola) {
             $opcoes_escola = [ '' => 'Selecione' ];
             $obj_escola = new clsPmieducarEscola();
-            $lista = $obj_escola->lista(null, null, null, null, null, null, null, null, null, null, 1);
+            $lista = $obj_escola->lista(str_nome: 1);
             if ($nivel_usuario == 4 || $nivel_usuario == 8) {
                 $opcoes_escola = ['' => 'Selecione'];
                 $obj_escola = new clsPmieducarEscolaUsuario();
@@ -115,7 +115,7 @@
             } elseif ($this->ref_cod_instituicao) {
                 $opcoes_escola = [ '' => 'Selecione' ];
                 $obj_escola = new clsPmieducarEscola();
-                $lista = $obj_escola->lista(null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1);
+                $lista = $obj_escola->lista(int_ref_cod_instituicao: $this->ref_cod_instituicao, str_nome: 1);
                 if (is_array($lista) && count($lista)) {
                     foreach ($lista as $registro) {
                         $opcoes_escola["{$registro['cod_escola']}"] = "{$registro['nome']}";
@@ -195,7 +195,7 @@
             // EDITAR
             if ($this->ref_cod_escola) {
                 $obj_esc_cur = new clsPmieducarEscolaCurso();
-                $lst_esc_cur = $obj_esc_cur->lista($this->ref_cod_escola, null, null, null, null, null, null, null, 1);
+                $lst_esc_cur = $obj_esc_cur->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ativo: 1);
                 if (is_array($lst_esc_cur) && count($lst_esc_cur)) {
                     foreach ($lst_esc_cur as $detalhe) {
                         $opcoes_curso["{$detalhe['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
@@ -235,7 +235,7 @@
             if ($this->ref_cod_curso && $this->ref_cod_escola) {
                 $obj_serie = new clsPmieducarSerie();
                 $obj_serie->setOrderby('nm_serie ASC');
-                $lst_serie = $obj_serie->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
+                $lst_serie = $obj_serie->lista(int_ref_cod_curso: $this->ref_cod_curso, int_ativo: 1);
                 if (is_array($lst_serie) && count($lst_serie)) {
                     foreach ($lst_serie as $serie) {
                         $opcoes_serie["{$serie['cod_serie']}"] = $serie['nm_serie'];
@@ -274,7 +274,7 @@
             if ($this->ref_cod_serie /*|| $this->ref_cod_curso*/) {
                 $obj_turma = new clsPmieducarTurma();
                 $obj_turma->setOrderby('nm_turma ASC');
-                $lst_turma = $obj_turma->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao, null, null, null, null, null, null, null, null, null, null, $this->ano);
+                $lst_turma = $obj_turma->lista(int_ref_ref_cod_serie: $this->ref_cod_serie, int_ref_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_curso: $this->ref_cod_curso, ano: $this->ano);
                 if (is_array($lst_turma) && count($lst_turma)) {
                     foreach ($lst_turma as $turma) {
                         $opcoes_turma["{$turma['cod_turma']}"] = $turma['nm_turma'];
