@@ -588,6 +588,7 @@ return new class extends clsCadastro {
                         false,
                         true
                     );
+                    if (is_numeric($campo['qtd_aulas_'])) {
                     $this->campoTextoInv(
                         $campo['qtd_horario_'] . '_qtd_aulas',
                         '',
@@ -598,6 +599,8 @@ return new class extends clsCadastro {
                         false,
                         true
                     );
+
+                }
                     if($campo['registra_diario_individual_']){
                         $this->campoTextoInv(
                             $campo['qtd_horario_'] . '_registra_diario_individual',
@@ -658,18 +661,7 @@ return new class extends clsCadastro {
                             '',
                             ''
                         );
-                        if($campo['registra_diario_individual_']){
-                            $this->campoTextoInv(
-                                $campo['qtd_horario_'] . '_registra_diario_individual',
-                                '',
-                                "Registro Individual",
-                                5,
-                                255,
-                                false,
-                                false,
-                                true
-                            );
-                          }
+                        
                     } else {
 
 
