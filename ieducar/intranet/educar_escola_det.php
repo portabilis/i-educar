@@ -220,6 +220,9 @@ return new class extends clsDetalhe {
             $existe_ano_andamento = $obj_ano_letivo->lista(int_ref_cod_escola: $this->cod_escola, int_andamento: 1, int_ativo: 1);
 
             foreach ($lista_ano_letivo as $ano) {
+
+
+
                 if (!$existe_ano_andamento && $ano['andamento'] != 2 && $canEdit) {
                     $incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/start.gif\"> Iniciar ano letivo</a></td>";
                 } elseif ($ano['andamento'] == 0) {
@@ -230,7 +233,8 @@ return new class extends clsDetalhe {
 
                 //verifica se o ano nao possui matricula em andamento para permitir finalizar o ano
                 $obj_matricula_ano = new clsPmieducarMatricula();
-                $matricula_em_andamento = $obj_matricula_ano->lista(int_ref_ref_cod_escola: $this->cod_escola, int_ativo: 1, int_ano: $ano['ano']);
+                $matricula_em_andamento = $obj_matricula_ano->lista(int_ref_ref_cod_escola: $this->cod_escola,int_aprovado: 3, int_ativo: 1,int_ultima_matricula: 1, int_ano: $ano['ano'],bool_curso_sem_avaliacao: false);
+
                 if (!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1 && $canEdit) {
                     $excluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','finalizar');\" ><img src=\"imagens/i-educar/stop.png\"> Finalizar ano letivo</a></td>";
                 } else {
