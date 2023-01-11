@@ -93,6 +93,8 @@
 
       getResource(options);
 
+      delay(2000)
+
       const campoData = document.getElementById('data').value;
       let paramsRegistroDiarioQuadroHorario = {
         id: campoTurma,
