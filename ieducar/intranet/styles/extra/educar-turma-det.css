@@ -1,0 +1,29 @@
+/*O opera nao renderiza tabelas com border-collapse corretamente*/
+/*css alterativo ao border-collapse*/
+
+#table-disciplines {
+  border-spacing: 0 !important;
+}
+
+#table-disciplines tr:last-child>td{
+  border: 1px solid #CCC;
+  border-left: none;
+  padding: 6px 8px;
+}
+#table-disciplines tr:last-child>td:first-child {
+  border: 1px solid #CCC;
+  padding: 6px 8px;
+}
+
+#table-disciplines td:first-child {
+  border: 1px solid #CCC;
+  border-bottom: none;
+  padding: 6px 8px;
+}
+
+#table-disciplines td {
+  border: 1px solid #CCC;
+  border-bottom: none;
+  border-left: none;
+  padding: 6px 8px;
+}

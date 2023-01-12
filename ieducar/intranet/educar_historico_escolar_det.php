@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $ref_cod_aluno;
     public $sequencial;
     public $ref_usuario_exc;
@@ -23,7 +17,6 @@ return new class extends clsDetalhe {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_instituicao;
     public $nm_serie;
     public $origem;
@@ -38,7 +31,7 @@ return new class extends clsDetalhe {
         $this->sequencial=$_GET['sequencial'];
         $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
 
-        $tmp_obj = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial);
+        $tmp_obj = new clsPmieducarHistoricoEscolar(ref_cod_aluno: $this->ref_cod_aluno, sequencial: $this->sequencial);
         $registro = $tmp_obj->detalhe();
 
         if (! $registro) {
@@ -46,7 +39,7 @@ return new class extends clsDetalhe {
         }
 
         $obj_aluno = new clsPmieducarAluno();
-        $lst_aluno = $obj_aluno->lista($registro['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $registro['ref_cod_aluno'], int_ativo: 1);
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
             $nm_aluno = $det_aluno['nome_aluno'];
@@ -92,7 +85,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Ano', "{$registro['ano']}"]);
         }
         if ($registro['carga_horaria']) {
-            $registro['carga_horaria'] = str_replace('.', ',', $registro['carga_horaria']);
+            $registro['carga_horaria'] = str_replace(search: '.', replace: ',', subject: $registro['carga_horaria']);
 
             $this->addDetalhe([ 'Carga Horária', "{$registro['carga_horaria']}"]);
         }
@@ -162,7 +155,7 @@ return new class extends clsDetalhe {
 
         $obj = new clsPmieducarHistoricoDisciplinas();
         $obj->setOrderby('nm_disciplina ASC');
-        $lst = $obj->lista(null, $this->ref_cod_aluno, $this->sequencial);
+        $lst = $obj->lista(int_ref_ref_cod_aluno: $this->ref_cod_aluno, int_ref_sequencial: $this->sequencial);
 
         $qtd_disciplinas = $obj->_total;
         if ($lst) {
@@ -237,7 +230,7 @@ return new class extends clsDetalhe {
                                                           ORDER BY cod_matricula DESC
                                                              LIMIT 1");
 
-                $possuiVinculoComEscolaUltimaMatricula = in_array($escola_ultima_matricula, $idEscolasUsuario);
+                $possuiVinculoComEscolaUltimaMatricula = in_array(needle: $escola_ultima_matricula, haystack: $idEscolasUsuario);
 
                 if (($possuiVinculoComEscolaUltimaMatricula) || $this->nivel_usuario == 1 || $this->nivel_usuario == 2) {
                     if ($registro['origem']) {
@@ -270,11 +263,11 @@ return new class extends clsDetalhe {
                                                                                                                                                                                      INNER JOIN pmieducar.escola_usuario ON (escola_usuario.ref_cod_usuario = usuario.cod_usuario)
                                                                                                                                                                                  WHERE usuario.cod_usuario = $this->pessoa_logada)");
                 if ($escola_usuario_historico != '' || $this->nivel_usuario == 1 || $this->nivel_usuario == 2) {
-                    $this->addBotao('Copiar Histórico', "educar_historico_escolar_cad.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}&copia=true");
+                    $this->addBotao(label: 'Copiar Histórico', url: "educar_historico_escolar_cad.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}&copia=true");
                 }
             }
         } else {
-            $this->addBotao('Copiar Histórico', "educar_historico_escolar_cad.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}&copia=true");
+            $this->addBotao(label: 'Copiar Histórico', url: "educar_historico_escolar_cad.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}&copia=true");
             if ($registro['origem']) {
                 $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}";
             }
@@ -283,7 +276,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = "educar_historico_escolar_lst.php?ref_cod_aluno={$registro['ref_cod_aluno']}";
         $this->largura = '100%';
 
-        $this->breadcrumb('Atualização de históricos escolares', [
+        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

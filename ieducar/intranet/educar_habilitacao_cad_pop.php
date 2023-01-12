@@ -3,13 +3,7 @@
 use App\Models\LegacyQualification;
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_habilitacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -28,7 +22,7 @@ return new class extends clsCadastro {
         $this->cod_habilitacao=$_GET['cod_habilitacao'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(573, $this->pessoa_logada, 3, 'educar_habilitacao_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 573, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_habilitacao_lst.php');
 
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
@@ -39,18 +33,18 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_habilitacao', $this->cod_habilitacao);
+        $this->campoOculto(nome: 'cod_habilitacao', valor: $this->cod_habilitacao);
         // foreign keys
         if ($_GET['precisa_lista']) {
             $get_escola = false;
             $obrigatorio = true;
             include('include/pmieducar/educar_campo_lista.php');
         } else {
-            $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+            $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
         }
         // text
-        $this->campoTexto('nm_tipo', 'Habilitação', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Habilitação', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMemo(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, colunas: 60, linhas: 5);
     }
 
     public function Novo()
@@ -78,13 +72,9 @@ return new class extends clsCadastro {
         return false;
     }
 
-    public function Editar()
-    {
-    }
+    public function Editar(){}
 
-    public function Excluir()
-    {
-    }
+    public function Excluir(){}
 
     public function makeExtra()
     {

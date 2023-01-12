@@ -16,14 +16,14 @@ return new class extends clsCadastro {
         $retorno = 'Novo';
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
 
         if (is_numeric(request('ref_cod_aluno')) && is_numeric(request('cod_distribuicao_uniforme'))) {
             $this->uniformDistribution = UniformDistribution::find(request('cod_distribuicao_uniforme'));
 
             if ($this->uniformDistribution) {
 
-                if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
 
@@ -39,7 +39,7 @@ return new class extends clsCadastro {
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Distribuições de uniforme escolar', [
+        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
             'educar_index.php' => 'Escola',
         ]);
 
@@ -59,9 +59,9 @@ return new class extends clsCadastro {
             $escolaOpcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
         }
 
-        $this->campoOculto('id', $this->uniformDistribution->id);
+        $this->campoOculto(nome: 'id', valor: $this->uniformDistribution->id);
 
-        $this->campoNumero('year', 'Ano', request('year', $this->uniformDistribution->year), 4, 4, true);
+        $this->campoNumero(nome: 'year', campo: 'Ano', valor: request(key: 'year', default: $this->uniformDistribution->year), tamanhovisivel: 4, tamanhomaximo: 4, obrigatorio: true);
 
         $this->inputsHelper()->dynamic(['instituicao', 'escola']);
 
@@ -69,7 +69,7 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Tipo',
-            'value' => request('type', $this->uniformDistribution->type),
+            'value' => request(key: 'type', default: $this->uniformDistribution->type),
             'resources' => [
                 '' => 'Tipo',
                 'Solicitado' => 'Solicitado',
@@ -78,11 +78,11 @@ return new class extends clsCadastro {
             'required' => true,
         ];
 
-        $this->inputsHelper()->select('type', $options);
+        $this->inputsHelper()->select(attrName: 'type', inputOptions: $options);
 
-        $this->inputsHelper()->date('distribution_date', [
+        $this->inputsHelper()->date(attrName: 'distribution_date', inputOptions: [
             'label' => 'Data da distribuição',
-            'value' => request('distribution_date', $this->uniformDistribution->distribution_date?->format('d/m/Y')),
+            'value' => request(key: 'distribution_date', default: $this->uniformDistribution->distribution_date?->format('d/m/Y')),
             'placeholder' => '',
             'size' => 15,
             'required' => false,
@@ -92,214 +92,214 @@ return new class extends clsCadastro {
         $this->campoQuebra();
 
 
-        $this->inputsHelper()->checkbox('complete_kit', [
-            'label' => 'Kit completo', 'value' => request('complete_kit', $this->uniformDistribution->complete_kit)
+        $this->inputsHelper()->checkbox(attrName: 'complete_kit', inputOptions: [
+            'label' => 'Kit completo', 'value' => request(key: 'complete_kit', default: $this->uniformDistribution->complete_kit)
         ]);
 
-        $this->inputsHelper()->integer('coat_pants_qty', [
+        $this->inputsHelper()->integer(attrName: 'coat_pants_qty', inputOptions: [
             'required' => false,
             'label' => 'Agasalhos (calça)',
-            'value' => request('coat_pants_qty', $this->uniformDistribution->coat_pants_qty),
+            'value' => request(key: 'coat_pants_qty', default: $this->uniformDistribution->coat_pants_qty),
             'max_length' => 2,
             'size' => 15,
             'inline'  => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('coat_pants_tm', [
+        $this->inputsHelper()->text(attrNames: 'coat_pants_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('coat_pants_tm', $this->uniformDistribution->coat_pants_tm),
+            'value' => request(key: 'coat_pants_tm', default: $this->uniformDistribution->coat_pants_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('coat_jacket_qty', [
+        $this->inputsHelper()->integer(attrName: 'coat_jacket_qty', inputOptions: [
             'required' => false,
             'label' => 'Agasalhos (jaqueta)',
-            'value' => request('coat_jacket_qty', $this->uniformDistribution->coat_jacket_qty),
+            'value' => request(key: 'coat_jacket_qty', default: $this->uniformDistribution->coat_jacket_qty),
             'max_length' => 2,
             'size' => 15,
             'inline'  => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('coat_jacket_tm', [
+        $this->inputsHelper()->text(attrNames: 'coat_jacket_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('coat_jacket_tm', $this->uniformDistribution->coat_jacket_tm),
+            'value' => request(key: 'coat_jacket_tm', default: $this->uniformDistribution->coat_jacket_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('shirt_short_qty', [
+        $this->inputsHelper()->integer(attrName: 'shirt_short_qty', inputOptions: [
             'required' => false,
             'label' => 'Camisetas (manga curta)',
-            'value' => request('shirt_short_qty', $this->uniformDistribution->shirt_short_qty),
+            'value' => request(key: 'shirt_short_qty', default: $this->uniformDistribution->shirt_short_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('shirt_short_tm', [
+        $this->inputsHelper()->text(attrNames: 'shirt_short_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('shirt_short_tm', $this->uniformDistribution->shirt_short_tm),
+            'value' => request(key: 'shirt_short_tm', default: $this->uniformDistribution->shirt_short_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('shirt_long_qty', [
+        $this->inputsHelper()->integer(attrName: 'shirt_long_qty', inputOptions: [
             'required' => false,
             'label' => 'Camisetas (manga longa)',
-            'value' => request('shirt_long_qty', $this->uniformDistribution->shirt_long_qty),
+            'value' => request(key: 'shirt_long_qty', default: $this->uniformDistribution->shirt_long_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('shirt_long_tm', [
+        $this->inputsHelper()->text(attrNames: 'shirt_long_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('shirt_long_tm', $this->uniformDistribution->shirt_long_tm),
+            'value' => request(key: 'shirt_long_tm', default: $this->uniformDistribution->shirt_long_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('kids_shirt_qty', [
+        $this->inputsHelper()->integer(attrName: 'kids_shirt_qty', inputOptions: [
             'required' => false,
             'label' => 'Camisetas infantis (sem manga)',
-            'value' => request('kids_shirt_qty', $this->uniformDistribution->kids_shirt_qty),
+            'value' => request(key: 'kids_shirt_qty', default: $this->uniformDistribution->kids_shirt_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('kids_shirt_tm', [
+        $this->inputsHelper()->text(attrNames: 'kids_shirt_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('kids_shirt_tm', $this->uniformDistribution->kids_shirt_tm),
+            'value' => request(key: 'kids_shirt_tm', default: $this->uniformDistribution->kids_shirt_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('pants_jeans_qty', [
+        $this->inputsHelper()->integer(attrName: 'pants_jeans_qty', inputOptions: [
             'required' => false,
             'label' => 'Calças jeans',
-            'value' => request('pants_jeans_qty', $this->uniformDistribution->pants_jeans_qty),
+            'value' => request(key: 'pants_jeans_qty', default: $this->uniformDistribution->pants_jeans_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('pants_jeans_tm', [
+        $this->inputsHelper()->text(attrNames: 'pants_jeans_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('pants_jeans_tm', $this->uniformDistribution->pants_jeans_tm),
+            'value' => request(key: 'pants_jeans_tm', default: $this->uniformDistribution->pants_jeans_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('socks_qty', [
+        $this->inputsHelper()->integer(attrName: 'socks_qty', inputOptions: [
             'required' => false,
             'label' => 'Meias',
-            'value' => request('socks_qty', $this->uniformDistribution->socks_qty),
+            'value' => request(key: 'socks_qty', default: $this->uniformDistribution->socks_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('socks_tm', [
+        $this->inputsHelper()->text(attrNames: 'socks_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('socks_tm', $this->uniformDistribution->socks_tm),
+            'value' => request(key: 'socks_tm', default: $this->uniformDistribution->socks_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('skirt_qty', [
+        $this->inputsHelper()->integer(attrName: 'skirt_qty', inputOptions: [
             'required' => false,
             'label' => 'Saias',
-            'value' => request('skirt_qty', $this->uniformDistribution->skirt_qty),
+            'value' => request(key: 'skirt_qty', default: $this->uniformDistribution->skirt_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('skirt_tm', [
+        $this->inputsHelper()->text(attrNames: 'skirt_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('skirt_tm', $this->uniformDistribution->skirt_tm),
+            'value' => request(key: 'skirt_tm', default: $this->uniformDistribution->skirt_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('shorts_tactel_qty', [
+        $this->inputsHelper()->integer(attrName: 'shorts_tactel_qty', inputOptions: [
             'required' => false,
             'label' => 'Bermudas tactels (masculino)',
-            'value' => request('shorts_tactel_qty', $this->uniformDistribution->shorts_tactel_qty),
+            'value' => request(key: 'shorts_tactel_qty', default: $this->uniformDistribution->shorts_tactel_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('shorts_tactel_tm', [
+        $this->inputsHelper()->text(attrNames: 'shorts_tactel_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('shorts_tactel_tm', $this->uniformDistribution->shorts_tactel_tm),
+            'value' => request(key: 'shorts_tactel_tm', default: $this->uniformDistribution->shorts_tactel_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('shorts_coton_qty', [
+        $this->inputsHelper()->integer(attrName: 'shorts_coton_qty', inputOptions: [
             'required' => false,
             'label' => 'Bermudas coton (feminino)',
-            'value' => request('shorts_coton_qty', $this->uniformDistribution->shorts_coton_qty),
+            'value' => request(key: 'shorts_coton_qty', default: $this->uniformDistribution->shorts_coton_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('shorts_coton_tm', [
+        $this->inputsHelper()->text(attrNames: 'shorts_coton_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('shorts_coton_tm', $this->uniformDistribution->shorts_coton_tm),
+            'value' => request(key: 'shorts_coton_tm', default: $this->uniformDistribution->shorts_coton_tm),
             'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
 
-        $this->inputsHelper()->integer('sneakers_qty', [
+        $this->inputsHelper()->integer(attrName: 'sneakers_qty', inputOptions: [
             'required' => false,
             'label' => 'Tênis',
-            'value' => request('sneakers_qty', $this->uniformDistribution->sneakers_qty),
+            'value' => request(key: 'sneakers_qty', default: $this->uniformDistribution->sneakers_qty),
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
             'placeholder' => 'Quantidade'
         ]);
 
-        $this->inputsHelper()->text('sneakers_tm', [
+        $this->inputsHelper()->text(attrNames: 'sneakers_tm', inputOptions: [
             'required' => false,
             'label' => '',
-            'value' => request('sneakers_tm', $this->uniformDistribution->sneakers_tm),
+            'value' => request(key: 'sneakers_tm', default: $this->uniformDistribution->sneakers_tm),
             'max_length'  => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
@@ -311,7 +311,7 @@ return new class extends clsCadastro {
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
 
         $exists = UniformDistribution::where('student_id', request('ref_cod_aluno'))
             ->where('year', request('year'))
@@ -330,7 +330,7 @@ return new class extends clsCadastro {
         $this->uniformDistribution = UniformDistribution::create(request()->all());
 
         if ($this->uniformDistribution) {
-            $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+            $this->redirectIf(condition: true, url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -342,7 +342,7 @@ return new class extends clsCadastro {
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
 
         $uniformDistribution = UniformDistribution::where('student_id', request('ref_cod_aluno'))
             ->where('year', request('year'))
@@ -361,7 +361,7 @@ return new class extends clsCadastro {
         $uniformDistribution->update(request()->all());
 
         if ($uniformDistribution->save()) {
-            $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+            $this->redirectIf(condition: true, url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -372,12 +372,12 @@ return new class extends clsCadastro {
     {
         dd(request()->all());
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
 
         $obj = UniformDistribution::find(request('id'));
 
         if ($obj->delete()) {
-            $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+            $this->redirectIf(condition: true, url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
