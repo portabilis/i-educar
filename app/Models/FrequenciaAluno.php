@@ -21,7 +21,8 @@ class FrequenciaAluno extends Model
     protected $fillable = [
         'id',
         'ref_frequencia',
-        'ref_cod_matricula'
+        'ref_cod_matricula', 
+        'aulas_faltou'
     ];
 
     /**
