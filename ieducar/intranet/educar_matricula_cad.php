@@ -829,10 +829,16 @@ return new class extends clsCadastro {
 
                 $this->enturmacaoMatricula(matriculaId: $this->cod_matricula, turmaDestinoId: $this->ref_cod_turma);
 
-                if ($this->situacaoUltimaMatricula == $this->transferido &&
-                    $this->serieUltimaMatricula == $this->ref_cod_serie &&
-                    $this->anoUltimaMatricula == $this->ano
-                ) {
+                $ultimaMatriculaSerieAno = LegacyRegistration::query()
+                    ->active()
+                    ->where('ref_cod_aluno', $this->ref_cod_aluno)
+                    ->where('ref_ref_cod_serie', $this->ref_cod_serie)
+                    ->where('ano', $this->ano)
+                    ->whereNot('cod_matricula', $this->cod_matricula)
+                    ->orderBy('cod_matricula', 'desc')
+                    ->first();
+
+                if ($ultimaMatriculaSerieAno->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO) {
                     /** @var LegacyRegistration $registration */
 
                     $registration = LegacyRegistration::find(id: $this->cod_matricula);
