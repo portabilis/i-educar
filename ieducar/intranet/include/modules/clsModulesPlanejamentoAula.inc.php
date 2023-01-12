@@ -799,7 +799,7 @@ class clsModulesPlanejamentoAula extends Model {
     {
         $planejamentos = $this->lista($ano,
             null,
-            ull,
+            null,
             null,
             null,
             $turmaId,
