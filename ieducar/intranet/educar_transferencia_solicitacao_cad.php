@@ -88,7 +88,7 @@ return new class() extends clsCadastro
     public function reabrirMatricula($matriculaId)
     {
 
-        echo "<script> alert(' data de cancelamento: ".$data_cancel." id da turma: ".$_GET['turma']." '); </script>";
+       
 
         $matricula = new clsPmieducarMatricula($matriculaId);
         $matricula->ref_usuario_exc = null;
@@ -160,6 +160,7 @@ return new class() extends clsCadastro
 
     public function Novo()  
     {
+        echo "<script> alert(' data de cancelamento: ".$data_cancel." id da turma: ".$_GET['turma']." '); </script>";
 
         $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->orderBy('id', 'DESC')->get();
         $contador = 0;
