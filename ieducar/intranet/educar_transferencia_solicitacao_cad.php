@@ -87,6 +87,9 @@ return new class() extends clsCadastro
 
     public function reabrirMatricula($matriculaId)
     {
+
+        echo "<script> alert(' data de cancelamento: ".$data_cancel." id da turma: ".$_GET['turma']." '); </script>";
+
         $matricula = new clsPmieducarMatricula($matriculaId);
         $matricula->ref_usuario_exc = null;
         $matricula->aprovado = 3;
