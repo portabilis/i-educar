@@ -162,7 +162,222 @@ return new class() extends clsCadastro
         $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
     }
 
-  
+    public function Novo()  
+    {
+
+
+        $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+
+      
+
+        $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', "'".$data_cancel."'")->orderBy('id', 'DESC')->get();
+        foreach($frequencia as $list) {
+            $etapa = $list->etapa_sequencial;
+            $componente_curricular_id = $list->ref_componente_curricular;
+
+
+               //contabiliza as faltas se for turma dos primeiros anos
+               $qtd_faltas_turma  = 0;
+                $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->get();
+                    foreach($frequencia_aluno as $list_freq_aluno) {
+
+                        $qtd_faltas_turma++;
+                        
+                    }
+                //contabiliza as faltas se for turma dos ultimos anos
+                    $lista_faltas = '';   
+                $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->where('aulas_faltou', 'not like', 'undefined')->get();
+                    foreach($frequencia_aluno as $list_freq_aluno) {
+                       
+                    
+                        if(!empty($aulas->aulas_faltou)){
+
+                        $lista_faltas .= $aulas->aulas_faltou.",";
+
+                        }
+                        
+                    }
+                //verifica a quantidade de faltas no array de aulas que o aluno faltou
+                    $lista_faltas = substr($lista_faltas, 0, -1);
+                    $str_arr = preg_split ("/\,/", $lista_faltas);
+                    $total_faltas = count($str_arr);
+
+                         
+                $falta_aluno = FaltaAluno::where('ref_cod_matricula', $_GET['cod_matricula'])->get();
+                foreach($falta_aluno as $list_falta_aluno) {
+
+                    //Atualiza a quantidade faltas se for turma dos ultimos anos
+
+                    if($list_falta_aluno->tipo_falta==2){
+                        //pega a quantidade e subtrai pela quantidade de faltas existentes
+                        $qtd_falta_atual = 0;
+                        $lista_qtd_faltas = FaltaComponente::where('componente_curricular_id', $componente_curricular_id)->where('falta_aluno_id', $list_falta_aluno->id)->where('etapa', $etapa)->get();
+                        foreach($lista_qtd_faltas as $lista_qtd_falta) {
+                                $qtd_falta_atual = $lista_qtd_falta->quantidade;
+                        }
+                        $total_faltas = $qtd_falta_atual - $total_faltas;
+                        if($total_faltas<0){
+                            $total_faltas = 0;  
+                        } 
+                        FaltaComponente::where('componente_curricular_id', $componente_curricular_id)->where('falta_aluno_id', $list_falta_aluno->id)->where('etapa', $etapa)->update([
+                            'quantidade' => $total_faltas
+                            
+                        ]);
+                    } 
+                    //Atualiza a quantidade faltas se for turma dos primeiros anos
+                    elseif($list_falta_aluno->tipo_falta==1){
+                        
+                        $qtd_falta_atual = 0;
+                        $lista_qtd_faltas = FaltaGeral::where('falta_aluno_id', $list_falta_aluno->id)->where('etapa', $etapa)->get();
+                        foreach($lista_qtd_faltas as $lista_qtd_falta) {
+                                $qtd_falta_atual = $lista_qtd_falta->quantidade;
+                        }
+                        $total_faltas = $qtd_falta_atual - $qtd_faltas_turma;
+                        if($total_faltas<0){
+                            $total_faltas = 0;  
+                        } 
+                        FaltaGeral::where('falta_aluno_id', $list_falta_aluno->id)->where('etapa', $etapa)->update([
+                            'quantidade' => $total_faltas
+                            
+                        ]);
+
+                    }
+
+
+                }
+
+                    
+           
+    
+            
+            FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->delete();
+        }
+   
+                $turma = new clsPmieducarTurma($_GET['turma']);
+                $tipoTurma = $turma->getTipoTurma();
+
+                if ($tipoTurma == 1) {
+
+                }
+
+                if ($tipoTurma == 0) {
+                    
+
+                
+
+        DB::beginTransaction();
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
+
+        $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+        $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
+        $det_matricula = $obj->detalhe();
+
+        if (is_null($det_matricula['data_matricula'])) {
+            if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {
+                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
+                return false;
+            }
+        } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
+            $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
+            return false;
+        }
+
+        $obj->data_cancel = $this->data_cancel;
+
+        $this->data_transferencia = date('Y-m-d');
+        $this->ativo = 1;
+
+        $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+        $det_matricula = $obj_matricula->detalhe();
+        $aprovado = $det_matricula['aprovado'];
+
+        if ($aprovado == 3) {
+            $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada, null, null, 4, null, null, 1);
+            $obj->data_cancel = $this->data_cancel;
+            $editou = $obj->edita();
+            if (!$editou) {
+                $this->mensagem = 'Não foi possível editar a Matrícula do Aluno.<br>';
+
+                return false;
+            }
+
+            $enturmacoes = new clsPmieducarMatriculaTurma();
+            $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1);
+
+            if ($enturmacoes) {
+                // foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
+                // código da turma e do sequencial
+                foreach ($enturmacoes as $enturmacao) {
+                    $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial'], $this->data_enturmacao);
+                    $detEnturmacao = $enturmacao->detalhe();
+                    $detEnturmacao = $detEnturmacao['data_enturmacao'];
+                    $enturmacao->data_enturmacao = $detEnturmacao;
+                    if (!$enturmacao->edita()) {
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
+
+                        return false;
+                    } else {
+                        $enturmacao->marcaAlunoTransferido($this->data_cancel);
+                    }
+                }
+            }
+        }
+        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
+
+        if ($this->escola_em_outro_municipio === 'on') {
+            $this->ref_cod_escola = null;
+        } else {
+            $this->escola_destino_externa = null;
+            $this->estado_escola_destino_externa = null;
+            $this->municipio_escola_destino_externa = null;
+        }
+
+        $obj = new clsPmieducarTransferenciaSolicitacao(null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
+        if ($obj->existSolicitacaoTransferenciaAtiva()) {
+            $this->mensagem = 'Já existe uma solitação de transferência ativa.<br>';
+
+            return false;
+        }
+
+        $cadastrou = $obj->cadastra();
+
+        if ($cadastrou) {
+            $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
+            $obj->data_cancel = $this->data_cancel;
+            $obj->edita();
+
+            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(['id'], ['matricula_id' => $obj->cod_matricula]);
+
+            if ($notasAluno && count($notasAluno)) {
+                $notaAlunoId = $notasAluno[0]->get('id');
+
+                try {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                } catch (\Throwable $exception) {
+                    DB::rollback();
+                }
+            }
+
+            DB::commit();
+
+            event(new TransferEvent(LegacyTransferRequest::findOrFail($cadastrou)));
+
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
+        }
+
+        DB::rollback();
+
+        $this->mensagem = 'Cadastro não realizado.<br>';
+
+        return false;
+    }
+    }
 
     public function Excluir()
     {
