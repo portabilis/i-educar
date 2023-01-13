@@ -201,7 +201,7 @@ return new class() extends clsCadastro
                     $total_faltas = count($str_arr);
 
                          
-                $falta_aluno = FaltaAluno::where('ref_cod_matricula', $_GET['cod_matricula'])->get();
+                $falta_aluno = FaltaAluno::where('matricula_id', $_GET['cod_matricula'])->get();
                 foreach($falta_aluno as $list_falta_aluno) {
 
                     //Atualiza a quantidade faltas se for turma dos ultimos anos
