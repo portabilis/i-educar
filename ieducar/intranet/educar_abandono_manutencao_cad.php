@@ -134,7 +134,7 @@ return new class extends clsCadastro
             $atendimento = new clsModulesComponenteMinistradoAee();
             $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
 
-            $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', $obj_matricula->data_cancel)->orderBy('id', 'DESC')->get();
+            $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', "'".$obj_matricula->data_cancel."'")->orderBy('id', 'DESC')->get();
             foreach($frequencia as $list) {
 
                 $etapa = $list->etapa_sequencial;
@@ -143,15 +143,16 @@ return new class extends clsCadastro
     
                    //contabiliza as faltas se for turma dos primeiros anos
                    $qtd_faltas_turma  = 0;
-                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->get();
+                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $this->ref_cod_matricula)->get();
                         foreach($frequencia_aluno as $list_freq_aluno) {
     
                             $qtd_faltas_turma++;
                             
                         }
+                      
                     //contabiliza as faltas se for turma dos ultimos anos
                         $lista_faltas = '';   
-                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->where('aulas_faltou', 'not like', 'undefined')->get();
+                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $this->ref_cod_matricula)->where('aulas_faltou', 'not like', 'undefined')->get();
                         foreach($frequencia_aluno as $list_freq_aluno) {
                            
                         
@@ -168,7 +169,7 @@ return new class extends clsCadastro
                         $total_faltas = count($str_arr);
     
                              
-                    $falta_aluno = FaltaAluno::where('matricula_id', $_GET['cod_matricula'])->get();
+                    $falta_aluno = FaltaAluno::where('matricula_id', $this->ref_cod_matricula)->get();
                     foreach($falta_aluno as $list_falta_aluno) {
     
                         //Atualiza a quantidade faltas se for turma dos ultimos anos
@@ -210,10 +211,9 @@ return new class extends clsCadastro
     
     
                     }
-    
 
 
-                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula',$_GET['cod_matricula'])->delete();
+                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula',$this->ref_cod_matricula)->delete();
             }
         }
 
@@ -222,7 +222,7 @@ return new class extends clsCadastro
             $frequencia = new clsModulesFrequencia();
             $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
 
-            $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', $obj_matricula->data_cancel)->orderBy('id', 'DESC')->get();
+            $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', "'".$obj_matricula->data_cancel."'")->orderBy('id', 'DESC')->get();
             foreach($frequencia as $list) {
 
                 $etapa = $list->etapa_sequencial;
@@ -231,15 +231,16 @@ return new class extends clsCadastro
     
                    //contabiliza as faltas se for turma dos primeiros anos
                    $qtd_faltas_turma  = 0;
-                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->get();
+                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $this->ref_cod_matricula)->get();
                         foreach($frequencia_aluno as $list_freq_aluno) {
     
                             $qtd_faltas_turma++;
                             
                         }
+                      
                     //contabiliza as faltas se for turma dos ultimos anos
                         $lista_faltas = '';   
-                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->where('aulas_faltou', 'not like', 'undefined')->get();
+                    $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $this->ref_cod_matricula)->where('aulas_faltou', 'not like', 'undefined')->get();
                         foreach($frequencia_aluno as $list_freq_aluno) {
                            
                         
@@ -256,7 +257,7 @@ return new class extends clsCadastro
                         $total_faltas = count($str_arr);
     
                              
-                    $falta_aluno = FaltaAluno::where('ref_cod_matricula', $_GET['cod_matricula'])->get();
+                    $falta_aluno = FaltaAluno::where('matricula_id', $this->ref_cod_matricula)->get();
                     foreach($falta_aluno as $list_falta_aluno) {
     
                         //Atualiza a quantidade faltas se for turma dos ultimos anos
@@ -298,9 +299,12 @@ return new class extends clsCadastro
     
     
                     }
+
+
+                
     
 
-                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula',$_GET['cod_matricula'])->delete();
+                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula',$this->ref_cod_matricula)->delete();
             }
         }
 
