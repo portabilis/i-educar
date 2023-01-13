@@ -32,3 +32,4 @@ class FrequenciaAluno extends Model
 
     use HasFactory;
 }
+  

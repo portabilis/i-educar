@@ -10,7 +10,7 @@ class FaltaComponente extends Model
  /**
     * @var string
     */
-    protected $table = 'modules.falta_aluno';
+    protected $table = 'modules.falta_componente_curricular';
 
     /**
      * @var string
@@ -22,7 +22,7 @@ class FaltaComponente extends Model
         'falta_aluno_id',
         'componente_curricular_id',
         'quantidade',
-        'etapa'
+        'etapa' 
     
     ];
  
@@ -35,3 +35,4 @@ class FaltaComponente extends Model
     use HasFactory;
 
 }
+

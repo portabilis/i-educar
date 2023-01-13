@@ -16,7 +16,7 @@ class FaltaAluno extends Model
     */
    protected $primaryKey = 'id';
 
-   protected $fillable = [
+   protected $fillable = [ 
        'id',
        'matricula_id',
        'tipo_falta'
