@@ -167,7 +167,8 @@ return new class() extends clsCadastro
 
 
         $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
-        echo"<script> alert(' data de cancelamento: ".$data_cancel." id da turma: ".$_GET['turma']."'); </script>";
+
+        echo "<script> alert(' data de cancelamento: ".$data_cancel."  '); </script>";
 
         $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', $data_cancel)->orderBy('id', 'DESC')->get();
         foreach($frequencia as $list) {
