@@ -10,7 +10,7 @@ class FaltaComponente extends Model
  /**
     * @var string
     */
-    protected $table = 'modules.falta_aluno';
+    protected $table = 'modules.falta_componente_curricular';
 
     /**
      * @var string

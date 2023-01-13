@@ -10,7 +10,7 @@ class FaltaGeral extends Model
     use HasFactory; /**
     * @var string
     */
-    protected $table = 'modules.falta_aluno';
+    protected $table = 'modules.falta_geral';
 
     /**
      * @var string
@@ -20,7 +20,6 @@ class FaltaGeral extends Model
     protected $fillable = [
         'id',
         'falta_aluno_id',
-        'componente_curricular_id',
         'quantidade',
         'etapa' 
     
