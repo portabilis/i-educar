@@ -22,8 +22,7 @@ class Frequencia extends Model
         'data',
         'ref_cod_turma',
         'ref_componente_curricular',
-        'ordens_aulas',
-        'etapa_sequencial'
+        'ordens_aulas'
     ];
 
     /**
