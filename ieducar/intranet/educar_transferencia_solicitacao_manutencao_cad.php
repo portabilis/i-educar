@@ -167,7 +167,7 @@ return new class() extends clsCadastro
 
         $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
         
-        echo"<script>alert('data ".$data_cancel."');</script>";
+      
         $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', $data_cancel)->orderBy('id', 'DESC')->get();
         foreach($frequencia as $list) {
         
@@ -184,6 +184,7 @@ return new class() extends clsCadastro
                         $qtd_faltas_turma++;
                         
                     }
+                    echo"<script>alert('qtd faltas ".$qtd_faltas_turma."');</script>";
                 //contabiliza as faltas se for turma dos ultimos anos
                     $lista_faltas = '';   
                 $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->where('aulas_faltou', 'not like', 'undefined')->get();
