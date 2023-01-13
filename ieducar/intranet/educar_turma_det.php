@@ -6,7 +6,7 @@ use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsDetalhe {
+return new class () extends clsDetalhe {
     public $titulo;
     public $cod_turma;
     public $ref_usuario_exc;
@@ -58,7 +58,6 @@ return new class extends clsDetalhe {
                 'false'
             ]
         );
-
 
         if (empty($lst_obj) || $not_access) {
             $this->simpleRedirect(url: 'educar_turma_lst.php');
@@ -345,6 +344,16 @@ return new class extends clsDetalhe {
 
             $this->array_botao[] = 'Lançar pareceres da turma';
             $this->array_botao_url_script[] = sprintf('go("educar_parecer_turma_cad.php?cod_turma=%d");', $registro['cod_turma']);
+
+            $doesntExist = \App\Models\LegacySchoolClassTeacher::query()
+                ->where('ano', $registro['ano'])
+                ->where('turma_id', $registro['cod_turma'])
+                ->doesntExist();
+
+            if ($doesntExist) {
+                $this->array_botao[] = 'Copiar vínculo de servidores';
+                $this->array_botao_url_script[] = sprintf('go("copia_vinculos_servidores_cad.php?cod_turma=%d");', $registro['cod_turma']);
+            }
         }
 
         $this->url_cancelar = 'educar_turma_lst.php';
@@ -466,8 +475,8 @@ return new class extends clsDetalhe {
         return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-turma-det.js');
     }
 
-    public function getComponentesTurma() {
-
+    public function getComponentesTurma()
+    {
         return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
             ->whereSchool(school: $this->ref_ref_cod_escola)
             ->whereYearEq($this->ano)
@@ -478,7 +487,7 @@ return new class extends clsDetalhe {
     public function getComponentesTurmaMulti($turmaId)
     {
         $componentes = DB::table(table: 'pmieducar.turma as t')
-            ->selectRaw(expression: "cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
+            ->selectRaw(expression: 'cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, \', \' order by nm_serie) as grade')
             ->join(table: 'pmieducar.turma_serie as ts', first: 'ts.turma_id', operator: '=', second: 't.cod_turma')
             ->leftJoin(table: 'pmieducar.serie as s', first: 's.cod_serie', operator: 'ts.serie_id')
             ->join(table: 'pmieducar.escola_serie as es', first: function ($join) {
