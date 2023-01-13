@@ -184,7 +184,7 @@ return new class() extends clsCadastro
                         $qtd_faltas_turma++;
                         
                     }
-                    echo"<script>alert('qtd faltas ".$qtd_faltas_turma."');</script>";
+                    echo"<script>alert('qtd faltas ".$qtd_faltas_turma." id_frequencia ".$list->id." cod_matricula ".$_GET['cod_matricula']."');</script>";
                 //contabiliza as faltas se for turma dos ultimos anos
                     $lista_faltas = '';   
                 $frequencia_aluno = FrequenciaAluno::where('ref_frequencia',$list->id)->where('ref_cod_matricula', $_GET['cod_matricula'])->where('aulas_faltou', 'not like', 'undefined')->get();
