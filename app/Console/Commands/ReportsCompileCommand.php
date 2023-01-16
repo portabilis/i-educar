@@ -20,14 +20,14 @@ class ReportsCompileCommand extends Command
      */
     protected $description = 'Compile reports files';
 
-    /**
-     * Return the reports source path.
-     *
-     * @return string
-     */
-    protected function getJasperFiles()
+    protected function getJasperFiles(): ?string
     {
-        return base_path('ieducar/modules/Reports/ReportSources');
+        $reportDefaultPath = 'ieducar/modules/Reports/ReportSources';
+        if(false === is_dir(base_path($reportDefaultPath))) {
+            return null;
+        }
+
+        return base_path($reportDefaultPath);
     }
 
     /**
@@ -50,6 +50,12 @@ class ReportsCompileCommand extends Command
         $this->info('Compiling reports files..');
 
         $jasperFiles = $this->getJasperFiles();
+
+        if ($jasperFiles === null) {
+            $this->info('Report Packet not install or linked');
+            return;
+        }
+
         $jasperStarter = $this->getJasperStarter();
 
         passthru('cd ' . $jasperFiles . '; for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(' . $jasperStarter . ' cp $line.jrxml -o $line); done');
