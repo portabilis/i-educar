@@ -3,7 +3,6 @@
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
-use App\Models\LegacySchoolStage;
 use Illuminate\Support\Facades\Auth;
 
 class PromocaoApiController extends ApiCoreController
