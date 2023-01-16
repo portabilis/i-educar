@@ -63,7 +63,6 @@ ajudar a alcançar nossos objetivos.
 - [Nova instalação](#nova-instalação)
 - [Primeiro acesso](#primeiro-acesso)
 - [Personalizando a instalação](#personalizando-a-instalação)
-- [Instalação em servidor](#instalação-em-servidor)
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
 - [Upgrade](#upgrade)
 
@@ -80,36 +79,11 @@ facilitar o desenvolvimento.
 
 #### Servidor
 
-- [PHP](http://php.net/) versão 8.0
+- [PHP](http://php.net/) versão 8.1
 - [Composer](https://getcomposer.org/)
 - [Postgres](https://www.postgresql.org/)
 - [Nginx](https://www.nginx.com/)
 - [Redis](https://redis.io/)
-
-As seguintes extensões do PHP são necessárias:
-
-- bcmath
-- ctype
-- curl
-- dom
-- fileinfo
-- gd
-- iconv
-- json
-- libxml
-- mbstring
-- openssl
-- pcre
-- PDO
-- pgsql
-- Phar
-- SimpleXML
-- tokenizer
-- xml
-- xmlreader
-- xmlwriter
-- zip
-- zlib
 
 ### Instalação utilizando Docker
 
@@ -182,57 +156,6 @@ Execute o comando:
 ```bash
 docker-compose exec php vendor/bin/phpunit
 ```
-
-### Instalação em servidor
-
-O i-Educar possui um instalador que pode te auxiliar no processo de instalação
-em um servidor para produção.
-
-Antes de tudo faça [download](https://github.com/portabilis/i-educar/releases)
-da versão mais recente do i-Educar e extraia o conteúdo do release em uma pasta
-no seu servidor. O instalador está disponível desde a versão `2.1.0`.
-
-#### Configurando o servidor
-
-O **Nginx** precisa estar devidamente configurado para rodar o i-Educar e
-permitir acesso ao instalador. Você encontra um exemplo de configuração
-[aqui](https://github.com/portabilis/i-educar/blob/master/docker/nginx/default.conf).
-
-Em sistemas **Ubuntu**, por exemplo, você colocaria este arquivo na pasta
-`/etc/nginx/sites-available` e criaria um symlink para ele na pasta
-`/etc/nginx/sites-enabled`.
-
-Não esqueça de adequar a configuração de acordo com a realidade do seu servidor
-principalmente as seguintes diretivas:
-
-- `root`
-- `fastcgi_pass`
-
-Depois de tudo pronto basta reiniciar o processo do nginx para que as
-configurações novas entrem em vigor.
-
-#### Executando o instalador
-
-Agora que o Nginx está configurado você pode acessar o instalador em:
-
-```
-http://www.example.com/install.php
-```
-
-Substitua "www.example.com" pelo seu domínio ou endereço de IP. A partir daqui o
-instalador deverá te dar todas as instruções necessárias para realizar a
-instalação com sucesso. Todo exemplo de comando ou código que possa vir a
-aparecer no processo de instalação leva em consideração o seu ambiente, ou seja,
-fique à vontade para copiar e colar os comandos que eles deverão funcionar
-corretamente.
-
-Quando tudo estiver ok você poderá definir uma senha para o usuário `admin` e
-iniciar o processo de instalação. Se tudo correr bem você poderá acessar o
-i-Educar normalmente.
-
-Em caso de erros no processo de instalação verifique os logs do sistema que se
-encontram em `storage/logs` para determinar suas causas. Não hesite em
-[entrar em contato](#comunicação) caso enfrente dificuldades!
 
 ### Instalação do pacote de relatórios
 

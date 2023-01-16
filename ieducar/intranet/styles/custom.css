@@ -83,6 +83,15 @@ span.select2-selection.select2-selection--multiple{
   background-position: -18 10px !important;
 }
 
+.chosen-container.error {
+  padding: 0;
+}
+
+.chosen-container.chosen-container-single.error .chosen-single {
+  color: #ff4e4e !important;
+  background-color: #ffeeee !important;
+}
+
 input[type="button"] {
   background-color: #FFF !important;
   font-size: 14px !important;
@@ -1325,7 +1334,7 @@ p.title-table-matricula {
   width: auto !important;
   font-size: 14px;
   font-weight: normal;
-  padding: 6px 20px 12px 20px;
+  padding: 6px 20px 12px 10px;
   border-radius: 0px !important;
   border: 0 !important;
   color: #47728f;

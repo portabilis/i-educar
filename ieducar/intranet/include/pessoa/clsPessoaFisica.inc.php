@@ -43,14 +43,12 @@ class clsPessoaFisica extends clsPessoaFj
      */
     public function __construct(
         $int_idpes = false,
-        $numeric_cpf = false,
-        $date_data_nasc = false,
-        $str_sexo = false,
-        $int_idpes_mae = false,
-        $int_idpes_pai = false
+        $numeric_cpf = false
     ) {
         $this->idpes = $int_idpes;
         $this->cpf = $numeric_cpf;
+
+        parent::__construct(int_idpes: $this->idpes);
     }
 
     public function lista(
@@ -67,37 +65,32 @@ class clsPessoaFisica extends clsPessoaFj
         $where = '';
         $db = new clsBanco();
 
-        if (is_string($str_nome) && $str_nome != '') {
-            $str_nome = $db->escapeString($str_nome);
-            $where .= "{$whereAnd} coalesce(slug, unaccent(nome)) ILIKE unaccent('%{$str_nome}%')";
+        if (is_string(value: $str_nome) && $str_nome != '') {
+            $str_nome = $db->escapeString(string: $str_nome);
+            $where .= "{$whereAnd} coalesce(slug, unaccent(p.nome)) ILIKE unaccent('%{$str_nome}%')";
             $whereAnd = ' AND ';
         }
 
-        if (is_string($numeric_cpf)) {
-            $numeric_cpf = pg_escape_string($numeric_cpf);
+        if (is_string(value: $numeric_cpf)) {
+            $numeric_cpf = pg_escape_string(connection: $numeric_cpf);
 
-            $where .= "{$whereAnd} cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
+            $where .= "{$whereAnd} f.cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_cod_sistema)) {
-            $where .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
+        if (is_numeric(value: $int_ref_cod_sistema)) {
+            $where .= "{$whereAnd} (f.ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_idpes)) {
-            $where .= "{$whereAnd} idpes = '$int_idpes'";
+        if (is_numeric(value: $int_idpes)) {
+            $where .= "{$whereAnd} p.idpes = '$int_idpes'";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($ativo)) {
-            $where .= "{$whereAnd} ativo = $ativo";
+        if (is_numeric(value: $ativo)) {
+            $where .= "{$whereAnd} f.ativo = $ativo";
             $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($this->tipo_endereco)) {
-            // Interno
-            $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_pessoa)";
         }
 
         if ($inicio_limite !== false && $qtd_registros) {
@@ -109,7 +102,7 @@ class clsPessoaFisica extends clsPessoaFj
         if ($str_orderBy) {
             $orderBy .= $str_orderBy . ' ';
         } else {
-            $orderBy .= 'COALESCE(nome_social, nome) ';
+            $orderBy .= 'COALESCE(f.nome_social, p.nome) ';
         }
 
         $dba = new clsBanco();
@@ -119,13 +112,19 @@ class clsPessoaFisica extends clsPessoaFj
         }
 
         if (!$where) {
-            $total = $db->CampoUnico('SELECT COUNT(0) FROM cadastro.fisica ' . $where);
+            $total = $db->CampoUnico(consulta: 'SELECT COUNT(0) FROM cadastro.fisica ' . $where);
         } else {
-            $total = $db->CampoUnico('SELECT COUNT(0) FROM cadastro.v_pessoa_fisica ' . $where);
+            $total = $db->CampoUnico(consulta: 'SELECT COUNT(0) FROM cadastro.pessoa p INNER JOIN cadastro.fisica f ON true AND f.idpes = p.idpes ' . $where);
         }
 
-        $db->Consulta(sprintf(
-            'SELECT idpes, nome, nome_social, url, \'F\' AS tipo, email, cpf FROM cadastro.v_pessoa_fisica %s %s %s',
+        $db->Consulta(consulta: sprintf(
+            'SELECT p.idpes AS idpes,
+                    p.nome as nome,
+                    f.nome_social as nome_social,
+                    p.url as url,
+                    \'F\' AS tipo,
+                    p.email as email,
+                    f.cpf FROM cadastro.pessoa p INNER JOIN cadastro.fisica f ON true AND f.idpes = p.idpes %s %s %s',
             $where,
             $orderBy,
             $limite
@@ -137,7 +136,7 @@ class clsPessoaFisica extends clsPessoaFj
             $tupla = $db->Tupla();
             $tupla['total'] = $total;
 
-            $dba->Consulta(sprintf(
+            $dba->Consulta(consulta: sprintf(
                 'SELECT
                 ddd_1, fone_1, ddd_2, fone_2, ddd_mov, fone_mov, ddd_fax, fone_fax
                 FROM
@@ -164,7 +163,7 @@ class clsPessoaFisica extends clsPessoaFj
             $resultado[] = $tupla;
         }
 
-        if (count($resultado) > 0) {
+        if (count(value: $resultado) > 0) {
             return $resultado;
         }
 
@@ -176,7 +175,7 @@ class clsPessoaFisica extends clsPessoaFj
         if ($this->idpes) {
             $tupla = parent::detalhe();
 
-            $objFisica = new clsFisica($this->idpes);
+            $objFisica = new clsFisica(idpes: $this->idpes);
             $detalhe_fisica = $objFisica->detalhe();
 
             if ($detalhe_fisica) {
@@ -320,44 +319,15 @@ class clsPessoaFisica extends clsPessoaFj
 
             $objFisica = new clsFisica();
             $lista = $objFisica->lista(
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                $this->cpf
+                int_limite_ini: false,
+                int_limite_qtd: false,
+                int_cpf: $this->cpf
             );
 
             $this->idpes = $lista[0]['idpes'];
 
             if ($this->idpes) {
-                $objFisica = new clsFisica($this->idpes);
+                $objFisica = new clsFisica(idpes: $this->idpes);
                 $detalhe_fisica = $objFisica->detalhe();
 
                 if ($detalhe_fisica) {
@@ -500,7 +470,7 @@ class clsPessoaFisica extends clsPessoaFj
         $pos = 0;
 
         for ($i = 1; $i < func_num_args(); $i++) {
-            $campo = func_get_arg($i);
+            $campo = func_get_arg(position: $i);
 
             $resultado[$pos] = $this->$campo ? $this->$campo : '';
             $resultado[$campo] = &$resultado[$pos];
@@ -508,7 +478,7 @@ class clsPessoaFisica extends clsPessoaFj
             $pos++;
         }
 
-        if (count($resultado) > 0) {
+        if (count(value: $resultado) > 0) {
             return $resultado;
         }
 
@@ -520,10 +490,10 @@ class clsPessoaFisica extends clsPessoaFj
         if ($this->idpes) {
             $this->pessoa_logada = Auth::id();
             $db = new clsBanco();
-            $excluir = $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
+            $excluir = $db->Consulta(consulta: 'UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
 
             if ($excluir) {
-                $db->Consulta("UPDATE cadastro.fisica SET ref_usuario_exc = $this->pessoa_logada, data_exclusao = NOW() WHERE idpes = $this->idpes");
+                $db->Consulta(consulta: "UPDATE cadastro.fisica SET ref_usuario_exc = $this->pessoa_logada, data_exclusao = NOW() WHERE idpes = $this->idpes");
             }
         }
     }
@@ -533,7 +503,7 @@ class clsPessoaFisica extends clsPessoaFj
         if ($this->idpes) {
             $db = new clsBanco();
 
-            $db->Consulta("SELECT pessoa.nome, funcionario.matricula, usuario.cod_usuario
+            $db->Consulta(consulta: "SELECT pessoa.nome, funcionario.matricula, usuario.cod_usuario
                        FROM cadastro.fisica
                  INNER JOIN pmieducar.usuario ON (fisica.ref_usuario_exc = usuario.cod_usuario)
                  INNER JOIN portal.funcionario ON (usuario.cod_usuario = funcionario.ref_cod_pessoa_fj)
@@ -549,11 +519,11 @@ class clsPessoaFisica extends clsPessoaFj
 
     public function detalheSimples()
     {
-        if (is_numeric($this->idpes)) {
+        if (is_numeric(value: $this->idpes)) {
             $sql = "SELECT * FROM cadastro.fisica WHERE idpes = '{$this->idpes}' AND ativo = 1;";
 
             $db = new clsBanco();
-            $db->Consulta($sql);
+            $db->Consulta(consulta: $sql);
             $db->ProximoRegistro();
 
             return $db->Tupla();

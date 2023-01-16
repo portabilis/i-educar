@@ -72,7 +72,7 @@ class clsListagem extends clsCampos
 
                 $path = $uri . '?' . $path;
 
-                return $this->simpleRedirect($path);
+                $this->simpleRedirect($path);
             }
         } else {
             $params = http_build_query($_GET) . '|' . now();
@@ -145,20 +145,14 @@ class clsListagem extends clsCampos
 
             $linkFixo = $strUrl . '?';
 
-            $add_iniciolimi = null;
-
             if (is_array($mixVariaveisMantidas)) {
                 foreach ($mixVariaveisMantidas as $key => $value) {
                     if ($key != $getVar) {
-                        if (! ($add_iniciolimi && $key == 'iniciolimit')) {
-                            $linkFixo .= "$key=$value&";
-                        }
+                        $linkFixo .= "$key=$value&";
                     }
                 }
-            } else {
-                if (is_string($mixVariaveisMantidas)) {
-                    $linkFixo .= "$mixVariaveisMantidas&";
-                }
+            } else if (is_string($mixVariaveisMantidas)) {
+                $linkFixo .= "$mixVariaveisMantidas&";
             }
 
             $strReturn = <<<HTML
@@ -307,7 +301,7 @@ HTML;
                 if (isset($this->botao_submit) && $this->botao_submit) {
                     $retorno .=  '&nbsp;<input type=\'submit\' class=\'botaolistagem\' value=\'Buscar\' id=\'botao_busca\'>&nbsp;';
                 } else {
-                    $retorno .=  "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
+                    $retorno .= "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
                 }
             }
 
@@ -403,7 +397,7 @@ HTML;
                         reset($this->colunas);
                     }
 
-                    foreach ($linha as $i => $celula) {
+                    foreach ($linha as $celula) {
                         if (!empty($this->colunas)) {
                             $fmt = current($this->colunas);
                         } else {
@@ -438,7 +432,6 @@ HTML;
 
         if (!empty($this->paginador)) {
             $ua = 0;
-            $qdt_paginador = 1;
             $i = 0;
             $retorno .=  "
                 <tr>

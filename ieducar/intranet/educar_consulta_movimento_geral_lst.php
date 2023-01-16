@@ -11,7 +11,7 @@ return new class extends clsListagem {
         $params['data_inicial'] = $this->getQueryString('data_inicial');
         $params['data_final'] = $this->getQueryString('data_final');
 
-        $this->breadcrumb('Consulta de movimento geral', ['educar_index.php' => 'Escola']);
+        $this->breadcrumb(currentPage: 'Consulta de movimento geral', breadcrumbs: ['educar_index.php' => 'Escola']);
 
         $required = [
             'ano',
@@ -32,7 +32,7 @@ return new class extends clsListagem {
         $base = new clsBanco();
         $base->FraseConexao();
         $connectionString = 'pgsql:' . $base->getFraseConexao();
-        $data = (new MovimentoGeralQueryFactory(new \PDO($connectionString), $params))
+        $data = (new MovimentoGeralQueryFactory(connection: new \PDO($connectionString), params: $params))
             ->getData();
 
         $this->titulo = 'Parâmetros';
@@ -43,7 +43,7 @@ return new class extends clsListagem {
         if (empty($params['curso'])) {
             $cursos[] = 'Todos';
         } else {
-            $cursoIds = join(', ', $params['curso']);
+            $cursoIds = join(separator: ', ', array: $params['curso']);
 
             $dadosCursos = (array)Portabilis_Utils_Database::fetchPreparedQuery(
                 "select nm_curso from pmieducar.curso where cod_curso in ({$cursoIds});"
@@ -62,13 +62,13 @@ return new class extends clsListagem {
         ]);
 
         $this->addLinhas([
-            filter_var($params['ano'], FILTER_SANITIZE_STRING),
-            join('<br>', $cursos),
-            filter_var($this->getQueryString('data_inicial'), FILTER_SANITIZE_STRING),
-            filter_var($this->getQueryString('data_final'), FILTER_SANITIZE_STRING)
+            filter_var(value: $params['ano'], filter: FILTER_SANITIZE_STRING),
+            join(separator: '<br>', array: $cursos),
+            filter_var(value: $this->getQueryString('data_inicial'), filter: FILTER_SANITIZE_STRING),
+            filter_var(value: $this->getQueryString('data_final'), filter: FILTER_SANITIZE_STRING)
         ]);
 
-        $params['curso'] = empty($params['curso']) ? '' : join(',', $params['curso']);
+        $params['curso'] = empty($params['curso']) ? '' : join(separator: ',', array: $params['curso']);
         $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoGeral" data-params=\'%s\' data-tipo="%s">%d</a>';
 
         foreach ($data as $key => $value) {
@@ -80,7 +80,6 @@ return new class extends clsListagem {
                     case 'aee':
                     case 'localizacao':
                         continue;
-                        break;
                     default:
                         $paramsCopy = $params;
                         $paramsCopy['escola'] = $value['cod_escola'];
@@ -172,8 +171,8 @@ return new class extends clsListagem {
 })();
 JS;
 
-        Portabilis_View_Helper_Application::embedJavascript($this, $tableScript, false);
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/consulta_movimentos.js']);
+        Portabilis_View_Helper_Application::embedJavascript(viewInstance: $this, script: $tableScript, afterReady: false);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: ['/intranet/scripts/consulta_movimentos.js']);
     }
 
     public function Formular()

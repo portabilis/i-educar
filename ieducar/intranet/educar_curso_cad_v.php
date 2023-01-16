@@ -1,16 +1,12 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
+use App\Models\LegacyEducationType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_curso;
     public $ref_usuario_cad;
     public $ref_cod_tipo_regime;
@@ -54,7 +50,7 @@ return new class extends clsCadastro {
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
                 $obj_permissoes = new clsPermissoes();
-                if ($obj_permissoes->permissao_excluir(0, $this->pessoa_logada, 0)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 0, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 0)) {
                     $this->fexcluir = true;
                 }
 
@@ -70,7 +66,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_curso', $this->cod_curso);
+        $this->campoOculto(nome: 'cod_curso', valor: $this->cod_curso);
 
         // foreign keys
         $opcoes = [ '' => 'Selecione' ];
@@ -83,19 +79,15 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_instituicao', 'Instituicão', $opcoes, $this->ref_cod_instituicao);
+        $this->campoLista(nome: 'ref_cod_instituicao', campo: 'Instituicão', valor: $opcoes, default: $this->ref_cod_instituicao);
 
-        $opcoes = [ '' => 'Selecione' ];
+        $opcoes = LegacyEducationType::query()
+            ->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nm_tipo', direction: 'ASC')
+            ->pluck(column: 'nm_tipo', key: 'cod_tipo_ensino')
+            ->prepend(value: 'Selecione', key: '');
 
-        $objTemp = new clsPmieducarTipoEnsino();
-        $lista = $objTemp->lista();
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_tipo']}";
-            }
-        }
-
-        $this->campoLista('ref_cod_tipo_ensino', 'Tipo Ensino', $opcoes, $this->ref_cod_tipo_ensino);
+        $this->campoLista(nome: 'ref_cod_tipo_ensino', campo: 'Tipo Ensino', valor: $opcoes, default: $this->ref_cod_tipo_ensino);
 
         $opcoes = [ '' => 'Selecione' ];
 
@@ -107,41 +99,37 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_tipo_avaliacao', 'Tipo Avaliacão', $opcoes, $this->ref_cod_tipo_avaliacao);
+        $this->campoLista(nome: 'ref_cod_tipo_avaliacao', campo: 'Tipo Avaliacão', valor: $opcoes, default: $this->ref_cod_tipo_avaliacao);
 
-        $opcoes = [ '' => 'Selecione' ];
+        $opcoes = LegacyEducationLevel::query()
+            ->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nm_nivel', direction: 'ASC')
+            ->pluck(column: 'nm_nivel', key: 'cod_nivel_ensino')
+            ->prepend(value: 'Selecione', key: '');
 
-        $objTemp = new clsPmieducarNivelEnsino();
-        $lista = $objTemp->lista();
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
-            }
-        }
-
-        $this->campoLista('ref_cod_nivel_ensino', 'Nivel Ensino', $opcoes, $this->ref_cod_nivel_ensino);
+        $this->campoLista(nome: 'ref_cod_nivel_ensino', campo: 'Nivel Ensino', valor: $opcoes, default: $this->ref_cod_nivel_ensino);
 
         // text
-        $this->campoTexto('nm_curso', 'Nome Curso', $this->nm_curso, 30, 255, true);
-        $this->campoTexto('sgl_curso', 'Sgl Curso', $this->sgl_curso, 30, 255, true);
-        $this->campoNumero('qtd_etapas', 'Qtd Etapas', $this->qtd_etapas, 15, 255, true);
-        $this->campoMonetario('frequencia_minima', 'Frequencia Minima', $this->frequencia_minima, 15, 255, true);
-        $this->campoMonetario('media', 'Media', $this->media, 15, 255, true);
-        $this->campoMonetario('media_exame', 'Media Exame', $this->media_exame, 15, 255, false);
-        $this->campoNumero('falta_ch_globalizada', 'Falta Ch Globalizada', $this->falta_ch_globalizada, 15, 255, true);
-        $this->campoMonetario('carga_horaria', 'Carga Horaria', $this->carga_horaria, 15, 255, true);
-        $this->campoTexto('ato_poder_publico', 'Ato Poder Publico', $this->ato_poder_publico, 30, 255, false);
-        $this->campoNumero('edicao_final', 'Edicão Final', $this->edicao_final, 15, 255, true);
-        $this->campoMemo('objetivo_curso', 'Objetivo Curso', $this->objetivo_curso, 60, 10, false);
-        $this->campoMemo('publico_alvo', 'Publico Alvo', $this->publico_alvo, 60, 10, false);
-        $this->campoNumero('padrao_ano_escolar', 'Padrão Ano Escolar', $this->padrao_ano_escolar, 15, 255, true);
-        $this->campoMonetario('hora_falta', 'Hora Falta', $this->hora_falta, 15, 255, true);
+        $this->campoTexto(nome: 'nm_curso', campo: 'Nome Curso', valor: $this->nm_curso, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'sgl_curso', campo: 'Sgl Curso', valor: $this->sgl_curso, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoNumero(nome: 'qtd_etapas', campo: 'Qtd Etapas', valor: $this->qtd_etapas, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMonetario(nome: 'frequencia_minima', campo: 'Frequencia Minima', valor: $this->frequencia_minima, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMonetario(nome: 'media', campo: 'Media', valor: $this->media, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMonetario(nome: 'media_exame', campo: 'Media Exame', valor: $this->media_exame, tamanhovisivel: 15, tamanhomaximo: 255);
+        $this->campoNumero(nome: 'falta_ch_globalizada', campo: 'Falta Ch Globalizada', valor: $this->falta_ch_globalizada, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMonetario(nome: 'carga_horaria', campo: 'Carga Horaria', valor: $this->carga_horaria, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'ato_poder_publico', campo: 'Ato Poder Publico', valor: $this->ato_poder_publico, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoNumero(nome: 'edicao_final', campo: 'Edicão Final', valor: $this->edicao_final, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMemo(nome: 'objetivo_curso', campo: 'Objetivo Curso', valor: $this->objetivo_curso, colunas: 60, linhas: 10);
+        $this->campoMemo(nome: 'publico_alvo', campo: 'Publico Alvo', valor: $this->publico_alvo, colunas: 60, linhas: 10);
+        $this->campoNumero(nome: 'padrao_ano_escolar', campo: 'Padrão Ano Escolar', valor: $this->padrao_ano_escolar, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMonetario(nome: 'hora_falta', campo: 'Hora Falta', valor: $this->hora_falta, tamanhovisivel: 15, tamanhomaximo: 255, obrigatorio: true);
     }
 
     public function Novo()
     {
 
-        $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
+        $obj = new clsPmieducarCurso(cod_curso: $this->cod_curso, ref_usuario_cad: $this->pessoa_logada, ref_cod_tipo_regime: $this->ref_cod_tipo_regime, ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino, ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino, ref_cod_tipo_avaliacao: $this->ref_cod_tipo_avaliacao, nm_curso: $this->nm_curso, sgl_curso: $this->sgl_curso, qtd_etapas: $this->qtd_etapas, frequencia_minima: $this->frequencia_minima, media: $this->media, media_exame: $this->media_exame, falta_ch_globalizada: $this->falta_ch_globalizada, carga_horaria: $this->carga_horaria, ato_poder_publico: $this->ato_poder_publico, edicao_final: $this->edicao_final, objetivo_curso: $this->objetivo_curso, publico_alvo: $this->publico_alvo, data_cadastro: $this->data_cadastro, data_exclusao: $this->data_exclusao, ativo: $this->ativo, ref_usuario_exc: $this->pessoa_logada, ref_cod_instituicao: $this->ref_cod_instituicao, padrao_ano_escolar: $this->padrao_ano_escolar, hora_falta: $this->hora_falta);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -159,7 +147,7 @@ return new class extends clsCadastro {
     public function Editar()
     {
 
-        $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
+        $obj = new clsPmieducarCurso(cod_curso: $this->cod_curso, ref_usuario_cad: $this->pessoa_logada, ref_cod_tipo_regime: $this->ref_cod_tipo_regime, ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino, ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino, ref_cod_tipo_avaliacao: $this->ref_cod_tipo_avaliacao, nm_curso: $this->nm_curso, sgl_curso: $this->sgl_curso, qtd_etapas: $this->qtd_etapas, frequencia_minima: $this->frequencia_minima, media: $this->media, media_exame: $this->media_exame, falta_ch_globalizada: $this->falta_ch_globalizada, carga_horaria: $this->carga_horaria, ato_poder_publico: $this->ato_poder_publico, edicao_final: $this->edicao_final, objetivo_curso: $this->objetivo_curso, publico_alvo: $this->publico_alvo, data_cadastro: $this->data_cadastro, data_exclusao: $this->data_exclusao, ativo: $this->ativo, ref_usuario_exc: $this->pessoa_logada, ref_cod_instituicao: $this->ref_cod_instituicao, padrao_ano_escolar: $this->padrao_ano_escolar, hora_falta: $this->hora_falta);
         $editou = $obj->edita();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
@@ -176,7 +164,7 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, 0, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
+        $obj = new clsPmieducarCurso(cod_curso: $this->cod_curso, ref_usuario_cad: $this->pessoa_logada, ref_cod_tipo_regime: $this->ref_cod_tipo_regime, ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino, ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino, ref_cod_tipo_avaliacao: $this->ref_cod_tipo_avaliacao, nm_curso: $this->nm_curso, sgl_curso: $this->sgl_curso, qtd_etapas: $this->qtd_etapas, frequencia_minima: $this->frequencia_minima, media: $this->media, media_exame: $this->media_exame, falta_ch_globalizada: $this->falta_ch_globalizada, carga_horaria: $this->carga_horaria, ato_poder_publico: $this->ato_poder_publico, edicao_final: $this->edicao_final, objetivo_curso: $this->objetivo_curso, publico_alvo: $this->publico_alvo, data_cadastro: $this->data_cadastro, data_exclusao: $this->data_exclusao, ativo: 0, ref_usuario_exc: $this->pessoa_logada, ref_cod_instituicao: $this->ref_cod_instituicao, padrao_ano_escolar: $this->padrao_ano_escolar, hora_falta: $this->hora_falta);
         $excluiu = $obj->excluir();
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';

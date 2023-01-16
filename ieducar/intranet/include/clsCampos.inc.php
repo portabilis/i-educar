@@ -448,7 +448,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     {
         $this->campos[$nome] = ['listapesquisa'];
 
-        foreach ($options as $key => $option) {
+        foreach ($options as $option) {
             $this->campos[$nome][] = $option;
         }
     }
@@ -838,9 +838,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         $foiDuplo = $junta_linhas;
 
-        // Marca quantos valores foram passados para o prenchimento das repetições
-        $adicionador_total_valores = 5;
-
         $javascript = '
   function tabela(name, counter)
   {
@@ -1055,7 +1052,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         $retorno .= "<script>$javascript</script>";
         $classe = $md ? 'formlttd' : 'formmdtd';
         $md = $md ? false : true;
-        $index = 0;
 
         foreach ($arr_campos as $nome => $componente) {
             $nome_add = $nome;
@@ -1637,10 +1633,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         break;
 
-                    case 'email':
-                        $retorno .= '<a href=\'www.google.com.br\' class=\'linkBory\'>Enviar Por Email</a>';
-                        break;
-
                     case 'emailDuplo':
                         $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\">";
                         $foiDuplo = true;
@@ -1725,7 +1717,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         document.' . $this->__nome . '.' . $this->executa_submete;
         }
 
-        $ret .= "
+        return $ret . "
         document.$this->__nome.submit();
       }
     }
@@ -1754,8 +1746,6 @@ class clsCampos extends Core_Controller_Page_Abstract
       }
     }
     ";
-
-        return $ret;
     }
 
     public function getCampoTexto(
@@ -1840,9 +1830,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $retorno .= '</optgroup>';
         }
 
-        $retorno .= "</select> {$complemento}";
-
-        return $retorno;
+        return $retorno . "</select> {$complemento}";
     }
 
     public function getCampoMonetario(
@@ -1917,9 +1905,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $retorno .= ' checked';
         }
 
-        $retorno .= " {$disabled}> {$desc}";
-
-        return $retorno;
+        return $retorno . " {$disabled}> {$desc}";
     }
 
     public function getCampoCNPJ($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo)

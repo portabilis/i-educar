@@ -4,15 +4,15 @@ use iEducar\Legacy\Model;
 
 class clsPmieducarMotivoAfastamento extends Model
 {
-    public $cod_motivo_afastamento = null;
-    public $ref_usuario_exc = null;
-    public $ref_usuario_cad = null;
-    public $nm_motivo = null;
-    public $descricao = null;
-    public $data_cadastro = null;
-    public $data_exclusao = null;
-    public $ativo = null;
-    public $ref_cod_instituicao = null;
+    public $cod_motivo_afastamento;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_motivo;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
     public function __construct(
         $cod_motivo_afastamento = null,
@@ -25,7 +25,7 @@ class clsPmieducarMotivoAfastamento extends Model
         $ativo = null,
         $ref_cod_instituicao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}motivo_afastamento";
 
@@ -132,6 +132,7 @@ class clsPmieducarMotivoAfastamento extends Model
         if (is_numeric($this->cod_motivo_afastamento) && is_numeric($this->ref_usuario_exc)
             && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -189,7 +190,7 @@ class clsPmieducarMotivoAfastamento extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_motivo_afastamento = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_motivo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
@@ -280,7 +281,7 @@ class clsPmieducarMotivoAfastamento extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -298,7 +299,7 @@ class clsPmieducarMotivoAfastamento extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

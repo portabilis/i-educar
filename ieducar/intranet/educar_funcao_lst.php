@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_funcao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -46,7 +22,7 @@ return new class extends clsListagem {
         $this->titulo = 'Função - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
@@ -67,42 +43,37 @@ return new class extends clsListagem {
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_funcao', 'Nome Função', $this->nm_funcao, 30, 255, false);
-        $this->campoTexto('abreviatura', 'Abreviatura', $this->abreviatura, 30, 255, false);
-        $opcoes = ['' => 'Selecione',
-                        'N' => 'Não',
-                        'S' => 'Sim'
-                        ];
+        $this->campoTexto(nome: 'nm_funcao', campo: 'Nome Função', valor: $this->nm_funcao, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'abreviatura', campo: 'Abreviatura', valor: $this->abreviatura, tamanhovisivel: 30, tamanhomaximo: 255);
+        $opcoes = [
+            '' => 'Selecione',
+            'N' => 'Não',
+            'S' => 'Sim'
+        ];
 
-        $this->campoLista('professor', 'Professor', $opcoes, $this->professor, '', false, '', '', false, false);
+        $this->campoLista(nome: 'professor', campo: 'Professor', valor: $opcoes, default: $this->professor, obrigatorio: false);
 
         if ($this->professor == 'N') {
-            $this->professor =  '0';
+            $this->professor = '0';
         } elseif ($this->professor == 'S') {
             $this->professor = '1';
         }
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_funcao = new clsPmieducarFuncao();
         $obj_funcao->setOrderby('nm_funcao ASC');
-        $obj_funcao->setLimite($this->limite, $this->offset);
+        $obj_funcao->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_funcao->lista(
-            $this->cod_funcao,
-            null,
-            null,
-            $this->nm_funcao,
-            $this->abreviatura,
-            $this->professor,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
+            int_cod_funcao: $this->cod_funcao,
+            str_nm_funcao: $this->nm_funcao,
+            str_abreviatura: $this->abreviatura,
+            int_professor: $this->professor,
+            int_ativo: 1,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         $total = $obj_funcao->_total;
@@ -128,16 +99,16 @@ return new class extends clsListagem {
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2('educar_funcao_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_funcao_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        if ($obj_permissoes->permissao_cadastra(634, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_funcao_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Funções do servidor', [
+        $this->breadcrumb(currentPage: 'Funções do servidor', breadcrumbs: [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }

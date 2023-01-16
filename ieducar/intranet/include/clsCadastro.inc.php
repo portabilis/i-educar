@@ -120,12 +120,7 @@ class clsCadastro extends clsCampos
             }
 
             $this->setFlashMessage();
-
-            if (empty($script) && $this->sucesso && !empty($this->url_sucesso)) {
-                redirecionar($this->url_sucesso);
-            } else {
-                $this->Formular();
-            }
+            $this->Formular();
         }
     }
 
@@ -303,7 +298,7 @@ class clsCadastro extends clsCampos
                 $ct_campo = 0;
                 $retorno .= "for(var id_campo=0;id_campo<$nome.getId();id_campo++)\n{\n";
 
-                foreach ($componente as $name => $componente_campo) {
+                foreach ($componente as $componente_campo) {
                     $nomeCampo = $componente_campo[1];
                     $validador = $componente_campo[2];
 

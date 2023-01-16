@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LegacyIndividual;
+use App\Models\Employee;
 
 return new class extends clsListagem {
     public $limite;
@@ -27,129 +27,82 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Nome do Servidor',
             'Matrícula',
             'CPF',
             'Instituição'
         ]);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'anoLetivo'], [],['options' => ['required' => false]]);
-
-        if ($this->cod_servidor) {
-            $objTemp = new clsFuncionario($this->cod_servidor);
-            $detalhe = $objTemp->detalhe();
-
-            $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-            $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula_servidor'];
-        }
+        $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'anoLetivo'], helperOptions: ['options' => ['required' => false]]);
 
         $parametros = new clsParametrosPesquisas();
-        $parametros->setSubmit(0);
-        $this->campoTexto('nome', 'Nome do servidor', $this->nome, 50, 255, false);
-        $this->campoTexto('matricula_servidor', 'Matrícula', $this->matricula_servidor, 50, 255, false);
-        $this->inputsHelper()->dynamic('escolaridade', ['required' => false]);
-        $this->campoCheck('servidor_sem_alocacao', 'Incluir servidores sem alocação', isset($_GET['servidor_sem_alocacao']));
+        $parametros->setSubmit(submit: 0);
+        $this->campoTexto(nome: 'nome', campo: 'Nome do servidor', valor: $this->nome, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'matricula_servidor', campo: 'Matrícula', valor: $this->matricula_servidor, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->inputsHelper()->dynamic(helperNames: 'escolaridade', inputOptions: ['required' => false]);
+        $this->campoCheck(nome: 'servidor_sem_alocacao', campo: 'Incluir servidores sem alocação', valor: isset($_GET['servidor_sem_alocacao']));
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome])
-            ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
-            : 0;
 
         if (!$this->ref_idesco && $_GET['idesco']) {
             $this->ref_idesco = $_GET['idesco'];
         }
 
-        $obj_servidor = new clsPmieducarServidor();
-        $obj_servidor->setOrderby('carga_horaria ASC');
-        $obj_servidor->setLimite($this->limite, $this->offset);
+        $lista = Employee::join(table: 'pessoa', first: 'cod_servidor', operator: 'idpes')->filter([
+            'institution' => $this->ref_cod_instituicao,
+            'name' => $this->nome,
+            'role' => $this->matricula_servidor,
+            'schooling_degree' => $this->ref_idesco,
+            'allocation' => [request()->has('servidor_sem_alocacao'),$this->ref_cod_escola,$this->ano_letivo],
+            'employee' => $this->cod_servidor,
+        ])->with([
+            'institution:cod_instituicao,nm_instituicao',
+            'individual:idpes,cpf',
+            'employeeRoles:ref_cod_servidor,matricula'
+        ])->active()->orderBy('pessoa.nome')->paginate($this->limite, [
+            'pessoa.nome as name',
+            'ref_cod_instituicao',
+            'cod_servidor',
+        ], 'pagina_');
 
-        $lista = $obj_servidor->lista(
-            $this->cod_servidor,
-            null,
-            $this->ref_idesco,
-            $this->carga_horaria,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            $this->nome,
-            null,
-            null,
-            true,
-            true,
-            true,
-            null,
-            null,
-            $this->ref_cod_escola,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            isset($_GET['servidor_sem_alocacao']),
-            $this->ano_letivo,
-            $this->matricula_servidor
-        );
-        $total = $obj_servidor->_total;
 
         // UrlHelper
         $url = CoreExt_View_Helper_UrlHelper::getInstance();
 
         // Monta a lista
-        if (is_array($lista) && count($lista)) {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao($lista[0]['ref_cod_instituicao']);
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-
-            $ids = array_map(function ($individual) {
-                return $individual['cod_servidor'];
-            }, $lista);
-
-            $cpfs = LegacyIndividual::query()->whereKey($ids)->pluck('cpf', 'idpes')->toArray();
-
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
-                $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
-                $registro['cpf'] = int2CPF($cpfs[$registro['cod_servidor']]);
-
                 $path = 'educar_servidor_det.php';
                 $options = [
                     'query' => [
-                        'cod_servidor' => $registro['cod_servidor'],
-                        'ref_cod_instituicao' => $det_ref_cod_instituicao['cod_instituicao'],
+                        'cod_servidor' => $registro->id,
+                        'ref_cod_instituicao' => $registro->institution->id,
                     ]
                 ];
 
-                $this->addLinhas([
-                    $url->l($registro['nome'], $path, $options),
-                    $url->l($registro['matricula_servidor'], $path, $options),
-                    $url->l($registro['cpf'], $path, $options),
-                    $url->l($registro['ref_cod_instituicao'], $path, $options),
+                $this->addLinhas(linha: [
+                    $url->l(text: $registro->name, path: $path, options: $options),
+                    $url->l(text: $registro->employeeRoles->unique('matricula')->implode('matricula',', '), path: $path, options: $options),
+                    $url->l(text: $registro->individual->cpf, path: $path, options: $options),
+                    $url->l(text: $registro->institution->name, path: $path, options: $options),
                 ]);
             }
         }
 
-        $this->addPaginador2('educar_servidor_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_servidor_lst.php', intTotalRegistros: $lista->total(), mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_servidor_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Funções do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        $this->breadcrumb(currentPage: 'Funções do servidor', breadcrumbs: [
+            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }
 

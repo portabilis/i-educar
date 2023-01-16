@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyRegistration;
 use App\Process;
 
 return new class extends clsCadastro {
@@ -87,18 +89,25 @@ return new class extends clsCadastro {
         $cursos = [];
 
         $escolaAluno = $this->ref_ref_cod_escola;
+        $registration = LegacyRegistration::query()->find($this->cod_matricula);
 
-        $objEscolaCurso = new clsPmieducarEscolaCurso();
+        $lst_escola_curso = LegacyCourse::query()
+            ->active()
+            ->whereSchool(
+                school: $escolaAluno,
+                year:$registration->ano
+            )
+            ->orderBy('nm_curso')
+            ->get(
+                [
+                    'cod_curso',
+                    'nm_curso',
+                    'descricao'
+                ])
+        ;
 
-        $listaEscolaCurso = $objEscolaCurso->lista($escolaAluno);
-
-        if ($listaEscolaCurso) {
-            foreach ($listaEscolaCurso as $escolaCurso) {
-                $objCurso = new clsPmieducarCurso($escolaCurso['ref_cod_curso']);
-                $detCurso = $objCurso->detalhe();
-                $nomeCurso = $detCurso['nm_curso'];
-                $cursos[$escolaCurso['ref_cod_curso']] = $nomeCurso;
-            }
+        foreach ($lst_escola_curso as $escolaCurso) {
+            $cursos[$escolaCurso->id] = $escolaCurso->name;
         }
 
         $this->campoOculto('serie_matricula', $this->ref_ref_cod_serie);
@@ -129,13 +138,11 @@ return new class extends clsCadastro {
                 $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
                 return false;
-                die();
             }
         } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
             $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
             return false;
-            die();
         }
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {

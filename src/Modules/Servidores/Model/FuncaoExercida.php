@@ -16,6 +16,7 @@ class FuncaoExercida
     public const DOCENTE_TUTOR_EAD = 6;
     public const GUIA_INTERPRETE_LIBRAS = 7;
     public const APOIO_ALUNOS_DEFICIENCIA = 8;
+    public const INSTRUTOR_EDUCACAO_PROFISSIONAL = 9;
 
     public static function getDescriptiveValues()
     {
@@ -28,6 +29,7 @@ class FuncaoExercida
             self::DOCENTE_TUTOR_EAD => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD',
             self::GUIA_INTERPRETE_LIBRAS => 'Guia-Intérprete',
             self::APOIO_ALUNOS_DEFICIENCIA => 'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)',
+            self::INSTRUTOR_EDUCACAO_PROFISSIONAL => 'Instrutor da Educação Profissional'
         ];
     }
 }

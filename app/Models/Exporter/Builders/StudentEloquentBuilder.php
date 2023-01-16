@@ -10,57 +10,157 @@ class StudentEloquentBuilder extends Builder
 {
     use JoinableBuilder;
 
-    /**
-     * @param array $columns
-     *
-     * @return StudentEloquentBuilder
-     */
+    public function getLegacyColumns(): array
+    {
+        return [
+            'mother.person' => [
+                'id' => 'm.idpes as ID da mãe',
+                'name' => 'm.nome as Nome da mãe',
+                'email' => 'm.email as E-mail da mãe'
+            ],
+            'mother.individual' => [
+                'social_name' => 'mf.nome_social as Nome social e/ou afetivo da mãe',
+                'cpf' => 'mf.cpf as CPF da mãe',
+                'date_of_birth' => 'mf.data_nasc as Data de nascimento da mãe',
+                'sus' => 'mf.sus as Número SUS da mãe',
+                'nis' => 'mf.nis_pis_pasep as NIS (PIS/PASEP) da mãe',
+                'occupation' => 'mf.ocupacao as Ocupação da mãe',
+                'organization' => 'mf.empresa as Empresa da mãe',
+                'monthly_income' => 'mf.renda_mensal as Renda Mensal da mãe',
+                'gender' => 'mf.sexo as Gênero da mãe'
+            ],
+            'mother.document' => [
+                'rg' => 'md.rg as RG da mãe',
+                'rg_issue_date' => 'md.data_exp_rg as RG (Data Emissão) da mãe',
+                'rg_state_abbreviation' => 'md.sigla_uf_exp_rg as RG (Estado) da mãe'
+            ],
+            'father.person' => [
+                'id' => 'f.idpes as ID do pai',
+                'name' => 'f.nome as Nome do pai',
+                'email' => 'f.email as E-mail do pai'
+            ],
+            'father.individual' => [
+                'social_name' => 'ff.nome_social as Nome social e/ou afetivo do pai',
+                'cpf' => 'ff.cpf as CPF do pai',
+                'date_of_birth' => 'ff.data_nasc as Data de nascimento do pai',
+                'sus' => 'ff.sus as Número SUS do pai',
+                'nis' => 'ff.nis_pis_pasep as NIS (PIS/PASEP) do pai',
+                'occupation' => 'ff.ocupacao as Ocupação do pai',
+                'organization' => 'ff.empresa as Empresa do pai',
+                'monthly_income' => 'ff.renda_mensal as Renda Mensal do pai',
+                'gender' => 'ff.sexo as Gênero do pai'
+            ],
+            'father.document' => [
+                'rg' => 'fd.rg as RG do pai',
+                'rg_issue_date' => 'fd.data_exp_rg as RG (Data Emissão) do pai',
+                'rg_state_abbreviation' => 'fd.sigla_uf_exp_rg as RG (Estado) do pai'
+            ],
+            'guardian.person' => [
+                'id' => 'g.idpes as ID do responsável',
+                'name' => 'g.nome as Nome do responsável',
+                'email' => 'g.email as E-mail do responsável'
+            ],
+            'guardian.individual' => [
+                'social_name' => 'gf.nome_social as Nome social e/ou afetivo do responsável',
+                'cpf' => 'gf.cpf as CPF do responsável',
+                'date_of_birth' => 'gf.data_nasc as Data de nascimento do responsável',
+                'sus' => 'gf.sus as Número SUS do responsável',
+                'nis' => 'gf.nis_pis_pasep as NIS (PIS/PASEP) do responsável',
+                'occupation' => 'gf.ocupacao as Ocupação do responsável',
+                'organization' => 'gf.empresa as Empresa do responsável',
+                'monthly_income' => 'gf.renda_mensal as Renda Mensal do responsável',
+                'gender' => 'gf.sexo as Gênero do responsável'
+            ],
+            'guardian.document' => [
+                'rg' => 'gd.rg as RG do responsável',
+                'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
+                'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável'
+            ],
+            'place' => [
+                'address' => 'p.address as Logradouro',
+                'number' => 'p.number as Número',
+                'complement' => 'p.complement as Complemento',
+                'neighborhood' => 'p.neighborhood as Bairro',
+                'postal_code' => 'p.postal_code as CEP',
+                'latitude' => 'p.latitude as Latitude',
+                'longitude' => 'p.longitude as Longitude',
+                'city' => 'c.name as Cidade',
+                'state_abbreviation' => 's.abbreviation as Sigla do Estado',
+                'state' => 's.name as Estado',
+                'country' => 'cn.name as País'
+            ]
+        ];
+    }
+
     public function mother($columns)
     {
-        $this->addSelect(
-            $this->joinColumns('mother', $columns)
-        );
+        //pessoa
+        if ($only = $this->model->getLegacyExportedColumns('mother.person', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.pessoa as m', 'exporter_student_grouped_registration.mother_id', 'm.idpes');
+        }
 
-        return $this->leftJoin('exporter_person as mother', function (JoinClause $join) {
-            $join->on('exporter_student.mother_id', '=', 'mother.id');
-        });
+        //fisica
+        if ($only = $this->model->getLegacyExportedColumns('mother.individual', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.fisica as mf', 'exporter_student_grouped_registration.mother_id', 'mf.idpes');
+        }
+
+        //documento
+        if ($only = $this->model->getLegacyExportedColumns('mother.document', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.documento as md', 'exporter_student_grouped_registration.mother_id', 'md.idpes');
+        }
+
+        return $this;
     }
 
-    /**
-     * @param array $columns
-     *
-     * @return StudentEloquentBuilder
-     */
     public function father($columns)
     {
-        $this->addSelect(
-            $this->joinColumns('father', $columns)
-        );
+        //pessoa
+        if ($only = $this->model->getLegacyExportedColumns('father.person', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.pessoa as f', 'exporter_student_grouped_registration.father_id', 'f.idpes');
+        }
 
-        return $this->leftJoin('exporter_person as father', function (JoinClause $join) {
-            $join->on('exporter_student.father_id', '=', 'father.id');
-        });
+        //fisica
+        if ($only = $this->model->getLegacyExportedColumns('father.individual', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.fisica as ff', 'exporter_student_grouped_registration.father_id', 'ff.idpes');
+        }
+
+        //documento
+        if ($only = $this->model->getLegacyExportedColumns('father.document', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.documento as fd', 'exporter_student_grouped_registration.father_id', 'fd.idpes');
+        }
+
+        return $this;
     }
 
-    /**
-     * @param array $columns
-     *
-     * @return StudentEloquentBuilder
-     */
     public function guardian($columns)
     {
-        $this->addSelect(
-            $this->joinColumns('guardian', $columns)
-        );
+        //pessoa
+        if ($only = $this->model->getLegacyExportedColumns('guardian.person', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.pessoa as g', 'exporter_student_grouped_registration.guardian_id', 'g.idpes');
+        }
 
-        return $this->leftJoin('exporter_person as guardian', function (JoinClause $join) {
-            $join->on('exporter_student.guardian_id', '=', 'guardian.id');
-        });
+        //fisica
+        if ($only = $this->model->getLegacyExportedColumns('guardian.individual', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.fisica as gf', 'exporter_student_grouped_registration.guardian_id', 'gf.idpes');
+        }
+
+        //documento
+        if ($only = $this->model->getLegacyExportedColumns('guardian.document', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.documento as gd', 'exporter_student_grouped_registration.guardian_id', 'gd.idpes');
+        }
+
+        return $this;
     }
 
-    /**
-     * @return StudentEloquentBuilder
-     */
     public function benefits()
     {
         $this->addSelect(
@@ -68,13 +168,10 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_benefits as benefits', function (JoinClause $join) {
-            $join->on('exporter_student.student_id', '=', 'benefits.student_id');
+            $join->on('exporter_student_grouped_registration.student_id', '=', 'benefits.student_id');
         });
     }
 
-    /**
-     * @return StudentEloquentBuilder
-     */
     public function disabilities()
     {
         $this->addSelect(
@@ -82,13 +179,10 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_disabilities as disabilities', function (JoinClause $join) {
-            $join->on('exporter_student.id', '=', 'disabilities.person_id');
+            $join->on('exporter_student_grouped_registration.id', '=', 'disabilities.person_id');
         });
     }
 
-    /**
-     * @return StudentEloquentBuilder
-     */
     public function phones()
     {
         $this->addSelect(
@@ -96,25 +190,42 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_phones as phones', function (JoinClause $join) {
-            $join->on('exporter_student.id', '=', 'phones.person_id');
+            $join->on('exporter_student_grouped_registration.id', '=', 'phones.person_id');
         });
     }
 
-    /**
-     * @param array $columns
-     *
-     * @return StudentEloquentBuilder
-     */
     public function place($columns)
     {
+        $this->leftJoin('person_has_place', static function (JoinClause $join) {
+            $join->on('exporter_student_grouped_registration.id', '=', 'person_has_place.person_id');
+        });
+
+        if ($only = $this->model->getLegacyExportedColumns('place', $columns)) {
+            $this->addSelect($only);
+
+            $this->leftJoin('places as p', 'p.id', 'person_has_place.id')
+                ->leftJoin('cities as c', 'c.id', 'p.city_id')
+                ->leftJoin('states as s', 's.id', 'c.state_id')
+                ->leftJoin('countries as cn', 'cn.id', 's.country_id');
+        }
+
+        return $this;
+    }
+
+    public function uniform_distributions($columns)
+    {
+        if (in_array('complete_kit', $columns)) {
+            unset($columns[array_search('complete_kit', $columns)]);
+
+            $this->addSelect(\DB::raw('CASE WHEN uniform_distributions.complete_kit THEN \'SIM\' ELSE \'NÃO\' END AS "Kit Completo"'));
+        }
+
         $this->addSelect(
-            $this->joinColumns('place', $columns)
+            $this->joinColumns('uniform_distributions', $columns)
         );
 
-        return $this->leftJoin('person_has_place', function (JoinClause $join) {
-            $join->on('exporter_student.id', '=', 'person_has_place.person_id');
-        })->leftJoin('addresses as place', function (JoinClause $join) {
-            $join->on('person_has_place.place_id', '=', 'place.id');
+        return $this->leftJoin('uniform_distributions', function (JoinClause $join) {
+            $join->on('exporter_student_grouped_registration.id', '=', 'uniform_distributions.student_id');
         });
     }
 }

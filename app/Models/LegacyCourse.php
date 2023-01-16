@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Builders\LegacyCourseBuilder;
+use App\Traits\HasLegacyDates;
+use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -12,9 +15,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property string        $name
  * @property LegacyGrade[] $grades
+ *
+ * @method static LegacyCourseBuilder query()
  */
-class LegacyCourse extends Model
+class LegacyCourse extends LegacyModel
 {
+    use LegacyAttribute;
+    use HasLegacyDates;
+
+    public const CREATED_AT = 'data_cadastro';
+
     /**
      * @var string
      */
@@ -26,12 +36,44 @@ class LegacyCourse extends Model
     protected $primaryKey = 'cod_curso';
 
     /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LegacyCourseBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var array
+     */
+    public array $legacy = [
+        'id' => 'cod_curso',
+        'name' => 'nm_curso',
+        'is_standard_calendar' => 'padrao_ano_escolar',
+        'steps' => 'qtd_etapas',
+        'description' => 'descricao'
+    ];
+
+    /**
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'ref_cod_tipo_regime', 'ref_cod_nivel_ensino', 'ref_cod_tipo_ensino', 'nm_curso',
-        'sgl_curso', 'qtd_etapas', 'carga_horaria', 'data_cadastro', 'ref_cod_instituicao', 'hora_falta', 'ativo',
-        'modalidade_curso', 'padrao_ano_escolar', 'multi_seriado'
+        'ref_usuario_cad',
+        'ref_cod_tipo_regime',
+        'ref_cod_nivel_ensino',
+        'ref_cod_tipo_ensino',
+        'nm_curso',
+        'descricao',
+        'sgl_curso',
+        'qtd_etapas',
+        'carga_horaria',
+        'ref_cod_instituicao',
+        'hora_falta',
+        'ativo',
+        'modalidade_curso',
+        'padrao_ano_escolar',
+        'multi_seriado'
     ];
 
     /**
@@ -41,33 +83,45 @@ class LegacyCourse extends Model
         'padrao_ano_escolar' => 'boolean',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_curso;
+        return Attribute::make(
+            get: fn () => $this->cod_curso,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function description(): Attribute
     {
-        return $this->nm_curso;
+        return Attribute::make(
+            get: fn () => $this->descricao,
+        );
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsStandardCalendarAttribute()
+    protected function steps(): Attribute
     {
-        return $this->padrao_ano_escolar;
+        return Attribute::make(
+            get: fn () => $this->qtd_etapas,
+        );
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (empty($this->description)) {
+                    return $this->nm_curso;
+                }
+
+                return $this->nm_curso . ' (' . $this->description . ')';
+            },
+        );
+    }
+
+    protected function isStandardCalendar(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->padrao_ano_escolar,
+        );
     }
 
     /**
@@ -81,36 +135,32 @@ class LegacyCourse extends Model
     }
 
     /**
-     * @param Builder $query
+     * Relaciona com  as escolas
      *
-     * @return Builder
+     * @return BelongsToMany
      */
-    public function scopeIsEja($query)
+    public function schools(): BelongsToMany
     {
-        return $query->where('modalidade_curso', ModalidadeCurso::EJA);
+        return $this->belongsToMany(LegacySchool::class, 'escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
 
-    public function scopeActive(Builder $query)
+    /**
+     * Relaciona com as habilitações
+     *
+     * @return BelongsToMany
+     */
+    public function qualifications(): BelongsToMany
     {
-        return $query->where('curso.ativo', 1);
+        return $this->belongsToMany(LegacyQualification::class, 'pmieducar.habilitacao_curso', 'ref_cod_curso', 'ref_cod_habilitacao');
     }
 
-    public function scopeRegistrationsActiveLastYear(Builder $query): Builder
+    public function educationType(): BelongsTo
     {
-        return $query->join('pmieducar.matricula', 'curso.cod_curso', '=', 'matricula.ref_cod_curso')
-            ->where('matricula.ano', date('Y') - 1)
-            ->where('matricula.ativo', 1);
+        return $this->belongsTo(LegacyEducationType::class, 'ref_cod_tipo_ensino');
     }
 
-    public function scopeRegistrationsActiveCurrentYear(Builder $query): Builder
+    public function educationLevel(): BelongsTo
     {
-        return $query->join('pmieducar.matricula', 'curso.cod_curso', '=', 'matricula.ref_cod_curso')
-            ->where('matricula.ano', date('Y'))
-            ->where('matricula.ativo', 1);
-    }
-
-    public function scopeHasModality(Builder $query): Builder
-    {
-        return $query->where('modalidade_curso', '>', 0);
+        return $this->belongsTo(LegacyEducationLevel::class, 'ref_cod_nivel_ensino');
     }
 }

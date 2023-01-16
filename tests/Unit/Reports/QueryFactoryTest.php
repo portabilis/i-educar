@@ -54,14 +54,4 @@ class QueryFactoryTest extends TestCase
         $data = $fakeClass->getData();
         $this->assertCount(2, $data);
     }
-
-    public function testSingleValue()
-    {
-        $fakeClass = new class (self::$pdo, []) extends QueryFactory {
-            protected $keys = ['usuario'];
-            protected $query = 'SELECT * FROM pmieducar.usuario WHERE cod_usuario = :usuario';
-        };
-        $fakeClass->setParams(['usuario' => 1]);
-        $this->assertEquals(1, $fakeClass->getData()[0]['cod_usuario']);
-    }
 }

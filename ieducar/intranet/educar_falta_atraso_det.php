@@ -4,7 +4,6 @@ use App\Models\LegacySchool;
 
 return new class extends clsDetalhe {
     public $titulo;
-
     public $cod_falta_atraso;
     public $ref_cod_escola;
     public $ref_ref_cod_instituicao;
@@ -52,7 +51,7 @@ return new class extends clsDetalhe {
                  </tr>';
 
             $cont  = 0;
-            $total = 0;
+            $corpo = '';
 
             foreach ($registro as $falta) {
                 if (($cont % 2) == 0) {
@@ -106,7 +105,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->caption_novo = 'Compensar';
             $this->url_novo     = sprintf(
                 'educar_falta_atraso_compensado_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
@@ -131,7 +130,7 @@ return new class extends clsDetalhe {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da falta/atraso do servidor', [
+        $this->breadcrumb(currentPage: 'Detalhe da falta/atraso do servidor', breadcrumbs: [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
     }

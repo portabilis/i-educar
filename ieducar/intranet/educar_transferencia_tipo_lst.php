@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyTransferType;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -28,47 +30,43 @@ return new class extends clsListagem {
         ];
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Instituição';
         }
 
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
         // Filtros de Foreign Keys
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Transferência', $this->nm_tipo, 30, 255, false);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Transferência', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_transferencia_tipo = new clsPmieducarTransferenciaTipo();
-        $obj_transferencia_tipo->setOrderby('nm_tipo ASC');
-        $obj_transferencia_tipo->setLimite($this->limite, $this->offset);
+        $query = LegacyTransferType::query()
+            ->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nm_tipo', direction: 'ASC');
 
-        $lista = $obj_transferencia_tipo->lista(
-            null,
-            null,
-            null,
-            $this->nm_tipo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string(value: $this->nm_tipo)) {
+            $query->where(column: 'nm_tipo', operator: 'ilike', value: '%' . $this->nm_tipo . '%');
+        }
 
-        $total = $obj_transferencia_tipo->_total;
+        if (is_numeric(value: $this->ref_cod_instituicao)) {
+            $query->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao);
+        }
+
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
@@ -79,10 +77,10 @@ return new class extends clsListagem {
                 if ($nivel_usuario == 1) {
                     $lista_busca[] = "<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro['cod_transferencia_tipo']}\">{$registro['ref_cod_instituicao']}</a>";
                 }
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
-        $this->addPaginador2('educar_transferencia_tipo_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_transferencia_tipo_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
         if ($obj_permissoes->permissao_cadastra(575, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_transferencia_tipo_cad.php")';
@@ -90,8 +88,8 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de tipos de transferência', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Listagem de tipos de transferência', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 

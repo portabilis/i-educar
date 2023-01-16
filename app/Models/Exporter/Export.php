@@ -41,10 +41,11 @@ class Export extends Model
     public function getAllowedExports()
     {
         return [
-            1 => new Student(),
-            2 => new Teacher(),
-            3 => new SocialAssistance(),
-            4 => new Stage(),
+            1 => new Enrollment(),
+            2 => new Student(),
+            3 => new Teacher(),
+            4 => new SocialAssistance(),
+            5 => new Stage(),
         ];
     }
 

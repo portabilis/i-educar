@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\LegacyDisciplineSchoolClass;
+use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
+use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
@@ -12,7 +15,6 @@ return new class extends clsCadastro {
     public $ref_cod_serie;
     public $ref_cod_serie_;
     public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
     public $nm_turma;
     public $sgl_turma;
     public $max_aluno;
@@ -82,17 +84,17 @@ return new class extends clsCadastro {
         $this->cod_turma = $_GET['cod_turma'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7, 'educar_turma_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 586, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_turma_lst.php');
 
         //Define que esta tela executa suas ações atraves de requisições ajax
         $this->acao_executa_submit_ajax = true;
 
-        if (is_numeric($this->cod_turma)) {
-            $obj_turma = new clsPmieducarTurma($this->cod_turma);
+        if (is_numeric(value: $this->cod_turma)) {
+            $obj_turma = new clsPmieducarTurma(cod_turma: $this->cod_turma);
             $registro = $obj_turma->detalhe();
-            $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+            $obj_esc = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
             $det_esc = $obj_esc->detalhe();
-            $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+            $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
             $det_ser = $obj_ser->detalhe();
 
             $this->visivel = (int) $registro['visivel'];
@@ -100,7 +102,7 @@ return new class extends clsCadastro {
             $regra_avaliacao_id = $det_ser['regra_avaliacao_id'];
             if ($regra_avaliacao_id) {
                 $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
-                $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+                $regra_avaliacao = $regra_avaliacao_mapper->find(pkey: $regra_avaliacao_id);
 
                 $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
             }
@@ -111,7 +113,7 @@ return new class extends clsCadastro {
             $this->ref_cod_curso = $det_ser['ref_cod_curso'];
             $this->ref_cod_serie = $det_ser['cod_serie'];
 
-            $obj_curso = new clsPmieducarCurso(($this->ref_cod_curso));
+            $obj_curso = new clsPmieducarCurso(cod_curso: ($this->ref_cod_curso));
             $det_curso = $obj_curso->detalhe();
             $this->padrao_ano_escolar = $det_curso['padrao_ano_escolar'];
             $this->modalidade_curso = $det_curso['modalidade_curso'];
@@ -127,7 +129,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                $objTurma = new clsPmieducarTurma($this->cod_turma);
+                $objTurma = new clsPmieducarTurma(cod_turma: $this->cod_turma);
                 $possuiAlunosVinculados = $objTurma->possuiAlunosVinculados();
 
                 if ($possuiAlunosVinculados) {
@@ -137,29 +139,29 @@ return new class extends clsCadastro {
                 }
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(
-                    586,
-                    $this->pessoa_logada,
-                    7,
-                    'educar_turma_lst.php'
+                    int_processo_ap: 586,
+                    int_idpes_usuario: $this->pessoa_logada,
+                    int_soma_nivel_acesso: 7,
+                    str_pagina_redirecionar: 'educar_turma_lst.php'
                 );
 
                 $retorno = 'Editar';
             }
         }
 
-        $this->dias_semana = transformStringFromDBInArray($this->dias_semana);
-        $this->atividades_complementares = transformStringFromDBInArray($this->atividades_complementares);
-        $this->estrutura_curricular = transformStringFromDBInArray($this->estrutura_curricular);
-        $this->cod_curso_profissional = transformStringFromDBInArray($this->cod_curso_profissional);
-        $this->unidade_curricular = transformStringFromDBInArray($this->unidade_curricular);
+        $this->dias_semana = transformStringFromDBInArray(string: $this->dias_semana);
+        $this->atividades_complementares = transformStringFromDBInArray(string: $this->atividades_complementares);
+        $this->estrutura_curricular = transformStringFromDBInArray(string: $this->estrutura_curricular);
+        $this->cod_curso_profissional = transformStringFromDBInArray(string: $this->cod_curso_profissional);
+        $this->unidade_curricular = transformStringFromDBInArray(string: $this->unidade_curricular);
 
         $this->url_cancelar = $retorno == 'Editar' ?
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' turma', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: $nomeMenu . ' turma', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 
         $this->retorno = $retorno;
@@ -175,12 +177,19 @@ return new class extends clsCadastro {
             }
         }
 
-        if (is_numeric($this->cod_turma)) {
-            $obj_turma = new clsPmieducarTurma($this->cod_turma);
+        if (is_numeric(value: $this->cod_turma)) {
+            if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
+                $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where(column: 'cod_turma', operator: $this->cod_turma)->doesntExist();
+                if ($not_access) {
+                    $this->simpleRedirect(url: 'educar_turma_lst.php');
+                }
+            }
+
+            $obj_turma = new clsPmieducarTurma(cod_turma: $this->cod_turma);
             $registro = $obj_turma->detalhe();
-            $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+            $obj_esc = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
             $det_esc = $obj_esc->detalhe();
-            $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+            $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
             $det_ser = $obj_ser->detalhe();
 
             $this->ref_cod_escola = $det_esc['cod_escola'];
@@ -192,62 +201,44 @@ return new class extends clsCadastro {
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
-        $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
-        $this->campoOculto('cod_turma', $this->cod_turma);
-        $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
-        $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);
-        $this->campoOculto('ref_cod_serie_', $this->ref_cod_serie);
-        $this->campoOculto('ano_letivo', (is_null($this->ano) ? date('Y') : $this->ano));
-        $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
-        $this->campoOculto('modalidade_curso', $this->modalidade_curso);
-        $this->campoOculto('retorno', $this->retorno);
+        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int)$obrigarCamposCenso);
+        $this->campoOculto(nome: 'cod_turma', valor: $this->cod_turma);
+        $this->campoOculto(nome: 'ref_cod_escola_', valor: $this->ref_cod_escola);
+        $this->campoOculto(nome: 'ref_cod_curso_', valor: $this->ref_cod_curso);
+        $this->campoOculto(nome: 'ref_cod_serie_', valor: $this->ref_cod_serie);
+        $this->campoOculto(nome: 'ano_letivo', valor: (is_null(value: $this->ano) ? date(format: 'Y') : $this->ano));
+        $this->campoOculto(nome: 'dependencia_administrativa', valor: $this->dependencia_administrativa);
+        $this->campoOculto(nome: 'modalidade_curso', valor: $this->modalidade_curso);
+        $this->campoOculto(nome: 'retorno', valor: $this->retorno);
 
         $bloqueia = false;
         if (!isset($this->cod_turma)) {
             $bloqueia = false;
-        } elseif (is_numeric($this->cod_turma)) {
+        } elseif (is_numeric(value: $this->cod_turma)) {
             $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
-            $obj_matriculas_turma->setOrderby('nome_aluno');
+            $obj_matriculas_turma->setOrderby(strNomeCampo: 'nome_aluno');
             $lst_matriculas_turma = $obj_matriculas_turma->lista(
-                null,
-                $this->cod_turma,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                [1, 2, 3],
-                null,
-                null,
-                null,
-                null,
-                true,
-                null,
-                1,
-                true
+                int_ref_cod_turma: $this->cod_turma,
+                int_ativo: 1,
+                aprovado: [1, 2, 3],
+                bool_get_nome_aluno: true,
+                int_ultima_matricula: 1,
+                bool_matricula_ativo: true
             );
 
-            if (is_array($lst_matriculas_turma) && count($lst_matriculas_turma) > 0) {
+            if (is_array(value: $lst_matriculas_turma) && count(value: $lst_matriculas_turma) > 0) {
                 $bloqueia = true;
             }
         }
 
         $desabilitado = $bloqueia;
 
-        $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano), 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(helperNames: 'ano', inputOptions: ['value' => (is_null(value: $this->ano) ? date(format: 'Y') : $this->ano), 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
 
         $multiseriada = $this->multiseriada ?? 0;
-        $this->campoCheck('multiseriada', 'Multisseriada', $multiseriada);
+        $this->campoCheck(nome: 'multiseriada', campo: 'Multisseriada', valor: $multiseriada);
 
         $opcoesCursos = [
             null => 'Selecione um curso',
@@ -255,178 +246,89 @@ return new class extends clsCadastro {
 
         if ($this->ref_ref_cod_escola) {
             $cursosDaEscola = LegacySchoolCourse::query()
-                ->with('course')
-                ->where('ref_cod_escola', $this->ref_ref_cod_escola)
+                ->with(relations: 'course')
+                ->where(column: 'ref_cod_escola', operator: $this->ref_ref_cod_escola)
                 ->get()
-                ->pluck('course.nm_curso', 'ref_cod_curso')
+                ->pluck(value: 'course.nm_curso', key: 'ref_cod_curso')
                 ->toArray();
             $opcoesCursos = array_replace($opcoesCursos, $cursosDaEscola);
         }
 
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(helperNames: ['curso', 'serie'], inputOptions: ['disabled' => $desabilitado, 'ano' => $this->ano]);
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
-        asort($tiposBoletim);
-        $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
+        asort(array: $tiposBoletim);
+        $tiposBoletim = Portabilis_Array_Utils::insertIn(key: null, value: 'Selecione um modelo', array: $tiposBoletim);
 
-        $this->campoTabelaInicio('turma_serie', 'Séries da turma', ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], $this->turma_serie);
-        $this->campoLista('mult_curso_id', 'Curso', $opcoesCursos, $this->mult_curso_id, 'atualizaInformacoesComBaseNoCurso(this)');
-        $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id, 'atualizaInformacoesComBaseNaSerie()');
-        $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
-        $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
-        $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
+        $this->campoTabelaInicio(nome: 'turma_serie', titulo: 'Séries da turma', arr_campos: ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], arr_valores: $this->turma_serie);
+        $this->campoLista(nome: 'mult_curso_id', campo: 'Curso', valor: $opcoesCursos, default: $this->mult_curso_id, acao: 'atualizaInformacoesComBaseNoCurso(this)');
+        $this->campoLista(nome: 'mult_serie_id', campo: 'Série', valor: ['Selecione uma série'], default: $this->mult_serie_id, acao: 'atualizaInformacoesComBaseNaSerie()');
+        $this->campoLista(nome: 'mult_boletim_id', campo: 'Boletim', valor: $tiposBoletim, default: $this->mult_boletim_id);
+        $this->campoLista(nome: 'mult_boletim_diferenciado_id', campo: 'Boletim diferenciado', valor: $tiposBoletim, default: $this->mult_boletim_diferenciado_id, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
+        $this->campoOculto(nome: 'mult_padrao_ano_escolar', valor: $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
-
-        // Infra prédio cômodo
-        $opcoes = ['' => 'Selecione'];
-
-        // Editar
-        if ($this->ref_ref_cod_escola) {
-            $obj_infra_predio = new clsPmieducarInfraPredio();
-            $obj_infra_predio->setOrderby('nm_predio ASC');
-            $lst_infra_predio = $obj_infra_predio->lista(
-                null,
-                null,
-                null,
-                $this->ref_ref_cod_escola,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
-            );
-
-            if (is_array($lst_infra_predio) && count($lst_infra_predio)) {
-                foreach ($lst_infra_predio as $predio) {
-                    $obj_infra_predio_comodo = new clsPmieducarInfraPredioComodo();
-                    $lst_infra_predio_comodo = $obj_infra_predio_comodo->lista(
-                        null,
-                        null,
-                        null,
-                        null,
-                        $predio['cod_infra_predio'],
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        1
-                    );
-
-                    if (is_array($lst_infra_predio_comodo) && count($lst_infra_predio_comodo)) {
-                        foreach ($lst_infra_predio_comodo as $comodo) {
-                            $opcoes[$comodo['cod_infra_predio_comodo']] = $comodo['nm_comodo'];
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->campoLista(
-            'ref_cod_infra_predio_comodo',
-            'Sala',
-            $opcoes,
-            $this->ref_cod_infra_predio_comodo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false
-        );
 
         $array_servidor = ['' => 'Selecione um servidor'];
         if ($this->ref_cod_regente) {
-            $obj_pessoa = new clsPessoa_($this->ref_cod_regente);
+            $obj_pessoa = new clsPessoa_(int_idpes: $this->ref_cod_regente);
             $det = $obj_pessoa->detalhe();
             $array_servidor[$this->ref_cod_regente] = $det['nome'];
         }
 
-        $this->campoListaPesq('ref_cod_regente', 'Professor/Regente', $array_servidor, $this->ref_cod_regente, '', '', false, '', '', null, null, '', true, false, false);
+        $this->campoListaPesq(nome: 'ref_cod_regente', campo: 'Professor/Regente', valor: $array_servidor, default: $this->ref_cod_regente, div: true);
 
         // Turma tipo
-        $opcoes = ['' => 'Selecione'];
-
-        // Editar
-        $objTemp = new clsPmieducarTurmaTipo();
-        $objTemp->setOrderby('nm_tipo ASC');
-        $lista = $objTemp->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_turma_tipo']] = $registro['nm_tipo'];
-            }
+        $query = LegacySchoolClassType::query()->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nm_tipo', direction: 'ASC');
+        if (is_numeric(value: $this->ref_cod_instituicao)) {
+            $query->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao);
         }
+        $opcoes = $query->orderBy(column: 'nm_tipo', direction: 'ASC')
+            ->pluck(column: 'nm_tipo', key: 'cod_turma_tipo')
+            ->prepend(value: 'Selecione', key: '');
 
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
-        if ($this->ref_cod_instituicao && $this->ref_cod_escola && $this->ref_cod_curso) {
-            $script = sprintf(
-                '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
-                $script
-            );
-        } else {
-            $script = sprintf(
-                '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
-                $script
-            );
-        }
-
-        $this->campoLista(
-            'ref_cod_turma_tipo',
-            'Tipo de turma',
-            $opcoes,
-            $this->ref_cod_turma_tipo,
-            '',
-            false,
-            '',
+        $script = sprintf(
+            '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
             $script
         );
 
-        $this->campoTexto('nm_turma', 'Nome da turma', $this->nm_turma, 30, 255, true);
+        $this->campoLista(
+            nome: 'ref_cod_turma_tipo',
+            campo: 'Tipo de turma',
+            valor: $opcoes,
+            default: $this->ref_cod_turma_tipo,
+            complemento: $script
+        );
 
-        $this->campoTexto('sgl_turma', _cl('turma.detalhe.sigla'), $this->sgl_turma, 15, 15, false);
+        $this->campoTexto(nome: 'nm_turma', campo: 'Nome da turma', valor: e(value: $this->nm_turma), tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
-        $this->campoNumero('max_aluno', 'Máximo de Alunos', $this->max_aluno, 3, 3, true);
+        $this->campoTexto(nome: 'sgl_turma', campo: _cl(key: 'turma.detalhe.sigla'), valor: $this->sgl_turma, tamanhovisivel: 15, tamanhomaximo: 15);
+
+        $this->campoNumero(nome: 'max_aluno', campo: 'Máximo de Alunos', valor: $this->max_aluno, tamanhovisivel: 3, tamanhomaximo: 3, obrigatorio: true);
 
         unset($opcoes);
-        if (!is_null($this->ref_cod_serie)) {
+        if (!is_null(value: $this->ref_cod_serie)) {
             $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $opcaoPadrao = [null => 'Selecione'];
-            $listaComponentes = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
+            $listaComponentes = $anoEscolar->findComponentePorSerie(serieId: $this->ref_cod_serie);
             if (!empty($listaComponentes)) {
                 foreach ($listaComponentes as $componente) {
-                    $componente->nome = ucwords(strtolower($componente->nome));
+                    $componente->nome = ucwords(string: strtolower(string: $componente->nome));
                     $opcoes["{$componente->id}"] = "{$componente->nome}";
                 }
                 $opcoes = $opcaoPadrao + $opcoes;
-                $this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', false, '', '', false, false);
+                $this->campoLista(nome: 'ref_cod_disciplina_dispensada', campo: 'Disciplina dispensada', valor: $opcoes, default: $this->ref_cod_disciplina_dispensada, obrigatorio: false);
             }
         }
 
-        $ativo = is_numeric($this->cod_turma) ? (bool) ($this->visivel) : true;
-        $this->campoCheck('visivel', 'Ativo', $ativo);
+        $ativo = is_numeric(value: $this->cod_turma) ? (bool) ($this->visivel) : true;
+        $this->campoCheck(nome: 'visivel', campo: 'Ativo', valor: $ativo);
 
         $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
         $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
-        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+        $this->inputsHelper()->select(attrName: 'tipo_mediacao_didatico_pedagogico', inputOptions: $options);
 
         $this->campoQuebra2();
 
@@ -440,25 +342,24 @@ return new class extends clsCadastro {
         }
 
         $this->campoRotulo(
-            'horario_funcionamento_turma',
-            '<b>Horário de funcionamento da turma</b>'
+            nome: 'horario_funcionamento_turma',
+            campo: '<b>Horário de funcionamento da turma</b>'
         );
 
-        $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, false, null, null, null);
+        $this->campoHora(nome: 'hora_inicial', campo: 'Hora inicial', valor: $this->hora_inicial, descricao: null, acao: null, limitaHora: null);
 
         $this->campoHora(
-            'hora_inicio_intervalo',
-            'Hora inicial do intervalo',
-            $this->hora_inicio_intervalo,
-            false,
-            null,
-            null,
-            null
+            nome: 'hora_inicio_intervalo',
+            campo: 'Hora inicial do intervalo',
+            valor: $this->hora_inicio_intervalo,
+            descricao: null,
+            acao: null,
+            limitaHora: null
         );
 
-        $this->campoHora('hora_fim_intervalo', 'Hora final do intervalo', $this->hora_fim_intervalo, false, null, null, null);
+        $this->campoHora(nome: 'hora_fim_intervalo', campo: 'Hora final do intervalo', valor: $this->hora_fim_intervalo, descricao: null, acao: null, limitaHora: null);
 
-        $this->campoHora('hora_final', 'Hora final', $this->hora_final, false, null, null, null);
+        $this->campoHora(nome: 'hora_final', campo: 'Hora final', valor: $this->hora_final, descricao: null, acao: null, limitaHora: null);
 
         $helperOptions = ['objectName' => 'dias_semana'];
         $options = ['label' => 'Dias da semana',
@@ -473,37 +374,25 @@ return new class extends clsCadastro {
                     5 => 'Quinta',
                     6 => 'Sexta',
                     7 => 'Sábado']]];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
         $this->inputsHelper()->turmaTurno();
 
-        $this->campoLista('tipo_boletim', 'Modelo relatório boletim', $tiposBoletim, $this->tipo_boletim, '', false, '', '', false, false);
-        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relatório boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
+        $this->campoLista(nome: 'tipo_boletim', campo: 'Modelo relatório boletim', valor: $tiposBoletim, default: $this->tipo_boletim, obrigatorio: false);
+        $this->campoLista(nome: 'tipo_boletim_diferenciado', campo: 'Modelo relatório boletim diferenciado', valor: $tiposBoletim, default: $this->tipo_boletim_diferenciado, obrigatorio: false);
 
         $this->montaListaComponentesSerieEscola();
 
         $objTemp = new clsPmieducarModulo();
-        $objTemp->setOrderby('nm_tipo ASC');
+        $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
 
         $lista = $objTemp->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null
+            int_ativo: 1
         );
 
         $opcoesCampoModulo = [];
 
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             $this->modulos = $lista;
             foreach ($lista as $registro) {
                 $opcoesCampoModulo[$registro['cod_modulo']] = sprintf('%s - %d etapa(s)', $registro['nm_tipo'], $registro['num_etapas']);
@@ -512,22 +401,22 @@ return new class extends clsCadastro {
 
         $registros = [];
 
-        if (is_numeric($this->cod_turma)) {
+        if (is_numeric(value: $this->cod_turma)) {
             $objTurma = new clsPmieducarTurmaModulo();
-            $objTurma->setOrderBy('sequencial ASC');
+            $objTurma->setOrderBy(strNomeCampo: 'sequencial ASC');
 
-            $registros = $objTurma->lista($this->cod_turma);
+            $registros = $objTurma->lista(int_ref_cod_turma: $this->cod_turma);
         }
 
         if (
             empty($registros)
-            && is_numeric($this->ano)
-            && is_numeric($this->ref_cod_escola)
+            && is_numeric(value: $this->ano)
+            && is_numeric(value: $this->ref_cod_escola)
         ) {
             $objAno = new clsPmieducarAnoLetivoModulo();
-            $objAno->setOrderBy('sequencial ASC');
+            $objAno->setOrderBy(strNomeCampo: 'sequencial ASC');
 
-            $registros = $objAno->lista($this->ano, $this->ref_cod_escola);
+            $registros = $objAno->lista(int_ref_ano: $this->ano, int_ref_ref_cod_escola: $this->ref_cod_escola);
         }
 
         if ($this->padrao_ano_escolar != 1) {
@@ -538,8 +427,8 @@ return new class extends clsCadastro {
                 $moduloSelecionado = $registros[0]['ref_cod_modulo'];
 
                 foreach ($registros as $campo) {
-                    $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
-                    $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
+                    $this->turma_modulo[$qtd_registros][] = dataFromPgToBr(data_original: $campo['data_inicio']);
+                    $this->turma_modulo[$qtd_registros][] = dataFromPgToBr(data_original: $campo['data_fim']);
                     $this->turma_modulo[$qtd_registros][] = $campo['dias_letivos'];
                     $qtd_registros++;
                 }
@@ -548,35 +437,34 @@ return new class extends clsCadastro {
 
         $this->campoQuebra2();
 
-        $this->campoRotulo('etapas_cabecalho', '<b>Etapas da turma</b>');
+        $this->campoRotulo(nome: 'etapas_cabecalho', campo: '<b>Etapas da turma</b>');
 
         $this->campoLista(
-            'ref_cod_modulo',
-            'Etapa',
-            $opcoesCampoModulo,
-            $moduloSelecionado,
-            null,
-            null,
-            null,
-            null,
-            null,
-            true
+            nome: 'ref_cod_modulo',
+            campo: 'Etapa',
+            valor: $opcoesCampoModulo,
+            default: $moduloSelecionado,
+            acao: null,
+            duplo: null,
+            descricao: null,
+            complemento: null,
+            desabilitado: null
         );
 
-        $this->campoTabelaInicio('turma_modulo', 'Etapas', ['Data inicial', 'Data final', 'Dias Letivos'], $this->turma_modulo);
+        $this->campoTabelaInicio(nome: 'turma_modulo', titulo: 'Etapas', arr_campos: ['Data inicial', 'Data final', 'Dias Letivos'], arr_valores: $this->turma_modulo);
 
-        $this->campoData('data_inicio', 'Data Início', $this->data_inicio, false);
-        $this->campoData('data_fim', 'Data Fim', $this->data_fim, false);
-        $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+        $this->campoData(nome: 'data_inicio', campo: 'Data Início', valor: $this->data_inicio);
+        $this->campoData(nome: 'data_fim', campo: 'Data Fim', valor: $this->data_fim);
+        $this->campoTexto(nome: 'dias_letivos', campo: 'Dias Letivos', valor: $this->dias_letivos_, tamanhovisivel: 9);
 
         $this->campoTabelaFim();
 
-        $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
+        $this->campoOculto(nome: 'padrao_ano_escolar', valor: $this->padrao_ano_escolar);
 
         $this->acao_enviar = 'valida()';
         $this->acao_executa_submit = false;
 
-        $this->inputsHelper()->integer('codigo_inep_educacenso', ['label' => 'Código INEP',
+        $this->inputsHelper()->integer(attrName: 'codigo_inep_educacenso', inputOptions: ['label' => 'Código INEP',
             'label_hint' => 'Somente números',
             'placeholder' => 'INEP',
             'required' => false,
@@ -589,7 +477,7 @@ return new class extends clsCadastro {
             5 => 'Atendimento educacional especializado (AEE)'];
 
         $options = ['label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => $obrigarCamposCenso, 'size' => 70,];
-        $this->inputsHelper()->select('tipo_atendimento', $options);
+        $this->inputsHelper()->select(attrName: 'tipo_atendimento', inputOptions: $options);
 
         $helperOptions = ['objectName' => 'estrutura_curricular'];
         $options = [
@@ -606,26 +494,26 @@ return new class extends clsCadastro {
             ]
         ];
 
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
-        $atividadesComplementares = loadJson('educacenso_json/atividades_complementares.json');
+        $atividadesComplementares = loadJson(file: 'educacenso_json/atividades_complementares.json');
         $helperOptions = ['objectName' => 'atividades_complementares'];
         $options = ['label' => 'Tipos de atividades complementares',
             'size' => 50,
             'required' => false,
             'options' => ['values' => $this->atividades_complementares,
                 'all_values' => $atividadesComplementares]];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
-        $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id,nome FROM modules.etapas_educacenso');
-        $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
-        $resources = Portabilis_Array_Utils::merge($resources, ['null' => 'Selecione']);
+        $resources = Portabilis_Utils_Database::fetchPreparedQuery(sql: 'SELECT id,nome FROM modules.etapas_educacenso');
+        $resources = Portabilis_Array_Utils::setAsIdValue(arrays: $resources, keyAttr: 'id', valueAtt: 'nome');
+        $resources = Portabilis_Array_Utils::merge(array: $resources, defaultArray: ['null' => 'Selecione']);
 
-        $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
+        $etapas_educacenso = loadJson(file: 'educacenso_json/etapas_ensino.json');
         $etapas_educacenso = array_replace([null => 'Selecione'], $etapas_educacenso);
 
         $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70];
-        $this->inputsHelper()->select('etapa_educacenso', $options);
+        $this->inputsHelper()->select(attrName: 'etapa_educacenso', inputOptions: $options);
 
         $resources = [
             null => 'Selecione',
@@ -638,32 +526,22 @@ return new class extends clsCadastro {
         ];
 
         $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70,];
-        $this->inputsHelper()->select('formas_organizacao_turma', $options);
+        $this->inputsHelper()->select(attrName: 'formas_organizacao_turma', inputOptions: $options);
 
         $helperOptions = ['objectName' => 'unidade_curricular'];
-        $resources = [
-            1 => 'Eletivas',
-            2 => 'Libras',
-            3 => 'Língua indígena',
-            4 => 'Língua/Literatura estrangeira - Espanhol',
-            5 => 'Língua/Literatura estrangeira - Francês',
-            6 => 'Língua/Literatura estrangeira - outra',
-            7 => 'Projeto de vida',
-            8 => 'Trilhas de aprofundamento/aprendizagens'
-        ];
         $options = [
             'label' => 'Unidade curricular',
             'required' => false,
             'size' => 70,
             'options' => [
                 'values' => $this->unidade_curricular,
-                'all_values'=> $resources
+                'all_values'=> UnidadesCurriculares::getDescriptiveValues()
             ]
         ];
 
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
-        $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
+        $cursos = loadJson(file: 'educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
             'type' => 'single'];
         $options = ['label' => 'Curso de educação profissional',
@@ -671,31 +549,31 @@ return new class extends clsCadastro {
             'required' => false,
             'options' => ['values' => $this->cod_curso_profissional,
                 'all_values' => $cursos]];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
 
         $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
-        $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
+        $this->inputsHelper()->select(attrName: 'local_funcionamento_diferenciado', inputOptions: $options);
 
         $options = ['label' => 'Não informar esta turma no Censo escolar',
             'value' => $this->nao_informar_educacenso,
             'label_hint' => 'Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'];
-        $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
+        $this->inputsHelper()->checkbox(attrName: 'nao_informar_educacenso', inputOptions: $options);
 
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/Turma.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Turma.js',
             '/intranet/scripts/etapas.js',
             '/intranet/scripts/tabelaSerieMult.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Turma.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Turma.css'];
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
     }
 
     protected function obrigaCamposHorario()
@@ -707,7 +585,7 @@ return new class extends clsCadastro {
     {
         if ($this->cod_turma) {
             return LegacyDisciplineSchoolClass::query()
-                ->where('turma_id', $this->cod_turma)
+                ->where(column: 'turma_id', operator: $this->cod_turma)
                 ->exists();
         }
 
@@ -724,13 +602,9 @@ return new class extends clsCadastro {
 
             try {
                 $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
-                    $this->ref_cod_serie,
-                    $this->ref_cod_escola,
-                    null,
-                    null,
-                    null,
-                    true,
-                    $this->ano
+                    serieId: $this->ref_cod_serie,
+                    escolaId: $this->ref_cod_escola,
+                    ano: $this->ano
                 );
             } catch (Throwable) {
                 return;
@@ -740,10 +614,9 @@ return new class extends clsCadastro {
             $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
             $componentesTurma = [];
 
-            if (isset($this->cod_turma) && is_numeric($this->cod_turma)) {
+            if (isset($this->cod_turma) && is_numeric(value: $this->cod_turma)) {
                 $componentesTurma = $componenteTurmaMapper->findAll(
-                    [],
-                    ['turma' => $this->cod_turma]
+                    where: ['turma' => $this->cod_turma]
                 );
             }
 
@@ -753,10 +626,10 @@ return new class extends clsCadastro {
             }
             unset($componentesTurma);
 
-            $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+            $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
             $instituicao = $instituicao->detalhe();
 
-            $podeCadastrarComponenteDiferenciado = dbBool($instituicao['componente_curricular_turma']);
+            $podeCadastrarComponenteDiferenciado = dbBool(val: $instituicao['componente_curricular_turma']);
 
             if ($podeCadastrarComponenteDiferenciado) {
                 $checkDefinirComponente = ($componentes == true);
@@ -766,19 +639,17 @@ return new class extends clsCadastro {
             }
 
             $this->campoCheck(
-                'definir_componentes_diferenciados',
-                'Definir componentes curriculares diferenciados',
-                $checkDefinirComponente,
-                null,
-                false,
-                false,
-                $disableDefinirComponente,
-                'Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado'
+                nome: 'definir_componentes_diferenciados',
+                campo: 'Definir componentes curriculares diferenciados',
+                valor: $checkDefinirComponente,
+                desc: null,
+                disable: $disableDefinirComponente,
+                dica: 'Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado'
             );
 
             $this->escola_serie_disciplina = [];
 
-            if (is_array($lista) && count($lista)) {
+            if (is_array(value: $lista) && count(value: $lista)) {
                 $conteudo .= '<tr>';
                 $conteudo .= '<td  width="250"><span style="display: block; float: left; width: 250px;">Nome</span></td>';
                 $conteudo .= '<td><span>Nome abreviado</span></td>';
@@ -807,7 +678,7 @@ return new class extends clsCadastro {
                         $checked = 'checked="checked"';
                     }
 
-                    if (is_null($componentes[$registro->id]->cargaHoraria) ||
+                    if (is_null(value: $componentes[$registro->id]->cargaHoraria) ||
                         0 == $componentes[$registro->id]->cargaHoraria) {
                         $usarComponente = true;
                     } else {
@@ -853,9 +724,9 @@ return new class extends clsCadastro {
         $label = sprintf($label, $help);
 
         $this->campoRotulo(
-            'disciplinas_',
-            $label,
-            "<div id='disciplinas'>$disciplinas</div>"
+            nome: 'disciplinas_',
+            campo: $label,
+            valor: "<div id='disciplinas'>$disciplinas</div>"
         );
     }
 
@@ -879,15 +750,15 @@ return new class extends clsCadastro {
             ];
         }
 
-        return json_encode($retorno);
+        return json_encode(value: $retorno);
     }
 
     public function makeExtra()
     {
         return str_replace(
-            '#modulos',
-            $this->gerarJsonDosModulos(),
-            file_get_contents(__DIR__ . '/scripts/extra/educar-turma-cad.js')
+            search: '#modulos',
+            replace: $this->gerarJsonDosModulos(),
+            subject: file_get_contents(filename: __DIR__ . '/scripts/extra/educar-turma-cad.js')
         );
     }
 

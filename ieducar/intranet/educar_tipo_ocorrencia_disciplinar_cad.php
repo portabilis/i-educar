@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDisciplinaryOccurrenceType;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_tipo_ocorrencia_disciplinar;
@@ -23,8 +25,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(580, $this->pessoa_logada, 3, 'educar_tipo_ocorrencia_disciplinar_lst.php');
 
         if (is_numeric($this->cod_tipo_ocorrencia_disciplinar)) {
-            $obj = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar);
-            $registro  = $obj->detalhe();
+            $registro = LegacyDisciplinaryOccurrenceType::find($this->cod_tipo_ocorrencia_disciplinar)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -64,43 +65,53 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarTipoOcorrenciaDisciplinar(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->max_ocorrencias, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $ocorrencia = new LegacyDisciplinaryOccurrenceType();
+        $ocorrencia->ref_usuario_cad = $this->pessoa_logada;
+        $ocorrencia->nm_tipo = $this->nm_tipo;
+        $ocorrencia->descricao = $this->descricao;
+        $ocorrencia->max_ocorrencias = is_numeric($this->max_ocorrencias) ? $this->max_ocorrencias : null;
+        $ocorrencia->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($ocorrencia->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->max_ocorrencias, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
+        $ocorrencia = LegacyDisciplinaryOccurrenceType::find($this->cod_tipo_ocorrencia_disciplinar);
+        $ocorrencia->ref_usuario_exc = $this->pessoa_logada;
+        $ocorrencia->nm_tipo = $this->nm_tipo;
+        $ocorrencia->descricao = $this->descricao;
+        $ocorrencia->max_ocorrencias = is_numeric($this->max_ocorrencias) ? $this->max_ocorrencias : null;
+        $ocorrencia->ref_cod_instituicao = $this->ref_cod_instituicao;
+        $ocorrencia->ativo = 1;
+
+        if ($ocorrencia->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar, $this->pessoa_logada, null, null, null, null, null, null, 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $ocorrencia = LegacyDisciplinaryOccurrenceType::find($this->cod_tipo_ocorrencia_disciplinar);
+        $ocorrencia->ativo = 0;
+        $ocorrencia->ref_usuario_exc = $this->pessoa_logada;
+
+        if ($ocorrencia->save()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 

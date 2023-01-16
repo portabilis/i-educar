@@ -126,8 +126,7 @@ class PictureController
             return '';
         }
         $l = strlen($name) - $i;
-        $ext = substr($name, $i + 1, $l);
 
-        return $ext;
+        return substr($name, $i + 1, $l);
     }
 }

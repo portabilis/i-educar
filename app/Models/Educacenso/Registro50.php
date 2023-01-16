@@ -2,6 +2,7 @@
 
 namespace App\Models\Educacenso;
 
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 
 class Registro50 implements RegistroEducacenso, ItemOfRegistro30
@@ -59,6 +60,12 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
      *            Campos 9 a 23
      */
     public $componentes;
+
+    /**
+     * @var array
+     *            Campos 24 a 31
+     */
+    public $unidadesCurriculares;
 
     /**
      * @var string
@@ -120,27 +127,11 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
      */
     public $etapaEducacensoTurma;
 
-    public function hydrateModel(array $arrayColumns): void
-    {
-        array_unshift($arrayColumns, null);
-        unset($arrayColumns[0]);
-
-        $this->registro = $arrayColumns[1];
-        $this->inepEscola = $arrayColumns[2];
-        $this->codigoPessoa = $arrayColumns[3];
-        $this->inepDocente = $arrayColumns[4];
-        $this->codigoTurma = $arrayColumns[5];
-        $this->inepTurma = $arrayColumns[6];
-        $this->funcaoDocente = $arrayColumns[7];
-        $this->tipoVinculo = $arrayColumns[8];
-        $this->componentes = [];
-
-        for ($index = 9; $index <= count($arrayColumns); $index++) {
-            if (!empty($arrayColumns[$index])) {
-                $this->componentes[] = $arrayColumns[$index];
-            }
-        }
-    }
+    /**
+     * @var array
+     *            Campo usado somente na análise
+     */
+    public $estruturaCurricular;
 
     /**
      * @return bool
@@ -176,5 +167,23 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
     public function getProperty($column)
     {
         // TODO: Implement getProperty() method.
+    }
+
+    public function estruturasCurricularesDescritivas()
+    {
+        $estruturasCurriculares = EstruturaCurricular::getDescriptiveValues();
+
+        $estruturaDescritiva = array_map(function ($key) use ($estruturasCurriculares) {
+            return $estruturasCurriculares[$key];
+        }, $this->estruturaCurricular);
+
+        return implode('/', $estruturaDescritiva);
+    }
+
+    public function estapaEducacensoDescritiva()
+    {
+        $todasEtapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
+
+        return $todasEtapasEducacenso[$this->etapaEducacensoTurma];
     }
 }

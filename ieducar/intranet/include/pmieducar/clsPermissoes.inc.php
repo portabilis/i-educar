@@ -48,16 +48,17 @@ class clsPermissoes
      * Verifica se um usuário tem permissão para cadastrar baseado em um
      * identificador de processo.
      *
-     * @param int    $int_processo_ap                 Identificador de processo
+     * @deprecated
+     *
      * @param int    $int_idpes_usuario               Identificador do usuário
      * @param int    $int_soma_nivel_acesso
      * @param string $str_pagina_redirecionar         Caminho para o qual a requisição será encaminhada caso o usuário não tenha privilégios suficientes para a operação de cadastro
      * @param bool   $super_usuario                   TRUE para verificar se o usuário é super usuário
      * @param bool   $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
      *
-     * @return bool|void
+     * @param int    $int_processo_ap                 Identificador de processo
      *
-     * @deprecated
+     * @return bool|void
      *
      */
     public function permissao_excluir(
@@ -192,6 +193,10 @@ class clsPermissoes
     }
 
     /**
+     * @deprecated
+     *
+     * TODO remover no futuro #library-package
+     *
      * Retorna um array com os códigos identificadores das bibliotecas aos quais
      * o usuário está vinculado.
      *
@@ -202,6 +207,10 @@ class clsPermissoes
      */
     public function getBiblioteca($int_idpes_usuario)
     {
+        if (class_exists(clsPmieducarBibliotecaUsuario::class) === false) {
+            return 0;
+        }
+
         $obj_usuario = new clsPmieducarBibliotecaUsuario();
         $lst_usuario_biblioteca = $obj_usuario->lista(null, $int_idpes_usuario);
 

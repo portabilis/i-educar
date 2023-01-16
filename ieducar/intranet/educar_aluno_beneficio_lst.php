@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyBenefit;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -46,55 +48,51 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Beneficio'
         ]);
 
         // outros Filtros
-        $this->campoTexto('nm_beneficio', 'Benefício', $this->nm_beneficio, 30, 255, false);
+        $this->campoTexto(nome: 'nm_beneficio', campo: 'Benefício', valor: $this->nm_beneficio, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_aluno_beneficio = new clsPmieducarAlunoBeneficio();
-        $obj_aluno_beneficio->setOrderby('nm_beneficio ASC');
-        $obj_aluno_beneficio->setLimite($this->limite, $this->offset);
+        $query = LegacyBenefit::query()
+            ->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nm_beneficio', direction: 'ASC');
 
-        $lista = $obj_aluno_beneficio->lista(
-            null,
-            null,
-            null,
-            $this->nm_beneficio,
-            null,
-            null,
-            null,
-            1
-        );
+        if (is_string(value: $this->nm_beneficio)) {
+            $query->where(column: 'nm_beneficio', operator: 'ilike', value: '%' . $this->nm_beneficio . '%');
+        }
 
-        $total = $obj_aluno_beneficio->_total;
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $this->addLinhas([
+                $this->addLinhas(linha: [
                     "<a href=\"educar_aluno_beneficio_det.php?cod_aluno_beneficio={$registro['cod_aluno_beneficio']}\">{$registro['nm_beneficio']}</a>"
                 ]);
             }
         }
-        $this->addPaginador2('educar_aluno_beneficio_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_aluno_beneficio_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
         $obj_permissao = new clsPermissoes();
 
-        if ($obj_permissao->permissao_cadastra(581, $this->pessoa_logada, 3)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_aluno_beneficio_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Tipos de benefício do aluno', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Tipos de benefício do aluno', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 

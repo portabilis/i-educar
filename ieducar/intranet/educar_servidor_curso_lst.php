@@ -63,39 +63,16 @@ return new class extends clsCadastro {
     {
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         $this->campoOculto('ref_cod_servidor_funcao', $this->ref_cod_servidor_funcao);
-        $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
         $obj_cursos = new clsPmieducarCurso();
         $obj_cursos->setOrderby('nm_curso');
 
         $lst_cursos = $obj_cursos->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->ref_cod_instituicao
+            int_ativo: 1,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
+        $opcoes_curso = [];
         if ($lst_cursos) {
             foreach ($lst_cursos as $curso) {
                 $opcoes_curso[$curso['cod_curso']] = $curso['nm_curso'];
@@ -158,7 +135,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        return $this->Novo();
+        $this->Novo();
     }
 
     public function Excluir()

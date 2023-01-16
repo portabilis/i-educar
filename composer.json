@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.7.0",
+    "version": "2.8.0",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -18,15 +18,15 @@
         "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
         "cossou/jasperphp": "^2.8",
-        "dex/composer-plug-and-play": "^0.8.0",
-        "dex/frontier": "^0.2.0",
-        "doctrine/dbal": "^2.13",
+        "dex/composer-plug-and-play": "^0.16",
+        "dex/frontier": "^0.3.0",
+        "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^3.12",
         "intervention/image": "^2.6",
-        "laravel/framework": "^9.00",
+        "laravel/framework": "^9.3",
         "laravel/horizon": "^v6.7.9",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.6",
@@ -40,6 +40,8 @@
         "nuwave/lighthouse": "^5",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
+        "psr/simple-cache": "^2.0",
+        "staudenmeir/laravel-adjacency-list": "^1.0",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0"
     },
@@ -54,7 +56,8 @@
         "mockery/mockery": "^1.4.3",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.7",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^1.0",
+        "uderline/openapi-php-attributes": "^1.5"
     },
     "autoload": {
         "classmap": [
@@ -100,27 +103,31 @@
     "scripts": {
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
+        "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
-        "npm": "yarn install",
         "new-install": [
             "@composer install",
             "@composer plug-and-play:install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
-            "@php artisan legacy:link --ansi",
-            "@php artisan migrate --seed --force --ansi",
-            "@npm"
+            "@php artisan storage:link --ansi",
+            "@php artisan migrate --force --ansi"
         ],
         "update-install": [
             "@composer update",
             "@composer plug-and-play:update",
             "@set-permissions",
-            "@php artisan legacy:link --ansi",
-            "@php artisan migrate --force --ansi",
-            "@npm"
+            "@php artisan storage:link --ansi",
+            "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
+            "chmod ug+x .git/hooks/*"
+        ],
+        "post-update-cmd": [
+            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
+            "chmod ug+x .git/hooks/*"
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"

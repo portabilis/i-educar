@@ -37,7 +37,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         $ativo = null,
         $dia_semana = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'quadro_horario_horarios';
 
@@ -235,6 +235,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($this->sequencial)
         ) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_instituicao_substituto)) {
@@ -304,7 +305,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_ref_cod_quadro_horario = null,
@@ -477,7 +478,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe($ref_cod_escola = null)
     {
@@ -509,7 +510,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

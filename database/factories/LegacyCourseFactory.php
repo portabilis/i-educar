@@ -27,12 +27,13 @@ class LegacyCourseFactory extends Factory
             'ref_cod_nivel_ensino' => LegacyEducationLevelFactory::new()->create(),
             'ref_cod_tipo_ensino' => LegacyEducationTypeFactory::new()->create(),
             'nm_curso' => $this->faker->words(3, true),
+            'descricao' => $this->faker->words(3, true),
             'sgl_curso' => $this->faker->word,
             'qtd_etapas' => $this->faker->randomElement([2, 3, 4]),
             'carga_horaria' => 800,
-            'data_cadastro' => now(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
             'hora_falta' => 0.75,
+            'ativo' => 1,
         ];
     }
 

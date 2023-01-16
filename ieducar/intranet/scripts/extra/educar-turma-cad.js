@@ -1,36 +1,5 @@
 var modulosDisponiveis = #modulos;
 
-function getComodo() {
-  var campoEscola = document.getElementById('ref_cod_escola').value;
-  var campoComodo = document.getElementById('ref_cod_infra_predio_comodo');
-  campoComodo.disabled = true;
-
-  campoComodo.length = 1;
-  campoComodo.options[0] = new Option('Selecione uma sala', '', false, false);
-
-  var xml1 = new ajax(atualizaTurmaCad_TipoComodo);
-  strURL = 'educar_escola_comodo_xml.php?esc=' + campoEscola;
-  xml1.envia(strURL);
-}
-
-function atualizaTurmaCad_TipoComodo(xml) {
-  var campoComodo = document.getElementById('ref_cod_infra_predio_comodo');
-  campoComodo.disabled = false;
-
-  var tipo_comodo = xml.getElementsByTagName('item');
-
-  if (tipo_comodo.length) {
-    for (var i = 0; i < tipo_comodo.length; i += 2) {
-      campoComodo.options[campoComodo.options.length] = new Option(
-        tipo_comodo[i + 1].firstChild.data, tipo_comodo[i].firstChild.data, false, false,
-      );
-    }
-  } else {
-    campoComodo.length = 1;
-    campoComodo.options[0] = new Option('A escola n\u00e3o possui nenhuma sala', '', false, false);
-  }
-}
-
 function getTipoTurma() {
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   var campoTipoTurma = document.getElementById('ref_cod_turma_tipo');
@@ -145,10 +114,9 @@ document.getElementById('ref_cod_curso').onchange = function () {
 };
 
 function PadraoAnoEscolar_xml() {
-  var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-  var xml1 = new ajax(PadraoAnoEscolar);
-  strURL = 'educar_curso_xml.php?ins=' + campoInstituicao;
-  xml1.envia(strURL);
+  const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+
+  getApiResource("/api/resource/course",PadraoAnoEscolar,{institution:campoInstituicao});
 }
 
 document.getElementById('ref_cod_serie').onchange = function () {
@@ -158,21 +126,20 @@ document.getElementById('ref_cod_serie').onchange = function () {
   }
 };
 
-function PadraoAnoEscolar(xml) {
-  var escola_curso_ = new Array();
+function PadraoAnoEscolar(cursos) {
+  let escola_curso_ = [];
 
-  if (xml != null) {
-    escola_curso_ = xml.getElementsByTagName('curso');
+  if (cursos != null) {
+    escola_curso_ = cursos;
   }
 
   campoCurso = document.getElementById('ref_cod_curso').value;
 
-  for (var j = 0; j < escola_curso_.length; j++) {
-    if (escola_curso_[j].getAttribute('cod_curso') == campoCurso) {
-      document.getElementById('padrao_ano_escolar').value =
-        escola_curso_[j].getAttribute('padrao_ano_escolar');
+  $j.each(escola_curso_, function(i, item) {
+    if (item.id == campoCurso) {
+      document.getElementById('padrao_ano_escolar').value = item.is_standard_calendar ? 1 : 0;
     }
-  }
+  });
 
   setModuleAndPhasesVisibility(false);
 
@@ -225,30 +192,6 @@ function atualizaTurmaCad_EscolaSerie(xml) {
     campoHoraFinal.value = typeof (horaFinal) != 'undefined' ? horaFinal : null;
     campoHoraInicioIntervalo.value = typeof (horaInicioIntervalo) != 'undefined' ? horaInicioIntervalo : null;
     campoHoraFimIntervalo.value = typeof (horaFimIntervalo) != 'undefined' ? horaFimIntervalo : null;
-  }
-}
-
-function valida() {
-  if (validaHorarioInicialFinal() && validaHoras() && validaAtividadesComplementares()) {
-    if (document.getElementById('padrao_ano_escolar').value == 1) {
-      var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-      var campoEscola = document.getElementById('ref_cod_escola').value;
-      var campoTurma = document.getElementById('cod_turma').value;
-      var campoComodo = document.getElementById('ref_cod_infra_predio_comodo').value;
-      var campoCurso = document.getElementById('ref_cod_curso').value;
-      var campoSerie = document.getElementById('ref_cod_serie').value;
-
-      var url = 'educar_turma_sala_xml.php';
-      var pars = '?inst=' + campoInstituicao + '&esc=' + campoEscola + '&not_tur=' +
-        campoTurma + '&com=' + campoComodo + '&cur=' + campoCurso + '&ser=' + campoSerie;
-
-      var xml1 = new ajax(valida_xml);
-      strURL = url + pars;
-
-      xml1.envia(strURL);
-    } else {
-      valida_xml(null);
-    }
   }
 }
 
@@ -344,29 +287,22 @@ function getEscolaCursoSerie() {
     campoSerie.disabled = true;
     campoSerie.options[0].text = 'Carregando series';
 
-    var xml = new ajax(atualizaLstEscolaCursoSerie);
-    xml.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola + '&cur=' + campoCurso);
+    getApiResource("/api/resource/grade",atualizaLstEscolaCursoSerie,{school:campoEscola,course:campoCurso});
   } else {
     campoSerie.options[0].text = 'Selecione';
   }
 }
 
-function atualizaLstEscolaCursoSerie(xml) {
-  var campoSerie = document.getElementById('ref_cod_serie');
-  campoSerie.length = 1;
-  campoSerie.options[0].text = 'Selecione uma s\u00e9rie';
-  campoSerie.disabled = false;
-
-  series = xml.getElementsByTagName('serie');
+function atualizaLstEscolaCursoSerie(series) {
+  const campoSerie = document.getElementById('ref_cod_serie');
+  setAttributes(campoSerie,'Selecione uma série',false);
 
   if (series.length) {
-    for (var i = 0; i < series.length; i++) {
-      campoSerie.options[campoSerie.options.length] = new Option(
-        series[i].firstChild.data, series[i].getAttribute('cod_serie'), false, false,
-      );
-    }
+    $j.each(series, function(i, item) {
+      campoSerie.options[campoSerie.options.length] = new Option(item.name, item.id, false, false);
+    });
   } else {
-    campoSerie.options[0].text = 'A escola/curso n\u00e3o possui nenhuma s\u00e9rie';
+    campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
   }
 }
 

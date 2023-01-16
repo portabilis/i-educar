@@ -49,8 +49,6 @@ class FileControllerPdf
 
     public function validateFile()
     {
-        $msg='';
-
         $name = $this->file['name'];
         $size = $this->file['size'];
         $ext = $this->getExtension($name);
@@ -76,9 +74,6 @@ class FileControllerPdf
 
             return false;
         }
-        $this->errorMessage = 'Arquivo invÃ¡lido.';
-
-        return false;
     }
 
     public function getErrorMessage()
@@ -93,8 +88,7 @@ class FileControllerPdf
             return '';
         }
         $l = strlen($name) - $i;
-        $ext = substr($name, $i+1, $l);
 
-        return $ext;
+        return substr($name, $i+1, $l);
     }
 }

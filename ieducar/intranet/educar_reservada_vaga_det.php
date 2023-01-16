@@ -6,7 +6,7 @@ return new class extends clsDetalhe {
      *
      * @var int
      */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
 
     /**
      * Título no topo da página
@@ -66,14 +66,14 @@ return new class extends clsDetalhe {
         $this->cod_reserva_vaga = $_GET['cod_reserva_vaga'];
 
         $obj_reserva_vaga = new clsPmieducarReservaVaga();
-        $lst_reserva_vaga = $obj_reserva_vaga->lista($this->cod_reserva_vaga);
+        $lst_reserva_vaga = $obj_reserva_vaga->lista(int_cod_reserva_vaga: $this->cod_reserva_vaga);
 
-        if (is_array($lst_reserva_vaga)) {
-            $registro = array_shift($lst_reserva_vaga);
+        if (is_array(value: $lst_reserva_vaga)) {
+            $registro = array_shift(array: $lst_reserva_vaga);
         }
 
         if (!$registro) {
-            $this->simpleRedirect('educar_reservada_vaga_lst.php');
+            $this->simpleRedirect(url: 'educar_reservada_vaga_lst.php');
         }
 
         // Atribui códigos a variáveis de instância
@@ -88,22 +88,22 @@ return new class extends clsDetalhe {
         }
 
         // Instituição
-        $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+        $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
         $det_instituicao = $obj_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
 
         // Escola
-        $obj_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+        $obj_escola = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
         $det_escola = $obj_escola->detalhe();
         $registro['ref_ref_cod_escola'] = $det_escola['nome'];
 
         // Série
-        $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+        $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
         $det_serie = $obj_serie->detalhe();
         $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
         // Curso
-        $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+        $obj_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
         $det_curso = $obj_curso->detalhe();
         $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
@@ -114,53 +114,44 @@ return new class extends clsDetalhe {
         if ($registro['ref_cod_aluno']) {
             $obj_aluno = new clsPmieducarAluno();
             $lst_aluno = $obj_aluno->lista(
-                $registro['ref_cod_aluno'],
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
+                int_cod_aluno: $registro['ref_cod_aluno'],
+                int_ativo: 1
             );
 
-            if (is_array($lst_aluno)) {
-                $det_aluno = array_shift($lst_aluno);
+            if (is_array(value: $lst_aluno)) {
+                $det_aluno = array_shift(array: $lst_aluno);
                 $nm_aluno = $det_aluno['nome_aluno'];
             }
         }
 
         if ($nm_aluno) {
-            $this->addDetalhe(['Aluno', $nm_aluno]);
+            $this->addDetalhe(detalhe: ['Aluno', $nm_aluno]);
         }
 
         if ($this->cod_reserva_vaga) {
-            $this->addDetalhe(['N&uacute;mero Reserva Vaga', $this->cod_reserva_vaga]);
+            $this->addDetalhe(detalhe: ['N&uacute;mero Reserva Vaga', $this->cod_reserva_vaga]);
         }
 
-        $this->addDetalhe(['-', 'Reserva Pretendida']);
+        $this->addDetalhe(detalhe: ['-', 'Reserva Pretendida']);
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
+            $this->addDetalhe(detalhe: ['Instituição', $registro['ref_cod_instituicao']]);
         }
 
         if ($registro['ref_ref_cod_escola']) {
-            $this->addDetalhe(['Escola', $registro['ref_ref_cod_escola']]);
+            $this->addDetalhe(detalhe: ['Escola', $registro['ref_ref_cod_escola']]);
         }
 
         if ($registro['ref_cod_curso']) {
-            $this->addDetalhe(['Curso', $registro['ref_cod_curso']]);
+            $this->addDetalhe(detalhe: ['Curso', $registro['ref_cod_curso']]);
         }
 
         if ($registro['ref_ref_cod_serie']) {
-            $this->addDetalhe(['Série', $registro['ref_ref_cod_serie']]);
+            $this->addDetalhe(detalhe: ['Série', $registro['ref_ref_cod_serie']]);
         }
 
         $obj_permissao = new clsPermissoes();
-        if ($obj_permissao->permissao_cadastra(639, $this->pessoa_logada, 7)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 639, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao = ['Emissão de Documento de Reserva de Vaga', 'Desativar Reserva'];
             $this->array_botao_url_script = ["showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatório de Solicitação de transferência\")","go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")"];
         }
@@ -169,8 +160,8 @@ return new class extends clsDetalhe {
       $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie;
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da vaga reservada', [
-        url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Detalhe da vaga reservada', breadcrumbs: [
+        url(path: 'intranet/educar_index.php') => 'Escola',
     ]);
     }
 
@@ -182,21 +173,15 @@ return new class extends clsDetalhe {
     private function _desativar()
     {
         $obj = new clsPmieducarReservaVaga(
-            $this->cod_reserva_vaga,
-            null,
-            null,
-            $this->pessoa_logada,
-            null,
-            null,
-            null,
-            null,
-            0
+            cod_reserva_vaga: $this->cod_reserva_vaga,
+            ref_usuario_exc: $this->pessoa_logada,
+            ativo: 0
         );
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_reservada_vaga_lst.php?ref_cod_escola=' .
+            $this->simpleRedirect(url: 'educar_reservada_vaga_lst.php?ref_cod_escola=' .
           $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie);
         }
 

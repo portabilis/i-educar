@@ -22,7 +22,8 @@ select
 		WHEN 4 THEN 'Magistério Indígena Modalidade Normal'
 		ELSE ''
 END AS high_school_type,
-	form.continuing_education_course
+	form.continuing_education_course,
+    sf.matricula AS matricula
 from modules.professor_turma pt
 inner join public.exporter_person p
 on p.id = pt.servidor_id
@@ -38,6 +39,7 @@ inner join pmieducar.curso c
 on c.cod_curso = t.ref_cod_curso
 left join pmieducar.servidor servidor
 on pt.servidor_id = servidor.cod_servidor
+LEFT JOIN pmieducar.servidor_funcao sf on sf.ref_cod_servidor = servidor.cod_servidor
 left join cadastro.escolaridade
 on escolaridade.idesco = servidor.ref_idesco,
 	LATERAL (
@@ -90,6 +92,7 @@ on escolaridade.idesco = servidor.ref_idesco,
 		FROM pmieducar.servidor as serv
 		where serv.cod_servidor = servidor.cod_servidor
 	) AS employee_postgraduates
+
 order by
 	p.name,
 	ep.nome,

@@ -1,13 +1,9 @@
 <?php
 
-return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
+use App\Models\LegacyQualification;
 
+return new class extends clsDetalhe {
+    public $titulo;
     public $cod_habilitacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -16,7 +12,6 @@ return new class extends clsDetalhe {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -25,8 +20,7 @@ return new class extends clsDetalhe {
 
         $this->cod_habilitacao=$_GET['cod_habilitacao'];
 
-        $tmp_obj = new clsPmieducarHabilitacao($this->cod_habilitacao);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyQualification::find($this->cod_habilitacao)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_habilitacao_lst.php');
@@ -46,14 +40,14 @@ return new class extends clsDetalhe {
         }
 
         $obj_permissao = new clsPermissoes();
-        if ($obj_permissao->permissao_cadastra(573, $this->pessoa_logada, 3)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 573, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_habilitacao_cad.php';
             $this->url_editar = "educar_habilitacao_cad.php?cod_habilitacao={$registro['cod_habilitacao']}";
         }
         $this->url_cancelar = 'educar_habilitacao_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da habilitação', [
+        $this->breadcrumb(currentPage: 'Detalhe da habilitação', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

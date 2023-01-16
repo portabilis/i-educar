@@ -240,11 +240,13 @@ class Portabilis_View_Helper_Inputs
         $this->simpleSearchResourceInput('simpleSearchMenu', $attrName, $inputOptions, $helperOptions);
     }
 
+    // TODO remover no futuro #library-package
     public function simpleSearchCliente($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->simpleSearchResourceInput('simpleSearchCliente', $attrName, $inputOptions, $helperOptions);
     }
 
+    // TODO remover no futuro #library-package
     public function simpleSearchAcervo($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->simpleSearchResourceInput('simpleSearchAcervo', $attrName, $inputOptions, $helperOptions);
@@ -255,16 +257,19 @@ class Portabilis_View_Helper_Inputs
         $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
     }
 
+    // TODO remover no futuro #library-package
     public function multipleSearchAssuntos($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->multipleSearchResourceInput('multipleSearchAssuntos', $attrName, $inputOptions, $helperOptions);
     }
 
+    // TODO remover no futuro #library-package
     public function multipleSearchCategoriaObra($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->multipleSearchResourceInput('multipleSearchCategoriaObra', $attrName, $inputOptions, $helperOptions);
     }
 
+    // TODO remover no futuro #library-package
     public function multipleSearchAutores($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->multipleSearchResourceInput('multipleSearchAutores', $attrName, $inputOptions, $helperOptions);
@@ -390,8 +395,7 @@ class Portabilis_View_Helper_Inputs
         }
 
         $defaultOptions = ['options' => $inputOptions];
-        $options = Portabilis_Array_Utils::merge($helperOptions, $defaultOptions);
 
-        return $options;
+        return Portabilis_Array_Utils::merge($helperOptions, $defaultOptions);
     }
 }

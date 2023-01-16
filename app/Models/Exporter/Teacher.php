@@ -66,6 +66,7 @@ class Teacher extends Model
                 'course' => 'Curso',
                 'year' => 'Ano',
                 'disciplines.disciplines' => 'Disciplinas',
+                'enrollments' => 'Matrículas',
             ],
             'Informações' => [
                 'phones.phones' => 'Telefones',
@@ -98,6 +99,11 @@ class Teacher extends Model
     public function getLabel()
     {
         return 'Professores';
+    }
+
+    public function getDescription()
+    {
+        return 'Os dados exportados serão contabilizados por quantidade de professores(as) alocados(as) no ano filtrado, agrupando as informações de cursos de formação dos docentes.';
     }
 
     /**

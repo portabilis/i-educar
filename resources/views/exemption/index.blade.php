@@ -2,7 +2,7 @@
 
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ Asset::get('modules/Portabilis/Assets/Plugins/Chosen/chosen.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css') }}"/>
 @endpush
 
 @section('content')
@@ -76,28 +76,28 @@
             <td style="font-weight:bold;">Feito em lote</td>
         </tr>
         @forelse($exemptions as $exemption)
-            @php $exemptionUrl = url('intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=' . $exemption->ref_cod_matricula . '&ref_cod_serie=' . $exemption->ref_cod_serie . '&ref_cod_escola=' . $exemption->ref_cod_escola . '&ref_cod_disciplina=' . $exemption->ref_cod_disciplina) @endphp
+            @php $exemptionUrl = url('intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=' . $exemption->registration_id . '&ref_cod_serie=' . $exemption->ref_cod_serie . '&ref_cod_escola=' . $exemption->school_id . '&ref_cod_disciplina=' . $exemption->discipline_id) @endphp
             <tr>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->registration->ano }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->year }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->registration->student->person->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->student->person->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->discipline->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->discipline->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->type }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->type->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->data_cadastro->format('d/m/Y') }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->created_at->format('d/m/Y') }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->createdBy->name }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->createdBy->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">@if($exemption->batch) Sim @else Não @endif</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">@if($exemption->batch) Sim @else Não @endif</a>
                 </td>
             </tr>
         @empty
@@ -118,17 +118,17 @@
 
 @prepend('scripts')
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Curso.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Curso.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/ComponenteCurricularEscolaSerie.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/ComponenteCurricularEscolaSerie.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js") }}"></script>
 @endprepend

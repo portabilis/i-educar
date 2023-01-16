@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LegacyController;
+
 class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Strategy_Interface
 {
     /**
@@ -7,7 +9,7 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
      *
      * @var CoreExt_Controller_Interface
      */
-    protected $_controller = null;
+    protected $_controller;
 
     /**
      * Construtor.
@@ -85,6 +87,10 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
         $basepath = $this->getController()->getOption('basepath');
         $controllerDir = $this->getController()->getOption('controller_dir');
         $controllerType = $this->getController()->getOption('controller_type');
+
+        $module = implode(DIRECTORY_SEPARATOR, [ucwords($controller), $controllerDir, $pageController]);
+
+        $basepath = LegacyController::resolve($module, $basepath);
 
         $controllerFile = [$basepath, $controller, $controllerDir, $pageController];
         $controllerFile = sprintf('%s.php', implode(DIRECTORY_SEPARATOR, $controllerFile));

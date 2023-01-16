@@ -19,7 +19,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
 
     public function __construct($ref_cod_quadro_horario = null, $sequencial = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null, $ref_cod_instituicao_servidor = null, $ref_servidor = null, $dia_semana = null, $hora_inicial = null, $hora_final = null, $identificador = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}quadro_horario_horarios_aux";
 
@@ -154,8 +154,8 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     {
         if (is_numeric($this->ref_cod_quadro_horario) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
             if (is_numeric($this->ref_cod_disciplina)) {
                 $set .= "{$gruda}ref_cod_disciplina = '{$this->ref_cod_disciplina}'";
                 $gruda = ', ';
@@ -218,7 +218,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
      * @param string time_hora_final_fim
      * @param string str_identificador
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_disciplina = null, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_cod_instituicao_servidor = null, $int_ref_servidor = null, $int_dia_semana = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $str_identificador = null, $str_data_cadastro_ini = null, $str_data_cadastro_fim = null)
     {
@@ -227,14 +227,6 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_ref_cod_quadro_horario)) {
-            $filtros .= "{$whereAnd} ref_cod_quadro_horario = '{$int_ref_cod_quadro_horario}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_sequencial)) {
-            $filtros .= "{$whereAnd} sequencial = '{$int_sequencial}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_ref_cod_disciplina)) {
             $filtros .= "{$whereAnd} ref_cod_disciplina = '{$int_ref_cod_disciplina}'";
             $whereAnd = ' AND ';
@@ -322,7 +314,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

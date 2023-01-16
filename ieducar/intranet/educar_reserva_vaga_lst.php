@@ -6,7 +6,7 @@ return new class extends clsListagem {
      *
      * @var int
      */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
 
     /**
      * Título no topo da página
@@ -54,14 +54,14 @@ return new class extends clsListagem {
     ];
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Escola';
             $lista_busca[] = 'Instituição';
         } elseif ($nivel_usuario == 2) {
             $lista_busca[] = 'Escola';
         }
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
         $get_escola = true;
         $get_curso  = true;
@@ -75,48 +75,34 @@ return new class extends clsListagem {
       0;
 
         $obj_escola_serie = new clsPmieducarEscolaSerie();
-        $obj_escola_serie->setLimite($this->limite, $this->offset);
+        $obj_escola_serie->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_escola_serie->lista(
-            $this->ref_cod_escola,
-            $this->ref_ref_cod_serie,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_instituicao,
-            $this->ref_cod_curso
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_ref_cod_serie: $this->ref_ref_cod_serie,
+            int_ativo: 1,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao,
+            int_ref_cod_curso: $this->ref_cod_curso
         );
 
         $total = $obj_escola_serie->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
+                $obj_ref_cod_serie = new clsPmieducarSerie(cod_serie: $registro['ref_cod_serie']);
                 $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
                 $nm_serie = $det_ref_cod_serie['nm_serie'];
 
-                $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+                $obj_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
                 $det_curso = $obj_curso->detalhe();
                 $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
-                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
+                $obj_ref_cod_escola = new clsPmieducarEscola(cod_escola: $registro['ref_cod_escola']);
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $nm_escola = $det_ref_cod_escola['nome'];
 
-                $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_ref_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
@@ -131,15 +117,15 @@ return new class extends clsListagem {
                 } elseif ($nivel_usuario == 2) {
                     $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_escola}</a>";
                 }
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
 
-        $this->addPaginador2('educar_reserva_vaga_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_reserva_vaga_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de reservas de vaga', [
-        url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Listagem de reservas de vaga', breadcrumbs: [
+        url(path: 'intranet/educar_index.php') => 'Escola',
     ]);
     }
 

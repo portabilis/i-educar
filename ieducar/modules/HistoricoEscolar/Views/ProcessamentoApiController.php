@@ -476,24 +476,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function getdadosEscola($escolaId)
     {
-        $sql = 'select
-            (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes
-            where esc.ref_cod_instituicao = $1 and esc.cod_escola = $2
-            and pes.idpes = esc.ref_idpes) as nome,
+        $sql = "
+            SELECT
+                nome,
+                municipio AS cidade,
+                uf_municipio AS uf
+            FROM relatorio.view_dados_escola
+            WHERE cod_escola = $1
+        ";
 
-            (select municipio.nome from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = $2) as cidade,
-
-            (select municipio.sigla_uf from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = $2) as uf';
-
-        $params = ['params' => [$this->getrequest()->instituicao_id, $escolaId], 'return_only' => 'first-line'];
+        $params = ['params' => [$escolaId], 'return_only' => 'first-line'];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
     }
@@ -720,7 +712,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
-        if ($this->getRequest()->disciplinas == 'buscar-boletim') {
+        if ($this->getRequest()->disciplinas === 'buscar-boletim') {
             $tpNota = $this->getService()->getRegra()->get('tipoNota');
             $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
             $mediasCc = $this->getService()->getMediasComponentes();
@@ -783,8 +775,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     if ($arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] === null) {
                         $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] = 0;
                     }
+
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] ??= 0 ;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] ??= 0;
+
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
-                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += is_numeric($notaConceitualNumerica) ? $notaConceitualNumerica : 0;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['ordenamento'] = $componenteCurricular->area_conhecimento->ordenamento;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['carga_horaria_disciplina'] = $componenteCurricular->area_conhecimento->carga_horaria_disciplina;
@@ -838,10 +834,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
             }
             if ($processarMediaGeral) {
-                $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral(
-                    $historicoSequencial,
-                    $alunoId
-                );
+                $this->insereComponenteMediaGeral($historicoSequencial, $alunoId);
             }
         } else {
             $i = 0;
@@ -906,7 +899,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $falta = $this->getRequest()->faltas;
         }
 
-        return $falta;
+        return empty($falta) ? 0 : $falta;
     }
 
     protected function getDadosMatricula($matriculaId)

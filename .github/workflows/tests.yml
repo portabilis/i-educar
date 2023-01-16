@@ -5,14 +5,18 @@ on:
     branches:
       - 2.*
       - main
+
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   default:
 
     name: Unit, Integration and Pages
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       APP_URL: http://localhost:8000
@@ -29,6 +33,9 @@ jobs:
       CACHE_DRIVER: array
       QUEUE_CONNECTION: sync
       SESSION_DRIVER: array
+      LEGACY_SEED_DATA: false
+      COMPOSER_ALLOW_SUPERUSER: 1
+      NODE_OPTIONS: --max_old_space_size=1024
 
     services:
       postgres:
@@ -43,18 +50,18 @@ jobs:
 
     steps:
       - name: Setup PHP
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: '8.1'
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -63,13 +70,8 @@ jobs:
       - name: Install Dependencies
         run: composer new-install
 
+      - name: Prepare tests
+        run: php artisan legacy:create:tests
+
       - name: Unit tests
         run: vendor/bin/phpunit
-
-      - name: Integration tests
-        run: vendor/bin/phpunit --testsuite=Diario
-
-      - name: Page tests
-        run: |
-          php artisan legacy:create:tests
-          php artisan test --parallel --testsuite Pages

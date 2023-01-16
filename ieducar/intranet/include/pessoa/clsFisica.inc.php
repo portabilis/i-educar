@@ -166,7 +166,7 @@ class clsFisica
         $this->nacionalidade            = $nacionalidade;
 
         // todo Remover variável não usada
-        $this->data_chegada_brasil      = $data_chegada_brasil ?? null;
+        $this->data_chegada_brasil      = null;
         $this->ultima_empresa           = $ultima_empresa;
         $this->nome_mae                 = $nome_mae;
         $this->nome_pai                 = $nome_pai;
@@ -178,7 +178,7 @@ class clsFisica
         $this->empresa                  = $empresa;
         $this->ddd_telefone_empresa     = $ddd_telefone_empresa;
         $this->telefone_empresa         = $telefone_empresa;
-        $this->pessoa_contato           = $pessoa_contato ?? null;
+        $this->pessoa_contato           = null;
         $this->renda_mensal             = $renda_mensal;
         $this->data_admissao            = $data_admissao;
         $this->zona_localizacao_censo   = $zona_localizacao_censo;
@@ -714,6 +714,7 @@ class clsFisica
                 $person->slug = trim("{$slug} {$person->slug}");
                 $person->save();
 
+                $this->nome_social = str_replace("'", "''", $this->nome_social);
                 $set .= "$gruda nome_social = '{$this->nome_social}'";
             }
 
@@ -751,7 +752,7 @@ class clsFisica
     public function exclui()
     {
         if (is_numeric($this->idpes)) {
-            $detalheAntigo = $this->detalheSimples();
+            $this->detalheSimples();
 
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
@@ -765,10 +766,11 @@ class clsFisica
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($int_idpes = false, $data_data_nasc = false, $str_sexo = false, $int_idpes_mae = false, $int_idpes_pai = false, $int_idpes_responsavel = false, $int_idesco = false, $int_ideciv = false, $int_idpes_con = false, $data_data_uniao = false, $data_data_obito = false, $int_nacionalidade = false, $int_idpais_estrangeiro = false, $data_data_chagada_brasil = false, $int_idmun_nascimento = false, $str_ultima_empresa = false, $int_idocup = false, $str_nome_mae = false, $str_nome_pai = false, $str_nome_conjuge = false, $str_nome_responsavel = false, $str_justificativa_provisorio = false, $str_ordenacao = false, $int_limite_ini = 0, $int_limite_qtd = 20, $arrayint_idisin = false, $arrayint_idnotin = false, $str_data_nasc_ini = false, $str_data_nasc_fim = false, $int_mes_aniversario = false, $int_ref_cod_sistema = false, $int_cpf = false)
     {
+        $where = '';
         $whereAnd = 'WHERE ';
 
         if (is_numeric($int_idpes)) {
@@ -815,10 +817,6 @@ class clsFisica
             $where .= "{$whereAnd}idpes_con =  '$int_idpes_con'";
             $whereAnd = ' AND ';
         }
-        if (is_string($data_data_uniao)) {
-            $where .= "{$whereAnd}data_uniao =  '$data_data-uniao'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($data_data_obito)) {
             $where .= "{$whereAnd}data_obito =  '$data_data_obito'";
             $whereAnd = ' AND ';
@@ -829,10 +827,6 @@ class clsFisica
         }
         if (is_numeric($int_idpais_estrangeiro)) {
             $where .= "{$whereAnd}idpais_estrangeiro =  '$int_idpais_estrangeiro'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($data_data_chegada_brasil)) {
-            $where .= "{$whereAnd}data_chegada_brasil =  '$data_data_chegada_brasil'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_idmun_nascimento)) {
@@ -964,7 +958,6 @@ class clsFisica
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla['idesco'] =  $tupla['idesco'];
             $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
             $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
@@ -981,7 +974,7 @@ class clsFisica
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -1024,9 +1017,7 @@ class clsFisica
         $db = new clsBanco();
         $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf}");
         if ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-
-            return $tupla;
+            return $db->Tupla();
         }
 
         return false;

@@ -72,7 +72,7 @@ return [
     */
 
     'schema' => [
-        'register' => base_path('packages/portabilis/pre-matricula/graphql/schema.graphql'),
+        'register' => base_path('graphql/schema.graphql'),
     ],
 
     /*

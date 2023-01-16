@@ -12,7 +12,7 @@ class Student extends Model
     /**
      * @var string
      */
-    protected $table = 'exporter_student';
+    protected $table = 'exporter_student_grouped_registration';
 
     /**
      * @var Collection
@@ -38,8 +38,6 @@ class Student extends Model
             'Códigos' => [
                 'id' => 'ID Pessoa',
                 'student_id' => 'ID Aluno',
-
-                'registration_id' => 'ID Matrícula',
                 'school_id' => 'ID Escola',
                 'school_class_id' => 'ID Turma',
                 'grade_id' => 'ID Série',
@@ -61,7 +59,8 @@ class Student extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
-                'race' => 'Raça'
+                'race' => 'Raça',
+                'religion' => 'Religião'
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -69,12 +68,8 @@ class Student extends Model
                 'school_class' => 'Turma',
                 'grade' => 'Série',
                 'course' => 'Curso',
-                'registration_date' => 'Data da Matrícula',
-                'registration_out' => 'Data de saída da matrícula',
                 'year' => 'Ano',
-                'status_text' => 'Situação da Matrícula',
                 'period' => 'Turno',
-                'school_class_stage' => 'Etapa Educacenso',
             ],
             'Informações' => [
                 'nationality' => 'Nacionalidade',
@@ -149,6 +144,33 @@ class Student extends Model
                 'guardian.monthly_income' => 'Renda Mensal do responsável',
                 'guardian.gender' => 'Gênero do responsável',
             ],
+            'Uniforme' => [
+                'uniform_distributions.type' => 'Tipo',
+                'uniform_distributions.distribution_date' => 'Data de Distribuição',
+                'uniform_distributions.complete_kit' => 'Kit Completo',
+                'uniform_distributions.coat_pants_qty' => 'Agasalho Calça (Quantidade)',
+                'uniform_distributions.coat_pants_tm' => 'Agasalho Calça (Tamanho)',
+                'uniform_distributions.coat_jacket_qty' => 'Agasalho Jaqueta (Quantidade)',
+                'uniform_distributions.coat_jacket_tm' => 'Agasalho Jaqueta (Tamanho)',
+                'uniform_distributions.shirt_short_qty' => 'Camiseta Curta (Quantidade)',
+                'uniform_distributions.shirt_short_tm' => 'Camiseta Curta (Tamanho)',
+                'uniform_distributions.shirt_long_qty' => 'Camiseta Longa (Quantidade)',
+                'uniform_distributions.shirt_long_tm' => 'Camiseta Longa (Tamanho)',
+                'uniform_distributions.socks_qty' => 'Meias (Quantidade)',
+                'uniform_distributions.socks_tm' => 'Meias (Tamanho)',
+                'uniform_distributions.shorts_tactel_qty' => 'Bermudas Tactel (Quantidade)',
+                'uniform_distributions.shorts_tactel_tm' => 'Bermudas Tactel (Tamanho)',
+                'uniform_distributions.shorts_coton_qty' => 'Bermudas Coton (Quantidade)',
+                'uniform_distributions.shorts_coton_tm' => 'Bermudas Coton (Tamanho)',
+                'uniform_distributions.sneakers_qty' => 'Tênis (Quantidade)',
+                'uniform_distributions.sneakers_tm' => 'Tênis (Tamanho)',
+                'uniform_distributions.kids_shirt_qty' => 'Camiseta Infantil (Quantidade)',
+                'uniform_distributions.kids_shirt_tm' => 'Camiseta Infantil (Tamanho)',
+                'uniform_distributions.pants_jeans_qty' => 'Calça Jeans (Quantidade)',
+                'uniform_distributions.pants_jeans_tm' => 'Calça Jeans (Tamanho)',
+                'uniform_distributions.skirt_qty' => 'Saia (Quantidade)',
+                'uniform_distributions.skirt_tm' => 'Saia (Tamanho)',
+            ],
         ];
     }
 
@@ -160,6 +182,11 @@ class Student extends Model
         return 'Alunos';
     }
 
+    public function getDescription()
+    {
+        return 'Os dados exportados serão contabilizados por quantidade de alunos(as), agrupando as informações de séries, cursos, turmas quando o(a) aluno(a) possuir mais de uma matrícula para a situação e ano filtrados.';
+    }
+
     /**
      * @param string $column
      *
@@ -168,9 +195,7 @@ class Student extends Model
     public function alias($column)
     {
         if (empty($this->alias)) {
-            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
-                return $item;
-            });
+            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(static fn ($item) => $item);
         }
 
         return $this->alias->get($column, $column);

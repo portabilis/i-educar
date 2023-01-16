@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $ano;
     public $ref_cod_instituicao;
     public $escola_em_andamento;
@@ -19,16 +18,16 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            $codigoMenu,
-            $this->pessoa_logada,
-            7,
-            'educar_index.php'
+            int_processo_ap: $codigoMenu,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_index.php'
         );
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
         $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
 
-        $this->breadcrumb($nomeTela, [
+        $this->breadcrumb(currentPage: $nomeTela, breadcrumbs: [
         url('intranet/educar_educacenso_index.php') => 'Educacenso',
     ]);
 
@@ -61,15 +60,15 @@ return new class extends clsCadastro {
 
         if ($fase2 == 1) {
             $dicaCampoData = 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).';
-            $this->campoOculto('fase2', 'true');
+            $this->campoOculto(nome: 'fase2', valor: 'true');
         }
 
-        $this->campoOculto('enable_export', (int) config('legacy.educacenso.enable_export'));
+        $this->campoOculto(nome: 'enable_export', valor: (int) config('legacy.educacenso.enable_export'));
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
-        $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
+        $this->inputsHelper()->hidden(attrName: 'escola_em_andamento', inputOptions: [ 'value' => $this->escola_em_andamento ]);
 
         if (!empty($this->ref_cod_escola)) {
-            Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
+            Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: '/vendor/legacy/Educacenso/Assets/Javascripts/Educacenso.js');
         }
     }
 

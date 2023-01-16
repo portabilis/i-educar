@@ -81,13 +81,13 @@
             <div class="social-icons">
                 <p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
                 @if(config('legacy.config.facebook_url'))
-                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}"><img src="{{ Asset::get('intranet/imagens/icon-social-facebook.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-facebook.png') }}"></a>
                 @endif
                 @if(config('legacy.config.linkedin_url'))
-                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}"><img src="{{ Asset::get('intranet/imagens/icon-social-linkedin.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-linkedin.png') }}"></a>
                 @endif
                 @if(config('legacy.config.twitter_url'))
-                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}"><img src="{{ Asset::get('intranet/imagens/icon-social-twitter.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-twitter.png') }}"></a>
                 @endif
             </div>
         @endif

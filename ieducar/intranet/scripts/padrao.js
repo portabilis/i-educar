@@ -455,46 +455,10 @@ function formataMonetario(campo, e)
 
 function formataCNPJ(campo, e)
 {
-  if (typeof window.event != 'undefined') {
-    if (window.event.keyCode != 46) {
-      if ((campo.value.length == 2) || (campo.value.length == 6)) {
-        campo.value += '.';
-      }
-    }
-
-    if (window.event.keyCode != 47) {
-      if (campo.value.length == 10) {
-        campo.value += '/';
-      }
-    }
-
-    if (window.event.keyCode != 45) {
-      if (campo.value.length == 15) {
-        campo.value += '-';
-      }
-    }
-  }
-  else {
-    if (e.which != 8) {
-      if (e.which != 46) {
-        if ((campo.value.length == 2) || (campo.value.length == 6)) {
-          campo.value += '.';
-        }
-      }
-
-      if (e.which != 47) {
-        if (campo.value.length == 10) {
-          campo.value += '/';
-        }
-      }
-
-      if (e.which != 45) {
-        if (campo.value.length == 15) {
-          campo.value += '-';
-        }
-      }
-    }
-  }
+  document.getElementById(campo.id).addEventListener('input', function (e) {
+    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})/);
+    e.target.value = !x[2] ? x[1] : x[1] + '.' + x[2] + '.' + x[3] + '/' + x[4] + (x[5] ? '-' + x[5] : '');
+  });
 }
 
 /**

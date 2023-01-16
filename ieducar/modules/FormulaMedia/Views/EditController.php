@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LegacyExamRule;
+use App\Models\LegacyEvaluationRule;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EditController extends Core_Controller_Page_EditController
@@ -54,7 +54,7 @@ class EditController extends Core_Controller_Page_EditController
 
     public function _preRender()
     {
-        Portabilis_View_Helper_Application::loadJavascript($this, '/modules/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
+        Portabilis_View_Helper_Application::loadJavascript($this, '/vendor/legacy/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
 
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
@@ -136,7 +136,7 @@ class EditController extends Core_Controller_Page_EditController
     {
         $id = $this->getRequest()->id;
 
-        return LegacyExamRule::where('formula_media_id', $id)
+        return LegacyEvaluationRule::where('formula_media_id', $id)
             ->orWhere('formula_recuperacao_id', $id)
             ->exists();
     }

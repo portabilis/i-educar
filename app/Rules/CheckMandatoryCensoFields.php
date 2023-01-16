@@ -4,9 +4,11 @@ namespace App\Rules;
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
-use App\Models\School;
+use App\Models\LegacySchool;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
+use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Contracts\Validation\Rule;
@@ -226,8 +228,8 @@ class CheckMandatoryCensoFields implements Rule
 
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
             isset($params->etapa_educacenso) &&
-            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 70, 71, 73, 74, 67, 68], true)) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 70, 71, 73, 74, 67 ou 68';
+            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 70, 71, 73, 74, 67, 68], true)) {
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 70, 71, 73, 74, 67 ou 68';
 
             return false;
         }
@@ -299,7 +301,7 @@ class CheckMandatoryCensoFields implements Rule
 
     protected function validaCampoLocalFuncionamentoDiferenciado($params)
     {
-        $school = School::find($params->ref_ref_cod_escola);
+        $school = LegacySchool::find($params->ref_ref_cod_escola);
         $localFuncionamentoEscola = $school->local_funcionamento;
         if (is_string($localFuncionamentoEscola)) {
             $localFuncionamentoEscola = explode(',', str_replace(['{', '}'], '', $localFuncionamentoEscola));
@@ -332,6 +334,10 @@ class CheckMandatoryCensoFields implements Rule
     {
         $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
+        if (is_array($estruturaCurricular) && in_array(2, $estruturaCurricular, true) && count($estruturaCurricular) === 1) {
+            $params->etapa_educacenso = null;
+        }
+
         if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO && empty($estruturaCurricular)) {
             $this->message = 'Campo "Estrutura Curricular" é obrigatório quando o campo tipo de atentimento é "Escolarização".';
 
@@ -340,6 +346,16 @@ class CheckMandatoryCensoFields implements Rule
 
         if (is_array($estruturaCurricular) && count($estruturaCurricular) > 1 && in_array(3, $estruturaCurricular, true)) {
             $this->message = 'Não é possível informar mais de uma opção no campo: <b>Estrutura curricular</b>, quando a opção: <b>Não se aplica</b> estiver selecionada';
+
+            return false;
+        }
+
+        if (
+            is_array($estruturaCurricular) &&
+            !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $estruturaCurricular, true) &&
+            $params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL
+        ) {
+            $this->message = 'Quando o campo: <b>Tipo de mediação didático-pedagógica</b> é: <b>Semipresencial</b>, o campo: <b>Estrutura curricular</b> deve ter a opção <b>Formação geral básica</b> informada.';
 
             return false;
         }
@@ -379,28 +395,6 @@ class CheckMandatoryCensoFields implements Rule
 
     private function validaCampoFormasOrganizacaoTurma(mixed $params)
     {
-        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
-
-        if (empty($estruturaCurricular)) {
-            return true;
-        }
-
-        if (empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
-            return true;
-        }
-
-        if (empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
-            $this->message = 'Campo: <b>Formas de organização da turma</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Formação geral básica</b>';
-
-            return false;
-        }
-
-        if (!empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
-            $this->message = 'Campo: <b>Formas de organização da turma</b> não pode ser preenchido quando o campo: <b>Estrutura Curricular não contém: Formação geral básica</b>';
-
-            return false;
-        }
-
         $validOption = [
             1 => 'Série/ano (séries anuais)',
             2 => 'Períodos semestrais',
@@ -411,27 +405,30 @@ class CheckMandatoryCensoFields implements Rule
         ];
 
         $validOptionCorrelationForEtapaEnsino = [
-            1 => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 69, 70, 71, 72, 73, 74, 67
+            FormaOrganizacaoTurma::SERIE_ANO => [
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67
             ],
-            2 => [
-                25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 69, 70, 71, 72, 73, 74, 67, 68
+            FormaOrganizacaoTurma::SEMESTRAL => [
+                25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 69, 70, 71, 72, 73, 74, 67, 68
             ],
-            3 => [
+            FormaOrganizacaoTurma::CICLOS => [
                 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56
             ],
-            4 => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 69, 70, 71, 72, 73, 74, 67, 68
+            FormaOrganizacaoTurma::NAO_SERIADO => [
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67, 68
             ],
-            5 => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 69, 70, 71, 72, 73, 74, 67,68
+            FormaOrganizacaoTurma::MODULES => [
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67,68
             ],
-            6 => [
-                19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 69, 70, 71, 72, 73, 74, 67, 68
+            FormaOrganizacaoTurma::ALTERNANCIA_REGULAR => [
+                19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 69, 70, 71, 72, 73, 74, 67, 68
             ]
         ];
 
-        if (!in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int)$params->formas_organizacao_turma], true)) {
+        if (isset($params->formas_organizacao_turma) &&
+            isset($params->etapa_educacenso) &&
+            !in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int)$params->formas_organizacao_turma], true)
+        ) {
             $todasEtapasEducacenso = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/etapas_ensino.json');
             $this->message = "Não é possível selecionar a opção: <b>{$validOption[(int)$params->formas_organizacao_turma]}</b>, no campo: <b>Formas de organização da turma</b> quando o campo: Etapa de ensino for: {$todasEtapasEducacenso[$params->etapa_educacenso]}.";
 

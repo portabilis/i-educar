@@ -130,7 +130,7 @@ class clsJuridica
 
             if ($set) {
                 $campos = implode(', ', $set);
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET $campos WHERE idpes = '$this->idpes' ");
 
                 return true;
@@ -149,7 +149,7 @@ class clsJuridica
     {
         if (is_numeric($this->idpes)) {
             $db = new clsBanco();
-            $detalheAntigo = $this->detalhe();
+            $this->detalhe();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
 
             return true;
@@ -161,16 +161,16 @@ class clsJuridica
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($str_fantasia = false, $str_insc_estadual = false, $int_cnpj = false, $str_ordenacao = false, $int_limite_ini = false, $int_limite_qtd = false, $arrayint_idisin = false, $arrayint_idnotin = false, $int_idpes = false)
     {
         $db = new clsBanco;
+        $where = '';
         $whereAnd = 'WHERE ';
-        $join = '';
         if (is_string($str_fantasia)) {
             $str_fantasia = $db->escapeString($str_fantasia);
-            $where .= "{$whereAnd} (fcn_upper_nrm(fantasia) LIKE fcn_upper_nrm('%$str_fantasia%') OR fcn_upper_nrm(nome) LIKE fcn_upper_nrm('%$str_fantasia%'))";
+            $where .= "{$whereAnd} (fcn_upper_nrm(j.fantasia) LIKE fcn_upper_nrm('%$str_fantasia%') OR fcn_upper_nrm(nome) LIKE fcn_upper_nrm('%$str_fantasia%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_insc_estadual)) {
@@ -178,11 +178,11 @@ class clsJuridica
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_idpes)) {
-            $where .= "{$whereAnd}idpes = '$int_idpes'";
+            $where .= "{$whereAnd}j.idpes = '$int_idpes'";
             $whereAnd = ' AND ';
         }
         if ($this->codUsuario) {
-            $where .= "{$whereAnd}idpes IN (SELECT ref_idpes
+            $where .= "{$whereAnd}j.idpes IN (SELECT ref_idpes
                                               FROM pmieducar.escola
                                              INNER JOIN pmieducar.escola_usuario ON (escola_usuario.ref_cod_escola = escola.cod_escola)
                                              WHERE ref_cod_usuario = $this->codUsuario
@@ -210,7 +210,7 @@ class clsJuridica
                 }
             }
             if ($ok) {
-                $where .= "{$whereAnd}idpes IN ( " . implode(',', $arrayint_idisin) . ' )';
+                $where .= "{$whereAnd}j.idpes IN ( " . implode(',', $arrayint_idisin) . ' )';
                 $whereAnd = ' AND ';
             }
         }
@@ -238,10 +238,10 @@ class clsJuridica
         }
 
         $db = new clsBanco();
-        $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.v_pessoa_juridica $where");
+        $db->Consulta("SELECT COUNT(0) AS total FROM cadastro.juridica j INNER JOIN cadastro.pessoa pessoa ON pessoa.idpes = j.idpes $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
-        $db->Consulta("SELECT idpes, cnpj, fantasia, insc_estadual, capital_social FROM {$this->schema}.v_pessoa_juridica $where $orderBy $limit");
+        $db->Consulta("SELECT j.idpes, j.cnpj, j.fantasia, j.insc_estadual, j.capital_social FROM cadastro.juridica j INNER JOIN cadastro.pessoa pessoa ON pessoa.idpes = j.idpes $where $orderBy $limit");
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
@@ -258,7 +258,7 @@ class clsJuridica
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -266,17 +266,13 @@ class clsJuridica
             $db = new clsBanco();
             $db->Consulta("SELECT idpes, cnpj, fantasia, insc_estadual, capital_social FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         } elseif ($this->cnpj) {
             $db = new clsBanco();
             $db->Consulta("SELECT idpes, cnpj, fantasia, insc_estadual, capital_social FROM {$this->schema}.{$this->tabela} WHERE cnpj = {$this->cnpj}");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

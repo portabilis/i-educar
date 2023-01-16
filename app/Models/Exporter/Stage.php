@@ -2,7 +2,7 @@
 
 namespace App\Models\Exporter;
 
-use App\Models\Exporter\Builders\StudentEloquentBuilder;
+use App\Models\Exporter\Builders\EnrollmentEloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
@@ -22,11 +22,11 @@ class Stage extends Model
     /**
      * @param Builder $query
      *
-     * @return StudentEloquentBuilder
+     * @return EnrollmentEloquentBuilder
      */
     public function newEloquentBuilder($query)
     {
-        return new StudentEloquentBuilder($query);
+        return new EnrollmentEloquentBuilder($query);
     }
 
     /**
@@ -54,6 +54,11 @@ class Stage extends Model
     public function getLabel()
     {
         return 'Calendário letivo';
+    }
+
+    public function getDescription()
+    {
+        return 'Exportação de todos os calendários letivos do ano filtrado para identificação das datas de início e fim das etapas e existência de lançamentos.';
     }
 
     /**

@@ -15,7 +15,6 @@ class PosGraduacao
             self::ESPECIALIZACAO => 'Especialização',
             self::MESTRADO => 'Mestrado',
             self::DOUTORADO => 'Doutorado',
-            self::NAO_POSSUI => 'Não tem pós-graduação concluída',
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Religion;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -22,34 +24,33 @@ return new class extends clsDetalhe {
 
         $this->cod_religiao=$_GET['cod_religiao'];
 
-        $tmp_obj = new clsPmieducarReligiao($this->cod_religiao);
-        $registro = $tmp_obj->detalhe();
+        $registro = Religion::findOrFail(id: $this->cod_religiao, columns: ['id', 'name'])?->getAttributes();
 
         if (! $registro) {
-            $this->simpleRedirect('educar_religiao_lst.php');
+            $this->simpleRedirect(url: 'educar_religiao_lst.php');
         }
 
-        if ($registro['cod_religiao']) {
-            $this->addDetalhe([ 'Religião', "{$registro['cod_religiao']}"]);
+        if ($registro['id']) {
+            $this->addDetalhe(detalhe: [ 'Religião', "{$registro['id']}"]);
         }
-        if ($registro['nm_religiao']) {
-            $this->addDetalhe([ 'Nome Religião', "{$registro['nm_religiao']}"]);
+        if ($registro['name']) {
+            $this->addDetalhe(detalhe: [ 'Nome Religião', "{$registro['name']}"]);
         }
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        if ($obj_permissao->permissao_cadastra(579, $this->pessoa_logada, 3)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 579, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_religiao_cad.php';
-            $this->url_editar = "educar_religiao_cad.php?cod_religiao={$registro['cod_religiao']}";
+            $this->url_editar = "educar_religiao_cad.php?cod_religiao={$registro['id']}";
         }
         //**
 
         $this->url_cancelar = 'educar_religiao_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da religião', [
-            url('intranet/educar_pessoas_index.php') => 'Pessoas',
+        $this->breadcrumb(currentPage: 'Detalhe da religião', breadcrumbs: [
+            url(path: 'intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
     }
 
