@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Cache;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $ref_cod_instituicao;
     public $permite_relacionamento_posvendas;
     public $url_novo_educacao;
@@ -33,22 +32,22 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
 
-        $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if ($nivel != 1) {
-            $this->simpleRedirect('educar_index.php');
+            $this->simpleRedirect(url: 'educar_index.php');
         }
 
         $obj_permissoes->permissao_cadastra(
-            999873,
-            $this->pessoa_logada,
-            7,
-            'educar_index.php'
+            int_processo_ap: 999873,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_index.php'
         );
-        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
 
-        $this->breadcrumb('Configurações gerais', [
-            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        $this->breadcrumb(currentPage: 'Configurações gerais', breadcrumbs: [
+            url(path: 'intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
 
         return 'Editar';
@@ -57,14 +56,14 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $obj_permissoes = new clsPermissoes();
-        $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao);
+        $configuracoes = new clsPmieducarConfiguracoesGerais(ref_cod_instituicao: $ref_cod_instituicao);
         $configuracoes = $configuracoes->detalhe();
 
         $this->permite_relacionamento_posvendas = $configuracoes['permite_relacionamento_posvendas'];
-        $this->bloquear_cadastro_aluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
-        $this->situacoes_especificas_atestados = dbBool($configuracoes['situacoes_especificas_atestados']);
+        $this->bloquear_cadastro_aluno = dbBool(val: $configuracoes['bloquear_cadastro_aluno']);
+        $this->situacoes_especificas_atestados = dbBool(val: $configuracoes['situacoes_especificas_atestados']);
         $this->url_novo_educacao = $configuracoes['url_novo_educacao'];
         $this->token_novo_educacao = $configuracoes['token_novo_educacao'];
         $this->mostrar_codigo_inep_aluno = $configuracoes['mostrar_codigo_inep_aluno'];
@@ -82,35 +81,35 @@ return new class extends clsCadastro {
         $this->twitter_url = $configuracoes['twitter_url'];
         $this->linkedin_url = $configuracoes['linkedin_url'];
         $this->ieducar_suspension_message = $configuracoes['ieducar_suspension_message'];
-        $this->emitir_ato_autorizativo = dbBool($configuracoes['emitir_ato_autorizativo']);
-        $this->emitir_ato_criacao_credenciamento = dbBool($configuracoes['emitir_ato_criacao_credenciamento']);
+        $this->emitir_ato_autorizativo = dbBool(val: $configuracoes['emitir_ato_autorizativo']);
+        $this->emitir_ato_criacao_credenciamento = dbBool(val: $configuracoes['emitir_ato_criacao_credenciamento']);
 
-        $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', [
+        $this->inputsHelper()->checkbox(attrName: 'permite_relacionamento_posvendas', inputOptions: [
             'label' => 'Permite relacionamento direto no pós-venda?',
             'value' => $this->permite_relacionamento_posvendas ? 'on' : ''
         ]);
 
-        $this->inputsHelper()->checkbox('bloquear_cadastro_aluno', [
+        $this->inputsHelper()->checkbox(attrName: 'bloquear_cadastro_aluno', inputOptions: [
             'label' => 'Bloquear o cadastro de novos alunos',
             'value' => $this->bloquear_cadastro_aluno ? 'on' : ''
         ]);
 
-        $this->inputsHelper()->checkbox('situacoes_especificas_atestados', [
+        $this->inputsHelper()->checkbox(attrName: 'situacoes_especificas_atestados', inputOptions: [
             'label' => 'Exibir apenas matrículas em situações específicas para os atestados',
             'value' => $this->situacoes_especificas_atestados ? 'on' : ''
         ]);
 
-        $this->inputsHelper()->checkbox('emitir_ato_autorizativo', [
+        $this->inputsHelper()->checkbox(attrName: 'emitir_ato_autorizativo', inputOptions: [
             'label' => 'Emite ato autorizativo nos cabeçalhos de histórico escolar (modelos padrão)',
             'value' => $this->emitir_ato_autorizativo ? 'on' : ''
         ]);
 
-        $this->inputsHelper()->checkbox('emitir_ato_criacao_credenciamento', [
+        $this->inputsHelper()->checkbox(attrName: 'emitir_ato_criacao_credenciamento', inputOptions: [
             'label' => 'Emite lei de criação e credenciamento nos cabeçalhos de histórico escolar (modelos padrão)',
             'value' => $this->emitir_ato_criacao_credenciamento ? 'on' : ''
         ]);
 
-        $this->inputsHelper()->text('url_novo_educacao', [
+        $this->inputsHelper()->text(attrNames: 'url_novo_educacao', inputOptions: [
             'label' => 'URL de integração (API)',
             'size' => 100,
             'max_length' => 100,
@@ -119,7 +118,7 @@ return new class extends clsCadastro {
             'value' => $this->url_novo_educacao
         ]);
 
-        $this->inputsHelper()->text('token_novo_educacao', [
+        $this->inputsHelper()->text(attrNames: 'token_novo_educacao', inputOptions: [
             'label' => 'Token de integração (API)',
             'size' => 100,
             'max_length' => 100,
@@ -132,16 +131,16 @@ return new class extends clsCadastro {
             'value' => $this->mostrar_codigo_inep_aluno,
             'required' => true,
         ];
-        $this->inputsHelper()->booleanSelect('mostrar_codigo_inep_aluno', $options);
+        $this->inputsHelper()->booleanSelect(attrName: 'mostrar_codigo_inep_aluno', inputOptions: $options);
 
         $options = [
             'label' => 'Campo "Justificativa para a falta de documentação" no cadastro de alunos deve ser obrigatório?',
             'value' => $this->justificativa_falta_documentacao_obrigatorio,
             'required' => true,
         ];
-        $this->inputsHelper()->booleanSelect('justificativa_falta_documentacao_obrigatorio', $options);
+        $this->inputsHelper()->booleanSelect(attrName: 'justificativa_falta_documentacao_obrigatorio', inputOptions: $options);
 
-        $this->inputsHelper()->integer('tamanho_min_rede_estadual', [
+        $this->inputsHelper()->integer(attrName: 'tamanho_min_rede_estadual', inputOptions: [
             'label' => 'Tamanho mínimo do campo "Código rede estadual" no cadastro de alunos ',
             'label_hint' => 'Deixe vazio no caso de não ter limite mínino',
             'max_length' => 3,
@@ -153,15 +152,15 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Modelo do boletim do professor',
             'resources' => [
-                1 => _cl('report.boletim_professor.modelo_padrao'),
-                2 => _cl('report.boletim_professor.modelo_recuperacao_por_etapa'),
-                3 => _cl('report.boletim_professor.modelo_recuperacao_paralela'),
+                1 => _cl(key: 'report.boletim_professor.modelo_padrao'),
+                2 => _cl(key: 'report.boletim_professor.modelo_recuperacao_por_etapa'),
+                3 => _cl(key: 'report.boletim_professor.modelo_recuperacao_paralela'),
             ],
             'value' => $this->modelo_boletim_professor
         ];
-        $this->inputsHelper()->select('modelo_boletim_professor', $options);
+        $this->inputsHelper()->select(attrName: 'modelo_boletim_professor', inputOptions: $options);
 
-        $this->inputsHelper()->text('url_cadastro_usuario', [
+        $this->inputsHelper()->text(attrNames: 'url_cadastro_usuario', inputOptions: [
             'label' => 'URL da ferramenta de cadastro de usuários',
             'label_hint' => 'Deixe vazio para desabilitar a ferramenta',
             'size' => 100,
@@ -171,13 +170,13 @@ return new class extends clsCadastro {
             'value' => $this->url_cadastro_usuario
         ]);
 
-        $this->inputsHelper()->booleanSelect('active_on_ieducar', [
+        $this->inputsHelper()->booleanSelect(attrName: 'active_on_ieducar', inputOptions: [
             'label' => 'Ativo no i-educar?',
             'value' => $this->active_on_ieducar,
             'required' => true,
         ]);
 
-        $this->inputsHelper()->text('ieducar_suspension_message', [
+        $this->inputsHelper()->text(attrNames: 'ieducar_suspension_message', inputOptions: [
             'label' => 'Mensagem de suspensão',
             'size' => 100,
             'max_length' => 255,
@@ -185,7 +184,7 @@ return new class extends clsCadastro {
             'value' => $this->ieducar_suspension_message
         ]);
 
-        $this->inputsHelper()->text('ieducar_image', [
+        $this->inputsHelper()->text(attrNames: 'ieducar_image', inputOptions: [
             'label' => 'URL do logo',
             'size' => 100,
             'max_length' => 255,
@@ -193,7 +192,7 @@ return new class extends clsCadastro {
             'value' => $this->ieducar_image
         ]);
 
-        $this->inputsHelper()->text('ieducar_entity_name', [
+        $this->inputsHelper()->text(attrNames: 'ieducar_entity_name', inputOptions: [
             'label' => 'Nome da entidade',
             'size' => 100,
             'max_length' => 255,
@@ -201,7 +200,7 @@ return new class extends clsCadastro {
             'value' => $this->ieducar_entity_name
         ]);
 
-        $this->inputsHelper()->textArea('ieducar_login_footer', [
+        $this->inputsHelper()->textArea(attrName: 'ieducar_login_footer', inputOptions: [
             'label' => 'Rodapé do login',
             'size' => 100,
             'rows' => 3,
@@ -209,7 +208,7 @@ return new class extends clsCadastro {
             'value' => $this->ieducar_login_footer
         ]);
 
-        $this->inputsHelper()->textArea('ieducar_external_footer', [
+        $this->inputsHelper()->textArea(attrName: 'ieducar_external_footer', inputOptions: [
             'label' => 'Rodapé externo',
             'size' => 100,
             'rows' => 3,
@@ -217,7 +216,7 @@ return new class extends clsCadastro {
             'value' => $this->ieducar_external_footer
         ]);
 
-        $this->inputsHelper()->textArea('ieducar_internal_footer', [
+        $this->inputsHelper()->textArea(attrName: 'ieducar_internal_footer', inputOptions: [
             'label' => 'Rodapé interno',
             'size' => 100,
             'rows' => 3,
@@ -225,7 +224,7 @@ return new class extends clsCadastro {
             'value' => $this->ieducar_internal_footer
         ]);
 
-        $this->inputsHelper()->text('facebook_url', [
+        $this->inputsHelper()->text(attrNames: 'facebook_url', inputOptions: [
             'label' => 'Facebook',
             'size' => 100,
             'max_length' => 255,
@@ -234,7 +233,7 @@ return new class extends clsCadastro {
             'value' => $this->facebook_url
         ]);
 
-        $this->inputsHelper()->text('twitter_url', [
+        $this->inputsHelper()->text(attrNames: 'twitter_url', inputOptions: [
             'label' => 'Twitter',
             'size' => 100,
             'max_length' => 255,
@@ -243,7 +242,7 @@ return new class extends clsCadastro {
             'value' => $this->twitter_url
         ]);
 
-        $this->inputsHelper()->text('linkedin_url', [
+        $this->inputsHelper()->text(attrNames: 'linkedin_url', inputOptions: [
             'label' => 'LinkedIn',
             'size' => 100,
             'max_length' => 255,
@@ -256,14 +255,14 @@ return new class extends clsCadastro {
     public function Editar()
     {
         $obj_permissoes = new clsPermissoes();
-        $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
         $bloquearCadastroAluno = $this->bloquear_cadastro_aluno == 'on' ? 1 : 0;
         $situacoesEspecificasAtestados = $this->situacoes_especificas_atestados == 'on' ? 1 : 0;
         $emitir_ato_autorizativo = $this->emitir_ato_autorizativo == 'on' ? 1 : 0;
         $emitir_ato_criacao_credenciamento = $this->emitir_ato_criacao_credenciamento == 'on' ? 1 : 0;
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, [
+        $configuracoes = new clsPmieducarConfiguracoesGerais(ref_cod_instituicao: $ref_cod_instituicao, campos: [
             'permite_relacionamento_posvendas' => $permiteRelacionamentoPosvendas,
             'bloquear_cadastro_aluno' => $bloquearCadastroAluno,
             'situacoes_especificas_atestados' => $situacoesEspecificasAtestados,
@@ -295,7 +294,7 @@ return new class extends clsCadastro {
             Cache::invalidateByTags(['configurations']);
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('index.php');
+            $this->simpleRedirect(url: 'index.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';

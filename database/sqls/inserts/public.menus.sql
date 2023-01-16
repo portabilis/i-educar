@@ -17,10 +17,6 @@ INSERT INTO public.menus VALUES (17, 3, 'Processos', NULL, NULL, NULL, 4, 2, NUL
 INSERT INTO public.menus VALUES (18, 3, 'Relatórios', NULL, NULL, NULL, 5, 2, NULL, 21126, 55, true, NULL, NULL);
 INSERT INTO public.menus VALUES (19, 3, 'Documentos', NULL, NULL, NULL, 6, 2, NULL, 21127, 55, true, NULL, NULL);
 INSERT INTO public.menus VALUES (20, 3, 'Ferramentas', NULL, NULL, NULL, 7, 2, NULL, 999926, 55, true, NULL, NULL);
-INSERT INTO public.menus VALUES (21, 7, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 15858, 57, true, NULL, NULL);
-INSERT INTO public.menus VALUES (22, 7, 'Movimentações', NULL, NULL, NULL, 2, 2, NULL, 15859, 57, true, NULL, NULL);
-INSERT INTO public.menus VALUES (23, 7, 'Relatórios', NULL, NULL, NULL, 3, 2, NULL, 999614, 57, true, NULL, NULL);
-INSERT INTO public.menus VALUES (24, 7, 'Documentos', NULL, NULL, NULL, 4, 2, NULL, 999831, 57, true, NULL, NULL);
 INSERT INTO public.menus VALUES (25, 1, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999930, 68, true, NULL, NULL);
 INSERT INTO public.menus VALUES (27, 6, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 20710, 69, true, NULL, NULL);
 INSERT INTO public.menus VALUES (28, 6, 'Movimentações', NULL, NULL, NULL, 2, 2, NULL, 20711, 69, true, NULL, NULL);
@@ -29,7 +25,6 @@ INSERT INTO public.menus VALUES (30, 5, 'Exportações', NULL, NULL, NULL, 1, 2,
 INSERT INTO public.menus VALUES (31, 5, 'Importações', NULL, NULL, NULL, 1, 2, NULL, 9998848, 70, true, NULL, NULL);
 INSERT INTO public.menus VALUES (32, 4, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999911, 71, true, NULL, NULL);
 INSERT INTO public.menus VALUES (33, 4, 'Relatórios', NULL, NULL, NULL, 2, 2, NULL, 999913, 71, true, NULL, NULL);
-INSERT INTO public.menus VALUES (34, 21, 'Tipos', 'Autores de obras', NULL, NULL, 1, 3, NULL, 999900, 15858, true, NULL, NULL);
 INSERT INTO public.menus VALUES (49, 28, 'Processos', NULL, NULL, NULL, 0, 3, NULL, 21244, 20711, true, NULL, NULL);
 INSERT INTO public.menus VALUES (51, 14, 'Tipos', NULL, NULL, NULL, 1, 3, NULL, 999917, 21122, true, NULL, NULL);
 INSERT INTO public.menus VALUES (52, 14, 'Alunos', 'Alunos', '/intranet/educar_aluno_lst.php', NULL, 2, 3, 578, 21205, 21122, true, NULL, NULL);

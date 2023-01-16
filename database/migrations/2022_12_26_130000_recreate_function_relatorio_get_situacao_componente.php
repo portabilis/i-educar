@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class CreatePmieducarVMatriculaMatriculaTurmaView extends Migration
+class RecreateFunctionRelatorioGetSituacaoComponente extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,7 @@ class CreatePmieducarVMatriculaMatriculaTurmaView extends Migration
     public function up()
     {
         DB::unprepared(
-            'DROP VIEW IF EXISTS pmieducar.v_matricula_matricula_turma;'
-        );
-
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/views/pmieducar.v_matricula_matricula_turma.sql')
+            file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_situacao_componente.sql')
         );
     }
 
@@ -29,7 +25,7 @@ class CreatePmieducarVMatriculaMatriculaTurmaView extends Migration
     public function down()
     {
         DB::unprepared(
-            'DROP VIEW IF EXISTS pmieducar.v_matricula_matricula_turma;'
+            'DROP FUNCTION relatorio.get_situacao_componente(cod_situacao numeric);'
         );
     }
 }

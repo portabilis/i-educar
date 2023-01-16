@@ -41,6 +41,8 @@
       $componenteCurricularField.change();
     };
 
+    $componenteCurricularField.attr('data-no-autocomplete', true);
+
     // bind onchange event
     $etapaField.change(updateComponentesCurriculares);
 

@@ -1,30 +1,28 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassTeacher;
+use App\Models\EmployeeAllocation;
+use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Services\iDiarioService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $ref_cod_instituicao;
-
     public $ref_ano;
-
     public $ref_ref_cod_escola;
-
     public $sequencial;
-
     public $ref_cod_modulo;
-
     public $data_inicio;
-
     public $data_fim;
-
     public $ano_letivo_modulo;
-
     public $modulos = [];
-
     public $etapas = [];
+    public $copiar_alocacoes_e_vinculos_professores;
+    public $copiar_alocacoes_demais_servidores;
 
     public function Inicializar()
     {
@@ -37,26 +35,33 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            561,
-            $this->pessoa_logada,
-            7,
-            'educar_escola_lst.php'
+            int_processo_ap: 561,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
-        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
-            $obj = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola, $this->ref_ano);
-            $registro = $obj->detalhe();
+        if (is_numeric(value: $this->ref_ano) && is_numeric(value: $this->ref_ref_cod_escola)) {
+            $schoolAcademicYear = LegacySchoolAcademicYear::query()->where(
+                column: [
+                    'ref_cod_escola' => $this->ref_ref_cod_escola,
+                    'ano' => $this->ref_ano
+                ]
+            )->first();
 
-            if ($registro) {
-                if ($obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 7)) {
+            if ($schoolAcademicYear instanceof LegacySchoolAcademicYear) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
+
+                $this->copiar_alocacoes_demais_servidores = $schoolAcademicYear->copia_dados_professor;
+                $this->copiar_alocacoes_e_vinculos_professores = $schoolAcademicYear->copia_dados_demais_servidores;
 
                 $retorno = 'Editar';
 
                 $etapasObj = new clsPmieducarAnoLetivoModulo();
-                $etapasObj->setOrderBy('sequencial ASC');
-                $this->etapas = $etapasObj->lista($this->ref_ano, $this->ref_ref_cod_escola);
+                $etapasObj->setOrderBy(strNomeCampo: 'sequencial ASC');
+                $this->etapas = $etapasObj->lista(int_ref_ano: $this->ref_ano, int_ref_ref_cod_escola: $this->ref_ref_cod_escola);
                 $this->ref_cod_modulo = $this->etapas[0]['ref_cod_modulo'];
             }
         }
@@ -65,8 +70,8 @@ return new class extends clsCadastro {
             ? $_GET['referrer'] . '?cod_escola=' . $this->ref_ref_cod_escola
             : 'educar_escola_lst.php';
 
-        $this->breadcrumb('Etapas do ano letivo', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Etapas do ano letivo', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -83,17 +88,17 @@ return new class extends clsCadastro {
         }
 
         // Primary keys
-        $this->campoOculto('ref_ano', $this->ref_ano);
-        $this->campoOculto('ref_ref_cod_escola', $this->ref_ref_cod_escola);
+        $this->campoOculto(nome: 'ref_ano', valor: $this->ref_ano);
+        $this->campoOculto(nome: 'ref_ref_cod_escola', valor: $this->ref_ref_cod_escola);
 
-        $obj_escola = new clsPmieducarEscola($this->ref_ref_cod_escola);
+        $obj_escola = new clsPmieducarEscola(cod_escola: $this->ref_ref_cod_escola);
         $det_escola = $obj_escola->detalhe();
         $ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
         $this->ref_cod_instituicao = $ref_cod_instituicao;
 
         $obj = new clsPmieducarAnoLetivoModulo();
-        $obj->setOrderBy('sequencial ASC');
-        $registros = $obj->lista($this->ref_ano - 1, $this->ref_ref_cod_escola);
+        $obj->setOrderBy(strNomeCampo: 'sequencial ASC');
+        $registros = $obj->lista(int_ref_ano: $this->ref_ano - 1, int_ref_ref_cod_escola: $this->ref_ref_cod_escola);
         $cont = 0;
 
         if ($registros) {
@@ -108,17 +113,17 @@ return new class extends clsCadastro {
             foreach ($registros as $campo) {
                 $cor = '#f5f9fd';
                 $cont++;
-                $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr($campo['data_inicio']).' à '.dataFromPgToBr($campo['data_fim']).'</td></tr>';
+                $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr(data_original: $campo['data_inicio']).' à '.dataFromPgToBr(data_original: $campo['data_fim']).'</td></tr>';
 
-                $ano = date_parse_from_format('Y-m-d', $campo['data_inicio']);
+                $ano = date_parse_from_format(format: 'Y-m-d', datetime: $campo['data_inicio']);
                 $ano = $ano['year'];
 
-                $novaDataInicio = str_replace($ano, $this->ref_ano, $campo['data_inicio']);
-                $novaDataFim = str_replace($ano, $this->ref_ano, $campo['data_fim']);
+                $novaDataInicio = str_replace(search: $ano, replace: $this->ref_ano, subject: $campo['data_inicio']);
+                $novaDataFim = str_replace(search: $ano, replace: $this->ref_ano, subject: $campo['data_fim']);
 
                 if (
-                    Portabilis_Date_Utils::checkDateBissexto($novaDataInicio)
-                    || Portabilis_Date_Utils::checkDateBissexto($novaDataFim)
+                    Portabilis_Date_Utils::checkDateBissexto(data: $novaDataInicio)
+                    || Portabilis_Date_Utils::checkDateBissexto(data: $novaDataFim)
                 ) {
                     $existeBissexto = true;
                 }
@@ -139,43 +144,26 @@ return new class extends clsCadastro {
         $ref_ano_ = $this->ref_ano;
 
         $this->campoTexto(
-            'ref_ano_',
-            'Ano',
-            $ref_ano_,
-            4,
-            4,
-            false,
-            false,
-            false,
-            '',
-            '',
-            '',
-            '',
-            true
+            nome: 'ref_ano_',
+            campo: 'Ano',
+            valor: $ref_ano_,
+            tamanhovisivel: 4,
+            tamanhomaximo: 4,
+            evento: '',
+            disabled: true
         );
 
         $opcoesCampoModulo = [];
 
         $objTemp = new clsPmieducarModulo();
-        $objTemp->setOrderby('nm_tipo ASC');
+        $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
 
         $lista = $objTemp->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $ref_cod_instituicao
+            int_ativo: 1,
+            int_ref_cod_instituicao: $ref_cod_instituicao
         );
 
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             $this->modulos = $lista;
 
             foreach ($lista as $registro) {
@@ -184,26 +172,25 @@ return new class extends clsCadastro {
         }
 
         $this->campoLista(
-            'ref_cod_modulo',
-            'Etapa',
-            $opcoesCampoModulo,
-            \Request::get('ref_cod_modulo',$this->ref_cod_modulo),
-            null,
-            null,
-            null,
-            null,
-            null,
-            true
+            nome: 'ref_cod_modulo',
+            campo: 'Etapa',
+            valor: $opcoesCampoModulo,
+            default: \Request::get('ref_cod_modulo',$this->ref_cod_modulo),
+            acao: null,
+            duplo: null,
+            descricao: null,
+            complemento: null,
+            desabilitado: null,
         );
 
         if ($tabela) {
             $this->campoQuebra();
-            $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
+            $this->campoRotulo(nome: 'modulosAnoAnterior', campo: '-', valor: $tabela);
         }
 
         $this->campoQuebra();
 
-        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && !$_POST) {
+        if (is_numeric(value: $this->ref_ano) && is_numeric(value: $this->ref_ref_cod_escola) && !$_POST) {
             $qtd_registros = 0;
 
 
@@ -216,31 +203,80 @@ return new class extends clsCadastro {
                 }
             } else {
                 foreach ($this->etapas as $campo) {
-                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
-                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
+                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr(data_original: $campo['data_inicio']);
+                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr(data_original: $campo['data_fim']);
                     $this->ano_letivo_modulo[$qtd_registros][] = $campo['dias_letivos'];
                     $qtd_registros++;
                 }
             }
 
             $this->campoTabelaInicio(
-                'modulos_ano_letivo',
-                'Etapas do ano letivo',
-                ['Data inicial', 'Data final', 'Dias Letivos'],
-                $this->ano_letivo_modulo
+                nome: 'modulos_ano_letivo',
+                titulo: 'Etapas do ano letivo',
+                arr_campos: ['Data inicial', 'Data final', 'Dias Letivos'],
+                arr_valores: $this->ano_letivo_modulo
             );
 
-            $this->campoData('data_inicio', 'Hora', $this->data_inicio, true);
-            $this->campoData('data_fim', 'Hora', $this->data_fim, true);
-            $this->campoNumero('dias_letivos', 'Dias Letivos', $this->dias_letivos, 6, 3, false);
+            $this->campoData(nome: 'data_inicio', campo: 'Hora', valor: $this->data_inicio, obrigatorio: true);
+            $this->campoData(nome: 'data_fim', campo: 'Hora', valor: $this->data_fim, obrigatorio: true);
+            $this->campoNumero(nome: 'dias_letivos', campo: 'Dias Letivos', valor: $this->dias_letivos, tamanhovisivel: 6, tamanhomaximo: 3, obrigatorio: false);
 
             $this->campoTabelaFim();
+
+            $this->campoQuebra();
+
+            $this->campoRotulo(
+                nome: 'titulo-alocacoes-vinculos',
+                campo: 'Alocações e vínculos',
+                separador: null
+            );
+
+            $this->campoRotulo(
+                nome: 'informativo1-alocacoes-vinculos',
+                campo: '
+                    Ao definir um novo ano letivo, o i-Educar copia automaticamente as turmas do ano anterior. <br>
+                    Gostaria de compiar também as alocações e vínculos?
+                ',
+                separador: null
+            );
+
+            $checkedProfessores = ($this->copiar_alocacoes_e_vinculos_professores || $this->tipoacao == 'Novo') ? 'checked' : '';
+            $checkedDemaisServidores = ($this->copiar_alocacoes_demais_servidores || $this->tipoacao == 'Novo') ? 'checked' : '';
+
+            $this->campoRotulo(
+                nome: 'copiar_alocacoes_e_vinculos_professores_',
+                campo: '
+                    <input type ="checkbox" '.$checkedProfessores.' id="copiar_alocacoes_e_vinculos_professores" name ="copiar_alocacoes_e_vinculos_professores">
+                    <label for = "subscribeNews">Copiar alocações e vínculos dos professores</ label>
+                ',
+                separador: null
+            );
+
+            $this->campoRotulo(
+                nome: 'copiar_alocacoes_demais_servidores_',
+                campo: '
+                    <input type="checkbox" '.$checkedDemaisServidores.' id="copiar_alocacoes_demais_servidores" name="copiar_alocacoes_demais_servidores">
+                    <label for = "subscribeNews">Copiar alocações dos demais servidores</ label>
+                ',
+                separador: null
+            );
+
+            $this->campoRotulo(
+                nome: 'informativo2-alocacoes-vinculos',
+                campo: 'As alocações e vínculos podem depois ser editadas e excluídas, caso necessário',
+                separador: null
+            );
         }
 
-        Portabilis_View_Helper_Application::loadJavascript($this, [
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
             '/intranet/scripts/etapas.js'
         ]);
+
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
+
+        Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this,
+            files: ['/vendor/legacy/Cadastro/Assets/Stylesheets/AnoLetivoModulo.css']);
     }
 
     public function Novo()
@@ -248,10 +284,10 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            561,
-            $this->pessoa_logada,
-            7,
-            'educar_escola_lst.php'
+            int_processo_ap: 561,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
         try {
@@ -263,41 +299,50 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
-            $this->copiarTurmasUltimoAno($this->ref_ref_cod_escola, $this->ref_ano);
-            Portabilis_Utils_Database::selectField("SELECT pmieducar.copiaAnosLetivos({$this->ref_ano}::smallint, {$this->ref_ref_cod_escola});");
+        $this->copiar_alocacoes_e_vinculos_professores = !is_null(value: $this->copiar_alocacoes_e_vinculos_professores);
+        $this->copiar_alocacoes_demais_servidores = !is_null(value: $this->copiar_alocacoes_demais_servidores);
 
-            $obj = new clsPmieducarEscolaAnoLetivo(
-                $this->ref_ref_cod_escola,
-                $this->ref_ano,
-                $this->pessoa_logada,
-                null,
-                0,
-                null,
-                null,
-                1,
-                1
+        if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
+            $this->copiarTurmasUltimoAno(
+                escolaId: $this->ref_ref_cod_escola,
+                anoDestino: $this->ref_ano,
+                copiaDadosProfessor: $this->copiar_alocacoes_e_vinculos_professores
             );
 
-            $cadastrou = $obj->cadastra();
+            if ($this->copiar_alocacoes_demais_servidores === true) {
+                $this->copyEmployeeAllocations(refCodEscola: $this->ref_ref_cod_escola, anoDestino: $this->ref_ano);
+            }
 
-            if ($cadastrou) {
+            Portabilis_Utils_Database::selectField(sql: "SELECT pmieducar.copiaAnosLetivos({$this->ref_ano}::smallint, {$this->ref_ref_cod_escola});");
+
+            $schoolAcademicYear = new LegacySchoolAcademicYear();
+
+            $schoolAcademicYear->ref_cod_escola = $this->ref_ref_cod_escola;
+            $schoolAcademicYear->ano = $this->ref_ano;
+            $schoolAcademicYear->ref_usuario_cad = $this->pessoa_logada;
+            $schoolAcademicYear->andamento = 0;
+            $schoolAcademicYear->ativo = 1;
+            $schoolAcademicYear->turmas_por_ano = 1;
+            $schoolAcademicYear->copia_dados_professor = $this->copiar_alocacoes_e_vinculos_professores;
+            $schoolAcademicYear->copia_dados_demais_servidores = $this->copiar_alocacoes_demais_servidores;
+
+            if ($schoolAcademicYear->save()) {
                 foreach ($this->data_inicio as $key => $campo) {
-                    $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
-                    $this->data_fim[$key] = dataToBanco($this->data_fim[$key]);
+                    $this->data_inicio[$key] = dataToBanco(data_original: $this->data_inicio[$key]);
+                    $this->data_fim[$key] = dataToBanco(data_original: $this->data_fim[$key]);
 
                     if ($this->dias_letivos[$key] == '') {
                         $this->dias_letivos[$key] = '0';
                     }
 
                     $obj = new clsPmieducarAnoLetivoModulo(
-                        $this->ref_ano,
-                        $this->ref_ref_cod_escola,
-                        $key + 1,
-                        $this->ref_cod_modulo,
-                        $this->data_inicio[$key],
-                        $this->data_fim[$key],
-                        $this->dias_letivos[$key]
+                        ref_ano: $this->ref_ano,
+                        ref_ref_cod_escola: $this->ref_ref_cod_escola,
+                        sequencial: $key + 1,
+                        ref_cod_modulo: $this->ref_cod_modulo,
+                        data_inicio: $this->data_inicio[$key],
+                        data_fim: $this->data_fim[$key],
+                        dias_letivos: $this->dias_letivos[$key]
                     );
 
                     $cadastrou1 = $obj->cadastra();
@@ -311,7 +356,7 @@ return new class extends clsCadastro {
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
 
-                $this->simpleRedirect('educar_escola_det.php?cod_escola=' . $this->ref_ref_cod_escola . '#ano_letivo');
+                $this->simpleRedirect(url: 'educar_escola_det.php?cod_escola=' . $this->ref_ref_cod_escola . '#ano_letivo');
             }
 
             $this->mensagem = 'Cadastro não realizado. <br />';
@@ -328,10 +373,10 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            561,
-            $this->pessoa_logada,
-            7,
-            'educar_escola_lst.php'
+            int_processo_ap: 561,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
         try {
@@ -356,26 +401,26 @@ return new class extends clsCadastro {
                 return false;
             }
 
-            $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
+            $obj = new clsPmieducarAnoLetivoModulo(ref_ano: $this->ref_ano, ref_ref_cod_escola: $this->ref_ref_cod_escola);
             $excluiu = $obj->excluirTodos();
 
             if ($excluiu) {
                 foreach ($this->data_inicio as $key => $campo) {
-                    $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
-                    $this->data_fim[$key] = dataToBanco($this->data_fim[$key]);
+                    $this->data_inicio[$key] = dataToBanco(data_original: $this->data_inicio[$key]);
+                    $this->data_fim[$key] = dataToBanco(data_original: $this->data_fim[$key]);
 
                     if ($this->dias_letivos[$key] == '') {
                         $this->dias_letivos[$key] = '0';
                     }
 
                     $obj = new clsPmieducarAnoLetivoModulo(
-                        $this->ref_ano,
-                        $this->ref_ref_cod_escola,
-                        $key + 1,
-                        $this->ref_cod_modulo,
-                        $this->data_inicio[$key],
-                        $this->data_fim[$key],
-                        $this->dias_letivos[$key]
+                        ref_ano: $this->ref_ano,
+                        ref_ref_cod_escola: $this->ref_ref_cod_escola,
+                        sequencial: $key + 1,
+                        ref_cod_modulo: $this->ref_cod_modulo,
+                        data_inicio: $this->data_inicio[$key],
+                        data_fim: $this->data_fim[$key],
+                        dias_letivos: $this->dias_letivos[$key]
                     );
 
                     $cadastrou1 = $obj->cadastra();
@@ -388,7 +433,7 @@ return new class extends clsCadastro {
                 }
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-                $this->simpleRedirect('educar_escola_lst.php');
+                $this->simpleRedirect(url: 'educar_escola_lst.php');
             }
         }
 
@@ -403,32 +448,31 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_excluir(
-            561,
-            $this->pessoa_logada,
-            7,
-            'educar_escola_lst.php'
+            int_processo_ap: 561,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
-        $obj = new clsPmieducarEscolaAnoLetivo(
-            $this->ref_ref_cod_escola,
-            $this->ref_ano,
-            null,
-            $this->pessoa_logada,
-            null,
-            null,
-            null,
-            0
-        );
+        $schoolAcademicYear = LegacySchoolAcademicYear::query()
+            ->where(
+                column: [
+                    'ref_cod_escola' => $this->ref_ref_cod_escola,
+                     'ano'=> $this->ref_ano
+                ]
+            )->first();
 
-        $excluiu = $obj->excluir();
+        $schoolAcademicYear->ref_usuario_cad = $this->pessoa_logada;
+        $schoolAcademicYear->andamento = 2;
+        $schoolAcademicYear->ativo = 0;
 
-        if ($excluiu) {
-            $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
+        if ($schoolAcademicYear->save()) {
+            $obj = new clsPmieducarAnoLetivoModulo(ref_ano: $this->ref_ano, ref_ref_cod_escola: $this->ref_ref_cod_escola);
             $excluiu1 = $obj->excluirTodos();
 
             if ($excluiu1) {
                 $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-                $this->simpleRedirect('educar_escola_lst.php');
+                $this->simpleRedirect(url: 'educar_escola_lst.php');
             }
 
             $this->mensagem = 'Exclusão não realizada.<br />';
@@ -441,60 +485,35 @@ return new class extends clsCadastro {
         return false;
     }
 
-    public function copiarTurmasUltimoAno($escolaId, $anoDestino)
+    public function copiarTurmasUltimoAno($escolaId, $anoDestino, $copiaDadosProfessor = true)
     {
-        $sql = 'select ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
-            'and ativo = 1 and ano in (select max(ano) from pmieducar.escola_ano_letivo where ' .
-            'ref_cod_escola = $1 and ativo = 1)';
+        $lastSchoolAcademicYear = LegacySchoolAcademicYear::query()
+            ->whereSchool(school: $escolaId)
+            ->active()
+            ->max(column: 'ano')
+        ;
 
-        $ultimoAnoLetivo = Portabilis_Utils_Database::selectRow($sql, $escolaId);
-        $turmasEscola = new clsPmieducarTurma();
-        $turmasEscola = $turmasEscola->lista(
-            null,
-            null,
-            null,
-            null,
-            $escolaId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            true,
-            null,
-            null,
-            $ultimoAnoLetivo['ano']
+        $turmasEscola = (new clsPmieducarTurma())->lista(
+            int_ref_ref_cod_escola: $escolaId,
+            int_ativo: 1,
+            ano: $lastSchoolAcademicYear
         );
 
         foreach ($turmasEscola as $turma) {
-            $this->copiarTurma($turma, $ultimoAnoLetivo['ano'], $anoDestino);
+            $this->copiarTurma(
+                turmaOrigem: $turma,
+                anoOrigem: $lastSchoolAcademicYear,
+                anoDestino: $anoDestino,
+                copiaDadosProfessor: $copiaDadosProfessor
+            );
+        }
+
+        if ($copiaDadosProfessor === true) {
+            $this->copyEmployeeAllocations(refCodEscola: $this->ref_ref_cod_escola, anoDestino: $this->ref_ano, onlyTeacher: true);
         }
     }
 
-    public function copiarTurma($turmaOrigem, $anoOrigem, $anoDestino)
+    public function copiarTurma($turmaOrigem, $anoOrigem, $anoDestino, $copiaDadosProfessor)
     {
         $sql = 'select 1 from turma where ativo = 1 and visivel = true
             and ref_ref_cod_escola = $1 and nm_turma = $2 and ref_ref_cod_serie = $3 and ano = $4 limit 1';
@@ -506,7 +525,7 @@ return new class extends clsCadastro {
             $anoDestino
         ];
 
-        $existe = Portabilis_Utils_Database::selectField($sql, $params);
+        $existe = Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $params);
 
         if ($existe != 1) {
             $fields = [
@@ -559,15 +578,121 @@ return new class extends clsCadastro {
             $turmaDestino->ano = $anoDestino;
             $turmaDestino->ref_usuario_cad = $this->pessoa_logada;
             $turmaDestino->ref_usuario_exc = $this->pessoa_logada;
-            $turmaDestino->visivel = dbBool($turmaOrigem['visivel']);
+            $turmaDestino->visivel = dbBool(val: $turmaOrigem['visivel']);
             $turmaDestinoId = $turmaDestino->cadastra();
 
-            $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
-            $this->copiarModulosTurma($turmaOrigem['cod_turma'], $turmaDestinoId, $anoOrigem, $anoDestino);
+            $this->copiarComponenteCurricularTurma(turmaOrigemId: $turmaOrigem['cod_turma'], turmaDestinoId: $turmaDestinoId);
+            $this->copiarModulosTurma(turmaOrigemId: $turmaOrigem['cod_turma'], turmaDestinoId: $turmaDestinoId, anoOrigem: $anoOrigem, anoDestino: $anoDestino);
 
             if ($turmaOrigem['multiseriada'] === 1) {
-                $this->criarTurmaMultisseriada($turmaOrigem, $turmaDestinoId);
+                $this->criarTurmaMultisseriada(turmaOrigem: $turmaOrigem, turmaDestinoId: $turmaDestinoId);
             }
+
+            if ($copiaDadosProfessor === true) {
+                $this->copySchoolClassTeacher(
+                    originSchoolClassId: $turmaOrigem,
+                    destinationSchoolClassId: $turmaDestinoId,
+                    originYear: $anoOrigem,
+                    destinationYear: $anoDestino
+                );
+            }
+        }
+    }
+
+    private function copySchoolClassTeacher($originSchoolClassId, $destinationSchoolClassId, $originYear, $destinationYear)
+    {
+        $schoolClassTeachers = LegacySchoolClassTeacher::query()
+            ->where(column: ['ano' => $originYear, 'turma_id' => $originSchoolClassId])
+            ->get();
+
+        /** @var LegacySchoolClassTeacher $schoolClassTeacher */
+        foreach ($schoolClassTeachers as $schoolClassTeacher) {
+            $exist = LegacySchoolClassTeacher::query()->where(
+                column: [
+                    'ano' => $destinationYear,
+                    'turma_id' => $destinationSchoolClassId,
+                    'servidor_id' => $schoolClassTeacher->servidor_id
+                ]
+            )->exists();
+
+            if ($exist === true) {
+                continue;
+            }
+
+            $newSchoolClassTeacher = $schoolClassTeacher->replicate();
+            $newSchoolClassTeacher->ano = $destinationYear;
+            $newSchoolClassTeacher->turma_id = $destinationSchoolClassId;
+
+            $newSchoolClassTeacher->save();
+
+            $this->copySchoolClassTeacherDiscipline(schoolClassTeacher: $schoolClassTeacher, newSchoolClassTeacher: $newSchoolClassTeacher);
+        }
+    }
+
+    private function copySchoolClassTeacherDiscipline(
+        LegacySchoolClassTeacher $schoolClassTeacher,
+        LegacySchoolClassTeacher $newSchoolClassTeacher
+    ) {
+        $schoolClassTeacherDisciplines = LegacySchoolClassTeacherDiscipline::query()
+            ->where(column: 'professor_turma_id', operator: $schoolClassTeacher->getKey())
+            ->get()
+        ;
+
+        /** @var LegacySchoolClassTeacherDiscipline $schoolClassTeacherDiscipline */
+        foreach ($schoolClassTeacherDisciplines as $schoolClassTeacherDiscipline) {
+            $exist = LegacySchoolClassTeacherDiscipline::query()->where(column: [
+                'professor_turma_id'=> $newSchoolClassTeacher->getKey(),
+                'componente_curricular_id' => $schoolClassTeacherDiscipline->componente_curricular_id
+            ])->exists();
+
+            if ($exist === true) {
+                continue;
+            }
+
+            $newSchoolClassTeacherDisciplines = $schoolClassTeacherDiscipline->replicate();
+            $newSchoolClassTeacherDisciplines->professor_turma_id = $newSchoolClassTeacher->getKey();
+
+            $newSchoolClassTeacherDisciplines->save();
+        }
+    }
+
+    public function copyEmployeeAllocations($refCodEscola, $anoDestino, $onlyTeacher = false)
+    {
+        $lastSchoolAcademicYear = LegacySchoolAcademicYear::query()
+            ->whereSchool(school: $refCodEscola)
+            ->active()
+            ->max(column: 'ano')
+        ;
+
+        $employeeAllocations = EmployeeAllocation::query()
+            ->whereHas(relation: 'employee', callback: fn($q) => ($q->professor($onlyTeacher)) )
+            ->where(
+                column: [
+                    'ano' => $lastSchoolAcademicYear,
+                    'ref_cod_escola' => $refCodEscola
+            ]
+        )->get();
+
+        /** @var EmployeeAllocation $employeeAllocation */
+        foreach ($employeeAllocations as $employeeAllocation) {
+
+            $exist = EmployeeAllocation::query()->where(
+                column: [
+                    'ano' => $anoDestino,
+                    'ref_cod_escola' => $refCodEscola,
+                    'ref_cod_servidor' => $employeeAllocation->ref_cod_servidor,
+                    'ref_cod_servidor_funcao' => $employeeAllocation->ref_cod_servidor_funcao
+                ]
+            )->exists();
+
+            if ($exist === true) {
+                continue;
+            }
+
+            $newEmployeeAllocation = $employeeAllocation->replicate();
+            $newEmployeeAllocation->ano = $anoDestino;
+
+            $newEmployeeAllocation->save();
         }
     }
 
@@ -575,8 +700,8 @@ return new class extends clsCadastro {
     {
         /** @var LegacySchoolClassGrade[] $turmasSeries */
         $turmasSeries = LegacySchoolClassGrade::query()
-            ->where('escola_id', $turmaOrigem['ref_ref_cod_escola'])
-            ->where('turma_id', $turmaOrigem['cod_turma'])
+            ->where(column: 'escola_id', operator: $turmaOrigem['ref_ref_cod_escola'])
+            ->where(column: 'turma_id', operator: $turmaOrigem['cod_turma'])
             ->get()
         ;
 
@@ -596,7 +721,7 @@ return new class extends clsCadastro {
     public function copiarComponenteCurricularTurma($turmaOrigemId, $turmaDestinoId)
     {
         $dataMapper = new ComponenteCurricular_Model_TurmaDataMapper();
-        $componentesTurmaOrigem = $dataMapper->findAll([], ['turma' => $turmaOrigemId]);
+        $componentesTurmaOrigem = $dataMapper->findAll(columns: [], where: ['turma' => $turmaOrigemId]);
 
         foreach ($componentesTurmaOrigem as $componenteTurmaOrigem) {
             $data = [
@@ -609,15 +734,15 @@ return new class extends clsCadastro {
                 'anoEscolar' => $componenteTurmaOrigem->get('anoEscolar')
             ];
 
-            $componenteTurmaDestino = $dataMapper->createNewEntityInstance($data);
-            $dataMapper->save($componenteTurmaDestino);
+            $componenteTurmaDestino = $dataMapper->createNewEntityInstance(data: $data);
+            $dataMapper->save(instance: $componenteTurmaDestino);
         }
     }
 
     public function copiarModulosTurma($turmaOrigemId, $turmaDestinoId, $anoOrigem, $anoDestino)
     {
         $modulosTurmaOrigem = new clsPmieducarTurmaModulo();
-        $modulosTurmaOrigem = $modulosTurmaOrigem->lista($turmaOrigemId);
+        $modulosTurmaOrigem = $modulosTurmaOrigem->lista(int_ref_cod_turma: $turmaOrigemId);
 
         foreach ($modulosTurmaOrigem as $moduloOrigem) {
             $moduloDestino = new clsPmieducarTurmaModulo();
@@ -627,23 +752,25 @@ return new class extends clsCadastro {
             $moduloDestino->ref_cod_turma = $turmaDestinoId;
 
             $moduloDestino->data_inicio = str_replace(
-                $anoOrigem,
-                $anoDestino,
-                $moduloOrigem['data_inicio']
+                search: $anoOrigem,
+                replace: $anoDestino,
+                subject: $moduloOrigem['data_inicio']
             );
 
             $moduloDestino->data_fim = str_replace(
-                $anoOrigem,
-                $anoDestino,
-                $moduloOrigem['data_fim']
+                search: $anoOrigem,
+                replace: $anoDestino,
+                subject: $moduloOrigem['data_fim']
             );
 
-            if (Portabilis_Date_Utils::checkDateBissexto($moduloDestino->data_inicio)) {
-                $moduloDestino->data_inicio = str_replace(29, 28, $moduloDestino->data_inicio);
+            $moduloDestino->dias_letivos = $moduloOrigem['dias_letivos'];
+
+            if (Portabilis_Date_Utils::checkDateBissexto(data: $moduloDestino->data_inicio)) {
+                $moduloDestino->data_inicio = str_replace(search: 29, replace: 28, subject: $moduloDestino->data_inicio);
             }
 
-            if (Portabilis_Date_Utils::checkDateBissexto($moduloDestino->data_fim)) {
-                $moduloDestino->data_fim = str_replace(29, 28, $moduloDestino->data_fim);
+            if (Portabilis_Date_Utils::checkDateBissexto(data: $moduloDestino->data_fim)) {
+                $moduloDestino->data_fim = str_replace(search: 29, replace: 28, subject: $moduloDestino->data_fim);
             }
 
             $moduloDestino->cadastra();
@@ -661,24 +788,24 @@ return new class extends clsCadastro {
             ];
         }
 
-        return json_encode($retorno);
+        return json_encode(value: $retorno);
     }
 
     protected function validaDates(): void
     {
         foreach ($this->data_inicio as $key => $campo) {
-            $data_inicio = \Carbon\Carbon::createFromFormat('d/m/Y',$this->data_inicio[$key]);
-            $data_fim = \Carbon\Carbon::createFromFormat('d/m/Y',$this->data_fim[$key]);
+            $data_inicio = Carbon::createFromFormat('d/m/Y',$this->data_inicio[$key]);
+            $data_fim = Carbon::createFromFormat('d/m/Y',$this->data_fim[$key]);
 
             $etapaAntigo = Portabilis_Utils_Database::selectRow(
-                'SELECT data_inicio,data_fim FROM pmieducar.ano_letivo_modulo WHERE ref_ano <> $1 AND ref_ref_cod_escola = $2 AND
+                sql: 'SELECT data_inicio,data_fim FROM pmieducar.ano_letivo_modulo WHERE ref_ano <> $1 AND ref_ref_cod_escola = $2 AND
                                                                    ($3::date BETWEEN data_inicio AND data_fim::date OR $4::date BETWEEN data_inicio AND data_fim OR
                                                                    ($3::date <= data_inicio AND $4::date >= data_fim)) limit 1',
-                [$this->ref_ano,$this->ref_ref_cod_escola,$data_inicio,$data_fim]
+                paramsOrOptions: [$this->ref_ano,$this->ref_ref_cod_escola,$data_inicio,$data_fim]
             );
 
             if (!empty($etapaAntigo) && isset($etapaAntigo['data_inicio'],$etapaAntigo['data_fim'])) {
-                throw new RuntimeException("A data informada não pode fazer parte do período configurado para outros anos letivos.");
+                throw new RuntimeException(message: "A data informada não pode fazer parte do período configurado para outros anos letivos.");
             }
         }
     }
@@ -687,10 +814,10 @@ return new class extends clsCadastro {
     {
         $ano = $this->ref_ano;
         $escolaId = $this->ref_ref_cod_escola;
-        $etapasCount = count($this->data_inicio);
+        $etapasCount = count(value: $this->data_inicio);
         $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
-            'SELECT COUNT(*) AS count FROM pmieducar.ano_letivo_modulo WHERE ref_ano = $1 AND ref_ref_cod_escola = $2',
-            [$ano, $escolaId]
+            sql: 'SELECT COUNT(*) AS count FROM pmieducar.ano_letivo_modulo WHERE ref_ano = $1 AND ref_ref_cod_escola = $2',
+            paramsOrOptions: [$ano, $escolaId]
         );
 
         if ($etapasCount >= $etapasCountAntigo) {
@@ -708,53 +835,53 @@ return new class extends clsCadastro {
         $counts = [];
 
         $counts[] = DB::table('modules.falta_componente_curricular as fcc')
-            ->join('modules.falta_aluno as fa', 'fa.id', '=', 'fcc.falta_aluno_id')
-            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
-            ->whereIn('fcc.etapa', $etapas)
-            ->where('m.ref_ref_cod_escola', $escolaId)
-            ->where('m.ano', $ano)
-            ->where('m.ativo', 1)
+            ->join(table: 'modules.falta_aluno as fa', first: 'fa.id', operator: '=', second: 'fcc.falta_aluno_id')
+            ->join(table: 'pmieducar.matricula as m', first: 'm.cod_matricula', operator: '=', second: 'fa.matricula_id')
+            ->whereIn(column: 'fcc.etapa', values: $etapas)
+            ->where(column: 'm.ref_ref_cod_escola', operator: $escolaId)
+            ->where(column: 'm.ano', operator: $ano)
+            ->where(column: 'm.ativo', operator: 1)
             ->count();
 
         $counts[] = DB::table('modules.falta_geral as fg')
-            ->join('modules.falta_aluno as fa', 'fa.id', '=', 'fg.falta_aluno_id')
-            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
-            ->whereIn('fg.etapa', $etapas)
-            ->where('m.ref_ref_cod_escola', $escolaId)
-            ->where('m.ano', $ano)
-            ->where('m.ativo', 1)
+            ->join(table: 'modules.falta_aluno as fa', first: 'fa.id', operator: '=', second: 'fg.falta_aluno_id')
+            ->join(table: 'pmieducar.matricula as m', first: 'm.cod_matricula', operator: '=', second: 'fa.matricula_id')
+            ->whereIn(column: 'fg.etapa', values: $etapas)
+            ->where(column: 'm.ref_ref_cod_escola', operator: $escolaId)
+            ->where(column: 'm.ano', operator: $ano)
+            ->where(column: 'm.ativo', operator: 1)
             ->count();
 
         $counts[] = DB::table('modules.nota_componente_curricular as ncc')
-            ->join('modules.nota_aluno as na', 'na.id', '=', 'ncc.nota_aluno_id')
-            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
-            ->whereIn('ncc.etapa', $etapas)
-            ->where('m.ref_ref_cod_escola', $escolaId)
-            ->where('m.ano', $ano)
-            ->where('m.ativo', 1)
+            ->join(table: 'modules.nota_aluno as na', first: 'na.id', operator: '=', second: 'ncc.nota_aluno_id')
+            ->join(table: 'pmieducar.matricula as m', first: 'm.cod_matricula', operator: '=', second: 'na.matricula_id')
+            ->whereIn(column: 'ncc.etapa', values: $etapas)
+            ->where(column: 'm.ref_ref_cod_escola', operator: $escolaId)
+            ->where(column: 'm.ano', operator: $ano)
+            ->where(column: 'm.ativo', operator: 1)
             ->count();
 
-        $sum = array_sum($counts);
+        $sum = array_sum(array: $counts);
 
         if ($sum > 0) {
-            throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+            throw new RuntimeException(message: 'Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
         }
 
         // Caso não exista token e URL de integração com o i-Diário, não irá
         // validar se há lançamentos nas etapas removidas
 
-        $checkReleases = config('legacy.config.url_novo_educacao')
-            && config('legacy.config.token_novo_educacao');
+        $checkReleases = config(key: 'legacy.config.url_novo_educacao')
+            && config(key: 'legacy.config.token_novo_educacao');
 
         if (!$checkReleases) {
             return true;
         }
 
-        $iDiarioService = app(iDiarioService::class);
+        $iDiarioService = app(abstract: iDiarioService::class);
 
         foreach ($etapas as $etapa) {
             if ($iDiarioService->getStepActivityByUnit($escolaId, $ano, $etapa)) {
-                throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+                throw new RuntimeException(message: 'Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
             }
         }
 
@@ -764,9 +891,9 @@ return new class extends clsCadastro {
     public function makeExtra()
     {
         return str_replace(
-            '#modulos',
-            $this->gerarJsonDosModulos(),
-            file_get_contents(__DIR__ . '/scripts/extra/educar-ano-letivo-modulo-cad.js')
+            search: '#modulos',
+            replace: $this->gerarJsonDosModulos(),
+            subject: file_get_contents(filename: __DIR__ . '/scripts/extra/educar-ano-letivo-modulo-cad.js')
         );
     }
 

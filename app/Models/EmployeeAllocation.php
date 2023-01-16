@@ -36,4 +36,13 @@ class EmployeeAllocation extends LegacyModel
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola', 'cod_escola');
     }
+
+    public function employeeRole()
+    {
+        return $this->belongsTo(LegacyEmployeeRole::class, 'ref_cod_servidor_funcao', 'cod_servidor_funcao');
+    }
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'ref_cod_servidor', 'cod_servidor');
+    }
 }

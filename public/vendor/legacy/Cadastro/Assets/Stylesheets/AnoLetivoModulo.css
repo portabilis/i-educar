@@ -1,0 +1,25 @@
+#tr_titulo-alocacoes-vinculos td{
+    background-color: #ccdce6 !important;
+    font-family: "Open Sans" !important;
+    font-size: 16px !important;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    color: #47728f;
+    padding: 8px 15px !important
+}
+
+#tr_informativo1-alocacoes-vinculos td,
+#tr_informativo2-alocacoes-vinculos td {
+    font-weight: bold;
+    line-height: 1.7;
+    padding: 8px !important;
+}
+
+
+#tr_copiar_alocacoes_e_vinculos_professores_ td,
+#tr_copiar_alocacoes_demais_servidores_ td,
+#tr_informativo1-alocacoes-vinculos td,
+#tr_informativo2-alocacoes-vinculos td {
+    background-color: #f5f9fd;
+}

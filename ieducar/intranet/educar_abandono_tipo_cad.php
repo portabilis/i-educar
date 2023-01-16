@@ -26,7 +26,7 @@ return new class extends clsCadastro {
         $this->cod_abandono_tipo=$_GET['cod_abandono_tipo'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7, 'educar_abandono_tipo_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 950, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_abandono_tipo_lst.php');
 
         if (is_numeric($this->cod_abandono_tipo)) {
             $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->getAttributes();
@@ -35,7 +35,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir(950, $this->pessoa_logada, 7);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 950, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
                 $retorno = 'Editar';
             }
         }
@@ -44,7 +44,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' tipo de abandono', [
+        $this->breadcrumb(currentPage: $nomeMenu . ' tipo de abandono', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
@@ -54,13 +54,13 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_abandono_tipo', $this->cod_abandono_tipo);
+        $this->campoOculto(nome: 'cod_abandono_tipo', valor: $this->cod_abandono_tipo);
 
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nome', 'Motivo Abandono', $this->nome, 30, 255, true);
+        $this->campoTexto(nome: 'nome', campo: 'Motivo Abandono', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
     }
 
     public function Novo()

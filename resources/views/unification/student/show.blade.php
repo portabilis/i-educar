@@ -51,7 +51,7 @@
                 </a>
             @endcan
         @endif
-        <a href="{{ route('student-log-unification.index') }}"><button class="btn" type="button">Voltar</button></a>
+        <a href="{{ route('student-log-unification.index', request()->only(['ref_cod_instituicao', 'ref_cod_escola', 'page'])) }}"><button class="btn" type="button">Voltar</button></a>
     </div>
 
     </form>

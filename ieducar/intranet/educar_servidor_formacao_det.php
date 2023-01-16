@@ -28,14 +28,9 @@ return new class extends clsDetalhe {
         }
 
         $obj_ref_cod_servidor = new clsPmieducarServidor(
-            $registro['ref_cod_servidor'],
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $registro['ref_ref_cod_instituicao']
+            cod_servidor: $registro['ref_cod_servidor'],
+            ativo: 1,
+            ref_cod_instituicao: $registro['ref_ref_cod_instituicao']
         );
 
         $det_ref_cod_servidor = $obj_ref_cod_servidor->detalhe();
@@ -46,10 +41,10 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['tipo'] == 'C') {
-            $obj_curso = new clsPmieducarServidorCurso(null, $this->cod_formacao);
+            $obj_curso = new clsPmieducarServidorCurso(cod_servidor_curso: null, ref_cod_formacao: $this->cod_formacao);
             $det_curso = $obj_curso->detalhe();
         } elseif ($registro['tipo'] == 'T' || $registro['tipo'] == 'O') {
-            $obj_titulo = new clsPmieducarServidorTituloConcurso(null, $this->cod_formacao);
+            $obj_titulo = new clsPmieducarServidorTituloConcurso(cod_servidor_titulo: null, ref_cod_formacao: $this->cod_formacao);
             $det_titulo = $obj_titulo->detalhe();
         }
 
@@ -93,7 +88,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_servidor_formacao_cad.php';
 
             $this->url_editar = sprintf(
