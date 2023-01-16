@@ -66,7 +66,11 @@ class DiarioController extends ApiCoreController
             $componentesTurma = $componentes[0];
         }
 
-        $valid = in_array($componenteCurricularId, $componentesTurma);
+        $valid = false;
+        if (is_array($componentesTurma)) {
+            $valid = in_array($componenteCurricularId, $componentesTurma);
+        }
+
         if (!$valid) {
             $this->messenger->append("Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.", 'error');
             $this->appendResponse('error', [
