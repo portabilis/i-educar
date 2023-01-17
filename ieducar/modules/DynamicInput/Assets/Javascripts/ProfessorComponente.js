@@ -1,5 +1,6 @@
 (function($){
     $(document).ready(function(){
+      resetSelect($componenteCurricularField);
   
       var $anoField                  = getElementFor('ano');
       var $turmaField                = getElementFor('turma');
