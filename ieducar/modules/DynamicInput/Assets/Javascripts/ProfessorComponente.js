@@ -34,7 +34,7 @@
        
         
        
-        $("#ref_cod_componente_curricular").change(function(){
+       
           
        
           
@@ -59,7 +59,7 @@
           };
   
           getResources(options);
-        });
+       
   
         $professorComponenteField.change();
        
