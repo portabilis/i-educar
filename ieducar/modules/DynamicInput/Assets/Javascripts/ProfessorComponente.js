@@ -26,7 +26,7 @@
       var xml = new ajax(getResultado);
       xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
   
-      var updateComponentesCurriculares = function(){
+      var updateProfessores = function(){
         resetSelect($professorComponenteField);
         $professorComponenteField.prop('disabled', false);
        
@@ -66,7 +66,7 @@
       };
   
       // bind onchange event
-      $turmaField.change(updateComponentesCurriculares);
+      $componenteCurricularField.change(updateProfessores);
      
   
       
