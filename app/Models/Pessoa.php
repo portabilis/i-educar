@@ -5,33 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FaltaComponente extends Model
+class Pessoa extends Model
 {
- /**
-    * @var string
-    */
-    protected $table = 'modules.falta_componente_curricular';
+     /**
+     * @var string
+     */
+    protected $table = 'cadastro.pessoa';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'id';
- 
+    protected $primaryKey = 'idpes';
+
     protected $fillable = [
-        'id',
-        'falta_aluno_id',
-        'componente_curricular_id',
-        'quantidade',
-        'etapa' 
+        'idpes',
+        'nome'
     
     ];
- 
+
     /**
      * @var bool
      */
     public $timestamps = false;
- 
+
     
     use HasFactory;
-
 }
