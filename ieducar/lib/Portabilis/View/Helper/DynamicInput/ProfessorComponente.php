@@ -4,7 +4,7 @@ class Portabilis_View_Helper_DynamicInput_ProfessorComponente extends Portabilis
 {
     protected function inputName()
     {
-        return 'ref_cod_Professor_componente';
+        return 'ref_cod_professor_componente';
     }
 
     protected function inputOptions($options)
