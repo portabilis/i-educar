@@ -72,7 +72,7 @@ class ProfessorComponenteController extends ApiCoreController
            
 
         }
-        elseif(!empty($turmaId)){
+        else{
 
             $professor_turma = ProfessorTurma::where('turma_id', $turmaId)->get(); 
             foreach($professor_turma as $professores_turma){
@@ -92,6 +92,13 @@ class ProfessorComponenteController extends ApiCoreController
             }
                 
             }
+            $options[
+                '__' . $pessoas->idpes
+            ] = [
+                'value' => mb_strtoupper($pessoas->idpes." ATENDEU ".$pessoas->nome, 'UTF-8'),
+                'checked' => "checked",
+                'group' => ''
+            ];
 
         }
 
