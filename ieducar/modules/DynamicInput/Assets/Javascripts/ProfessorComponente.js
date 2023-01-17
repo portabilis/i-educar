@@ -1,6 +1,6 @@
 (function($){
     $(document).ready(function(){
-      resetSelect($componenteCurricularField);
+      
   
       var $anoField                  = getElementFor('ano');
       var $turmaField                = getElementFor('turma');
@@ -55,8 +55,7 @@
        
       };
   
-      // bind onchange event
-      $componenteCurricularField.change(updateProfessores);
+     updateProfessores();
      
      
   
