@@ -8,13 +8,9 @@
   
       var $professorComponenteTitleField =  $professorComponenteField[0].parentElement.parentElement.parentElement.children[0].children[0];
   
-      var handleGetComponentesCurriculares = function(response) {
+      var handleGetProfessores = function(response) {
         var selectOptions = jsonResourcesToSelectOptions(response['options']);
-        updateSelect($professorComponenteField, selectOptions);
-   
-      
-          $professorComponenteField.prop('disabled', false);
-        
+        updateSelect($professorComponenteField, selectOptions, "Selecione um professor");
       }
   
         $professorComponenteTitleField.innerText =  'Professor:';
@@ -47,7 +43,7 @@
           var options = {
             url : urlForGetFrequenciaComponentes,
             dataType : 'json',
-            success  : handleGetComponentesCurriculares
+            success  : handleGetProfessores
           };
   
           getResources(options);
