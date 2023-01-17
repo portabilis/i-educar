@@ -12,11 +12,9 @@
         var selectOptions = jsonResourcesToSelectOptions(response['options']);
         updateSelect($professorComponenteField, selectOptions);
    
-        let tipoPresenca = $turmaField.attr('tipo_presenca');
-  
-        if (tipoPresenca == 1 || tipoPresenca == '1') {
-          $professorComponenteField.prop('disabled', true);
-        }
+      
+          $professorComponenteField.prop('disabled', false);
+        
       }
   
       function getResultado(xml) {
@@ -68,9 +66,7 @@
       // bind onchange event
       $componenteCurricularField.change(updateProfessorres);
      
-      $("#ref_cod_componente_curricular").change(function(){
-        updateProfessorres();
-      });
+     
   
       
     }); // ready
