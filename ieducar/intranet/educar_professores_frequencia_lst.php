@@ -138,7 +138,7 @@ return new class extends clsListagem {
             $this->data_inicial,
             $this->data_final,
             $this->fase_etapa,
-            $eh_professor ? $this->pessoa_logada : null,
+           $this->ref_cod_professor_componente,
             empty($this->ref_cod_escola) ? $escolasUsuario : null
         );
 

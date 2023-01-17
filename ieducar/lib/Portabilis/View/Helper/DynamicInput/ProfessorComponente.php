@@ -62,7 +62,7 @@ class Portabilis_View_Helper_DynamicInput_ProfessorComponente extends Portabilis
                 foreach($pessoa as $pessoas){
 
                     $resources[$pessoas->idpes] = $pessoas->idpes.' - '.$pessoas->nome;
-                    $ultimo_nome = $pessoas->nome;
+                  
 
                 }
                 
@@ -71,6 +71,7 @@ class Portabilis_View_Helper_DynamicInput_ProfessorComponente extends Portabilis
 
     }
 
+    $ultimo_nome = 'Selecione um professor';
              
          
 
