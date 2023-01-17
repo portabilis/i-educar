@@ -74,28 +74,32 @@
     }
 
     document.getElementById('ref_cod_turma').onchange = function () {
-      const campoTurma = document.getElementById('ref_cod_turma').value;
+      let turmaId = $(this).val();
 
-      if (!campoTurma) {
+      if (!turmaId) {
         hideOrdensAulas();
         getResource(false);
+        return false;
       }
 
-      let params = {id: campoTurma};
+      let params = {id: turmaId};
       let options = {
         url: getResourceUrlBuilder.buildUrl('/module/Api/Frequencia', 'getTipoPresenca', params),
         dataType: 'json',
         data: {},
         success: function (response) {
           $('#ref_cod_turma').attr('tipo_presenca', response.tipo_presenca);
+          getRegistroDiarioQuadroHorario(response.tipo_presenca);
         },
       };
 
       getResource(options);
+    }
 
-      delay(2000)
-
+    function getRegistroDiarioQuadroHorario(tipoPresenca) {
+      const campoTurma = document.getElementById('ref_cod_turma').value;
       const campoData = document.getElementById('data').value;
+
       let paramsRegistroDiarioQuadroHorario = {
         id: campoTurma,
         data: campoData
@@ -106,11 +110,9 @@
         dataType: 'json',
         data: {},
         success: function (response) {
-          let tipoPresenca = $('#ref_cod_turma').attr('tipo_presenca');
-
-         if (response.registraDiarioIndividual) {
-           componenteCurricularRegistrioDiario = response.componentesCurriculares[0];
-         }
+          if (response.registraDiarioIndividual) {
+            componenteCurricularRegistrioDiario = response.componentesCurriculares[0];
+          }
 
           carregarAulas(tipoPresenca, campoTurma, componenteCurricularRegistrioDiario);
 
@@ -118,7 +120,6 @@
       };
 
       getResource(optionsRegistroDiarioQuadroHorario);
-
     }
 
     $('input[type="checkbox"]').change(function() {
@@ -148,8 +149,12 @@
       }
     }
 
-    function carregarAulas(tipo_presenca, campoTurma, componenteCurricularRegistrioDiario) {
-      if (tipo_presenca == 2 || tipo_presenca == '2') {
+    function carregarAulas(tipoPresenca, campoTurma, componenteCurricularRegistrioDiario) {
+      if (tipoPresenca == 1 || tipoPresenca == '1') {
+        carregarAlunos(componenteCurricularRegistrioDiario);
+      }
+
+      if (tipoPresenca == 2 || tipoPresenca == '2') {
         const campoData = document.getElementById('data').value;
 
         let params = {
@@ -182,8 +187,6 @@
 
         getResource(options);
 
-      } else {
-        carregarAlunos(componenteCurricularRegistrioDiario);
       }
     }
 
