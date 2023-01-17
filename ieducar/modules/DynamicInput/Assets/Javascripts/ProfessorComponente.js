@@ -22,8 +22,6 @@
       var updateProfessores = function(){
       
 
-        $("#ref_cod_componente_curricular").change(function(){
-
 
           $professorComponenteField.children().first().html('Aguarde, carregando...');
        
@@ -49,7 +47,6 @@
   
           getResources(options);
 
-        });
   
         $professorComponenteField.change();
        
@@ -57,6 +54,39 @@
   
      updateProfessores();
      
+
+     $("#ref_cod_componente_curricular").change(function(){
+
+
+      $professorComponenteField.children().first().html('Aguarde, carregando...');
+   
+
+      
+
+      var data = {
+        ano      : $anoField.attr('value'),
+        turma_id : $turmaField.attr('value'),
+        componente_id : $componenteCurricularField.attr('value')
+       
+      };
+
+      var urlForGetFrequenciaComponentes = getResourceUrlBuilder.buildUrl(
+        '/module/DynamicInput/professorComponente', 'professoresComponente', data
+      );
+
+      var options = {
+        url : urlForGetFrequenciaComponentes,
+        dataType : 'json',
+        success  : handleGetProfessores
+      };
+
+      getResources(options);
+
+      $professorComponenteField.change();
+
+    });
+
+    
      
   
       

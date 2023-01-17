@@ -92,13 +92,7 @@ class ProfessorComponenteController extends ApiCoreController
             }
                 
             }
-            $options[
-                '__' . $pessoas->idpes
-            ] = [
-                'value' => mb_strtoupper($pessoas->idpes." ATENDEU ".$pessoas->nome, 'UTF-8'),
-                'checked' => "checked",
-                'group' => ''
-            ];
+            
 
         }
 
