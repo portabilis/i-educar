@@ -21,7 +21,7 @@ class Portabilis_View_Helper_DynamicInput_ProfessorComponente extends Portabilis
         $escolaId = $this->getEscolaId($options['escolaId'] ?? null);
         $serieId = $this->getSerieId($options['serieId'] ?? null);
         $turmaId = $this->getTurmaId($options['turmaId'] ?? null);
-        $ComponenteId =
+        $ComponenteId =  $this->getComponenteCurricularId($options['componenteId'] ?? null);
         $anoLetivo = $this->getAno($options['ano'] ?? null);
 
         $userId = $this->getCurrentUserId();
