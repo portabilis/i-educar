@@ -26,7 +26,7 @@
       var xml = new ajax(getResultado);
       xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
   
-      var updateProfessores = function(){
+      var updateProfessorres = function(){
         resetSelect($professorComponenteField);
         $professorComponenteField.prop('disabled', false);
        
@@ -34,7 +34,7 @@
        
         
        
-       
+    
           
        
           
@@ -59,15 +59,18 @@
           };
   
           getResources(options);
-       
+     
   
         $professorComponenteField.change();
        
       };
   
       // bind onchange event
-      $componenteCurricularField.change(updateProfessores);
+      $componenteCurricularField.change(updateProfessorres);
      
+      $("#ref_cod_componente_curricular").change(function(){
+        updateProfessorres();
+      });
   
       
     }); // ready
