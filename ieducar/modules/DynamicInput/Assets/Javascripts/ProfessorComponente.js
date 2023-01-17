@@ -22,10 +22,10 @@
   
     
   
-      var updateProfessorres = function(){
+      var updateProfessores = function(){
        
 
-        if ($turmaField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
+        $("#ref_cod_componente_curricular").change(function(){
 
 
           $professorComponenteField.children().first().html('Aguarde, carregando...');
@@ -52,14 +52,14 @@
   
           getResources(options);
 
-        }
+        });
   
         $professorComponenteField.change();
        
       };
   
       // bind onchange event
-      $componenteCurricularField.change(updateProfessorres);
+      $componenteCurricularField.change(updateProfessores);
      
      
   
