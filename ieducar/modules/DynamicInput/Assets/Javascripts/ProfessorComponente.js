@@ -20,7 +20,7 @@
     
   
       var updateProfessores = function(){
-        resetSelect($professorComponenteField);
+      
 
         $("#ref_cod_componente_curricular").change(function(){
 
