@@ -70,6 +70,28 @@ class Portabilis_View_Helper_DynamicInput_ProfessorComponente extends Portabilis
         }
 
     }
+    else{
+
+        $professor_turma = ProfessorTurma::where('turma_id', $turmaId)->get(); 
+        foreach($professor_turma as $professores_turma){
+
+        
+        $pessoa = Pessoa::where('idpes', $professores_turma->servidor_id)->get(); 
+        foreach($pessoa as $pessoas){
+
+            $options[
+                '__' . $pessoas->idpes
+            ] = [
+                'value' => mb_strtoupper($pessoas->idpes." - ".$pessoas->nome, 'UTF-8'),
+                'checked' => "checked",
+                'group' => ''
+            ];
+
+        }
+            
+        }
+
+    } 
 
     $ultimo_nome = 'Selecione um professor';
              
