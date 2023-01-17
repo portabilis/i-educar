@@ -17,27 +17,21 @@
         
       }
   
-      function getResultado(xml) {
-        $professorComponenteTitleField.innerText = xml.getElementsByTagName("ce")[0]?.getAttribute("resp") == '0' ? 'Professor:' : 'Professor:';
-      }
+        $professorComponenteTitleField.innerText =  'Professor:';
+     
   
-      var xml = new ajax(getResultado);
-      xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
+    
   
       var updateProfessorres = function(){
-        resetSelect($professorComponenteField);
-        $professorComponenteField.prop('disabled', false);
        
-  
+
+        if ($turmaField.val() && $componenteCurricularField.val() && $componenteCurricularField.is(':enabled')) {
+
+
+          $professorComponenteField.children().first().html('Aguarde, carregando...');
        
-        
-       
-    
+
           
-       
-          
-          var xml = new ajax(getResultado);
-          xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
   
           var data = {
             ano      : $anoField.attr('value'),
@@ -57,7 +51,8 @@
           };
   
           getResources(options);
-     
+
+        }
   
         $professorComponenteField.change();
        
