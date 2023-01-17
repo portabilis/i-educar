@@ -64,6 +64,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic(['componenteCurricular'], ['required' => false]);
+        $this->inputsHelper()->dynamic('professorComponente', ['required' => false]);
 
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -135,7 +136,7 @@ return new class extends clsListagem {
             $this->data_inicial,
             $this->data_final,
             $this->fase_etapa,
-            $eh_professor ? $this->pessoa_logada : null,
+            $this->ref_cod_professor_componente,
             null,
             empty($this->ref_cod_escola) ? $escolasUsuario : null
         );
