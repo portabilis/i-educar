@@ -31,13 +31,34 @@
         resetSelect($frequenciaComponenteField);
         $frequenciaComponenteField.prop('disabled', false);
        
-  
+        var xml = new ajax(getResultado);
+        xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
+
+        var data = {
+          ano      : $anoField.attr('value'),
+          turma_id : $turmaField.attr('value'),
+          componente_id : $componenteCurricularField.attr('value'),
+          data_frequencia : $dataField.attr('value').toString()
+        };
+
+        var urlForGetFrequenciaComponentes = getResourceUrlBuilder.buildUrl(
+          '/module/DynamicInput/frequenciaComponente', 'frequenciasComponente', data
+        );
+
+        var options = {
+          url : urlForGetFrequenciaComponentes,
+          dataType : 'json',
+          success  : handleGetComponentesCurriculares
+        };
+
+        getResources(options);
        
         
        
         $("#ref_cod_componente_curricular").change(function(){
+
           
-       
+          resetSelect($frequenciaComponenteField);
           
           var xml = new ajax(getResultado);
           xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
