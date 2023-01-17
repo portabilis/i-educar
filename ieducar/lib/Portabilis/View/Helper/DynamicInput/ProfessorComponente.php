@@ -1,4 +1,11 @@
 <?php
+use App\Models\Frequencia;
+use App\Models\Pessoa;
+use App\Models\ProfessorTurma;
+use App\Models\ProfessorDisciplina;
+use App\Models\SerieTurma;
+use App\Models\Serie;
+use App\Models\Turma;
 
 class Portabilis_View_Helper_DynamicInput_ProfessorComponente extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
@@ -53,7 +60,7 @@ class Portabilis_View_Helper_DynamicInput_ProfessorComponente extends Portabilis
             
                 $pessoa = Pessoa::where('idpes', $professores_disciplina->ref_cod_servidor)->get(); 
                 foreach($pessoa as $pessoas){
-                    
+
                     $resources[$pessoas->idpes] = $pessoas->idpes.' - '.$pessoas->nome;
                     $ultimo_nome = $pessoas->nome;
 
