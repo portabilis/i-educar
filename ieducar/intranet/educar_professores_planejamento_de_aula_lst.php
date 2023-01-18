@@ -180,15 +180,15 @@ return new class extends clsListagem {
                     foreach ($componentesCurriculares as $componenteCurricular) {
                         $abreviatura .= $componenteCurricular['abreviatura'].'<br>';
                     }
-                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$abreviatura}</a>";
+                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$abreviatura}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
+                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">—</a>";
                 }
 
                 if (!empty($registro['cod_professor_registro'])) {
-                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor_registro']}</a>";
+                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['professor_registro']}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor_turma']}</a>";
+                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['professor_turma']}</a>";
                 }
 
                 $this->addLinhas($lista_busca);
