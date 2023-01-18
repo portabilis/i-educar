@@ -16,7 +16,7 @@ class clsPmieducarTipoAvaliacao extends Model
 
     public function __construct($cod_tipo_avaliacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $conceitual = null, $ref_cod_instituicao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}tipo_avaliacao";
 
@@ -112,6 +112,7 @@ class clsPmieducarTipoAvaliacao extends Model
     {
         if (is_numeric($this->cod_tipo_avaliacao) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -158,7 +159,7 @@ class clsPmieducarTipoAvaliacao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_tipo_avaliacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $date_data_cadastro = null, $date_data_exclusao = null, $int_ativo = null, $int_conceitual = null, $int_ref_cod_instituicao = null)
     {
@@ -181,22 +182,6 @@ class clsPmieducarTipoAvaliacao extends Model
         }
         if (is_string($str_nm_tipo)) {
             $filtros .= "{$whereAnd} nm_tipo LIKE '%{$str_nm_tipo}%'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ativo)) {
@@ -245,7 +230,7 @@ class clsPmieducarTipoAvaliacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -263,7 +248,7 @@ class clsPmieducarTipoAvaliacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

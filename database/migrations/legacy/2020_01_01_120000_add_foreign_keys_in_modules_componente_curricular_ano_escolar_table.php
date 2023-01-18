@@ -15,10 +15,10 @@ class AddForeignKeysInModulesComponenteCurricularAnoEscolarTable extends Migrati
     {
         Schema::table('modules.componente_curricular_ano_escolar', function (Blueprint $table) {
             $table->foreign('componente_curricular_id')
-               ->references('id')
-               ->on('modules.componente_curricular')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.componente_curricular')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

@@ -56,11 +56,12 @@ class UpdateRegistrationDateController extends Controller
         $newDateEnrollment = \DateTime::createFromFormat('d/m/Y', $request->get('nova_data_enturmacao'));
 
         $result = [];
+        $remanejadas = !empty($request->get('remanejadas'));
         foreach ($registrations as $registration) {
             $result[] = $registrationService->updateRegistrationDate($registration, $newDateRegistration);
 
             if ($newDateEnrollment) {
-                $registrationService->updateEnrollmentsDate($registration, $newDateEnrollment, !empty($request->get('remanejadas')));
+                $registrationService->updateEnrollmentsDate($registration, $newDateEnrollment, $remanejadas);
             }
         }
 
@@ -90,6 +91,9 @@ class UpdateRegistrationDateController extends Controller
             $query->whereHas('enrollments', function ($enrollmentQuery) use ($schoolClassId) {
                 $enrollmentQuery->where('ref_cod_turma', $schoolClassId);
             });
+            $query->with(['enrollments' => function ($enrollmentQuery) use ($schoolClassId) {
+                $enrollmentQuery->where('ref_cod_turma', $schoolClassId);
+            }]);
         }
 
         if ($request->get('ref_cod_serie')) {

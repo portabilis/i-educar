@@ -44,7 +44,7 @@ class Teacher extends Model
             ],
             'Professor' => [
                 'name' => 'Nome',
-                'social_name' => 'Nome social',
+                'social_name' => 'Nome social e/ou afetivo',
                 'cpf' => 'CPF',
                 'rg' => 'RG',
                 'rg_issue_date' => 'RG (Data Emissão)',
@@ -57,6 +57,7 @@ class Teacher extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
+                'race' => 'Raça'
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -65,10 +66,16 @@ class Teacher extends Model
                 'course' => 'Curso',
                 'year' => 'Ano',
                 'disciplines.disciplines' => 'Disciplinas',
+                'enrollments' => 'Matrículas',
             ],
             'Informações' => [
                 'phones.phones' => 'Telefones',
                 'disabilities.disabilities' => 'Deficiências',
+                'schooling_degree' => 'Escolaridade',
+                'high_school_type' => 'Tipo de ensino médio cursado',
+                'employee_postgraduates_complete' => 'Pós-Graduações concluídas',
+                'continuing_education_course' => 'Outros cursos de formação continuada',
+                'employee_graduation_complete' => 'Curso(s) superior(es) concluído(s)',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',
@@ -92,6 +99,11 @@ class Teacher extends Model
     public function getLabel()
     {
         return 'Professores';
+    }
+
+    public function getDescription()
+    {
+        return 'Os dados exportados serão contabilizados por quantidade de professores(as) alocados(as) no ano filtrado, agrupando as informações de cursos de formação dos docentes.';
     }
 
     /**

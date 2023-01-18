@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarAnoLetivoModuloTable extends Migration
     {
         Schema::table('pmieducar.ano_letivo_modulo', function (Blueprint $table) {
             $table->foreign(['ref_ref_cod_escola', 'ref_ano'])
-               ->references(['ref_cod_escola', 'ano'])
-               ->on('pmieducar.escola_ano_letivo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_cod_escola', 'ano'])
+                ->on('pmieducar.escola_ano_letivo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_modulo')
-               ->references('cod_modulo')
-               ->on('pmieducar.modulo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_modulo')
+                ->on('pmieducar.modulo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

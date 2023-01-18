@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Models\LegacyRace;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 
@@ -9,10 +10,9 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Detalhe da Pessoa';
 
-        $cod_pessoa = (int) $this->getQueryString('cod_pessoa');
+        $cod_pessoa = (int) $this->getQueryString(name: 'cod_pessoa');
 
-        $objPessoa = new clsPessoaFisica($cod_pessoa);
-        $db = new clsBanco();
+        $objPessoa = new clsPessoaFisica(int_idpes: $cod_pessoa);
 
         $detalhe = $objPessoa->queryRapida(
             $cod_pessoa,
@@ -44,34 +44,35 @@ return new class extends clsDetalhe {
             'nome_social'
         );
 
-        $objFoto = new clsCadastroFisicaFoto($cod_pessoa);
+        $objFoto = new clsCadastroFisicaFoto(idpes: $cod_pessoa);
         $caminhoFoto = $objFoto->detalhe();
         if ($caminhoFoto!=false) {
-            $this->addDetalhe(['Nome', $detalhe['nome'].'
-                <p><img height="117" src="' . (new UrlPresigner())->getPresignedUrl($caminhoFoto['caminho']) . '"/></p>']);
+            $this->addDetalhe(detalhe: ['Nome', $detalhe['nome'].'
+                <p><img height="117" src="' . (new UrlPresigner())->getPresignedUrl(url: $caminhoFoto['caminho']) . '"/></p>']);
         } else {
-            $this->addDetalhe(['Nome', $detalhe['nome']]);
+            $this->addDetalhe(detalhe: ['Nome', $detalhe['nome']]);
         }
 
         if ($detalhe['nome_social']) {
-            $this->addDetalhe(['Nome social', $detalhe['nome_social']]);
+            $this->addDetalhe(detalhe: ['Nome social e/ou afetivo', $detalhe['nome_social']]);
         }
 
-        $this->addDetalhe(['CPF', int2cpf($detalhe['cpf'])]);
+        $this->addDetalhe(detalhe: ['CPF', int2cpf(int: $detalhe['cpf'])]);
 
         if ($detalhe['data_nasc']) {
-            $this->addDetalhe(['Data de Nascimento', dataFromPgToBr($detalhe['data_nasc'])]);
+            $this->addDetalhe(detalhe: ['Data de Nascimento', dataFromPgToBr(data_original: $detalhe['data_nasc'])]);
         }
 
         // Cor/Raça.
-        $raca = new clsCadastroFisicaRaca($cod_pessoa);
+        $raca = new clsCadastroFisicaRaca(ref_idpes: $cod_pessoa);
         $raca = $raca->detalhe();
-        if (is_array($raca)) {
-            $raca = new clsCadastroRaca($raca['ref_cod_raca']);
-            $raca = $raca->detalhe();
+        if (is_array(value: $raca)) {
+            $nameRace = LegacyRace::query()
+                ->whereKey(id: $raca['ref_cod_raca'])
+                ->value(column: 'nm_raca');
 
-            if (is_array($raca)) {
-                $this->addDetalhe(['Raça', $raca['nm_raca']]);
+            if ($nameRace) {
+                $this->addDetalhe(detalhe: ['Raça', $nameRace]);
             }
         }
 
@@ -80,78 +81,78 @@ return new class extends clsDetalhe {
                 $end = ' nº ' . $detalhe['numero'];
             }
 
-            $this->addDetalhe(['Endereço', $detalhe['logradouro'] . ' ' . $end]);
+            $this->addDetalhe(detalhe: ['Endereço', $detalhe['logradouro'] . ' ' . $end]);
         }
 
         if ($detalhe['complemento']) {
-            $this->addDetalhe(['Complemento', $detalhe['complemento']]);
+            $this->addDetalhe(detalhe: ['Complemento', $detalhe['complemento']]);
         }
 
         if ($detalhe['cidade']) {
-            $this->addDetalhe(['Cidade', $detalhe['cidade']]);
+            $this->addDetalhe(detalhe: ['Cidade', $detalhe['cidade']]);
         }
 
         if ($detalhe['sigla_uf']) {
-            $this->addDetalhe(['Estado', $detalhe['sigla_uf']]);
+            $this->addDetalhe(detalhe: ['Estado', $detalhe['sigla_uf']]);
         }
 
         $zona = App_Model_ZonaLocalizacao::getInstance();
         if ($detalhe['zona_localizacao']) {
-            $this->addDetalhe([
-                'Zona Localização', $zona->getValue($detalhe['zona_localizacao'])
+            $this->addDetalhe(detalhe: [
+                'Zona Localização', $zona->getValue(key: $detalhe['zona_localizacao'])
             ]);
         }
 
         if ($detalhe['cep']) {
-            $this->addDetalhe(['CEP', int2cep($detalhe['cep'])]);
+            $this->addDetalhe(detalhe: ['CEP', int2cep(int: $detalhe['cep'])]);
         }
 
         if ($detalhe['fone_1']) {
             $this->addDetalhe(
-                ['Telefone 1', sprintf('(%s) %s', $detalhe['ddd_1'], $detalhe['fone_1'])]
+                detalhe: ['Telefone 1', sprintf('(%s) %s', $detalhe['ddd_1'], $detalhe['fone_1'])]
             );
         }
 
         if ($detalhe['fone_2']) {
             $this->addDetalhe(
-                ['Telefone 2', sprintf('(%s) %s', $detalhe['ddd_2'], $detalhe['fone_2'])]
+                detalhe: ['Telefone 2', sprintf('(%s) %s', $detalhe['ddd_2'], $detalhe['fone_2'])]
             );
         }
 
         if ($detalhe['fone_mov']) {
             $this->addDetalhe(
-                ['Celular', sprintf('(%s) %s', $detalhe['ddd_mov'], $detalhe['fone_mov'])]
+                detalhe: ['Celular', sprintf('(%s) %s', $detalhe['ddd_mov'], $detalhe['fone_mov'])]
             );
         }
 
         if ($detalhe['fone_fax']) {
             $this->addDetalhe(
-                ['Fax', sprintf('(%s) %s', $detalhe['ddd_fax'], $detalhe['fone_fax'])]
+                detalhe: ['Fax', sprintf('(%s) %s', $detalhe['ddd_fax'], $detalhe['fone_fax'])]
             );
         }
 
         if ($detalhe['url']) {
-            $this->addDetalhe(['Site', $detalhe['url']]);
+            $this->addDetalhe(detalhe: ['Site', $detalhe['url']]);
         }
 
         if ($detalhe['email']) {
-            $this->addDetalhe(['E-mail', $detalhe['email']]);
+            $this->addDetalhe(detalhe: ['E-mail', $detalhe['email']]);
         }
 
         if ($detalhe['sexo']) {
-            $this->addDetalhe(['Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino']);
+            $this->addDetalhe(detalhe: ['Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino']);
         }
 
-        $fileService = new FileService(new UrlPresigner);
-        $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
+        $fileService = new FileService(urlPresigner: new UrlPresigner);
+        $files = $fileService->getFiles(relation: LegacyIndividual::find($cod_pessoa));
 
-        if (count($files) > 0) {
-            $this->addHtml(view('uploads.upload-details', ['files' => $files])->render());
+        if (is_array(value: $files) && count(value: $files) > 0) {
+            $this->addHtml(html: view(view: 'uploads.upload-details', data: ['files' => $files])->render());
         }
 
         $obj_permissao = new clsPermissoes();
 
-        if ($obj_permissao->permissao_cadastra(43, $this->pessoa_logada, 7, null, true)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 43, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true)) {
             $this->url_novo = 'atendidos_cad.php';
             $this->url_editar = 'atendidos_cad.php?cod_pessoa_fj=' . $detalhe['idpes'];
         }
@@ -160,7 +161,7 @@ return new class extends clsDetalhe {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
+        $this->breadcrumb(currentPage: 'Pessoa física', breadcrumbs: ['educar_pessoas_index.php' => 'Pessoas']);
     }
 
     public function Formular()

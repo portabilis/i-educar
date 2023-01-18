@@ -24,10 +24,10 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            584,
-            $this->pessoa_logada,
-            3,
-            'educar_modulo_lst.php'
+            int_processo_ap: 584,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 3,
+            str_pagina_redirecionar: 'educar_modulo_lst.php'
         );
 
         if (is_numeric($this->cod_modulo)) {
@@ -40,7 +40,7 @@ return new class extends clsCadastro {
                 }
 
                 $obj_permissoes = new clsPermissoes();
-                if ($obj_permissoes->permissao_excluir(584, $this->pessoa_logada, 3)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
                     $this->fexcluir = true;
                 }
                 $retorno = 'Editar';
@@ -51,7 +51,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' etapa', [
+        $this->breadcrumb(currentPage: $nomeMenu . ' etapa', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
@@ -63,39 +63,39 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_modulo', $this->cod_modulo);
+        $this->campoOculto(nome: 'cod_modulo', valor: $this->cod_modulo);
 
         // Filtros de Foreign Keys
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $option = false;
         if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma()) {
             $option = true;
         }
 
-        $this->campoTexto('nm_tipo', 'Etapa', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
-        $this->campoNumero('num_etapas', 'Número de etapas', $this->num_etapas, 2, 2, true, null, null, null, null, null, $option);
-        $this->campoNumero('num_meses', 'Número de meses', $this->num_meses, 2, 2, false);
-        $this->campoNumero('num_semanas', 'Número de semanas', $this->num_semanas, 2, 2, false);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Etapa', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMemo(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, colunas: 60, linhas: 5);
+        $this->campoNumero(nome: 'num_etapas', campo: 'Número de etapas', valor: $this->num_etapas, tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true, descricao: null, descricao2: null, script: null, evento: null, duplo: null, disabled: $option);
+        $this->campoNumero(nome: 'num_meses', campo: 'Número de meses', valor: $this->num_meses, tamanhovisivel: 2, tamanhomaximo: 2);
+        $this->campoNumero(nome: 'num_semanas', campo: 'Número de semanas', valor: $this->num_semanas, tamanhovisivel: 2, tamanhomaximo: 2);
     }
 
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
-        if (LegacyStageType::alreadyExists($this->nm_tipo, $this->num_etapas)) {
+        if (LegacyStageType::alreadyExists(name: $this->nm_tipo, stagesNumber: $this->num_etapas)) {
             $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
 
             return false;
         }
 
-        $obj = new clsPmieducarModulo(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao, $this->num_etapas);
+        $obj = new clsPmieducarModulo(cod_modulo: null, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, nm_tipo: $this->nm_tipo, descricao: $this->descricao, num_meses: $this->num_meses, num_semanas: $this->num_semanas, data_cadastro: null, data_exclusao: null, ativo: 1, ref_cod_instituicao: $this->ref_cod_instituicao, num_etapas: $this->num_etapas);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -110,15 +110,15 @@ return new class extends clsCadastro {
     public function Editar()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
-        if (LegacyStageType::alreadyExists($this->nm_tipo, $this->num_etapas, $this->cod_modulo)) {
+        if (LegacyStageType::alreadyExists(name: $this->nm_tipo, stagesNumber: $this->num_etapas, id: $this->cod_modulo)) {
             $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
 
             return false;
         }
 
-        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao, $this->num_etapas);
+        $obj = new clsPmieducarModulo(cod_modulo: $this->cod_modulo, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, nm_tipo: $this->nm_tipo, descricao: $this->descricao, num_meses: $this->num_meses, num_semanas: $this->num_semanas, data_cadastro: null, data_exclusao: null, ativo: 1, ref_cod_instituicao: $this->ref_cod_instituicao, num_etapas: $this->num_etapas);
         $editou = $obj->edita();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
@@ -133,9 +133,9 @@ return new class extends clsCadastro {
     public function Excluir()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
+        $obj_permissoes->permissao_excluir(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
-        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
+        $obj = new clsPmieducarModulo(cod_modulo: $this->cod_modulo, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, nm_tipo: null, descricao: null, num_meses: null, num_semanas: null, data_cadastro: null, data_exclusao: null, ativo: 0);
         $modulo = $obj->detalhe();
 
         if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma()) {
@@ -163,7 +163,7 @@ return new class extends clsCadastro {
         }
 
         $obj = new clsPmieducarAnoLetivoModulo($this->cod_modulo);
-        $result = $obj->lista(null, null, null, $this->cod_modulo);
+        $result = $obj->lista(int_ref_cod_modulo: $this->cod_modulo);
 
         return !empty($result);
     }
@@ -175,7 +175,7 @@ return new class extends clsCadastro {
         }
 
         $obj = new clsPmieducarTurmaModulo($this->cod_modulo);
-        $result = $obj->lista(null, $this->cod_modulo);
+        $result = $obj->lista(int_ref_cod_modulo: $this->cod_modulo);
 
         if (!$result > 0) {
             return false;
@@ -186,7 +186,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Etapa';
+        $this->title = 'Etapa';
         $this->processoAp = '584';
     }
 };

@@ -21,13 +21,12 @@ return new class extends clsListagem {
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
 
-        $submit = false;
 
-        $this->addCabecalhos(['Matr&iacute;cula', 'CPF', 'Funcion&aacute;rio']);
+        $this->addCabecalhos(['Matrícula', 'CPF', 'Funcionário']);
 
         // Filtros de Busca
-        $this->campoTexto('campo_busca', 'Funcionário', '', 50, 255, false, false, false, 'Matrícula/CPF/Nome do Funcionário');
-        $this->campoOculto('com_matricula', $_GET['com_matricula']);
+        $this->campoTexto(nome: 'campo_busca', campo: 'Funcionário', valor: '', tamanhovisivel: 50, tamanhomaximo: 255, descricao: 'Matrícula/CPF/Nome do Funcionário');
+        $this->campoOculto(nome: 'com_matricula', valor: $_GET['com_matricula']);
 
         if ($_GET['campo_busca']) {
             $chave_busca = @$_GET['campo_busca'];
@@ -42,7 +41,7 @@ return new class extends clsListagem {
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
 
         $this->chave_campo = $_GET['chave_campo'];
-        $this->campoOculto('chave_campo', $this->chave_campo);
+        $this->campoOculto(nome: 'chave_campo', valor: $this->chave_campo);
         if (is_numeric($this->chave_campo)) {
             $chave = "[$this->chave_campo]";
         } else {
@@ -59,14 +58,14 @@ return new class extends clsListagem {
 
         if ($busca == 'S') {
             $obj_funcionario = new clsFuncionario();
-            $lst_funcionario = $obj_funcionario->lista(false, $chave_busca, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
+            $lst_funcionario = $obj_funcionario->lista(str_nome: $chave_busca, int_qtd_registros: $limite);
 
             if (!$lst_funcionario) {
-                $lst_funcionario = $obj_funcionario->lista($chave_busca, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
+                $lst_funcionario = $obj_funcionario->lista(str_matricula: $chave_busca, int_inicio_limit: $iniciolimit, int_qtd_registros: $limite, matricula_is_not_null: $com_matricula);
             }
         } else {
             $obj_funcionario = new clsFuncionario();
-            $lst_funcionario = $obj_funcionario->lista(false, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
+            $lst_funcionario = $obj_funcionario->lista(int_inicio_limit: $iniciolimit, int_qtd_registros: $limite, matricula_is_not_null: $com_matricula);
         }
 
         if ($lst_funcionario) {
@@ -124,7 +123,7 @@ return new class extends clsListagem {
             }
         }
         // Paginador
-        $this->addPaginador2('pesquisa_funcionario_lst.php', $total, $_GET, $this->nome, $limite);
+        $this->addPaginador2(strUrl: 'pesquisa_funcionario_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $limite);
 
         // Define Largura da Página
         $this->largura = '100%';
@@ -132,7 +131,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Pesquisa por Funcion&aacute;rio!';
+        $this->title = 'Pesquisa por Funcionário!';
         $this->processoAp         = '0';
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;

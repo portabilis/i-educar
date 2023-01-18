@@ -15,12 +15,12 @@ class AddForeignKeysInModulesEtapasCursoEducacensoTable extends Migration
     {
         Schema::table('modules.etapas_curso_educacenso', function (Blueprint $table) {
             $table->foreign('etapa_id')
-               ->references('id')
-               ->on('modules.etapas_educacenso');
+                ->references('id')
+                ->on('modules.etapas_educacenso');
 
             $table->foreign('curso_id')
-               ->references('cod_curso')
-               ->on('pmieducar.curso');
+                ->references('cod_curso')
+                ->on('pmieducar.curso');
         });
     }
 

@@ -6,7 +6,7 @@ use DateTime;
 
 abstract class ImportService
 {
-    const DELIMITER = '|';
+    public const DELIMITER = '|';
 
     /**
      * @var DateTime

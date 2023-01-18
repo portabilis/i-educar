@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarHistoricoDisciplinasTable extends Migration
     {
         Schema::table('pmieducar.historico_disciplinas', function (Blueprint $table) {
             $table->foreign(['ref_ref_cod_aluno', 'ref_sequencial'])
-               ->references(['ref_cod_aluno', 'sequencial'])
-               ->on('pmieducar.historico_escolar')
-               ->onUpdate('cascade')
-               ->onDelete('cascade');
+                ->references(['ref_cod_aluno', 'sequencial'])
+                ->on('pmieducar.historico_escolar')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

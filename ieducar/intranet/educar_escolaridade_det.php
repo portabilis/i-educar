@@ -6,7 +6,7 @@ return new class extends clsDetalhe {
      *
      * @var int
      */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
 
     /**
      * Título no topo da página
@@ -32,7 +32,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['descricao']) {
-            $this->addDetalhe(['Descri&ccedil;&atilde;o', $registro['descricao']]);
+            $this->addDetalhe(['Descrição', $registro['descricao']]);
         }
 
         $obj_permissoes = new clsPermissoes();

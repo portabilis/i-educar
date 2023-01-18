@@ -16,7 +16,7 @@ Alterar estado do Lead no funil do RD Station (API)
 http://ajuda.rdstation.com.br/hc/pt-br/articles/200310699-Alterar-estado-do-Lead-no-funil-do-RD-Station-API-
 
 Integrar formulÃ¡rio no site ou sistema prÃ³prio para CriaÃ§Ã£o de Lead (API)
-http://ajuda.rdstation.com.br/hc/pt-br/articles/200310589-Integrar-formul&aacute;rio-no-site-ou-sistema-pr&oacute;prio-para-Cria&ccedil;&atilde;o-de-Lead-API-
+http://ajuda.rdstation.com.br/hc/pt-br/articles/200310589-Integrar-formulário-no-site-ou-sistema-pr&oacute;prio-para-Criação-de-Lead-API-
 **/
 
 class RDStationAPI

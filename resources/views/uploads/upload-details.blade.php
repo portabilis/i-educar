@@ -14,7 +14,7 @@
                             <td> {{$file->original_name}} </td>
                             <td> {{$file->created_at->format('d/m/Y')}} </td>
                             <td>
-                                <a class="decorated" target="_blank" href="{{$file->url}}">Visualizar</a>
+                                <a class="decorated" target="_blank" rel="noopener" href="{{$file->url}}">Visualizar</a>
                             </td>
                         </div>
                         </tr>

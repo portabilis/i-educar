@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyRegistration;
 use App\Process;
 
 return new class extends clsCadastro {
@@ -54,7 +56,6 @@ return new class extends clsCadastro {
             $this->$key = $value;
         }
 
-        //$this->url_cancelar = "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
         $this->breadcrumb('Registro da reclassificação da matrícula', [
@@ -88,25 +89,32 @@ return new class extends clsCadastro {
         $cursos = [];
 
         $escolaAluno = $this->ref_ref_cod_escola;
+        $registration = LegacyRegistration::query()->find($this->cod_matricula);
 
-        $objEscolaCurso = new clsPmieducarEscolaCurso();
+        $lst_escola_curso = LegacyCourse::query()
+            ->active()
+            ->whereSchool(
+                school: $escolaAluno,
+                year:$registration->ano
+            )
+            ->orderBy('nm_curso')
+            ->get(
+                [
+                    'cod_curso',
+                    'nm_curso',
+                    'descricao'
+                ])
+        ;
 
-        $listaEscolaCurso = $objEscolaCurso->lista($escolaAluno);
-
-        if ($listaEscolaCurso) {
-            foreach ($listaEscolaCurso as $escolaCurso) {
-                $objCurso = new clsPmieducarCurso($escolaCurso['ref_cod_curso']);
-                $detCurso = $objCurso->detalhe();
-                $nomeCurso = $detCurso['nm_curso'];
-                $cursos[$escolaCurso['ref_cod_curso']] = $nomeCurso;
-            }
+        foreach ($lst_escola_curso as $escolaCurso) {
+            $cursos[$escolaCurso->id] = $escolaCurso->name;
         }
 
         $this->campoOculto('serie_matricula', $this->ref_ref_cod_serie);
         $this->campoLista('ref_cod_curso', 'Curso', $cursos, $this->ref_cod_curso, 'getSerie();');
-        $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', ['' => 'Selecione uma série'], '');
-        $this->inputsHelper()->date('data_cancel', ['label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
-        $this->campoMemo('descricao_reclassificacao', 'Descri&ccedil;&atilde;o', $this->descricao_reclassificacao, 100, 10, true);
+        $this->campoLista('ref_ref_cod_serie', 'Série', ['' => 'Selecione uma série'], '');
+        $this->inputsHelper()->date('data_cancel', ['label' => 'Data da reclassificação', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
+        $this->campoMemo('descricao_reclassificacao', 'Descrição', $this->descricao_reclassificacao, 100, 10, true);
 
         $this->acao_enviar = 'if(confirm("Deseja reclassificar está matrícula?"))acao();';
     }
@@ -130,13 +138,11 @@ return new class extends clsCadastro {
                 $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
                 return false;
-                die();
             }
         } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
             $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
             return false;
-            die();
         }
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
@@ -242,7 +248,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Reclassificar Matr&iacute;cula';
+        $this->title = 'Reclassificar Matrícula';
         $this->processoAp = Process::RECLASSIFY_REGISTRATION;
     }
 };

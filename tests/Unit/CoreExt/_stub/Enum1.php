@@ -1,10 +1,8 @@
 <?php
 
-
-
 class CoreExt_Enum1Stub extends CoreExt_Enum
 {
-    const ONE = 1;
+    public const ONE = 1;
 
     protected $_data = [
         self::ONE => 1

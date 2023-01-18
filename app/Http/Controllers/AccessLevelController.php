@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use App\Models\LegacyUserType;
-use App\Services\CacheManager;
 use App\Services\MenuCacheService;
 use App\User;
 use Exception;
@@ -12,7 +11,6 @@ use Illuminate\Database\Connection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Throwable;
 
@@ -61,6 +59,7 @@ class AccessLevelController extends Controller
 
         app(MenuCacheService::class)->flushMenuTag($userType->cod_tipo_usuario);
     }
+
     /**
      * @param Request $request
      *
@@ -92,10 +91,10 @@ class AccessLevelController extends Controller
 
         $userProcesses = $user->type->getProcesses();
 
-        $menus = Menu::user($user)->map(function (Menu $menu) use ($userProcesses) {
+        $menus = Menu::user($user)->map(function (Menu $menu) use ($userProcesses, $userType) {
             return new Collection([
                 'menu' => $menu,
-                'processes' => $menu->processes($menu->title, $userProcesses),
+                'processes' => $menu->processes($menu->title, $userProcesses, $userType->nivel),
             ]);
         });
 

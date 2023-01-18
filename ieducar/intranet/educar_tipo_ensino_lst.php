@@ -1,34 +1,12 @@
 <?php
 
+use App\Models\LegacyEducationType;
+
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_tipo_ensino;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -55,7 +33,7 @@ return new class extends clsListagem {
             case 1:
                 $this->addCabecalhos([
                     'Tipo Ensino',
-                    'Institui&ccedil;&atilde;o'
+                    'Instituição'
                 ]);
                 break;
 
@@ -73,24 +51,23 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_tipo_ensino = new clsPmieducarTipoEnsino();
-        $obj_tipo_ensino->setOrderby('nm_tipo ASC');
-        $obj_tipo_ensino->setLimite($this->limite, $this->offset);
+        $query = LegacyEducationType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
 
-        $lista = $obj_tipo_ensino->lista(
-            $this->cod_tipo_ensino,
-            null,
-            null,
-            $this->nm_tipo,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nm_tipo)) {
+            $query->where('nm_tipo', 'ilike', '%' . $this->nm_tipo . '%');
+        }
 
-        $total = $obj_tipo_ensino->_total;
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
@@ -134,7 +111,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Ensino';
+        $this->title = 'Tipo Ensino';
         $this->processoAp = '558';
     }
 };

@@ -11,6 +11,7 @@ class FileController extends Controller
     public function upload(FileRequest $request, FileService $fileService)
     {
         $file = $request->file('file');
+
         try {
             $url = $fileService->upload($file);
         } catch (Throwable $e) {

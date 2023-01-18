@@ -2,20 +2,32 @@
 
 namespace App\Models;
 
+use App\Models\Builders\DistrictBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class District extends Model
 {
-    use DateSerializer, HasIbgeCode;
+    use DateSerializer;
+    use HasIbgeCode;
+    use LegacyAttribute;
 
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = DistrictBuilder::class;
     /**
      * @var array
      */
     protected $fillable = [
-        'city_id', 'name', 'ibge_code',
+        'city_id',
+        'name',
+        'ibge_code',
     ];
 
     /**

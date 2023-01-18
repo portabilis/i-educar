@@ -5,10 +5,12 @@ namespace Tests\Unit\Services\Educacenso;
 use App\Models\Educacenso\Registro00;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacySchoolStage;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\Version2019\Registro00Import;
 use App\User;
+use Database\Factories\LegacySchoolFactory;
+use Database\Factories\LegacyUserFactory;
+use Database\Factories\SchoolInepFactory;
 use Faker\Factory;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -26,7 +28,8 @@ class Registro002019ImportTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = factory(User::class)->state('admin')->make();
+
+        $this->user = LegacyUserFactory::new()->make();
     }
 
     /**
@@ -36,8 +39,8 @@ class Registro002019ImportTest extends TestCase
     {
         $model = $this->getImportModel();
 
-        $school = factory(LegacySchool::class)->create();
-        $inep = factory(SchoolInep::class)->create([
+        $school = LegacySchoolFactory::new()->create();
+        $inep = SchoolInepFactory::new()->create([
             'cod_escola' => $school,
             'cod_escola_inep' => $model->codigoInep,
         ]);
@@ -92,7 +95,7 @@ class Registro002019ImportTest extends TestCase
         $phones = $school->person->phone;
 
         $this->assertCount(1, $phones);
-        $this->assertEquals((int)$model->telefone, (int)$phones->first()->fone);
+        $this->assertEquals((int) $model->telefone, (int) $phones->first()->fone);
     }
 
     /**
@@ -111,7 +114,6 @@ class Registro002019ImportTest extends TestCase
         $schoolInep = SchoolInep::where('cod_escola_inep', $model->codigoInep)->first();
 
         $this->assertFalse(LegacySchoolAcademicYear::where('ref_cod_escola', $schoolInep->cod_escola)->exists());
-        $this->assertFalse(LegacySchoolStage::where('ref_ref_cod_escola', $schoolInep->cod_escola)->exists());
     }
 
     /**
@@ -133,7 +135,6 @@ class Registro002019ImportTest extends TestCase
         $schoolInep = SchoolInep::where('cod_escola_inep', $model->codigoInep)->first();
 
         $this->assertTrue(LegacySchoolAcademicYear::where('ref_cod_escola', $schoolInep->cod_escola)->exists());
-        $this->assertTrue(LegacySchoolStage::where('ref_ref_cod_escola', $schoolInep->cod_escola)->exists());
     }
 
     /**

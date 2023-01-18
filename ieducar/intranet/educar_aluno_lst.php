@@ -1,30 +1,15 @@
 <?php
 
+use App\Models\DataSearch\StudentFilter;
+use App\Models\LegacyStudent;
+
 return new class extends clsListagem {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
+    public $cod_inep;
+    public $aluno_estado_id;
     public $cod_aluno;
-    public $ref_idpes_responsavel;
-    public $ref_cod_aluno_beneficio;
     public $ref_cod_religiao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -36,7 +21,6 @@ return new class extends clsListagem {
     public $matriculado;
     public $inativado;
     public $nome_responsavel;
-    public $cpf_responsavel;
     public $nome_pai;
     public $nome_mae;
     public $data_nascimento;
@@ -47,6 +31,7 @@ return new class extends clsListagem {
     public $ref_cod_serie;
     public $cpf_aluno;
     public $rg_aluno;
+    public $situacao_matricula_id;
 
     public function Gerar()
     {
@@ -59,177 +44,130 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->campoNumero('cod_aluno', _cl('aluno.detalhe.codigo_aluno'), $this->cod_aluno, 20, 9, false);
+        $this->campoNumero(nome: 'cod_aluno', campo: _cl(key: 'aluno.detalhe.codigo_aluno'), valor: $this->cod_aluno, tamanhovisivel: 20, tamanhomaximo: 9);
 
         if ($configuracoes['mostrar_codigo_inep_aluno']) {
-            $this->campoNumero('cod_inep', 'Código INEP', $this->cod_inep, 20, 255, false);
+            $this->campoNumero(nome: 'cod_inep', campo: 'Código INEP', valor: $this->cod_inep, tamanhovisivel: 20, tamanhomaximo: 255);
         }
 
-        $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
-        $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
-        $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
-        $this->campoCpf('cpf_aluno', 'CPF', $this->cpf_aluno);
-        $this->campoTexto('rg_aluno', 'RG', $this->rg_aluno);
-        $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
-        $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
-        $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
-        $this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
+        $this->campoRA(nome: 'aluno_estado_id', campo: 'Código rede estadual do aluno (RA)', valor: $this->aluno_estado_id);
+        $this->campoTexto(nome: 'nome_aluno', campo: 'Nome do aluno', valor: $this->nome_aluno, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoData(nome: 'data_nascimento', campo: 'Data de Nascimento', valor: $this->data_nascimento);
+        $this->campoCpf(nome: 'cpf_aluno', campo: 'CPF', valor: $this->cpf_aluno);
+        $this->campoTexto(nome: 'rg_aluno', campo: 'RG', valor: $this->rg_aluno);
+        $this->campoTexto(nome: 'nome_pai', campo: 'Nome do Pai', valor: $this->nome_pai, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nome_mae', campo: 'Nome da Mãe', valor: $this->nome_mae, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nome_responsavel', campo: 'Nome do Responsável', valor: $this->nome_responsavel, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoRotulo(nome: 'filtros_matricula', campo: '<b>Filtros de alunos</b>');
 
-        $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
+        $this->inputsHelper()->integer(attrName: 'ano', inputOptions: ['required' => false, 'value'=> $this->ano,'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
+        $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'value' => $this->ref_cod_instituicao]);
+        $this->inputsHelper()->dynamic(helperNames: 'escolaSemFiltroPorUsuario', inputOptions: ['required' => false, 'value' => $this->ref_cod_escola,'label_hint'=>'Retorna alunos com matrículas na escola selecionada']);
+        $this->inputsHelper()->dynamic(helperNames: 'curso', inputOptions: ['required' => false,'label_hint'=>'Retorna alunos com matrículas no curso selecionado']);
+        $this->inputsHelper()->dynamic(helperNames: 'serie', inputOptions: ['required' => false,'label_hint'=>'Retorna alunos com matrículas na série selecionada']);
 
         $obj_permissoes = new clsPermissoes();
-        $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
+        $cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
 
         if ($cod_escola) {
-            $this->campoCheck('meus_alunos', 'Meus Alunos', $_GET['meus_alunos']);
-            $ref_cod_escola = false;
+            $this->campoCheck(nome: 'meus_alunos', campo: 'Meus Alunos', valor: $_GET['meus_alunos']);
             if ($_GET['meus_alunos']) {
-                $ref_cod_escola = $cod_escola;
+                $this->ref_cod_escola = $cod_escola;
             }
         }
 
-        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
-            $cabecalhos = ['Código Aluno',
-                'Nome do Aluno',
-                'Nome da Mãe',
-                'Nome do Responsável',
-                'CPF Responsável',];
-        } else {
-            $cabecalhos = ['Código Aluno',
-                'Código INEP',
-                'Nome do Aluno',
-                'Nome da Mãe',
-                'Nome do Responsável',
-                'CPF Responsável',];
+        $cabecalhos = ['Código Aluno',
+            $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? 'Código INEP' : null,
+            'Nome do Aluno',
+            'Nome da Mãe',
+            'Nome do Responsável',
+            'CPF Responsável'
+        ];
+
+        $this->addCabecalhos(coluna: array_filter(array: $cabecalhos));
+
+        $validator_date = Validator::make(request()->only(keys: 'data_nascimento'), ['data_nascimento' => ['nullable', 'date_format:d/m/Y', 'after_or_equal:1990-01-01']]);
+        if ($validator_date->fails()) {
+            $this->data_nascimento = null;
         }
+        $this->cod_aluno = preg_replace(pattern: '/\D/', replacement: '', subject: $this->cod_aluno);
+        $this->cod_inep = preg_replace(pattern: '/\D/', replacement: '', subject: $this->cod_inep);
+        $this->nome_aluno = $this->cleanNameSearch(name: $this->nome_aluno);
+        $this->nome_pai = $this->cleanNameSearch(name: $this->nome_pai);
+        $this->nome_mae = $this->cleanNameSearch(name: $this->nome_mae);
 
-        $this->addCabecalhos($cabecalhos);
+        $dataFilter = [
+            'rg' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->rg_aluno),
+            'year' => $this->ano,
+            'cpf' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno),
+            'inep' => $this->cod_inep,
+            'grade' => $this->ref_cod_serie,
+            'school' => $this->ref_cod_escola,
+            'course' => $this->ref_cod_curso,
+            'birthdate' => $this->data_nascimento,
+            'fatherName' => $this->nome_pai,
+            'motherName' => $this->nome_mae,
+            'studentName' => $this->nome_aluno,
+            'studentCode' => (int) $this->cod_aluno > 0 ? $this->cod_aluno : null,
+            'stateNetwork' => $this->aluno_estado_id,
+            'responsableName' => $this->nome_responsavel,
+            'perPage' => 20,
+            'pageName' => $this->nome,
+        ];
 
-        // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $aluno = new clsPmieducarAluno();
-        $aluno->setLimite($this->limite, $this->offset);
+        $studentFilter = new StudentFilter(...$dataFilter);
+        $students = LegacyStudent::query()->findStudentWithMultipleSearch(studentFilter: $studentFilter);
 
-        $alunos = $aluno->lista2(
-            $this->cod_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->nome_aluno,
-            null,
-            idFederal2int($this->cpf_responsavel),
-            null,
-            null,
-            null,
-            $ref_cod_escola,
-            null,
-            $this->data_nascimento,
-            $this->nome_pai,
-            $this->nome_mae,
-            $this->nome_responsavel,
-            $this->cod_inep,
-            $this->aluno_estado_id,
-            $this->ano,
-            $this->ref_cod_instituicao,
-            $this->ref_cod_escola,
-            $this->ref_cod_curso,
-            $this->ref_cod_serie,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            idFederal2int($this->cpf_aluno),
-            idFederal2int($this->rg_aluno)
-        );
-
-        $total = $aluno->_total;
-
-        foreach ($alunos as $registro) {
-            $nomeAluno = $registro['nome_aluno'];
-            $nomeSocial = $registro['nome_social'];
+        foreach ($students as $student) {
+            $nomeAluno = $student->person->name;
+            $nomeSocial = $student->individual->nome_social;
 
             if ($nomeSocial) {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
             }
 
-            // responsavel
-            $aluno->cod_aluno = $registro['cod_aluno'];
-            $responsavel = $aluno->getResponsavelAluno();
-            $nomeResponsavel = mb_strtoupper($responsavel['nome_responsavel']);
+            $nomeResponsavel = mb_strtoupper(string: $student->getGuardianName() ?? '-');
+            $cpfResponsavel  = ucfirst(string: $student->getGuardianCpf());
+            $nomeMae         = mb_strtoupper(string: $student->individual->mother->name ?? '-');
 
-            if (!$configuracoes['mostrar_codigo_inep_aluno']) {
-                $linhas = [
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
-                ];
-            } else {
-                $linhas = [
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['codigo_inep']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
-                ];
-            }
+            $linhas = array_filter(array: [
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
+                $configuracoes['mostrar_codigo_inep_aluno'] ===  1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->inepNumber</a>" : null,
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>"
+                ]);
 
-            $this->addLinhas($linhas);
+            $this->addLinhas(linha: $linhas);
         }
 
-        $this->addPaginador2('educar_aluno_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_aluno_lst.php', intTotalRegistros: $students->total(), mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
-        $usuarioTemPermissaoCadastro = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
+        $bloquearCadastroAluno = dbBool(val: $configuracoes['bloquear_cadastro_aluno']);
+        $usuarioTemPermissaoCadastro = $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
         $usuarioPodeCadastrar = $usuarioTemPermissaoCadastro && $bloquearCadastroAluno == false;
-
-        // Verifica se o usuário tem permissão para cadastrar um aluno.
-        // O sistema irá validar o cadastro de permissões e o parâmetro
-        // "bloquear_cadastro_aluno" da instituição.
 
         if ($usuarioPodeCadastrar) {
             $this->acao = 'go("/module/Cadastro/aluno")';
             $this->nome_acao = 'Novo';
         }
 
-        if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "students")'];
-            $this->array_botao = ['Exportar para planilha'];
-            $this->array_botao_id = ['export-btn'];
-        }
-
         $this->largura = '100%';
-
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
-
-        $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
+        $this->breadcrumb(currentPage: 'Alunos', breadcrumbs: ['/intranet/educar_index.php' => 'Escola']);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Aluno';
+        $this->title = 'Aluno';
         $this->processoAp = '578';
+    }
+
+    public function cleanNameSearch($name)
+    {
+        return trim(string: preg_replace(pattern: '/\W/', replacement: ' ', subject: limpa_acentos(str_nome: $name)));
     }
 };

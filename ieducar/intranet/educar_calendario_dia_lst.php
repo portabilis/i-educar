@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $ref_cod_calendario_ano_letivo;
     public $mes;
     public $dia;
@@ -40,7 +16,6 @@ return new class extends clsListagem {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_escola;
     public $ref_cod_instituicao;
 
@@ -53,20 +28,19 @@ return new class extends clsListagem {
         }
 
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if (!$this->ref_cod_escola) {
-            $this->ref_cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
+            $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
         }
         if (!$this->ref_cod_instituicao) {
-            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         }
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Calendario Ano Letivo',
             'Dia',
             'Mes',
-
             'Calendario Dia Motivo'
         ]);
 
@@ -79,39 +53,35 @@ return new class extends clsListagem {
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_calendario_dia = new clsPmieducarCalendarioDia();
-        $obj_calendario_dia->setOrderby('descricao ASC');
-        $obj_calendario_dia->setLimite($this->limite, $this->offset);
+        $obj_calendario_dia->setOrderby(strNomeCampo: 'descricao ASC');
+        $obj_calendario_dia->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_calendario_dia->lista(
-            $this->ref_cod_calendario_ano_letivo,
-            $this->mes,
-            $this->dia,
-            null,
-            null,
-            $this->ref_cod_calendario_dia_motivo,
-            $this->ref_cod_calendario_atividade,
-            $this->descricao_ini,
-            $this->descricao_fim,
-            null,
-            null,
-            1,
-            $this->ref_cod_escola
+            int_ref_cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo,
+            int_mes: $this->mes,
+            int_dia: $this->dia,
+            int_ref_cod_calendario_dia_motivo: $this->ref_cod_calendario_dia_motivo,
+            str_descricao: $this->ref_cod_calendario_atividade,
+            date_descricao_fim: $this->descricao_ini,
+            date_data_cadastro_ini: $this->descricao_fim,
+            date_data_exclusao_fim: 1,
+            int_ativo: $this->ref_cod_escola
         );
 
         $total = $obj_calendario_dia->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_ref_cod_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo($registro['ref_cod_calendario_dia_motivo']);
+                $obj_ref_cod_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo(cod_calendario_dia_motivo: $registro['ref_cod_calendario_dia_motivo']);
                 $det_ref_cod_calendario_dia_motivo = $obj_ref_cod_calendario_dia_motivo->detalhe();
                 $registro['ref_cod_calendario_dia_motivo'] = $det_ref_cod_calendario_dia_motivo['nm_motivo'];
 
-                $obj_ref_cod_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo($registro['ref_cod_calendario_ano_letivo']);
+                $obj_ref_cod_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $registro['ref_cod_calendario_ano_letivo']);
                 $det_ref_cod_calendario_ano_letivo = $obj_ref_cod_calendario_ano_letivo->detalhe();
                 $registro['ano'] = $det_ref_cod_calendario_ano_letivo['ano'];
 
-                $this->addLinhas([
+                $this->addLinhas(linha: [
                     "<a href=\"educar_calendario_dia_cad.php?ref_cod_calendario_ano_letivo={$registro['ref_cod_calendario_ano_letivo']}&ano={$registro['ano']}&mes={$registro['mes']}&dia={$registro['dia']}\">{$registro['ano']}</a>",
                     "<a href=\"educar_calendario_dia_cad.php?ref_cod_calendario_ano_letivo={$registro['ref_cod_calendario_ano_letivo']}&ano={$registro['ano']}&mes={$registro['mes']}&dia={$registro['dia']}\">{$registro['dia']}</a>",
                     "<a href=\"educar_calendario_dia_cad.php?ref_cod_calendario_ano_letivo={$registro['ref_cod_calendario_ano_letivo']}&ano={$registro['ano']}&mes={$registro['mes']}&dia={$registro['dia']}\">{$registro['mes']}</a>",
@@ -119,9 +89,9 @@ return new class extends clsListagem {
                 ]);
             }
         }
-        $this->addPaginador2('educar_calendario_dia_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_calendario_dia_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(0, $this->pessoa_logada, 0)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 0, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 0)) {
             $this->acao = 'go("educar_calendario_dia_cad.php")';
             $this->nome_acao = 'Novo';
         }
@@ -131,11 +101,9 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calendario Dia';
+        $this->title = 'Calendario Dia';
         $this->processoAp = '621';
     }
 };
-
-?>
 
 

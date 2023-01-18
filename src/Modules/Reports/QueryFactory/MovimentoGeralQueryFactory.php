@@ -344,7 +344,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                             end)
                     )
                     and mt.sequencial = 1
-                    and (coalesce(mt.data_enturmacao, m.data_cadastro) > :data_inicial::date and coalesce(mt.data_enturmacao, m.data_cadastro) < :data_final::date)
+                    and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
             ) as admitidos,
             (
                 select count(cod_matricula)
@@ -420,7 +420,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         from pmieducar.matricula_turma
                         where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
                     )
-                    and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
+                    and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date and mt.remanejado_mesma_turma = false
             ) as rem,
             (
                 select count(m.cod_matricula)

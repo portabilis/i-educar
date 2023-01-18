@@ -15,14 +15,14 @@ class AddForeignKeysInModulesComponenteCurricularTurmaTable extends Migration
     {
         Schema::table('modules.componente_curricular_turma', function (Blueprint $table) {
             $table->foreign('turma_id')
-               ->references('cod_turma')
-               ->on('pmieducar.turma')
-               ->onDelete('cascade');
+                ->references('cod_turma')
+                ->on('pmieducar.turma')
+                ->onDelete('cascade');
 
             $table->foreign('componente_curricular_id')
-               ->references('id')
-               ->on('modules.componente_curricular')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.componente_curricular')
+                ->onDelete('restrict');
         });
     }
 

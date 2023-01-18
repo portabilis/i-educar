@@ -7,13 +7,6 @@ function trocaDisplay(id) {
   element.style.display = (element.style.display == 'none') ? 'inline' : 'none';
 }
 
-function popless() {
-  let campoServidor = #cod_servidor;
-  let campoInstituicao = #ref_cod_instituicao;
-  pesquisa_valores_popless('educar_servidor_nivel_cad.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao, '');
-}
-
-
 function makeDialog (params) {
   let container = $j('#dialog-container');
 

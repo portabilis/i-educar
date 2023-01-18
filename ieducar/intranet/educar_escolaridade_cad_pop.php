@@ -49,7 +49,7 @@ return new class extends clsCadastro {
         $this->campoOculto('idesco', $this->idesco);
 
         // text
-        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, true);
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, true);
 
         $resources = [1 => 'Fundamental incompleto',
                            2 => 'Fundamental completo',
@@ -73,11 +73,9 @@ return new class extends clsCadastro {
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-
-            return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -92,7 +90,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escolaridade';
+        $this->title = 'Escolaridade';
         $this->processoAp = '632';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

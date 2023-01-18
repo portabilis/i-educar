@@ -1,20 +1,33 @@
 <?php
 
-use App\Models\LegacySchoolClass;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolClassStage;
-use App\Models\LegacyStageType;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolClassStageFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacySchoolClassStage::class;
 
-$factory->define(LegacySchoolClassStage::class, function (Faker $faker) {
-    return [
-        'ref_cod_turma' => factory(LegacySchoolClass::class)->create(),
-        'ref_cod_modulo' => factory(LegacyStageType::class)->state('unique')->make(),
-        'sequencial' => $faker->numberBetween(1, 9),
-        'data_inicio' => now()->subMonths(3),
-        'data_fim' => now()->addMonths(3),
-        'dias_letivos' => $faker->numberBetween(150, 200),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_turma' => LegacySchoolClassFactory::new()->create(),
+            'ref_cod_modulo' => LegacyStageTypeFactory::new()->unique()->make(),
+            'sequencial' => $this->faker->numberBetween(1, 9),
+            'data_inicio' => now()->subMonths(3),
+            'data_fim' => now()->addMonths(3),
+            'dias_letivos' => $this->faker->numberBetween(150, 200),
+        ];
+    }
+}

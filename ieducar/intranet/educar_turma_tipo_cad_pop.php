@@ -1,13 +1,9 @@
 <?php
 
-return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
+use App\Models\LegacySchoolClassType;
 
+return new class extends clsCadastro {
+    public $pessoa_logada;
     public $cod_turma_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -26,25 +22,19 @@ return new class extends clsCadastro {
         $this->cod_turma_tipo=$_GET['cod_turma_tipo'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(570, $this->pessoa_logada, 7, 'educar_turma_tipo_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 570, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_turma_tipo_lst.php');
 
         if (is_numeric($this->cod_turma_tipo)) {
-            $obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo);
-            $registro  = $obj->detalhe();
+            $registro = LegacySchoolClassType::findOrFail($this->cod_turma_tipo)->getAttributes();
             if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
                 }
 
-                //$obj_ref_cod_escola = new clsPmieducarEscola( $this->ref_cod_escola );
-                //$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                //$this->ref_cod_instituicao = $det_ref_cod_escola["ref_cod_instituicao"];
-
-                $this->fexcluir = $obj_permissoes->permissao_excluir(570, $this->pessoa_logada, 7);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 570, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_turma_tipo_det.php?cod_turma_tipo={$registro["cod_turma_tipo"]}" : "educar_turma_tipo_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -54,7 +44,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_turma_tipo', $this->cod_turma_tipo);
+        $this->campoOculto(nome: 'cod_turma_tipo', valor: $this->cod_turma_tipo);
 
         if ($_GET['precisa_lista']) {
             $obrigatorio = true;
@@ -62,18 +52,26 @@ return new class extends clsCadastro {
             $get_escola = false;
             include('include/pmieducar/educar_campo_lista.php');
         } else {
-            $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+            $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
         }
         // text
-        $this->campoTexto('nm_tipo', 'Turma Tipo', $this->nm_tipo, 30, 255, true);
-        $this->campoTexto('sgl_tipo', 'Sigla', $this->sgl_tipo, 15, 15, true);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Turma Tipo', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'sgl_tipo', campo: 'Sigla', valor: $this->sgl_tipo, tamanhovisivel: 15, tamanhomaximo: 15, obrigatorio: true);
     }
 
     public function Novo()
     {
-        $obj = new clsPmieducarTurmaTipo(null, null, $this->pessoa_logada, $this->nm_tipo, $this->sgl_tipo, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $classType = new LegacySchoolClassType();
+        $classType->ref_usuario_cad = $this->pessoa_logada;
+        $classType->nm_tipo = $this->nm_tipo;
+        $classType->sgl_tipo = $this->sgl_tipo;
+        $classType->data_cadastro = now();
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $classType->ref_cod_instituicao = $this->ref_cod_instituicao;
+        }
+        $classType->ativo = 1;
+
+        if ($classType->save()) {
             echo "<script>
                         if (parent.document.getElementById('ref_cod_turma_tipo').disabled)
                             parent.document.getElementById('ref_cod_turma_tipo').options[0] = new Option('Selectione um tipo de turma', '', false, false);
@@ -83,11 +81,9 @@ return new class extends clsCadastro {
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-
-            return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -111,7 +107,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Turma Tipo';
+        $this->title = 'Turma Tipo';
         $this->processoAp = '570';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

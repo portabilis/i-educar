@@ -65,8 +65,8 @@
         <tbody>
         @forelse($notifications as $notification)
             <tr @if(!$notification->read_at) class="unread" @endif>
-                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank">{!! $notification->text !!}</a></td>
-                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank" class="text-status"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
+                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank" rel="noopener">{!! $notification->text !!}</a></td>
+                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank" rel="noopener" class="text-status"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
                 <td>{{$notification->created_at->format('d/m/Y H:i')}}</td>
             </tr>
         @empty
@@ -100,15 +100,15 @@
     </script>
 
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Curso.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Curso.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
 @endprepend

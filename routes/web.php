@@ -1,12 +1,34 @@
 <?php
 
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\SchoolClassController;
+use App\Http\Controllers\WebController;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
-Route::redirect('/', 'intranet/index.php');
+Route::redirect('/', '/web');
+
+Route::view('/docs-api', 'docs/api/index');
+
+Route::redirect('intranet/index.php', '/web')
+    ->name('home');
+
+Route::redirect('intranet/public_pais_lst.php', '/web/enderecamento/pais');
+Route::redirect('intranet/public_uf_lst.php', '/web/enderecamento/estado');
+Route::redirect('intranet/public_municipio_lst.php', '/web/enderecamento/municipio');
+Route::redirect('intranet/public_distrito_lst.php', '/web/enderecamento/distrito');
+Route::redirect('intranet/public_pais_det.php', '/web/enderecamento/pais');
+Route::redirect('intranet/public_uf_det.php', '/web/enderecamento/estado');
+Route::redirect('intranet/public_municipio_det.php', '/web/enderecamento/municipio');
+Route::redirect('intranet/public_distrito_det.php', '/web/enderecamento/distrito');
+
+Route::redirect('intranet/public_pais_cad.php', '/web/enderecamento/pais/novo');
+Route::redirect('intranet/public_uf_cad.php', '/web/enderecamento/estado/novo');
+Route::redirect('intranet/public_municipio_cad.php', '/web/enderecamento/municipio/novo');
+Route::redirect('intranet/public_distrito_cad.php', '/web/enderecamento/distrito/novo');
 
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
@@ -22,6 +44,11 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
+    Route::get('/config', [WebController::class, 'config']);
+    Route::get('/user', [WebController::class, 'user']);
+    Route::get('/institution', [WebController::class, 'institution']);
+    Route::get('/menus', [WebController::class, 'menus']);
+
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_lst.php')
         ->name('enrollments.index');
@@ -31,6 +58,13 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
+
+    Route::get('registration/{registration}/formative-itinerary', 'EnrollmentFormativeItineraryController@index')
+        ->name('registration.formative-itinerary.index');
+    Route::get('registration/{registration}/formative-itinerary/{enrollment}/edit', 'EnrollmentFormativeItineraryController@edit')
+        ->name('registration.formative-itinerary.edit');
+    Route::put('registration/{registration}/formative-itinerary/{enrollment}', 'EnrollmentFormativeItineraryController@update')
+        ->name('registration.formative-itinerary.update');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');
@@ -69,10 +103,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/unificacao-pessoa', 'PersonLogUnificationController@index')->name('person-log-unification.index');
     Route::get('/unificacao-pessoa/{unification}', 'PersonLogUnificationController@show')->name('person-log-unification.show');
 
-    Route::get('intranet/index.php', 'LegacyController@intranet')
-        ->defaults('uri', 'index.php')
-        ->name('home');
-
     Route::get('intranet/educar_configuracoes_index.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_configuracoes_index.php')
         ->name('settings');
@@ -110,7 +140,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 
     Route::get('/exportacoes', 'ExportController@index')->middleware('can:view:' . Process::DATA_EXPORT)->name('export.index');
-    Route::get('/exportacoes/novo', 'ExportController@form')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
+    Route::get('/exportacoes/novo', [ExportController::class,'form'])->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
@@ -132,8 +162,11 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/dispensa-lote', 'BatchExemptionController@index')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.index');
     Route::post('/dispensa-lote', 'BatchExemptionController@exempt')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.exempt');
-});
 
-Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
-    Route::get('students', 'StudentsController@export');
+    Route::post('/turma', [SchoolClassController::class, 'store'])
+        ->name('schoolclass.store');
+    Route::delete('/turma', [SchoolClassController::class, 'delete'])
+        ->name('schoolclass.delete');
+
+    Route::fallback([WebController::class, 'fallback']);
 });

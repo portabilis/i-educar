@@ -51,46 +51,43 @@ return new class extends clsListagem {
         ];
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
         // Filtros de Foreign Keys
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nome', 'Abandono', $this->nome, 30, 255, false);
+        $this->campoTexto(nome: 'nome', campo: 'Abandono', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_abandono_tipo = new clsPmieducarAbandonoTipo();
-        $obj_abandono_tipo->setOrderby('nome ASC');
-        $obj_abandono_tipo->setLimite($this->limite, $this->offset);
+        $query = \App\Models\LegacyAbandonmentType::query()
+            ->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nome', direction: 'ASC');
 
-        $lista = $obj_abandono_tipo->lista(
-            null,
-            null,
-            null,
-            $this->nome,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string(value: $this->nome)) {
+            $query->where(column: 'nome', operator: 'ilike', value: '%' . $this->nome . '%');
+        }
 
-        $total = $obj_abandono_tipo->_total;
+        if (is_numeric(value: $this->ref_cod_instituicao)) {
+            $query->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao);
+        }
+
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_');
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
@@ -101,10 +98,10 @@ return new class extends clsListagem {
                 if ($nivel_usuario == 1) {
                     $lista_busca[] = "<a href=\"educar_abandono_tipo_det.php?cod_abandono_tipo={$registro['cod_abandono_tipo']}\">{$registro['ref_cod_instituicao']}</a>";
                 }
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
-        $this->addPaginador2('educar_abandono_tipo_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_abandono_tipo_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: null, intResultadosPorPagina: $this->limite);
 
         if ($obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_abandono_tipo_cad.php")';
@@ -112,14 +109,14 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de tipos de abandono', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Listagem de tipos de abandono', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motivo Abandono';
+        $this->title = 'Motivo Abandono';
         $this->processoAp = '950';
     }
 };

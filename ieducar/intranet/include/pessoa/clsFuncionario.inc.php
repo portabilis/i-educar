@@ -32,7 +32,6 @@ class clsFuncionario extends clsPessoaFisica
         $this->data_troca_senha = $data_troca_senha;
         $this->data_reativa_conta = $data_reativa_conta;
         $this->tempo_expira_senha = $tempo_expira_senha;
-        $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
         $this->email = $email;
         $this->_campos_lista = '
@@ -92,7 +91,7 @@ class clsFuncionario extends clsPessoaFisica
         $matricula_interna = null
     ) {
         // Recuperar lista
-        $sql = " SELECT {$this->_campos_lista} FROM {$this->schema_portal}.v_funcionario f";
+        $sql = " SELECT {$this->_campos_lista}, (SELECT pessoa.nome FROM cadastro.pessoa WHERE pessoa.idpes = f.ref_cod_pessoa_fj::numeric) AS nome FROM portal.funcionario f";
         $filtros = '';
         $filtro_pessoa = false;
 
@@ -109,7 +108,7 @@ class clsFuncionario extends clsPessoaFisica
         }
 
         if (is_string($str_nome)) {
-            $filtros .= "{$whereAnd} translate(upper(f.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
             $filtro_pessoa = true;
         }
@@ -135,11 +134,6 @@ class clsFuncionario extends clsPessoaFisica
             $filtro_pessoa = true;
         }
 
-        if (is_string($str_email)) {
-            $filtros .= "{$whereAnd} f.email ILIKE '%{$str_email}%'f";
-            $whereAnd = ' AND ';
-        }
-
         $limite = '';
         if ($int_inicio_limit !== false && $int_qtd_registros !== false) {
             $limite = "LIMIT $int_qtd_registros OFFSET $int_inicio_limit ";
@@ -155,7 +149,7 @@ class clsFuncionario extends clsPessoaFisica
             $sql .= "{$filtros}" . $this->getOrderby() . $this->getLimite();
         }
 
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f {$filtros}");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM portal.funcionario f {$filtros}");
 
         $db->Consulta($sql);
 
@@ -189,11 +183,13 @@ class clsFuncionario extends clsPessoaFisica
         $int_nivel = null,
         $int_ativo = null
     ) {
-        $sql = " SELECT DISTINCT f.ref_cod_pessoa_fj, f.nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
-                            FROM {$this->schema_portal}.v_funcionario f
+        $sql = " SELECT DISTINCT f.ref_cod_pessoa_fj, pessoa.nome as nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
+                            FROM portal.funcionario f
+                            INNER JOIN cadastro.pessoa pessoa ON (pessoa.idpes = f.ref_cod_pessoa_fj::numeric)
                             LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
                             LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
                             LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ";
+
         $filtros = '';
         $filtro_pessoa = false;
 
@@ -210,7 +206,7 @@ class clsFuncionario extends clsPessoaFisica
         }
 
         if (is_string($str_nome)) {
-            $filtros .= "{$whereAnd} translate(upper(f.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} translate(upper(pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
             $filtro_pessoa = true;
         }
@@ -247,7 +243,8 @@ class clsFuncionario extends clsPessoaFisica
 
         $sql .= "{$filtros}" . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM portal.funcionario f
+                                                                                INNER JOIN cadastro.pessoa pessoa ON (pessoa.idpes = f.ref_cod_pessoa_fj::numeric)
                                                                                 LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
                                                                                 LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
                                                                                 LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario) {$filtros}");

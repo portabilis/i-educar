@@ -42,6 +42,7 @@ class DisableUsersWithAccessExpired extends Command
     {
         $job = new BatchDisableUsersWithDaysGoneSinceLastAccess(DB::getDefaultConnection());
         app(Dispatcher::class)->dispatch($job);
+
         return 0;
     }
 }

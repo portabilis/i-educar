@@ -62,7 +62,7 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
 
-        $obj_permissoes->permissao_cadastra(559, $this->pessoa_logada, 3, 'educar_instituicao_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 559, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_instituicao_lst.php');
 
         $this->cod_instituicao = $this->getQueryString('cod_instituicao');
 
@@ -76,14 +76,14 @@ return new class extends clsCadastro {
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir(559, $this->pessoa_logada, 3);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 559, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
                 $retorno = 'Editar';
             }
         }
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_instituicao_det.php?cod_instituicao={$registro['cod_instituicao']}" : 'educar_instituicao_lst.php';
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Instituição', ['educar_index.php' => 'Escola']);
+        $this->breadcrumb(currentPage: 'Instituição', breadcrumbs: ['educar_index.php' => 'Escola']);
 
         $this->gerar_historico_transferencia = dbBool($this->gerar_historico_transferencia);
         $this->controlar_posicao_historicos = dbBool($this->controlar_posicao_historicos);
@@ -114,25 +114,25 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_instituicao', $this->cod_instituicao);
+        $this->campoOculto(nome: 'cod_instituicao', valor: $this->cod_instituicao);
 
         // text
-        $this->campoTexto('nm_instituicao', 'Nome da Instituição', $this->nm_instituicao, 30, 255, true);
-        $this->campoCep('cep', 'CEP', int2CEP($this->cep), true, '-', false, false);
-        $this->campoTexto('logradouro', 'Logradouro', $this->logradouro, 30, 255, true);
-        $this->campoNumero('numero', 'Número', $this->numero, 6, 6);
-        $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 50, false);
-        $this->campoTexto('bairro', 'Bairro', $this->bairro, 30, 40, true);
-        $this->campoTexto('cidade', 'Cidade', $this->cidade, 30, 60, true);
+        $this->campoTexto(nome: 'nm_instituicao', campo: 'Nome da Instituição', valor: $this->nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoCep(nome: 'cep', campo: 'CEP', valor: int2CEP($this->cep), obrigatorio: true);
+        $this->campoTexto(nome: 'logradouro', campo: 'Logradouro', valor: $this->logradouro, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoNumero(nome: 'numero', campo: 'Número', valor: $this->numero, tamanhovisivel: 6, tamanhomaximo: 6);
+        $this->campoTexto(nome: 'complemento', campo: 'Complemento', valor: $this->complemento, tamanhovisivel: 30, tamanhomaximo: 50);
+        $this->campoTexto(nome: 'bairro', campo: 'Bairro', valor: $this->bairro, tamanhovisivel: 30, tamanhomaximo: 40, obrigatorio: true);
+        $this->campoTexto(nome: 'cidade', campo: 'Cidade', valor: $this->cidade, tamanhovisivel: 30, tamanhomaximo: 60, obrigatorio: true);
 
         // foreign keys
         $opcoes = ['' => 'Selecione'] + State::getListKeyAbbreviation()->toArray();
 
-        $this->campoLista('ref_sigla_uf', 'UF', $opcoes, $this->ref_sigla_uf, '', false, '', '', false, true);
+        $this->campoLista(nome: 'ref_sigla_uf', campo: 'UF', valor: $opcoes, default: $this->ref_sigla_uf);
 
-        $this->campoTexto('nm_responsavel', 'Nome do Responsável', $this->nm_responsavel, 30, 255, true);
-        $this->campoNumero('ddd_telefone', 'DDD Telefone', $this->ddd_telefone, 2, 2);
-        $this->campoNumero('telefone', 'Telefone', $this->telefone, 11, 11);
+        $this->campoTexto(nome: 'nm_responsavel', campo: 'Nome do Responsável', valor: $this->nm_responsavel, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoNumero(nome: 'ddd_telefone', campo: 'DDD Telefone', valor: $this->ddd_telefone, tamanhovisivel: 2, tamanhomaximo: 2);
+        $this->campoNumero(nome: 'telefone', campo: 'Telefone', valor: $this->telefone, tamanhovisivel: 11, tamanhomaximo: 11);
 
         $options = [
             'label' => 'Coordenador(a) de transporte',
@@ -141,37 +141,35 @@ return new class extends clsCadastro {
             'required' => false
         ];
 
-        $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options);
-
-        $opcoes = [];
+        $this->inputsHelper()->simpleSearchPessoa(attrName: 'coordenador_transporte', inputOptions: $options);
 
         if (!empty($this->ref_sigla_uf)) {
             $opcoes = [null => 'Selecione'];
             $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper();
             $orgaosRegionais = $orgaoRegional->findAll(
-                ['sigla_uf', 'codigo'],
-                ['sigla_uf' => $this->ref_sigla_uf],
-                ['codigo' => 'asc'],
-                false
+                columns: ['sigla_uf', 'codigo'],
+                where: ['sigla_uf' => $this->ref_sigla_uf],
+                orderBy: ['codigo' => 'asc'],
+                addColumnIdIfNotSet: false
             );
             foreach ($orgaosRegionais as $orgaoRegional) {
-                $opcoes[$orgaoRegional->codigo] = $orgaoRegional->codigo;
+                $opcoes[strtoupper($orgaoRegional->codigo)] = strtoupper($orgaoRegional->codigo);
             }
         } else {
             $opcoes = [null => 'Informe uma UF'];
         }
 
         $options = ['label' => 'Código do órgão regional de ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,];
-        $this->inputsHelper()->select('orgao_regional', $options);
+        $this->inputsHelper()->select(attrName: 'orgao_regional', inputOptions: $options);
 
-        $this->campoRotulo('gerais', '<b>Gerais</b>');
-        $this->campoCheck('obrigar_documento_pessoa', 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', $this->obrigar_documento_pessoa);
+        $this->campoRotulo(nome: 'gerais', campo: '<b>Gerais</b>');
+        $this->campoCheck(nome: 'obrigar_documento_pessoa', campo: 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', valor: $this->obrigar_documento_pessoa);
 
-        $this->campoRotulo('datas', '<b>Datas</b>');
+        $this->campoRotulo(nome: 'datas', campo: '<b>Datas</b>');
         $dataBaseDeslocamento = 'A ordenação/apresentação de alunos transferidos nos relatórios (ex.: Relação de alunos por turma) será baseada neste campo quando preenchido.';
         $this->inputsHelper()->date(
-            'data_base_transferencia',
-            [
+            attrName: 'data_base_transferencia',
+            inputOptions: [
                 'label' => 'Data máxima para deslocamento',
                 'required' => false,
                 'hint' => $dataBaseDeslocamento,
@@ -181,8 +179,8 @@ return new class extends clsCadastro {
         );
         $dataBaseRemanejamento = 'A ordenação/apresentação de alunos remanejados nas turmas, nos relatórios (ex.: Relação de alunos por turma), será baseada neste campo quando preenchido.';
         $this->inputsHelper()->date(
-            'data_base_remanejamento',
-            [
+            attrName: 'data_base_remanejamento',
+            inputOptions: [
                 'label' => 'Data máxima para troca de sala',
                 'required' => false,
                 'hint' => $dataBaseRemanejamento,
@@ -192,8 +190,8 @@ return new class extends clsCadastro {
         );
         $dataBase = 'Caso o campo seja preenchido, o sistema irá controlar distorção de idade/série e limitar inscrições por idade no Pré-matrícula com base na data informada.';
         $this->inputsHelper()->dateDiaMes(
-            'data_base',
-            [
+            attrName: 'data_base',
+            inputOptions: [
                 'label' => 'Data base para matrícula (dia/mês)',
                 'size' => 5,
                 'max_length' => 5,
@@ -205,8 +203,8 @@ return new class extends clsCadastro {
         );
         $dataExpiracaoReservaVaga = 'Caso o campo seja preenchido, o sistema irá indeferir automaticamente as reservas em situação de espera após a data informada.';
         $this->inputsHelper()->date(
-            'data_expiracao_reserva_vaga',
-            [
+            attrName: 'data_expiracao_reserva_vaga',
+            inputOptions: [
                 'label' => 'Data para indeferimento automático da reserva de vaga',
                 'required' => false,
                 'hint' => $dataExpiracaoReservaVaga,
@@ -216,8 +214,8 @@ return new class extends clsCadastro {
         );
         $dataFechamento = 'Caso o campo seja preenchido, o sistema irá bloquear a matrícula de novos alunos nas turmas após a data informada.';
         $this->inputsHelper()->dateDiaMes(
-            'data_fechamento',
-            [
+            attrName: 'data_fechamento',
+            inputOptions: [
                 'label' => 'Data de fechamento das turmas para matrícula',
                 'size' => 5,
                 'max_length' => 5,
@@ -229,8 +227,8 @@ return new class extends clsCadastro {
         );
         $dataEducacenso = 'Este campo deve ser preenchido com a data máxima das matrículas que devem ser enviadas para o Censo.';
         $this->inputsHelper()->date(
-            'data_educacenso',
-            [
+            attrName: 'data_educacenso',
+            inputOptions: [
                 'label' => 'Data de referência do Educacenso',
                 'required' => false,
                 'hint' => $dataEducacenso,
@@ -239,114 +237,98 @@ return new class extends clsCadastro {
             ]
         );
 
-        $this->campoRotulo('historicos', '<b>Históricos</b>');
-        $this->campoCheck('gerar_historico_transferencia', 'Gerar histórico de transferência ao transferir matrícula?', $this->gerar_historico_transferencia);
-        $this->campoCheck('controlar_posicao_historicos', 'Permitir controlar posicionamento dos históricos em seu respectivo documento', $this->controlar_posicao_historicos);
-        $this->campoCheck('restringir_historico_escolar', 'Restringir modificações de históricos escolares?', $this->restringir_historico_escolar, null, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.');
-        $this->campoCheck('permitir_carga_horaria', 'Não permitir definir C.H. por componente no histórico escolar', $this->permitir_carga_horaria, null, false, false, false, 'Caso a opção estiver habilitada, não será possivel adicionar carga horária na tabela de disciplinas do histórico do aluno.');
+        $this->campoRotulo(nome: 'historicos', campo: '<b>Históricos</b>');
+        $this->campoCheck(nome: 'gerar_historico_transferencia', campo: 'Gerar histórico de transferência ao transferir matrícula?', valor: $this->gerar_historico_transferencia);
+        $this->campoCheck(nome: 'controlar_posicao_historicos', campo: 'Permitir controlar posicionamento dos históricos em seu respectivo documento', valor: $this->controlar_posicao_historicos);
+        $this->campoCheck(nome: 'restringir_historico_escolar', campo: 'Restringir modificações de históricos escolares?', valor: $this->restringir_historico_escolar, desc: null, dica: 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.');
+        $this->campoCheck(nome: 'permitir_carga_horaria', campo: 'Não permitir definir C.H. por componente no histórico escolar', valor: $this->permitir_carga_horaria, desc: null, dica: 'Caso a opção estiver habilitada, não será possivel adicionar carga horária na tabela de disciplinas do histórico do aluno.');
 
-        $this->campoRotulo('reserva_vaga', '<b>Reserva de vaga</b>');
+        $this->campoRotulo(nome: 'reserva_vaga', campo: '<b>Reserva de vaga</b>');
         $this->multiplas_reserva_vaga = isset($this->cod_instituicao) ? dbBool($this->multiplas_reserva_vaga) : true;
-        $this->campoCheck('multiplas_reserva_vaga', 'Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes', $this->multiplas_reserva_vaga);
-        $this->campoCheck('reserva_integral_somente_com_renda', 'Permitir reserva de vaga para o turno integral somente quando a renda for informada', $this->reserva_integral_somente_com_renda);
-        $this->campoCheck('exigir_dados_socioeconomicos', 'Exigir dados socioeconômicos na reserva de vaga para turno integral', $this->exigir_dados_socioeconomicos);
+        $this->campoCheck(nome: 'multiplas_reserva_vaga', campo: 'Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes', valor: $this->multiplas_reserva_vaga);
+        $this->campoCheck(nome: 'reserva_integral_somente_com_renda', campo: 'Permitir reserva de vaga para o turno integral somente quando a renda for informada', valor: $this->reserva_integral_somente_com_renda);
+        $this->campoCheck(nome: 'exigir_dados_socioeconomicos', campo: 'Exigir dados socioeconômicos na reserva de vaga para turno integral', valor: $this->exigir_dados_socioeconomicos);
 
-        $this->campoRotulo('relatorios', '<b>Relatórios</b>');
-        $this->campoCheck('permissao_filtro_abandono_transferencia', 'Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência', $this->permissao_filtro_abandono_transferencia);
-        $this->campoCheck('altera_atestado_para_declaracao', 'Alterar nome do título do menu e relatórios de Atestado para Declaração', $this->altera_atestado_para_declaracao);
-        $this->campoCheck('exibir_apenas_professores_alocados', 'Exibir apenas professores alocados nos filtros de emissão do Diário de classe', $this->exibir_apenas_professores_alocados);
+        $this->campoRotulo(nome: 'relatorios', campo: '<b>Relatórios</b>');
+        $this->campoCheck(nome: 'permissao_filtro_abandono_transferencia', campo: 'Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência', valor: $this->permissao_filtro_abandono_transferencia);
+        $this->campoCheck(nome: 'altera_atestado_para_declaracao', campo: 'Alterar nome do título do menu e relatórios de Atestado para Declaração', valor: $this->altera_atestado_para_declaracao);
+        $this->campoCheck(nome: 'exibir_apenas_professores_alocados', campo: 'Exibir apenas professores alocados nos filtros de emissão do Diário de classe', valor: $this->exibir_apenas_professores_alocados);
         $this->campoCheck(
-            'ordenar_alunos_sequencial_enturmacao',
-            'Apresentar alunos em relatórios de acordo com a ordenação definida de forma automática/manual na turma',
-            $this->ordenar_alunos_sequencial_enturmacao,
-            null,
-            false,
-            false,
-            false
+            nome: 'ordenar_alunos_sequencial_enturmacao',
+            campo: 'Apresentar alunos em relatórios de acordo com a ordenação definida de forma automática/manual na turma',
+            valor: $this->ordenar_alunos_sequencial_enturmacao,
+            desc: null
         );
 
-        $this->campoRotulo('processos_escolares', '<b>Processos escolares</b>');
-        $this->campoCheck('exigir_vinculo_turma_professor', 'Exigir vínculo com turma para lançamento de notas do professor?', $this->exigir_vinculo_turma_professor);
+        $this->campoRotulo(nome: 'processos_escolares', campo: '<b>Processos escolares</b>');
+        $this->campoCheck(nome: 'exigir_vinculo_turma_professor', campo: 'Exigir vínculo com turma para lançamento de notas do professor?', valor: $this->exigir_vinculo_turma_professor);
 
-        $this->campoCheck('matricula_apenas_bairro_escola', 'Permitir matrícula de alunos apenas do bairro da escola?', $this->matricula_apenas_bairro_escola);
+        $this->campoCheck(nome: 'matricula_apenas_bairro_escola', campo: 'Permitir matrícula de alunos apenas do bairro da escola?', valor: $this->matricula_apenas_bairro_escola);
 
-        $this->campoCheck('controlar_espaco_utilizacao_aluno', 'Controlar espaço utilizado pelo aluno?', $this->controlar_espaco_utilizacao_aluno);
+        $this->campoCheck(nome: 'controlar_espaco_utilizacao_aluno', campo: 'Controlar espaço utilizado pelo aluno?', valor: $this->controlar_espaco_utilizacao_aluno);
         $this->campoMonetario(
-            'percentagem_maxima_ocupacao_salas',
-            'Percentagem máxima de ocupação da sala',
-            Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
-            6,
-            6,
-            false
+            nome: 'percentagem_maxima_ocupacao_salas',
+            campo: 'Percentagem máxima de ocupação da sala',
+            valor: Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
+            tamanhovisivel: 6,
+            tamanhomaximo: 6
         );
-        $this->campoNumero('quantidade_alunos_metro_quadrado', 'Quantidade máxima de alunos permitidos por metro quadrado', $this->quantidade_alunos_metro_quadrado, 6, 6);
+        $this->campoNumero(nome: 'quantidade_alunos_metro_quadrado', campo: 'Quantidade máxima de alunos permitidos por metro quadrado', valor: $this->quantidade_alunos_metro_quadrado, tamanhovisivel: 6, tamanhomaximo: 6);
 
-        $this->campoCheck('restringir_multiplas_enturmacoes', 'Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano', $this->restringir_multiplas_enturmacoes);
+        $this->campoCheck(nome: 'restringir_multiplas_enturmacoes', campo: 'Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano', valor: $this->restringir_multiplas_enturmacoes);
 
         $this->permitir_carga_horaria = isset($this->cod_instituicao) ? dbBool($this->permitir_carga_horaria) : true;
 
         $this->campoCheck(
-            'componente_curricular_turma',
-            'Permitir definir componentes curriculares diferenciados nas turmas',
-            $this->componente_curricular_turma
+            nome: 'componente_curricular_turma',
+            campo: 'Permitir definir componentes curriculares diferenciados nas turmas',
+            valor: $this->componente_curricular_turma
         );
 
         $this->campoCheck(
-            'reprova_dependencia_ano_concluinte',
-            'Não permitir dependência em séries/anos concluintes',
-            $this->reprova_dependencia_ano_concluinte,
-            null,
-            false,
-            false,
-            false,
-            'Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.'
+            nome: 'reprova_dependencia_ano_concluinte',
+            campo: 'Não permitir dependência em séries/anos concluintes',
+            valor: $this->reprova_dependencia_ano_concluinte,
+            desc: null,
+            dica: 'Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.'
         );
 
-        $this->campoCheck('bloqueia_matricula_serie_nao_seguinte', 'Não permitir matrículas que não respeitem a sequência de enturmação', $this->bloqueia_matricula_serie_nao_seguinte);
+        $this->campoCheck(nome: 'bloqueia_matricula_serie_nao_seguinte', campo: 'Não permitir matrículas que não respeitem a sequência de enturmação', valor: $this->bloqueia_matricula_serie_nao_seguinte);
 
-        $this->campoCheck('obrigar_campos_censo', 'Obrigar e validar o preenchimento dos campos exigidos pelo Censo escolar', $this->obrigar_campos_censo);
+        $this->campoCheck(nome: 'obrigar_campos_censo', campo: 'Obrigar e validar o preenchimento dos campos exigidos pelo Censo escolar', valor: $this->obrigar_campos_censo);
 
         $this->campoCheck(
-            'exigir_lancamentos_anteriores',
-            'Exigir o lançamento de notas em etapas que o aluno não estava enturmado',
-            $this->exigir_lancamentos_anteriores
+            nome: 'exigir_lancamentos_anteriores',
+            campo: 'Exigir o lançamento de notas em etapas que o aluno não estava enturmado',
+            valor: $this->exigir_lancamentos_anteriores
         );
 
         $this->campoCheck(
-            'bloquear_vinculo_professor_sem_alocacao_escola',
-            'Bloquear vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados',
-            $this->bloquear_vinculo_professor_sem_alocacao_escola,
-            null,
-            false,
-            false,
-            false,
-            'Caso marcado, os vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados será bloqueado.'
+            nome: 'bloquear_vinculo_professor_sem_alocacao_escola',
+            campo: 'Bloquear vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados',
+            valor: $this->bloquear_vinculo_professor_sem_alocacao_escola,
+            desc: null,
+            dica: 'Caso marcado, os vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados será bloqueado.'
         );
 
         $this->campoCheck(
-            'permitir_matricula_fora_periodo_letivo',
-            'Permitir matricular alunos fora do período letivo',
-            $this->permitir_matricula_fora_periodo_letivo,
-            null,
-            false,
-            false,
-            false
+            nome: 'permitir_matricula_fora_periodo_letivo',
+            campo: 'Permitir matricular alunos fora do período letivo',
+            valor: $this->permitir_matricula_fora_periodo_letivo,
+            desc: null
         );
 
         $this->campoCheck(
-            'obrigar_telefone_pessoa',
-            'Obrigar o preenchimento de um telefone no cadastro de pessoa física',
-            $this->obrigar_telefone_pessoa,
-            null,
-            false,
-            false,
-            false
+            nome: 'obrigar_telefone_pessoa',
+            campo: 'Obrigar o preenchimento de um telefone no cadastro de pessoa física',
+            valor: $this->obrigar_telefone_pessoa,
+            desc: null
         );
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Instituicao.css'];
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/Instituicao.js'];
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Instituicao.css'];
+        Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
     }
 
     public function Novo()
@@ -357,37 +339,35 @@ return new class extends clsCadastro {
     public function Editar()
     {
         $obj = new clsPmieducarInstituicao(
-            $this->cod_instituicao,
-            $this->ref_usuario_exc,
-            $this->pessoa_logada,
-            $this->ref_idtlog,
-            $this->ref_sigla_uf,
-            str_replace('-', '', $this->cep),
-            $this->cidade,
-            $this->bairro,
-            $this->logradouro,
-            $this->numero,
-            $this->complemento,
-            $this->nm_responsavel,
-            $this->ddd_telefone,
-            $this->telefone,
-            $this->data_cadastro,
-            $this->data_exclusao,
-            1,
-            $this->nm_instituicao,
-            null,
-            null,
-            $this->quantidade_alunos_metro_quadrado,
-            $this->exigir_dados_socioeconomicos,
-            $this->altera_atestado_para_declaracao,
-            $this->obrigar_campos_censo,
-            $this->obrigar_documento_pessoa,
-            $this->exigir_lancamentos_anteriores,
-            $this->exibir_apenas_professores_alocados,
-            $this->bloquear_vinculo_professor_sem_alocacao_escola,
-            $this->permitir_matricula_fora_periodo_letivo,
-            $this->ordenar_alunos_sequencial_enturmacao,
-            $this->obrigar_telefone_pessoa
+            cod_instituicao: $this->cod_instituicao,
+            ref_usuario_exc: $this->ref_usuario_exc,
+            ref_usuario_cad: $this->pessoa_logada,
+            ref_idtlog: $this->ref_idtlog,
+            ref_sigla_uf: $this->ref_sigla_uf,
+            cep: str_replace(search: '-', replace: '', subject: $this->cep),
+            cidade: $this->cidade,
+            bairro: $this->bairro,
+            logradouro: $this->logradouro,
+            numero: $this->numero,
+            complemento: $this->complemento,
+            nm_responsavel: $this->nm_responsavel,
+            ddd_telefone: $this->ddd_telefone,
+            telefone: $this->telefone,
+            data_cadastro: $this->data_cadastro,
+            data_exclusao: $this->data_exclusao,
+            ativo: 1,
+            nm_instituicao: $this->nm_instituicao,
+            quantidade_alunos_metro_quadrado: $this->quantidade_alunos_metro_quadrado,
+            exigir_dados_socioeconomicos: $this->exigir_dados_socioeconomicos,
+            altera_atestado_para_declaracao: $this->altera_atestado_para_declaracao,
+            obrigar_campos_censo: $this->obrigar_campos_censo,
+            obrigar_documento_pessoa: $this->obrigar_documento_pessoa,
+            exigir_lancamentos_anteriores: $this->exigir_lancamentos_anteriores,
+            exibir_apenas_professores_alocados: $this->exibir_apenas_professores_alocados,
+            bloquear_vinculo_professor_sem_alocacao_escola: $this->bloquear_vinculo_professor_sem_alocacao_escola,
+            permitir_matricula_fora_periodo_letivo: $this->permitir_matricula_fora_periodo_letivo,
+            ordenar_alunos_sequencial_enturmacao: $this->ordenar_alunos_sequencial_enturmacao,
+            obrigar_telefone_pessoa: $this->obrigar_telefone_pessoa
         );
         $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
         $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -452,7 +432,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Instituição';
+        $this->title = 'Instituição';
         $this->processoAp = '559';
     }
 };

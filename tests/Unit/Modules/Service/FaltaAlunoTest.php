@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-
 class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 {
     public function testCriaNovaInstanciaDeFaltaAluno()

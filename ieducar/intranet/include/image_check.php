@@ -91,12 +91,12 @@ class PictureController
                 if ($size < $this->maxSize) {
                     return true;
                 } else {
-                    $this->errorMessage = 'O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.';
+                    $this->errorMessage = 'O cadastro não pode ser realizado, a foto possui um tamanho maior do que o permitido.';
 
                     return false;
                 }
             } else {
-                $this->errorMessage = 'O cadastro n&atilde;o pode ser realizado, a foto possui um formato diferente daqueles permitidos.';
+                $this->errorMessage = 'O cadastro não pode ser realizado, a foto possui um formato diferente daqueles permitidos.';
 
                 return false;
             }
@@ -126,8 +126,7 @@ class PictureController
             return '';
         }
         $l = strlen($name) - $i;
-        $ext = substr($name, $i + 1, $l);
 
-        return $ext;
+        return substr($name, $i + 1, $l);
     }
 }

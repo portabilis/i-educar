@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class LegacyStudentBenefit extends Model
 {
     /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * @var string
      */
     protected $table = 'pmieducar.aluno_aluno_beneficio';

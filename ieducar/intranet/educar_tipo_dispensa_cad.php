@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\LegacyExemptionType;
+
 return new class extends clsCadastro {
 
     public $pessoa_logada;
-
     public $cod_tipo_dispensa;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -24,8 +25,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(577, $this->pessoa_logada, 7, 'educar_tipo_dispensa_lst.php');
 
         if (is_numeric($this->cod_tipo_dispensa)) {
-            $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa);
-            $registro  = $obj->detalhe();
+            $registro = LegacyExemptionType::find($this->cod_tipo_dispensa)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -50,69 +50,69 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
+
         $this->campoOculto('cod_tipo_dispensa', $this->cod_tipo_dispensa);
 
-        // foreign keys
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
-        // text
         $this->campoTexto('nm_tipo', 'Tipo Dispensa', $this->nm_tipo, 30, 255, true);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
     {
-        $obj = new clsPmieducarTipoDispensa(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
+        $object = new LegacyExemptionType();
+        $object->ref_usuario_cad = $this->pessoa_logada;
+        $object->nm_tipo = $this->nm_tipo;
+        $object->descricao = $this->descricao;
+        $object->ref_cod_instituicao = $this->ref_cod_instituicao;
 
-        if ($cadastrou === false) {
-            $this->mensagem = 'Cadastro não realizado.<br>';
-
-            return false;
+        if ($object->save()) {
+            $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
         }
 
-        $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
-        $this->simpleRedirect('educar_tipo_dispensa_lst.php');
-        return true;
+        $this->mensagem = 'Cadastro não realizado.<br>';
+        return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
+        $object = LegacyExemptionType::find($this->cod_tipo_dispensa);
+        $object->ativo = 1;
+        $object->ref_usuario_exc = $this->pessoa_logada;
+        $object->nm_tipo = $this->nm_tipo;
+        $object->descricao = $this->descricao;
+        $object->ref_cod_instituicao = $this->ref_cod_instituicao;
 
-        if ($editou === false) {
-            $this->mensagem = 'Edição não realizada.<br>';
-            return false;
+        if ($object->save()) {
+            $this->mensagem = 'Edição efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
         }
 
-        $this->mensagem = 'Edição efetuada com sucesso.<br>';
-        $this->simpleRedirect('educar_tipo_dispensa_lst.php');
-
-        return true;
+        $this->mensagem = 'Edição não realizada.<br>';
+        return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, null, null, null, null, 0);
-        $excluiu = $obj->excluir();
+        $object = LegacyExemptionType::find($this->cod_tipo_dispensa);
+        $object->ativo = 0;
+        $object->ref_usuario_exc = $this->pessoa_logada;
 
-        if ($excluiu === false) {
-            $this->mensagem = 'Exclusão não realizada.<br>';
+        if ($object->save()) {
+            $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
 
-            return false;
         }
-
-        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-        $this->simpleRedirect('educar_tipo_dispensa_lst.php');
-        return true;
+        $this->mensagem = 'Exclusão não realizada.<br>';
+        return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Dispensa';
+        $this->title = 'Tipo Dispensa';
         $this->processoAp = '577';
     }
 };

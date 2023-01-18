@@ -1,17 +1,30 @@
 <?php
 
-use App\Models\LegacyPerson;
+namespace Database\Factories;
+
 use App\Models\PersonHasPlace;
-use App\Models\Place;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class PersonHasPlaceFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = PersonHasPlace::class;
 
-$factory->define(PersonHasPlace::class, function (Faker $faker) {
-    return [
-        'person_id' => factory(LegacyPerson::class)->create(),
-        'place_id' => factory(Place::class)->create(),
-        'type' => 1,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'person_id' => LegacyPersonFactory::new()->create(),
+            'place_id' => PlaceFactory::new()->create(),
+            'type' => 1,
+        ];
+    }
+}

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ValidatorController extends Controller
 {
-    const VALIDATORS = [
+    public const VALIDATORS = [
         'nome' => 'iEducar\Modules\Educacenso\Validator\NameValidator',
         'data-nascimento' => 'iEducar\Modules\Educacenso\Validator\BirthDateValidator',
         'certidao-nascimento' => 'iEducar\Modules\Educacenso\Validator\BirthCertificateValidator',

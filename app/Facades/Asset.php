@@ -2,8 +2,8 @@
 
 namespace App\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use App\Contracts\AssetServiceContract;
+use Illuminate\Support\Facades\Facade;
 
 class Asset extends Facade
 {

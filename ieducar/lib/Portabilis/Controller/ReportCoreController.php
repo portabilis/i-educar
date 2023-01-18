@@ -29,6 +29,14 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     protected $report;
 
+
+    /**
+     * Usada em relatório onde não possui ações cadastrar, atualizar ou excluir
+     *
+     * @var bool
+     */
+    protected $_onlyRead = true;
+
     /**
      * Portabilis_Controller_ReportCoreController constructor.
      */
@@ -271,7 +279,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     {
         $details = Portabilis_String_Utils::escape($details);
         $msg = 'Ocorreu um erro ao emitir o relatório. \n\n' . $details;
-        
+
         $msg = "<script type='text/javascript'>alert('$msg'); close();</script>";
 
         echo $msg;
@@ -290,8 +298,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         $controllerName = ucwords($dispatcher->getControllerName());
         $actionName = ucwords($dispatcher->getActionName());
 
-        $style = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
-        $script = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+        $style = "/vendor/legacy/$controllerName/Assets/Stylesheets/$actionName.css";
+        $script = "/vendor/legacy/$controllerName/Assets/Javascripts/$actionName.js";
 
         if (file_exists($rootPath . $style)) {
             Portabilis_View_Helper_Application::loadStylesheet($this, $style);

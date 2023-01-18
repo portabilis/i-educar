@@ -13,34 +13,34 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $this->ano = $this->getQueryString('ano');
-        $this->curso = $this->getQueryString('curso');
-        $this->data_inicial = $this->getQueryString('data_inicial');
-        $this->data_final = $this->getQueryString('data_final');
+        $this->ano = $this->getQueryString(name: 'ano');
+        $this->curso = $this->getQueryString(name: 'curso');
+        $this->data_inicial = $this->getQueryString(name: 'data_inicial');
+        $this->data_final = $this->getQueryString(name: 'data_final');
 
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            self::PROCESSO_AP,
-            $this->pessoa_logada,
-            7,
-            'educar_index.php'
+            int_processo_ap: self::PROCESSO_AP,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_index.php'
         );
 
         $this->nome_url_sucesso = 'Continuar';
         $this->url_cancelar = 'educar_index.php';
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Consulta de movimento geral', ['educar_index.php' => 'Escola']);
+        $this->breadcrumb(currentPage: 'Consulta de movimento geral', breadcrumbs: ['educar_index.php' => 'Escola']);
 
         return 'Novo';
     }
 
     public function Gerar()
     {
-        $this->inputsHelper()->dynamic(['ano', 'instituicao']);
-        $this->inputsHelper()->multipleSearchCurso('', ['label' => 'Cursos','required' => false]);
-        $this->inputsHelper()->dynamic(['dataInicial', 'dataFinal']);
+        $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao']);
+        $this->inputsHelper()->multipleSearchCurso(attrName: '', inputOptions: ['label' => 'Cursos','required' => false]);
+        $this->inputsHelper()->dynamic(helperNames: ['dataInicial', 'dataFinal']);
     }
 
     public function Novo()
@@ -48,13 +48,13 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            self::PROCESSO_AP,
-            $this->pessoa_logada,
-            7,
-            'index.php'
+            int_processo_ap: self::PROCESSO_AP,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'index.php'
         );
 
-        $queryString = http_build_query([
+        $queryString = http_build_query(data: [
             'ano' => $this->ano,
             'curso' => $this->curso,
             'data_inicial' => $this->data_inicial,
@@ -63,12 +63,12 @@ return new class extends clsCadastro {
 
         $url = '/intranet/educar_consulta_movimento_geral_lst.php?' . $queryString;
 
-        $this->simpleRedirect($url);
+        $this->simpleRedirect(url: $url);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Consulta de movimento geral';
+        $this->title = 'Consulta de movimento geral';
         $this->processoAp = 9998900;
     }
 };

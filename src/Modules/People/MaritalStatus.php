@@ -4,11 +4,11 @@ namespace iEducar\Modules\People;
 
 class MaritalStatus
 {
-    const MARRIED = 2;
-    const COMPANION = 6;
-    const DIVORCED = 3;
-    const SEPARATED = 4;
-    const SINGLE = 1;
-    const WIDOWER = 5;
-    const UNINFORMED = 7;
+    public const MARRIED = 2;
+    public const COMPANION = 6;
+    public const DIVORCED = 3;
+    public const SEPARATED = 4;
+    public const SINGLE = 1;
+    public const WIDOWER = 5;
+    public const UNINFORMED = 7;
 }

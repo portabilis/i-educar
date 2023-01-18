@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_EntityDataMapperStub extends CoreExt_DataMapper
 {
     protected $_entityClass = 'CoreExt_EntityStub';

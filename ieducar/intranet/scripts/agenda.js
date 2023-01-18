@@ -84,7 +84,7 @@ function text2form( compId )
 		conteudo += 'P&uacute;blico:<input type="checkbox" name="agenda_rap_publico" id="agenda_rap_publico" ' + chck1 + '>';
 	}
 	conteudo += '<br>';
-	conteudo += '<input type="button" name="agenda_salvar" class="agenda_rap_botao" id="agenda_salvar" value="Salvar Altera&ccedil;&otilde;es" onclick="agenda_salva();"> <input type="button" name="agenda_cancelar" class="agenda_rap_botao" id="agenda_cancelar" value="Cancelar Altera&ccedil;&otilde;es" onclick="form2text( ' + compId + ' );">';
+	conteudo += '<input type="button" name="agenda_salvar" class="agenda_rap_botao" id="agenda_salvar" value="Salvar Alterações" onclick="agenda_salva();"> <input type="button" name="agenda_cancelar" class="agenda_rap_botao" id="agenda_cancelar" value="Cancelar Alterações" onclick="form2text( ' + compId + ' );">';
 
 	divConteudo.innerHTML = conteudo;
 	oldBotoes = divBotoes.innerHTML;
@@ -190,9 +190,8 @@ function excluir_compromisso( compId )
 {
 	if( confirm( 'Deseja realmente excluir este compromisso?\nEsta e uma operacao irreversivel!' ) )
 	{
-		excluirSim( compId, location );
+		excluirSim(compId);
 	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta &eacute; uma opera&ccedil;&atilde;o irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="N&atilde;o" onclick="excluirNao( ' + compId + ' )">' );
 }
 
 function excluirSim( compId )
@@ -200,23 +199,6 @@ function excluirSim( compId )
 	expansivel = document.getElementById( "DOM_expansivel" );
 	expansivel.style.display = 'none';
 	document.location.href = 'agenda.php' + document.getElementById( "parametros" ).value + '&deletar=' + compId;
-}
-
-// Excluir compromisso dentro do sistema OpenJuris -- Higor 23/11/2005
-function excluirJuris( compId )
-{
-	if( confirm( 'Deseja realmente excluir este compromisso?\nEsta e uma operacao irreversivel!' ) )
-	{
-		excluirSim( compId, location );
-	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta &eacute; uma opera&ccedil;&atilde;o irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="N&atilde;o" onclick="excluirNao( ' + compId + ' )">' );
-}
-
-function excluirSimJuris( compId )
-{
-	expansivel = document.getElementById( "DOM_expansivel" );
-	expansivel.style.display = 'none';
-	document.location.href = 'juris_agenda_desenv.php' + document.getElementById( "parametros" ).value + '&deletar=' + compId;
 }
 
 function novoForm(array_compromissos)
@@ -244,11 +226,11 @@ function novoForm(array_compromissos)
 	conteudo += '</tr>';
 	conteudo += '<tr><td colspan="4" style="height:1px;background-color: #9cbdd7;"></td></tr>';
 	conteudo += '<tr>';
-	conteudo += '<td width="25%" valign="top">T&iacute;tulo:</td>';
+	conteudo += '<td width="25%" valign="top">Título:</td>';
 	conteudo += '<td colspan="3" width="75%"><input type="text" name="novo_titulo" id="novo_titulo" style="width:330px;"></td>';
 	conteudo += '</tr>';
 	conteudo += '<tr>';
-	conteudo += '<td width="25%" valign="top">Descri&ccedil;&atilde;o:</td>';
+	conteudo += '<td width="25%" valign="top">Descrição:</td>';
 	conteudo += '<td colspan="3" width="75%"><textarea name="novo_descricao" id="novo_descricao" class="agenda_conteudo" style="width:330px;"></textarea></td>';
 	conteudo += '</tr>';
 	conteudo += '<tr><td colspan="4" style="height:1px;background-color: #9cbdd7;"></td></tr>';
@@ -400,23 +382,23 @@ function formataHora(campo, e)
 	}
 }
 
-function verifica_hora(novo_hora_inicio){ 
-hrs = (document.forms[0].novo_hora_inicio.value.substring(0,2)); 
-min = (document.forms[0].novo_hora_inicio.value.substring(3,5)); 
-               
+function verifica_hora(novo_hora_inicio){
+hrs = (document.forms[0].novo_hora_inicio.value.substring(0,2));
+min = (document.forms[0].novo_hora_inicio.value.substring(3,5));
 
-if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
+
+if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){
 alert('Por favor, insira um hor\u00e1rio v\u00e1lido!');
 document.forms[0].novo_hora_inicio.value = "";
-}       
-} 
-function verifica_hora_fim(novo_hora_fim){ 
-hrs = (document.forms[0].novo_hora_fim.value.substring(0,2)); 
-min = (document.forms[0].novo_hora_fim.value.substring(3,5)); 
-               
+}
+}
+function verifica_hora_fim(novo_hora_fim){
+hrs = (document.forms[0].novo_hora_fim.value.substring(0,2));
+min = (document.forms[0].novo_hora_fim.value.substring(3,5));
 
-if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
+
+if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){
 alert('Por favor, insira um hor\u00e1rio v\u00e1lido!');
 document.forms[0].novo_hora_fim.value = "";
-}       
-} 
+}
+}

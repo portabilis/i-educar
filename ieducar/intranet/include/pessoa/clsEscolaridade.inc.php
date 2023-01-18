@@ -72,10 +72,11 @@ class clsEscolaridade
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($int_idesco = false, $str_descricao = false, $str_ordenacao = 'descricao', $int_limite_ini = 0, $int_limite_qtd = 30)
     {
+        $where = '';
         $whereAnd = 'WHERE ';
 
         if (is_numeric($int_idesco)) {
@@ -116,7 +117,7 @@ class clsEscolaridade
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -124,9 +125,7 @@ class clsEscolaridade
             $db = new clsBanco();
             $db->Consulta("SELECT idesco, descricao FROM {$this->schema}.{$this->tabela} WHERE idesco = {$this->idesco}");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

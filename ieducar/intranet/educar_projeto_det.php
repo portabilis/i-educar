@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyProject;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -18,27 +20,26 @@ return new class extends clsDetalhe {
 
         $this->cod_projeto=$_GET['cod_projeto'];
 
-        $tmp_obj = new clsPmieducarProjeto($this->cod_projeto);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyProject::find(id: $this->cod_projeto)?->getAttributes();
 
         if (! $registro) {
-            $this->simpleRedirect('educar_projeto_lst.php');
+            $this->simpleRedirect(url: 'educar_projeto_lst.php');
         }
 
         if ($registro['cod_projeto']) {
-            $this->addDetalhe([ 'C&oacute;digo projeto', "{$registro['cod_projeto']}"]);
+            $this->addDetalhe(detalhe: [ 'Código projeto', "{$registro['cod_projeto']}"]);
         }
         if ($registro['nome']) {
-            $this->addDetalhe([ 'Nome do projeto', "{$registro['nome']}"]);
+            $this->addDetalhe(detalhe: [ 'Nome do projeto', "{$registro['nome']}"]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observa&ccedil;&atilde;o', nl2br("{$registro['observacao']}")]);
+            $this->addDetalhe(detalhe: [ 'Observação', nl2br(string: "{$registro['observacao']}")]);
         }
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        if ($obj_permissao->permissao_cadastra(21250, $this->pessoa_logada, 3)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 21250, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_projeto_cad.php';
             $this->url_editar = "educar_projeto_cad.php?cod_projeto={$registro['cod_projeto']}";
         }
@@ -46,14 +47,14 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_projeto_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do projeto', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Detalhe do projeto', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Projeto';
+        $this->title = 'Projeto';
         $this->processoAp = '21250';
     }
 };

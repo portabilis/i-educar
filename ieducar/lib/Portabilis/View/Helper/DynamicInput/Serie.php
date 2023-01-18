@@ -23,12 +23,12 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
             $resources = App_Model_IedFinder::getSeries($instituicaoId, $escolaId, $cursoId, $ano);
         }
 
-        return $this->insertOption(null, 'Selecione uma s&eacute;rie', $resources);
+        return $this->insertOption(null, 'Selecione uma série', $resources);
     }
 
     protected function defaultOptions()
     {
-        return ['options' => ['label' => 'S&eacute;rie']];
+        return ['options' => ['label' => 'Série']];
     }
 
     public function serie($options = [])

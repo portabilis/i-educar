@@ -266,4 +266,12 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
 
         return preg_replace($patterns, $zeroValue, $replaced);
     }
+
+    /**
+     * @see CoreExt_Entity::__toString()
+     */
+    public function __toString()
+    {
+        return $this->nome . ': <br />' . $this->formulaMedia;
+    }
 }

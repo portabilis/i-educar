@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
 {
     public function testRetornaTodosOsValoresDoEnum()

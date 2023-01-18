@@ -1,29 +1,45 @@
 <?php
 
-use App\Models\LegacyInstitution;
+namespace Database\Factories;
+
 use App\Models\LegacyStageType;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyStageTypeFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyStageType::class;
 
-$factory->define(LegacyStageType::class, function (Faker $faker) {
-    return [
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'nm_tipo' => $faker->word,
-        'data_cadastro' => now(),
-        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
-        'num_etapas' => $faker->numberBetween(1, 4),
-    ];
-});
-
-$factory->state(LegacyStageType::class, 'unique', function () {
-    $stageType = LegacyStageType::query()->first();
-
-    if (empty($stageType)) {
-        $stageType = factory(LegacyStageType::class)->create();
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'nm_tipo' => $this->faker->word,
+            'data_cadastro' => now(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
+            'num_etapas' => $this->faker->numberBetween(1, 4),
+        ];
     }
 
-    return $stageType->toArray();
-});
+    public function unique()
+    {
+        return $this->state(function () {
+            $stageType = LegacyStageType::query()->first();
+
+            if (empty($stageType)) {
+                $stageType = LegacyStageTypeFactory::new()->create();
+            }
+
+            return $stageType->getAttributes();
+        });
+    }
+}

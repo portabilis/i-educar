@@ -1,34 +1,49 @@
 <?php
 
-use App\Models\LegacyInstitution;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolClassType;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolClassTypeFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacySchoolClassType::class;
 
-$factory->define(LegacySchoolClassType::class, function (Faker $faker) {
-    $name = $faker->colorName;
-    $abbreviation = mb_substr($faker->colorName, 0, 5);
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        $name = $this->faker->colorName;
+        $abbreviation = mb_substr($this->faker->colorName, 0, 5);
 
-    return [
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'nm_tipo' => 'Tipo ' . $name,
-        'sgl_tipo' => $abbreviation,
-        'data_cadastro' => now(),
-        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
-    ];
-});
-
-$factory->state(LegacySchoolClassType::class, 'unique', function () {
-    $schoolClassType = LegacySchoolClassType::query()->first();
-
-    if (empty($schoolClassType)) {
-        $schoolClassType = factory(LegacySchoolClassType::class)->create();
+        return [
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'nm_tipo' => 'Tipo ' . $name,
+            'sgl_tipo' => $abbreviation,
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+        ];
     }
 
-    return [
-        'cod_turma_tipo' => $schoolClassType->getKey()
-    ];
-});
+    public function unique(): self
+    {
+        return $this->state(function () {
+            $schoolClassType = LegacySchoolClassType::query()->first();
+
+            if (empty($schoolClassType)) {
+                $schoolClassType = LegacySchoolClassTypeFactory::new()->create();
+            }
+
+            return [
+                'cod_turma_tipo' => $schoolClassType->getKey()
+            ];
+        });
+    }
+}

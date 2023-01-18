@@ -4,10 +4,10 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class LocalizacaoDiferenciadaPessoa
 {
-    const AREA_ASSENTAMENTO = 1;
-    const TERRA_INDIGENA = 2;
-    const COMUNIDADES_REMANESCENTES_QUILOMBOS = 3;
-    const NAO_SE_APLICA = 7;
+    public const AREA_ASSENTAMENTO = 1;
+    public const TERRA_INDIGENA = 2;
+    public const COMUNIDADES_REMANESCENTES_QUILOMBOS = 3;
+    public const NAO_SE_APLICA = 7;
 
     public static function getDescriptiveValues()
     {

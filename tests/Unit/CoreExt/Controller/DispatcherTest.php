@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
 {
     protected $_dispatcher = null;

@@ -58,10 +58,11 @@ class clsFisicaCpf
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($int_idpes = false, $int_cpf = false, $str_ordenacao = 'idpes', $int_limite_ini = false, $int_limite_qtd = false)
     {
+        $where = '';
         $whereAnd = 'WHERE ';
 
         if (is_numeric($int_idpes)) {
@@ -102,10 +103,11 @@ class clsFisicaCpf
     /**
      * Exibe uma lista de idpes baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function listaCod($int_idpes = false, $int_cpf = false, $str_ordenacao = 'idpes', $int_limite_ini = false, $int_limite_qtd = false)
     {
+        $where = '';
         $whereAnd = 'WHERE ';
 
         if (is_numeric($int_idpes)) {
@@ -144,7 +146,7 @@ class clsFisicaCpf
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -152,17 +154,13 @@ class clsFisicaCpf
             $db = new clsBanco();
             $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf} ");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         } elseif ($this->idpes) {
             $db = new clsBanco();
             $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes} ");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

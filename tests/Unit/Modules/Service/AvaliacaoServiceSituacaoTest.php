@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\LegacyLevel;
-use App\Models\LegacyRegistration;
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyRegistrationFactory;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\MockObject\MockObject;
 
 require_once __DIR__ . '/TestCommon.php';
@@ -11,6 +12,8 @@ require_once __DIR__ . '/TestCommon.php';
  */
 class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
 {
+    use DatabaseTransactions;
+
     public function testSituacaoAluno()
     {
         $nota = new \stdClass();
@@ -36,10 +39,10 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
             ->method('getRegra')
             ->willReturn($regra);
 
-        $registration = factory(LegacyRegistration::class)
+        $registration = LegacyRegistrationFactory::new()
             ->create(
                 [
-                    'ref_ref_cod_serie' => factory(LegacyLevel::class)->create(),
+                    'ref_ref_cod_serie' => LegacyGradeFactory::new()->create(),
                     'dependencia' => true,
                 ]
             );

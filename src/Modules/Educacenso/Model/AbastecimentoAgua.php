@@ -4,11 +4,11 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class AbastecimentoAgua
 {
-    const REDE_PUBLICA = 1;
-    const POCO_ARTESIANO = 2;
-    const CACIMBA_CISTERNA_POCO = 3;
-    const FONTE = 4;
-    const INEXISTENTE = 5;
+    public const REDE_PUBLICA = 1;
+    public const POCO_ARTESIANO = 2;
+    public const CACIMBA_CISTERNA_POCO = 3;
+    public const FONTE = 4;
+    public const INEXISTENTE = 5;
 
     public static function getDescriptiveValues()
     {

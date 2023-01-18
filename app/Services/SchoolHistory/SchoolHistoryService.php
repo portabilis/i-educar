@@ -26,35 +26,43 @@ class SchoolHistoryService
         $year = 0;
         $level = 0;
         $certificationText = '';
+        $eja_show_course = config('legacy.report.historico_escolar.eja_exibir_curso', false);
 
         foreach ($data as $history) {
-            if (!$this->isValidLevelName($history['nm_serie'])) {
-                continue;
-            }
+            $course = trim($history['nome_curso']);
 
-            if (!in_array($history['aprovado'], $consideredStatus)) {
-                continue;
-            }
-
-            if ($history['ano'] < $year) {
-                continue;
-            }
-
-            if ($this->getLevelByName($history['nm_serie']) < $level) {
-                continue;
-            }
-
-            $year = $history['ano'];
-            $level = $history['nm_serie'];
-
-            $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando ' : 'concluiu ';
-
-            if ($this->isConclusiveLevelByGrade($history['nm_serie'], $history['historico_grade_curso_id'])) {
-                $certificationText .= 'o ENSINO FUNDAMENTAL';
+            if ($course && $eja_show_course && $history['historico_grade_curso_id'] === SchoolHistory::GRADE_EJA) {
+                if (in_array($history['aprovado_eja'], [SchoolHistoryStatus::REPROVED, SchoolHistoryStatus::REPROVED_BY_ABSENCE])) {
+                    $certificationText = 'está reprovado no ';
+                } else {
+                    $certificationText = $history['aprovado_eja'] == SchoolHistoryStatus::ONGOING ? 'está cursando no ' : 'está aprovado no ';
+                }
+                $certificationText .= mb_strtoupper($course);
             } else {
-                $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'a ' : 'o ';
-                $certificationText .= $this->getLevelByName($history['nm_serie']);
-                $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'ª série' : 'º ano';
+                if (!$this->isValidLevelName($history['nm_serie'])) {
+                    continue;
+                }
+                if (!in_array($history['aprovado'], $consideredStatus)) {
+                    continue;
+                }
+                if ($history['ano'] < $year) {
+                    continue;
+                }
+                if ($this->getLevelByName($history['nm_serie']) < $level) {
+                    continue;
+                }
+
+                $year = $history['ano'];
+                $level = $history['nm_serie'];
+
+                $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando ' : 'concluiu ';
+                if ($this->isConclusiveLevelByGrade($history['nm_serie'], $history['historico_grade_curso_id'])) {
+                    $certificationText .= 'o ENSINO FUNDAMENTAL';
+                } else {
+                    $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'a ' : 'o ';
+                    $certificationText .= $this->getLevelByName($history['nm_serie']);
+                    $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'ª série' : 'º ano';
+                }
             }
         }
 
@@ -89,9 +97,9 @@ class SchoolHistoryService
     private function getUsedSpaceByTemplate($templateName)
     {
         $usedSpaceByTemplate = [
-            'portabilis_historico_escolar_9anos' => 359,
+            'portabilis_historico_escolar_9anos' => 345,
             'portabilis_historico_escolar' => 395,
-            'portabilis_historico_escolar_series_anos' => 323,
+            'portabilis_historico_escolar_series_anos' => 290,
         ];
 
         if ((int) config('legacy.report.header.alternativo')) {
@@ -109,18 +117,17 @@ class SchoolHistoryService
      * Calcula e retorna quantidade de linhas necessários para que o campo
      * de observações preencha o restante da página em branco
      *
-     * @param $usedSpace           soma das alturas das bands fixas do histórico
-     * @param $numberOfDisciplines número de disciplinas geradas no histórico
-     * @param $lineHeight          altura da linha
+     * @param int $numberOfDisciplines número de disciplinas geradas no histórico
+     * @param int $lineHeight          altura da linha
      *
      * @return string
      */
     public function getBlankSpace($templateName, $numberOfDisciplines, $lineHeight)
     {
         $usedSpace = $this->getUsedSpaceByTemplate($templateName);
-        $numberOfBlankLines = (($usedSpace - ($numberOfDisciplines * $lineHeight)) / $lineHeight);
+        $numberOfBlankLines = (int) (((int)$usedSpace - ((int)$numberOfDisciplines * (int)$lineHeight)) / (int)$lineHeight);
 
-        return str_repeat('<br>', (int) $numberOfBlankLines);
+        return str_repeat('<br>', max($numberOfBlankLines, 0));
     }
 
     public function getAllObservationsByStudent($studentId)

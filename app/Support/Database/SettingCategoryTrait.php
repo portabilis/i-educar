@@ -8,23 +8,12 @@ use App\SettingCategory;
 
 trait SettingCategoryTrait
 {
-    public $settingsCattegories;
-
-    public function __construct()
+    private function getSettingCategoryIdByName(string $name): int
     {
-        $this->getAllSettingsCategories();
-    }
+        $settingsCattegories = SettingCategory::query()->get();
+        $id = $settingsCattegories->first()->id;
 
-    private function getAllSettingsCategories()
-    {
-        $this->settingsCattegories = SettingCategory::query()->get();
-    }
-
-    private function getSettingCategoryIdByName($name): int
-    {
-        $id = $this->settingsCattegories->first()->id;
-
-        foreach ($this->settingsCattegories as $settingCategory) {
+        foreach ($settingsCattegories as $settingCategory) {
             if ($settingCategory->name === $name) {
                 $id = $settingCategory->id;
             }

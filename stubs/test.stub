@@ -1,0 +1,37 @@
+<?php
+
+namespace {{ namespace }};
+
+use Tests\ResourceTestCase;
+
+class {{ class }} extends ResourceTestCase
+{
+    protected string $uri = '/api';
+    protected string $model = {{ class }}::class;
+    protected string $factory = {{ class }}::class;
+
+    public function testIndex(): void
+    {
+        $this->index();
+    }
+
+    public function testStore(): void
+    {
+        $this->store();
+    }
+
+    public function testShow(): void
+    {
+        $this->show();
+    }
+
+    public function testUpdate(): void
+    {
+        $this->update();
+    }
+
+    public function testDelete(): void
+    {
+        $this->destroy();
+    }
+}

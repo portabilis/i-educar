@@ -9,9 +9,6 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    protected int $maxAttempts = 2;
-    protected int $decayMinutes = 1;
-
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -24,6 +21,9 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
+    protected int $maxAttempts = 2;
+    protected int $decayMinutes = 1;
 
     /**
      * Where to redirect users after login.
@@ -70,7 +70,7 @@ class LoginController extends Controller
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
-            'grecaptcha' => [new ReCaptchaV3],
+            'grecaptcha' => [new ReCaptchaV3()],
         ]);
     }
 }

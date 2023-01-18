@@ -2,7 +2,6 @@
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_formacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -41,7 +40,7 @@ return new class extends clsCadastro {
         );
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         if (is_string($this->passo) && $this->passo == 1) {
             $retorno = 'Novo';
@@ -49,17 +48,10 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->cod_formacao)) {
             $obj = new clsPmieducarServidorFormacao(
-                $this->cod_formacao,
-                null,
-                null,
-                $this->ref_cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
+                cod_formacao: $this->cod_formacao,
+                ref_cod_servidor: $this->ref_cod_servidor,
+                ativo: 1,
+                ref_ref_cod_instituicao: $this->ref_cod_instituicao
             );
 
             $registro  = $obj->detalhe();
@@ -70,14 +62,14 @@ return new class extends clsCadastro {
                 $this->descricao   = $registro['descricao'];
 
                 if ($this->tipo == 'C') {
-                    $obj_curso                = new clsPmieducarServidorCurso(null, $this->cod_formacao);
+                    $obj_curso                = new clsPmieducarServidorCurso(cod_servidor_curso: null, ref_cod_formacao: $this->cod_formacao);
                     $det_curso                = $obj_curso->detalhe();
                     $this->data_conclusao     = dataFromPgToBr($det_curso['data_conclusao']);
                     $this->data_registro      = dataFromPgToBr($det_curso['data_registro']);
                     $this->diplomas_registros = $det_curso['diplomas_registros'];
                     $this->cod_servidor_curso = $det_curso['cod_servidor_curso'];
                 } else {
-                    $obj_outros = new clsPmieducarServidorTituloConcurso(null, $this->cod_formacao);
+                    $obj_outros = new clsPmieducarServidorTituloConcurso(cod_servidor_titulo: null, ref_cod_formacao: $this->cod_formacao);
                     $det_outros = $obj_outros->detalhe();
                     $this->data_vigencia_homolog = dataFromPgToBr($det_outros['data_vigencia_homolog']);
                     $this->data_publicacao       = dataFromPgToBr($det_outros['data_publicacao']);
@@ -85,7 +77,7 @@ return new class extends clsCadastro {
                 }
 
                 $obj_permissoes = new clsPermissoes();
-                if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
 
@@ -107,7 +99,7 @@ return new class extends clsCadastro {
     {
         if (! is_numeric($this->passo)) {
             $this->passo = 1;
-            $this->campoOculto('passo', $this->passo);
+            $this->campoOculto(nome: 'passo', valor: $this->passo);
 
             $opcoes = [
         'C' => 'Cursos',
@@ -115,7 +107,7 @@ return new class extends clsCadastro {
         'O' => 'Concursos'
       ];
 
-            $this->campoLista('tipo', 'Tipo de Formação', $opcoes, $this->tipo);
+            $this->campoLista(nome: 'tipo', campo: 'Tipo de Formação', valor: $opcoes, default: $this->tipo);
 
             $this->acao_enviar = false;
 
@@ -133,19 +125,19 @@ return new class extends clsCadastro {
         } elseif (is_numeric($this->passo) && $this->passo == 1) {
             if ($this->tipo == 'C') {
                 // Primary keys
-                $this->campoOculto('cod_formacao', $this->cod_formacao);
-                $this->campoOculto('tipo', $this->tipo);
-                $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
-                $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-                $this->campoOculto('cod_servidor_curso', $this->cod_servidor_curso);
+                $this->campoOculto(nome: 'cod_formacao', valor: $this->cod_formacao);
+                $this->campoOculto(nome: 'tipo', valor: $this->tipo);
+                $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
+                $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
+                $this->campoOculto(nome: 'cod_servidor_curso', valor: $this->cod_servidor_curso);
 
                 $obrigatorio     = true;
                 $get_instituicao = true;
 
                 include 'include/pmieducar/educar_campo_lista.php';
 
-                $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'C') ? 'Curso' : 'Error');
-                $this->campoTexto('nm_formacao', 'Nome do Curso', $this->nm_formacao, 30, 255, true);
+                $this->campoRotulo(nome: 'nm_tipo', campo: 'Tipo de Formação', valor: ($this->tipo == 'C') ? 'Curso' : 'Error');
+                $this->campoTexto(nome: 'nm_formacao', campo: 'Nome do Curso', valor: $this->nm_formacao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
                 // Foreign keys
                 $nm_servidor = '';
@@ -161,37 +153,36 @@ return new class extends clsCadastro {
                     }
                 }
 
-                $this->campoMemo('descricao', 'Descricão', $this->descricao, 60, 5, false);
+                $this->campoMemo(nome: 'descricao', campo: 'Descricão', valor: $this->descricao, colunas: 60, linhas: 5);
 
-                $this->campoRotulo('nm_servidor', 'Nome do Servidor', $nm_servidor);
+                $this->campoRotulo(nome: 'nm_servidor', campo: 'Nome do Servidor', valor: $nm_servidor);
 
-                $this->campoData('data_conclusao', 'Data de Conclusão', $this->data_conclusao, true);
+                $this->campoData(nome: 'data_conclusao', campo: 'Data de Conclusão', valor: $this->data_conclusao, obrigatorio: true);
 
-                $this->campoData('data_registro', 'Data de Registro', $this->data_registro);
+                $this->campoData(nome: 'data_registro', campo: 'Data de Registro', valor: $this->data_registro);
 
                 $this->campoMemo(
-                    'diplomas_registros',
-                    'Diplomas e Registros',
-                    $this->diplomas_registros,
-                    60,
-                    5,
-                    false
+                    nome: 'diplomas_registros',
+                    campo: 'Diplomas e Registros',
+                    valor: $this->diplomas_registros,
+                    colunas: 60,
+                    linhas: 5
                 );
             } elseif ($this->tipo == 'T') {
                 // Primary keys
-                $this->campoOculto('cod_formacao', $this->cod_formacao);
-                $this->campoOculto('tipo', $this->tipo);
-                $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
-                $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-                $this->campoOculto('cod_servidor_titulo', $this->cod_servidor_titulo);
+                $this->campoOculto(nome: 'cod_formacao', valor: $this->cod_formacao);
+                $this->campoOculto(nome: 'tipo', valor: $this->tipo);
+                $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
+                $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
+                $this->campoOculto(nome: 'cod_servidor_titulo', valor: $this->cod_servidor_titulo);
 
                 $obrigatorio     = true;
                 $get_instituicao = true;
 
                 include 'include/pmieducar/educar_campo_lista.php';
 
-                $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'T') ? 'Título' : 'Error');
-                $this->campoTexto('nm_formacao', 'Nome do Título', $this->nm_formacao, 30, 255, true);
+                $this->campoRotulo(nome: 'nm_tipo', campo: 'Tipo de Formação', valor: ($this->tipo == 'T') ? 'Título' : 'Error');
+                $this->campoTexto(nome: 'nm_formacao', campo: 'Nome do Título', valor: $this->nm_formacao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
                 // Foreign keys
                 $nm_servidor = '';
@@ -207,28 +198,28 @@ return new class extends clsCadastro {
                     }
                 }
 
-                $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
+                $this->campoMemo(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, colunas: 60, linhas: 5);
 
-                $this->campoRotulo('nm_servidor', 'Nome do Servidor', $nm_servidor);
+                $this->campoRotulo(nome: 'nm_servidor', campo: 'Nome do Servidor', valor: $nm_servidor);
 
-                $this->campoData('data_vigencia_homolog', 'Data de Vigência', $this->data_vigencia_homolog, true);
+                $this->campoData(nome: 'data_vigencia_homolog', campo: 'Data de Vigência', valor: $this->data_vigencia_homolog, obrigatorio: true);
 
-                $this->campoData('data_publicacao', 'Data de Publicação', $this->data_publicacao, true);
+                $this->campoData(nome: 'data_publicacao', campo: 'Data de Publicação', valor: $this->data_publicacao, obrigatorio: true);
             } elseif ($this->tipo == 'O') {
                 // Primary keys
-                $this->campoOculto('cod_formacao', $this->cod_formacao);
-                $this->campoOculto('tipo', $this->tipo);
-                $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
-                $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-                $this->campoOculto('cod_servidor_titulo', $this->cod_servidor_titulo);
+                $this->campoOculto(nome: 'cod_formacao', valor: $this->cod_formacao);
+                $this->campoOculto(nome: 'tipo', valor: $this->tipo);
+                $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
+                $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
+                $this->campoOculto(nome: 'cod_servidor_titulo', valor: $this->cod_servidor_titulo);
 
                 $obrigatorio     = true;
                 $get_instituicao = true;
 
                 include 'include/pmieducar/educar_campo_lista.php';
 
-                $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'O') ? 'Formação' : 'Error');
-                $this->campoTexto('nm_formacao', 'Nome do Concurso', $this->nm_formacao, 30, 255, true);
+                $this->campoRotulo(nome: 'nm_tipo', campo: 'Tipo de Formação', valor: ($this->tipo == 'O') ? 'Formação' : 'Error');
+                $this->campoTexto(nome: 'nm_formacao', campo: 'Nome do Concurso', valor: $this->nm_formacao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
                 // Foreign keys
                 $nm_servidor = '';
@@ -243,13 +234,13 @@ return new class extends clsCadastro {
                         $nm_servidor = $det['nome'];
                     }
                 }
-                $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
+                $this->campoMemo(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, colunas: 60, linhas: 5);
 
-                $this->campoRotulo('nm_servidor', 'Nome do Servidor', $nm_servidor);
+                $this->campoRotulo(nome: 'nm_servidor', campo: 'Nome do Servidor', valor: $nm_servidor);
 
-                $this->campoData('data_vigencia_homolog', 'Data de Homologação', $this->data_vigencia_homolog, true);
+                $this->campoData(nome: 'data_vigencia_homolog', campo: 'Data de Homologação', valor: $this->data_vigencia_homolog, obrigatorio: true);
 
-                $this->campoData('data_publicacao', 'Data de Publicação', $this->data_publicacao, true);
+                $this->campoData(nome: 'data_publicacao', campo: 'Data de Publicação', valor: $this->data_publicacao, obrigatorio: true);
             }
         }
     }
@@ -263,31 +254,26 @@ return new class extends clsCadastro {
         );
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         $obj = new clsPmieducarServidorFormacao(
-            null,
-            null,
-            $this->pessoa_logada,
-            $this->ref_cod_servidor,
-            $this->nm_formacao,
-            $this->tipo,
-            $this->descricao,
-            null,
-            null,
-            $this->ativo,
-            $this->ref_cod_instituicao
+            ref_usuario_cad: $this->pessoa_logada,
+            ref_cod_servidor: $this->ref_cod_servidor,
+            nm_formacao: $this->nm_formacao,
+            tipo: $this->tipo,
+            descricao: $this->descricao,
+            ativo: $this->ativo,
+            ref_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             if ($this->tipo == 'C') {
                 $obj = new clsPmieducarServidorCurso(
-                    null,
-                    $cadastrou,
-                    dataToBanco($this->data_conclusao),
-                    dataToBanco($this->data_registro),
-                    $this->diplomas_registros
+                    ref_cod_formacao: $cadastrou,
+                    data_conclusao: dataToBanco($this->data_conclusao),
+                    data_registro: dataToBanco($this->data_registro),
+                    diplomas_registros: $this->diplomas_registros
                 );
 
                 if ($obj->cadastra()) {
@@ -296,10 +282,9 @@ return new class extends clsCadastro {
                 }
             } elseif ($this->tipo == 'T' || $this->tipo == 'O') {
                 $obj = new clsPmieducarServidorTituloConcurso(
-                    null,
-                    $cadastrou,
-                    dataToBanco($this->data_vigencia_homolog),
-                    dataToBanco($this->data_publicacao)
+                    ref_cod_formacao: $cadastrou,
+                    data_vigencia_homolog: dataToBanco($this->data_vigencia_homolog),
+                    data_publicacao: dataToBanco($this->data_publicacao)
                 );
 
                 if ($obj->cadastra()) {
@@ -323,19 +308,16 @@ return new class extends clsCadastro {
         );
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         $obj = new clsPmieducarServidorFormacao(
-            $this->cod_formacao,
-            $this->pessoa_logada,
-            null,
-            $this->ref_cod_servidor,
-            $this->nm_formacao,
-            $this->tipo,
-            $this->descricao,
-            null,
-            null,
-            1
+            cod_formacao: $this->cod_formacao,
+            ref_usuario_exc: $this->pessoa_logada,
+            ref_cod_servidor: $this->ref_cod_servidor,
+            nm_formacao: $this->nm_formacao,
+            tipo: $this->tipo,
+            descricao: $this->descricao,
+            ativo: 1
         );
 
         $editou = $obj->edita();
@@ -343,11 +325,11 @@ return new class extends clsCadastro {
         if ($editou) {
             if ($this->tipo == 'C') {
                 $obj_curso  = new clsPmieducarServidorCurso(
-                    $this->cod_servidor_curso,
-                    $this->cod_formacao,
-                    dataToBanco($this->data_conclusao),
-                    dataToBanco($this->data_registro),
-                    $this->diplomas_registros
+                    cod_servidor_curso: $this->cod_servidor_curso,
+                    ref_cod_formacao: $this->cod_formacao,
+                    data_conclusao: dataToBanco($this->data_conclusao),
+                    data_registro: dataToBanco($this->data_registro),
+                    diplomas_registros: $this->diplomas_registros
                 );
 
                 $editou_cur = $obj_curso->edita();
@@ -358,10 +340,10 @@ return new class extends clsCadastro {
                 }
             } else {
                 $obj_titulo = new clsPmieducarServidorTituloConcurso(
-                    $this->cod_servidor_titulo,
-                    $this->cod_formacao,
-                    dataToBanco($this->data_vigencia_homolog),
-                    dataToBanco($this->data_publicacao)
+                    cod_servidor_titulo: $this->cod_servidor_titulo,
+                    ref_cod_formacao: $this->cod_formacao,
+                    data_vigencia_homolog: dataToBanco($this->data_vigencia_homolog),
+                    data_publicacao: dataToBanco($this->data_publicacao)
                 );
 
                 $editou_tit = $obj_titulo->edita();
@@ -387,20 +369,17 @@ return new class extends clsCadastro {
         );
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, $backUrl);
+        $obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         $obj = new clsPmieducarServidorFormacao(
-            $this->cod_formacao,
-            $this->pessoa_logada,
-            null,
-            $this->ref_cod_servidor,
-            $this->nm_formacao,
-            $this->tipo,
-            $this->descricao,
-            null,
-            null,
-            0,
-            $this->ref_cod_instituicao
+            cod_formacao: $this->cod_formacao,
+            ref_usuario_exc: $this->pessoa_logada,
+            ref_cod_servidor: $this->ref_cod_servidor,
+            nm_formacao: $this->nm_formacao,
+            tipo: $this->tipo,
+            descricao: $this->descricao,
+            ativo: 0,
+            ref_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         $excluiu = $obj->excluir();
@@ -417,7 +396,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Servidor Formação';
+        $this->title = 'Servidor Formação';
         $this->processoAp = 635;
     }
 };

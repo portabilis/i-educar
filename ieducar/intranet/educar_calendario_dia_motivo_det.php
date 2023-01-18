@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_calendario_dia_motivo;
     public $ref_cod_escola;
     public $ref_usuario_exc;
@@ -22,7 +16,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Calend&aacute;rio Dia Motivo - Detalhe';
+        $this->titulo = 'Calendário Dia Motivo - Detalhe';
 
         $this->cod_calendario_dia_motivo=$_GET['cod_calendario_dia_motivo'];
 
@@ -43,7 +37,7 @@ return new class extends clsDetalhe {
         $nm_instituicao = $obj_instituicao_det['nm_instituicao'];
 
         if ($nm_instituicao) {
-            $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$nm_instituicao}" ]);
+            $this->addDetalhe([ 'Instituição', "{$nm_instituicao}" ]);
         }
         if ($registro['ref_cod_escola']) {
             $this->addDetalhe([ 'Escola', "{$registro['ref_cod_escola']}"]);
@@ -55,33 +49,33 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Sigla', "{$registro['sigla']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descric&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descricão', "{$registro['descricao']}"]);
         }
         if ($registro['tipo']) {
             if ($registro['tipo'] == 'e') {
                 $registro['tipo'] = 'extra';
             } elseif ($registro['tipo'] == 'n') {
-                $registro['tipo'] = 'n&atilde;o-letivo';
+                $registro['tipo'] = 'não-letivo';
             }
             $this->addDetalhe([ 'Tipo', "{$registro['tipo']}"]);
         }
 
         $obj_permissao = new clsPermissoes();
-        if ($obj_permissao->permissao_cadastra(576, $this->pessoa_logada, 7)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 576, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_calendario_dia_motivo_cad.php';
             $this->url_editar = "educar_calendario_dia_motivo_cad.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}";
         }
         $this->url_cancelar = 'educar_calendario_dia_motivo_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do motivo de dias do calendário', [
+        $this->breadcrumb(currentPage: 'Detalhe do motivo de dias do calendário', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calend&aacute;rio Dia Motivo';
+        $this->title = 'Calendário Dia Motivo';
         $this->processoAp = '576';
     }
 };

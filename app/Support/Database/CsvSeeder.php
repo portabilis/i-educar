@@ -87,7 +87,7 @@ abstract class CsvSeeder extends Seeder
     public function run()
     {
         $model = $this->getModelName();
-        $model = new $model;
+        $model = new $model();
 
         foreach ($this->read() as $data) {
             $model->newQuery()->updateOrCreate($data);

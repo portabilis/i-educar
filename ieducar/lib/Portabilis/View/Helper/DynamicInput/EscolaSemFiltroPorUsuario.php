@@ -25,7 +25,7 @@ class Portabilis_View_Helper_DynamicInput_EscolaSemFiltroPorUsuario extends Port
         $this->attributeJs($options);
         $this->select($options);
         Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
-        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Escola.js');
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/vendor/legacy/DynamicInput/Assets/Javascripts/Escola.js');
     }
 
     protected function attributeJs($options)

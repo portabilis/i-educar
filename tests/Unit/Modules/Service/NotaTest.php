@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
 {
     public function testInstanciaDeNotaComponenteERegistradaApenasUmaVezNoBoletiom()

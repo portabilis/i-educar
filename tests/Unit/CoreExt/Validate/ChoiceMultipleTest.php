@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_Validate_ChoiceMultipleTest extends PHPUnit\Framework\TestCase
 {
     protected $_validator = null;
@@ -28,6 +26,7 @@ class CoreExt_Validate_ChoiceMultipleTest extends PHPUnit\Framework\TestCase
     public function testEscolhaMultiplaInvalidaLancaExcecao()
     {
         $this->_validator->setOptions(['choices' => $this->_choices['bit']]);
+
         try {
             $this->_validator->isValid([0, 2, 3]);
             $this->fail('CoreExt_Validate_ChoiceMultiple deveria ter lançado exceção.');

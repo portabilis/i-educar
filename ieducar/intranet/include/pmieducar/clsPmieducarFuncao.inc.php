@@ -17,7 +17,7 @@ class clsPmieducarFuncao extends Model
 
     public function __construct($cod_funcao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_funcao = null, $abreviatura = null, $professor = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}funcao";
 
@@ -121,6 +121,7 @@ class clsPmieducarFuncao extends Model
     {
         if (is_numeric($this->cod_funcao) && is_numeric($this->ref_usuario_exc) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -173,7 +174,7 @@ class clsPmieducarFuncao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_funcao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_funcao = null, $str_abreviatura = null, $int_professor = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null)
     {
@@ -270,7 +271,7 @@ class clsPmieducarFuncao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -288,7 +289,7 @@ class clsPmieducarFuncao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

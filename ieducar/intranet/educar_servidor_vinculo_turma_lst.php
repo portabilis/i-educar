@@ -7,13 +7,11 @@ return new class extends clsListagem {
     public $titulo;
     public $limite;
     public $offset;
-
     public $id;
     public $ano;
     public $servidor_id;
     public $funcao_exercida;
     public $tipo_vinculo;
-
     public $ref_cod_instituicao;
     public $ref_cod_escola;
     public $ref_cod_curso;
@@ -32,56 +30,53 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos([
-      'Ano',
-      'Escola',
-      'Curso',
-      'Série',
-      'Turma',
-      'Função exercida',
-      'Tipo de vínculo'
-    ]);
+        $this->addCabecalhos(coluna: [
+          'Ano',
+          'Escola',
+          'Curso',
+          'Série',
+          'Turma',
+          'Função exercida',
+          'Tipo de vínculo'
+        ]);
 
-        $this->campoOculto('ref_cod_servidor', $this->servidor_id);
+        $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->servidor_id);
 
-        $this->inputsHelper()->dynamic(['ano', 'instituicao','escola','curso','serie', 'turma'], ['required' => false]);
+        $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao','escola','curso','serie', 'turma'], inputOptions: ['required' => false]);
 
         $resources_funcao = SelectOptions::funcoesExercidaServidor();
         $options = ['label' =>'Função exercida', 'resources' => $resources_funcao, 'value' => $this->funcao_exercida];
-        $this->inputsHelper()->select('funcao_exercida', $options);
+        $this->inputsHelper()->select(attrName: 'funcao_exercida', inputOptions: $options);
 
         $resources_tipo = SelectOptions::tiposVinculoServidor();
         $options = ['label' => 'Tipo do vínculo', 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo];
-        $this->inputsHelper()->select('tipo_vinculo', $options);
+        $this->inputsHelper()->select(attrName: 'tipo_vinculo', inputOptions: $options);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
+        $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $obj_vinculo = new clsModulesProfessorTurma();
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
             $obj_vinculo->codUsuario = $this->pessoa_logada;
         }
 
-        $obj_vinculo->setOrderby(' nm_escola, nm_curso, nm_serie, nm_turma ASC');
-        $obj_vinculo->setLimite($this->limite, $this->offset);
+        $obj_vinculo->setOrderby(strNomeCampo: ' nm_escola, nm_curso, nm_serie, nm_turma ASC');
 
-        if (! isset($this->tipo)) {
-            $this->tipo = null;
-        }
+        $obj_vinculo->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_vinculo->lista(
-            $this->servidor_id,
-            $this->ref_cod_instituicao,
-            $this->ano,
-            $this->ref_cod_escola,
-            $this->ref_cod_curso,
-            $this->ref_cod_serie,
-            $this->ref_cod_turma,
-            $this->funcao_exercida,
-            $this->tipo_vinculo
+            servidor_id: $this->servidor_id,
+            instituicao_id: $this->ref_cod_instituicao,
+            ano: $this->ano,
+            ref_cod_escola: $this->ref_cod_escola,
+            ref_cod_curso: $this->ref_cod_curso,
+            ref_cod_serie: $this->ref_cod_serie,
+            ref_cod_turma: $this->ref_cod_turma,
+            funcao_exercida: $this->funcao_exercida,
+            tipo_vinculo: $this->tipo_vinculo
         );
 
         $total = $obj_vinculo->_total;
@@ -91,29 +86,29 @@ return new class extends clsListagem {
         $path = 'educar_servidor_vinculo_turma_det.php';
 
         // Monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 $options = [
-          'query' => [
-            'id' => $registro['id']
-        ]];
+                  'query' => [
+                    'id' => $registro['id']
+                ]];
 
-                $this->addLinhas([
-          $url->l($registro['ano'], $path, $options),
-          $url->l($registro['nm_escola'], $path, $options),
-          $url->l($registro['nm_curso'], $path, $options),
-          $url->l($registro['nm_serie'], $path, $options),
-          $url->l($registro['nm_turma'], $path, $options),
-          $url->l($resources_funcao[$registro['funcao_exercida']], $path, $options),
-          $url->l($resources_tipo[$registro['tipo_vinculo']], $path, $options)
-        ]);
+                $this->addLinhas(linha: [
+                  $url->l(text: $registro['ano'], path: $path, options: $options),
+                  $url->l(text: $registro['nm_escola'], path: $path, options: $options),
+                  $url->l(text: $registro['nm_curso'], path: $path, options: $options),
+                  $url->l(text: $registro['nm_serie'], path: $path, options: $options),
+                  $url->l(text: $registro['nm_turma'], path: $path, options: $options),
+                  $url->l(text: $resources_funcao[$registro['funcao_exercida']], path: $path, options: $options),
+                  $url->l(text: $resources_tipo[$registro['tipo_vinculo']], path: $path, options: $options)
+                ]);
             }
         }
 
-        $this->addPaginador2('educar_servidor_vinculo_turma_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_servidor_vinculo_turma_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao[] = [
                 'name' => 'Novo',
                 'css-extra' => 'btn-green'
@@ -134,9 +129,9 @@ return new class extends clsListagem {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Registro de vínculos do professor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+        $this->breadcrumb(currentPage: 'Registro de vínculos do professor', breadcrumbs: [
+        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 
     public function Formular()

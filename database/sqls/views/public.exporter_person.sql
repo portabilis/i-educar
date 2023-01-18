@@ -15,6 +15,7 @@ select
     f.empresa as organization,
     f.renda_mensal as monthly_income,
     f.sexo as gender,
+    r.nm_raca as race,
     f.idpes_mae as mother_id,
     f.idpes_pai as father_id,
     f.idpes_responsavel as guardian_id,
@@ -27,6 +28,8 @@ select
     COALESCE(ci."name" || '/' || st.abbreviation, 'Não informado') as birthplace
 from cadastro.pessoa p
 inner join cadastro.fisica f on f.idpes = p.idpes
+left join cadastro.fisica_raca fr on fr.ref_idpes = f.idpes
+left join cadastro.raca r on r.cod_raca = fr.ref_cod_raca
 left join cadastro.documento d on d.idpes = p.idpes
 left join public.cities ci on ci.id = f.idmun_nascimento
 left join public.states st on ci.state_id = st.id

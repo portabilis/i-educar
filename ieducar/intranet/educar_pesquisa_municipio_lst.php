@@ -39,8 +39,8 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        Session::put([
-            'campo1' => $_GET['campo1'] ? $_GET['campo1'] : Session::get('campo1')
+        Session::put(key: [
+            'campo1' => $_GET['campo1'] ? $_GET['campo1'] : Session::get(key: 'campo1')
         ]);
         Session::save();
         Session::start();
@@ -53,7 +53,7 @@ return new class extends clsListagem {
 
         //
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Cidade',
             'Estado'
         ]);
@@ -61,52 +61,51 @@ return new class extends clsListagem {
         $array_uf = ['' => 'Todos'] + State::getListKeyAbbreviation()->toArray();
 
         if (!isset($this->sigla_uf)) {
-            $this->sigla_uf = config('legacy.app.locale.province', '');
+            $this->sigla_uf = config(key: 'legacy.app.locale.province', default: '');
         }
 
         // outros Filtros
 
-        $this->campoLista('sigla_uf', 'UF', $array_uf, $this->sigla_uf, '', false, '', '', $disabled);
-        $this->campoTexto('nome', 'Cidade', $this->nome, 30, 255, false);
-        //  $this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 30, 255, false );
+        $this->campoLista(nome: 'sigla_uf', campo: 'UF', valor: $array_uf, default: $this->sigla_uf, desabilitado: $disabled);
+        $this->campoTexto(nome: 'nome', campo: 'Cidade', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $cities = City::query()
-            ->with('state')
-            ->where('name', 'ilike', "%{$this->nome}%")
-            ->whereHas('state', function ($query) {
+            ->with(relations: 'state')
+            ->where(column: 'name', operator: 'ilike', value: "%{$this->nome}%")
+            ->whereHas(relation: 'state', callback: function ($query) {
                 $query->where('abbreviation', $this->sigla_uf);
             })
-            ->orderBy('name')
-            ->paginate(null, ['*'], $pageName = "pagina_{$this->nome}");
+            ->orderBy(column: 'name')
+            ->paginate(columns: ['*'], pageName: $pageName = "pagina_{$this->nome}");
 
         $total = $cities->total();
 
         foreach ($cities as $city) {
-            $campo1 = Session::get('campo1');
+            $campo1 = Session::get(key: 'campo1');
             $script = " onclick=\"addSel1('{$campo1}','{$city->id}','{$city->name}'); fecha();\"";
-            $this->addLinhas([
+            $this->addLinhas(linha: [
                 "<a href=\"javascript:void(0);\" {$script}>{$city->name}</a>",
                 "<a href=\"javascript:void(0);\" {$script}>{$city->state->name}</a>"
             ]);
         }
 
-        $this->addPaginador2('educar_pesquisa_municipio_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_pesquisa_municipio_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
         $this->largura = '100%';
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-pesquisa-municipio-lst.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-pesquisa-municipio-lst.js');
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Municipio';
+        $this->title = 'Municipio';
         $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

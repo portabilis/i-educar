@@ -44,7 +44,7 @@ class clsPmieducarReservaVaga extends Model
         $nm_aluno = null,
         $cpf_responsavel = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'reserva_vaga';
 
@@ -169,6 +169,7 @@ class clsPmieducarReservaVaga extends Model
     {
         if (is_numeric($this->cod_reserva_vaga)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_ref_cod_escola)) {

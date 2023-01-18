@@ -18,6 +18,8 @@ BEGIN
                            WHEN cod_situacao = 11 THEN 'Pré-matrícula'
                            WHEN cod_situacao = 12 THEN 'Aprovado com dependência'
                            WHEN cod_situacao = 13 THEN 'Aprovado pelo conselho'
+                           WHEN cod_situacao = 14 THEN 'Rep. Faltas'
+                           WHEN cod_situacao = 15 THEN 'Falecido'
                            ELSE '' END);
     RETURN texto_situacao;
 END;

@@ -29,7 +29,7 @@ class clsPmieducarFaltaAtrasoCompensado extends Model
         $data_exclusao = null,
         $ativo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'falta_atraso_compensado';
 
@@ -155,6 +155,7 @@ class clsPmieducarFaltaAtrasoCompensado extends Model
     {
         if (is_numeric($this->cod_compensado) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_escola)) {
@@ -218,7 +219,7 @@ class clsPmieducarFaltaAtrasoCompensado extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_compensado = null,
@@ -354,7 +355,7 @@ class clsPmieducarFaltaAtrasoCompensado extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -372,7 +373,7 @@ class clsPmieducarFaltaAtrasoCompensado extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

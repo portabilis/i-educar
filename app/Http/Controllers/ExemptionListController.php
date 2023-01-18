@@ -22,43 +22,28 @@ class ExemptionListController extends Controller
 
         $this->menu(Process::EXEMPTION_LIST);
 
-        $query = LegacyDisciplineExemption::active()->with('registration.student.person');
-
-        if ($request->get('ano')) {
-            $ano = $request->get('ano');
-            $query->whereHas('registration', function ($registrationQuery) use ($ano) {
-                $registrationQuery->where('ano', $ano);
-            });
-        }
-
         $schools[] = $request->get('ref_cod_escola');
 
         if ($request->user()->isSchooling()) {
             $schools = $request->user()->schools->pluck('cod_escola')->all();
         }
-
-        if (array_filter($schools)) {
-            $query->whereIn('ref_cod_escola', $schools);
-        }
-
-        if ($request->get('ref_cod_serie')) {
-            $query->where('ref_cod_serie', $request->get('ref_cod_serie'));
-        }
-
-        if ($request->get('ref_cod_curso')) {
-            $courseId = $request->get('ref_cod_curso');
-            $query->whereHas('registration', function ($registrationQuery) use ($courseId) {
-                $registrationQuery->where('ref_cod_curso', $courseId);
-            });
-        }
-
-        if ($request->get('ref_cod_componente_curricular')) {
-            $query->where('ref_cod_disciplina', $request->get('ref_cod_componente_curricular'));
-        }
-
-        $query->orderBy('data_cadastro', 'desc');
-
-        $exemptions = $query->paginate(20)->appends($request->except('page'));
+        $exemptions = LegacyDisciplineExemption::filter([
+            'schools' => array_filter($schools),
+            'yearEq' => $request->get('ano'),
+            'grade' => $request->get('ref_cod_serie'),
+            'course' => $request->get('ref_cod_curso'),
+            'discipline' => $request->get('ref_cod_componente_curricular')
+        ])->with([
+            'type:cod_tipo_dispensa,nm_tipo',
+            'registration:cod_matricula,ano,ref_cod_aluno',
+            'registration.student:cod_aluno,ref_idpes',
+            'registration.student.person:idpes,nome',
+            'discipline:id,nome',
+            'createdBy:cod_usuario'
+        ])->withoutTrashed()
+            ->orderByCreatedAt()
+            ->paginate(20)
+            ->appends($request->except('page'));
 
         return view('exemption.index', compact('exemptions'));
     }

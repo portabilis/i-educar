@@ -1,13 +1,10 @@
 <?php
 
-return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
+use App\Models\LegacyRegimeType;
 
+return new class extends clsCadastro {
+
+    public $pessoa_logada;
     public $cod_tipo_regime;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -15,7 +12,6 @@ return new class extends clsCadastro {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -28,20 +24,16 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(568, $this->pessoa_logada, 3, 'educar_tipo_regime_lst.php');
 
         if (is_numeric($this->cod_tipo_regime)) {
-            $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime);
-            $registro  = $obj->detalhe();
+            $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
                 }
 
-                //** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissoes->permissao_excluir(568, $this->pessoa_logada, 3);
-                //**
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_tipo_regime_det.php?cod_tipo_regime={$registro["cod_tipo_regime"]}" : "educar_tipo_regime_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -50,41 +42,39 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_tipo_regime', $this->cod_tipo_regime);
 
-        // foreign keys
-        // foreign keys
         if ($_GET['precisa_lista']) {
             $get_escola = false;
             $obrigatorio = true;
             include('include/pmieducar/educar_campo_lista.php');
-        }// text
-        else {
+        } else {
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
         $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, true);
-
-        // data
     }
 
     public function Novo()
     {
-        $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $type = new LegacyRegimeType();
+        $type->ref_usuario_exc = $this->pessoa_logada;
+        $type->ref_usuario_cad = $this->pessoa_logada;
+        $type->nm_tipo = $this->nm_tipo;
+        $type->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($type->save()) {
             echo "<script>
                         if (parent.document.getElementById('ref_cod_tipo_regime').disabled)
                             parent.document.getElementById('ref_cod_tipo_regime').options[0] = new Option('Selecione um tipo de regime', '', false, false);
-                        parent.document.getElementById('ref_cod_tipo_regime').options[parent.document.getElementById('ref_cod_tipo_regime').options.length] = new Option('$this->nm_tipo', '$cadastrou', false, false);
-                        parent.document.getElementById('ref_cod_tipo_regime').value = '$cadastrou';
+                        parent.document.getElementById('ref_cod_tipo_regime').options[parent.document.getElementById('ref_cod_tipo_regime').options.length] = new Option('$this->nm_tipo', '$type->cod_tipo_regime', false, false);
+                        parent.document.getElementById('ref_cod_tipo_regime').value = '$type->cod_tipo_regime';
                         parent.document.getElementById('ref_cod_tipo_regime').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -108,7 +98,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Regime';
+        $this->title = 'Tipo Regime';
         $this->processoAp = '568';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

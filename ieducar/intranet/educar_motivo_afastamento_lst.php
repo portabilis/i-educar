@@ -52,53 +52,37 @@ return new class extends clsListagem {
         ];
 
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            //$lista_busca[] = "Escola";
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
-        // Filtros de Foreign Keys
-
-        // outros Filtros
         $get_escola = false;
         include('include/pmieducar/educar_campo_lista.php');
-        $this->campoTexto('nm_motivo', 'Motivo de Afastamento', $this->nm_motivo, 30, 255, false);
+        $this->campoTexto(nome: 'nm_motivo', campo: 'Motivo de Afastamento', valor: $this->nm_motivo, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_motivo_afastamento = new clsPmieducarMotivoAfastamento();
-        $obj_motivo_afastamento->setOrderby('nm_motivo ASC');
-        $obj_motivo_afastamento->setLimite($this->limite, $this->offset);
+        $obj_motivo_afastamento->setOrderby(strNomeCampo: 'nm_motivo ASC');
+        $obj_motivo_afastamento->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_motivo_afastamento->lista(
-            null,
-            null,
-            null,
-            $this->nm_motivo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
+            str_nm_motivo: $this->nm_motivo,
+            int_ativo: 1,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         $total = $obj_motivo_afastamento->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                //$obj_ins = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-                //$det_ins = $obj_ins->detalhe();
-
-                //  $ref_cod_instituicao = $det_ins["ref_cod_instituicao"];
-                $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $det_instituicao = $obj_instituicao->detalhe();
 
                 $lista_busca = [
@@ -109,26 +93,26 @@ return new class extends clsListagem {
                     //$lista_busca[] = "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro["cod_motivo_afastamento"]}\">{$det_ins["nome"]}</a>";
                     $lista_busca[] = "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}\">{$det_instituicao['nm_instituicao']}</a>";
                 }
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
-        $this->addPaginador2('educar_motivo_afastamento_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_motivo_afastamento_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(633, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 633, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_motivo_afastamento_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Motivos de afastamento do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        $this->breadcrumb(currentPage: 'Motivos de afastamento do servidor', breadcrumbs: [
+            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motivos de afastamento do servidor';
+        $this->title = 'Motivos de afastamento do servidor';
         $this->processoAp = '633';
     }
 };

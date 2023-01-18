@@ -14,7 +14,7 @@ class clsPortalAcesso extends Model
 
     public function __construct($cod_acesso = null, $data_hora = null, $ip_externo = null, $ip_interno = null, $cod_pessoa = null, $obs = null, $sucesso = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}acesso";
 
@@ -109,6 +109,7 @@ class clsPortalAcesso extends Model
     {
         if (is_numeric($this->cod_acesso)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->data_hora)) {
@@ -150,7 +151,7 @@ class clsPortalAcesso extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($date_data_hora_ini = null, $date_data_hora_fim = null, $str_ip_externo = null, $str_ip_interno = null, $int_cod_pessoa = null, $str_obs = null, $bool_sucesso = null)
     {
@@ -159,10 +160,6 @@ class clsPortalAcesso extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_cod_acesso)) {
-            $filtros .= "{$whereAnd} cod_acesso = '{$int_cod_acesso}'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($date_data_hora_ini)) {
             $filtros .= "{$whereAnd} data_hora >= '{$date_data_hora_ini}'";
             $whereAnd = ' AND ';
@@ -229,7 +226,7 @@ class clsPortalAcesso extends Model
     /**
      * Retorna uma lista de falhas filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista_falhas($int_cod_pessoa = null, $int_min_quantidade_falhas = null, $int_max_quantidade_falhas = null, $date_ultimo_sucesso_ini = null, $date_ultimo_sucesso_fim = null, $date_quinto_erro_ini = null, $date_quinto_erro_fim = null)
     {
@@ -335,7 +332,7 @@ SELECT COUNT(0) FROM (
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -353,7 +350,7 @@ SELECT COUNT(0) FROM (
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -375,9 +372,6 @@ SELECT COUNT(0) FROM (
      */
     public function excluir()
     {
-        if (is_numeric($this->cod_acesso)) {
-        }
-
         return false;
     }
 }

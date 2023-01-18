@@ -3,9 +3,13 @@
 use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudentBenefit;
+use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
+use App\Models\TransportationProvider;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -23,25 +27,9 @@ class AlunoController extends ApiCoreController
     {
         $existenceOptions = ['schema_name' => 'cadastro', 'field_name' => 'idpes'];
 
-        return (
-            $this->validatesPresenceOf('pessoa_id') &&
+        return ($this->validatesPresenceOf('pessoa_id') &&
             $this->validatesExistenceOf('fisica', $this->getRequest()->pessoa_id, $existenceOptions)
         );
-    }
-
-    protected function validatesReligiaoId()
-    {
-        $isValid = true;
-
-        // beneficio is optional
-        if (is_numeric($this->getRequest()->religiao_id)) {
-            $isValid = (
-                $this->validatesPresenceOf('religiao_id') &&
-                $this->validatesExistenceOf('religiao', $this->getRequest()->religiao_id)
-            );
-        }
-
-        return $isValid;
     }
 
     protected function validatesBeneficioId()
@@ -51,8 +39,7 @@ class AlunoController extends ApiCoreController
 
         // beneficio is optional
         if (is_numeric($this->getRequest()->beneficio_id)) {
-            $isValid = (
-                $this->validatesPresenceOf('beneficio_id') &&
+            $isValid = ($this->validatesPresenceOf('beneficio_id') &&
                 $this->validatesExistenceOf('aluno_beneficio', $this->getRequest()->beneficio_id)
             );
         }
@@ -67,8 +54,7 @@ class AlunoController extends ApiCoreController
         if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
             $existenceOptions = ['schema_name' => 'cadastro', 'field_name' => 'idpes'];
 
-            $isValid = (
-                $this->validatesPresenceOf('responsavel_id') &&
+            $isValid = ($this->validatesPresenceOf('responsavel_id') &&
                 $this->validatesExistenceOf('fisica', $this->getRequest()->responsavel_id, $existenceOptions)
             );
         }
@@ -80,8 +66,7 @@ class AlunoController extends ApiCoreController
     {
         $expectedValues = ['mae', 'pai', 'outra_pessoa', 'pai_mae'];
 
-        return (
-            $this->validatesPresenceOf('tipo_responsavel') &&
+        return ($this->validatesPresenceOf('tipo_responsavel') &&
             $this->validator->validatesValueInSetOf(
                 $this->getRequest()->tipo_responsavel,
                 $expectedValues,
@@ -92,8 +77,7 @@ class AlunoController extends ApiCoreController
 
     protected function validatesResponsavel()
     {
-        return (
-            $this->validatesResponsavelTipo() &&
+        return ($this->validatesResponsavelTipo() &&
             $this->validatesResponsavelId()
         );
     }
@@ -102,8 +86,7 @@ class AlunoController extends ApiCoreController
     {
         $expectedValues = ['nenhum', 'municipal', 'estadual'];
 
-        return (
-            $this->validatesPresenceOf('tipo_transporte') &&
+        return ($this->validatesPresenceOf('tipo_transporte') &&
             $this->validator->validatesValueInSetOf(
                 $this->getRequest()->tipo_transporte,
                 $expectedValues,
@@ -194,17 +177,12 @@ class AlunoController extends ApiCoreController
         return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('escola');
     }
 
-    protected function canGetAlunosByGuardianCpf()
-    {
-        return $this->validatesPresenceOf('aluno_id') && $this->validatesPresenceOf('cpf');
-    }
-
     protected function validateInepCode()
     {
         if ($this->getRequest()->aluno_inep_id) {
             $inepCode = str_split($this->getRequest()->aluno_inep_id);
 
-            if(count($inepCode) !== 12 || $inepCode[0] === "0"){
+            if (count($inepCode) !== 12 || $inepCode[0] === "0") {
                 return false;
             }
         }
@@ -214,11 +192,9 @@ class AlunoController extends ApiCoreController
 
     protected function canChange()
     {
-        return (
-            $this->validatesPessoaId() &&
+        return ($this->validatesPessoaId() &&
             $this->validatesResponsavel() &&
             $this->validatesTransporte() &&
-            $this->validatesReligiaoId() &&
             $this->validatesUniquenessOfAlunoInepId() &&
             $this->validatesUniquenessOfAlunoEstadoId()
         );
@@ -376,26 +352,9 @@ class AlunoController extends ApiCoreController
         return $turnoValido;
     }
 
-    protected function loadTransporte($alunoId)
+    protected function loadTransporte($responsavelTransporte): string
     {
-        $tiposTransporte = [
-            Transporte_Model_Responsavel::NENHUM => 'nenhum',
-            Transporte_Model_Responsavel::MUNICIPAL => 'municipal',
-            Transporte_Model_Responsavel::ESTADUAL => 'estadual'
-        ];
-
-        $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
-        $entity = $this->tryGetEntityOf($dataMapper, $alunoId);
-
-        //Alterado para retornar null quando não houver transporte, pois
-        //na validação do censo este campo é obrigatório e não deve vir pré-populado
-        if (is_null($entity)) {
-            $tipo = $tiposTransporte[null];
-        } else {
-            $tipo = $tiposTransporte[$entity->get('responsavel')];
-        }
-
-        return $tipo;
+        return (new TransportationProvider())->getValueDescription($responsavelTransporte);
     }
 
     protected function saveSus($pessoaId)
@@ -404,28 +363,6 @@ class AlunoController extends ApiCoreController
         $sql = 'update cadastro.fisica set sus = $1 where idpes = $2';
 
         return $this->fetchPreparedQuery($sql, [$sus, $pessoaId]);
-    }
-
-    protected function createOrUpdateTransporte($alunoId)
-    {
-        $tiposTransporte = [
-            'nenhum' => Transporte_Model_Responsavel::NENHUM,
-            'municipal' => Transporte_Model_Responsavel::MUNICIPAL,
-            'estadual' => Transporte_Model_Responsavel::ESTADUAL
-        ];
-
-        $data = [
-            'aluno' => $alunoId,
-            'responsavel' => $tiposTransporte[$this->getRequest()->tipo_transporte],
-            'user' => \Illuminate\Support\Facades\Auth::id(),
-            'created_at' => 'NOW()',
-        ];
-
-        $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
-        $entity = $this->getOrCreateEntityOf($dataMapper, $alunoId);
-        $entity->setOptions($data);
-
-        return $this->saveEntity($dataMapper, $entity);
     }
 
     protected function createOrUpdateFichaMedica($id)
@@ -578,14 +515,15 @@ class AlunoController extends ApiCoreController
 
     protected function updateDeficiencias()
     {
-        $sql = 'delete from cadastro.fisica_deficiencia where ref_idpes = $1';
-        $this->fetchPreparedQuery($sql, $this->getRequest()->pessoa_id, false);
+        $individual = LegacyIndividual::find($this->getRequest()->pessoa_id,['idpes']);
+        $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
+        $news = array_filter($this->getRequest()->deficiencias);
+        $individual->deficiency()->sync($news);
 
-        foreach ($this->getRequest()->deficiencias as $id) {
-            if (!empty($id)) {
-                $deficiencia = new clsCadastroFisicaDeficiencia($this->getRequest()->pessoa_id, $id);
-                $deficiencia->cadastra();
-            }
+        $diff = array_merge(array_diff($old, $news),array_diff($news,$old));
+
+        if (! empty($diff)) {
+            LegacyDeficiency::whereIn('cod_deficiencia', $diff)->update(['updated_at' => now()]);
         }
     }
 
@@ -597,8 +535,7 @@ class AlunoController extends ApiCoreController
         $aluno->cod_aluno = $id;
 
         $alunoEstadoId = mb_strtoupper($this->getRequest()->aluno_estado_id);
-        $alunoEstadoId = str_replace('.', '', $alunoEstadoId);
-        $alunoEstadoId = str_replace('-', '', $alunoEstadoId);
+        $alunoEstadoId = str_replace(['-','.'], '', $alunoEstadoId);
 
         if (strlen($alunoEstadoId) < 10) {
             $mask['pattern'] = '"(.{3})(.{3})(.{3})"';
@@ -608,9 +545,7 @@ class AlunoController extends ApiCoreController
             $mask['replacement'] = '\\1.\\2.\\3-\\4';
         }
 
-        $alunoEstadoId = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
-        $aluno->aluno_estado_id = $alunoEstadoId;
-
+        $aluno->aluno_estado_id = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
         $aluno->codigo_sistema = $this->getRequest()->codigo_sistema;
         $aluno->autorizado_um = $this->getRequest()->autorizado_um;
         $aluno->parentesco_um = $this->getRequest()->parentesco_um;
@@ -637,12 +572,23 @@ class AlunoController extends ApiCoreController
         $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
 
         // INFORAMÇÕES PROVA INEP
-        $recursosProvaInep = array_filter($this->getRequest()->recursos_prova_inep__);
-        $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
+        $recursosProvaInepRequest = $this->getRequest()->recursos_prova_inep__;
+        $recursosProvaInep = null;
+        if (is_array($recursosProvaInepRequest)) {
+            $recursosProvaInep = array_filter($recursosProvaInepRequest);
+            $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
+        }
         $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
-        $aluno->veiculo_transporte_escolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
+
+        $veiculoTransportEscolarFromRequest = $this->getRequest()->veiculo_transporte_escolar;
+        $veiculoTransporteEscolar = null;
+        if (is_array($veiculoTransportEscolarFromRequest)) {
+            $veiculoTransporteEscolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
+        }
+
+        $aluno->veiculo_transporte_escolar = $veiculoTransporteEscolar;
 
         $this->file_foto = $_FILES['file'];
         $this->del_foto = $_POST['file_delete'];
@@ -661,6 +607,8 @@ class AlunoController extends ApiCoreController
 
         //laudo medico
         $aluno->url_laudo_medico = $this->getRequest()->url_laudo_medico;
+
+        $aluno->tipo_transporte = (new TransportationProvider())->from($this->getRequest()->tipo_transporte);
 
         if (is_null($id)) {
             $id = $aluno->cadastra();
@@ -776,9 +724,7 @@ class AlunoController extends ApiCoreController
         }
 
         if (!isset($this->_tiposOcorrenciasDisciplinares[$id])) {
-            $ocorrencia = new clsPmieducarTipoOcorrenciaDisciplinar;
-            $ocorrencia->cod_tipo_ocorrencia_disciplinar = $id;
-            $ocorrencia = $ocorrencia->detalhe();
+            $ocorrencia = LegacyDisciplinaryOccurrenceType::find($id)?->toArray();
 
             $this->_tiposOcorrenciasDisciplinares[$id] = $this->toUtf8(
                 $ocorrencia['nm_tipo'],
@@ -793,6 +739,11 @@ class AlunoController extends ApiCoreController
     {
         $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
+        $alunoId = $this->getRequest()->aluno_id;
+
+        if (is_array($alunoId)) {
+            $alunoId = implode(',', $alunoId);
+        }
 
         if (is_array($escola)) {
             $escola = implode(',', $escola);
@@ -804,6 +755,11 @@ class AlunoController extends ApiCoreController
         if ($modified) {
             $where = ' AND od.updated_at >= $1';
             $params[] = $modified;
+        }
+
+        $alunoFilter = '';
+        if ($alunoId) {
+            $alunoFilter = "AND m.ref_cod_aluno in ({$alunoId})";
         }
 
         $sql = "
@@ -829,6 +785,7 @@ class AlunoController extends ApiCoreController
             on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
             where true
                 and od.visivel_pais = 1
+                {$alunoFilter}
                 and m.ref_ref_cod_escola IN ({$escola})
                 {$where}
         ";
@@ -1127,9 +1084,7 @@ class AlunoController extends ApiCoreController
         if ($this->canGet()) {
             $id = $this->getRequest()->id;
 
-            $aluno = new clsPmieducarAluno();
-            $aluno->cod_aluno = $id;
-            $aluno = $aluno->detalhe();
+            $alunoDetalhe = (new clsPmieducarAluno($id))->detalhe();
 
             $attrs = [
                 'cod_aluno' => 'id',
@@ -1159,28 +1114,18 @@ class AlunoController extends ApiCoreController
                 'parentesco_quatro',
                 'autorizado_cinco',
                 'parentesco_cinco',
-                'emancipado'
+                'emancipado',
+                'tipo_transporte'
             ];
 
-            $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
+            $aluno = Portabilis_Array_Utils::filter($alunoDetalhe, $attrs);
 
             $aluno['nome'] = $this->loadNomeAluno($id);
-            $aluno['tipo_transporte'] = $this->loadTransporte($id);
+            $aluno['tipo_transporte'] = $this->loadTransporte($aluno['tipo_transporte']);
             $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
             $aluno['aluno_inep_id'] = $this->loadAlunoInepId($id);
             $aluno['ativo'] = $aluno['ativo'] == 1;
-            $aluno['aluno_estado_id'] = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
-            $aluno['codigo_sistema'] = Portabilis_String_Utils::toUtf8($aluno['codigo_sistema']);
-            $aluno['autorizado_um'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_um']);
-            $aluno['parentesco_um'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_um']);
-            $aluno['autorizado_dois'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_dois']);
-            $aluno['parentesco_dois'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_dois']);
-            $aluno['autorizado_tres'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_tres']);
-            $aluno['parentesco_tres'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_tres']);
-            $aluno['autorizado_quatro'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_quatro']);
-            $aluno['parentesco_quatro'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_quatro']);
-            $aluno['autorizado_cinco'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_cinco']);
-            $aluno['parentesco_cinco'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_cinco']);
+
             $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
             $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;
             unset($aluno['analfabeto']);
@@ -1207,29 +1152,24 @@ class AlunoController extends ApiCoreController
             $objMoradia = new clsModulesMoradiaAluno($id);
             if ($objMoradia->existe()) {
                 $objMoradia = $objMoradia->detalhe();
-
-                foreach ($objMoradia as $chave => $value) {
-                    $objMoradia[$chave] = Portabilis_String_Utils::toUtf8($value);
-                }
-
                 $aluno = Portabilis_Array_Utils::merge($objMoradia, $aluno);
             }
 
-            $objPessoaTransporte = new clsModulesPessoaTransporte(null, null, $aluno['pessoa_id']);
-            $objPessoaTransporte = $objPessoaTransporte->detalhe();
+            // TODO remover no futuro #transport-package
+            if (class_exists(clsModulesPessoaTransporte::class)) {
+                $objPessoaTransporte = new clsModulesPessoaTransporte(null, null, $aluno['pessoa_id']);
+                $objPessoaTransporte = $objPessoaTransporte->detalhe();
 
-            if ($objPessoaTransporte) {
-                foreach ($objPessoaTransporte as $chave => $value) {
-                    $objPessoaTransporte[$chave] = Portabilis_String_Utils::toUtf8($value);
+                if ($objPessoaTransporte) {
+                    $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
                 }
-
-                $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
             }
 
-            $sql = 'select sus, ref_cod_religiao from cadastro.fisica where idpes = $1';
+            $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
             $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
 
             $aluno['sus'] = $camposFisica['sus'];
+            $aluno['observacao_aluno'] = $camposFisica['observacao'];
             $aluno['religiao_id'] = $camposFisica['ref_cod_religiao'];
             $aluno['beneficios'] = $this->loadBeneficios($id);
             $aluno['projetos'] = $this->loadProjetos($id);
@@ -1349,67 +1289,11 @@ class AlunoController extends ApiCoreController
         }
     }
 
-    protected function getIdpesFromCpf($cpf)
-    {
-        $sql = 'SELECT idpes FROM cadastro.fisica WHERE cpf = $1';
-
-        return $this->fetchPreparedQuery($sql, $cpf, true, 'first-field');
-    }
-
-    protected function checkAlunoIdpesGuardian($idpesGuardian, $alunoId)
-    {
-        $sql = '
-            SELECT 1
-            FROM pmieducar.aluno
-            INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
-            WHERE cod_aluno = $2
-            AND (idpes_pai = $1
-            OR idpes_mae = $1
-            OR idpes_responsavel = $1) LIMIT 1
-        ';
-
-        return $this->fetchPreparedQuery($sql, [$idpesGuardian, $alunoId], true, 'first-field') == 1;
-    }
-
-    protected function getAlunosByGuardianCpf()
-    {
-        if ($this->canGetAlunosByGuardianCpf()) {
-            $cpf = $this->getRequest()->cpf;
-            $alunoId = $this->getRequest()->aluno_id;
-
-            $idpesGuardian = $this->getIdpesFromCpf($cpf);
-
-            if (is_numeric($idpesGuardian) && $this->checkAlunoIdpesGuardian($idpesGuardian, $alunoId)) {
-                $sql = '
-                    SELECT cod_aluno as aluno_id, pessoa.nome as nome_aluno
-                    FROM pmieducar.aluno
-                    INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
-                    INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
-                    WHERE idpes_pai = $1
-                    OR idpes_mae = $1
-                    OR idpes_responsavel = $1
-                ';
-
-                $alunos = $this->fetchPreparedQuery($sql, [$idpesGuardian]);
-                $attrs = ['aluno_id', 'nome_aluno'];
-                $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
-
-                foreach ($alunos as &$aluno) {
-                    $aluno['nome_aluno'] = Portabilis_String_Utils::toUtf8($aluno['nome_aluno']);
-                }
-
-                return ['alunos' => $alunos];
-            } else {
-                $this->messenger->append('Não foi encontrado nenhum vínculos entre esse aluno e cpf.');
-            }
-        }
-    }
-
     protected function getMatriculas()
     {
         if ($this->canGetMatriculas()) {
             $matriculas = new clsPmieducarMatricula();
-            $matriculas->setOrderby('ano DESC, coalesce(m.data_matricula, m.data_cadastro) DESC, (CASE WHEN dependencia THEN 1 ELSE 0 END), ref_ref_cod_serie DESC, cod_matricula DESC, aprovado');
+            $matriculas->setOrderby('ano DESC, coalesce(m.data_matricula, m.data_cadastro) DESC, (CASE WHEN dependencia THEN 1 ELSE 0 END), nm_serie DESC, cod_matricula DESC, aprovado');
 
             $only_valid_boletim = $this->getRequest()->only_valid_boletim;
 
@@ -1555,12 +1439,14 @@ class AlunoController extends ApiCoreController
 
     public function updateBeneficios($id)
     {
-        $obj = new clsPmieducarAlunoBeneficio();
-        $obj->deletaBeneficiosDoAluno($id);
-
+        LegacyStudentBenefit::query()->where('aluno_id', $id)->delete();
         foreach ($this->getRequest()->beneficios as $beneficioId) {
             if (!empty($beneficioId)) {
-                $obj->cadastraBeneficiosDoAluno($id, $beneficioId);
+                $alunoBeneficio = new LegacyStudentBenefit();
+                $alunoBeneficio->aluno_id = $id;
+                $alunoBeneficio->aluno_beneficio_id = $beneficioId;
+
+                $alunoBeneficio->save();
             }
         }
     }
@@ -1572,8 +1458,7 @@ class AlunoController extends ApiCoreController
 
     public function saveProjetos($alunoId)
     {
-        $obj = new clsPmieducarProjeto();
-        $obj->deletaProjetosDoAluno($alunoId);
+        LegacyStudentProject::query()->where('ref_cod_aluno', $alunoId)->delete();
 
         foreach ($this->getRequest()->projeto_turno as $key => $value) {
             $projetoId = $this->retornaCodigo($this->getRequest()->projeto_cod_projeto[$key]);
@@ -1585,8 +1470,22 @@ class AlunoController extends ApiCoreController
 
                 if (is_numeric($projetoId) && is_numeric($turnoId) && !empty($dataInclusao)) {
                     if ($this->validaTurnoProjeto($alunoId, $turnoId)) {
-                        if (!$obj->cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId)) {
+                        $count = LegacyStudentProject::query()->where('ref_cod_aluno', $alunoId)
+                            ->where('ref_cod_projeto', $projetoId)
+                            ->count();
+                        if ($count > 0) {
                             $this->messenger->append('O aluno não pode ser cadastrado no mesmo projeto mais de uma vez.');
+                        } else {
+                            $alunoProjeto = new LegacyStudentProject();
+                            $alunoProjeto->ref_cod_aluno = $alunoId;
+                            $alunoProjeto->data_inclusao = $dataInclusao;
+                            if ($dataDesligamento && $dataDesligamento != "") {
+                                $alunoProjeto->data_desligamento = $dataDesligamento;
+                            }
+                            $alunoProjeto->ref_cod_projeto = $projetoId;
+                            $alunoProjeto->turno = $turnoId;
+
+                            $alunoProjeto->save();
                         }
                     } else {
                         $this->messenger->append('O aluno não pode ser cadastrado em projetos no mesmo turno em que estuda, por favor, verifique.');
@@ -1634,7 +1533,6 @@ class AlunoController extends ApiCoreController
                 $this->updateBeneficios($id);
                 $this->updateResponsavel();
                 $this->saveSus($pessoaId);
-                $this->createOrUpdateTransporte($id);
                 $this->createUpdateOrDestroyEducacensoAluno($id);
                 $this->updateDeficiencias();
                 $this->createOrUpdateFichaMedica($id);
@@ -1667,7 +1565,6 @@ class AlunoController extends ApiCoreController
             $this->updateBeneficios($id);
             $this->updateResponsavel();
             $this->saveSus($pessoaId);
-            $this->createOrUpdateTransporte($id);
             $this->createUpdateOrDestroyEducacensoAluno($id);
             $this->updateDeficiencias();
             $this->createOrUpdateFichaMedica($id);
@@ -1688,6 +1585,11 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdatePessoaTransporte($ref_idpes)
     {
+        // TODO remover no futuro o uso deste método createOrUpdatePessoaTransporte #transport-package
+        if (class_exists(clsModulesPessoaTransporte::class) === false) {
+            return;
+        }
+
         $pt = new clsModulesPessoaTransporte(null, null, $ref_idpes);
         $det = $pt->detalhe();
 
@@ -1875,6 +1777,7 @@ class AlunoController extends ApiCoreController
         $fisica->cpf = $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : 'NULL';
         $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
         $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep ?: 'NULL';
+        $fisica->observacao = $this->getRequest()->observacao_aluno ?: 'NULL';
         $fisica = $fisica->edita();
     }
 
@@ -1990,12 +1893,13 @@ class AlunoController extends ApiCoreController
     {
         $var1 = $this->getRequest()->id;
 
-        $sql = "SELECT relatorio.get_texto_sem_caracter_especial(bairro.nome) as nome
-                  FROM pmieducar.aluno
-            INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
-            INNER JOIN cadastro.endereco_pessoa ON (fisica.idpes = endereco_pessoa.idpes)
-            INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
-                 WHERE cod_aluno = $var1";
+        $sql = "
+            SELECT unaccent(upper(neighborhood)) AS nome
+            FROM addresses a
+            JOIN person_has_place php ON a.id = php.place_id
+            JOIN pmieducar.aluno al ON al.ref_idpes = php.person_id
+            WHERE al.cod_aluno = {$var1}
+        ";
 
         $bairro = $this->fetchPreparedQuery($sql);
 
@@ -2017,7 +1921,7 @@ class AlunoController extends ApiCoreController
             });
         });
 
-        return  ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
+        return  ['unificacoes' => $unificationsQuery->get(['id', 'main_id', 'duplicates_id', 'created_at', 'active'])->all()];
     }
 
     protected function dadosUnificacaoAlunos()
@@ -2124,8 +2028,6 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getOcorrenciasDisciplinares());
         } elseif ($this->isRequestFor('get', 'grade_ultimo_historico')) {
             $this->appendResponse($this->getGradeUltimoHistorico());
-        } elseif ($this->isRequestFor('get', 'alunos_by_guardian_cpf')) {
-            $this->appendResponse($this->getAlunosByGuardianCpf());
         } elseif ($this->isRequestFor('post', 'aluno')) {
             $this->appendResponse($this->post());
         } elseif ($this->isRequestFor('put', 'aluno')) {

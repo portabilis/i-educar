@@ -1,10 +1,8 @@
 <?php
 
-
-
 class CoreExt_Enum2Stub extends CoreExt_Enum
 {
-    const TWO = 2;
+    public const TWO = 2;
 
     protected $_data = [
         self::TWO => 2

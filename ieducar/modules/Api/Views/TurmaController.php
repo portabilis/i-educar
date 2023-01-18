@@ -1,7 +1,6 @@
 <?php
 
-# TODO remove-require
-require_once 'Reports/Tipos/TipoBoletim.php';
+use App\Models\LegacySchoolClassGrade;
 
 class TurmaController extends ApiCoreController
 {
@@ -30,14 +29,6 @@ class TurmaController extends ApiCoreController
         return (
             $this->canAcceptRequest() &&
             $this->validatesTurmaId()
-        );
-    }
-
-    protected function canGetAlunosMatriculadosTurma()
-    {
-        return (
-            $this->validatesPresenceOf('instituicao_id') &&
-            $this->validatesPresenceOf('turma_id')
         );
     }
 
@@ -145,6 +136,7 @@ class TurmaController extends ApiCoreController
         $objMatriculaTurma = new clsPmieducarMatriculaTurma();
         $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma, null, null, null, null, null, null, 3);
 
+        $lstNomes = [];
         foreach ($lstMatriculaTurma as $matricula) {
             $lstNomes[] = [
                 'nome' => limpa_acentos(mb_strtoupper($matricula['nome'])),
@@ -175,8 +167,23 @@ class TurmaController extends ApiCoreController
     protected function getTipoBoletim()
     {
         $turma = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
+        $serie = $this->getRequest()->serie_id;
+
         $tipo = $turma['tipo_boletim'];
         $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
+
+        if ((int) $turma['multiseriada'] === 1) {
+            $boletimPorSerie = LegacySchoolClassGrade::query()
+            ->where('turma_id', $turma)
+            ->where('serie_id', $serie)
+            ->first();
+
+            if ($boletimPorSerie instanceof LegacySchoolClassGrade) {
+                $boletimPorSerie->toArray();
+                $tipo = $boletimPorSerie['boletim_id'];
+                $tipoDiferenciado = $boletimPorSerie['boletim_diferenciado_id'];
+            }
+        }
 
         $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
         $tipos = Portabilis_Array_Utils::insertIn(null, 'indefinido', $tipos);
@@ -219,10 +226,13 @@ class TurmaController extends ApiCoreController
                     t.ano,
                     t.ref_ref_cod_escola as escola_id,
                     t.turma_turno_id as turno_id,
-                    t.ref_cod_curso as curso_id,
-                    t.ref_ref_cod_serie as serie_id,
-                   ra.id as regra_avaliacao_id,
-                   ra.regra_diferenciada_id as regra_avaliacao_diferenciada_id,
+                    t.ref_cod_regente,
+                    json_agg(
+                        json_build_object(
+                            'serie_id', s.cod_serie,
+                            'regra_avaliacao_id', ra.id
+                        )
+                    ) AS series_regras,
                     t.updated_at,
                     (
                         CASE t.ativo WHEN 1 THEN
@@ -234,8 +244,10 @@ class TurmaController extends ApiCoreController
                 FROM pmieducar.turma t
                 INNER JOIN pmieducar.escola e
                     ON e.cod_escola = t.ref_ref_cod_escola
+                LEFT JOIN pmieducar.turma_serie ts ON ts.turma_id = t.cod_turma
+                JOIN pmieducar.serie s ON s.cod_serie = coalesce(ts.serie_id, t.ref_ref_cod_serie)
                 LEFT JOIN modules.regra_avaliacao_serie_ano rasa ON true
-                    AND rasa.serie_id = t.ref_ref_cod_serie
+                    AND rasa.serie_id = s.cod_serie
                     AND rasa.ano_letivo = $2
                 LEFT JOIN modules.regra_avaliacao ra
                     ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
@@ -244,102 +256,28 @@ class TurmaController extends ApiCoreController
                     AND t.ref_ref_cod_escola IN ({$escola})
                     {$turnoId}
                     {$modified}
+                GROUP BY
+                    t.cod_turma,
+                    t.nm_turma,
+                    t.ano,
+                    t.ref_ref_cod_escola,
+                    t.turma_turno_id
                 ORDER BY t.updated_at, t.ref_ref_cod_escola, t.nm_turma
             ";
 
             $turmas = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'serie_id', 'regra_avaliacao_id', 'regra_avaliacao_diferenciada_id', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'series_regras','ref_cod_regente', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
+
+            foreach ($turmas as $key => $turma) {
+                $turmas[$key]['series_regras'] = json_decode($turma['series_regras']);
+            }
 
             return ['turmas' => $turmas];
         }
     }
 
-    protected function getAlunosMatriculadosTurma()
-    {
-        if ($this->canGetAlunosMatriculadosTurma()) {
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $turmaId = $this->getRequest()->turma_id;
-            $disciplinaId = $this->getRequest()->disciplina_id;
-            $dataMatricula = $this->getRequest()->data_matricula;
-
-            $sql = 'SELECT a.cod_aluno as id,
-                     m.dependencia,
-                     mt.sequencial_fechamento as sequencia,
-                     mt.data_enturmacao
-              FROM pmieducar.aluno a
-              INNER JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
-              INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
-              INNER JOIN pmieducar.turma t ON mt.ref_cod_turma = t.cod_turma
-              INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
-              WHERE m.ativo = 1
-                AND a.ativo = 1
-                AND t.ativo = 1
-                AND t.ref_cod_instituicao = $1
-                AND t.cod_turma  = $2
-                AND (CASE WHEN coalesce($3, current_date)::date = current_date
-                      THEN mt.ativo = 1
-                     ELSE
-                       (CASE WHEN mt.ativo = 0 THEN
-                          mt.sequencial = ( select max(matricula_turma.sequencial)
-                                              from pmieducar.matricula_turma
-                                             inner join pmieducar.matricula on(matricula_turma.ref_cod_matricula = matricula.cod_matricula)
-                                             where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
-                                               and matricula_turma.ref_cod_turma = mt.ref_cod_turma
-                                               and ($3::date >= matricula_turma.data_enturmacao::date
-                                                   and $3::date < coalesce(matricula_turma.data_exclusao::date, matricula.data_cancel::date, current_date))
-                                               and matricula_turma.ativo = 0
-                                               and not exists(select 1
-                                                                from pmieducar.matricula_turma mt_sub
-                                                               where mt_sub.ativo = 1
-                                                                 and mt_sub.ref_cod_matricula = mt.ref_cod_matricula
-                                                                 and mt_sub.ref_cod_turma = mt.ref_cod_turma
-                                                              )
-                                          )
-                       ELSE
-                          ($3::date >= mt.data_enturmacao::date
-                          and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
-                       END)
-                      END)';
-
-            $params = [$instituicaoId, $turmaId, $dataMatricula];
-
-            if (is_numeric($disciplinaId)) {
-                $params[] = $disciplinaId;
-                $sql .= 'AND
-                  CASE WHEN m.dependencia THEN
-                    (
-                      SELECT 1 FROM pmieducar.disciplina_dependencia dd
-                      WHERE dd.ref_cod_matricula = m.cod_matricula
-                      AND dd.ref_cod_disciplina = $4
-                      LIMIT 1
-                    ) IS NOT NULL
-                  ELSE
-                   (
-                    SELECT 1 FROM pmieducar.dispensa_disciplina dd
-                    WHERE dd.ativo = 1
-                    AND dd.ref_cod_matricula = m.cod_matricula
-                    AND dd.ref_cod_disciplina = $4
-                    LIMIT 1
-                  ) IS NULL
-                END';
-            }
-
-            $sql .= ' ORDER BY m.dependencia, (upper(p.nome))';
-
-            $alunos = $this->fetchPreparedQuery($sql, $params);
-
-            $attrs = ['id','dependencia', 'sequencia', 'data_enturmacao'];
-            $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
-
-            foreach ($alunos as &$aluno) {
-                $aluno['dependencia'] = dbBool($aluno['dependencia']);
-            }
-
-            return ['alunos' => $alunos];
-        }
-    }
     protected function getAlunosExameTurma()
     {
         $instituicaoId = $this->getRequest()->instituicao_id;
@@ -376,6 +314,20 @@ class TurmaController extends ApiCoreController
         return ['alunos' => $alunos];
     }
 
+    protected function getSeriesDaTurma()
+    {
+        $schoolClass = $this->getRequest()->turma_id;
+        $seriesDaTurma = LegacySchoolClassGrade::query()
+            ->select('turma_serie.*', 'serie.ref_cod_curso', 'curso.padrao_ano_escolar')
+            ->join('pmieducar.serie', 'serie.cod_serie', '=', 'turma_serie.serie_id')
+            ->join('pmieducar.curso', 'curso.cod_curso', '=', 'serie.ref_cod_curso')
+            ->where('turma_id', $schoolClass)
+            ->get()
+            ->toArray();
+
+        return ['series_turma' => $seriesDaTurma];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'turma')) {
@@ -388,10 +340,10 @@ class TurmaController extends ApiCoreController
             $this->appendResponse($this->ordenaSequencialAlunosTurma());
         } elseif ($this->isRequestFor('get', 'turmas-por-escola')) {
             $this->appendResponse($this->getTurmasPorEscola());
-        } elseif ($this->isRequestFor('get', 'alunos-matriculados-turma')) {
-            $this->appendResponse($this->getAlunosMatriculadosTurma());
         } elseif ($this->isRequestFor('get', 'alunos-exame-turma')) {
             $this->appendResponse($this->getAlunosExameTurma());
+        } elseif ($this->isRequestFor('get', 'series-da-turma')) {
+            $this->appendResponse($this->getSeriesDaTurma());
         } else {
             $this->notImplementedOperationError();
         }

@@ -6,9 +6,9 @@ use iEducar\Modules\Educacenso\Model\Deficiencias;
 
 class Registro30 implements RegistroEducacenso
 {
-    const TIPO_MANAGER = 'manager';
-    const TIPO_TEACHER = 'teacher';
-    const TIPO_STUDENT = 'student';
+    public const TIPO_MANAGER = 'manager';
+    public const TIPO_TEACHER = 'teacher';
+    public const TIPO_STUDENT = 'student';
 
     public $tipos = [];
 
@@ -114,15 +114,9 @@ class Registro30 implements RegistroEducacenso
 
     public $formacaoInstituicao;
 
-    public $formacaoComponenteCurricular;
+    public $complementacaoPedagogica;
 
-    public $countPosGraduacao;
-
-    public $posGraduacaoEspecializacao;
-
-    public $posGraduacaoMestrado;
-
-    public $posGraduacaoDoutorado;
+    public $posGraduacoes;
 
     public $posGraduacaoNaoPossui;
 

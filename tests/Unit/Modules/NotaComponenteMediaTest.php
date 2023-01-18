@@ -1,7 +1,5 @@
 <?php
 
-
-
 class NotaComponenteMediaTest extends UnitBaseTest
 {
     protected $_entity = null;

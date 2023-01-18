@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>i-Educar @if(isset($title)) - {!! $title !!} @endif</title>
+    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" href="{{ Asset::get('css/vue-multiselect.min.css') }}">
     <link rel="stylesheet" href="{{ Asset::get('intranet/styles/font-awesome.css') }}">
@@ -16,23 +18,22 @@
 <div class="ieducar-container">
     <header class="ieducar-header">
         <div class="ieducar-header-logo">
-            <h1><a href="{{ url('/') }}">i-Educar</a></h1>
+            <h1><a href="{{ Asset::get('/') }}">i-Educar</a></h1>
         </div>
         <div class="ieducar-header-links">
             <div class="dropdown">
                 <div class="dropbtn">{{ $loggedUser->name }}</div>
                 <div class="dropdown-content">
-                    <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
-                    <a href="{{ url('intranet/index.php') }}">Calendário</a>
-                    <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
-                    <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
+                    <a href="{{ Asset::get('intranet/agenda.php') }}">Agenda</a>
+                    <a href="{{ Asset::get('intranet/meusdados.php') }}">Meus dados</a>
+                    <a href="{{ Asset::get('intranet/logof.php') }}" id="logout">Sair</a>
                 </div>
             </div>
-            <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
-                <img height="35" src="{{ url('intranet/imagens/user-perfil.png') }}" alt="Perfil">
+            <a href="{{ Asset::get('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
+                <img height="35" src="{{ Asset::get('intranet/imagens/user-perfil.png') }}" alt="Perfil">
             </a>
             <a href="#" class="notifications">
-                <img alt="Notificação" id="notificacao" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}">
+                <img alt="Notificação" id="notificacao" src="{{ Asset::get('intranet/imagens/icon-nav-notifications.png') }}">
             </a>
         </div>
     </header>

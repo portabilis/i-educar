@@ -40,10 +40,12 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
             case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
             case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
                 $mapper = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
+
                 break;
             case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
             case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
                 $mapper = 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper';
+
                 break;
         }
 

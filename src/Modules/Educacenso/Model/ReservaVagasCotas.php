@@ -4,12 +4,12 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class ReservaVagasCotas
 {
-    const NAO_POSSUI = 1;
-    const AUTODECLARACAO_PPI = 2;
-    const CONDICAO_RENDA = 3;
-    const ESCOLA_PUBLICA = 4;
-    const PCD = 5;
-    const OUTROS = 6;
+    public const NAO_POSSUI = 1;
+    public const AUTODECLARACAO_PPI = 2;
+    public const CONDICAO_RENDA = 3;
+    public const ESCOLA_PUBLICA = 4;
+    public const PCD = 5;
+    public const OUTROS = 6;
 
     public static function getDescriptiveValues()
     {

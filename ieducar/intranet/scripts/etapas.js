@@ -45,7 +45,7 @@ $j(function () {
                 if (validationUtils.validatesFields(true)) {
                     if (parseInt($j('#padrao_ano_escolar').val(), 10) === 1) {
                         if (typeof window.valida !== "undefined") {
-                            // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
+                            // reproduzindo função encontrada em vendor/legacy/Cadastro/Assets/Javascripts/Turma.js:332
                             if (validationUtils.validatesFields(true)) {
                                 window.valida();
                             }
@@ -81,7 +81,7 @@ $j(function () {
 
                     if (valid) {
                         if (typeof window.valida !== "undefined") {
-                            // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
+                            // reproduzindo função encontrada em vendor/legacy/Cadastro/Assets/Javascripts/Turma.js:332
                             if (validationUtils.validatesFields(true)) {
                                 window.valida();
                             }
@@ -164,7 +164,7 @@ $j(function () {
                     dateParts = that.getDateParts(val),
                     ts = that.makeTimestamp(dateParts),
                     parentLine = $elm.closest('tr'),
-                    previousLine = parentLine.prev(that.getSelector('stepsRows'));
+                    previousLine = parentLine.prevAll(that.getSelector('stepsRows')).first();
 
                 if (previousLine.length < 1) {
                     var validYears = [currentYear, previousYear];
@@ -206,13 +206,17 @@ $j(function () {
             }
         },
         removeTableCellsAndRows: function () {
-            var removeLinks = $j('[id^=link_remove'),
-                addLink = $j('[id^=btn_add]'),
+            let tabela = '';
+            if (this.env == 'turma') {
+                tabela = '#turma_modulo ';
+            }
+            var removeLinks = $j(tabela + '[id^=link_remove'),
+                addLink = $j(tabela + '[id^=btn_add]'),
                 sendBtn = $j('#btn_enviar');
 
-            $j('td#td_acao').hide();
-            $j('[id^=link_remove').parent().hide();
-            $j('#adicionar_linha').hide();
+            $j(tabela + 'td#td_acao').hide();
+            $j(tabela + '[id^=link_remove').parent().hide();
+            $j(tabela + '#adicionar_linha').hide();
 
             removeLinks.removeAttr('onclick');
             addLink.removeAttr('onclick');
@@ -355,7 +359,11 @@ $j(function () {
         },
         addRows: function (qtt) {
             for (var i = 0; i < qtt; i++) {
-                tab_add_1.addRow();
+                if (this.env == 'turma') {
+                    tab_add_2.addRow();
+                } else {
+                    tab_add_1.addRow();
+                }
                 this.removeTableCellsAndRows();
             }
         },

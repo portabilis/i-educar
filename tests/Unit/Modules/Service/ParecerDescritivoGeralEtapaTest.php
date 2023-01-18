@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Service_ParecerDescritivoCommon
 {
     protected function setUp(): void

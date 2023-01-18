@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarTurmaModuloTable extends Migration
     {
         Schema::table('pmieducar.turma_modulo', function (Blueprint $table) {
             $table->foreign('ref_cod_turma')
-               ->references('cod_turma')
-               ->on('pmieducar.turma')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_turma')
+                ->on('pmieducar.turma')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_modulo')
-               ->references('cod_modulo')
-               ->on('pmieducar.modulo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_modulo')
+                ->on('pmieducar.modulo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

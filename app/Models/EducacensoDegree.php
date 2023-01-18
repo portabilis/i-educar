@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EducacensoDegree extends Model
 {
@@ -16,10 +17,10 @@ class EducacensoDegree extends Model
      */
     protected $primaryKey = 'id';
 
-    const GRAU_TECNOLOGICO = 1;
-    const GRAU_LICENCIATURA = 2;
-    const GRAU_BACHARELADO = 3;
-    const GRAU_SEQUENCIAL = 4;
+    public const GRAU_TECNOLOGICO = 1;
+    public const GRAU_LICENCIATURA = 2;
+    public const GRAU_BACHARELADO = 3;
+    public const GRAU_SEQUENCIAL = 4;
 
     protected $fillable = [
         'curso_id',
@@ -29,4 +30,14 @@ class EducacensoDegree extends Model
         'created_at',
         'grau_academico'
     ];
+
+    public function employeeGraduations(): HasMany
+    {
+        return $this->hasMany(EmployeeGraduation::class, 'course_id');
+    }
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'codigo_curso_superior_2');
+    }
 }

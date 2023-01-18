@@ -1,38 +1,60 @@
-function ajax( funcaoRetorno )
-{
+function getApiResource(url,callback,data = null,id = null) {
+  $j.ajax({
+    url: url,
+    data: data,
+    dataType: "json",
+    type: "GET",
+    success: function(e) {
+      callback(e.data,id);
+    },
+    error: function(e){
+      alert('Erro: '+e.status);
+    }
+  })
+}
 
-	if(arguments.length-1 > 0)
-	{
-		var args = new Array();
-		for(var ct=1;ct<ajax.arguments.length;ct++)
+function setAttributes(element,text,disabled = true,length = 1) {
+  element.length = length;
+  element.disabled = disabled;
+  element.options[0].text = text
+}
+
+function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location) {
+  let host = hostInformation.protocol + '//' + hostInformation.host + '/intranet/';
+  let args = null;
+	if(arguments.length-1 > 0)  {
+		args = [];
+		for(let ct=1;ct<ajax.arguments.length;ct++)
 			args[ct-1] = ajax.arguments[ct];
-		//args.push(ajax.arguments[ct]);
-
 	}
-	else
-		args = null;
-//	alert('teste do sistema');
 	// para navegadores que seguem o padrao (mozzila, firefox, etc)
-	if ( window.XMLHttpRequest )
-	{
-		try
-		{
-
-			var xml;
+	if ( window.XMLHttpRequest ) {
+		try {
+			let xml;
 			xml = new XMLHttpRequest();
 			xml.args = args;
 			xml.personalCallback = funcaoRetorno;
 			xml.onreadystatechange = function(){
 				if( xml.readyState > 3 ) {
-					if ( xml.status == 200 ) {
+					if ( xml.status === 200 ) {
 						xml.personalCallback( xml.responseXML, xml.args )
-					} else if (xml.status == 500){
-						alert('N\u00e3o existem Componentes curriculares vinculados para a S\u00e9rie/Ano desta escola. Verifique em Cadastros > S\u00e9rie > Escola-s\u00e9rie se os Componentes curriculares foram selecionados/marcados para esta S\u00e9rie/Ano.');
-					}else {
+					} else if (xml.status === 500){
+						alert('Não existem Componentes curriculares vinculados para a Série/Ano desta escola. Verifique em Cadastros > Série > Escola-série se os Componentes curriculares foram selecionados/marcados para esta Série/Ano.');
+					} else {
 						alert('Erro: '+xml.status);
 					}
-				} };
-			xml.envia = function(){xml.open("GET",addRandToURL(arguments[0]),true);xml.send(null)};
+				}
+      };
+
+			xml.envia = function() {
+        xml.open(
+          "GET",
+          buildUrl(host, arguments[0]),
+          true
+        )
+        xml.send(null)
+      };
+
 			return xml;
 		} catch(e)
 		{
@@ -51,12 +73,23 @@ function ajax( funcaoRetorno )
 			This.personalCallback = function() { funcaoRetorno(  This.xml.responseXML,This.args ); };
 			This.callback=function(){ if( This.xml.readyState > 3 ) { if ( This.xml.status == 200 ) { This.personalCallback() } else { alert('erro'); } } };
 			This.xml.onreadystatechange = function(){ This.callback() };
-			This.envia = function(){This.xml.open("GET",addRandToURL(arguments[0]),true);This.xml.send()};
+			This.envia = function(){This.xml.open("GET",buildUrl(host,arguments[0]),true);This.xml.send()};
 		} catch(e)
 		{
 			alert("Erro ajax: " + e.description);
 		}
 	}
+}
+
+function buildUrl(host, args) {
+  let url = addRandToURL(args);
+
+  if (url.include('modules/')) {
+    host = host.replace('intranet/', '')
+    return host + url;
+  }
+
+  return host + url;
 }
 
 function addRandToURL( url )
@@ -91,24 +124,6 @@ function addEvent(elm, evType, fn, useCapture) {
 	else {
 		elm['on' + evType] = fn;
 	}
-}
-
-function getElementsByClass(searchClass,node,tag) {
-	var classElements = new Array();
-	if ( node == null )
-		node = document;
-	if ( tag == null )
-		tag = '*';
-	var els = node.getElementsByTagName(tag);
-	var elsLen = els.length;
-	var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-	for (i = 0, j = 0; i < elsLen; i++) {
-		if ( pattern.test(els[i].className) ) {
-			classElements[j] = els[i];
-			j++;
-		}
-	}
-	return classElements;
 }
 
 function toggle(obj) {
@@ -391,53 +406,6 @@ function DOM_setVal( value )
 	document.getElementById( DOM_atual.objectId ).value = value;
 }
 
-function DOM_navegaUpDown(e)
-{
-	var tecla = ( window.event ) ? event.keyCode : e.keyCode;
-	if( tecla > 32 && tecla < 41 )
-	{
-		if( tecla == 33 )// page up || 36 Home
-		{
-			DOM_trocaClasse( 0 );
-		} else if( tecla == 34 )// page down || 35 End
-		{
-			DOM_trocaClasse( total - 1 );
-		} else if( tecla == 38 )// UP
-		{
-			if( DOM_opcao  ) {
-				DOM_trocaClasse( DOM_opcao - 1 );
-			}
-			else
-			{
-				DOM_trocaClasse( DOM_opcao );
-			}
-		} else if( tecla == 40 )// DOWN
-		{
-			if( DOM_opcao + 1 < total )
-			{
-				DOM_trocaClasse( DOM_opcao + 1 );
-			}
-			else
-			{
-				DOM_trocaClasse( DOM_opcao );
-			}
-		}
-	}
-	else
-	{
-		if( tecla != 16 && tecla != 17 && tecla != 0 && tecla != 20 )
-		{
-			DOM_showHint();
-		}
-	}
-}
-
-function DOM_focusOut()
-{
-	//setTimeout( "document.getElementById( \"DOM_expansivel\" ).style.display = 'none';", 100 );
-	document.getElementById( "DOM_expansivel" ).style.display = 'none';
-}
-
 function DOM_focusIn()
 {
 	DOM_acao = 1;
@@ -450,21 +418,6 @@ function DOM_focusIn()
 		posY = DOM_ObjectPosition_getPageOffsetTop( obj );
 		objExpansivel.style.left = posX - 1;
 		objExpansivel.style.top = posY + 21;
-	}
-}
-
-function DOM_showHint()
-{
-	obj = document.getElementById( DOM_atual.objectId );
-	minChars = 3;
-	strText = obj.value;
-	if( strText.length >= minChars )
-	{
-		DOM_loadXMLDoc( "xml_pessoas.php?s=" + strText );
-	}
-	else
-	{
-		document.getElementById( "DOM_expansivel" ).style.display = 'none';
 	}
 }
 

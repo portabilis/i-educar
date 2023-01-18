@@ -79,15 +79,6 @@ class EscolaController extends ApiCoreController
         return ['id' => $id];
     }
 
-    protected function canGetEscolas()
-    {
-        return (
-            $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano') &&
-            $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id') &&
-            $this->validatesPresenceOf('turma_turno_id')
-        );
-    }
-
     protected function canGetEtapasPorEscola()
     {
         return $this->validatesPresenceOf('instituicao_id');
@@ -290,78 +281,6 @@ class EscolaController extends ApiCoreController
         return ['etapas' => $etapas];
     }
 
-    protected function getEscolas()
-    {
-        if ($this->canGetEscolas()) {
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $ano = $this->getRequest()->ano;
-            $cursoId = $this->getRequest()->curso_id;
-            $serieId = $this->getRequest()->serie_id;
-            $turmaTurnoId = $this->getRequest()->turma_turno_id;
-
-            $sql = ' SELECT DISTINCT cod_escola
-                FROM pmieducar.escola e
-                INNER JOIN pmieducar.escola_curso ec
-                ON (e.cod_escola = ec.ref_cod_escola
-                AND $1 = ANY(ec.anos_letivos)
-                )
-                INNER JOIN pmieducar.curso c ON (c.cod_curso = ec.ref_cod_curso)
-                INNER JOIN pmieducar.escola_serie es ON (
-                es.ref_cod_escola = e.cod_escola
-                AND $1 = ANY(es.anos_letivos)
-                )
-                INNER JOIN pmieducar.serie s ON (s.cod_serie = es.ref_cod_serie)
-                INNER JOIN pmieducar.turma t ON (s.cod_serie = t.ref_ref_cod_serie AND t.ref_ref_cod_escola = e.cod_escola )
-                INNER JOIN pmieducar.escola_ano_letivo eal ON(e.cod_escola = eal.ref_cod_escola)
-                WHERE t.ano = $1
-                AND t.turma_turno_id = $2
-                AND c.cod_curso = $3
-                AND e.ref_cod_instituicao = $4
-                AND s.cod_serie = $5
-                AND ec.ativo = 1
-                AND c.ativo = 1
-                AND e.ativo = 1
-                AND es.ativo = 1
-                AND s.ativo = 1
-                AND t.ativo = 1
-                AND eal.ativo = 1
-                AND eal.andamento <> 2
-                AND eal.ano = $1';
-
-            $escolaIds = $this->fetchPreparedQuery($sql, [$ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId]);
-
-            foreach ($escolaIds as $escolaId) {
-                // $this->messenger->append("Escola: " . $escolaId[0] . " Maximo de alunos no turno: " . $this->_getMaxAlunoTurno($escolaId[0]) . " Quantidade alunos fila: " . $this->_getQtdAlunosFila($escolaId[0]) . " Quantidade matriculas turno: " . $this->_getQtdMatriculaTurno($escolaId[0]));
-
-                if (!$this->existeVagasDisponiveis($escolaId[0])) {
-                    if (($key = array_search($escolaId, $escolaIds)) !== false) {
-                        unset($escolaIds[$key]);
-                    }
-                }
-            }
-
-            if (empty($escolaIds)) {
-                $this->messenger->append('Desculpe, mas aparentemente não existem mais vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.');
-
-                return [ 'escolas' => 0];
-            } else {
-                $attrs = ['cod_escola'];
-
-                return [ 'escolas' => Portabilis_Array_Utils::filterSet($escolaIds, $attrs)];
-            }
-        }
-    }
-
-    public function existeVagasDisponiveis($escolaId)
-    {
-        // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
-        if ($this->_getMaxAlunoTurno($escolaId) <= ($this->_getQtdAlunosFila($escolaId) + $this->_getQtdMatriculaTurno($escolaId))) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function _getQtdAlunosFila($escolaId)
     {
         $sql = 'SELECT count(1) as qtd
@@ -485,14 +404,14 @@ class EscolaController extends ApiCoreController
     {
         $sql = ' SELECT escola.cod_escola as cod_escola,
           juridica.fantasia as nome,
-          endereco_pessoa.cep as cep,
-          endereco_pessoa.numero as numero,
-          endereco_pessoa.complemento as complemento,
-          logradouro.nome as logradouro,
-          bairro.nome as bairro,
-          municipio.nome as municipio,
-          uf.sigla_uf as uf,
-          pais.nome as pais,
+          addresses.postal_code as cep,
+          addresses.number as numero,
+          addresses.complement as complemento,
+          addresses.address as logradouro,
+          addresses.neighborhood as bairro,
+          addresses.city as municipio,
+          addresses.state_abbreviation as uf,
+          addresses.country as pais,
           pessoa.email as email,
           fone_pessoa.ddd as ddd,
           fone_pessoa.fone as fone,
@@ -503,13 +422,9 @@ class EscolaController extends ApiCoreController
          inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
          left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
          left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
+         left join person_has_place ON person_has_place.person_id = escola.ref_idpes and person_has_place.type = 1
+         left join addresses ON TRUE AND addresses.id = person_has_place.place_id
          left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes and fone_pessoa.tipo = 1)
-         left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
-         left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
-         left join public.municipio on(logradouro.idmun = municipio.idmun)
-         left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
-         left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
-         left join public.pais on(uf.idpais = pais.idpais)
          left join modules.educacenso_cod_escola on (educacenso_cod_escola.cod_escola = escola.cod_escola)';
 
         $escolas = $this->fetchPreparedQuery($sql);
@@ -731,6 +646,55 @@ class EscolaController extends ApiCoreController
         return false;
     }
 
+    protected function getEscolaSerieDisciplinasAnosLetivos()
+    {
+        $escolaId = $this->getRequest()->escola ?? 0;
+        $modified = $this->getRequest()->modified;
+        $whereModified = '';
+
+        if ($modified) {
+            $whereModified = " WHERE updated_at >= '$modified' ";
+        }
+
+        $sql = "
+            SELECT
+                escola_id,
+                json_agg(
+                    json_build_object(
+                        'serie_id', serie_id,
+                        'disciplinas_anos_letivos', disciplinas_anos_letivos
+                    )
+                ) AS series_disciplinas_anos_letivos
+            FROM (
+                SELECT
+                    ref_ref_cod_escola AS escola_id,
+                    ref_ref_cod_serie AS serie_id,
+                    json_agg(
+                        json_build_object(
+                            ref_cod_disciplina, anos_letivos
+                        )
+                    ) AS disciplinas_anos_letivos
+                FROM pmieducar.escola_serie_disciplina
+                $whereModified
+                GROUP BY
+                ref_ref_cod_escola,
+                ref_ref_cod_serie
+            ) esd
+            WHERE escola_id in ($escolaId)
+            GROUP BY escola_id;
+        ";
+
+        $escolas = $this->fetchPreparedQuery($sql);
+        $attrs = ['escola_id','series_disciplinas_anos_letivos'];
+        $escolas = Portabilis_Array_Utils::filterSet($escolas, $attrs);
+
+        foreach ($escolas as $key => $escola) {
+            $escolas[$key]['series_disciplinas_anos_letivos'] = json_decode($escola['series_disciplinas_anos_letivos']);
+        }
+
+        return ['escolas' => $escolas];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'escola')) {
@@ -739,8 +703,6 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->search());
         } elseif ($this->isRequestFor('put', 'escola')) {
             $this->appendResponse($this->put());
-        } elseif ($this->isRequestFor('get', 'escolas')) {
-            $this->appendResponse($this->getEscolas());
         } elseif ($this->isRequestFor('get', 'etapas-por-escola')) {
             $this->appendResponse($this->getEtapasPorEscola());
         } elseif ($this->isRequestFor('get', 'etapas-da-escola-por-ano')) {
@@ -763,6 +725,8 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->getParametrosEscolas());
         } elseif ($this->isRequestFor('get', 'endereco-escola')) {
             $this->appendResponse($this->getSchoolAddress());
+        } elseif ($this->isRequestFor('get', 'escola-serie-disciplinas-anos-letivos')) {
+            $this->appendResponse($this->getEscolaSerieDisciplinasAnosLetivos());
         } else {
             $this->notImplementedOperationError();
         }

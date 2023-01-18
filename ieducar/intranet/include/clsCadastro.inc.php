@@ -45,9 +45,10 @@ class clsCadastro extends clsCampos
     public $sucesso;
     public $onSubmit = 'acao()';
     public $form_enctype;
+    public $acao_executa_submit_ajax = false;
 
-    const NOVO = 'N';
-    const EDITAR = 'E';
+    public const NOVO = 'N';
+    public const EDITAR = 'E';
 
     public function __construct()
     {
@@ -94,37 +95,32 @@ class clsCadastro extends clsCampos
                 }
 
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]';
+                    $this->_mensagem = 'Não foi possível inserir a informação. [CAD01]';
                 }
             } elseif ($this->tipoacao == 'Editar') {
                 $this->sucesso = $this->Editar();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]';
+                    $this->_mensagem = 'Não foi possível editar a informação. [CAD02]';
                 }
             } elseif ($this->tipoacao == 'Excluir') {
                 $this->sucesso = $this->Excluir();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]';
+                    $this->_mensagem = 'Não foi possível excluir a informação. [CAD03]';
                 }
             } elseif ($this->tipoacao == 'ExcluirImg') {
                 $this->sucesso = $this->ExcluirImg();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]';
+                    $this->_mensagem = 'Não foi possível excluir a informação. [CAD04]';
                 }
             } elseif ($this->tipoacao == 'Enturmar') {
                 $this->sucesso = $this->Enturmar();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]';
+                    $this->_mensagem = 'Não foi possível copiar as entrumações. [CAD05]';
                 }
             }
 
             $this->setFlashMessage();
-
-            if (empty($script) && $this->sucesso && !empty($this->url_sucesso)) {
-                redirecionar($this->url_sucesso);
-            } else {
-                $this->Formular();
-            }
+            $this->Formular();
         }
     }
 
@@ -239,7 +235,7 @@ class clsCadastro extends clsCampos
         $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
 
         if (empty($this->campos)) {
-            $retorno .= '<tr><td class=\'linhaSim\' colspan=\'2\'><span class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>';
+            $retorno .= '<tr><td class=\'linhaSim\' colspan=\'2\'><span class=\'form\'>Não existe informação disponível</span></td></tr>';
         } else {
             // Verifica se houve erros no controller
             $retorno .= $this->_getControllerErrors();
@@ -302,7 +298,7 @@ class clsCadastro extends clsCampos
                 $ct_campo = 0;
                 $retorno .= "for(var id_campo=0;id_campo<$nome.getId();id_campo++)\n{\n";
 
-                foreach ($componente as $name => $componente_campo) {
+                foreach ($componente as $componente_campo) {
                     $nomeCampo = $componente_campo[1];
                     $validador = $componente_campo[2];
 
@@ -323,7 +319,7 @@ class clsCadastro extends clsCampos
                                 $validador = substr($validador, 1);
                                 $campo = 'campos';
                                 $retorno .= " var campos = document.getElementById('{$nomeCampo}['+id_campo+']');\n
-                              if(campos.value!='' &&
+                                if(campos != null && campos.value != '' &&
                           ";
                             } else {
                                 $retorno .= " \n if (";
@@ -477,6 +473,8 @@ class clsCadastro extends clsCampos
       ';
 
             $retorno .= "\ndocument.$this->__nome.submit(); ";
+        } elseif ($this->acao_executa_submit_ajax) {
+            $retorno .= " \n doAjax(); \n";
         } else {
             $retorno .= " \n return true; \n";
         }
@@ -575,7 +573,7 @@ class clsCadastro extends clsCampos
     {
         try {
             $hasErrors = $this->hasErrors();
-        } catch (Core_Controller_Page_Exception $e) {
+        } catch (Core_Controller_Page_Exception) {
             return null;
         }
 
@@ -653,6 +651,14 @@ class clsCadastro extends clsCampos
      */
     private function getPageTitle()
     {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
+        if (isset($this->_title)) {
+            return $this->_title;
+        }
+
         if (isset($this->titulo)) {
             return $this->titulo;
         }
@@ -660,8 +666,6 @@ class clsCadastro extends clsCampos
         if (isset($this->_titulo)) {
             return $this->_titulo;
         }
-
-        return '';
     }
 
     public function __set($name, $value)

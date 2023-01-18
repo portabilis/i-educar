@@ -8,7 +8,7 @@
                         <span id="file_info{{$file->id}}">
                             {{$file->original_name}} adicionado em {{$file->created_at->format('d/m/Y')}}:
                             <a class="decorated" id="link_delete_file_{{$file->id}}" style="cursor: pointer; margin-left: 10px;">Excluir</a>
-                            <a class="decorated" id="link_view_file_{{$file->id}}" target="_blank" href="{{$file->url}}" style="cursor: pointer; margin-left: 10px;">Visualizar</a>
+                            <a class="decorated" id="link_view_file_{{$file->id}}" target="_blank" rel="noopener" href="{{$file->url}}" style="cursor: pointer; margin-left: 10px;">Visualizar</a>
                         </span>
                     </div>
                 @endforeach

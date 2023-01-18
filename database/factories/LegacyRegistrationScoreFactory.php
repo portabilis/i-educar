@@ -1,14 +1,28 @@
 <?php
 
-use App\Models\LegacyRegistration;
+namespace Database\Factories;
+
 use App\Models\LegacyRegistrationScore;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyRegistrationScoreFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyRegistrationScore::class;
 
-$factory->define(LegacyRegistrationScore::class, function (Faker $faker) {
-    return [
-        'matricula_id' => factory(LegacyRegistration::class)->create(),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'matricula_id' => LegacyRegistrationFactory::new()->create(),
+        ];
+    }
+}

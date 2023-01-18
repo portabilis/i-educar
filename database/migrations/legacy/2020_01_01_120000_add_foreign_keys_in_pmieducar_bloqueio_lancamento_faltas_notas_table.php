@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarBloqueioLancamentoFaltasNotasTable extends Migrat
     {
         Schema::table('pmieducar.bloqueio_lancamento_faltas_notas', function (Blueprint $table) {
             $table->foreign('ref_cod_escola')
-               ->references('cod_escola')
-               ->on('pmieducar.escola')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_escola')
+                ->on('pmieducar.escola')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

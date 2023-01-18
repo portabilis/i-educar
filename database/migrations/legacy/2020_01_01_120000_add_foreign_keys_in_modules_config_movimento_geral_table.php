@@ -15,8 +15,8 @@ class AddForeignKeysInModulesConfigMovimentoGeralTable extends Migration
     {
         Schema::table('modules.config_movimento_geral', function (Blueprint $table) {
             $table->foreign('ref_cod_serie')
-               ->references('cod_serie')
-               ->on('pmieducar.serie');
+                ->references('cod_serie')
+                ->on('pmieducar.serie');
         });
     }
 

@@ -6,7 +6,7 @@ return new class extends clsListagem {
      *
      * @var int
      */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
 
     /**
      * Título no topo da página
@@ -42,7 +42,7 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-      'Descri&ccedil;&atilde;o'
+      'Descrição'
     ]);
 
         // Outros Filtros
@@ -88,7 +88,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escolaridade do servidor';
+        $this->title = 'Escolaridade do servidor';
         $this->processoAp = '632';
     }
 };

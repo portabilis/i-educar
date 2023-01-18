@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarInstituicaoDocumentacaoTable extends Migration
     {
         Schema::table('pmieducar.instituicao_documentacao', function (Blueprint $table) {
             $table->foreign('instituicao_id')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

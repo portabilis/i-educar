@@ -84,15 +84,21 @@ class EnrollmentController extends Controller
 
         $previousEnrollment = $enrollmentService->getPreviousEnrollmentAccordingToRelocationDate($registration);
 
+        $isRelocatedSameClassGroup = false;
+        if ($previousEnrollment !== null && $previousEnrollment->school_class_id === $schoolClass->id) {
+            $isRelocatedSameClassGroup = true;
+            $enrollmentService->markAsRelocatedSameClassGroup($previousEnrollment);
+        }
+
         // Se for um remanejamento e a matrícula anterior tiver data de saída antes da data base (ou não houver data base)
         // marca a matrícula como "remanejada" e reordena o sequencial da turma de origem
-        if ($request->input('is_relocation') && $previousEnrollment) {
+        if ($request->input('is_relocation') && $previousEnrollment && $previousEnrollment->school_class_id !== $schoolClass->id) {
             $enrollmentService->markAsRelocated($previousEnrollment);
             $enrollmentService->reorderSchoolClassAccordingToRelocationDate($previousEnrollment);
         }
 
         try {
-            $enrollmentService->enroll($registration, $schoolClass, $date);
+            $enrollmentService->enroll($registration, $schoolClass, $date, $isRelocatedSameClassGroup);
         } catch (Throwable $throwable) {
             DB::rollback();
 

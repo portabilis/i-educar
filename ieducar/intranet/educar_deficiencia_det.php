@@ -1,19 +1,13 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_deficiencia;
     public $nm_deficiencia;
 
     public function Gerar()
     {
-        $this->titulo = 'Defici&ecirc;ncia - Detalhe';
+        $this->titulo = 'Deficiência - Detalhe';
 
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
@@ -28,21 +22,21 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Deficiência', "{$registro['nm_deficiencia']}"]);
         }
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(631, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_deficiencia_cad.php';
             $this->url_editar = "educar_deficiencia_cad.php?cod_deficiencia={$registro['cod_deficiencia']}";
         }
         $this->url_cancelar = 'educar_deficiencia_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da deficiência', [
+        $this->breadcrumb(currentPage: 'Detalhe da deficiência', breadcrumbs: [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Defici&ecirc;ncia';
+        $this->title = 'Deficiência';
         $this->processoAp = '631';
     }
 };

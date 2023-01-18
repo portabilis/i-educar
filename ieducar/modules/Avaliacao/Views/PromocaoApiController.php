@@ -1,8 +1,8 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
-use App\Models\LegacySchoolStage;
 
 class PromocaoApiController extends ApiCoreController
 {
@@ -39,25 +39,30 @@ class PromocaoApiController extends ApiCoreController
         $serieId = empty($this->getRequest()->serie) ? 0 : $this->getRequest()->serie;
         $turmaId = empty($this->getRequest()->turma) ? 0 : $this->getRequest()->turma;
         $matricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->matricula;
-        $sql = 'SELECT m.cod_matricula
-              FROM pmieducar.matricula AS m
-        INNER JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula
-             WHERE m.ano = $1
-               AND m.ativo = 1
-               AND mt.ref_cod_matricula = m.cod_matricula
-               AND mt.ativo = 1
-               AND ref_cod_matricula > $2
-               AND (CASE WHEN $3 = 0  THEN true else $3 = m.ref_ref_cod_escola END)
-               AND (CASE WHEN $4 = 0  THEN true else $4 = m.ref_cod_curso END)
-               AND (CASE WHEN $5 = 0  THEN true else $5 = m.ref_ref_cod_serie END)
-               AND (CASE WHEN $6 = 0  THEN true else $6 = mt.ref_cod_turma END)
-               AND (CASE WHEN $7 = 10 THEN true
-                         WHEN $7 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)
-          ORDER BY ref_cod_matricula
-             LIMIT 1';
+        $regraDeAvaliacao = empty($this->getRequest()->regras_avaliacao_id) ? 0 : $this->getRequest()->regras_avaliacao_id;
 
-        $options = ['params' => [$this->getRequest()->ano, $currentMatriculaId, $escolaId, $cursoId, $serieId, $turmaId, $matricula],
-            'return_only' => 'first-field'];
+        $sql = 'SELECT m.cod_matricula FROM pmieducar.matricula AS m
+                INNER JOIN pmieducar.aluno ON aluno.cod_aluno = m.ref_cod_aluno
+                INNER JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula
+                INNER JOIN pmieducar.serie as s on m.ref_ref_cod_serie = s.cod_serie
+                INNER JOIN modules.regra_avaliacao_serie_ano as ra on ra.serie_id = s.cod_serie and ra.ano_letivo = m.ano
+                WHERE m.ano = $1
+                AND m.ativo = 1
+                AND mt.ref_cod_matricula = m.cod_matricula
+                AND mt.ativo = 1
+                AND ref_cod_matricula > $2
+                AND (CASE WHEN $3 = 0  THEN TRUE ELSE $3 = m.ref_ref_cod_escola END)
+                AND (CASE WHEN $4 = 0  THEN TRUE ELSE $4 = m.ref_cod_curso END)
+                AND (CASE WHEN $5 = 0  THEN TRUE ELSE $5 = m.ref_ref_cod_serie END)
+                AND (CASE WHEN $6 = 0  THEN TRUE ELSE $6 = mt.ref_cod_turma END)
+                AND (CASE WHEN $7 = 10 THEN TRUE WHEN $7 = 9  THEN m.aprovado NOT IN (4,6) ELSE $7 = m.aprovado END)
+                AND (CASE WHEN $8 = 0  THEN TRUE ELSE $8 = ra.regra_avaliacao_id END)
+                ORDER BY ref_cod_matricula LIMIT 1';
+
+        $options = [
+            'params' => [$this->getRequest()->ano, $currentMatriculaId, $escolaId, $cursoId, $serieId, $turmaId, $matricula, $regraDeAvaliacao],
+            'return_only' => 'first-field'
+        ];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
     }
@@ -84,11 +89,10 @@ class PromocaoApiController extends ApiCoreController
                    mt.ref_cod_turma AS turma_id,
                    m.ano,
                    m.aprovado
-              FROM pmieducar.matricula  AS m
-        INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
-             WHERE mt.ativo = 1
-               AND cod_matricula = $1
-             LIMIT 1';
+                FROM pmieducar.matricula  AS m
+                INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+                WHERE mt.ativo = 1
+                AND cod_matricula = $1 LIMIT 1';
 
         $options = ['params' => $matriculaId, 'return_only' => 'first-row'];
 
@@ -105,13 +109,13 @@ class PromocaoApiController extends ApiCoreController
         $turmaId = $dadosMatricula['turma_id'];
 
         $sql = 'SELECT cc.id, cc.nome
-              FROM modules.componente_curricular_turma AS cct
-        INNER JOIN modules.componente_curricular AS cc ON cct.componente_curricular_id = cc.id
-        INNER JOIN pmieducar.escola_ano_letivo AS al ON cct.escola_id = al.ref_cod_escola
-             WHERE cct.turma_id = $1
-               AND cct.escola_id = $2
-               AND al.ano = $3
-               AND cc.instituicao_id = $4';
+                FROM modules.componente_curricular_turma AS cct
+                INNER JOIN modules.componente_curricular AS cc ON cct.componente_curricular_id = cc.id
+                INNER JOIN pmieducar.escola_ano_letivo AS al ON cct.escola_id = al.ref_cod_escola
+                WHERE cct.turma_id = $1
+                AND cct.escola_id = $2
+                AND al.ano = $3
+                AND cc.instituicao_id = $4';
 
         $options = ['params' => [$turmaId, $escolaId, $anoEscolar, $this->getRequest()->instituicao_id]];
         $componentesCurricularesTurma = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -121,17 +125,17 @@ class PromocaoApiController extends ApiCoreController
         }
 
         $sql = 'SELECT cc.id, cc.nome
-              FROM pmieducar.turma AS t
-        INNER JOIN pmieducar.escola_serie_disciplina AS esd ON t.ref_ref_cod_serie = esd.ref_ref_cod_serie
-        INNER JOIN modules.componente_curricular AS cc ON esd.ref_cod_disciplina = cc.id
-        INNER JOIN pmieducar.escola_ano_letivo AS al ON esd.ref_ref_cod_escola = al.ref_cod_escola
-             WHERE t.cod_turma = $1
-               AND esd.ref_ref_cod_escola = $2
-               AND al.ano = $3
-               AND cc.instituicao_id = $4
-               AND t.ativo = 1
-               AND esd.ativo = 1
-               AND al.ativo = 1';
+                FROM pmieducar.turma AS t
+                INNER JOIN pmieducar.escola_serie_disciplina AS esd ON t.ref_ref_cod_serie = esd.ref_ref_cod_serie
+                INNER JOIN modules.componente_curricular AS cc ON esd.ref_cod_disciplina = cc.id
+                INNER JOIN pmieducar.escola_ano_letivo AS al ON esd.ref_ref_cod_escola = al.ref_cod_escola
+                WHERE t.cod_turma = $1
+                AND esd.ref_ref_cod_escola = $2
+                AND al.ano = $3
+                AND cc.instituicao_id = $4
+                AND t.ativo = 1
+                AND esd.ativo = 1
+                AND al.ativo = 1';
 
         $options = ['params' => [$turmaId, $escolaId, $anoEscolar, $this->getRequest()->instituicao_id]];
         $componentesCurricularesSerie = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -144,7 +148,7 @@ class PromocaoApiController extends ApiCoreController
         try {
             // FIXME #parameters
             $this->boletimService()->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
             // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
             // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
         }
@@ -240,7 +244,7 @@ class PromocaoApiController extends ApiCoreController
             ->orderBy('sequencial');
 
         if (!$stages->exists()) {
-            $stages = LegacySchoolStage::query(['sequencial'])
+            $stages = LegacyAcademicYearStage::query(['sequencial'])
                 ->where([
                     'ref_ref_cod_escola' => $escolaId,
                     'ref_ano' => $ano
@@ -249,6 +253,7 @@ class PromocaoApiController extends ApiCoreController
                 ->orderBy('sequencial');
         }
 
+        $getStages = [];
         foreach ($stages->get() as $stage) {
             $getStages[] = $stage->sequencial;
         }
@@ -342,21 +347,27 @@ class PromocaoApiController extends ApiCoreController
             $serieId = empty($this->getRequest()->serie) ? 0 : $this->getRequest()->serie;
             $turmaId = empty($this->getRequest()->turma) ? 0 : $this->getRequest()->turma;
             $matricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->matricula;
+            $regraDeAvaliacao = empty($this->getRequest()->regras_avaliacao_id) ? 0 : $this->getRequest()->regras_avaliacao_id;
+
             $sql = 'SELECT count(m.cod_matricula)
                     FROM pmieducar.matricula AS m
-                INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+                    INNER JOIN pmieducar.aluno ON aluno.cod_aluno = m.ref_cod_aluno
+                    INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+                    INNER JOIN pmieducar.serie as s on m.ref_ref_cod_serie = s.cod_serie
+                    INNER JOIN modules.regra_avaliacao_serie_ano as ra on ra.serie_id = s.cod_serie and ra.ano_letivo = m.ano
                     WHERE m.ano = $1
-                        AND m.ativo = 1
-                        AND mt.ref_cod_matricula = m.cod_matricula
-                        AND mt.ativo = 1
-                        AND (CASE WHEN $2 = 0  THEN true ELSE $2 = m.ref_ref_cod_escola END)
-                        AND (CASE WHEN $3 = 0  THEN true ELSE $3 = m.ref_cod_curso END)
-                        AND (CASE WHEN $4 = 0  THEN true ELSE $4 = m.ref_ref_cod_serie END)
-                        AND (CASE WHEN $5 = 0  THEN true ELSE $5 = mt.ref_cod_turma END)
-                        AND (CASE WHEN $6 = 10 THEN true
-                                WHEN $6 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)';
+                    AND m.ativo = 1
+                    AND mt.ref_cod_matricula = m.cod_matricula
+                    AND mt.ativo = 1
+                    AND (CASE WHEN $2 = 0  THEN TRUE ELSE $2 = m.ref_ref_cod_escola END)
+                    AND (CASE WHEN $3 = 0  THEN TRUE ELSE $3 = m.ref_cod_curso END)
+                    AND (CASE WHEN $4 = 0  THEN TRUE ELSE $4 = m.ref_ref_cod_serie END)
+                    AND (CASE WHEN $5 = 0  THEN TRUE ELSE $5 = mt.ref_cod_turma END)
+                    AND (CASE WHEN $6 = 10 THEN TRUE WHEN $6 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)
+                    AND (CASE WHEN $7 = 0  THEN TRUE ELSE $7 = ra.regra_avaliacao_id END)';
 
-            $options = ['params' => [$this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId, $matricula], 'return_only' => 'first-field'];
+
+            $options = ['params' => [$this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId, $matricula, $regraDeAvaliacao], 'return_only' => 'first-field'];
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
         }
@@ -385,7 +396,7 @@ class PromocaoApiController extends ApiCoreController
                 $situacaoAnterior = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
 
                 $this->lancarFaltasNaoLancadas($this->matriculaId());
-                //$this->convertParecerToLatin1($matriculaId);
+
                 $this->atualizaNotaExame();
 
                 $this->trySaveBoletimService();
@@ -402,9 +413,11 @@ class PromocaoApiController extends ApiCoreController
                 }
             }
 
-            return ['proximo_matricula_id' => $proximoMatriculaId,
+            return [
+                'proximo_matricula_id' => $proximoMatriculaId,
                 'situacao_anterior' => $situacaoAnterior,
-                'nova_situacao' => $novaSituacao];
+                'nova_situacao' => $novaSituacao
+            ];
         }
     }
 
@@ -484,6 +497,6 @@ class PromocaoApiController extends ApiCoreController
             'ref_ano' => $registration->ano,
         ];
 
-        return LegacySchoolStage::query()->where($where)->count();
+        return LegacyAcademicYearStage::query()->where($where)->count();
     }
 }

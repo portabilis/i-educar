@@ -1,10 +1,8 @@
 <?php
 
-
-
 class CoreExt_EnumStringStub extends CoreExt_Enum
 {
-    const RED = 'red';
+    public const RED = 'red';
 
     protected $_data = [
         self::RED => '#FF0000'

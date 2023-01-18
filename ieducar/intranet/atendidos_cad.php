@@ -1,7 +1,12 @@
 <?php
 
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
+use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyRace;
+use App\Models\LegacyUser;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -60,12 +65,12 @@ return new class extends clsCadastro {
     public function Inicializar()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(43, $this->pessoa_logada, 7, 'atendidos_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 43, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'atendidos_lst.php');
 
-        $this->cod_pessoa_fj = $this->getQueryString('cod_pessoa_fj');
+        $this->cod_pessoa_fj = $this->getQueryString(name: 'cod_pessoa_fj');
         $this->retorno = 'Novo';
 
-        if (is_numeric($this->cod_pessoa_fj)) {
+        if (is_numeric(value: $this->cod_pessoa_fj)) {
             $this->retorno = 'Editar';
             $objPessoa = new clsPessoaFisica();
 
@@ -78,68 +83,70 @@ return new class extends clsCadastro {
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
                 $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia
-            ) =
-            $objPessoa->queryRapida(
-                $this->cod_pessoa_fj,
-                'nome',
-                'cpf',
-                'data_nasc',
-                'ddd_1',
-                'fone_1',
-                'ddd_2',
-                'fone_2',
-                'ddd_mov',
-                'fone_mov',
-                'ddd_fax',
-                'fone_fax',
-                'email',
-                'tipo',
-                'sexo',
-                'ideciv',
-                'idpes_pai',
-                'idpes_mae',
-                'nacionalidade',
-                'idpais_estrangeiro',
-                'idmun_nascimento',
-                'letra',
-                'sus',
-                'nis_pis_pasep',
-                'ocupacao',
-                'empresa',
-                'ddd_telefone_empresa',
-                'telefone_empresa',
-                'pessoa_contato',
-                'renda_mensal',
-                'data_admissao',
-                'falecido',
-                'ref_cod_religiao',
-                'zona_localizacao_censo',
-                'localizacao_diferenciada',
-                'nome_social',
-                'pais_residencia'
-            );
+                ) =
+                $objPessoa->queryRapida(
+                    $this->cod_pessoa_fj,
+                    'nome',
+                    'cpf',
+                    'data_nasc',
+                    'ddd_1',
+                    'fone_1',
+                    'ddd_2',
+                    'fone_2',
+                    'ddd_mov',
+                    'fone_mov',
+                    'ddd_fax',
+                    'fone_fax',
+                    'email',
+                    'tipo',
+                    'sexo',
+                    'ideciv',
+                    'idpes_pai',
+                    'idpes_mae',
+                    'nacionalidade',
+                    'idpais_estrangeiro',
+                    'idmun_nascimento',
+                    'letra',
+                    'sus',
+                    'nis_pis_pasep',
+                    'ocupacao',
+                    'empresa',
+                    'ddd_telefone_empresa',
+                    'telefone_empresa',
+                    'pessoa_contato',
+                    'renda_mensal',
+                    'data_admissao',
+                    'falecido',
+                    'ref_cod_religiao',
+                    'zona_localizacao_censo',
+                    'localizacao_diferenciada',
+                    'nome_social',
+                    'pais_residencia'
+                );
 
-            $this->loadAddress($this->cod_pessoa_fj);
+            $this->loadAddress(person: $this->cod_pessoa_fj);
 
-            $this->id_federal = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
-            $this->nis_pis_pasep = int2Nis($this->nis_pis_pasep);
-            $this->renda_mensal = number_format($this->renda_mensal, 2, ',', '.');
+            $this->id_federal = is_numeric(value: $this->id_federal) ? int2CPF(int: $this->id_federal) : '';
+            $this->nis_pis_pasep = int2Nis(nis: $this->nis_pis_pasep);
+            $this->renda_mensal = number_format(num: (float)$this->renda_mensal, decimals: 2, decimal_separator: ',', thousands_separator: '.');
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
-            $this->data_admissao = $this->data_admissao ? dataFromPgToBr($this->data_admissao) : '';
+            $this->data_admissao = $this->data_admissao ? dataFromPgToBr(data_original: $this->data_admissao) : '';
 
             $this->estado_civil_id = $this->estado_civil->ideciv;
             $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
         }
 
-        $this->fexcluir = $obj_permissoes->permissao_excluir(
-            43,
-            $this->pessoa_logada,
-            7
-        );
+        $this->fexcluir = is_numeric(value: $this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
+                int_processo_ap: 43,
+                int_idpes_usuario: $this->pessoa_logada,
+                int_soma_nivel_acesso: 7
+            );
+
+        $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
 
         $this->nome_url_cancelar = 'Cancelar';
-        $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
+        $this->breadcrumb(currentPage: "{$nomeMenu} pessoa física", breadcrumbs: ['educar_pessoas_index.php' => 'Pessoas']);
 
         return $this->retorno;
     }
@@ -147,15 +154,14 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->form_enctype = ' enctype=\'multipart/form-data\'';
-        $camposObrigatorios = !config('legacy.app.remove_obrigatorios_cadastro_pessoa') == 1;
+        $camposObrigatorios = !config(key: 'legacy.app.remove_obrigatorios_cadastro_pessoa') == 1;
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
-        $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int)$obrigarCamposCenso);
         $this->url_cancelar = $this->retorno == 'Editar' ?
-        'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
+            'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
-        $this->cod_pessoa_fj;
-        $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
-        $db = new clsBanco();
+        $objPessoa = new clsPessoaFisica(int_idpes: $this->cod_pessoa_fj);
+
 
         $detalhe = $objPessoa->queryRapida(
             $this->cod_pessoa_fj,
@@ -181,33 +187,33 @@ return new class extends clsCadastro {
 
         if (isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1 && $this->retorno == 'Editar') {
             $getNomeUsuario = $objPessoa->getNomeUsuario();
-            $detalhe['data_exclusao'] = date_format(new DateTime($detalhe['data_exclusao']), 'd/m/Y');
+            $detalhe['data_exclusao'] = date_format(object: new DateTime(datetime: $detalhe['data_exclusao']), format: 'd/m/Y');
             $this->mensagem = 'Este cadastro foi desativado em <strong>' . $detalhe['data_exclusao'] . '</strong>, pelo usuário <strong>' . $getNomeUsuario . "</strong>. <a href='javascript:ativarPessoa($this->cod_pessoa_fj);'>Reativar cadastro</a>";
         }
 
-        $this->campoCpf('id_federal', 'CPF', $this->id_federal, false);
+        $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal);
 
-        $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
-        $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, '50', '255', true);
-        $this->campoTexto('nome_social', 'Nome social', $this->nome_social, '50', '255', false);
+        $this->campoOculto(nome: 'cod_pessoa_fj', valor: $this->cod_pessoa_fj);
+        $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
+        $this->campoTexto(nome: 'nome_social', campo: 'Nome social e/ou afetivo', valor: $this->nome_social, tamanhovisivel: '50', tamanhomaximo: '255');
 
         $foto = false;
-        if (is_numeric($this->cod_pessoa_fj)) {
-            $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
+        if (is_numeric(value: $this->cod_pessoa_fj)) {
+            $objFoto = new clsCadastroFisicaFoto(idpes: $this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
-            if (count($detalheFoto)) {
+            if (is_array(value: $detalheFoto) && count(value: $detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
             }
         } else {
-            $foto=false;
+            $foto = false;
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
-            $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('photo', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
+            $this->campoRotulo(nome: 'fotoAtual_', campo: 'Foto atual', valor: '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl(url: $foto) . '"/>');
+            $this->inputsHelper()->checkbox(attrName: 'file_delete', inputOptions: ['label' => 'Excluir a foto']);
+            $this->campoArquivo(nome: 'photo', campo: 'Trocar foto', valor: $this->arquivoFoto, tamanho: 40, descricao: '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         } else {
-            $this->campoArquivo('photo', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
+            $this->campoArquivo(nome: 'photo', campo: 'Foto', valor: $this->arquivoFoto, tamanho: 40, descricao: '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         }
 
         // ao cadastrar pessoa do pai ou mãe apartir do cadastro de outra pessoa,
@@ -223,9 +229,9 @@ return new class extends clsCadastro {
 
         // sugere sexo quando cadastrando o pai ou mãe
 
-        if (! $sexo && $parentType == 'pai') {
+        if (!$sexo && $parentType == 'pai') {
             $sexo = 'M';
-        } elseif (! $sexo && $parentType == 'mae') {
+        } elseif (!$sexo && $parentType == 'mae') {
             $sexo = 'F';
         }
 
@@ -241,11 +247,14 @@ return new class extends clsCadastro {
             'required' => $camposObrigatorios
         ];
 
-        $this->inputsHelper()->select('sexo', $options);
+        $this->inputsHelper()->select(attrName: 'sexo', inputOptions: $options);
 
         // estado civil
 
-        $this->inputsHelper()->estadoCivil(['label' => '', 'required' => empty($parentType) && $camposObrigatorios]);
+        $this->inputsHelper()->estadoCivil(inputOptions: [
+            'label' => '',
+            'required' => empty($parentType) && $camposObrigatorios
+        ]);
 
         // data nascimento
 
@@ -255,7 +264,7 @@ return new class extends clsCadastro {
             'required' => empty($parentType) && $camposObrigatorios
         ];
 
-        $this->inputsHelper()->date('data_nasc', $options);
+        $this->inputsHelper()->date(attrName: 'data_nasc', inputOptions: $options);
 
         // pai, mãe
 
@@ -272,9 +281,9 @@ return new class extends clsCadastro {
 
         // o rg é obrigatorio ao cadastrar pai ou mãe, exceto se configurado como opcional.
 
-        $required = (! empty($parentType));
+        $required = (!empty($parentType));
 
-        if ($required && config('legacy.app.rg_pessoa_fisica_pais_opcional')) {
+        if ($required && config(key: 'legacy.app.rg_pessoa_fisica_pais_opcional')) {
             $required = false;
         }
 
@@ -288,7 +297,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer('rg', $options);
+        $this->inputsHelper()->integer(attrName: 'rg', inputOptions: $options);
 
         // data emissão rg
 
@@ -300,11 +309,11 @@ return new class extends clsCadastro {
             'size' => 19
         ];
 
-        $this->inputsHelper()->date('data_emissao_rg', $options);
+        $this->inputsHelper()->date(attrName: 'data_emissao_rg', inputOptions: $options);
 
         // orgão emissão rg
 
-        $selectOptions = [ null => 'Órgão emissor' ];
+        $selectOptions = [null => 'Órgão emissor'];
         $orgaos = new clsOrgaoEmissorRg();
         $orgaos = $orgaos->lista();
 
@@ -312,7 +321,7 @@ return new class extends clsCadastro {
             $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
         }
 
-        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+        $selectOptions = Portabilis_Array_Utils::sortByValue(array: $selectOptions);
 
         $options = [
             'required' => false,
@@ -322,7 +331,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->select('orgao_emissao_rg', $options);
+        $this->inputsHelper()->select(attrName: 'orgao_emissao_rg', inputOptions: $options);
 
         // uf emissão rg
 
@@ -336,7 +345,7 @@ return new class extends clsCadastro {
             'attrName' => 'uf_emissao_rg'
         ];
 
-        $this->inputsHelper()->uf($options, $helperOptions);
+        $this->inputsHelper()->uf(inputOptions: $options, helperOptions: $helperOptions);
 
         // Código NIS (PIS/PASEP)
 
@@ -349,12 +358,12 @@ return new class extends clsCadastro {
             'size' => 20
         ];
 
-        $this->inputsHelper()->integer('nis_pis_pasep', $options);
+        $this->inputsHelper()->integer(attrName: 'nis_pis_pasep', inputOptions: $options);
 
         // Carteira do SUS
 
         $options = [
-            'required' => config('legacy.app.fisica.exigir_cartao_sus'),
+            'required' => config(key: 'legacy.app.fisica.exigir_cartao_sus'),
             'label' => 'Número da carteira do SUS',
             'placeholder' => '',
             'value' => $this->sus,
@@ -362,7 +371,7 @@ return new class extends clsCadastro {
             'size' => 20
         ];
 
-        $this->inputsHelper()->text('sus', $options);
+        $this->inputsHelper()->text(attrNames: 'sus', inputOptions: $options);
 
         // tipo de certidao civil
 
@@ -376,9 +385,9 @@ return new class extends clsCadastro {
 
         // caso certidao nascimento novo formato tenha sido informado,
         // considera este o tipo da certidão
-        if (! empty($documentos['certidao_nascimento'])) {
+        if (!empty($documentos['certidao_nascimento'])) {
             $tipoCertidaoCivil = 'certidao_nascimento_novo_formato';
-        } elseif (! empty($documentos['certidao_casamento'])) {
+        } elseif (!empty($documentos['certidao_casamento'])) {
             $tipoCertidaoCivil = 'certidao_casamento_novo_formato';
         } else {
             $tipoCertidaoCivil = $documentos['tipo_cert_civil'];
@@ -392,7 +401,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->select('tipo_certidao_civil', $options);
+        $this->inputsHelper()->select(attrName: 'tipo_certidao_civil', inputOptions: $options);
 
         // termo certidao civil
 
@@ -405,7 +414,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer('termo_certidao_civil', $options);
+        $this->inputsHelper()->integer(attrName: 'termo_certidao_civil', inputOptions: $options);
 
         // livro certidao civil
 
@@ -419,7 +428,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->text('livro_certidao_civil', $options);
+        $this->inputsHelper()->text(attrNames: 'livro_certidao_civil', inputOptions: $options);
 
         // folha certidao civil
 
@@ -432,7 +441,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer('folha_certidao_civil', $options);
+        $this->inputsHelper()->integer(attrName: 'folha_certidao_civil', inputOptions: $options);
 
         // certidao nascimento (novo padrão)
 
@@ -446,7 +455,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer('certidao_nascimento', $options);
+        $this->inputsHelper()->integer(attrName: 'certidao_nascimento', inputOptions: $options);
 
         // certidao casamento (novo padrão)
 
@@ -459,7 +468,7 @@ return new class extends clsCadastro {
             'size' => 32
         ];
 
-        $this->inputsHelper()->integer('certidao_casamento', $options);
+        $this->inputsHelper()->integer(attrName: 'certidao_casamento', inputOptions: $options);
 
         // uf emissão certidão civil
 
@@ -475,7 +484,7 @@ return new class extends clsCadastro {
             'attrName' => 'uf_emissao_certidao_civil'
         ];
 
-        $this->inputsHelper()->uf($options, $helperOptions);
+        $this->inputsHelper()->uf(inputOptions: $options, helperOptions: $helperOptions);
 
         // data emissão certidão civil
 
@@ -487,12 +496,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
-
-        $options = [
-            'label' => '',
-            'required' => false
-        ];
+        $this->inputsHelper()->date(attrName: 'data_emissao_certidao_civil', inputOptions: $options);
 
         // cartório emissão certidão civil
         $options = [
@@ -503,7 +507,7 @@ return new class extends clsCadastro {
             'max_length' => 200,
         ];
 
-        $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
+        $this->inputsHelper()->textArea(attrName: 'cartorio_emissao_certidao_civil', inputOptions: $options);
 
         // Passaporte
         $options = [
@@ -514,7 +518,7 @@ return new class extends clsCadastro {
             'max_length' => 20
         ];
 
-        $this->inputsHelper()->text('passaporte', $options);
+        $this->inputsHelper()->text(attrNames: 'passaporte', inputOptions: $options);
 
         // carteira de trabalho
 
@@ -527,7 +531,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer('carteira_trabalho', $options);
+        $this->inputsHelper()->integer(attrName: 'carteira_trabalho', inputOptions: $options);
 
         // serie carteira de trabalho
 
@@ -539,7 +543,7 @@ return new class extends clsCadastro {
             'max_length' => 5
         ];
 
-        $this->inputsHelper()->integer('serie_carteira_trabalho', $options);
+        $this->inputsHelper()->integer(attrName: 'serie_carteira_trabalho', inputOptions: $options);
 
         // uf emissão carteira de trabalho
 
@@ -554,7 +558,7 @@ return new class extends clsCadastro {
             'attrName' => 'uf_emissao_carteira_trabalho'
         ];
 
-        $this->inputsHelper()->uf($options, $helperOptions);
+        $this->inputsHelper()->uf(inputOptions: $options, helperOptions: $helperOptions);
 
         // data emissão carteira de trabalho
 
@@ -565,7 +569,7 @@ return new class extends clsCadastro {
             'value' => $documentos['data_emissao_cart_trabalho']
         ];
 
-        $this->inputsHelper()->date('data_emissao_carteira_trabalho', $options);
+        $this->inputsHelper()->date(attrName: 'data_emissao_carteira_trabalho', inputOptions: $options);
 
         // titulo eleitor
 
@@ -578,7 +582,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer('titulo_eleitor', $options);
+        $this->inputsHelper()->integer(attrName: 'titulo_eleitor', inputOptions: $options);
 
         // zona titulo eleitor
 
@@ -591,7 +595,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer('zona_titulo_eleitor', $options);
+        $this->inputsHelper()->integer(attrName: 'zona_titulo_eleitor', inputOptions: $options);
 
         // seção titulo eleitor
 
@@ -603,27 +607,22 @@ return new class extends clsCadastro {
             'max_length' => 4
         ];
 
-        $this->inputsHelper()->integer('secao_titulo_eleitor', $options);
+        $this->inputsHelper()->integer(attrName: 'secao_titulo_eleitor', inputOptions: $options);
 
         // Cor/raça.
 
-        $racas = new clsCadastroRaca();
-        $racas = $racas->lista(null, null, null, null, null, null, null, true);
+        $race = LegacyRace::query()
+            ->where(column: 'ativo', operator: true)
+            ->orderBy(column: 'nm_raca')
+            ->pluck(column: 'nm_raca', key: 'cod_raca')
+            ->prepend(value: 'Selecione', key: '')
+            ->toArray();
 
-        $selectOptionsRaca = [];
-
-        foreach ($racas as $raca) {
-            $selectOptionsRaca[$raca['cod_raca']] = $raca['nm_raca'];
-        }
-
-        $selectOptionsRaca = Portabilis_Array_Utils::sortByValue($selectOptionsRaca);
-        $selectOptionsRaca = array_replace([null => 'Selecione'], $selectOptionsRaca);
-
-        $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
+        $raca = new clsCadastroFisicaRaca(ref_idpes: $this->cod_pessoa_fj);
         $raca = $raca->detalhe();
-        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
+        $this->cod_raca = is_array(value: $raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
 
-        $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
+        $this->campoLista(nome: 'cor_raca', campo: 'Raça', valor: $race, default: $this->cod_raca, obrigatorio: $obrigarCamposCenso);
 
         // nacionalidade
 
@@ -642,7 +641,7 @@ return new class extends clsCadastro {
             'value' => $this->tipo_nacionalidade
         ];
 
-        $this->inputsHelper()->select('tipo_nacionalidade', $options);
+        $this->inputsHelper()->select(attrName: 'tipo_nacionalidade', inputOptions: $options);
 
         // pais origem
 
@@ -661,37 +660,47 @@ return new class extends clsCadastro {
             'hiddenInputOptions' => $hiddenInputOptions
         ];
 
-        $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPaisSemBrasil(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
 
         //Falecido
-        $options = ['label' => 'Falecido?', 'required' => false, 'value' => dbBool($this->falecido)];
+        $options = [
+            'label' => 'Falecido?',
+            'required' => false,
+            'value' => dbBool(val: $this->falecido)
+        ];
 
-        $this->inputsHelper()->checkbox('falecido', $options);
+        $this->inputsHelper()->checkbox(attrName: 'falecido', inputOptions: $options);
 
         // naturalidade
 
-        $options = ['label' => 'Naturalidade', 'required' => $naturalidadeObrigatoria && $camposObrigatorios];
+        $options = [
+            'label' => 'Naturalidade',
+            'required' => $naturalidadeObrigatoria && $camposObrigatorios
+        ];
 
         $helperOptions = [
             'objectName' => 'naturalidade',
             'hiddenInputOptions' => ['options' => ['value' => $this->naturalidade_id]]
         ];
 
-        $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchMunicipio(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
 
         // Religião
-        $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
+        $this->inputsHelper()->religiao(inputOptions: [
+            'required' => false,
+            'label' => 'Religião'
+        ]);
 
-        $this->viewAddress();
+        $this->viewAddress(optionalFields: true);
 
-        $this->inputsHelper()->select('pais_residencia', [
+        $this->inputsHelper()->select(attrName: 'pais_residencia', inputOptions: [
             'label' => 'País de residência',
-            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL,
             'resources' => PaisResidencia::getDescriptiveValues(),
             'required' => true,
         ]);
 
-        $this->inputsHelper()->select('zona_localizacao_censo', [
+        $this->inputsHelper()->select(attrName: 'zona_localizacao_censo', inputOptions: [
             'label' => 'Zona de residência',
             'value' => $this->zona_localizacao_censo,
             'resources' => [
@@ -702,7 +711,7 @@ return new class extends clsCadastro {
             'required' => $obrigarCamposCenso,
         ]);
 
-        $this->inputsHelper()->select('localizacao_diferenciada', [
+        $this->inputsHelper()->select(attrName: 'localizacao_diferenciada', inputOptions: [
             'label' => 'Localização diferenciada de residência',
             'value' => $this->localizacao_diferenciada,
             'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
@@ -710,49 +719,49 @@ return new class extends clsCadastro {
         ]);
 
         // contato
-        $this->campoRotulo('contato', '<b>Contato</b>', '', '', 'Informações de contato da pessoa');
-        $this->inputTelefone('1', 'Telefone residencial');
-        $this->inputTelefone('2', 'Celular');
-        $this->inputTelefone('mov', 'Telefone adicional');
-        $this->inputTelefone('fax', 'Fax');
-        $this->campoTexto('email', 'E-mail', $this->email, '50', '255', false);
+        $this->campoRotulo(nome: 'contato', campo: '<b>Contato</b>', valor: '', duplo: '', descricao: 'Informações de contato da pessoa');
+        $this->inputTelefone(type: '1', typeLabel: 'Telefone residencial');
+        $this->inputTelefone(type: '2', typeLabel: 'Celular');
+        $this->inputTelefone(type: 'mov', typeLabel: 'Telefone adicional');
+        $this->inputTelefone(type: 'fax', typeLabel: 'Fax');
+        $this->campoTexto(nome: 'email', campo: 'E-mail', valor: $this->email, tamanhovisivel: '50', tamanhomaximo: '255');
 
         // renda
-        $this->campoRotulo('renda', '<b>Trabalho e renda</b>', '', '', 'Informações de trabalho e renda da pessoa');
-        $this->campoTexto('ocupacao', 'Ocupação', $this->ocupacao, '50', '255', false);
-        $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '9', '10');
-        $this->campoData('data_admissao', 'Data de admissão', $this->data_admissao);
-        $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', false);
-        $this->inputTelefone('empresa', 'Telefone da empresa');
-        $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
+        $this->campoRotulo(nome: 'renda', campo: '<b>Trabalho e renda</b>', valor: '', duplo: '', descricao: 'Informações de trabalho e renda da pessoa');
+        $this->campoTexto(nome: 'ocupacao', campo: 'Ocupação', valor: $this->ocupacao, tamanhovisivel: '50', tamanhomaximo: '255');
+        $this->campoMonetario(nome: 'renda_mensal', campo: 'Renda mensal (R$)', valor: $this->renda_mensal, tamanhovisivel: '9', tamanhomaximo: '10');
+        $this->campoData(nome: 'data_admissao', campo: 'Data de admissão', valor: $this->data_admissao);
+        $this->campoTexto(nome: 'empresa', campo: 'Empresa', valor: $this->empresa, tamanhovisivel: '50', tamanhomaximo: '255');
+        $this->inputTelefone(type: 'empresa', typeLabel: 'Telefone da empresa');
+        $this->campoTexto(nome: 'pessoa_contato', campo: 'Pessoa de contato na empresa', valor: $this->pessoa_contato, tamanhovisivel: '50', tamanhomaximo: '255');
 
-        $fileService = new FileService(new UrlPresigner);
-        $files = $this->cod_pessoa_fj ? $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj)) : [];
-        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+        $fileService = new FileService(urlPresigner: new UrlPresigner);
+        $files = $this->cod_pessoa_fj ? $fileService->getFiles(relation: LegacyIndividual::find($this->cod_pessoa_fj)) : [];
+        $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files])->render());
 
         // after change pessoa pai / mae
 
         if ($parentType) {
-            $this->inputsHelper()->hidden('parent_type', ['value' => $parentType]);
+            $this->inputsHelper()->hidden(attrName: 'parent_type', inputOptions: ['value' => $parentType]);
         }
 
         $styles = [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
-            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
 
         $script = [
-            '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
-            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Endereco.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $script);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
     }
 
     public function Novo()
@@ -762,7 +771,11 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        return $this->createOrUpdate($this->cod_pessoa_fj);
+        $user = LegacyUser::find($this->cod_pessoa_fj);
+        if ($user) {
+            UserUpdated::dispatch($user);
+        }
+        return $this->createOrUpdate(pessoaIdOrNull: $this->cod_pessoa_fj);
     }
 
     public function Excluir()
@@ -770,7 +783,7 @@ return new class extends clsCadastro {
         $idPes = $this->cod_pessoa_fj;
 
         $aluno = new clsPmieducarAluno();
-        $aluno = $aluno->lista(null, null, null, null, null, $idPes, null, null, null, null, 1);
+        $aluno = $aluno->lista(int_cod_aluno: null, int_ref_cod_aluno_beneficio: null, int_ref_cod_religiao: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ref_idpes: $idPes, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
 
         if ($aluno) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com aluno.';
@@ -779,9 +792,9 @@ return new class extends clsCadastro {
         }
 
         $inUse = LegacyIndividual::query()
-            ->where('idpes_responsavel', $idPes)
-            ->orWhere('idpes_pai', $idPes)
-            ->orWhere('idpes_mae', $idPes)
+            ->where(column: 'idpes_responsavel', operator: $idPes)
+            ->orWhere(column: 'idpes_pai', operator: $idPes)
+            ->orWhere(column: 'idpes_mae', operator: $idPes)
             ->exists();
 
         if ($inUse) {
@@ -791,10 +804,10 @@ return new class extends clsCadastro {
         }
 
         $usuario = new clsPmieducarUsuario();
-        $usuario = $usuario->lista($idPes, null, null, null, null, null, null, null, null, null, true);
+        $usuario = $usuario->lista(int_cod_usuario: $idPes, int_ref_cod_escola: null, int_ref_cod_instituicao: null, int_ref_funcionario_cad: null, int_ref_funcionario_exc: null, int_ref_cod_tipo_usuario: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: true);
         $funcionario = new clsPortalFuncionario();
         $funcionario->ref_cod_pessoa_fj = $idPes;
-        $funcionario = $funcionario->lista(null, null, 1);
+        $funcionario = $funcionario->lista(str_matricula: null, str_senha: null, int_ativo: 1);
 
         if ($funcionario && $usuario) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com usuário do sistema.';
@@ -803,7 +816,7 @@ return new class extends clsCadastro {
         }
 
         $servidor = new clsPmieducarServidor();
-        $servidor = $servidor->lista($idPes, null, null, null, null, null, null, null, 1);
+        $servidor = $servidor->lista(int_cod_servidor: $idPes, int_ref_cod_deficiencia: null, int_ref_idesco: null, int_carga_horaria: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
 
         if ($servidor) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com servidor.';
@@ -811,48 +824,26 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $cliente = new clsPmieducarCliente();
-        $cliente = $cliente->lista(null, null, null, $idPes, null, null, null, null, null, null, 1);
-
-        if ($cliente) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com cliente.';
-
-            return false;
-        }
-
-        $usuarioTransporte = new clsModulesPessoaTransporte();
-        $usuarioTransporte = $usuarioTransporte->lista(null, $idPes);
-
-        if ($usuarioTransporte) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com usuário de transporte.';
-
-            return false;
-        }
-
-        $motorista = new clsModulesMotorista();
-        $motorista = $motorista->lista(null, null, null, null, null, $idPes);
-
-        if ($motorista) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com motorista.';
-
-            return false;
-        }
-
-        $pessoaFisica = new clsPessoaFisica($idPes);
+        $pessoaFisica = new clsPessoaFisica(int_idpes: $idPes);
         $pessoaFisica->excluir();
+
+        $user = LegacyUser::find($idPes);
+        if ($user) {
+            UserDeleted::dispatch($user);
+        }
 
         $this->mensagem = 'Exclusão efetuada com sucesso.';
 
-        $this->simpleRedirect('atendidos_lst.php');
+        $this->simpleRedirect(url: 'atendidos_lst.php');
     }
 
     public function afterChangePessoa($id)
     {
-        Portabilis_View_Helper_Application::embedJavascript($this, "
+        Portabilis_View_Helper_Application::embedJavascript(viewInstance: $this, script: "
 
         if(window.opener &&  window.opener.afterChangePessoa) {
             var parentType = \$j('#parent_type').val();
-
+            alert('Alteração realizada com sucesso!');
             if (parentType)
             window.opener.afterChangePessoa(self, parentType, $id, \$j('#nm_pessoa').val());
             else
@@ -861,7 +852,7 @@ return new class extends clsCadastro {
         else
             document.location = 'atendidos_lst.php';
 
-        ", $afterReady = true);
+        ", afterReady: $afterReady = false);
     }
 
     protected function loadAlunoByPessoaId($id)
@@ -874,22 +865,22 @@ return new class extends clsCadastro {
 
     protected function inputPai()
     {
-        $this->addParentsInput('pai');
+        $this->addParentsInput(parentType: 'pai');
     }
 
     protected function inputMae()
     {
-        $this->addParentsInput('mae', 'mãe');
+        $this->addParentsInput(parentType: 'mae', parentTypeLabel: 'mãe');
     }
 
     protected function addParentsInput($parentType, $parentTypeLabel = '')
     {
-        if (! $parentTypeLabel) {
+        if (!$parentTypeLabel) {
             $parentTypeLabel = $parentType;
         }
 
-        if (! isset($this->_aluno)) {
-            $this->_aluno = $this->loadAlunoByPessoaId($this->cod_pessoa_fj);
+        if (!isset($this->_aluno)) {
+            $this->_aluno = $this->loadAlunoByPessoaId(id: $this->cod_pessoa_fj);
         }
 
         $parentId = $this->{$parentType . '_id'};
@@ -897,16 +888,19 @@ return new class extends clsCadastro {
         // mostra uma dica nos casos em que foi informado apenas o nome dos pais,
         //pela antiga interface do cadastro de alunos.
 
-        if (! $parentId && $this->_aluno['nm_' . $parentType]) {
+        if (!$parentId && $this->_aluno['nm_' . $parentType]) {
             $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
-            '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
-            'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
+                '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
+                'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
         }
 
         $hiddenInputOptions = ['options' => ['value' => $parentId]];
-        $helperOptions = ['objectName' => $parentType, 'hiddenInputOptions' => $hiddenInputOptions];
+        $helperOptions = [
+            'objectName' => $parentType,
+            'hiddenInputOptions' => $hiddenInputOptions
+        ];
 
         $options = [
             'label' => 'Pessoa ' . $parentTypeLabel,
@@ -915,24 +909,24 @@ return new class extends clsCadastro {
             'input_hint' => $inputHint
         ];
 
-        $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPessoa(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
     }
 
     protected function validatesCpf($cpf)
     {
         $isValid = true;
 
-        if ($cpf && ! Portabilis_Utils_Validation::validatesCpf($cpf)) {
+        if ($cpf && !Portabilis_Utils_Validation::validatesCpf(cpf: $cpf)) {
             $this->erros['id_federal'] = 'CPF inválido.';
             $isValid = false;
         } elseif ($cpf) {
             $fisica = new clsFisica();
-            $fisica->cpf = idFederal2int($cpf);
+            $fisica->cpf = idFederal2int(str: $cpf);
             $fisica = $fisica->detalhe();
 
             if ($fisica['cpf'] && $this->cod_pessoa_fj != $fisica['idpes']) {
                 $link = '<a class=\'decorated\' target=\'__blank\' href=\'/intranet/atendidos_cad.php?cod_pessoa_fj=' .
-                "{$fisica['idpes']}'>{$fisica['idpes']}</a>";
+                    "{$fisica['idpes']}'>{$fisica['idpes']}</a>";
 
                 $this->erros['id_federal'] = "CPF já utilizado pela pessoa $link.";
                 $isValid = false;
@@ -956,7 +950,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! $this->validatesCpf($this->id_federal)) {
+        if (!$this->validatesCpf(cpf: $this->id_federal)) {
             return false;
         }
 
@@ -969,6 +963,10 @@ return new class extends clsCadastro {
         }
 
         if (!empty($this->nm_pessoa) && !$this->validaNome()) {
+            return false;
+        }
+
+        if (!empty($this->nome_social) && !$this->validaNomeSocial()) {
             return false;
         }
 
@@ -990,21 +988,71 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
-        $this->savePhoto($pessoaId);
-        $this->createOrUpdatePessoaFisica($pessoaId);
-        $this->createOrUpdateDocumentos($pessoaId);
-        $this->createOrUpdateTelefones($pessoaId);
-        $this->saveAddress($pessoaId);
-        $this->afterChangePessoa($pessoaId);
-        $this->saveFiles($pessoaId);
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
+
+        if (!$this->validaDadosTelefones()) {
+            return false;
+        }
+
+        $pessoaId = $this->createOrUpdatePessoa(pessoaId: $pessoaIdOrNull);
+        $this->savePhoto(id: $pessoaId);
+        $this->createOrUpdatePessoaFisica(pessoaId: $pessoaId);
+        $this->createOrUpdateDocumentos(pessoaId: $pessoaId);
+        $this->createOrUpdateTelefones(pessoaId: $pessoaId);
+        $this->saveAddress(person: $pessoaId, optionalFields: true);
+        $this->afterChangePessoa(id: $pessoaId);
+        $this->saveFiles(idpes: $pessoaId);
+
+        return true;
+    }
+
+    protected function validaDadosTelefones()
+    {
+        return $this->validaDDDTelefone(valorDDD: $this->ddd_telefone_1, valorTelefone: $this->telefone_1, nomeCampo: 'Telefone residencial') &&
+            $this->validaDDDTelefone(valorDDD: $this->ddd_telefone_2, valorTelefone: $this->telefone_2, nomeCampo: 'Celular') &&
+            $this->validaDDDTelefone(valorDDD: $this->ddd_telefone_mov, valorTelefone: $this->telefone_mov, nomeCampo: 'Telefone adicional') &&
+            $this->validaDDDTelefone(valorDDD: $this->ddd_telefone_fax, valorTelefone: $this->telefone_fax, nomeCampo: 'Fax');
+    }
+
+    protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
+    {
+        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+
+        if (!empty($valorDDD) && empty($valorTelefone)) {
+            $this->mensagem = $msgRequereTelefone;
+
+            return false;
+        }
+
+        if (empty($valorDDD) && !empty($valorTelefone)) {
+            $this->mensagem = $msgRequereDDD;
+
+            return false;
+        }
 
         return true;
     }
 
     private function validaNome()
     {
-        $validator = new NameValidator($this->nm_pessoa);
+        $validator = new NameValidator(name: $this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaNomeSocial()
+    {
+        $validator = new NameValidator(name: $this->nome_social);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1016,7 +1064,7 @@ return new class extends clsCadastro {
 
     private function validaLocalizacaoDiferenciada()
     {
-        $validator = new DifferentiatedLocationValidator($this->localizacao_diferenciada, $this->zona_localizacao_censo);
+        $validator = new DifferentiatedLocationValidator(differentiatedLocation: $this->localizacao_diferenciada, locationZone: $this->zona_localizacao_censo);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1028,7 +1076,7 @@ return new class extends clsCadastro {
 
     private function validaDataNascimento()
     {
-        $validator = new BirthDateValidator(Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
+        $validator = new BirthDateValidator(birthDate: Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc));
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1041,13 +1089,13 @@ return new class extends clsCadastro {
     //envia foto e salva caminha no banco
     protected function savePhoto($id)
     {
-        $caminhoFoto = url('intranet/imagens/user-perfil.png');
+        $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
-                $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
+                $obj = new clsCadastroFisicaFoto(idpes: $id, caminho: $caminhoFoto);
                 $detalheFoto = $obj->detalhe();
-                if (is_array($detalheFoto) && count($detalheFoto) > 0) {
+                if (is_array(value: $detalheFoto) && count(value: $detalheFoto) > 0) {
                     $obj->edita();
                 } else {
                     $obj->cadastra();
@@ -1057,13 +1105,13 @@ return new class extends clsCadastro {
 
                 return false;
             }
-            $caminhoFoto = (new UrlPresigner())->getPresignedUrl($caminhoFoto);
+            $caminhoFoto = (new UrlPresigner())->getPresignedUrl(url: $caminhoFoto);
         } elseif ($this->file_delete == 'on') {
-            $obj = new clsCadastroFisicaFoto($id);
+            $obj = new clsCadastroFisicaFoto(idpes: $id);
             $obj->excluir();
         }
 
-        $loggedUser = session('logged_user');
+        $loggedUser = session(key: 'logged_user');
 
         if ($loggedUser->personId == $id) {
             Session::put('logged_user_picture', $caminhoFoto);
@@ -1078,8 +1126,8 @@ return new class extends clsCadastro {
     {
         $this->arquivoFoto = $_FILES['photo'];
         if (!empty($this->arquivoFoto['name'])) {
-            $this->arquivoFoto['name'] = mb_strtolower($this->arquivoFoto['name'], 'UTF-8');
-            $this->objPhoto = new PictureController($this->arquivoFoto);
+            $this->arquivoFoto['name'] = mb_strtolower(string: $this->arquivoFoto['name'], encoding: 'UTF-8');
+            $this->objPhoto = new PictureController(imageFile: $this->arquivoFoto);
             if ($this->objPhoto->validatePicture()) {
                 return true;
             } else {
@@ -1087,8 +1135,6 @@ return new class extends clsCadastro {
 
                 return false;
             }
-
-            return false;
         } else {
             $this->objPhoto = null;
 
@@ -1103,7 +1149,7 @@ return new class extends clsCadastro {
         $obrigarDocumentoPessoa = false;
 
         if ($instituicao && isset($instituicao['obrigar_documento_pessoa'])) {
-            $obrigarDocumentoPessoa = dbBool($instituicao['obrigar_documento_pessoa']);
+            $obrigarDocumentoPessoa = dbBool(val: $instituicao['obrigar_documento_pessoa']);
         }
 
         return $obrigarDocumentoPessoa;
@@ -1116,10 +1162,10 @@ return new class extends clsCadastro {
         $certidaoCasamentoNovoFormato = $this->certidao_casamento;
 
         return $this->id_federal ||
-           $this->rg ||
-           $certidaoCivil ||
-           $certidaoCasamentoNovoFormato ||
-           $certidaoNascimentoNovoFormato;
+            $this->rg ||
+            $certidaoCivil ||
+            $certidaoCasamentoNovoFormato ||
+            $certidaoNascimentoNovoFormato;
     }
 
     protected function validaCertidao()
@@ -1127,18 +1173,18 @@ return new class extends clsCadastro {
         $certidaoNascimento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato');
         $certidaoCasamento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato');
 
-        if ($certidaoNascimento && strlen($this->certidao_nascimento) < 32) {
+        if ($certidaoNascimento && strlen(string: $this->certidao_nascimento) < 32) {
             $this->mensagem = 'O campo referente a certidão de nascimento deve conter exatos 32 dígitos.';
 
             return false;
-        } elseif ($certidaoCasamento && strlen($this->certidao_casamento) < 32) {
+        } elseif ($certidaoCasamento && strlen(string: $this->certidao_casamento) < 32) {
             $this->mensagem = 'O campo referente a certidão de casamento deve conter exatos 32 dígitos.';
 
             return false;
         }
 
         if (!empty($this->data_nasc) && $certidaoNascimento) {
-            $validator = new BirthCertificateValidator($this->certidao_nascimento, Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
+            $validator = new BirthCertificateValidator(birthCertificate: $this->certidao_nascimento, birthDate: Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc));
             if (!$validator->isValid()) {
                 $this->mensagem = $validator->getMessage();
 
@@ -1151,13 +1197,13 @@ return new class extends clsCadastro {
 
     protected function validaNisPisPasep()
     {
-        if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
+        if ($this->nis_pis_pasep && strlen(string: $this->nis_pis_pasep) != 11) {
             $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
 
             return false;
         }
 
-        $validator = new NisValidator($this->nis_pis_pasep ?? '');
+        $validator = new NisValidator(nis: $this->nis_pis_pasep ?? '');
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1169,7 +1215,7 @@ return new class extends clsCadastro {
 
     protected function validaObrigatoriedadeTelefone()
     {
-        $institution = app(LegacyInstitution::class);
+        $institution = app(abstract: LegacyInstitution::class);
         $telefoneObrigatorio = $institution->obrigar_telefone_pessoa;
         $possuiTelefoneInformado = (!empty($this->telefone_1) || !empty($this->telefone_2));
 
@@ -1180,22 +1226,31 @@ return new class extends clsCadastro {
         return true;
     }
 
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match(pattern: $pattern, subject: $this->complement);
+    }
+
     protected function createOrUpdatePessoa($pessoaId = null)
     {
         $pessoa = new clsPessoa_();
         $pessoa->idpes = $pessoaId;
         $pessoa->nome = $this->nm_pessoa;
-        $pessoa->email = addslashes($this->email);
+        $pessoa->email = addslashes(string: $this->email);
 
         $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
 
-        if (! $pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
+        if (!$pessoaId || Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $pessoaId) != 1) {
             $pessoa->tipo = 'F';
             $pessoa->idpes_cad = $this->currentUserId();
             $pessoaId = $pessoa->cadastra();
         } else {
             $pessoa->idpes_rev = $this->currentUserId();
-            $pessoa->data_rev = date('Y-m-d H:i:s', time());
+            $pessoa->data_rev = date(format: 'Y-m-d H:i:s', timestamp: time());
             $pessoa->edita();
         }
 
@@ -1207,27 +1262,27 @@ return new class extends clsCadastro {
         $db = new clsBanco();
         $fisica = new clsFisica();
         $fisica->idpes = $pessoaId;
-        $fisica->data_nasc = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
+        $fisica->data_nasc = Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc);
         $fisica->sexo = $this->sexo;
         $fisica->ref_cod_sistema = 'NULL';
-        $fisica->cpf = $this->id_federal ? idFederal2int($this->id_federal) : 'NULL';
+        $fisica->cpf = $this->id_federal ? idFederal2int(str: $this->id_federal) : 'NULL';
         $fisica->ideciv = $this->estado_civil_id;
         $fisica->idpes_pai = $this->pai_id ? $this->pai_id : 'NULL';
         $fisica->idpes_mae = $this->mae_id ? $this->mae_id : 'NULL';
         $fisica->nacionalidade = $_REQUEST['tipo_nacionalidade'];
         $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
         $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
-        $fisica->sus = $this->sus;
+        $fisica->sus = trim(string: $this->sus);
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
-        $fisica->ocupacao = $db->escapeString($this->ocupacao);
-        $fisica->empresa = $db->escapeString($this->empresa);
+        $fisica->ocupacao = $db->escapeString(string: $this->ocupacao);
+        $fisica->empresa = $db->escapeString(string: $this->empresa);
         $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
         $fisica->telefone_empresa = $this->telefone_empresa;
-        $fisica->pessoa_contato = $db->escapeString($this->pessoa_contato);
-        $this->renda_mensal = str_replace('.', '', $this->renda_mensal);
-        $this->renda_mensal = str_replace(',', '.', $this->renda_mensal);
+        $fisica->pessoa_contato = $db->escapeString(string: $this->pessoa_contato);
+        $this->renda_mensal = str_replace(search: '.', replace: '', subject: $this->renda_mensal);
+        $this->renda_mensal = str_replace(search: ',', replace: '.', subject: $this->renda_mensal);
         $fisica->renda_mensal = $this->renda_mensal;
-        $fisica->data_admissao = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
+        $fisica->data_admissao = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL(date: $this->data_admissao) : null;
         $fisica->falecido = $this->falecido;
         $fisica->ref_cod_religiao = $this->religiao_id;
         $fisica->zona_localizacao_censo = empty($this->zona_localizacao_censo) ? null : $this->zona_localizacao_censo;
@@ -1237,25 +1292,25 @@ return new class extends clsCadastro {
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 
-        if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
+        if (Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $pessoaId) != 1) {
             $fisica->cadastra();
         } else {
             $fisica->edita();
         }
 
-        $this->createOrUpdateRaca($pessoaId, $this->cor_raca);
+        $this->createOrUpdateRaca(pessoaId: $pessoaId, corRaca: $this->cor_raca);
     }
 
     public function createOrUpdateRaca($pessoaId, $corRaca)
     {
-        $pessoaId = (int) $pessoaId;
-        $corRaca  = (int) $corRaca;
+        $pessoaId = (int)$pessoaId;
+        $corRaca = (int)$corRaca;
 
         if ($corRaca == 0) {
             return false;
         } //Quando não tiver cor/raça selecionado não faz update
 
-        $raca = new clsCadastroFisicaRaca($pessoaId, $corRaca);
+        $raca = new clsCadastroFisicaRaca(ref_idpes: $pessoaId, ref_cod_raca: $corRaca);
 
         if ($raca->existe()) {
             return $raca->edita();
@@ -1274,7 +1329,7 @@ return new class extends clsCadastro {
         $documentos->rg = $_REQUEST['rg'];
 
         $documentos->data_exp_rg = Portabilis_Date_Utils::brToPgSQL(
-            $_REQUEST['data_emissao_rg']
+            date: $_REQUEST['data_emissao_rg']
         );
 
         $documentos->idorg_exp_rg = $_REQUEST['orgao_emissao_rg'];
@@ -1307,12 +1362,12 @@ return new class extends clsCadastro {
         $documentos->num_folha = $_REQUEST['folha_certidao_civil'];
 
         $documentos->data_emissao_cert_civil = Portabilis_Date_Utils::brToPgSQL(
-            $_REQUEST['data_emissao_certidao_civil']
+            date: $_REQUEST['data_emissao_certidao_civil']
         );
 
         $documentos->sigla_uf_cert_civil = $_REQUEST['uf_emissao_certidao_civil'];
-        $documentos->cartorio_cert_civil = pg_escape_string($_REQUEST['cartorio_emissao_certidao_civil']);
-        $documentos->passaporte = pg_escape_string($_REQUEST['passaporte']);
+        $documentos->cartorio_cert_civil = pg_escape_string(connection: $_REQUEST['cartorio_emissao_certidao_civil']);
+        $documentos->passaporte = pg_escape_string(connection: $_REQUEST['passaporte']);
 
         // carteira de trabalho
 
@@ -1320,7 +1375,7 @@ return new class extends clsCadastro {
         $documentos->serie_cart_trabalho = $_REQUEST['serie_carteira_trabalho'];
 
         $documentos->data_emissao_cart_trabalho = Portabilis_Date_Utils::brToPgSQL(
-            $_REQUEST['data_emissao_carteira_trabalho']
+            date: $_REQUEST['data_emissao_carteira_trabalho']
         );
 
         $documentos->sigla_uf_cart_trabalho = $_REQUEST['uf_emissao_carteira_trabalho'];
@@ -1338,7 +1393,7 @@ return new class extends clsCadastro {
 
         $sql = 'select 1 from cadastro.documento WHERE idpes = $1 limit 1';
 
-        if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
+        if (Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $pessoaId) != 1) {
             $documentos->cadastra();
         } else {
             $documentos->edita();
@@ -1349,10 +1404,10 @@ return new class extends clsCadastro {
     {
         $telefones = [];
 
-        $telefones[] = new clsPessoaTelefone($pessoaId, 1, $this->telefone_1, $this->ddd_telefone_1);
-        $telefones[] = new clsPessoaTelefone($pessoaId, 2, $this->telefone_2, $this->ddd_telefone_2);
-        $telefones[] = new clsPessoaTelefone($pessoaId, 3, $this->telefone_mov, $this->ddd_telefone_mov);
-        $telefones[] = new clsPessoaTelefone($pessoaId, 4, $this->telefone_fax, $this->ddd_telefone_fax);
+        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 1, str_fone: $this->telefone_1, str_ddd: $this->ddd_telefone_1);
+        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 2, str_fone: $this->telefone_2, str_ddd: $this->ddd_telefone_2);
+        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 3, str_fone: $this->telefone_mov, str_ddd: $this->ddd_telefone_mov);
+        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 4, str_fone: $this->telefone_fax, str_ddd: $this->ddd_telefone_fax);
 
         foreach ($telefones as $telefone) {
             $telefone->cadastra();
@@ -1365,7 +1420,7 @@ return new class extends clsCadastro {
 
     protected function inputTelefone($type, $typeLabel = '')
     {
-        if (! $typeLabel) {
+        if (!$typeLabel) {
             $typeLabel = "Telefone {$type}";
         }
 
@@ -1381,7 +1436,7 @@ return new class extends clsCadastro {
             'inline' => true
         ];
 
-        $this->inputsHelper()->integer("ddd_telefone_{$type}", $options);
+        $this->inputsHelper()->integer(attrName: "ddd_telefone_{$type}", inputOptions: $options);
 
         // telefone
 
@@ -1393,36 +1448,36 @@ return new class extends clsCadastro {
             'max_length' => 11
         ];
 
-        $this->inputsHelper()->integer("telefone_{$type}", $options);
+        $this->inputsHelper()->integer(attrName: "telefone_{$type}", inputOptions: $options);
     }
 
     private function saveFiles($idpes)
     {
-        $fileService = new FileService(new UrlPresigner);
+        $fileService = new FileService(urlPresigner: new UrlPresigner);
 
         if ($this->file_url) {
-            $newFiles = json_decode($this->file_url);
+            $newFiles = json_decode(json: $this->file_url);
             foreach ($newFiles as $file) {
                 $fileService->saveFile(
-                    $file->url,
-                    $file->size,
-                    $file->originalName,
-                    $file->extension,
-                    LegacyIndividual::class,
-                    $idpes
+                    url: $file->url,
+                    size: $file->size,
+                    originalName: $file->originalName,
+                    extension: $file->extension,
+                    typeFileRelation: LegacyIndividual::class,
+                    relationId: $idpes
                 );
             }
         }
 
         if ($this->file_url_deleted) {
-            $deletedFiles = explode(',', $this->file_url_deleted);
-            $fileService->deleteFiles($deletedFiles);
+            $deletedFiles = explode(separator: ',', string: $this->file_url_deleted);
+            $fileService->deleteFiles(deletedFiles: $deletedFiles);
         }
     }
 
     public function Formular()
     {
-        $this->title = 'Pessoas Físicas - Cadastro';
+        $this->title = 'Pessoa Física - Cadastro';
         $this->processoAp = 43;
     }
 };

@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_acesso;
     public $data_hora;
     public $ip_externo;
@@ -22,33 +16,33 @@ return new class extends clsDetalhe {
 
         $this->cod_acesso=$_GET['cod_acesso'];
 
-        $tmp_obj = new clsPortalAcesso($this->cod_acesso);
+        $tmp_obj = new clsPortalAcesso(cod_acesso: $this->cod_acesso);
         $registro = $tmp_obj->detalhe();
 
         if (! $registro) {
-            $this->simpleRedirect('portal_acesso_lst.php');
+            $this->simpleRedirect(url: 'portal_acesso_lst.php');
         }
 
         if ($registro['cod_acesso']) {
-            $this->addDetalhe([ 'Acesso', "{$registro['cod_acesso']}"]);
+            $this->addDetalhe(detalhe: [ 'Acesso', "{$registro['cod_acesso']}"]);
         }
         if ($registro['data_hora']) {
-            $this->addDetalhe([ 'Data Hora', dataFromPgToBr($registro['data_hora'], 'd/m/Y H:i') ]);
+            $this->addDetalhe(detalhe: [ 'Data Hora', dataFromPgToBr(data_original: $registro['data_hora'], formatacao: 'd/m/Y H:i') ]);
         }
         if ($registro['ip_externo']) {
-            $this->addDetalhe([ 'Ip Externo', "{$registro['ip_externo']}"]);
+            $this->addDetalhe(detalhe: [ 'Ip Externo', "{$registro['ip_externo']}"]);
         }
         if ($registro['ip_interno']) {
-            $this->addDetalhe([ 'Ip Interno', "{$registro['ip_interno']}"]);
+            $this->addDetalhe(detalhe: [ 'Ip Interno', "{$registro['ip_interno']}"]);
         }
         if ($registro['cod_pessoa']) {
-            $this->addDetalhe([ 'Pessoa', "{$registro['cod_pessoa']}"]);
+            $this->addDetalhe(detalhe: [ 'Pessoa', "{$registro['cod_pessoa']}"]);
         }
         if ($registro['obs']) {
-            $this->addDetalhe([ 'Obs', "{$registro['obs']}"]);
+            $this->addDetalhe(detalhe: [ 'Obs', "{$registro['obs']}"]);
         }
-        if (! is_null($registro['sucesso'])) {
-            $this->addDetalhe([ 'Sucesso', dbBool($registro['sucesso']) ? 'Sim': 'Não' ]);
+        if (! is_null(value: $registro['sucesso'])) {
+            $this->addDetalhe(detalhe: [ 'Sucesso', dbBool(val: $registro['sucesso']) ? 'Sim': 'Não' ]);
         }
 
         $this->url_novo = 'portal_acesso_cad.php';

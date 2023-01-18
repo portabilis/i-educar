@@ -1,21 +1,36 @@
 <?php
 
-use App\Models\LegacySchool;
+namespace Database\Factories;
+
 use App\Models\LegacyTransferRequest;
-use App\Models\LegacyTransferType;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyTransferRequestFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyTransferRequest::class;
 
-$factory->define(LegacyTransferRequest::class, function (Faker $faker) {
-    return [
-        'ref_usuario_cad' => 1,
-        // 'ref_cod_matricula_saida' => factory(LegacyEnrollment::class)->create(),
-        'observacao' => $faker->words(3, true),
-        'ref_cod_escola_destino' => factory(LegacySchool::class)->create(),
-        'data_cadastro' => now(),
-        'ativo' => 1,
-        'ref_cod_transferencia_tipo' => factory(LegacyTransferType::class)->create()
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_transferencia_tipo' => LegacyTransferTypeFactory::new()->create(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_cod_matricula_entrada' => fn () => LegacyRegistrationFactory::new()->create(),
+            'ref_cod_matricula_saida' => fn () => LegacyRegistrationFactory::new()->create(),
+            'observacao' => $this->faker->text,
+            'ativo' => 1,
+            'data_transferencia' => now(),
+            'ref_cod_escola_destino' => LegacySchoolFactory::new()->create(),
+        ];
+    }
+}

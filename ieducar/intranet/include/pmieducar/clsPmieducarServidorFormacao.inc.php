@@ -18,7 +18,7 @@ class clsPmieducarServidorFormacao extends Model
 
     public function __construct($cod_formacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_servidor = null, $nm_formacao = null, $tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_ref_cod_instituicao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_formacao";
 
@@ -126,6 +126,7 @@ class clsPmieducarServidorFormacao extends Model
     {
         if (is_numeric($this->cod_formacao) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -180,7 +181,7 @@ class clsPmieducarServidorFormacao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_formacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_servidor = null, $str_nm_formacao = null, $str_tipo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
@@ -278,7 +279,7 @@ class clsPmieducarServidorFormacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -296,7 +297,7 @@ class clsPmieducarServidorFormacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

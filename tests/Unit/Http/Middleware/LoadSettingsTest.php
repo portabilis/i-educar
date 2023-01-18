@@ -4,6 +4,7 @@ namespace Tests\Unit\Http\Middleware;
 
 use App\Http\Middleware\LoadSettings;
 use App\Setting;
+use Database\Factories\SettingFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -18,7 +19,7 @@ class LoadSettingsTest extends TestCase
      */
     public function testMiddleware()
     {
-        factory(Setting::class)->create([
+        SettingFactory::new()->create([
             'key' => 'load.settings.test',
             'value' => 'Middleware for Test',
             'type' => Setting::TYPE_STRING,

@@ -65,26 +65,16 @@ return new class extends clsDetalhe {
         $lista = $obj->lista(
             null,
             $this->ref_cod_instituicao,
-            null,
-            null,
-            null,
-            $this->cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            date('Y'),
-            true
+            int_ref_cod_servidor: $this->cod_servidor,
+            bool_busca_nome: null,
+            boo_professor: 1,
+            ano: date('Y'),
+            desconsiderarAlocacoesComDataDeSaida: true
         );
 
         if ($lista) {
             // Passa todos os valores do registro para atributos do objeto
-            foreach ($lista as $campo => $val) {
+            foreach ($lista as $val) {
                 $temp = [];
                 $temp['carga_horaria'] = $val['carga_horaria'];
                 $temp['periodo'] = $val['periodo'];
@@ -112,7 +102,7 @@ return new class extends clsDetalhe {
         $docenteInep = null;
         try {
             $docenteInep = $docenteMapper->find(['docente' => $registro['cod_servidor']]);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         if (isset($docenteInep)) {
@@ -133,13 +123,6 @@ return new class extends clsDetalhe {
 
         if ($registro['ref_idesco']) {
             $this->addDetalhe(['Escolaridade', $registro['ref_idesco']]);
-        }
-
-        if ($registro['ref_cod_subnivel']) {
-            $obj_nivel = new clsPmieducarSubnivel($registro['ref_cod_subnivel']);
-            $det_nivel = $obj_nivel->detalhe();
-
-            $this->addDetalhe(['Nível', $det_nivel['nm_subnivel']]);
         }
 
         if ($registro['ref_cod_funcao']) {
@@ -296,9 +279,6 @@ return new class extends clsDetalhe {
 
             $this->array_botao[] = 'Alocar Servidor';
             $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_lst.php?{$get_padrao}\");";
-
-            $this->array_botao[] = 'Alterar Nível';
-            $this->array_botao_url_script[] = 'popless();';
 
             if ($lista) {
                 $this->array_botao[] = 'Substituir Horário Servidor';

@@ -55,7 +55,7 @@ class UpdateDisciplinesCommand extends Command
         }
 
         foreach ($copiers as $copier) {
-            $service->setMoveDataService(new $copier);
+            $service->setMoveDataService(new $copier());
         }
     }
 }

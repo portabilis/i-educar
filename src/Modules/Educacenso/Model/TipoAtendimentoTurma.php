@@ -8,10 +8,10 @@ class TipoAtendimentoTurma
 {
     use DescriptionValue;
 
-    const ESCOLARIZACAO = 0;
-    const CLASSE_HOSPITALAR = 1;
-    const ATIVIDADE_COMPLEMENTAR = 4;
-    const AEE = 5;
+    public const ESCOLARIZACAO = 0;
+    public const CLASSE_HOSPITALAR = 1;
+    public const ATIVIDADE_COMPLEMENTAR = 4;
+    public const AEE = 5;
 
     /**
      * @return array

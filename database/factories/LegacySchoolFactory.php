@@ -1,22 +1,34 @@
 <?php
 
-use App\Models\LegacyEducationNetwork;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyOrganization;
+namespace Database\Factories;
+
 use App\Models\LegacySchool;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolFactory extends Factory
+{
+    protected $model = LegacySchool::class;
 
-$factory->define(LegacySchool::class, function (Faker $faker) {
-    return [
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
-        'ref_cod_escola_rede_ensino' => factory(LegacyEducationNetwork::class)->create(),
-        'sigla' => $faker->asciify(),
-        'data_cadastro' => now(),
-        'ref_idpes' => factory(LegacyOrganization::class)->create(),
-    ];
-});
+    public function definition(): array
+    {
+        return [
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'sigla' => $this->faker->asciify(),
+            'data_cadastro' => now(),
+            'ref_idpes' => LegacyOrganizationFactory::new()->create(),
+            'latitude' => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
+        ];
+    }
+
+    public function withPhone(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            LegacyPhoneFactory::new()->create([
+                'idpes' => $school->person,
+                'tipo' => 1,
+            ]);
+        });
+    }
+}

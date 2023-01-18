@@ -7,6 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 class AddSettingMaxDaysWithoutLoginToDisableUser extends Migration
 {
     use SettingCategoryTrait;
+
     /**
      * Run the migrations.
      *

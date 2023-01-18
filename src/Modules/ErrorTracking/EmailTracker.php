@@ -26,7 +26,7 @@ class EmailTracker implements Tracker
             $mail = new ErrorTrackerMail($to, $subject, $html);
 
             Mail::send($mail);
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             //
         }
     }

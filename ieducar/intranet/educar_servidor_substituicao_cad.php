@@ -2,7 +2,6 @@
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_servidor_alocacao;
     public $ref_ref_cod_instituicao;
     public $ref_usuario_exc;
@@ -15,9 +14,7 @@ return new class extends clsCadastro {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $todos;
-
     public $alocacao_array = [];
     public $professor;
 
@@ -29,57 +26,38 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            635,
-            $this->pessoa_logada,
-            3,
-            'educar_servidor_lst.php'
+            int_processo_ap: 635,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 3,
+            str_pagina_redirecionar: 'educar_servidor_lst.php'
         );
 
-        if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao)) {
+        if (is_numeric(value: $this->ref_cod_servidor) && is_numeric(value: $this->ref_ref_cod_instituicao)) {
             $retorno = 'Novo';
 
             $obj_servidor = new clsPmieducarServidor(
-                $this->ref_cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_ref_cod_instituicao
+                cod_servidor: $this->ref_cod_servidor,
+                ref_cod_instituicao: $this->ref_ref_cod_instituicao
             );
             $det_servidor = $obj_servidor->detalhe();
 
             // Nenhum servidor com o código de servidor e instituição
             if (!$det_servidor) {
-                $this->simpleRedirect('educar_servidor_lst.php');
+                $this->simpleRedirect(url: 'educar_servidor_lst.php');
             }
 
             $this->professor = $obj_servidor->isProfessor() == true ? 'true' : 'false';
 
             $obj = new clsPmieducarServidorAlocacao();
             $lista  = $obj->lista(
-                null,
-                $this->ref_ref_cod_instituicao,
-                null,
-                null,
-                null,
-                $this->ref_cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
+                int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
+                int_ref_cod_servidor: $this->ref_cod_servidor,
+                ano: 1
             );
 
             if ($lista) {
                 // passa todos os valores obtidos no registro para atributos do objeto
-                foreach ($lista as $campo => $val) {
+                foreach ($lista as $val) {
                     $temp = [];
                     $temp['carga_horaria']  = $val['carga_horaria'];
                     $temp['periodo']        = $val['periodo'];
@@ -93,7 +71,7 @@ return new class extends clsCadastro {
 
             $this->carga_horaria = $det_servidor['carga_horaria'];
         } else {
-            $this->simpleRedirect('educar_servidor_lst.php');
+            $this->simpleRedirect(url: 'educar_servidor_lst.php');
         }
 
         $this->url_cancelar = sprintf(
@@ -103,8 +81,8 @@ return new class extends clsCadastro {
         );
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Registro de substituição do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
+        $this->breadcrumb(currentPage: 'Registro de substituição do servidor', breadcrumbs: [
+        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
     ]);
 
         return $retorno;
@@ -112,14 +90,13 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $obj_inst = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
+        $obj_inst = new clsPmieducarInstituicao(cod_instituicao: $this->ref_ref_cod_instituicao);
         $inst_det = $obj_inst->detalhe();
 
-        $this->campoRotulo('nm_instituicao', 'Instituição', $inst_det['nm_instituicao']);
-        $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);
+        $this->campoRotulo(nome: 'nm_instituicao', campo: 'Instituição', valor: $inst_det['nm_instituicao']);
+        $this->campoOculto(nome: 'ref_ref_cod_instituicao', valor: $this->ref_ref_cod_instituicao);
 
-        $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsPmieducarServidor($this->ref_cod_servidor);
+        $objTemp = new clsPmieducarServidor(cod_servidor: $this->ref_cod_servidor);
         $det = $objTemp->detalhe();
         if ($det) {
             foreach ($det as $key => $registro) {
@@ -128,18 +105,18 @@ return new class extends clsCadastro {
         }
 
         if ($this->ref_cod_servidor) {
-            $objPessoa     = new clsPessoa_($this->ref_cod_servidor);
+            $objPessoa     = new clsPessoa_(int_idpes: $this->ref_cod_servidor);
             $detalhePessoa = $objPessoa->detalhe();
             $nm_servidor = $detalhePessoa['nome'];
         }
 
-        $this->campoRotulo('nm_servidor', 'Servidor', $nm_servidor);
+        $this->campoRotulo(nome: 'nm_servidor', campo: 'Servidor', valor: $nm_servidor);
 
-        $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
-        $this->campoOculto('professor', $this->professor);
+        $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
+        $this->campoOculto(nome: 'professor', valor: $this->professor);
 
         $url = sprintf(
-            'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d&tipo=livre&professor=%d',
+            'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d&professor=%d',
             $this->ref_ref_cod_instituicao,
             $this->ref_cod_servidor,
             $this->professor
@@ -151,80 +128,65 @@ return new class extends clsCadastro {
         );
 
         $this->campoTextoInv(
-            'ref_cod_servidor_todos_',
-            'Substituir por:',
-            '',
-            30,
-            255,
-            true,
-            false,
-            false,
-            '',
-            $img,
-            '',
-            '',
-            ''
+            nome: 'ref_cod_servidor_todos_',
+            campo: 'Substituir por:',
+            valor: '',
+            tamanhovisivel: 30,
+            tamanhomaximo: 255,
+            obrigatorio: true,
+            descricao2: $img,
+            evento: ''
         );
-        $this->campoOculto('ref_cod_servidor_todos', '');
+        $this->campoOculto(nome: 'ref_cod_servidor_todos', valor: '');
 
-        $this->campoOculto('alocacao_array', serialize($this->alocacao_array));
+        $this->campoOculto(nome: 'alocacao_array', valor: serialize(value: $this->alocacao_array));
         $this->acao_enviar = 'acao2()';
     }
 
     public function Novo()
     {
-        $professor  = isset($_POST['professor']) ? strtolower($_POST['professor']) : 'FALSE';
+        $professor  = isset($_POST['professor']) ? strtolower(string: $_POST['professor']) : 'FALSE';
         $substituto = isset($_POST['ref_cod_servidor_todos']) ? $_POST['ref_cod_servidor_todos'] : null;
 
         $permissoes = new clsPermissoes();
         $permissoes->permissao_cadastra(
-            635,
-            $this->pessoa_logada,
-            3,
-            'educar_servidor_alocacao_lst.php'
+            int_processo_ap: 635,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 3,
+            str_pagina_redirecionar: 'educar_servidor_alocacao_lst.php'
         );
 
         $this->alocacao_array = [];
         if ($_POST['alocacao_array']) {
-            $this->alocacao_array = unserialize(urldecode($_POST['alocacao_array']));
+            $this->alocacao_array = unserialize(data: urldecode(string: $_POST['alocacao_array']));
         }
 
         if ($this->alocacao_array) {
             // Substitui todas as alocações
-            foreach ($this->alocacao_array as $key => $alocacao) {
+            foreach ($this->alocacao_array as $alocacao) {
                 $obj = new clsPmieducarServidorAlocacao(
-                    null,
-                    $this->ref_ref_cod_instituicao,
-                    $this->pessoa_logada,
-                    $this->pessoa_logada,
-                    $alocacao['ref_cod_escola'],
-                    $this->ref_cod_servidor,
-                    null,
-                    null,
-                    null,
-                    $alocacao['carga_horaria'],
-                    $alocacao['periodo']
+                    cod_servidor_alocacao: null,
+                    ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
+                    ref_usuario_exc: $this->pessoa_logada,
+                    ref_usuario_cad: $this->pessoa_logada,
+                    ref_cod_escola: $alocacao['ref_cod_escola'],
+                    ref_cod_servidor: $this->ref_cod_servidor,
+                    carga_horaria: $alocacao['carga_horaria'],
+                    periodo: $alocacao['periodo']
                 );
 
                 $return = $obj->lista(
-                    null,
-                    $this->ref_ref_cod_instituicao,
-                    null,
-                    null,
-                    $alocacao['ref_cod_escola'],
-                    $this->ref_cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    $alocacao['carga_horaria']
+                    int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
+                    int_ref_cod_escola: $alocacao['ref_cod_escola'],
+                    int_ref_cod_servidor: $this->ref_cod_servidor,
+                    int_ativo: 1,
+                    int_carga_horaria: $alocacao['carga_horaria']
                 );
 
                 if (false !== $return) {
-                    $substituiu = $obj->substituir_servidor($substituto);
+                    $substituiu = $obj->substituir_servidor(int_ref_cod_servidor_substituto: $substituto);
                     if (!$substituiu) {
-                        $this->mensagem = 'Substituicao n&atilde;o realizado.<br>';
+                        $this->mensagem = 'Substituicao não realizado.<br>';
 
                         return false;
                     }
@@ -234,31 +196,18 @@ return new class extends clsCadastro {
             // Substituição do servidor no quadro de horários (caso seja professor)
             if ('true' == $professor) {
                 $quadroHorarios = new clsPmieducarQuadroHorarioHorarios(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $this->ref_ref_cod_instituicao,
-                    null,
-                    $this->ref_cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    null
+                    ref_cod_instituicao_servidor: $this->ref_ref_cod_instituicao,
+                    ref_servidor: $this->ref_cod_servidor,
+                    ativo: 1,
                 );
-                $quadroHorarios->substituir_servidor($substituto);
+                $quadroHorarios->substituir_servidor(int_ref_cod_servidor_substituto: $substituto);
             }
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
         $destination = 'educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s';
         $destination = sprintf($destination, $this->ref_cod_servidor, $this->ref_ref_cod_instituicao);
-        $this->simpleRedirect($destination);
+        $this->simpleRedirect(url: $destination);
     }
 
     public function Editar()
@@ -273,7 +222,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-substituicao-cad.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-servidor-substituicao-cad.js');
     }
 
     public function Formular()

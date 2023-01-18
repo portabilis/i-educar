@@ -15,7 +15,7 @@ class clsCadastroDeficiencia extends Model
      */
     public function __construct($cod_deficiencia = null, $nm_deficiencia = null, $deficiencia_educacenso = null, $desconsidera_regra_diferenciada = null, $exigir_laudo_medico = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}deficiencia";
 
@@ -106,6 +106,7 @@ class clsCadastroDeficiencia extends Model
         if (is_numeric($this->cod_deficiencia)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_string($this->nm_deficiencia)) {
                 $set .= "{$gruda}nm_deficiencia = '{$this->nm_deficiencia}'";
@@ -142,7 +143,7 @@ class clsCadastroDeficiencia extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_deficiencia = null, $str_nm_deficiencia = null)
     {
@@ -194,7 +195,7 @@ class clsCadastroDeficiencia extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

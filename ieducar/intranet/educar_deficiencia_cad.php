@@ -3,18 +3,11 @@
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_deficiencia;
     public $nm_deficiencia;
     public $deficiencia_educacenso;
     public $exigir_laudo_medico;
-
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -22,7 +15,7 @@ return new class extends clsCadastro {
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(631, $this->pessoa_logada, 7, 'educar_deficiencia_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_deficiencia_lst.php');
 
         if (is_numeric($this->cod_deficiencia)) {
             $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
@@ -32,7 +25,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                if ($obj_permissoes->permissao_excluir(631, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
                 $retorno = 'Editar';
@@ -43,7 +36,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' deficiência', [
+        $this->breadcrumb(currentPage: $nomeMenu . ' deficiência', breadcrumbs: [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
 
@@ -55,12 +48,12 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_deficiencia', $this->cod_deficiencia);
+        $this->campoOculto(nome: 'cod_deficiencia', valor: $this->cod_deficiencia);
 
         // foreign keys
 
         // text
-        $this->campoTexto('nm_deficiencia', 'Deficiência', $this->nm_deficiencia, 30, 255, true);
+        $this->campoTexto(nome: 'nm_deficiencia', campo: 'Deficiência', valor: $this->nm_deficiencia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
         $options = [
             'label' => 'Deficiência educacenso',
@@ -69,9 +62,9 @@ return new class extends clsCadastro {
             'label_hint' => 'Deficiências definidas como "Outras" não serão exportadas no arquivo do Censo',
         ];
 
-        $this->inputsHelper()->select('deficiencia_educacenso', $options);
-        $this->campoCheck('exigir_laudo_medico', 'Exigir laudo médico?', dbBool($this->exigir_laudo_medico));
-        $this->campoCheck('desconsidera_regra_diferenciada', 'Desconsiderar deficiência na regra de avaliação diferenciada', dbBool($this->desconsidera_regra_diferenciada));
+        $this->inputsHelper()->select(attrName: 'deficiencia_educacenso', inputOptions: $options);
+        $this->campoCheck(nome: 'exigir_laudo_medico', campo: 'Exigir laudo médico?', valor: dbBool($this->exigir_laudo_medico));
+        $this->campoCheck(nome: 'desconsidera_regra_diferenciada', campo: 'Desconsiderar deficiência na regra de avaliação diferenciada', valor: dbBool($this->desconsidera_regra_diferenciada));
     }
 
     public function Novo()
@@ -114,7 +107,7 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
+        $obj = new clsCadastroDeficiencia(cod_deficiencia: $this->cod_deficiencia, nm_deficiencia: $this->nm_deficiencia);
         $excluiu = $obj->excluir();
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
@@ -133,7 +126,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Deficiência';
+        $this->title = 'Deficiência';
         $this->processoAp = '631';
     }
 };

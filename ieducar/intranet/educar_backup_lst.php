@@ -1,34 +1,12 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $__titulo;
 
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $__limite;
 
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $__offset;
-
     public $idBackup;
     public $caminho;
     public $data_backup;
@@ -41,7 +19,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Download',
             'Data backup'
         ]);
@@ -49,7 +27,7 @@ return new class extends clsListagem {
         // Filtros de Foreign Keys
 
         // outros Filtros
-        $this->campoData('data_backup', 'Data backup', $this->data_backup, false);
+        $this->campoData(nome: 'data_backup', campo: 'Data backup', valor: $this->data_backup, obrigatorio: false);
 
         // Paginador
         $this->__limite = 10;
@@ -57,35 +35,33 @@ return new class extends clsListagem {
 
         $objBackup = new clsPmieducarBackup();
 
-        $objBackup->setOrderby('data_backup DESC');
-        $objBackup->setLimite($this->__limite, $this->__offset);
+        $objBackup->setOrderby(strNomeCampo: 'data_backup DESC');
+        $objBackup->setLimite(intLimiteQtd: $this->__limite, intLimiteOffset: $this->__offset);
 
-        $lista = $objBackup->lista(null, null, Portabilis_Date_Utils::brToPgSQL($this->data_backup));
+        $lista = $objBackup->lista(idBackup: null, caminho: null, dataBackup: Portabilis_Date_Utils::brToPgSQL(date: $this->data_backup));
 
         $total = $objBackup->_total;
 
         // monta a lista
-        $baseDownloadUrl = route('backup.download');
-        if (is_array($lista) && count($lista)) {
+        $baseDownloadUrl = route(name: 'backup.download');
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $dataBackup = Portabilis_Date_Utils::pgSQLToBr($registro['data_backup']);
+                $dataBackup = Portabilis_Date_Utils::pgSQLToBr(timestamp: $registro['data_backup']);
 
-                $url = $baseDownloadUrl . '?url=' . urlencode($registro['caminho']);
+                $url = $baseDownloadUrl . '?url=' . urlencode(string: $registro['caminho']);
 
-                $this->addLinhas([
+                $this->addLinhas(linha: [
                     "<a href=\"$url\">{$registro['caminho']}</a>",
                     "<a href=\"$url\">{$dataBackup}</a>"
                 ]);
             }
         }
-        $this->addPaginador2('educar_backup_lst.php', $total, $_GET, $this->data_backup, $this->__limite);
-
-        $obj_permissao = new clsPermissoes();
+        $this->addPaginador2(strUrl: 'educar_backup_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->data_backup, intResultadosPorPagina: $this->__limite);
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Backups', [
-            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        $this->breadcrumb(currentPage: 'Backups', breadcrumbs: [
+            url(path: 'intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
     }
 

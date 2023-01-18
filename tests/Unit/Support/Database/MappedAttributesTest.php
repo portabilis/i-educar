@@ -18,7 +18,7 @@ class MappedAttributesTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->abstract = new class extends Model {
+        $this->abstract = new class () extends Model {
             use MappedAttributes;
 
             protected $fillable = [

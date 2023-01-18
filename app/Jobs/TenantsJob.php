@@ -11,7 +11,11 @@ use Illuminate\Queue\SerializesModels;
 
 class TenantsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Connections;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    use Connections;
 
     /**
      * @var int

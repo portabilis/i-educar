@@ -123,7 +123,6 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      * Retorna uma URL formatada. Veja a documentação de url().
      *
      * @param string $path
-     * @param array  $options
      *
      * @return string
      */
@@ -157,7 +156,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
             $url['query'] = '?' . http_build_query($options['query']);
         }
         if (isset($options['fragment'])) {
-            $url['fragment'] = '#' . (string) $options['fragment'];
+            $url['fragment'] = '#' . $options['fragment'];
         }
 
         // Remove da URL final os componentes que tem valor maior que o especificado

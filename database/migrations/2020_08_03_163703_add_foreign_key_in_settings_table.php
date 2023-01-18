@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 class AddForeignKeyInSettingsTable extends Migration
 {
     use SettingCategoryTrait;
+
     /**
      * Run the migrations.
      *
@@ -17,7 +18,6 @@ class AddForeignKeyInSettingsTable extends Migration
     {
         $settingCategoryIdDefault = $this->getSettingCategoryIdByName('Sem categoria');
         Schema::table('settings', function (Blueprint $table) use ($settingCategoryIdDefault) {
-
             $table->integer('setting_category_id')->default($settingCategoryIdDefault);
             $table->foreign('setting_category_id')->on('settings_categories')->references('id');
         });

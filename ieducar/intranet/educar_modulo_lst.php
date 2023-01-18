@@ -44,50 +44,41 @@ return new class extends clsListagem {
         ];
 
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Instituição';
         }
 
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
         // Filtros de Foreign Keys
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Etapa', $this->nm_tipo, 30, 255, false);
-        $this->campoNumero('num_meses', 'Número de meses', $this->num_meses, 2, 2, false);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Etapa', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoNumero(nome: 'num_meses', campo: 'Número de meses', valor: $this->num_meses, tamanhovisivel: 2, tamanhomaximo: 2);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_modulo = new clsPmieducarModulo();
-        $obj_modulo->setOrderby('nm_tipo ASC');
-        $obj_modulo->setLimite($this->limite, $this->offset);
+        $obj_modulo->setOrderby(strNomeCampo: 'nm_tipo ASC');
+        $obj_modulo->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_modulo->lista(
-            null,
-            null,
-            null,
-            $this->nm_tipo,
-            null,
-            $this->num_meses,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
+            str_nm_tipo: $this->nm_tipo,
+            int_num_meses: $this->num_meses,
+            int_ativo: 1,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         $total = $obj_modulo->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
@@ -100,27 +91,27 @@ return new class extends clsListagem {
                 if ($nivel_usuario == 1) {
                     $lista_busca[] = "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['ref_cod_instituicao']}</a>";
                 }
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
 
-        $this->addPaginador2('educar_modulo_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_modulo_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        if ($obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_modulo_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de etapas', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Listagem de etapas', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Etapa';
+        $this->title = 'Etapa';
         $this->processoAp = '584';
     }
 };

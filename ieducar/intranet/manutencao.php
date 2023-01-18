@@ -10,8 +10,8 @@ header('HTTP/1.1 503 Service Unavailable');
   <head>
     <link rel='stylesheet' type='text/css' href='styles/reset.css'>
     <link rel='stylesheet' type='text/css' href='styles/portabilis.css'>
-    <link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'></head>
-
+    <link rel='stylesheet' type='text/css' href='styles/min-portabilis.css'>
+    <title>Manutenção</title>
   </head>
 
   <body>

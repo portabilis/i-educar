@@ -127,9 +127,12 @@ class SchoolManagers implements EducacensoValidator
             return;
         }
 
-        if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->linkTypeId)) {
+        if ((int) $valueObject->roleId === SchoolManagerRole::DIRETOR &&
+            empty($valueObject->linkTypeId) &&
+            $this->operatingSituation === SituacaoFuncionamento::EM_ATIVIDADE
+        ) {
             $this->valid = false;
-            $this->message[] = 'O campo: <b>Tipo de vínculo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>';
+            $this->message[] = 'O campo: <b>Tipo de vínculo</b> deve ser preenchido quando o campo: <b>Situação de funcionamento</b> for: <b>Em atividade<b>, o campo <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>';
         }
     }
 

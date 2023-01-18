@@ -1,6 +1,6 @@
 <?php
 
-class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
+class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract implements \Stringable
 {
     protected $_header = [];
     protected $_body = [];
@@ -117,7 +117,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
     /**
      * Cria uma tabela HTML usando os valores passados para os métodos add*().
      *
-     * @param array $tableAttributes
      *
      * @return string
      */
@@ -243,7 +242,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
     /**
      * Cria uma string de atributos HTML.
      *
-     * @param array $attributes
      *
      * @return string
      */
@@ -269,7 +267,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
      *
      * @link
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->createTable();
     }

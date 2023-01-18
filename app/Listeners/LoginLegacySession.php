@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
@@ -55,7 +56,7 @@ class LoginLegacySession
 
         $picture = $individual->picture()->first()
             ? (new UrlPresigner())->getPresignedUrl($individual->picture()->first()->caminho)
-            : url('intranet/imagens/user-perfil.png');
+            : Asset::get('intranet/imagens/user-perfil.png');
 
         try {
             $createdAt = Carbon::create($user->created_at)->getTimestamp();

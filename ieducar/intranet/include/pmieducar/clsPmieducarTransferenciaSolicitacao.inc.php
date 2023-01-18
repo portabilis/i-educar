@@ -22,7 +22,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
 
     public function __construct($cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null, $estado_escola_destino_externa = null, $municipio_escola_destino_externa = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}transferencia_solicitacao";
 
@@ -171,6 +171,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     {
         if (is_numeric($this->cod_transferencia_solicitacao) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_transferencia_tipo)) {
@@ -260,7 +261,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_transferencia_solicitacao = null, $int_ref_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_matricula_entrada = null, $int_ref_cod_matricula_saida = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_transferencia_ini = null, $date_data_transferencia_fim = null, $int_ref_cod_aluno = null, $entrada_aluno = false, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $mes = null, $transferido = null, $bool_matricula_entrada = null, $parar = false)
     {
@@ -405,7 +406,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -423,7 +424,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

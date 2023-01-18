@@ -4,10 +4,10 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class TipoEnsinoMedioCursado
 {
-    const FORMACAO_GERAL = 1;
-    const MODALIDADE_NORMAL = 2;
-    const CURSO_TECNICO = 3;
-    const MAGISTERIO_INDIGENA = 4;
+    public const FORMACAO_GERAL = 1;
+    public const MODALIDADE_NORMAL = 2;
+    public const CURSO_TECNICO = 3;
+    public const MAGISTERIO_INDIGENA = 4;
 
     /**
      * @return array

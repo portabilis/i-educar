@@ -1,13 +1,10 @@
 <?php
 
-return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
+use App\Models\LegacyExemptionType;
 
+return new class extends clsDetalhe {
+
+    public $titulo;
     public $cod_tipo_dispensa;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -24,8 +21,7 @@ return new class extends clsDetalhe {
 
         $this->cod_tipo_dispensa=$_GET['cod_tipo_dispensa'];
 
-        $tmp_obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyExemptionType::find($this->cod_tipo_dispensa)?->getAttributes();
         if (! $registro) {
             $this->simpleRedirect('educar_tipo_dispensa_lst.php');
         }
@@ -37,14 +33,14 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_tipo']) {
             $this->addDetalhe([ 'Tipo Dispensa', "{$registro['nm_tipo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(577, $this->pessoa_logada, 7)) {
@@ -61,7 +57,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Dispensa';
+        $this->title = 'Tipo Dispensa';
         $this->processoAp = '577';
     }
 };

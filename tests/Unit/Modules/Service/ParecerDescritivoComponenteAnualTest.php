@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_Service_ParecerDescritivoCommon
 {
     protected function setUp(): void

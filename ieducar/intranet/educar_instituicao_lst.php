@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_instituicao;
     public $nm_instituicao;
     public $ref_usuario_exc;
@@ -50,16 +26,16 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Institui&ccedil;&atilde;o - Listagem';
+        $this->titulo = 'Instituição - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->addCabecalhos([ 'Nome da Institui&ccedil;&atilde;o' ]);
+        $this->addCabecalhos([ 'Nome da Instituição' ]);
 
         // outros Filtros
-        $this->campoTexto('nm_instituicao', 'Nome da Institui&ccedil;&atilde;o', $this->nm_instituicao, 30, 255, false);
+        $this->campoTexto(nome: 'nm_instituicao', campo: 'Nome da Instituição', valor: $this->nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
@@ -67,23 +43,23 @@ return new class extends clsListagem {
 
         $obj_instituicao = new clsPmieducarInstituicao();
         $obj_instituicao->setOrderby('nm_responsavel ASC');
-        $obj_instituicao->setLimite($this->limite, $this->offset);
+        $obj_instituicao->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
         $lista = $obj_instituicao->lista(
-            $this->cod_instituicao,
-            $this->ref_sigla_uf,
-            $this->cep,
-            $this->cidade,
-            $this->bairro,
-            $this->logradouro,
-            $this->numero,
-            $this->complemento,
-            $this->nm_responsavel,
-            $this->ddd_telefone,
-            $this->telefone,
-            $this->data_cadastro,
-            $this->data_exclusao,
-            1,
-            $this->nm_instituicao
+            int_cod_instituicao: $this->cod_instituicao,
+            str_ref_sigla_uf: $this->ref_sigla_uf,
+            int_cep: $this->cep,
+            str_cidade: $this->cidade,
+            str_bairro: $this->bairro,
+            str_logradouro: $this->logradouro,
+            int_numero: $this->numero,
+            str_complemento: $this->complemento,
+            str_nm_responsavel: $this->nm_responsavel,
+            int_ddd_telefone: $this->ddd_telefone,
+            int_telefone: $this->telefone,
+            date_data_cadastro: $this->data_cadastro,
+            date_data_exclusao: $this->data_exclusao,
+            int_ativo: 1,
+            str_nm_instituicao: $this->nm_instituicao
         );
 
         $total = $obj_instituicao->_total;
@@ -95,18 +71,18 @@ return new class extends clsListagem {
                 ]);
             }
         }
-        $this->addPaginador2('educar_instituicao_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_instituicao_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de instituições', [
+        $this->breadcrumb(currentPage: 'Listagem de instituições', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Instituicao';
+        $this->title = 'Instituicao';
         $this->processoAp = '559';
     }
 };

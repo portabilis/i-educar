@@ -11,7 +11,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
 
     public function __construct($ref_cod_instituicao = null, $ref_ano = null, $data_inicio = null, $data_fim = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}bloqueio_ano_letivo";
 
@@ -83,6 +83,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     {
         if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano) && is_string($this->data_inicio) && is_string($this->data_fim)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->data_inicio)) {
@@ -107,7 +108,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($ref_cod_instituicao = null, $ref_ano = null)
     {
@@ -159,7 +160,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -177,7 +178,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

@@ -67,7 +67,7 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->formacaoCurso = null;
             $registro30->formacaoAnoConclusao = null;
             $registro30->formacaoInstituicao = null;
-            $registro30->formacaoComponenteCurricular = null;
+            $registro30->complementacaoPedagogica = null;
             $registro30->posGraduacaoEspecializacao = null;
             $registro30->posGraduacaoDoutorado = null;
             $registro30->posGraduacaoMestrado = null;

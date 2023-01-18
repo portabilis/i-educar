@@ -24,7 +24,7 @@ return new class extends clsListagem {
         $allow = Gate::allows('view', Process::ACTIVE_LOOKING);
 
         if ($user->isLibrary() || !$allow) {
-            $this->simpleRedirect('/intranet/index.php');
+            $this->simpleRedirect(url: '/intranet/index.php');
             return false;
         }
 
@@ -35,7 +35,7 @@ return new class extends clsListagem {
     {
         // Helper para url
         $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
-        $ref_cod_matricula = $this->getQueryString('ref_cod_matricula');
+        $ref_cod_matricula = $this->getQueryString(name: 'ref_cod_matricula');
         $this->titulo = 'Busca ativa - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
@@ -44,14 +44,14 @@ return new class extends clsListagem {
         }
 
         if (!$ref_cod_matricula) {
-            $this->simpleRedirect('educar_matricula_lst.php');
+            $this->simpleRedirect(url: 'educar_matricula_lst.php');
         }
 
         $legacyRegistration = LegacyRegistration::find($ref_cod_matricula);
         $legacyEnrollment = $legacyRegistration->lastEnrollment()->first();
         $this->ref_cod_turma = $legacyEnrollment->ref_cod_turma;
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Data de início',
             'Data de finalização',
             'Resultado da busca ativa'
@@ -62,55 +62,50 @@ return new class extends clsListagem {
             $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $legacyActiveLookings = LegacyActiveLooking::query()
-            ->where('ref_cod_matricula', $this->ref_cod_matricula)
-            ->orderBy('id', 'DESC')
-            ->limit($this->limite)
-            ->offset($this->offset)
-            ->get()
-            ->toArray();
+            ->where(column: 'ref_cod_matricula', operator: $this->ref_cod_matricula)
+            ->orderBy(column: 'id', direction: 'DESC')
+            ->limit(value: $this->limite)
+            ->offset(value: $this->offset)
+            ->get();
 
-        $total = count($legacyActiveLookings);
+        $total = count(value: $legacyActiveLookings);
 
         if ($total > 0) {
             foreach ($legacyActiveLookings as $legacyActiveLooking) {
-
                 $row = [];
 
-                $startDate = new DateTime($legacyActiveLooking['data_inicio']);
-                $endDate = empty($legacyActiveLooking['data_fim']) ? null : (new DateTime($legacyActiveLooking['data_fim']));
-
-                $row['data_inicio_br'] = $startDate->format('d/m/Y');
-                $row['data_fim_br'] = $endDate ? $endDate->format('d/m/Y') : '-';
+                $row['data_inicio_br'] = $legacyActiveLooking->start->format('d/m/Y');
+                $row['data_fim_br'] = $legacyActiveLooking->end?->format('d/m/Y');
 
                 $url = 'educar_busca_ativa_cad.php';
                 $options = ['query' =>
                     [
-                        'id' => $legacyActiveLooking['id'],
+                        'id' => $legacyActiveLooking->id,
                         'ref_cod_matricula' => $this->ref_cod_matricula
                     ]
                 ];
 
-                $row['active_looking_result'] = ActiveLooking::getDescription($legacyActiveLooking['resultado_busca_ativa']);
+                $row['active_looking_result'] = ActiveLooking::getDescription(value: $legacyActiveLooking->result);
 
-                $this->addLinhas([
-                    $urlHelper->l($row['data_inicio_br'], $url, $options),
-                    $urlHelper->l($row['data_fim_br'], $url, $options),
-                    $urlHelper->l($row['active_looking_result'], $url, $options)
+                $this->addLinhas(linha: [
+                    $urlHelper->l(text: $row['data_inicio_br'], path: $url, options: $options),
+                    $urlHelper->l(text: $row['data_fim_br'], path: $url, options: $options),
+                    $urlHelper->l(text: $row['active_looking_result'], path: $url, options: $options)
                 ]);
             }
         }
 
         $this->addPaginador2(
-            'educar_busca_ativa_lst.php',
-            $total,
-            $_GET,
-            $this->nome,
-            $this->limite
+            strUrl: 'educar_busca_ativa_lst.php',
+            intTotalRegistros: $total,
+            mixVariaveisMantidas: $_GET,
+            nome: $this->nome,
+            intResultadosPorPagina: $this->limite
         );
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7) && $legacyRegistration->aprovado == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: Process::ACTIVE_LOOKING, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $legacyRegistration->aprovado == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
             $this->array_botao_url[] = 'educar_busca_ativa_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;
             $this->array_botao[] = [
                 'name' => 'Novo',
@@ -123,14 +118,14 @@ return new class extends clsListagem {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Busca ativa', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Busca ativa', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Busca ativa';
+        $this->title = 'Busca ativa';
         $this->processoAp = Process::ACTIVE_LOOKING;
     }
 };

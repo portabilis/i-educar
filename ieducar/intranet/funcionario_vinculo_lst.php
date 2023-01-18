@@ -49,7 +49,7 @@ return new class extends clsListagem {
         $this->acao = 'go("funcionario_vinculo_cad.php")';
         $this->nome_acao = 'Novo';
 
-        $this->breadcrumb('Listagem de v&iacute;nculos');
+        $this->breadcrumb('Listagem de vínculos');
     }
 
     public function Formular()
