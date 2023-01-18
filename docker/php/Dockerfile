@@ -23,7 +23,9 @@ RUN apk add --update \
     postgresql14-client \
     postgresql-dev \
     ttf-dejavu \
-    unzip
+    unzip \
+    openssh \
+    git
 
 # https://github.com/docker-library/php/issues/436#issuecomment-303171390
 RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
