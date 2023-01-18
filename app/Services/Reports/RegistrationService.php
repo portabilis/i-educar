@@ -4,8 +4,12 @@ namespace App\Services\Reports;
 
 class RegistrationService
 {
-    public static function frequencyTotal(int $absenceType, int $absenceTotal, float $courseHourAbsence, float $gradeWorkload, float $diasLetivos = 0): float
+    public static function frequencyTotal(bool $isGeneralAbsence, int $absenceTotal, float $courseHourAbsence, float $gradeWorkload, float $academicDays): float
     {
+        if ($isGeneralAbsence) {
+            return bcdiv(((($academicDays - $absenceTotal) * 100) / $academicDays), 1, 1);
+        }
+
         return bcdiv(100 - (($absenceTotal * ($courseHourAbsence * 100)) / $gradeWorkload), 1, 1);
     }
 
