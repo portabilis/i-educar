@@ -135,6 +135,11 @@ class LegacyEvaluationRule extends Model
             && $this->tipo_calculo_recuperacao_paralela == self::PARALLEL_REMEDIAL_SUM_SCORE;
     }
 
+    public function isGeneralAbsence(): bool
+    {
+        return $this->tipo_presenca === 1;
+    }
+
     /**
      * @return bool
      */
