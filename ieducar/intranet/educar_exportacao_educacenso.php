@@ -34,7 +34,7 @@ return new class extends clsCadastro {
         $exportacao = $_POST['exportacao'];
 
         if ($exportacao) {
-            $converted_to_iso88591 = utf8_decode($exportacao);
+            $converted_to_iso88591 = mb_convert_encoding($exportacao, 'ISO-8859-1', 'UTF-8');
 
             $inepEscola = DB::selectOne('SELECT cod_escola_inep FROM modules.educacenso_cod_escola WHERE cod_escola = ?', [$_POST['escola']]);
 
