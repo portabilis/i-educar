@@ -15,8 +15,6 @@ class clsPmieducarMatriculaTurma extends Model
     public $sequencial;
     public $data_enturmacao;
     public $sequencial_fechamento;
-    public $removerSequencial;
-    public $reabrirMatricula;
     public $etapa_educacenso;
     public $turma_unificada;
     public $turno_id;
@@ -38,8 +36,6 @@ class clsPmieducarMatriculaTurma extends Model
         $ref_cod_turma_transf = null,
         $sequencial = null,
         $data_enturmacao = null,
-        $removerSequencial = false,
-        $reabrirMatricula = false,
         $remanejado = false
     ) {
         $this->_schema = 'pmieducar.';
@@ -244,31 +240,6 @@ class clsPmieducarMatriculaTurma extends Model
 
             if (is_string($this->data_enturmacao)) {
                 $set .= "{$gruda}data_enturmacao = '{$this->data_enturmacao}'";
-                $gruda = ', ';
-            }
-
-            if ($this->reabrirMatricula) {
-                $det = $this->detalhe();
-                $this->ref_usuario_cad = $det['ref_usuario_cad'];
-
-                return $this->cadastra();
-            }
-
-            if ($this->removerSequencial) {
-                $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
-                $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
-            }
-
-            // FIXME
-            // Este trecho de código não é utilizado na atualização do registro, ou
-            // seja, não serve para nada. Verificar o impacto ao corrigi-lo.
-
-            $campos = '';
-            $valores = '';
-
-            if (is_numeric($this->sequencial_fechamento)) {
-                $campos .= "{$gruda}sequencial_fechamento";
-                $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
                 $gruda = ', ';
             }
 

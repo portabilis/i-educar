@@ -77,20 +77,6 @@ class SequencialEnturmacao
         }
     }
 
-    public function ordenaSequencialExcluiMatricula()
-    {
-        $sequencialFechamento = $this->existeMatriculaTurma();
-
-        $this->subtraiSequencialPosterior($sequencialFechamento);
-
-        // FIXME
-        // A implentação anterior retornava uma variável indefinida, ver
-        // impactos ao corrigir esta implementação para retornar o sequencial
-        // correto.
-
-        return null;
-    }
-
     private function sequencialAlunoAposData()
     {
         $sql = "  SELECT MAX(sequencial_fechamento)+1 as sequencial
