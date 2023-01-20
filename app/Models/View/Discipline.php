@@ -22,4 +22,11 @@ class Discipline extends Model
             get: fn () => (float) $this->carga_horaria
         );
     }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->nome
+        );
+    }
 }
