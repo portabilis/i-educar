@@ -6,9 +6,9 @@ use Illuminate\Support\Collection;
 
 class Util
 {
-    public static function format(mixed $value, $decimalPlaces = 1): string
+    public static function format(mixed $value, int $decimalPlaces = 1): string
     {
-        return str_replace('.', ',', bcdiv($value, 1, $decimalPlaces));
+        return number_format($value, $decimalPlaces, ',', '.');
     }
 
     public static function moduleName(Collection $modules): array
