@@ -1578,8 +1578,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             if ($tipoNotaNenhum) {
                 $situacaoNota = $situacaoNotas->situacao;
             } else {
-                $situacaoNota = $situacaoNotaCc->situacao;
+                $situacaoNota = $situacaoNotaCc?->situacao;
             }
+
+            //     dd($this);
+            //139123
 
             // pega situacao da falta componente ou geral.
             if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
