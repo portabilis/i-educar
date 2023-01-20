@@ -144,9 +144,9 @@ class ServidorController extends ApiCoreController
                         tmp.turno_id,
                         tmp.permite_lancar_faltas_componente,
                         string_agg(distinct concat(tmp.componente_curricular_id, ' ', tmp.tipo_nota)::varchar, ',') as disciplinas,
+                        string_agg(distinct concat( tmp.serie_id, ' ',tmp.componente_curricular_id)::varchar, ',') as disciplinas_serie,
                         max(tmp.updated_at) as updated_at,
-                        deleted_at,
-                        string_agg(distinct tmp.serie_id::varchar, ',') as series
+                        deleted_at
                     from (
                              select
                                  ts.serie_id,
@@ -189,9 +189,9 @@ class ServidorController extends ApiCoreController
                         pt.turno_id,
                         null as permite_lancar_faltas_componente,
                         null as disciplinas,
+                        null as disciplinas_serie,
                         pt.updated_at,
-                        pt.deleted_at,
-                        string_agg(distinct ts.serie_id::varchar, ',') as series
+                        pt.deleted_at
                     from modules.professor_turma_excluidos pt
                     inner join pmieducar.turma t
                     on t.cod_turma = pt.turma_id
@@ -208,21 +208,27 @@ class ServidorController extends ApiCoreController
 
             $vinculos = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'servidor_id', 'turma_id', 'turno_id', 'permite_lancar_faltas_componente', 'series', 'disciplinas','tipo_nota', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'servidor_id', 'turma_id', 'turno_id', 'permite_lancar_faltas_componente', 'disciplinas', 'disciplinas_serie', 'tipo_nota', 'updated_at', 'deleted_at'];
 
             $vinculos = Portabilis_Array_Utils::filterSet($vinculos, $attrs);
 
             $vinculos = array_map(function ($vinculo) {
+                if (is_null($vinculo['disciplinas_serie'])) {
+                    $vinculo['disciplinas_serie'] = [];
+                } elseif (is_string($vinculo['disciplinas_serie'])) {
+                    $collect = collect(explode(',', $vinculo['disciplinas_serie']));
+                    $collect = $collect->mapToGroups(function ($item, $key) {
+                        [$key, $value] = explode(' ', $item);
+                        return [$key => (int)$value];
+                    });
+
+                    $vinculo['disciplinas_serie'] = $collect;
+                }
+
                 if (is_null($vinculo['disciplinas'])) {
                     $vinculo['disciplinas'] = [];
                 } elseif (is_string($vinculo['disciplinas'])) {
                     $vinculo['disciplinas'] = explode(',', $vinculo['disciplinas']);
-                }
-
-                if (is_null($vinculo['series'])) {
-                    $vinculo['series'] = [];
-                } elseif (is_string($vinculo['series'])) {
-                    $vinculo['series'] = explode(',', $vinculo['series']);
                 }
 
                 return $vinculo;
