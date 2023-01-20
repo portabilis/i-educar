@@ -5,6 +5,7 @@ use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -318,6 +319,11 @@ return new class extends clsCadastro {
         DB::beginTransaction();
 
         $dependencia = $this->dependencia == 'on';
+
+        if (!$this->validaAlunoAtivo()) {
+            $this->mensagem = 'Não é possível matricular alunos inativos ou inexistentes.';
+            return false;
+        }
 
         if (!$this->validaPeriodoDeMatriculasPelaDataFechamento()) {
             $this->mensagem = 'Não é possível matricular alunos após a data de fechamento.';
@@ -970,6 +976,11 @@ return new class extends clsCadastro {
         return false;
     }
 
+    private function validaAlunoAtivo() : bool
+    {
+        return LegacyStudent::where('cod_aluno', $this->ref_cod_aluno)->active()->exists();
+    }
+
     private function validaPeriodoDeMatriculasPelaDataFechamento() : bool
     {
         $instituicao = app(abstract: LegacyInstitution::class);
@@ -1005,7 +1016,6 @@ return new class extends clsCadastro {
                     sequencial: $enturmacao['sequencial']
                 );
 
-                $enturmacao->removerSequencial = true;
                 $detEnturmacao = $enturmacao->detalhe();
                 $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
