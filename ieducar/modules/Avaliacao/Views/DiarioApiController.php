@@ -2387,3 +2387,4 @@ class DiarioApiController extends ApiCoreController
         }
     }
 }
+ 
