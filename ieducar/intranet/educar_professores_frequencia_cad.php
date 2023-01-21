@@ -155,7 +155,7 @@ return new class extends clsCadastro {
 
         if (empty($tipo_presenca) || $tipo_presenca == 2) {
             for ($i = 1; $i <= 5; $i++) {
-                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => "Quantidade de aulas <br> <sub style='vertical-align: top;'>(obrigatório)</sub> ", 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
+                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => "Quantidade de aulas <span class='campo_obrigatorio'>*</span> ", 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
             }
         }
 
