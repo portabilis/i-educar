@@ -1565,24 +1565,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
 
-            // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
-            $situacaoFaltaCc = new stdClass();
-            $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-
-            // caso possua situacaoFalta para o componente substitui situacao inicializada
-            if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId])) {
-                $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
-            }
-
             // pega situação nota geral ou do componente
             if ($tipoNotaNenhum) {
                 $situacaoNota = $situacaoNotas->situacao;
             } else {
                 $situacaoNota = $situacaoNotaCc?->situacao;
             }
-
-            //     dd($this);
-            //139123
 
             // pega situacao da falta componente ou geral.
             if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
