@@ -454,35 +454,31 @@ return new class extends clsCadastro {
             str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
-        $schoolAcademicYear = LegacySchoolAcademicYear::query()
-            ->where(
-                column: [
-                    'ref_cod_escola' => $this->ref_ref_cod_escola,
-                     'ano'=> $this->ref_ano
-                ]
-            )->first();
+        //Salvar com query raw, pois o model não tem primary key única e gera erro modificando todas as escolas em vez de uma
+        LegacySchoolAcademicYear::query()->where(
+            column: [
+                'ref_cod_escola' => $this->ref_ref_cod_escola,
+                'ano' => $this->ref_ano
+            ]
+        )->update([
+            'ref_usuario_cad' => $this->pessoa_logada,
+            'andamento' => 2,
+            'ativo' => 0
+        ]);
 
-        $schoolAcademicYear->ref_usuario_cad = $this->pessoa_logada;
-        $schoolAcademicYear->andamento = 2;
-        $schoolAcademicYear->ativo = 0;
 
-        if ($schoolAcademicYear->save()) {
-            $obj = new clsPmieducarAnoLetivoModulo(ref_ano: $this->ref_ano, ref_ref_cod_escola: $this->ref_ref_cod_escola);
-            $excluiu1 = $obj->excluirTodos();
+        $obj = new clsPmieducarAnoLetivoModulo(ref_ano: $this->ref_ano, ref_ref_cod_escola: $this->ref_ref_cod_escola);
+        $excluiu1 = $obj->excluirTodos();
 
-            if ($excluiu1) {
-                $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-                $this->simpleRedirect(url: 'educar_escola_lst.php');
-            }
-
-            $this->mensagem = 'Exclusão não realizada.<br />';
-
-            return false;
+        if ($excluiu1) {
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
+            $this->simpleRedirect(url: 'educar_escola_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
+
     }
 
     public function copiarTurmasUltimoAno($escolaId, $anoDestino, $copiaDadosProfessor = true)
