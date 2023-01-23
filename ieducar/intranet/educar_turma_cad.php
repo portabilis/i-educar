@@ -650,6 +650,7 @@ return new class extends clsCadastro {
             $this->escola_serie_disciplina = [];
 
             if (is_array(value: $lista) && count(value: $lista)) {
+            //    dd($lista);
                 $conteudo .= '<tr>';
                 $conteudo .= '<td  width="250"><span style="display: block; float: left; width: 250px;">Nome</span></td>';
                 $conteudo .= '<td><span>Nome abreviado</span></td>';
@@ -678,8 +679,7 @@ return new class extends clsCadastro {
                         $checked = 'checked="checked"';
                     }
 
-                    if (is_null(value: $componentes[$registro->id]->cargaHoraria) ||
-                        0 == $componentes[$registro->id]->cargaHoraria) {
+                    if (is_null(value: $componentes[$registro->id]->cargaHoraria)) {
                         $usarComponente = true;
                     } else {
                         $cargaHoraria = $componentes[$registro->id]->cargaHoraria;
