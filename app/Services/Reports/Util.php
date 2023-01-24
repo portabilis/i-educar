@@ -11,8 +11,22 @@ class Util
         return number_format($value, $decimalPlaces, ',', '.');
     }
 
-    public static function moduleName(Collection $modules): array
+    public static function float(mixed $value): float
     {
+        return str_replace(',', '.', $value);
+    }
+
+    public static function moduleName(Collection|null $modules = null): array
+    {
+        if ($modules === null) {
+            return [
+                [
+                    'step' => 'An',
+                    'name' => 'ANUAL'
+                ]
+            ];
+        }
+
         return $modules->map(static fn ($module) => match ($modules->count()) {
             1 => [
                 'step' => $module,
