@@ -650,7 +650,6 @@ return new class extends clsCadastro {
             $this->escola_serie_disciplina = [];
 
             if (is_array(value: $lista) && count(value: $lista)) {
-            //    dd($lista);
                 $conteudo .= '<tr>';
                 $conteudo .= '<td  width="250"><span style="display: block; float: left; width: 250px;">Nome</span></td>';
                 $conteudo .= '<td><span>Nome abreviado</span></td>';
