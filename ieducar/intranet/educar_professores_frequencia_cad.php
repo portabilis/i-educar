@@ -155,7 +155,7 @@ return new class extends clsCadastro {
 
         if (empty($tipo_presenca) || $tipo_presenca == 2) {
             for ($i = 1; $i <= 5; $i++) {
-                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Quantidade de aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
+                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => "Quantidade de aulas <span class='campo_obrigatorio'>*</span> ", 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
             }
         }
 
@@ -422,20 +422,28 @@ return new class extends clsCadastro {
 
            // Componente Curricular.
 
-          
+
            $this->inputsHelper()->dynamic('frequenciaComponente', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
-          
-      
-          
-          
+
+
+
+
            //end componente
-  
+
 
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
 
     public function Novo() {
+        $this->ordens_aulas = [];
+
+        if (isset($this->ordens_aulas1) && !empty($this->ordens_aulas1)) array_push($this->ordens_aulas, '1');
+        if (isset($this->ordens_aulas2) && !empty($this->ordens_aulas2)) array_push($this->ordens_aulas, '2');
+        if (isset($this->ordens_aulas3) && !empty($this->ordens_aulas3)) array_push($this->ordens_aulas, '3');
+        if (isset($this->ordens_aulas4) && !empty($this->ordens_aulas4)) array_push($this->ordens_aulas, '4');
+        if (isset($this->ordens_aulas5) && !empty($this->ordens_aulas5)) array_push($this->ordens_aulas, '5');
+
         $obj = new clsPmieducarTurma();
         $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
         $serie = $turmaDetalhes['ref_ref_cod_serie'];
@@ -455,6 +463,12 @@ return new class extends clsCadastro {
 
         if ($tipo_presenca == 2 && !$this->ref_cod_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois o componente curricular é obrigatório para esta série.<br>';
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
+        }
+
+
+        if (($tipo_presenca == 2 || !empty($this->componente_curricular_registro_individual)) && empty($this->ordens_aulas)) {
+            $this->mensagem = 'Cadastro não realizado, pois a quantidade de aulas não foi selecionada.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
@@ -513,14 +527,6 @@ return new class extends clsCadastro {
             $this->mensagem = 'Cadastro não realizado, pois a data informada é maior que a data atual.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
-
-        $this->ordens_aulas = [];
-
-        if (isset($this->ordens_aulas1) && !empty($this->ordens_aulas1)) array_push($this->ordens_aulas, '1');
-        if (isset($this->ordens_aulas2) && !empty($this->ordens_aulas2)) array_push($this->ordens_aulas, '2');
-        if (isset($this->ordens_aulas3) && !empty($this->ordens_aulas3)) array_push($this->ordens_aulas, '3');
-        if (isset($this->ordens_aulas4) && !empty($this->ordens_aulas4)) array_push($this->ordens_aulas, '4');
-        if (isset($this->ordens_aulas5) && !empty($this->ordens_aulas5)) array_push($this->ordens_aulas, '5');
 
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
@@ -637,7 +643,7 @@ return new class extends clsCadastro {
         $this->mensagem = 'Cadastro não realizado.<br>';
 
 
-        
+
 
 
         return false;
@@ -833,7 +839,7 @@ return new class extends clsCadastro {
         parent::__construct();
         $this->loadAssets();
     }
-  
+
     public function loadAssets () {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
