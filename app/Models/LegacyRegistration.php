@@ -102,6 +102,13 @@ class LegacyRegistration extends LegacyModel
         );
     }
 
+    protected function schoolId(): Attribute
+    {
+        return Attribute::make(
+            get: fn () =>  $this->ref_ref_cod_escola
+        );
+    }
+
     /**
      * Relação com o aluno.
      *

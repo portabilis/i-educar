@@ -8,6 +8,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacyEnrollment
@@ -145,6 +146,14 @@ class LegacyEnrollment extends LegacyModel
     public function period()
     {
         return $this->belongsTo(LegacyPeriod::class, 'turno_id')->withDefault();
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function registrationScore(): HasOne
+    {
+        return $this->hasOne(LegacyRegistrationScore::class, 'matricula_id', 'ref_cod_matricula');
     }
 
     /**

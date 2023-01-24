@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Reports\Util;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -43,13 +44,13 @@ class LegacyDisciplineScoreAverage extends Model
         return $this->belongsTo(LegacyRegistrationScore::class, 'nota_aluno_id');
     }
 
-    public function average(int $decimalPlaces = 1): string|null
+    public function average(int $decimalPlaces): string|null
     {
         $score = $this->media_arredondada;
         if (!is_numeric($score) || empty($score)) {
             return $score;
         }
 
-        return str_replace('.', ',', bcdiv($score, 1, $decimalPlaces));
+        return Util::format($score, $decimalPlaces);
     }
 }
