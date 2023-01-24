@@ -29,7 +29,7 @@ class Situation extends Model
             $query->whereExists(
                 LegacyDisciplineScoreAverage::selectRaw(1)
                     ->whereColumn('nota_aluno_id', 'nota_aluno.id')
-                    ->where('situacao', 8)
+                    ->where('situacao', App_Model_MatriculaSituacao::APROVADO_APOS_EXAME)
             );
             $query->aproved();
         } else {
