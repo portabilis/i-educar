@@ -62,6 +62,9 @@ $j(document).ready(function(){
         pais_escola.val('');
         estado_escola.val('');
         cidade_escola.val('');
+        cidade_escola.makeRequired();
+        estado_escola.makeRequired();
+        pais_escola.makeRequired();
       } else {
         $j('#escola').closest('tr').hide();
         cidade_escola.closest('tr').hide();
@@ -70,6 +73,9 @@ $j(document).ready(function(){
         pais_escola.val('');
         estado_escola.val('');
         cidade_escola.val('');
+        cidade_escola.makeUnrequired();
+        estado_escola.makeUnrequired();
+        pais_escola.makeUnrequired();
         $j('#ref_cod_instituicao').closest('tr').show();
         $j('#ref_cod_escola').closest('tr').show();
         $j('#ref_cod_instituicao').makeRequired();

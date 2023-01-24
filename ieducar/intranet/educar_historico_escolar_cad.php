@@ -153,13 +153,13 @@ return new class extends clsCadastro {
 
         $lista_pais_origem = Country::query()->orderBy('name')->pluck(column: 'name', key: 'id')->prepend(value: 'Selecione um país', key: '');
 
-        $this->campoLista(nome: 'idpais', campo: 'País da Escola', valor: $lista_pais_origem, default: $countryId ?? 45);
+        $this->campoLista(nome: 'idpais', campo: 'País da Escola', valor: $lista_pais_origem, default: $countryId ?? 45, obrigatorio: false);
 
         $lista_estado = ['' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
 
-        $this->campoLista(nome: 'escola_uf', campo: 'Estado da Escola', valor: $lista_estado, default: $this->escola_uf);
+        $this->campoLista(nome: 'escola_uf', campo: 'Estado da Escola', valor: $lista_estado, default: $this->escola_uf, obrigatorio: false);
 
-        $options = ['label' => 'Cidade da Escola', 'required' => true];
+        $options = ['label' => 'Cidade da Escola', 'required' => false];
 
         $helperOptions = [
             'objectName' => 'escola_cidade',
