@@ -59,7 +59,11 @@ return new class extends clsListagem {
         $obj_falta_atraso->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         // Recupera a lista de faltas/atrasos
-        $lista = $obj_falta_atraso->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao);
+        $lista = $obj_falta_atraso->lista(
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
+            int_ref_cod_servidor: $this->ref_cod_servidor
+        );
 
         $total = $obj_falta_atraso->_total;
 
