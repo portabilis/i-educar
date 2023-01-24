@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Country;
+use App\Models\LegacyInstitution;
 use App\Models\State;
 
 return new class extends clsCadastro {
@@ -285,6 +286,8 @@ return new class extends clsCadastro {
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
+        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
             ref_usuario_cad: $this->pessoa_logada,
@@ -293,8 +296,8 @@ return new class extends clsCadastro {
             carga_horaria: $this->carga_horaria,
             dias_letivos: $this->dias_letivos,
             escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade),
-            escola_uf: $this->escola_uf,
+            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao->cidade),
+            escola_uf: $this->escola_uf ?: $instituicao->ref_sigla_uf,
             observacao: $this->observacao,
             aprovado: $this->aprovado,
             ativo: 1,
@@ -364,6 +367,8 @@ return new class extends clsCadastro {
         $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
+        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
             sequencial: $this->sequencial,
@@ -373,8 +378,8 @@ return new class extends clsCadastro {
             carga_horaria: $this->carga_horaria,
             dias_letivos: $this->dias_letivos,
             escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade),
-            escola_uf: $this->escola_uf,
+            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao->cidade),
+            escola_uf: $this->escola_uf ?: $instituicao->ref_sigla_uf,
             observacao: $this->observacao,
             aprovado: $this->aprovado,
             ativo: 1,
