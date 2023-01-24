@@ -430,9 +430,9 @@ class DiarioApiController extends ApiCoreController
                
             }
             $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
-            if($tipoNota==1){
+            
                 $this->updateMedia();
-            }
+            
            
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
