@@ -209,6 +209,12 @@ $submitButton.removeAttr('onclick');
 $submitButton.click(validaSubmit);
 
   function validaSubmit() {
+    var canSubmit = validationUtils.validatesFields(true);
+
+    if (!canSubmit) {
+        return false;
+    }
+
     if (!$j('#escola_em_outro_municipio').is(':checked')) {
       if ($j('#ref_cod_instituicao').closest("select").val() === '') {
         return alert('É necessário informar a instituição');
