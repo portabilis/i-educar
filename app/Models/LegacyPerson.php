@@ -81,6 +81,13 @@ class LegacyPerson extends Model
         );
     }
 
+    protected function socialName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ! empty($social_name = $this->individual->social_name) ? $social_name : $this->name
+        );
+    }
+
     /**
      * @return HasMany
      */

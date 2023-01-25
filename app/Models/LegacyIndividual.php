@@ -208,6 +208,13 @@ class LegacyIndividual extends Model
         );
     }
 
+    protected function socialName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->nome_social,
+        );
+    }
+
     protected function birthdate(): Attribute
     {
         return Attribute::make(
