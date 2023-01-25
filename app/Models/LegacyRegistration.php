@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
+use App\Models\Builders\LegacyRegistrationBuilder;
 use App\Models\View\Situation;
 use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;
@@ -47,6 +48,8 @@ class LegacyRegistration extends LegacyModel
      * @var string
      */
     protected $primaryKey = 'cod_matricula';
+
+    protected string $builder = LegacyRegistrationBuilder::class;
 
     /**
      * @var array
