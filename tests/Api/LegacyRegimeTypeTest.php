@@ -2,7 +2,6 @@
 
 namespace Tests\Api;
 
-use Database\Factories\LegacyQualificationFactory;
 use Database\Factories\LegacyRegimeTypeFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
