@@ -62,6 +62,9 @@ $j(document).ready(function(){
         pais_escola.val('');
         estado_escola.val('');
         cidade_escola.val('');
+        cidade_escola.makeRequired();
+        estado_escola.makeRequired();
+        pais_escola.makeRequired();
       } else {
         $j('#escola').closest('tr').hide();
         cidade_escola.closest('tr').hide();
@@ -70,6 +73,9 @@ $j(document).ready(function(){
         pais_escola.val('');
         estado_escola.val('');
         cidade_escola.val('');
+        cidade_escola.makeUnrequired();
+        estado_escola.makeUnrequired();
+        pais_escola.makeUnrequired();
         $j('#ref_cod_instituicao').closest('tr').show();
         $j('#ref_cod_escola').closest('tr').show();
         $j('#ref_cod_instituicao').makeRequired();
@@ -209,6 +215,12 @@ $submitButton.removeAttr('onclick');
 $submitButton.click(validaSubmit);
 
   function validaSubmit() {
+    var canSubmit = validationUtils.validatesFields(true);
+
+    if (!canSubmit) {
+        return false;
+    }
+
     if (!$j('#escola_em_outro_municipio').is(':checked')) {
       if ($j('#ref_cod_instituicao').closest("select").val() === '') {
         return alert('É necessário informar a instituição');
