@@ -122,9 +122,9 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals('escola portabilis', $person->slug);
         $this->assertEquals('J', $person->tipo);
 
-        $this->assertNotNull($legacySchool->address);
-        $this->assertCount(1, $legacySchool->address);
-        $address = $legacySchool->address->first();
+        $this->assertNotNull($legacySchool->addresses);
+        $this->assertCount(1, $legacySchool->addresses);
+        $address = $legacySchool->addresses->first();
         $this->assertInstanceOf(Place::class, $address);
         $this->assertTrue($address->created_at->isToday());
         $this->assertEquals('0', $address->number);
