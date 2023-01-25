@@ -370,7 +370,6 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        dd(request()->all());
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
 
