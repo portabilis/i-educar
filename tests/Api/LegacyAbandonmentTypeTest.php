@@ -33,7 +33,7 @@ class LegacyAbandonmentTypeTest extends TestCase
 
         $this->assertDatabaseHas($type, [
             'ref_cod_instituicao' => $type->ref_cod_instituicao,
-            'ref_usuario_cad' => $type->ref_usuario_cad,
+            'ref_usuario_cad' => $user->getKey(),
             'nome' => $type->nome,
             'ativo' => 1
         ]);
