@@ -49,8 +49,6 @@ class LegacyRegistration extends LegacyModel
      */
     protected $primaryKey = 'cod_matricula';
 
-    protected string $builder = LegacyRegistrationBuilder::class;
-
     /**
      * @var array
      */
