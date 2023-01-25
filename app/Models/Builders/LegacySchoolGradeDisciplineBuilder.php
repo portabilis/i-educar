@@ -53,4 +53,13 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
     {
         return $this->where('ref_ref_cod_escola', $school);
     }
+
+    public function active()
+    {
+        return $this->where('ativo', 1);
+    }
+    public function whereYearEq(int $year)
+    {
+        return $this->whereRaw("anos_letivos @> ('{{$year}}')");
+    }
 }
