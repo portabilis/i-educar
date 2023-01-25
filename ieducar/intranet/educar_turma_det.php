@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
@@ -374,47 +375,13 @@ return new class () extends clsDetalhe {
 
     public function montaListaComponentes()
     {
-        $this->tabela3 = '';
+        $listaDeComponentes = $this->buscaComponentes();
 
-        try {
-            $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
-                serieId: $this->ref_ref_cod_serie,
-                escolaId: $this->ref_ref_cod_escola,
-                ano: $this->ano
-            );
-        } catch (Throwable $e) {
-            $this->mensagem = $e->getMessage();
-
-            return;
-        }
-
-        // Instancia o mapper de turma
-        $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
-        $componentesTurma = [];
-
-        if (isset($this->cod_turma) && is_numeric(value: $this->cod_turma)) {
-            $componentesTurma = $componenteTurmaMapper->findAll(
-                where: ['turma' => $this->cod_turma]
-            );
-        }
-
-        $componentes = [];
-        foreach ($componentesTurma as $componenteTurma) {
-            $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
-        }
-        unset($componentesTurma);
-        $this->escola_serie_disciplina = [];
-
-        if (is_array(value: $componentes) && !empty($componentes)) {
-            $lista = array_intersect_key($lista, $componentes);
-        }
-
-        $this->tabela3 = '';
-        $componentes = collect(value: $lista)->map(callback: function ($disciplina) {
+        $componentes = collect(value: $listaDeComponentes)->map(callback: function ($disciplina) {
             return [
-                'id' => $disciplina->id,
-                'name' => $disciplina->nome,
-                'workload' => $disciplina->cargaHoraria !== null || $disciplina->cargaHoraria !== 0 ? $disciplina->cargaHoraria : null
+                'id' => $disciplina['id'],
+                'name' => $disciplina['nome'],
+                'workload' => (int) $disciplina['carga_horaria']
             ];
         })->sortByDesc(callback: 'workload');
 
@@ -437,6 +404,73 @@ return new class () extends clsDetalhe {
         }
         $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
+    }
+
+    protected function buscaComponentes()
+    {
+        $exist = $this->existeComponentesNaTurma();
+
+        if ($exist) {
+            return $this->buscaComponentesDaTurma(
+                year: $this->ano,
+                turmaId: $this->cod_turma,
+                escolaId: $this->ref_ref_cod_escola,
+                serieId: $this->ref_ref_cod_serie
+            );
+        }
+
+        return $this->buscaComponentesEscolaSerieDisciplina(
+            serieId: $this->ref_ref_cod_serie,
+            escolaId: $this->ref_ref_cod_escola,
+            ano: $this->ano
+        );
+    }
+
+    protected function buscaComponentesEscolaSerieDisciplina($serieId, $escolaId, $ano)
+    {
+        return LegacySchoolGradeDiscipline::query()
+            ->selectRaw('"modules"."componente_curricular".id,
+                        "modules"."componente_curricular".nome,
+                        carga_horaria')
+            ->join('modules.componente_curricular', first: 'modules.componente_curricular.id', operator: '=', second: 'pmieducar.escola_serie_disciplina.ref_cod_disciplina')
+            ->whereGrade($this->ref_ref_cod_serie)
+            ->whereSchool(school: $this->ref_ref_cod_escola)
+            ->whereYearEq($this->ano)
+            ->active()
+            ->get()
+            ?->toArray();
+    }
+
+    protected function buscaComponentesDaTurma($year, $turmaId, $escolaId, $serieId)
+    {
+        return LegacyDisciplineSchoolClass::query()
+            ->selectRaw('"modules"."componente_curricular".id,
+                        "modules"."componente_curricular".nome,
+                        coalesce("modules"."componente_curricular_turma".carga_horaria, "pmieducar"."escola_serie_disciplina".carga_horaria) as carga_horaria')
+            ->join('pmieducar.escola_serie_disciplina', first: function ($join) {
+                $join->on('pmieducar.escola_serie_disciplina.ref_ref_cod_serie', '=', 'modules.componente_curricular_turma.ano_escolar_id');
+                $join->on('pmieducar.escola_serie_disciplina.ref_ref_cod_escola', '=', 'modules.componente_curricular_turma.escola_id');
+                $join->on('pmieducar.escola_serie_disciplina.ref_cod_disciplina', '=', 'modules.componente_curricular_turma.componente_curricular_id');
+            })
+            ->join('modules.componente_curricular', first: 'modules.componente_curricular.id', operator: '=', second: 'modules.componente_curricular_turma.componente_curricular_id')
+            ->where('pmieducar.escola_serie_disciplina.ref_ref_cod_escola', '=', $escolaId )
+            ->where('pmieducar.escola_serie_disciplina.ref_ref_cod_serie', '=', $serieId)
+            ->where('componente_curricular_turma.turma_id', '=', $turmaId )
+            ->whereRaw('array[' . $year . '::smallint] <@ pmieducar.escola_serie_disciplina.anos_letivos')
+            ->orderBy('carga_horaria')
+            ->get()
+            ?->toArray();
+    }
+
+    protected function existeComponentesNaTurma()
+    {
+        if ($this->cod_turma) {
+            return LegacyDisciplineSchoolClass::query()
+                ->where(column: 'turma_id', operator: $this->cod_turma)
+                ->exists();
+        }
+
+        return false;
     }
 
     public function montaListaComponentesMulti()
