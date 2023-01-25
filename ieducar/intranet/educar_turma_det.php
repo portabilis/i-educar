@@ -438,7 +438,7 @@ return new class () extends clsDetalhe {
             ->whereYearEq($this->ano)
             ->active()
             ->get()
-            ?->toArray();
+            ->toArray();
     }
 
     protected function buscaComponentesDaTurma($year, $turmaId, $escolaId, $serieId)
@@ -459,7 +459,7 @@ return new class () extends clsDetalhe {
             ->whereRaw('array[' . $year . '::smallint] <@ pmieducar.escola_serie_disciplina.anos_letivos')
             ->orderBy('carga_horaria')
             ->get()
-            ?->toArray();
+            ->toArray();
     }
 
     protected function existeComponentesNaTurma()
