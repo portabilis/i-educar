@@ -534,7 +534,7 @@ return new class () extends clsCadastro {
             $withdrawal->ref_cod_motivo_afastamento = $this->ref_cod_motivo_afastamento;
         }
         $withdrawal->data_retorno = $returnDate;
-        $withdrawal->data_saida = (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate;
+        $withdrawal->data_saida = $exitDate;
 
         $editou = $withdrawal->save();
         if ($editou) {
