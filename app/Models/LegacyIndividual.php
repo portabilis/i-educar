@@ -211,7 +211,7 @@ class LegacyIndividual extends Model
     protected function socialName(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->nome_social,
+            get: fn () => !empty($this->nome_social) ? $this->nome_social : null
         );
     }
 

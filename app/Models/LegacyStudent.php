@@ -63,7 +63,7 @@ class LegacyStudent extends LegacyModel
     protected function socialName(): Attribute
     {
         return Attribute::make(
-            get: fn () => ! empty($social_name = $this->individual->social_name) ? $social_name : $this->name
+            get: fn () => $this->individual->social_name ?? null
         );
     }
 
