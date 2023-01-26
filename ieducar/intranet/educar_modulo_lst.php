@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyStageType;
+
 return new class extends clsListagem {
     /**
      * Quantidade de registros a ser apresentada em cada pagina
@@ -62,18 +64,23 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_modulo = new clsPmieducarModulo();
-        $obj_modulo->setOrderby(strNomeCampo: 'nm_tipo ASC');
-        $obj_modulo->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $query = LegacyStageType::where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
 
-        $lista = $obj_modulo->lista(
-            str_nm_tipo: $this->nm_tipo,
-            int_num_meses: $this->num_meses,
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
+        if (is_string(value: $this->nm_tipo)) {
+            $query->where(column: 'nm_tipo', operator: 'ilike', value: '%' . $this->nm_tipo . '%');
+        }
+        if (is_numeric(value: $this->num_meses)) {
+            $query->where(column: 'num_meses', operator: $this->num_meses);
+        }
+        if (is_numeric(value: $this->ref_cod_instituicao)) {
+            $query->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao);
+        }
 
-        $total = $obj_modulo->_total;
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {

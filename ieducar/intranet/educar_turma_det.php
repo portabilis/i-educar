@@ -5,6 +5,7 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Models\LegacyStageType;
 use Illuminate\Support\Facades\DB;
 
 return new class () extends clsDetalhe {
@@ -269,9 +270,7 @@ return new class () extends clsDetalhe {
                         $color = ' bgcolor="#FFFFFF" ';
                     }
 
-                    $obj_modulo = new clsPmieducarModulo(cod_modulo: $valor['ref_cod_modulo']);
-                    $det_modulo = $obj_modulo->detalhe();
-                    $nm_modulo = $det_modulo['nm_tipo'];
+                    $nm_modulo = LegacyStageType::find($valor['ref_cod_modulo'])->nm_tipo;
 
                     $valor['data_inicio'] = dataFromPgToBr(data_original: $valor['data_inicio']);
                     $valor['data_fim'] = dataFromPgToBr(data_original: $valor['data_fim']);
