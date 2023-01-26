@@ -530,7 +530,9 @@ return new class () extends clsCadastro {
             ->where('sequencial', $this->sequencial)
             ->first();
 
-        $withdrawal->ref_cod_motivo_afastamento = $this->ref_cod_motivo_afastamento;
+        if (!is_null($this->ref_cod_motivo_afastamento)) {
+            $withdrawal->ref_cod_motivo_afastamento = $this->ref_cod_motivo_afastamento;
+        }
         $withdrawal->data_retorno = $returnDate;
         $withdrawal->data_saida = (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate;
 
