@@ -33,7 +33,9 @@ class LegacyStageType extends LegacyModel
         'ref_usuario_cad',
         'nm_tipo',
         'num_etapas',
-        'descricao'
+        'descricao',
+        'num_meses',
+        'num_semanas'
     ];
 
     /**
@@ -78,13 +80,20 @@ class LegacyStageType extends LegacyModel
      *
      * @return bool
      */
-    public static function alreadyExists($name, $stagesNumber, $id = null): bool
-    {
+    public static function alreadyExists(
+        $name,
+        $stagesNumber,
+        $id = null
+    ): bool {
         return self::query()
             ->where('ativo', 1)
             ->where('nm_tipo', $name)
             ->where('num_etapas', $stagesNumber)
-            ->when($id, function ($query) use ($id) {
+            ->when($id, function (
+                $query
+            ) use (
+                $id
+            ) {
                 $query->where('cod_modulo', '<>', $id);
             })
             ->exists();
@@ -93,7 +102,13 @@ class LegacyStageType extends LegacyModel
     protected function descricao(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => str_replace(["\r\n", "\r", "\n"], '<br />', $value)
+            get: fn (
+                $value
+            ) => str_replace([
+                "\r\n",
+                "\r",
+                "\n"
+            ], '<br />', $value)
         );
     }
 }
