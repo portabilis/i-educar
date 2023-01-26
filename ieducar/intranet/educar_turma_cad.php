@@ -678,8 +678,7 @@ return new class extends clsCadastro {
                         $checked = 'checked="checked"';
                     }
 
-                    if (is_null(value: $componentes[$registro->id]->cargaHoraria) ||
-                        0 == $componentes[$registro->id]->cargaHoraria) {
+                    if (is_null(value: $componentes[$registro->id]->cargaHoraria)) {
                         $usarComponente = true;
                     } else {
                         $cargaHoraria = $componentes[$registro->id]->cargaHoraria;
