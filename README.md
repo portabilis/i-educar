@@ -109,7 +109,7 @@ docker-compose up -d --build
 Execute o comando para fazer uma nova instalação:
 
 ```bash
-docker-compose exec php composer new-install
+docker exec php composer new-install
 ```
 
 #### Primeiro acesso
