@@ -9,6 +9,7 @@ use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyDisciplineScoreStudent;
 use App\Models\SerieTurma;
+use App\Models\TurmaModulo;
 use App\Models\NotaExame;
 use App\Models\RegraAvaliacaoSerieAno;
 use App\Models\RegraAvaliacaoRecuperacao;
@@ -430,9 +431,9 @@ class DiarioApiController extends ApiCoreController
                
             }
             $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
-            if($tipoNota==1){
-                $this->updateMedia();
-            }
+
+            $this->updateMedia();
+            
            
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
@@ -473,9 +474,18 @@ class DiarioApiController extends ApiCoreController
             }
         }
         $tipo_recuperacao_paralela = -1;
+        $media_aprovacao = 5;
         $regra_avaliacoes = RegraAvaliacao::where('id', $regra_avaliacao_id)->get();
         foreach($regra_avaliacoes as $regra_av) {
              $tipo_recuperacao_paralela = $regra_av->tipo_recuperacao_paralela;
+             $media_aprovacao = $regra_av->media;
+             $media_aprovacao = round($media_aprovacao , 2);
+        }
+        $ultima_etapa_sequencial = 4;
+        $turma_modulos = TurmaModulo::where('ref_cod_turma', $this->getRequest()->turma_id)->orderBy('sequencial', 'ASC')->get();
+        foreach($turma_modulos as $turma_modulo) {
+             $ultima_etapa_sequencial = $turma_modulo->sequencial;
+           
         }
        
         if($tipo_recuperacao_paralela==2){
@@ -545,7 +555,7 @@ class DiarioApiController extends ApiCoreController
                             
                         }
                         $media = round($media , 2);
-
+                        
                         //verifica a situação da matricula
                         $situacao = 0;
                         $nota_exame_final = $nota_exame;
@@ -553,7 +563,7 @@ class DiarioApiController extends ApiCoreController
                         //Se existir exame
                         if(!empty($nota_exame_final)){
 
-                            if($media<5){
+                            if($media<$media_aprovacao){
                                 //reprovado
                                 $situacao = 2;
                             }else{
@@ -561,10 +571,10 @@ class DiarioApiController extends ApiCoreController
                                 $situacao = 8; 
                             }   
                            
-                        }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+                        }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                               //em exame
                               $situacao = 7; 
-                        }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+                        }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                                 //Aprovado
                                 $situacao = 1; 
                          }else{
@@ -574,7 +584,7 @@ class DiarioApiController extends ApiCoreController
 
 
 
-                        if($this->getRequest()->etapa==4 and $media<5){
+                        if($this->getRequest()->etapa==$ultima_etapa_sequencial and $media<$media_aprovacao){
                             //atualiza a nota que falta no exame final
                               $nota_falta_exame = 10 - $media;
                             
@@ -686,7 +696,7 @@ class DiarioApiController extends ApiCoreController
                             //Se existir exame
                             if(!empty($nota_exame_final)){
     
-                                if($media<5){
+                                if($media<$media_aprovacao){
                                     //reprovado
                                     $situacao = 2;
                                 }else{
@@ -694,10 +704,10 @@ class DiarioApiController extends ApiCoreController
                                     $situacao = 8; 
                                 }   
                                
-                            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+                            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                                   //em exame
                                   $situacao = 7; 
-                            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+                            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                                     //Aprovado
                                     $situacao = 1; 
                              }else{
@@ -708,7 +718,7 @@ class DiarioApiController extends ApiCoreController
 
 
 
-                        if($this->getRequest()->etapa==4 and $media<5){
+                        if($this->getRequest()->etapa==$ultima_etapa_sequencial and $media<$media_aprovacao){
                             //atualiza a nota que falta no exame final
                               $nota_falta_exame = 10 - $media;
                              
@@ -792,7 +802,7 @@ class DiarioApiController extends ApiCoreController
             //Se existir exame
             if(!empty($nota_exame_final)){
 
-                if($media<5){
+                if($media<$media_aprovacao){
                     //reprovado
                     $situacao = 2;
                 }else{
@@ -800,10 +810,10 @@ class DiarioApiController extends ApiCoreController
                     $situacao = 8; 
                 }   
                 
-            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                 //em exame
                 $situacao = 7; 
-            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                     //Aprovado
                     $situacao = 1; 
             }else{
@@ -814,7 +824,7 @@ class DiarioApiController extends ApiCoreController
 
 
 
-            if($this->getRequest()->etapa==4 and $media<5){
+            if($this->getRequest()->etapa==$ultima_etapa_sequencial and $media<$media_aprovacao){
                 //atualiza a nota que falta no exame final
                   $nota_falta_exame = 10 - $media;
               
@@ -887,7 +897,7 @@ class DiarioApiController extends ApiCoreController
                       //Se existir exame
                       if(!empty($nota_exame_final)){
 
-                          if($media<5){
+                          if($media<$media_aprovacao){
                               //reprovado
                               $situacao = 2;
                           }else{
@@ -895,10 +905,10 @@ class DiarioApiController extends ApiCoreController
                               $situacao = 8; 
                           }   
                          
-                      }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+                      }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                             //em exame
                             $situacao = 7; 
-                      }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+                      }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                               //Aprovado
                               $situacao = 1; 
                        }else{
@@ -907,7 +917,7 @@ class DiarioApiController extends ApiCoreController
                        }
 
 
-                if($this->getRequest()->etapa==4 and $media<5){
+                if($this->getRequest()->etapa==$ultima_etapa_sequencial and $media<$media_aprovacao){
                   //atualiza a nota que falta no exame final
                     $nota_falta_exame = 10 - $media;
                    
