@@ -443,7 +443,6 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente());
         $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
-       
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
        
@@ -487,6 +486,7 @@ class DiarioApiController extends ApiCoreController
              $ultima_etapa_sequencial = $turma_modulo->sequencial;
            
         }
+        echo "<script>alert('tipo recuperação: "".$tipo_recuperacao_paralela.');</script>";
        
         if($tipo_recuperacao_paralela==2){
             //recuperacao paralela por etapa substituindo a menor nota
