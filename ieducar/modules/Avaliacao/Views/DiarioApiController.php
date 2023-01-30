@@ -486,8 +486,7 @@ class DiarioApiController extends ApiCoreController
              $ultima_etapa_sequencial = $turma_modulo->sequencial;
            
         }
-        echo "<script>alert('tipo recuperação: "".$tipo_recuperacao_paralela.');</script>";
-       
+        
         if($tipo_recuperacao_paralela==2){
             //recuperacao paralela por etapa substituindo a menor nota
                         
