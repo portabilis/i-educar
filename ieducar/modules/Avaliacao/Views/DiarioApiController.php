@@ -1519,7 +1519,7 @@ class DiarioApiController extends ApiCoreController
 
         //validação para evitar a soma de valores da notaOriginal para string vazia
         if ($nota === "") {
-            return 0;
+            return null;
         }
         return $nota;
     }
