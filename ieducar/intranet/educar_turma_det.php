@@ -474,7 +474,7 @@ return new class () extends clsDetalhe {
     {
         if ($this->cod_turma) {
             return LegacyDisciplineSchoolClass::query()
-                ->where(column: 'turma_id', value: $this->cod_turma)
+                ->where('turma_id', $this->cod_turma)
                 ->exists();
         }
 
