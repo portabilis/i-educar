@@ -9,6 +9,7 @@ use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
 use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
+use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
@@ -647,7 +648,12 @@ class AlunoController extends ApiCoreController
         $escola->cod_escola = $id;
         $escola = $escola->detalhe();
 
-        return $this->toUtf8($escola['nome'], ['transform' => true]);
+        $schoolInep = SchoolInep::query()
+            ->select('cod_escola_inep')
+            ->where('cod_escola', $id)
+            ->value('cod_escola_inep');
+
+        return $this->toUtf8($escola['nome'] . ' - INEP: ' . $schoolInep, ['transform' => true]);
     }
 
     protected function loadCursoNome($id)
