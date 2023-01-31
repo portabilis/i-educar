@@ -446,11 +446,19 @@ return new class () extends clsDetalhe {
         return LegacyDisciplineSchoolClass::query()
             ->selectRaw('"modules"."componente_curricular".id,
                         "modules"."componente_curricular".nome,
-                        coalesce("modules"."componente_curricular_turma".carga_horaria, "pmieducar"."escola_serie_disciplina".carga_horaria) as carga_horaria')
+                        coalesce(
+                            "modules"."componente_curricular_turma".carga_horaria,
+                            "pmieducar"."escola_serie_disciplina".carga_horaria,
+                            "modules"."componente_curricular_ano_escolar".carga_horaria
+                        ) as carga_horaria')
             ->join('pmieducar.escola_serie_disciplina', first: function ($join) {
                 $join->on('pmieducar.escola_serie_disciplina.ref_ref_cod_serie', '=', 'modules.componente_curricular_turma.ano_escolar_id');
                 $join->on('pmieducar.escola_serie_disciplina.ref_ref_cod_escola', '=', 'modules.componente_curricular_turma.escola_id');
                 $join->on('pmieducar.escola_serie_disciplina.ref_cod_disciplina', '=', 'modules.componente_curricular_turma.componente_curricular_id');
+            })
+            ->join('modules.componente_curricular_ano_escolar', first: function ($join) {
+                $join->on('modules.componente_curricular_ano_escolar.ano_escolar_id', '=', 'modules.componente_curricular_turma.ano_escolar_id');
+                $join->on('modules.componente_curricular_ano_escolar.componente_curricular_id', '=', 'modules.componente_curricular_turma.componente_curricular_id');
             })
             ->join('modules.componente_curricular', first: 'modules.componente_curricular.id', operator: '=', second: 'modules.componente_curricular_turma.componente_curricular_id')
             ->where('pmieducar.escola_serie_disciplina.ref_ref_cod_escola', '=', $escolaId )
