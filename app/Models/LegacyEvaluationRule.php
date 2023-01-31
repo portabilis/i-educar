@@ -135,6 +135,21 @@ class LegacyEvaluationRule extends Model
             && $this->tipo_calculo_recuperacao_paralela == self::PARALLEL_REMEDIAL_SUM_SCORE;
     }
 
+    public function isGeneralAbsence(): bool
+    {
+        return $this->tipo_presenca === 1;
+    }
+
+    public function hasOpinion(): bool
+    {
+        return in_array($this->registration->grade->evaluationRule?->parecer_descritivo, [0, 1], true);
+    }
+
+    public function isGeneralScore(): bool
+    {
+        return $this->nota_geral_por_etapa === 1;
+    }
+
     /**
      * @return bool
      */
