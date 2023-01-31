@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -87,6 +88,10 @@ class LegacyIndividual extends Model
         'ideciv'
     ];
 
+    protected $casts = [
+        'data_nasc' => 'date:d/m/Y'
+    ];
+
     /**
      * @return BelongsToMany
      */
@@ -160,6 +165,11 @@ class LegacyIndividual extends Model
         return $this->hasOne(LegacyIndividualPicture::class, 'idpes');
     }
 
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(LegacyCity::class, 'idmun_nascimento', 'idmun');
+    }
+
     /**
      * @inheritDoc
      */
@@ -195,6 +205,33 @@ class LegacyIndividual extends Model
     {
         return Attribute::make(
             get: fn ($value) => int2CPF($value),
+        );
+    }
+
+    protected function socialName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => !empty($this->nome_social) ? $this->nome_social : null
+        );
+    }
+
+    protected function birthdate(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->data_nasc,
+        );
+    }
+
+    protected function parentsName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $data = collect();
+                $data->push($this->father->name);
+                $data->push($this->mother->name);
+
+                return $data->filter()->implode(' e ');
+            },
         );
     }
 }
