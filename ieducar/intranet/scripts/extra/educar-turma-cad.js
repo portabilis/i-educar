@@ -315,7 +315,7 @@ $j(document).ready(function () {
 
 $j('.etapas_utilizadas').mask('9,9,9,9', { placeholder: '1,2,3...' });
 
-$j('#definir_componentes_diferenciados').on('click', function () {
+$j('#definir_componentes_diferenciados').on('click change', function () {
   disableInputsDisciplinas();
 });
 
