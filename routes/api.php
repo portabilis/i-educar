@@ -2,10 +2,16 @@
 
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
+use App\Http\Controllers\Api\GradeController;
+use App\Http\Controllers\Api\InstitutionController;
 use App\Http\Controllers\Api\People\LegacyDeficiencyController;
+use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\ReligionController;
+use App\Http\Controllers\Api\SchoolClassController;
+use App\Http\Controllers\Api\SchoolController;
 use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => 'auth:sanctum',
+       // 'middleware' => 'auth:sanctum',
     ],
     static fn () =>
     Route::apiResources([
@@ -31,7 +37,13 @@ Route::group(
         'district' => DistrictController::class,
         'city' => CityController::class,
         'religion' => ReligionController::class,
-        'person/deficiency' => LegacyDeficiencyController::class
+        'person/deficiency' => LegacyDeficiencyController::class,
+        'institution' => InstitutionController::class,
+        'school' => SchoolController::class,
+        'course' => CourseController::class,
+        'grade' => GradeController::class,
+        'school-class' => SchoolClassController::class,
+        'registration' => RegistrationController::class
     ])
 );
 
@@ -50,6 +62,10 @@ Route::get('/school-class/calendars', 'Api\SchoolClassController@getCalendars');
 Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getStages');
 
 Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
+
+Route::group(['namespace' => 'Api'], static function () {
+    Route::get('situation', 'SituationController@index');
+});
 
 Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Api\Resource'], static function () {
     Route::get('course', 'Course\ResourceCourseController@index')->name('course');
