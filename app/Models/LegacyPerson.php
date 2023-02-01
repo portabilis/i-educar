@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,7 +11,7 @@ use Illuminate\Support\Str;
 /**
  * @property string $name
  */
-class LegacyPerson extends Model
+class LegacyPerson extends LegacyModel
 {
     public const CREATED_AT = 'data_cad';
     public const UPDATED_AT = 'data_rev';
@@ -45,6 +44,11 @@ class LegacyPerson extends Model
         'origem_gravacao',
         'operacao',
         'email'
+    ];
+
+    public array $legacy = [
+        'id' => 'idpes',
+        'name' => 'nome',
     ];
 
     /**

@@ -3,9 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,10 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @method static LegacySchoolBuilder query()
  */
-class LegacySchool extends Model
+class LegacySchool extends LegacyModel
 {
-    use LegacyAttribute;
-
     public const CREATED_AT = 'data_cadastro';
 
     /**
@@ -49,7 +45,7 @@ class LegacySchool extends Model
      */
     public array $legacy = [
         'id' => 'cod_escola',
-        'name' => 'fantasia'
+        'person_id' => 'ref_idpes'
     ];
 
     /**

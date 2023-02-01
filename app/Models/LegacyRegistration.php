@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyRegistrationBuilder;
 use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Builder;
@@ -69,11 +70,29 @@ class LegacyRegistration extends LegacyModel
     protected $dates = [
         'data_matricula'
     ];
+    public array $legacy = [
+        'id' => 'cod_matricula',
+        'student_id' => 'ref_cod_aluno'
+    ];
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LegacyRegistrationBuilder::class;
 
     protected function id(): Attribute
     {
         return Attribute::make(
             get: fn () =>  $this->cod_matricula
+        );
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () =>  $this->student->name
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyInstitutionBuilder;
 use App\Services\RelocationDate\RelocationDateProvider;
 use App\Traits\HasLegacyDates;
 use DateTime;
@@ -34,6 +35,13 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected $primaryKey = 'cod_instituicao';
 
     /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LegacyInstitutionBuilder::class;
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -55,6 +63,11 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected $dates = [
         'data_base_remanejamento',
         'data_educacenso',
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_instituicao',
+        'name' => 'nm_instituicao',
     ];
 
     /**
