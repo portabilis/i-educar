@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolBuilder;
+use App\Models\View\SchoolData;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -45,7 +46,8 @@ class LegacySchool extends LegacyModel
      */
     public array $legacy = [
         'id' => 'cod_escola',
-        'person_id' => 'ref_idpes'
+        'person_id' => 'ref_idpes',
+        'name' => 'fantasia'
     ];
 
     /**
@@ -186,6 +188,11 @@ class LegacySchool extends LegacyModel
         return $this->hasMany(LegacyUserSchool::class, 'ref_cod_escola', 'cod_escola');
     }
 
+    public function data(): BelongsTo
+    {
+        return $this->belongsTo(SchoolData::class, 'cod_escola');
+    }
+
     /**
      * @return HasMany
      */
@@ -199,7 +206,7 @@ class LegacySchool extends LegacyModel
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
     }
 
-    public function address(): BelongsToMany
+    public function addresses(): BelongsToMany
     {
         return $this->belongsToMany(
             Place::class,
@@ -208,5 +215,15 @@ class LegacySchool extends LegacyModel
             'place_id',
             'ref_idpes',
         );
+    }
+
+    public function director(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_idpes_gestor');
+    }
+
+    public function secretary(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_idpes_secretario_escolar');
     }
 }

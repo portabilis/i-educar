@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolClassBuilder;
+use App\Models\View\Discipline;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -435,6 +436,11 @@ class LegacySchoolClass extends LegacyModel
             'etapas_especificas',
             'etapas_utilizadas',
         ]);
+    }
+
+    public function viewDisciplines(): HasMany
+    {
+        return $this->hasMany(Discipline::class, 'cod_turma', 'id');
     }
 
     /**

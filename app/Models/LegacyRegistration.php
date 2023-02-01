@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use App\Models\Builders\LegacyRegistrationBuilder;
+use App\Models\View\Situation;
 use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class LegacyRegistration extends LegacyModel
 {
     use HasLegacyDates;
+    use BelongsToOne;
 
     /**
      * @var string
@@ -45,6 +48,8 @@ class LegacyRegistration extends LegacyModel
      * @var string
      */
     protected $primaryKey = 'cod_matricula';
+
+    protected string $builder = LegacyRegistrationBuilder::class;
 
     /**
      * @var array
@@ -75,12 +80,6 @@ class LegacyRegistration extends LegacyModel
         'student_id' => 'ref_cod_aluno'
     ];
 
-    /**
-     * Builder dos filtros
-     *
-     * @var string
-     */
-    protected string $builder = LegacyRegistrationBuilder::class;
 
     protected function id(): Attribute
     {
@@ -112,6 +111,13 @@ class LegacyRegistration extends LegacyModel
     {
         return Attribute::make(
             get: fn () =>  $this->ano
+        );
+    }
+
+    protected function schoolId(): Attribute
+    {
+        return Attribute::make(
+            get: fn () =>  $this->ref_ref_cod_escola
         );
     }
 
@@ -172,6 +178,42 @@ class LegacyRegistration extends LegacyModel
             'ref_cod_turma',
         )->wherePivot('ativo', 1)
             ->where('pmieducar.turma.ativo', 1);
+    }
+
+    public function situations(): HasMany
+    {
+        return $this->hasMany(Situation::class, 'cod_matricula');
+    }
+    public function situation(): HasOne
+    {
+        return $this->hasOne(Situation::class, 'cod_matricula');
+    }
+
+    public function situationApproved(): HasOne
+    {
+        return $this->hasOne(Situation::class, 'cod_matricula')->approved();
+    }
+
+    public function schoolClass()
+    {
+        return $this->belongsToOne(
+            LegacySchoolClass::class,
+            'pmieducar.matricula_turma',
+            'ref_cod_matricula',
+            'ref_cod_turma',
+        )->wherePivot('ativo', 1)
+            ->where('pmieducar.turma.ativo', 1)
+            ->orderBy('matricula_turma.sequencial', 'desc');
+    }
+
+    public function registrationStores(): HasMany
+    {
+        return $this->hasMany(LegacyRegistrationScore::class, 'matricula_id');
+    }
+
+    public function disciplineScores(): HasMany
+    {
+        return $this->hasMany(LegacyDisciplineScore::class, 'nota_aluno_id');
     }
 
     /**
