@@ -111,4 +111,29 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     {
         return $this->where($this->model->getTable().'.ano', $year);
     }
+
+    /**
+     * Ordena por nome
+     *
+     * @param string $direction
+     *
+     * @return LegacyRegistrationBuilder
+     */
+    public function orderByName(string $direction = 'asc'): self
+    {
+        return $this->joinPerson()->orderBy('nome', $direction);
+    }
+
+    /**
+     * Realiza a junçao com organização
+     *
+     * @return LegacyRegistrationBuilder
+     */
+    public function joinPerson(): self
+    {
+        $this->join('pmieducar.aluno', 'ref_cod_aluno', 'cod_aluno');
+        $this->join('cadastro.pessoa', 'idpes', 'ref_idpes');
+
+        return $this;
+    }
 }
