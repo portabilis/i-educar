@@ -31,6 +31,7 @@ let postPromocaoMatricula = function(){
       serie : $j('#serie').val(),
       turma : $j('#turma').val(),
       matricula: $j('#matricula').val(),
+      situacaoMatricula: $j('#situacaoMatricula').val(),
       regras_avaliacao_id : $j('#regras_avaliacao_id').val()
     },
     success : handlePostPromocaoMatricula,

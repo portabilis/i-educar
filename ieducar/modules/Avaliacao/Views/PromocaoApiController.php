@@ -357,7 +357,7 @@ class PromocaoApiController extends ApiCoreController
             $cursoId = empty($this->getRequest()->curso) ? 0 : $this->getRequest()->curso;
             $serieId = empty($this->getRequest()->serie) ? 0 : $this->getRequest()->serie;
             $turmaId = empty($this->getRequest()->turma) ? 0 : $this->getRequest()->turma;
-            $matricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->matricula;
+            $situacaoMatricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->situacaoMatricula;
             $regraDeAvaliacao = empty($this->getRequest()->regras_avaliacao_id) ? 0 : $this->getRequest()->regras_avaliacao_id;
 
             $sql = 'SELECT count(m.cod_matricula)
@@ -378,7 +378,7 @@ class PromocaoApiController extends ApiCoreController
                     AND (CASE WHEN $7 = 0  THEN TRUE ELSE $7 = ra.regra_avaliacao_id END)';
 
 
-            $options = ['params' => [$this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId, $matricula, $regraDeAvaliacao], 'return_only' => 'first-field'];
+            $options = ['params' => [$this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId, $situacaoMatricula, $regraDeAvaliacao], 'return_only' => 'first-field'];
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
         }
