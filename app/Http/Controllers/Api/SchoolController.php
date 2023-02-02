@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ResourceController;
 use App\Models\LegacySchool;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,11 @@ class SchoolController extends ResourceController
         $this->skipAuthorization();
 
         return $this->all($school, $request);
+    }
+
+    public function filter(Builder $builder, Request $request): void
+    {
+        $builder->orderByName();
     }
 
     public function store(LegacySchool $school, Request $request): JsonResource
