@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-       // 'middleware' => 'auth:sanctum',
+        'middleware' => 'auth:sanctum',
     ],
     static fn () =>
     Route::apiResources([
@@ -63,8 +63,9 @@ Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getS
 
 Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
 
-Route::group(['namespace' => 'Api'], static function () {
+Route::group(['middleware' => 'auth:sanctum','namespace' => 'Api'], static function () {
     Route::get('situation', 'SituationController@index');
+    Route::get('discipline', 'DisciplineController@index');
 });
 
 Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Api\Resource'], static function () {
