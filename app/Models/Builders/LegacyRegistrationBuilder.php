@@ -109,6 +109,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
      */
     public function whereYearEq(int $year): self
     {
-        return $this->where($this->model->getTable().'ano', $year);
+        return $this->where($this->model->getTable().'.ano', $year);
     }
 }
