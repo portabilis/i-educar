@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ResourceController;
-use App\Models\LegacySchool;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SituationController extends ResourceController
 {
 
-    public function index(LegacySchool $school, Request $request): JsonResource
+    public function index(): JsonResource
     {
         return $this->newResource([
             9 => 'Exceto Transferidos/Abandono',
