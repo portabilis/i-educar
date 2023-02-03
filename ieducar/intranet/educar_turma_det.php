@@ -376,7 +376,7 @@ return new class () extends clsDetalhe {
 
     public function montaListaComponentes()
     {
-        $componentes = $this->buscaComponentesDaTurma($this->cod_turma, $this->ref_ref_cod_serie);
+        $componentes = Discipline::getBySchoolClassAndGrade($this->cod_turma, $this->ref_ref_cod_serie);
 
         if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
@@ -399,13 +399,6 @@ return new class () extends clsDetalhe {
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
 
-    protected function buscaComponentesDaTurma($turmaId, $serieId)
-    {
-        return Discipline::query()
-            ->where('cod_turma', $turmaId)
-            ->where('cod_serie', $serieId)
-            ->get();
-    }
 
     public function montaListaComponentesMulti()
     {
