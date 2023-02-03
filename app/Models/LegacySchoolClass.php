@@ -37,9 +37,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @method static LegacySchoolClassBuilder query()
  */
-class LegacySchoolClass extends Model
+class LegacySchoolClass extends LegacyModel
 {
-    use LegacyAttribute;
 
     /**
      * @var string
@@ -125,6 +124,12 @@ class LegacySchoolClass extends Model
         'estrutura_curricular',
         'formas_organizacao_turma',
         'unidade_curricular',
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_turma',
+        'name' => 'nm_turma',
+        'year' => 'ano'
     ];
 
     protected function id(): Attribute
