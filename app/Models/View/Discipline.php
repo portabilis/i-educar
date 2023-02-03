@@ -3,9 +3,9 @@
 namespace App\Models\View;
 
 use App\Casts\LegacyArray;
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Discipline extends Model
 {
