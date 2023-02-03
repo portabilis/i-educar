@@ -47,6 +47,11 @@ class LegacyRegistrationBuilder extends LegacyBuilder
         ]);
     }
 
+    public function whereName(string $name): self
+    {
+        return $this->whereHas('student.person', fn ($q) => $q->whereRaw('unaccent(pessoa.nome) ~* unaccent(?)', $name));
+    }
+
     public function statusTransfer(): LegacyBuilder
     {
         return $this->where('aprovado', 4);

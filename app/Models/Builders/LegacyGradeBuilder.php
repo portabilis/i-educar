@@ -21,6 +21,19 @@ class LegacyGradeBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por nome
+     *
+     * @param string $name
+     *
+     * @return LegacyGradeBuilder
+     */
+    public function whereName(string $name): self
+    {
+        return $this->whereRaw('unaccent(nm_serie) ~* unaccent(?)', $name);
+    }
+
+
+    /**
      * Ordena por nome e curso
      *
      * @return LegacyGradeBuilder

@@ -21,7 +21,7 @@ class SchoolController extends ResourceController
 
     public function filter(Builder $builder, Request $request): void
     {
-        $builder->orderByName();
+        $builder->orderByName()->filter($request->all());
     }
 
     public function store(LegacySchool $school, Request $request): JsonResource

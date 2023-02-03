@@ -21,7 +21,7 @@ class RegistrationController extends ResourceController
 
     public function filter(Builder $builder, Request $request): void
     {
-        $builder->orderByName();
+        $builder->orderByName()->filter($request->all());
     }
 
 

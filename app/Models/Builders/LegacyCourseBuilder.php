@@ -23,6 +23,18 @@ class LegacyCourseBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por nome
+     *
+     * @param string $name
+     *
+     * @return LegacyCourseBuilder
+     */
+    public function whereName(string $name): self
+    {
+        return $this->whereRaw('unaccent(nm_curso) ~* unaccent(?)', $name);
+    }
+
+    /**
      * Filtra por Instituição
      *
      * @param int $institution

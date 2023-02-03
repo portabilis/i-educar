@@ -17,6 +17,18 @@ class LegacyInstitutionBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por nome
+     *
+     * @param string $name
+     *
+     * @return LegacyInstitutionBuilder
+     */
+    public function whereName(string $name): self
+    {
+        return $this->whereRaw('unaccent(nm_instituicao) ~* unaccent(?)', $name);
+    }
+
+    /**
      * Ordena por nome
      *
      * @param string $direction
