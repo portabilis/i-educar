@@ -83,7 +83,6 @@ class PromocaoApiController extends ApiCoreController
 
     protected function loadComponentesCurriculares(LegacyRegistration $registration)
     {
-      //  var_export($registration->schoolClass->cod_turma); die;
         return Discipline::getBySchoolClassAndGrade(
             $registration->schoolClass->cod_turma,
             $registration->ref_ref_cod_serie)
