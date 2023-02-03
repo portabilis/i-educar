@@ -24,7 +24,6 @@ class RegistrationController extends ResourceController
         $builder->orderByName()->filter($request->all());
     }
 
-
     public function store(LegacyRegistration $registration, Request $request): JsonResource
     {
         return $this->post($registration, $request);

@@ -80,7 +80,6 @@ class LegacyRegistration extends LegacyModel
         'student_id' => 'ref_cod_aluno'
     ];
 
-
     protected function id(): Attribute
     {
         return Attribute::make(

@@ -6,7 +6,6 @@ use App\Http\Controllers\ResourceController;
 
 class SituationController extends ResourceController
 {
-
     public function index(): array
     {
         return [

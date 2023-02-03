@@ -32,7 +32,6 @@ class LegacyGradeBuilder extends LegacyBuilder
         return $this->whereRaw('unaccent(nm_serie) ~* unaccent(?)', $name);
     }
 
-
     /**
      * Ordena por nome e curso
      *
