@@ -286,7 +286,7 @@ return new class extends clsCadastro {
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao ?: 0);
 
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
@@ -367,7 +367,7 @@ return new class extends clsCadastro {
         $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao ?: 0);
 
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
