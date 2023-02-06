@@ -71,16 +71,6 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     ];
 
     /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('ativo', 1);
-    }
-
-    /**
      * @return HasOne
      */
     public function generalConfiguration(): HasOne
