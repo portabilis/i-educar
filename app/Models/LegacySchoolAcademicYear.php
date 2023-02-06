@@ -7,9 +7,12 @@ use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * LegacySchoolAcademicYear
+ *
+ * @property int $ano
  *
  * @method static LegacySchoolAcademicYearBuilder query()
  */
@@ -58,6 +61,8 @@ class LegacySchoolAcademicYear extends LegacyModel
         'data_exclusao',
         'ativo',
         'turmas_por_ano',
+        'copia_dados_professor',
+        'copia_dados_demais_servidores'
     ];
 
     protected function year(): Attribute
@@ -70,5 +75,9 @@ class LegacySchoolAcademicYear extends LegacyModel
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
+    }
+    public function academicYearStates(): HasMany
+    {
+        return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_cod_escola');
     }
 }

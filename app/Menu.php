@@ -68,6 +68,15 @@ class Menu extends Model
         })->toTree();
     }
 
+    public static function getMenuAncestors(Menu $menu)
+    {
+        return Menu::find($menu->getKey())
+            ->ancestors()
+            ->get()
+            ->pluck('id')
+            ->toArray();
+    }
+
     private static function getMenusByIds($ids): Collection
     {
         return static::query()

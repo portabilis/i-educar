@@ -20,7 +20,7 @@ class Registro10Model extends Registro10
         $this->localFuncionamentoUnidadePrisional = $arrayColumns[7];
         $this->localFuncionamentoOutros = $arrayColumns[8];
         $this->condicao = $arrayColumns[9];
-        $this->predioCompartilhadoOutraEscola = $arrayColumns[10];
+        $this->predioCompartilhadoOutraEscola = $arrayColumns[10] ?: null;
         $this->codigoInepEscolaCompartilhada = $arrayColumns[11];
         $this->codigoInepEscolaCompartilhada2 = $arrayColumns[12];
         $this->codigoInepEscolaCompartilhada3 = $arrayColumns[13];
@@ -156,7 +156,7 @@ class Registro10Model extends Registro10
         $this->instrumentosPedagogicosEducacaoIndigena = $arrayColumns[143];
         $this->instrumentosPedagogicosEducacaoEtnicoRacial = $arrayColumns[144];
         $this->instrumentosPedagogicosEducacaoCampo = $arrayColumns[145];
-        $this->educacaoIndigena = $arrayColumns[146];
+        $this->educacaoIndigena = $arrayColumns[146] ?: null;
         $this->linguaIndigena = $arrayColumns[147];
         $this->linguaPortuguesa = $arrayColumns[148];
         $this->linguaIndigena1 = $arrayColumns[149];

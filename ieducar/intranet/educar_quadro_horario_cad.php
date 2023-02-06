@@ -27,8 +27,8 @@ return new class extends clsCadastro {
         $this->cod_quadro_horario  = $_GET['ref_cod_quadro_horario'];
         $this->ano                 = $_GET['ano'];
 
-        if (is_numeric($this->cod_quadro_horario)) {
-            $obj_quadro_horario = new clsPmieducarQuadroHorario($this->cod_quadro_horario);
+        if (is_numeric(value: $this->cod_quadro_horario)) {
+            $obj_quadro_horario = new clsPmieducarQuadroHorario(cod_quadro_horario: $this->cod_quadro_horario);
             $det_quadro_horario = $obj_quadro_horario->detalhe();
             if ($det_quadro_horario) {
                 // Passa todos os valores obtidos no registro para atributos do objeto
@@ -38,7 +38,7 @@ return new class extends clsCadastro {
 
                 $obj_permissoes = new clsPermissoes();
 
-                if ($obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 641, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
 
@@ -49,10 +49,10 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            641,
-            $this->pessoa_logada,
-            7,
-            "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
+            int_processo_ap: 641,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
         );
 
         $this->url_cancelar = "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}";
@@ -61,8 +61,8 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' quadro de horários', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
+        $this->breadcrumb(currentPage: $nomeMenu . ' quadro de horários', breadcrumbs: [
+        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
     ]);
 
         return $retorno;
@@ -75,19 +75,19 @@ return new class extends clsCadastro {
         }
 
         // primary keys
-        $this->campoOculto('cod_quadro_horario', $this->cod_quadro_horario);
+        $this->campoOculto(nome: 'cod_quadro_horario', valor: $this->cod_quadro_horario);
 
-        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
+        $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
     }
 
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            641,
-            $this->pessoa_logada,
-            7,
-            "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
+            int_processo_ap: 641,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
         );
 
         $obj = new clsPmieducarQuadroHorario();
@@ -99,21 +99,17 @@ return new class extends clsCadastro {
         }
 
         $obj = new clsPmieducarQuadroHorario(
-            null,
-            null,
-            $this->pessoa_logada,
-            $this->ref_cod_turma,
-            null,
-            null,
-            1,
-            $this->ano
+            ref_usuario_cad: $this->pessoa_logada,
+            ref_cod_turma: $this->ref_cod_turma,
+            ativo: 1,
+            ano: $this->ano
         );
 
         $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
+            $this->simpleRedirect(url: "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -129,40 +125,27 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(
-            641,
-            $this->pessoa_logada,
-            7,
-            "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
+            int_processo_ap: 641,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
         );
 
-        if (is_numeric($this->cod_quadro_horario)) {
+        if (is_numeric(value: $this->cod_quadro_horario)) {
             $obj_horarios = new clsPmieducarQuadroHorarioHorarios(
-                $this->cod_quadro_horario,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
+                ref_cod_quadro_horario: $this->cod_quadro_horario,
+                dia_semana: 1
             );
 
             if ($obj_horarios->excluirTodos()) {
                 $obj_quadro = new clsPmieducarQuadroHorario(
-                    $this->cod_quadro_horario,
-                    $this->pessoa_logada
+                    cod_quadro_horario: $this->cod_quadro_horario,
+                    ref_usuario_exc: $this->pessoa_logada
                 );
 
                 if ($obj_quadro->excluir()) {
                     $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-                    $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
+                    $this->simpleRedirect(url: "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
                 }
             }
         }
@@ -174,7 +157,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-quadro-horario-horarios-cad.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-quadro-horario-horarios-cad.js');
     }
 
     public function Formular()

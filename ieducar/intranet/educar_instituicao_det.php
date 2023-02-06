@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_instituicao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -52,13 +46,13 @@ return new class extends clsDetalhe {
         $this->addDetalhe([ 'Nome do Responsável', "{$registro['nm_responsavel']}"]);
 
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(559, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 559, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_editar = "educar_instituicao_cad.php?cod_instituicao={$registro['cod_instituicao']}";
         }
         $this->url_cancelar = 'educar_instituicao_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da instituição', [
+        $this->breadcrumb(currentPage: 'Detalhe da instituição', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 

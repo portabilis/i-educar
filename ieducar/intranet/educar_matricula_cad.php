@@ -5,6 +5,7 @@ use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -74,34 +75,34 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $this->ref_cod_turma_copiar_enturmacoes = $this->getQueryString('ref_cod_turma_copiar_enturmacoes');
-        $this->cod_matricula = $this->getQueryString('cod_matricula');
-        $this->ref_cod_aluno = $this->getQueryString('ref_cod_aluno');
-        $this->ref_cod_candidato_reserva_vaga = $this->getQueryString('ref_cod_candidato_reserva_vaga');
-        $this->ref_cod_candidato_fila_unica = $this->getQueryString('cod_candidato_fila_unica');
-        $this->ano = $this->getQueryString('ano');
+        $this->ref_cod_turma_copiar_enturmacoes = $this->getQueryString(name: 'ref_cod_turma_copiar_enturmacoes');
+        $this->cod_matricula = $this->getQueryString(name: 'cod_matricula');
+        $this->ref_cod_aluno = $this->getQueryString(name: 'ref_cod_aluno');
+        $this->ref_cod_candidato_reserva_vaga = $this->getQueryString(name: 'ref_cod_candidato_reserva_vaga');
+        $this->ref_cod_candidato_fila_unica = $this->getQueryString(name: 'cod_candidato_fila_unica');
+        $this->ano = $this->getQueryString(name: 'ano');
 
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
-        $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
+        $obj_aluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
 
         if (!$obj_aluno->existe() and !$this->ref_cod_turma_copiar_enturmacoes) {
             throw new HttpResponseException(
-                new RedirectResponse('educar_aluno_lst.php')
+                response: new RedirectResponse(url: 'educar_aluno_lst.php')
             );
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
             $this->nome_url_sucesso = 'Gravar enturmações';
-            $url = route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma_copiar_enturmacoes]);
+            $url = route(name: 'enrollments.batch.enroll.index', parameters: ['schoolClass' => $this->ref_cod_turma_copiar_enturmacoes]);
         } else {
             $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
         }
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, $url);
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $url);
 
-        if (is_numeric($this->cod_matricula)) {
-            if ($obj_permissoes->permissao_excluir(627, $this->pessoa_logada, 7)) {
+        if (is_numeric(value: $this->cod_matricula)) {
+            if ($obj_permissoes->permissao_excluir(int_processo_ap: 627, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                 $this->Excluir();
             }
         }
@@ -111,7 +112,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Nova';
 
-        $this->breadcrumb("{$nomeMenu} matrícula", [
+        $this->breadcrumb(currentPage: "{$nomeMenu} matrícula", breadcrumbs: [
             'educar_index.php' => 'Escola',
         ]);
 
@@ -121,33 +122,24 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('ref_cod_turma_copiar_enturmacoes', $this->ref_cod_turma_copiar_enturmacoes);
-        $this->campoOculto('cod_matricula', $this->cod_matricula);
-        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
-        $this->campoOculto('ref_cod_candidato_reserva_vaga', $this->ref_cod_candidato_reserva_vaga);
-        $this->campoOculto('ref_cod_candidato_fila_unica', $this->ref_cod_candidato_fila_unica);
+        $this->campoOculto(nome: 'ref_cod_turma_copiar_enturmacoes', valor: $this->ref_cod_turma_copiar_enturmacoes);
+        $this->campoOculto(nome: 'cod_matricula', valor: $this->cod_matricula);
+        $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
+        $this->campoOculto(nome: 'ref_cod_candidato_reserva_vaga', valor: $this->ref_cod_candidato_reserva_vaga);
+        $this->campoOculto(nome: 'ref_cod_candidato_fila_unica', valor: $this->ref_cod_candidato_fila_unica);
 
         if ($this->ref_cod_aluno) {
             $obj_aluno = new clsPmieducarAluno();
 
             $lst_aluno = $obj_aluno->lista(
-                $this->ref_cod_aluno,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
+                int_cod_aluno: $this->ref_cod_aluno,
+                int_ativo: 1
             );
 
-            if (is_array($lst_aluno)) {
-                $det_aluno = array_shift($lst_aluno);
+            if (is_array(value: $lst_aluno)) {
+                $det_aluno = array_shift(array: $lst_aluno);
                 $this->nm_aluno = $det_aluno['nome_aluno'];
-                $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
+                $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
             }
         }
 
@@ -155,47 +147,47 @@ return new class extends clsCadastro {
             $this->nome_url_sucesso ='Gravar enturmações';
         }
 
-        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
-        $this->inputsHelper()->date('data_matricula', ['label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
-        $this->inputsHelper()->textArea('observacoes', ['required' => false, 'label' => 'Observações']);
-        $this->inputsHelper()->hidden('ano_em_andamento', ['value' => '1']);
+        $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
+        $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: ['label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy', 'value' => date(format: 'd/m/Y')]);
+        $this->inputsHelper()->textArea(attrName: 'observacoes', inputOptions: ['required' => false, 'label' => 'Observações']);
+        $this->inputsHelper()->hidden(attrName: 'ano_em_andamento', inputOptions: ['value' => '1']);
 
-        if (config('legacy.app.matricula.dependencia') == 1) {
+        if (config(key: 'legacy.app.matricula.dependencia') == 1) {
             $this->inputsHelper()->checkbox(
-                'dependencia',
-                [
+                attrName: 'dependencia',
+                inputOptions: [
                     'label' => 'Matrícula de dependência?',
                     'value' => $this->dependencia
                 ]
             );
         }
 
-        if (is_numeric($this->ref_cod_curso)) {
-            $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
+        if (is_numeric(value: $this->ref_cod_curso)) {
+            $obj_curso = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
             $det_curso = $obj_curso->detalhe();
 
-            if (is_numeric($det_curso['ref_cod_tipo_avaliacao'])) {
-                $this->campoOculto('apagar_radios', $det_curso['padrao_ano_escolar']);
-                $this->campoOculto('is_padrao', $det_curso['padrao_ano_escolar']);
+            if (is_numeric(value: $det_curso['ref_cod_tipo_avaliacao'])) {
+                $this->campoOculto(nome: 'apagar_radios', valor: $det_curso['padrao_ano_escolar']);
+                $this->campoOculto(nome: 'is_padrao', valor: $det_curso['padrao_ano_escolar']);
             }
         }
 
         $script = ['/vendor/legacy/Cadastro/Assets/Javascripts/Matricula.js'];
-        Portabilis_View_Helper_Application::loadJavascript($this, $script);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
 
         $this->acao_enviar = 'formUtils.submit()';
     }
 
     protected function getCurso($id)
     {
-        $curso = new clsPmieducarCurso($id);
+        $curso = new clsPmieducarCurso(cod_curso: $id);
 
         return $curso->detalhe();
     }
 
     private function getEnturmacoesNaTurma($turma)
     {
-        return (array) Portabilis_Utils_Database::fetchPreparedQuery("
+        return (array) Portabilis_Utils_Database::fetchPreparedQuery(sql: "
             select *
             from pmieducar.matricula_turma
             where ref_cod_turma = {$turma}
@@ -205,7 +197,7 @@ return new class extends clsCadastro {
 
     private function getMaximoAlunosNaTurma($turma)
     {
-        return (int) (new clsBanco())->CampoUnico("
+        return (int) (new clsBanco())->CampoUnico(consulta: "
             select max_aluno
             from pmieducar.turma
             where cod_turma = $turma
@@ -214,46 +206,36 @@ return new class extends clsCadastro {
 
     private function getMatricula($matricula)
     {
-        $matriculas = Portabilis_Utils_Database::fetchPreparedQuery("
+        $matriculas = Portabilis_Utils_Database::fetchPreparedQuery(sql: "
             select *
             from pmieducar.matricula
             where cod_matricula = {$matricula}
             limit 1
         ");
 
-        if (is_array($matriculas) && count($matriculas)) {
-            return array_shift($matriculas);
+        if (is_array(value: $matriculas) && count(value: $matriculas)) {
+            return array_shift(array: $matriculas);
         }
 
-        throw new Exception("A matrícula {$matricula} não foi encontrada.");
+        throw new Exception(message: "A matrícula {$matricula} não foi encontrada.");
     }
 
     private function addMatricula($escola, $curso, $serie, $aluno, $ano)
     {
-        $datahora = date('Y-m-d H:i:s');
+        $datahora = date(format: 'Y-m-d H:i:s');
 
         $obj = new clsPmieducarMatricula(
-            null,
-            null,
-            $escola,
-            $serie,
-            null,
-            $this->pessoa_logada,
-            $aluno,
-            3,
-            null,
-            null,
-            1,
-            $ano,
-            1,
-            null,
-            null,
-            null,
-            null,
-            $curso,
-            null,
-            1,
-            $datahora
+            ref_ref_cod_escola: $escola,
+            ref_ref_cod_serie: $serie,
+            ref_usuario_cad: $this->pessoa_logada,
+            ref_cod_aluno: $aluno,
+            aprovado: 3,
+            ativo: 1,
+            ano: $ano,
+            ultima_matricula: 1,
+            ref_cod_curso: $curso,
+            semestre: 1,
+            data_matricula: $datahora
         );
 
         return $obj->cadastra();
@@ -261,11 +243,11 @@ return new class extends clsCadastro {
 
     private function addEnturmacao($matricula, $turma, $sequencial, $ativo)
     {
-        $data = date('Y-m-d');
-        $datahora = date('Y-m-d H:i:s');
+        $data = date(format: 'Y-m-d');
+        $datahora = date(format: 'Y-m-d H:i:s');
         $usuario = $this->pessoa_logada;
 
-        (new clsBanco)->CampoUnico("
+        (new clsBanco)->CampoUnico(consulta: "
             insert into pmieducar.matricula_turma (
                 ref_cod_matricula, ref_cod_turma, sequencial, ref_usuario_exc, ref_usuario_cad, data_cadastro,
                 ativo, data_enturmacao
@@ -279,17 +261,17 @@ return new class extends clsCadastro {
     public function Enturmar()
     {
         try {
-            $enturmacoesNaTurmaDestino = $this->getEnturmacoesNaTurma($this->ref_cod_turma);
-            $enturmacoesParaCopiar = $this->getEnturmacoesNaTurma($this->ref_cod_turma_copiar_enturmacoes);
+            $enturmacoesNaTurmaDestino = $this->getEnturmacoesNaTurma(turma: $this->ref_cod_turma);
+            $enturmacoesParaCopiar = $this->getEnturmacoesNaTurma(turma: $this->ref_cod_turma_copiar_enturmacoes);
         } catch (Exception) {
             $this->mensagem = 'Houve um erro ao buscar informações das turmas.';
 
             return false;
         }
 
-        $maximoDeAlunosTurmaDestino = $this->getMaximoAlunosNaTurma($this->ref_cod_turma);
-        $quantidadeAlunosNaTurmaDestino = count($enturmacoesNaTurmaDestino);
-        $quantidadeAlunosParaCopiar = count($enturmacoesParaCopiar);
+        $maximoDeAlunosTurmaDestino = $this->getMaximoAlunosNaTurma(turma: $this->ref_cod_turma);
+        $quantidadeAlunosNaTurmaDestino = count(value: $enturmacoesNaTurmaDestino);
+        $quantidadeAlunosParaCopiar = count(value: $enturmacoesParaCopiar);
         $vagasDisponiveisTurmaDestino = $maximoDeAlunosTurmaDestino - $quantidadeAlunosNaTurmaDestino;
 
         if ($quantidadeAlunosParaCopiar > $vagasDisponiveisTurmaDestino) {
@@ -302,32 +284,32 @@ return new class extends clsCadastro {
         $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
 
         foreach ($enturmacoesParaCopiar as $enturmar) {
-            $dadosDaMatricula = $this->getMatricula($enturmar['ref_cod_matricula']);
+            $dadosDaMatricula = $this->getMatricula(matricula: $enturmar['ref_cod_matricula']);
 
-            if ($validarCamposEducacenso && !$this->availableTimeService()->isAvailable($dadosDaMatricula['ref_cod_aluno'], $this->ref_cod_turma)) {
+            if ($validarCamposEducacenso && !$this->availableTimeService()->isAvailable(studentId: $dadosDaMatricula['ref_cod_aluno'], schoolClassId: $this->ref_cod_turma)) {
                 $mensagemErro = 'O aluno já está matriculado em uma turma com esse horário.';
             }
 
             $matricula = $this->addMatricula(
-                $this->ref_cod_escola,
-                $this->ref_cod_curso,
-                $this->ref_cod_serie,
-                $dadosDaMatricula['ref_cod_aluno'],
-                $this->ano
+                escola: $this->ref_cod_escola,
+                curso: $this->ref_cod_curso,
+                serie: $this->ref_cod_serie,
+                aluno: $dadosDaMatricula['ref_cod_aluno'],
+                ano: $this->ano
             );
 
-            $this->addEnturmacao($matricula, $this->ref_cod_turma, $enturmar['sequencial'], $enturmar['ativo']);
+            $this->addEnturmacao(matricula: $matricula, turma: $this->ref_cod_turma, sequencial: $enturmar['sequencial'], ativo: $enturmar['ativo']);
         }
 
-        if (!is_null($mensagemErro)) {
+        if (!is_null(value: $mensagemErro)) {
             $this->mensagem = $mensagemErro;
 
             return false;
         }
 
         throw new HttpResponseException(
-            new RedirectResponse(
-                route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma])
+            response: new RedirectResponse(
+                url: route(name: 'enrollments.batch.enroll.index', parameters: ['schoolClass' => $this->ref_cod_turma])
             )
         );
     }
@@ -337,6 +319,11 @@ return new class extends clsCadastro {
         DB::beginTransaction();
 
         $dependencia = $this->dependencia == 'on';
+
+        if (!$this->validaAlunoAtivo()) {
+            $this->mensagem = 'Não é possível matricular alunos inativos ou inexistentes.';
+            return false;
+        }
 
         if (!$this->validaPeriodoDeMatriculasPelaDataFechamento()) {
             $this->mensagem = 'Não é possível matricular alunos após a data de fechamento.';
@@ -358,16 +345,30 @@ return new class extends clsCadastro {
         }
 
         $db = new clsBanco();
-        $somente_do_bairro = $db->CampoUnico("SELECT matricula_apenas_bairro_escola FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
+        $somente_do_bairro = $db->CampoUnico(consulta: "SELECT matricula_apenas_bairro_escola FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
 
         if ($somente_do_bairro) {
             $db = new clsBanco();
-            $bairro_escola = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.escola where cod_escola = {$this->ref_cod_escola}))");
+            $bairro_escola = $db->CampoUnico(consulta: "
+                SELECT neighborhood
+                FROM addresses a
+                JOIN person_has_place php ON true
+                    AND a.id = php.place_id
+                JOIN pmieducar.escola e ON e.ref_idpes = php.person_id
+                WHERE e.cod_escola = {$this->ref_cod_escola}
+            ");
 
             $db = new clsBanco();
-            $bairro_aluno = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.aluno where cod_aluno = {$this->ref_cod_aluno}))");
+            $bairro_aluno = $db->CampoUnico(consulta: "
+                SELECT neighborhood
+                FROM addresses a
+                JOIN person_has_place php ON true
+                    AND a.id = php.place_id
+                JOIN pmieducar.aluno al ON al.ref_idpes = php.person_id
+                WHERE al.cod_aluno = {$this->ref_cod_aluno}
+            ");
 
-            if (strcasecmp($bairro_aluno, $bairro_escola) != 0) {
+            if (strcasecmp(string1: $bairro_aluno, string2: $bairro_escola) != 0) {
                 $this->mensagem = 'O aluno deve morar no mesmo bairro da escola';
 
                 return false;
@@ -380,10 +381,10 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            578,
-            $this->pessoa_logada,
-            7,
-            'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno
+            int_processo_ap: 578,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno
         );
 
         //novas regras matricula aluno
@@ -391,29 +392,23 @@ return new class extends clsCadastro {
         $anoLetivoEmAndamentoEscola = new clsPmieducarEscolaAnoLetivo();
 
         $anoLetivoEmAndamentoEscola = $anoLetivoEmAndamentoEscola->lista(
-            $this->ref_cod_escola,
-            $this->ano,
-            null,
-            null,
-            1, /*somente em andamento */
-            null,
-            null,
-            null,
-            null,
-            1
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_ano: $this->ano,
+            int_andamento: 1, /*somente em andamento */
+            int_ativo: 1
         );
 
         $objEscolaSerie = new clsPmieducarEscolaSerie();
-        $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_cod_escola, $this->ref_cod_serie);
+        $dadosEscolaSerie = $objEscolaSerie->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
 
         if (!$this->existeVagasDisponiveis() && $dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
             return false;
         }
 
-        if (is_array($anoLetivoEmAndamentoEscola)) {
+        if (is_array(value: $anoLetivoEmAndamentoEscola)) {
             $db = new clsBanco();
 
-            $db->Consulta("SELECT ref_ref_cod_serie, ref_cod_curso
+            $db->Consulta(consulta: "SELECT ref_ref_cod_serie, ref_cod_curso
                              FROM pmieducar.matricula
                             WHERE ano = $this->ano
                               AND ativo = 1
@@ -426,10 +421,10 @@ return new class extends clsCadastro {
             $db->ProximoRegistro();
             $m = $db->Tupla();
 
-            if (is_array($m) && count($m) && !$dependencia) {
-                $curso = $this->getCurso($this->ref_cod_curso);
+            if (is_array(value: $m) && count(value: $m) && !$dependencia) {
+                $curso = $this->getCurso(id: $this->ref_cod_curso);
 
-                $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
+                $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
                 $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                 if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
@@ -437,10 +432,10 @@ return new class extends clsCadastro {
 
                     return false;
                 } elseif ($curso['multi_seriado'] != 1) {
-                    $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
+                    $serie = new clsPmieducarSerie(cod_serie: $m['ref_ref_cod_serie'], ref_usuario_exc: null, ref_usuario_cad: null, ref_cod_curso: $m['ref_cod_curso']);
                     $serie = $serie->detalhe();
 
-                    if (is_array($serie) && count($serie)) {
+                    if (is_array(value: $serie) && count(value: $serie)) {
                         $nomeSerie = $serie['nm_serie'];
                     } else {
                         $nomeSerie = '';
@@ -451,33 +446,33 @@ return new class extends clsCadastro {
                     return false;
                 }
             } else {
-                $db->Consulta("select ref_ref_cod_escola, ref_cod_curso, ref_ref_cod_serie, ano from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola != $this->ref_cod_escola and ref_cod_aluno = $this->ref_cod_aluno AND dependencia = FALSE and aprovado = 3 and not exists (select 1 from pmieducar.transferencia_solicitacao as ts where ts.ativo = 1 and ts.ref_cod_matricula_saida = matricula.cod_matricula )");
+                $db->Consulta(consulta: "select ref_ref_cod_escola, ref_cod_curso, ref_ref_cod_serie, ano from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola != $this->ref_cod_escola and ref_cod_aluno = $this->ref_cod_aluno AND dependencia = FALSE and aprovado = 3 and not exists (select 1 from pmieducar.transferencia_solicitacao as ts where ts.ativo = 1 and ts.ref_cod_matricula_saida = matricula.cod_matricula )");
 
                 $db->ProximoRegistro();
                 $m = $db->Tupla();
 
-                if (is_array($m) && count($m) && !$dependencia) {
+                if (is_array(value: $m) && count(value: $m) && !$dependencia) {
                     $mesmoCursoAno = ($m['ref_cod_curso'] == $this->ref_cod_curso && $m['ano'] == $this->ano);
-                    $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
+                    $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
-                    if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
-                        $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
+                    if (($mesmoCursoAno || config(key: 'legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
+                        $serie = new clsPmieducarSerie(cod_serie: $m['ref_ref_cod_serie'], ref_usuario_exc: null, ref_usuario_cad: null, ref_cod_curso: $m['ref_cod_curso']);
                         $serie = $serie->detalhe();
 
-                        if (is_array($serie) && count($serie)) {
+                        if (is_array(value: $serie) && count(value: $serie)) {
                             $serie = $serie['nm_serie'];
                         } else {
                             $serie = '';
                         }
 
-                        $escola = new clsPmieducarEscola($m['ref_ref_cod_escola']);
+                        $escola = new clsPmieducarEscola(cod_escola: $m['ref_ref_cod_escola']);
                         $escola = $escola->detalhe();
 
-                        if (is_array($escola) && count($escola)) {
-                            $escola = new clsJuridica($escola['ref_idpes']);
+                        if (is_array(value: $escola) && count(value: $escola)) {
+                            $escola = new clsJuridica(idpes: $escola['ref_idpes']);
                             $escola = $escola->detalhe();
-                            if (is_array($escola) && count($escola)) {
+                            if (is_array(value: $escola) && count(value: $escola)) {
                                 $escola = $escola['fantasia'];
                             } else {
                                 $escola = '';
@@ -486,10 +481,10 @@ return new class extends clsCadastro {
                             $escola = '';
                         }
 
-                        $curso = new clsPmieducarCurso($m['ref_cod_curso']);
+                        $curso = new clsPmieducarCurso(cod_curso: $m['ref_cod_curso']);
                         $curso = $curso->detalhe();
 
-                        if (is_array($curso) && count($curso)) {
+                        if (is_array(value: $curso) && count(value: $curso)) {
                             $curso = $curso['nm_curso'];
                         } else {
                             $curso = '';
@@ -502,7 +497,7 @@ return new class extends clsCadastro {
                 }
             }
 
-            $serie = new clsPmieducarSerie($this->ref_cod_serie);
+            $serie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
             $detSerie = $serie->detalhe();
 
             $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'];
@@ -510,19 +505,19 @@ return new class extends clsCadastro {
 
             $verificarDataCorte = $alertaFaixaEtaria || $bloquearMatriculaFaixaEtaria;
 
-            $reload = Session::get('reload_faixa_etaria');
+            $reload = Session::get(key: 'reload_faixa_etaria');
 
             if ($verificarDataCorte && !$reload) {
-                $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+                $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
                 $instituicao = $instituicao->detalhe();
 
-                $objAluno = new clsPmieducarAluno($this->ref_cod_aluno);
+                $objAluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
                 $detAluno = $objAluno->detalhe();
 
-                $objPes = new clsPessoaFisica($detAluno['ref_idpes']);
+                $objPes = new clsPessoaFisica(int_idpes: $detAluno['ref_idpes']);
                 $detPes = $objPes->detalhe();
 
-                $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento($detPes['data_nasc'], $this->ano);
+                $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento(dataNascimento: $detPes['data_nasc'], ano: $this->ano);
 
                 if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
                     $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série';
@@ -541,7 +536,7 @@ return new class extends clsCadastro {
                     //Permite que o usuário possa salvar a matrícula na próxima tentativa
                     $reload = 1;
 
-                    Session::put('reload_faixa_etaria', $reload);
+                    Session::put(key: 'reload_faixa_etaria', value: $reload);
                     Session::save();
                     Session::start();
 
@@ -550,8 +545,8 @@ return new class extends clsCadastro {
             }
 
             $objAluno = new clsPmieducarAluno();
-            $alunoInep = $objAluno->verificaInep($this->ref_cod_aluno);
-            $objSerie = new clsPmieducarSerie($this->ref_cod_serie);
+            $alunoInep = $objAluno->verificaInep(cod_aluno: $this->ref_cod_aluno);
+            $objSerie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
             $serieDet = $objSerie->detalhe();
             $exigeInep = $serieDet['exigir_inep'];
 
@@ -564,34 +559,27 @@ return new class extends clsCadastro {
             $obj_reserva_vaga = new clsPmieducarReservaVaga();
 
             $lst_reserva_vaga = $obj_reserva_vaga->lista(
-                null,
-                $this->ref_cod_escola,
-                $this->ref_cod_serie,
-                null,
-                null,
-                $this->ref_cod_aluno,
-                null,
-                null,
-                null,
-                null,
-                1
+                int_ref_ref_cod_escola: $this->ref_cod_escola,
+                int_ref_ref_cod_serie: $this->ref_cod_serie,
+                int_ref_cod_aluno: $this->ref_cod_aluno,
+                int_ativo: 1
             );
 
             // Verifica se existe reserva de vaga para o aluno
-            if (is_array($lst_reserva_vaga)) {
-                $det_reserva_vaga = array_shift($lst_reserva_vaga);
+            if (is_array(value: $lst_reserva_vaga)) {
+                $det_reserva_vaga = array_shift(array: $lst_reserva_vaga);
                 $this->ref_cod_reserva_vaga = $det_reserva_vaga['cod_reserva_vaga'];
 
                 $obj_reserva_vaga = new clsPmieducarReservaVaga(
-                    $this->ref_cod_reserva_vaga,
-                    null,
-                    null,
-                    $this->pessoa_logada,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0
+                    cod_reserva_vaga: $this->ref_cod_reserva_vaga,
+                    ref_ref_cod_escola: null,
+                    ref_ref_cod_serie: null,
+                    ref_usuario_exc: $this->pessoa_logada,
+                    ref_usuario_cad: null,
+                    ref_cod_aluno: null,
+                    data_cadastro: null,
+                    data_exclusao: null,
+                    ativo: 0
                 );
 
                 $editou = $obj_reserva_vaga->edita();
@@ -609,41 +597,13 @@ return new class extends clsCadastro {
                 $obj_turmas = new clsPmieducarTurma();
 
                 $lst_turmas = $obj_turmas->lista(
-                    null,
-                    null,
-                    null,
-                    $this->ref_cod_serie,
-                    $this->ref_cod_escola,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    true
+                    int_ref_ref_cod_serie: $this->ref_cod_serie,
+                    int_ref_ref_cod_escola: $this->ref_cod_escola,
+                    int_ativo: 1,
+                    bool_verifica_serie_multiseriada: true
                 );
 
-                if (is_array($lst_turmas)) {
+                if (is_array(value: $lst_turmas)) {
                     $total_vagas = 0;
 
                     foreach ($lst_turmas as $turmas) {
@@ -658,49 +618,32 @@ return new class extends clsCadastro {
                 $obj_matricula = new clsPmieducarMatricula();
 
                 $lst_matricula = $obj_matricula->lista(
-                    null,
-                    null,
-                    $this->ref_cod_escola,
-                    $this->ref_cod_serie,
-                    null,
-                    null,
-                    null,
-                    3,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    $this->ano,
-                    $this->ref_cod_curso,
-                    $this->ref_cod_instituicao,
-                    1
+                    int_ref_ref_cod_escola: $this->ref_cod_escola,
+                    int_ref_ref_cod_serie: $this->ref_cod_serie,
+                    int_aprovado: 3,
+                    int_ativo: 1,
+                    int_ano: $this->ano,
+                    int_ref_cod_curso2: $this->ref_cod_curso,
+                    int_ref_cod_instituicao: $this->ref_cod_instituicao,
+                    int_ultima_matricula: 1
                 );
 
-                if (is_array($lst_matricula)) {
-                    $matriculados = count($lst_matricula);
+                if (is_array(value: $lst_matricula)) {
+                    $matriculados = count(value: $lst_matricula);
                 }
 
                 $obj_reserva_vaga = new clsPmieducarReservaVaga();
 
                 $lst_reserva_vaga = $obj_reserva_vaga->lista(
-                    null,
-                    $this->ref_cod_escola,
-                    $this->ref_cod_serie,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    $this->ref_cod_instituicao,
-                    $this->ref_cod_curso
+                    int_ref_ref_cod_escola: $this->ref_cod_escola,
+                    int_ref_ref_cod_serie: $this->ref_cod_serie,
+                    int_ativo: 1,
+                    int_ref_cod_instituicao: $this->ref_cod_instituicao,
+                    int_ref_cod_curso: $this->ref_cod_curso
                 );
 
-                if (is_array($lst_reserva_vaga)) {
-                    $reservados = count($lst_reserva_vaga);
+                if (is_array(value: $lst_reserva_vaga)) {
+                    $reservados = count(value: $lst_reserva_vaga);
                 }
 
                 $vagas_restantes = $total_vagas - ($matriculados + $reservados);
@@ -734,11 +677,11 @@ return new class extends clsCadastro {
                 $this->semestre = null;
             }
 
-            if (!$this->removerFlagUltimaMatricula($this->ref_cod_aluno)) {
+            if (!$this->removerFlagUltimaMatricula(alunoId: $this->ref_cod_aluno)) {
                 return false;
             }
 
-            $db->Consulta("SELECT *
+            $db->Consulta(consulta: "SELECT *
                              FROM pmieducar.matricula m
                             WHERE m.ano = {$this->ano}
                               AND m.aprovado = 3
@@ -751,33 +694,28 @@ return new class extends clsCadastro {
             $db->ProximoRegistro();
             $m = $db->Tupla();
 
-            if (is_array($m) && count($m) && $dependencia) {
+            if (is_array(value: $m) && count(value: $m) && $dependencia) {
                 $this->mensagem = 'Esse aluno já tem uma matrícula de dependência nesta escola e série.';
 
                 return false;
             }
 
-            $reloadReserva = Session::get('reload_reserva_vaga');
+            $reloadReserva = Session::get(key: 'reload_reserva_vaga');
 
             $obj_CandidatoReservaVaga = new clsPmieducarCandidatoReservaVaga();
 
             $lst_CandidatoReservaVaga = $obj_CandidatoReservaVaga->lista(
-                $this->ano,
-                null,
-                null,
-                null,
-                $this->ref_cod_serie,
-                null,
-                null,
-                $this->ref_cod_aluno,
-                true
+                ano_letivo: $this->ano,
+                ref_cod_serie: $this->ref_cod_serie,
+                ref_cod_aluno: $this->ref_cod_aluno,
+                situacaoEmEspera: true
             );
 
-            $count = is_array($lst_CandidatoReservaVaga) ? count($lst_CandidatoReservaVaga) : 0;
+            $count = is_array(value: $lst_CandidatoReservaVaga) ? count(value: $lst_CandidatoReservaVaga) : 0;
             $countEscolasDiferentes = 0;
             $countEscolasIguais = 0;
 
-            if (is_array($lst_CandidatoReservaVaga)) {
+            if (is_array(value: $lst_CandidatoReservaVaga)) {
                 for ($i = 0; $i < $count; $i++) {
                     if ($lst_CandidatoReservaVaga[$i]['ref_cod_escola'] != $this->ref_cod_escola) {
                         $countEscolasDiferentes = $countEscolasDiferentes + 1;
@@ -798,57 +736,46 @@ return new class extends clsCadastro {
 
                     $reloadReserva = 1;
 
-                    Session::put('reload_reserva_vaga', $reloadReserva);
+                    Session::put(key: 'reload_reserva_vaga', value: $reloadReserva);
                     Session::save();
                     Session::start();
 
                     return true;
                 } elseif (($countEscolasDiferentes > 0) && ($reloadReserva == 1)) {
                     $obj_CandidatoReservaVaga->atualizaDesistente(
-                        $this->ano,
-                        $this->ref_cod_serie,
-                        $this->ref_cod_aluno,
-                        $this->ref_cod_escola
+                        ano_letivo: $this->ano,
+                        ref_cod_serie: $this->ref_cod_serie,
+                        ref_cod_aluno: $this->ref_cod_aluno,
+                        ref_cod_escola: $this->ref_cod_escola
                     );
                 }
             }
 
-            $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
+            $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
             $obj = new clsPmieducarMatricula(
-                null,
-                $this->ref_cod_reserva_vaga,
-                $this->ref_cod_escola,
-                $this->ref_cod_serie,
-                null,
-                $this->pessoa_logada,
-                $this->ref_cod_aluno,
-                3,
-                null,
-                null,
-                1,
-                $this->ano,
-                1,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_curso,
-                null,
-                $this->semestre,
-                $this->data_matricula,
-                null,
-                null,
-                $this->observacoes
+                ref_cod_reserva_vaga: $this->ref_cod_reserva_vaga,
+                ref_ref_cod_escola: $this->ref_cod_escola,
+                ref_ref_cod_serie: $this->ref_cod_serie,
+                ref_usuario_cad: $this->pessoa_logada,
+                ref_cod_aluno: $this->ref_cod_aluno,
+                aprovado: 3,
+                ativo: 1,
+                ano: $this->ano,
+                ultima_matricula: 1,
+                ref_cod_curso: $this->ref_cod_curso,
+                semestre: $this->semestre,
+                data_matricula: $this->data_matricula,
+                observacoes: $this->observacoes
             );
 
-            $dataMatriculaObj = new \DateTime($this->data_matricula);
-            $dataTransferencia = $obj->pegaDataDeTransferencia($this->ref_cod_aluno, $this->ano);
-            $dataAnoLetivoInicio = $obj->pegaDataAnoLetivoInicio($this->ref_cod_turma);
-            $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim($this->ref_cod_turma);
+            $dataMatriculaObj = new \DateTime(datetime: $this->data_matricula);
+            $dataTransferencia = $obj->pegaDataDeTransferencia(cod_aluno: $this->ref_cod_aluno, ano: $this->ano);
+            $dataAnoLetivoInicio = $obj->pegaDataAnoLetivoInicio(cod_turma: $this->ref_cod_turma);
+            $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim(cod_turma: $this->ref_cod_turma);
 
             /** @var LegacyInstitution $instituicao */
-            $instituicao = app(LegacyInstitution::class);
+            $instituicao = app(abstract: LegacyInstitution::class);
 
             if (empty($dataAnoLetivoTermino)) {
                 $this->mensagem = 'Não está definida a data de término do ano letivo.';
@@ -859,7 +786,7 @@ return new class extends clsCadastro {
             if ($dataTransferencia && $dataMatriculaObj <= $dataTransferencia) {
                 $this->mensagem = sprintf(
                     'Não é possível matricular o aluno. O mesmo possui enturmação com data de saída anterior à data informada. Favor alterar a data de matrícula para ser superior a %s.',
-                    $dataTransferencia->format('d/m/Y')
+                    $dataTransferencia->format(format: 'd/m/Y')
                 );
 
                 return false;
@@ -867,7 +794,7 @@ return new class extends clsCadastro {
                 if (!$instituicao->allowRegistrationOutAcademicYear) {
                     $this->mensagem = sprintf(
                         'A data de matrícula precisa ser igual ou maior que a data de início do ano letivo da escola ou turma (%s).',
-                        $dataAnoLetivoInicio->format('d/m/Y')
+                        $dataAnoLetivoInicio->format(format: 'd/m/Y')
                     );
 
                     return false;
@@ -877,7 +804,7 @@ return new class extends clsCadastro {
             if ($dataMatriculaObj > $dataAnoLetivoTermino) {
                 $this->mensagem = sprintf(
                     'A data de matrícula precisa ser igual ou menor que a data fim do ano letivo da escola ou turma (%s).',
-                    $dataAnoLetivoTermino->format('d/m/Y')
+                    $dataAnoLetivoTermino->format(format: 'd/m/Y')
                 );
 
                 return false;
@@ -885,7 +812,7 @@ return new class extends clsCadastro {
 
             $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
 
-            if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($this->ref_cod_aluno, $this->ref_cod_turma)) {
+            if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable(studentId: $this->ref_cod_aluno, schoolClassId: $this->ref_cod_turma)) {
                 $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
 
                 return false;
@@ -897,46 +824,52 @@ return new class extends clsCadastro {
 
             if ($cadastrou) {
                 if ($countEscolasIguais > 0) {
-                    $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
-                    $obj_crv->vinculaMatricula($this->ref_cod_escola, $this->cod_matricula, $this->ref_cod_aluno);
+                    $obj_crv = new clsPmieducarCandidatoReservaVaga(cod_candidato_reserva_vaga: $this->ref_cod_candidato_reserva_vaga);
+                    $obj_crv->vinculaMatricula(ref_cod_escola: $this->ref_cod_escola, ref_cod_matricula: $this->cod_matricula, ref_cod_aluno: $this->ref_cod_aluno);
                 }
 
                 if ($this->ref_cod_candidato_fila_unica) {
-                    $obj_cfu = new clsPmieducarCandidatoFilaUnica($this->ref_cod_candidato_fila_unica);
-                    $obj_cfu->vinculaMatricula($this->cod_matricula);
+                    $obj_cfu = new clsPmieducarCandidatoFilaUnica(cod_candidato_fila_unica: $this->ref_cod_candidato_fila_unica);
+                    $obj_cfu->vinculaMatricula(ref_cod_matricula: $this->cod_matricula);
                 }
 
-                $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
+                $this->enturmacaoMatricula(matriculaId: $this->cod_matricula, turmaDestinoId: $this->ref_cod_turma);
 
-                if ($this->situacaoUltimaMatricula == $this->transferido &&
-                    $this->serieUltimaMatricula == $this->ref_cod_serie &&
-                    $this->anoUltimaMatricula == $this->ano
-                ) {
+                $ultimaMatriculaSerieAno = LegacyRegistration::query()
+                    ->active()
+                    ->where('ref_cod_aluno', $this->ref_cod_aluno)
+                    ->where('ref_ref_cod_serie', $this->ref_cod_serie)
+                    ->where('ano', $this->ano)
+                    ->whereNot('cod_matricula', $this->cod_matricula)
+                    ->orderBy('cod_matricula', 'desc')
+                    ->first();
+
+                if ($ultimaMatriculaSerieAno->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO) {
                     /** @var LegacyRegistration $registration */
 
-                    $registration = LegacyRegistration::find($this->cod_matricula);
+                    $registration = LegacyRegistration::find(id: $this->cod_matricula);
 
                     $mensagem = '';
 
                     try {
-                        event(new RegistrationEvent($registration));
+                        event(new RegistrationEvent(registration: $registration));
                     } catch (TransferException $exception) {
                         $mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
                     } catch (RegistrationException $exception) {
                         $this->mensagem = 'Não é possível concluir a matrícula. ' . $exception->getMessage();
 
                         DB::rollBack();
-                        $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                        $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
                     }
 
-                    $promocao = new PromotionService($registration->enrollments()->first());
+                    $promocao = new PromotionService(enrollment: $registration->enrollments()->first());
                     $promocao->fakeRequest();
                 }
 
                 $this->mensagem = 'Cadastro efetuado com sucesso.<br />' . $mensagem;
 
                 DB::commit();
-                $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }
 
             $this->mensagem = 'Cadastro não realizado.<br />';
@@ -951,20 +884,20 @@ return new class extends clsCadastro {
 
     public function permiteDependenciaAnoConcluinte()
     {
-        $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
-        $serie = new clsPmieducarSerie($this->ref_cod_serie);
+        $serie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
         $serie = $serie->detalhe();
         $reprovaDependenciaAnoConcluinte = $instituicao['reprova_dependencia_ano_concluinte'];
         $anoConcluinte = $serie['concluinte'] == 2;
 
-        return !(dbBool($reprovaDependenciaAnoConcluinte) && $anoConcluinte);
+        return !(dbBool(val: $reprovaDependenciaAnoConcluinte) && $anoConcluinte);
     }
 
     public function verificaQtdeDependenciasPermitida()
     {
         $matriculasDependencia =
-            Portabilis_Utils_Database::fetchPreparedQuery("SELECT *
+            Portabilis_Utils_Database::fetchPreparedQuery(sql: "SELECT *
                                                              FROM pmieducar.matricula
                                                             WHERE matricula.ano = {$this->ano}
                                                               AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
@@ -972,10 +905,10 @@ return new class extends clsCadastro {
                                                               AND matricula.aprovado = 3
                                                               AND matricula.ativo = 1");
 
-        $matriculasDependencia = count($matriculasDependencia);
+        $matriculasDependencia = count(value: $matriculasDependencia);
 
         $db = new clsBanco();
-        $matriculasDependenciaPermitida = $db->CampoUnico("SELECT regra_avaliacao.qtd_matriculas_dependencia
+        $matriculasDependenciaPermitida = $db->CampoUnico(consulta: "SELECT regra_avaliacao.qtd_matriculas_dependencia
                                                              FROM pmieducar.serie
                                                        INNER JOIN modules.regra_avaliacao_serie_ano AS rasa ON (rasa.serie_id = serie.cod_serie AND rasa.ano_letivo = {$this->ano})
                                                        INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = rasa.regra_avaliacao_id)
@@ -992,21 +925,21 @@ return new class extends clsCadastro {
 
     public function verificaAlunoFalecido()
     {
-        $aluno = new clsPmieducarAluno($this->ref_cod_aluno);
+        $aluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
         $aluno = $aluno->detalhe();
 
-        $pessoa = new clsPessoaFisica($aluno['ref_idpes']);
+        $pessoa = new clsPessoaFisica(int_idpes: $aluno['ref_idpes']);
         $pessoa = $pessoa->detalhe();
 
-        return dbBool($pessoa['falecido']);
+        return dbBool(val: $pessoa['falecido']);
     }
 
     public function bloqueiaMatriculaSerieNaoSeguinte()
     {
-        $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
 
-        return dbBool($instituicao['bloqueia_matricula_serie_nao_seguinte']);
+        return dbBool(val: $instituicao['bloqueia_matricula_serie_nao_seguinte']);
     }
 
     public function permiteMatriculaSerieDestino()
@@ -1014,7 +947,7 @@ return new class extends clsCadastro {
         $objMatricula = new clsPmieducarMatricula;
         $objSequenciaSerie = new clsPmieducarSequenciaSerie;
 
-        $dadosUltimaMatricula = $objMatricula->getDadosUltimaMatricula($this->ref_cod_aluno);
+        $dadosUltimaMatricula = $objMatricula->getDadosUltimaMatricula(codAluno: $this->ref_cod_aluno);
         $this->situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
         $this->serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
         $this->anoUltimaMatricula = $dadosUltimaMatricula[0]['ano'];
@@ -1029,10 +962,10 @@ return new class extends clsCadastro {
             return true;
         }
 
-        if (in_array($this->situacaoUltimaMatricula, $aprovado)) {
-            $serieNovaMatricula = $objSequenciaSerie->lista($this->serieUltimaMatricula);
+        if (in_array(needle: $this->situacaoUltimaMatricula, haystack: $aprovado)) {
+            $serieNovaMatricula = $objSequenciaSerie->lista(int_ref_serie_origem: $this->serieUltimaMatricula);
             $serieNovaMatricula = $serieNovaMatricula[0]['ref_serie_destino'];
-        } elseif (in_array($this->situacaoUltimaMatricula, $reprovado)) {
+        } elseif (in_array(needle: $this->situacaoUltimaMatricula, haystack: $reprovado)) {
             $serieNovaMatricula = $this->serieUltimaMatricula;
         }
 
@@ -1043,17 +976,22 @@ return new class extends clsCadastro {
         return false;
     }
 
+    private function validaAlunoAtivo() : bool
+    {
+        return LegacyStudent::where('cod_aluno', $this->ref_cod_aluno)->active()->exists();
+    }
+
     private function validaPeriodoDeMatriculasPelaDataFechamento() : bool
     {
-        $instituicao = app(LegacyInstitution::class);
+        $instituicao = app(abstract: LegacyInstitution::class);
 
         if (empty($instituicao->data_fechamento)) {
             return true;
         }
 
-        $dataFechamento = explode('-', $instituicao->data_fechamento);
+        $dataFechamento = explode(separator: '-', string: $instituicao->data_fechamento);
         $dataFechamento = $this->ano . '-' . $dataFechamento[1] . '-' . $dataFechamento[2];
-        $dataMatricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
+        $dataMatricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
         return $dataMatricula <= $dataFechamento;
     }
@@ -1064,32 +1002,20 @@ return new class extends clsCadastro {
 
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista(
-            $matriculaId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
+            int_ref_cod_matricula: $matriculaId,
+            int_ativo: 1
         );
 
         if ($enturmacoes) {
             foreach ($enturmacoes as $enturmacao) {
                 $enturmacao = new clsPmieducarMatriculaTurma(
-                    $matriculaId,
-                    $enturmacao['ref_cod_turma'],
-                    $this->pessoa_logada,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    $enturmacao['sequencial']
+                    ref_cod_matricula: $matriculaId,
+                    ref_cod_turma: $enturmacao['ref_cod_turma'],
+                    ref_usuario_exc: $this->pessoa_logada,
+                    ativo: 0,
+                    sequencial: $enturmacao['sequencial']
                 );
 
-                $enturmacao->removerSequencial = true;
                 $detEnturmacao = $enturmacao->detalhe();
                 $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
@@ -1112,80 +1038,51 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_excluir(
-            627,
-            $this->pessoa_logada,
-            7,
-            'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno
+            int_processo_ap: 627,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno
         );
 
-        if (!$this->desativaEnturmacoesMatricula($this->cod_matricula)) {
+        if (!$this->desativaEnturmacoesMatricula(matriculaId: $this->cod_matricula)) {
             return false;
         }
 
-        $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
+        $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->cod_matricula);
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
         $obj_sequencia = new clsPmieducarSequenciaSerie();
 
         $lst_sequencia = $obj_sequencia->lista(
-            null,
-            $ref_cod_serie,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
+            int_ref_serie_destino: $ref_cod_serie,
+            int_ativo: 1
         );
 
         // Verifica se a série da matrícula cancelada é sequência de alguma outra série
-        if (is_array($lst_sequencia)) {
-            $det_sequencia = array_shift($lst_sequencia);
+        if (is_array(value: $lst_sequencia)) {
+            $det_sequencia = array_shift(array: $lst_sequencia);
             $ref_serie_origem = $det_sequencia['ref_serie_origem'];
 
             $obj_matricula = new clsPmieducarMatricula();
 
             $lst_matricula = $obj_matricula->lista(
-                null,
-                null,
-                null,
-                $ref_serie_origem,
-                null,
-                null,
-                $this->ref_cod_aluno,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                null,
-                null,
-                null,
-                0
+                int_ref_ref_cod_serie: $ref_serie_origem,
+                ref_cod_aluno: $this->ref_cod_aluno,
+                int_ativo: 1,
+                int_ultima_matricula: 0
             );
 
             // Verifica se o aluno tem matrícula na série encontrada
-            if (is_array($lst_matricula)) {
-                $det_matricula = array_shift($lst_matricula);
+            if (is_array(value: $lst_matricula)) {
+                $det_matricula = array_shift(array: $lst_matricula);
                 $ref_cod_matricula = $det_matricula['cod_matricula'];
 
                 $obj = new clsPmieducarMatricula(
-                    $ref_cod_matricula,
-                    null,
-                    null,
-                    null,
-                    $this->pessoa_logada,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    1
+                    cod_matricula: $ref_cod_matricula,
+                    ref_usuario_exc: $this->pessoa_logada,
+                    ativo: 1,
+                    ultima_matricula: 1
                 );
 
                 $editou1 = $obj->edita();
@@ -1199,17 +1096,9 @@ return new class extends clsCadastro {
         }
 
         $obj = new clsPmieducarMatricula(
-            $this->cod_matricula,
-            null,
-            null,
-            null,
-            $this->pessoa_logada,
-            null,
-            null,
-            null,
-            null,
-            null,
-            0
+            cod_matricula: $this->cod_matricula,
+            ref_usuario_exc: $this->pessoa_logada,
+            ativo: 0
         );
 
         $excluiu = $obj->excluir();
@@ -1218,7 +1107,7 @@ return new class extends clsCadastro {
             $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
-                new RedirectResponse("educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
+                response: new RedirectResponse(url: "educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
             );
         }
 
@@ -1232,41 +1121,19 @@ return new class extends clsCadastro {
         $matriculas = new clsPmieducarMatricula();
 
         $matriculas = $matriculas->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            1
+            ref_cod_aluno: $this->ref_cod_aluno,
+            int_ativo: 1,
+            int_ultima_matricula: 1
         );
 
         foreach ($matriculas as $matricula) {
             if (!$matricula['aprovado'] == 3) {
                 $matricula = new clsPmieducarMatricula(
-                    $matricula['cod_matricula'],
-                    null,
-                    null,
-                    null,
-                    $this->pessoa_logada,
-                    null,
-                    $alunoId,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    0
+                    cod_matricula: $matricula['cod_matricula'],
+                    ref_usuario_exc: $this->pessoa_logada,
+                    ref_cod_aluno: $alunoId,
+                    ativo: 1,
+                    ultima_matricula: 0
                 );
 
                 if (!$matricula->edita()) {
@@ -1285,28 +1152,20 @@ return new class extends clsCadastro {
         $enturmacaoExists = new clsPmieducarMatriculaTurma();
 
         $enturmacaoExists = $enturmacaoExists->lista(
-            $matriculaId,
-            $turmaDestinoId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
+            int_ref_cod_matricula: $matriculaId,
+            int_ref_cod_turma: $turmaDestinoId,
+            int_ativo: 1
         );
 
-        $enturmacaoExists = is_array($enturmacaoExists) && count($enturmacaoExists) > 0;
+        $enturmacaoExists = is_array(value: $enturmacaoExists) && count(value: $enturmacaoExists) > 0;
 
         if (!$enturmacaoExists) {
             $enturmacao = new clsPmieducarMatriculaTurma(
-                $matriculaId,
-                $turmaDestinoId,
-                $this->pessoa_logada,
-                $this->pessoa_logada,
-                null,
-                null,
-                1
+                ref_cod_matricula: $matriculaId,
+                ref_cod_turma: $turmaDestinoId,
+                ref_usuario_exc: $this->pessoa_logada,
+                ref_usuario_cad: $this->pessoa_logada,
+                ativo: 1
             );
 
             $enturmacao->data_enturmacao = $this->data_matricula;
@@ -1342,14 +1201,14 @@ return new class extends clsCadastro {
     public function _getQtdMatriculaTurma()
     {
         $obj_mt = new clsPmieducarMatriculaTurma();
-        $lst_mt = $obj_mt->enturmacoesSemDependencia($this->ref_cod_turma);
+        $lst_mt = $obj_mt->enturmacoesSemDependencia(turmaId: $this->ref_cod_turma);
 
         return $lst_mt[0];
     }
 
     public function _getMaxAlunoTurma()
     {
-        $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+        $obj_t = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
         $det_t = $obj_t->detalhe();
 
         return $det_t['max_aluno'];
@@ -1361,44 +1220,10 @@ return new class extends clsCadastro {
         $det_t = $obj_t->detalhe();
 
         $lista_t = $obj_t->lista(
-            $int_cod_turma = null,
-            $int_ref_usuario_exc = null,
-            $int_ref_usuario_cad = null,
-            $int_ref_ref_cod_serie = $this->ref_cod_serie,
-            $int_ref_ref_cod_escola = $this->ref_cod_escola,
-            $int_ref_cod_infra_predio_comodo = null,
-            $str_nm_turma = null,
-            $str_sgl_turma = null,
-            $int_max_aluno = null,
-            $int_multiseriada = null,
-            $date_data_cadastro_ini = null,
-            $date_data_cadastro_fim = null,
-            $date_data_exclusao_ini = null,
-            $date_data_exclusao_fim = null,
-            $int_ativo = null,
-            $int_ref_cod_turma_tipo = null,
-            $time_hora_inicial_ini = null,
-            $time_hora_inicial_fim = null,
-            $time_hora_final_ini = null,
-            $time_hora_final_fim = null,
-            $time_hora_inicio_intervalo_ini = null,
-            $time_hora_inicio_intervalo_fim = null,
-            $time_hora_fim_intervalo_ini = null,
-            $time_hora_fim_intervalo_fim = null,
-            $int_ref_cod_curso = null,
-            $int_ref_cod_instituicao = null,
-            $int_ref_cod_regente = null,
-            $int_ref_cod_instituicao_regente = null,
-            $int_ref_ref_cod_escola_mult = null,
-            $int_ref_ref_cod_serie_mult = null,
-            $int_qtd_min_alunos_matriculados = null,
-            $bool_verifica_serie_multiseriada = true,
-            $bool_tem_alunos_aguardando_nota = null,
-            $visivel = null,
-            $turma_turno_id = $det_t['turma_turno_id'],
-            $tipo_boletim = null,
-            $ano = $this->ano,
-            $somenteAnoLetivoEmAndamento = false
+            int_ref_ref_cod_serie: $this->ref_cod_serie,
+            int_ref_ref_cod_escola: $this->ref_cod_escola,
+            turma_turno_id: $det_t['turma_turno_id'],
+            ano: $this->ano
         );
 
         $max_aluno_turmas = 0;
@@ -1412,7 +1237,7 @@ return new class extends clsCadastro {
 
     public function _getQtdAlunosFila()
     {
-        $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+        $obj_t = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
         $det_t = $obj_t->detalhe();
 
         $sql = 'SELECT count(1) as qtd
@@ -1424,51 +1249,23 @@ return new class extends clsCadastro {
                    AND turno_pre_matricula = $5
                    AND aprovado = 11 ';
 
-        return (int) Portabilis_Utils_Database::selectField($sql, [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
+        return (int) Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
     }
 
     public function _getQtdMatriculaTurno()
     {
-        $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+        $obj_t = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
         $det_t = $obj_t->detalhe();
         $obj_mt = new clsPmieducarMatriculaTurma();
 
         $obj_mt->lista(
-            $int_ref_cod_matricula = null,
-            $int_ref_cod_turma = null,
-            $int_ref_usuario_exc = null,
-            $int_ref_usuario_cad = null,
-            $date_data_cadastro_ini = null,
-            $date_data_cadastro_fim = null,
-            $date_data_exclusao_ini = null,
-            $date_data_exclusao_fim = null,
-            $int_ativo = 1,
-            $int_ref_cod_serie = $this->ref_cod_serie,
-            $int_ref_cod_curso = $this->ref_cod_curso,
-            $int_ref_cod_escola = $this->ref_cod_escola,
-            $int_ref_cod_instituicao = null,
-            $int_ref_cod_aluno = null,
-            $mes = null,
-            $aprovado = null,
-            $mes_menor_que = null,
-            $int_sequencial = null,
-            $int_ano_matricula = null,
-            $tem_avaliacao = null,
-            $bool_get_nome_aluno = false,
-            $bool_aprovados_reprovados = null,
-            $int_ultima_matricula = null,
-            $bool_matricula_ativo = null,
-            $bool_escola_andamento = false,
-            $mes_matricula_inicial = false,
-            $get_serie_mult = false,
-            $int_ref_cod_serie_mult = null,
-            $int_semestre = null,
-            $pegar_ano_em_andamento = false,
-            $parar = null,
-            $diario = false,
-            $int_turma_turno_id = $det_t['turma_turno_id'],
-            $int_ano_turma = $det_t['ano'],
-            $dependencia = 'f'
+            int_ativo: 1,
+            int_ref_cod_serie: $this->ref_cod_serie,
+            int_ref_cod_curso: $this->ref_cod_curso,
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_turma_turno_id:  $det_t['turma_turno_id'],
+            int_ano_turma:  $det_t['ano'],
+            dependencia:  'f'
         );
 
         return $obj_mt->_total;

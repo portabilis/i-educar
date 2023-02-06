@@ -16,6 +16,20 @@ Route::view('/docs-api', 'docs/api/index');
 Route::redirect('intranet/index.php', '/web')
     ->name('home');
 
+Route::redirect('intranet/public_pais_lst.php', '/web/enderecamento/pais');
+Route::redirect('intranet/public_uf_lst.php', '/web/enderecamento/estado');
+Route::redirect('intranet/public_municipio_lst.php', '/web/enderecamento/municipio');
+Route::redirect('intranet/public_distrito_lst.php', '/web/enderecamento/distrito');
+Route::redirect('intranet/public_pais_det.php', '/web/enderecamento/pais');
+Route::redirect('intranet/public_uf_det.php', '/web/enderecamento/estado');
+Route::redirect('intranet/public_municipio_det.php', '/web/enderecamento/municipio');
+Route::redirect('intranet/public_distrito_det.php', '/web/enderecamento/distrito');
+
+Route::redirect('intranet/public_pais_cad.php', '/web/enderecamento/pais/novo');
+Route::redirect('intranet/public_uf_cad.php', '/web/enderecamento/estado/novo');
+Route::redirect('intranet/public_municipio_cad.php', '/web/enderecamento/municipio/novo');
+Route::redirect('intranet/public_distrito_cad.php', '/web/enderecamento/distrito/novo');
+
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
 Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet')
@@ -153,4 +167,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('schoolclass.store');
     Route::delete('/turma', [SchoolClassController::class, 'delete'])
         ->name('schoolclass.delete');
+
+    Route::fallback([WebController::class, 'fallback']);
 });

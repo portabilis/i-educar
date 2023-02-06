@@ -25,17 +25,17 @@ return new class extends clsCadastro {
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        $obj_permissao->permissao_cadastra(579, $this->pessoa_logada, 3, 'educar_religiao_lst.php');
+        $obj_permissao->permissao_cadastra(int_processo_ap: 579, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_religiao_lst.php');
         //**
 
-        if (is_numeric($this->cod_religiao)) {
-            $registro = Religion::findOrFail($this->cod_religiao, ['id', 'name']);
+        if (is_numeric(value: $this->cod_religiao)) {
+            $registro = Religion::findOrFail(id: $this->cod_religiao, columns: ['id', 'name']);
             if ($registro) {
                 $this->nm_religiao = $registro->name;
                 $this->cod_religiao = $registro->id;
 
                 //** verificao de permissao para exclusao
-                $this->fexcluir = $obj_permissao->permissao_excluir(579, $this->pessoa_logada, 3);
+                $this->fexcluir = $obj_permissao->permissao_excluir(int_processo_ap: 579, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
                 //**
 
                 $retorno = 'Editar';
@@ -45,8 +45,8 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' religião', [
-            url('intranet/educar_pessoas_index.php') => 'Pessoas',
+        $this->breadcrumb(currentPage: $nomeMenu . ' religião', breadcrumbs: [
+            url(path: 'intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -56,8 +56,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $this->campoOculto('cod_religiao', $this->cod_religiao);
-        $this->campoTexto('nm_religiao', 'Religião', $this->nm_religiao, 30, 255, true);
+        $this->campoOculto(nome: 'cod_religiao', valor: $this->cod_religiao);
+        $this->campoTexto(nome: 'nm_religiao', campo: 'Religião', valor: $this->nm_religiao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
     }
 
     public function Novo()
@@ -67,7 +67,7 @@ return new class extends clsCadastro {
 
         if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_religiao_lst.php');
+            $this->simpleRedirect(url: 'educar_religiao_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -76,12 +76,12 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $obj = Religion::findOrFail($this->cod_religiao);
+        $obj = Religion::findOrFail(id: $this->cod_religiao);
         $obj->name = $this->nm_religiao;
 
         if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_religiao_lst.php');
+            $this->simpleRedirect(url: 'educar_religiao_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -90,7 +90,7 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $exists = LegacyIndividual::where('ref_cod_religiao', $this->cod_religiao)
+        $exists = LegacyIndividual::where(column: 'ref_cod_religiao', operator: $this->cod_religiao)
             ->exists();
 
         if ($exists) {
@@ -98,11 +98,11 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $obj = Religion::findOrFail($this->cod_religiao);
+        $obj = Religion::findOrFail(id: $this->cod_religiao);
 
         if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_religiao_lst.php');
+            $this->simpleRedirect(url: 'educar_religiao_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

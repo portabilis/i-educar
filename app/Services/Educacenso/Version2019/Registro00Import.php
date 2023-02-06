@@ -9,7 +9,6 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
-use App\Models\LegacyPersonAddress;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
@@ -18,6 +17,7 @@ use App\Models\PersonHasPlace;
 use App\Models\Place;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro00Model;
 use App\User;
 use DateTime;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
@@ -71,12 +71,18 @@ class Registro00Import implements RegistroImportInterface
      *
      * @return LegacySchool
      */
-    private function getOrCreateSchool()
+    protected function getOrCreateSchool()
     {
-        $schoolInep = SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
+        $schoolInep = $this->getSchool();
 
         if ($schoolInep) {
             return $schoolInep->school;
+        }
+
+        $institution = LegacyInstitution::whereNull('orgao_regional')->first();
+        if ($institution instanceof LegacyInstitution) {
+            $institution->orgao_regional = $this->model->orgaoRegional;
+            $institution->save();
         }
 
         $person = LegacyPerson::create([
@@ -131,9 +137,14 @@ class Registro00Import implements RegistroImportInterface
         $this->createPhones($school);
     }
 
+    protected function getSchool()
+    {
+        return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
+    }
+
     private function createAddress($school)
     {
-        $personAddress = LegacyPersonAddress::where('idpes', $school->ref_idpes)->exists();
+        $personAddress = PersonHasPlace::where('person_id', $school->ref_idpes)->exists();
         if ($personAddress) {
             return;
         }
@@ -309,7 +320,7 @@ class Registro00Import implements RegistroImportInterface
 
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro00();
+        $registro = new Registro00Model();
         $registro->hydrateModel($arrayColumns);
 
         return $registro;

@@ -9,6 +9,7 @@ use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
 use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
+use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
@@ -175,11 +176,6 @@ class AlunoController extends ApiCoreController
     protected function canGetTodosAlunos()
     {
         return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('escola');
-    }
-
-    protected function canGetAlunosByGuardianCpf()
-    {
-        return $this->validatesPresenceOf('aluno_id') && $this->validatesPresenceOf('cpf');
     }
 
     protected function validateInepCode()
@@ -652,7 +648,12 @@ class AlunoController extends ApiCoreController
         $escola->cod_escola = $id;
         $escola = $escola->detalhe();
 
-        return $this->toUtf8($escola['nome'], ['transform' => true]);
+        $schoolInep = SchoolInep::query()
+            ->select('cod_escola_inep')
+            ->where('cod_escola', $id)
+            ->value('cod_escola_inep');
+
+        return $this->toUtf8($escola['nome'] . ' - INEP: ' . $schoolInep, ['transform' => true]);
     }
 
     protected function loadCursoNome($id)
@@ -1294,62 +1295,6 @@ class AlunoController extends ApiCoreController
         }
     }
 
-    protected function getIdpesFromCpf($cpf)
-    {
-        $sql = 'SELECT idpes FROM cadastro.fisica WHERE cpf = $1';
-
-        return $this->fetchPreparedQuery($sql, $cpf, true, 'first-field');
-    }
-
-    protected function checkAlunoIdpesGuardian($idpesGuardian, $alunoId)
-    {
-        $sql = '
-            SELECT 1
-            FROM pmieducar.aluno
-            INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
-            WHERE cod_aluno = $2
-            AND (idpes_pai = $1
-            OR idpes_mae = $1
-            OR idpes_responsavel = $1) LIMIT 1
-        ';
-
-        return $this->fetchPreparedQuery($sql, [$idpesGuardian, $alunoId], true, 'first-field') == 1;
-    }
-
-    protected function getAlunosByGuardianCpf()
-    {
-        if ($this->canGetAlunosByGuardianCpf()) {
-            $cpf = $this->getRequest()->cpf;
-            $alunoId = $this->getRequest()->aluno_id;
-
-            $idpesGuardian = $this->getIdpesFromCpf($cpf);
-
-            if (is_numeric($idpesGuardian) && $this->checkAlunoIdpesGuardian($idpesGuardian, $alunoId)) {
-                $sql = '
-                    SELECT cod_aluno as aluno_id, pessoa.nome as nome_aluno
-                    FROM pmieducar.aluno
-                    INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
-                    INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
-                    WHERE idpes_pai = $1
-                    OR idpes_mae = $1
-                    OR idpes_responsavel = $1
-                ';
-
-                $alunos = $this->fetchPreparedQuery($sql, [$idpesGuardian]);
-                $attrs = ['aluno_id', 'nome_aluno'];
-                $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
-
-                foreach ($alunos as &$aluno) {
-                    $aluno['nome_aluno'] = Portabilis_String_Utils::toUtf8($aluno['nome_aluno']);
-                }
-
-                return ['alunos' => $alunos];
-            } else {
-                $this->messenger->append('Não foi encontrado nenhum vínculos entre esse aluno e cpf.');
-            }
-        }
-    }
-
     protected function getMatriculas()
     {
         if ($this->canGetMatriculas()) {
@@ -1954,12 +1899,13 @@ class AlunoController extends ApiCoreController
     {
         $var1 = $this->getRequest()->id;
 
-        $sql = "SELECT relatorio.get_texto_sem_caracter_especial(bairro.nome) as nome
-                  FROM pmieducar.aluno
-            INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
-            INNER JOIN cadastro.endereco_pessoa ON (fisica.idpes = endereco_pessoa.idpes)
-            INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
-                 WHERE cod_aluno = $var1";
+        $sql = "
+            SELECT unaccent(upper(neighborhood)) AS nome
+            FROM addresses a
+            JOIN person_has_place php ON a.id = php.place_id
+            JOIN pmieducar.aluno al ON al.ref_idpes = php.person_id
+            WHERE al.cod_aluno = {$var1}
+        ";
 
         $bairro = $this->fetchPreparedQuery($sql);
 
@@ -2088,8 +2034,6 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getOcorrenciasDisciplinares());
         } elseif ($this->isRequestFor('get', 'grade_ultimo_historico')) {
             $this->appendResponse($this->getGradeUltimoHistorico());
-        } elseif ($this->isRequestFor('get', 'alunos_by_guardian_cpf')) {
-            $this->appendResponse($this->getAlunosByGuardianCpf());
         } elseif ($this->isRequestFor('post', 'aluno')) {
             $this->appendResponse($this->post());
         } elseif ($this->isRequestFor('put', 'aluno')) {

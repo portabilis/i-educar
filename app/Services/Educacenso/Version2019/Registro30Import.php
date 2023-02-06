@@ -27,7 +27,6 @@ use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
-use iEducar\Modules\Educacenso\Model\PosGraduacao;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 
 class Registro30Import implements RegistroImportInterface
@@ -449,7 +448,7 @@ class Registro30Import implements RegistroImportInterface
             return null;
         }
 
-        $country = Country::where('cod_ibge', $countryIbge)->first();
+        $country = Country::where('ibge_code', $countryIbge)->first();
 
         return $country ? $country->getKey() : null;
     }
@@ -561,7 +560,6 @@ class Registro30Import implements RegistroImportInterface
         $this->createEmployeeInep($employee);
         $this->createEscolaridade($employee);
         $this->createEmployeeGraduations($employee);
-        $this->storeEmployeePostgraduate($employee);
         $this->storeEmployeeCourses($employee);
 
         $employee->tipo_ensino_medio_cursado = (int) $this->model->tipoEnsinoMedioCursado;
@@ -597,7 +595,6 @@ class Registro30Import implements RegistroImportInterface
         $arrayCursos = array_filter($this->model->formacaoCurso);
         $arrayInstituicoes = array_filter($this->model->formacaoInstituicao);
         $arrayAnosConclusao = array_filter($this->model->formacaoAnoConclusao);
-        $arrayComponentes = array_filter($this->model->formacaoComponenteCurricular);
 
         if (empty($arrayCursos)) {
             return;
@@ -620,36 +617,8 @@ class Registro30Import implements RegistroImportInterface
                 'course_id' => $degree->getKey(),
                 'completion_year' => $arrayAnosConclusao[$key] ?? null,
                 'college_id' => $institution->getKey(),
-                'discipline_id' => $arrayComponentes[$key] ?? null,
             ]);
         }
-    }
-
-    /**
-     * @param Employee $employee
-     */
-    private function storeEmployeePostgraduate(Employee $employee)
-    {
-        $arrayPostGraduate = [];
-
-        if ($this->model->posGraduacaoEspecializacao) {
-            $arrayPostGraduate[] = PosGraduacao::ESPECIALIZACAO;
-        }
-
-        if ($this->model->posGraduacaoMestrado) {
-            $arrayPostGraduate[] = PosGraduacao::MESTRADO;
-        }
-
-        if ($this->model->posGraduacaoDoutorado) {
-            $arrayPostGraduate[] = PosGraduacao::DOUTORADO;
-        }
-
-        if ($this->model->posGraduacaoNaoPossui) {
-            $arrayPostGraduate[] = PosGraduacao::NAO_POSSUI;
-        }
-
-        $employee->pos_graduacao = $this->getPostgresIntegerArray($arrayPostGraduate);
-        $employee->save();
     }
 
     private function storeEmployeeCourses(Employee $employee)

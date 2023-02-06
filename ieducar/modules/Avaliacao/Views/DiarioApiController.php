@@ -1444,7 +1444,7 @@ class DiarioApiController extends ApiCoreController
             $etapas = $regraRecuperacao->getEtapas();
             $sumNota = 0;
             foreach ($etapas as $key => $_etapa) {
-                $sumNota += (int)$this->getNotaOriginal($_etapa, $componenteCurricularId);
+                $sumNota += $this->getNotaOriginal($_etapa, $componenteCurricularId);
             }
 
             // caso a média das notas da etapa seja menor que média definida na regra e a última nota tenha sido lançada
@@ -1517,6 +1517,10 @@ class DiarioApiController extends ApiCoreController
         $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->notaOriginal);
         $nota = str_replace(',', '.', $nota);
 
+        //validação para evitar a soma de valores da notaOriginal para string vazia
+        if ($nota === "") {
+            return null;
+        }
         return $nota;
     }
 

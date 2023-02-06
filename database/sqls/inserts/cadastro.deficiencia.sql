@@ -1,9 +1,9 @@
-INSERT INTO cadastro.deficiencia VALUES (8, 'Deficiência Mental', NULL, false);
-INSERT INTO cadastro.deficiencia VALUES (10, 'Autismo Clássico', NULL, false);
-INSERT INTO cadastro.deficiencia VALUES (11, 'Síndrome de Asperger', NULL, false);
-INSERT INTO cadastro.deficiencia VALUES (12, 'Síndrome de Rett', NULL, false);
-INSERT INTO cadastro.deficiencia VALUES (13, 'Transtorno desintegrativo da infância (psicose infantil)', NULL, false);
-INSERT INTO cadastro.deficiencia VALUES (14, 'Altas Habilidades/Superdotação', NULL, false);
+INSERT INTO cadastro.deficiencia VALUES (8, 'Deficiência Mental', 999, false);
+INSERT INTO cadastro.deficiencia VALUES (10, 'Autismo Clássico', 25, false);
+INSERT INTO cadastro.deficiencia VALUES (11, 'Síndrome de Asperger', 999, false);
+INSERT INTO cadastro.deficiencia VALUES (12, 'Síndrome de Rett', 999, false);
+INSERT INTO cadastro.deficiencia VALUES (13, 'Transtorno desintegrativo da infância (psicose infantil)', 999, false);
+INSERT INTO cadastro.deficiencia VALUES (14, 'Altas Habilidades/Superdotação', 13, false);
 INSERT INTO cadastro.deficiencia VALUES (2, 'Cegueira', 1, false);
 INSERT INTO cadastro.deficiencia VALUES (3, 'Baixa Visão', 2, false);
 INSERT INTO cadastro.deficiencia VALUES (4, 'Surdez', 3, false);

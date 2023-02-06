@@ -23,7 +23,7 @@ class LegacyDisciplineSchoolClassFactory extends Factory
     {
         return [
             'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
-            'ano_escolar_id' => LegacySchoolFactory::new()->create(),
+            'ano_escolar_id' => fn () => LegacyGradeFactory::new()->create(),
             'escola_id' => LegacySchoolFactory::new()->create(),
             'turma_id' => LegacySchoolClassFactory::new()->create(),
             'carga_horaria' => $this->faker->randomNumber(3),

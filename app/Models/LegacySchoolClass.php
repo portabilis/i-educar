@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolClassBuilder;
+use App\Models\View\Discipline;
 use App\Traits\LegacyAttribute;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,7 +78,6 @@ class LegacySchoolClass extends Model
         'ref_usuario_cad',
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
-        'ref_cod_infra_predio_comodo',
         'nm_turma',
         'sgl_turma',
         'max_aluno',
@@ -247,7 +247,7 @@ class LegacySchoolClass extends Model
      */
     public function grades(): BelongsToMany
     {
-        return $this->belongsToMany(LegacyGrade::class, 'turma_serie', 'turma_id', 'serie_id');
+        return $this->belongsToMany(LegacyGrade::class, 'pmieducar.turma_serie', 'turma_id', 'serie_id');
     }
 
     /**
@@ -440,6 +440,11 @@ class LegacySchoolClass extends Model
             'etapas_especificas',
             'etapas_utilizadas',
         ]);
+    }
+
+    public function viewDisciplines(): HasMany
+    {
+        return $this->hasMany(Discipline::class, 'cod_turma', 'id');
     }
 
     /**

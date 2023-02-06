@@ -19,11 +19,11 @@ return new class extends clsDetalhe {
 
         $this->id = $_GET['id'];
 
-        $tmp_obj = new clsModulesProfessorTurma($this->id);
+        $tmp_obj = new clsModulesProfessorTurma(id: $this->id);
         $registro = $tmp_obj->detalhe();
 
         if (! $registro) {
-            $this->simpleRedirect('educar_servidor_professor_vinculo_lst.php');
+            $this->simpleRedirect(url: 'educar_servidor_professor_vinculo_lst.php');
         }
 
         $resources_funcao = [  null => 'Selecione',
@@ -44,27 +44,27 @@ return new class extends clsDetalhe {
                               4    => 'Contrato CLT'];
 
         if ($registro['nm_escola']) {
-            $this->addDetalhe(['Escola', $registro['nm_escola']]);
+            $this->addDetalhe(detalhe: ['Escola', $registro['nm_escola']]);
         }
 
         if ($registro['nm_curso']) {
-            $this->addDetalhe(['Curso', $registro['nm_curso']]);
+            $this->addDetalhe(detalhe: ['Curso', $registro['nm_curso']]);
         }
 
         if ($registro['nm_serie']) {
-            $this->addDetalhe(['Série', $registro['nm_serie']]);
+            $this->addDetalhe(detalhe: ['Série', $registro['nm_serie']]);
         }
 
         if ($registro['nm_turma']) {
-            $this->addDetalhe(['Turma', $registro['nm_turma']]);
+            $this->addDetalhe(detalhe: ['Turma', $registro['nm_turma']]);
         }
 
         if ($registro['funcao_exercida']) {
-            $this->addDetalhe(['Função exercida', $resources_funcao[$registro['funcao_exercida']]]);
+            $this->addDetalhe(detalhe: ['Função exercida', $resources_funcao[$registro['funcao_exercida']]]);
         }
 
         if ($registro['tipo_vinculo']) {
-            $this->addDetalhe(['Tipo de vínculo', $resources_tipo[$registro['tipo_vinculo']]]);
+            $this->addDetalhe(detalhe: ['Tipo de vínculo', $resources_tipo[$registro['tipo_vinculo']]]);
         }
 
         $sql = 'SELECT nome
@@ -75,19 +75,19 @@ return new class extends clsDetalhe {
 
         $disciplinas = '';
 
-        $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, [ 'params' => [$this->id] ]);
+        $resources = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: [ 'params' => [$this->id] ]);
 
         foreach ($resources as $reg) {
             $disciplinas .= '<span style="background-color: #ccdce6; padding: 2px; border-radius: 3px;"><b>'.$reg['nome'].'</b></span> ';
         }
 
         if ($disciplinas != '') {
-            $this->addDetalhe(['Disciplinas', $disciplinas]);
+            $this->addDetalhe(detalhe: ['Disciplinas', $disciplinas]);
         }
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = sprintf(
                 'educar_servidor_vinculo_turma_cad.php?ref_cod_instituicao=%d&ref_cod_servidor=%d',
                 $registro['instituicao_id'],
@@ -118,8 +118,8 @@ return new class extends clsDetalhe {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do vínculo', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
+        $this->breadcrumb(currentPage: 'Detalhe do vínculo', breadcrumbs: [
+        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
     ]);
     }
 

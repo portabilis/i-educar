@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_deficiencia;
     public $nm_deficiencia;
 
@@ -18,7 +12,7 @@ return new class extends clsCadastro {
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(631, $this->pessoa_logada, 7, 'educar_deficiencia_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_deficiencia_lst.php');
 
         if (is_numeric($this->cod_deficiencia)) {
             $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
@@ -28,7 +22,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                if ($obj_permissoes->permissao_excluir(631, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
                 $retorno = 'Editar';
@@ -43,13 +37,13 @@ return new class extends clsCadastro {
     public function Gerar()
     {
 
-        $this->campoOculto('cod_deficiencia', $this->cod_deficiencia);
-        $this->campoTexto('nm_deficiencia', 'Deficiência', $this->nm_deficiencia, 30, 255, true);
+        $this->campoOculto(nome: 'cod_deficiencia', valor: $this->cod_deficiencia);
+        $this->campoTexto(nome: 'nm_deficiencia', campo: 'Deficiência', valor: $this->nm_deficiencia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
     }
 
     public function Novo()
     {
-        $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
+        $obj = new clsCadastroDeficiencia(cod_deficiencia: $this->cod_deficiencia, nm_deficiencia: $this->nm_deficiencia);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             echo "<script>

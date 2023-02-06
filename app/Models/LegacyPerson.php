@@ -81,12 +81,11 @@ class LegacyPerson extends Model
         );
     }
 
-    /**
-     * @return HasOne
-     */
-    public function address(): HasOne
+    protected function socialName(): Attribute
     {
-        return $this->hasOne(LegacyPersonAddress::class, 'idpes', 'idpes');
+        return Attribute::make(
+            get: fn () => $this->individual->social_name ?? null
+        );
     }
 
     /**
