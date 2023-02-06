@@ -57,6 +57,17 @@ class LegacySchoolClass extends LegacyModel
     protected string $builder = LegacySchoolClassBuilder::class;
 
     /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public array $legacy = [
+        'id' => 'cod_turma',
+        'name' => 'nm_turma',
+        'year' => 'ano'
+    ];
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -121,12 +132,6 @@ class LegacySchoolClass extends LegacyModel
         'estrutura_curricular',
         'formas_organizacao_turma',
         'unidade_curricular',
-    ];
-
-    public array $legacy = [
-        'id' => 'cod_turma',
-        'name' => 'nm_turma',
-        'year' => 'ano'
     ];
 
     protected function id(): Attribute
