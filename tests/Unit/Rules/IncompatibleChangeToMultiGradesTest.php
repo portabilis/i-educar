@@ -201,7 +201,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
                 $mock
                     ->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['originalGrade'])
-                    ->andReturn(1);;
+                    ->andReturn(1);
 
                 // Contém alunos com matrículas ativas
                 $mock->shouldReceive('getLegacyColumn', 'getTotalEnrolled')
@@ -246,7 +246,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
                 $mock
                     ->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['originalGrade'])
-                    ->andReturn(1);;
+                    ->andReturn(1);
 
                 // Contém alunos com matrículas ativas
                 $mock->shouldReceive('getLegacyColumn', 'getTotalEnrolled')
