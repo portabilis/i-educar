@@ -2,6 +2,10 @@
 
 namespace App\Models\Builders;
 
+use App\Models\RegistrationStatus;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+
 class LegacyRegistrationBuilder extends LegacyBuilder
 {
     public function transfer(): LegacyBuilder
@@ -28,22 +32,22 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     public function finalized(): LegacyBuilder
     {
         return $this->whereIn('aprovado', [
-            1,
-            2,
-            12,
-            13,
-            14
+            RegistrationStatus::APPROVED,
+            RegistrationStatus::REPROVED,
+            RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+            RegistrationStatus::APPROVED_BY_BOARD,
+            RegistrationStatus::REPROVED_BY_ABSENCE
         ]);
     }
 
     public function notFinalized(): LegacyBuilder
     {
         return $this->whereNotIn('aprovado', [
-            1,
-            2,
-            12,
-            13,
-            14
+            RegistrationStatus::APPROVED,
+            RegistrationStatus::REPROVED,
+            RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+            RegistrationStatus::APPROVED_BY_BOARD,
+            RegistrationStatus::REPROVED_BY_ABSENCE
         ]);
     }
 
@@ -54,21 +58,21 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     public function statusTransfer(): LegacyBuilder
     {
-        return $this->where('aprovado', 4);
+        return $this->where('aprovado', RegistrationStatus::TRANSFERRED);
     }
 
     public function modalityRegular(): LegacyBuilder
     {
         return $this->whereHas('course', static fn (
             $q
-        ) => $q->where('curso.modalidade_curso', 1));
+        ) => $q->where('curso.modalidade_curso', ModalidadeCurso::ENSINO_REGULAR));
     }
 
     public function serviceTypeNotComplementaryActivity(): LegacyBuilder
     {
         return $this->whereHas('schoolClasses', static fn (
             $q
-        ) => $q->where('turma.tipo_atendimento', '<>', 4)->orWhereNull('turma.tipo_atendimento'));
+        ) => $q->where('turma.tipo_atendimento', '<>', TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR)->orWhereNull('turma.tipo_atendimento'));
     }
 
     /**
