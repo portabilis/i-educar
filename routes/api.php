@@ -39,7 +39,7 @@ Route::group(
         'district' => DistrictController::class,
         'city' => CityController::class,
         'religion' => ReligionController::class,
-        'person/deficiency' => LegacyDeficiencyController::class,
+        'person/deficiency' => LegacyDeficiencyController::class
     ])
 );
 
@@ -59,7 +59,7 @@ Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getS
 
 Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
 
-Route::group([/*'middleware' => 'auth:sanctum',*/'namespace' => 'Api'], static function () {
+Route::group(['middleware' => 'auth:sanctum','namespace' => 'Api'], static function () {
     Route::resource('institution', InstitutionController::class)->only(['index']);
     Route::resource('school', SchoolController::class)->only(['index']);
     Route::resource('course', CourseController::class)->only(['index']);
