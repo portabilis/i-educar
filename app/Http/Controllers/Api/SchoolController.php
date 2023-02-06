@@ -23,24 +23,4 @@ class SchoolController extends ResourceController
     {
         $builder->orderByName()->filter($request->all());
     }
-
-    public function store(LegacySchool $school, Request $request): JsonResource
-    {
-        return $this->post($school, $request);
-    }
-
-    public function show(int $school, Request $request): JsonResource
-    {
-        return $this->get($school, $request, LegacySchool::class);
-    }
-
-    public function update(LegacySchool $school, Request $request): JsonResource
-    {
-        return $this->patch($school, $request);
-    }
-
-    public function destroy(LegacySchool $school, Request $request): JsonResource
-    {
-        return $this->delete($school, $request);
-    }
 }

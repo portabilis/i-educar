@@ -23,24 +23,4 @@ class RegistrationController extends ResourceController
     {
         $builder->orderByName()->filter($request->all());
     }
-
-    public function store(LegacyRegistration $registration, Request $request): JsonResource
-    {
-        return $this->post($registration, $request);
-    }
-
-    public function show(int $registration, Request $request): JsonResource
-    {
-        return $this->get($registration, $request, LegacyRegistration::class);
-    }
-
-    public function update(LegacyRegistration $registration, Request $request): JsonResource
-    {
-        return $this->patch($registration, $request);
-    }
-
-    public function destroy(LegacyRegistration $registration, Request $request): JsonResource
-    {
-        return $this->delete($registration, $request);
-    }
 }

@@ -17,24 +17,4 @@ class CourseController extends ResourceController
 
         return $this->all($course, $request);
     }
-
-    public function store(LegacyCourse $course, Request $request): JsonResource
-    {
-        return $this->post($course, $request);
-    }
-
-    public function show(int $course, Request $request): JsonResource
-    {
-        return $this->get($course, $request, LegacyCourse::class);
-    }
-
-    public function update(LegacyCourse $course, Request $request): JsonResource
-    {
-        return $this->patch($course, $request);
-    }
-
-    public function destroy(LegacyCourse $course, Request $request): JsonResource
-    {
-        return $this->delete($course, $request);
-    }
 }

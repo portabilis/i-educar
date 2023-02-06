@@ -19,26 +19,6 @@ class SchoolClassController extends ResourceController
         return $this->all($schoolClass, $request);
     }
 
-    public function store(LegacySchoolClass $schoolClass, Request $request): JsonResource
-    {
-        return $this->post($schoolClass, $request);
-    }
-
-    public function show(int $schoolClass, Request $request): JsonResource
-    {
-        return $this->get($schoolClass, $request, LegacySchoolClass::class);
-    }
-
-    public function update(LegacySchoolClass $schoolClass, Request $request): JsonResource
-    {
-        return $this->patch($schoolClass, $request);
-    }
-
-    public function destroy(LegacySchoolClass $schoolClass, Request $request): JsonResource
-    {
-        return $this->delete($schoolClass, $request);
-    }
-
     public function getCalendars(Request $request, SchoolClassService $schoolClassService)
     {
         if (request()->get('ref_cod_turma')) {
