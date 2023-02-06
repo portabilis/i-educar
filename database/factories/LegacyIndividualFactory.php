@@ -31,7 +31,6 @@ class LegacyIndividualFactory extends Factory
             'sexo' => $this->faker->randomElement(['M', 'F']),
             'data_nasc' => now()->format('Y-m-d'),
             'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
-            'idmun_nascimento' => CityFactory::new()->create(),
         ];
     }
 
