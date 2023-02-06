@@ -1182,4 +1182,163 @@ class clsModulesFrequencia extends Model {
         return $qtdFaltas;
     }
 
+    public function updateQuantityMissingStudents()
+    { 
+        for ($etapa = 1; $etapa <= 4; $etapa++) {
+            $this->updateFaltaGeral($etapa);
+            $this->updateFaltaComponenteCurricular($etapa);
+        }
+
+        return true;
+    }
+
+    private function updateFaltaGeral($etapa)
+    {
+        $sql = "SELECT
+                    *
+                FROM
+                    modules.falta_aluno
+                WHERE tipo_falta = 1";
+
+        $db = new clsBanco();
+        $db->Consulta($sql);
+
+        $faltaAlunos = [];
+        while ($db->ProximoRegistro()) {
+            $faltaAlunos[] = $db->Tupla();
+        }
+
+        if (!empty($faltaAlunos)) {
+            foreach ($faltaAlunos as $faltaAluno) {
+                $sql = "SELECT
+                            fa.*
+                        FROM
+                            modules.frequencia_aluno fa
+                            INNER JOIN modules.frequencia f ON ( f.ID = fa.ref_frequencia )
+                        WHERE fa.ref_cod_matricula = '{$faltaAluno['matricula_id']}' AND f.etapa_sequencial = '{$etapa}' AND f.ref_componente_curricular IS NULL";
+
+                $db = new clsBanco();
+                $db->Consulta($sql);
+
+                $qtdAulasFaltou = 0;
+                while ($db->ProximoRegistro()) {
+                    $registro = $db->Tupla();
+
+                    if ($registro && ($registro['aulas_faltou'] == '1' || empty($registro['aulas_faltou']) || $registro['aulas_faltou'] == 'undefined')) {
+                        $qtdAulasFaltou++;
+                    }
+                }
+
+                $sql = "SELECT
+                            fg.id,
+                            fa.matricula_id,
+                            fg.quantidade
+                        FROM
+                            modules.falta_aluno fa
+                        INNER JOIN modules.falta_geral fg ON (fg.falta_aluno_id = fa.id)
+                        WHERE
+                            fa.matricula_id = '{$faltaAluno['matricula_id']}' AND fa.tipo_falta = '1'  AND fg.etapa = '{$etapa}'";
+
+                $db = new clsBanco();
+                $db->Consulta($sql);
+                $db->ProximoRegistro();
+                $registro = $db->Tupla();
+
+                if ($registro) {
+                    $qtdFaltasGeral = $registro['quantidade'];
+
+                    if ($qtdFaltasGeral > $qtdAulasFaltou) {
+                        $sql = "
+                        UPDATE
+                            modules.falta_geral
+                        SET
+                            quantidade = '{$qtdAulasFaltou}'
+                        WHERE
+                            id = '{$registro['id']}'";
+
+                        $db->Consulta($sql);
+                    }
+                }
+            }
+        }
+    }
+
+    private function updateFaltaComponenteCurricular($etapa)
+    {
+        $sql = "SELECT
+                    *
+                FROM
+                    modules.falta_aluno
+                WHERE tipo_falta = 2";
+
+        $db = new clsBanco();
+        $db->Consulta($sql);
+
+        $faltaAlunos = [];
+        while ($db->ProximoRegistro()) {
+            $faltaAlunos[] = $db->Tupla();
+        }
+
+        if (!empty($faltaAlunos)) {
+            foreach ($faltaAlunos as $faltaAluno) {
+                $sql = "SELECT
+                            fa.*
+                        FROM
+                            modules.frequencia_aluno fa
+                            INNER JOIN modules.frequencia f ON ( f.ID = fa.ref_frequencia )
+                        WHERE fa.ref_cod_matricula = '{$faltaAluno['matricula_id']}' AND f.etapa_sequencial = '{$etapa}' AND f.ref_componente_curricular IS NOT NULL";
+
+                $db = new clsBanco();
+                $db->Consulta($sql);
+
+                $qtdAulasFaltou = 0;
+                while ($db->ProximoRegistro()) {
+                    $registro = $db->Tupla();
+
+                    if ($registro) {
+                        $qtd = 1;
+
+                        if (strlen($registro['aulas_faltou']) > 1) {
+                            $aulasArray = explode(',', $registro['aulas_faltou']);
+                            $qtd = count($aulasArray);
+                        }
+
+                        $qtdAulasFaltou += $qtd;
+                    }
+                }
+
+                $sql = "SELECT
+                            fcc.ID,
+                            fa.matricula_id,
+                            fcc.quantidade
+                        FROM
+                            modules.falta_aluno fa
+                        INNER JOIN modules.falta_componente_curricular fcc ON ( fcc.falta_aluno_id = fa.ID )
+                        WHERE
+                            fa.matricula_id = '{$faltaAluno['matricula_id']}' AND fa.tipo_falta = '2'  AND fcc.etapa = '{$etapa}'";
+
+                $db = new clsBanco();
+                $db->Consulta($sql);
+                $db->ProximoRegistro();
+                $registro = $db->Tupla();
+
+                if ($registro) {
+                    $qtdFaltasComponenteCurricular = $registro['quantidade'];
+
+                    if ($qtdFaltasComponenteCurricular > $qtdAulasFaltou) {
+                        $sql = "
+                        UPDATE
+                            modules.falta_componente_curricular
+                        SET
+                            quantidade = '{$qtdAulasFaltou}'
+                        WHERE
+                            id = '{$registro['id']}'";
+
+                        $db->Consulta($sql);
+                    }
+                }
+            }
+        }
+    }
+
 }
