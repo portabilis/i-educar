@@ -1,6 +1,8 @@
 // variaveis usadas pelo modulo Frontend/Process.js
 
 processOptions.validatesResourcesAfterSearch = false;
+processOptions.showNewSearchButton = false;
+processOptions.clearSearchDiv = true;
 
 // #DEPRECADO, migrar para novo padrao processOptions
 const PAGE_URL_BASE      = 'promocao';
@@ -18,7 +20,7 @@ let onClickDeleteEvent    = false;
 
 let setTableSearchDetails = function(){};
 
-let postPromocaoMatricula = function(){
+let postPromocaoMatricula = function() {
   let options = {
     url : '/enrollments-promotion',
     dataType : 'json',
@@ -70,3 +72,6 @@ function handleSearch($resultTable, dataResponse) {
 
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
 }
+
+
+let showNewSearchButton = function () {};
