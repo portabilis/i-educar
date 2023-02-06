@@ -11,6 +11,7 @@ use Database\Factories\LegacySchoolClassGradeFactory;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
+use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use OpenApiGenerator\Attributes\Controller;
 use OpenApiGenerator\Attributes\GET;
@@ -28,6 +29,8 @@ class DisciplineControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->actingAs(LegacyUserFactory::new()->admin()->create());
+
         $school = LegacySchoolFactory::new()->create();
         $this->discipline = LegacyDisciplineFactory::new()->create();
         $grade = LegacyGradeFactory::new()->create();
