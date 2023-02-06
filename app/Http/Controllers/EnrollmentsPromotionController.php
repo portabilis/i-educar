@@ -7,11 +7,8 @@ use App\Models\NotificationType;
 use App\Services\NotificationService;
 use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class EnrollmentsPromotionController extends Controller
 {
@@ -72,6 +69,7 @@ class EnrollmentsPromotionController extends Controller
                    AND m.ativo = 1
                    AND mt.ref_cod_matricula = m.cod_matricula
                    AND mt.ativo = 1
+                   AND (CASE WHEN :matricula = 0  THEN true else :matricula = m.cod_matricula END)
                    AND (CASE WHEN :escolaId = 0  THEN true else :escolaId = m.ref_ref_cod_escola END)
                    AND (CASE WHEN :cursoId = 0  THEN true else :cursoId = m.ref_cod_curso END)
                    AND (CASE WHEN :serieId = 0  THEN true else :serieId = m.ref_ref_cod_serie END)
@@ -91,7 +89,8 @@ class EnrollmentsPromotionController extends Controller
             'cursoId' => (int) $request->input('curso', 0),
             'serieId' => (int) $request->input('serie', 0),
             'turmaId' => (int) $request->input('turma', 0),
-            'matriculaSituacao' => (int) $request->input('matricula', 10),
+            'matricula' => (int) $request->input('matricula', 0),
+            'matriculaSituacao' => (int) $request->input('situacaoMatricula', 10),
             'regraDeAvaliacao' => (int) $request->input('regras_avaliacao_id', 0),
         ];
     }
