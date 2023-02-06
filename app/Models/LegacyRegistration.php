@@ -75,6 +75,7 @@ class LegacyRegistration extends LegacyModel
     protected $dates = [
         'data_matricula'
     ];
+
     public array $legacy = [
         'id' => 'cod_matricula',
         'student_id' => 'ref_cod_aluno'
