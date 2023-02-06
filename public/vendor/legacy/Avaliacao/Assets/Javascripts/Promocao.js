@@ -55,8 +55,6 @@ function handlePostPromocaoMatricula(dataResponse) {
 function handleSearch($resultTable, dataResponse) {
   let $text = $j('<div />');
 
-  console.log(dataResponse);
-
   let html = `
     <table id="atualizacao-matriculas-resultados" width="100%">
         <tr>
