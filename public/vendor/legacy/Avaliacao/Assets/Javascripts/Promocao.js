@@ -102,8 +102,6 @@ function handleSearch($resultTable, dataResponse) {
     </table>
   `;
 
-  console.log($resultTable, dataResponse);
-
   $j('<span />')
     .html(html)
     .attr('class','qnt-matriculas')
