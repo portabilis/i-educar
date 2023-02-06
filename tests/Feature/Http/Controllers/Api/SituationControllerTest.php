@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use Database\Factories\LegacyUserFactory;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use OpenApiGenerator\Attributes\Controller;
 use OpenApiGenerator\Attributes\GET;
 use OpenApiGenerator\Attributes\Response;
@@ -12,6 +13,8 @@ use Tests\TestCase;
 #[Controller]
 class SituationControllerTest extends TestCase
 {
+    use DatabaseTransactions;
+
     protected function setUp(): void
     {
         parent::setUp();
