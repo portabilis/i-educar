@@ -90,7 +90,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
                     ->shouldReceive('getLegacyColumn')
                     ->with('originalMultiGradesInfo')
                     ->andReturn('originalMultiGradesInfo')
-                    ->shouldReceive('getAttribute')
+                    ->shouldReceive('getAttribute')->once()
                     ->andReturn(0)
                 ;
 
@@ -104,7 +104,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
                     ->shouldReceive('getLegacyColumn')
                     ->with('originalGrade')
                     ->andReturn('originalGrade')
-                    ->shouldReceive('getAttribute')
+                    ->shouldReceive('getAttribute')->once()
                     ->andReturn(1)
                 ;
 
