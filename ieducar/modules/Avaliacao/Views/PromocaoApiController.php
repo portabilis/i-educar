@@ -1,8 +1,15 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
+use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyGrade;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use Illuminate\Support\Facades\Auth;
 
 class PromocaoApiController extends ApiCoreController
@@ -464,11 +471,34 @@ class PromocaoApiController extends ApiCoreController
     {
         if ($this->isRequestFor('get', 'quantidade_matriculas')) {
             $this->appendResponse('quantidade_matriculas', $this->getQuantidadeMatriculas());
+            $this->appendResponse('ano', (int) $this->getRequest()->ano);
+            $this->appendResponse('instituicao', $this->getInstitutionName($this->getRequest()->instituicao_id));
+            $this->appendResponse('escola', $this->getSchoolName($this->getRequest()->escola));
+            $this->appendResponse('curso', $this->getCourseName($this->getRequest()->curso));
+            $this->appendResponse('serie', $this->getGradeName($this->getRequest()->serie));
+            $this->appendResponse('turma', $this->getSchoolClassName($this->getRequest()->turma));
+            $this->appendResponse('matricula', $this->getStudentName($this->getRequest()->matricula));
+            $this->appendResponse('situacaoMatricula', $this->getRegistrationStatus($this->getRequest()->situacaoMatricula));
+            $this->appendResponse('regraAvaliacao', $this->getEvaluationRuleName($this->getRequest()->regras_avaliacao_id));
         } elseif ($this->isRequestFor('post', 'promocao')) {
             $this->appendResponse('result', $this->postPromocaoMatricula());
         } else {
             $this->notImplementedOperationError();
         }
+    }
+
+    private function getInstitutionName($institutionId)
+    {
+        return LegacyInstitution::query()->find($institutionId)?->nm_instituicao;
+    }
+
+    private function getSchoolName($schoolId)
+    {
+        if (empty($schoolId)) {
+            return ' - ';
+        }
+
+        return LegacySchool::query()->find($schoolId)?->name;
     }
 
     /**
@@ -518,5 +548,59 @@ class PromocaoApiController extends ApiCoreController
         $this->lancarFaltasNaoLancadas($enrollmentsId);
         $this->atualizaNotaExame($enrollmentsId);
         $this->trySaveBoletimService();
+    }
+
+    private function getCourseName(mixed $curso)
+    {
+        if (empty($curso)) {
+            return ' - ';
+        }
+
+        return LegacyCourse::query()->find($curso)?->nm_curso;
+    }
+
+    private function getGradeName(mixed $serie)
+    {
+        if (empty($serie)) {
+            return ' - ';
+        }
+
+        return LegacyGrade::query()->find($serie)?->nm_serie;
+    }
+
+    private function getSchoolClassName(mixed $schoolClassId)
+    {
+        if (empty($schoolClassId)) {
+            return ' - ';
+        }
+
+        return LegacySchoolClass::query()->find($schoolClassId)?->nm_turma;
+    }
+
+    private function getStudentName(mixed $registrationId)
+    {
+        if (empty($registrationId)) {
+            return ' - ';
+        }
+
+        return LegacyRegistration::query()->find($registrationId)?->student->name;
+    }
+
+    private function getRegistrationStatus(mixed $registrationStatusId)
+    {
+        if (empty($registrationStatusId)) {
+            return ' - ';
+        }
+
+        return EnrollmentStatusFilter::getDescriptiveValues()[$registrationStatusId];
+    }
+
+    private function getEvaluationRuleName(mixed $evaluationRuleId)
+    {
+        if (empty($evaluationRuleId)) {
+            return 'Todas';
+        }
+
+        return LegacyEvaluationRule::query()->find($evaluationRuleId)?->name;
     }
 }
