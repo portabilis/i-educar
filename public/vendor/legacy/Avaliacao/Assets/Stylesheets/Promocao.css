@@ -24,3 +24,10 @@
 #atualizacao-matriculas-resultados tr:nth-child(odd) {
     background-color: #fff;
 }
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}

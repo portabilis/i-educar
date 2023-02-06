@@ -53,7 +53,6 @@ function handlePostPromocaoMatricula(dataResponse) {
 }
 
 function handleSearch($resultTable, dataResponse) {
-  let $text = $j('<div />');
 
   let html = `
     <table id="atualizacao-matriculas-resultados" width="100%">
@@ -102,10 +101,24 @@ function handleSearch($resultTable, dataResponse) {
     </table>
   `;
 
+  let $text = $j('<div />');
+
   $j('<span />')
     .html(html)
     .attr('class','qnt-matriculas')
     .appendTo($text);
+
+  let boxButtons = $j('<div />').attr('id', 'box-buttons')
+    .attr('class','box')
+    .appendTo($text);
+
+  $j('<input />').attr('id', 'voltar')
+    .attr('href', '#')
+    .attr('type','button')
+    .attr('class','botaolistagem')
+    .attr('value','Voltar')
+    .bind('click', showSearchForm)
+    .appendTo(boxButtons);
 
   $j('<input />').attr('id', 'promover-matricula')
     .attr('href', '#')
@@ -113,7 +126,7 @@ function handleSearch($resultTable, dataResponse) {
     .attr('class','btn-green')
     .attr('value','Iniciar processo')
     .bind('click', postPromocaoMatricula)
-    .appendTo($text);
+    .appendTo(boxButtons);
 
   $j('<span />').html(' ').appendTo($text);
 
