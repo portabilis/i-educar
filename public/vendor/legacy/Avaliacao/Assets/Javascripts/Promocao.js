@@ -55,8 +55,59 @@ function handlePostPromocaoMatricula(dataResponse) {
 function handleSearch($resultTable, dataResponse) {
   let $text = $j('<div />');
 
+  console.log(dataResponse);
+
+  let html = `
+    <table id="atualizacao-matriculas-resultados" width="100%">
+        <tr>
+            <th colspan="2">Matrículas</th>
+        </tr>
+        <tr>
+            <td>Ano</td>
+            <td>${dataResponse.ano}</td>
+        </tr>
+        <tr>
+            <td>Instituição</td>
+            <td>${dataResponse.instituicao}</td>
+        </tr>
+        <tr>
+            <td>Escola</td>
+            <td>${dataResponse.escola}</td>
+        </tr>
+        <tr>
+            <td>Curso</td>
+            <td>${dataResponse.curso}</td>
+        </tr>
+        <tr>
+            <td>Série</td>
+            <td>${dataResponse.serie}</td>
+        </tr>
+        <tr>
+            <td>Turma</td>
+            <td>${dataResponse.turma}</td>
+        </tr>
+        <tr>
+            <td>Aluno</td>
+            <td>${dataResponse.matricula}</td>
+        </tr>
+        <tr>
+            <td>Situação</td>
+            <td>${dataResponse.situacaoMatricula}</td>
+        </tr>
+        <tr>
+            <td>Regra de avaliação</td>
+            <td>${dataResponse.regraAvaliacao}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>Quantidade de matrículas filtradas: ${dataResponse.quantidade_matriculas}<b></td>
+        </tr>
+    </table>
+  `;
+
+  console.log($resultTable, dataResponse);
+
   $j('<span />')
-    .html('Quantidade de matrículas filtradas: ' + '<b>' + dataResponse.quantidade_matriculas + '<b><br />')
+    .html(html)
     .attr('class','qnt-matriculas')
     .appendTo($text);
 

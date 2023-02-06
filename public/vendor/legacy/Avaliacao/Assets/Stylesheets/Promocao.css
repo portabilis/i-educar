@@ -1,0 +1,26 @@
+#atualizacao-matriculas-resultados tr th {
+    background-color: #ccdce6 !important;
+    font-family: "Open Sans" !important;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    color: #47728f;
+    padding: 8px;
+}
+
+#atualizacao-matriculas-resultados tr td {
+    color: #47728f;
+    font-family: "Open Sans";
+    font-size: 14px;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+#atualizacao-matriculas-resultados tr:nth-child(even) {
+    background-color: #f5f9fd;
+}
+
+#atualizacao-matriculas-resultados tr:nth-child(odd) {
+    background-color: #fff;
+}
