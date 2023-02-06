@@ -30,22 +30,18 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
                 // Informação que a turma se tornará de multiseriada
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['multiseriada'])
                     ->andReturn(true);
 
-                $mock
-                    ->shouldReceive('getLegacyColumn')
+                $mock->shouldReceive('getLegacyColumn')
                     ->with('originalMultiGradesInfo')
                     ->andReturn('originalMultiGradesInfo')
                     ->shouldReceive('getAttribute')
-                    ->andReturn(0)
-                ;
+                    ->andReturn(0);
 
                 // Serie original diferente da listagem de series propostas
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['originalGrade'])
                     ->andReturn(1);
 
@@ -81,32 +77,21 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
                 // Informação que a turma se tornará de multiseriada
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['multiseriada'])
                     ->andReturn(true);
 
-                $mock
-                    ->shouldReceive('getLegacyColumn')
+                $mock->shouldReceive('getLegacyColumn')
                     ->with('originalMultiGradesInfo')
                     ->andReturn('originalMultiGradesInfo')
                     ->shouldReceive('getAttribute')->once()
-                    ->andReturn(0)
-                ;
+                    ->andReturn(0);
 
-                // Serie original diferente da listagem de series propostas
-//                $mock
-//                    ->shouldReceive('getLegacyColumn', 'getAttribute')
-//                    ->withArgs(['originalGrade'])
-//                    ->andReturn(1);
-
-                $mock
-                    ->shouldReceive('getLegacyColumn')
+                $mock->shouldReceive('getLegacyColumn')
                     ->with('originalGrade')
                     ->andReturn('originalGrade')
                     ->shouldReceive('getAttribute')->once()
-                    ->andReturn(1)
-                ;
+                    ->andReturn(1);
 
                 // Contém alunos com matrículas ativas
                 $mock->shouldReceive('getLegacyColumn', 'getTotalEnrolled')
@@ -137,22 +122,19 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
                 // Informação que a turma se tornará de multiseriada
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['multiseriada'])
                     ->andReturn(true);
 
                 // Não era multisseriada anteriormenente
-                $mock
-                    ->shouldReceive('getLegacyColumn')
+                $mock->shouldReceive('getLegacyColumn')
                     ->with('originalMultiGradesInfo')
                     ->andReturn('originalMultiGradesInfo')
                     ->shouldReceive('getAttribute')
                     ->andReturn(0);
 
                 // Serie original diferente da listagem de series propostas
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['originalGrade'])
                     ->andReturn(1);
 
@@ -190,16 +172,14 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
                     ->andReturn(false);
 
                 // Não era multisseriada anteriormenente
-                $mock
-                    ->shouldReceive('getLegacyColumn')
+                $mock->shouldReceive('getLegacyColumn')
                     ->with('originalMultiGradesInfo')
                     ->andReturn('originalMultiGradesInfo')
                     ->shouldReceive('getAttribute')
                     ->andReturn(0);
 
                 // Serie original
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock ->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['originalGrade'])
                     ->andReturn(1);
 
@@ -229,22 +209,19 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
                 // Informação que a turma se tornará de multiseriada
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['multiseriada'])
                     ->andReturn(true);
 
                 // Era multisseriada anteriormenente
-                $mock
-                    ->shouldReceive('getLegacyColumn')
+                $mock->shouldReceive('getLegacyColumn')
                     ->with('originalMultiGradesInfo')
                     ->andReturn('originalMultiGradesInfo')
                     ->shouldReceive('getAttribute')
                     ->andReturn(true);
 
                 // Serie original
-                $mock
-                    ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['originalGrade'])
                     ->andReturn(1);
 
