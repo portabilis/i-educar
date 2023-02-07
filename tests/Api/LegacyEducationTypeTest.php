@@ -25,7 +25,7 @@ class LegacyEducationTypeTest extends TestCase
         $data = [
             'ref_cod_instituicao' => $type->ref_cod_instituicao,
             'nm_tipo' => $type->nm_tipo,
-            'atividade_complementar' => $type->atividade_complementar,
+            'atividade_complementar' => $type->atividade_complementar ? true : null,
         ];
 
         $payload = array_merge($request, $data);
