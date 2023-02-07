@@ -96,7 +96,7 @@ function handleSearch($resultTable, dataResponse) {
             <td>${dataResponse.regraAvaliacao}</td>
         </tr>
         <tr>
-            <td colspan="2"><b>Quantidade de matrículas filtradas: ${dataResponse.quantidade_matriculas}<b></td>
+            <td colspan="2" class=padding><b>Quantidade de matrículas filtradas: ${dataResponse.quantidade_matriculas}<b></td>
         </tr>
     </table>
   `;
@@ -106,6 +106,19 @@ function handleSearch($resultTable, dataResponse) {
   $j('<span />')
     .html(html)
     .attr('class','qnt-matriculas')
+    .appendTo($text);
+
+  let message = `
+    <div class="flex font-16 gap-4 justify-between items-center border-l-8 border-solid py-2 px-4 border-warning bg-warning text-warning">
+        <div>
+            <i class="fa fa-exclamation-triangle x-alert-icon" aria-hidden="true"></i>
+        </div>
+        <div class="flex-grow ">Ao clicar em "Iniciar processo" a atualização será iniciada automaticamente. Uma notificação será enviada quando a atualização for concluída.</div>
+    </div>
+  `;
+
+  $j('<div />')
+    .html(message)
     .appendTo($text);
 
   let boxButtons = $j('<div />').attr('id', 'box-buttons')
@@ -132,6 +145,3 @@ function handleSearch($resultTable, dataResponse) {
 
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
 }
-
-
-let showNewSearchButton = function () {};
