@@ -286,7 +286,7 @@ return new class extends clsCadastro {
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+        $instituicao = $instituicao = LegacyInstitution::active()->first();
 
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
@@ -296,13 +296,13 @@ return new class extends clsCadastro {
             carga_horaria: $this->carga_horaria,
             dias_letivos: $this->dias_letivos,
             escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao->cidade),
-            escola_uf: $this->escola_uf ?: $instituicao->ref_sigla_uf,
+            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao?->cidade),
+            escola_uf: $this->escola_uf ?: $instituicao?->ref_sigla_uf,
             observacao: $this->observacao,
             aprovado: $this->aprovado,
             ativo: 1,
             faltas_globalizadas: $this->faltas_globalizadas,
-            ref_cod_instituicao: $this->ref_cod_instituicao,
+            ref_cod_instituicao: $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
             origem: 1,
             extra_curricular: $this->extra_curricular,
             frequencia: $this->frequencia,
@@ -367,7 +367,7 @@ return new class extends clsCadastro {
         $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+        $instituicao = LegacyInstitution::active()->first();
 
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
@@ -378,13 +378,13 @@ return new class extends clsCadastro {
             carga_horaria: $this->carga_horaria,
             dias_letivos: $this->dias_letivos,
             escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao->cidade),
-            escola_uf: $this->escola_uf ?: $instituicao->ref_sigla_uf,
+            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao?->cidade),
+            escola_uf: $this->escola_uf ?: $instituicao?->ref_sigla_uf,
             observacao: $this->observacao,
             aprovado: $this->aprovado,
             ativo: 1,
             faltas_globalizadas: $faltasGlobalizadas,
-            ref_cod_instituicao: $this->ref_cod_instituicao,
+            ref_cod_instituicao: $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
             origem: 1,
             extra_curricular: $this->extra_curricular,
             frequencia: $this->frequencia,
