@@ -43,7 +43,7 @@ class EnrollmentsPromotionController extends Controller
             ->dispatch();
 
         return response()->json([
-            'message' => 'Itens enviados para processamento',
+            'message' => 'Matrículas enviadas para atualização. O processo de demorar alguns minutos, aguarde a notificação antes de realizar a mesma atualização.',
             'status' => 'success'
         ]);
     }
