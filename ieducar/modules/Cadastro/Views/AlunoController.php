@@ -446,6 +446,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $obrigarDocumentoPessoa = LegacyInstitution::query()
             ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
 
+        $this->campoOculto('obrigarCPF', (int) $obrigarDocumentoPessoa);
         $this->campoCpf('id_federal', 'CPF', $valorCpf, $obrigarDocumentoPessoa);
 
         $options = [
