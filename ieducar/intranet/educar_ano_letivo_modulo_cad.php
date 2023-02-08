@@ -343,7 +343,7 @@ return new class extends clsCadastro {
                         'dias_letivos' => $this->dias_letivos[$key]
                     ];
                     if ($this->validaAnoLetivoModulo($data)) {
-                        $cadastrou1 = $schoolAcademicYear->academicYearStates()->create($data);
+                        $cadastrou1 = $schoolAcademicYear->academicYearStages()->create($data);
                         LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
                     }
 
@@ -430,7 +430,7 @@ return new class extends clsCadastro {
                     ];
 
                     if ($this->validaAnoLetivoModulo($data)) {
-                        $cadastrou1 = $schoolAcademicYear->academicYearStates()->create($data);
+                        $cadastrou1 = $schoolAcademicYear->academicYearStages()->create($data);
                         LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
                     }
 

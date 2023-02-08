@@ -70,7 +70,7 @@ class LegacySchoolAcademicYear extends LegacyModel
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
-    public function academicYearStates(): HasMany
+    public function academicYearStages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'escola_ano_letivo_id');
     }
