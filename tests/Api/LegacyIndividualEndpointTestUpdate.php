@@ -18,7 +18,9 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
         $this->loginWithFirstUser();
         $faker = Factory::create();
 
-        $individual = LegacyIndividualFactory::new()->create();
+        $individual = LegacyIndividualFactory::new()->create([
+            'sexo' => 'M'
+        ]);
         $newIndividual = LegacyIndividualFactory::new()->make();
 
         $request = [
@@ -32,7 +34,7 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
             'naturalidade_id' => $newIndividual->idmun_nascimento,
             'nm_pessoa' => 'DOMINIC TORRETO',
             'nome_social' => 'DOMINIC TORRETO',
-            'sexo' => $newIndividual->sexo,
+            'sexo' => 'F',
             'data_nasc' => $newIndividual->data_nasc->format('d/m/Y'),
             'rg' => $faker->randomNumber(8),
             'data_emissao_rg' => now()->format('d/m/Y'),
@@ -51,6 +53,7 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
         $this->assertDatabaseHas($individual->getTable(), [
             'idpes' => $individual->person->getKey(),
             'data_nasc' => $newIndividual->data_nasc->format('Y-m-d'),
+            'sexo' => 'F',
         ])->assertDatabaseHas($individual->person->getTable(), [
             'idpes' => $individual->person->getKey(),
             'nome' => 'DOMINIC TORRETO',
