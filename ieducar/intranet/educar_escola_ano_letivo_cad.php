@@ -2,7 +2,7 @@
 
 use App\Models\LegacySchoolAcademicYear;
 
-return new class extends clsCadastro {
+return new class () extends clsCadastro {
     public $pessoa_logada;
     public $ref_cod_escola;
     public $ano;
@@ -46,7 +46,10 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'ref_cod_escola', valor: $this->ref_cod_escola);
         $this->campoOculto(nome: 'ano', valor: $this->ano);
 
-        $ano_array = LegacySchoolAcademicYear::active()->where('andamento', 2)->whereSchool($this->ref_cod_escola)->pluck('ano', 'ano');
+        $ano_array = collect();
+        if (is_numeric($this->ref_cod_escola)) {
+            $ano_array = LegacySchoolAcademicYear::active()->where('andamento', 2)->whereSchool($this->ref_cod_escola)->pluck('ano', 'ano');
+        }
 
         $ano_atual = date('Y') - 5;
 
