@@ -42,6 +42,7 @@ return new class () extends Migration {
         Schema::table('escola_ano_letivo', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('updated_at')->nullable();
+            $table->renameColumn('data_cadastro', 'created_at');
             $table->index([
                 'ref_cod_escola',
                 'ano'

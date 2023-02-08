@@ -24,8 +24,6 @@ class LegacySchoolAcademicYear extends LegacyModel
      */
     protected $table = 'pmieducar.escola_ano_letivo';
 
-    public const CREATED_AT = 'data_cadastro';
-
     /**
      * Builder dos filtros
      *
@@ -39,8 +37,7 @@ class LegacySchoolAcademicYear extends LegacyModel
      * @var string[]
      */
     public array $legacy = [
-        'year' => 'ano',
-        'created_at' => 'data_cadastro'
+        'year' => 'ano'
     ];
 
     /**
