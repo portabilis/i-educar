@@ -1,12 +1,12 @@
 <?php
 
-use App\Support\Database\MigrationUtils;
+use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
-    use MigrationUtils;
+    use AsView;
 
     public function up()
     {
@@ -16,10 +16,9 @@ return new class () extends Migration {
         $this->dropView('relatorio.view_dados_modulo');
         $this->dropView('relatorio.view_modulo');
 
-        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint if exists ano_letivo_modulo_pkey');
-        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint if exists pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign');
-        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint if exists ano_letivo_modulo_ref_ref_cod_escola_fkey');
-
+        \DB::statement('ALTER TABLE pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_pkey');
+        \DB::statement('ALTER TABLE pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign');
+        \DB::statement('ALTER TABLE pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_ref_ref_cod_escola_fkey');
 
         Schema::table('ano_letivo_modulo', function (Blueprint $table) {
             $table->increments('id');
@@ -33,13 +32,13 @@ return new class () extends Migration {
                 'ref_cod_modulo'
             ]);
         });
-        $this->executeSqlFile(__DIR__ . '/../sqls/views/public.exporter_school_stages.sql');
-        $this->executeSqlFile(__DIR__ . '/../sqls/views/public.exporter_stages.sql');
-        $this->executeSqlFile(__DIR__ . '/../sqls/views/relatorio.view_modulo.sql');
-        $this->executeSqlFile(__DIR__ . '/../sqls/views/relatorio.view_dados_modulo.sql');
+        $this->createView('public.exporter_school_stages', '2020-07-09');
+        $this->createView('public.exporter_stages', '2020-07-10');
+        $this->createView('relatorio.view_modulo');
+        $this->createView('relatorio.view_dados_modulo');
 
         //ESCOLA ANO LETIVO
-        \DB::statement('alter table pmieducar.escola_ano_letivo drop constraint if exists escola_ano_letivo_pkey');
+        \DB::statement('ALTER TABLE pmieducar.escola_ano_letivo DROP CONSTRAINT IF EXISTS escola_ano_letivo_pkey');
         Schema::table('escola_ano_letivo', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('updated_at')->nullable();
@@ -59,6 +58,6 @@ return new class () extends Migration {
         });
 
         \DB::statement('UPDATE pmieducar.ano_letivo_modulo alm SET escola_ano_letivo_id = eal.id FROM pmieducar.escola_ano_letivo eal WHERE eal.ano = alm.ref_ano AND eal.ref_cod_escola = alm.ref_ref_cod_escola');
-        \DB::statement('alter table pmieducar.ano_letivo_modulo alter column escola_ano_letivo_id set not null');
+        \DB::statement('ALTER TABLE pmieducar.ano_letivo_modulo ALTER COLUMN escola_ano_letivo_id SET NOT NULL');
     }
 };
