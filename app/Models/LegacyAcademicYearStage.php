@@ -38,6 +38,7 @@ class LegacyAcademicYearStage extends Model
         'data_inicio',
         'data_fim',
         'dias_letivos',
+        'escola_ano_letivo_id'
     ];
 
     /**
