@@ -23,8 +23,7 @@ class LegacySchoolAcademicYearTest extends EloquentTestCase
     protected function getLegacyAttributes(): array
     {
         return [
-            'year' => 'ano',
-            'created_at' => 'data_cadastro'
+            'year' => 'ano'
         ];
     }
 

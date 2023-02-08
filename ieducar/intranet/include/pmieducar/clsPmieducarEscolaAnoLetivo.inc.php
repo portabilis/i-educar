@@ -19,7 +19,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_ano_letivo";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_escola, ano, ref_usuario_cad, ref_usuario_exc, andamento, data_cadastro, data_exclusao, ativo, turmas_por_ano';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_escola, ano, ref_usuario_cad, ref_usuario_exc, andamento, created_at, data_exclusao, ativo, turmas_por_ano';
 
         if (is_numeric($ref_usuario_exc)) {
             $this->ref_usuario_exc = $ref_usuario_exc;
@@ -38,7 +38,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
             $this->andamento = $andamento;
         }
         if (is_string($data_cadastro)) {
-            $this->data_cadastro = $data_cadastro;
+            $this->created_at = $data_cadastro;
         }
         if (is_string($data_exclusao)) {
             $this->data_exclusao = $data_exclusao;
@@ -85,7 +85,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
                 $gruda = ', ';
             }
 
-            $campos .= "{$gruda}data_cadastro";
+            $campos .= "{$gruda}created_at";
             $valores .= "{$gruda}NOW()";
             $gruda = ', ';
 
@@ -132,7 +132,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
-                $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+                $set .= "{$gruda}created_at = '{$this->data_cadastro}'";
                 $gruda = ', ';
             }
             $set .= "{$gruda}data_exclusao = NOW()";
@@ -188,11 +188,11 @@ class clsPmieducarEscolaAnoLetivo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
+            $filtros .= "{$whereAnd} created_at >= '{$date_data_cadastro_ini}'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
+            $filtros .= "{$whereAnd} created_at <= '{$date_data_cadastro_fim}'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_exclusao_ini)) {

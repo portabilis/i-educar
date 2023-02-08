@@ -220,7 +220,6 @@ class Registro00Import implements RegistroImportInterface
             'ano' => $this->year,
             'ref_usuario_cad' => $this->user->id,
             'andamento' => 1,
-            'data_cadastro' => now(),
             'ativo' => 1,
         ]);
 
