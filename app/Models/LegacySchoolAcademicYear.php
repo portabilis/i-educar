@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolAcademicYearBuilder;
-use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,19 +18,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LegacySchoolAcademicYear extends LegacyModel
 {
     use LegacyAttribute;
-    use HasLegacyDates;
 
     /**
      * @var string
      */
     protected $table = 'pmieducar.escola_ano_letivo';
 
-    public const CREATED_AT = null;
-
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'ref_cod_escola';
+    public const CREATED_AT = 'data_cadastro';
 
     /**
      * Builder dos filtros
@@ -46,7 +39,8 @@ class LegacySchoolAcademicYear extends LegacyModel
      * @var string[]
      */
     public array $legacy = [
-        'year' => 'ano'
+        'year' => 'ano',
+        'created_at' => 'data_cadastro'
     ];
 
     /**
@@ -78,6 +72,6 @@ class LegacySchoolAcademicYear extends LegacyModel
     }
     public function academicYearStates(): HasMany
     {
-        return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_cod_escola');
+        return $this->hasMany(LegacyAcademicYearStage::class, 'escola_ano_letivo_id');
     }
 }

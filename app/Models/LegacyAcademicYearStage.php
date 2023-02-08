@@ -20,11 +20,6 @@ class LegacyAcademicYearStage extends Model
     protected $table = 'pmieducar.ano_letivo_modulo';
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'ref_ref_cod_escola';
-
-    /**
      * @var array
      */
     protected $dates = [
