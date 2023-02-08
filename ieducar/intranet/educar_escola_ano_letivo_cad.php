@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
     public $ref_cod_escola;
@@ -44,20 +46,7 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'ref_cod_escola', valor: $this->ref_cod_escola);
         $this->campoOculto(nome: 'ano', valor: $this->ano);
 
-        $obj_anos = new clsPmieducarEscolaAnoLetivo();
-        $lista_ano = $obj_anos->lista(
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_andamento: 2,
-            int_ativo: 1
-        );
-
-        $ano_array = [];
-
-        if ($lista_ano) {
-            foreach ($lista_ano as $ano) {
-                $ano_array[$ano['ano']] = $ano['ano'];
-            }
-        }
+        $ano_array = LegacySchoolAcademicYear::active()->where('andamento', 2)->whereSchool($this->ref_cod_escola)->pluck('ano', 'ano');
 
         $ano_atual = date('Y') - 5;
 
@@ -68,7 +57,7 @@ return new class extends clsCadastro {
         for ($i = 0; $i < $lim; $i++) {
             $ano = $ano_atual + $i;
 
-            if (! key_exists(key: $ano, array: $ano_array)) {
+            if (! $ano_array->contains($ano)) {
                 $opcoes[$ano] = $ano;
             } else {
                 $lim++;

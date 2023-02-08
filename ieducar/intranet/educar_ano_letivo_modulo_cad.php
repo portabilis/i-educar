@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\EmployeeAllocation;
+use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassTeacher;
-use App\Models\EmployeeAllocation;
 use App\Models\LegacySchoolClassTeacherDiscipline;
+use App\Models\LegacyStageType;
 use App\Services\iDiarioService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +52,7 @@ return new class extends clsCadastro {
                 ]
             )->first();
 
-            if ($schoolAcademicYear instanceof LegacySchoolAcademicYear) {
+            if ($schoolAcademicYear) {
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
@@ -59,10 +62,8 @@ return new class extends clsCadastro {
 
                 $retorno = 'Editar';
 
-                $etapasObj = new clsPmieducarAnoLetivoModulo();
-                $etapasObj->setOrderBy(strNomeCampo: 'sequencial ASC');
-                $this->etapas = $etapasObj->lista(int_ref_ano: $this->ref_ano, int_ref_ref_cod_escola: $this->ref_ref_cod_escola);
-                $this->ref_cod_modulo = $this->etapas[0]['ref_cod_modulo'];
+                $this->etapas = LegacyAcademicYearStage::where('ref_ano', $this->ref_ano)->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->orderBy('sequencial')->get();
+                $this->ref_cod_modulo = $this->etapas->first()?->ref_cod_modulo;
             }
         }
 
@@ -91,17 +92,13 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'ref_ano', valor: $this->ref_ano);
         $this->campoOculto(nome: 'ref_ref_cod_escola', valor: $this->ref_ref_cod_escola);
 
-        $obj_escola = new clsPmieducarEscola(cod_escola: $this->ref_ref_cod_escola);
-        $det_escola = $obj_escola->detalhe();
-        $ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
-        $this->ref_cod_instituicao = $ref_cod_instituicao;
+        $this->ref_cod_instituicao = LegacySchool::where('cod_escola', $this->ref_ref_cod_escola)->value('ref_cod_instituicao');
 
-        $obj = new clsPmieducarAnoLetivoModulo();
-        $obj->setOrderBy(strNomeCampo: 'sequencial ASC');
-        $registros = $obj->lista(int_ref_ano: $this->ref_ano - 1, int_ref_ref_cod_escola: $this->ref_ref_cod_escola);
+        $registros = LegacyAcademicYearStage::where('ref_ano', $this->ref_ano - 1)->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->orderBy('sequencial')->get();
+
         $cont = 0;
 
-        if ($registros) {
+        if ($registros->isNotEmpty()) {
             $cor = '';
             $tabela = '<table border=0 style=\'\' cellpadding=2 width=\'100%\'>';
             $tabela .= "<tr bgcolor=$cor><td colspan='2'>Etapas do ano anterior (".($this->ref_ano - 1).')</td></tr><tr><td>';
@@ -157,13 +154,13 @@ return new class extends clsCadastro {
 
         $objTemp = new clsPmieducarModulo();
         $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
+        $lista = LegacyStageType::active()->where('ref_cod_instituicao', $this->ref_cod_instituicao)->orderBy('nm_tipo')->get([
+            'cod_modulo',
+            'nm_tipo',
+            'num_etapas'
+        ]);
 
-        $lista = $objTemp->lista(
-            int_ativo: 1,
-            int_ref_cod_instituicao: $ref_cod_instituicao
-        );
-
-        if (is_array(value: $lista) && count(value: $lista)) {
+        if ($lista->isNotEmpty()) {
             $this->modulos = $lista;
 
             foreach ($lista as $registro) {
@@ -335,17 +332,20 @@ return new class extends clsCadastro {
                         $this->dias_letivos[$key] = '0';
                     }
 
-                    $obj = new clsPmieducarAnoLetivoModulo(
-                        ref_ano: $this->ref_ano,
-                        ref_ref_cod_escola: $this->ref_ref_cod_escola,
-                        sequencial: $key + 1,
-                        ref_cod_modulo: $this->ref_cod_modulo,
-                        data_inicio: $this->data_inicio[$key],
-                        data_fim: $this->data_fim[$key],
-                        dias_letivos: $this->dias_letivos[$key]
-                    );
-
-                    $cadastrou1 = $obj->cadastra();
+                    $cadastrou1 = null;
+                    $data = [
+                        'ref_ano' => $this->ref_ano,
+                        'ref_ref_cod_escola' => $this->ref_ref_cod_escola,
+                        'sequencial' => $key + 1,
+                        'ref_cod_modulo' => $this->ref_cod_modulo,
+                        'data_inicio' => $this->data_inicio[$key],
+                        'data_fim' => $this->data_fim[$key],
+                        'dias_letivos' => $this->dias_letivos[$key]
+                    ];
+                    if ($this->validaAnoLetivoModulo($data)) {
+                        $cadastrou1 = $schoolAcademicYear->academicYearStates()->create($data);
+                        LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
+                    }
 
                     if (!$cadastrou1) {
                         $this->mensagem = 'Cadastro não realizado.<br />';
@@ -354,7 +354,7 @@ return new class extends clsCadastro {
                     }
                 }
 
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+                $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 
                 $this->simpleRedirect(url: 'educar_escola_det.php?cod_escola=' . $this->ref_ref_cod_escola . '#ano_letivo');
             }
@@ -401,10 +401,14 @@ return new class extends clsCadastro {
                 return false;
             }
 
-            $obj = new clsPmieducarAnoLetivoModulo(ref_ano: $this->ref_ano, ref_ref_cod_escola: $this->ref_ref_cod_escola);
-            $excluiu = $obj->excluirTodos();
+            $excluiu = true;
+            if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
+                $excluiu = LegacyAcademicYearStage::where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->where('ref_ano', $this->ref_ano)->delete() >= 0;
+            }
 
             if ($excluiu) {
+                $schoolAcademicYear =  LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->first();
+
                 foreach ($this->data_inicio as $key => $campo) {
                     $this->data_inicio[$key] = dataToBanco(data_original: $this->data_inicio[$key]);
                     $this->data_fim[$key] = dataToBanco(data_original: $this->data_fim[$key]);
@@ -413,17 +417,22 @@ return new class extends clsCadastro {
                         $this->dias_letivos[$key] = '0';
                     }
 
-                    $obj = new clsPmieducarAnoLetivoModulo(
-                        ref_ano: $this->ref_ano,
-                        ref_ref_cod_escola: $this->ref_ref_cod_escola,
-                        sequencial: $key + 1,
-                        ref_cod_modulo: $this->ref_cod_modulo,
-                        data_inicio: $this->data_inicio[$key],
-                        data_fim: $this->data_fim[$key],
-                        dias_letivos: $this->dias_letivos[$key]
-                    );
+                    $cadastrou1 = null;
 
-                    $cadastrou1 = $obj->cadastra();
+                    $data = [
+                        'ref_ano' => $this->ref_ano,
+                        'ref_ref_cod_escola' => $this->ref_ref_cod_escola,
+                        'sequencial' => $key + 1,
+                        'ref_cod_modulo' => $this->ref_cod_modulo,
+                        'data_inicio' => $this->data_inicio[$key],
+                        'data_fim' => $this->data_fim[$key],
+                        'dias_letivos' => $this->dias_letivos[$key]
+                    ];
+
+                    if ($this->validaAnoLetivoModulo($data)) {
+                        $cadastrou1 = $schoolAcademicYear->academicYearStates()->create($data);
+                        LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
+                    }
 
                     if (!$cadastrou1) {
                         $this->mensagem = 'Edição não realizada.<br />';
@@ -432,7 +441,7 @@ return new class extends clsCadastro {
                     }
                 }
 
-                $this->mensagem .= 'Edição efetuada com sucesso.<br />';
+                $this->mensagem = 'Edição efetuada com sucesso.<br />';
                 $this->simpleRedirect(url: 'educar_escola_lst.php');
             }
         }
@@ -441,6 +450,17 @@ return new class extends clsCadastro {
         $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
+    }
+
+    private function validaAnoLetivoModulo(array $data): bool
+    {
+        return is_numeric($data['ref_ano'])
+            && is_numeric($data['ref_ref_cod_escola'])
+            && is_numeric($data['sequencial'])
+            && is_numeric($data['ref_cod_modulo'])
+            && is_string($data['data_inicio'])
+            && is_string($data['data_fim'])
+            && is_numeric($data['dias_letivos']);
     }
 
     public function Excluir()
@@ -466,12 +486,10 @@ return new class extends clsCadastro {
             'ativo' => 0
         ]);
 
-
-        $obj = new clsPmieducarAnoLetivoModulo(ref_ano: $this->ref_ano, ref_ref_cod_escola: $this->ref_ref_cod_escola);
-        $excluiu1 = $obj->excluirTodos();
+        $excluiu1 = LegacyAcademicYearStage::where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->where('ref_ano', $this->ref_ano)->delete() >= 0;
 
         if ($excluiu1) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
+            $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect(url: 'educar_escola_lst.php');
         }
 
