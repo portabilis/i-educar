@@ -39,7 +39,9 @@ SELECT p.id,
        string_agg(ece.cod_escola_inep::TEXT, '|') AS school_inep,
        string_agg(t.etapa_educacenso::TEXT, '|') AS school_class_stage,
        string_agg(COALESCE(tm.nome, tt.nome)::TEXT, '|')  AS period,
-       array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text) AS technological_resources,
+       array_to_string(ARRAY(
+            SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text
+        ), ';'::text) AS technological_resources,
        p.nationality,
        p.birthplace,
        string_agg((CASE m.modalidade_ensino
