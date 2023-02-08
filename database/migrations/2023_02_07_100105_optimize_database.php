@@ -16,8 +16,10 @@ return new class () extends Migration {
         $this->dropView('relatorio.view_dados_modulo');
         $this->dropView('relatorio.view_modulo');
 
-        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint ano_letivo_modulo_pkey');
-        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint ano_letivo_modulo_ref_ref_cod_escola_fkey');
+        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint if exists ano_letivo_modulo_pkey');
+        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint if exists pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign');
+        \DB::statement('alter table pmieducar.ano_letivo_modulo drop constraint if exists ano_letivo_modulo_ref_ref_cod_escola_fkey');
+
 
         Schema::table('ano_letivo_modulo', function (Blueprint $table) {
             $table->increments('id');
@@ -37,11 +39,10 @@ return new class () extends Migration {
         $this->executeSqlFile(__DIR__ . '/../sqls/views/relatorio.view_dados_modulo.sql');
 
         //ESCOLA ANO LETIVO
-        \DB::statement('alter table pmieducar.escola_ano_letivo drop constraint escola_ano_letivo_pkey');
+        \DB::statement('alter table pmieducar.escola_ano_letivo drop constraint if exists escola_ano_letivo_pkey');
         Schema::table('escola_ano_letivo', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('updated_at')->nullable();
-            $table->foreign('ref_cod_escola')->references('cod_escola')->on('pmieducar.escola')->onDelete('cascade');
             $table->index([
                 'ref_cod_escola',
                 'ano'
