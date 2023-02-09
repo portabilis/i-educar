@@ -42,7 +42,7 @@ class Student extends Model
                 'school_class_id' => 'ID Turma',
                 'grade_id' => 'ID Série',
                 'course_id' => 'ID Curso',
-                'inep_id' => 'Código INEP',
+                'inep_id' => 'Código INEP (Aluno)',
             ],
             'Aluno' => [
                 'name' => 'Nome',
