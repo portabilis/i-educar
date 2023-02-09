@@ -237,8 +237,12 @@ class AlunoController extends ApiCoreController
         $strictValitation  = LegacyInstitution::query()
             ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
 
-        if ($strictValitation && validaCPF($cpf)) {
-            return true;
+        if ($strictValitation) {
+            if (validaCPF($cpf)) {
+                return true;
+            }
+            $this->messenger->append("O CPF informado é inválido");
+            return false;
         }
 
         if ($cpf === '000.000.000-00') {
