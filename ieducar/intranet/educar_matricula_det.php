@@ -363,7 +363,7 @@ return new class extends clsDetalhe {
                 if (is_array(value: $lst_transferencia) && isset($data_transferencia)) {
                     $this->array_botao[] = 'Cancelar solicitação transferência';
                     $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
-                } elseif ($registro['ref_ref_cod_serie']) {
+                } elseif ($registro['ref_ref_cod_serie'] && $registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
                     $this->array_botao[] = _cl(key: 'matricula.detalhe.solicitar_transferencia');
                     $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
                 }

@@ -708,6 +708,15 @@ return new class extends clsCadastro {
             } else {
                 $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
             }
+        } else {
+            $this->campoCheck(
+                nome: 'definir_componentes_diferenciados',
+                campo: 'Definir componentes curriculares diferenciados',
+                valor: false,
+                desc: null,
+                disable: true,
+                dica: 'Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado'
+            );
         }
 
         $help = [];

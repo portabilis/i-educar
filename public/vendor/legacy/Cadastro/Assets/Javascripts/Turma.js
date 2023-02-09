@@ -351,6 +351,8 @@ var preencheComponentesCurriculares = function(data) {
           <tr align="left"><td>${conteudo}</td></tr>
       </table>`
     );
+
+    $j('#definir_componentes_diferenciados').prop('disabled', !componentesCurriculares[0].permite_por_turma).trigger("change");
   }
 }
 
