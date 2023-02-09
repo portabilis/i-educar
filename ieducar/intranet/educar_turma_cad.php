@@ -4,6 +4,7 @@ use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
+use App\Models\LegacyStageType;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
 
@@ -383,12 +384,9 @@ return new class extends clsCadastro {
 
         $this->montaListaComponentesSerieEscola();
 
-        $objTemp = new clsPmieducarModulo();
-        $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
-
-        $lista = $objTemp->lista(
-            int_ativo: 1
-        );
+        $lista = LegacyStageType::query()->where('ativo', 1)
+            ->orderBy(column: 'nm_tipo', direction: 'ASC')
+            ->get()->toArray();
 
         $opcoesCampoModulo = [];
 
