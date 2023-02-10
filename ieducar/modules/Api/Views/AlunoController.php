@@ -249,9 +249,11 @@ class AlunoController extends ApiCoreController
             return true;
         }
 
-        $this->messenger->append("O CPF informado é inválido");
+        if (!empty($cpf) && validaCPF($cpf)) {
+            return true;
+        }
 
-        return false;
+        return true;
     }
     /**
      * @return bool
