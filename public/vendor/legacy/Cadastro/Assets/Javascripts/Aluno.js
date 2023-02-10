@@ -53,6 +53,7 @@ var pessoaPaiOuMae;
 var $idField = $j("#id");
 var $nomeField = $j("#pessoa_nome");
 var $cpfField = $j("#id_federal");
+var obrigarCPF = $j("#obrigarCPF");
 
 var $resourceNotice = $j("<span>")
   .html("")
@@ -2843,7 +2844,10 @@ function canShowParentsFields() {
 
       $cpfNotice.hide();
 
-      if (cpf && !ignoreValidation.includes(cpf) && validatesCpf()) {
+      let regraCpf = obrigarCPF.val();
+      let validCpfRule = regraCpf == 1 ? true : !ignoreValidation.includes(cpf);
+
+      if (cpf && validCpfRule && validatesCpf()) {
         getPersonByCpf(cpf);
       }else{
         handleShowSubmit();
@@ -2905,7 +2909,10 @@ function canShowParentsFields() {
 
       $cpfNotice.hide();
 
-      if (cpf && !ignoreValidation.includes(cpf) && !validationUtils.validatesCpf(cpf)) {
+      let regraCpf = obrigarCPF.val();
+      let validCpfRule = regraCpf == 1 ? true : !ignoreValidation.includes(cpf);
+
+      if (cpf && validCpfRule && !validationUtils.validatesCpf(cpf)) {
         $cpfNotice.html("O CPF informado é inválido").slideDown("fast");
 
         $submitButton.attr("disabled", "disabled").hide();
