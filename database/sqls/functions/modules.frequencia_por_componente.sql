@@ -4,26 +4,40 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     cod_falta_aluno_id integer;
-    v_qtd_dias_letivos_serie integer;
     v_total_faltas integer;
-    qtde_carga_horaria integer;
+    qtde_carga_horaria float;
     v_hora_falta float;
     cod_serie_id integer;
+    cod_escola_id integer;
 BEGIN
 
     cod_falta_aluno_id := (SELECT id FROM modules.falta_aluno WHERE matricula_id = cod_matricula_id ORDER BY id DESC LIMIT 1);
 
     qtde_carga_horaria := (
-        SELECT carga_horaria :: int
+        SELECT carga_horaria :: float
         FROM modules.componente_curricular_turma
         WHERE componente_curricular_turma.componente_curricular_id = cod_disciplina_id
         AND componente_curricular_turma.turma_id = cod_turma_id
     );
 
     IF (qtde_carga_horaria IS NULL) THEN
+        cod_serie_id := (SELECT es.ref_cod_serie FROM pmieducar.turma t
+                LEFT JOIN pmieducar.turma_serie ts ON ts.turma_id = t.cod_turma
+                JOIN pmieducar.escola_serie es ON (es.ref_cod_escola = t.ref_ref_cod_escola AND es.ref_cod_serie = coalesce(ts.serie_id, t.ref_ref_cod_serie))
+            WHERE cod_turma = cod_turma_id);
+        cod_escola_id := (SELECT t.ref_ref_cod_escola FROM pmieducar.turma t WHERE cod_turma = cod_turma_id);
+        qtde_carga_horaria := (
+            SELECT carga_horaria :: float
+            FROM pmieducar.escola_serie_disciplina
+            WHERE escola_serie_disciplina.ref_cod_disciplina = cod_disciplina_id
+            AND escola_serie_disciplina.ref_ref_cod_serie = cod_serie_id
+            AND escola_serie_disciplina.ref_ref_cod_escola = cod_escola_id);
+    END IF;
+
+    IF (qtde_carga_horaria IS NULL) THEN
         cod_serie_id := (SELECT ref_ref_cod_serie FROM pmieducar.turma WHERE cod_turma = cod_turma_id);
         qtde_carga_horaria := (
-            SELECT carga_horaria :: int
+            SELECT carga_horaria :: float
             FROM modules.componente_curricular_ano_escolar
             WHERE componente_curricular_ano_escolar.componente_curricular_id = cod_disciplina_id
             AND componente_curricular_ano_escolar.ano_escolar_id = cod_serie_id

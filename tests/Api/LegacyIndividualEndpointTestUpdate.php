@@ -21,7 +21,9 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
         $individual = LegacyIndividualFactory::new()->create([
             'sexo' => 'M'
         ]);
-        $newIndividual = LegacyIndividualFactory::new()->make();
+        $newIndividual = LegacyIndividualFactory::new()->make([
+            'data_nasc' => now()->subYears(18),
+        ]);
 
         $request = [
             'tipoacao' => 'Editar',
@@ -54,6 +56,7 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
             'idpes' => $individual->person->getKey(),
             'data_nasc' => $newIndividual->data_nasc->format('Y-m-d'),
             'sexo' => 'F',
+            'data_nasc' => $newIndividual->data_nasc,
         ])->assertDatabaseHas($individual->person->getTable(), [
             'idpes' => $individual->person->getKey(),
             'nome' => 'DOMINIC TORRETO',
