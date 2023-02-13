@@ -30,6 +30,7 @@ class LegacyStageTypeFactory extends Factory
             'descricao' => $this->faker->sentence,
             'num_meses' => $this->faker->numberBetween(1, 12),
             'num_semanas' => $this->faker->numberBetween(1, 52),
+            'ativo' => 1,
         ];
     }
 

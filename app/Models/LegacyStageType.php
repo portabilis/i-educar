@@ -15,6 +15,9 @@ class LegacyStageType extends LegacyModel
     use HasLegacyDates;
     use HasInstitution;
 
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -35,13 +38,10 @@ class LegacyStageType extends LegacyModel
         'num_etapas',
         'descricao',
         'num_meses',
-        'num_semanas'
+        'ref_cod_instituicao',
+        'num_semanas',
+        'ativo'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     public function academicYearStages(): HasMany
     {
@@ -80,20 +80,13 @@ class LegacyStageType extends LegacyModel
      *
      * @return bool
      */
-    public static function alreadyExists(
-        $name,
-        $stagesNumber,
-        $id = null
-    ): bool {
+    public static function alreadyExists($name, $stagesNumber, $id = null): bool
+    {
         return self::query()
             ->where('ativo', 1)
             ->where('nm_tipo', $name)
             ->where('num_etapas', $stagesNumber)
-            ->when($id, function (
-                $query
-            ) use (
-                $id
-            ) {
+            ->when($id, function ($query) use ($id) {
                 $query->where('cod_modulo', '<>', $id);
             })
             ->exists();
@@ -102,13 +95,7 @@ class LegacyStageType extends LegacyModel
     protected function descricao(): Attribute
     {
         return Attribute::make(
-            get: fn (
-                $value
-            ) => str_replace([
-                "\r\n",
-                "\r",
-                "\n"
-            ], '<br />', $value)
+            get: fn ($value) => str_replace(["\r\n", "\r", "\n"], '<br />', $value)
         );
     }
 }

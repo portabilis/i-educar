@@ -6,6 +6,7 @@ use App\Casts\LegacyArray;
 use App\Models\Builders\DisciplineBuilder;
 use App\Models\LegacyModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Collection;
 
 class Discipline extends LegacyModel
 {
@@ -35,5 +36,13 @@ class Discipline extends LegacyModel
         return Attribute::make(
             get: fn () => $this->nome
         );
+    }
+
+    public static function getBySchoolClassAndGrade(int $schoolClass, int $grade): Collection
+    {
+        return self::query()
+            ->where('cod_turma', $schoolClass)
+            ->where('cod_serie', $grade)
+            ->get();
     }
 }

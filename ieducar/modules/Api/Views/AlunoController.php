@@ -4,6 +4,7 @@ use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
@@ -11,6 +12,7 @@ use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
 use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
+use App\User;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -219,10 +221,40 @@ class AlunoController extends ApiCoreController
             $this->validateNis() &&
             $this->validateInepExam() &&
             $this->validateTechnologicalResources() &&
+            $this->validateCpfCode() &&
             $this->validateBirthCertificate() &&
             $this->validateInepCode();
     }
 
+
+    private function validateCpfCode()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $cpf = $this->getRequest()->id_federal;
+
+        $strictValitation  = LegacyInstitution::query()
+            ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
+
+        if ($strictValitation) {
+            if (validaCPF($cpf)) {
+                return true;
+            }
+            $this->messenger->append("O CPF informado é inválido");
+            return false;
+        }
+
+        if ($cpf === '000.000.000-00') {
+            return true;
+        }
+
+        if (!empty($cpf) && validaCPF($cpf)) {
+            return true;
+        }
+
+        return true;
+    }
     /**
      * @return bool
      */

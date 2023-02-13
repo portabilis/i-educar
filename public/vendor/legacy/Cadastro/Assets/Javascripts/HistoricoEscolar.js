@@ -65,6 +65,8 @@ $j(document).ready(function(){
         cidade_escola.makeRequired();
         estado_escola.makeRequired();
         pais_escola.makeRequired();
+        $j('#ref_cod_instituicao').makeUnrequired();
+        $j('#ref_cod_escola').makeUnrequired();
       } else {
         $j('#escola').closest('tr').hide();
         cidade_escola.closest('tr').hide();
