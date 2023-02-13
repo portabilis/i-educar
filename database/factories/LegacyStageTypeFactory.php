@@ -27,6 +27,10 @@ class LegacyStageTypeFactory extends Factory
             'data_cadastro' => now(),
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
             'num_etapas' => $this->faker->numberBetween(1, 4),
+            'descricao' => $this->faker->sentence,
+            'num_meses' => $this->faker->numberBetween(1, 12),
+            'num_semanas' => $this->faker->numberBetween(1, 52),
+            'ativo' => 1,
         ];
     }
 

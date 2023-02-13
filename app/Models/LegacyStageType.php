@@ -15,6 +15,9 @@ class LegacyStageType extends LegacyModel
     use HasLegacyDates;
     use HasInstitution;
 
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -33,13 +36,12 @@ class LegacyStageType extends LegacyModel
         'ref_usuario_cad',
         'nm_tipo',
         'num_etapas',
-        'descricao'
+        'descricao',
+        'num_meses',
+        'ref_cod_instituicao',
+        'num_semanas',
+        'ativo'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     public function academicYearStages(): HasMany
     {

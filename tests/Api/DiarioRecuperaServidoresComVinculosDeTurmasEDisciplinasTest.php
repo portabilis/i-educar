@@ -98,14 +98,16 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
                             'id' => $legacySchoolClassTeacher->getKey(),
                             'servidor_id' => $employee->getKey(),
                             'turma_id' => $schoolClass->getKey(),
-                            'serie_id' => $schoolClass->ref_ref_cod_serie,
                             'turno_id' => $period->getKey(),
                             'permite_lancar_faltas_componente' => 0,
                             'tipo_nota' => null,
                             'deleted_at' => null,
-                                'disciplinas' => [
-                                    $discipline->getKey() . ' ' . $legacyDisciplineAcademicYear->tipo_nota
-                                ]
+                            'disciplinas' => [
+                                $discipline->getKey() . ' ' . $legacyDisciplineAcademicYear->tipo_nota
+                            ],
+                            'disciplinas_serie' => [
+                                $grade->getKey() => [$discipline->getKey()]
+                            ]
                         ]
                     ],
                     'oper' => 'get',
@@ -121,13 +123,13 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
                             'id',
                             'servidor_id',
                             'turma_id',
-                            'serie_id',
                             'turno_id',
                             'permite_lancar_faltas_componente',
                             'tipo_nota',
                             'updated_at',
                             'deleted_at',
-                            'disciplinas'
+                            'disciplinas',
+                            'disciplinas_serie'
                         ]
                     ],
                     'oper',

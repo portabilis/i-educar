@@ -124,6 +124,13 @@ class LegacyCourse extends LegacyModel
         );
     }
 
+    protected function hourAbsence(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => (float) $this->hora_falta
+        );
+    }
+
     /**
      * Relacionamento com as series
      *

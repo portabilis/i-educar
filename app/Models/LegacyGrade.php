@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use App\Models\Builders\LegacyGradeBuilder;
+use App\Models\View\Discipline;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacyGrade extends LegacyModel
 {
+    use BelongsToOne;
+
     public const CREATED_AT = 'data_cadastro';
 
     /**
@@ -102,6 +106,28 @@ class LegacyGrade extends LegacyModel
             'serie_id',
             'regra_avaliacao_id'
         )->withPivot('ano_letivo', 'regra_avaliacao_diferenciada_id');
+    }
+
+    public function evaluationRule()
+    {
+        return $this->belongsToOne(
+            LegacyEvaluationRule::class,
+            'modules.regra_avaliacao_serie_ano',
+            'serie_id',
+            'regra_avaliacao_id'
+        )->withPivot('ano_letivo', 'regra_avaliacao_diferenciada_id');
+    }
+
+    protected function workload(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->carga_horaria,
+        );
+    }
+
+    public function disciplines(): HasMany
+    {
+        return $this->hasMany(Discipline::class, 'cod_serie');
     }
 
     /**
