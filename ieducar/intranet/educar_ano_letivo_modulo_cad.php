@@ -5,6 +5,7 @@ use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassTeacher;
 use App\Models\EmployeeAllocation;
 use App\Models\LegacySchoolClassTeacherDiscipline;
+use App\Models\LegacyStageType;
 use App\Services\iDiarioService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -155,13 +156,12 @@ return new class extends clsCadastro {
 
         $opcoesCampoModulo = [];
 
-        $objTemp = new clsPmieducarModulo();
-        $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
-
-        $lista = $objTemp->lista(
-            int_ativo: 1,
-            int_ref_cod_instituicao: $ref_cod_instituicao
-        );
+        $lista = LegacyStageType::query()
+            ->where('ativo', 1)
+            ->where('ref_cod_instituicao', $ref_cod_instituicao)
+            ->orderBy('nm_tipo')
+            ->get()
+            ->toArray();
 
         if (is_array(value: $lista) && count(value: $lista)) {
             $this->modulos = $lista;

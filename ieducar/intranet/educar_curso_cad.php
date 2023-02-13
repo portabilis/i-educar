@@ -375,6 +375,7 @@ return new class extends clsCadastro {
                 ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino,
                 nm_curso: $this->nm_curso,
                 sgl_curso: $this->sgl_curso,
+                qtd_etapas: $this->qtd_etapas,
                 carga_horaria: $this->carga_horaria,
                 ato_poder_publico: $this->ato_poder_publico,
                 objetivo_curso: $this->objetivo_curso,

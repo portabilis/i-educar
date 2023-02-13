@@ -479,11 +479,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
             ->with(1)
             ->will($this->onConsecutiveCalls($returnMatriculaTurma, $returnMatriculaTurma));
 
-        $moduloMock = $this->getCleanMock('clsPmieducarModulo');
-        $moduloMock->expects($this->any())
-            ->method('detalhe')
-            ->will($this->onConsecutiveCalls($returnModulo, $returnModulo));
-
         $returnCurso = ['cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 0];
         $cursoMock = $this->getCleanMock('clsPmieducarCurso');
         $cursoMock->expects($this->any())
@@ -517,12 +512,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
         App_Model_IedFinder::addClassToStorage(
             'clsPmieducarMatriculaTurma',
             $matriculaTurmaMock,
-            null,
-            true
-        );
-        App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarModulo',
-            $moduloMock,
             null,
             true
         );

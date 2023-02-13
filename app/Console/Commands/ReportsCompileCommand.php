@@ -23,7 +23,7 @@ class ReportsCompileCommand extends Command
     protected function getJasperFiles(): ?string
     {
         $reportDefaultPath = 'ieducar/modules/Reports/ReportSources';
-        if(false === is_dir(base_path($reportDefaultPath))) {
+        if (false === is_dir(base_path($reportDefaultPath))) {
             return null;
         }
 
@@ -53,6 +53,7 @@ class ReportsCompileCommand extends Command
 
         if ($jasperFiles === null) {
             $this->info('Report Packet not install or linked');
+
             return;
         }
 

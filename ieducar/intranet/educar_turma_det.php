@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Models\View\Discipline;
+use App\Models\LegacyStageType;
 use Illuminate\Support\Facades\DB;
 
 return new class () extends clsDetalhe {
@@ -268,9 +271,7 @@ return new class () extends clsDetalhe {
                         $color = ' bgcolor="#FFFFFF" ';
                     }
 
-                    $obj_modulo = new clsPmieducarModulo(cod_modulo: $valor['ref_cod_modulo']);
-                    $det_modulo = $obj_modulo->detalhe();
-                    $nm_modulo = $det_modulo['nm_tipo'];
+                    $nm_modulo = LegacyStageType::find($valor['ref_cod_modulo'])->nm_tipo;
 
                     $valor['data_inicio'] = dataFromPgToBr(data_original: $valor['data_inicio']);
                     $valor['data_fim'] = dataFromPgToBr(data_original: $valor['data_fim']);
@@ -374,49 +375,7 @@ return new class () extends clsDetalhe {
 
     public function montaListaComponentes()
     {
-        $this->tabela3 = '';
-
-        try {
-            $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
-                serieId: $this->ref_ref_cod_serie,
-                escolaId: $this->ref_ref_cod_escola,
-                ano: $this->ano
-            );
-        } catch (Throwable $e) {
-            $this->mensagem = $e->getMessage();
-
-            return;
-        }
-
-        // Instancia o mapper de turma
-        $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
-        $componentesTurma = [];
-
-        if (isset($this->cod_turma) && is_numeric(value: $this->cod_turma)) {
-            $componentesTurma = $componenteTurmaMapper->findAll(
-                where: ['turma' => $this->cod_turma]
-            );
-        }
-
-        $componentes = [];
-        foreach ($componentesTurma as $componenteTurma) {
-            $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
-        }
-        unset($componentesTurma);
-        $this->escola_serie_disciplina = [];
-
-        if (is_array(value: $componentes) && !empty($componentes)) {
-            $lista = array_intersect_key($lista, $componentes);
-        }
-
-        $this->tabela3 = '';
-        $componentes = collect(value: $lista)->map(callback: function ($disciplina) {
-            return [
-                'id' => $disciplina->id,
-                'name' => $disciplina->nome,
-                'workload' => $disciplina->cargaHoraria !== null || $disciplina->cargaHoraria !== 0 ? $disciplina->cargaHoraria : null
-            ];
-        })->sortByDesc(callback: 'workload');
+        $componentes = Discipline::getBySchoolClassAndGrade($this->cod_turma, $this->ref_ref_cod_serie);
 
         if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
@@ -427,8 +386,8 @@ return new class () extends clsDetalhe {
 
             foreach ($componentes as $componente) {
                 $disciplinas .= '<tr>';
-                $disciplinas .= "<td>{$componente['name']}</td>";
-                $disciplinas .= "<td style='text-align: center'>{$componente['workload']}</td>";
+                $disciplinas .= "<td>{$componente->name}</td>";
+                $disciplinas .= "<td style='text-align: center'>{$componente->workload}</td>";
                 $disciplinas .= '</tr>';
             }
             $disciplinas .= '</table>';
@@ -438,6 +397,7 @@ return new class () extends clsDetalhe {
         $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
+
 
     public function montaListaComponentesMulti()
     {

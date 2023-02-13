@@ -1,12 +1,15 @@
 <?php
 
+use App\User;
 use App\Models\LegacyRace;
 use App\Services\UrlPresigner;
-use iEducar\Modules\Addressing\LegacyAddressingFields;
+use App\Models\LegacyInstitution;
+use Illuminate\Support\Facades\Auth;
+use iEducar\Support\View\SelectOptions;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
-use iEducar\Support\View\SelectOptions;
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
@@ -437,7 +440,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $nisPisPasep = int2Nis($fisica['nis_pis_pasep']);
         }
 
-        $this->campoCpf('id_federal', 'CPF', $valorCpf);
+       /** @var User $user */
+        $user = Auth::user();
+
+        $obrigarDocumentoPessoa = LegacyInstitution::query()
+            ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
+
+        $this->campoOculto('obrigarCPF', (int) $obrigarDocumentoPessoa);
+        $this->campoCpf('id_federal', 'CPF', $valorCpf, $obrigarDocumentoPessoa);
 
         $options = [
             'required' => false,
