@@ -62,7 +62,7 @@ return new class extends clsCadastro {
 
                 $retorno = 'Editar';
 
-                $this->etapas = LegacyAcademicYearStage::where('ref_ano', $this->ref_ano)->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->orderBy('sequencial')->get();
+                $this->etapas = LegacyAcademicYearStage::query()->where('ref_ano', $this->ref_ano)->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->orderBy('sequencial')->get();
                 $this->ref_cod_modulo = $this->etapas->first()?->ref_cod_modulo;
             }
         }
@@ -92,9 +92,9 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'ref_ano', valor: $this->ref_ano);
         $this->campoOculto(nome: 'ref_ref_cod_escola', valor: $this->ref_ref_cod_escola);
 
-        $this->ref_cod_instituicao = LegacySchool::where('cod_escola', $this->ref_ref_cod_escola)->value('ref_cod_instituicao');
+        $this->ref_cod_instituicao = LegacySchool::query()->where('cod_escola', $this->ref_ref_cod_escola)->value('ref_cod_instituicao');
 
-        $registros = LegacyAcademicYearStage::where('ref_ano', $this->ref_ano - 1)->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->orderBy('sequencial')->get();
+        $registros = LegacyAcademicYearStage::query()->where('ref_ano', $this->ref_ano - 1)->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->orderBy('sequencial')->get();
 
         $cont = 0;
 
@@ -344,7 +344,7 @@ return new class extends clsCadastro {
                     ];
                     if ($this->validaAnoLetivoModulo($data)) {
                         $cadastrou1 = $schoolAcademicYear->academicYearStages()->create($data);
-                        LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
+                        LegacySchoolAcademicYear::query()->where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
                     }
 
                     if (!$cadastrou1) {
@@ -403,11 +403,11 @@ return new class extends clsCadastro {
 
             $excluiu = true;
             if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
-                $excluiu = LegacyAcademicYearStage::where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->where('ref_ano', $this->ref_ano)->delete() >= 0;
+                $excluiu = LegacyAcademicYearStage::query()->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->where('ref_ano', $this->ref_ano)->delete() >= 0;
             }
 
             if ($excluiu) {
-                $schoolAcademicYear =  LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->first();
+                $schoolAcademicYear =  LegacySchoolAcademicYear::query()->where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->first();
 
                 foreach ($this->data_inicio as $key => $campo) {
                     $this->data_inicio[$key] = dataToBanco(data_original: $this->data_inicio[$key]);
@@ -431,7 +431,7 @@ return new class extends clsCadastro {
 
                     if ($this->validaAnoLetivoModulo($data)) {
                         $cadastrou1 = $schoolAcademicYear->academicYearStages()->create($data);
-                        LegacySchoolAcademicYear::where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
+                        LegacySchoolAcademicYear::query()->where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->where('ativo', 0)->update(['ativo' => 1]);
                     }
 
                     if (!$cadastrou1) {
@@ -486,7 +486,7 @@ return new class extends clsCadastro {
             'ativo' => 0
         ]);
 
-        $excluiu1 = LegacyAcademicYearStage::where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->where('ref_ano', $this->ref_ano)->delete() >= 0;
+        $excluiu1 = LegacyAcademicYearStage::query()->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->where('ref_ano', $this->ref_ano)->delete() >= 0;
 
         if ($excluiu1) {
             $this->mensagem = 'Exclusão efetuada com sucesso.<br />';

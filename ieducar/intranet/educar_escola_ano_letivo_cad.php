@@ -48,7 +48,7 @@ return new class () extends clsCadastro {
 
         $ano_array = collect();
         if (is_numeric($this->ref_cod_escola)) {
-            $ano_array = LegacySchoolAcademicYear::active()->where('andamento', 2)->whereSchool($this->ref_cod_escola)->pluck('ano', 'ano');
+            $ano_array = LegacySchoolAcademicYear::query()->where('andamento', 2)->whereSchool($this->ref_cod_escola)->active()->pluck('ano', 'ano');
         }
 
         $ano_atual = date('Y') - 5;

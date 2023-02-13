@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Models\LegacyStageType;
 use App\Models\View\Discipline;
 use Illuminate\Support\Facades\DB;
 
