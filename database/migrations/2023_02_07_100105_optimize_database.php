@@ -23,6 +23,8 @@ return new class () extends Migration {
         Schema::table('ano_letivo_modulo', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedSmallInteger('sequencial')->change();
+            $table->unsignedSmallInteger('ref_cod_modulo')->change();
+            $table->unsignedSmallInteger('dias_letivos')->change();
             $table->unsignedSmallInteger('ref_ano')->change();
             $table->foreign('ref_ref_cod_escola')->references('cod_escola')->on('pmieducar.escola')->onDelete('cascade');
             $table->unique([
