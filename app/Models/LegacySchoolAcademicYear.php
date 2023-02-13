@@ -32,15 +32,6 @@ class LegacySchoolAcademicYear extends LegacyModel
     protected string $builder = LegacySchoolAcademicYearBuilder::class;
 
     /**
-     * Atributos legados para serem usados nas queries
-     *
-     * @var string[]
-     */
-    public array $legacy = [
-        'year' => 'ano'
-    ];
-
-    /**
      * @var array
      */
     protected $fillable = [
@@ -67,6 +58,7 @@ class LegacySchoolAcademicYear extends LegacyModel
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
+
     public function academicYearStages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'escola_ano_letivo_id');

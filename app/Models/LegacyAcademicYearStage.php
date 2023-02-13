@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyAcademicYearStageBuilder;
 use App\Support\Database\DateSerializer;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  *
  * @package App\Models
  */
-class LegacyAcademicYearStage extends Model
+class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
 
@@ -18,6 +18,13 @@ class LegacyAcademicYearStage extends Model
      * @var string
      */
     protected $table = 'pmieducar.ano_letivo_modulo';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LegacyAcademicYearStageBuilder::class;
 
     /**
      * @var array
