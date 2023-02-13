@@ -33,6 +33,7 @@ class LegacyIndividualEndpointTestCreate extends TestCase
         $institution = LegacyInstitutionFactory::new()->make();
         $individual = LegacyIndividualFactory::new()->make([
             'idmun_nascimento' => $city,
+            'data_nasc' => now(),
             'sexo' => 'M'
         ]);
 
@@ -76,6 +77,7 @@ class LegacyIndividualEndpointTestCreate extends TestCase
             'pais_residencia' => 76,
             'zona_localizacao_censo' => $individual->zona_localizacao_censo,
             'sexo' => $individual->sexo,
+            'data_nasc' => $individual->data_nasc,
         ])->assertDatabaseHas($individual->person->getTable(), [
             'nome' => 'DOMINIC TORRETO'
         ])->assertDatabaseHas('cadastro.fisica_raca', [
