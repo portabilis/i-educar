@@ -3,6 +3,8 @@
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
+use App\Models\View\Discipline;
+use Illuminate\Support\Facades\Auth;
 
 class PromocaoApiController extends ApiCoreController
 {
@@ -79,68 +81,12 @@ class PromocaoApiController extends ApiCoreController
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
     }
 
-    protected function loadDadosMatricula($matriculaId)
+    protected function loadComponentesCurriculares(LegacyRegistration $registration)
     {
-        $sql = 'SELECT m.cod_matricula AS matricula_id,
-                   m.ref_cod_aluno AS aluno_id,
-                   m.ref_ref_cod_escola AS escola_id,
-                   m.ref_cod_curso AS curso_id,
-                   m.ref_ref_cod_serie AS serie_id,
-                   mt.ref_cod_turma AS turma_id,
-                   m.ano,
-                   m.aprovado
-                FROM pmieducar.matricula  AS m
-                INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
-                WHERE mt.ativo = 1
-                AND cod_matricula = $1 LIMIT 1';
-
-        $options = ['params' => $matriculaId, 'return_only' => 'first-row'];
-
-        return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-    }
-
-    #TODO substituir este metodo por service->getComponentes()?
-    protected function loadComponentesCurriculares($matriculaId)
-    {
-        $dadosMatricula = $this->loadDadosMatricula($matriculaId);
-
-        $anoEscolar = $dadosMatricula['ano'];
-        $escolaId = $dadosMatricula['escola_id'];
-        $turmaId = $dadosMatricula['turma_id'];
-
-        $sql = 'SELECT cc.id, cc.nome
-                FROM modules.componente_curricular_turma AS cct
-                INNER JOIN modules.componente_curricular AS cc ON cct.componente_curricular_id = cc.id
-                INNER JOIN pmieducar.escola_ano_letivo AS al ON cct.escola_id = al.ref_cod_escola
-                WHERE cct.turma_id = $1
-                AND cct.escola_id = $2
-                AND al.ano = $3
-                AND cc.instituicao_id = $4';
-
-        $options = ['params' => [$turmaId, $escolaId, $anoEscolar, $this->getRequest()->instituicao_id]];
-        $componentesCurricularesTurma = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-
-        if (count($componentesCurricularesTurma)) {
-            return $componentesCurricularesTurma;
-        }
-
-        $sql = 'SELECT cc.id, cc.nome
-                FROM pmieducar.turma AS t
-                INNER JOIN pmieducar.escola_serie_disciplina AS esd ON t.ref_ref_cod_serie = esd.ref_ref_cod_serie
-                INNER JOIN modules.componente_curricular AS cc ON esd.ref_cod_disciplina = cc.id
-                INNER JOIN pmieducar.escola_ano_letivo AS al ON esd.ref_ref_cod_escola = al.ref_cod_escola
-                WHERE t.cod_turma = $1
-                AND esd.ref_ref_cod_escola = $2
-                AND al.ano = $3
-                AND cc.instituicao_id = $4
-                AND t.ativo = 1
-                AND esd.ativo = 1
-                AND al.ativo = 1';
-
-        $options = ['params' => [$turmaId, $escolaId, $anoEscolar, $this->getRequest()->instituicao_id]];
-        $componentesCurricularesSerie = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-
-        return $componentesCurricularesSerie;
+        return Discipline::getBySchoolClassAndGrade(
+            $registration->schoolClass->cod_turma,
+            $registration->ref_ref_cod_serie)
+            ->pluck('nome', 'id');
     }
 
     protected function trySaveBoletimService()
@@ -165,7 +111,7 @@ class PromocaoApiController extends ApiCoreController
         if (!isset($this->_boletimServices[$matriculaId]) || $reload) {
             // set service
             try {
-                $params = ['matricula' => $matriculaId, 'usuario' => \Illuminate\Support\Facades\Auth::id()];
+                $params = ['matricula' => $matriculaId, 'usuario' => Auth::id()];
                 $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
                 $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
@@ -232,7 +178,8 @@ class PromocaoApiController extends ApiCoreController
 
         $regraNaoUsaNota = $this->regraNaoUsaNota($regra->get('tipoNota'));
 
-        $componentesCurriculares = $this->loadComponentesCurriculares($matriculaId);
+        $registration = LegacyRegistration::query()->find($matriculaId);
+        $componentesCurriculares = $this->loadComponentesCurriculares($registration);
 
         $ano = $this->boletimService()->getOption('matriculaData')['ano'];
         $escolaId = $this->boletimService()->getOption('matriculaData')['ref_ref_cod_escola'];
@@ -272,9 +219,9 @@ class PromocaoApiController extends ApiCoreController
                     $hasNotaOrParecerInEtapa = true;
                 }
 
-                foreach ($componentesCurriculares as $cc) {
-                    $nota = $this->getNota($etapa, $cc['id']);
-                    $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
+                foreach ($componentesCurriculares as $key => $cc) {
+                    $nota = $this->getNota($etapa, $key);
+                    $parecer = $this->getParecerDescritivo($etapa, $key);
 
                     if (!$hasNotaOrParecerInEtapa && (trim($nota) != '' || trim($parecer) != '')) {
                         $hasNotaOrParecerInEtapa = true;
@@ -300,24 +247,24 @@ class PromocaoApiController extends ApiCoreController
         } elseif ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             // FIXME #parameters
             foreach ($etapas as $etapa) {
-                foreach ($componentesCurriculares as $cc) {
-                    $nota = $this->getNota($etapa, $cc['id']);
-                    $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
+                foreach ($componentesCurriculares as $key => $cc) {
+                    $nota = $this->getNota($etapa, $key);
+                    $parecer = $this->getParecerDescritivo($etapa, $key);
 
                     if ($regraNaoUsaNota || trim($nota) != '' || trim($parecer) != '') {
                         // FIXME #parameters
-                        $falta = $this->boletimService()->getFalta($etapa, $cc['id'])->quantidade;
+                        $falta = $this->boletimService()->getFalta($etapa, $key)->quantidade;
 
                         if (is_null($falta)) {
                             // FIXME #parameters
                             $this->boletimService()->addFalta(
                                 new Avaliacao_Model_FaltaComponente([
-                                    'componenteCurricular' => $cc['id'],
+                                    'componenteCurricular' => $key,
                                     'quantidade' => $defaultValue,
                                     'etapa' => $etapa])
                             );
 
-                            $this->messenger->append(Portabilis_String_Utils::toUtf8("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$cc['id']} - {$cc['nome']} (matricula $matriculaId)"), 'notice');
+                            $this->messenger->append(Portabilis_String_Utils::toUtf8("Lançado falta (valor $defaultValue) para etapa $etapa e componente curricular {$key} - {$cc} (matricula $matriculaId)"), 'notice');
                         }
                     }
                 }

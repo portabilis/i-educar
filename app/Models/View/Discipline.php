@@ -5,6 +5,7 @@ namespace App\Models\View;
 use App\Casts\LegacyArray;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Discipline extends Model
 {
@@ -28,5 +29,13 @@ class Discipline extends Model
         return Attribute::make(
             get: fn () => $this->nome
         );
+    }
+
+    public static function getBySchoolClassAndGrade(int $schoolClass, int $grade): Collection
+    {
+        return self::query()
+            ->where('cod_turma', $schoolClass)
+            ->where('cod_serie', $grade)
+            ->get();
     }
 }

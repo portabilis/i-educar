@@ -314,9 +314,7 @@ return new class extends clsCadastro {
             $dadosEtapa = $dadosTurmaModulo;
         }
         //Pega nome do modulo
-        $objModulo           = new clsPmieducarModulo();
-        $dadosModulo         = $objModulo->lista($dadosEtapa[0]['ref_cod_modulo']);
-        $nomeModulo          = $dadosModulo[0]['nm_tipo'];
+        $nomeModulo          = LegacyStageType::find($dadosEtapa[0]['ref_cod_modulo'])->nm_tipo;
         $conteudoHtml = '';
 
         foreach ($dadosEtapa as $modulo) {
