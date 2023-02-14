@@ -7,7 +7,7 @@ class LegacyPersonBuilder extends LegacyBuilder
     public function whereName(string $name): self
     {
         return $this->whereRaw('slug ~* unaccent(?)', $name)
-            ->orWhereRaw('SOUNDEX(slug) = SOUNDEX(unaccent(?))', $name);
+            ->orWhereRaw('SOUNDEX(nome) = SOUNDEX(?)', $name);
     }
 
     public function whereCpf(string $cpf): self

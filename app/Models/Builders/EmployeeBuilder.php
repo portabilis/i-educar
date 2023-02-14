@@ -65,7 +65,7 @@ class EmployeeBuilder extends LegacyBuilder
     {
         return $this->whereHas('person', function (Builder $q) use ($name) {
             $q->whereRaw('slug ~* unaccent(?)', addcslashes($name, '[]()\''))
-                ->orWhereRaw('SOUNDEX(slug) = SOUNDEX(unaccent(?))', $name);
+                ->orWhereRaw('SOUNDEX(nome) = SOUNDEX(?)', $name);
         });
     }
 

@@ -66,7 +66,7 @@ class LegacyStudentBuilder extends LegacyBuilder
     {
         return $this->whereHas(
             'person',
-            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)->orWhereRaw('SOUNDEX(slug) = SOUNDEX(unaccent(?))', $name)
+            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)->orWhereRaw('SOUNDEX(nome) = SOUNDEX(?)', $name)
         );
     }
 
