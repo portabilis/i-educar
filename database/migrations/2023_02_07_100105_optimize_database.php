@@ -13,6 +13,7 @@ return new class () extends Migration {
         //ANO LETIVO MODULO
         $this->dropView('public.exporter_stages');
         $this->dropView('public.exporter_school_stages');
+        $this->dropView('public.exporter_school_class_stages');
         $this->dropView('relatorio.view_dados_modulo');
         $this->dropView('relatorio.view_modulo');
 
@@ -34,6 +35,15 @@ return new class () extends Migration {
                 'ref_cod_modulo'
             ]);
         });
+
+        Schema::table('pmieducar.modulo', function (Blueprint $table) {
+            $table->smallInteger('cod_modulo')->change();
+            $table->smallInteger('num_meses')->nullable()->change();
+            $table->smallInteger('num_semanas')->nullable()->change();
+            $table->smallInteger('num_etapas')->nullable()->change();
+        });
+
+        $this->createView('public.exporter_school_class_stages', '2020-09-18');
         $this->createView('public.exporter_school_stages', '2020-07-09');
         $this->createView('public.exporter_stages', '2020-07-10');
         $this->createView('relatorio.view_modulo');
