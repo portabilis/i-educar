@@ -87,7 +87,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     protected function workload(): Attribute
     {
         return Attribute::make(
-            get: fn () => (float) $this->carga_horaria,
+            get: fn () => $this->carga_horaria,
         );
     }
 }
