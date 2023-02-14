@@ -36,8 +36,10 @@ return new class () extends Migration {
             ]);
         });
 
+        //MODULO
+        \DB::statement('ALTER TABLE pmieducar.modulo ALTER COLUMN cod_modulo type smallint USING cod_modulo::smallint');
+
         Schema::table('pmieducar.modulo', function (Blueprint $table) {
-            $table->smallInteger('cod_modulo')->change();
             $table->smallInteger('num_meses')->nullable()->change();
             $table->smallInteger('num_semanas')->nullable()->change();
             $table->smallInteger('num_etapas')->nullable()->change();
