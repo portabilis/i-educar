@@ -1,10 +1,15 @@
 <?php
 
-use App\Models\LegacyQualification;
 use App\Models\LegacyRole;
 
 return new class extends clsDetalhe {
-    public $pessoa_logada;
+    /**
+     * Titulo no topo da pagina
+     *
+     * @var int
+     */
+    public $titulo;
+
     public $cod_funcao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -18,36 +23,51 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Servidores -  Funções do servidor';
+        $this->titulo = 'Função - Detalhe';
 
-        $this->cod_funcao = $_GET['cod_funcao'];
+        $this->cod_funcao=$_GET['cod_funcao'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $registro = LegacyRole::find($this->cod_funcao)?->getAttributes();
         if (! $registro) {
-            $this->simpleRedirect('educar_funcao_lst.php');
+            $this->simpleRedirect('educar_fonte_lst.php');
         }
-        if ($registro['ref_cod_instituicao']) {
-            $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-            $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-            $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+        $obj_permissoes = new clsPermissoes();
+        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        if ($nivel_usuario == 1) {
+            if ($registro['ref_cod_instituicao']) {
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+            }
         }
-        $this->addDetalhe([ 'Nome', "{$registro['nm_funcao']}"]);
-        $this->addDetalhe([ 'Abreviatura', "{$registro['abreviatura']}"]);
-        $professor = $registro['professor'] == 1 ? 'Sim' : 'Não';
-        $this->addDetalhe([ 'Professor', "{$professor}"]);
+        if ($registro['cod_funcao']) {
+            $this->addDetalhe([ 'Funcão', "{$registro['cod_funcao']}"]);
+        }
+        if ($registro['nm_funcao']) {
+            $this->addDetalhe([ 'Nome Funcão', "{$registro['nm_funcao']}"]);
+        }
+        if ($registro['abreviatura']) {
+            $this->addDetalhe([ 'Abreviatura', "{$registro['abreviatura']}"]);
+        }
 
-        $obj_permissao = new clsPermissoes();
-        if ($obj_permissao->permissao_cadastra(int_processo_ap: 573, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
+        $opcoes = ['1' => 'Sim',
+            '0' => 'Não'
+        ];
+
+        if (is_numeric($registro['professor'])) {
+            $this->addDetalhe([ 'Professor', "{$opcoes[$registro['professor']]}"]);
+        }
+
+        if ($obj_permissoes->permissao_cadastra(634, $this->pessoa_logada, 3)) {
             $this->url_novo = 'educar_funcao_cad.php';
             $this->url_editar = "educar_funcao_cad.php?cod_funcao={$registro['cod_funcao']}";
         }
+
         $this->url_cancelar = 'educar_funcao_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Detalhe da função', breadcrumbs: [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb('Detalhe da função', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }
 
