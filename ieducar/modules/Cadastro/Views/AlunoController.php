@@ -378,7 +378,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->date('data_nascimento', $options);
 
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],
@@ -392,7 +392,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = [
             'required' => false,
             'label' => '',
-            'placeholder' => 'Data emiss\u00e3o',
+            'placeholder' => 'Data emissão',
             'value' => $documentos['data_exp_rg'],
             'size' => 19
         ];
