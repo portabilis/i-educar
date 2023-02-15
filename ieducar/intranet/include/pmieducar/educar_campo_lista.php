@@ -231,13 +231,13 @@ if ($get_cliente_tipo && class_exists(clsPmieducarClienteTipo::class)) {
 if ($get_funcao) {
     $opcoes_funcao = ['' => 'Selecione'];
     if ($this->ref_cod_instituicao) {
-        $obj_funcao = new clsPmieducarFuncao();
-        $obj_funcao->setOrderby('nm_funcao ASC');
-        $lst_funcao = $obj_funcao->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-        if (is_array($lst_funcao) && count($lst_funcao)) {
-            foreach ($lst_funcao as $funcao) {
-                $opcoes_funcao["{$funcao['cod_funcao']}"] = "{$funcao['nm_funcao']}";
-            }
+        $lst_funcao = LegacyRole::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_funcao', 'ASC')
+            ->get();
+
+        foreach ($lst_funcao as $funcao) {
+            $opcoes_funcao["{$funcao['cod_funcao']}"] = "{$funcao['nm_funcao']}";
         }
     }
     $this->campoLista('ref_cod_funcao', 'Função', $opcoes_funcao, $this->ref_cod_funcao, null, null, null, null, $funcao_desabilitado, $funcao_obrigatorio);

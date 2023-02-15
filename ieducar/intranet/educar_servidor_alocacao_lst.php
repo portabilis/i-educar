@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRole;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -122,8 +124,7 @@ return new class extends clsListagem {
                 $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $registro['ref_cod_servidor_funcao']);
                 $funcaoServidor = $funcaoServidor->detalhe();
 
-                $funcao = new clsPmieducarFuncao($funcaoServidor['ref_cod_funcao']);
-                $funcao = $funcao->detalhe();
+                $funcao = LegacyRole::find($funcaoServidor['ref_cod_funcao'])?->getAttributes();
 
                 //Vinculo
                 $funcionarioVinculo = new clsPortalFuncionario();

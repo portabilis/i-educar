@@ -66,8 +66,7 @@ return new class extends clsDetalhe {
             $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $this->ref_cod_servidor_funcao);
             $funcaoServidor = $funcaoServidor->detalhe();
 
-            $funcao = new clsPmieducarFuncao($funcaoServidor['ref_cod_funcao']);
-            $funcao = $funcao->detalhe();
+            $funcao = LegacyRole::find($this->cod_funcao)?->getAttributes();
 
             $this->addDetalhe(['Função', "{$funcao['nm_funcao']}"]);
         }
