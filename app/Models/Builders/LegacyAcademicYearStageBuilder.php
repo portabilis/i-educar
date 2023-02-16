@@ -5,7 +5,7 @@ namespace App\Models\Builders;
 class LegacyAcademicYearStageBuilder extends LegacyBuilder
 {
     /**
-     * Filtra por anos maiores
+     * Filtra por anos maiores e iguais
      *
      * @param int $year
      *
