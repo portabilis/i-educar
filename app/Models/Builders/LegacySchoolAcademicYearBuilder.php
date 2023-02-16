@@ -2,6 +2,7 @@
 
 namespace App\Models\Builders;
 
+use App\Models\LegacySchoolAcademicYear;
 use Illuminate\Support\Collection;
 
 class LegacySchoolAcademicYearBuilder extends LegacyBuilder
@@ -51,7 +52,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      */
     public function inProgress(): self
     {
-        return $this->where('escola_ano_letivo.andamento', 1);
+        return $this->where('escola_ano_letivo.andamento', LegacySchoolAcademicYear::IN_PROGRESS);
     }
 
     /**
@@ -61,7 +62,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      */
     public function notInProgress(): self
     {
-        return $this->where('escola_ano_letivo.andamento', 2);
+        return $this->where('escola_ano_letivo.andamento', LegacySchoolAcademicYear::FINALIZED);
     }
 
     /**
