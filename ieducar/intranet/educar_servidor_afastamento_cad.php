@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\WithdrawalReason;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
@@ -114,18 +115,14 @@ return new class () extends clsCadastro {
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         $this->campoOculto('retornar_servidor', $this->retornar_servidor);
 
-        $opcoes = ['' => 'Selecione'];
+        $lista = WithdrawalReason::query()
+            ->orderBy('nm_motivo', 'ASC')
+            ->pluck('nm_motivo', 'cod_motivo_afastamento');
 
-        $objTemp = new clsPmieducarMotivoAfastamento();
-        $lista = $objTemp->lista();
-
-        if (is_array($lista) && count($lista) > 0) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_motivo_afastamento']] = $registro['nm_motivo'];
-            }
-        } else {
-            $opcoes = ['' => 'Nenhum motivo de afastamento cadastrado'];
+        foreach ($lista as $key => $label) {
+            $opcoes[$key] = $label;
         }
+        $opcoes = ['' => 'Selecione'];
 
         if ($this->status == clsCadastro::NOVO || $this->retornar_servidor != EmployeeReturn::SIM) {
             $this->campoLista(

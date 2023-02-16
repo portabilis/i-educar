@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\WithdrawalReason;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -28,8 +30,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(int_processo_ap: 633, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_motivo_afastamento_lst.php');
 
         if (is_numeric($this->cod_motivo_afastamento)) {
-            $obj = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento);
-            $registro  = $obj->detalhe();
+            $registro = WithdrawalReason::find($this->cod_motivo_afastamento)?->getAttributes();
 
             if ($registro) {
                 foreach ($registro as $campo => $val) {    // passa todos os valores obtidos no registro para atributos do objeto
@@ -81,15 +82,18 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 633, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_motivo_afastamento_lst.php');
 
-        $obj = new clsPmieducarMotivoAfastamento(cod_motivo_afastamento: null, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, nm_motivo: $this->nm_motivo, descricao: $this->descricao, data_cadastro: null, data_exclusao: null, ativo: 1, ref_cod_instituicao: $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $obj = new WithdrawalReason();
+        $obj->ref_usuario_cad = $this->pessoa_logada;
+        $obj->nm_motivo = $this->nm_motivo;
+        $obj->descricao = $this->descricao;
+        $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_motivo_afastamento_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
@@ -103,23 +107,18 @@ return new class extends clsCadastro {
             str_pagina_redirecionar: 'educar_motivo_afastamento_lst.php'
         );
 
-        $obj = new clsPmieducarMotivoAfastamento(
-            cod_motivo_afastamento: $this->cod_motivo_afastamento,
-            ref_usuario_exc: $this->pessoa_logada,
-            nm_motivo: $this->nm_motivo,
-            descricao: $this->descricao,
-            ativo: 1,
-            ref_cod_instituicao: $this->ref_cod_instituicao
-        );
+        $obj = WithdrawalReason::find($this->cod_motivo_afastamento);
+        $obj->ref_usuario_exc = $this->pessoa_logada;
+        $obj->nm_motivo = $this->nm_motivo;
+        $obj->descricao = $this->descricao;
+        $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
 
-        $editou = $obj->edita();
-        if ($editou) {
+        if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_motivo_afastamento_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
@@ -128,23 +127,14 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(int_processo_ap: 633, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_motivo_afastamento_lst.php');
 
-        $obj = new clsPmieducarMotivoAfastamento(
-            cod_motivo_afastamento: $this->cod_motivo_afastamento,
-            ref_usuario_exc: $this->pessoa_logada,
-            nm_motivo: $this->nm_motivo,
-            descricao: $this->descricao,
-            ativo: 0,
-            ref_cod_instituicao: $this->ref_cod_instituicao
-        );
+        $obj = WithdrawalReason::find($this->cod_motivo_afastamento);
 
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_motivo_afastamento_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 
