@@ -29,7 +29,7 @@ class LegacyAcademicYearStageBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por Instituição
+     * Filtra por escola
      *
      * @param int $school
      *
