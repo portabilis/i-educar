@@ -115,14 +115,10 @@ return new class () extends clsCadastro {
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         $this->campoOculto('retornar_servidor', $this->retornar_servidor);
 
-        $lista = WithdrawalReason::query()
+        $opcoes = WithdrawalReason::query()
             ->orderBy('nm_motivo', 'ASC')
-            ->pluck('nm_motivo', 'cod_motivo_afastamento');
-
-        foreach ($lista as $key => $label) {
-            $opcoes[$key] = $label;
-        }
-        $opcoes = ['' => 'Selecione'];
+            ->pluck('nm_motivo', 'cod_motivo_afastamento')
+            ->prepend('Selecione', '');
 
         if ($this->status == clsCadastro::NOVO || $this->retornar_servidor != EmployeeReturn::SIM) {
             $this->campoLista(
