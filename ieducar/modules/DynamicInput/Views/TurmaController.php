@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 
 class TurmaController extends ApiCoreController
 {
