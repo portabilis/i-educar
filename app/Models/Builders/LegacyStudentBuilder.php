@@ -3,6 +3,7 @@
 namespace App\Models\Builders;
 
 use App\Models\DataSearch\StudentFilter;
+use App\Models\LegacyPerson;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentBuilder extends LegacyBuilder
@@ -146,7 +147,7 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function findStudentWithMultipleSearch(StudentFilter $studentFilter)
     {
-        return $this->with(
+        $builder = $this->with(
             [
                 'individual' => function (BelongsTo $query) {
                     $query->select(['idpes', 'idpes_mae', 'idpes_pai', 'nome_social', 'idpes_responsavel']);
@@ -179,12 +180,19 @@ class LegacyStudentBuilder extends LegacyBuilder
                     ]
                 ]
             )
-            ->active()
-            ->orderBy('data_cadastro', 'desc')
-            ->paginate(
-                $studentFilter->perPage,
-                ['ref_idpes', 'cod_aluno', 'tipo_responsavel'],
-                'pagina_' . $studentFilter->pageName
-            );
+            ->active();
+
+        if ($studentFilter->studentName) {
+            $builder->join('cadastro.pessoa', 'pessoa.idpes', '=', 'aluno.ref_idpes');
+            $builder->orderByRaw('LEVENSHTEIN(UPPER(nome), UPPER(?), 1, 0, 4)', $studentFilter->studentName);
+        } else {
+            $builder->orderBy('data_cadastro', 'desc');
+        }
+
+        return $builder->paginate(
+            $studentFilter->perPage,
+            ['ref_idpes', 'cod_aluno', 'tipo_responsavel'],
+            'pagina_' . $studentFilter->pageName
+        );
     }
 }
