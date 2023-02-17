@@ -3,7 +3,6 @@
 namespace App\Models\Builders;
 
 use App\Models\DataSearch\StudentFilter;
-use App\Models\LegacyPerson;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentBuilder extends LegacyBuilder
