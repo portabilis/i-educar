@@ -19,6 +19,7 @@ class LegacySchoolAcademicYear extends LegacyModel
 {
     use LegacyAttribute;
 
+    public const NOT_INITIALIZED = 0;
     public const IN_PROGRESS = 1;
     public const FINALIZED = 2;
 
