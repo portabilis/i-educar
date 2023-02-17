@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRole;
+
 return new class extends clsDetalhe {
     public $titulo;
 
