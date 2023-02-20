@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyRole;
 use App\Models\LegacyUserType;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Facades\DB;
@@ -41,8 +42,7 @@ return new class extends clsDetalhe {
         $registro['ref_idesco'] = $det_ref_idesco['descricao'];
 
         // Função
-        $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], null, null, null, null, null, null, null, null, $this->ref_cod_instituicao);
-        $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
+        $det_ref_cod_funcao = LegacyRole::find($this->cod_funcao)?->getAttributes();
         $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 
         // Nome
