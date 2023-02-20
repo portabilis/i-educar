@@ -135,8 +135,9 @@ return new class extends clsCadastro {
         $obj->ref_usuario_cad = $this->pessoa_logada;
         $obj->nm_tipo = $this->nm_tipo;
         $obj->descricao = $this->descricao;
-        $obj->num_etapas = $this->num_etapas;
-
+        if (!empty($this->num_etapas)) {
+            $obj->num_etapas = $this->num_etapas;
+        }
         !empty($this->num_meses) ? $obj->num_meses = $this->num_semanas : $obj->num_meses = null;
         !empty($this->num_semanas) ? $obj->num_semanas = $this->num_semanas : $obj->num_semanas = null;
 
