@@ -101,11 +101,11 @@ return new class extends clsCadastro {
         $obj->num_etapas = $this->num_etapas;
         $obj->descricao = $this->descricao;
 
-        if (!empty($obj->num_meses)) {
+        if (!empty($this->num_meses)) {
             $obj->num_meses = $this->num_meses;
         }
 
-        if (!empty($obj->num_semanas)) {
+        if (!empty($this->num_semanas)) {
             $obj->num_semanas = $this->num_semanas;
         }
 
@@ -141,11 +141,11 @@ return new class extends clsCadastro {
         $obj->descricao = $this->descricao;
         $obj->num_etapas = $this->num_etapas;
 
-        if (!empty($obj->num_meses)) {
+        if (!empty($this->num_meses)) {
             $obj->num_meses = $this->num_meses;
         }
 
-        if (!empty($obj->num_semanas)) {
+        if (!empty($this->num_semanas)) {
             $obj->num_semanas = $this->num_semanas;
         }
 
