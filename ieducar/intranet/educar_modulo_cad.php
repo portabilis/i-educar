@@ -95,12 +95,20 @@ return new class extends clsCadastro {
         }
 
         $obj = new LegacyStageType();
+
         $obj->ref_usuario_cad = $this->pessoa_logada;
         $obj->nm_tipo = $this->nm_tipo;
-        $obj->descricao = $this->descricao;
         $obj->num_etapas = $this->num_etapas;
-        $obj->num_meses = $this->num_meses;
-        $obj->num_semanas = $this->num_semanas;
+        $obj->descricao = $this->descricao;
+
+        if (!empty($obj->num_meses)) {
+            $obj->num_meses = $this->num_meses;
+        }
+
+        if (!empty($obj->num_semanas)) {
+            $obj->num_semanas = $this->num_semanas;
+        }
+
         $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
         $obj->ativo = 1;
 
@@ -132,8 +140,15 @@ return new class extends clsCadastro {
         $obj->nm_tipo = $this->nm_tipo;
         $obj->descricao = $this->descricao;
         $obj->num_etapas = $this->num_etapas;
-        $obj->num_meses = $this->num_meses;
-        $obj->num_semanas = $this->num_semanas;
+
+        if (!empty($obj->num_meses)) {
+            $obj->num_meses = $this->num_meses;
+        }
+
+        if (!empty($obj->num_semanas)) {
+            $obj->num_semanas = $this->num_semanas;
+        }
+
         $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
         $obj->ativo = 1;
 
