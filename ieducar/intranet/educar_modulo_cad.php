@@ -103,7 +103,7 @@ return new class extends clsCadastro {
 
         !empty($this->num_meses) ? $obj->num_meses = $this->num_semanas : $obj->num_meses = null;
         !empty($this->num_semanas) ? $obj->num_semanas = $this->num_semanas : $obj->num_semanas = null;
-        }
+
 
         $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
         $obj->ativo = 1;
