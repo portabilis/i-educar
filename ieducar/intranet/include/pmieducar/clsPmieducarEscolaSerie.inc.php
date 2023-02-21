@@ -19,14 +19,15 @@ class clsPmieducarEscolaSerie extends Model
     public $bloquear_cadastro_turma_para_serie_com_vagas;
     public $codUsuario;
     public $anos_letivos;
+    public $hora_falta;
 
-    public function __construct($ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null, $anos_letivos = [])
+    public function __construct($ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null, $anos_letivos = [], $hora_falta = null)
     {
 
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_serie";
 
-        $this->_campos_lista = $this->_todos_campos = 'es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas, ARRAY_TO_JSON(es.anos_letivos) AS anos_letivos ';
+        $this->_campos_lista = $this->_todos_campos = 'es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas, ARRAY_TO_JSON(es.anos_letivos) AS anos_letivos, es.hora_falta ';
 
         if (is_numeric($ref_usuario_cad)) {
             $this->ref_usuario_cad = $ref_usuario_cad;
@@ -66,6 +67,10 @@ class clsPmieducarEscolaSerie extends Model
             $this->anos_letivos = $anos_letivos;
         }
 
+        if (is_numeric($hora_falta)) {
+            $this->hora_falta = (float) $hora_falta;
+        }
+
         $this->bloquear_enturmacao_sem_vagas = $bloquear_enturmacao_sem_vagas;
         $this->bloquear_cadastro_turma_para_serie_com_vagas = $bloquear_cadastro_turma_para_serie_com_vagas;
     }
@@ -97,6 +102,11 @@ class clsPmieducarEscolaSerie extends Model
             if (is_numeric($this->ref_usuario_cad)) {
                 $campos .= "{$gruda}ref_usuario_cad";
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
+                $gruda = ', ';
+            }
+            if (is_numeric($this->hora_falta )) {
+                $campos .= "{$gruda}hora_falta";
+                $valores .= "{$gruda}'{$this->hora_falta }'";
                 $gruda = ', ';
             }
             if (($this->hora_inicial)) {
@@ -205,6 +215,10 @@ class clsPmieducarEscolaSerie extends Model
 
             if (is_numeric($this->bloquear_cadastro_turma_para_serie_com_vagas)) {
                 $set .= "{$gruda}bloquear_cadastro_turma_para_serie_com_vagas = '{$this->bloquear_cadastro_turma_para_serie_com_vagas}'";
+                $gruda = ', ';
+            }
+            if (is_numeric($this->hora_falta )) {
+                $set .= "{$gruda}hora_falta = '{$this->hora_falta}'";
                 $gruda = ', ';
             }
             if (is_array($this->anos_letivos)) {
