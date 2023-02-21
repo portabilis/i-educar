@@ -258,13 +258,22 @@ function carregaDadosComponentesSerie(){
 }
 
 function handleCarregaDadosComponentesSerie(response){
-    componentes = response.disciplinas;
+    const componentes = response.disciplinas;
     componentes.forEach(function(componente) {
-        $j( '#componente_' + componente.id).prop( "checked", true );
-        $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
-        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
-        $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
-        reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
+      $j( '#componente_' + componente.id).prop( "checked", true );
+      $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
+      $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
+      $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
+
+      reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
+
+      if (componente.contem_componente_curricular_turma) {
+        $j( '#componente_' + componente.id).prop( "checked", true ).prop("disabled", true);
+        $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", true);
+        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", true);
+        $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", true);
+        $j( '#anos_letivos_' + componente.id).trigger("chosen:updated");
+      }
     }, this);
 }
 
