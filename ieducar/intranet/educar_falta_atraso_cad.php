@@ -275,7 +275,7 @@ return new class extends clsCadastro {
 
         $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
 
-        if ($obj->detalhe()) {
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
