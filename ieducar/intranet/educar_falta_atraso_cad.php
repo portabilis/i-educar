@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbsenceDelay;
+use App\Services\EmployeeService;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
@@ -38,8 +40,7 @@ return new class extends clsCadastro {
         );
 
         if (is_numeric($this->cod_falta_atraso)) {
-            $obj = new clsPmieducarFaltaAtraso($this->cod_falta_atraso);
-            $registro  = $obj->detalhe();
+            $registro = LegacyAbsenceDelay::find($this->cod_falta_atraso)?->getAttributes();
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -139,46 +140,46 @@ return new class extends clsCadastro {
         );
 
         if ($this->tipo == 1) {
-            $obj = new clsPmieducarFaltaAtraso(
-                ref_cod_escola: $this->ref_cod_escola,
-                ref_ref_cod_instituicao: $this->ref_cod_instituicao,
-                ref_usuario_cad: $this->pessoa_logada,
-                ref_cod_servidor: $this->ref_cod_servidor,
-                tipo: $this->tipo,
-                data_falta_atraso: $this->data_falta_atraso,
-                qtd_horas: $this->qtd_horas,
-                qtd_min: $this->qtd_min,
-                justificada: $this->justificada,
-                ativo: 1,
-                ref_cod_servidor_funcao: $this->ref_cod_servidor_funcao
-            );
+            $obj = new LegacyAbsenceDelay();
+            $obj->ref_cod_escola = $this->ref_cod_escola;
+            $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+            $obj->ref_usuario_cad = $this->pessoa_logada;
+            $obj->ref_cod_servidor = $this->ref_cod_servidor;
+            $obj->tipo = $this->tipo;
+            $obj->data_falta_atraso = $this->data_falta_atraso;
+            $obj->qtd_horas = $this->qtd_horas;
+            $obj->qtd_min = $this->qtd_min;
+            $obj->justificada = $this->justificada;
+            $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
+
         } elseif ($this->tipo == 2) {
             $db = new clsBanco();
             $dia_semana = $db->CampoUnico(sprintf('(SELECT EXTRACT (DOW FROM date \'%s\') + 1 )', $this->data_falta_atraso));
 
-            $obj_ser = new clsPmieducarServidor();
-            $horas   = $obj_ser->qtdhoras(int_cod_servidor: $this->ref_cod_servidor, int_cod_escola: $this->ref_cod_escola, int_ref_cod_instituicao: $this->ref_cod_instituicao, dia_semana: $dia_semana);
+            $servive = new EmployeeService();
+            $horas = $servive->getQuantityHours(
+                cod_servidor: $this->ref_cod_servidor,
+                cod_escola: $this->ref_cod_escola,
+                cod_instituicao: $this->ref_cod_instituicao,
+                dia_semana: $dia_semana
+            );
 
             if ($horas) {
-                $obj = new clsPmieducarFaltaAtraso(
-                    ref_cod_escola: $this->ref_cod_escola,
-                    ref_ref_cod_instituicao: $this->ref_cod_instituicao,
-                    ref_usuario_cad: $this->pessoa_logada,
-                    ref_cod_servidor: $this->ref_cod_servidor,
-                    tipo: $this->tipo,
-                    data_falta_atraso: $this->data_falta_atraso,
-                    qtd_horas: $horas['hora'],
-                    qtd_min: $horas['min'],
-                    justificada: $this->justificada,
-                    ativo: 1,
-                    ref_cod_servidor_funcao: $this->ref_cod_servidor_funcao
-                );
+                $obj = new LegacyAbsenceDelay();
+                $obj->ref_cod_escola = $this->ref_cod_escola;
+                $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+                $obj->ref_usuario_cad = $this->pessoa_logada;
+                $obj->ref_cod_servidor = $this->ref_cod_servidor;
+                $obj->tipo = $this->tipo;
+                $obj->data_falta_atraso = $this->data_falta_atraso;
+                $obj->qtd_horas = $horas['hora'];
+                $obj->qtd_min = $horas['min'];
+                $obj->justificada = $this->justificada;
+                $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
             }
         }
 
-        $cadastrou = $obj->cadastra();
-
-        if ($cadastrou) {
+        if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -207,20 +208,20 @@ return new class extends clsCadastro {
         );
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
         if ($this->tipo == 1) {
-            $obj = new clsPmieducarFaltaAtraso(
-                cod_falta_atraso: $this->cod_falta_atraso,
-                ref_cod_escola: $this->ref_cod_escola,
-                ref_ref_cod_instituicao: $this->ref_cod_instituicao,
-                ref_usuario_exc: $this->pessoa_logada,
-                ref_cod_servidor: $this->ref_cod_servidor,
-                tipo: $this->tipo,
-                data_falta_atraso: $this->data_falta_atraso,
-                qtd_horas: $this->qtd_horas,
-                qtd_min: $this->qtd_min,
-                justificada: $this->justificada,
-                ativo: 1,
-                ref_cod_servidor_funcao: $this->ref_cod_servidor_funcao
-            );
+            $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
+            $obj->ref_cod_escola = $this->ref_cod_escola;
+            $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+            $obj->ref_usuario_exc = $this->pessoa_logada;
+            $obj->ref_cod_servidor = $this->ref_cod_servidor;
+            $obj->tipo = $this->tipo;
+            $obj->data_falta_atraso = $this->data_falta_atraso;
+            $obj->qtd_horas = $this->qtd_horas;
+            $obj->qtd_min = $this->qtd_min;
+            $obj->justificada = $this->justificada;
+            $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
+
+
+
         } elseif ($this->tipo == 2) {
             $obj_ser = new clsPmieducarServidor(
                 cod_servidor: $this->ref_cod_servidor,
@@ -231,23 +232,20 @@ return new class extends clsCadastro {
             $det_ser = $obj_ser->detalhe();
             $horas   = floor($det_ser['carga_horaria']);
             $minutos = ($det_ser['carga_horaria'] - $horas) * 60;
-            $obj = new clsPmieducarFaltaAtraso(
-                cod_falta_atraso: $this->cod_falta_atraso,
-                ref_cod_escola: $this->ref_cod_escola,
-                ref_ref_cod_instituicao: $this->ref_cod_instituicao,
-                ref_usuario_exc: $this->pessoa_logada,
-                ref_cod_servidor: $this->ref_cod_servidor,
-                tipo: $this->tipo,
-                data_falta_atraso: $this->data_falta_atraso,
-                qtd_horas: $horas,
-                qtd_min: $minutos,
-                justificada: $this->justificada,
-                ativo: 1,
-                ref_cod_servidor_funcao: $this->ref_cod_servidor_funcao
-            );
+
+            $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
+            $obj->ref_cod_escola = $this->ref_cod_escola;
+            $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+            $obj->ref_usuario_exc = $this->pessoa_logada;
+            $obj->ref_cod_servidor = $this->ref_cod_servidor;
+            $obj->tipo = $this->tipo;
+            $obj->data_falta_atraso = $this->data_falta_atraso;
+            $obj->qtd_horas = $horas;
+            $obj->qtd_min = $minutos;
+            $obj->justificada = $this->justificada;
+            $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
         }
-        $editou = $obj->edita();
-        if ($editou) {
+        if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -257,7 +255,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br />';
-
         return false;
     }
 
@@ -276,24 +273,9 @@ return new class extends clsCadastro {
             )
         );
 
-        $obj = new clsPmieducarFaltaAtraso(
-            cod_falta_atraso: $this->cod_falta_atraso,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            ref_cod_servidor: $this->ref_cod_servidor,
-            tipo: $this->tipo,
-            data_falta_atraso: $this->data_falta_atraso,
-            qtd_horas: $this->qtd_horas,
-            qtd_min: $this->qtd_min,
-            justificada: $this->justificada,
-            data_cadastro: $this->data_cadastro,
-            data_exclusao: $this->data_exclusao,
-            ativo: 0
-        );
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
+
+        if ($obj->detalhe()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -301,8 +283,8 @@ return new class extends clsCadastro {
                 $this->ref_cod_instituicao
             ));
         }
-        $this->mensagem = 'Exclusão não realizada.<br>';
 
+        $this->mensagem = 'Exclusão não realizada.<br>';
         return false;
     }
 

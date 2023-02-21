@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbsenceDelayCompensate;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_compensado;
@@ -37,8 +39,8 @@ return new class extends clsCadastro {
         );
 
         if (is_numeric($this->cod_compensado)) {
-            $obj = new clsPmieducarFaltaAtrasoCompensado($this->cod_compensado);
-            $registro = $obj->detalhe();
+            $obj = LegacyAbsenceDelayCompensate::find($this->cod_compensado);
+            $registro = $obj->getAttributes();
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -103,20 +105,15 @@ return new class extends clsCadastro {
         $this->data_inicio = dataToBanco($this->data_inicio);
         $this->data_fim    = dataToBanco($this->data_fim);
 
-        $obj = new clsPmieducarFaltaAtrasoCompensado(
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_ref_cod_instituicao: $this->ref_cod_instituicao,
-            ref_cod_servidor: $this->ref_cod_servidor,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            data_inicio: $this->data_inicio,
-            data_fim: $this->data_fim,
-            ativo: 1
-        );
+        $obj = new LegacyAbsenceDelayCompensate();
+        $obj->ref_cod_servidor    = $this->ref_cod_servidor;
+        $obj->ref_cod_escola      = $this->ref_cod_escola;
+        $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->data_inicio         = $this->data_inicio;
+        $obj->data_fim            = $this->data_fim;
+        $obj->ref_usuario_cad     = $this->pessoa_logada;
 
-        $cadastrou = $obj->cadastra();
-
-        if ($cadastrou) {
+        if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
@@ -127,7 +124,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br />';
-
         return false;
     }
 
@@ -150,23 +146,15 @@ return new class extends clsCadastro {
         $this->data_inicio = dataToBanco($this->data_inicio);
         $this->data_fim    = dataToBanco($this->data_fim);
 
-        $obj = new clsPmieducarFaltaAtrasoCompensado(
-            cod_compensado: $this->cod_compensado,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_ref_cod_instituicao: $this->ref_cod_instituicao,
-            ref_cod_servidor: $this->ref_cod_servidor,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            data_inicio: $this->data_inicio,
-            data_fim: $this->data_fim,
-            data_cadastro: $this->data_cadastro,
-            data_exclusao: $this->data_exclusao,
-            ativo: $this->ativo
-        );
+        $obj = LegacyAbsenceDelayCompensate::find($this->cod_compensado);
+        $obj->ref_cod_servidor    = $this->ref_cod_servidor;
+        $obj->ref_cod_escola      = $this->ref_cod_escola;
+        $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->data_inicio         = $this->data_inicio;
+        $obj->data_fim            = $this->data_fim;
+        $obj->ref_usuario_exc     = $this->pessoa_logada;
 
-        $editou = $obj->edita();
-
-        if ($editou) {
+        if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
@@ -177,7 +165,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br />';
-
         return false;
     }
 
@@ -196,33 +183,14 @@ return new class extends clsCadastro {
             )
         );
 
-        // Transforma a data para o formato aceito pelo banco
-        $this->data_inicio = dataToBanco($this->data_inicio);
-        $this->data_fim    = dataToBanco($this->data_fim);
+        $obj = LegacyAbsenceDelayCompensate::find($this->cod_compensado);
 
-        $obj = new clsPmieducarFaltaAtrasoCompensado(
-            cod_compensado: $this->cod_compensado,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_ref_cod_instituicao: $this->ref_cod_instituicao,
-            ref_cod_servidor: $this->ref_cod_servidor,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            data_inicio: $this->data_inicio,
-            data_fim: $this->data_fim,
-            data_cadastro: $this->data_cadastro,
-            data_exclusao: $this->data_exclusao,
-            ativo: 0
-        );
-
-        $excluiu = $obj->excluir();
-
-        if ($excluiu) {
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect("educar_falta_atraso_det.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         }
 
         $this->mensagem = 'Exclusão não realizada.<br />';
-
         return false;
     }
 
