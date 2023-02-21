@@ -92,12 +92,6 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             }
         }
 
-        if ($this->updateInfo['delete']) {
-            foreach ($this->updateInfo['delete'] as $componenteDelete) {
-                $this->excluiComponente(intval($componenteDelete));
-            }
-        }
-
         return true;
     }
 
