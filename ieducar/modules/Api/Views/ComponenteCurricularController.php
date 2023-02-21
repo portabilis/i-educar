@@ -111,7 +111,7 @@ class ComponenteCurricularController extends ApiCoreController
             $instituicaoId = $this->getRequest()->instituicao_id;
             $serieId       = $this->getRequest()->serie_id;
 
-            $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, tipo_nota, array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos, area_conhecimento_id, area_conhecimento.nome AS nome_area
+            $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::float, tipo_nota, array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos, area_conhecimento_id, area_conhecimento.nome AS nome_area, hora_falta
                 FROM modules.componente_curricular
                INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
@@ -120,11 +120,13 @@ class ComponenteCurricularController extends ApiCoreController
                 ORDER BY nome ';
             $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area'];
+            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'hora_falta'];
             $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
             foreach ($disciplinas as &$disciplina) {
                 $disciplina['anos_letivos'] = json_decode($disciplina['anos_letivos']);
+                $disciplina['hora_falta'] = (float) $disciplina['hora_falta'];
+                $disciplina['carga_horaria'] = (float) $disciplina['carga_horaria'];
             }
 
             return ['disciplinas' => $disciplinas];
@@ -139,7 +141,6 @@ class ComponenteCurricularController extends ApiCoreController
             $ano       = $this->getRequest()->ano;
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($serieId, $escolaId, null, null, null, true, $ano);
             $componente_curricular_turma = LegacyInstitution::whereHas('schools', fn ($q) => $q->where('cod_escola', $escolaId))->value('componente_curricular_turma');
-            $componentesCurriculares = [];
             $componentesCurriculares = array_map(function ($componente) use ($componente_curricular_turma){
                 return [
                     'id' => $componente->id,
