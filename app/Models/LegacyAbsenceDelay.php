@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasLegacyUserAction;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAbsenceDelay extends LegacyModel
