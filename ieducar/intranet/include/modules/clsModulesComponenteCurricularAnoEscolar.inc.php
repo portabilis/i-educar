@@ -250,7 +250,7 @@ SQL;
         return false;
     }
 
-    private function excluiComponente($componente_curricular_id = null)
+    public function excluiComponente($componente_curricular_id = null)
     {
         if (is_numeric($componente_curricular_id)) {
             $db = new clsBanco();
