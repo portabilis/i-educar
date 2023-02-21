@@ -111,16 +111,32 @@ class ComponenteCurricularController extends ApiCoreController
             $instituicaoId = $this->getRequest()->instituicao_id;
             $serieId       = $this->getRequest()->serie_id;
 
-            $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::float, tipo_nota, array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos, area_conhecimento_id, area_conhecimento.nome AS nome_area, hora_falta
+            $sql = '
+                SELECT componente_curricular.id,
+                       componente_curricular.nome,
+                       carga_horaria::int,
+                       tipo_nota,
+                       array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos,
+                       area_conhecimento_id,
+                       area_conhecimento.nome AS nome_area,
+                       hora_falta,
+                       (SELECT COUNT(cct.*) > 0
+                                    FROM modules.componente_curricular_turma cct
+                                    INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                                    WHERE TRUE
+                                        AND cct.componente_curricular_id = componente_curricular.id
+                                        AND cct.ano_escolar_id =  ' . $serieId . '
+                        ) contem_componente_curricular_turma
+
                 FROM modules.componente_curricular
-               INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
-               INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
+                    INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
+                    INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
                   AND ano_escolar_id = ' . $serieId . '
                 ORDER BY nome ';
             $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'hora_falta'];
+            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'contem_componente_curricular_turma', 'hora_falta'];
             $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
             foreach ($disciplinas as &$disciplina) {
