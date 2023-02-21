@@ -27,7 +27,6 @@ class ComponentesSerieController extends ApiCoreController
         $updateInfo = $obj->updateInfo();
         $componentesAtualizados = $updateInfo['update'];
         $componentesInseridos = $updateInfo['insert'];
-        $componentesExcluidos = $updateInfo['delete'];
 
         try {
             $valido = $this->validaAtualizacao($serieId, $updateInfo);
@@ -35,15 +34,12 @@ class ComponentesSerieController extends ApiCoreController
             return ['msgErro' => $e->getMessage()];
         }
 
-        if ($valido && $obj->atualizaComponentesDaSerie()) {
-            if ($componentesExcluidos) {
-                $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
-            }
+        if ($valido) {
+            $obj->atualizaComponentesDaSerie();
 
             return [
                 'update' => $componentesAtualizados,
-                'insert' => $componentesInseridos,
-                'delete' => $componentesExcluidos
+                'insert' => $componentesInseridos
             ];
         }
 
