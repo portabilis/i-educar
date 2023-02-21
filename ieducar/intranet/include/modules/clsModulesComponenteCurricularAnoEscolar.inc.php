@@ -131,13 +131,6 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             }
         }
 
-        foreach ($this->getComponentesSerie() as $componente) {
-            if (!in_array($componente, $componentesArray)) {
-                $this->updateInfo['delete'][$d] = $componente;
-                $d++;
-            }
-        }
-
         return $this->updateInfo;
     }
 
