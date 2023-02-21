@@ -6,16 +6,17 @@ submitButton.click(function(){
   var componentesInput = $j('[name*=carga_horaria]');
   var arrayComponentes = [];
   componentesInput.each(function(i) {
-    let nome      = this.name;
-    let key       = nome.split('componentes[').pop().split('][').shift();
-    let check     = $j('[name="componentes['+key+'][id]"]').is(':checked');
-    let id        = $j('[name="componentes['+key+'][id]"]').val();
-    let carga     = $j('[name="componentes['+key+'][carga_horaria]"]').val();
-    let tipo_nota = $j('[name="componentes['+key+'][tipo_nota]"]').val();
+    let nome         = this.name;
+    let key          = nome.split('componentes[').pop().split('][').shift();
+    let check        = $j('[name="componentes['+key+'][id]"]').is(':checked');
+    let id           = $j('[name="componentes['+key+'][id]"]').val();
+    let carga        = $j('[name="componentes['+key+'][carga_horaria]"]').val();
+    let hora_falta   = $j('[name="componentes['+key+'][hora_falta]"]').val();
+    let tipo_nota    = $j('[name="componentes['+key+'][tipo_nota]"]').val();
     let anos_letivos = $j('[name="componentes['+key+'][anos_letivos]"]').val() || [];
 
     if(check){
-      arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota, anos_letivos: anos_letivos});
+      arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota, anos_letivos: anos_letivos, hora_falta: hora_falta});
     }
   });
   atualizaComponentesSerie(arrayComponentes);

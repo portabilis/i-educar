@@ -71,11 +71,13 @@ function checkAll(id){
     var isChecked = $j('#check-all-'+id).is(':checked');
     $j( '.check_componente_area_' + id).prop( "checked", isChecked );
     $j( '.area_conhecimento_' + id + ' .carga_horaria').prop("disabled", !isChecked);
+    $j( '.area_conhecimento_' + id + ' .hora_falta').prop("disabled", !isChecked);
     $j( '.area_conhecimento_' + id + ' .tipo_nota').prop("disabled", !isChecked);
     $j( '.area_conhecimento_' + id + ' .anos_letivos').prop("disabled", !isChecked);
     $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
     if(!isChecked){
         $j( '.area_conhecimento_' + id + ' .carga_horaria').val('');
+        $j( '.area_conhecimento_' + id + ' .hora_falta').val('');
         $j( '.area_conhecimento_' + id + ' .tipo_nota').val('');
         $j( '.area_conhecimento_' + id + ' .anos_letivos').val('');
         $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
@@ -97,6 +99,7 @@ function reloadChosenAnosLetivos($element){
 function habilitaCampos(componente_id){
     var isChecked = !$j( '#componente_' + componente_id).is(':checked');
     $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked).val('');
+    $j( '#hora_falta_' + componente_id ).prop("disabled", isChecked).val('');
     $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked).val('');
     $j( '#anos_letivos_' + componente_id ).prop("disabled", isChecked).val('');
     reloadChosenAnosLetivos($j( '#anos_letivos_' + componente_id ));
@@ -230,6 +233,7 @@ function handleCarregaDadosComponentesSerie(response){
     componentes.forEach(function(componente) {
         $j( '#componente_' + componente.id).prop( "checked", true );
         $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
+        $j( '#hora_falta_' + componente.id ).val(componente.hora_falta).prop("disabled", false);
         $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
         $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
         reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
@@ -391,6 +395,9 @@ function htmlSubCabecalhoAreaConhecimento(id){
                     <b>Carga horária</b>
                 </td>
                 <td>
+                    <b>Hora falta</b>
+                </td>
+                <td>
                     <b>Tipo de nota</b>
                 </td>
                 <td>
@@ -452,6 +459,17 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
                            value=""
                            disabled>
                            ` + iconCloneCargaHoraria + `
+                </td>
+                <td>
+                    <input type="text"
+                           size="5"
+                           maxlength="5"
+                           name="componentes[` + id + componente_id + `][hora_falta]"
+                           class="carga_horaria"
+                           id="hora_falta_` + componente_id + `"
+                           value=""
+                           disabled>
+
                 </td>
                 <td>
                     <select name="componentes[` + id + componente_id + `][tipo_nota]"
