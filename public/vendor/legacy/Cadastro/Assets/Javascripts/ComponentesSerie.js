@@ -94,11 +94,43 @@ function reloadChosenAnosLetivos($element){
   });
 }
 
+
+function verificaRetorno(response) {
+  if (response.msgErro) {
+    let msgs = response.msgErro.split("\n");
+    msgs.forEach(msg => messageUtils.error(msg));
+  }
+}
+
+function removeComponent(componente_id) {
+
+  serieId = serieId != '' ? serieId : $j('#ref_cod_serie').val();
+  let urlForAtualizaComponentesSerie = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'remove-componentes-serie', {});
+
+  let options = {
+    type     : 'POST',
+    url      : urlForAtualizaComponentesSerie,
+    dataType : 'json',
+    data     : {
+      serie_id    : serieId,
+      componente : componente_id
+    },
+    success: verificaRetorno
+  };
+
+  postResource(options);
+
+}
 function habilitaCampos(componente_id){
     var isChecked = !$j( '#componente_' + componente_id).is(':checked');
     $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked).val('');
     $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked).val('');
     $j( '#anos_letivos_' + componente_id ).prop("disabled", isChecked).val('');
+
+    if (isChecked) {
+      removeComponent(componente_id)
+    }
+
     reloadChosenAnosLetivos($j( '#anos_letivos_' + componente_id ));
 }
 
