@@ -46,10 +46,9 @@ $j("#ref_cod_area_conhecimento").change(function() {
     if(chosenArray && chosenOldArray){
         if (chosenArray.length > chosenOldArray.length) {
             chosenArray.forEach(function(area) {
-                nome_area = $j(this).find("option[value='"+ area +"']").text();
+              let nome_area = $j(this).find("option[value='" + area + "']").text();
                 if (!$j('#area_conhecimento_' + area).length && area != '') {
                     $j('#componentes').append(htmlCabecalhoAreaConhecimento(area, nome_area));
-                    carregaComponentesDaArea(area);
                 }
             }, this);
         }else{
@@ -57,7 +56,7 @@ $j("#ref_cod_area_conhecimento").change(function() {
                 var areaExcluida = '';
                 if($j.inArray(area,chosenArray) == -1){
                     areaExcluida = area;
-                };
+                }
                 $j('#area_conhecimento_'+areaExcluida).remove();
                 $j('.area_conhecimento_'+areaExcluida).remove();
             }, this);
@@ -115,13 +114,23 @@ function cloneValues(area_id, componente_id, classe){
     }, this);
 }
 
-function expandClose(id){
-    var expand = $j('.area_conhecimento_'+id).is(':visible');
+async function expandClose(id){
+    const expand = !$j('.area_conhecimento_'+id).is(':visible');
+    const loading = document.getElementById('load_' + id);
+    const arrow = document.getElementById('expandClose_' + id);
     $j('.area_conhecimento_'+id).toggle('fast');
-    if(expand){
-        $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-down2.png)');
-    }else{
-        $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-up2.png)');
+
+    if(expand) {
+      $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-up2.png)');
+      if (document.getElementsByClassName('area_conhecimento_' + id).length === 0) {
+        loading.style.display = 'block'
+        arrow.style.display = 'none'
+        await carregaComponentesDaArea(id)
+        loading.style.display = 'none'
+        arrow.style.display = 'block'
+      }
+    } else {
+      $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-down2.png)');
     }
 }
 
@@ -227,33 +236,40 @@ function handleCarregaDadosComponentesSerie(response){
     }, this);
 }
 
-function carregaComponentesDaArea(id){
-    var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular',
-                                             'componentes-curriculares',
-                                             { instituicao_id       : instituicao_id,
-                                               area_conhecimento_id : id }
+async function carregaComponentesDaArea(id) {
+    const url = getResourceUrlBuilder.buildUrl(
+      '/module/Api/ComponenteCurricular',
+      'componentes-curriculares',
+      {
+        instituicao_id: instituicao_id,
+        area_conhecimento_id: id
+      }
     );
-    var options = {
+    const options = {
         url      : url,
         dataType : 'json',
         success  : handleCarregaComponentesDaArea
     };
-    getResources(options);
+    await getPromise(options);
 }
 
-function handleCarregaComponentesDaArea(response){
+function handleCarregaComponentesDaArea(response) {
     var componentes          = response.disciplinas;
     var urlRequisicao        = new URLSearchParams(this.url);
     var area_conhecimento_id = urlRequisicao.get('area_conhecimento_id');
 
     for (var i = componentes.length - 1; i >= 0 ; i--) {
         var firstLine = i == 0;
-        $j(htmlComponentesAreaConhecimento(componentes[i].area_conhecimento_id, componentes[i].id, componentes[i].nome, firstLine)).insertAfter('#area_conhecimento_' + componentes[i].area_conhecimento_id);
+        $j(htmlComponentesAreaConhecimento(
+          componentes[i].area_conhecimento_id,
+          componentes[i].id,
+          componentes[i].nome,
+          firstLine)).insertAfter('#area_conhecimento_' + componentes[i].area_conhecimento_id);
     }
 
     $j(htmlSubCabecalhoAreaConhecimento(area_conhecimento_id)).insertAfter('#area_conhecimento_' + area_conhecimento_id);
 
-    if(serie_id != ''){
+    if(serie_id != '') {
         carregaDadosComponentesSerie();
     }
     reloadChosenAnosLetivos($j('.anos_letivos'));
@@ -302,7 +318,6 @@ function handleGetAreaConhecimentoSerie(response) {
         $j("#ref_cod_area_conhecimento").children("[value=" + id + "]").attr('selected', '');
         $j("#ref_cod_area_conhecimento").chosen().trigger("chosen:updated");
         $j('#componentes').append(htmlCabecalhoAreaConhecimento(id, nome));
-        carregaComponentesDaArea(id);
     });
     chosenOldArray = $j("#ref_cod_area_conhecimento").chosen().val();
 }
@@ -329,12 +344,36 @@ function htmlCabecalhoAreaConhecimento(id, nome){
                 <td colspan="2" style="text-align: right;">
                      <div id="expandClose_` + id + `"
                           onClick="expandClose(` + id + `)"
-                          style="background-image: url(/intranet/imagens/arrow-up2.png);
+                          style="background-image: url(/intranet/imagens/arrow-down2.png);
                                  width: 15px;
                                  height: 15px;
                                  background-size: cover;
                                  float: right;
-                                 cursor: pointer;"/>
+                                 cursor: pointer;">
+                     </div>
+                     <div
+                        id="load_` + id + `"
+                        style="display: none">
+                        <div>
+                            <svg
+                              class="x-spinner-mat"
+                              width="20px"
+                              height="20px"
+                              viewBox="25 25 50 50"
+                              style="text-color: #47728f"
+                            >
+                              <circle
+                                class="path"
+                                cx="50"
+                                cy="50"
+                                r="20"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="5"
+                                stroke-miterlimit="10">
+                              </circle>
+                            </svg>
+                          </div>
                      </div>
                 </td>
             </tr>`;
@@ -376,7 +415,7 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
     var iconCloneTipoNota = '';
     var iconCloneAnosLetivos = '';
 
-    if(firstLine){
+    if(firstLine) {
         iconCloneCargaHoraria = `<a class="clone-values"
                                     onclick="cloneValues(` + id + `,` + componente_id + `, 'carga_horaria')">
                                     <i class="fa fa-clone" aria-hidden="true"></i>

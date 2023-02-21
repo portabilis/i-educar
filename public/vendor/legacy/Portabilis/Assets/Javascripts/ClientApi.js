@@ -104,6 +104,18 @@ var getResources = function(options, errorCallback) {
   getResource(options, errorCallback);
 };
 
+const getPromise = function (options, errCallback) {
+  return fetch(options.url,{
+    method: 'GET',
+  }).then(function(res) {
+    return res.json()
+  }).then(function(res) {
+      options.success(res)
+  }).catch(function(err) {
+      errCallback(err)
+  });
+}
+
 var postResource = function(options, errorCallback){
   $j.ajax(options).error(errorCallback || handleErrorOnPostResource);
 };
