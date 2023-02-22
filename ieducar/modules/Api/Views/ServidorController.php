@@ -136,7 +136,7 @@ class ServidorController extends ApiCoreController
             }
 
             if ($ano) {
-                $where = $where . "AND {$ano} = ANY(ccae.anos_letivos)";
+                $where = $where . " AND {$ano} = ANY(ccae.anos_letivos)";
             }
 
             $sql = "
