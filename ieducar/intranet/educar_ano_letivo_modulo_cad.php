@@ -154,7 +154,7 @@ return new class extends clsCadastro {
 
         $lista = LegacyStageType::query()
             ->where('ativo', 1)
-            ->where('ref_cod_instituicao', $ref_cod_instituicao)
+            ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
             ->orderBy('nm_tipo')
             ->get()
             ->toArray();
