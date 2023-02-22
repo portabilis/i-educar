@@ -315,38 +315,29 @@ function handleCarregaDadosComponentesSerie(response){
 
       let textBase = 'Contém restrições em: ';
       let contemRestricao = false;
+      let tiposRestricao = [];
 
       if (componente.contem_notas) {
         contemRestricao = true
-        textBase += 'notas'
+        tiposRestricao.push('notas')
       }
 
       if (componente.contem_faltas) {
-        let virgula = ', '
-        if (componente.contem_notas) {
-          textBase += virgula
-        }
         contemRestricao = true
-        textBase += 'falta '
+        tiposRestricao.push('falta')
       }
 
       if (componente.contem_paracer) {
-        let virgula = ', '
-        if (componente.contem_faltas || componente.contem_notas) {
-          textBase += virgula
-        }
         contemRestricao = true
-        textBase += 'pareceres '
+        tiposRestricao.push('pareceres')
       }
 
       if (componente.contem_componente_curricular_turma) {
-        let e = ' e '
-        if (componente.contem_faltas || componente.contem_notas || componente.contem_paracer) {
-          textBase += e
-        }
         contemRestricao = true
-        textBase += 'configurado da turma'
+        tiposRestricao.push('configurado da turma')
       }
+
+      textBase += tiposRestricao.join(', ')
 
       let icon = '<i class="ml-5 fa fa-question-circle" title="' + textBase +'"></i>';
       if (contemRestricao) {
