@@ -313,12 +313,45 @@ function handleCarregaDadosComponentesSerie(response){
 
       reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
 
+      let textBase = 'Contém restrições em: ';
+      let contemRestricao = false;
+
+      if (componente.contem_notas) {
+        contemRestricao = true
+        textBase += 'notas'
+      }
+
+      if (componente.contem_faltas) {
+        let virgula = ', '
+        if (componente.contem_notas) {
+          textBase += virgula
+        }
+        contemRestricao = true
+        textBase += 'falta '
+      }
+
+      if (componente.contem_paracer) {
+        let virgula = ', '
+        if (componente.contem_faltas || componente.contem_notas) {
+          textBase += virgula
+        }
+        contemRestricao = true
+        textBase += 'pareceres '
+      }
+
       if (componente.contem_componente_curricular_turma) {
+        let e = ' e '
+        if (componente.contem_faltas || componente.contem_notas || componente.contem_paracer) {
+          textBase += e
+        }
+        contemRestricao = true
+        textBase += 'configurado da turma'
+      }
+
+      let icon = '<i class="ml-5 fa fa-question-circle" title="' + textBase +'"></i>';
+      if (contemRestricao) {
+        $j(icon).insertAfter('#label_componente_' + componente.id)
         $j( '#componente_' + componente.id).prop( "checked", true ).prop("disabled", true);
-        $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", true);
-        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", true);
-        $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", true);
-        $j( '#anos_letivos_' + componente.id).trigger("chosen:updated");
       }
     }, this);
 }
@@ -519,7 +552,9 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
 
     return `<tr class="area_conhecimento_` + id + `">
                 <td colspan="2">
-                    <label>
+                    <label
+                        id="label_componente_` + componente_id + `"
+                    >
                         <input type="checkbox"
                                name="componentes[` + id + componente_id + `][id]"
                                class="check_componente_area_`+ id +`"
