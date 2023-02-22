@@ -121,17 +121,59 @@ function removeComponent(componente_id) {
   postResource(options);
 
 }
+
+function defaultModal(componenteId) {
+  makeDialog({
+    content: 'Tem certeza que deseja remover o compoente? Cajo não exista lancamentos no i-Diario ' +
+      'o componente será removido',
+    title: 'Atenção!',
+    maxWidth: 600,
+    width: 600,
+    size: 500,
+    close: function () {
+      habilitaComponente(componenteId)
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        removeComponent(componenteId)
+        desabilitaComponente(componenteId)
+        $j('#dialog-container').dialog('destroy');
+      }
+    },
+    {
+      text: 'Cancelar',
+      click: function () {
+        habilitaComponente(componenteId)
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
+
+function habilitaComponente(componenteId) {
+  $j( '#componente_' + componenteId).attr('checked','checked')
+  $j( '#carga_horaria_' + componenteId ).prop("disabled", false);
+  $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
+  $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
+}
+
+function desabilitaComponente(componenteId) {
+    $j( '#carga_horaria_' + componenteId ).prop("disabled", true).val('');
+    $j( '#tipo_nota_' + componenteId ).prop("disabled", true).val('');
+    $j( '#anos_letivos_' + componenteId ).prop("disabled", true).val('');
+    reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ));
+}
+
 function habilitaCampos(componente_id){
-    var isChecked = !$j( '#componente_' + componente_id).is(':checked');
-    $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked).val('');
-    $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked).val('');
-    $j( '#anos_letivos_' + componente_id ).prop("disabled", isChecked).val('');
+  const isChecked = !$j( '#componente_' + componente_id).is(':checked');
 
-    if (isChecked) {
-      removeComponent(componente_id)
-    }
-
-    reloadChosenAnosLetivos($j( '#anos_letivos_' + componente_id ));
+  if (isChecked) {
+    defaultModal(componente_id)
+  } else {
+    habilitaComponente(componente_id)
+  }
 }
 
 function cloneValues(area_id, componente_id, classe){
@@ -483,7 +525,7 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
                                class="check_componente_area_`+ id +`"
                                id="componente_` + componente_id + `"
                                value="` + componente_id + `"
-                               onclick="habilitaCampos(` + componente_id + `)">` +
+                               onclick="habilitaCampos(` + componente_id + ',' + id + ` )">` +
                         componente_nome +
                     `</label>
                 </td>
