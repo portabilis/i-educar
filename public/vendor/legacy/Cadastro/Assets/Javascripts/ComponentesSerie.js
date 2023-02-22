@@ -243,13 +243,17 @@ function handleGetSeries(response){
     updateAreaConhecimento();
 }
 
-function carregaDadosComponentesSerie(){
-    var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular',
-                                             'componentes-curriculares-serie',
-                                             { instituicao_id : instituicao_id,
-                                               serie_id       : serie_id }
+function carregaDadosComponentesSerie(area_conhecimento_id){
+    let url = getResourceUrlBuilder.buildUrl(
+      '/module/Api/ComponenteCurricular',
+      'componentes-curriculares-serie',
+      {
+        instituicao_id: instituicao_id,
+        serie_id: serie_id,
+        area_conhecimento: area_conhecimento_id
+      }
     );
-    var options = {
+    let options = {
         url      : url,
         dataType : 'json',
         success  : handleCarregaDadosComponentesSerie
@@ -311,7 +315,7 @@ function handleCarregaComponentesDaArea(response) {
     $j(htmlSubCabecalhoAreaConhecimento(area_conhecimento_id)).insertAfter('#area_conhecimento_' + area_conhecimento_id);
 
     if(serie_id != '') {
-        carregaDadosComponentesSerie();
+        carregaDadosComponentesSerie(area_conhecimento_id);
     }
     reloadChosenAnosLetivos($j('.anos_letivos'));
 }
