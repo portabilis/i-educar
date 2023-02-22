@@ -6,7 +6,6 @@ use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStageType;
 use App\Models\View\Discipline;
-use App\Models\LegacyStageType;
 use Illuminate\Support\Facades\DB;
 
 return new class () extends clsDetalhe {
