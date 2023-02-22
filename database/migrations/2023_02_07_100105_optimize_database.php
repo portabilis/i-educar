@@ -18,9 +18,7 @@ return new class () extends Migration {
         $this->dropView('relatorio.view_modulo');
 
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_pkey;');
-        \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_ref_cod_modulo_fkey;');
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_ref_ref_cod_escola_fkey;');
-        \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS pmieducar_ano_letivo_modulo_ref_cod_modulo_foreign;');
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign;');
 
         Schema::table('ano_letivo_modulo', function (Blueprint $table) {
@@ -29,7 +27,7 @@ return new class () extends Migration {
             $table->unsignedSmallInteger('ref_cod_modulo')->change();
             $table->unsignedSmallInteger('dias_letivos')->nullable()->change();
             $table->unsignedSmallInteger('ref_ano')->change();
-            $table->foreign('ref_ref_cod_escola')->references('cod_escola')->on('pmieducar.escola')->onDelete('cascade');
+            $table->foreign('ref_ref_cod_escola')->references('cod_escola')->on('pmieducar.escola');
             $table->unique([
                 'ref_ano',
                 'ref_ref_cod_escola',
@@ -74,6 +72,7 @@ return new class () extends Migration {
             $table->foreign('escola_ano_letivo_id')->references('id')->on('pmieducar.escola_ano_letivo')->onDelete('cascade');
         });
 
+        \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo ADD CONSTRAINT pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign FOREIGN KEY (ref_ref_cod_escola, ref_ano) REFERENCES pmieducar.escola_ano_letivo(ref_cod_escola, ano) ON UPDATE RESTRICT ON DELETE RESTRICT');
         \DB::statement('UPDATE pmieducar.ano_letivo_modulo alm SET escola_ano_letivo_id = eal.id FROM pmieducar.escola_ano_letivo eal WHERE eal.ano = alm.ref_ano AND eal.ref_cod_escola = alm.ref_ref_cod_escola;');
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo ALTER COLUMN escola_ano_letivo_id SET NOT NULL;');
     }
@@ -91,6 +90,7 @@ return new class () extends Migration {
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_ref_ano_ref_ref_cod_escola_sequencial_ref_cod;');
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_escola_ano_letivo_id_foreign;');
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_ref_ref_cod_escola_foreign;');
+        \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign;');
 
         Schema::table('ano_letivo_modulo', function (Blueprint $table) {
             $table->dropColumn('id');
