@@ -108,8 +108,9 @@ class ComponenteCurricularController extends ApiCoreController
     public function getComponentesCurricularesPorSerie()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $serieId       = $this->getRequest()->serie_id;
+            $instituicaoId      = (int) $this->getRequest()->instituicao_id;
+            $serieId            = (int) $this->getRequest()->serie_id;
+            $areaDeConhecimento = (int) $this->getRequest()->area_conhecimento;
 
             $sql = '
                 SELECT componente_curricular.id,
@@ -133,8 +134,9 @@ class ComponenteCurricularController extends ApiCoreController
                     INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
                   AND ano_escolar_id = ' . $serieId . '
+                  AND modules.area_conhecimento.id = $2
                 ORDER BY nome ';
-            $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
+            $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId, $areaDeConhecimento]);
 
             $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'contem_componente_curricular_turma', 'hora_falta'];
             $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
