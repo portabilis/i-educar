@@ -22,7 +22,6 @@ return new class () extends clsCadastro {
     public $hora_inicio_intervalo;
     public $hora_fim_intervalo;
     public $hora_fim_intervalo_;
-    public $hora_falta;
     public $ref_cod_curso;
     public $escola_serie_disciplina;
     public $ref_cod_disciplina;
@@ -192,13 +191,6 @@ return new class () extends clsCadastro {
         $this->campoHora(nome: 'hora_final', campo: 'Hora Final', valor: $this->hora_final);
         $this->campoHora(nome: 'hora_inicio_intervalo', campo: 'Hora Início Intervalo', valor: $this->hora_inicio_intervalo);
         $this->campoHora(nome: 'hora_fim_intervalo', campo: 'Hora Fim Intervalo', valor: $this->hora_fim_intervalo);
-
-        $this->campoTexto(
-            nome: 'hora_falta',
-            campo: 'Hora Falta',
-            valor: (float) $this->hora_falta
-        );
-
         $this->campoCheck(nome: 'bloquear_enturmacao_sem_vagas', campo: 'Bloquear enturmação após atingir limite de vagas', valor: $this->bloquear_enturmacao_sem_vagas);
         $this->campoCheck(nome: 'bloquear_cadastro_turma_para_serie_com_vagas', campo: 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)', valor: $this->bloquear_cadastro_turma_para_serie_com_vagas);
         $this->campoQuebra();
@@ -401,8 +393,7 @@ return new class () extends clsCadastro {
             hora_fim_intervalo: $this->hora_fim_intervalo,
             bloquear_enturmacao_sem_vagas: $this->bloquear_enturmacao_sem_vagas,
             bloquear_cadastro_turma_para_serie_com_vagas: $this->bloquear_cadastro_turma_para_serie_com_vagas,
-            anos_letivos: $this->anos_letivos ?: [],
-            hora_falta: $this->hora_falta
+            anos_letivos: $this->anos_letivos ?: []
         );
 
         if ($obj->existe()) {
@@ -474,8 +465,7 @@ return new class () extends clsCadastro {
             hora_fim_intervalo: $this->hora_fim_intervalo,
             bloquear_enturmacao_sem_vagas: $this->bloquear_enturmacao_sem_vagas,
             bloquear_cadastro_turma_para_serie_com_vagas: $this->bloquear_cadastro_turma_para_serie_com_vagas,
-            anos_letivos: $this->anos_letivos ?: [],
-            hora_falta: $this->hora_falta
+            anos_letivos: $this->anos_letivos ?: []
         );
 
         $sombra = json_decode(json: urldecode($this->componentes_sombra), associative: true) ?? [];
