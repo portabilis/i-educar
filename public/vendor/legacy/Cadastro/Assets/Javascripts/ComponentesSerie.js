@@ -451,7 +451,7 @@ function htmlCabecalhoAreaConhecimento(id, nome, anos_letivos = null) {
 
     let label = '';
     if (anos_letivos !== null) {
-      label = '<label></label> <i class="ml-5 fa fa-question-circle" title="Usado em: '  + anos_letivos  + '"></i>';
+      label = '<label></label> <i class="ml-5 fa fa-info-circle" title="Usado em: '  + anos_letivos  + '"></i>';
     }
     return `<tr id="area_conhecimento_` + id + `"
                 class="area_conhecimento_title">
