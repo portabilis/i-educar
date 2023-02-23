@@ -50,8 +50,8 @@ SELECT p.id,
             ELSE 'Presencial'::character varying
         END::text, '|'::text) AS modalidade_ensino,
     me.cod_aluno_inep AS inep_id,
-	ap.altura as altura,
-	ap.peso as peso
+	ap.altura as height,
+	ap.peso as weight
    FROM exporter_person p
      JOIN pmieducar.aluno a ON p.id = a.ref_idpes::numeric
      JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
