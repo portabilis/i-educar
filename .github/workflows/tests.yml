@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 jobs:
+  if: github.event.pull_request.draft == false
   default:
-
     name: Unit, Integration and Pages
 
     runs-on: self-hosted
