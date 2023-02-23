@@ -8,6 +8,7 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
+use App\Models\LegacyStudentHistoricalHeightWeight;
 use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
 use App\Models\SchoolInep;
@@ -255,6 +256,7 @@ class AlunoController extends ApiCoreController
 
         return true;
     }
+
     /**
      * @return bool
      */
@@ -1537,21 +1539,22 @@ class AlunoController extends ApiCoreController
 
     public function saveHistoricoAlturaPeso($alunoId)
     {
-        $obj = new clsPmieducarAlunoHistoricoAlturaPeso($alunoId);
-
-        // exclui todos
-        $obj->excluir();
+        LegacyStudentHistoricalHeightWeight::query()
+            ->where('ref_cod_aluno', $alunoId)
+            ->delete();
 
         foreach ($this->getRequest()->data_historico as $key => $value) {
             $data_historico = Portabilis_Date_Utils::brToPgSQL($value);
             $altura = $this->getRequest()->historico_altura[$key];
             $peso = $this->getRequest()->historico_peso[$key];
 
+            $obj = new LegacyStudentHistoricalHeightWeight();
+            $obj->ref_cod_aluno = $alunoId;
             $obj->data_historico = $data_historico;
             $obj->altura = $altura;
             $obj->peso = $peso;
 
-            if (!$obj->cadastra()) {
+            if (!$obj->save()) {
                 $this->messenger->append('Erro ao cadastrar histórico de altura e peso.');
             }
         }
