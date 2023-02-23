@@ -123,18 +123,59 @@ function removeComponent(componente_id) {
   postResource(options);
 
 }
+
+function defaultModal(componenteId) {
+  makeDialog({
+    content: 'Tem certeza que deseja remover o compoente? Cajo não exista lancamentos no i-Diario ' +
+      'o componente será removido',
+    title: 'Atenção!',
+    maxWidth: 600,
+    width: 600,
+    size: 500,
+    close: function () {
+      habilitaComponente(componenteId)
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        removeComponent(componenteId)
+        desabilitaComponente(componenteId)
+        $j('#dialog-container').dialog('destroy');
+      }
+    },
+    {
+      text: 'Cancelar',
+      click: function () {
+        habilitaComponente(componenteId)
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
+
+function habilitaComponente(componenteId) {
+  $j( '#componente_' + componenteId).attr('checked','checked')
+  $j( '#carga_horaria_' + componenteId ).prop("disabled", false);
+  $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
+  $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
+}
+
+function desabilitaComponente(componenteId) {
+    $j( '#carga_horaria_' + componenteId ).prop("disabled", true).val('');
+    $j( '#tipo_nota_' + componenteId ).prop("disabled", true).val('');
+    $j( '#anos_letivos_' + componenteId ).prop("disabled", true).val('');
+    reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ));
+}
+
 function habilitaCampos(componente_id){
-    var isChecked = !$j( '#componente_' + componente_id).is(':checked');
-    $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked).val('');
-    $j( '#hora_falta_' + componente_id ).prop("disabled", isChecked).val('');
-    $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked).val('');
-    $j( '#anos_letivos_' + componente_id ).prop("disabled", isChecked).val('');
+  const isChecked = !$j( '#componente_' + componente_id).is(':checked');
 
-    if (isChecked) {
-      removeComponent(componente_id)
-    }
-
-    reloadChosenAnosLetivos($j( '#anos_letivos_' + componente_id ));
+  if (isChecked) {
+    defaultModal(componente_id)
+  } else {
+    habilitaComponente(componente_id)
+  }
 }
 
 function cloneValues(area_id, componente_id, classe){
@@ -275,12 +316,36 @@ function handleCarregaDadosComponentesSerie(response){
 
       reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
 
+      let textBase = 'Contém restrições em: ';
+      let contemRestricao = false;
+      let tiposRestricao = [];
+
+      if (componente.contem_notas) {
+        contemRestricao = true
+        tiposRestricao.push('notas')
+      }
+
+      if (componente.contem_faltas) {
+        contemRestricao = true
+        tiposRestricao.push('falta')
+      }
+
+      if (componente.contem_paracer) {
+        contemRestricao = true
+        tiposRestricao.push('pareceres')
+      }
+
       if (componente.contem_componente_curricular_turma) {
+        contemRestricao = true
+        tiposRestricao.push('configurado na turma')
+      }
+
+      textBase += tiposRestricao.join(', ')
+
+      let icon = '<i class="ml-5 fa fa-question-circle" title="' + textBase +'"></i>';
+      if (contemRestricao) {
+        $j(icon).insertAfter('#label_componente_' + componente.id)
         $j( '#componente_' + componente.id).prop( "checked", true ).prop("disabled", true);
-        $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", true);
-        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", true);
-        $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", true);
-        $j( '#anos_letivos_' + componente.id).trigger("chosen:updated");
       }
     }, this);
 }
@@ -363,12 +428,13 @@ function updateAreaConhecimento(){
 
 function handleGetAreaConhecimentoSerie(response) {
     $j('#ref_cod_area_conhecimento').val('').trigger('liszt:updated');
-    $j.each(response['options'], function(id,nome) {
-        $j("#ref_cod_area_conhecimento").children("[value=" + id + "]").attr('selected', '');
+  $j.each(response['options'], function(index, item) {
+        $j("#ref_cod_area_conhecimento").children("[value=" + item.id + "]").attr('selected', '');
         $j("#ref_cod_area_conhecimento").chosen().trigger("chosen:updated");
-        $j('#componentes').append(htmlCabecalhoAreaConhecimento(id, nome));
+        let anos_letivos = item.anos_letivos.replace('{', '').replace('}', '');
+        $j('#componentes').append(htmlCabecalhoAreaConhecimento(item.id, item.nome, anos_letivos));
     });
-    chosenOldArray = $j("#ref_cod_area_conhecimento").chosen().val();
+  chosenOldArray = $j("#ref_cod_area_conhecimento").chosen().val();
 }
 
 
@@ -384,10 +450,16 @@ function getAreaConhecimentoSerie(){
     getResources(options);
 }
 
-function htmlCabecalhoAreaConhecimento(id, nome){
+function htmlCabecalhoAreaConhecimento(id, nome, anos_letivos = null) {
+
+    let label = '';
+    if (anos_letivos !== null) {
+      label = '<label></label> <i class="ml-5 fa fa-info-circle" title="Usado em: '  + anos_letivos  + '"></i>';
+    }
     return `<tr id="area_conhecimento_` + id + `"
                 class="area_conhecimento_title">
-                <td colspan="2">` + nome + `</td>
+                <td colspan="2">` + nome + ` ` + label + `
+               </td>
                 <td class="td_check_all">
                 </td>
                 <td colspan="2" style="text-align: right;">
@@ -484,13 +556,15 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
 
     return `<tr class="area_conhecimento_` + id + `">
                 <td colspan="2">
-                    <label>
+                    <label
+                        id="label_componente_` + componente_id + `"
+                    >
                         <input type="checkbox"
                                name="componentes[` + id + componente_id + `][id]"
                                class="check_componente_area_`+ id +`"
                                id="componente_` + componente_id + `"
                                value="` + componente_id + `"
-                               onclick="habilitaCampos(` + componente_id + `)">` +
+                               onclick="habilitaCampos(` + componente_id + ',' + id + ` )">` +
                         componente_nome +
                     `</label>
                 </td>
