@@ -224,6 +224,8 @@ class StudentTest extends ViewTestCase
                 'grade_id' => 'ID Série',
                 'course_id' => 'ID Curso',
                 'inep_id' => 'Código INEP (Aluno)',
+                'altura' => 'Altura',
+                'peso' => 'Peso'
             ],
             'Aluno' => [
                 'name' => 'Nome',
