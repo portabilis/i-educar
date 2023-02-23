@@ -59,6 +59,7 @@ class LegacyStudentMedicalRecord extends Model
         'aceita_hospital_proximo',
         'desc_aceita_hospital_proximo',
     ];
+
     public function student()
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
