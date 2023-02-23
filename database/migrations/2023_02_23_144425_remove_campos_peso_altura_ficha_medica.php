@@ -6,7 +6,7 @@ return new class () extends Migration {
     public function up()
     {
         DB::unprepared('ALTER TABLE IF EXISTS modules.ficha_medica_aluno DROP COLUMN IF EXISTS peso;');
-        DB::unprepared('ALTER TABLE IF EXISTS modules.ficha_medica_aluno DROP COLUMN IF EXISTS alturacom;');
+        DB::unprepared('ALTER TABLE IF EXISTS modules.ficha_medica_aluno DROP COLUMN IF EXISTS altura;');
     }
 
     public function down()
