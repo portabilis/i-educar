@@ -62,8 +62,8 @@ class Student extends Model
                 'gender' => 'Gênero',
                 'race' => 'Raça',
                 'religion' => 'Religião',
-                'altura' => 'Altura',
-                'peso' => 'Peso'
+                'height' => 'Altura',
+                'weight' => 'Peso'
             ],
             'Escola' => [
                 'school' => 'Escola',
