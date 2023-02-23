@@ -68,20 +68,40 @@ class AreaConhecimentoController extends ApiCoreController
     {
         $serieId = $this->getRequest()->serie_id;
 
-        $sql = 'SELECT ac.id as id,
+        $sql = '
+            SELECT
+                id,
+                nome,
+                nome_agrupador,
+                array_agg(DISTINCT anos_letivos) AS anos_letivos
+            FROM
+                (SELECT
+                    ac.id AS id,
                     ac.nome AS nome,
-                    CASE WHEN agrupar_descritores THEN nome || \' (agrupador)\' ELSE nome END AS nome_agrupador
-                  FROM modules.area_conhecimento ac
-                 WHERE ac.id in(SELECT area_conhecimento.id
-                                  FROM modules.area_conhecimento
-                            INNER JOIN modules.componente_curricular cc ON(cc.area_conhecimento_id = ac.id)
-                            INNER JOIN modules.componente_curricular_ano_escolar ccae ON (ccae.componente_curricular_id = cc.id
-                                                                                                   AND ccae.ano_escolar_id = $1))
-              ORDER BY (lower(ac.nome)) ASC';
+                    CASE WHEN ac.agrupar_descritores THEN ac.nome || \' (agrupador)\' ELSE ac.nome END AS nome_agrupador,
+                   unnest(ccae.anos_letivos) AS anos_letivos
+                FROM modules.componente_curricular_ano_escolar ccae
+                INNER JOIN modules.componente_curricular cc ON ccae.componente_curricular_id = cc.id
+                INNER JOIN modules.area_conhecimento ac ON ac.id  = cc.area_conhecimento_id
+                WHERE ccae.ano_escolar_id = $1
+                GROUP BY
+                    ac.id,
+                    ac.nome,
+                    ccae.anos_letivos,
+                    ac.agrupar_descritores
+                ORDER BY (lower(ac.nome)) ASC
+                ) AS item
+            GROUP BY id, nome, nome_agrupador
+            ORDER BY (lower(nome)) ASC';
 
         $paramsSql = [$serieId];
 
-        return $this->getReturnRequest($this->fetchPreparedQuery($sql, $paramsSql));
+        $areasDeConhecimento =  $this->fetchPreparedQuery($sql, $paramsSql);
+
+        $attrs = ['id', 'nome', 'nome_agrupador', 'anos_letivos'];
+        $areasDeConhecimento = Portabilis_Array_Utils::filterSet($areasDeConhecimento, $attrs);
+
+        return ['options' => $areasDeConhecimento];
     }
 
     protected function getAreasDeConhecimentoForEscolaSerie()
@@ -131,9 +151,9 @@ class AreaConhecimentoController extends ApiCoreController
     protected function getReturnRequest($areasConhecimento)
     {
         $options = [];
-        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome_agrupador');
+        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome_agrupador', 'anos_letivos');
 
-        return ['options' => $options];
+        return ['options' => $areasConhecimento];
     }
 
     public function Gerar()

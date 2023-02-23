@@ -425,12 +425,13 @@ function updateAreaConhecimento(){
 
 function handleGetAreaConhecimentoSerie(response) {
     $j('#ref_cod_area_conhecimento').val('').trigger('liszt:updated');
-    $j.each(response['options'], function(id,nome) {
-        $j("#ref_cod_area_conhecimento").children("[value=" + id + "]").attr('selected', '');
+  $j.each(response['options'], function(index, item) {
+        $j("#ref_cod_area_conhecimento").children("[value=" + item.id + "]").attr('selected', '');
         $j("#ref_cod_area_conhecimento").chosen().trigger("chosen:updated");
-        $j('#componentes').append(htmlCabecalhoAreaConhecimento(id, nome));
+        let anos_letivos = item.anos_letivos.replace('{', '').replace('}', '');
+        $j('#componentes').append(htmlCabecalhoAreaConhecimento(item.id, item.nome, anos_letivos));
     });
-    chosenOldArray = $j("#ref_cod_area_conhecimento").chosen().val();
+  chosenOldArray = $j("#ref_cod_area_conhecimento").chosen().val();
 }
 
 
@@ -446,10 +447,16 @@ function getAreaConhecimentoSerie(){
     getResources(options);
 }
 
-function htmlCabecalhoAreaConhecimento(id, nome){
+function htmlCabecalhoAreaConhecimento(id, nome, anos_letivos = null) {
+
+    let label = '';
+    if (anos_letivos !== null) {
+      label = '<label></label> <i class="ml-5 fa fa-question-circle" title=" '  + anos_letivos  + '"></i>';
+    }
     return `<tr id="area_conhecimento_` + id + `"
                 class="area_conhecimento_title">
-                <td colspan="2">` + nome + `</td>
+                <td colspan="2">` + nome + ` ` + label + `
+               </td>
                 <td class="td_check_all">
                 </td>
                 <td colspan="2" style="text-align: right;">
