@@ -15,10 +15,10 @@ return new class () extends Migration {
         $records->each(function (
             LegacyStudentMedicalRecord $record
         ) {
-            if ($record->altura != '' && $record->peso != '') {
+            if ($record->altura != '' && $record->peso != '' && $record->student()->exists()) {
                 LegacyStudentHistoricalHeightWeight::create([
                     'ref_cod_aluno' => $record->ref_cod_aluno,
-                    'data_historico' => $record->student->updated_at ?: now(),
+                    'data_historico' => $record->student->updated_at ?? now(),
                     'altura' => $record->altura,
                     'peso' => $record->peso,
                 ]);
