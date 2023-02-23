@@ -334,7 +334,7 @@ function handleCarregaDadosComponentesSerie(response){
 
       if (componente.contem_componente_curricular_turma) {
         contemRestricao = true
-        tiposRestricao.push('configurado da turma')
+        tiposRestricao.push('configurado na turma')
       }
 
       textBase += tiposRestricao.join(', ')
