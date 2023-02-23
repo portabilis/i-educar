@@ -115,11 +115,12 @@ class ComponenteCurricularController extends ApiCoreController
             $sql = '
                 SELECT componente_curricular.id,
                        componente_curricular.nome,
-                       carga_horaria::int,
+                       carga_horaria,
                        tipo_nota,
                        array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos,
                        area_conhecimento_id,
                        area_conhecimento.nome AS nome_area,
+                       componente_curricular_ano_escolar.hora_falta,
                        exists (SELECT * FROM modules.componente_curricular_turma cct
                                     INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
                                     WHERE TRUE
@@ -154,7 +155,7 @@ class ComponenteCurricularController extends ApiCoreController
                 ORDER BY nome ';
             $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId, $areaDeConhecimento, $serieId]);
 
-            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'contem_componente_curricular_turma', 'contem_notas', 'contem_faltas', 'contem_paracer'];
+            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'hora_falta', 'contem_componente_curricular_turma', 'contem_notas', 'contem_faltas', 'contem_paracer'];
             $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
             foreach ($disciplinas as &$disciplina) {
