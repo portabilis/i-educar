@@ -18,7 +18,7 @@ return new class () extends Migration {
             if ($record->altura != '' && $record->peso != '') {
                 LegacyStudentHistoricalHeightWeight::create([
                     'ref_cod_aluno' => $record->ref_cod_aluno,
-                    'data_historico' => $record->student->updated_at,
+                    'data_historico' => $record->student->updated_at ?: now(),
                     'altura' => $record->altura,
                     'peso' => $record->peso,
                 ]);
