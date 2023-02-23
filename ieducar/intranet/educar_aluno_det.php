@@ -617,6 +617,7 @@ return new class extends clsDetalhe {
         $reg = $objFichaMedica->detalhe();
 
         if ($reg) {
+            $this->addDetalhe(detalhe: ['<span id="fmedica"></span>', null]);
             if (trim(string: $reg['grupo_sanguineo']) != '') {
                 $this->addDetalhe(detalhe: ['Grupo sanguíneo', $reg['grupo_sanguineo']]);
             }
