@@ -617,11 +617,6 @@ return new class extends clsDetalhe {
         $reg = $objFichaMedica->detalhe();
 
         if ($reg) {
-            $this->addDetalhe(detalhe: ['<span id="fmedica"></span>Altura/metro', $reg['altura']]);
-            if (trim(string: $reg['peso']) != '') {
-                $this->addDetalhe(detalhe: ['Peso/kg', $reg['peso']]);
-            }
-
             if (trim(string: $reg['grupo_sanguineo']) != '') {
                 $this->addDetalhe(detalhe: ['Grupo sanguíneo', $reg['grupo_sanguineo']]);
             }
