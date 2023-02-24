@@ -167,7 +167,7 @@ return new class extends clsCadastro {
         $this->campoRotulo(nome: 'gerais', campo: '<b>Gerais</b>');
         $this->campoCheck(nome: 'obrigar_documento_pessoa', campo: 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', valor: $this->obrigar_documento_pessoa);
 
-        $this->campoCheck(nome: 'obrigar_cpf', campo: 'Exigir CPF válido', valor: $this->obrigar_cpf);
+        $this->campoCheck(nome: 'obrigar_cpf', campo: 'Exigir CPF no cadastro pessoa / aluno', valor: $this->obrigar_cpf);
 
         $this->campoRotulo(nome: 'datas', campo: '<b>Datas</b>');
         $dataBaseDeslocamento = 'A ordenação/apresentação de alunos transferidos nos relatórios (ex.: Relação de alunos por turma) será baseada neste campo quando preenchido.';
