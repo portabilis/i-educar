@@ -12,7 +12,7 @@ class LegacyStudentMedicalRecordFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_aluno' => LegacyStudentFactory::new()->create(),
+            'ref_cod_aluno' => fn () => LegacyStudentFactory::new()->create(),
             'grupo_sanguineo' => $this->faker->randomElement(['A', 'B', 'AB', 'O']),
             'fator_rh' => $this->faker->randomElement(['+', '-']),
             'alergia_medicamento' => $this->faker->randomElement(['S', 'N']),
