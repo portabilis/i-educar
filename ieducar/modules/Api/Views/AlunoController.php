@@ -234,8 +234,13 @@ class AlunoController extends ApiCoreController
 
         $cpf = $this->getRequest()->id_federal;
 
-        $strictValitation  = LegacyInstitution::query()
-            ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
+        if ($user->ref_cod_instituicao) {
+            $strictValitation = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $strictValitation = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
 
         if ($strictValitation) {
             if (validaCPF($cpf)) {
@@ -243,14 +248,6 @@ class AlunoController extends ApiCoreController
             }
             $this->messenger->append("O CPF informado é inválido");
             return false;
-        }
-
-        if ($cpf === '000.000.000-00') {
-            return true;
-        }
-
-        if (!empty($cpf) && validaCPF($cpf)) {
-            return true;
         }
 
         return true;

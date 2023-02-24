@@ -443,11 +443,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
        /** @var User $user */
         $user = Auth::user();
 
-        $obrigarDocumentoPessoa = LegacyInstitution::query()
-            ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
+        if ($user->ref_cod_instituicao) {
+            $obrigarCpf = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $obrigarCpf = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
 
-        $this->campoOculto('obrigarCPF', (int) $obrigarDocumentoPessoa);
-        $this->campoCpf('id_federal', 'CPF', $valorCpf, $obrigarDocumentoPessoa);
+        $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
+        $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
         $options = [
             'required' => false,

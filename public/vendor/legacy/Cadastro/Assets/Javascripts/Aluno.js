@@ -242,6 +242,13 @@ function handleShowSubmit() {
 };
 
 function formularioValido() {
+  if ( obrigarCPF.val() == 1 && $j("#tipo_nacionalidade").val() != 3  && !$cpfField.val()) {
+    messageUtils.error(
+      "É necessário o preenchimento do CPF"
+    );
+    return false;
+  }
+
   if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
     messageUtils.error(
       "É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil."
@@ -2830,11 +2837,10 @@ function canShowParentsFields() {
 
       $cpfNotice.hide();
 
-      let regraCpf = obrigarCPF.val();
-      let validCpfRule = regraCpf == 1 ? true : !ignoreValidation.includes(cpf);
-
-      if (cpf && validCpfRule && validatesCpf()) {
-        getPersonByCpf(cpf);
+      if (cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf))) {
+        if (validatesCpf()) {
+          getPersonByCpf(cpf);
+        }
       }else{
         handleShowSubmit();
       }
@@ -2895,10 +2901,7 @@ function canShowParentsFields() {
 
       $cpfNotice.hide();
 
-      let regraCpf = obrigarCPF.val();
-      let validCpfRule = regraCpf == 1 ? true : !ignoreValidation.includes(cpf);
-
-      if (cpf && validCpfRule && !validationUtils.validatesCpf(cpf)) {
+      if (cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && !validationUtils.validatesCpf(cpf)) {
         $cpfNotice.html("O CPF informado é inválido").slideDown("fast");
 
         $submitButton.attr("disabled", "disabled").hide();
