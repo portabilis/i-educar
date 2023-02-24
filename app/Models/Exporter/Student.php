@@ -61,7 +61,9 @@ class Student extends Model
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
                 'race' => 'Raça',
-                'religion' => 'Religião'
+                'religion' => 'Religião',
+                'height' => 'Altura',
+                'weight' => 'Peso'
             ],
             'Escola' => [
                 'school' => 'Escola',
