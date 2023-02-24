@@ -12,7 +12,7 @@ class LegacyStudentHistoricalHeightWeightFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_aluno' => LegacyStudentFactory::new()->create(),
+            'ref_cod_aluno' => fn () => LegacyStudentFactory::new()->create(),
             'data_historico' => $this->faker->date(),
             'altura' => $this->faker->randomFloat(2, 0, 2),
             'peso' => $this->faker->randomFloat(2, 0, 2),
