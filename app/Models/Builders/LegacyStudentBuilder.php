@@ -183,7 +183,7 @@ class LegacyStudentBuilder extends LegacyBuilder
 
         if ($studentFilter->studentName) {
             $builder->join('cadastro.pessoa', 'pessoa.idpes', '=', 'aluno.ref_idpes');
-            $builder->orderByRaw('LEVENSHTEIN(UPPER(nome), UPPER(?), 1, 0, 4)', $studentFilter->studentName);
+            $builder->orderByRaw('LEVENSHTEIN(UPPER(nome), UPPER(?), 1, 0, 4), nome ASC', $studentFilter->studentName);
         } else {
             $builder->orderBy('data_cadastro', 'desc');
         }
