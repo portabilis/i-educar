@@ -277,18 +277,9 @@ return new class extends clsCadastro {
         $documentos->idpes = $this->cod_pessoa_fj;
         $documentos = $documentos->detalhe();
 
-        // rg
-
-        // o rg é obrigatorio ao cadastrar pai ou mãe, exceto se configurado como opcional.
-
-        $required = (!empty($parentType));
-
-        if ($required && config(key: 'legacy.app.rg_pessoa_fisica_pais_opcional')) {
-            $required = false;
-        }
 
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],

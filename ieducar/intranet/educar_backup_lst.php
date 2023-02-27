@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Backup;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $__titulo;
@@ -31,16 +33,17 @@ return new class extends clsListagem {
 
         // Paginador
         $this->__limite = 10;
-        $this->__offset = ($_GET["pagina_{$this->data_backup}"]) ? $_GET["pagina_{$this->data_backup}"]*$this->__limite-$this->__limite: 0;
 
-        $objBackup = new clsPmieducarBackup();
+        $query = Backup::query()
+            ->orderBy('data_backup', 'DESC');
 
-        $objBackup->setOrderby(strNomeCampo: 'data_backup DESC');
-        $objBackup->setLimite(intLimiteQtd: $this->__limite, intLimiteOffset: $this->__offset);
+        if ($this->data_backup) {
+            $query->where('data_backup', Portabilis_Date_Utils::brToPgSQL($this->data_backup));
+        }
 
-        $lista = $objBackup->lista(idBackup: null, caminho: null, dataBackup: Portabilis_Date_Utils::brToPgSQL(date: $this->data_backup));
-
-        $total = $objBackup->_total;
+        $result = $query->paginate(perPage: $this->__limite, pageName: 'pagina_'.$this->data_backup);
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         $baseDownloadUrl = route(name: 'backup.download');

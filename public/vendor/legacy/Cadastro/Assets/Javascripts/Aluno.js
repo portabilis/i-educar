@@ -984,19 +984,6 @@ resourceOptions.handleGet = function (dataResponse) {
 
   camposTransporte();
 
-  function verificaObrigatoriedadeRg() {
-    $j("#data_emissao_rg").makeUnrequired();
-    $j("#orgao_emissao_rg").makeUnrequired();
-    $j("#uf_emissao_rg").makeUnrequired();
-    if ($j("#rg").val().trim().length && obrigarCamposCenso) {
-      $j("#data_emissao_rg").makeRequired();
-      $j("#orgao_emissao_rg").makeRequired();
-      $j("#uf_emissao_rg").makeRequired();
-    }
-  }
-
-  $j("#rg").on("change", verificaObrigatoriedadeRg);
-
   setTimeout(function () {
     $veiculo_transporte_escolar = $j("#veiculo_transporte_escolar");
     $veiculo_transporte_escolar.val(
@@ -1005,7 +992,6 @@ resourceOptions.handleGet = function (dataResponse) {
     $veiculo_transporte_escolar.trigger("chosen:updated");
   }, 550);
 
-  verificaObrigatoriedadeRg();
 };
 
 var changeVisibilityOfLinksToPessoaParent = function (parentType) {

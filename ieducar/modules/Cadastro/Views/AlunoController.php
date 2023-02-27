@@ -116,10 +116,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'sus' => ['label' => 'Número da Carteira do SUS'],
 
-        'altura' => ['label' => 'Altura/Metro'],
-
-        'peso' => ['label' => 'Peso/Kg'],
-
         'grupo_sanguineo' => ['label' => 'Grupo sanguíneo'],
 
         'fator_rh' => ['label' => 'Fator RH'],
@@ -378,7 +374,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->date('data_nascimento', $options);
 
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],
@@ -392,7 +388,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = [
             'required' => false,
             'label' => '',
-            'placeholder' => 'Data emiss\u00e3o',
+            'placeholder' => 'Data emissão',
             'value' => $documentos['data_exp_rg'],
             'size' => 19
         ];
@@ -829,15 +825,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->numeric('historico_peso');
 
         $this->campoTabelaFim();
-
-
-        $options = ['label' => $this->_getLabel('altura'), 'size' => 5, 'max_length' => 4, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->numeric('altura', $options);
-
-
-        $options = ['label' => $this->_getLabel('peso'), 'size' => 5, 'max_length' => 6, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->numeric('peso', $options);
-
 
         $options = ['label' => $this->_getLabel('grupo_sanguineo'), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('grupo_sanguineo', $options);

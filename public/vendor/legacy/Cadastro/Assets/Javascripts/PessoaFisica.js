@@ -263,18 +263,6 @@ $j(document).ready(function() {
   $submitButton.removeAttr('onclick');
   $submitButton.click(submitForm);
 
-  function verificaObrigatoriedadeRg() {
-    $j('#data_emissao_rg').makeUnrequired();
-    $j('#orgao_emissao_rg').makeUnrequired();
-    $j('#uf_emissao_rg').makeUnrequired();
-    if ($j('#rg').val().length && obrigarCamposCenso) {
-      $j('#data_emissao_rg').makeRequired();
-      $j('#orgao_emissao_rg').makeRequired();
-      $j('#uf_emissao_rg').makeRequired();
-    }
-  }
-
-  $j('#rg').on('change', verificaObrigatoriedadeRg);
 
   campoCadeiraSUS.focusout(function() {
     validateFieldSUS();
