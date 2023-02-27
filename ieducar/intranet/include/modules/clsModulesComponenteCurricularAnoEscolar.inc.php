@@ -83,12 +83,6 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             }
         }
 
-        if ($this->updateInfo['delete']) {
-            foreach ($this->updateInfo['delete'] as $componenteDelete) {
-                $this->excluiComponente(intval($componenteDelete));
-            }
-        }
-
         return true;
     }
 
@@ -117,13 +111,6 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
                 $this->updateInfo['insert'][$i]['tipo_nota'] = $componente['tipo_nota'];
                 $this->updateInfo['insert'][$i]['anos_letivos'] = $componente['anos_letivos'];
                 $i++;
-            }
-        }
-
-        foreach ($this->getComponentesSerie() as $componente) {
-            if (!in_array($componente, $componentesArray)) {
-                $this->updateInfo['delete'][$d] = $componente;
-                $d++;
             }
         }
 
@@ -263,7 +250,7 @@ SQL;
         return false;
     }
 
-    private function excluiComponente($componente_curricular_id = null)
+    public function excluiComponente($componente_curricular_id = null)
     {
         if (is_numeric($componente_curricular_id)) {
             $db = new clsBanco();
