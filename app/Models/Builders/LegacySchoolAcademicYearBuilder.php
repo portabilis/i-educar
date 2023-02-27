@@ -18,7 +18,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
     {
         $this->active()->orderByYear()->filter($filters);
 
-        return $this->resource(['ano as year']);
+        return $this->get(['ano'])->map(fn ($item) => ['year'=> $item->year]);
     }
 
     /**
