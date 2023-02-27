@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\LegacyCalendarDayNote;
+use App\Models\LegacyCalendarDayReason;
+use App\Models\LegacyCalendarYear;
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsListagem {
+return new class () extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -42,8 +45,8 @@ return new class extends clsListagem {
         }
 
         $this->breadcrumb(currentPage: 'Calendários', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-      ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
 
         $retorno = '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem"> <tbody>';
 
@@ -82,34 +85,38 @@ return new class extends clsListagem {
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         }
 
-        $get_escola  = 1;
+        $get_escola = 1;
         $obrigatorio = false;
         include 'educar_calendario_pesquisas.php';
 
-        $obj_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo();
-        $obj_calendario_ano_letivo->setOrderby(strNomeCampo: 'ano ASC');
-        $obj_calendario_ano_letivo->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $query = LegacyCalendarYear::query()
+            ->orderBy('ano')
+            ->limit($this->limite ?: 20)
+            ->offset($this->offset ?: 0);
 
         $lista = [];
-        $obj_calendario_ano_letivo->setOrderby(strNomeCampo: 'ano');
 
         switch ($nivel) {
-          // Poli-institucional
-          case 1:
-          case 2:
-          case 4:
-              if (!isset($this->ref_cod_escola)) {
-                  break;
-              }
+            // Poli-institucional
+            case 1:
+            case 2:
+            case 4:
+                if (!isset($this->ref_cod_escola)) {
+                    break;
+                }
+                if ($this->cod_calendario_ano_letivo) {
+                    $query->where('cod_calendario_ano_letivo', $this->cod_calendario_ano_letivo);
+                }
+                if ($this->ref_cod_escola) {
+                    $query->where('ref_cod_escola', $this->ref_cod_escola);
+                }
+                if (!isset($this->cod_calendario_ano_letivo)) {
+                    $query->where('ano', $this->ano);
+                }
+                $lista = $query->get()->toArray();
 
-              $lista = $obj_calendario_ano_letivo->lista(
-                  int_cod_calendario_ano_letivo: $this->cod_calendario_ano_letivo,
-                  int_ref_cod_escola: $this->ref_cod_escola,
-                  int_ano: (!isset($this->cod_calendario_ano_letivo) ? $this->ano : null),
-                  date_data_exclusao_ini: 1
-              );
-              break;
-      }
+                break;
+        }
 
         if (empty($lista)) {
             if ($nivel == 4) {
@@ -136,12 +143,12 @@ return new class extends clsListagem {
         if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 Session::put('calendario', [
-                  'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
-                  'ref_cod_instituicao' => $this->ref_cod_instituicao,
-                  'ref_cod_escola' => $this->ref_cod_escola,
-                  'ano' => $this->ano,
-                  'mes' => $this->mes
-              ]);
+                    'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
+                    'ref_cod_instituicao' => $this->ref_cod_instituicao,
+                    'ref_cod_escola' => $this->ref_cod_escola,
+                    'ano' => $this->ano,
+                    'mes' => $this->mes
+                ]);
 
                 // Nome da escola
                 $obj_ref_cod_escola = new clsPmieducarEscola(cod_escola: $registro['ref_cod_escola']);
@@ -174,7 +181,10 @@ return new class extends clsListagem {
                 $obj_calendario->setLargura(int_largura: 600);
                 $obj_calendario->permite_trocar_ano = true;
 
-                $obj_calendario->setCorDiaSemana(arr_dia_semana: [0, 6], str_cor: 'ROSA');
+                $obj_calendario->setCorDiaSemana(arr_dia_semana: [
+                    0,
+                    6
+                ], str_cor: 'ROSA');
 
                 $obj_dia_calendario = new clsPmieducarCalendarioDia(
                     ref_cod_calendario_ano_letivo: $registro['cod_calendario_ano_letivo'],
@@ -211,8 +221,7 @@ return new class extends clsListagem {
                         if ($dia['ref_cod_calendario_dia_motivo']) {
                             $array_dias[$dia['dia']] = $dia['dia'];
 
-                            $obj_motivo = new clsPmieducarCalendarioDiaMotivo(cod_calendario_dia_motivo: $dia['ref_cod_calendario_dia_motivo']);
-                            $det_motivo = $obj_motivo->detalhe();
+                            $registro = LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])->getAttributes();
 
                             /**
                              * @todo CoreExt_Enum?
@@ -221,11 +230,11 @@ return new class extends clsListagem {
 
                             // Busca pelas turmas que estão marcadas para esse dia
                             $args = [
-                              'calendarioAnoLetivo' => $registro['cod_calendario_ano_letivo'],
-                              'mes' => $dia['mes'],
-                              'dia' => $dia['dia'],
-                              'ano' => $this->ano
-                          ];
+                                'calendarioAnoLetivo' => $registro['cod_calendario_ano_letivo'],
+                                'mes' => $dia['mes'],
+                                'dia' => $dia['dia'],
+                                'ano' => $this->ano
+                            ];
 
                             $calendarioTurmas = $calendarioTurmaMapper->findAll(where: $args);
 
@@ -351,25 +360,24 @@ return new class extends clsListagem {
                     $obj_calendario->setLegendaPadrao(str_legenda: 'Dias Letivos', str_cor: 'AZUL_CLARO');
                 }
 
-                $obj_calendario->setCorDiaSemana(arr_dia_semana: [0, 6], str_cor: 'ROSA');
+                $obj_calendario->setCorDiaSemana(arr_dia_semana: [
+                    0,
+                    6
+                ], str_cor: 'ROSA');
 
-                $obj_anotacao = new clsPmieducarCalendarioDiaAnotacao();
-                $lista_anotacoes = $obj_anotacao->lista(
-                    int_ref_mes: $this->mes,
-                    int_ref_ref_cod_calendario_ano_letivo: $registro['cod_calendario_ano_letivo'],
-                    is_ativo: 1
-                );
+                $lista_anotacoes = LegacyCalendarDayNote::query()
+                    ->where('ref_mes', $this->mes)
+                    ->where('ref_ref_cod_calendario_ano_letivo', $registro['cod_calendario_ano_letivo'])
+                    ->get();
 
-                if ($lista_anotacoes) {
-                    $dia_anotacao = [];
-                    foreach ($lista_anotacoes as $anotacao) {
-                        if ($this->mes == (int)$anotacao['ref_mes']) {
-                            $dia_anotacao[$anotacao['ref_dia']] = $anotacao['ref_dia'];
-                        }
+                $dia_anotacao = [];
+                foreach ($lista_anotacoes as $anotacao) {
+                    if ($this->mes == (int)$anotacao['ref_mes']) {
+                        $dia_anotacao[$anotacao['ref_dia']] = $anotacao['ref_dia'];
                     }
-
-                    $obj_calendario->adicionarIconeDias(arr_dias: $dia_anotacao, id_icone: 'A');
                 }
+
+                $obj_calendario->adicionarIconeDias(arr_dias: $dia_anotacao, id_icone: 'A');
 
                 $obj_calendario->all_days_url = sprintf(
                     'educar_calendario_anotacao_lst.php?ref_cod_calendario_ano_letivo=%s',
@@ -441,8 +449,8 @@ return new class extends clsListagem {
         $retorno .= '</tbody> </table>';
 
         $scripts = [
-        '/intranet/scripts/calendario.js'
-      ];
+            '/intranet/scripts/calendario.js'
+        ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
 

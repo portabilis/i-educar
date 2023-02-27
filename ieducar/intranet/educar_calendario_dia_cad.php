@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\LegacyCalendarDayReason;
+use App\Models\LegacyCalendarYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class extends clsCadastro {
+return new class () extends clsCadastro {
     public $pessoa_logada;
     public $ref_cod_calendario_ano_letivo;
     public $mes;
@@ -137,9 +139,9 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
 
-            $objTemp = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo);
-            $det = $objTemp->detalhe();
-            $this->ano = $det['ano'];
+            $this->ano = LegacyCalendarYear::query()
+                ->where('cod_calendario_ano_letivo', $this->ref_cod_calendario_ano_letivo)
+                ->value('ano');
         }
 
         $this->url_cancelar = sprintf(
@@ -168,11 +170,7 @@ return new class extends clsCadastro {
             valor: $this->ref_cod_calendario_ano_letivo
         );
 
-        $obj_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo(
-            cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo
-        );
-
-        $det_calendario_ano_letivo = $obj_calendario_ano_letivo->detalhe();
+        $det_calendario_ano_letivo = LegacyCalendarYear::find($this->ref_cod_calendario_ano_letivo)->getAttributes();
         $ref_cod_escola = $det_calendario_ano_letivo['ref_cod_escola'];
 
         $this->campoRotulo(nome: 'ano', campo: 'Ano Letivo', valor: $this->ano);
@@ -180,18 +178,10 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'dia', valor: $this->dia);
 
         // Foreign keys
-        $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsPmieducarCalendarioDiaMotivo();
-        $lista = $objTemp->lista(
-            int_ref_cod_escola: $ref_cod_escola,
-            int_ativo: 1
-        );
-
-        if (is_array(value: $lista) && count(value: $lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_calendario_dia_motivo']] = $registro['nm_motivo'];
-            }
-        }
+        $opcoes = LegacyCalendarDayReason::query()
+            ->orderBy('nm_motivo', 'ASC')
+            ->pluck('nm_motivo', 'cod_calendario_dia_motivo')
+            ->prepend('Selecione', '');
 
         $this->campoLista(
             nome: 'ref_cod_calendario_dia_motivo',
@@ -265,6 +255,7 @@ return new class extends clsCadastro {
                 $this->ano,
                 $this->ref_cod_calendario_ano_letivo
             );
+
             throw new HttpResponseException(
                 response: new RedirectResponse(url: $url)
             );
@@ -350,6 +341,7 @@ return new class extends clsCadastro {
                 $this->ano,
                 $this->ref_cod_calendario_ano_letivo
             );
+
             throw new HttpResponseException(
                 response: new RedirectResponse(url: $url)
             );
@@ -403,6 +395,7 @@ return new class extends clsCadastro {
                 $this->ano,
                 $this->ref_cod_calendario_ano_letivo
             );
+
             throw new HttpResponseException(
                 response: new RedirectResponse(url: $url)
             );

@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\LegacyCalendarYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class extends clsCadastro {
+return new class () extends clsCadastro {
     public $pessoa_logada;
     public $cod_calendario_ano_letivo;
     public $ref_cod_escola;
@@ -29,8 +30,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
         if (is_numeric(value: $this->cod_calendario_ano_letivo)) {
-            $obj = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $this->cod_calendario_ano_letivo);
-            $registro  = $obj->detalhe();
+            $registro  = LegacyCalendarYear::find($this->cod_calendario_ano_letivo)->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -100,33 +100,46 @@ return new class extends clsCadastro {
         $data_fim = $obj_ano_letivo_modulo->maiorData(ref_ano: $this->ano, ref_ref_cod_escola: $this->ref_cod_escola);
 
         if ($data_inicio && $data_fim) {
-            $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo();
-            $lst_calend_ano_letivo = $obj_calend_ano_letivo->lista(int_cod_calendario_ano_letivo: null, int_ref_cod_escola: $this->ref_cod_escola, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ano: $this->ano);
+            $lst_calend_ano_letivo = LegacyCalendarYear::query()
+                ->where('ano', $this->ano)
+                ->where('ref_cod_escola', $this->ref_cod_escola)
+                ->get()
+                ->toArray();
+
             if ($lst_calend_ano_letivo) {
                 $det_calend_ano_letivo = array_shift(array: $lst_calend_ano_letivo);
 
-                $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $det_calend_ano_letivo['cod_calendario_ano_letivo'], ref_cod_escola: $this->ref_cod_escola, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ano: $this->ano, data_cadastra: null, data_exclusao: null, ativo: 1/*, $data_inicio,$data_fim*/);
-                if ($obj_calend_ano_letivo->edita()) {
+                $obj_calend_ano_letivo = LegacyCalendarYear::find($det_calend_ano_letivo['cod_calendario_ano_letivo']);
+
+                $obj_calend_ano_letivo->ref_cod_escola = $this->ref_cod_escola;
+                $obj_calend_ano_letivo->ref_usuario_exc = $this->pessoa_logada;
+                $obj_calend_ano_letivo->ano = $this->ano;
+
+                if ($obj_calend_ano_letivo->save()) {
                     $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+
                     throw new HttpResponseException(
                         response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
                     );
                 }
 
                 $this->mensagem = 'Edição não realizada.<br>';
-
                 return false;
             } else {
-                $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: null, ref_cod_escola: $this->ref_cod_escola, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, ano: $this->ano, data_cadastra: null, data_exclusao: null, ativo: 1);
-                if ($obj_calend_ano_letivo->cadastra()) {
+                $obj_calend_ano_letivo = new LegacyCalendarYear();
+                $obj_calend_ano_letivo->ref_cod_escola = $this->ref_cod_escola;
+                $obj_calend_ano_letivo->ref_usuario_cad = $this->pessoa_logada;
+                $obj_calend_ano_letivo->ano = $this->ano;
+
+                if ($obj_calend_ano_letivo->save()) {
                     $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+
                     throw new HttpResponseException(
                         response: new RedirectResponse(url: "educar_calendario_ano_letivo_lst.php?ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}")
                     );
                 }
 
                 $this->mensagem = 'Cadastro não realizado.<br>';
-
                 return false;
             }
         }
@@ -146,9 +159,14 @@ return new class extends clsCadastro {
         $data_fim = $obj_ano_letivo_modulo->maiorData(ref_ano: $this->ano, ref_ref_cod_escola: $this->ref_cod_escola);
 
         if ($data_inicio && $data_fim) {
-            $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $this->cod_calendario_ano_letivo, ref_cod_escola: $this->ref_cod_escola, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ano: $this->ano, data_cadastra: null, data_exclusao: null, ativo: 1/*, $data_inicio,$data_fim*/);
-            if ($obj_calend_ano_letivo->edita()) {
+            $obj = LegacyCalendarYear::find($this->cod_calendario_ano_letivo);
+            $obj->ref_cod_escola = $this->ref_cod_escola;
+            $obj->ref_usuario_exc = $this->pessoa_logada;
+            $obj->ano = $this->ano;
+
+            if ($obj->save()) {
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+
                 throw new HttpResponseException(
                     response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
                 );
@@ -169,10 +187,10 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
-        $obj = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $this->cod_calendario_ano_letivo, ref_cod_escola: $this->ref_cod_escola, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: $this->pessoa_logada, ano: $this->ano, data_cadastra: $this->data_cadastra, data_exclusao: $this->data_exclusao, ativo: 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $obj = LegacyCalendarYear::find($this->cod_calendario_ano_letivo);
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
             );

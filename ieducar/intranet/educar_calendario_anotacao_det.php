@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCalendarNote;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -28,8 +29,7 @@ return new class extends clsDetalhe {
 
         $this->cod_calendario_anotacao=$_GET['cod_calendario_anotacao'];
 
-        $tmp_obj = new clsPmieducarCalendarioAnotacao(cod_calendario_anotacao: $this->cod_calendario_anotacao);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)->getAttributes();
 
         if (! $registro) {
             throw new HttpResponseException(

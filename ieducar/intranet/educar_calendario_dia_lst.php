@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyCalendarDayReason;
+use App\Models\LegacyCalendarYear;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -73,12 +76,10 @@ return new class extends clsListagem {
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_ref_cod_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo(cod_calendario_dia_motivo: $registro['ref_cod_calendario_dia_motivo']);
-                $det_ref_cod_calendario_dia_motivo = $obj_ref_cod_calendario_dia_motivo->detalhe();
+                $det_ref_cod_calendario_dia_motivo = LegacyCalendarDayReason::find($registro['ref_cod_calendario_dia_motivo'])?->getAttributes();
                 $registro['ref_cod_calendario_dia_motivo'] = $det_ref_cod_calendario_dia_motivo['nm_motivo'];
 
-                $obj_ref_cod_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $registro['ref_cod_calendario_ano_letivo']);
-                $det_ref_cod_calendario_ano_letivo = $obj_ref_cod_calendario_ano_letivo->detalhe();
+                $det_ref_cod_calendario_ano_letivo = LegacyCalendarYear::find($registro['ref_cod_calendario_ano_letivo'])?->getAttributes();
                 $registro['ano'] = $det_ref_cod_calendario_ano_letivo['ano'];
 
                 $this->addLinhas(linha: [
