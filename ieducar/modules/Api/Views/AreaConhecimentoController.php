@@ -150,10 +150,9 @@ class AreaConhecimentoController extends ApiCoreController
 
     protected function getReturnRequest($areasConhecimento)
     {
-        $options = [];
-        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome_agrupador', 'anos_letivos');
+        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome_agrupador');
 
-        return ['options' => $areasConhecimento];
+        return ['options' => $options];
     }
 
     public function Gerar()
