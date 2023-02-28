@@ -53,6 +53,7 @@ function getDisciplina(disciplinas) {
         conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         conteudo += '  <span style="display: block; float: left; width: 100px">Carga horária</span>';
         conteudo += '  <span style="display: block; float: left; width: 180px;">Usar padrão do componente?</span>';
+        conteudo += '  <span style="display: block; float: left; width: 180px;">Hora falta</span>';
         conteudo += '  <span style="display: block; float: left; width: 150px;">Anos letivos</span>';
         conteudo += '</div>';
 
@@ -82,6 +83,7 @@ function getDisciplina(disciplinas) {
           conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[' + id + ']" class="check_'+id+'" id="disciplinas[]" value="' + id + '">' + item.name + '</label>';
           conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="carga_horaria_' + id + '" data-id="'+id+'" name="carga_horaria[' + id + ']" class="carga_horaria" value="" size="5" maxlength="7"></label>';
           conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' +  item.workload + ' h)</label>';
+          conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="hora_falta_' + id + '" data-id="'+id+'" name="hora_falta[' + id + ']" class="" value="" size="5" maxlength="7"></label>';
           conteudo += `
             <select name='componente_anos_letivos[${id}][]' class="anos_letivos" id='anos_letivos_${id}' data-id='${id}' style='width: 150px;' multiple='multiple'>
             </select>
@@ -108,7 +110,7 @@ document.getElementById('ref_cod_serie').onchange = function () {
     const campoDisciplinas = document.getElementById('disciplinas');
     campoDisciplinas.innerHTML = "Carregando disciplina";
 
-    getApiResource("/api/resource/discipline",getDisciplina,{grade:campoSerie});
+    getApiResource("/api/resource/discipline", getDisciplina,{grade:campoSerie});
 };
 
 after_getEscola = function () {
@@ -340,14 +342,14 @@ $j('#ano_letivo').change(function() {
 });
 
 function cloneValues(componente_id, classe){
-  var valor = $j('#' + classe + '_' + componente_id).val();
+  const valor = $j('#' + classe + '_' + componente_id).val();
 
   $j('.' + classe).each(function() {
-    var id = $j(this).data('id')
+    const id = $j(this).data('id')
 
     if ($j('.check_' + id).is(':checked')) {
       $j(this).val(valor);
-      if (classe == 'anos_letivos') {
+      if (classe === 'anos_letivos') {
         $j(this).trigger('chosen:updated');
       }
     }

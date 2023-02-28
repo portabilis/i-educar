@@ -219,6 +219,7 @@ return new class () extends clsCadastro {
                 foreach ($registros as $campo) {
                     $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
                     $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = $campo['carga_horaria'];
+                    $this->escola_serie_disciplina_hora_falta[$campo['ref_cod_disciplina']] = $campo['hora_falta'];
                     $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = $campo['anos_letivos'] ?: [];
 
                     if ($this->definirComponentePorEtapa) {
@@ -246,6 +247,8 @@ return new class () extends clsCadastro {
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 180px;" >Usar padrão do componente?</span>';
+                $conteudo .= '  <span style="display: block; float: left; width: 100px;">Hora falta</span>';
+
 
                 if ($this->definirComponentePorEtapa) {
                     $conteudo .= '  <span style="display: block; width: 280px; float: left; margin-left: 30px;">Usado em etapas específicas?(Exemplo: 1,2 / 1,3)</span>';
@@ -264,6 +267,7 @@ return new class () extends clsCadastro {
                                         </a>
                                      </label>';
                 $conteudo .= '  <label style=\'display: block; float: left; width: 180px;\'><input type=\'checkbox\' name=\'CheckTodos2\' onClick=\'marcarCheck(' . '"usar_componente[]"' . ');\';/>Marcar Todos</label>';
+                $conteudo .= '<label style="display: block; float: left; width: 100px">&nbsp;</label>';
 
                 if ($this->definirComponentePorEtapa) {
                     $conteudo .= '  <label style=\'display: block; float: left; width: 283px; margin-left: 27px;\'><input type=\'checkbox\' name=\'CheckTodos3\' onClick=\'marcarCheck(' . '"etapas_especificas[]"' . ');\';/>Marcar Todos</label>';
@@ -302,6 +306,12 @@ return new class () extends clsCadastro {
                         $cargaHoraria = $this->escola_serie_disciplina_carga[$registro->id];
                     }
 
+                    if (is_null($this->escola_serie_disciplina_hora_falta[$registro->id]) || 0 == $this->escola_serie_disciplina_hora_falta[$registro->id]) {
+                       // $usarComponente = true;
+                    } else {
+                        $horaFalta = $this->escola_serie_disciplina_hora_falta[$registro->id];
+                    }
+
                     if (!empty($this->escola_serie_disciplina_anos_letivos[$registro->id])) {
                         $anosLetivosComponente = $this->escola_serie_disciplina_anos_letivos[$registro->id];
                     }
@@ -314,6 +324,7 @@ return new class () extends clsCadastro {
                     $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
                     $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' class='carga_horaria' id='carga_horaria_{$registro->id}' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7' data-id='$registro->id'></label>";
                     $conteudo .= "  <label style='display: block; float: left;  width: 180px;'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</label>";
+                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' class='hora_falta' id='hora_falta_{$registro->id}' name='hora_falta[$registro->id]' value='{$horaFalta}' size='5' maxlength='7' data-id='$registro->id'></label>";
 
                     $conteudo .= "
                             <select name='componente_anos_letivos[{$registro->id}][]'
@@ -338,6 +349,7 @@ return new class () extends clsCadastro {
                     $conteudo .= '<br style="clear: left" />';
 
                     $cargaHoraria = '';
+                    $horaFalta = '';
                 }
 
                 $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
@@ -413,7 +425,8 @@ return new class () extends clsCadastro {
                         carga_horaria: $this->carga_horaria[$key],
                         etapas_especificas: $this->etapas_especificas[$key],
                         etapas_utilizadas: $this->etapas_utilizadas[$key],
-                        anos_letivos: $this->componente_anos_letivos[$key] ?: []
+                        anos_letivos: $this->componente_anos_letivos[$key] ?: [],
+                        hora_falta: $this->hora_falta[$key]
                     );
 
                     if ($obj->existe()) {
@@ -485,7 +498,7 @@ return new class () extends clsCadastro {
         $obj = new clsPmieducarEscolaSerieDisciplina(
             ref_ref_cod_serie: $this->ref_cod_serie,
             ref_ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: $campo,
+            ref_cod_disciplina: null,
             ativo: 1
         );
 
@@ -496,8 +509,10 @@ return new class () extends clsCadastro {
                 foreach ($this->disciplinas as $key => $campo) {
                     if (isset($this->usar_componente[$key])) {
                         $carga_horaria = null;
+                        $hora_falta = null;
                     } else {
                         $carga_horaria = $this->carga_horaria[$key];
+                        $hora_falta = $this->hora_falta[$key];;
                     }
 
                     $etapas_especificas = $this->etapas_especificas[$key];
@@ -511,7 +526,8 @@ return new class () extends clsCadastro {
                         carga_horaria: $carga_horaria,
                         etapas_especificas: $etapas_especificas,
                         etapas_utilizadas: $etapas_utilizadas,
-                        anos_letivos: $this->componente_anos_letivos[$key] ?: []
+                        anos_letivos: $this->componente_anos_letivos[$key] ?: [],
+                        hora_falta: $hora_falta
                     );
 
                     $existe = $obj->existe();
@@ -557,7 +573,7 @@ return new class () extends clsCadastro {
         $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina(
             ref_ref_cod_serie: $this->ref_cod_serie_,
             ref_ref_cod_escola: $this->ref_cod_escola_,
-            ref_cod_disciplina: $campo,
+            ref_cod_disciplina: null,
             ativo: 1
         );
 
@@ -625,8 +641,10 @@ return new class () extends clsCadastro {
         foreach ($this->disciplinas as $componenteId) {
             if (isset($this->usar_componente[$componenteId])) {
                 $carga_horaria = null;
+                $hora_falta = null;
             } else {
                 $carga_horaria = $this->carga_horaria[$componenteId];
+                $hora_falta = $this->hora_falta[$componenteId];
             }
 
             $anosLetivos = $this->componente_anos_letivos[$componenteId] ?: [];
@@ -639,6 +657,7 @@ return new class () extends clsCadastro {
                 'ref_ref_cod_escola' => $this->ref_cod_escola,
                 'ref_cod_disciplina' => $componenteId,
                 'carga_horaria' => $carga_horaria,
+                'hora_falta' => $hora_falta,
                 'etapas_especificas' => $this->etapas_especificas[$componenteId],
                 'etapas_utilizadas' => $this->etapas_utilizadas[$componenteId],
                 'anos_letivos' => $anosLetivos
