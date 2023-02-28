@@ -167,6 +167,16 @@ abstract class Portabilis_Report_ReportCore
     }
 
     /**
+     * Indica se o Html será utilizado como fonte de renderização dos dados para o relatório.
+     *
+     * @return bool
+     */
+    public function useHtml()
+    {
+        return false;
+    }
+
+    /**
      * Retorna a query onde será encontrado os dados para o relatório
      * principal.
      *

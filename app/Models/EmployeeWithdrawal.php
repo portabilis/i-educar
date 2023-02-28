@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
+use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmployeeWithdrawal extends LegacyModel
 {
+    use Ativo;
     use HasFiles;
     use HasLegacyDates;
     use HasLegacyUserAction;
@@ -23,6 +25,7 @@ class EmployeeWithdrawal extends LegacyModel
         'ref_cod_motivo_afastamento',
         'data_retorno',
         'data_saida',
+        'sequencial'
     ];
 
     protected $dates = [
@@ -44,5 +47,14 @@ class EmployeeWithdrawal extends LegacyModel
     public function reason(): BelongsTo
     {
         return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($employeeWithdrawal) {
+            $employeeWithdrawal->sequencial = $employeeWithdrawal->employee->withdrawals()->withTrashed()->count() + 1;
+        });
     }
 }

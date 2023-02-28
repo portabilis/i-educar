@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyRole;
 use App\Models\LegacyUserType;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Facades\DB;
@@ -41,8 +42,7 @@ return new class extends clsDetalhe {
         $registro['ref_idesco'] = $det_ref_idesco['descricao'];
 
         // Função
-        $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], null, null, null, null, null, null, null, null, $this->ref_cod_instituicao);
-        $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
+        $det_ref_cod_funcao = LegacyRole::find($this->cod_funcao)?->getAttributes();
         $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 
         // Nome
@@ -285,15 +285,18 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
             }
 
-            $obj_afastamento = new clsPmieducarServidorAfastamento();
-            $afastamento = $obj_afastamento->afastado($this->cod_servidor, $this->ref_cod_instituicao);
+            $afastamento = EmployeeWithdrawal::query()
+                ->where('ref_cod_servidor', $this->cod_servidor)
+                ->where('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+                ->where('data_retorno', null)
+                ->first();
 
-            if (is_numeric($afastamento) && $afastamento == 0) {
+            if (is_null($afastamento)) {
                 $this->array_botao[] = 'Afastar Servidor';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}\");";
-            } elseif (is_numeric($afastamento)) {
+            } elseif ($afastamento instanceof EmployeeWithdrawal) {
                 $this->array_botao[] = 'Retornar Servidor';
-                $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=" . EmployeeReturn::SIM . '");';
+                $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento->sequencial}&retornar_servidor=" . EmployeeReturn::SIM . '");';
             }
 
             if ($this->isTeacher($this->cod_servidor)) {

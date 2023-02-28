@@ -161,4 +161,9 @@ class Employee extends LegacyModel
         return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
             ->where('servidor_alocacao.ano', date('Y'));
     }
+
+    public function withdrawals(): HasMany
+    {
+        return $this->hasMany(EmployeeWithdrawal::class, 'ref_cod_servidor', 'cod_servidor');
+    }
 }

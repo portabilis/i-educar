@@ -31,8 +31,7 @@ return new class extends clsCadastro {
         );
 
         if (is_numeric($this->cod_modulo)) {
-            $obj = new clsPmieducarModulo($this->cod_modulo);
-            $registro = $obj->detalhe();
+            $registro = LegacyStageType::find($this->cod_modulo)->getAttributes();
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro as $campo => $val) {
@@ -95,8 +94,21 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $obj = new clsPmieducarModulo(cod_modulo: null, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, nm_tipo: $this->nm_tipo, descricao: $this->descricao, num_meses: $this->num_meses, num_semanas: $this->num_semanas, data_cadastro: null, data_exclusao: null, ativo: 1, ref_cod_instituicao: $this->ref_cod_instituicao, num_etapas: $this->num_etapas);
-        $cadastrou = $obj->cadastra();
+        $obj = new LegacyStageType();
+
+        $obj->ref_usuario_cad = $this->pessoa_logada;
+        $obj->nm_tipo = $this->nm_tipo;
+        $obj->num_etapas = $this->num_etapas;
+        $obj->descricao = $this->descricao;
+
+        !empty($this->num_meses) ? $obj->num_meses = $this->num_meses : $obj->num_meses = null;
+        !empty($this->num_semanas) ? $obj->num_semanas = $this->num_semanas : $obj->num_semanas = null;
+
+
+        $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->ativo = 1;
+
+        $cadastrou = $obj->save();
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_modulo_lst.php');
@@ -118,15 +130,27 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $obj = new clsPmieducarModulo(cod_modulo: $this->cod_modulo, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, nm_tipo: $this->nm_tipo, descricao: $this->descricao, num_meses: $this->num_meses, num_semanas: $this->num_semanas, data_cadastro: null, data_exclusao: null, ativo: 1, ref_cod_instituicao: $this->ref_cod_instituicao, num_etapas: $this->num_etapas);
-        $editou = $obj->edita();
+        $obj = LegacyStageType::find($this->cod_modulo);
+        $obj->ref_usuario_exc = $this->pessoa_logada;
+        $obj->ref_usuario_cad = $this->pessoa_logada;
+        $obj->nm_tipo = $this->nm_tipo;
+        $obj->descricao = $this->descricao;
+        if (!empty($this->num_etapas)) {
+            $obj->num_etapas = $this->num_etapas;
+        }
+        !empty($this->num_meses) ? $obj->num_meses = $this->num_meses : $obj->num_meses = null;
+        !empty($this->num_semanas) ? $obj->num_semanas = $this->num_semanas : $obj->num_semanas = null;
+
+        $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->ativo = 1;
+
+        $editou = $obj->save();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_modulo_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
@@ -135,24 +159,23 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
-        $obj = new clsPmieducarModulo(cod_modulo: $this->cod_modulo, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, nm_tipo: null, descricao: null, num_meses: null, num_semanas: null, data_cadastro: null, data_exclusao: null, ativo: 0);
-        $modulo = $obj->detalhe();
+        $obj = LegacyStageType::find($this->cod_modulo);
 
         if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma()) {
             $this->mensagem = 'Exclusão não realizada.<br>';
-            $this->url_cancelar = "educar_modulo_det.php?cod_modulo={$modulo['cod_modulo']}";
+            $this->url_cancelar = "educar_modulo_det.php?cod_modulo={$obj->getKey()}";
 
             return false;
         }
 
-        $excluiu = $obj->excluir();
+        $obj->ativo = 0;
+        $excluiu = $obj->save();
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_modulo_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 

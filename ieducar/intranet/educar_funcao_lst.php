@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRole;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -63,20 +65,27 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_funcao = new clsPmieducarFuncao();
-        $obj_funcao->setOrderby('nm_funcao ASC');
-        $obj_funcao->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $query = LegacyRole::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_funcao', 'ASC');
 
-        $lista = $obj_funcao->lista(
-            int_cod_funcao: $this->cod_funcao,
-            str_nm_funcao: $this->nm_funcao,
-            str_abreviatura: $this->abreviatura,
-            int_professor: $this->professor,
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
+        if (is_string(value: $this->nm_funcao)) {
+            $query->where('nm_funcao', 'ilike', '%' . $this->nm_funcao . '%');
+        }
+        if (is_string(value: $this->abreviatura)) {
+            $query->where('nm_funcao', 'ilike', '%' . $this->abreviatura . '%');
+        }
+        if (is_numeric(value: $this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+        if (is_numeric(value: $this->professor)) {
+            $query->where('professor', $this->professor);
+        }
 
-        $total = $obj_funcao->_total;
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {

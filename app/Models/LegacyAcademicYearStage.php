@@ -54,4 +54,9 @@ class LegacyAcademicYearStage extends Model
     {
         return $this->belongsTo(LegacyStageType::class, 'ref_cod_modulo');
     }
+
+    public function schoolAcademicYear(): BelongsTo
+    {
+        return $this->belongsTo(LegacySchoolAcademicYear::class, 'ref_ref_cod_escola', 'ref_cod_escola');
+    }
 }
