@@ -322,6 +322,11 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (request('type') == 'Entregue' && request('distribution_date') == null) {
+            $this->mensagem = 'Informe a Data da distribuição do uniforme.<br>';
+            return false;
+        }
+
         request()->merge([
             'school_id' => request('ref_cod_escola'),
             'student_id' => request('ref_cod_aluno'),

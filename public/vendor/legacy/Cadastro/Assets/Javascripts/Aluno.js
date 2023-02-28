@@ -242,6 +242,13 @@ function handleShowSubmit() {
 };
 
 function formularioValido() {
+  if ( obrigarCPF.val() == 1 && $j("#tipo_nacionalidade").val() != 3  && !$cpfField.val()) {
+    messageUtils.error(
+      "É necessário o preenchimento do CPF"
+    );
+    return false;
+  }
+
   if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
     messageUtils.error(
       "É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil."
@@ -984,19 +991,6 @@ resourceOptions.handleGet = function (dataResponse) {
 
   camposTransporte();
 
-  function verificaObrigatoriedadeRg() {
-    $j("#data_emissao_rg").makeUnrequired();
-    $j("#orgao_emissao_rg").makeUnrequired();
-    $j("#uf_emissao_rg").makeUnrequired();
-    if ($j("#rg").val().trim().length && obrigarCamposCenso) {
-      $j("#data_emissao_rg").makeRequired();
-      $j("#orgao_emissao_rg").makeRequired();
-      $j("#uf_emissao_rg").makeRequired();
-    }
-  }
-
-  $j("#rg").on("change", verificaObrigatoriedadeRg);
-
   setTimeout(function () {
     $veiculo_transporte_escolar = $j("#veiculo_transporte_escolar");
     $veiculo_transporte_escolar.val(
@@ -1005,7 +999,6 @@ resourceOptions.handleGet = function (dataResponse) {
     $veiculo_transporte_escolar.trigger("chosen:updated");
   }, 550);
 
-  verificaObrigatoriedadeRg();
 };
 
 var changeVisibilityOfLinksToPessoaParent = function (parentType) {
@@ -2844,11 +2837,10 @@ function canShowParentsFields() {
 
       $cpfNotice.hide();
 
-      let regraCpf = obrigarCPF.val();
-      let validCpfRule = regraCpf == 1 ? true : !ignoreValidation.includes(cpf);
-
-      if (cpf && validCpfRule && validatesCpf()) {
-        getPersonByCpf(cpf);
+      if (cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf))) {
+        if (validatesCpf()) {
+          getPersonByCpf(cpf);
+        }
       }else{
         handleShowSubmit();
       }
@@ -2909,10 +2901,7 @@ function canShowParentsFields() {
 
       $cpfNotice.hide();
 
-      let regraCpf = obrigarCPF.val();
-      let validCpfRule = regraCpf == 1 ? true : !ignoreValidation.includes(cpf);
-
-      if (cpf && validCpfRule && !validationUtils.validatesCpf(cpf)) {
+      if (cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && !validationUtils.validatesCpf(cpf)) {
         $cpfNotice.html("O CPF informado é inválido").slideDown("fast");
 
         $submitButton.attr("disabled", "disabled").hide();

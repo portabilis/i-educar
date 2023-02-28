@@ -193,6 +193,19 @@ return new class extends clsCadastro {
 
         $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal);
 
+        $user = Auth::user();
+
+        if ($user->ref_cod_instituicao) {
+            $obrigarCpf = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $obrigarCpf = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
+
+        $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
+        $this->campoCpf('id_federal', 'CPF', $valorCpf);
+
         $this->campoOculto(nome: 'cod_pessoa_fj', valor: $this->cod_pessoa_fj);
         $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
         $this->campoTexto(nome: 'nome_social', campo: 'Nome social e/ou afetivo', valor: $this->nome_social, tamanhovisivel: '50', tamanhomaximo: '255');
@@ -277,18 +290,9 @@ return new class extends clsCadastro {
         $documentos->idpes = $this->cod_pessoa_fj;
         $documentos = $documentos->detalhe();
 
-        // rg
-
-        // o rg é obrigatorio ao cadastrar pai ou mãe, exceto se configurado como opcional.
-
-        $required = (!empty($parentType));
-
-        if ($required && config(key: 'legacy.app.rg_pessoa_fisica_pais_opcional')) {
-            $required = false;
-        }
 
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],
@@ -938,6 +942,12 @@ return new class extends clsCadastro {
 
     protected function createOrUpdate($pessoaIdOrNull = null)
     {
+        if ($this->tipo_nacionalidade !== 3 && $this->obrigarCPFPessoa() && !$this->id_federal) {
+            $this->mensagem = 'É necessário o preenchimento do CPF.';
+
+            return false;
+        }
+
         if ($this->obrigarDocumentoPessoa() && !$this->possuiDocumentoObrigatorio()) {
             $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
 
@@ -1144,15 +1154,31 @@ return new class extends clsCadastro {
 
     protected function obrigarDocumentoPessoa()
     {
-        $clsInstituicao = new clsPmieducarInstituicao();
-        $instituicao = $clsInstituicao->primeiraAtiva();
-        $obrigarDocumentoPessoa = false;
-
-        if ($instituicao && isset($instituicao['obrigar_documento_pessoa'])) {
-            $obrigarDocumentoPessoa = dbBool(val: $instituicao['obrigar_documento_pessoa']);
+        $user = Auth::user();
+        if ($user->ref_cod_instituicao) {
+            $obrigarDocumentoPessoa = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
+        } else {
+            $obrigarDocumentoPessoa = LegacyInstitution::query()
+                ->first(['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
         }
 
         return $obrigarDocumentoPessoa;
+    }
+
+    protected function obrigarCPFPessoa()
+    {
+        $user = Auth::user();
+
+        if ($user->ref_cod_instituicao) {
+            $obrigarCpf = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $obrigarCpf = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
+
+        return $obrigarCpf;
     }
 
     protected function possuiDocumentoObrigatorio()
