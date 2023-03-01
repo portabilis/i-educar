@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStudentAbsence;
 use App\Services\CyclicRegimeService;
 use App\Services\StageScoreCalculationService;
@@ -3551,5 +3553,43 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $diasLetivos;
+    }
+
+    /**
+     *
+     * @param $registration
+     * @param int $disciplineId
+     * @return \Illuminate\Database\Eloquent\HigherOrderBuilderProxy|mixed|void
+     */
+    private function getHoraFalta(array $registration, int $disciplineId)
+    {
+        $year   = $registration['ano'];
+        $grade  = $registration['ref_ref_cod_serie'];
+        $school = $registration['ref_ref_cod_escola'];
+
+        $legacySchoolGradeDiscipline = LegacySchoolGradeDiscipline::query()
+            ->whereYearEq($year)
+            ->whereGrade($grade)
+            ->whereSchool($school)
+            ->whereDiscipline($disciplineId)
+            ->value('hora_falta')
+        ;
+
+        if ($legacySchoolGradeDiscipline) {
+            return (float) $legacySchoolGradeDiscipline;
+        }
+
+        $legacyDisciplineAcademicYear = LegacyDisciplineAcademicYear::query()
+            ->whereGrade($grade)
+            ->whereDiscipline($disciplineId)
+            ->whereYearEq($year)
+            ->value('hora_falta')
+        ;
+
+        if ($legacyDisciplineAcademicYear) {
+            return (float) $legacyDisciplineAcademicYear;
+        }
+
+        return $this->getOption('cursoHoraFalta');
     }
 }
