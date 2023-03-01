@@ -66,6 +66,14 @@ class LegacyStudentBuilder extends LegacyBuilder
     {
         return $this->whereHas(
             'person',
+            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
+        );
+    }
+
+    public function whereStudentNameSimilarity($name)
+    {
+        return $this->whereHas(
+            'person',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)->orWhereRaw('SOUNDEX(nome) = SOUNDEX(?)', $name)
         );
     }
@@ -162,7 +170,8 @@ class LegacyStudentBuilder extends LegacyBuilder
             ->filter(
                 [
                     'student' => $studentFilter->studentCode,
-                    'student_name' => $studentFilter->studentName,
+                    'student_name' => !$studentFilter->similarity ? $studentFilter->studentName : null,
+                    'student_name_similarity' => $studentFilter->similarity ? $studentFilter->studentName : null,
                     'mother_name' => $studentFilter->motherName,
                     'father_name' => $studentFilter->fatherName,
                     'guardian_name' => $studentFilter->responsableName,
