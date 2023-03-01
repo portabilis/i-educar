@@ -10,10 +10,13 @@ return new class () extends Migration {
         DB::unprepared('ALTER TABLE IF EXISTS modules.calendario_turma DROP CONSTRAINT IF EXISTS calendario_turma_calendario_dia_fk;');
         DB::unprepared('ALTER TABLE IF EXISTS modules.calendario_turma DROP CONSTRAINT IF EXISTS modules_calendario_turma_calendario_ano_letivo_id_mes_dia_forei;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia_anotacao DROP CONSTRAINT IF EXISTS calendario_dia_anotacao_ref_ref_cod_calendario_ano_letivo_fkey;');
+        DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia_anotacao DROP CONSTRAINT IF EXISTS pmieducar_calendario_dia_anotacao_ref_ref_cod_calendario_ano_le;');
 
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS calendario_dia_pkey;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS calendario_dia_ref_cod_calendario_ano_letivo_fkey;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS calendario_dia_ref_cod_calendario_dia_motivo_fkey;');
+        DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS pmieducar_calendario_dia_ref_cod_calendario_ano_letivo_foreign;');
+        DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS pmieducar_calendario_dia_ref_cod_calendario_dia_motivo_foreign;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS calendario_dia_ref_usuario_exc_fkey;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS calendario_dia_ref_usuario_cad_fkey;');
         DB::unprepared('DROP INDEX IF EXISTS pmieducar.i_calendario_dia_ativo;');
