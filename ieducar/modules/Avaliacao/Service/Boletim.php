@@ -1302,6 +1302,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 return $disciplina->id;
             }, $disciplinasNaoReprovativas);
 
+            $totalHorasFaltaComponentes = 0;
             foreach ($faltas as $key => $falta) {
                 // Total de faltas do componente
                 $componenteTotal = array_sum(CoreExt_Entity::entityFilterAttr(
@@ -1329,9 +1330,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $faltasComponentes[$id]->porcentagemPresenca = null;
                 $faltasComponentes[$id]->total = $componenteTotal;
 
+                $componenteHoraFalta = $this->getHoraFalta($enrollmentData, $id);
+
                 // Calcula a quantidade de horas/faltas no componente
-                $faltasComponentes[$id]->horasFaltas =
-                    $this->_calculateHoraFalta($componenteTotal, $presenca->cursoHoraFalta);
+                $quantidadeHoraFaltaDoComponente = $this->_calculateHoraFalta($componenteTotal, $componenteHoraFalta);
+
+                $faltasComponentes[$id]->horasFaltas =  $quantidadeHoraFaltaDoComponente;
 
                 // Calcula a porcentagem de falta no componente
                 $faltasComponentes[$id]->porcentagemFalta =
@@ -1375,6 +1379,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 if (!in_array($id, $disciplinasNaoReprovativas)) {
                     // Adiciona a quantidade de falta do componente ao total geral de faltas
                     $total += $componenteTotal;
+
+                    // Faz somas de todas as horas faltas por compomente
+                    $totalHorasFaltaComponentes += $quantidadeHoraFaltaDoComponente;
                 }
             }
 
@@ -1395,18 +1402,23 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         } // fim if por_componente
 
         $presenca->totalFaltas = $total;
-        $presenca->horasFaltas = $this->_calculateHoraFalta($total, $presenca->cursoHoraFalta);
 
         if ($tipoFaltaGeral) {
+            // Quando é tipoFaltaGeral a carga horária é do curso
+            $presenca->horasFaltas = $this->_calculateHoraFalta($total, $presenca->cursoHoraFalta);
             $presenca->porcentagemFalta = $this->_calculatePorcentagem(
                 $presenca->diasLetivos,
                 $presenca->totalFaltas,
                 false
             );
-        } elseif ($tipoFaltaPorComponente) {
+        }
+
+        if ($tipoFaltaPorComponente) {
+            // Quando é $tipoFaltaPorComponente a carga horária é a soma da quantidade de horas faltas dos componentes reprovativos $totalHorasFaltaComponentes
+            $presenca->horasFaltas = $totalHorasFaltaComponentes;
             $presenca->porcentagemFalta = $this->_calculatePorcentagem(
                 $presenca->cargaHoraria,
-                $presenca->horasFaltas,
+                $totalHorasFaltaComponentes,
                 false
             );
         }
