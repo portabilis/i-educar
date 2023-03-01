@@ -221,7 +221,7 @@ return new class () extends clsListagem {
                         if ($dia['ref_cod_calendario_dia_motivo']) {
                             $array_dias[$dia['dia']] = $dia['dia'];
 
-                            $registro = LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])->getAttributes();
+                            $det_motivo = LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])->getAttributes();
 
                             /**
                              * @todo CoreExt_Enum?
