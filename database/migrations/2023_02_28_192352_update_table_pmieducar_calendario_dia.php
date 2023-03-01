@@ -29,7 +29,6 @@ return new class () extends Migration {
             $table->increments('id');
             $table->foreign('ref_cod_calendario_ano_letivo')->references('cod_calendario_ano_letivo')->on('pmieducar.calendario_ano_letivo');
             $table->foreign('ref_cod_calendario_dia_motivo')->references('cod_calendario_dia_motivo')->on('pmieducar.calendario_dia_motivo');
-            $table->foreign('ref_usuario_exc')->references('cod_usuario')->on('pmieducar.usuario');
             $table->unique([
                 'ref_cod_calendario_ano_letivo',
                 'mes',
