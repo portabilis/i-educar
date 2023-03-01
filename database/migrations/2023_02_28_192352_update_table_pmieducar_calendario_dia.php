@@ -8,6 +8,7 @@ return new class () extends Migration {
     public function up()
     {
         DB::unprepared('ALTER TABLE IF EXISTS modules.calendario_turma DROP CONSTRAINT IF EXISTS calendario_turma_calendario_dia_fk;');
+        DB::unprepared('ALTER TABLE IF EXISTS modules.calendario_turma DROP CONSTRAINT IF EXISTS modules_calendario_turma_calendario_ano_letivo_id_mes_dia_forei;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia_anotacao DROP CONSTRAINT IF EXISTS calendario_dia_anotacao_ref_ref_cod_calendario_ano_letivo_fkey;');
 
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.calendario_dia DROP CONSTRAINT IF EXISTS calendario_dia_pkey;');
