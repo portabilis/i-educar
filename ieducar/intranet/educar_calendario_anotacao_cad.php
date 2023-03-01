@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCalendarDay;
 use App\Models\LegacyCalendarDayNote;
 use App\Models\LegacyCalendarNote;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -80,11 +81,20 @@ return new class () extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php');
 
-        $obj_dia = new clsPmieducarCalendarioDia(ref_cod_calendario_ano_letivo: $this->ref_ref_cod_calendario_ano_letivo, mes: $this->mes, dia: $this->dia);
-        if (!$obj_dia->existe()) {
-            $obj_dia = new clsPmieducarCalendarioDia(ref_cod_calendario_ano_letivo: $this->ref_ref_cod_calendario_ano_letivo, mes: $this->mes, dia: $this->dia, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, ref_cod_calendario_dia_motivo: null, descricao: null, data_cadastro: null, data_exclusao: null, ativo: 1);
-            $ref_cod_dia_letivo = $obj_dia->cadastra();
-            if (!$ref_cod_dia_letivo) {
+        $exists = LegacyCalendarDay::query()
+            ->where('ref_cod_calendario_ano_letivo', $this->ref_ref_cod_calendario_ano_letivo)
+            ->where('mes', $this->mes)
+            ->where('dia', $this->dia)
+            ->exists();
+
+        if (!$exists) {
+            $obj_dia = new LegacyCalendarDay();
+            $obj_dia->cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
+            $obj_dia->mes = $this->mes;
+            $obj_dia->dia = $this->dia;
+            $obj_dia->ref_usuario_cad = $this->pessoa_logada;
+
+            if (!$obj_dia->save()) {
                 return false;
             }
         }

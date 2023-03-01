@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCalendarDay;
 use App\Models\LegacyCalendarDayNote;
 use App\Models\LegacyCalendarDayReason;
 use App\Models\LegacyCalendarYear;
@@ -186,15 +187,10 @@ return new class () extends clsListagem {
                     6
                 ], str_cor: 'ROSA');
 
-                $obj_dia_calendario = new clsPmieducarCalendarioDia(
-                    ref_cod_calendario_ano_letivo: $registro['cod_calendario_ano_letivo'],
-                    mes: $this->mes
-                );
-
-                $lista_dia = $obj_dia_calendario->lista(
-                    int_ref_cod_calendario_ano_letivo: $registro['cod_calendario_ano_letivo'],
-                    int_mes: $this->mes
-                );
+                $lista_dia = LegacyCalendarDay::query()
+                    ->where('ref_cod_calendario_ano_letivo', $registro['cod_calendario_ano_letivo'])
+                    ->where('mes', $this->mes)
+                    ->get();
 
                 if ($lista_dia) {
                     $array_dias = [];

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCalendarDay;
 use App\Models\LegacyCalendarDayReason;
 use App\Models\LegacyCalendarYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -114,13 +115,11 @@ return new class () extends clsCadastro {
         if (is_numeric(value: $this->ref_cod_calendario_ano_letivo) &&
             is_numeric(value: $this->mes) && is_numeric(value: $this->dia)
         ) {
-            $obj = new clsPmieducarCalendarioDia(
-                ref_cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo,
-                mes: $this->mes,
-                dia: $this->dia
-            );
-
-            $registro  = $obj->detalhe();
+            $registro = LegacyCalendarDay::query()
+                ->where('ref_cod_calendario_ano_letivo', $this->ref_cod_calendario_ano_letivo)
+                ->where('mes', $this->mes)
+                ->where('dia', $this->dia)
+                ->first();
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -139,9 +138,7 @@ return new class () extends clsCadastro {
                 $retorno = 'Editar';
             }
 
-            $this->ano = LegacyCalendarYear::query()
-                ->where('cod_calendario_ano_letivo', $this->ref_cod_calendario_ano_letivo)
-                ->value('ano');
+            $this->ano = $registro->calendarYear->ano;
         }
 
         $this->url_cancelar = sprintf(
@@ -220,20 +217,17 @@ return new class () extends clsCadastro {
             str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
-        $obj = new clsPmieducarCalendarioDia(
-            ref_cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo,
-            mes: $this->mes,
-            dia: $this->dia,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            ref_cod_calendario_dia_motivo: $this->ref_cod_calendario_dia_motivo,
-            descricao: $this->descricao,
-            data_cadastro: $this->data_cadastro,
-            data_exclusao: $this->data_exclusao,
-            ativo: $this->ativo
-        );
+        $obj = new LegacyCalendarDay();
+        $obj->ref_cod_calendario_ano_letivo = $this->ref_cod_calendario_ano_letivo;
+        $obj->mes = $this->mes;
+        $obj->dia = $this->dia;
+        $obj->ref_cod_calendario_dia_motivo = $this->ref_cod_calendario_dia_motivo;
+        $obj->descricao = $this->descricao;
+        $obj->ref_usuario_cad = $this->pessoa_logada;
 
-        $cadastrou = $obj->cadastra();
+        $obj->save();
+
+        $cadastrou = $obj->save();
 
         foreach ($this->turmas as $codTurma => $turma) {
             $calendarioTurma = new Calendario_Model_Turma(options: [
@@ -276,20 +270,17 @@ return new class () extends clsCadastro {
             str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
-        $obj = new clsPmieducarCalendarioDia(
-            ref_cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo,
-            mes: $this->mes,
-            dia: $this->dia,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            ref_cod_calendario_dia_motivo: $this->ref_cod_calendario_dia_motivo,
-            descricao: $this->descricao,
-            data_cadastro: $this->data_cadastro,
-            data_exclusao: $this->data_exclusao,
-            ativo: 1
-        );
+        $obj = LegacyCalendarDay::query()
+            ->where('ref_cod_calendario_ano_letivo', $this->ref_cod_calendario_ano_letivo)
+            ->where('mes', $this->mes)
+            ->where('dia', $this->dia)
+            ->first();
 
-        $editou = $obj->edita();
+        $obj->ref_usuario_exc = $this->pessoa_logada;
+        $obj->ref_cod_calendario_dia_motivo = $this->ref_cod_calendario_dia_motivo;
+        $obj->descricao = $this->descricao;
+
+        $editou = $obj->save();
 
         // Inicialização de arrays
         $insert = $delete = $entries = $intersect = [];
@@ -362,18 +353,13 @@ return new class () extends clsCadastro {
             str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
-        $obj = new clsPmieducarCalendarioDia(
-            ref_cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo,
-            mes: $this->mes,
-            dia: $this->dia,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            data_cadastro: $this->data_cadastro,
-            data_exclusao: $this->data_exclusao,
-            ativo: 0
-        );
+        $obj = LegacyCalendarDay::query()
+            ->where('ref_cod_calendario_ano_letivo', $this->ref_cod_calendario_ano_letivo)
+            ->where('mes', $this->mes)
+            ->where('dia', $this->dia)
+            ->first();
 
-        $excluiu = $obj->edita();
+        $excluiu = $obj->delete();
 
         $entries = $this->_getEntries(
             codCalendarioAnoLetivo: $this->ref_cod_calendario_ano_letivo,
