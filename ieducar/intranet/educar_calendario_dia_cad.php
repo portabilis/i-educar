@@ -108,7 +108,7 @@ return new class () extends clsCadastro {
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
             int_soma_nivel_acesso: 7,
-            str_pagina_redirecionar: 'educar_calendario_dia_lst.php'
+            str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
         if (is_numeric(value: $this->ref_cod_calendario_ano_letivo) &&
@@ -217,7 +217,7 @@ return new class () extends clsCadastro {
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
             int_soma_nivel_acesso: 7,
-            str_pagina_redirecionar: 'educar_calendario_dia_lst.php'
+            str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
         $obj = new clsPmieducarCalendarioDia(
@@ -273,7 +273,7 @@ return new class () extends clsCadastro {
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
             int_soma_nivel_acesso: 7,
-            str_pagina_redirecionar: 'educar_calendario_dia_lst.php'
+            str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
         $obj = new clsPmieducarCalendarioDia(
@@ -359,7 +359,7 @@ return new class () extends clsCadastro {
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
             int_soma_nivel_acesso: 7,
-            str_pagina_redirecionar: 'educar_calendario_dia_lst.php'
+            str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
         $obj = new clsPmieducarCalendarioDia(

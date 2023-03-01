@@ -769,7 +769,7 @@ return new class extends clsCadastro {
             int_processo_ap: 641,
             int_idpes_usuario: $this->pessoa_logada,
             int_soma_nivel_acesso: 7,
-            str_pagina_redirecionar: 'educar_calendario_dia_lst.php'
+            str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
         $obj = new clsPmieducarCalendarioDia(
