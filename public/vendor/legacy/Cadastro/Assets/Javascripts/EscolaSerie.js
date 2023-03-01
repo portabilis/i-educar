@@ -67,7 +67,7 @@ function getDisciplina(disciplinas) {
         "</a>" +
         "</label>";
         conteudo += "  <label style='display: block; float: left; width: 150px'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(" + '"usar_componente[]"' + ");';/>Marcar todos</label>";
-        conteudo += "<label style='display: block; float: left; width: 30px'>&nbsp;</label>" +
+        conteudo += "<label style='display: block; float: left; width: 130px'>&nbsp;</label>" +
         "<label style='display: block; float: left; width: 100px;'>" +
         "<a class='clone-values' onclick='cloneValues("+first_key+",\"anos_letivos\")'>" +
         "<i class='fa fa-clone' aria-hidden='true'></i>" +
