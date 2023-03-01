@@ -44,6 +44,7 @@ class LegacyDisciplineAcademicYear extends Pivot
         'carga_horaria',
         'tipo_nota',
         'anos_letivos',
+        'hora_falta',
     ];
 
     public $timestamps = false;

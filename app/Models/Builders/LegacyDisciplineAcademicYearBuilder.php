@@ -56,4 +56,28 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
             $q->whereCourse($course);
         });
     }
+
+    /**
+     * Filtra por ano letivo
+     *
+     * @param int $year
+     *
+     * @return LegacySchoolGradeDisciplineBuilder
+     */
+    public function whereYearEq(int $year)
+    {
+        return $this->whereRaw("anos_letivos @> ('{{$year}}')");
+    }
+
+    /**
+     * Filtra por Disciplina
+     *
+     * @param int $discipline
+     *
+     * @return LegacySchoolGradeDisciplineBuilder
+     */
+    public function whereDiscipline(int $discipline): self
+    {
+        return $this->where('componente_curricular_id', $discipline);
+    }
 }
