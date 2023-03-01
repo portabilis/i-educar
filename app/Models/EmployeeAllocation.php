@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builders\EmployeeAllocationBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 
@@ -13,6 +14,8 @@ class EmployeeAllocation extends LegacyModel
     protected $primaryKey = 'cod_servidor_alocacao';
 
     protected $table = 'pmieducar.servidor_alocacao';
+
+    public string $builder = EmployeeAllocationBuilder::class;
 
     protected $fillable = [
         'carga_horaria',

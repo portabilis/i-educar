@@ -16,7 +16,7 @@ return new class () extends Migration {
         );
 
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/functions/modules.frequencia_por_componente.sql')
+            file_get_contents(__DIR__ . '/../../sqls/functions/modules.frequencia_por_componente_2023-02-13.sql')
         );
     }
 };

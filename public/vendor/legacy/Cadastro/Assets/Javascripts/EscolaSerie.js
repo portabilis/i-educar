@@ -82,7 +82,7 @@ function getDisciplina(disciplinas) {
           conteudo += '<div style="margin-bottom: 10px; float: left">';
           conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[' + id + ']" class="check_'+id+'" id="disciplinas[]" value="' + id + '">' + item.name + '</label>';
           conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="carga_horaria_' + id + '" data-id="'+id+'" name="carga_horaria[' + id + ']" class="carga_horaria" value="" size="5" maxlength="7"></label>';
-          conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' +  item.workload + ' h)</label>';
+          conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' + formatNumber(item.workload)  + ' h)</label>';
           conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="hora_falta_' + id + '" data-id="'+id+'" name="hora_falta[' + id + ']" class="" value="" size="5" maxlength="7"></label>';
           conteudo += `
             <select name='componente_anos_letivos[${id}][]' class="anos_letivos" id='anos_letivos_${id}' data-id='${id}' style='width: 150px;' multiple='multiple'>
@@ -102,6 +102,18 @@ function getDisciplina(disciplinas) {
         campoDisciplinas.innerHTML += '</table>';
     }
     rebuildAllChosenAnosLetivos();
+}
+
+function formatNumber(value)
+{
+  let float = Math.floor(value);
+  let calc = value - float;
+
+  if (calc > 0) {
+    return value;
+  }
+
+  return Math.round(value);
 }
 
 document.getElementById('ref_cod_serie').onchange = function () {

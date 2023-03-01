@@ -20,13 +20,11 @@ BEGIN
         AND componente_curricular_turma.turma_id = cod_turma_id
     );
 
-    cod_serie_id := (
-        SELECT ref_ref_cod_serie
-        FROM pmieducar.matricula
-        WHERE cod_matricula = cod_matricula_id
-    );
-
     IF (qtde_carga_horaria IS NULL) THEN
+        cod_serie_id := (SELECT es.ref_cod_serie FROM pmieducar.turma t
+                LEFT JOIN pmieducar.turma_serie ts ON ts.turma_id = t.cod_turma
+                JOIN pmieducar.escola_serie es ON (es.ref_cod_escola = t.ref_ref_cod_escola AND es.ref_cod_serie = coalesce(ts.serie_id, t.ref_ref_cod_serie))
+            WHERE cod_turma = cod_turma_id);
         cod_escola_id := (SELECT t.ref_ref_cod_escola FROM pmieducar.turma t WHERE cod_turma = cod_turma_id);
         qtde_carga_horaria := (
             SELECT carga_horaria :: float
@@ -37,6 +35,7 @@ BEGIN
     END IF;
 
     IF (qtde_carga_horaria IS NULL) THEN
+        cod_serie_id := (SELECT ref_ref_cod_serie FROM pmieducar.turma WHERE cod_turma = cod_turma_id);
         qtde_carga_horaria := (
             SELECT carga_horaria :: float
             FROM modules.componente_curricular_ano_escolar
