@@ -192,6 +192,12 @@ function marcarCheck(idValue) {
                 campo.elements[i].checked = campo.CheckTodos3.checked;
             }
         }
+    } else if (idValue == 'usar_componente_hora_falta[]') {
+        for (i = 0; i < contaForm; i++) {
+          if (campo.elements[i].id == idValue) {
+            campo.elements[i].checked = campo.CheckTodos4.checked;
+          }
+        }
     }
 }
 
