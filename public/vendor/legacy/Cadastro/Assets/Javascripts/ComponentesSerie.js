@@ -157,12 +157,14 @@ function defaultModal(componenteId) {
 function habilitaComponente(componenteId) {
   $j( '#componente_' + componenteId).attr('checked','checked')
   $j( '#carga_horaria_' + componenteId ).prop("disabled", false);
+  $j( '#hora_falta_' + componenteId ).prop("disabled", false);
   $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
   $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
 }
 
 function desabilitaComponente(componenteId) {
     $j( '#carga_horaria_' + componenteId ).prop("disabled", true).val('');
+    $j( '#hora_falta_' + componenteId ).prop("disabled", true);
     $j( '#tipo_nota_' + componenteId ).prop("disabled", true).val('');
     $j( '#anos_letivos_' + componenteId ).prop("disabled", true).val('');
     reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ));

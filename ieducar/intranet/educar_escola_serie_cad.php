@@ -244,7 +244,7 @@ return new class () extends clsCadastro {
                  ->mapWithKeys(function ($item) {
                      return [$item['componente_curricular_id'] => $item];
                  })->sort();
-             
+
             if (is_iterable($lista)) {
 
                 $firstKey = $lista->keys()->first();
