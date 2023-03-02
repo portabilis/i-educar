@@ -2,6 +2,8 @@
 
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeePosgraduate;
+use App\Models\LegacyAbsenceDelay;
+use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
 use App\Services\EmployeePosgraduateService;
@@ -14,7 +16,7 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsCadastro {
+return new class () extends clsCadastro {
     public $pessoa_logada;
     public $cod_servidor;
     public $ref_cod_instituicao;
@@ -120,8 +122,7 @@ return new class extends clsCadastro {
 
                 if ($lst_funcoes) {
                     foreach ($lst_funcoes as $funcao) {
-                        $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
-                        $det_funcao = $obj_funcao->detalhe();
+                        $det_funcao = LegacyRole::find($funcao['ref_cod_funcao'])?->getAttributes();
 
                         $this->ref_cod_funcao[] = [$funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula'], $funcao['cod_servidor_funcao']];
 
@@ -158,7 +159,7 @@ return new class extends clsCadastro {
         }
 
         // remove dados que podem estar na session de outras consultas
-        Session::forget("cursos_por_funcao");
+        Session::forget('cursos_por_funcao');
 
         $this->url_cancelar = ($retorno == 'Editar') ?
             "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
@@ -259,15 +260,15 @@ return new class extends clsCadastro {
         $opcoes = ['' => 'Selecione'];
 
         if (is_numeric($this->ref_cod_instituicao)) {
-            $objTemp = new clsPmieducarFuncao();
-            $objTemp->setOrderby('nm_funcao ASC');
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+            $lista = LegacyRole::query()
+                ->where('ativo', 1)
+                ->orderBy('nm_funcao', 'ASC')
+                ->get();
 
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
-                }
+            foreach ($lista as $registro) {
+                $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
             }
+
         }
 
         $this->campoTabelaInicio(
@@ -348,6 +349,7 @@ return new class extends clsCadastro {
             $docenteMapper = new Educacenso_Model_DocenteDataMapper();
 
             $docenteInep = null;
+
             try {
                 $docenteInep = $docenteMapper->find(['docente' => $this->cod_servidor]);
             } catch (Exception) {
@@ -701,6 +703,7 @@ JS;
 
         if ($obj_quadro_horario->detalhe()) {
             $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
+
             return false;
         }
 
@@ -721,6 +724,7 @@ JS;
         if ($excluiu === false) {
             DB::rollBack();
             $this->mensagem = 'Exclusão não realizada.<br>';
+
             return false;
         }
 
@@ -843,7 +847,9 @@ JS;
 
     public function excluiFaltaAtraso()
     {
-        (new clsPmieducarFaltaAtraso())->excluiTodosPorServidor($this->cod_servidor);
+        LegacyAbsenceDelay::query()
+            ->where('ref_cod_servidor', $this->cod_servidor)
+            ->delete();
     }
 
     public function excluiFuncoesRemovidas($funcoes)

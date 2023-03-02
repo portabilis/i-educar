@@ -13,11 +13,11 @@ permissions:
 
 jobs:
   default:
-
     name: Unit, Integration and Pages
 
-    runs-on: ubuntu-latest
+    if: '! github.event.pull_request.draft'
 
+    runs-on: self-hosted
     env:
       APP_URL: http://localhost:8000
       APP_ENV: testing

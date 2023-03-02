@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\WithdrawalReason;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -65,19 +67,20 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_motivo_afastamento = new clsPmieducarMotivoAfastamento();
-        $obj_motivo_afastamento->setOrderby(strNomeCampo: 'nm_motivo ASC');
-        $obj_motivo_afastamento->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $query = WithdrawalReason::query()
+            ->orderBy('nm_motivo');
 
-        $lista = $obj_motivo_afastamento->lista(
-            str_nm_motivo: $this->nm_motivo,
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
+        if ($this->ref_cod_instituicao) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+        if ($this->nm_motivo) {
+            $query->where('nm_motivo', 'ilike', '%' . $this->nm_motivo . '%');
+        }
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_'.$this->nome);
 
-        $total = $obj_motivo_afastamento->_total;
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {

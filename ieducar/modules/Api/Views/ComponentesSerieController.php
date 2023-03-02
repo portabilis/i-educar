@@ -27,7 +27,6 @@ class ComponentesSerieController extends ApiCoreController
         $updateInfo = $obj->updateInfo();
         $componentesAtualizados = $updateInfo['update'];
         $componentesInseridos = $updateInfo['insert'];
-        $componentesExcluidos = $updateInfo['delete'];
 
         try {
             $valido = $this->validaAtualizacao($serieId, $updateInfo);
@@ -35,15 +34,12 @@ class ComponentesSerieController extends ApiCoreController
             return ['msgErro' => $e->getMessage()];
         }
 
-        if ($valido && $obj->atualizaComponentesDaSerie()) {
-            if ($componentesExcluidos) {
-                $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
-            }
+        if ($valido) {
+            $obj->atualizaComponentesDaSerie();
 
             return [
                 'update' => $componentesAtualizados,
-                'insert' => $componentesInseridos,
-                'delete' => $componentesExcluidos
+                'insert' => $componentesInseridos
             ];
         }
 
@@ -404,6 +400,8 @@ SQL;
             $this->appendResponse($this->getEscolasBySerie($this->getRequest()->serie));
         } elseif ($this->isRequestFor('post', 'atualiza-componentes-escolas')) {
             $this->appendResponse($this->atualizaComponentesEscolas());
+        } elseif ($this->isRequestFor('post', 'remove-componentes-serie')) {
+            $this->appendResponse($this->removeComponeteDaSerie());
         } else {
             $this->notImplementedOperationError();
         }
@@ -434,5 +432,24 @@ SQL;
         }
 
         return null;
+    }
+
+    private function removeComponeteDaSerie()
+    {
+        $serieId = $this->getRequest()->serie_id;
+        $componente = [$this->getRequest()->componente];
+        $componentes['delete'] = $componente;
+
+        try {
+            $valido = $this->validaAtualizacao($serieId, $componentes);
+        } catch (\Exception $e) {
+            return ['msgErro' => $e->getMessage()];
+        }
+
+        if($valido) {
+            $obj = new clsModulesComponenteCurricularAnoEscolar(ano_escolar_id: $serieId, componentes: $componente);
+            $obj->excluiComponente($this->getRequest()->componente);
+            $this->atualizaExclusoesDeComponentes($serieId, $componente);
+        }
     }
 }

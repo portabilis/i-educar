@@ -46,10 +46,9 @@ $j("#ref_cod_area_conhecimento").change(function() {
     if(chosenArray && chosenOldArray){
         if (chosenArray.length > chosenOldArray.length) {
             chosenArray.forEach(function(area) {
-                nome_area = $j(this).find("option[value='"+ area +"']").text();
+              let nome_area = $j(this).find("option[value='" + area + "']").text();
                 if (!$j('#area_conhecimento_' + area).length && area != '') {
                     $j('#componentes').append(htmlCabecalhoAreaConhecimento(area, nome_area));
-                    carregaComponentesDaArea(area);
                 }
             }, this);
         }else{
@@ -57,7 +56,7 @@ $j("#ref_cod_area_conhecimento").change(function() {
                 var areaExcluida = '';
                 if($j.inArray(area,chosenArray) == -1){
                     areaExcluida = area;
-                };
+                }
                 $j('#area_conhecimento_'+areaExcluida).remove();
                 $j('.area_conhecimento_'+areaExcluida).remove();
             }, this);
@@ -95,12 +94,86 @@ function reloadChosenAnosLetivos($element){
   });
 }
 
+
+function verificaRetorno(response) {
+  if (response.msgErro) {
+    let msgs = response.msgErro.split("\n");
+    msgs.forEach(msg => messageUtils.error(msg));
+  }
+}
+
+function removeComponent(componente_id) {
+
+  serieId = serieId != '' ? serieId : $j('#ref_cod_serie').val();
+  let urlForAtualizaComponentesSerie = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'remove-componentes-serie', {});
+
+  let options = {
+    type     : 'POST',
+    url      : urlForAtualizaComponentesSerie,
+    dataType : 'json',
+    data     : {
+      serie_id    : serieId,
+      componente : componente_id
+    },
+    success: verificaRetorno
+  };
+
+  postResource(options);
+
+}
+
+function defaultModal(componenteId) {
+  makeDialog({
+    content: 'Tem certeza que deseja remover o compoente? Cajo não exista lancamentos no i-Diario ' +
+      'o componente será removido',
+    title: 'Atenção!',
+    maxWidth: 600,
+    width: 600,
+    size: 500,
+    close: function () {
+      habilitaComponente(componenteId)
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        removeComponent(componenteId)
+        desabilitaComponente(componenteId)
+        $j('#dialog-container').dialog('destroy');
+      }
+    },
+    {
+      text: 'Cancelar',
+      click: function () {
+        habilitaComponente(componenteId)
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
+
+function habilitaComponente(componenteId) {
+  $j( '#componente_' + componenteId).attr('checked','checked')
+  $j( '#carga_horaria_' + componenteId ).prop("disabled", false);
+  $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
+  $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
+}
+
+function desabilitaComponente(componenteId) {
+    $j( '#carga_horaria_' + componenteId ).prop("disabled", true).val('');
+    $j( '#tipo_nota_' + componenteId ).prop("disabled", true).val('');
+    $j( '#anos_letivos_' + componenteId ).prop("disabled", true).val('');
+    reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ));
+}
+
 function habilitaCampos(componente_id){
-    var isChecked = !$j( '#componente_' + componente_id).is(':checked');
-    $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked).val('');
-    $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked).val('');
-    $j( '#anos_letivos_' + componente_id ).prop("disabled", isChecked).val('');
-    reloadChosenAnosLetivos($j( '#anos_letivos_' + componente_id ));
+  const isChecked = !$j( '#componente_' + componente_id).is(':checked');
+
+  if (isChecked) {
+    defaultModal(componente_id)
+  } else {
+    habilitaComponente(componente_id)
+  }
 }
 
 function cloneValues(area_id, componente_id, classe){
@@ -115,13 +188,23 @@ function cloneValues(area_id, componente_id, classe){
     }, this);
 }
 
-function expandClose(id){
-    var expand = $j('.area_conhecimento_'+id).is(':visible');
+async function expandClose(id){
+    const expand = !$j('.area_conhecimento_'+id).is(':visible');
+    const loading = document.getElementById('load_' + id);
+    const arrow = document.getElementById('expandClose_' + id);
     $j('.area_conhecimento_'+id).toggle('fast');
-    if(expand){
-        $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-down2.png)');
-    }else{
-        $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-up2.png)');
+
+    if(expand) {
+      $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-up2.png)');
+      if (document.getElementsByClassName('area_conhecimento_' + id).length === 0) {
+        loading.style.display = 'block'
+        arrow.style.display = 'none'
+        await carregaComponentesDaArea(id)
+        loading.style.display = 'none'
+        arrow.style.display = 'block'
+      }
+    } else {
+      $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-down2.png)');
     }
 }
 
@@ -202,13 +285,17 @@ function handleGetSeries(response){
     updateAreaConhecimento();
 }
 
-function carregaDadosComponentesSerie(){
-    var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular',
-                                             'componentes-curriculares-serie',
-                                             { instituicao_id : instituicao_id,
-                                               serie_id       : serie_id }
+function carregaDadosComponentesSerie(area_conhecimento_id){
+    let url = getResourceUrlBuilder.buildUrl(
+      '/module/Api/ComponenteCurricular',
+      'componentes-curriculares-serie',
+      {
+        instituicao_id: instituicao_id,
+        serie_id: serie_id,
+        area_conhecimento: area_conhecimento_id
+      }
     );
-    var options = {
+    let options = {
         url      : url,
         dataType : 'json',
         success  : handleCarregaDadosComponentesSerie
@@ -217,44 +304,84 @@ function carregaDadosComponentesSerie(){
 }
 
 function handleCarregaDadosComponentesSerie(response){
-    componentes = response.disciplinas;
+    const componentes = response.disciplinas;
     componentes.forEach(function(componente) {
-        $j( '#componente_' + componente.id).prop( "checked", true );
-        $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
-        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
-        $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
-        reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
+      $j( '#componente_' + componente.id).prop( "checked", true );
+      $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
+      $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
+      $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
+
+      reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
+
+      let textBase = 'Contém restrições em: ';
+      let contemRestricao = false;
+      let tiposRestricao = [];
+
+      if (componente.contem_notas) {
+        contemRestricao = true
+        tiposRestricao.push('notas')
+      }
+
+      if (componente.contem_faltas) {
+        contemRestricao = true
+        tiposRestricao.push('falta')
+      }
+
+      if (componente.contem_paracer) {
+        contemRestricao = true
+        tiposRestricao.push('pareceres')
+      }
+
+      if (componente.contem_componente_curricular_turma) {
+        contemRestricao = true
+        tiposRestricao.push('configurado na turma')
+      }
+
+      textBase += tiposRestricao.join(', ')
+
+      let icon = '<i class="ml-5 fa fa-question-circle" title="' + textBase +'"></i>';
+      if (contemRestricao) {
+        $j(icon).insertAfter('#label_componente_' + componente.id)
+        $j( '#componente_' + componente.id).prop( "checked", true ).prop("disabled", true);
+      }
     }, this);
 }
 
-function carregaComponentesDaArea(id){
-    var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular',
-                                             'componentes-curriculares',
-                                             { instituicao_id       : instituicao_id,
-                                               area_conhecimento_id : id }
+async function carregaComponentesDaArea(id) {
+    const url = getResourceUrlBuilder.buildUrl(
+      '/module/Api/ComponenteCurricular',
+      'componentes-curriculares',
+      {
+        instituicao_id: instituicao_id,
+        area_conhecimento_id: id
+      }
     );
-    var options = {
+    const options = {
         url      : url,
         dataType : 'json',
         success  : handleCarregaComponentesDaArea
     };
-    getResources(options);
+    await getPromise(options);
 }
 
-function handleCarregaComponentesDaArea(response){
+function handleCarregaComponentesDaArea(response) {
     var componentes          = response.disciplinas;
     var urlRequisicao        = new URLSearchParams(this.url);
     var area_conhecimento_id = urlRequisicao.get('area_conhecimento_id');
 
     for (var i = componentes.length - 1; i >= 0 ; i--) {
         var firstLine = i == 0;
-        $j(htmlComponentesAreaConhecimento(componentes[i].area_conhecimento_id, componentes[i].id, componentes[i].nome, firstLine)).insertAfter('#area_conhecimento_' + componentes[i].area_conhecimento_id);
+        $j(htmlComponentesAreaConhecimento(
+          componentes[i].area_conhecimento_id,
+          componentes[i].id,
+          componentes[i].nome,
+          firstLine)).insertAfter('#area_conhecimento_' + componentes[i].area_conhecimento_id);
     }
 
     $j(htmlSubCabecalhoAreaConhecimento(area_conhecimento_id)).insertAfter('#area_conhecimento_' + area_conhecimento_id);
 
-    if(serie_id != ''){
-        carregaDadosComponentesSerie();
+    if(serie_id != '') {
+        carregaDadosComponentesSerie(area_conhecimento_id);
     }
     reloadChosenAnosLetivos($j('.anos_letivos'));
 }
@@ -298,13 +425,13 @@ function updateAreaConhecimento(){
 
 function handleGetAreaConhecimentoSerie(response) {
     $j('#ref_cod_area_conhecimento').val('').trigger('liszt:updated');
-    $j.each(response['options'], function(id,nome) {
-        $j("#ref_cod_area_conhecimento").children("[value=" + id + "]").attr('selected', '');
+  $j.each(response['options'], function(index, item) {
+        $j("#ref_cod_area_conhecimento").children("[value=" + item.id + "]").attr('selected', '');
         $j("#ref_cod_area_conhecimento").chosen().trigger("chosen:updated");
-        $j('#componentes').append(htmlCabecalhoAreaConhecimento(id, nome));
-        carregaComponentesDaArea(id);
+        let anos_letivos = item.anos_letivos.replace('{', '').replace('}', '');
+        $j('#componentes').append(htmlCabecalhoAreaConhecimento(item.id, item.nome, anos_letivos));
     });
-    chosenOldArray = $j("#ref_cod_area_conhecimento").chosen().val();
+  chosenOldArray = $j("#ref_cod_area_conhecimento").chosen().val();
 }
 
 
@@ -320,21 +447,51 @@ function getAreaConhecimentoSerie(){
     getResources(options);
 }
 
-function htmlCabecalhoAreaConhecimento(id, nome){
+function htmlCabecalhoAreaConhecimento(id, nome, anos_letivos = null) {
+
+    let label = '';
+    if (anos_letivos !== null) {
+      label = '<label></label> <i class="ml-5 fa fa-info-circle" title="Usado em: '  + anos_letivos  + '"></i>';
+    }
     return `<tr id="area_conhecimento_` + id + `"
                 class="area_conhecimento_title">
-                <td colspan="2">` + nome + `</td>
+                <td colspan="2">` + nome + ` ` + label + `
+               </td>
                 <td class="td_check_all">
                 </td>
                 <td colspan="2" style="text-align: right;">
                      <div id="expandClose_` + id + `"
                           onClick="expandClose(` + id + `)"
-                          style="background-image: url(/intranet/imagens/arrow-up2.png);
+                          style="background-image: url(/intranet/imagens/arrow-down2.png);
                                  width: 15px;
                                  height: 15px;
                                  background-size: cover;
                                  float: right;
-                                 cursor: pointer;"/>
+                                 cursor: pointer;">
+                     </div>
+                     <div
+                        id="load_` + id + `"
+                        style="display: none">
+                        <div>
+                            <svg
+                              class="x-spinner-mat"
+                              width="20px"
+                              height="20px"
+                              viewBox="25 25 50 50"
+                              style="text-color: #47728f"
+                            >
+                              <circle
+                                class="path"
+                                cx="50"
+                                cy="50"
+                                r="20"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="5"
+                                stroke-miterlimit="10">
+                              </circle>
+                            </svg>
+                          </div>
                      </div>
                 </td>
             </tr>`;
@@ -376,7 +533,7 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
     var iconCloneTipoNota = '';
     var iconCloneAnosLetivos = '';
 
-    if(firstLine){
+    if(firstLine) {
         iconCloneCargaHoraria = `<a class="clone-values"
                                     onclick="cloneValues(` + id + `,` + componente_id + `, 'carga_horaria')">
                                     <i class="fa fa-clone" aria-hidden="true"></i>
@@ -393,13 +550,15 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
 
     return `<tr class="area_conhecimento_` + id + `">
                 <td colspan="2">
-                    <label>
+                    <label
+                        id="label_componente_` + componente_id + `"
+                    >
                         <input type="checkbox"
                                name="componentes[` + id + componente_id + `][id]"
                                class="check_componente_area_`+ id +`"
                                id="componente_` + componente_id + `"
                                value="` + componente_id + `"
-                               onclick="habilitaCampos(` + componente_id + `)">` +
+                               onclick="habilitaCampos(` + componente_id + ',' + id + ` )">` +
                         componente_nome +
                     `</label>
                 </td>

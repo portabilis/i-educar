@@ -102,7 +102,7 @@ class clsModulesFichaMedicaAluno extends Model
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}ficha_medica_aluno";
 
-        $this->_campos_lista = $this->_todos_campos = ' ref_cod_aluno, altura, peso, grupo_sanguineo,
+        $this->_campos_lista = $this->_todos_campos = ' ref_cod_aluno, grupo_sanguineo,
         fator_rh, alergia_medicamento, desc_alergia_medicamento,alergia_alimento, desc_alergia_alimento,
         doenca_congenita,desc_doenca_congenita, fumante, doenca_caxumba, doenca_sarampo,doenca_rubeola,
         doenca_catapora, doenca_escarlatina, doenca_coqueluche,doenca_outras,  epiletico,
@@ -114,14 +114,6 @@ class clsModulesFichaMedicaAluno extends Model
 
         if (is_numeric($ref_cod_aluno)) {
             $this->ref_cod_aluno = $ref_cod_aluno;
-        }
-
-        if (is_string($altura)) {
-            $this->altura = $altura;
-        }
-
-        if (is_string($peso)) {
-            $this->peso = $peso;
         }
 
         if (is_string($grupo_sanguineo)) {
@@ -307,14 +299,6 @@ class clsModulesFichaMedicaAluno extends Model
             $valores .= "{$gruda}{$this->ref_cod_aluno}";
             $gruda = ', ';
 
-            $campos .= "{$gruda}altura";
-            $valores .= "{$gruda}'{$this->altura}'";
-            $gruda = ', ';
-
-            $campos .= "{$gruda}peso";
-            $valores .= "{$gruda}'{$this->peso}'";
-            $gruda = ', ';
-
             $campos .= "{$gruda}grupo_sanguineo";
             $valores .= "{$gruda}'{$this->grupo_sanguineo}'";
             $gruda = ', ';
@@ -497,11 +481,7 @@ class clsModulesFichaMedicaAluno extends Model
             $db = new clsBanco();
             $set = '';
 
-            $set .= "altura = '{$this->altura}'";
-
-            $set .= ",peso = '{$this->peso}'";
-
-            $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
+            $set .= "grupo_sanguineo = '{$this->grupo_sanguineo}'";
 
             $set .= ",fator_rh = '{$this->fator_rh}'";
 
