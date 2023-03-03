@@ -233,6 +233,13 @@ class LegacySchoolClass extends Model
         );
     }
 
+    protected function multiseries(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->multiseriada === 1,
+        );
+    }
+
     protected function endAcademicYear(): Attribute
     {
         return Attribute::make(
