@@ -38,11 +38,11 @@ class Registro00Import extends Registro00Import2019
             $ibge_code = explode($model->codigoIbgeMunicipio, $model->codigoIbgeDistrito)[1];
             $city = City::where('ibge_code', $model->codigoIbgeMunicipio)->first();
 
-            $district = District::where('city_id', $city->id)
-                ->where('ibge_code', $ibge_code)
-                ->first();
+            // $district = District::where('city_id', $city->id)
+            //     ->where('ibge_code', $ibge_code)
+            //     ->first();
 
-            $school->iddis = $district->getKey();
+            $school->iddis = 0;
         }
 
         $school->poder_publico_parceria_convenio = transformDBArrayInString($model->poderPublicoConveniado) ?: null;

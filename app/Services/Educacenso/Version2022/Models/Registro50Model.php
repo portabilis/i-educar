@@ -29,14 +29,14 @@ class Registro50Model extends Registro50
         }
 
         $this->unidadesCurriculares = array_filter([
-            $arrayColumns[24] ? UnidadesCurriculares::ELETIVAS : null,
-            $arrayColumns[25] ? UnidadesCurriculares::LIBRAS : null,
-            $arrayColumns[26] ? UnidadesCurriculares::LINGUA_INDIGENA : null,
-            $arrayColumns[27] ? UnidadesCurriculares::LINGUA_LITERATURA_ESTRANGEIRA_ESPANHOL : null,
-            $arrayColumns[28] ? UnidadesCurriculares::LINGUA_LITERATURA_ESTRANGEIRA_FRANCES : null,
-            $arrayColumns[29] ? UnidadesCurriculares::LINGUA_LITERATURA_ESTRANGEIRA_OUTRA : null,
-            $arrayColumns[30] ? UnidadesCurriculares::PROJETO_DE_VIDA : null,
-            $arrayColumns[31] ? UnidadesCurriculares::TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS : null,
+            isset($arrayColumns[24]) ? UnidadesCurriculares::ELETIVAS : null,
+            isset($arrayColumns[25]) ? UnidadesCurriculares::LIBRAS : null,
+            isset($arrayColumns[26]) ? UnidadesCurriculares::LINGUA_INDIGENA : null,
+            isset($arrayColumns[27]) ? UnidadesCurriculares::LINGUA_LITERATURA_ESTRANGEIRA_ESPANHOL : null,
+            isset($arrayColumns[28]) ? UnidadesCurriculares::LINGUA_LITERATURA_ESTRANGEIRA_FRANCES : null,
+            isset($arrayColumns[29]) ? UnidadesCurriculares::LINGUA_LITERATURA_ESTRANGEIRA_OUTRA : null,
+            isset($arrayColumns[30]) ? UnidadesCurriculares::PROJETO_DE_VIDA : null,
+            isset($arrayColumns[31]) ? UnidadesCurriculares::TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS : null,
         ]);
     }
 }
