@@ -76,4 +76,9 @@ class LegacySchoolBuilder extends LegacyBuilder
     {
         return $this->where('escola.ativo', 1);
     }
+
+    public function whereActive(int $active): self
+    {
+        return $this->where('escola.ativo', $active);
+    }
 }

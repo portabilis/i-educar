@@ -103,4 +103,9 @@ class LegacyGradeBuilder extends LegacyBuilder
     {
         return $this->where('serie.ativo', 1);
     }
+
+    public function whereActive(int $active): self
+    {
+        return $this->where('serie.ativo', $active);
+    }
 }

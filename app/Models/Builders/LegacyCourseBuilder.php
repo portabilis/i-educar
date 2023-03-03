@@ -146,6 +146,11 @@ class LegacyCourseBuilder extends LegacyBuilder
         return $this->where('curso.ativo', 1);
     }
 
+    public function whereActive(int $active): self
+    {
+        return $this->where('curso.ativo', $active);
+    }
+
     /**
      * Filtra por modalidade Eja
      *
