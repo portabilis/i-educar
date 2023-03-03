@@ -204,7 +204,6 @@ return new class extends clsCadastro {
         }
 
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
-        $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
         $this->campoOculto(nome: 'cod_pessoa_fj', valor: $this->cod_pessoa_fj);
         $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
