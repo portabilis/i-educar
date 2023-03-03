@@ -12,6 +12,7 @@ DECLARE
 BEGIN
 
     cod_falta_aluno_id := (SELECT id FROM modules.falta_aluno WHERE matricula_id = cod_matricula_id ORDER BY id DESC LIMIT 1);
+	cod_escola_id := (SELECT t.ref_ref_cod_escola FROM pmieducar.turma t WHERE cod_turma = cod_turma_id);
 
     qtde_carga_horaria := (
         SELECT carga_horaria :: float
@@ -27,7 +28,6 @@ BEGIN
     );
 
     IF (qtde_carga_horaria IS NULL) THEN
-        cod_escola_id := (SELECT t.ref_ref_cod_escola FROM pmieducar.turma t WHERE cod_turma = cod_turma_id);
         qtde_carga_horaria := (
             SELECT carga_horaria :: float
             FROM pmieducar.escola_serie_disciplina
@@ -45,20 +45,32 @@ BEGIN
         );
     END IF;
 
-    v_total_faltas := (
-        SELECT SUM(quantidade)
-        FROM modules.falta_componente_curricular
-        WHERE falta_aluno_id = cod_falta_aluno_id
-        AND componente_curricular_id = cod_disciplina_id
+    v_hora_falta := (
+        SELECT hora_falta :: float
+        FROM pmieducar.escola_serie_disciplina
+        WHERE escola_serie_disciplina.ref_cod_disciplina = cod_disciplina_id
+        AND escola_serie_disciplina.ref_ref_cod_serie = cod_serie_id
+        AND escola_serie_disciplina.ref_ref_cod_escola = cod_escola_id
     );
 
-    v_hora_falta := (
-        SELECT hora_falta
-        FROM pmieducar.curso c
-        INNER JOIN pmieducar.matricula m
-        ON (c.cod_curso = m.ref_cod_curso)
-        WHERE m.cod_matricula = cod_matricula_id
-    );
+    IF (v_hora_falta IS NULL) THEN
+        v_hora_falta := (
+            SELECT pmieducar :: float
+            FROM modules.componente_curricular_ano_escolar
+            WHERE componente_curricular_ano_escolar.componente_curricular_id = cod_disciplina_id
+            AND componente_curricular_ano_escolar.ano_escolar_id = cod_serie_id
+        );
+    END IF;
+
+    IF (v_hora_falta IS NULL) THEN
+        v_hora_falta := (
+	        SELECT hora_falta
+	        FROM pmieducar.curso c
+	        INNER JOIN pmieducar.matricula m
+	        ON (c.cod_curso = m.ref_cod_curso)
+	        WHERE m.cod_matricula = cod_matricula_id
+	   );
+    END IF;
 
     IF (qtde_carga_horaria = 0) THEN
         RETURN 0;
