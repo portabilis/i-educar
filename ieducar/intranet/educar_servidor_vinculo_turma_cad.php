@@ -26,6 +26,7 @@ return new class extends clsCadastro {
     public $unidades_curriculares;
     public $turma_estrutura_curricular;
     public $nm_turma;
+    public $copia = false;
 
     public function Inicializar()
     {
@@ -79,6 +80,7 @@ return new class extends clsCadastro {
                 }
 
                 if (isset($_GET['copia'])) {
+                    $this->copia = true;
                     $this->ano = date(format: 'Y');
                 }
             }
@@ -121,6 +123,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto(nome: 'id', valor: $this->id);
         $this->campoOculto(nome: 'servidor_id', valor: $this->servidor_id);
+        $this->campoOculto(nome: 'copia', valor: (int) $this->copia);
         $this->inputsHelper()->dynamic(helperNames: 'ano', inputOptions: ['value' => (is_null(value: $ano) ? date(format: 'Y') : $ano)]);
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'curso', 'serie', 'turma']);
 
