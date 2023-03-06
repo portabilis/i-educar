@@ -36,7 +36,7 @@ $j(document).ready(function() {
 
         // Insere o componente no multipleSearch caso não exista
         // e caso não seja um novo vinculo oriundo de uma cópia
-        if (0 == componentecurricular.children("[value=" + value + "]").length && !copiaDeVinculo) {
+        if (0 == componentecurricular.children("[value=" + value + "]").length && copiaDeVinculo === false) {
           addComponenteCurricular(value);
         } else {
           componentecurricular.children("[value=" + value + "]").attr('selected', '');
