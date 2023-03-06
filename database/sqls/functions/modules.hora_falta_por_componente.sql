@@ -32,19 +32,13 @@ BEGIN
         );
     END IF;
 
-    IF (v_hora_falta IS NULL) THEN
-        v_hora_falta := (
-	        SELECT hora_falta
-	        FROM pmieducar.curso c
-	        INNER JOIN pmieducar.matricula m
-	        ON (c.cod_curso = m.ref_cod_curso)
-	        WHERE m.cod_matricula = cod_matricula_id
-	   );
-    END IF;
-
-    IF (qtde_carga_horaria = 0) THEN
-        RETURN 0;
-    END IF;
+    v_hora_falta := (
+        SELECT hora_falta
+        FROM pmieducar.curso c
+                 INNER JOIN pmieducar.matricula m
+                            ON (c.cod_curso = m.ref_cod_curso)
+        WHERE m.cod_matricula = cod_matricula_id
+    );
 
     RETURN  v_hora_falta;
 
