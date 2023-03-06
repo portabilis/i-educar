@@ -8,7 +8,12 @@ DECLARE
     cod_escola_id integer;
 BEGIN
 
-	cod_escola_id := (SELECT t.ref_ref_cod_escola FROM pmieducar.turma t WHERE cod_turma = cod_turma_id);
+	cod_escola_id := (
+        SELECT ref_ref_cod_escola
+        FROM pmieducar.matricula
+        WHERE cod_matricula = cod_matricula_id
+    );
+
     cod_serie_id := (
         SELECT ref_ref_cod_serie
         FROM pmieducar.matricula
@@ -25,7 +30,7 @@ BEGIN
 
     IF (v_hora_falta IS NULL) THEN
         v_hora_falta := (
-            SELECT pmieducar :: float
+            SELECT hora_falta :: float
             FROM modules.componente_curricular_ano_escolar
             WHERE componente_curricular_ano_escolar.componente_curricular_id = cod_disciplina_id
             AND componente_curricular_ano_escolar.ano_escolar_id = cod_serie_id
@@ -35,8 +40,7 @@ BEGIN
     v_hora_falta := (
         SELECT hora_falta
         FROM pmieducar.curso c
-                 INNER JOIN pmieducar.matricula m
-                            ON (c.cod_curso = m.ref_cod_curso)
+        INNER JOIN pmieducar.matricula m ON (c.cod_curso = m.ref_cod_curso)
         WHERE m.cod_matricula = cod_matricula_id
     );
 
