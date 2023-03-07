@@ -72,6 +72,7 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereStudentNameSimilarity($name)
     {
+        dd($name);
         return $this->whereHas(
             'person',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)->orWhereRaw('SOUNDEX(nome) = SOUNDEX(?)', $name)
@@ -190,7 +191,7 @@ class LegacyStudentBuilder extends LegacyBuilder
             )
             ->active();
 
-        if ($studentFilter->studentName) {
+        if ($studentFilter->similarity) {
             $builder->join('cadastro.pessoa', 'pessoa.idpes', '=', 'aluno.ref_idpes');
             $builder->orderByRaw('LEVENSHTEIN(UPPER(nome), UPPER(?), 1, 0, 4), nome ASC', $studentFilter->studentName);
         } else {

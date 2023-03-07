@@ -114,7 +114,7 @@ return new class extends clsListagem {
             'responsableName' => $this->nome_responsavel,
             'perPage' => 20,
             'pageName' => $this->nome,
-            'similarity' => request()->boolean('similaridade'),
+            'similarity' => isset($_GET['similaridade']),
         ];
 
         $this->limite = 20;
