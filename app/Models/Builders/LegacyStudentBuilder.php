@@ -72,8 +72,6 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereStudentNameSimilarity($name)
     {
-        dd($name);
-
         return $this->whereHas(
             'person',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)->orWhereRaw('SOUNDEX(nome) = SOUNDEX(?)', $name)
