@@ -3,9 +3,11 @@
 use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -1035,6 +1037,16 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
+        $enrollments = LegacyEnrollment::query()
+            ->where('ref_cod_matricula', $this->cod_matricula)
+            ->get();
+
+        $enrollmentService = app(EnrollmentService::class);
+
+        foreach ($enrollments as $enrollment) {
+            $enrollmentService->reorderSchoolClass($enrollment);
+        }
+
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_excluir(
