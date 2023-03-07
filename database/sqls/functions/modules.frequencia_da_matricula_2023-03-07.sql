@@ -8,7 +8,6 @@ DECLARE
     v_qtd_dias_letivos_serie NUMERIC;
     v_total_faltas integer;
     v_qtd_horas_serie integer;
-    v_hora_falta FLOAT;
     v_total_hora_falta FLOAT;
 BEGIN
     /*
