@@ -12,7 +12,7 @@ return new class () extends Migration {
     public function up()
     {
         DB::unprepared(
-            'DROP FUNCTION IF EXISTS modules.frequencia_matricula_por_etapa(matricula integer, etapa character varying);'
+            'DROP FUNCTION IF EXISTS modules.frequencia_da_matricula(matricula integer, etapa character varying);'
         );
 
         DB::unprepared(
@@ -28,11 +28,11 @@ return new class () extends Migration {
     public function down()
     {
         DB::unprepared(
-            'DROP FUNCTION IF EXISTS modules.frequencia_matricula_por_etapa(matricula integer, etapa character varying);'
+            'DROP FUNCTION IF EXISTS modules.frequencia_da_matricula(matricula integer, etapa character varying);'
         );
 
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/functions/modules.frequencia_da_matricula_2023-03-07.sql')
+            file_get_contents(__DIR__ . '/../sqls/functions/modules.frequencia_da_matricula.sql')
         );
     }
 };
