@@ -100,7 +100,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ],
 
         'deficiencias' => [
-            'label' => 'Deficiências / habilidades especiais',
+            'label' => 'Deficiências / Transtornos',
             'help' => '',
         ],
 

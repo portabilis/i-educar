@@ -1,13 +1,13 @@
 <?php
 
+use App\Models\LegacyDeficiency;
+
 class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends Portabilis_View_Helper_Input_MultipleSearch
 {
     protected function getOptions($resources)
     {
         if (empty($resources)) {
-            $resources = new clsCadastroDeficiencia();
-            $resources = $resources->lista();
-            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_deficiencia', 'nm_deficiencia');
+            $resources = LegacyDeficiency::orderBy('nm_deficiencia')->pluck('nm_deficiencia', 'cod_deficiencia')->toArray();
         }
 
         return $this->insertOption(null, '', $resources);

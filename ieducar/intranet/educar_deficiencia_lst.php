@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDeficiency;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -17,31 +19,21 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-            'Deficiência'
+            'Deficiência e transtorno'
         ]);
 
         // Filtros de Foreign Keys
 
         // outros Filtros
-        $this->campoTexto(nome: 'nm_deficiencia', campo: 'Deficiência', valor: $this->nm_deficiencia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
+        $this->campoTexto(nome: 'nm_deficiencia', campo: 'Deficiência e transtorno', valor: $this->nm_deficiencia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
-        $obj_deficiencia = new clsCadastroDeficiencia();
-        $obj_deficiencia->setOrderby('nm_deficiencia ASC');
-        $obj_deficiencia->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
-
-        $lista = $obj_deficiencia->lista(
-            int_cod_deficiencia: $this->cod_deficiencia,
-            str_nm_deficiencia: $this->nm_deficiencia
-        );
-
-        $total = $obj_deficiencia->_total;
+        $lista = LegacyDeficiency::orderBy('nm_deficiencia')->paginate(perPage: $this->limite, columns: ['cod_deficiencia', 'nm_deficiencia'], pageName: 'pagina_' . $this->nome);
+        $total = $lista->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
                 // muda os campos data
 
@@ -60,7 +52,7 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Listagem de deficiência', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Listagem de deficiência e transtorno', breadcrumbs: [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
     }
