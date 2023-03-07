@@ -81,7 +81,6 @@ INSERT INTO public.menus VALUES (118, 51, 'Calendários', NULL, NULL, NULL, 9, 4
 INSERT INTO public.menus VALUES (119, 82, 'Unificação de alunos', 'Unificação de alunos', '/unificacao-aluno', NULL, 0, 4, 999847, 999847, 999927, true, NULL, NULL);
 INSERT INTO public.menus VALUES (120, 83, 'Bloqueio de lançamento de notas e faltas', 'Bloqueio de lançamento de notas e faltas', '/intranet/educar_bloqueio_lancamento_faltas_notas_lst.php', NULL, 0, 4, 999848, 999848, 999928, true, NULL, NULL);
 INSERT INTO public.menus VALUES (121, 83, 'Bloqueio do ano letivo', 'Bloqueio do ano letivo', '/intranet/educar_bloqueio_ano_letivo_lst.php', NULL, 0, 4, 21251, 21251, 999928, true, NULL, NULL);
-INSERT INTO public.menus VALUES (122, 83, 'Vagas por série/ano', 'Vagas por série/ano', '/intranet/educar_serie_vaga_lst.php', NULL, 2, 4, 21253, 21253, 999928, true, NULL, NULL);
 INSERT INTO public.menus VALUES (123, 84, 'Tipos de cor ou raça', 'Tipos de cor ou raça da pessoa', '/intranet/educar_raca_lst.php', NULL, 0, 4, 678, 21223, 999934, true, NULL, NULL);
 INSERT INTO public.menus VALUES (124, 84, 'Tipos de deficiência', 'Tipos de deficiência da pessoa', '/intranet/educar_deficiencia_lst.php', NULL, 0, 4, 631, 21170, 999934, true, NULL, NULL);
 INSERT INTO public.menus VALUES (125, 84, 'Tipos de religião', 'Tipos de religião da pessoa', '/intranet/educar_religiao_lst.php', NULL, 0, 4, 579, 21219, 999934, true, NULL, NULL);
