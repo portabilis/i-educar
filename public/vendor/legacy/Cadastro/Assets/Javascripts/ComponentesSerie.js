@@ -157,6 +157,8 @@ function habilitaComponente(componenteId) {
   $j( '#carga_horaria_' + componenteId ).prop("disabled", false);
   $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
   $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
+
+  reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ))
 }
 
 function desabilitaComponente(componenteId) {
