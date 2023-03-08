@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends P
     protected function getOptions($resources)
     {
         if (empty($resources)) {
-            $resources = LegacyDeficiency::orderBy('nm_deficiencia')->pluck('nm_deficiencia', 'cod_deficiencia')->toArray();
+            $resources = LegacyDeficiency::orderBy('nm_deficiencia')->where('deficiency_type_id', 1)->pluck('nm_deficiencia', 'cod_deficiencia')->toArray();
         }
 
         return $this->insertOption(null, '', $resources);
