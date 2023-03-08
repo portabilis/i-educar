@@ -66,28 +66,6 @@
   }
   }
 
-  function getHabilitacao(xml_habilitacao)
-  {
-    var campoHabilitacao = document.getElementById('habilitacao');
-    var DOM_array = xml_habilitacao.getElementsByTagName( "habilitacao" );
-
-    if (DOM_array.length) {
-    campoHabilitacao.length = 1;
-    campoHabilitacao.options[0].text = 'Selecione uma habilitação';
-    campoHabilitacao.disabled = false;
-
-    for (var i = 0; i < DOM_array.length; i++) {
-    campoHabilitacao.options[campoHabilitacao.options.length] = new Option(
-    DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_habilitacao"),
-    false, false
-    );
-  }
-  }
-    else {
-    campoHabilitacao.options[0].text = 'A instituição não possui nenhuma habilitação';
-  }
-  }
-
   document.getElementById('ref_cod_instituicao').onchange = function()
   {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -107,11 +85,6 @@
     campoTipoRegime.disabled = true;
     campoTipoRegime.options[0].text = 'Carregando tipo de regime';
 
-    var campoHabilitacao = document.getElementById('habilitacao');
-    campoHabilitacao.length = 1;
-    campoHabilitacao.disabled = true;
-    campoHabilitacao.options[0].text = 'Carregando habilitação';
-
     var xml_nivel_ensino = new ajax(getNivelEnsino);
     xml_nivel_ensino.envia("educar_nivel_ensino_xml.php?ins="+campoInstituicao);
 
@@ -120,9 +93,6 @@
 
     var xml_tipo_regime = new ajax(getTipoRegime);
     xml_tipo_regime.envia("educar_tipo_regime_xml.php?ins="+campoInstituicao);
-
-    var xml_habilitacao = new ajax(getHabilitacao);
-    xml_habilitacao.envia("educar_habilitacao_xml.php?ins="+campoInstituicao);
 
     if (this.value == '') {
     $('img_nivel_ensino').style.display = 'none;';
