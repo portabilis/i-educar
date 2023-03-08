@@ -138,7 +138,9 @@ return new class () extends clsCadastro {
                 $retorno = 'Editar';
             }
 
-            $this->ano = $registro->calendarYear->ano;
+            $this->ano = LegacyCalendarYear::query()
+                ->where('cod_calendario_ano_letivo', $this->ref_cod_calendario_ano_letivo)
+                ->value('ano');
         }
 
         $this->url_cancelar = sprintf(
