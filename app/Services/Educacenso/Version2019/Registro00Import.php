@@ -5,7 +5,6 @@ namespace App\Services\Educacenso\Version2019;
 use App\Models\City;
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
-use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
