@@ -32,7 +32,7 @@ return new class () extends clsCadastro {
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
         if (is_numeric(value: $this->cod_calendario_ano_letivo)) {
-            $registro  = LegacyCalendarYear::find($this->cod_calendario_ano_letivo)->getAttributes();
+            $registro  = LegacyCalendarYear::find($this->cod_calendario_ano_letivo)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

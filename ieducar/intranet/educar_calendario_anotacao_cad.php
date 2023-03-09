@@ -39,7 +39,7 @@ return new class () extends clsCadastro {
             );
         }
         if (is_numeric(value: $this->cod_calendario_anotacao)) {
-            $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)->getAttributes();
+            $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)?->getAttributes();
 
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
