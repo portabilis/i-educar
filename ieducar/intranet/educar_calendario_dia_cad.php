@@ -169,7 +169,7 @@ return new class () extends clsCadastro {
             valor: $this->ref_cod_calendario_ano_letivo
         );
 
-        $det_calendario_ano_letivo = LegacyCalendarYear::find($this->ref_cod_calendario_ano_letivo)->getAttributes();
+        $det_calendario_ano_letivo = LegacyCalendarYear::find($this->ref_cod_calendario_ano_letivo)?->getAttributes();
         $ref_cod_escola = $det_calendario_ano_letivo['ref_cod_escola'];
 
         $this->campoRotulo(nome: 'ano', campo: 'Ano Letivo', valor: $this->ano);
