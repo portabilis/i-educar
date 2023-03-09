@@ -112,7 +112,7 @@ return new class extends clsCadastro {
             }
             $obj_aluno = new clsPmieducarAluno();
             $det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
-            array_shift($det_aluno);
+            $det_aluno = current($det_aluno);
 
             $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
         } else {

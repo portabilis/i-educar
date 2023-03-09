@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyInstitution;
 use App\Models\MigratedDiscipline;
 use Illuminate\Support\Facades\DB;
 
@@ -137,13 +138,15 @@ class ComponenteCurricularController extends ApiCoreController
             $serieId       = $this->getRequest()->serie_id;
             $ano       = $this->getRequest()->ano;
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($serieId, $escolaId, null, null, null, true, $ano);
+            $componente_curricular_turma = LegacyInstitution::whereHas('schools', fn ($q) => $q->where('cod_escola', $escolaId))->value('componente_curricular_turma');
             $componentesCurriculares = [];
-            $componentesCurriculares = array_map(function ($componente) {
+            $componentesCurriculares = array_map(function ($componente) use ($componente_curricular_turma){
                 return [
                     'id' => $componente->id,
                     'nome' => $componente->nome,
                     'carga_horaria' => $componente->cargaHoraria,
                     'abreviatura' => $componente->abreviatura,
+                    'permite_por_turma' => $componente_curricular_turma
                 ];
             }, array_values($componentes));
 

@@ -4,6 +4,7 @@ use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
+use App\Models\LegacyStageType;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
 
@@ -383,12 +384,9 @@ return new class extends clsCadastro {
 
         $this->montaListaComponentesSerieEscola();
 
-        $objTemp = new clsPmieducarModulo();
-        $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
-
-        $lista = $objTemp->lista(
-            int_ativo: 1
-        );
+        $lista = LegacyStageType::query()->where('ativo', 1)
+            ->orderBy(column: 'nm_tipo', direction: 'ASC')
+            ->get()->toArray();
 
         $opcoesCampoModulo = [];
 
@@ -678,8 +676,7 @@ return new class extends clsCadastro {
                         $checked = 'checked="checked"';
                     }
 
-                    if (is_null(value: $componentes[$registro->id]->cargaHoraria) ||
-                        0 == $componentes[$registro->id]->cargaHoraria) {
+                    if (is_null(value: $componentes[$registro->id]->cargaHoraria)) {
                         $usarComponente = true;
                     } else {
                         $cargaHoraria = $componentes[$registro->id]->cargaHoraria;
@@ -711,6 +708,15 @@ return new class extends clsCadastro {
             } else {
                 $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
             }
+        } else {
+            $this->campoCheck(
+                nome: 'definir_componentes_diferenciados',
+                campo: 'Definir componentes curriculares diferenciados',
+                valor: false,
+                desc: null,
+                disable: true,
+                dica: 'Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado'
+            );
         }
 
         $help = [];

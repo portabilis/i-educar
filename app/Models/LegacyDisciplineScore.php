@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Reports\Util;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -42,5 +43,20 @@ class LegacyDisciplineScore extends Model
     public function registrationScore()
     {
         return $this->belongsTo(LegacyRegistrationScore::class, 'nota_aluno_id');
+    }
+
+    public function discipline(): BelongsTo
+    {
+        return $this->belongsTo(LegacyDiscipline::class, 'componente_curricular_id');
+    }
+
+    public function score(int $decimalPlaces = 1, bool $isGeneralAbsence = false): string|null
+    {
+        $score = $isGeneralAbsence ? 0 : $this->nota_arredondada;
+        if (!is_numeric($score) || empty($score)) {
+            return $score;
+        }
+
+        return Util::format($score, $decimalPlaces);
     }
 }

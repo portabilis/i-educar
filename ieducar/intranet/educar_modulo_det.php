@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyStageType;
+
 return new class extends clsDetalhe {
     public $cod_modulo;
     public $ref_usuario_exc;
@@ -18,16 +20,13 @@ return new class extends clsDetalhe {
 
         $this->cod_modulo = $_GET['cod_modulo'];
 
-        $tmp_obj = new clsPmieducarModulo(cod_modulo: $this->cod_modulo);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyStageType::find($this->cod_modulo);
 
         if (!$registro) {
             $this->simpleRedirect(url: 'educar_modulo_lst.php');
         }
-
-        $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
-        $obj_instituicao_det = $obj_instituicao->detalhe();
-        $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
+        $registro['ref_cod_instituicao'] = $registro->institution->nm_instituicao;
+        $registro = $registro->getAttributes();
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);

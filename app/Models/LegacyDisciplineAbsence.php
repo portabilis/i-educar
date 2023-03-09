@@ -34,4 +34,9 @@ class LegacyDisciplineAbsence extends Model
     {
         return $this->belongsTo(LegacyStudentAbsence::class, 'falta_aluno_id');
     }
+
+    public function absence(bool $isGeneralAbsence = false): int
+    {
+        return $isGeneralAbsence ? 0 : $this->quantidade;
+    }
 }

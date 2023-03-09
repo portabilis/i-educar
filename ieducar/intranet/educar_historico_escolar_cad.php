@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Country;
+use App\Models\LegacyInstitution;
 use App\Models\State;
 
 return new class extends clsCadastro {
@@ -153,13 +154,13 @@ return new class extends clsCadastro {
 
         $lista_pais_origem = Country::query()->orderBy('name')->pluck(column: 'name', key: 'id')->prepend(value: 'Selecione um país', key: '');
 
-        $this->campoLista(nome: 'idpais', campo: 'País da Escola', valor: $lista_pais_origem, default: $countryId ?? 45);
+        $this->campoLista(nome: 'idpais', campo: 'País da Escola', valor: $lista_pais_origem, default: $countryId ?? 45, obrigatorio: false);
 
         $lista_estado = ['' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
 
-        $this->campoLista(nome: 'escola_uf', campo: 'Estado da Escola', valor: $lista_estado, default: $this->escola_uf);
+        $this->campoLista(nome: 'escola_uf', campo: 'Estado da Escola', valor: $lista_estado, default: $this->escola_uf, obrigatorio: false);
 
-        $options = ['label' => 'Cidade da Escola', 'required' => true];
+        $options = ['label' => 'Cidade da Escola', 'required' => false];
 
         $helperOptions = [
             'objectName' => 'escola_cidade',
@@ -285,6 +286,8 @@ return new class extends clsCadastro {
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
+        $instituicao = $instituicao = LegacyInstitution::active()->first();
+
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
             ref_usuario_cad: $this->pessoa_logada,
@@ -293,13 +296,13 @@ return new class extends clsCadastro {
             carga_horaria: $this->carga_horaria,
             dias_letivos: $this->dias_letivos,
             escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade),
-            escola_uf: $this->escola_uf,
+            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao?->cidade),
+            escola_uf: $this->escola_uf ?: $instituicao?->ref_sigla_uf,
             observacao: $this->observacao,
             aprovado: $this->aprovado,
             ativo: 1,
             faltas_globalizadas: $this->faltas_globalizadas,
-            ref_cod_instituicao: $this->ref_cod_instituicao,
+            ref_cod_instituicao: $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
             origem: 1,
             extra_curricular: $this->extra_curricular,
             frequencia: $this->frequencia,
@@ -364,6 +367,8 @@ return new class extends clsCadastro {
         $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
+        $instituicao = LegacyInstitution::active()->first();
+
         $obj = new clsPmieducarHistoricoEscolar(
             ref_cod_aluno: $this->ref_cod_aluno,
             sequencial: $this->sequencial,
@@ -373,13 +378,13 @@ return new class extends clsCadastro {
             carga_horaria: $this->carga_horaria,
             dias_letivos: $this->dias_letivos,
             escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade),
-            escola_uf: $this->escola_uf,
+            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao?->cidade),
+            escola_uf: $this->escola_uf ?: $instituicao?->ref_sigla_uf,
             observacao: $this->observacao,
             aprovado: $this->aprovado,
             ativo: 1,
             faltas_globalizadas: $faltasGlobalizadas,
-            ref_cod_instituicao: $this->ref_cod_instituicao,
+            ref_cod_instituicao: $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
             origem: 1,
             extra_curricular: $this->extra_curricular,
             frequencia: $this->frequencia,
