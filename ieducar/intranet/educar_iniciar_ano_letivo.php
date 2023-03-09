@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
     public $ref_cod_escola;
@@ -33,11 +35,9 @@ return new class extends clsCadastro {
         /**
          * verifica se existe ano letivo
          */
+        $det_ano = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->first(['andamento']);
 
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo(ref_cod_escola: $this->ref_cod_escola, ano: $this->ano);
-        $det_ano = $obj_ano_letivo->detalhe();
-
-        if (!$obj_ano_letivo->detalhe()) {
+        if (!$det_ano) {
             $this->simpleRedirect('educar_escola_lst.php');
         }
 
@@ -62,15 +62,21 @@ return new class extends clsCadastro {
          *  INICIALIZA ano letivo
          */
 
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo(ref_cod_escola: $this->ref_cod_escola, ano: $this->ano, ref_usuario_cad: $this->pessoa_logada, ref_usuario_exc: $this->pessoa_logada, andamento: 1, data_cadastro: null, data_exclusao: null, ativo: 1);
-        if (!$obj_ano_letivo->edita()) {
+        $obj_ano_letivo = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->active()->first();
+
+        if ($obj_ano_letivo) {
+            $obj_ano_letivo->update([
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'andamento' => 1
+            ]);
+
             echo "<script>
-                    alert('Erro ao finalizar o ano letivo!');
+                    alert('Ano letivo inicializado com sucesso!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
         } else {
             echo "<script>
-                    alert('Ano letivo inicializado com sucesso!');
+                    alert('Erro ao finalizar o ano letivo!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
         }
@@ -109,15 +115,21 @@ return new class extends clsCadastro {
          *  FINALIZA ano letivo
          */
 
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo(ref_cod_escola: $this->ref_cod_escola, ano: $this->ano, ref_usuario_cad: $this->pessoa_logada, ref_usuario_exc: $this->pessoa_logada, andamento: 2, data_cadastro: null, data_exclusao: null, ativo: 1);
-        if (!$obj_ano_letivo->edita()) {
+        $obj_ano_letivo = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->active()->first();
+
+        if ($obj_ano_letivo) {
+            $obj_ano_letivo->update([
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'andamento' => 2
+            ]);
+
             echo "<script>
-                    alert('Erro ao finalizar o ano letivo!');
+                    alert('Ano letivo finalizado com sucesso!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
         } else {
             echo "<script>
-                    alert('Ano letivo finalizado com sucesso!');
+                    alert('Erro ao finalizar o ano letivo!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
         }

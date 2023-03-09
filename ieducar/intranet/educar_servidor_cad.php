@@ -2,6 +2,7 @@
 
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeePosgraduate;
+use App\Models\LegacyAbsenceDelay;
 use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
@@ -846,7 +847,9 @@ JS;
 
     public function excluiFaltaAtraso()
     {
-        (new clsPmieducarFaltaAtraso())->excluiTodosPorServidor($this->cod_servidor);
+        LegacyAbsenceDelay::query()
+            ->where('ref_cod_servidor', $this->cod_servidor)
+            ->delete();
     }
 
     public function excluiFuncoesRemovidas($funcoes)

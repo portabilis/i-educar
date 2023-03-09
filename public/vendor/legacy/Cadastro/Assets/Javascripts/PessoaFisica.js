@@ -1,5 +1,10 @@
 // before page is ready
 
+const ignoreValidation = [
+  '000.000.000-00'
+];
+const obrigarCPF = $j("#obrigarCPF");
+
 function hrefToCreateParent(parentType) {
   return '/intranet/atendidos_cad.php?parent_type=' + parentType;
 }
@@ -147,7 +152,7 @@ var validatesCpf = function() {
 
   $cpfNotice.hide();
 
-  if (cpf && ! validationUtils.validatesCpf(cpf)) {
+  if (cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && ! validationUtils.validatesCpf(cpf)) {
     $cpfNotice.html(stringUtils.toUtf8('O CPF informado é inválido')).slideDown('fast');
 
     // não usado $cpfField.focus(), pois isto prenderia o usuário a página,
@@ -166,7 +171,7 @@ var validatesUniquenessOfCpf = function() {
 
   $cpfNotice.hide();
 
-  if(cpf && validatesCpf())
+  if ((obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && cpf && validatesCpf())
     getPersonByCpf(cpf);
 }
 
@@ -197,7 +202,7 @@ var submitForm = function(event) {
     validateFieldSUS();
   }
 
-  if ($cpfField.val()) {
+  if ( !ignoreValidation.includes($cpfField.val()) && $cpfField.val()) {
     $j(document).data('submit_form_after_ajax_validation', true);
     validatesUniquenessOfCpf();
   }
