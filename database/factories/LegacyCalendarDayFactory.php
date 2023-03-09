@@ -14,8 +14,6 @@ class LegacyCalendarDayFactory extends Factory
         return [
             'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->unique()->make(),
             'ref_usuario_cad' =>  fn () => LegacyUserFactory::new()->unique()->make(),
-            //'data_cadastro',
-            //'data_exclusao',
             'ativo' => 1,
             'ref_cod_calendario_ano_letivo' => fn () => LegacyCalendarYearFactory::new()->create(),
             'mes' => now()->month,
