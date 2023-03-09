@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacySchoolAcademicYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -76,9 +78,9 @@ return new class extends clsCadastro {
 
         $ano_array = [ '' => 'Selecione um ano' ];
         if ($this->ref_cod_escola) {
-            $obj_anos = new clsPmieducarEscolaAnoLetivo();
-            $lista_ano = $obj_anos->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ano: null, int_ref_usuario_cad: null, int_ref_usuario_exc: null, int_andamento: 2, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
-            if ($lista_ano) {
+            $lista_ano = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->notInProgress()->active()->get(['ano']);
+
+            if ($lista_ano->isNotEmpty()) {
                 foreach ($lista_ano as $ano) {
                     $ano_array["{$ano['ano']}"] = $ano['ano'];
                 }
@@ -95,9 +97,8 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
-        $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
-        $data_inicio = $obj_ano_letivo_modulo->menorData(ref_ano: $this->ano, ref_ref_cod_escola: $this->ref_cod_escola);
-        $data_fim = $obj_ano_letivo_modulo->maiorData(ref_ano: $this->ano, ref_ref_cod_escola: $this->ref_cod_escola);
+        $data_inicio = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->min('data_inicio');
+        $data_fim = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->max('data_fim');
 
         if ($data_inicio && $data_fim) {
             $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo();
@@ -140,10 +141,8 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
-
-        $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
-        $data_inicio = $obj_ano_letivo_modulo->menorData(ref_ano: $this->ano, ref_ref_cod_escola: $this->ref_cod_escola);
-        $data_fim = $obj_ano_letivo_modulo->maiorData(ref_ano: $this->ano, ref_ref_cod_escola: $this->ref_cod_escola);
+        $data_inicio = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->min('data_inicio');
+        $data_fim = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->max('data_fim');
 
         if ($data_inicio && $data_fim) {
             $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo(cod_calendario_ano_letivo: $this->cod_calendario_ano_letivo, ref_cod_escola: $this->ref_cod_escola, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ano: $this->ano, data_cadastra: null, data_exclusao: null, ativo: 1/*, $data_inicio,$data_fim*/);
