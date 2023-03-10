@@ -52,7 +52,13 @@ return new class extends clsListagem {
 
         $this->campoRA(nome: 'aluno_estado_id', campo: 'Código rede estadual do aluno (RA)', valor: $this->aluno_estado_id);
         $this->campoTexto(nome: 'nome_aluno', campo: 'Nome do aluno', valor: $this->nome_aluno, tamanhovisivel: 50, tamanhomaximo: 255);
-        $this->campoCheck(nome: 'similaridade', campo: 'Similaridade', valor: request()->has('similaridade'), dica: 'Ativar busca por similaridade');
+        $this->campoCheck(
+            nome: 'similaridade',
+            campo: 'Similaridade',
+            valor: request()->has('similaridade'),
+            desc: 'Ativar busca por similaridade',
+            dica: 'Exibe grafias parecidas com o nome do aluno que você está buscando'
+        );
         $this->campoData(nome: 'data_nascimento', campo: 'Data de Nascimento', valor: $this->data_nascimento);
         $this->campoCpf(nome: 'cpf_aluno', campo: 'CPF', valor: $this->cpf_aluno);
         $this->campoTexto(nome: 'rg_aluno', campo: 'RG', valor: $this->rg_aluno);
