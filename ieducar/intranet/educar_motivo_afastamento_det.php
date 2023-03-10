@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\WithdrawalReason;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -28,8 +29,7 @@ return new class extends clsDetalhe {
 
         $this->cod_motivo_afastamento=$_GET['cod_motivo_afastamento'];
 
-        $tmp_obj = new clsPmieducarMotivoAfastamento(cod_motivo_afastamento: $this->cod_motivo_afastamento);
-        $registro = $tmp_obj->detalhe();
+        $registro = WithdrawalReason::find($this->cod_motivo_afastamento)?->getAttributes();
 
         if (! $registro) {
             throw new HttpResponseException(

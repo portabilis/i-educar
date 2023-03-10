@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyStageType;
 
 return new class extends clsCadastro {
@@ -95,12 +96,16 @@ return new class extends clsCadastro {
         }
 
         $obj = new LegacyStageType();
+
         $obj->ref_usuario_cad = $this->pessoa_logada;
         $obj->nm_tipo = $this->nm_tipo;
-        $obj->descricao = $this->descricao;
         $obj->num_etapas = $this->num_etapas;
-        $obj->num_meses = $this->num_meses;
-        $obj->num_semanas = $this->num_semanas;
+        $obj->descricao = $this->descricao;
+
+        !empty($this->num_meses) ? $obj->num_meses = $this->num_meses : $obj->num_meses = null;
+        !empty($this->num_semanas) ? $obj->num_semanas = $this->num_semanas : $obj->num_semanas = null;
+
+
         $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
         $obj->ativo = 1;
 
@@ -131,9 +136,12 @@ return new class extends clsCadastro {
         $obj->ref_usuario_cad = $this->pessoa_logada;
         $obj->nm_tipo = $this->nm_tipo;
         $obj->descricao = $this->descricao;
-        $obj->num_etapas = $this->num_etapas;
-        $obj->num_meses = $this->num_meses;
-        $obj->num_semanas = $this->num_semanas;
+        if (!empty($this->num_etapas)) {
+            $obj->num_etapas = $this->num_etapas;
+        }
+        !empty($this->num_meses) ? $obj->num_meses = $this->num_meses : $obj->num_meses = null;
+        !empty($this->num_semanas) ? $obj->num_semanas = $this->num_semanas : $obj->num_semanas = null;
+
         $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
         $obj->ativo = 1;
 
@@ -178,10 +186,9 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $obj = new clsPmieducarAnoLetivoModulo($this->cod_modulo);
-        $result = $obj->lista(int_ref_cod_modulo: $this->cod_modulo);
-
-        return !empty($result);
+        return LegacyAcademicYearStage::query()
+            ->where('ref_cod_modulo', $this->cod_modulo)
+            ->exists();
     }
 
     public function existeEtapaNaTurma()

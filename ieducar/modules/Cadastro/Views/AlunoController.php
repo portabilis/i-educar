@@ -100,7 +100,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ],
 
         'deficiencias' => [
-            'label' => 'Deficiências / habilidades especiais',
+            'label' => 'Deficiências',
+            'help' => '',
+        ],
+
+        'transtornos' => [
+            'label' => 'Transtornos',
             'help' => '',
         ],
 
@@ -115,10 +120,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ],
 
         'sus' => ['label' => 'Número da Carteira do SUS'],
-
-        'altura' => ['label' => 'Altura/Metro'],
-
-        'peso' => ['label' => 'Peso/Kg'],
 
         'grupo_sanguineo' => ['label' => 'Grupo sanguíneo'],
 
@@ -378,7 +379,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->date('data_nascimento', $options);
 
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],
@@ -392,7 +393,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = [
             'required' => false,
             'label' => '',
-            'placeholder' => 'Data emiss\u00e3o',
+            'placeholder' => 'Data emissão',
             'value' => $documentos['data_exp_rg'],
             'size' => 19
         ];
@@ -443,11 +444,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
        /** @var User $user */
         $user = Auth::user();
 
-        $obrigarDocumentoPessoa = LegacyInstitution::query()
-            ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
+        if ($user->ref_cod_instituicao) {
+            $obrigarCpf = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $obrigarCpf = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
 
-        $this->campoOculto('obrigarCPF', (int) $obrigarDocumentoPessoa);
-        $this->campoCpf('id_federal', 'CPF', $valorCpf, $obrigarDocumentoPessoa);
+        $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
+        $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
         $options = [
             'required' => false,
@@ -793,6 +799,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 
+        $helperOptions = ['objectName' => 'transtornos'];
+        $options = [
+            'label' => $this->_getLabel('transtornos'),
+            'size' => 50,
+            'required' => false,
+            'options' => ['value' => null]
+        ];
+
+        $this->inputsHelper()->multipleSearchTranstornos('', $options, $helperOptions);
+
         $options = ['label' => $this->_getLabel('alfabetizado'), 'value' => 'checked'];
         $this->inputsHelper()->checkbox('alfabetizado', $options);
 
@@ -829,15 +845,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->numeric('historico_peso');
 
         $this->campoTabelaFim();
-
-
-        $options = ['label' => $this->_getLabel('altura'), 'size' => 5, 'max_length' => 4, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->numeric('altura', $options);
-
-
-        $options = ['label' => $this->_getLabel('peso'), 'size' => 5, 'max_length' => 6, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->numeric('peso', $options);
-
 
         $options = ['label' => $this->_getLabel('grupo_sanguineo'), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('grupo_sanguineo', $options);

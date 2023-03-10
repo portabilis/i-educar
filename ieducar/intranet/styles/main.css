@@ -3,27 +3,27 @@
 /**
  * Sprites
  */
-.sprite-buttons, 
+.sprite-buttons,
 span.confirm a {
   background: url('/intranet/static/images/sprite-buttons.png') no-repeat top left;
 }
 
-.sp-accept, 
-span.confirm.yes a { 
-  background-position: 0 0; 
-} 
+.sp-accept,
+span.confirm.yes a {
+  background-position: 0 0;
+}
 
-.sp-add { 
-  background-position: 0 -116px; 
-} 
+.sp-add {
+  background-position: 0 -116px;
+}
 
-.sp-cancel, 
-span.confirm.no a { 
-  background-position: 0 -232px; 
-} 
+.sp-cancel,
+span.confirm.no a {
+  background-position: 0 -232px;
+}
 
-.sp-delete { 
-  background-position: 0 -348px; 
+.sp-delete {
+  background-position: 0 -348px;
 }
 
 /**
@@ -31,9 +31,9 @@ span.confirm.no a {
  */
 form div.error {
   padding: 15px;
-  border-top: 1px solid #F00; 
+  border-top: 1px solid #F00;
   border-bottom: 1px solid #F00;
-  background: #FBECEF; 
+  background: #FBECEF;
   color: #220000;
   font-size: 12px;
 }
@@ -64,7 +64,7 @@ span.confirm a {
   margin-right: 15px;
   padding: 5px 15px 5px 25px;
 }
- 
+
 span.confirm.yes a {
   background-position: 4px 4px;
   border-left: 3px solid #006400;
@@ -73,4 +73,48 @@ span.confirm.yes a {
 span.confirm.no a {
   background-position: 4px -228px;
   border-left: 3px solid #F00;
+}
+
+@keyframes x-spin {
+  0% {
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+  25% {
+    transform: rotate3d(0, 0, 1, 90deg);
+  }
+  50% {
+    transform: rotate3d(0, 0, 1, 180deg);
+  }
+  75% {
+    transform: rotate3d(0, 0, 1, 270deg);
+  }
+  100% {
+    transform: rotate3d(0, 0, 1, 359deg);
+  }
+}
+
+@keyframes x-mat-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+.x-spinner-mat {
+  animation: x-spin 2s linear infinite;
+  transform-origin: center center;
+}
+
+.x-spinner-mat .path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: x-mat-dash 1.5s ease-in-out infinite;
 }

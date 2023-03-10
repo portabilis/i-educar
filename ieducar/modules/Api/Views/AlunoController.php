@@ -8,6 +8,7 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
+use App\Models\LegacyStudentHistoricalHeightWeight;
 use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
 use App\Models\SchoolInep;
@@ -234,8 +235,13 @@ class AlunoController extends ApiCoreController
 
         $cpf = $this->getRequest()->id_federal;
 
-        $strictValitation  = LegacyInstitution::query()
-            ->find($user->ref_cod_instituicao)?->obrigar_documento_pessoa;
+        if ($user->ref_cod_instituicao) {
+            $strictValitation = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $strictValitation = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
 
         if ($strictValitation) {
             if (validaCPF($cpf)) {
@@ -245,16 +251,9 @@ class AlunoController extends ApiCoreController
             return false;
         }
 
-        if ($cpf === '000.000.000-00') {
-            return true;
-        }
-
-        if (!empty($cpf) && validaCPF($cpf)) {
-            return true;
-        }
-
         return true;
     }
+
     /**
      * @return bool
      */
@@ -550,7 +549,7 @@ class AlunoController extends ApiCoreController
     {
         $individual = LegacyIndividual::find($this->getRequest()->pessoa_id,['idpes']);
         $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
-        $news = array_filter($this->getRequest()->deficiencias);
+        $news = array_filter(array_merge($this->getRequest()->deficiencias, $this->getRequest()->transtornos));
         $individual->deficiency()->sync($news);
 
         $diff = array_merge(array_diff($old, $news),array_diff($news,$old));
@@ -1537,21 +1536,22 @@ class AlunoController extends ApiCoreController
 
     public function saveHistoricoAlturaPeso($alunoId)
     {
-        $obj = new clsPmieducarAlunoHistoricoAlturaPeso($alunoId);
-
-        // exclui todos
-        $obj->excluir();
+        LegacyStudentHistoricalHeightWeight::query()
+            ->where('ref_cod_aluno', $alunoId)
+            ->delete();
 
         foreach ($this->getRequest()->data_historico as $key => $value) {
             $data_historico = Portabilis_Date_Utils::brToPgSQL($value);
             $altura = $this->getRequest()->historico_altura[$key];
             $peso = $this->getRequest()->historico_peso[$key];
 
+            $obj = new LegacyStudentHistoricalHeightWeight();
+            $obj->ref_cod_aluno = $alunoId;
             $obj->data_historico = $data_historico;
             $obj->altura = $altura;
             $obj->peso = $peso;
 
-            if (!$obj->cadastra()) {
+            if (!$obj->save()) {
                 $this->messenger->append('Erro ao cadastrar histórico de altura e peso.');
             }
         }

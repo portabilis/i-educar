@@ -3,6 +3,7 @@
 use App\Models\City;
 use App\Models\Country;
 use App\Models\LegacyBenefit;
+use App\Models\LegacyDeficiency;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
@@ -189,10 +190,7 @@ return new class extends clsDetalhe {
                 $deficiencia_pessoa = [];
 
                 foreach ($obj_deficiencia_pessoa_lista as $deficiencia) {
-                    $obj_def = new clsCadastroDeficiencia(cod_deficiencia: $deficiencia['ref_cod_deficiencia']);
-                    $det_def = $obj_def->detalhe();
-
-                    $deficiencia_pessoa[$deficiencia['ref_cod_deficiencia']] = $det_def['nm_deficiencia'];
+                    $deficiencia_pessoa[$deficiencia['ref_cod_deficiencia']] = LegacyDeficiency::where('cod_deficiencia', $deficiencia['ref_cod_deficiencia'])->value('nm_deficiencia');
                 }
             }
 
@@ -617,11 +615,7 @@ return new class extends clsDetalhe {
         $reg = $objFichaMedica->detalhe();
 
         if ($reg) {
-            $this->addDetalhe(detalhe: ['<span id="fmedica"></span>Altura/metro', $reg['altura']]);
-            if (trim(string: $reg['peso']) != '') {
-                $this->addDetalhe(detalhe: ['Peso/kg', $reg['peso']]);
-            }
-
+            $this->addDetalhe(detalhe: ['<span id="fmedica"></span>', null]);
             if (trim(string: $reg['grupo_sanguineo']) != '') {
                 $this->addDetalhe(detalhe: ['Grupo sanguíneo', $reg['grupo_sanguineo']]);
             }

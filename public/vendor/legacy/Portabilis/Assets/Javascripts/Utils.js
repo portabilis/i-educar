@@ -377,3 +377,28 @@ const buttonUtils = {
     }
   }
 }
+
+function makeDialog(params) {
+  params.closeOnEscape = false;
+  params.draggable = false;
+  params.modal = true;
+  let size = params.size ?? '500'
+
+  var container = $j('#dialog-container');
+
+  if (container.length < 1) {
+    $j('body').append('<div id="dialog-container" style="width: '+ size + 'px' + ';"></div>');
+    container = $j('#dialog-container');
+  }
+
+  if (container.hasClass('ui-dialog-content')) {
+    container.dialog('destroy');
+  }
+
+  container.empty();
+  container.html(params.content);
+
+  delete params['content'];
+
+  container.dialog(params);
+}

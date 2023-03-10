@@ -61,7 +61,6 @@ class RegistrationService
 
         return LegacyRegistration::query()
             ->with('student.person', 'lastEnrollment')
-            ->where('ref_cod_curso', $schoolClass->course_id)
             ->whereIn('ref_ref_cod_serie', $grades)
             ->where('ref_ref_cod_escola', $schoolClass->school_id)
             ->where('ativo', 1)
