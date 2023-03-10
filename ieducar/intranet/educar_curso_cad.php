@@ -364,7 +364,7 @@ return new class extends clsCadastro {
                 ativo: 1,
                 ref_cod_instituicao: $this->ref_cod_instituicao,
                 padrao_ano_escolar: $this->padrao_ano_escolar,
-                hora_falta: $this->hora_falta / 60,
+                hora_falta: $this->hora_falta === null ? null : $this->hora_falta / 60,
                 multi_seriado: $this->multi_seriado,
                 importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
                 descricao: $this->descricao
@@ -433,7 +433,7 @@ return new class extends clsCadastro {
                 ref_usuario_exc: $this->pessoa_logada,
                 ref_cod_instituicao: $this->ref_cod_instituicao,
                 padrao_ano_escolar: $this->padrao_ano_escolar,
-                hora_falta: $this->hora_falta / 60,
+                hora_falta: $this->hora_falta === null ? null : $this->hora_falta / 60,
                 multi_seriado: $this->multi_seriado,
                 importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
                 descricao: $this->descricao
