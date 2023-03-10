@@ -2,6 +2,7 @@
 
 namespace App\Models\Builders;
 
+use App\Models\LegacySchoolAcademicYear;
 use Illuminate\Support\Collection;
 
 class LegacySchoolAcademicYearBuilder extends LegacyBuilder
@@ -17,7 +18,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
     {
         $this->active()->orderByYear()->filter($filters);
 
-        return $this->resource(['year']);
+        return $this->get(['ano'])->map(fn ($item) => ['year'=> $item->year]);
     }
 
     /**
@@ -51,7 +52,17 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      */
     public function inProgress(): self
     {
-        return $this->where('escola_ano_letivo.andamento', 1);
+        return $this->where('escola_ano_letivo.andamento', LegacySchoolAcademicYear::IN_PROGRESS);
+    }
+
+    /**
+     * Filtra por ano letivos que não estão em andamento
+     *
+     * @return LegacySchoolAcademicYearBuilder
+     */
+    public function notInProgress(): self
+    {
+        return $this->where('escola_ano_letivo.andamento', LegacySchoolAcademicYear::FINALIZED);
     }
 
     /**

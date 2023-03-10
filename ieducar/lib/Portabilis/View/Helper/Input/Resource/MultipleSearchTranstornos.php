@@ -2,23 +2,23 @@
 
 use App\Models\LegacyDeficiency;
 
-class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends Portabilis_View_Helper_Input_MultipleSearch
+class Portabilis_View_Helper_Input_Resource_MultipleSearchTranstornos extends Portabilis_View_Helper_Input_MultipleSearch
 {
     protected function getOptions($resources)
     {
         if (empty($resources)) {
-            $resources = LegacyDeficiency::orderBy('nm_deficiencia')->where('deficiency_type_id', 1)->pluck('nm_deficiencia', 'cod_deficiencia')->toArray();
+            $resources = LegacyDeficiency::orderBy('nm_deficiencia')->where('deficiency_type_id', 2)->pluck('nm_deficiencia', 'cod_deficiencia')->toArray();
         }
 
         return $this->insertOption(null, '', $resources);
     }
 
-    public function multipleSearchDeficiencias($attrName, $options = [])
+    public function multipleSearchTranstornos($attrName, $options = [])
     {
         $defaultOptions = [
-            'objectName' => 'deficiencias',
-            'apiController' => 'Deficiencia',
-            'apiResource' => 'deficiencia-search'
+            'objectName' => 'transtornos',
+            'apiController' => 'Transtorno',
+            'apiResource' => 'transtorno-search'
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -35,7 +35,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends P
 
         $js = "
             if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
-            $optionsVarName.placeholder = 'Selecione as deficiências';
+            $optionsVarName.placeholder = 'Selecione os transtornos';
         ";
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);

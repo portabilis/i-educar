@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\PersonHasPlace;
 
 return new class extends clsDetalhe {
@@ -198,10 +199,7 @@ return new class extends clsDetalhe {
         }
 
         $existe = false;
-
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
-        $obj_ano_letivo->setOrderby(strNomeCampo: 'ano');
-        $lista_ano_letivo = $obj_ano_letivo->lista(int_ref_cod_escola: $this->cod_escola, int_ativo: 1);
+        $lista_ano_letivo = LegacySchoolAcademicYear::query()->whereSchool($this->cod_escola)->active()->orderBy('ano')->get();
 
         $tabela = '<table class=\'anosLetivos\'>';
 
@@ -209,15 +207,14 @@ return new class extends clsDetalhe {
         $canEdit = $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
         $cor = null;
 
-        if ($lista_ano_letivo) {
+        if ($lista_ano_letivo->isNotEmpty()) {
             $existe = true;
             $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Anos letivos</b></td></tr><tr><td>";
             $tabela .= '<table cellpadding="2" cellspacing="2" border="0" align="left" width=\'60%\'>';
             $tabela .= '<tr bgcolor=\'#ccdce6\'><th width=\'90\'>Ano<a name=\'ano_letivo\'/></th><th width=\'70\'>Iniciar</th><th width=\'70\'>Finalizar</th><th width=\'150\'>Editar</th></tr>';
             $cor = $cor == '#FFFFFF' ? '#f5f9fd' : '#FFFFFF';
 
-            $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
-            $existe_ano_andamento = $obj_ano_letivo->lista(int_ref_cod_escola: $this->cod_escola, int_andamento: 1, int_ativo: 1);
+            $existe_ano_andamento = LegacySchoolAcademicYear::query()->whereSchool($this->cod_escola)->active()->inProgress()->exists();
 
             foreach ($lista_ano_letivo as $ano) {
                 if (!$existe_ano_andamento && $ano['andamento'] != 2 && $canEdit) {

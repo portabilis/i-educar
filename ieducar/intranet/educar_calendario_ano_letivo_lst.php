@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem {
@@ -149,17 +150,8 @@ return new class extends clsListagem {
                 $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
                 // Início e término do ano letivo.
-                $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
-
-                $inicio_ano = $obj_ano_letivo_modulo->menorData(
-                    ref_ano: $registro['ano'],
-                    ref_ref_cod_escola: $this->ref_cod_escola
-                );
-
-                $fim_ano = $obj_ano_letivo_modulo->maiorData(
-                    ref_ano: $registro['ano'],
-                    ref_ref_cod_escola: $this->ref_cod_escola
-                );
+                $inicio_ano = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($registro['ano'])->min('data_inicio');
+                $fim_ano = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($registro['ano'])->max('data_fim');
 
                 $inicio_ano = explode(separator: '/', string: dataFromPgToBr(data_original: $inicio_ano));
                 $fim_ano = explode(separator: '/', string: dataFromPgToBr(data_original: $fim_ano));
