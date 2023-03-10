@@ -83,14 +83,6 @@ return new class () extends clsCadastro {
         return $retorno;
     }
 
-    public function formataParaMinuto($tempo) {
-        if ($tempo === null) {
-            return null;
-        }
-
-        return round( $tempo * 60 );
-    }
-
     public function Gerar()
     {
         if ($_POST) {
@@ -228,7 +220,7 @@ return new class () extends clsCadastro {
                 foreach ($registros as $campo) {
                     $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
                     $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = $campo['carga_horaria'];
-                    $this->escola_serie_disciplina_hora_falta[$campo['ref_cod_disciplina']] = $this->formataParaMinuto($campo['hora_falta']);
+                    $this->escola_serie_disciplina_hora_falta[$campo['ref_cod_disciplina']] = round( $campo['hora_falta'] * 60 );
                     $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = $campo['anos_letivos'] ?: [];
 
                     if ($this->definirComponentePorEtapa) {
