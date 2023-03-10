@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
+
 class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputName()
@@ -49,12 +51,9 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
 
     protected function turmasPorAno($escolaId, $ano)
     {
-        $anoLetivo = new clsPmieducarEscolaAnoLetivo();
-        $anoLetivo->ref_cod_escola = $escolaId;
-        $anoLetivo->ano = $ano;
-        $anoLetivo = $anoLetivo->detalhe();
+        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq($ano)->value('turmas_por_ano');
 
-        return $anoLetivo['turmas_por_ano'] == 1;
+        return $turmasPorAno === 1;
     }
 
     public function turma($options = [])

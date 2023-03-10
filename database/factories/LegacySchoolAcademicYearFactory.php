@@ -15,8 +15,7 @@ class LegacySchoolAcademicYearFactory extends Factory
             'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'ano' => now()->year,
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'andamento' => 1,
-            'data_cadastro' => now(),
+            'andamento' => 1
         ];
     }
 }

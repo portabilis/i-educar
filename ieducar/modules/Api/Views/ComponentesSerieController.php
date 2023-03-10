@@ -3,6 +3,7 @@
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyGrade;
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
@@ -188,10 +189,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function getUltimoAnoLetivoAberto()
     {
-        $objEscolaAnoLetivo = new clsPmieducarEscolaAnoLetivo();
-        $ultimoAnoLetivoAberto = $objEscolaAnoLetivo->getUltimoAnoLetivoAberto();
-
-        return $ultimoAnoLetivoAberto;
+        return LegacySchoolAcademicYear::query()->max('ano');
     }
 
     public function getEscolasSerieBySerie($serieId)

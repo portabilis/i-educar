@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 
 class TurmaController extends ApiCoreController
 {
@@ -13,12 +14,9 @@ class TurmaController extends ApiCoreController
 
     protected function turmasPorAno($escolaId, $ano)
     {
-        $anoLetivo = new clsPmieducarEscolaAnoLetivo();
-        $anoLetivo->ref_cod_escola = $escolaId;
-        $anoLetivo->ano = $ano;
-        $anoLetivo = $anoLetivo->detalhe();
+        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq($ano)->value('turmas_por_ano');
 
-        return ($anoLetivo['turmas_por_ano'] == 1);
+        return $turmasPorAno === 1;
     }
 
     protected function getTurmas()

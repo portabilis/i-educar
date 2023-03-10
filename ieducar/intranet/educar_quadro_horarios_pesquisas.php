@@ -1,6 +1,8 @@
 <?php
 
-        $obj_permissoes = new clsPermissoes();
+use App\Models\LegacySchoolAcademicYear;
+
+$obj_permissoes = new clsPermissoes();
         $nivel_usuario  = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         $retorno .= '<tr>
                      <td height="24" colspan="2" class="formdktd">
@@ -155,9 +157,8 @@
 
             // EDITAR
             if ($this->ref_cod_escola) {
-                $obj_esc_ano = new clsPmieducarEscolaAnoLetivo();
-                $lst_esc_ano = $obj_esc_ano->lista($this->ref_cod_escola);
-                if (is_array($lst_esc_ano) && count($lst_esc_ano)) {
+                $lst_esc_ano = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->active()->get(['ano']);
+                if ($lst_esc_ano->isNotEmpty()) {
                     foreach ($lst_esc_ano as $detalhe) {
                         $opcoes_ano["{$detalhe['ano']}"] = "{$detalhe['ano']}";
                     }

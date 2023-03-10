@@ -215,12 +215,11 @@ class Registro00Import implements RegistroImportInterface
      */
     private function createAcademicYear($school)
     {
-        LegacySchoolAcademicYear::create([
+        $schoolAcademicYear = LegacySchoolAcademicYear::create([
             'ref_cod_escola' => $school->getKey(),
             'ano' => $this->year,
             'ref_usuario_cad' => $this->user->id,
             'andamento' => 1,
-            'data_cadastro' => now(),
             'ativo' => 1,
         ]);
 
@@ -236,7 +235,7 @@ class Registro00Import implements RegistroImportInterface
             ]);
         }
 
-        LegacyAcademicYearStage::create([
+        $schoolAcademicYear->academicYearStages()->create([
             'ref_ano' => $this->year,
             'ref_ref_cod_escola' => $school->getKey(),
             'sequencial' => 1,
