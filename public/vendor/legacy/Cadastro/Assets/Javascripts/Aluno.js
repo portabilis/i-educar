@@ -1183,12 +1183,15 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#religiao_id").val(dataResponse.religiao_id);
 
   $deficiencias = $j("#deficiencias");
+  $transtornos = $j("#transtornos");
 
   $j.each(dataResponse.deficiencias, function (id, nome) {
     $deficiencias.children("[value=" + id + "]").attr("selected", "");
+    $transtornos.children("[value=" + id + "]").attr("selected", "");
   });
 
   $deficiencias.trigger("chosen:updated");
+  $transtornos.trigger("chosen:updated");
 
   function habilitaRecursosProvaInep() {
     var deficiencias = $j("#deficiencias").val();

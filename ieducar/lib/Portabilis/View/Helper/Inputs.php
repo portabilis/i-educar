@@ -257,6 +257,11 @@ class Portabilis_View_Helper_Inputs
         $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
     }
 
+    public function multipleSearchTranstornos($attrName, $inputOptions = [], $helperOptions = [])
+    {
+        $this->multipleSearchResourceInput('multipleSearchTranstornos', $attrName, $inputOptions, $helperOptions);
+    }
+
     // TODO remover no futuro #library-package
     public function multipleSearchAssuntos($attrName, $inputOptions = [], $helperOptions = [])
     {
