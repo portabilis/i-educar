@@ -210,26 +210,7 @@ return new class extends clsCadastro {
         $this->campoTexto(nome: 'sgl_curso', campo: 'Sigla Curso', valor: $this->sgl_curso, tamanhovisivel: 15, tamanhomaximo: 15);
         $this->campoTexto(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, tamanhovisivel: 15, tamanhomaximo: 50, duplo: '', descricao: 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
         $this->campoNumero(nome: 'qtd_etapas', campo: 'Quantidade Etapas', valor: $this->qtd_etapas, tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true);
-
-        if (is_numeric(value: $this->hora_falta)) {
-            $this->campoMonetario(
-                nome: 'hora_falta',
-                campo: 'Hora Falta',
-                valor: number_format(num: $this->hora_falta, decimals: 2, decimal_separator: ',', thousands_separator: ''),
-                tamanhovisivel: 5,
-                tamanhomaximo: 5,
-                evento: ''
-            );
-        } else {
-            $this->campoMonetario(
-                nome: 'hora_falta',
-                campo: 'Hora Falta',
-                valor: $this->hora_falta,
-                tamanhovisivel: 5,
-                tamanhomaximo: 5,
-                evento: ''
-            );
-        }
+        $this->campoNumero(nome: 'hora_falta', campo: 'Hora Falta (min)', valor: round($this->hora_falta * 60), tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true);
 
         $this->campoMonetario(
             nome: 'carga_horaria',
@@ -383,7 +364,7 @@ return new class extends clsCadastro {
                 ativo: 1,
                 ref_cod_instituicao: $this->ref_cod_instituicao,
                 padrao_ano_escolar: $this->padrao_ano_escolar,
-                hora_falta: $this->hora_falta,
+                hora_falta: $this->hora_falta / 60,
                 multi_seriado: $this->multi_seriado,
                 importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
                 descricao: $this->descricao
@@ -452,7 +433,7 @@ return new class extends clsCadastro {
                 ref_usuario_exc: $this->pessoa_logada,
                 ref_cod_instituicao: $this->ref_cod_instituicao,
                 padrao_ano_escolar: $this->padrao_ano_escolar,
-                hora_falta: $this->hora_falta,
+                hora_falta: $this->hora_falta / 60,
                 multi_seriado: $this->multi_seriado,
                 importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
                 descricao: $this->descricao
