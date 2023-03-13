@@ -191,6 +191,7 @@ function defaultModal(componenteId) {
 function habilitaComponente(componenteId) {
   $j( '#componente_' + componenteId).attr('checked','checked')
   $j( '#carga_horaria_' + componenteId ).prop("disabled", false);
+  $j( '#hora_falta_' + componenteId ).prop("disabled", false);
   $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
   $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
 
@@ -199,6 +200,7 @@ function habilitaComponente(componenteId) {
 
 function desabilitaComponente(componenteId) {
     $j( '#carga_horaria_' + componenteId ).prop("disabled", true).val('');
+    $j( '#hora_falta_' + componenteId ).prop("disabled", true);
     $j( '#tipo_nota_' + componenteId ).prop("disabled", true).val('');
     $j( '#anos_letivos_' + componenteId ).prop("disabled", true).val('');
     reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ));
@@ -346,6 +348,7 @@ function handleCarregaDadosComponentesSerie(response){
     componentes.forEach(function(componente) {
       $j( '#componente_' + componente.id).prop( "checked", true );
       $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
+      $j( '#hora_falta_' + componente.id ).val(Math.round(componente.hora_falta * 60)).prop("disabled", false);
       $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
       $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
 
@@ -547,6 +550,9 @@ function htmlSubCabecalhoAreaConhecimento(id){
                     <b>Carga horária</b>
                 </td>
                 <td>
+                    <b>Hora falta (min)</b>
+                </td>
+                <td>
                     <b>Tipo de nota</b>
                 </td>
                 <td>
@@ -610,6 +616,17 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
                            value=""
                            disabled>
                            ` + iconCloneCargaHoraria + `
+                </td>
+                <td>
+                    <input type="text"
+                           size="5"
+                           maxlength="5"
+                           name="componentes[` + id + componente_id + `][hora_falta]"
+                           class="carga_horaria"
+                           id="hora_falta_` + componente_id + `"
+                           value=""
+                           disabled>
+
                 </td>
                 <td>
                     <select name="componentes[` + id + componente_id + `][tipo_nota]"

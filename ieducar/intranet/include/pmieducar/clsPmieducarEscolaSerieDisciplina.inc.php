@@ -12,6 +12,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
     public $etapas_especificas;
     public $etapas_utilizadas;
     public $anos_letivos;
+    public $hora_falta;
 
     public function __construct(
         $ref_ref_cod_serie = null,
@@ -21,13 +22,14 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         $carga_horaria = false,
         $etapas_especificas = false,
         $etapas_utilizadas = false,
-        $anos_letivos = []
+        $anos_letivos = [],
+        $hora_falta = null
     ) {
 
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola_serie_disciplina';
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas, ARRAY_TO_JSON(anos_letivos) AS anos_letivos ';
+        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas, ARRAY_TO_JSON(anos_letivos) AS anos_letivos, hora_falta ';
 
         if (is_numeric($ref_cod_disciplina)) {
             $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
@@ -54,6 +56,12 @@ class clsPmieducarEscolaSerieDisciplina extends Model
             $this->carga_horaria = $carga_horaria;
         } elseif (is_null($carga_horaria)) {
             $this->carga_horaria = null;
+        }
+
+        if (is_numeric($hora_falta)) {
+            $this->hora_falta = $hora_falta;
+        } elseif (is_null($hora_falta)) {
+            $this->hora_falta = null;
         }
 
         if (is_string($etapas_utilizadas)) {
@@ -116,6 +124,16 @@ class clsPmieducarEscolaSerieDisciplina extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->hora_falta)) {
+                $campos .= "{$gruda}hora_falta";
+                $valores .= "{$gruda}'{$this->hora_falta}'";
+                $gruda = ', ';
+            } elseif (is_null($this->hora_falta)) {
+                $campos .= "{$gruda}hora_falta";
+                $valores .= "{$gruda}null";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->etapas_especificas)) {
                 $campos .= "{$gruda}etapas_especificas";
                 $valores .= "{$gruda}'{$this->etapas_especificas}'";
@@ -168,6 +186,12 @@ class clsPmieducarEscolaSerieDisciplina extends Model
                 $set[] = "carga_horaria = '{$this->carga_horaria}'";
             } elseif (is_null($this->carga_horaria)) {
                 $set[] = 'carga_horaria = NULL';
+            }
+
+            if (is_numeric($this->hora_falta)) {
+                $set[] = "hora_falta = '{$this->hora_falta}'";
+            } elseif (is_null($this->hora_falta)) {
+                $set[] = 'hora_falta = NULL';
             }
 
             if (is_numeric($this->etapas_especificas)) {
