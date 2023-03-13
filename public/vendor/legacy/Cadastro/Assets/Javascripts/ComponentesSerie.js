@@ -110,9 +110,11 @@ function checkAll(id) {
     const cargasHorarias = $j( '.area_conhecimento_' + id + ' .carga_horaria');
     const tiposNotas = $j( '.area_conhecimento_' + id + ' .tipo_nota');
     const anosLetivos = $j( '.area_conhecimento_' + id + ' .anos_letivos');
+    const horasFalta = $j( '.area_conhecimento_' + id + ' .hora_falta');
 
     disableComponent(cargasHorarias, isChecked);
     disableComponent(tiposNotas, isChecked);
+    disableComponent(horasFalta, isChecked);
     disableComponent(anosLetivos, isChecked, true);
 }
 
