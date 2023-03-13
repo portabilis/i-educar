@@ -19,11 +19,13 @@ class ComponentesSerieController extends ApiCoreController
         foreach ($componentes as $key => $componente) {
             $arrayComponentes[$key]['id'] = $componente->id;
             $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
+            $arrayComponentes[$key]['hora_falta'] = $componente->hora_falta;
             $arrayComponentes[$key]['tipo_nota'] = $componente->tipo_nota;
             $arrayComponentes[$key]['anos_letivos'] = $componente->anos_letivos;
         }
 
-        $obj = new clsModulesComponenteCurricularAnoEscolar(null, $serieId, null, null, $arrayComponentes);
+
+        $obj = new clsModulesComponenteCurricularAnoEscolar(ano_escolar_id: $serieId, componentes: $arrayComponentes);
 
         $updateInfo = $obj->updateInfo();
         $componentesAtualizados = $updateInfo['update'];
@@ -76,8 +78,6 @@ class ComponentesSerieController extends ApiCoreController
                 if ($count > 0) {
                     $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
                 }
-
-                //...
 
                 $hasDataPosted = $service->hasDataPostedInGrade($componenteId, $serieId, null);
 
