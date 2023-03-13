@@ -16,7 +16,7 @@ submitButton.click(function(){
     let anos_letivos = $j('[name="componentes['+key+'][anos_letivos]"]').val() || [];
 
     if(check){
-      arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota, anos_letivos: anos_letivos, hora_falta: hora_falta});
+      arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota, anos_letivos: anos_letivos, hora_falta: hora_falta / 60});
     }
   });
   atualizaComponentesSerie(arrayComponentes);

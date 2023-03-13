@@ -160,6 +160,8 @@ function habilitaComponente(componenteId) {
   $j( '#hora_falta_' + componenteId ).prop("disabled", false);
   $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
   $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
+
+  reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ))
 }
 
 function desabilitaComponente(componenteId) {
@@ -312,8 +314,8 @@ function handleCarregaDadosComponentesSerie(response){
     componentes.forEach(function(componente) {
       $j( '#componente_' + componente.id).prop( "checked", true );
       $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
-      $j( '#hora_falta_' + componente.id ).val(componente.hora_falta).prop("disabled", false);
-        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
+      $j( '#hora_falta_' + componente.id ).val(Math.round(componente.hora_falta * 60)).prop("disabled", false);
+      $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
       $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
 
       reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
@@ -514,7 +516,7 @@ function htmlSubCabecalhoAreaConhecimento(id){
                     <b>Carga horária</b>
                 </td>
                 <td>
-                    <b>Hora falta</b>
+                    <b>Hora falta (min)</b>
                 </td>
                 <td>
                     <b>Tipo de nota</b>

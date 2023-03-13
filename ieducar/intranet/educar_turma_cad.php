@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
@@ -411,10 +412,7 @@ return new class extends clsCadastro {
             && is_numeric(value: $this->ano)
             && is_numeric(value: $this->ref_cod_escola)
         ) {
-            $objAno = new clsPmieducarAnoLetivoModulo();
-            $objAno->setOrderBy(strNomeCampo: 'sequencial ASC');
-
-            $registros = $objAno->lista(int_ref_ano: $this->ano, int_ref_ref_cod_escola: $this->ref_cod_escola);
+            $registros = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->orderBySequencial()->get();
         }
 
         if ($this->padrao_ano_escolar != 1) {

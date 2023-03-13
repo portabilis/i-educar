@@ -100,7 +100,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ],
 
         'deficiencias' => [
-            'label' => 'Deficiências / habilidades especiais',
+            'label' => 'Deficiências',
+            'help' => '',
+        ],
+
+        'transtornos' => [
+            'label' => 'Transtornos',
             'help' => '',
         ],
 
@@ -793,6 +798,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
 
         $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
+
+        $helperOptions = ['objectName' => 'transtornos'];
+        $options = [
+            'label' => $this->_getLabel('transtornos'),
+            'size' => 50,
+            'required' => false,
+            'options' => ['value' => null]
+        ];
+
+        $this->inputsHelper()->multipleSearchTranstornos('', $options, $helperOptions);
 
         $options = ['label' => $this->_getLabel('alfabetizado'), 'value' => 'checked'];
         $this->inputsHelper()->checkbox('alfabetizado', $options);

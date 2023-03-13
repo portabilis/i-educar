@@ -14,13 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::table('modules.componente_curricular_ano_escolar', function (Blueprint $table) {
-            $table->decimal('hora_falta', 7,3)
+            $table->decimal('hora_falta', 7,4)
                 ->nullable()
                 ->default(null);
         });
 
         Schema::table('pmieducar.escola_serie_disciplina', function (Blueprint $table) {
-            $table->decimal('hora_falta',7,3)
+            $table->decimal('hora_falta',7,4)
                 ->nullable()
                 ->default(null);
         });
