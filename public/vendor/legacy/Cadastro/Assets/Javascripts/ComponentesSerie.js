@@ -67,19 +67,53 @@ $j("#ref_cod_area_conhecimento").change(function() {
     chosenOldArray = chosenArray;
 } );
 
-function checkAll(id){
-    var isChecked = $j('#check-all-'+id).is(':checked');
-    $j( '.check_componente_area_' + id).prop( "checked", isChecked );
-    $j( '.area_conhecimento_' + id + ' .carga_horaria').prop("disabled", !isChecked);
-    $j( '.area_conhecimento_' + id + ' .tipo_nota').prop("disabled", !isChecked);
-    $j( '.area_conhecimento_' + id + ' .anos_letivos').prop("disabled", !isChecked);
-    $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
-    if(!isChecked){
-        $j( '.area_conhecimento_' + id + ' .carga_horaria').val('');
-        $j( '.area_conhecimento_' + id + ' .tipo_nota').val('');
-        $j( '.area_conhecimento_' + id + ' .anos_letivos').val('');
-        $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
+function verificaComponenteBloqueado(element) {
+
+  const id = element.id.split('_').last()
+  const input = document.getElementById('componente_' + id);
+
+  return input.hasAttribute('disabled')
+}
+
+function disableComponent(elements, isChecked, isAnosLetivos = false) {
+  elements.each(function () {
+    let isBlock = verificaComponenteBloqueado(this)
+
+    if (isBlock) {
+      return;
     }
+    $j(this).prop("disabled", !isChecked);
+  })
+
+  if (!isChecked) {
+    $j(this).val('');
+  }
+
+  if (isAnosLetivos) {
+    $j(this).trigger("chosen:updated");
+  }
+}
+
+function checkAll(id) {
+    const isChecked = $j('#check-all-'+id).is(':checked');
+
+    $j( '.check_componente_area_' + id).each(function () {
+      let isDisabled = $j(this).prop('disabled');
+
+      if (isDisabled ) {
+        return;
+      }
+
+      $j(this).prop( "checked", isChecked );
+    });
+
+    const cargasHorarias = $j( '.area_conhecimento_' + id + ' .carga_horaria');
+    const tiposNotas = $j( '.area_conhecimento_' + id + ' .tipo_nota');
+    const anosLetivos = $j( '.area_conhecimento_' + id + ' .anos_letivos');
+
+    disableComponent(cargasHorarias, isChecked);
+    disableComponent(tiposNotas, isChecked);
+    disableComponent(anosLetivos, isChecked, true);
 }
 
 function reloadChosenAnosLetivos($element){
