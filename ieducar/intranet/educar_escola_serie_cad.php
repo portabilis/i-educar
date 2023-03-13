@@ -210,7 +210,7 @@ return new class () extends clsCadastro {
                     }
 
                     $item['anos_letivos'] = json_decode($item['anos_letivos']);
-                    $item['carga_horaria'] = floatval($item['carga_horaria']);
+                    $item['carga_horaria'] = (float) $item['carga_horaria'];
 
                     return $item;
                 }, array: $registros);
@@ -219,8 +219,8 @@ return new class () extends clsCadastro {
 
                 foreach ($registros as $campo) {
                     $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
-                    $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = $campo['carga_horaria'];
-                    $this->escola_serie_disciplina_hora_falta[$campo['ref_cod_disciplina']] = $campo['hora_falta'];
+                    $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = (float) $campo['carga_horaria'];
+                    $this->escola_serie_disciplina_hora_falta[$campo['ref_cod_disciplina']] = round( $campo['hora_falta'] * 60 );
                     $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = $campo['anos_letivos'] ?: [];
 
                     if ($this->definirComponentePorEtapa) {
@@ -254,7 +254,7 @@ return new class () extends clsCadastro {
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 180px;" >Usar padrão do componente?</span>';
-                $conteudo .= '  <span style="display: block; float: left; width: 100px;">Hora falta</span>';
+                $conteudo .= '  <span style="display: block; float: left; width: 100px;">Hora falta (min)</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 180px;" >Usar hora falta padrão do componente?</span>';
 
                 if ($this->definirComponentePorEtapa) {
@@ -325,7 +325,7 @@ return new class () extends clsCadastro {
                         $anosLetivosComponente = $this->escola_serie_disciplina_anos_letivos[$registro->id];
                     }
 
-                    $cargaComponente = $registro->carga_horaria;
+                    $cargaComponente = (float) $registro->carga_horaria;
                     $etapas_utilizadas = $this->escola_serie_disciplina_etapa_utilizada[$registro->id];
 
 
@@ -437,7 +437,7 @@ return new class () extends clsCadastro {
                         etapas_especificas: $this->etapas_especificas[$key],
                         etapas_utilizadas: $this->etapas_utilizadas[$key],
                         anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: $this->hora_falta[$key]
+                        hora_falta: $this->hora_falta[$key] === null ? null : $this->hora_falta[$key]  / 60
                     );
 
                     if ($obj->existe()) {
@@ -543,8 +543,9 @@ return new class () extends clsCadastro {
                         etapas_especificas: $etapas_especificas,
                         etapas_utilizadas: $etapas_utilizadas,
                         anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: $hora_falta
+                        hora_falta: $hora_falta === null ? null : $hora_falta / 60
                     );
+
 
                     $existe = $obj->existe();
 

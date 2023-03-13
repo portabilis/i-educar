@@ -109,7 +109,7 @@
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
             "@composer install",
-            "@composer plug-and-play:install",
+            "@composer plug-and-play",
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan storage:link --ansi",
@@ -117,7 +117,7 @@
         ],
         "update-install": [
             "@composer update",
-            "@composer plug-and-play:update",
+            "@composer plug-and-play",
             "@set-permissions",
             "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"

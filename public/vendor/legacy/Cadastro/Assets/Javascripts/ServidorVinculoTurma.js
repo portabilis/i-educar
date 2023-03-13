@@ -24,6 +24,7 @@ $j(document).ready(function() {
   const turmaField = $j('#ref_cod_turma');
   const turnoField = $j('#turma_turno_id');
   const professorAreaEspecificaField = $j('#permite_lancar_faltas_componente');
+  const copiaDeVinculo = $j('#copia').val() == 1 ? true : false;
 
   getRegraAvaliacao();
   getTurnoTurma();
@@ -34,7 +35,8 @@ $j(document).ready(function() {
       $j.each(dataResponse['componentecurricular'], function (id, value) {
 
         // Insere o componente no multipleSearch caso não exista
-        if (0 == componentecurricular.children("[value=" + value + "]").length) {
+        // e caso não seja um novo vinculo oriundo de uma cópia
+        if (0 == componentecurricular.children("[value=" + value + "]").length && copiaDeVinculo === false) {
           addComponenteCurricular(value);
         } else {
           componentecurricular.children("[value=" + value + "]").attr('selected', '');

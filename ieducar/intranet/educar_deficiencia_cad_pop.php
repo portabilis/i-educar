@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDeficiency;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_deficiencia;
@@ -15,8 +17,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_deficiencia_lst.php');
 
         if (is_numeric($this->cod_deficiencia)) {
-            $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
-            $registro  = $obj->detalhe();
+            $registro  = LegacyDeficiency::find($this->cod_deficiencia)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -43,8 +44,14 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsCadastroDeficiencia(cod_deficiencia: $this->cod_deficiencia, nm_deficiencia: $this->nm_deficiencia);
-        $cadastrou = $obj->cadastra();
+        $cadastrou = false;
+        if (is_string($this->nm_deficiencia)) {
+            LegacyDeficiency::create([
+                'nm_deficiencia' => $this->nm_deficiencia
+            ]);
+            $cadastrou = true;
+        }
+
         if ($cadastrou) {
             echo "<script>
                         parent.document.getElementById('ref_cod_deficiencia').options[parent.document.getElementById('ref_cod_deficiencia').options.length] = new Option('$this->nm_deficiencia', '$cadastrou', false, false);
