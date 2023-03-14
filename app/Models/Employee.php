@@ -135,7 +135,17 @@ class Employee extends LegacyModel
             'pmieducar.servidor_disciplina',
             'ref_cod_servidor',
             'ref_cod_disciplina'
-        )->withPivot('ref_ref_cod_instituicao', 'ref_cod_curso');
+        )->withPivot('ref_ref_cod_instituicao', 'ref_cod_curso', 'ref_cod_funcao');
+    }
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            LegacyCourse::class,
+            'pmieducar.servidor_curso_ministra',
+            'ref_cod_servidor',
+            'ref_cod_curso'
+        )->withPivot('ref_ref_cod_instituicao');
     }
 
     public function scopeActive(Builder $query): Builder
