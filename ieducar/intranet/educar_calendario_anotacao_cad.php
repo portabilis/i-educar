@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\LegacyCalendarDay;
+use App\Models\LegacyCalendarDayNote;
+use App\Models\LegacyCalendarNote;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class extends clsCadastro {
+return new class () extends clsCadastro {
     public $pessoa_logada;
     public $cod_calendario_anotacao;
     public $ref_usuario_exc;
@@ -22,11 +25,11 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->cod_calendario_anotacao=$_GET['cod_calendario_anotacao'];
-        $this->dia=$_GET['dia'];
-        $this->mes=$_GET['mes'];
-        $this->ano=$_GET['ano'];
-        $this->ref_ref_cod_calendario_ano_letivo=$_GET['ref_cod_calendario_ano_letivo'];
+        $this->cod_calendario_anotacao = $_GET['cod_calendario_anotacao'];
+        $this->dia = $_GET['dia'];
+        $this->mes = $_GET['mes'];
+        $this->ano = $_GET['ano'];
+        $this->ref_ref_cod_calendario_ano_letivo = $_GET['ref_cod_calendario_ano_letivo'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php');
@@ -36,8 +39,8 @@ return new class extends clsCadastro {
             );
         }
         if (is_numeric(value: $this->cod_calendario_anotacao)) {
-            $obj = new clsPmieducarCalendarioAnotacao(cod_calendario_anotacao: $this->cod_calendario_anotacao);
-            $registro  = $obj->detalhe();
+            $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)?->getAttributes();
+
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -53,7 +56,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar =  "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}";
+        $this->url_cancelar = "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}";
         $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
@@ -71,7 +74,6 @@ return new class extends clsCadastro {
 
         $this->campoTexto(nome: 'nm_anotacao', campo: 'Anotação', valor: $this->nm_anotacao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
         $this->campoMemo(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, colunas: 60, linhas: 5, obrigatorio: false);
-
     }
 
     public function Novo()
@@ -79,20 +81,37 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php');
 
-        $obj_dia = new clsPmieducarCalendarioDia(ref_cod_calendario_ano_letivo: $this->ref_ref_cod_calendario_ano_letivo, mes: $this->mes, dia: $this->dia);
-        if (!$obj_dia->existe()) {
-            $obj_dia = new clsPmieducarCalendarioDia(ref_cod_calendario_ano_letivo: $this->ref_ref_cod_calendario_ano_letivo, mes: $this->mes, dia: $this->dia, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, ref_cod_calendario_dia_motivo: null, descricao: null, data_cadastro: null, data_exclusao: null, ativo: 1);
-            $ref_cod_dia_letivo = $obj_dia->cadastra();
-            if (!$ref_cod_dia_letivo) {
+        $exists = LegacyCalendarDay::query()
+            ->where('ref_cod_calendario_ano_letivo', $this->ref_ref_cod_calendario_ano_letivo)
+            ->where('mes', $this->mes)
+            ->where('dia', $this->dia)
+            ->exists();
+
+        if (!$exists) {
+            $obj_dia = new LegacyCalendarDay();
+            $obj_dia->cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
+            $obj_dia->mes = $this->mes;
+            $obj_dia->dia = $this->dia;
+            $obj_dia->ref_usuario_cad = $this->pessoa_logada;
+
+            if (!$obj_dia->save()) {
                 return false;
             }
         }
-        $obj = new clsPmieducarCalendarioAnotacao(cod_calendario_anotacao: $this->cod_calendario_anotacao, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: $this->pessoa_logada, nm_anotacao: $this->nm_anotacao, descricao: $this->descricao, data_cadastro: $this->data_cadastro, data_exclusao: $this->data_exclusao, ativo: $this->ativo);
-        $this->cod_calendario_anotacao = $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $obj_anotacao_dia = new clsPmieducarCalendarioDiaAnotacao(ref_dia: $this->dia, ref_mes: $this->mes, ref_ref_cod_calendario_ano_letivo: $this->ref_ref_cod_calendario_ano_letivo, ref_cod_calendario_anotacao: $cadastrou);
-            $cadastrado = $obj_anotacao_dia->cadastra();
-            if ($cadastrado) {
+
+        $obj = new LegacyCalendarNote();
+        $obj->ref_usuario_cad = $this->pessoa_logada;
+        $obj->nm_anotacao = $this->nm_anotacao;
+        $obj->descricao = $this->descricao;
+
+        if ($obj->save()) {
+            $obj_anotacao_dia = new LegacyCalendarDayNote();
+            $obj_anotacao_dia->ref_dia = $this->dia;
+            $obj_anotacao_dia->ref_mes = $this->mes;
+            $obj_anotacao_dia->ref_ref_cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
+            $obj_anotacao_dia->ref_cod_calendario_anotacao = $obj->getKey();
+
+            if ($obj_anotacao_dia->save()) {
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
                 $this->simpleRedirect(url: "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}");
             }
@@ -109,10 +128,14 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php');
 
-        $obj = new clsPmieducarCalendarioAnotacao(cod_calendario_anotacao: $this->cod_calendario_anotacao, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: $this->pessoa_logada, nm_anotacao: $this->nm_anotacao, descricao: $this->descricao, data_cadastro: $this->data_cadastro, data_exclusao: $this->data_exclusao, ativo: $this->ativo);
-        $editou = $obj->edita();
-        if ($editou) {
+        $obj = LegacyCalendarNote::find($this->cod_calendario_anotacao);
+        $obj->ref_usuario_exc = $this->pessoa_logada;
+        $obj->nm_anotacao = $this->nm_anotacao;
+        $obj->descricao = $this->descricao;
+
+        if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+
             throw new HttpResponseException(
                 response: new RedirectResponse(url: "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}")
             );
@@ -128,17 +151,16 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php');
 
-        $obj = new clsPmieducarCalendarioAnotacao(cod_calendario_anotacao: $this->cod_calendario_anotacao, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: $this->pessoa_logada, nm_anotacao: $this->nm_anotacao, descricao: $this->descricao, data_cadastro: $this->data_cadastro, data_exclusao: $this->data_exclusao, ativo: 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $obj = LegacyCalendarNote::find($this->cod_calendario_anotacao);
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+
             throw new HttpResponseException(
                 response: new RedirectResponse(url: "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}")
             );
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 

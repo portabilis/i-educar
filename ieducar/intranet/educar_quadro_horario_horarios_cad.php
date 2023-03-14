@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCalendarDay;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
 
@@ -769,25 +771,12 @@ return new class extends clsCadastro {
             int_processo_ap: 641,
             int_idpes_usuario: $this->pessoa_logada,
             int_soma_nivel_acesso: 7,
-            str_pagina_redirecionar: 'educar_calendario_dia_lst.php'
+            str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
-        $obj = new clsPmieducarCalendarioDia(
-            ref_cod_calendario_ano_letivo: $this->ref_cod_calendario_ano_letivo,
-            mes: $this->mes,
-            dia: $this->dia,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            ref_cod_calendario_dia_motivo: 'NULL',
-            descricao: 'NULL',
-            data_cadastro: $this->data_cadastro,
-            data_exclusao: $this->data_exclusao,
-            ativo: 1
-        );
+        $obj = LegacyCalendarDay::find($this->ref_cod_calendario_ano_letivo);
 
-        $excluiu = $obj->edita();
-
-        if ($excluiu) {
+        if ($obj->delete()) {
             $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux();
             $obj_quadro_horarios_aux->excluirTodos(identificador: $this->identificador);
 
@@ -796,7 +785,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 
