@@ -1330,7 +1330,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $faltasComponentes[$id]->porcentagemPresenca = null;
                 $faltasComponentes[$id]->total = $componenteTotal;
 
-                $componenteHoraFalta = $this->getHoraFalta($enrollmentData, $id);
+                $componenteHoraFalta = $this->getHoraFalta($enrollmentData, (int)$id);
 
                 // Calcula a quantidade de horas/faltas no componente
                 $quantidadeHoraFaltaDoComponente = $this->_calculateHoraFalta($componenteTotal, $componenteHoraFalta);
