@@ -29,6 +29,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             'ano_escolar_id',
             'carga_horaria',
             'array_to_json(anos_letivos) as anos_letivos',
+            'updated_at',
             'hora_falta',
         ];
 
@@ -83,9 +84,9 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
         if ($this->updateInfo['insert']) {
             foreach ($this->updateInfo['insert'] as $componenteInsert) {
                 $this->cadastraComponente(
-                    intval($componenteInsert['id']),
+                    (int)$componenteInsert['id'],
                     (float)$componenteInsert['carga_horaria'],
-                    intval($componenteInsert['tipo_nota']),
+                    (int)$componenteInsert['tipo_nota'],
                     $componenteInsert['anos_letivos'],
                     (float)$componenteInsert['hora_falta'],
                 );
@@ -206,6 +207,7 @@ SQL;
                     $carga_horaria,
                     $tipo_nota,
                     $anosLetivosFormatados,
+                    NOW(),
                     $hora_falta
             )";
 
