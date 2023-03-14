@@ -9,8 +9,8 @@ use Tests\EloquentTestCase;
 class LegacyCalendarDayTest extends EloquentTestCase
 {
     protected $relations = [
-        'createdBy' => LegacyUser::class,
-        'updatedBy' => LegacyUser::class,
+        'createdByUser' => LegacyUser::class,
+        'deletedByUser' => LegacyUser::class,
     ];
 
     /**

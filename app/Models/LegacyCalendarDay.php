@@ -15,6 +15,7 @@ class LegacyCalendarDay extends LegacyModel
     use HasLegacyDates;
 
     public $table = 'pmieducar.calendario_dia';
+
     public $fillable = [
         'ref_usuario_exc',
         'ref_usuario_cad',
