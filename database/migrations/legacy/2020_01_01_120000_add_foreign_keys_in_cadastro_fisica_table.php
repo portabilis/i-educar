@@ -49,10 +49,6 @@ class AddForeignKeysInCadastroFisicaTable extends Migration
                 ->on('cadastro.pessoa')
                 ->onDelete('restrict');
 
-            $table->foreign('idocup')
-                ->references('idocup')
-                ->on('cadastro.ocupacao');
-
             $table->foreign('ideciv')
                 ->references('ideciv')
                 ->on('cadastro.estado_civil');
