@@ -55,7 +55,7 @@ BEGIN
 
     IF (v_hora_falta IS NULL) THEN
         v_hora_falta := (
-            SELECT pmieducar :: float
+            SELECT hora_falta :: float
             FROM modules.componente_curricular_ano_escolar
             WHERE componente_curricular_ano_escolar.componente_curricular_id = cod_disciplina_id
             AND componente_curricular_ano_escolar.ano_escolar_id = cod_serie_id
