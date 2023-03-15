@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION modules.hora_falta_por_componente(cod_matricula_id integer, cod_disciplina_id integer)
-RETURNS character varying
+RETURNS float
 LANGUAGE plpgsql
 AS $$
 DECLARE
