@@ -28,9 +28,9 @@ class EmployeeWithdrawal extends LegacyModel
         'sequencial'
     ];
 
-    protected $dates = [
-        'data_retorno',
-        'data_saida',
+    protected $casts = [
+        'data_retorno' => 'date',
+        'data_saida' => 'date',
     ];
 
     /**

@@ -13,8 +13,6 @@ class Student extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
     public function individual(): BelongsTo
     {
         return $this->belongsTo(Individual::class);

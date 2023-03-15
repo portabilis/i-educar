@@ -17,13 +17,6 @@ class Individual extends Model
     /**
      * @var array
      */
-    protected $dates = [
-        'deleted_at'
-    ];
-
-    /**
-     * @var array
-     */
     protected $casts = [
         'gender' => 'integer',
         'nationality' => 'integer',
