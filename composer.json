@@ -22,7 +22,6 @@
         "dex/composer-plug-and-play": "^0.16",
         "dex/frontier": "^0.3.0",
         "doctrine/dbal": "^3.3",
-        "fruitcake/laravel-cors": "^2.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^3.12",
