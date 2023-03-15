@@ -20,12 +20,9 @@ class LegacySchoolClassStage extends Model
      */
     protected $primaryKey = 'ref_cod_turma';
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_inicio',
-        'data_fim',
+    protected $casts = [
+        'data_inicio' => 'date',
+        'data_fim' => 'date',
     ];
 
     /**
