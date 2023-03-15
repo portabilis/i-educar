@@ -20,6 +20,11 @@ class Student extends Model
         return $this->belongsTo(Individual::class);
     }
 
+    public function person(): BelongsTo
+    {
+        return $this->belongsTo(Person::class, 'individual_id');
+    }
+
     public function religion(): BelongsTo
     {
         return $this->belongsTo(Religion::class);
