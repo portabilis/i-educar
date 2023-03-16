@@ -23,7 +23,7 @@ class EducacensoInstitutionFactory extends Factory
     {
         return [
             'ies_id' => $this->faker->numberBetween(10000, 99999),
-            'nome' => $this->faker->name,
+            'nome' => $this->faker->name(),
             'dependencia_administrativa_id' => 1,
             'tipo_instituicao_id' => $this->faker->numberBetween(10000, 99999),
             'uf' => 'SC',
