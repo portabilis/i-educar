@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 class DeficiencyType
 {
     public const DEFICIENCY = 1;
