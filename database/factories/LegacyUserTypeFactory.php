@@ -27,7 +27,7 @@ class LegacyUserTypeFactory extends Factory
             'ref_funcionario_cad' => function () {
                 return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
             },
-            'data_cadastro' => $this->faker->dateTime,
+            'data_cadastro' => $this->faker->dateTime(),
         ];
     }
 }
