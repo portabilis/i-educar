@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
 return new class extends clsCadastro {
     public $cod_matricula;
@@ -44,11 +45,17 @@ return new class extends clsCadastro {
             $this->nm_aluno = $det_aluno['nome_aluno'];
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
-        $enturmacoes = new clsPmieducarMatriculaTurma();
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->cod_matricula,
-            int_ativo: 1
-        );
+        $enturmacoes = LegacyEnrollment::active()
+            ->with([
+                'schoolClass:cod_turma,ref_cod_curso,nm_turma,turma_turno_id',
+                'schoolClass.course:cod_curso,modalidade_curso'
+            ])
+            ->where('ref_cod_matricula', $this->cod_matricula)
+            ->get([
+                'ref_cod_turma',
+                'sequencial',
+                'turno_id'
+            ]);
 
         $turnos = [
             0 => 'Selecione',
@@ -57,13 +64,15 @@ return new class extends clsCadastro {
         ];
 
         foreach ($enturmacoes as $enturmacao) {
-            $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
-            $turma         = $turma->detalhe();
-            if ($turma['turma_turno_id'] != clsPmieducarTurma::TURNO_INTEGRAL) {
+            if ($enturmacao->schoolClass->turma_turno_id != clsPmieducarTurma::TURNO_INTEGRAL) {
                 continue;
             }
 
-            $this->campoLista(nome: "turno[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", campo: "Turno do aluno na turma: {$enturmacao['nm_turma']}", valor: $turnos, default: $enturmacao['turno_id'], descricao: 'Não é necessário preencher o campo quando o aluno cursar o turno INTEGRAL', obrigatorio: false);
+            if ($enturmacao->schoolClass->course->modalidade_curso === ModalidadeCurso::EJA) {
+                $turnos[clsPmieducarTurma::TURNO_NOTURNO] = 'Noturno';
+            }
+
+            $this->campoLista(nome: "turno[{$enturmacao->ref_cod_turma}-{$enturmacao->sequencial}]", campo: "Turno do aluno na turma: {$enturmacao->schoolClass->name}}", valor: $turnos, default: $enturmacao->turno_id, descricao: 'Não é necessário preencher o campo quando o aluno cursar o turno INTEGRAL', obrigatorio: false);
         }
 
         $this->acao_enviar = 'showConfirmationMessage(this)';
