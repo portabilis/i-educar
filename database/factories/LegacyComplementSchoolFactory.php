@@ -28,7 +28,7 @@ class LegacyComplementSchoolFactory extends Factory
             'cep' => $this->faker->randomNumber(8),
             'number' => $this->faker->randomNumber(3),
             'complement' => $this->faker->word,
-            'address' => $this->faker->address,
+            'address' => $this->faker->address(),
             'district' => $this->faker->word,
             'created_by' => fn () => LegacyUserFactory::new()->unique()->make(),
             'deleted_by' => fn () => LegacyUserFactory::new()->unique()->make(),

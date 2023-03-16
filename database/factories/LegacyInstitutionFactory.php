@@ -28,7 +28,7 @@ class LegacyInstitutionFactory extends Factory
             'cep' => $this->faker->numerify('########'),
             'cidade' => $this->faker->city,
             'bairro' => $this->faker->lastName,
-            'logradouro' => $this->faker->address,
+            'logradouro' => $this->faker->address(),
             'nm_responsavel' => $this->faker->name(),
             'data_cadastro' => now(),
             'nm_instituicao' => $this->faker->company(),
