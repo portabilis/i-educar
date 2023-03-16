@@ -20,7 +20,7 @@
         "composer/semver": "^3.2",
         "cossou/jasperphp": "^2.8",
         "dex/composer-plug-and-play": "^0.16",
-        "dex/frontier": "^0.3.0",
+        "dex/frontier": "^0.4.0",
         "doctrine/dbal": "^3.3",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
@@ -146,6 +146,6 @@
             "dex/composer-plug-and-play": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
