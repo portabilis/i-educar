@@ -31,7 +31,7 @@ class LegacyInstitutionFactory extends Factory
             'logradouro' => $this->faker->address,
             'nm_responsavel' => $this->faker->name(),
             'data_cadastro' => now(),
-            'nm_instituicao' => $this->faker->company,
+            'nm_instituicao' => $this->faker->company(),
         ];
     }
 
