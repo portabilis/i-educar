@@ -4,6 +4,7 @@ use App\Models\Employee;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Services\iDiarioService;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
@@ -160,13 +161,23 @@ return new class extends clsCadastro {
         ];
         $this->inputsHelper()->select(attrName: 'tipo_vinculo', inputOptions: $options);
 
+        $turnos = [
+            null => 'Selecione',
+            clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
+            clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino'
+        ];
+        $turma = LegacySchoolClass::with('course:cod_curso,modalidade_curso')->find($this->ref_cod_turma, [
+            'cod_turma',
+            'ref_cod_curso'
+        ]);
+
+        if ($turma && $turma->course->modalidade_curso === ModalidadeCurso::EJA) {
+            $turnos[clsPmieducarTurma::TURNO_NOTURNO] = 'Noturno';
+        }
+
         $options = [
             'label' => 'Turno',
-            'resources' => [
-                null => 'Selecione',
-                clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
-                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
-            ],
+            'resources' => $turnos,
             'value' => $this->turma_turno_id,
             'required' => false,
             'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
