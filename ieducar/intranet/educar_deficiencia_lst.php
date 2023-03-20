@@ -29,7 +29,9 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $lista = LegacyDeficiency::orderBy('nm_deficiencia')->paginate(perPage: $this->limite, columns: ['cod_deficiencia', 'nm_deficiencia'], pageName: 'pagina_' . $this->nome);
+        $lista = LegacyDeficiency::filter(
+            ['name' => $this->nm_deficiencia]
+        )->orderBy('nm_deficiencia')->paginate(perPage: $this->limite, columns: ['cod_deficiencia', 'nm_deficiencia'], pageName: 'pagina_' . $this->nome);
         $total = $lista->total();
 
         // monta a lista
