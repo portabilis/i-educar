@@ -248,7 +248,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
         }
 
-        $etapaAtual = ($_GET['etapa'] ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($_GET['etapa'] ?? null);
+        $etapa = $this->getOption('etapa') ?: ($_GET['etapa'] ?? null);
+
+        $etapaAtual = ($etapa ?? null) === 'Rc' ? $maiorEtapaUtilizada : ($etapa ?? null);
 
         $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
             $codMatricula,
@@ -1577,20 +1579,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
 
-            // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
-            $situacaoFaltaCc = new stdClass();
-            $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-
-            // caso possua situacaoFalta para o componente substitui situacao inicializada
-            if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId])) {
-                $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
-            }
-
             // pega situação nota geral ou do componente
             if ($tipoNotaNenhum) {
                 $situacaoNota = $situacaoNotas->situacao;
             } else {
-                $situacaoNota = $situacaoNotaCc->situacao;
+                $situacaoNota = $situacaoNotaCc?->situacao;
             }
 
             // pega situacao da falta componente ou geral.

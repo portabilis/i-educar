@@ -66,7 +66,6 @@
             "ieducar/lib",
             "ieducar/modules/*/Model",
             "ieducar/modules/Avaliacao/Service",
-            "ieducar/modules/Avaliacao/Fixups",
             "ieducar/modules/Avaliacao/Views",
             "ieducar/modules/FormulaMedia/Validate"
         ],
