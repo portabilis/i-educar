@@ -2,12 +2,12 @@
 
 trait Avaliacao_Service_Boletim_Acessores
 {
-    use Avaliacao_Service_Boletim_Avaliacao,
-        Avaliacao_Service_Boletim_FaltaAluno,
-        Avaliacao_Service_Boletim_NotaAluno,
-        Avaliacao_Service_Boletim_ParecerDescritivoAluno,
-        Avaliacao_Service_Boletim_RegraAvaliacao,
-        Avaliacao_Service_Boletim_Validators;
+    use Avaliacao_Service_Boletim_Avaliacao;
+    use Avaliacao_Service_Boletim_FaltaAluno;
+    use Avaliacao_Service_Boletim_NotaAluno;
+    use Avaliacao_Service_Boletim_ParecerDescritivoAluno;
+    use Avaliacao_Service_Boletim_RegraAvaliacao;
+    use Avaliacao_Service_Boletim_Validators;
 
     /**
      * @var array
@@ -18,6 +18,7 @@ trait Avaliacao_Service_Boletim_Acessores
         'usuario' => null,
         'turmaId' => null,
         'ignorarDispensasParciais' => false,
+        'etapa' => null,
     ];
 
     /**

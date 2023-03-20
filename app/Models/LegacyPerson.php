@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyPersonBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 /**
  * @property string $name
  */
-class LegacyPerson extends Model
+class LegacyPerson extends LegacyModel
 {
     public const CREATED_AT = 'data_cad';
     public const UPDATED_AT = 'data_rev';
@@ -26,6 +26,8 @@ class LegacyPerson extends Model
      * @var string
      */
     protected $primaryKey = 'idpes';
+
+    protected string $builder = LegacyPersonBuilder::class;
 
     /**
      * @var array
@@ -78,6 +80,13 @@ class LegacyPerson extends Model
     {
         return Attribute::make(
             get: fn () =>  $this->nome
+        );
+    }
+
+    protected function socialName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->individual->social_name ?? null
         );
     }
 

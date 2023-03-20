@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStageType;
 use App\Services\Exemption\ExemptionService;
 
 return new class extends clsCadastro {
@@ -301,8 +303,7 @@ return new class extends clsCadastro {
         $seqMatriculaTurma   = $objMatriculaTurma->getUltimaEnturmacao($this->ref_cod_matricula);
         $dadosMatriculaTurma = $objMatriculaTurma->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_sequencial: $seqMatriculaTurma);
         //Pega etapas definidas na escola
-        $objAnoLetivoMod     = new clsPmieducarAnoLetivoModulo();
-        $dadosAnoLetivoMod   = $objAnoLetivoMod->lista(int_ref_ano: $ano, int_ref_ref_cod_escola: $escolaId);
+        $dadosAnoLetivoMod   = LegacyAcademicYearStage::query()->whereSchool($escolaId)->whereYearEq($ano)->get();
         //Pega etapas definida na turma
         $objTurmaModulo      = new clsPmieducarTurmaModulo();
         $dadosTurmaModulo    = $objTurmaModulo->lista($dadosMatriculaTurma[0]['ref_cod_turma']);
@@ -313,9 +314,7 @@ return new class extends clsCadastro {
             $dadosEtapa = $dadosTurmaModulo;
         }
         //Pega nome do modulo
-        $objModulo           = new clsPmieducarModulo();
-        $dadosModulo         = $objModulo->lista($dadosEtapa[0]['ref_cod_modulo']);
-        $nomeModulo          = $dadosModulo[0]['nm_tipo'];
+        $nomeModulo          = LegacyStageType::find($dadosEtapa[0]['ref_cod_modulo'])->nm_tipo;
         $conteudoHtml = '';
 
         foreach ($dadosEtapa as $modulo) {

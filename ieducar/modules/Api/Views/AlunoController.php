@@ -4,12 +4,16 @@ use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
+use App\Models\LegacyStudentHistoricalHeightWeight;
 use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
+use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
+use App\User;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -218,8 +222,36 @@ class AlunoController extends ApiCoreController
             $this->validateNis() &&
             $this->validateInepExam() &&
             $this->validateTechnologicalResources() &&
+            $this->validateCpfCode() &&
             $this->validateBirthCertificate() &&
             $this->validateInepCode();
+    }
+
+
+    private function validateCpfCode()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $cpf = $this->getRequest()->id_federal;
+
+        if ($user->ref_cod_instituicao) {
+            $strictValitation = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $strictValitation = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
+
+        if ($strictValitation) {
+            if (validaCPF($cpf)) {
+                return true;
+            }
+            $this->messenger->append("O CPF informado é inválido");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -517,7 +549,7 @@ class AlunoController extends ApiCoreController
     {
         $individual = LegacyIndividual::find($this->getRequest()->pessoa_id,['idpes']);
         $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
-        $news = array_filter($this->getRequest()->deficiencias);
+        $news = array_filter(array_merge($this->getRequest()->deficiencias, $this->getRequest()->transtornos));
         $individual->deficiency()->sync($news);
 
         $diff = array_merge(array_diff($old, $news),array_diff($news,$old));
@@ -647,7 +679,12 @@ class AlunoController extends ApiCoreController
         $escola->cod_escola = $id;
         $escola = $escola->detalhe();
 
-        return $this->toUtf8($escola['nome'], ['transform' => true]);
+        $schoolInep = SchoolInep::query()
+            ->select('cod_escola_inep')
+            ->where('cod_escola', $id)
+            ->value('cod_escola_inep');
+
+        return $this->toUtf8($escola['nome'] . ' - INEP: ' . $schoolInep, ['transform' => true]);
     }
 
     protected function loadCursoNome($id)
@@ -1499,21 +1536,22 @@ class AlunoController extends ApiCoreController
 
     public function saveHistoricoAlturaPeso($alunoId)
     {
-        $obj = new clsPmieducarAlunoHistoricoAlturaPeso($alunoId);
-
-        // exclui todos
-        $obj->excluir();
+        LegacyStudentHistoricalHeightWeight::query()
+            ->where('ref_cod_aluno', $alunoId)
+            ->delete();
 
         foreach ($this->getRequest()->data_historico as $key => $value) {
             $data_historico = Portabilis_Date_Utils::brToPgSQL($value);
             $altura = $this->getRequest()->historico_altura[$key];
             $peso = $this->getRequest()->historico_peso[$key];
 
+            $obj = new LegacyStudentHistoricalHeightWeight();
+            $obj->ref_cod_aluno = $alunoId;
             $obj->data_historico = $data_historico;
             $obj->altura = $altura;
             $obj->peso = $peso;
 
-            if (!$obj->cadastra()) {
+            if (!$obj->save()) {
                 $this->messenger->append('Erro ao cadastrar histórico de altura e peso.');
             }
         }

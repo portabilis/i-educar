@@ -94,17 +94,23 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
             ->assertJson(
                 [
                     'vinculos' => [
-                       0 => [
+                        0 => [
                             'id' => $legacySchoolClassTeacher->getKey(),
                             'servidor_id' => $employee->getKey(),
                             'turma_id' => $schoolClass->getKey(),
                             'turno_id' => $period->getKey(),
                             'permite_lancar_faltas_componente' => 0,
-                            'tipo_nota' => null,
                             'deleted_at' => null,
-                                'disciplinas' => [
-                                    $discipline->getKey() . ' ' . $legacyDisciplineAcademicYear->tipo_nota
+                            'disciplinas' => [
+                                [
+                                    'id' => $discipline->getKey(),
+                                    'serie_id' => $grade->getKey(),
+                                    'tipo_nota' => $legacyDisciplineAcademicYear->tipo_nota
                                 ]
+                            ],
+                            'disciplinas_serie' => [
+                                $grade->getKey() => [$discipline->getKey()]
+                            ]
                         ]
                     ],
                     'oper' => 'get',
@@ -122,10 +128,10 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
                             'turma_id',
                             'turno_id',
                             'permite_lancar_faltas_componente',
-                            'tipo_nota',
                             'updated_at',
                             'deleted_at',
-                            'disciplinas'
+                            'disciplinas',
+                            'disciplinas_serie'
                         ]
                     ],
                     'oper',

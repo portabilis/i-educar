@@ -1101,34 +1101,4 @@ class clsPmieducarServidor extends Model
 
         return false;
     }
-
-    /**
-     * Retorna um array com os dados de um registro.
-     *
-     * @return array
-     */
-    public function qtdhoras(
-        $int_cod_servidor,
-        $int_cod_escola,
-        $int_ref_cod_instituicao,
-        $dia_semana
-    ) {
-        $db = new clsBanco();
-        $db->Consulta(
-            "
-      SELECT
-        EXTRACT(HOUR FROM (SUM(hora_final - hora_inicial))) AS hora,
-        EXTRACT(MINUTE FROM (SUM(hora_final - hora_inicial))) AS min
-      FROM
-        pmieducar.servidor_alocacao
-      WHERE
-        ref_cod_servidor = {$int_cod_servidor} AND
-        ref_cod_escola = {$int_cod_escola} AND
-        ref_ref_cod_instituicao = {$int_ref_cod_instituicao} AND
-        dia_semana = {$dia_semana}"
-        );
-        $db->ProximoRegistro();
-
-        return $db->Tupla();
-    }
 }

@@ -42,6 +42,7 @@ class Student extends Model
                 'school_class_id' => 'ID Turma',
                 'grade_id' => 'ID Série',
                 'course_id' => 'ID Curso',
+                'inep_id' => 'Código INEP (Aluno)',
             ],
             'Aluno' => [
                 'name' => 'Nome',
@@ -60,7 +61,9 @@ class Student extends Model
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
                 'race' => 'Raça',
-                'religion' => 'Religião'
+                'religion' => 'Religião',
+                'height' => 'Altura',
+                'weight' => 'Peso'
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -79,6 +82,8 @@ class Student extends Model
                 'disabilities.disabilities' => 'Deficiências',
                 'modalidade_ensino' => 'Modalidade de ensino cursada',
                 'technological_resources' => 'Recursos tecnológicos',
+                'transport.tipo_transporte' => 'Transporte escolar público',
+                'transport.veiculo_transporte_escolar' => 'Veículo utilizado',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',

@@ -48,6 +48,7 @@ return new class extends clsCadastro {
     public $altera_atestado_para_declaracao;
     public $obrigar_campos_censo;
     public $obrigar_documento_pessoa;
+    public $obrigar_cpf;
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
     public $exibir_apenas_professores_alocados;
@@ -101,6 +102,7 @@ return new class extends clsCadastro {
         $this->altera_atestado_para_declaracao = dbBool($this->altera_atestado_para_declaracao);
         $this->obrigar_campos_censo = dbBool($this->obrigar_campos_censo);
         $this->obrigar_documento_pessoa = dbBool($this->obrigar_documento_pessoa);
+        $this->obrigar_cpf = dbBool($this->obrigar_cpf);
         $this->exigir_lancamentos_anteriores = dbBool($this->exigir_lancamentos_anteriores);
         $this->exibir_apenas_professores_alocados = dbBool($this->exibir_apenas_professores_alocados);
         $this->bloquear_vinculo_professor_sem_alocacao_escola = dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola);
@@ -164,6 +166,8 @@ return new class extends clsCadastro {
 
         $this->campoRotulo(nome: 'gerais', campo: '<b>Gerais</b>');
         $this->campoCheck(nome: 'obrigar_documento_pessoa', campo: 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', valor: $this->obrigar_documento_pessoa);
+
+        $this->campoCheck(nome: 'obrigar_cpf', campo: 'Exigir CPF no cadastro pessoa / aluno', valor: $this->obrigar_cpf);
 
         $this->campoRotulo(nome: 'datas', campo: '<b>Datas</b>');
         $dataBaseDeslocamento = 'A ordenação/apresentação de alunos transferidos nos relatórios (ex.: Relação de alunos por turma) será baseada neste campo quando preenchido.';
@@ -362,6 +366,7 @@ return new class extends clsCadastro {
             altera_atestado_para_declaracao: $this->altera_atestado_para_declaracao,
             obrigar_campos_censo: $this->obrigar_campos_censo,
             obrigar_documento_pessoa: $this->obrigar_documento_pessoa,
+            obrigar_cpf: $this->obrigar_cpf,
             exigir_lancamentos_anteriores: $this->exigir_lancamentos_anteriores,
             exibir_apenas_professores_alocados: $this->exibir_apenas_professores_alocados,
             bloquear_vinculo_professor_sem_alocacao_escola: $this->bloquear_vinculo_professor_sem_alocacao_escola,
@@ -395,6 +400,7 @@ return new class extends clsCadastro {
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
         $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
         $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
+        $obj->obrigar_cpf = !is_null($this->obrigar_cpf);
         $obj->orgao_regional = $this->orgao_regional;
         $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
         $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);

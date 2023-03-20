@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyCalendarDayReason;
+use App\Models\LegacyInstitution;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -43,51 +46,38 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo();
+        $query = LegacyCalendarDayReason::query()
+            ->orderBy('nm_motivo');
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
-            $obj_calendario_dia_motivo->codUsuario = $this->pessoa_logada;
+        if ($this->ref_cod_instituicao) {
+            $query->whereHas('school', function ($query) {
+                $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+            });
+        }
+        if ($this->ref_cod_escola) {
+            $query->where('ref_cod_escola', $this->ref_cod_escola);
+        }
+        if ($this->nm_motivo) {
+            $query->where('nm_motivo', 'ilike', "%{$this->nm_motivo}%");
         }
 
-        $obj_calendario_dia_motivo->setOrderby('nm_motivo ASC');
-        $obj_calendario_dia_motivo->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $lista = $obj_calendario_dia_motivo->lista(
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_ativo: 1,
-            str_nm_motivo: $this->nm_motivo,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
-
-        $total = $obj_calendario_dia_motivo->_total;
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
-
-                $obj_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
-                $obj_cod_escola_det = $obj_cod_escola->detalhe();
-                $registro['ref_cod_escola'] = $obj_cod_escola_det['nome'];
-
-                if ($registro['tipo'] == 'e') {
-                    $registro['tipo'] = 'extra';
-                } elseif ($registro['tipo'] == 'n') {
-                    $registro['tipo'] = 'não-letivo';
-                }
-                $lista_busca = [
-                    "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro['nm_motivo']}</a>",
-                    "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro['tipo']}</a>",
-                    "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro['ref_cod_escola']}</a>",
-                    "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro['ref_cod_instituicao']}</a>"
-                ];
-                $this->addLinhas($lista_busca);
-            }
+        foreach ($lista as $registro) {
+            $lista_busca = [
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->name}</a>",
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->type}</a>",
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->school_name}</a>",
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->institution_name}</a>"
+            ];
+            $this->addLinhas($lista_busca);
         }
+
         $this->addPaginador2(strUrl: 'educar_calendario_dia_motivo_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 576, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {

@@ -5,6 +5,8 @@ use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacyStudent;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -319,6 +321,11 @@ return new class extends clsCadastro {
 
         $dependencia = $this->dependencia == 'on';
 
+        if (!$this->validaAlunoAtivo()) {
+            $this->mensagem = 'Não é possível matricular alunos inativos ou inexistentes.';
+            return false;
+        }
+
         if (!$this->validaPeriodoDeMatriculasPelaDataFechamento()) {
             $this->mensagem = 'Não é possível matricular alunos após a data de fechamento.';
             return false;
@@ -383,14 +390,7 @@ return new class extends clsCadastro {
 
         //novas regras matricula aluno
         $this->ano = $_POST['ano'];
-        $anoLetivoEmAndamentoEscola = new clsPmieducarEscolaAnoLetivo();
-
-        $anoLetivoEmAndamentoEscola = $anoLetivoEmAndamentoEscola->lista(
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_ano: $this->ano,
-            int_andamento: 1, /*somente em andamento */
-            int_ativo: 1
-        );
+        $anoLetivoEmAndamentoEscola = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->inProgress()->active()->exists();
 
         $objEscolaSerie = new clsPmieducarEscolaSerie();
         $dadosEscolaSerie = $objEscolaSerie->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
@@ -399,7 +399,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (is_array(value: $anoLetivoEmAndamentoEscola)) {
+        if ($anoLetivoEmAndamentoEscola) {
             $db = new clsBanco();
 
             $db->Consulta(consulta: "SELECT ref_ref_cod_serie, ref_cod_curso
@@ -970,6 +970,11 @@ return new class extends clsCadastro {
         return false;
     }
 
+    private function validaAlunoAtivo() : bool
+    {
+        return LegacyStudent::where('cod_aluno', $this->ref_cod_aluno)->active()->exists();
+    }
+
     private function validaPeriodoDeMatriculasPelaDataFechamento() : bool
     {
         $instituicao = app(abstract: LegacyInstitution::class);
@@ -1005,7 +1010,6 @@ return new class extends clsCadastro {
                     sequencial: $enturmacao['sequencial']
                 );
 
-                $enturmacao->removerSequencial = true;
                 $detEnturmacao = $enturmacao->detalhe();
                 $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyStudentBuilder;
+use App\Models\View\HistoricGradeYear;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,10 +48,22 @@ class LegacyStudent extends LegacyModel
         return $this->belongsTo(LegacyIndividual::class, 'ref_idpes');
     }
 
+    public function document(): BelongsTo
+    {
+        return $this->belongsTo(LegacyDocument::class, 'ref_idpes');
+    }
+
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->individual->person->name
+            get: fn () => $this->person->name
+        );
+    }
+
+    protected function socialName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->individual->social_name ?? null
         );
     }
 
@@ -169,5 +182,120 @@ class LegacyStudent extends LegacyModel
     public function benefits(): BelongsToMany
     {
         return $this->belongsToMany(LegacyBenefit::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_id', 'aluno_beneficio_id');
+    }
+
+    public function historicGradeYear(): HasMany
+    {
+        return $this->hasMany(HistoricGradeYear::class, 'cod_aluno', 'cod_aluno');
+    }
+
+    public function historicGradeYearNotDiversified(): HasMany
+    {
+        return $this->historicGradeYear()->whereRaw('(select max(unnest) from unnest(tipos_base)) != 2');
+    }
+
+    public function historicGradeYearDiversified(): HasMany
+    {
+        return $this->historicGradeYear()->whereRaw('(select max(unnest) from unnest(tipos_base)) = 2');
+    }
+
+    public function registration_transfer(): HasOne
+    {
+        return $this->hasOne(LegacyRegistration::class, 'ref_cod_aluno')->transfer();
+    }
+
+    public function workload1(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria1');
+                if ($maxWorkload !== null) {
+                    return $maxWorkload;
+                }
+
+                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd1');
+                if ($sumWorkload > 0) {
+                    return $sumWorkload;
+                }
+
+                return '-';
+            }
+        );
+    }
+
+    public function workload2(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria2');
+                if ($maxWorkload !== null) {
+                    return $maxWorkload;
+                }
+
+                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd2');
+                if ($sumWorkload > 0) {
+                    return $sumWorkload;
+                }
+
+                return '-';
+            }
+        );
+    }
+
+    public function workload3(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria3');
+                if ($maxWorkload !== null) {
+                    return $maxWorkload;
+                }
+
+                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd3');
+                if ($sumWorkload > 0) {
+                    return $sumWorkload;
+                }
+
+                return '-';
+            }
+        );
+    }
+
+    public function workload4(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria4');
+                if ($maxWorkload !== null) {
+                    return $maxWorkload;
+                }
+
+                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd4');
+                if ($sumWorkload > 0) {
+                    return $sumWorkload;
+                }
+
+                return '-';
+            }
+        );
+    }
+
+    public function workload5(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria5');
+                if ($maxWorkload !== null) {
+                    return $maxWorkload;
+                }
+
+                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd5');
+                if ($sumWorkload > 0) {
+                    return $sumWorkload;
+                }
+
+                return '-';
+            }
+        );
     }
 }

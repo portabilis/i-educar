@@ -4,9 +4,11 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Models\LegacyStageType;
+use App\Models\View\Discipline;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsDetalhe {
+return new class () extends clsDetalhe {
     public $titulo;
     public $cod_turma;
     public $ref_usuario_exc;
@@ -58,7 +60,6 @@ return new class extends clsDetalhe {
                 'false'
             ]
         );
-
 
         if (empty($lst_obj) || $not_access) {
             $this->simpleRedirect(url: 'educar_turma_lst.php');
@@ -269,9 +270,7 @@ return new class extends clsDetalhe {
                         $color = ' bgcolor="#FFFFFF" ';
                     }
 
-                    $obj_modulo = new clsPmieducarModulo(cod_modulo: $valor['ref_cod_modulo']);
-                    $det_modulo = $obj_modulo->detalhe();
-                    $nm_modulo = $det_modulo['nm_tipo'];
+                    $nm_modulo = LegacyStageType::find($valor['ref_cod_modulo'])->nm_tipo;
 
                     $valor['data_inicio'] = dataFromPgToBr(data_original: $valor['data_inicio']);
                     $valor['data_fim'] = dataFromPgToBr(data_original: $valor['data_fim']);
@@ -345,6 +344,16 @@ return new class extends clsDetalhe {
 
             $this->array_botao[] = 'Lançar pareceres da turma';
             $this->array_botao_url_script[] = sprintf('go("educar_parecer_turma_cad.php?cod_turma=%d");', $registro['cod_turma']);
+
+            $doesntExist = \App\Models\LegacySchoolClassTeacher::query()
+                ->where('ano', $registro['ano'])
+                ->where('turma_id', $registro['cod_turma'])
+                ->doesntExist();
+
+            if ($doesntExist) {
+                $this->array_botao[] = 'Copiar vínculo de servidores';
+                $this->array_botao_url_script[] = sprintf('go("copia_vinculos_servidores_cad.php?cod_turma=%d");', $registro['cod_turma']);
+            }
         }
 
         $this->url_cancelar = 'educar_turma_lst.php';
@@ -365,49 +374,7 @@ return new class extends clsDetalhe {
 
     public function montaListaComponentes()
     {
-        $this->tabela3 = '';
-
-        try {
-            $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
-                serieId: $this->ref_ref_cod_serie,
-                escolaId: $this->ref_ref_cod_escola,
-                ano: $this->ano
-            );
-        } catch (Throwable $e) {
-            $this->mensagem = $e->getMessage();
-
-            return;
-        }
-
-        // Instancia o mapper de turma
-        $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
-        $componentesTurma = [];
-
-        if (isset($this->cod_turma) && is_numeric(value: $this->cod_turma)) {
-            $componentesTurma = $componenteTurmaMapper->findAll(
-                where: ['turma' => $this->cod_turma]
-            );
-        }
-
-        $componentes = [];
-        foreach ($componentesTurma as $componenteTurma) {
-            $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
-        }
-        unset($componentesTurma);
-        $this->escola_serie_disciplina = [];
-
-        if (is_array(value: $componentes) && !empty($componentes)) {
-            $lista = array_intersect_key($lista, $componentes);
-        }
-
-        $this->tabela3 = '';
-        $componentes = collect(value: $lista)->map(callback: function ($disciplina) {
-            return [
-                'id' => $disciplina->id,
-                'name' => $disciplina->nome,
-                'workload' => $disciplina->cargaHoraria !== null || $disciplina->cargaHoraria !== 0 ? $disciplina->cargaHoraria : null
-            ];
-        })->sortByDesc(callback: 'workload');
+        $componentes = Discipline::getBySchoolClassAndGrade($this->cod_turma, $this->ref_ref_cod_serie);
 
         if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
@@ -418,8 +385,8 @@ return new class extends clsDetalhe {
 
             foreach ($componentes as $componente) {
                 $disciplinas .= '<tr>';
-                $disciplinas .= "<td>{$componente['name']}</td>";
-                $disciplinas .= "<td style='text-align: center'>{$componente['workload']}</td>";
+                $disciplinas .= "<td>{$componente->name}</td>";
+                $disciplinas .= "<td style='text-align: center'>{$componente->workload}</td>";
                 $disciplinas .= '</tr>';
             }
             $disciplinas .= '</table>';
@@ -429,6 +396,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
+
 
     public function montaListaComponentesMulti()
     {
@@ -466,8 +434,8 @@ return new class extends clsDetalhe {
         return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-turma-det.js');
     }
 
-    public function getComponentesTurma() {
-
+    public function getComponentesTurma()
+    {
         return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
             ->whereSchool(school: $this->ref_ref_cod_escola)
             ->whereYearEq($this->ano)
@@ -478,7 +446,7 @@ return new class extends clsDetalhe {
     public function getComponentesTurmaMulti($turmaId)
     {
         $componentes = DB::table(table: 'pmieducar.turma as t')
-            ->selectRaw(expression: "cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
+            ->selectRaw(expression: 'cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, \', \' order by nm_serie) as grade')
             ->join(table: 'pmieducar.turma_serie as ts', first: 'ts.turma_id', operator: '=', second: 't.cod_turma')
             ->leftJoin(table: 'pmieducar.serie as s', first: 's.cod_serie', operator: 'ts.serie_id')
             ->join(table: 'pmieducar.escola_serie as es', first: function ($join) {

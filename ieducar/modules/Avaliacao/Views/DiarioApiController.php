@@ -4,6 +4,7 @@ use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRemedialRule;
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
 use App\Process;
 use App\Services\ReleasePeriodService;
@@ -32,13 +33,12 @@ class DiarioApiController extends ApiCoreController
     protected function validatesCanChangeDiarioForAno()
     {
         $escola = App_Model_IedFinder::getEscola($this->getRequest()->escola_id);
+        $ano = LegacySchoolAcademicYear::query()->whereSchool($this->getRequest()->escola_id)->whereYearEq($this->getRequest()->ano)->first([
+            'ativo',
+            'andamento'
+        ]);
 
-        $ano = new clsPmieducarEscolaAnoLetivo();
-        $ano->ref_cod_escola = $this->getRequest()->escola_id;
-        $ano->ano = $this->getRequest()->ano;
-        $ano = $ano->detalhe();
-
-        $anoLetivoEncerrado = is_array($ano) && count($ano) > 0 &&
+        $anoLetivoEncerrado = $ano &&
             $ano['ativo'] == 1 && $ano['andamento'] == 2;
 
         if ($escola['bloquear_lancamento_diario_anos_letivos_encerrados'] == '1' && $anoLetivoEncerrado) {
@@ -1518,9 +1518,10 @@ class DiarioApiController extends ApiCoreController
         $nota = str_replace(',', '.', $nota);
 
         //validação para evitar a soma de valores da notaOriginal para string vazia
-        if ($nota === "") {
-            return 0;
+        if ($nota === '') {
+            return null;
         }
+
         return $nota;
     }
 
@@ -1806,6 +1807,7 @@ class DiarioApiController extends ApiCoreController
         $legacyRegistration = LegacyRegistration::query()->find($matriculaId);
         if ($legacyRegistration instanceof LegacyRegistration && $legacyRegistration->isLockedToChangeStatus() === true) {
             $this->messenger->append('Situação da matrícula ' . $matriculaId . ' não pode ser alterada pois esta bloqueada para mudança de situação');
+
             return;
         }
 
@@ -1818,6 +1820,7 @@ class DiarioApiController extends ApiCoreController
     {
         if (! $this->canPostSituacaoAndNota()) {
             $this->messenger->append('Usuário não possui permissão para alterar a situação do bloqueio de status da matrícula.', 'error');
+
             return;
         }
 

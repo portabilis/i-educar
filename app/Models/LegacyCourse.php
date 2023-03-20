@@ -124,6 +124,13 @@ class LegacyCourse extends LegacyModel
         );
     }
 
+    protected function hourAbsence(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => (float) $this->hora_falta
+        );
+    }
+
     /**
      * Relacionamento com as series
      *
@@ -142,16 +149,6 @@ class LegacyCourse extends LegacyModel
     public function schools(): BelongsToMany
     {
         return $this->belongsToMany(LegacySchool::class, 'escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
-    }
-
-    /**
-     * Relaciona com as habilitações
-     *
-     * @return BelongsToMany
-     */
-    public function qualifications(): BelongsToMany
-    {
-        return $this->belongsToMany(LegacyQualification::class, 'pmieducar.habilitacao_curso', 'ref_cod_curso', 'ref_cod_habilitacao');
     }
 
     public function educationType(): BelongsTo

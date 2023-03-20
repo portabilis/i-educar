@@ -9,7 +9,7 @@ ENV COMPOSER_DISABLE_XDEBUG_WARN=1
 ENV XDEBUG_IDEKEY xdebug
 ENV XDEBUG_CLIENT_HOST 127.0.0.1
 ENV XDEBUG_CLIENT_PORT 9003
-ENV XDEBUG_MODE off
+ENV XDEBUG_MODE dev,debug,coverage
 ENV XDEBUG_START_WITH_REQUEST off
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
@@ -23,7 +23,9 @@ RUN apk add --update \
     postgresql14-client \
     postgresql-dev \
     ttf-dejavu \
-    unzip
+    unzip \
+    openssh \
+    git
 
 # https://github.com/docker-library/php/issues/436#issuecomment-303171390
 RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS

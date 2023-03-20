@@ -70,6 +70,14 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
+    public function whereStudentNameSimilarity($name)
+    {
+        return $this->whereHas(
+            'person',
+            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)->orWhereRaw('SOUNDEX(nome) = SOUNDEX(?)', $name)
+        );
+    }
+
     public function whereFatherName($name)
     {
         return $this->whereHas(
@@ -146,10 +154,10 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function findStudentWithMultipleSearch(StudentFilter $studentFilter)
     {
-        return $this->with(
+        $builder = $this->with(
             [
                 'individual' => function (BelongsTo $query) {
-                    $query->select(['idpes', 'idpes_mae', 'idpes_pai', 'nome_social']);
+                    $query->select(['idpes', 'idpes_mae', 'idpes_pai', 'nome_social', 'idpes_responsavel']);
                     $query
                         ->with('father:nome,idpes', 'father.individual:cpf,idpes')
                         ->with('mother:nome,idpes', 'mother.individual:cpf,idpes')
@@ -162,7 +170,8 @@ class LegacyStudentBuilder extends LegacyBuilder
             ->filter(
                 [
                     'student' => $studentFilter->studentCode,
-                    'student_name' => $studentFilter->studentName,
+                    'student_name' => !$studentFilter->similarity ? $studentFilter->studentName : null,
+                    'student_name_similarity' => $studentFilter->similarity ? $studentFilter->studentName : null,
                     'mother_name' => $studentFilter->motherName,
                     'father_name' => $studentFilter->fatherName,
                     'guardian_name' => $studentFilter->responsableName,
@@ -179,12 +188,19 @@ class LegacyStudentBuilder extends LegacyBuilder
                     ]
                 ]
             )
-            ->active()
-            ->orderBy('data_cadastro', 'desc')
-            ->paginate(
-                $studentFilter->perPage,
-                ['ref_idpes', 'cod_aluno', 'tipo_responsavel'],
-                'pagina_' . $studentFilter->pageName
-            );
+            ->active();
+
+        if ($studentFilter->similarity) {
+            $builder->join('cadastro.pessoa', 'pessoa.idpes', '=', 'aluno.ref_idpes');
+            $builder->orderByRaw('LEVENSHTEIN(UPPER(nome), UPPER(?), 1, 0, 4), nome ASC', $studentFilter->studentName);
+        } else {
+            $builder->orderBy('data_cadastro', 'desc');
+        }
+
+        return $builder->paginate(
+            $studentFilter->perPage,
+            ['ref_idpes', 'cod_aluno', 'tipo_responsavel'],
+            'pagina_' . $studentFilter->pageName
+        );
     }
 }

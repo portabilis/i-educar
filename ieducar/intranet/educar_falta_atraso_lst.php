@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyAbsenceDelay;
+use App\Services\EmployeeService;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -42,96 +45,107 @@ return new class extends clsListagem {
         $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
         $this->campoRotulo(nome: 'nm_servidor', campo: 'Servidor', valor: $fisica['nome']);
 
-        $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
+        $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: [
+            'required' => false,
+            'show-select' => true,
+            'value' => $this->ref_cod_instituicao
+        ]);
+        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: [
+            'required' => false,
+            'show-select' => true,
+            'value' => $this->ref_cod_escola
+        ]);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome]) ? $_GET['pagina_' . $this->nome] * $this->limite-$this->limite : 0;
+        $this->offset = ($_GET['pagina_' . $this->nome]) ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_falta_atraso = new clsPmieducarFaltaAtraso(
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
-            ref_cod_servidor: $this->ref_cod_servidor
-        );
+        $query = LegacyAbsenceDelay::query()
+            ->orderBy('tipo', 'ASC');
 
-        $obj_falta_atraso->setOrderby('tipo ASC');
-        $obj_falta_atraso->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
-
-        // Recupera a lista de faltas/atrasos
-        $lista = $obj_falta_atraso->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao);
-
-        $total = $obj_falta_atraso->_total;
-
-        // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-
-                // Recupera o nome da escola
-                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
-                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                $registro['nm_escola'] = $det_ref_cod_escola['nome'];
-
-                $obj_ins = new clsPmieducarInstituicao($registro['ref_ref_cod_instituicao']);
-                $det_ins = $obj_ins->detalhe();
-
-                $obj_comp = new clsPmieducarFaltaAtrasoCompensado();
-                $horas    = $obj_comp->ServidorHorasCompensadas(
-                    int_ref_cod_servidor: $this->ref_cod_servidor,
-                    int_ref_cod_escola: $registro['ref_cod_escola'],
-                    int_ref_cod_instituicao: $registro['ref_ref_cod_instituicao']
-                );
-
-                if ($horas) {
-                    $horas_aux   = $horas['hora'];
-                    $minutos_aux = $horas['min'];
-                }
-
-                $horas_aux   = $horas_aux - $registro['qtd_horas'];
-                $minutos_aux = $minutos_aux - $registro['qtd_min'];
-
-                if ($horas_aux > 0 && $minutos_aux < 0) {
-                    $horas_aux--;
-                    $minutos_aux += 60;
-                }
-
-                if ($horas_aux < 0 && $minutos_aux > 0) {
-                    $horas_aux--;
-                    $minutos_aux -= 60;
-                }
-
-                if ($horas_aux < 0) {
-                    $horas_aux = '('.($horas_aux * -1).')';
-                }
-
-                if ($minutos_aux < 0) {
-                    $minutos_aux = '('.($minutos_aux * -1).')';
-                }
-
-                $tipo = $registro['tipo'] == 1 ? 'Atraso' : 'Falta';
-
-                $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
-                $url       = 'educar_falta_atraso_det.php';
-                $options   = ['query' => [
-                    'cod_falta_atraso'    => $registro['cod_falta_atraso'],
-                    'ref_cod_servidor'    => $registro['ref_cod_servidor'],
-                    'ref_cod_escola'      => $registro['ref_cod_escola'],
-                    'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
-                ]];
-
-                $dt = new DateTime($registro['data_falta_atraso']);
-                $data = $dt->format('d/m/Y');
-                $this->addLinhas([
-                    $urlHelper->l(text: $registro['nm_escola'], path: $url, options: $options),
-                    $urlHelper->l(text: $det_ins['nm_instituicao'], path: $url, options: $options),
-                    $urlHelper->l(text: $registro['matricula'], path: $url, options: $options),
-                    $urlHelper->l(text: $tipo, path: $url, options: $options),
-                    $urlHelper->l(text: $data, path: $url, options: $options),
-                    $urlHelper->l(text: $horas_aux, path: $url, options: $options),
-                    $urlHelper->l(text: $minutos_aux, path: $url, options: $options)
-                ]);
-            }
+        if ($this->ref_cod_instituicao) {
+            $query->where('ref_ref_cod_instituicao', $this->ref_cod_instituicao);
         }
+        if ($this->ref_cod_escola) {
+            $query->where('ref_cod_escola', $this->ref_cod_escola);
+        }
+        if ($this->ref_cod_servidor) {
+            $query->where('ref_cod_servidor', $this->ref_cod_servidor);
+        }
+
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
+
+        foreach ($lista as $registro) {
+            // Recupera o nome da escola
+            $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
+            $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+            $registro['nm_escola'] = $det_ref_cod_escola['nome'];
+
+            $obj_ins = new clsPmieducarInstituicao($registro['ref_ref_cod_instituicao']);
+            $det_ins = $obj_ins->detalhe();
+
+            $service = new EmployeeService();
+            $horas = $service->getHoursCompensate(
+                cod_servidor: $registro['ref_cod_servidor'],
+                cod_escola: $registro['ref_cod_escola'],
+                cod_instituicao: $registro['data_falta']
+            );
+
+            if ($horas) {
+                $horas_aux = $horas['hora'];
+                $minutos_aux = $horas['min'];
+            }
+
+            $horas_aux = $horas_aux - $registro['qtd_horas'];
+            $minutos_aux = $minutos_aux - $registro['qtd_min'];
+
+            if ($horas_aux > 0 && $minutos_aux < 0) {
+                $horas_aux--;
+                $minutos_aux += 60;
+            }
+
+            if ($horas_aux < 0 && $minutos_aux > 0) {
+                $horas_aux--;
+                $minutos_aux -= 60;
+            }
+
+            if ($horas_aux < 0) {
+                $horas_aux = '(' . ($horas_aux * -1) . ')';
+            }
+
+            if ($minutos_aux < 0) {
+                $minutos_aux = '(' . ($minutos_aux * -1) . ')';
+            }
+
+            $tipo = $registro['tipo'] == 1 ? 'Atraso' : 'Falta';
+
+            $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
+            $url = 'educar_falta_atraso_det.php';
+            $options = [
+                'query' => [
+                    'cod_falta_atraso' => $registro['cod_falta_atraso'],
+                    'ref_cod_servidor' => $registro['ref_cod_servidor'],
+                    'ref_cod_escola' => $registro['ref_cod_escola'],
+                    'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
+                ]
+            ];
+
+            $dt = new DateTime($registro['data_falta_atraso']);
+            $data = $dt->format('d/m/Y');
+            $this->addLinhas([
+                $urlHelper->l(text: $registro['nm_escola'], path: $url, options: $options),
+                $urlHelper->l(text: $det_ins['nm_instituicao'], path: $url, options: $options),
+                $urlHelper->l(text: $registro['matricula'], path: $url, options: $options),
+                $urlHelper->l(text: $tipo, path: $url, options: $options),
+                $urlHelper->l(text: $data, path: $url, options: $options),
+                $urlHelper->l(text: $horas_aux, path: $url, options: $options),
+                $urlHelper->l(text: $minutos_aux, path: $url, options: $options)
+            ]);
+        }
+
 
         $this->addPaginador2(
             strUrl: 'educar_falta_atraso_lst.php',

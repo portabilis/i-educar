@@ -53,6 +53,7 @@ function getDisciplina(disciplinas) {
         conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         conteudo += '  <span style="display: block; float: left; width: 100px">Carga horária</span>';
         conteudo += '  <span style="display: block; float: left; width: 180px;">Usar padrão do componente?</span>';
+        conteudo += '  <span style="display: block; float: left; width: 180px;">Hora falta</span>';
         conteudo += '  <span style="display: block; float: left; width: 150px;">Anos letivos</span>';
         conteudo += '</div>';
 
@@ -66,7 +67,7 @@ function getDisciplina(disciplinas) {
         "</a>" +
         "</label>";
         conteudo += "  <label style='display: block; float: left; width: 150px'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(" + '"usar_componente[]"' + ");';/>Marcar todos</label>";
-        conteudo += "<label style='display: block; float: left; width: 30px'>&nbsp;</label>" +
+        conteudo += "<label style='display: block; float: left; width: 130px'>&nbsp;</label>" +
         "<label style='display: block; float: left; width: 100px;'>" +
         "<a class='clone-values' onclick='cloneValues("+first_key+",\"anos_letivos\")'>" +
         "<i class='fa fa-clone' aria-hidden='true'></i>" +
@@ -81,7 +82,8 @@ function getDisciplina(disciplinas) {
           conteudo += '<div style="margin-bottom: 10px; float: left">';
           conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[' + id + ']" class="check_'+id+'" id="disciplinas[]" value="' + id + '">' + item.name + '</label>';
           conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="carga_horaria_' + id + '" data-id="'+id+'" name="carga_horaria[' + id + ']" class="carga_horaria" value="" size="5" maxlength="7"></label>';
-          conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' +  item.workload + ' h)</label>';
+          conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' + formatNumber(item.workload)  + ' h)</label>';
+          conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="hora_falta_' + id + '" data-id="'+id+'" name="hora_falta[' + id + ']" class="" value="" size="5" maxlength="7"></label>';
           conteudo += `
             <select name='componente_anos_letivos[${id}][]' class="anos_letivos" id='anos_letivos_${id}' data-id='${id}' style='width: 150px;' multiple='multiple'>
             </select>
@@ -102,13 +104,25 @@ function getDisciplina(disciplinas) {
     rebuildAllChosenAnosLetivos();
 }
 
+function formatNumber(value)
+{
+  let float = Math.floor(value);
+  let calc = value - float;
+
+  if (calc > 0) {
+    return value;
+  }
+
+  return Math.round(value);
+}
+
 document.getElementById('ref_cod_serie').onchange = function () {
     const campoSerie = document.getElementById('ref_cod_serie').value;
 
     const campoDisciplinas = document.getElementById('disciplinas');
     campoDisciplinas.innerHTML = "Carregando disciplina";
 
-    getApiResource("/api/resource/discipline",getDisciplina,{grade:campoSerie});
+    getApiResource("/api/resource/discipline", getDisciplina,{grade:campoSerie});
 };
 
 after_getEscola = function () {
@@ -177,6 +191,12 @@ function marcarCheck(idValue) {
             if (campo.elements[i].id == idValue) {
                 campo.elements[i].checked = campo.CheckTodos3.checked;
             }
+        }
+    } else if (idValue == 'usar_componente_hora_falta[]') {
+        for (i = 0; i < contaForm; i++) {
+          if (campo.elements[i].id == idValue) {
+            campo.elements[i].checked = campo.CheckTodos4.checked;
+          }
         }
     }
 }
@@ -340,14 +360,14 @@ $j('#ano_letivo').change(function() {
 });
 
 function cloneValues(componente_id, classe){
-  var valor = $j('#' + classe + '_' + componente_id).val();
+  const valor = $j('#' + classe + '_' + componente_id).val();
 
   $j('.' + classe).each(function() {
-    var id = $j(this).data('id')
+    const id = $j(this).data('id')
 
     if ($j('.check_' + id).is(':checked')) {
       $j(this).val(valor);
-      if (classe == 'anos_letivos') {
+      if (classe === 'anos_letivos') {
         $j(this).trigger('chosen:updated');
       }
     }

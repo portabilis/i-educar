@@ -15,6 +15,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pgsql": "*",
+        "ankurk91/laravel-eloquent-relationships": "^1.3",
         "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
         "cossou/jasperphp": "^2.8",
@@ -65,7 +66,6 @@
             "ieducar/lib",
             "ieducar/modules/*/Model",
             "ieducar/modules/Avaliacao/Service",
-            "ieducar/modules/Avaliacao/Fixups",
             "ieducar/modules/Avaliacao/Views",
             "ieducar/modules/FormulaMedia/Validate"
         ],
@@ -108,7 +108,7 @@
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
             "@composer install",
-            "@composer plug-and-play:install",
+            "@composer plug-and-play",
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan storage:link --ansi",
@@ -116,7 +116,7 @@
         ],
         "update-install": [
             "@composer update",
-            "@composer plug-and-play:update",
+            "@composer plug-and-play",
             "@set-permissions",
             "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"
