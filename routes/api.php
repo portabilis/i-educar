@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ReligionController;
 use App\Http\Controllers\Api\SchoolClassController;
 use App\Http\Controllers\Api\SchoolController;
 use App\Http\Controllers\Api\SituationController;
+use App\Http\Controllers\Api\StageController;
 use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,7 +60,7 @@ Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getS
 
 Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
 
-Route::group(['middleware' => 'auth:sanctum','namespace' => 'Api'], static function () {
+Route::group([/*'middleware' => 'auth:sanctum',*/'namespace' => 'Api'], static function () {
     Route::resource('institution', InstitutionController::class)->only(['index']);
     Route::resource('school', SchoolController::class)->only(['index']);
     Route::resource('course', CourseController::class)->only(['index']);
@@ -68,6 +69,7 @@ Route::group(['middleware' => 'auth:sanctum','namespace' => 'Api'], static funct
     Route::resource('registration', RegistrationController::class)->only(['index']);
     Route::resource('situation', SituationController::class)->only(['index']);
     Route::resource('discipline', DisciplineController::class)->only(['index']);
+    Route::resource('stage', StageController::class)->only(['index']);
 });
 
 Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Api\Resource'], static function () {
