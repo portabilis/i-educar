@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolClassStageBuilder;
 use App\Support\Database\DateSerializer;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacySchoolClassStage extends Model
+class LegacySchoolClassStage extends LegacyModel
 {
     use DateSerializer;
 
@@ -19,6 +19,13 @@ class LegacySchoolClassStage extends Model
      * @var string
      */
     protected $primaryKey = 'ref_cod_turma';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LegacySchoolClassStageBuilder::class;
 
     /**
      * @var array
