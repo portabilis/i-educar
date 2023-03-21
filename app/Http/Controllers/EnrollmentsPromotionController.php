@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class EnrollmentsPromotionController extends Controller
 {
-
     public function processEnrollmentsPromotionJobs(Request $request)
     {
         $data = $this->getResquetData($request);
@@ -38,7 +37,7 @@ class EnrollmentsPromotionController extends Controller
         Bus::batch($jobs)
             ->finally(function (Batch $batch) use ($userId, $message) {
                 $message .= $batch->totalJobs . ' matrícula(s)';
-                (new NotificationService())->createByUser($userId, $message ,'',NotificationType::OTHER);
+                (new NotificationService())->createByUser($userId, $message, '', NotificationType::OTHER);
             })
             ->dispatch();
 
@@ -54,9 +53,8 @@ class EnrollmentsPromotionController extends Controller
 
         $dbInformation = DB::select(DB::raw($sql), $data);
 
-        return array_map(fn($item) => $item->cod_matricula, $dbInformation);
+        return array_map(fn ($item) => $item->cod_matricula, $dbInformation);
     }
-
 
     private function getEnrollmentsByFilterSql(): string
     {
@@ -81,7 +79,7 @@ class EnrollmentsPromotionController extends Controller
                 ';
     }
 
-    private function getResquetData(Request $request) : array
+    private function getResquetData(Request $request): array
     {
         return [
             'ano' => (int) $request->input('ano'),
