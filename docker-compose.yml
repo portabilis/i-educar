@@ -51,8 +51,6 @@ services:
       - SERVICE_TAGS=dev
       - SERVICE_NAME=php
       - PGPASSWORD=ieducar
-      - PHP_IDE_CONFIG=serverName=i-Educar
-      - XDEBUG_CONFIG=remote_host=127.0.0.1'
     working_dir: /var/www/ieducar
     links:
       - postgres
