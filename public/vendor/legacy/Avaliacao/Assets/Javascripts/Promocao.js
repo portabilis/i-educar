@@ -1,6 +1,8 @@
 // variaveis usadas pelo modulo Frontend/Process.js
 
 processOptions.validatesResourcesAfterSearch = false;
+processOptions.showNewSearchButton = false;
+processOptions.clearSearchDiv = true;
 
 // #DEPRECADO, migrar para novo padrao processOptions
 const PAGE_URL_BASE      = 'promocao';
@@ -16,119 +18,120 @@ let onClickSelectAllEvent = false;
 let onClickActionEvent    = false;
 let onClickDeleteEvent    = false;
 
-//url builders
-
 let setTableSearchDetails = function(){};
 
-let postPromocaoMatricula = function(){
-  let $proximoMatriculaIdField = $j('#proximo-matricula-id');
-  $proximoMatriculaIdField.data('initial_matricula_id', $proximoMatriculaIdField.val());
-
-  if (validatesIfValueIsNumeric($proximoMatriculaIdField.val())) {
-    let options = {
-      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'promocao', {matricula_id : $proximoMatriculaIdField.val()}),
-      dataType : 'json',
-      data : {
-        instituicao_id : $j('#instituicao_id').val(),
-        ano : $j('#ano').val(),
-        escola : $j('#escola').val(),
-        curso : $j('#curso').val(),
-        serie : $j('#serie').val(),
-        turma : $j('#turma').val(),
-        matricula: $j('#matricula').val(),
-        regras_avaliacao_id : $j('#regras_avaliacao_id').val()
-      },
-      success : handlePostPromocaoMatricula,
-      error : handlePostPromocaoMatricula
-    };
-    postResource(options);
-  }
-};
-
-let deleteOldComponentesCurriculares = function() {
+let postPromocaoMatricula = function() {
   let options = {
-    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'old_componentes_curriculares', {ano : $j('#ano').val()}),
+    url : '/enrollments-promotion',
     dataType : 'json',
-    data : {},
-    success : handleDelete
+    type: 'post',
+    data : {
+      instituicao_id : $j('#instituicao_id').val(),
+      ano : $j('#ano').val(),
+      escola : $j('#escola').val(),
+      curso : $j('#curso').val(),
+      serie : $j('#serie').val(),
+      turma : $j('#turma').val(),
+      matricula: $j('#matricula').val(),
+      situacaoMatricula: $j('#situacaoMatricula').val(),
+      regras_avaliacao_id : $j('#regras_avaliacao_id').val()
+    },
+    success : handlePostPromocaoMatricula,
+    error : handlePostPromocaoMatricula
   };
 
-  deleteResource(options);
+  postResource(options);
 };
 
 function handlePostPromocaoMatricula(dataResponse) {
-  const response = dataResponse.msgs;
-  response.map((res) => {
-    if (res.type === 'error') {
-      messageUtils.error(safeUtf8Decode(res.msg));
-    } else{
-      messageUtils.success(safeUtf8Decode(res.msg));
-    }
-  });
-
-  let $proximoMatriculaIdField = $j('#proximo-matricula-id');
-  let initialMatriculaId = parseInt($proximoMatriculaIdField.data('initial_matricula_id'));
-  let nextEnrollmentValue = parseInt($proximoMatriculaIdField.val());
-  let nextResponseEnrollmentValue = dataResponse.result.proximo_matricula_id;
-  let arrayCheck = Array.isArray(nextResponseEnrollmentValue);
-
-  if (nextResponseEnrollmentValue !== 0 && !arrayCheck) {
-    let $proximaMatricula = ((dataResponse.any_error_msg) ? (nextEnrollmentValue + parseInt(1)) : nextResponseEnrollmentValue);
-    $proximoMatriculaIdField.val($proximaMatricula);
-    initialMatriculaId = parseInt($proximoMatriculaIdField.val());
+  if (dataResponse.status === 'notice') {
+    messageUtils.notice(dataResponse.message);
+    return;
   }
 
-  if ($j('#continuar-processo').is(':checked') && initialMatriculaId !== nextEnrollmentValue) {
-      $j('#promover-matricula').click();
-  } else if (($j('#continuar-processo').is(':checked') && initialMatriculaId === nextEnrollmentValue)) {
-      messageUtils.success('Processo finalizado.');
-  }
-}
-
-function handleDelete(dataResponse) {
-  const response = dataResponse.msgs;
-  response.map((res) => {
-    if (res.type === 'error') {
-      messageUtils.error(safeUtf8Decode(res.msg));
-    } else{
-      messageUtils.success(safeUtf8Decode(res.msg));
-    }
-  });
+  messageUtils.success(dataResponse.message);
 }
 
 function handleSearch($resultTable, dataResponse) {
+
+  let html = `
+    <table id="atualizacao-matriculas-resultados" width="100%">
+        <tr>
+            <th colspan="2">Matrículas</th>
+        </tr>
+        <tr>
+            <td>Ano</td>
+            <td>${dataResponse.ano}</td>
+        </tr>
+        <tr>
+            <td>Instituição</td>
+            <td>${dataResponse.instituicao}</td>
+        </tr>
+        <tr>
+            <td>Escola</td>
+            <td>${dataResponse.escola}</td>
+        </tr>
+        <tr>
+            <td>Curso</td>
+            <td>${dataResponse.curso}</td>
+        </tr>
+        <tr>
+            <td>Série</td>
+            <td>${dataResponse.serie}</td>
+        </tr>
+        <tr>
+            <td>Turma</td>
+            <td>${dataResponse.turma}</td>
+        </tr>
+        <tr>
+            <td>Aluno</td>
+            <td>${dataResponse.matricula}</td>
+        </tr>
+        <tr>
+            <td>Situação</td>
+            <td>${dataResponse.situacaoMatricula}</td>
+        </tr>
+        <tr>
+            <td>Regra de avaliação</td>
+            <td>${dataResponse.regraAvaliacao}</td>
+        </tr>
+        <tr>
+            <td colspan="2" class=padding><b>Quantidade de matrículas filtradas: ${dataResponse.quantidade_matriculas}<b></td>
+        </tr>
+    </table>
+  `;
+
   let $text = $j('<div />');
 
   $j('<span />')
-    .html('Quantidade de matrículas ativas na rede : ' + '<b>' + dataResponse.quantidade_matriculas + '<b><br />')
+    .html(html)
     .attr('class','qnt-matriculas')
     .appendTo($text);
 
-  $j('<span />')
-    .html('Próxima matrícula:')
-    .attr('class','qnt-matriculas')
+  let message = `
+    <div class="flex font-16 gap-4 justify-between items-center border-l-8 border-solid py-2 px-4 border-warning bg-warning text-warning">
+        <div>
+            <i class="fa fa-exclamation-triangle x-alert-icon" aria-hidden="true"></i>
+        </div>
+        <div class="flex-grow ">Ao clicar em "Iniciar processo" a atualização será iniciada automaticamente. Uma notificação será enviada quando a atualização for concluída.</div>
+    </div>
+  `;
+
+  $j('<div />')
+    .html(message)
     .appendTo($text);
 
-  $j('<input />').attr('type', 'text')
-    .attr('name', 'proximo-matricula-id')
-    .attr('id', 'proximo-matricula-id')
-    .attr('class','proximo-matricula')
-    .val(0)
+  let boxButtons = $j('<div />').attr('id', 'box-buttons')
+    .attr('class','box')
     .appendTo($text);
 
-  $j('<br />').appendTo($text);
-
-  $j('<input />')
-    .attr('type', 'checkbox')
-    .attr('id', 'continuar-processo')
-    .attr('name', 'continuar-processo')
-    .attr('class','continuar-processo')
-    .appendTo($text);
-
-  $j('<span />')
-    .html('Continuar processo <br />')
-    .attr('class','qnt-matriculas')
-    .appendTo($text);
+  $j('<input />').attr('id', 'voltar')
+    .attr('href', '#')
+    .attr('type','button')
+    .attr('class','botaolistagem')
+    .attr('value','Voltar')
+    .bind('click', showSearchForm)
+    .appendTo(boxButtons);
 
   $j('<input />').attr('id', 'promover-matricula')
     .attr('href', '#')
@@ -136,29 +139,9 @@ function handleSearch($resultTable, dataResponse) {
     .attr('class','btn-green')
     .attr('value','Iniciar processo')
     .bind('click', postPromocaoMatricula)
-    .appendTo($text);
+    .appendTo(boxButtons);
 
   $j('<span />').html(' ').appendTo($text);
 
-  $j('<input />').attr('id', 'delete-old-componentes-curriculares')
-    .attr('href', '#')
-    .attr('type','button')
-    .attr('class','btn-danger')
-    .attr('value','Limpar antigos componentes curriculares')
-    .bind('click', deleteOldComponentesCurriculares)
-    .appendTo($text);
-
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
-
-  if (dataResponse.quantidade_matriculas <= 1) {
-    $j('#proximo-matricula-id').prop('disabled', true);
-    $j('#continuar-processo').prop('disabled', true);
-  }
 }
-
-$j(document).ready(() => {
-  $j('#matricula').on('change', () => {
-    let value = $j('#matricula').val()
-    $j('#matricula option').removeAttr('selected').filter("[value="+value+"]").attr('selected', '')
-  })
-})

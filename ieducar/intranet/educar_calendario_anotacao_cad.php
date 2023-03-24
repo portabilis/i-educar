@@ -89,7 +89,7 @@ return new class () extends clsCadastro {
 
         if (!$exists) {
             $obj_dia = new LegacyCalendarDay();
-            $obj_dia->cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
+            $obj_dia->ref_cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
             $obj_dia->mes = $this->mes;
             $obj_dia->dia = $this->dia;
             $obj_dia->ref_usuario_cad = $this->pessoa_logada;

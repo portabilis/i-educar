@@ -49,7 +49,6 @@ class LegacyIndividual extends Model
         'data_chegada_brasil',
         'idmun_nascimento',
         'ultima_empresa',
-        'idocup',
         'nome_mae',
         'nome_pai',
         'nome_conjuge',

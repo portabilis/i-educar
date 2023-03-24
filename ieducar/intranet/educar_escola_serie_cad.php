@@ -437,7 +437,7 @@ return new class () extends clsCadastro {
                         etapas_especificas: $this->etapas_especificas[$key],
                         etapas_utilizadas: $this->etapas_utilizadas[$key],
                         anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: $this->hora_falta[$key] === null ? null : $this->hora_falta[$key]  / 60
+                        hora_falta: empty($this->hora_falta[$key]) ? null : $this->hora_falta[$key]  / 60
                     );
 
                     if ($obj->existe()) {
@@ -543,7 +543,7 @@ return new class () extends clsCadastro {
                         etapas_especificas: $etapas_especificas,
                         etapas_utilizadas: $etapas_utilizadas,
                         anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: $hora_falta === null ? null : $hora_falta / 60
+                        hora_falta: empty($hora_falta) ? null : $hora_falta / 60
                     );
 
 
