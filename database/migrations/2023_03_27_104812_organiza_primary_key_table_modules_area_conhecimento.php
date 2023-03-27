@@ -7,6 +7,7 @@ return new class () extends Migration {
     public function up()
     {
         DB::unprepared('ALTER TABLE IF EXISTS modules.componente_curricular DROP CONSTRAINT IF EXISTS componente_curricular_area_conhecimento_fk;');
+        DB::unprepared('ALTER TABLE IF EXISTS modules.componente_curricular DROP CONSTRAINT IF EXISTS modules_componente_curricular_area_conhecimento_id_instituicao_;');
         DB::unprepared('ALTER TABLE IF EXISTS modules.componente_curricular DROP CONSTRAINT IF EXISTS componente_curricular_area_conhecimento_id_instituicao_id_forei;');
         DB::unprepared('ALTER TABLE IF EXISTS modules.area_conhecimento DROP CONSTRAINT IF EXISTS area_conhecimento_pkey;');
         DB::unprepared('ALTER TABLE IF EXISTS modules.area_conhecimento ADD CONSTRAINT area_conhecimento_pkey PRIMARY KEY (id);');
