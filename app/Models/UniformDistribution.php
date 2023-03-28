@@ -19,10 +19,6 @@ class UniformDistribution extends Model
         'distribution_date' => 'date:d/m/Y',
     ];
 
-    protected $dates = [
-        'distribution_date'
-    ];
-
     protected $fillable = [
         'student_id',
         'year',

@@ -26,12 +26,9 @@ class LegacyAcademicYearStage extends LegacyModel
      */
     protected string $builder = LegacyAcademicYearStageBuilder::class;
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_inicio',
-        'data_fim',
+    protected $casts = [
+        'data_inicio' => 'date',
+        'data_fim' => 'date',
     ];
 
     /**

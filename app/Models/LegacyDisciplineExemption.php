@@ -59,11 +59,10 @@ class LegacyDisciplineExemption extends LegacyModel
         'active' => 'ativo'
     ];
 
-    protected $dates = [
-        'data_exclusao'
+    protected $casts = [
+        'updated_at' => 'date:d/m/Y H:i:s',
+        'data_exclusao' => 'datetime',
     ];
-
-    protected $casts = ['updated_at' => 'date:d/m/Y H:i:s'];
 
     /**
      * Relação com a matrícula.
