@@ -282,17 +282,6 @@ class clsPmieducarTurmaDisciplina extends Model
                             UNION
 
                             SELECT 1
-                            FROM pmieducar.falta_aluno fa
-                            WHERE
-                                    fa.disc_ref_ref_cod_disciplina = {$disciplina}
-                                AND fa.disc_ref_ref_cod_turma = {$this->ref_cod_turma}
-                                AND fa.ref_ref_cod_turma = {$this->ref_cod_turma}
-                                AND fa.disc_ref_ref_cod_serie = {$this->ref_cod_serie}
-                                AND fa.disc_ref_ref_cod_escola = {$this->ref_cod_escola}
-
-                            UNION
-
-                            SELECT 1
                             FROM pmieducar.quadro_horario_horarios qhh
                             WHERE
                                     qhh.ref_ref_cod_disciplina = {$disciplina}
