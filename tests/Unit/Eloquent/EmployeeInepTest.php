@@ -29,7 +29,7 @@ class EmployeeInepTest extends EloquentTestCase
     protected function getLegacyAttributes(): array
     {
         return [
-            'id' => 'cod_servidor',
+            'id' => 'id',
         ];
     }
 }
