@@ -26,12 +26,12 @@ class LegacyInstitutionFactory extends Factory
             'ref_idtlog' => 'AV',
             'ref_sigla_uf' => 'SC',
             'cep' => $this->faker->numerify('########'),
-            'cidade' => $this->faker->city,
-            'bairro' => $this->faker->lastName,
-            'logradouro' => $this->faker->address,
-            'nm_responsavel' => $this->faker->name,
+            'cidade' => $this->faker->city(),
+            'bairro' => $this->faker->lastName(),
+            'logradouro' => $this->faker->address(),
+            'nm_responsavel' => $this->faker->name(),
             'data_cadastro' => now(),
-            'nm_instituicao' => $this->faker->company,
+            'nm_instituicao' => $this->faker->company(),
         ];
     }
 

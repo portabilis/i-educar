@@ -22,7 +22,7 @@ class LegacyOrganizationFactory extends Factory
     public function definition(): array
     {
         $person = LegacyPersonFactory::new()->create([
-            'nome' => $this->faker->company,
+            'nome' => $this->faker->company(),
         ]);
 
         return [
