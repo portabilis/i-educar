@@ -25,11 +25,4 @@ class EmployeeInepTest extends EloquentTestCase
     {
         $this->assertEquals($this->model->cod_docente_inep, $this->model->number);
     }
-
-    protected function getLegacyAttributes(): array
-    {
-        return [
-            'id' => 'id',
-        ];
-    }
 }

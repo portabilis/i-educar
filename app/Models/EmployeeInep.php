@@ -23,10 +23,6 @@ class EmployeeInep extends LegacyModel
         'cod_docente_inep'
     ];
 
-    public array $legacy = [
-        'id' => 'id',
-    ];
-
     protected function number(): Attribute
     {
         return Attribute::make(
