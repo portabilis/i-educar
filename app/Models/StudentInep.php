@@ -17,11 +17,6 @@ class StudentInep extends LegacyModel
      */
     protected $table = 'modules.educacenso_cod_aluno';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_aluno';
-
     protected $fillable = [
         'cod_aluno',
         'cod_aluno_inep',
