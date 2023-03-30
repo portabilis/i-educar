@@ -24,6 +24,7 @@ return new class () extends Migration {
         DB::unprepared('ALTER TABLE IF EXISTS modules.educacenso_cod_aluno DROP CONSTRAINT IF EXISTS educacenso_cod_aluno_pk;');
         DB::unprepared('ALTER TABLE IF EXISTS modules.educacenso_cod_aluno DROP CONSTRAINT IF EXISTS educacenso_cod_aluno_pkey;');
         DB::unprepared('ALTER TABLE IF EXISTS modules.educacenso_cod_aluno DROP CONSTRAINT IF EXISTS educacenso_cod_aluno_cod_aluno_cod_aluno_inep_unique;');
+        DB::unprepared('ALTER TABLE IF EXISTS modules.educacenso_cod_aluno DROP CONSTRAINT IF EXISTS modules_educacenso_cod_aluno_cod_aluno_cod_aluno_inep_unique;');
         Schema::table('modules.educacenso_cod_aluno', function (Blueprint $table) {
             $table->dropColumn('id');
         });
