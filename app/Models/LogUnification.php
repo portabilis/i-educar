@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class LogUnification extends Model
 {
-
     use LegacyAttribute;
 
     /**
