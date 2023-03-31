@@ -34,9 +34,10 @@ return new class () extends clsListagem {
         $limite = 10;
         $iniciolimit = ($this->getQueryString(name: "pagina_{$this->nome}")) ? $this->getQueryString(name: "pagina_{$this->nome}") * $limite - $limite : 0;
 
+
         $lista = LegacyPerson::query()->filter([
             'name' => $par_nome,
-            'cpf' => $par_id_federal,
+            'cpf' => is_numeric($par_id_federal) ? $par_id_federal : null,
         ])->select([
             'idpes',
             'nome',
