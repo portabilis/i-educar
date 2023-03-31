@@ -1304,7 +1304,7 @@ var handleGetPersonDetails = function (dataResponse) {
 
   var mascara = null;
 
-  if (cpf) {
+  if (cpf && (obrigarCPF.val() == 0 || !ignoreValidation.includes(cpf))) {
     mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
   }
 
