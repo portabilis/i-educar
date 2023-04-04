@@ -75,7 +75,7 @@ class Registro20Model extends Registro20
             $arrayColumns[47] ? UnidadesCurriculares::TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS : null,
         ]);
 
-        $this->componentes = $this->getComponentesByImportFile(array_slice($arrayColumns, 47, 73));
+        $this->componentes = $this->getComponentesByImportFile(array_slice($arrayColumns, 47, 26));
     }
 
     private function getComponentesByImportFile($componentesImportacao)
