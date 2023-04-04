@@ -8,10 +8,10 @@ class TipoVinculo
 {
     use DescriptionValue;
 
-    const EFETIVO = 1;
-    const TEMPORARIO = 2;
-    const TERCEIRIZADO = 3;
-    const CLT = 4;
+    public const EFETIVO = 1;
+    public const TEMPORARIO = 2;
+    public const TERCEIRIZADO = 3;
+    public const CLT = 4;
 
     public static function getDescriptiveValues()
     {

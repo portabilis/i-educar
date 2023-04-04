@@ -10,8 +10,8 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $this->cod_matricula = $this->getQueryString('ref_cod_matricula');
-        $this->ref_cod_aluno = $this->getQueryString('ref_cod_aluno');
+        $this->cod_matricula = $this->getQueryString(name: 'ref_cod_matricula');
+        $this->ref_cod_aluno = $this->getQueryString(name: 'ref_cod_aluno');
 
         $this->validaPermissao();
         $this->validaParametros();
@@ -21,29 +21,29 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $this->campoOculto('cod_matricula', $this->cod_matricula);
-        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+        $this->campoOculto(nome: 'cod_matricula', valor: $this->cod_matricula);
+        $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
 
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb('Tipo do AEE do aluno', [
+        $this->breadcrumb(currentPage: 'Tipo do AEE do aluno', breadcrumbs: [
             $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
             'educar_index.php' => 'Escola',
         ]);
 
         $obj_aluno = new clsPmieducarAluno();
-        $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
+        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
+        if (is_array(value: $lst_aluno)) {
+            $det_aluno = array_shift(array: $lst_aluno);
             $this->nm_aluno = $det_aluno['nome_aluno'];
-            $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
+            $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
 
         $enturmacoes = $this->getEnturmacoesAee();
 
         foreach ($enturmacoes as $enturmacao) {
-            $tipoAtendimento = explode(',', str_replace(['{', '}'], '', $enturmacao['tipo_atendimento']));
+            $tipoAtendimento = explode(separator: ',', string: str_replace(search: ['{', '}'], replace: '', subject: $enturmacao['tipo_atendimento']));
 
             $helperOptions = ['objectName' => "{$enturmacao['ref_cod_turma']}_{$enturmacao['sequencial']}_tipoatendimento"];
             $options = [
@@ -54,7 +54,7 @@ return new class extends clsCadastro {
                 ],
                 'required' => false,
             ];
-            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
         }
     }
 
@@ -68,37 +68,37 @@ return new class extends clsCadastro {
         $arrayTipoAtendimento = [];
         foreach ($enturmacoes as $enturmacao) {
             $arrayTipoAtendimento[] = [
-                'value' => request($enturmacao['ref_cod_turma'] . '_' . $enturmacao['sequencial'] . '_tipoatendimento'),
+                'value' => request(key: $enturmacao['ref_cod_turma'] . '_' . $enturmacao['sequencial'] . '_tipoatendimento'),
                 'turma' => $enturmacao['ref_cod_turma'],
                 'sequencial' => $enturmacao['sequencial'],
             ];
         }
 
         foreach ($arrayTipoAtendimento as $data) {
-            $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $data['turma'], $this->pessoa_logada);
-            $tipoAtendimento = implode(',', $data['value']);
+            $obj = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->cod_matricula, ref_cod_turma: $data['turma'], ref_usuario_exc: $this->pessoa_logada);
+            $tipoAtendimento = $data['value'] ? implode(separator: ',', array: $data['value']) : null;
             $obj->sequencial = $data['sequencial'];
             $obj->tipo_atendimento = $tipoAtendimento;
             $obj->edita();
         }
 
         $this->mensagem = 'Tipo do AEE do aluno atualizado com sucesso.<br>';
-        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
+        $this->simpleRedirect(url: "educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
     private function validaPermissao()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
     }
 
     private function validaParametros()
     {
-        $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
+        $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->cod_matricula);
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->simpleRedirect(url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
     }
 
@@ -106,45 +106,13 @@ return new class extends clsCadastro {
     {
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista(
-            $this->cod_matricula,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
-            false,
-            false,
-            false,
-            null,
-            null,
-            false,
-            null,
-            false,
-            false,
-            false
+            int_ref_cod_matricula: $this->cod_matricula,
+            int_ativo: 1
         );
 
         $arrayEnturmacoes = [];
         foreach ($enturmacoes as $enturmacao) {
-            $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+            $turma         = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
             $turma         = $turma->detalhe();
 
             if ($turma['tipo_atendimento'] == TipoAtendimentoTurma::AEE) {
@@ -157,7 +125,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo do AEE do aluno';
+        $this->title = 'Tipo do AEE do aluno';
         $this->processoAp = '578';
     }
 };

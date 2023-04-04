@@ -38,7 +38,7 @@ abstract class CoreExt_DataMapper
      *
      * @var clsBanco
      */
-    protected $_dbAdapter = null;
+    protected $_dbAdapter;
 
     /**
      * Instância padrão para uso em objetos CoreExt_DataMapper. Isso possibilita
@@ -47,7 +47,7 @@ abstract class CoreExt_DataMapper
      *
      * @var clsBanco
      */
-    protected static $_defaultDbAdapter = null;
+    protected static $_defaultDbAdapter;
 
     /**
      * Nome da tabela em que o objeto é mapeado.
@@ -65,8 +65,6 @@ abstract class CoreExt_DataMapper
 
     /**
      * Construtor.
-     *
-     * @param clsBanco $db
      */
     public function __construct(clsBanco $db = null)
     {
@@ -79,8 +77,6 @@ abstract class CoreExt_DataMapper
      * Setter para configuração de um adapter de banco de dados padrão usado
      * nas instâncias concretas de CoreExt_DataMapper quando nenhuma instância de
      * clsBanco é passada ao construtor.
-     *
-     * @param clsBanco $db
      */
     public static function setDefaultDbAdapter(clsBanco $db = null)
     {
@@ -100,7 +96,6 @@ abstract class CoreExt_DataMapper
      * Setter para o objeto de adapter responsável pela interação com o banco de
      * dados.
      *
-     * @param clsBanco $db
      *
      * @return CoreExt_DataMapper Provê interface fluída
      */
@@ -197,7 +192,7 @@ abstract class CoreExt_DataMapper
         $tempColumns = array_map([$this, '_getTableColumn'], array_keys($data));
 
         // Remove colunas não-persistíveis
-        foreach ($tempColumns as $key => $column) {
+        foreach ($tempColumns as $column) {
             if (is_null($column)) {
                 continue;
             }
@@ -233,7 +228,6 @@ abstract class CoreExt_DataMapper
     /**
      * Retorna os nomes das colunas da tabela separados por vírgula e espaço (', ').
      *
-     * @param array $data
      *
      * @return string
      */
@@ -245,9 +239,6 @@ abstract class CoreExt_DataMapper
     /**
      * Retorna uma query SQL de recuperação de todos os registros de uma tabela.
      *
-     * @param array $data
-     * @param array $where
-     * @param array $orderBy
      *
      * @return string
      */
@@ -479,8 +470,6 @@ abstract class CoreExt_DataMapper
      * query de _getFindAllStatment().
      *
      * @param array $columns             Atributos a serem carregados. O atributo id é sempre carregado.
-     * @param array $where
-     * @param array $orderBy
      * @param bool  $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
      *
      * @return array
@@ -515,11 +504,9 @@ abstract class CoreExt_DataMapper
      * @param array $columns             Atributos a serem carregados. O atributo id é sempre carregado.
      * @param array $where               Condicoes preparadas ex: array('arg1 = $1', 'arg2 = $2');
      * @param array $params              Valor das condiçoes ($1, $2 ...) ex: array('1', '3');
-     * @param array $orderBy
      * @param bool  $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
      *
      * @return array
-     *
      * @throws Exception
      */
     public function findAllUsingPreparedQuery(array $columns = [], array $where = [], array $params = [], array $orderBy = [], $addColumnIdIfNotSet = true)
@@ -550,7 +537,7 @@ abstract class CoreExt_DataMapper
      * Retorna um registro que tenha como identificador (chave única ou composta)
      * o valor dado por $pkey.
      *
-     * @param array|long $pkey
+     * @param $pkey
      *
      * @return CoreExt_Entity
      *
@@ -590,10 +577,8 @@ abstract class CoreExt_DataMapper
     /**
      * Salva ou atualiza um registro através de uma instância de CoreExt_Entity.
      *
-     * @param CoreExt_Entity $instance
      *
      * @return bool
-     *
      * @throws CoreExt_DataMapper_Exception|Exception
      */
     public function save(CoreExt_Entity $instance)
@@ -656,21 +641,9 @@ abstract class CoreExt_DataMapper
      */
     public function delete($instance)
     {
-        $info = [];
         $pkToDelete = $this->buildKeyToFind($instance);
 
-        if ((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)) {
-            $tmpEntry = $this->find($pkToDelete);
-            $info = $tmpEntry->toDataArray();
-        }
-
-        $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($pkToDelete));
-
-        if (count($info)) {
-            $pessoa_logada = \Illuminate\Support\Facades\Auth::id();
-        }
-
-        return $return;
+        return $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($pkToDelete));
     }
 
     /**
@@ -742,7 +715,6 @@ abstract class CoreExt_DataMapper
      * Cria um objeto CoreExt_Entity com os valores dos campos relacionais
      * mapeados para os atributos da instância.
      *
-     * @param array $data
      *
      * @return CoreExt_Entity
      */
@@ -750,9 +722,8 @@ abstract class CoreExt_DataMapper
     {
         $instance = $this->createNewEntityInstance();
         $instance->markOld();
-        $instance = $this->_mapData($data, $instance);
 
-        return $instance;
+        return $this->_mapData($data, $instance);
     }
 
     /**
@@ -760,7 +731,6 @@ abstract class CoreExt_DataMapper
      * CoreExt_Entity.
      *
      * @param array          $data
-     * @param CoreExt_Entity $instance
      *
      * @return CoreExt_Entity A instância com os atributos mapeados
      */
@@ -775,7 +745,7 @@ abstract class CoreExt_DataMapper
                 } else {
                     $instance->$key = $value;
                 }
-            } catch (CoreExt_Exception_InvalidArgumentException $e) {
+            } catch (CoreExt_Exception_InvalidArgumentException) {
                 //
             }
         }

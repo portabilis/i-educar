@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Contracts\AssetServiceContract;
 use App\Services\AssetService;
+use Illuminate\Support\ServiceProvider;
 
 class AssetServiceProvider extends ServiceProvider
 {

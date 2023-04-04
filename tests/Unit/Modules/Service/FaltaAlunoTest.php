@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-
 class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 {
     public function testCriaNovaInstanciaDeFaltaAluno()
@@ -20,15 +19,11 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
             ->method('save')
             ->with($faltaSave)
             ->willReturn(true);
-
         $mock
             ->expects(self::exactly(2))
             ->method('findAll')
-            ->withConsecutive(
-                [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]],
-                [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]]
-            )
             ->willReturnOnConsecutiveCalls([], [$faltaAluno]);
+        $this->assertEquals(1, $this->_getConfigOption('matricula', 'cod_matricula'));
 
         $this->_setFaltaAlunoDataMapperMock($mock);
 

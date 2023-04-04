@@ -4,10 +4,10 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class Escolaridade
 {
-    const NAO_CONCLUIU_ENSINO_FUNDAMENTAL = 1;
-    const ENSINO_FUNDAMENTAL = 2;
-    const ENSINO_MEDIO = 7;
-    const EDUCACAO_SUPERIOR = 6;
+    public const NAO_CONCLUIU_ENSINO_FUNDAMENTAL = 1;
+    public const ENSINO_FUNDAMENTAL = 2;
+    public const ENSINO_MEDIO = 7;
+    public const EDUCACAO_SUPERIOR = 6;
 
     /**
      * @return array

@@ -1,0 +1,88 @@
+#atualizacao-matriculas-resultados tr th {
+    background-color: #ccdce6 !important;
+    font-family: "Open Sans" !important;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    color: #47728f;
+    padding: 8px;
+}
+
+#atualizacao-matriculas-resultados tr td {
+    color: #47728f;
+    font-family: "Open Sans";
+    font-size: 14px;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+#atualizacao-matriculas-resultados tr:nth-child(even) {
+    background-color: #f5f9fd;
+}
+
+#atualizacao-matriculas-resultados tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.flex {
+  display: flex;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.items-center {
+  align-items: center;
+}
+.border-l-8 {
+  border-left-width: 8px !important;
+}
+.border-solid {
+  border-style: solid !important;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.border-warning {
+  border: 0;
+  border-left-color: #dfc32e;
+}
+.bg-warning {
+  background-color: #fff8d6;
+}
+.flex-grow {
+  flex-grow: 1;
+}
+.x-alert-icon {
+  color: #dfc32e;
+}
+.x-alert-icon::before {
+  font-size: 1.5rem;
+}
+.text-warning {
+  color: #958f73;
+}
+.font-16 {
+  font-size: 16px;
+}
+
+.padding {
+  /*padding-top: 10px !important;*/
+  /*padding-bottom: 10px !important;*/
+  padding: 20px 0 60px 0!important;
+}

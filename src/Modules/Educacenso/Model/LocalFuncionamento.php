@@ -4,12 +4,12 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class LocalFuncionamento
 {
-    const PREDIO_ESCOLAR = 3;
-    const SALAS_OUTRA_ESCOLA = 7;
-    const GALPAO = 8;
-    const UNIDADE_ATENDIMENTO_SOCIOEDUCATIVA = 9;
-    const UNIDADE_PRISIONAL = 10;
-    const OUTROS = 11;
+    public const PREDIO_ESCOLAR = 3;
+    public const SALAS_OUTRA_ESCOLA = 7;
+    public const GALPAO = 8;
+    public const UNIDADE_ATENDIMENTO_SOCIOEDUCATIVA = 9;
+    public const UNIDADE_PRISIONAL = 10;
+    public const OUTROS = 11;
 
     /**
      * @return array

@@ -14,7 +14,7 @@ class clsCadastroFisicaFoto extends Model
      */
     public function __construct($idpes = null, $caminho = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}fisica_foto";
 
@@ -74,6 +74,7 @@ class clsCadastroFisicaFoto extends Model
         if (is_numeric($this->idpes)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_string($this->caminho)) {
                 $set .= "{$gruda}caminho = '{$this->caminho}'";
@@ -93,7 +94,7 @@ class clsCadastroFisicaFoto extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_idpes = null, $str_caminho = null)
     {
@@ -144,7 +145,7 @@ class clsCadastroFisicaFoto extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

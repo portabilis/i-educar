@@ -1,7 +1,5 @@
 <?php
 
-
-
 class ValidateFormulaTest extends UnitBaseTest
 {
     public function testFormulaValida()

@@ -33,6 +33,7 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
         27 => 'Língua indígena',
         31 => 'Língua Portuguesa como Segunda Língua',
         32 => 'Estágio Curricular Supervisionado',
+        33 => 'Projeto de vida',
         99 => 'Outras áreas do conhecimento'
     ];
 

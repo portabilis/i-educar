@@ -15,24 +15,24 @@ class AddForeignKeysInPmieducarCandidatoReservaVagaTable extends Migration
     {
         Schema::table('pmieducar.candidato_reserva_vaga', function (Blueprint $table) {
             $table->foreign('ref_cod_turno')
-               ->references('id')
-               ->on('pmieducar.turma_turno');
+                ->references('id')
+                ->on('pmieducar.turma_turno');
 
             $table->foreign('ref_cod_serie')
-               ->references('cod_serie')
-               ->on('pmieducar.serie');
+                ->references('cod_serie')
+                ->on('pmieducar.serie');
 
             $table->foreign('ref_cod_pessoa_cad')
-               ->references('idpes')
-               ->on('cadastro.pessoa');
+                ->references('idpes')
+                ->on('cadastro.pessoa');
 
             $table->foreign('ref_cod_aluno')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno');
 
             $table->foreign('ref_cod_escola')
-               ->references('cod_escola')
-               ->on('pmieducar.escola');
+                ->references('cod_escola')
+                ->on('pmieducar.escola');
         });
     }
 

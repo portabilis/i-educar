@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarDisciplinaDependenciaTable extends Migration
     {
         Schema::table('pmieducar.disciplina_dependencia', function (Blueprint $table) {
             $table->foreign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina'])
-               ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
-               ->on('pmieducar.escola_serie_disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
+                ->on('pmieducar.escola_serie_disciplina')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_matricula')
-               ->references('cod_matricula')
-               ->on('pmieducar.matricula')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_matricula')
+                ->on('pmieducar.matricula')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

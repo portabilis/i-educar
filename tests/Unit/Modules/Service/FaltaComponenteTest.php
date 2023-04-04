@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommon
 {
     protected function setUp(): void

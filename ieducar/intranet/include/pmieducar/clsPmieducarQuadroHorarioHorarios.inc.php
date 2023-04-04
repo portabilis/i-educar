@@ -37,7 +37,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         $ativo = null,
         $dia_semana = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'quadro_horario_horarios';
 
@@ -235,6 +235,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($this->sequencial)
         ) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_instituicao_substituto)) {
@@ -304,7 +305,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_ref_cod_quadro_horario = null,
@@ -477,7 +478,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe($ref_cod_escola = null)
     {
@@ -509,7 +510,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -635,6 +636,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         ORDER BY
           hora_inicial");
 
+            $resultado = [];
             while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
@@ -642,7 +644,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
                 $resultado[] = $tupla;
             }
 
-            if (count($resultado)) {
+            if (count($resultado) > 0) {
                 return $resultado;
             }
         }
@@ -657,62 +659,6 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             $db->Consulta("UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_quadro_horario = '{$this->ref_cod_quadro_horario}'");
 
             return true;
-        }
-
-        return false;
-    }
-
-    public function listaHoras(
-        $int_ref_cod_instituicao_servidor = null,
-        $int_ativo = null,
-        $int_dia_semana = null
-    ) {
-        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} qhh";
-        $filtros = '';
-
-        $whereAnd = ' WHERE ';
-
-        if (is_numeric($int_ref_cod_instituicao_servidor)) {
-            $filtros .= "{$whereAnd} qhh.ref_cod_instituicao_servidor = '{$int_ref_cod_instituicao_servidor}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ativo)) {
-            $filtros .= "{$whereAnd} qhh.ativo = '{$int_ativo}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_dia_semana)) {
-            $filtros .= "{$whereAnd} qhh.dia_semana <> '{$int_dia_semana}'";
-            $whereAnd = ' AND ';
-        }
-
-        $db = new clsBanco();
-        $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado = [];
-
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} qhh {$filtros}");
-
-        $db->Consulta($sql);
-
-        if ($countCampos > 1) {
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                $tupla['_total'] = $this->_total;
-                $resultado[] = $tupla;
-            }
-        } else {
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-                $resultado[] = $tupla[$this->_campos_lista];
-            }
-        }
-
-        if (count($resultado)) {
-            return $resultado;
         }
 
         return false;

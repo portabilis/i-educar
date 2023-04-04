@@ -56,38 +56,38 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Matr&iacute;cula - Listagem';
+        $this->titulo = 'Matrícula - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
         }
 
         if (!$this->ref_cod_aluno) {
-            $this->simpleRedirect('educar_aluno_lst.php');
+            $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 
-        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+        $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
 
         $lista_busca = [
             'Ano',
             'Matrícula',
             'Situação',
             'Turma',
-            'S&eacute;rie',
+            'Série',
             'Curso'
         ];
 
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Escola';
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         } elseif ($nivel_usuario == 2) {
             $lista_busca[] = 'Escola';
         }
 
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
         $get_escola = true;
         $get_curso = true;
@@ -103,72 +103,56 @@ return new class extends clsListagem {
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_matricula = new clsPmieducarMatricula();
-        $obj_matricula->setOrderby('ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
-        $obj_matricula->setLimite($this->limite, $this->offset);
+        $obj_matricula->setOrderby(strNomeCampo: 'ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
+        $obj_matricula->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_matricula->lista(
-            $this->cod_matricula,
-            null,
-            $this->ref_ref_cod_escola,
-            $this->ref_ref_cod_serie,
-            null,
-            null,
-            $this->ref_cod_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->ref_cod_curso,
-            $this->ref_cod_instituicao,
-            1
+            int_cod_matricula: $this->cod_matricula,
+            int_ref_ref_cod_escola: $this->ref_ref_cod_escola,
+            int_ref_ref_cod_serie: $this->ref_ref_cod_serie,
+            ref_cod_aluno: $this->ref_cod_aluno,
+            int_ativo: 1,
+            int_ref_cod_curso2: $this->ref_cod_curso,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao,
+            int_ultima_matricula: 1
         );
 
         $total = $obj_matricula->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+                $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
                 $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
                 $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
-                $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+                $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
                 $det_serie = $obj_serie->detalhe();
                 $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+                $obj_ref_cod_escola = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
                 $enturmacoes = new clsPmieducarMatriculaTurma();
                 $enturmacoes = $enturmacoes->lista(
-                    $registro['cod_matricula'],
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1
+                    int_ref_cod_matricula: $registro['cod_matricula'],
+                    int_ativo: 1
                 );
 
                 $nomesTurmas = [];
 
                 foreach ($enturmacoes as $enturmacao) {
-                    $turma = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+                    $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
                     $turma = $turma->detalhe();
                     $nomesTurmas[] = $turma['nm_turma'];
                 }
 
-                $nomesTurmas = implode('<br />', $nomesTurmas);
+                $nomesTurmas = implode(separator: '<br />', array: $nomesTurmas);
 
                 $situacao = $registro['aprovado'];
 
@@ -221,17 +205,17 @@ return new class extends clsListagem {
                         $lista_busca[] = "<a href=\"educar_matricula_det.php?cod_matricula={$registro['cod_matricula']}\">-</a>";
                     }
                 }
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         } else {
-            $this->addLinhas(['Aluno sem matrículas em andamento na sua escola.']);
+            $this->addLinhas(linha: ['Aluno sem matrículas em andamento na sua escola.']);
         }
 
-        $this->addPaginador2('educar_matricula_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_matricula_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = "go(\"educar_matricula_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
-            $this->nome_acao = 'Nova Matr&iacute;cula';
+            $this->nome_acao = 'Nova Matrícula';
         }
 
         $this->array_botao[] = 'Voltar';
@@ -241,12 +225,12 @@ return new class extends clsListagem {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula-abandono-cad.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-matricula-abandono-cad.js');
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matr&iacute;cula';
+        $this->title = 'Matrícula';
         $this->processoAp = '578';
     }
 };

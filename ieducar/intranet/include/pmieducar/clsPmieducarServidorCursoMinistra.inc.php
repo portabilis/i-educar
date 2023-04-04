@@ -10,7 +10,7 @@ class clsPmieducarServidorCursoMinistra extends Model
 
     public function __construct($ref_cod_curso = null, $ref_ref_cod_instituicao = null, $ref_cod_servidor = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_curso_ministra";
 
@@ -88,9 +88,9 @@ class clsPmieducarServidorCursoMinistra extends Model
      * Retorna uma lista filtrados de acordo com os parametros
      *
      *
-     * @return array
+     * @return array|false
      */
-    public function lista($int_ref_cod_curso = null, $int_ref_ref_cod_instituicao = null, $int_ref_cod_servidor = null)
+    public function lista($int_ref_cod_curso = null, $int_ref_ref_cod_instituicao = null, $int_ref_cod_servidor = null, $ref_cod_servidor_funcao = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
@@ -107,6 +107,17 @@ class clsPmieducarServidorCursoMinistra extends Model
         }
         if (is_numeric($int_ref_cod_servidor)) {
             $filtros .= "{$whereAnd} ref_cod_servidor = '{$int_ref_cod_servidor}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($ref_cod_servidor_funcao)) {
+            $filtros .= "{$whereAnd} EXISTS (
+                SELECT 1
+                FROM pmieducar.servidor_disciplina sd
+                WHERE sd.ref_cod_servidor = {$int_ref_cod_servidor}
+                AND sd.ref_cod_funcao = {$ref_cod_servidor_funcao}
+                AND sd.ref_cod_curso = servidor_curso_ministra.ref_cod_curso
+            )";
             $whereAnd = ' AND ';
         }
 
@@ -143,7 +154,7 @@ class clsPmieducarServidorCursoMinistra extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -183,9 +194,6 @@ class clsPmieducarServidorCursoMinistra extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_curso) && is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor)) {
-        }
-
         return false;
     }
 

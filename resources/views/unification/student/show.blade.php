@@ -51,7 +51,7 @@
                 </a>
             @endcan
         @endif
-        <a href="{{ route('student-log-unification.index') }}"><button class="btn" type="button">Voltar</button></a>
+        <a href="{{ route('student-log-unification.index', request()->only(['ref_cod_instituicao', 'ref_cod_escola', 'page'])) }}"><button class="btn" type="button">Voltar</button></a>
     </div>
 
     </form>
@@ -59,9 +59,9 @@
 
 @prepend('scripts')
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
 @endprepend

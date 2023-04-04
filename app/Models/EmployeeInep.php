@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -11,29 +11,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Employee $employee
  *
  */
-class EmployeeInep extends Model
+class EmployeeInep extends LegacyModel
 {
     /**
      * @var string
      */
     protected $table = 'modules.educacenso_cod_docente';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_servidor';
+    protected $fillable = [
+        'cod_servidor',
+        'cod_docente_inep'
+    ];
 
-    protected $fillable = ['cod_servidor', 'cod_docente_inep'];
-
-    public function getNumberAttribute()
+    protected function number(): Attribute
     {
-        return $this->cod_docente_inep;
+        return Attribute::make(
+            get: fn () => $this->cod_docente_inep
+        );
     }
 
     /**
      * @return BelongsTo
      */
-    public function employee()
+    public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'cod_servidor', 'cod_servidor');
     }

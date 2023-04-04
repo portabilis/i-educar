@@ -4,9 +4,9 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class EsferaAdministrativa
 {
-    const FEDERAL = 1;
-    const ESTADUAL = 2;
-    const MUNICIPAL = 3;
+    public const FEDERAL = 1;
+    public const ESTADUAL = 2;
+    public const MUNICIPAL = 3;
 
     public static function getDescriptiveValues()
     {

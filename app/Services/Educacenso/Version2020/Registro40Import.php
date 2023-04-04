@@ -88,7 +88,7 @@ class Registro40Import extends Registro40Import2019
 
         $manager->role_id = $this->model->cargo;
         $manager->access_criteria_id = $this->model->criterioAcesso ?: null;
-        $manager->access_criteria_description = $this->model->especificacaoCriterioAcesso;
+        $manager->link_type_id = $this->model->tipoVinculo;
 
         if (!$this->existsChiefSchoolManager($school)) {
             $manager->chief = true;

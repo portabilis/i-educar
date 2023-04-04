@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class LegacyAccess extends Model
+class LegacyAccess extends LegacyModel
 {
+    public const CREATED_AT = 'data_hora';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -16,12 +17,14 @@ class LegacyAccess extends Model
      */
     protected $primaryKey = 'cod_acesso';
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    protected $dates = ['data_hora'];
+    public array $legacy = [
+        'id' => 'cod_acesso',
+        'access' => 'data_hora',
+        'internal_ip' => 'ip_interno',
+        'external_ip' => 'ip_externo',
+        'people_id' => 'cod_pessoa',
+        'success' => 'sucesso',
+    ];
 
     public function getLastAccess()
     {

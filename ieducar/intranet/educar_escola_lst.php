@@ -1,25 +1,12 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_escola;
     public $ref_usuario_cad;
     public $ref_usuario_exc;
     public $ref_cod_instituicao;
-    public $ref_cod_escola_rede_ensino;
     public $ref_idpes;
     public $sigla;
     public $data_cadastro;
@@ -51,11 +38,11 @@ return new class extends clsListagem {
                     $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, false, false, false, false, false, false);
+            $this->campoLista(nome: 'ref_cod_instituicao', campo: 'Instituição', valor: $opcoes, default: $this->ref_cod_instituicao, acao: false, descricao: false, complemento: false, desabilitado: false);
         } else {
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
             if ($this->ref_cod_instituicao) {
-                $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+                $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
             } else {
                 die('Erro: Usuário não é do nivel poli-institucional e não possui uma instituição');
             }
@@ -63,7 +50,7 @@ return new class extends clsListagem {
 
         $this->addCabecalhos($cabecalhos);
 
-        $this->campoTexto('nm_escola', 'Escola', $this->nm_escola, 30, 255, false);
+        $this->campoTexto(nome: 'nm_escola', campo: 'Escola', valor: $this->nm_escola, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Filtros de Foreign Keys
         $this->limite = 10;
@@ -74,27 +61,17 @@ return new class extends clsListagem {
         }
 
         if ($this->pagina_formulario) {
-            $obj_escola->setLimite($this->limite, ($this->pagina_formulario - 1) * $this->limite);
+            $obj_escola->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: ($this->pagina_formulario - 1) * $this->limite);
         } else {
             $obj_escola->setLimite($this->limite);
         }
 
         $obj_escola->setOrderby('nome');
         $lista = $obj_escola->lista(
-            null,
-            null,
-            null,
-            $this->ref_cod_instituicao,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->nm_escola,
-            null,
-            $this->pessoa_logada
+            int_ref_cod_instituicao: $this->ref_cod_instituicao,
+            int_ativo: 1,
+            str_nome: $this->nm_escola,
+            cod_usuario: $this->pessoa_logada
         );
 
         $total = $obj_escola->_total;
@@ -114,23 +91,23 @@ return new class extends clsListagem {
             }
         }
 
-        $this->addPaginador2('educar_escola_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_escola_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        if ($obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_escola_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de escolas', [
+        $this->breadcrumb(currentPage: 'Listagem de escolas', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escola';
+        $this->title = 'Escola';
         $this->processoAp = 561;
     }
 };

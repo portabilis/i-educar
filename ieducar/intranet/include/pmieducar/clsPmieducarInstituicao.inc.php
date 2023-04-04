@@ -44,6 +44,7 @@ class clsPmieducarInstituicao extends Model
     public $altera_atestado_para_declaracao;
     public $obrigar_campos_censo;
     public $obrigar_documento_pessoa;
+    public $obrigar_cpf;
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
     public $exibir_apenas_professores_alocados;
@@ -83,9 +84,10 @@ class clsPmieducarInstituicao extends Model
         $bloquear_vinculo_professor_sem_alocacao_escola = null,
         $permitir_matricula_fora_periodo_letivo = null,
         $ordenar_alunos_sequencial_enturmacao = null,
-        $obrigar_telefone_pessoa = null
+        $obrigar_telefone_pessoa = null,
+        $obrigar_cpf = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}instituicao";
         $this->_campos_lista = $this->_todos_campos = '
@@ -134,6 +136,7 @@ class clsPmieducarInstituicao extends Model
             altera_atestado_para_declaracao,
             obrigar_campos_censo,
             obrigar_documento_pessoa,
+            obrigar_cpf,
             orgao_regional,
             exigir_lancamentos_anteriores,
             exibir_apenas_professores_alocados,
@@ -236,6 +239,10 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($obrigar_documento_pessoa)) {
             $this->obrigar_documento_pessoa = $obrigar_documento_pessoa;
+        }
+
+        if (is_bool($obrigar_cpf)) {
+            $this->obrigar_cpf = $obrigar_cpf;
         }
 
         if (is_bool($exigir_lancamentos_anteriores)) {
@@ -608,6 +615,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->obrigar_cpf)) {
+                $campos .= "{$gruda}obrigar_cpf";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}obrigar_cpf";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (dbBool($this->exigir_lancamentos_anteriores)) {
                 $campos .= "{$gruda}exigir_lancamentos_anteriores";
                 $valores .= "{$gruda} true ";
@@ -691,6 +708,7 @@ class clsPmieducarInstituicao extends Model
     {
         if (is_numeric($this->cod_instituicao)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -996,6 +1014,14 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->obrigar_cpf)) {
+                $set .= "{$gruda}obrigar_cpf = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}obrigar_cpf = false ";
+                $gruda = ', ';
+            }
+
             if (dbBool($this->exigir_lancamentos_anteriores)) {
                 $set .= "{$gruda}exigir_lancamentos_anteriores = true ";
                 $gruda = ', ';
@@ -1071,7 +1097,7 @@ class clsPmieducarInstituicao extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_instituicao = null,
@@ -1218,7 +1244,7 @@ class clsPmieducarInstituicao extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -1236,7 +1262,7 @@ class clsPmieducarInstituicao extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

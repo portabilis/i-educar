@@ -1,18 +1,21 @@
 <?php
 
-use App\Models\LegacySchool;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacyUser;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolAcademicYearFactory extends Factory
+{
+    protected $model = LegacySchoolAcademicYear::class;
 
-$factory->define(LegacySchoolAcademicYear::class, function () {
-    return [
-        'ref_cod_escola' => factory(LegacySchool::class)->create(),
-        'ano' => now()->year,
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'andamento' => 1,
-        'data_cadastro' => now(),
-    ];
-});
+    public function definition(): array
+    {
+        return [
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
+            'ano' => now()->year,
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'andamento' => 1
+        ];
+    }
+}

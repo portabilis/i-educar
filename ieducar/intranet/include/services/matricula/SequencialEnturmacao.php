@@ -77,20 +77,6 @@ class SequencialEnturmacao
         }
     }
 
-    public function ordenaSequencialExcluiMatricula()
-    {
-        $sequencialFechamento = $this->existeMatriculaTurma();
-
-        $this->subtraiSequencialPosterior($sequencialFechamento);
-
-        // FIXME
-        // A implentação anterior retornava uma variável indefinida, ver
-        // impactos ao corrigir esta implementação para retornar o sequencial
-        // correto.
-
-        return null;
-    }
-
     private function sequencialAlunoAposData()
     {
         $sql = "  SELECT MAX(sequencial_fechamento)+1 as sequencial
@@ -116,9 +102,7 @@ class SequencialEnturmacao
 
         $novoSequencial = DB::selectOne($sql)->sequencial;
 
-        $novoSequencial = $novoSequencial ? $novoSequencial : 1;
-
-        return $novoSequencial;
+        return $novoSequencial ? $novoSequencial : 1;
     }
 
     private function sequencialAlunoAntesData()
@@ -133,6 +117,15 @@ class SequencialEnturmacao
                INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
                INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                WHERE matricula.ativo = 1
+                 AND (CASE
+                     WHEN matricula_turma.ativo = 1 THEN true
+                     WHEN matricula_turma.transferido THEN true
+                     WHEN matricula_turma.remanejado THEN true
+                     WHEN matricula.dependencia THEN true
+                     WHEN matricula_turma.abandono THEN true
+                     WHEN matricula_turma.reclassificado THEN true
+                     ELSE false
+                 END)
                  AND ref_cod_turma = {$this->refCodTurma}
                  AND matricula_turma.data_enturmacao < '{$relocationDate}'
                  AND pessoa.nome < (SELECT pessoa.nome
@@ -147,9 +140,7 @@ class SequencialEnturmacao
 
         $novoSequencial = DB::selectOne($sql)->sequencial;
 
-        $novoSequencial = $novoSequencial ? $novoSequencial : 1;
-
-        return $novoSequencial;
+        return $novoSequencial ? $novoSequencial : 1;
     }
 
     private function sequencialAlunoDependencia()

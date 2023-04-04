@@ -120,7 +120,6 @@ class clsPmieducarHistoricoEscolar extends Model
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
             $db = new clsBanco();
-            $resultado = [];
             $db->Consulta("SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
                                       FROM cadastro.pessoa ps, cadastro.juridica
                                      WHERE escola.ref_idpes = juridica.idpes
@@ -292,7 +291,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($aceleracao)) {
+            if (is_numeric($this->aceleracao)) {
                 $campos .= "{$gruda}aceleracao";
                 $valores .= "{$gruda}'{$this->aceleracao}'";
                 $gruda = ', ';
@@ -336,7 +335,7 @@ class clsPmieducarHistoricoEscolar extends Model
             $db->Consulta("INSERT INTO {$this->_tabela} ( sequencial, $campos ) VALUES( $this->sequencial, $valores )");
 
             if ($this->ref_cod_aluno) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->sequencial;
@@ -354,6 +353,7 @@ class clsPmieducarHistoricoEscolar extends Model
     {
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -507,7 +507,7 @@ class clsPmieducarHistoricoEscolar extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'");
 
                 return true;
@@ -520,7 +520,7 @@ class clsPmieducarHistoricoEscolar extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_aluno = null, $int_sequencial = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_serie = null, $int_ano = null, $int_carga_horaria = null, $int_dias_letivos = null, $str_escola = null, $str_escola_cidade = null, $str_escola_uf = null, $str_observacao = null, $int_aprovado = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_faltas_globalizadas = null, $int_ref_cod_instituicao = null, $int_origem = null, $int_extra_curricular = null, $int_ref_cod_matricula = null, $int_frequencia = null)
     {
@@ -664,7 +664,7 @@ class clsPmieducarHistoricoEscolar extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -682,7 +682,7 @@ class clsPmieducarHistoricoEscolar extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -695,21 +695,6 @@ class clsPmieducarHistoricoEscolar extends Model
         }
 
         return false;
-    }
-
-    public function getCodNomeEscola()
-    {
-        $db = new clsBanco();
-        $db->Consulta("SELECT escola, ref_cod_escola
-                         FROM pmieducar.historico_escolar
-                        WHERE ref_cod_aluno = $this->ref_cod_aluno
-                          AND sequencial = $this->sequencial");
-
-        if ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-
-            return $tupla['escola'] . '-' . $tupla['ref_cod_escola'];
-        }
     }
 
     /**
@@ -732,15 +717,14 @@ class clsPmieducarHistoricoEscolar extends Model
     {
         if (is_numeric($ref_cod_aluno)) {
             $db = new clsBanco();
-            $sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}");
 
-            return $sequencial;
+            return $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}");
         }
 
         return false;
     }
 
-    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada, $ref_cod_escola)
+    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada)
     {
         $detMatricula = self::dadosMatricula($ref_cod_matricula);
 
@@ -778,7 +762,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $detMatricula['nome_curso'],
                 $grade_curso_id,
                 null,
-                $ref_cod_escola
+                $detMatricula['ref_ref_cod_escola'],
             );
 
             if ($historicoEscolar->cadastra()) {
@@ -833,24 +817,14 @@ class clsPmieducarHistoricoEscolar extends Model
 
     protected static function dadosEscola($cod_escola, $cod_instituicao)
     {
-        $sql = "select
-
-            (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes
-            where esc.ref_cod_instituicao = {$cod_instituicao} and esc.cod_escola = {$cod_escola}
-            and pes.idpes = esc.ref_idpes) as nome,
-
-            (select municipio.nome from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = {$cod_escola}
-            ) as cidade,
-
-            (select municipio.sigla_uf from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = {$cod_escola}) as uf";
+        $sql = "
+            SELECT
+                nome,
+                municipio AS cidade,
+                uf_municipio AS uf
+            FROM relatorio.view_dados_escola
+            WHERE cod_escola = {$cod_escola}
+        ";
         $db = new clsBanco();
         $db->Consulta($sql);
         $db->ProximoRegistro();

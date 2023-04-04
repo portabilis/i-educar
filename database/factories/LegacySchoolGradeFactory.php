@@ -1,25 +1,46 @@
 <?php
 
-use App\Models\LegacyLevel;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolGradeFactory extends Factory
+{
+    protected $model = LegacySchoolGrade::class;
 
-$factory->define(LegacySchoolGrade::class, function (Faker $faker) {
-    $schoolCourse = factory(LegacySchoolCourse::class)->create();
+    protected LegacySchoolCourse $schoolCourse;
 
-    return [
-        'ref_cod_escola' => $schoolCourse->school,
-        'ref_cod_serie' => factory(LegacyLevel::class)->create([
-            'ref_cod_curso' => $schoolCourse->course,
-        ]),
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'data_cadastro' => now(),
-        'ativo' => 1,
-        'anos_letivos' => $schoolCourse->anos_letivos,
-    ];
-});
+    public function definition(): array
+    {
+        $schoolCourse = $this->getSchoolCourse();
+
+        return [
+            'ref_cod_escola' => $schoolCourse->school,
+            'ref_cod_serie' => fn () => LegacyGradeFactory::new()->create([
+                'ref_cod_curso' => $schoolCourse->course,
+            ]),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'data_cadastro' => now(),
+            'ativo' => 1,
+            'anos_letivos' => $schoolCourse->anos_letivos,
+        ];
+    }
+
+    public function useSchoolCourse(LegacySchoolCourse $schoolCourse): static
+    {
+        $this->schoolCourse = $schoolCourse;
+
+        return $this;
+    }
+
+    public function getSchoolCourse()
+    {
+        if (empty($this->schoolCourse)) {
+            return LegacySchoolCourseFactory::new()->create();
+        }
+
+        return $this->schoolCourse;
+    }
+}

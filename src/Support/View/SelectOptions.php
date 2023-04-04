@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\View;
 
+use App\Models\DeficiencyType;
 use App\Models\EmployeeGraduationDiscipline;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
@@ -18,7 +19,6 @@ use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoEnsinoMedioCursado;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\School\Model\ActiveLooking;
-use iEducar\Modules\School\Model\ExemptionType;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Modules\Transport\Period;
@@ -134,6 +134,15 @@ class SelectOptions
     {
         return self::getDefaultOption() + Deficiencias::getDescriptiveValues();
     }
+    /**
+     * Retorna as opções disponíveis referentes ao tipo de deficiência
+     *
+     * @return array
+     */
+    public static function deficiencyTypes()
+    {
+        return self::getDefaultOption() + DeficiencyType::getDescriptiveValues();
+    }
 
     /**
      * Retorna as opções disponíveis referentes aos locais de funcionamento da escola
@@ -204,12 +213,14 @@ class SelectOptions
 
     /**
      * Retorna as opções disponíveis para os tipos de dispensa
+     *
      * @return string[]
      */
     public static function activeSearchResultOptions()
     {
         $options = ActiveLooking::getDescriptiveValues();
         unset($options[ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT]);
+
         return $options;
     }
 }

@@ -64,7 +64,7 @@ class clsListagem extends clsCampos
         if (empty($_GET)) {
             if (!empty($previousFilters[$uri])) {
                 list($path, $ts) = explode('|', $previousFilters[$uri]);
-                $diff = now() - (int) $ts;
+                $diff = ((int) now()) - ((int) $ts);
 
                 if ($diff > 7200) { //duas horas
                     return;
@@ -72,7 +72,7 @@ class clsListagem extends clsCampos
 
                 $path = $uri . '?' . $path;
 
-                return $this->simpleRedirect($path);
+                $this->simpleRedirect($path);
             }
         } else {
             $params = http_build_query($_GET) . '|' . now();
@@ -145,20 +145,14 @@ class clsListagem extends clsCampos
 
             $linkFixo = $strUrl . '?';
 
-            $add_iniciolimi = null;
-
             if (is_array($mixVariaveisMantidas)) {
                 foreach ($mixVariaveisMantidas as $key => $value) {
                     if ($key != $getVar) {
-                        if (! ($add_iniciolimi && $key == 'iniciolimit')) {
-                            $linkFixo .= "$key=$value&";
-                        }
+                        $linkFixo .= "$key=$value&";
                     }
                 }
-            } else {
-                if (is_string($mixVariaveisMantidas)) {
-                    $linkFixo .= "$mixVariaveisMantidas&";
-                }
+            } else if (is_string($mixVariaveisMantidas)) {
+                $linkFixo .= "$mixVariaveisMantidas&";
             }
 
             $strReturn = <<<HTML
@@ -185,7 +179,7 @@ HTML;
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
                 $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
-                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
+                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a página " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
@@ -200,9 +194,28 @@ HTML;
         }
     }
 
+    private function getPageTitle()
+    {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
+        if (isset($this->_title)) {
+            return $this->_title;
+        }
+
+        if (isset($this->titulo)) {
+            return $this->titulo;
+        }
+
+        if (isset($this->_titulo)) {
+            return $this->_titulo;
+        }
+    }
+
     public function RenderHTML()
     {
-        View::share('title', $this->titulo);
+        View::share('title', $this->getPageTitle());
 
         ob_start();
 
@@ -261,7 +274,7 @@ HTML;
             if (empty($this->campos)) {
                 $retorno .=  '
                     <tr>
-                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td>
+                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>Não existem campos definidos para o formulário</span></td>
                     </tr>';
             } else {
                 $retorno .= $this->MakeCampos();
@@ -288,7 +301,7 @@ HTML;
                 if (isset($this->botao_submit) && $this->botao_submit) {
                     $retorno .=  '&nbsp;<input type=\'submit\' class=\'botaolistagem\' value=\'Buscar\' id=\'botao_busca\'>&nbsp;';
                 } else {
-                    $retorno .=  "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
+                    $retorno .= "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
                 }
             }
 
@@ -300,7 +313,7 @@ HTML;
                 </form>';
         }
 
-        $ncols = count($this->cabecalho);
+        $ncols = is_iterable($this->cabecalho) ? count($this->cabecalho) : 0;
         $width = empty($this->largura) ? '' : "width='$this->largura'";
 
         if (empty($this->__titulo)) {
@@ -321,13 +334,9 @@ HTML;
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
                     </tr>";
 
-        $ncols = count($this->cabecalho);
-
         // Cabeçalho
         if (!empty($this->cabecalho)) {
             reset($this->cabecalho);
-
-            $ncols = count($this->cabecalho);
 
             if (!empty($this->colunas)) {
                 reset($this->colunas);
@@ -341,7 +350,7 @@ HTML;
 
             foreach ($this->cabecalho as $i => $texto) {
                 if (!empty($this->colunas)) {
-                    list($i, $fmt) = each($this->colunas);
+                    [$i, $fmt] = current($this->colunas);
                 } else {
                     $fmt = alTopLeft;
                 }
@@ -364,7 +373,7 @@ HTML;
 
         // Lista
         if (empty($this->linhas)) {
-            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td></tr>";
+            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informação para ser apresentada</td></tr>";
         } else {
             reset($this->linhas);
 
@@ -388,7 +397,7 @@ HTML;
                         reset($this->colunas);
                     }
 
-                    foreach ($linha as $i => $celula) {
+                    foreach ($linha as $celula) {
                         if (!empty($this->colunas)) {
                             $fmt = current($this->colunas);
                         } else {
@@ -423,7 +432,6 @@ HTML;
 
         if (!empty($this->paginador)) {
             $ua = 0;
-            $qdt_paginador = 1;
             $i = 0;
             $retorno .=  "
                 <tr>
@@ -474,7 +482,7 @@ HTML;
             $campo_anterior = '';
             $md = true;
 
-            while (list($nome, $componente) = each($this->camposResultado)) {
+            foreach ($this->camposResultado as $nome => $componente) {
                 if ($componente[0] != 'oculto') {
                     $tipo = $componente[0];
                     $campo = $componente[1] . ':';
@@ -508,8 +516,7 @@ HTML;
                             $retorno .=  "<select class='form' name='$nome'>\n";
 
                             reset($componente[2]);
-
-                            while (list($chave, $texto) = each($componente[2])) {
+                            foreach ($componente[2] as $chave => $texto) {
                                 $retorno .=  '<option value=\'' . urlencode($chave) . '\'';
 
                                 if ($chave == $componente[3]) {

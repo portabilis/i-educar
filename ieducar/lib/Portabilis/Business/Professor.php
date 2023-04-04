@@ -198,8 +198,8 @@ class Portabilis_Business_Professor
         if (self::necessarioVinculoTurma($instituicaoId)) {
             $sql = '
                 SELECT
-                    cod_turma as id,
-                    nm_turma as nome,
+                    t.cod_turma as id,
+                    t.nm_turma as nome,
                     t.ano
                 FROM pmieducar.quadro_horario qh
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
@@ -217,40 +217,38 @@ class Portabilis_Business_Professor
             # Feito gambiarra para que quando professor tenha alocação liste todas turmas do turno integral
             $sql = '
                 SELECT
-                    cod_turma as id,
-		    nm_turma as nome,
- 	            turma.ano
-                from pmieducar.turma
-                where ref_ref_cod_escola = $1
-                and (
-                    ref_ref_cod_serie = $2
-                    or ref_ref_cod_serie_mult = $2
+                    t.cod_turma AS id,
+		                t.nm_turma AS nome,
+ 	                  t.ano
+                FROM pmieducar.turma AS t
+                LEFT JOIN pmieducar.turma_serie AS ts ON ts.turma_id = t.cod_turma
+                WHERE t.ref_ref_cod_escola = $1
+                AND (
+                    t.ref_ref_cod_serie = $2
+                    OR ts.serie_id = $2
                 )
-                and ativo = 1
-                and visivel != \'f\'
-                and
-                (
-                    turma_turno_id in (
-                        select periodo
-                        from servidor_alocacao
-                        where ref_cod_escola = ref_ref_cod_escola
-                        and ref_cod_servidor = $3
-                        and ativo = 1
-                    )
-                    OR
-                    (
-                        turma_turno_id = 4
+                AND t.ativo = 1
+                AND t.visivel != \'f\'
+                AND (
+                        t.turma_turno_id IN (
+                        SELECT s.periodo
+                        FROM servidor_alocacao AS s
+                        WHERE s.ref_cod_escola = t.ref_ref_cod_escola
+                        AND s.ref_cod_servidor = $3
+                        AND ativo = 1
+                    ) OR (
+                        t.turma_turno_id = 4
                         AND (
-                            select 1
-                            from servidor_alocacao
-                            where ref_cod_escola = ref_ref_cod_escola
-                            and ref_cod_servidor = $3
-                            and ativo = 1
+                            SELECT 1
+                            FROM servidor_alocacao AS sea
+                            WHERE sea.ref_cod_escola = t.ref_ref_cod_escola
+                            AND sea.ref_cod_servidor = $3
+                            AND t.ativo = 1
                             LIMIT 1
                         ) IS NOT NULL
                     )
                 )
-                order by nm_turma asc
+                ORDER BY t.nm_turma ASC
             ';
         }
 

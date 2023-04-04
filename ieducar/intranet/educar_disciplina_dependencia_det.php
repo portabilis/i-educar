@@ -2,7 +2,6 @@
 
 return new class extends clsDetalhe {
     public $titulo;
-
     public $ref_cod_matricula;
     public $ref_cod_turma;
     public $ref_cod_serie;
@@ -12,7 +11,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Disciplina de depend&ecirc;ncia - Detalhe';
+        $this->titulo = 'Disciplina de dependência - Detalhe';
 
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_matricula  = $_GET['ref_cod_matricula'];
@@ -21,10 +20,10 @@ return new class extends clsDetalhe {
         $this->ref_cod_escola     = $_GET['ref_cod_escola'];
 
         $tmp_obj = new clsPmieducarDisciplinaDependencia(
-            $this->ref_cod_matricula,
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->ref_cod_disciplina
+            ref_cod_matricula: $this->ref_cod_matricula,
+            ref_cod_serie: $this->ref_cod_serie,
+            ref_cod_escola: $this->ref_cod_escola,
+            ref_cod_disciplina: $this->ref_cod_disciplina
         );
 
         $registro = $tmp_obj->detalhe();
@@ -39,37 +38,21 @@ return new class extends clsDetalhe {
 
         // Dados da matrícula
         $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
+        $detalhe_aluno = array_shift($matricula);
 
         $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($obj_aluno->lista(
-            $detalhe_aluno['ref_cod_aluno'],
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
-        ));
+        $lista =  $obj_aluno->lista(
+            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
+            int_ativo: 1
+        );
+        $det_aluno = array_shift($lista);
 
         $obj_escola = new clsPmieducarEscola(
-            $this->ref_cod_escola,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
+            cod_escola: $this->ref_cod_escola,
+            bloquear_lancamento_diario_anos_letivos_encerrados: 1
         );
-        $det_escola = $obj_escola->detalhe();
+        $obj_escola->detalhe();
 
         $nm_aluno = $det_aluno['nome_aluno'];
 
@@ -106,7 +89,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo   = sprintf(
                 'educar_disciplina_dependencia_cad.php?ref_cod_matricula=%d',
                 $this->ref_cod_matricula
@@ -121,14 +104,14 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->largura      = '100%';
 
-        $this->breadcrumb('Disciplinas de dependência', [
+        $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
         url('intranet/educar_index.php') => 'Escola',
     ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Disciplina depend&ecirc;ncia';
+        $this->title = 'Disciplina dependência';
         $this->processoAp = 578;
     }
 };

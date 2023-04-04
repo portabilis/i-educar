@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\Services\SchoolClass;
 
-use App\Models\LegacyEnrollment;
-use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolClassStage;
-use App\Models\LegacyStudent;
 use App\Services\SchoolClass\AvailableTimeService;
+use Database\Factories\LegacyEnrollmentFactory;
+use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolClassStageFactory;
+use Database\Factories\LegacyStudentFactory;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -48,8 +48,8 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testWithoutOthersEnrollmentsReturnsTrue()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $registration = factory(LegacyRegistration::class)->create();
+        $schoolClass = LegacySchoolClassFactory::new()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create();
 
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
@@ -59,20 +59,20 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testWithEnrollmentsSameDayDifferentTimeReturnsTrue()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $otherSchoolClass = factory(LegacySchoolClass::class)->state('afternoon')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $registration = factory(LegacyRegistration::class)->create();
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->afternoon()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create();
 
-        factory(LegacyEnrollment::class)->state('active')->create([
+        LegacyEnrollmentFactory::new()->active()->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $otherSchoolClass,
         ]);
 
@@ -84,19 +84,19 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testWithEnrollmentsSameDaySameTimeSameYearReturnsFalse()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $otherSchoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $otherSchoolClass,
         ]);
 
-        factory(LegacyEnrollment::class)->state('active')->create([
+        LegacyEnrollmentFactory::new()->active()->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);
@@ -109,11 +109,11 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testWithEnrollmentsSameDaySameTimeDifferentYearReturnsTrue()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $otherSchoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $registration = factory(LegacyRegistration::class)->create(['ano' => ($schoolClass->ano - 1)]);
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => ($schoolClass->ano - 1)]);
 
-        factory(LegacyEnrollment::class)->state('active')->create([
+        LegacyEnrollmentFactory::new()->active()->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);
@@ -126,14 +126,14 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testWithEnrollmentsDifferentDaySameTimeReturnsFalse()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->state('morning')->create([
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create([
             'tipo_mediacao_didatico_pedagogico' => 1,
             'dias_semana' => '{1, 7}',
         ]);
-        $otherSchoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $registration = factory(LegacyRegistration::class)->create();
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create();
 
-        factory(LegacyEnrollment::class)->state('active')->create([
+        LegacyEnrollmentFactory::new()->active()->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);
@@ -148,7 +148,7 @@ class AvailableTimeServiceTest extends TestCase
     {
         $this->expectException(ModelNotFoundException::class);
 
-        $registration = factory(LegacyRegistration::class)->create();
+        $registration = LegacyRegistrationFactory::new()->create();
 
         $this->service->isAvailable($registration->ref_cod_aluno, -1);
     }
@@ -158,32 +158,32 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testSameYearButDifferentAcademicPeriods()
     {
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudentFactory::new()->create();
 
-        $schoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $otherSchoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
             'data_inicio' => now()->subMonths(3),
             'data_fim' => now()->subMonths(2),
         ]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $otherSchoolClass,
             'data_inicio' => now()->addMonths(3),
             'data_fim' => now()->addMonths(2),
         ]);
 
-        $registration = factory(LegacyRegistration::class)->create([
+        $registration = LegacyRegistrationFactory::new()->create([
             'ref_cod_aluno' => $student
         ]);
 
-        $otherRegistration = factory(LegacyRegistration::class)->create([
+        $otherRegistration = LegacyRegistrationFactory::new()->create([
             'ref_cod_aluno' => $student
         ]);
 
-        factory(LegacyEnrollment::class)->state('active')->create([
+        LegacyEnrollmentFactory::new()->active()->create([
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
         ]);
@@ -196,13 +196,13 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testWithEnrollmentsSameDaySameTimeSameYearAndOneAeeOtherEscolarizacaoReturnsTrue()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->state('morning')->create(
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(
             [
                 'tipo_mediacao_didatico_pedagogico' => 1,
                 'tipo_atendimento' => TipoAtendimentoTurma::AEE,
             ]
         );
-        $otherSchoolClass = factory(LegacySchoolClass::class)->state('morning')->create(
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(
             [
                 'tipo_mediacao_didatico_pedagogico' => 1,
                 'tipo_atendimento' => TipoAtendimentoTurma::ESCOLARIZACAO,
@@ -210,17 +210,17 @@ class AvailableTimeServiceTest extends TestCase
             ]
         );
 
-        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $otherSchoolClass,
         ]);
 
-        factory(LegacyEnrollment::class)->state('active')->create([
+        LegacyEnrollmentFactory::new()->active()->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);
@@ -233,19 +233,19 @@ class AvailableTimeServiceTest extends TestCase
      */
     public function testWithInactiveEnrollmentsSameDaySameTimeSameYearReturnsTrue()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $otherSchoolClass = factory(LegacySchoolClass::class)->state('morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $otherSchoolClass,
         ]);
 
-        factory(LegacyEnrollment::class)->state('inactive')->create([
+        LegacyEnrollmentFactory::new()->inactive()->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);

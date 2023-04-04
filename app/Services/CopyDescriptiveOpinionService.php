@@ -137,7 +137,7 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
         LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion,
         LegacyRegistration $oldRegistration
     ) {
-        $descriptiveOpinions = $oldRegistration->studentDescriptiveOpinion->descriptiveOpinions;
+        $descriptiveOpinions = $oldRegistration->studentDescriptiveOpinion->descriptiveOpinionByDiscipline;
 
         foreach ($descriptiveOpinions as $descriptiveOpinion) {
             LegacyDisciplineDescriptiveOpinion::create(
@@ -161,7 +161,7 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
         LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion,
         LegacyRegistration $oldRegistration
     ) {
-        $descriptiveOpinions = $oldRegistration->studentDescriptiveOpinion->descriptiveOpinions;
+        $descriptiveOpinions = $oldRegistration->studentDescriptiveOpinion->generalDescriptiveOpinion;
 
         foreach ($descriptiveOpinions as $descriptiveOpinion) {
             LegacyGeneralDescriptiveOpinion::create(

@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 class AlterTriggerDeletedAtInModulesAreaConhecimentoExcluidosTable extends Migration
 {
     use WhenDeleted;
+
     /**
      * Run the migrations.
      *

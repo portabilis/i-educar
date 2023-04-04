@@ -1,27 +1,44 @@
 <?php
 
-use App\Models\LegacyInstitution;
+namespace Database\Factories;
+
 use App\Models\LegacyKnowledgeArea;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyKnowledgeAreaFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyKnowledgeArea::class;
 
-$factory->define(LegacyKnowledgeArea::class, function (Faker $faker) {
-    return [
-        'instituicao_id' => factory(LegacyInstitution::class)->state('unique')->make(),
-        'nome' => $faker->words(3, true),
-    ];
-});
-
-$factory->state(LegacyKnowledgeArea::class, 'unique', function () {
-    $knowledgeArea = LegacyKnowledgeArea::query()->first();
-
-    if (empty($knowledgeArea)) {
-        $knowledgeArea = factory(LegacyKnowledgeArea::class)->create();
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'nome' => $this->faker->words(3, true),
+        ];
     }
 
-    return [
-        'id' => $knowledgeArea->getKey()
-    ];
-});
+    public function unique(): self
+    {
+        return $this->state(function () {
+            $knowledgeArea = LegacyKnowledgeArea::query()->first();
+
+            if (empty($knowledgeArea)) {
+                $knowledgeArea = LegacyKnowledgeAreaFactory::new()->create();
+            }
+
+            return [
+                'id' => $knowledgeArea->getKey()
+            ];
+        });
+    }
+}

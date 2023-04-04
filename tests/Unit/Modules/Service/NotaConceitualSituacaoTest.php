@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_NotaConceitualSituacaoTest extends Avaliacao_Service_NotaSituacaoCommon
 {
     protected function setUp(): void

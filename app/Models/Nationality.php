@@ -6,9 +6,9 @@ use App\Contracts\Enum;
 
 class Nationality implements Enum
 {
-    const BRAZILIAN = 1;
-    const NATURALIZED_BRAZILIAN = 2;
-    const FOREIGN = 3;
+    public const BRAZILIAN = 1;
+    public const NATURALIZED_BRAZILIAN = 2;
+    public const FOREIGN = 3;
 
     public function getDescriptiveValues(): array
     {

@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\Ativo;
+use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class LegacyRace extends Model
+class LegacyRace extends LegacyModel
 {
+    use Ativo;
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -22,12 +27,11 @@ class LegacyRace extends Model
     protected $fillable = [
         'idpes_cad',
         'nm_raca',
-        'data_cadastro',
         'raca_educacenso',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public function individual(): BelongsToMany
+    {
+        return $this->belongsToMany(LegacyIndividual::class, 'fisica_raca', 'ref_cod_raca', 'ref_idpes');
+    }
 }

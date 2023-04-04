@@ -2,10 +2,10 @@
 
 namespace App\Services\Exemption;
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolStage;
 use App\Services\PromotionService;
 use App\User;
 use App_Model_IedFinder;
@@ -220,14 +220,18 @@ class ExemptionService
             'ref_ano' => $registration->ano,
         ];
 
-        $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
+        $totalEtapas = LegacyAcademicYearStage::query()->where($where)->count();
         $arrayEtapas = [];
 
-        for ($i = 1; $i <= $totalEtapas['total']; $i++) {
+        for ($i = 1; $i <= $totalEtapas; $i++) {
             $arrayEtapas[$i] = strval($i);
         }
 
         $arrayEtapas = array_diff($arrayEtapas, $stages);
+
+        if (count($arrayEtapas) === 0) {
+            return null;
+        }
 
         return max($arrayEtapas);
     }

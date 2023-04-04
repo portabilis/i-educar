@@ -213,7 +213,7 @@ class EditController extends Core_Controller_Page_EditController
             this.getTabelasArredondamento = function(docObj, tipoNota) {
                 tabela_arredondamento.docObj = docObj;
                 var xml = new ajax(tabela_arredondamento.parseResponse);
-                xml.envia("/modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php?tipoNota=" + tipoNota);
+                xml.envia("modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php?tipoNota=" + tipoNota);
             };
 
             this.parseResponse = function() {
@@ -320,7 +320,7 @@ class EditController extends Core_Controller_Page_EditController
 
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
-            '/modules/RegraAvaliacao/Assets/Javascripts/RegraAvaliacao.js'
+            '/vendor/legacy/RegraAvaliacao/Assets/Javascripts/RegraAvaliacao.js'
         );
 
         $nomeMenu = ($this->getRequest()->id == null || $this->getRequest()->copy) ? 'Cadastrar' : 'Editar';
@@ -800,7 +800,9 @@ class EditController extends Core_Controller_Page_EditController
                 $this->getEntity()
             );
 
-            for ($i = 0, $loop = count($recuperacoes); $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
+            $quantidadeRecuperacoes = is_array($recuperacoes) ? count($recuperacoes) : 0;
+
+            for ($i = 0, $loop = $quantidadeRecuperacoes; $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
                 $recuperacao = $recuperacoes[$i];
 
                 $recuperacaoLabel = sprintf('recuperacao[label][%d]', $i);
@@ -965,7 +967,7 @@ class EditController extends Core_Controller_Page_EditController
         $recuperacoes = $this->getRequest()->recuperacao;
 
         // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
-        $loop = count($recuperacoes['id']);
+        $loop = is_array($recuperacoes['id']) ? count($recuperacoes['id']) : 0;
 
         // Array de objetos a persistir
         $insert = [];

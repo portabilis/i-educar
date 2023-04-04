@@ -11,7 +11,9 @@ use Illuminate\Queue\SerializesModels;
 
 class NotificationEvent implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * @var Notification

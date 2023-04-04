@@ -1,26 +1,38 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyOrganization;
-use App\Models\LegacyPerson;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyOrganizationFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyOrganization::class;
 
-$factory->define(LegacyOrganization::class, function (Faker $faker) {
-    $person = factory(LegacyPerson::class)->create([
-        'nome' => $faker->company,
-    ]);
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        $person = LegacyPersonFactory::new()->create([
+            'nome' => $this->faker->company(),
+        ]);
 
-    return [
-        'idpes' => $person,
-        'cnpj' => $faker->numerify('##############'),
-        'insc_estadual' => $faker->numerify('########'),
-        'origem_gravacao' => $faker->randomElement(['M', 'U', 'C', 'O']),
-        'idpes_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'data_cad' => now(),
-        'operacao' => $faker->randomElement(['I', 'A', 'E']),
-        'fantasia' => $person->name,
-    ];
-});
+        return [
+            'idpes' => $person,
+            'cnpj' => $this->faker->numerify('##############'),
+            'insc_estadual' => $this->faker->numerify('########'),
+            'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
+            'idpes_cad' => LegacyUserFactory::new()->unique()->make(),
+            'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
+            'fantasia' => $person->name,
+        ];
+    }
+}

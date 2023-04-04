@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\Ativo;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class LegacySchoolClassType extends Model
+class LegacySchoolClassType extends LegacyModel
 {
+    use Ativo;
+    use HasLegacyDates;
+    use HasInstitution;
+
     /**
      * @var string
      */
@@ -23,12 +30,11 @@ class LegacySchoolClassType extends Model
         'ref_usuario_cad',
         'nm_tipo',
         'sgl_tipo',
-        'data_cadastro',
-        'ref_cod_instituicao',
+        'ativo'
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public function schoolClasses(): HasMany
+    {
+        return $this->hasMany(LegacySchoolClass::class, 'ref_cod_turma_tipo');
+    }
 }

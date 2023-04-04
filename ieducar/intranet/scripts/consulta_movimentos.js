@@ -43,7 +43,7 @@ $j(function () {
       $j.each(data, function (i, v) {
         html += '<tr>';
         html += '<td class="formmdtd"><a href="/intranet/educar_matricula_det.php?cod_matricula=' + v.cod_matricula +'">' + (i + 1) + '</a></td>';
-        html += '<td class="formmdtd"><a href="/intranet/educar_matricula_det.php?cod_matricula=' + v.cod_matricula +'">' + v.nome + '</a></td>';
+        html += '<td class="formmdtd"><a href="/intranet/educar_matricula_det.php?cod_matricula=' + v.cod_matricula +'">' + v.nome.toUpperCase() + '</a></td>';
         html += '<td class="formmdtd"><a href="/intranet/educar_matricula_det.php?cod_matricula=' + v.cod_matricula +'">' + v.nm_turma + '</a></td>';
         html += '</tr>';
       });

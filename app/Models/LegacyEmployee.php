@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -40,74 +41,57 @@ class LegacyEmployee extends Model
         'email',
     ];
 
-    protected $dates = ['data_reativa_conta', 'data_troca_senha'];
+    protected $casts = [
+        'data_reativa_conta' => 'date',
+        'data_troca_senha' => 'date',
+    ];
 
-    /**
-     * @return string
-     */
-    public function getLoginAttribute()
+    protected function login(): Attribute
     {
-        return $this->matricula;
+        return Attribute::make(
+            get: fn () => $this->matricula,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getPasswordAttribute()
+    protected function password(): Attribute
     {
-        return $this->senha;
+        return Attribute::make(
+            get: fn () => $this->senha,
+            set: static fn ($value) => [
+                'senha' => $value,
+            ],
+        );
     }
 
-    /**
-     * @param string $value
-     *
-     * @return void
-     */
-    public function setPasswordAttribute($value)
+    protected function departmentId(): Attribute
     {
-        $this->senha = $value;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_setor_new,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getDepartmentIdAttribute()
+    protected function menuType(): Attribute
     {
-        return $this->ref_cod_setor_new;
+        return Attribute::make(
+            get: fn () => $this->tipo_menu,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getMenuTypeAttribute()
+    protected function rememberToken(): Attribute
     {
-        return $this->tipo_menu;
+        return Attribute::make(
+            get: fn () => $this->status_token,
+            set: static fn ($value) => [
+                'status_token' => $value,
+            ],
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getRememberTokenAttribute()
+    protected function active(): Attribute
     {
-        return $this->status_token;
-    }
-
-    /**
-     * @param string $token
-     *
-     * @return void
-     */
-    public function setRememberTokenAttribute($token)
-    {
-        $this->status_token = $token;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getActiveAttribute()
-    {
-        return boolval($this->ativo);
+        return Attribute::make(
+            get: fn () => $this->ativo,
+        );
     }
 
     public function getEnabledUserDate(): ?Carbon

@@ -15,9 +15,9 @@ class AddForeignKeysInModulesNotaComponenteCurricularMediaTable extends Migratio
     {
         Schema::table('modules.nota_componente_curricular_media', function (Blueprint $table) {
             $table->foreign('nota_aluno_id')
-               ->references('id')
-               ->on('modules.nota_aluno')
-               ->onDelete('cascade');
+                ->references('id')
+                ->on('modules.nota_aluno')
+                ->onDelete('cascade');
         });
     }
 

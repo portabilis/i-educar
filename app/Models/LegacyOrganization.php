@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class LegacyOrganization extends Model
@@ -11,6 +13,9 @@ class LegacyOrganization extends Model
      * @var string
      */
     protected $table = 'cadastro.juridica';
+
+    public const CREATED_AT = 'data_cad';
+    public const UPDATED_AT = 'data_rev';
 
     /**
      * @var string
@@ -37,11 +42,6 @@ class LegacyOrganization extends Model
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @inheritDoc
      */
     protected static function boot()
@@ -53,5 +53,17 @@ class LegacyOrganization extends Model
                 $model->fantasia = Str::upper($model->fantasia);
             }
         });
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->fantasia
+        );
+    }
+
+    public function person(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'idpes');
     }
 }

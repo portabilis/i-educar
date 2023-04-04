@@ -29,8 +29,8 @@ class SituacaoFuncionamento implements EducacensoExportRule
             $registro00->mantenedoraOng = null;
             $registro00->mantenedoraInstituicoes = null;
             $registro00->mantenedoraSistemaS = null;
+            $registro00->poderPublicoConveniado = null;
             $registro00->mantenedoraOscip = null;
-            $registro00->conveniadaPoderPublico = null;
             $registro00->cnpjMantenedoraPrincipal = null;
             $registro00->cnpjEscolaPrivada = null;
         }

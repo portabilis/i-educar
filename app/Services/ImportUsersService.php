@@ -77,7 +77,7 @@ class ImportUsersService implements ToCollection
      * Cria um usuário a partir do nome, matrícula e senha informados
      *
      * @param string $name
-     * @param string $user               Matrícula
+     * @param string $user
      * @param string $password
      * @param string $email
      * @param bool   $forceResetPassword

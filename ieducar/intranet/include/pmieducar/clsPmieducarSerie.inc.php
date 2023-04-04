@@ -51,7 +51,7 @@ class clsPmieducarSerie extends Model
         $importar_serie_pre_matricula = false,
         $descricao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie";
         $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep, s.importar_serie_pre_matricula, s.descricao';
@@ -452,7 +452,7 @@ class clsPmieducarSerie extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_serie = null,
@@ -573,7 +573,7 @@ class clsPmieducarSerie extends Model
 
             $filtros[] = $condicao;
         } elseif (isset($ano)) {
-            $filtros[] = "{$whereAnd} EXISTS (SELECT 1
+            $filtros[] = " EXISTS (SELECT 1
                                          FROM pmieducar.escola_serie es
                                         WHERE s.cod_serie = es.ref_cod_serie
                                           AND es.ativo = 1
@@ -604,11 +604,8 @@ class clsPmieducarSerie extends Model
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if (count($resultado)) {
-            return $resultado;
-        }
 
-        return false;
+        return $resultado;
     }
 
     public function listaSeriesComComponentesVinculados(
@@ -676,7 +673,7 @@ class clsPmieducarSerie extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -729,38 +726,6 @@ class clsPmieducarSerie extends Model
         }
 
         return false;
-    }
-
-    /**
-     * Seleciona as série que não estejam cadastradas na escola.
-     *
-     * @param int $ref_cod_curso
-     * @param int $ref_cod_escola
-     *
-     * @return array
-     */
-    public function getNotEscolaSerie($ref_cod_curso, $ref_cod_escola)
-    {
-        $db = new clsBanco();
-        $sql = "SELECT *
-            FROM
-              pmieducar.serie s
-            WHERE s.ref_cod_curso = '{$ref_cod_curso}'
-            AND s.cod_serie NOT IN
-            (
-              SELECT es.ref_cod_serie
-              FROM pmieducar.escola_serie es
-              WHERE es.ref_cod_escola = '{$ref_cod_escola}'
-            )";
-
-        $db->Consulta($sql);
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla;
-        }
-
-        return $resultado;
     }
 
     /**

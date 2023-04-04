@@ -4,10 +4,10 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class TratamentoLixo
 {
-    const NAO_FAZ = 1;
-    const SEPARACAO = 2;
-    const REAPROVEITAMENTO = 3;
-    const RECICLAGEM = 4;
+    public const NAO_FAZ = 1;
+    public const SEPARACAO = 2;
+    public const REAPROVEITAMENTO = 3;
+    public const RECICLAGEM = 4;
 
     public static function getDescriptiveValues()
     {

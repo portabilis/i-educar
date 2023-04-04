@@ -1,13 +1,9 @@
 <?php
 
-return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
+use App\Models\LegacyRole;
 
+return new class extends clsCadastro {
+    public $pessoa_logada;
     public $cod_funcao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -23,27 +19,26 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->cod_funcao=$_GET['cod_funcao'];
+        $this->cod_funcao = $_GET['cod_funcao'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(634, $this->pessoa_logada, 3, 'educar_funcao_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
         if (is_numeric($this->cod_funcao)) {
-            $obj = new clsPmieducarFuncao($this->cod_funcao);
-            $registro  = $obj->detalhe();
+            $registro = LegacyRole::find($this->cod_funcao)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
                 }
 
-                if ($obj_permissoes->permissao_excluir(634, $this->pessoa_logada, 3)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
                     $this->fexcluir = true;
                 }
                 $retorno = 'Editar';
             }
 
             if ($this->professor == '0') {
-                $this->professor =  'N';
+                $this->professor = 'N';
             } elseif ($this->professor == '1') {
                 $this->professor = 'S';
             }
@@ -53,7 +48,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' função', [
+        $this->breadcrumb(currentPage: $nomeMenu . ' função', breadcrumbs: [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
 
@@ -63,83 +58,90 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoOculto('cod_funcao', $this->cod_funcao);
+        $this->campoOculto(nome: 'cod_funcao', valor: $this->cod_funcao);
 
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_funcao', 'Func&atilde;o', $this->nm_funcao, 30, 255, true);
-        $this->campoTexto('abreviatura', 'Abreviatura', $this->abreviatura, 30, 30, true);
-        $opcoes = ['' => 'Selecione',
-                        'S' => 'Sim',
-                        'N' => 'N&atilde;o'
-                        ];
+        $this->campoTexto(nome: 'nm_funcao', campo: 'Funcão', valor: $this->nm_funcao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'abreviatura', campo: 'Abreviatura', valor: $this->abreviatura, tamanhovisivel: 30, tamanhomaximo: 30, obrigatorio: true);
+        $opcoes = [
+            '' => 'Selecione',
+            'S' => 'Sim',
+            'N' => 'Não'
+        ];
 
-        $this->campoLista('professor', 'Professor', $opcoes, $this->professor, '', false, '', '', false, true);
+        $this->campoLista(nome: 'professor', campo: 'Professor', valor: $opcoes, default: $this->professor);
     }
 
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(634, $this->pessoa_logada, 3, 'educar_funcao_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
         if ($this->professor == 'N') {
-            $this->professor =  '0';
+            $this->professor = '0';
         } elseif ($this->professor == 'S') {
             $this->professor = '1';
         }
 
-        $obj = new clsPmieducarFuncao(null, null, $this->pessoa_logada, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $obj = new LegacyRole();
+        $obj->nm_funcao = $this->nm_funcao;
+        $obj->abreviatura = $this->abreviatura;
+        $obj->professor = $this->professor;
+        $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->ref_usuario_cad = $this->pessoa_logada;
+
+        if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_funcao_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-
+        $this->mensagem = 'Cadastro não realizado.<br>';
         return false;
     }
 
     public function Editar()
     {
         if ($this->professor == 'N') {
-            $this->professor =  '0';
+            $this->professor = '0';
         } elseif ($this->professor == 'S') {
             $this->professor = '1';
         }
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(634, $this->pessoa_logada, 3, 'educar_funcao_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
-        $obj = new clsPmieducarFuncao($this->cod_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        $obj = LegacyRole::find($this->cod_funcao);
+        $obj->nm_funcao = $this->nm_funcao;
+        $obj->abreviatura = $this->abreviatura;
+        $obj->professor = $this->professor;
+        $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->ref_usuario_exc = $this->pessoa_logada;
+
+        if ($obj->save()) {
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_funcao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Edição não realizada.<br>';
         return false;
     }
 
     public function Excluir()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir(634, $this->pessoa_logada, 3, 'educar_funcao_lst.php');
+        $obj_permissoes->permissao_excluir(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
-        $obj = new clsPmieducarFuncao($this->cod_funcao, $this->pessoa_logada, null, null, null, null, null, null, 0, $this->ref_cod_instituicao);
+        $obj = LegacyRole::find($this->cod_funcao);
 
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+        if ($obj->delete()) {
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_funcao_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Exclusão não realizada.<br>';
         return false;
     }
 

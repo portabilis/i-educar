@@ -1,8 +1,7 @@
 <?php
 
-
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
-
+use Mockery\MockInterface;
 
 class App_Model_IedFinderTest extends UnitBaseTest
 {
@@ -155,39 +154,71 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     public function testGetSeries()
     {
-        $returnValue = [
-            1 => ['cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'PRÉ'],
-            2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'SER']
-        ];
-
-        $mock = $this->getCleanMock('clsPmieducarSerie');
-        $mock->expects($this->exactly(2))
-            ->method('lista')
-            ->will($this->onConsecutiveCalls($returnValue, [$returnValue[1]]));
-
-        // Registra a instância no repositório de classes de CoreExt_Entity
-        $instance = CoreExt_Entity::addClassToStorage(
-            'clsPmieducarSerie',
-            $mock,
-            null,
-            true
+        $this->instance(
+            clsPmieducarSerie::class,
+            Mockery::mock(clsPmieducarSerie::class, function (MockInterface $mock) {
+                $returnValue = [
+                    1 => ['cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'pré'],
+                    2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'ser']
+                ];
+                $mock
+                    ->shouldReceive('setOrderby')
+                    ->twice();
+                $mock
+                    ->shouldReceive('lista')
+                    ->once()
+                    ->andReturn($returnValue);
+                $mock
+                    ->shouldReceive('lista')
+                    ->with(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        1,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                    ->once()
+                    ->andReturn([$returnValue[1]])
+                ;
+            })
         );
 
         $series = App_Model_IedFinder::getSeries();
+        $test = [
+            1 => 'PRÉ',
+            2 => 'SER'
+        ];
+
         $this->assertEquals(
-            [
-                1 => 'PRÉ',
-                2 => 'SER'
-            ],
+            $test,
             $series,
             '::getSeries() retorna todas as séries cadastradas.'
         );
 
         $series = App_Model_IedFinder::getSeries(1);
+        $testFilter = [
+            1 => 'PRÉ'
+        ];
+
         $this->assertEquals(
-            [1 => 'PRÉ'],
+            $testFilter,
             $series,
-            '::getSeries() retorna todas as séries de uma instituição.'
+            '::getSeries() retorna todas as séries cadastradas por instituição'
         );
     }
 
@@ -401,125 +432,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
             $expected,
             $componentes,
             '::getComponentesPorMatricula() retorna os componentes curriculares de uma matrícula, descartando aqueles em regime de dispensa (dispensa de componente)'
-        );
-    }
-
-    /**
-     * @depends App_Model_IedFinderTest::testGetRegraAvaliacaoPorMatricula
-     */
-    public function testGetQuantidadeDeModulosMatricula()
-    {
-        $this->markTestSkipped();
-
-        $returnEscolaAno = [
-            ['ref_cod_escola' => 1, 'ano' => 2009, 'andamento' => 1, 'ativo' => 1]
-        ];
-
-        $returnAnoLetivo = [
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1, 'ref_cod_modulo' => 1],
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2, 'ref_cod_modulo' => 1],
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3, 'ref_cod_modulo' => 1],
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4, 'ref_cod_modulo' => 1]
-        ];
-
-        $returnMatriculaTurma = [
-            ['ref_cod_matricula' => 1, 'ref_cod_turma' => 1]
-        ];
-
-        $returnModulo = ['cod_modulo' => 1, 'nm_tipo' => 'Bimestre'];
-
-        // Mock para escola ano letivo (ano letivo em andamento)
-        $escolaAnoMock = $this->getCleanMock('clsPmieducarEscolaAnoLetivo');
-        $escolaAnoMock->expects($this->any())
-            ->method('lista')
-            ->with(1, null, null, null, 1, null, null, null, null, 1)
-            ->will($this->returnValue($returnEscolaAno));
-
-        // Mock para o ano letivo (módulos do ano)
-        $anoLetivoMock = $this->getCleanMock('clsPmieducarAnoLetivoModulo');
-        $anoLetivoMock->expects($this->any())
-            ->method('lista')
-            ->with(2009, 1)
-            ->will($this->returnValue($returnAnoLetivo));
-
-        $matriculaTurmaMock = $this->getCleanMock('clsPmieducarMatriculaTurma');
-        $matriculaTurmaMock->expects($this->any())
-            ->method('lista')
-            ->with(1)
-            ->will($this->onConsecutiveCalls($returnMatriculaTurma, $returnMatriculaTurma));
-
-        $moduloMock = $this->getCleanMock('clsPmieducarModulo');
-        $moduloMock->expects($this->any())
-            ->method('detalhe')
-            ->will($this->onConsecutiveCalls($returnModulo, $returnModulo));
-
-        $returnCurso = ['cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 0];
-        $cursoMock = $this->getCleanMock('clsPmieducarCurso');
-        $cursoMock->expects($this->any())
-            ->method('detalhe')
-            ->will($this->returnValue($returnCurso));
-        $returnTurmaModulo = [
-            ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 1],
-            ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 2],
-            ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 3],
-            ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 4]
-        ];
-        $turmaModuloMock = $this->getCleanMock('clsPmieducarTurmaModulo');
-        $turmaModuloMock->expects($this->at(0))
-            ->method('lista')
-            ->with(1)
-            ->will($this->returnValue($returnTurmaModulo));
-
-        // Adiciona mocks ao repositório estático
-        App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarEscolaAnoLetivo',
-            $escolaAnoMock,
-            null,
-            true
-        );
-        App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarAnoLetivoModulo',
-            $anoLetivoMock,
-            null,
-            true
-        );
-        App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarMatriculaTurma',
-            $matriculaTurmaMock,
-            null,
-            true
-        );
-        App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarModulo',
-            $moduloMock,
-            null,
-            true
-        );
-        App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarCurso',
-            $cursoMock,
-            null,
-            true
-        );
-        App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarTurmaModulo',
-            $turmaModuloMock,
-            null,
-            true
-        );
-
-        $matricula = [
-            'ref_ref_cod_escola' => 1,
-            'ref_cod_curso' => 1,
-            'ref_cod_turma' => 1,
-            'ano' => 2018
-        ];
-        $modulos = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1, $matricula);
-
-        $this->assertEquals(
-            4,
-            $modulos,
-            '::getQuantidadeDeModulosMatricula() retorna a quantidade de módulos para uma matrícula de ano escolar padrão (curso padrão ano escolar).'
         );
     }
 

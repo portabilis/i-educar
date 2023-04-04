@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarReservaVagaTable extends Migration
     {
         Schema::table('pmieducar.reserva_vaga', function (Blueprint $table) {
             $table->foreign(['ref_ref_cod_serie', 'ref_ref_cod_escola'])
-               ->references(['ref_cod_serie', 'ref_cod_escola'])
-               ->on('pmieducar.escola_serie')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_cod_serie', 'ref_cod_escola'])
+                ->on('pmieducar.escola_serie')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_aluno')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

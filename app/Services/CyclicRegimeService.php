@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
+use App_Model_MatriculaSituacao;
 use Illuminate\Support\Facades\Cache;
 
 class CyclicRegimeService
@@ -27,7 +28,7 @@ class CyclicRegimeService
             foreach ($grades as $grade) {
                 $result = LegacyRegistration::where('ref_ref_cod_serie', $grade->getKey())
                     ->where('ref_cod_aluno', $registration->ref_cod_aluno)
-                    ->where('ano', $registration->ano)
+                    ->whereIn('aprovado', [App_Model_MatriculaSituacao::EM_ANDAMENTO, App_Model_MatriculaSituacao::APROVADO])
                     ->active()
                     ->get()
                     ->first();

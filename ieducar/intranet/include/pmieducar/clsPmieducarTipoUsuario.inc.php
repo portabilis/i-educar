@@ -25,7 +25,7 @@ class clsPmieducarTipoUsuario extends Model
         $data_exclusao = null,
         $ativo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}tipo_usuario";
 
@@ -120,6 +120,7 @@ class clsPmieducarTipoUsuario extends Model
     {
         if (is_numeric($this->cod_tipo_usuario) && is_numeric($this->ref_funcionario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_funcionario_cad)) {
@@ -166,7 +167,7 @@ class clsPmieducarTipoUsuario extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_tipo_usuario = null,
@@ -213,22 +214,6 @@ class clsPmieducarTipoUsuario extends Model
             $filtros .= "{$whereAnd} nivel >= '{$int_nivel_menor}'";
             $whereAnd = ' AND ';
         }
-        if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} ativo = '{$int_ativo}'";
             $whereAnd = ' AND ';
@@ -267,7 +252,7 @@ class clsPmieducarTipoUsuario extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -285,7 +270,7 @@ class clsPmieducarTipoUsuario extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -318,13 +303,5 @@ class clsPmieducarTipoUsuario extends Model
         $this->ativo = 0;
 
         return $this->edita();
-    }
-
-    public function possuiUsuarioRelacionado()
-    {
-        $db = new clsBanco();
-        $resultado = $db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE ref_cod_tipo_usuario = {$this->cod_tipo_usuario}");
-
-        return (bool) $resultado;
     }
 }

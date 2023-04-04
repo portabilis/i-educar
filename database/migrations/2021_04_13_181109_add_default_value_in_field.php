@@ -3,10 +3,8 @@
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
-
 class AddDefaultValueInField extends Migration
 {
-
     use AsView;
 
     public function up()

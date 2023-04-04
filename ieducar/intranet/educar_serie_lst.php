@@ -23,7 +23,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'S&eacute;rie - Listagem';
+        $this->titulo = 'Série - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
@@ -31,28 +31,28 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-      'S&eacute;rie',
-      'Curso'
-    ];
+          'Série',
+          'Curso'
+        ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso']);
+        $get_curso = true;
+        include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, false);
+        $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = $_GET["pagina_{$this->nome}"] ?
-      $_GET["pagina_{$this->nome}"] * $this->limite-$this->limite : 0;
+        $this->offset = $_GET["pagina_{$this->nome}"] ? $_GET["pagina_{$this->nome}"] * $this->limite-$this->limite : 0;
 
         $obj_serie = new clsPmieducarSerie();
         $obj_serie->setOrderby('nm_serie ASC');
@@ -80,8 +80,7 @@ return new class extends clsListagem {
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-
-        // Pega detalhes de foreign_keys
+                // Pega detalhes de foreign_keys
                 $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
                 $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
                 $nomeCurso = empty($det_ref_cod_curso['descricao']) ? $det_ref_cod_curso['nm_curso'] : "{$det_ref_cod_curso['nm_curso']} ({$det_ref_cod_curso['descricao']})";
@@ -114,14 +113,12 @@ return new class extends clsListagem {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de séries', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+        $this->breadcrumb('Listagem de séries', [url('intranet/educar_index.php') => 'Escola']);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - S&eacute;rie';
+        $this->title = 'Série';
         $this->processoAp = '583';
     }
 };

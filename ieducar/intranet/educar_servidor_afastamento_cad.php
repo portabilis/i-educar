@@ -1,44 +1,29 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\WithdrawalReason;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Carbon;
 
-return new class extends clsCadastro {
-
-    /**
-     * Referência a usuário da sessão
-     *
-     * @var int
-     */
-    public $pessoa_logada = null;
-
-    /**
-     * Atributos de mapeamento dos campos de banco de dados
-     */
-    public $id = null;
-    public $ref_cod_servidor = null;
-    public $sequencial = null;
-    public $ref_cod_instituicao = null;
-    public $ref_cod_motivo_afastamento = null;
-    public $ref_usuario_exc = null;
-    public $ref_usuario_cad = null;
-    public $data_cadastro = null;
-    public $data_exclusao = null;
-    public $data_retorno = null;
-    public $data_saida = null;
-    public $ativo = null;
-    public $status = null;
-    public $alocacao_array = null;
-    public $parametros = null;
-
-    /**
-     * Dias da semana
-     *
-     * @var array
-     */
+return new class () extends clsCadastro {
+    public $pessoa_logada;
+    public $id;
+    public $ref_cod_servidor;
+    public $sequencial;
+    public $ref_cod_instituicao;
+    public $ref_cod_motivo_afastamento;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $data_retorno;
+    public $data_saida;
+    public $ativo;
+    public $status;
+    public $alocacao_array;
+    public $parametros;
     public $dias_da_semana = [
         '' => 'Selecione',
         1  => 'Domingo',
@@ -76,21 +61,11 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->sequencial) &&
             is_numeric($this->ref_cod_instituicao)) {
-            $obj = new clsPmieducarServidorAfastamento(
-                $this->ref_cod_servidor,
-                $this->sequencial,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
-            $registro = $obj->detalhe();
+            $registro = EmployeeWithdrawal::query()
+                ->where('ref_cod_servidor', $this->ref_cod_servidor)
+                ->where('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+                ->where('sequencial', $this->sequencial)
+                ->first()?->toArray();
 
             if ($registro) {
                 // Passa todos os valores obtidos no registro para atributos do objeto
@@ -140,18 +115,10 @@ return new class extends clsCadastro {
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         $this->campoOculto('retornar_servidor', $this->retornar_servidor);
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPmieducarMotivoAfastamento();
-        $lista = $objTemp->lista();
-
-        if (is_array($lista) && count($lista) > 0) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_motivo_afastamento']] = $registro['nm_motivo'];
-            }
-        } else {
-            $opcoes = ['' => 'Nenhum motivo de afastamento cadastrado'];
-        }
+        $opcoes = WithdrawalReason::query()
+            ->orderBy('nm_motivo', 'ASC')
+            ->pluck('nm_motivo', 'cod_motivo_afastamento')
+            ->prepend('Selecione', '');
 
         if ($this->status == clsCadastro::NOVO || $this->retornar_servidor != EmployeeReturn::SIM) {
             $this->campoLista(
@@ -203,19 +170,6 @@ return new class extends clsCadastro {
         $det_servidor = $obj_servidor->detalhe();
 
         if ($det_servidor) {
-            $obj_funcao = new clsPmieducarFuncao(
-                $det_servidor['ref_cod_funcao'],
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
             // Se for professor
             if (true == $obj_servidor->isProfessor()) {
                 $obj = new clsPmieducarQuadroHorarioHorarios();
@@ -246,9 +200,8 @@ return new class extends clsCadastro {
                 );
 
                 if ($lista) {
-
                     // Passa todos os valores obtidos no registro para atributos do objeto
-                    foreach ($lista as $campo => $val) {
+                    foreach ($lista as $val) {
                         $temp = [];
                         $temp['hora_inicial']       = $val['hora_inicial'];
                         $temp['hora_final']         = $val['hora_final'];
@@ -263,7 +216,7 @@ return new class extends clsCadastro {
                     }
 
                     if ($this->alocacao_array) {
-                        $tamanho = sizeof($alocacao);
+                        $tamanho = count($this->alocacao_array);
                         $script  = "<script>\nvar num_alocacao = {$tamanho};\n";
                         $script .= "var array_servidores = Array();\n";
 
@@ -389,8 +342,10 @@ return new class extends clsCadastro {
                 }
             }
         }
-
         if ($this->retornar_servidor != EmployeeReturn::SIM) {
+            if ($this->id == '') {
+                $this->id = null;
+            }
             $fileService = new FileService(new UrlPresigner());
             $files = $fileService->getFiles(EmployeeWithdrawal::find($this->id));
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
@@ -399,8 +354,14 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
+        $this->data_saida = formatDateParse($this->data_saida, 'Y-m-d');
+        if ($this->data_saida == null || $this->data_saida <= date('Y-m-d', strtotime('-1 year'))) {
+            $this->data_saida = null;
+            $this->mensagem = 'Data de Afastamento Inválida.<br>';
+
+            return false;
+        }
         $this->data_retorno = dataToBanco($this->data_retorno);
-        $this->data_saida = dataToBanco($this->data_saida);
 
         $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ? $_POST['ref_cod_servidor'] : null;
 
@@ -413,22 +374,16 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
-        $obj = new clsPmieducarServidorAfastamento(
-            $this->ref_cod_servidor,
-            null,
-            $this->ref_cod_motivo_afastamento,
-            null,
-            $this->pessoa_logada,
-            null,
-            null,
-            $this->data_retorno,
-            $this->data_saida,
-            1,
-            $this->ref_cod_instituicao
-        );
+        $withdrawal = new EmployeeWithdrawal();
+        $withdrawal->ref_cod_servidor = $this->ref_cod_servidor;
+        $withdrawal->ref_usuario_cad = $this->pessoa_logada;
+        $withdrawal->ref_cod_motivo_afastamento = $this->ref_cod_motivo_afastamento;
+        $withdrawal->data_retorno = $this->data_retorno ? formatDateParse($this->data_retorno, 'Y-m-d') : null;
+        $withdrawal->data_saida = formatDateParse($this->data_saida, 'Y-m-d');
+        $withdrawal->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+        $withdrawal->sequencial = null;
 
-        $cadastrou = $obj->cadastra();
-
+        $cadastrou = $withdrawal->save();
         if ($cadastrou) {
             if (is_array($_POST['ref_cod_servidor_substituto'])) {
                 /*
@@ -534,35 +489,34 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
-        $exitDate = $this->data_saida ? dataToBanco(str_replace('%2F','/', $this->data_saida)) : $this->data_saida;
+        $exitDate = $this->data_saida ? dataToBanco(str_replace('%2F', '/', $this->data_saida)) : $this->data_saida;
         $returnDate = $this->data_retorno ? dataToBanco($this->data_retorno) : $this->data_retorno;
 
-        if($exitDate && $returnDate){
-            $exitDate = Carbon::createFromFormat('Y-m-d',$exitDate);
-            $returnDate = Carbon::createFromFormat('Y-m-d',$returnDate);
-            if(!$this->validateDates($exitDate, $returnDate)){
+        if ($exitDate && $returnDate) {
+            $exitDate = Carbon::createFromFormat('Y-m-d', $exitDate);
+            $returnDate = Carbon::createFromFormat('Y-m-d', $returnDate);
+            if (!$this->validateDates($exitDate, $returnDate)) {
                 $this->mensagem = 'A data de retorno não pode ser inferior à data de afastamento.';
+
                 return false;
             }
             $exitDate = $exitDate->format('Y-m-d');
             $returnDate = $returnDate->format('Y-m-d');
         }
 
-        $obj = new clsPmieducarServidorAfastamento(
-            $this->ref_cod_servidor,
-            $this->sequencial,
-            $this->ref_cod_motivo_afastamento,
-            $this->pessoa_logada,
-            null,
-            null,
-            null,
-            $returnDate,
-            (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate,
-            (int)($this->retornar_servidor == EmployeeReturn::SIM) ? 0 : null,
-            $this->ref_cod_instituicao
-        );
+        $withdrawal = EmployeeWithdrawal::query()
+            ->where('ref_cod_servidor', $this->ref_cod_servidor)
+            ->where('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+            ->where('sequencial', $this->sequencial)
+            ->first();
 
-        $editou = $obj->edita();
+        if (!is_null($this->ref_cod_motivo_afastamento)) {
+            $withdrawal->ref_cod_motivo_afastamento = $this->ref_cod_motivo_afastamento;
+        }
+        $withdrawal->data_retorno = $returnDate;
+        $withdrawal->data_saida = $exitDate;
+
+        $editou = $withdrawal->save();
         if ($editou) {
             if (is_array($_POST['ref_cod_servidor_substituto'])) {
                 foreach ($_POST['ref_cod_servidor_substituto'] as $key => $valor) {
@@ -666,21 +620,13 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, $urlPermite);
 
-        $obj = new clsPmieducarServidorAfastamento(
-            $this->ref_cod_servidor,
-            $this->sequencial,
-            $this->ref_ref_cod_instituicao,
-            $this->ref_cod_motivo_afastamento,
-            $this->pessoa_logada,
-            $this->pessoa_logada,
-            $this->data_cadastro,
-            $this->data_exclusao,
-            $this->data_retorno,
-            $this->data_saida,
-            0
-        );
+        $withdrawal = EmployeeWithdrawal::query()
+            ->where('ref_cod_servidor', $this->ref_cod_servidor)
+            ->where('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+            ->where('sequencial', $this->sequencial)
+            ->first();
 
-        $excluiu = $obj->excluir();
+        $excluiu = $withdrawal->delete();
 
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';

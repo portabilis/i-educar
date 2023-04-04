@@ -11,7 +11,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
         $ref_cod_dispensa = null,
         $etapa = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}dispensa_etapa";
 
@@ -68,6 +68,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     {
         if (is_numeric($this->ref_cod_dispensa) && is_numeric($this->etapa)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->etapa)) {
@@ -90,7 +91,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $ref_cod_dispensa = null,
@@ -145,7 +146,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

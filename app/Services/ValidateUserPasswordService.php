@@ -21,7 +21,7 @@ class ValidateUserPasswordService
     {
         try {
             $this->validate($newPassword, $oldPassword);
-        } catch (ValidationException $ex){
+        } catch (ValidationException $ex) {
             throw ValidationException::withMessages([
                 'password' => [
                     'A senha deve conter pelo menos ' .
@@ -29,7 +29,7 @@ class ValidateUserPasswordService
                     ' caracteres e uma combinação de letras maiúsculas e minúsculas, números e símbolos (!@#$%*).'
                 ]
             ]);
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             throw ValidationException::withMessages([
                 'password' => $ex->getMessage()
             ]);
@@ -38,7 +38,7 @@ class ValidateUserPasswordService
 
     public function validate(string $newPassword, $oldPassword = null)
     {
-        if ($this->hash->check($newPassword, $oldPassword)){
+        if ($this->hash->check($newPassword, $oldPassword)) {
             throw new \Exception('A senha informada foi usada recentemente. Por favor, escolha outra.');
         }
 

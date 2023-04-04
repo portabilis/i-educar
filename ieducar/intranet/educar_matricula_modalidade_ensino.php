@@ -8,7 +8,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Modalidade de ensino';
+        $this->title = 'Modalidade de ensino';
         $this->processoAp = 578;
     }
 
@@ -24,29 +24,24 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $this->campoOculto('cod_matricula', $this->cod_matricula);
+        $this->campoOculto(nome: 'cod_matricula', valor: $this->cod_matricula);
 
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb('Modalidade de ensino', [
-            url('/') => 'Início',
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Modalidade de ensino', breadcrumbs: [
+            url(path: '/') => 'Início',
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->campoRotulo('nm_aluno', 'Aluno', $this->matricula['nome']);
+        $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->matricula['nome']);
 
         $this->campoLista(
-            'modalidade_ensino',
-            'Modalidade de ensino:',
-            clsPmieducarMatricula::MODELOS_DE_ENSINO,
-            (int) $this->matricula['modalidade_ensino'],
-            '',
-            false,
-            '',
-            '',
-            false,
-            false
+            nome: 'modalidade_ensino',
+            campo: 'Modalidade de ensino:',
+            valor: clsPmieducarMatricula::MODELOS_DE_ENSINO,
+            default: (int) $this->matricula['modalidade_ensino'],
+            obrigatorio: false
         );
     }
 
@@ -55,10 +50,10 @@ return new class extends clsCadastro {
         $this->validaPermissao();
 
         try {
-            $matricula = (new clsPmieducarMatricula($this->cod_matricula));
+            $matricula = (new clsPmieducarMatricula(cod_matricula: $this->cod_matricula));
             $matricula->modalidade_ensino = (int) $this->modalidade_ensino;
             $matricula->edita();
-        } catch (Exception $exception) {
+        } catch (Exception) {
             $this->mensagem = 'Erro ao atualizar a modalidade de ensino.';
 
             return false;
@@ -74,15 +69,15 @@ return new class extends clsCadastro {
     private function validaPermissao()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
     }
 
     private function validaParametros()
     {
-        $matricula = (new clsPmieducarMatricula($this->cod_matricula))->detalhe();
+        $matricula = (new clsPmieducarMatricula(cod_matricula: $this->cod_matricula))->detalhe();
 
         if (empty($matricula)) {
-            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->simpleRedirect(url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
         $this->matricula = $matricula;

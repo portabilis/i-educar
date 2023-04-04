@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_SingletonStub extends CoreExt_Singleton
 {
     public static function getInstance()

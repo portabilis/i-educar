@@ -38,9 +38,9 @@
                 <form
                     id="formcadastro"
                     @if($userType->getKey())
-                    action="{{ route('usertype.update', ['userType' => $userType]) }}"
+                    action="{{ Asset::get( '/usuarios/tipos/' . $userType->getKey()) }}"
                     @else
-                    action="{{ route('usertype.create') }}"
+                    action="{{ Asset::get('/usuarios/tipos') }}"
                     @endif
                     method="post">
 
@@ -135,10 +135,10 @@
                         <tr class="linhaBotoes">
                             <td colspan="2" align="center">
                                 <button class="btn-green" type="submit">Salvar</button>
-                                <a class="btn" href="{{ route('usertype.index') }}">Cancelar</a>
+                                <a class="btn" href="{{ Asset::get('/usuarios/tipos') }}">Cancelar</a>
                                 @can('remove', 554)
                                 @if($userType->getKey())
-                                <button class="btn" type="button" onclick="this.form._method.value = 'delete'; this.form.action = '{{ route('usertype.delete', ['userType' => $userType]) }}'; this.form.submit()">Excluir</button>
+                                <button class="btn" type="button" onclick="this.form._method.value = 'delete'; this.form.action = '{{ Asset::get('/usuarios/tipos/' . $userType->getKey()) }}'; this.form.submit()">Excluir</button>
                                 @endif
                                 @endcan
                             </td>

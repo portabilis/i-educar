@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarTipoUsuarioTable extends Migration
     {
         Schema::table('pmieducar.tipo_usuario', function (Blueprint $table) {
             $table->foreign('ref_funcionario_exc')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_funcionario_cad')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

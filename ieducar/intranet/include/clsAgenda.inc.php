@@ -68,8 +68,8 @@ class clsAgenda
         if (count($nomeArr) > 1) {
             $nome .= ' ' . $nomeArr[ count($nomeArr) - 1 ];
         }
-
-        $db->Consulta("INSERT INTO portal.agenda ( ref_ref_cod_pessoa_cad, ref_ref_cod_pessoa_own, nm_agenda, data_cad ) VALUES ( $this->cod_pessoa_dono, $this->cod_pessoa_dono, '{$nome}', NOW() )");
+        $nome = str_replace("'", "''", $nome);
+        $db->Consulta("INSERT INTO portal.agenda ( ref_ref_cod_pessoa_cad, ref_ref_cod_pessoa_own, nm_agenda, data_cad ) VALUES ( $this->cod_pessoa_dono, $this->cod_pessoa_dono, quote_literal('{$nome}') , NOW() )");
         $this->agenda = $db->InsertId('agenda_cod_agenda_seq');
 
         $this->publica = 0;
@@ -222,13 +222,13 @@ class clsAgenda
                         $objAgenda->cadastra();
                     }
                 } else {
-                    $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
+                    $this->erro_msg .= 'Você deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
                 }
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
             }
         } else {
-            $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Titulo ou o campo Descricao<br>';
+            $this->erro_msg .= 'Você deve preencher o campo Titulo ou o campo Descricao<br>';
         }
     }
 
@@ -239,7 +239,6 @@ class clsAgenda
             $verifica = true;
 
             $versaoAtual = $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
-            $versaoNova = $versaoAtual + 1;
             $campos = '';
             $valores = '';
             // faz as verificacoes dos campos postados
@@ -255,15 +254,15 @@ class clsAgenda
                             }
                         }
                     } else {
-                        $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
+                        $this->erro_msg .= 'Você deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
                         $verifica = false;
                     }
                 } else {
-                    $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
+                    $this->erro_msg .= 'Você deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
                     $verifica = false;
                 }
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Titulo ou o campo Descricao<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Titulo ou o campo Descricao<br>';
                 $verifica = false;
             }
             if (isset($publico)) {
@@ -289,7 +288,6 @@ class clsAgenda
             if (preg_match('/[0-9]{2}:[0-9]{2}/', $hora_fim)) {
                 // pega a versao da nota
                 $versaoAtual = $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
-                $versaoNova = $versaoAtual + 1;
 
                 // pega os dados da nota
                 $db->Consulta("SELECT data_inicio, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versaoAtual}'");
@@ -301,7 +299,7 @@ class clsAgenda
 
                 $this->edita_compromisso($cod_compromisso, $titulo, $descricao, $data_inicio, $hora_inicio, $hora_fim, $publico, $importante);
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Fim corretamente. Formato hora: hh:mm<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Hora de Fim corretamente. Formato hora: hh:mm<br>';
             }
         }
     }
@@ -312,7 +310,7 @@ class clsAgenda
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 1 WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versao}'");
-            $this->erro_msg .= "Vers&atilde;o {$versao} restaurada com sucesso.<br>";
+            $this->erro_msg .= "Versão {$versao} restaurada com sucesso.<br>";
         }
     }
 
@@ -374,9 +372,7 @@ class clsAgenda
     {
         $db = new clsBanco();
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
-            $maxVersao = $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
-
-            return $maxVersao;
+            return $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
         }
 
         return 0;
@@ -403,7 +399,7 @@ class clsAgenda
 
     public function add_compromisso_externo_1()
     {
-        $db = new clsBanco();
+
         // seleciona os dados
         //$db->Consulta();
         if ($this->time_atual) {
@@ -414,7 +410,7 @@ class clsAgenda
                     if ($encaminha['ref_cod_juris_processo'] && $encaminha['ref_versao_processo']) {
                         $objProcesso = new clsProcesso($encaminha['ref_cod_juris_processo'], $encaminha['ref_versao_processo']);
                         $detalheProcesso = $objProcesso->detalhe();
-                        if ($detalheProcesso['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora'] && $qtd<3) {
+                        if ($detalheProcesso['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
                             $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];
@@ -431,7 +427,7 @@ class clsAgenda
                         $detalheTramite = $objTramite->detalhe();
                         $objProcesso = new clsProcesso($detalheTramite['ref_cod_juris_processo'], $detalheTramite['ref_versao_processo']);
                         $detalheProcesso = $objProcesso->detalhe();
-                        if ($detalheTramite['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora'] && $qtd<3) {
+                        if ($detalheTramite['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
                             $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];

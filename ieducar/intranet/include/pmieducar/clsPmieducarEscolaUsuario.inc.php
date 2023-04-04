@@ -11,7 +11,7 @@ class clsPmieducarEscolaUsuario extends Model
 
     public function __construct($id = 0, $ref_cod_usuario = null, $ref_cod_escola = null, $escola_atual = 0)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_usuario";
 
@@ -62,6 +62,7 @@ class clsPmieducarEscolaUsuario extends Model
     {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_usuario)) {

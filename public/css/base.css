@@ -216,6 +216,11 @@ a:hover {
   text-decoration: none;
 }
 
+.ieducar-sidebar-menu-active {
+  background: #cddce6;
+  text-decoration: none;
+}
+
 .ieducar-sidebar-menu li a i {
   color: #98b0c3;
   font-size: 20px;
@@ -393,4 +398,8 @@ a:hover {
   border-radius: 50%;
   object-fit: cover;
   vertical-align: middle;
+}
+
+.ml-5 {
+  margin-left: 5px;
 }

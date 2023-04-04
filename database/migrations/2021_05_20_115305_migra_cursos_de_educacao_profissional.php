@@ -12,7 +12,7 @@ class MigraCursosDeEducacaoProfissional extends Migration
      */
     public function up()
     {
-        DB::statement("
+        DB::statement('
             UPDATE pmieducar.turma
             SET cod_curso_profissional = (
                 CASE cod_curso_profissional
@@ -22,7 +22,7 @@ class MigraCursosDeEducacaoProfissional extends Migration
                 END
             )
             WHERE cod_curso_profissional IN (3057, 9122, 11161);
-        ");
+        ');
     }
 
     /**
@@ -32,7 +32,7 @@ class MigraCursosDeEducacaoProfissional extends Migration
      */
     public function down()
     {
-        DB::statement("
+        DB::statement('
             UPDATE pmieducar.turma
             SET cod_curso_profissional = (
                 CASE cod_curso_profissional
@@ -42,6 +42,6 @@ class MigraCursosDeEducacaoProfissional extends Migration
                 END
             )
             WHERE cod_curso_profissional IN (11178, 12186, 3064);
-        ");
+        ');
     }
 }

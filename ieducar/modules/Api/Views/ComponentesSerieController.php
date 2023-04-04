@@ -3,6 +3,7 @@
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyGrade;
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
@@ -18,16 +19,17 @@ class ComponentesSerieController extends ApiCoreController
         foreach ($componentes as $key => $componente) {
             $arrayComponentes[$key]['id'] = $componente->id;
             $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
+            $arrayComponentes[$key]['hora_falta'] = $componente->hora_falta;
             $arrayComponentes[$key]['tipo_nota'] = $componente->tipo_nota;
             $arrayComponentes[$key]['anos_letivos'] = $componente->anos_letivos;
         }
 
-        $obj = new clsModulesComponenteCurricularAnoEscolar(null, $serieId, null, null, $arrayComponentes);
+
+        $obj = new clsModulesComponenteCurricularAnoEscolar(ano_escolar_id: $serieId, componentes: $arrayComponentes);
 
         $updateInfo = $obj->updateInfo();
         $componentesAtualizados = $updateInfo['update'];
         $componentesInseridos = $updateInfo['insert'];
-        $componentesExcluidos = $updateInfo['delete'];
 
         try {
             $valido = $this->validaAtualizacao($serieId, $updateInfo);
@@ -35,15 +37,12 @@ class ComponentesSerieController extends ApiCoreController
             return ['msgErro' => $e->getMessage()];
         }
 
-        if ($valido && $obj->atualizaComponentesDaSerie()) {
-            if ($componentesExcluidos) {
-                $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
-            }
+        if ($valido) {
+            $obj->atualizaComponentesDaSerie();
 
             return [
                 'update' => $componentesAtualizados,
-                'insert' => $componentesInseridos,
-                'delete' => $componentesExcluidos
+                'insert' => $componentesInseridos
             ];
         }
 
@@ -79,8 +78,6 @@ class ComponentesSerieController extends ApiCoreController
                 if ($count > 0) {
                     $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
                 }
-
-                //...
 
                 $hasDataPosted = $service->hasDataPostedInGrade($componenteId, $serieId, null);
 
@@ -192,10 +189,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function getUltimoAnoLetivoAberto()
     {
-        $objEscolaAnoLetivo = new clsPmieducarEscolaAnoLetivo();
-        $ultimoAnoLetivoAberto = $objEscolaAnoLetivo->getUltimoAnoLetivoAberto();
-
-        return $ultimoAnoLetivoAberto;
+        return LegacySchoolAcademicYear::query()->max('ano');
     }
 
     public function getEscolasSerieBySerie($serieId)
@@ -404,6 +398,8 @@ SQL;
             $this->appendResponse($this->getEscolasBySerie($this->getRequest()->serie));
         } elseif ($this->isRequestFor('post', 'atualiza-componentes-escolas')) {
             $this->appendResponse($this->atualizaComponentesEscolas());
+        } elseif ($this->isRequestFor('post', 'remove-componentes-serie')) {
+            $this->appendResponse($this->removeComponeteDaSerie());
         } else {
             $this->notImplementedOperationError();
         }
@@ -434,5 +430,24 @@ SQL;
         }
 
         return null;
+    }
+
+    private function removeComponeteDaSerie()
+    {
+        $serieId = $this->getRequest()->serie_id;
+        $componente = [$this->getRequest()->componente];
+        $componentes['delete'] = $componente;
+
+        try {
+            $valido = $this->validaAtualizacao($serieId, $componentes);
+        } catch (\Exception $e) {
+            return ['msgErro' => $e->getMessage()];
+        }
+
+        if($valido) {
+            $obj = new clsModulesComponenteCurricularAnoEscolar(ano_escolar_id: $serieId, componentes: $componente);
+            $obj->excluiComponente($this->getRequest()->componente);
+            $this->atualizaExclusoesDeComponentes($serieId, $componente);
+        }
     }
 }

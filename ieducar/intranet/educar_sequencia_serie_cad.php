@@ -93,7 +93,7 @@ return new class extends clsCadastro {
                     $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao);
+            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
         } else {
             $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
             $obj_usuario_det = $obj_usuario->detalhe();
@@ -110,8 +110,8 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'];
-                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'];
+                    $opcoes[$registro['cod_curso']] = $this->concatNameAndDescription('nm_curso', $registro);
+                    $opcoes_[$registro['cod_curso']] = $this->concatNameAndDescription('nm_curso', $registro);
                 }
             }
         }
@@ -130,7 +130,7 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
                 }
             }
         }
@@ -140,15 +140,20 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes_[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
                 }
             }
         }
 
-        $this->campoLista('ref_serie_origem', 'S&eacute;rie Origem', $opcoes, $this->ref_serie_origem, null, true);
-        $this->campoLista('ref_serie_destino', ' S&eacute;rie Destino', $opcoes_, $this->ref_serie_destino);
+        $this->campoLista('ref_serie_origem', 'Série Origem', $opcoes, $this->ref_serie_origem, null, true);
+        $this->campoLista('ref_serie_destino', ' Série Destino', $opcoes_, $this->ref_serie_destino);
 
         $this->campoOculto('nivel_usuario', $nivel_usuario);
+    }
+
+    private function concatNameAndDescription($dataName, array $data): string
+    {
+        return $data[$dataName] . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');
     }
 
     public function Novo()
@@ -172,7 +177,7 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);
             $editou = $obj->edita();
             if ($editou) {
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
                 throw new HttpResponseException(
                     new RedirectResponse('educar_sequencia_serie_lst.php')
@@ -180,7 +185,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -196,18 +201,18 @@ return new class extends clsCadastro {
         if (!$existe) {
             $editou = $obj->editar($this->serie_origem_old, $this->serie_destino_old);
             if ($editou) {
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
                 throw new HttpResponseException(
                     new RedirectResponse('educar_sequencia_serie_lst.php')
                 );
             }
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+            $this->mensagem = 'Edição não realizada.<br>';
 
             return false;
         }
         echo '<script> alert(\'Edição não realizada! \\n Já existe essa sequência.\') </script>';
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -220,26 +225,26 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
 
             throw new HttpResponseException(
                 new RedirectResponse('educar_sequencia_serie_lst.php')
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie-cad.js');
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie.js');
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o';
+        $this->title = 'Sequência Enturmação';
         $this->processoAp = '587';
     }
 };

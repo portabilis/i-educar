@@ -1,13 +1,11 @@
 <?php
 
-
-
 class CoreExt_EnumTipoSanguineoStub extends CoreExt_Enum
 {
-    const A = 1;
-    const B = 2;
-    const AB = 3;
-    const O = 4;
+    public const A = 1;
+    public const B = 2;
+    public const AB = 3;
+    public const O = 4;
 
     protected $_data = [
         self::A => 'A',

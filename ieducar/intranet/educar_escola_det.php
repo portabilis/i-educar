@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\PersonHasPlace;
 
 return new class extends clsDetalhe {
@@ -7,7 +8,6 @@ return new class extends clsDetalhe {
     public $ref_usuario_cad;
     public $ref_usuario_exc;
     public $ref_cod_instituicao;
-    public $ref_cod_escola_rede_ensino;
     public $ref_idpes;
     public $sigla;
     public $data_cadastro;
@@ -29,34 +29,34 @@ return new class extends clsDetalhe {
 
         $this->cod_escola = $_GET['cod_escola'];
 
-        $tmp_obj = new clsPmieducarEscola($this->cod_escola);
+        $tmp_obj = new clsPmieducarEscola(cod_escola: $this->cod_escola);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
-            $this->simpleRedirect('educar_aluno_lst.php');
+            $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 
-        $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         if ($registro['ref_idpes']) {
-            $obj_escola = new clsPessoa_($registro['ref_idpes']);
+            $obj_escola = new clsPessoa_(int_idpes: $registro['ref_idpes']);
             $obj_escola_det = $obj_escola->detalhe();
             $url = $obj_escola_det['url'];
             $email = $obj_escola_det['email'];
-            $obj_escola1 = new clsPessoaJuridica($registro['ref_idpes']);
+            $obj_escola1 = new clsPessoaJuridica(int_idpes: $registro['ref_idpes']);
             $obj_escola_det1 = $obj_escola1->detalhe();
             $nm_escola = $obj_escola_det1['fantasia'];
 
             $place = PersonHasPlace::query()
-                ->with('place.city.state')
-                ->where('person_id', $registro['ref_idpes'])
-                ->orderBy('type')
+                ->with(relations: 'place.city.state')
+                ->where(column: 'person_id', operator: $registro['ref_idpes'])
+                ->orderBy(column: 'type')
                 ->first();
 
             $obj_telefone = new clsPessoaTelefone();
-            $telefone_lst = $obj_telefone->lista($registro['ref_idpes'], 'tipo');
+            $telefone_lst = $obj_telefone->lista(int_idpes: $registro['ref_idpes'], str_ordenacao: 'tipo');
             if ($telefone_lst) {
                 foreach ($telefone_lst as $telefone) {
                     if ($telefone['tipo'] == 1) {
@@ -72,72 +72,64 @@ return new class extends clsDetalhe {
             }
         }
 
-        $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino($registro['ref_cod_escola_rede_ensino']);
-        $det_ref_cod_escola_rede_ensino = $obj_ref_cod_escola_rede_ensino->detalhe();
-        $registro['ref_cod_escola_rede_ensino'] = $det_ref_cod_escola_rede_ensino['nm_rede'];
-
-        $obj_ref_idpes = new clsPessoaJuridica($registro['ref_idpes']);
+        $obj_ref_idpes = new clsPessoaJuridica(int_idpes: $registro['ref_idpes']);
         $det_ref_idpes = $obj_ref_idpes->detalhe();
         $registro['ref_idpes'] = $det_ref_idpes['nome'];
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
 
         if ($nm_escola) {
-            $this->addDetalhe(['Escola', "{$nm_escola}"]);
+            $this->addDetalhe(detalhe: ['Escola', "{$nm_escola}"]);
         }
 
         if ($registro['sigla']) {
-            $this->addDetalhe(['Sigla', "{$registro['sigla']}"]);
+            $this->addDetalhe(detalhe: ['Sigla', "{$registro['sigla']}"]);
         }
 
         if ($registro['zona_localizacao']) {
             $zona = App_Model_ZonaLocalizacao::getInstance();
-            $this->addDetalhe([
-                'Zona Localização', $zona->getValue($registro['zona_localizacao'])
+            $this->addDetalhe(detalhe: [
+                'Zona Localização', $zona->getValue(key: $registro['zona_localizacao'])
             ]);
         }
 
-        if ($registro['ref_cod_escola_rede_ensino']) {
-            $this->addDetalhe(['Rede Ensino', "{$registro['ref_cod_escola_rede_ensino']}"]);
-        }
-
         if ($registro['ref_idpes']) {
-            $this->addDetalhe(['Raz&atilde;o Social', "{$registro['ref_idpes']}"]);
+            $this->addDetalhe(detalhe: ['Razão Social', "{$registro['ref_idpes']}"]);
         }
 
         if (isset($place)) {
             $place = $place->place;
 
-            $this->addDetalhe(['Logradouro', $place->address]);
-            $this->addDetalhe(['Número', $place->number]);
-            $this->addDetalhe(['Complemento', $place->complement]);
-            $this->addDetalhe(['Bairro', $place->neighborhood]);
-            $this->addDetalhe(['CEP', int2CEP($place->postal_code)]);
+            $this->addDetalhe(detalhe: ['Logradouro', $place->address]);
+            $this->addDetalhe(detalhe: ['Número', $place->number]);
+            $this->addDetalhe(detalhe: ['Complemento', $place->complement]);
+            $this->addDetalhe(detalhe: ['Bairro', $place->neighborhood]);
+            $this->addDetalhe(detalhe: ['CEP', int2CEP(int: $place->postal_code)]);
         }
 
         if ($url) {
-            $this->addDetalhe(['Site', "{$url}"]);
+            $this->addDetalhe(detalhe: ['Site', "{$url}"]);
         }
         if ($email) {
-            $this->addDetalhe(['E-mail', "{$email}"]);
+            $this->addDetalhe(detalhe: ['E-mail', "{$email}"]);
         }
         if ($telefone_1) {
-            $this->addDetalhe(['Telefone 1', "{$telefone_1}"]);
+            $this->addDetalhe(detalhe: ['Telefone 1', "{$telefone_1}"]);
         }
         if ($telefone_2) {
-            $this->addDetalhe(['Telefone 2', "{$telefone_2}"]);
+            $this->addDetalhe(detalhe: ['Telefone 2', "{$telefone_2}"]);
         }
         if ($telefone_mov) {
-            $this->addDetalhe(['Celular', "{$telefone_mov}"]);
+            $this->addDetalhe(detalhe: ['Celular', "{$telefone_mov}"]);
         }
         if ($telefone_fax) {
-            $this->addDetalhe(['Fax', "{$telefone_fax}"]);
+            $this->addDetalhe(detalhe: ['Fax', "{$telefone_fax}"]);
         }
 
         $obj = new clsPmieducarEscolaCurso();
-        $lst = $obj->lista($this->cod_escola);
+        $lst = $obj->lista(int_ref_cod_escola: $this->cod_escola);
 
         if ($lst) {
             $tabela = '<table>
@@ -152,8 +144,8 @@ return new class extends clsDetalhe {
                 } else {
                     $color = ' bgcolor=\'#ffffff\' ';
                 }
-                $obj_curso = new clsPmieducarCurso($valor['ref_cod_curso']);
-                $obj_curso->setorderby('nm_curso asc');
+                $obj_curso = new clsPmieducarCurso(cod_curso: $valor['ref_cod_curso']);
+                $obj_curso->setorderby(strNomeCampo: 'nm_curso asc');
                 $obj_curso_det = $obj_curso->detalhe();
                 $nm_curso = $obj_curso_det['nm_curso'];
 
@@ -166,17 +158,17 @@ return new class extends clsDetalhe {
         }
 
         if ($nm_curso) {
-            $this->addDetalhe(['Curso', "{$tabela}"]);
+            $this->addDetalhe(detalhe: ['Curso', "{$tabela}"]);
         }
 
         if ($tabela = $this->listaAnos()) {
-            $this->addDetalhe(['-', "{$tabela}"]);
+            $this->addDetalhe(detalhe: ['-', "{$tabela}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
 
-        $canCreate = $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3);
-        $canEdit = $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7);
+        $canCreate = $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
+        $canEdit = $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
 
         if ($canCreate) {
             $this->url_novo = 'educar_escola_cad.php';
@@ -188,15 +180,15 @@ return new class extends clsDetalhe {
             $this->array_botao_url = ["educar_escola_ano_letivo_cad.php?cod_escola={$registro['cod_escola']}"];
         }
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
 
         $this->url_cancelar = 'educar_escola_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da escola', [
-            url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: 'Detalhe da escola', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
@@ -207,29 +199,24 @@ return new class extends clsDetalhe {
         }
 
         $existe = false;
-
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
-        $obj_ano_letivo->setOrderby('ano');
-        $lista_ano_letivo = $obj_ano_letivo->lista($this->cod_escola, null, null, null, null, null, null, null, null, 1);
+        $lista_ano_letivo = LegacySchoolAcademicYear::query()->whereSchool($this->cod_escola)->active()->orderBy('ano')->get();
 
         $tabela = '<table class=\'anosLetivos\'>';
 
         $obj_permissoes = new clsPermissoes();
-        $canEdit = $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7);
+        $canEdit = $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
         $cor = null;
 
-        if ($lista_ano_letivo) {
+        if ($lista_ano_letivo->isNotEmpty()) {
             $existe = true;
             $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Anos letivos</b></td></tr><tr><td>";
             $tabela .= '<table cellpadding="2" cellspacing="2" border="0" align="left" width=\'60%\'>';
             $tabela .= '<tr bgcolor=\'#ccdce6\'><th width=\'90\'>Ano<a name=\'ano_letivo\'/></th><th width=\'70\'>Iniciar</th><th width=\'70\'>Finalizar</th><th width=\'150\'>Editar</th></tr>';
             $cor = $cor == '#FFFFFF' ? '#f5f9fd' : '#FFFFFF';
 
-            $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
-            $existe_ano_andamento = $obj_ano_letivo->lista($this->cod_escola, null, null, null, 1, null, null, null, null, 1);
+            $existe_ano_andamento = LegacySchoolAcademicYear::query()->whereSchool($this->cod_escola)->active()->inProgress()->exists();
 
             foreach ($lista_ano_letivo as $ano) {
-                $incluir = $excluir = '';
                 if (!$existe_ano_andamento && $ano['andamento'] != 2 && $canEdit) {
                     $incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/start.gif\"> Iniciar ano letivo</a></td>";
                 } elseif ($ano['andamento'] == 0) {
@@ -240,7 +227,8 @@ return new class extends clsDetalhe {
 
                 //verifica se o ano nao possui matricula em andamento para permitir finalizar o ano
                 $obj_matricula_ano = new clsPmieducarMatricula();
-                $matricula_em_andamento = $obj_matricula_ano->lista(null, null, $this->cod_escola, null, null, null, null, 3, null, null, null, null, 1, $ano['ano'], null, null, 1, null, null, null, null, null, null, null, null, false);
+                $matricula_em_andamento = $obj_matricula_ano->lista(int_ref_ref_cod_escola: $this->cod_escola,int_aprovado: 3, int_ativo: 1,int_ultima_matricula: 1, int_ano: $ano['ano'],bool_curso_sem_avaliacao: false);
+
                 if (!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1 && $canEdit) {
                     $excluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','finalizar');\" ><img src=\"imagens/i-educar/stop.png\"> Finalizar ano letivo</a></td>";
                 } else {
@@ -264,13 +252,13 @@ return new class extends clsDetalhe {
             $tabela .= '</table></td></tr>';
             $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>*Somente &eacute; poss&iacute;vel finalizar um ano letivo ap&oacute;s n&atilde;o existir mais nenhuma matr&iacute;cula em andamento.</b></span>
+                                <span class=\'formlttd\'><b>*Somente é possível finalizar um ano letivo após não existir mais nenhuma matrícula em andamento.</b></span>
                             </td>
                         </tr>';
             if (!$canEdit) {
                 $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>**Somente usu&aacute;rios com permiss&atilde;o de edição de escola podem alterar anos letivos.</b></span>
+                                <span class=\'formlttd\'><b>**Somente usuários com permissão de edição de escola podem alterar anos letivos.</b></span>
                             </td>
                         </tr>';
             }
@@ -292,12 +280,12 @@ return new class extends clsDetalhe {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-escola-det.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-escola-det.js');
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escola';
+        $this->title = 'Escola';
         $this->processoAp = '561';
     }
 };

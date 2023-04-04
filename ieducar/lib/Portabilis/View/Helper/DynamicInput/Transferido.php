@@ -9,12 +9,12 @@ class Portabilis_View_Helper_DynamicInput_Transferido extends Portabilis_View_He
 
     protected function inputOptions($options)
     {
-        return $this->insertOption(null, 'Selecione uma matr&iacute;cula', $resources);
+        return $this->insertOption(null, 'Selecione uma matrícula', $resources);
     }
 
     protected function defaultOptions()
     {
-        return ['options' => ['label' => 'Matr&iacute;cula']];
+        return ['options' => ['label' => 'Matrícula']];
     }
 
     public function transferido($options = [])

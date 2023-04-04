@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
 {
     protected function setUp(): void

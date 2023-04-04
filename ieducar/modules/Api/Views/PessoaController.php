@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Models\PersonHasPlace;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -135,7 +136,8 @@ class PessoaController extends ApiCoreController
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
-             fisica.pais_residencia
+             fisica.pais_residencia,
+             fisica.sus
             from cadastro.fisica
             where idpes = $2';
 
@@ -190,6 +192,7 @@ class PessoaController extends ApiCoreController
             'nome_cartorio',
             'nome_social',
             'pais_residencia',
+            'sus',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -482,6 +485,20 @@ class PessoaController extends ApiCoreController
         return true;
     }
 
+    private function validaNomeSocial()
+    {
+        if($this->getRequest()->nome_social) {
+            $validator = new NameValidator($this->getRequest()->nome_social);
+
+            if (!$validator->isValid()) {
+                $this->messenger->append($validator->getMessage());
+
+                return false;
+            }
+        }
+        return true;
+    }
+
     private function validateBirthDate()
     {
         if (empty($this->getRequest()->datanasc)) {
@@ -514,7 +531,7 @@ class PessoaController extends ApiCoreController
 
     protected function canPost()
     {
-        return $this->validateName() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
+        return $this->validateName() && $this->validaNomeSocial() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
     }
 
     protected function post()
@@ -607,7 +624,7 @@ class PessoaController extends ApiCoreController
         $this->neighborhood = $this->getRequest()->neighborhood;
         $this->city_id = $this->getRequest()->city_id;
 
-        $this->saveAddress($this->getRequest()->person_id);
+        $this->saveAddress($this->getRequest()->person_id,true);
     }
 
     protected function getInep($servidorId)
@@ -640,6 +657,7 @@ class PessoaController extends ApiCoreController
 
         $_servidor['exist'] = $exist;
         $_servidor['id'] = $id;
+        $_servidor['instituicao_id'] = LegacyInstitution::active()->first()->cod_instituicao;
         $_servidor['nome'] = $exist ? $this->loadPessoa($id)['nome'] : null;
 
         return $_servidor;

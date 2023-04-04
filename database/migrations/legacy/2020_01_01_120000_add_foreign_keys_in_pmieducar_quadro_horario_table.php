@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarQuadroHorarioTable extends Migration
     {
         Schema::table('pmieducar.quadro_horario', function (Blueprint $table) {
             $table->foreign('ref_cod_turma')
-               ->references('cod_turma')
-               ->on('pmieducar.turma')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_turma')
+                ->on('pmieducar.turma')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

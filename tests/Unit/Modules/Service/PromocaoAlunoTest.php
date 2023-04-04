@@ -1,8 +1,6 @@
 <?php
 
-
 use PHPUnit\Framework\MockObject\MockObject;
-
 
 class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
 {

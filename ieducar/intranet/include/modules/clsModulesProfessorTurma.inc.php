@@ -24,6 +24,8 @@ class clsModulesProfessorTurma extends Model
 
     public $codUsuario;
 
+    public $unidades_curriculares;
+
     /**
      * Construtor.
      *
@@ -46,12 +48,13 @@ class clsModulesProfessorTurma extends Model
         $funcao_exercida = null,
         $tipo_vinculo = null,
         $permite_lancar_faltas_componente = null,
-        $turno_id = null
+        $turno_id = null,
+        $unidades_curriculares = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
 
-        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id';
+        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id, pt.unidades_curriculares';
 
         if (is_numeric($id)) {
             $this->id = $id;
@@ -83,6 +86,10 @@ class clsModulesProfessorTurma extends Model
 
         if (is_numeric($turno_id)) {
             $this->turno_id = $turno_id;
+        }
+
+        if (is_string($unidades_curriculares)) {
+            $this->unidades_curriculares = $unidades_curriculares;
         }
 
         if (isset($permite_lancar_faltas_componente)) {
@@ -161,9 +168,19 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->unidades_curriculares)) {
+                $campos .= "{$gruda}unidades_curriculares";
+                $valores .= "{$gruda}='{{$this->unidades_curriculares}}'";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}unidades_curriculares";
+                $valores .= "{$gruda}NULL";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}updated_at";
             $valores .= "{$gruda} CURRENT_TIMESTAMP";
-            $gruda = ', ';
+
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
@@ -243,13 +260,21 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->unidades_curriculares)) {
+                $set .= "{$gruda}unidades_curriculares ='{{$this->unidades_curriculares}}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}unidades_curriculares = NULL";
+                $gruda = ', ';
+            }
+
             $set .= "{$gruda}updated_at = CURRENT_TIMESTAMP";
             $gruda = ', ';
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE id = '{$this->id}'");
-                $detalheAtual = $this->detalhe();
+                $this->detalhe();
 
                 return true;
             }
@@ -293,15 +318,21 @@ class clsModulesProfessorTurma extends Model
                 t.nm_turma,
                 t.cod_turma as ref_cod_turma,
                 t.ref_ref_cod_serie as ref_cod_serie,
-                s.nm_serie,
+                textcat_all(s.nm_serie) AS nm_serie,
                 t.ref_cod_curso,
-                c.nm_curso,
+                textcat_all(DISTINCT c.nm_curso) AS nm_curso,
                 t.ref_ref_cod_escola as ref_cod_escola,
                 p.nome as nm_escola
             FROM {$this->_tabela} pt
         ";
-        $filtros = ' , pmieducar.turma t, pmieducar.serie s, pmieducar.curso c, pmieducar.escola e, cadastro.pessoa p WHERE pt.turma_id = t.cod_turma AND t.ref_ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso
-                  AND t.ref_ref_cod_escola = e.cod_escola AND e.ref_idpes = p.idpes ';
+        $filtros = '
+            JOIN pmieducar.turma t ON pt.turma_id = t.cod_turma
+            LEFT JOIN pmieducar.turma_serie ts ON ts.turma_id = t.cod_turma
+            JOIN pmieducar.serie s ON s.cod_serie = coalesce(ts.serie_id, t.ref_ref_cod_serie)
+            JOIN pmieducar.curso c ON s.ref_cod_curso = c.cod_curso
+            JOIN pmieducar.escola e ON t.ref_ref_cod_escola = e.cod_escola
+            JOIN cadastro.pessoa p ON e.ref_idpes = p.idpes
+        WHERE true ';
 
         $whereAnd = ' AND ';
 
@@ -360,7 +391,14 @@ class clsModulesProfessorTurma extends Model
         $countCampos = count(explode(',', $this->_campos_lista)) + 8;
         $resultado = [];
 
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $groupBy = '
+            GROUP BY
+                pt.id,
+                t.cod_turma,
+                p.nome
+        ';
+
+        $sql .= $filtros . $groupBy . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} pt {$filtros}");
 
@@ -464,7 +502,7 @@ class clsModulesProfessorTurma extends Model
     public function excluir()
     {
         if (is_numeric($this->id)) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
             $sql = "DELETE FROM {$this->_tabela} pt WHERE id = '{$this->id}'";
             $db = new clsBanco();
             $db->Consulta($sql);
@@ -477,14 +515,11 @@ class clsModulesProfessorTurma extends Model
 
     public function gravaComponentes($professor_turma_id, $componentes)
     {
-        $componentesAntigos = $this->retornaComponentesVinculados($professor_turma_id);
         $this->excluiComponentes($professor_turma_id);
         $db = new clsBanco();
         foreach ($componentes as $componente) {
             $db->Consulta("INSERT INTO modules.professor_turma_disciplina VALUES ({$professor_turma_id},{$componente})");
         }
-        $componentesNovos = $this->retornaComponentesVinculados($professor_turma_id);
-        $this->auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos);
     }
 
     public function excluiComponentes($professor_turma_id)
@@ -507,26 +542,6 @@ class clsModulesProfessorTurma extends Model
         }
 
         return $componentesVinculados;
-    }
-
-    private function auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos)
-    {
-        $componentesExcluidos = array_diff($componentesAntigos, $componentesNovos);
-        $componentesAdicionados = array_diff($componentesNovos, $componentesAntigos);
-
-        foreach ($componentesExcluidos as $componente) {
-            $componente = [
-                'componente_curricular_id' => $componente,
-                'nome' => $this->retornaNomeDoComponente($componente)
-            ];
-        }
-
-        foreach ($componentesAdicionados as $componente) {
-            $componente = [
-                'componente_curricular_id' => $componente,
-                'nome' => $this->retornaNomeDoComponente($componente)
-            ];
-        }
     }
 
     public function retornaNomeDoComponente($idComponente)

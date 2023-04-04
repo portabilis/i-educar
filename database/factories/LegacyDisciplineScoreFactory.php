@@ -1,17 +1,30 @@
 <?php
 
-use App\Models\LegacyDiscipline;
+namespace Database\Factories;
+
 use App\Models\LegacyDisciplineScore;
-use App\Models\LegacyRegistrationScore;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyDisciplineScoreFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyDisciplineScore::class;
 
-$factory->define(LegacyDisciplineScore::class, function (Faker $faker) {
-    return [
-        'nota_aluno_id' => factory(LegacyRegistrationScore::class)->create(),
-        'componente_curricular_id' => factory(LegacyDiscipline::class)->create(),
-        'etapa' => $faker->randomElement([2, 3, 4]),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'nota_aluno_id' => LegacyRegistrationScoreFactory::new()->create(),
+            'componente_curricular_id' => LegacyDisciplineFactory::new()->create(),
+            'etapa' => $this->faker->randomElement([2, 3, 4]),
+        ];
+    }
+}

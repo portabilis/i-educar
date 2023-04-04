@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarServidorCursoMinistraTable extends Migration
     {
         Schema::table('pmieducar.servidor_curso_ministra', function (Blueprint $table) {
             $table->foreign(['ref_cod_servidor', 'ref_ref_cod_instituicao'])
-               ->references(['cod_servidor', 'ref_cod_instituicao'])
-               ->on('pmieducar.servidor')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['cod_servidor', 'ref_cod_instituicao'])
+                ->on('pmieducar.servidor')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_curso')
-               ->references('cod_curso')
-               ->on('pmieducar.curso')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_curso')
+                ->on('pmieducar.curso')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

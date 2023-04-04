@@ -19,7 +19,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
         $data_inicio = null,
         $data_fim = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'bloqueio_lancamento_faltas_notas';
 
@@ -109,6 +109,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     {
         if (is_numeric($this->cod_bloqueio)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ano)) {
@@ -149,7 +150,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista($ano = null, $ref_cod_escola = null)
     {
@@ -201,7 +202,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -219,7 +220,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -256,35 +257,6 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_bloqueio = '{$this->cod_bloqueio}' ");
 
             return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Retorna um boleano identificando se está atualmente dentro do periodo para lançamento de faltas notas
-     * registros.
-     *
-     * @return bool
-     */
-    public function verificaPeriodo()
-    {
-        if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola)) {
-            if (!$this->existe()) {
-                return true;
-            }
-            $db = new clsBanco();
-
-            $db->Consulta("SELECT 1
-                       FROM pmieducar.bloqueio_lancamento_faltas_notas
-                      WHERE ref_cod_escola = {$this->ref_cod_escola}
-                        AND ano = {$this->ano}
-                        AND etapa = {$this->etapa}
-                        AND data_inicio <= now()::date
-                        AND data_fim >= now()::date");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
         }
 
         return false;

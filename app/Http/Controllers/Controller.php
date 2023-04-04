@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Menu;
+use App\Services\MenuCacheService;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -13,9 +14,27 @@ use Illuminate\Support\Facades\View;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     protected $beta = false;
+
+    /**
+     * @return Breadcrumb
+     */
+    private function getBreadcrumbInstance(): Breadcrumb
+    {
+        return app(Breadcrumb::class);
+    }
+
+    /**
+     * @return MenuCacheService
+     */
+    private function getMenuCacheServiceInstance(): MenuCacheService
+    {
+        return app(MenuCacheService::class);
+    }
 
     /**
      * Set the breadcrumbs of the action
@@ -27,7 +46,7 @@ class Controller extends BaseController
      */
     public function breadcrumb($currentPage, $pages = [])
     {
-        $breadcrumb = app(Breadcrumb::class)
+        $breadcrumb = $this->getBreadcrumbInstance()
             ->current($currentPage, $pages);
 
         if ($this->beta) {
@@ -47,19 +66,50 @@ class Controller extends BaseController
     public function menu($process)
     {
         $user = Auth::user();
-        $menu = Menu::user($user);
+        $menu = $this->getMenuCacheServiceInstance()->getMenuByUser($user);
 
         $topmenu = Menu::query()
             ->where('process', $process)
             ->first();
 
+        $ancestors = $topmenu === null ? [] : Menu::getMenuAncestors($topmenu);
+
         if ($topmenu) {
-            View::share('mainmenu', $topmenu->root()->getKey());
+            View::share([
+                'mainmenu' => $topmenu->root()->getKey(),
+                'currentMenu' => $topmenu,
+                'menuPaths' => $ancestors
+            ]);
         }
 
-        View::share('menu', $menu);
-        View::share('title', '');
+        View::share([
+            'menu' => $menu,
+            'root' => $topmenu?->root()->getKey()
+        ]);
+        View::share('title', $this->getPageTitle());
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    private function getPageTitle()
+    {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
+        if (isset($this->_title)) {
+            return $this->_title;
+        }
+
+        if (isset($this->titulo)) {
+            return $this->titulo;
+        }
+
+        if (isset($this->_titulo)) {
+            return $this->_titulo;
+        }
     }
 }

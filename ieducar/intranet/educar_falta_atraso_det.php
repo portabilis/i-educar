@@ -1,10 +1,10 @@
 <?php
 
+use App\Models\LegacyAbsenceDelay;
 use App\Models\LegacySchool;
 
 return new class extends clsDetalhe {
     public $titulo;
-
     public $cod_falta_atraso;
     public $ref_cod_escola;
     public $ref_ref_cod_instituicao;
@@ -24,14 +24,12 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Falta Atraso - Detalhe';
 
-        $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
-        $this->ref_cod_escola          = $_GET['ref_cod_escola'];
+        $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-
-        $tmp_obj = new clsPmieducarFaltaAtraso();
-        $tmp_obj->setOrderby('data_falta_atraso DESC');
         $this->cod_falta_atraso = $_GET['cod_falta_atraso'];
-        $registro = $tmp_obj->lista($this->cod_falta_atraso);
+
+        $registro = LegacyAbsenceDelay::find($this->cod_falta_atraso)?->getAttributes();
 
         if (!$registro) {
             $this->simpleRedirect(sprintf(
@@ -51,23 +49,22 @@ return new class extends clsDetalhe {
                      <td bgcolor="#ccdce6"><b>Matrícula</b></td>
                  </tr>';
 
-            $cont  = 0;
-            $total = 0;
+            $cont = 0;
+            $corpo = '';
 
-            foreach ($registro as $falta) {
-                if (($cont % 2) == 0) {
-                    $color = ' bgcolor="#f5f9fd" ';
-                } else {
-                    $color = ' bgcolor="#FFFFFF" ';
-                }
+            if (($cont % 2) == 0) {
+                $color = ' bgcolor="#f5f9fd" ';
+            } else {
+                $color = ' bgcolor="#FFFFFF" ';
+            }
 
-                $school = LegacySchool::query()->with('person')->find($falta['ref_cod_escola']);
+            $school = LegacySchool::query()->with('person')->find($registro['ref_cod_escola']);
 
-                $obj_ins = new clsPmieducarInstituicao($falta['ref_ref_cod_instituicao']);
-                $det_ins = $obj_ins->detalhe();
+            $obj_ins = new clsPmieducarInstituicao($registro['ref_ref_cod_instituicao']);
+            $det_ins = $obj_ins->detalhe();
 
-                $corpo .= sprintf(
-                    '
+            $corpo .= sprintf(
+                '
           <tr>
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
@@ -77,44 +74,44 @@ return new class extends clsDetalhe {
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
           </tr>',
-                    $color,
-                    dataFromPgToBr($falta['data_falta_atraso']),
-                    $color,
-                    $falta['tipo'] == 1 ? 'Atraso' : 'Falta',
-                    $color,
-                    $falta['qtd_horas'],
-                    $color,
-                    $falta['qtd_min'],
-                    $color,
-                    $school->person->name ?? null,
-                    $color,
-                    $det_ins['nm_instituicao'],
-                    $color,
-                    $falta['matricula']
-                );
-
-                $cont++;
-            }
+                $color,
+                dataFromPgToBr($registro['data_falta_atraso']),
+                $color,
+                $registro['tipo'] == 1 ? 'Atraso' : 'Falta',
+                $color,
+                $registro['qtd_horas'],
+                $color,
+                $registro['qtd_min'],
+                $color,
+                $school->person->name ?? null,
+                $color,
+                $det_ins['nm_instituicao'],
+                $color,
+                $registro['matricula']
+            );
 
             $tabela .= $corpo;
             $tabela .= '</table>';
 
             if ($tabela) {
-                $this->addDetalhe(['Faltas/Atrasos', $tabela]);
+                $this->addDetalhe([
+                    'Faltas/Atrasos',
+                    $tabela
+                ]);
             }
         }
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->caption_novo = 'Compensar';
-            $this->url_novo     = sprintf(
+            $this->url_novo = sprintf(
                 'educar_falta_atraso_compensado_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
                 $this->ref_cod_servidor,
                 $this->ref_cod_escola,
                 $this->ref_ref_cod_instituicao
             );
-            $this->url_editar   = sprintf(
+            $this->url_editar = sprintf(
                 'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d&cod_falta_atraso=%d',
                 $this->ref_cod_servidor,
                 $this->ref_cod_escola,
@@ -131,9 +128,9 @@ return new class extends clsDetalhe {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da falta/atraso do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+        $this->breadcrumb(currentPage: 'Detalhe da falta/atraso do servidor', breadcrumbs: [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 
     public function Formular()

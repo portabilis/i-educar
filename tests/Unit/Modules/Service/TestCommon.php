@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacySchoolAcademicYear;
+use Mockery\MockInterface;
+
 /**
  * Avaliacao_Service_TestCommon abstract class.
  *
@@ -183,7 +187,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->_setUpSerieMock()
             ->_setUpEscolaAnoLetivo()
             ->_setUpAnoLetivoModulo()
-            ->_setUpModulo()
             ->_setUpEscolaSerieDisciplinaMock()
             ->_setUpDispensaDisciplinaMock();
 
@@ -570,6 +573,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->method('execPreparedQuery')
             ->willReturn(true);
 
+        Portabilis_Utils_Database::$_db
+            ->method('setFetchMode')
+            ->willReturn($this->getDbMock());
+
         $returnCallback = function ($reset = false) use ($return) {
             static $total = 0;
 
@@ -678,15 +685,20 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      */
     protected function _setUpEscolaAnoLetivo()
     {
-        $mock = $this->getCleanMock('clsPmieducarEscolaAnoLetivo');
-
-        $mock
-            ->method('lista')
-            ->with(1, 2009, null, null, 1, null, null, null, null, 1)
-            ->willReturn($this->_getConfigOptions('escolaAnoLetivo'));
+        $mock = $this->instance(
+            LegacySchoolAcademicYear::class,
+            Mockery::mock(LegacySchoolAcademicYear::class, function (MockInterface $mock) {
+                $mock->shouldReceive('withSchool')
+                    ->with(1)
+                    ->shouldReceive('withYearEq')
+                    ->with(2009)
+                    ->shouldReceive(['active','inProgress'])
+                    ->andReturn($this->_getConfigOptions('escolaAnoLetivo'));
+            })
+        );
 
         CoreExt_Entity::addClassToStorage(
-            'clsPmieducarEscolaAnoLetivo',
+            LegacySchoolAcademicYear::class,
             $mock,
             null,
             true
@@ -702,37 +714,23 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      */
     protected function _setUpAnoLetivoModulo()
     {
-        $mock = $this->getCleanMock('clsPmieducarAnoLetivoModulo');
-
-        $mock
-            ->method('lista')
-            ->with(2009, 1)
-            ->willReturn($this->_getConfigOptions('anoLetivoModulo'));
+        $mock = $this->instance(
+            LegacyAcademicYearStage::class,
+            Mockery::mock(LegacyAcademicYearStage::class, function (MockInterface $mock) {
+                $mock->shouldReceive('withSchool')
+                    ->with(1)
+                    ->shouldReceive('withYearEq')
+                    ->with(2009)
+                    ->andReturn($this->_getConfigOptions('anoLetivoModulo'));
+            })
+        );
 
         CoreExt_Entity::addClassToStorage(
-            'clsPmieducarAnoLetivoModulo',
+            LegacyAcademicYearStage::class,
             $mock,
             null,
             true
         );
-
-        return $this;
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @return $this
-     */
-    protected function _setUpModulo()
-    {
-        $mock = $this->getCleanMock('clsPmieducarModulo');
-
-        $mock
-            ->method('detalhe')
-            ->willReturn($this->_getConfigOptions('modulo'));
-
-        CoreExt_Entity::addClassToStorage('clsPmieducarModulo', $mock, null, true);
 
         return $this;
     }
@@ -762,6 +760,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
+     *
      * @return $this
      */
     protected function _setUpDispensaDisciplinaMock()

@@ -12,7 +12,7 @@ return new class {
 
     public function Formular()
     {
-        $this->title = 'i-Educar';
+        $this->title = 'Escola';
         $this->processoAp = 55;
     }
 };

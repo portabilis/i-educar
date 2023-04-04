@@ -2,12 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Builders\EmployeeBuilder;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
+use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Employee extends Model
+class Employee extends LegacyModel
 {
+    use LegacyAttribute;
+    use HasLegacyDates;
+    use HasInstitution;
+
     /**
      * @var string
      */
@@ -19,15 +29,20 @@ class Employee extends Model
     protected $primaryKey = 'cod_servidor';
 
     /**
-     * @var bool
+     * Builder dos filtros
+     *
+     * @var string
      */
-    public $timestamps = false;
+    protected string $builder = EmployeeBuilder::class;
 
     protected $fillable = [
         'cod_servidor',
-        'ref_cod_instituicao',
-        'data_cadastro',
         'carga_horaria',
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_servidor',
+        'workload' => 'carga_horaria'
     ];
 
     /**
@@ -38,18 +53,47 @@ class Employee extends Model
         return $this->belongsTo(EmployeeInep::class, 'cod_servidor', 'cod_servidor');
     }
 
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_servidor;
+        return Attribute::make(
+            get: fn () => $this->cod_servidor,
+        );
+    }
+
+    /**
+     * Servidor alocação
+     *
+     * @return HasMany
+     */
+    public function employeeAllocations(): HasMany
+    {
+        return $this->hasMany(EmployeeAllocation::class, 'ref_cod_servidor', 'cod_servidor');
+    }
+
+    /**
+     * Servidor função
+     *
+     * @return HasMany
+     */
+    public function employeeRoles(): HasMany
+    {
+        return $this->hasMany(LegacyEmployeeRole::class, 'ref_cod_servidor');
+    }
+
+    /**
+     * Pessoa física
+     *
+     * @return BelongsTo
+     */
+    public function individual(): BelongsTo
+    {
+        return $this->belongsTo(LegacyIndividual::class, 'cod_servidor');
     }
 
     /**
      * @return BelongsToMany
      */
-    public function schools()
+    public function schools(): BelongsToMany
     {
         return $this->belongsToMany(
             LegacySchool::class,
@@ -63,7 +107,7 @@ class Employee extends Model
     /**
      * @return BelongsTo
      */
-    public function person()
+    public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'cod_servidor');
     }
@@ -71,12 +115,12 @@ class Employee extends Model
     /**
      * @return BelongsTo
      */
-    public function schoolingDegree()
+    public function schoolingDegree(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolingDegree::class, 'ref_idesco');
     }
 
-    public function graduations()
+    public function graduations(): HasMany
     {
         return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
@@ -84,7 +128,7 @@ class Employee extends Model
     /**
      * @return BelongsToMany
      */
-    public function disciplines()
+    public function disciplines(): BelongsToMany
     {
         return $this->belongsToMany(
             LegacyDiscipline::class,
@@ -92,5 +136,34 @@ class Employee extends Model
             'ref_cod_servidor',
             'ref_cod_disciplina'
         )->withPivot('ref_ref_cod_instituicao', 'ref_cod_curso');
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('servidor.ativo', 1);
+    }
+
+    public function scopeProfessor(Builder $query, $onlyTeacher = true): Builder
+    {
+        return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
+            ->where('funcao.professor', (int) $onlyTeacher);
+    }
+
+    public function scopeLastYear(Builder $query): Builder
+    {
+        return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
+            ->where('servidor_alocacao.ano', date('Y') - 1);
+    }
+
+    public function scopeCurrentYear(Builder $query): Builder
+    {
+        return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
+            ->where('servidor_alocacao.ano', date('Y'));
+    }
+
+    public function withdrawals(): HasMany
+    {
+        return $this->hasMany(EmployeeWithdrawal::class, 'ref_cod_servidor', 'cod_servidor');
     }
 }

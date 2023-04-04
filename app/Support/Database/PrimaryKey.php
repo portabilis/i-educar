@@ -111,4 +111,20 @@ SQL;
             $table->unique($columnsForeignKey);
         });
     }
+
+    /**
+     * @param $schema
+     * @param $table
+     * @param $columnsForeignKey
+     * @param $foreignKey
+     *
+     * @return void
+     */
+    public function createConstraint($table, $columnsForeignKey, $foreignKey): void
+    {
+        $collumns = implode(', ', $columnsForeignKey);
+        $sql = "ALTER TABLE {$table} ADD CONSTRAINT {$foreignKey} PRIMARY KEY({$collumns});";
+
+        DB::unprepared($sql);
+    }
 }

@@ -15,22 +15,22 @@ class AddForeignKeysInPmieducarQuadroHorarioHorariosAuxTable extends Migration
     {
         Schema::table('pmieducar.quadro_horario_horarios_aux', function (Blueprint $table) {
             $table->foreign(['ref_servidor', 'ref_cod_instituicao_servidor'])
-               ->references(['cod_servidor', 'ref_cod_instituicao'])
-               ->on('pmieducar.servidor')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['cod_servidor', 'ref_cod_instituicao'])
+                ->on('pmieducar.servidor')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina'])
-               ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
-               ->on('pmieducar.escola_serie_disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
+                ->on('pmieducar.escola_serie_disciplina')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_quadro_horario')
-               ->references('cod_quadro_horario')
-               ->on('pmieducar.quadro_horario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_quadro_horario')
+                ->on('pmieducar.quadro_horario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

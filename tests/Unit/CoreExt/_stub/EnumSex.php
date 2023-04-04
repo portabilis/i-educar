@@ -1,11 +1,9 @@
 <?php
 
-
-
 class CoreExt_EnumSexStub extends CoreExt_Enum
 {
-    const MALE = 1;
-    const FEMALE = 2;
+    public const MALE = 1;
+    public const FEMALE = 2;
 
     protected $_data = [
         self::MALE => 'masculino',

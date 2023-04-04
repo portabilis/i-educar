@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarMenuTipoUsuarioTable extends Migration
     {
         Schema::table('pmieducar.menu_tipo_usuario', function (Blueprint $table) {
             $table->foreign('ref_cod_tipo_usuario')
-               ->references('cod_tipo_usuario')
-               ->on('pmieducar.tipo_usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_tipo_usuario')
+                ->on('pmieducar.tipo_usuario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('menu_id')->on('menus')->references('id');
         });

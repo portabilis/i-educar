@@ -2,6 +2,9 @@
 
 /**
  * Class Avaliacao_Model_NotaComponente
+ *
+ * @property mixed|null $notaRecuperacaoParalela
+ * @property mixed|null $notaRecuperacaoEspecifica
  */
 class Avaliacao_Model_NotaComponente extends Avaliacao_Model_Etapa
 {

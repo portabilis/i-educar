@@ -16,7 +16,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
      *
      * @var CoreExt_Controller_Interface|NULL
      */
-    protected static $_instance = null;
+    protected static $_instance;
 
     /**
      * Opções de configuração geral da classe.
@@ -41,7 +41,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
      *
      * @var CoreExt_View_Abstract
      */
-    protected $_view = null;
+    protected $_view;
 
     /**
      * Construtor singleton.
@@ -104,7 +104,6 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
     /**
      * Setter.
      *
-     * @param CoreExt_View_Abstract $view
      *
      * @return CoreExt_Controller_Interface Provê interface fluída
      */
@@ -157,15 +156,11 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
      */
     protected function _getControllerStrategy()
     {
-        switch ($this->getOption('controller_type')) {
-            case 1:
-                                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_FrontStrategy';
-                break;
-
-            case 2:
-                                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_PageStrategy';
-                break;
-        }
+        $strategy = match ((int)$this->getOption('controller_type')) {
+            1 => 'CoreExt_Controller_Dispatcher_Strategy_FrontStrategy',
+            2 => 'CoreExt_Controller_Dispatcher_Strategy_PageStrategy',
+            default => throw new Exception('Parâmetro de controlador incorreto'),
+        };
 
         return new $strategy($this);
     }

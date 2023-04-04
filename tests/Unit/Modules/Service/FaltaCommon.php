@@ -1,7 +1,5 @@
 <?php
 
-
-
 abstract class Avaliacao_Service_FaltaCommon extends Avaliacao_Service_TestCommon
 {
     /**

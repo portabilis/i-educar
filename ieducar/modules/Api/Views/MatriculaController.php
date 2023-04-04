@@ -2,7 +2,12 @@
 
 use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
+use App\Services\EnrollmentService;
+use App\Services\RegistrationService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class MatriculaController extends ApiCoreController
 {
@@ -40,8 +45,14 @@ class MatriculaController extends ApiCoreController
         // opcionalmente por ano.
         return 'select aluno.cod_aluno as aluno_id,
             matricula.cod_matricula as id,
-            pessoa.nome as name
+            (case
+                        when fisica.nome_social not like \'\' then
+                            fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                        else
+                            pessoa.nome
+                    end) as name
        from cadastro.pessoa
+      inner join cadastro.fisica on(pessoa.idpes = fisica.idpes)
       inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
       inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
       inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
@@ -377,6 +388,7 @@ class MatriculaController extends ApiCoreController
                        matricula.cod_matricula as matricula_id,
                        matricula_turma.ref_cod_turma AS turma_id,
                        matricula_turma.sequencial AS sequencial,
+                       matricula_turma.remanejado_mesma_turma AS remanejado_mesma_turma,
                        matricula_turma.sequencial_fechamento AS sequencial_fechamento,
                        COALESCE(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
                        COALESCE(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
@@ -392,7 +404,19 @@ class MatriculaController extends ApiCoreController
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma.turno_id,
-                       null AS deleted_at
+                       matricula.ref_ref_cod_serie AS serie_id,
+                       CASE
+                           WHEN turma.ativo = 0 THEN turma.data_exclusao::timestamp(0)
+                           WHEN matricula.ativo = 0 THEN matricula.updated_at::timestamp(0)
+                           WHEN matricula_turma.ativo = 0
+                           AND coalesce(transferido, false) = false
+                           AND coalesce(remanejado, false) = false
+                           AND coalesce(reclassificado, false) = false
+                           AND coalesce(abandono, false) = false
+                           AND coalesce(falecido, false) = false
+                           THEN coalesce(matricula_turma.data_exclusao,matricula_turma.updated_at)::timestamp(0)
+                           ELSE NULL
+                       END AS deleted_at
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -400,6 +424,8 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN pmieducar.matricula_turma
                     ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                  JOIN pmieducar.turma
+                    ON turma.cod_turma = matricula_turma.ref_cod_turma
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer
                  ' . $whereMatriculaTurma . ')
@@ -409,6 +435,7 @@ class MatriculaController extends ApiCoreController
                        matricula.cod_matricula as matricula_id,
                        matricula_turma_excluidos.ref_cod_turma AS turma_id,
                        matricula_turma_excluidos.sequencial AS sequencial,
+                       false AS remanejado_mesma_turma,
                        matricula_turma_excluidos.sequencial_fechamento AS sequencial_fechamento,
                        COALESCE(matricula_turma_excluidos.data_enturmacao::date::varchar, \'\') AS data_entrada,
                        COALESCE(matricula_turma_excluidos.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
@@ -424,7 +451,8 @@ class MatriculaController extends ApiCoreController
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
-                       matricula_turma_excluidos.deleted_at
+                       matricula.ref_ref_cod_serie AS serie_id,
+                       matricula_turma_excluidos.deleted_at::timestamp(0)
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -445,11 +473,13 @@ class MatriculaController extends ApiCoreController
                     'turma_id',
                     'matricula_id',
                     'sequencial',
+                    'remanejado_mesma_turma',
                     'sequencial_fechamento',
                     'data_entrada',
                     'data_saida',
                     'apresentar_fora_da_data',
                     'turno_id',
+                    'serie_id',
                     'updated_at',
                     'deleted_at',
                 ];
@@ -559,52 +589,6 @@ class MatriculaController extends ApiCoreController
         return ['aluno_id' => $alunoId];
     }
 
-    protected function canPostReservaExterna()
-    {
-        return (
-            $this->validatesPresenceOf('instituicao_id') &&
-            $this->validatesPresenceOf('ano') &&
-            $this->validatesPresenceOf('curso_id') &&
-            $this->validatesPresenceOf('serie_id') &&
-            $this->validatesPresenceOf('turma_turno_id') &&
-            $this->validatesPresenceOf('qtd_alunos') &&
-            $this->validatesPresenceOf('escola_id')
-        );
-    }
-
-    protected function postReservaExterna()
-    {
-        if ($this->canPostReservaExterna()) {
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $escolaId = $this->getRequest()->escola_id;
-            $cursoId = $this->getRequest()->curso_id;
-            $serieId = $this->getRequest()->serie_id;
-            $turmaTurnoId = $this->getRequest()->turma_turno_id;
-            $ano = $this->getRequest()->ano;
-            $qtd_alunos = $this->getRequest()->qtd_alunos;
-            $params = [$instituicaoId, $escolaId, $cursoId, $serieId, $turmaTurnoId, $ano];
-
-            $sql = 'DELETE
-                FROM pmieducar.quantidade_reserva_externa
-                WHERE ref_cod_instituicao = $1
-                AND ref_cod_escola = $2
-                AND ref_cod_curso = $3
-                AND ref_cod_serie = $4
-                AND ref_turma_turno_id = $5
-                AND ano = $6';
-
-            $this->fetchPreparedQuery($sql, $params);
-
-            $params[] = $qtd_alunos;
-
-            $sql = ' INSERT INTO pmieducar.quantidade_reserva_externa VALUES ($1,$2,$3,$4,$5,$6,$7)';
-
-            $this->fetchPreparedQuery($sql, $params);
-
-            $this->messenger->append('Quantidade de alunos atualizada com sucesso!.', 'success');
-        }
-    }
-
     protected function validaDataEntrada()
     {
         if (!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)) {
@@ -621,13 +605,7 @@ class MatriculaController extends ApiCoreController
 
     protected function validaDataSaida()
     {
-        if (!Portabilis_Date_Utils::validaData($this->getRequest()->data_saida)) {
-            $this->messenger->append('Valor inválido para data de saída', 'error');
-
-            return false;
-        } else {
-            return true;
-        }
+        return Portabilis_Date_Utils::validaData($this->getRequest()->data_saida);
     }
 
     protected function postDataEntrada()
@@ -646,21 +624,29 @@ class MatriculaController extends ApiCoreController
 
     protected function postDataSaida()
     {
-        if ($this->validaDataSaida()) {
-            $matricula_id = $this->getRequest()->matricula_id;
-            $data_saida = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_saida);
-            $matricula = new clsPmieducarMatricula($matricula_id);
-            $matricula->data_cancel = $data_saida;
-
-            if ($matricula->edita()) {
-                $enrollment = LegacyRegistration::find($matricula_id);
-                $lastenrollment = $enrollment->lastEnrollment;
-                $lastenrollment->data_exclusao = $data_saida;
-                $lastenrollment->save();
-
-                return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
+        $matricula_id = $this->getRequest()->matricula_id;
+        $exitDate = Carbon::createFromFormat('d/m/Y', $this->getRequest()->data_saida)->toDateTime();
+        try {
+            DB::beginTransaction();
+            if (!$this->validaDataSaida()) {
+                throw new Exception('Valor inválido para data de saída');
             }
+            $legacyRegistration = LegacyRegistration::find($matricula_id);
+            if (!$legacyRegistration) {
+                throw new Exception('Matrícula não encontrada.');
+            }
+            $lastEnrollment = $legacyRegistration->lastEnrollment()->first();
+            app(RegistrationService::class)->updateCancelDate($legacyRegistration, $exitDate);
+            app(EnrollmentService::class)->updateExitDate($lastEnrollment, $exitDate);
+        } catch (ValidationException $ex) {
+            DB::rollBack();
+            return $this->messenger->append('Não foi possível alterar a data de saída desta matrícula. '.$ex->validator->errors()->first(), 'error');
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return $this->messenger->append('Ocorreu um erro desconhecido ao tentar alterar a data de saída. Por favor entre em contato com o suporte.', 'error');
         }
+        DB::commit();
+        return $this->messenger->append('Data de saída atualizada com sucesso.', 'success');
     }
 
     protected function postSituacao()
@@ -986,7 +972,19 @@ class MatriculaController extends ApiCoreController
             $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
         }
 
-        $buscaAtiva = $legacyActiveLooking->get()->toArray();
+        $buscaAtiva = $legacyActiveLooking->get()->map(function ($item) {
+            return [
+                'id' => $item->getKey(),
+                'ref_cod_matricula' => $item->ref_cod_matricula,
+                'data_inicio' => $item->getStartDate(),
+                'data_fim' => $item->getEndDate(),
+                'observacoes' => $item->observacoes,
+                'resultado_busca_ativa' => $item->resultado_busca_ativa,
+                'updated_at' => $item->updated_at,
+                'created_at' => $item->created_at,
+                'deleted_at' => $item->deleted_at
+            ];
+        });
 
         return ['busca_ativa' => $buscaAtiva];
     }
@@ -1013,8 +1011,6 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->deleteReclassificacao());
         } elseif ($this->isRequestFor('delete', 'saidaEscola')) {
             $this->appendResponse($this->desfazSaidaEscola());
-        } elseif ($this->isRequestFor('post', 'reserva-externa')) {
-            $this->appendResponse($this->postReservaExterna());
         } elseif ($this->isRequestFor('post', 'data-entrada')) {
             $this->appendResponse($this->postDataEntrada());
         } elseif ($this->isRequestFor('post', 'data-saida')) {

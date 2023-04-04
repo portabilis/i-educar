@@ -87,8 +87,7 @@ class clsPmieducarMatricula extends Model
         $observacoes = false,
         $modalidadeEnsino = self::MODELO_PRESENCIAL
     ) {
-        $db = new clsBanco();
-        $this->db = $db;
+        $this->db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'matricula';
 
@@ -346,7 +345,7 @@ class clsPmieducarMatricula extends Model
             $this->cod_matricula = $db->InsertId("{$this->_tabela}_cod_matricula_seq");
 
             if ($this->cod_matricula) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_matricula;
@@ -376,8 +375,8 @@ class clsPmieducarMatricula extends Model
     {
         if (is_numeric($this->cod_matricula)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
 
             if (is_numeric($this->ref_cod_reserva_vaga)) {
                 $set .= "{$gruda}ref_cod_reserva_vaga = '{$this->ref_cod_reserva_vaga}'";
@@ -509,7 +508,7 @@ class clsPmieducarMatricula extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_matricula = '{$this->cod_matricula}'");
 
                 return true;
@@ -522,7 +521,7 @@ class clsPmieducarMatricula extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_matricula = null,
@@ -573,9 +572,9 @@ class clsPmieducarMatricula extends Model
             $condicao_sequencial_fechamento = 'AND ativo = 1';
         }
 
-        $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, p.nome, a.cod_aluno, a.ref_idpes, c.cod_curso, m.observacao, (SELECT sequencial_fechamento FROM pmieducar.matricula_turma WHERE ref_cod_matricula = cod_matricula {$condicao_sequencial_fechamento} LIMIT 1) as sequencial_fechamento FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p ";
+        $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, p.nome, a.cod_aluno, a.ref_idpes, c.cod_curso, m.observacao, s.nm_serie, (SELECT sequencial_fechamento FROM pmieducar.matricula_turma WHERE ref_cod_matricula = cod_matricula {$condicao_sequencial_fechamento} LIMIT 1) as sequencial_fechamento FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a,  {$this->_schema}serie s, cadastro.pessoa p ";
         $whereAnd = ' AND ';
-        $filtros = ' WHERE m.ref_cod_aluno = a.cod_aluno AND m.ref_cod_curso = c.cod_curso AND p.idpes = a.ref_idpes ';
+        $filtros = ' WHERE m.ref_cod_aluno = a.cod_aluno AND m.ref_cod_curso = c.cod_curso AND p.idpes = a.ref_idpes AND m.ref_ref_cod_serie = s.cod_serie ';
 
         if (is_numeric($int_cod_matricula)) {
             $filtros .= "{$whereAnd} m.cod_matricula = '{$int_cod_matricula}'";
@@ -761,7 +760,7 @@ class clsPmieducarMatricula extends Model
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p {$filtros}");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, {$this->_schema}serie s, cadastro.pessoa p {$filtros}");
         $db->Consulta($sql);
 
         if ($countCampos > 1) {
@@ -1048,7 +1047,7 @@ class clsPmieducarMatricula extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -1085,7 +1084,7 @@ class clsPmieducarMatricula extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -1187,7 +1186,8 @@ class clsPmieducarMatricula extends Model
     public function getEndMatricula($codAluno)
     {
         $db = new clsBanco();
-        $situacaoUltimaMatricula = $db->CampoUnico("SELECT matricula.aprovado
+
+        return $db->CampoUnico("SELECT matricula.aprovado
                                                       FROM pmieducar.matricula
                                                      WHERE matricula.ref_cod_aluno = $codAluno
                                                        AND matricula.ativo = 1
@@ -1195,47 +1195,6 @@ class clsPmieducarMatricula extends Model
                                                                                         FROM pmieducar.matricula AS m
                                                                                        WHERE m.ref_cod_aluno = matricula.ref_cod_aluno
                                                                                          AND m.ativo = 1)");
-
-        return $situacaoUltimaMatricula;
-    }
-
-    public function isSequencia($origem, $destino)
-    {
-        $obj = new clsPmieducarSequenciaSerie();
-        $sequencia = $obj->lista($origem, null, null, null, null, null, null, null, 1);
-        $achou = false;
-
-        if ($sequencia) {
-            do {
-                if ($lista['ref_serie_origem'] == $destino) {
-                    $achou = true;
-                    break;
-                }
-                if ($lista['ref_serie_destino'] == $destino) {
-                    $achou = true;
-                    break;
-                }
-
-                $sequencia_ = $obj->lista(
-                    $lista['ref_serie_destino'],
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1
-                );
-
-                if (!$lista) {
-                    $achou = false;
-                    break;
-                }
-            } while ($achou != false);
-        }
-
-        return $achou;
     }
 
     public function getInicioSequencia()
@@ -1255,74 +1214,6 @@ class clsPmieducarMatricula extends Model
         }
 
         return $resultado;
-    }
-
-    public function getFimSequencia()
-    {
-        $db = new clsBanco();
-        $sql = 'SELECT o.ref_serie_destino
-                  FROM pmieducar.sequencia_serie o
-                 WHERE NOT EXISTS (SELECT 1
-                                     FROM pmieducar.sequencia_serie d
-                                    WHERE o.ref_serie_destino = d.ref_serie_origem)';
-
-        $db->Consulta($sql);
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla;
-        }
-
-        return $resultado;
-    }
-
-    /**
-     * Retorna os dados de um registro.
-     *
-     * @return array
-     */
-    public function numModulo(
-        $int_ref_ref_cod_serie,
-        $int_ref_ref_cod_escola,
-        $int_ref_ref_cod_turma,
-        $int_ref_cod_turma,
-        $int_ref_ref_cod_matricula
-    ) {
-        $db = new clsBanco();
-        $sql = "SELECT CASE WHEN FLOOR((SELECT COUNT(*)
-                                          FROM pmieducar.nota_aluno
-                                         WHERE disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                           AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola}
-                                           AND disc_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                           AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                           AND ref_ref_cod_turma = {$int_ref_cod_turma}) / ((SELECT COUNT(*)
-                                                                                               FROM pmieducar.disciplina_serie
-                                                                                              WHERE ref_cod_serie = {$int_ref_ref_cod_serie}) - (SELECT COUNT(0)
-                                                                                                                                                   FROM pmieducar.dispensa_disciplina
-                                                                                                                                                  WHERE ref_ref_cod_turma = {$int_ref_cod_turma}
-                                                                                                                                                    AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                                                                                                                                    AND disc_ref_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                                                                                                                                    AND disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                                                                                                                                    AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola}))) = 0
-                            THEN 0
-                       ELSE FLOOR((SELECT COUNT(*)
-                                     FROM pmieducar.nota_aluno
-                                    WHERE disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                      AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola}
-                                      AND disc_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                      AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                      AND ref_ref_cod_turma = {$int_ref_cod_turma}) / ((SELECT COUNT(*)
-                                                                                          FROM pmieducar.disciplina_serie
-                                                                                         WHERE ref_cod_serie = {$int_ref_ref_cod_serie}) - (SELECT COUNT(0)
-                                                                                                                                              FROM pmieducar.dispensa_disciplina
-                                                                                                                                             WHERE ref_ref_cod_turma = {$int_ref_cod_turma}
-                                                                                                                                               AND ref_ref_cod_matricula = {$int_ref_ref_cod_matricula}
-                                                                                                                                               AND disc_ref_ref_cod_turma = {$int_ref_ref_cod_turma}
-                                                                                                                                               AND disc_ref_ref_cod_serie = {$int_ref_ref_cod_serie}
-                                                                                                                                               AND disc_ref_ref_cod_escola = {$int_ref_ref_cod_escola})))
-                END";
-
-        return $db->CampoUnico($sql);
     }
 
     /**
@@ -1434,19 +1325,6 @@ class clsPmieducarMatricula extends Model
         return false;
     }
 
-    public function aprova_matricula_andamento_curso_sem_avaliacao()
-    {
-        if (is_numeric($this->ref_ref_cod_escola)) {
-            $db = new clsBanco();
-            $consulta = "UPDATE {$this->_tabela} SET aprovado = 1 , ref_usuario_exc = {$this->ref_usuario_exc} , data_exclusao = NOW() WHERE ano = {$this->ano} AND ref_ref_cod_escola = {$this->ref_ref_cod_escola} AND exists (SELECT 1 FROM {$this->_schema}curso c WHERE c.cod_curso = ref_cod_curso)";
-            $db->Consulta($consulta);
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function matriculaAlunoAndamento($aluno, $anoLetivo, $showErrors = true)
     {
         if ($aluno && $anoLetivo) {
@@ -1470,245 +1348,6 @@ class clsPmieducarMatricula extends Model
 
         return false;
     }
-
-    public function getTotalAlunosEscola(
-        $cod_escola,
-        $cod_curso,
-        $cod_serie,
-        $ano = null,
-        $semestre = null
-    ) {
-        if (is_numeric($cod_escola) && is_numeric($cod_curso)) {
-            if (!is_numeric($ano)) {
-                $ano = date('Y');
-            }
-
-            if (is_numeric($cod_serie)) {
-                $where = " AND ref_ref_cod_serie = {$cod_serie} ";
-            }
-
-            if (is_numeric($semestre)) {
-                $where .= " AND semestre = {$semestre} ";
-            }
-
-            $select = "SELECT count(1) as total_alunos_serie,
-                              ref_ref_cod_serie as cod_serie,
-                              nm_serie
-                         FROM pmieducar.matricula,
-                              pmieducar.serie
-                        WHERE serie.cod_serie = ref_ref_cod_serie
-                          AND ref_ref_cod_escola = {$cod_escola}
-                          AND serie.ref_cod_curso = {$cod_curso}
-                          AND ano = {$ano}
-                          $where
-                          AND ultima_matricula = 1
-                          AND aprovado IN (1,2,3)
-                          AND matricula.ativo = 1
-                     GROUP BY ref_ref_cod_serie,
-                              ref_ref_cod_escola,
-                              nm_serie";
-
-            $db = new clsBanco();
-            $db->Consulta($select);
-            $total_registros = $db->numLinhas();
-
-            if (!$total_registros) {
-                return false;
-            }
-
-            $resultados = [];
-            $total = 0;
-
-            while ($db->ProximoRegistro()) {
-                $registro = $db->Tupla();
-                $total += $registro['total_alunos_serie'];
-                $resultados[$registro['cod_serie']] = $registro;
-            }
-
-            $array_inicio_sequencias = clsPmieducarMatricula::getInicioSequencia();
-            $db = new clsBanco();
-
-            foreach ($array_inicio_sequencias as $serie_inicio) {
-                $serie_inicio = $serie_inicio[0];
-                $seq_ini = $serie_inicio;
-                $seq_correta = false;
-                $series[$cod_serie] = $cod_serie;
-
-                do {
-                    $sql = "SELECT o.ref_serie_origem,
-                                   s.nm_serie,
-                                   o.ref_serie_destino,
-                                   s.ref_cod_curso as ref_cod_curso_origem,
-                                   sd.ref_cod_curso as ref_cod_curso_destino
-                              FROM pmieducar.sequencia_serie o,
-                                   pmieducar.serie s,
-                                   pmieducar.serie sd
-                             WHERE s.cod_serie = o.ref_serie_origem
-                               AND s.cod_serie = $seq_ini
-                               AND sd.cod_serie = o.ref_serie_destino";
-
-                    $db->Consulta($sql);
-                    $db->ProximoRegistro();
-                    $tupla = $db->Tupla();
-                    $serie_origem = $tupla['ref_serie_origem'];
-                    $seq_ini = $serie_destino = $tupla['ref_serie_destino'];
-                    $series[$tupla['ref_serie_destino']] = $tupla['ref_serie_destino'];
-                    $sql = "SELECT 1
-                              FROM pmieducar.sequencia_serie s
-                             WHERE s.ref_serie_origem = $seq_ini";
-
-                    $true = $db->CampoUnico($sql);
-                } while ($true);
-
-                $obj_serie = new clsPmieducarSerie($serie_destino);
-                $det_serie = $obj_serie->detalhe();
-
-                if ($cod_serie == $serie_destino) {
-                    $seq_correta = true;
-                }
-            }
-
-            if ($series) {
-                $resultados2 = [];
-
-                foreach ($series as $key => $serie) {
-                    if (key_exists($key, $resultados)) {
-                        $resultados[$key]['_total'] = $total;
-                        $resultados2[] = $resultados[$key];
-                    }
-                }
-            }
-
-            return $resultados2;
-        }
-
-        return false;
-    }
-
-    public function getTotalAlunosIdadeSexoEscola(
-        $cod_escola,
-        $cod_curso,
-        $cod_serie,
-        $ano = null,
-        $semestre = null
-    ) {
-        if (is_numeric($cod_escola) && is_numeric($cod_curso)) {
-            if (!is_numeric($ano)) {
-                $ano = date('Y');
-            }
-
-            if (is_numeric($cod_serie)) {
-                $where = " AND ref_ref_cod_serie = {$cod_serie} ";
-            }
-
-            if (is_numeric($semestre)) {
-                $where .= " AND m.semestre = {$semestre} ";
-            }
-
-            $select = "SELECT m.ref_ref_cod_serie as cod_serie,
-                              nm_serie,
-                              COUNT(1) as total_alunos_serie,
-                              COALESCE ( EXTRACT ( YEAR FROM ( age(now(),data_nasc) ) )::text , '-' ) as idade,
-                              f.sexo
-                         FROM pmieducar.aluno a,
-                              pmieducar.matricula m,
-                              cadastro.fisica f,
-                              pmieducar.serie
-                        WHERE a.cod_aluno = m.ref_cod_aluno
-                          AND a.ref_idpes = idpes
-                          AND ref_ref_cod_serie = cod_serie
-                          AND m.ref_ref_cod_escola = $cod_escola
-                          AND ano = $ano
-                          AND ultima_matricula = 1
-                          AND aprovado IN ( 1,2,3)
-                          AND m.ref_cod_curso = $cod_curso
-                          $where
-                     GROUP BY m.ref_ref_cod_serie,
-                              nm_serie,
-                              EXTRACT ( YEAR FROM ( age(now(),data_nasc) ) ),
-                              f.sexo
-                     ORDER BY EXTRACT ( YEAR FROM ( age(now(),data_nasc) ) ),
-                              f.sexo";
-
-            $db = new clsBanco();
-            $db->Consulta($select);
-            $total_registros = $db->numLinhas();
-
-            if (!$total_registros) {
-                return false;
-            }
-
-            $resultados = [];
-            $total = 0;
-
-            while ($db->ProximoRegistro()) {
-                $registro = $db->Tupla();
-                $total += $registro['total_alunos_serie'];
-                $resultados[] = $registro;
-            }
-
-            $array_inicio_sequencias = clsPmieducarMatricula::getInicioSequencia();
-            $db = new clsBanco();
-
-            foreach ($array_inicio_sequencias as $serie_inicio) {
-                $serie_inicio = $serie_inicio[0];
-                $seq_ini = $serie_inicio;
-                $seq_correta = false;
-                $series[$cod_serie] = $cod_serie;
-                do {
-                    $sql = "SELECT o.ref_serie_origem,
-                                   s.nm_serie,
-                                   o.ref_serie_destino,
-                                   s.ref_cod_curso as ref_cod_curso_origem,
-                                   sd.ref_cod_curso as ref_cod_curso_destino
-                              FROM pmieducar.sequencia_serie o
-                                   pmieducar.serie s
-                                   pmieducar.serie sd
-                             WHERE s.cod_serie = o.ref_serie_origem
-                               AND s.cod_serie = $seq_ini
-                               AND sd.cod_serie = o.ref_serie_destino";
-
-                    $db->Consulta($sql);
-                    $db->ProximoRegistro();
-                    $tupla = $db->Tupla();
-                    $serie_origem = $tupla['ref_serie_origem'];
-                    $seq_ini = $serie_destino = $tupla['ref_serie_destino'];
-                    $series[$tupla['ref_serie_destino']] = $tupla['ref_serie_destino'];
-                    $sql = "SELECT 1
-                              FROM pmieducar.sequencia_serie s
-                             WHERE s.ref_serie_origem = $seq_ini";
-
-                    $true = $db->CampoUnico($sql);
-                } while ($true);
-
-                $obj_serie = new clsPmieducarSerie($serie_destino);
-                $det_serie = $obj_serie->detalhe();
-
-                if ($cod_serie == $serie_destino) {
-                    $seq_correta = true;
-                }
-            }
-
-            if ($series) {
-                $resultados2 = [];
-
-                foreach ($series as $key => $serie) {
-                    foreach ($resultados as $key2 => $resultado) {
-                        if ($key == $resultado['cod_serie']) {
-                            $resultados[$key2]['_total'] = $total;
-                            $resultados2[] = $resultados[$key2];
-                            unset($resultados[$key2]);
-                        }
-                    }
-                }
-            }
-
-            return $resultados2;
-        }
-
-        return false;
-    }
-
     public function pegaDataDeTransferencia($cod_aluno, $ano)
     {
         $query = "

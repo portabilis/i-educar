@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Core_ViewStub extends Core_View
 {
     /**

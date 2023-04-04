@@ -72,8 +72,8 @@ class TransferRegistrationDataService
         LegacyRegistration $newRegistration,
         LegacyRegistration $oldRegistration
     ) {
-        $newRegistrationNumbersOfStages = count($newRegistration->lastEnrollment->schoolClass->stages);
-        $oldRegistrationNumbersOfStages = count($oldRegistration->lastEnrollment->schoolClass->stages);
+        $newRegistrationNumbersOfStages = count($newRegistration?->lastEnrollment?->schoolClass?->stages ?? []);
+        $oldRegistrationNumbersOfStages = count($oldRegistration?->lastEnrollment?->schoolClass?->stages ?? []);
 
         return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;
     }

@@ -3,12 +3,7 @@
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
-    /**
-     * Referência a usuário da sessão
-     *
-     * @var int
-     */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
     public $idesco;
     public $descricao;
     public $escolaridade;
@@ -16,8 +11,8 @@ return new class extends clsCadastro {
 
     protected function loadAssets()
     {
-        $jsFile = '/modules/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
-        Portabilis_View_Helper_Application::loadJavascript($this, $jsFile);
+        $jsFile = '/vendor/legacy/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $jsFile);
     }
 
     public function Inicializar()
@@ -27,7 +22,7 @@ return new class extends clsCadastro {
         $this->idesco = $_GET['idesco'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3, 'educar_escolaridade_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 632, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_escolaridade_lst.php');
 
         if (is_numeric($this->idesco)) {
             $obj = new clsCadastroEscolaridade($this->idesco);
@@ -44,7 +39,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                if ($obj_permissoes->permissao_excluir(632, $this->pessoa_logada, 3)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 632, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
                     $this->fexcluir = true;
                 }
 
@@ -60,7 +55,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' escolaridade', [
+        $this->breadcrumb(currentPage: $nomeMenu . ' escolaridade', breadcrumbs: [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
 
@@ -72,13 +67,13 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // Primary keys
-        $this->campoOculto('idesco', $this->idesco);
+        $this->campoOculto(nome: 'idesco', valor: $this->idesco);
 
         // Outros campos
-        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, true);
+        $this->campoTexto(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
         $options = ['label' => 'Escolaridade educacenso', 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade];
-        $this->inputsHelper()->select('escolaridade', $options);
+        $this->inputsHelper()->select(attrName: 'escolaridade', inputOptions: $options);
     }
 
     public function Novo()
@@ -90,7 +85,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $obj = new clsCadastroEscolaridade(null, $this->descricao, $this->escolaridade);
+        $obj = new clsCadastroEscolaridade(idesco: null, descricao: $this->descricao, escolaridade: $this->escolaridade);
         $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
@@ -98,14 +93,14 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_escolaridade_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao, $this->escolaridade);
+        $obj = new clsCadastroEscolaridade(idesco: $this->idesco, descricao: $this->descricao, escolaridade: $this->escolaridade);
         $editou = $obj->edita();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
@@ -119,7 +114,7 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
+        $obj = new clsCadastroEscolaridade(idesco: $this->idesco, descricao: $this->descricao);
 
         if ($obj->findUsages()) {
             $this->mensagem = 'Exclusão não realizada - Ainda existe vínculos.<br>';

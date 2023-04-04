@@ -10,7 +10,7 @@
         <button type="submit" class="submit">Redefinir</button>
 
         <div class="remember">
-            <a href="{{ url('login') }}">Fazer login?</a>
+            <a href="{{ Asset::get('login') }}">Fazer login?</a>
         </div>
 
     </form>

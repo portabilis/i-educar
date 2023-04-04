@@ -135,6 +135,10 @@ class ServidorController extends ApiCoreController
                 $whereDeleted = 'AND pt.updated_at >= $3';
             }
 
+            if ($ano) {
+                $where = $where . " AND {$ano} = ANY(ccae.anos_letivos)";
+            }
+
             $sql = "
                 (
                     select
@@ -143,11 +147,13 @@ class ServidorController extends ApiCoreController
                         tmp.turma_id,
                         tmp.turno_id,
                         tmp.permite_lancar_faltas_componente,
-                        string_agg(concat(tmp.componente_curricular_id, ' ', tmp.tipo_nota)::varchar, ',') as disciplinas,
+                        string_agg(distinct concat(serie_id,'|',tmp.componente_curricular_id, '|', tmp.tipo_nota)::varchar, ',') as disciplinas,
+                        string_agg(distinct concat( tmp.serie_id, ' ',tmp.componente_curricular_id)::varchar, ',') as disciplinas_serie,
                         max(tmp.updated_at) as updated_at,
-                        null as deleted_at
+                        deleted_at
                     from (
                              select
+                                 coalesce(ts.serie_id, t.ref_ref_cod_serie) as serie_id,
                                  pt.id,
                                  pt.servidor_id,
                                  pt.turma_id,
@@ -156,22 +162,27 @@ class ServidorController extends ApiCoreController
                                  ptd.componente_curricular_id,
                                  ccae.tipo_nota,
                                  greatest(pt.updated_at, ccae.updated_at) as updated_at,
-                                 null as deleted_at
+                                 CASE
+                                     WHEN s.ativo = 0 THEN coalesce(s.data_exclusao::timestamp(0),s.updated_at::timestamp(0))
+                                     ELSE NULL
+                                 END AS deleted_at
                              from modules.professor_turma pt
                                       left join modules.professor_turma_disciplina ptd
                                                 on ptd.professor_turma_id = pt.id
                                       inner join pmieducar.turma t
                                                  on t.cod_turma = pt.turma_id
+                                      left join pmieducar.turma_serie ts on ts.turma_id = t.cod_turma
                                       inner join modules.componente_curricular_ano_escolar ccae
-                                                 on ccae.ano_escolar_id = t.ref_ref_cod_serie
-                                                     and ccae.componente_curricular_id = ptd.componente_curricular_id
+                                                on ccae.ano_escolar_id = coalesce(ts.serie_id, t.ref_ref_cod_serie)
+                                                and ccae.componente_curricular_id = ptd.componente_curricular_id
+                                      left join pmieducar.servidor s on s.cod_servidor = pt.servidor_id
                              where true
                              and pt.instituicao_id = $1
                              and pt.ano = $2
                              and t.ref_ref_cod_escola in ({$escola})
                             {$where}
                          ) as tmp
-                    group by tmp.id, tmp.servidor_id, tmp.turma_id, tmp.turno_id, tmp.permite_lancar_faltas_componente
+                    group by tmp.id, tmp.servidor_id, tmp.turma_id, tmp.turno_id, tmp.permite_lancar_faltas_componente,deleted_at
                 )
                 union all
                 (
@@ -182,31 +193,54 @@ class ServidorController extends ApiCoreController
                         pt.turno_id,
                         null as permite_lancar_faltas_componente,
                         null as disciplinas,
+                        null as disciplinas_serie,
                         pt.updated_at,
                         pt.deleted_at
                     from modules.professor_turma_excluidos pt
                     inner join pmieducar.turma t
                     on t.cod_turma = pt.turma_id
+                    left join pmieducar.turma_serie ts on ts.turma_id = t.cod_turma
                     where true
                     and pt.instituicao_id = $1
                     and pt.ano = $2
                     and t.ref_ref_cod_escola in ({$escola})
                     {$whereDeleted}
+                    group by pt.id,pt.servidor_id,pt.turma_id,pt.turno_id,pt.updated_at,pt.deleted_at
                 )
                 order by updated_at
             ";
 
             $vinculos = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'servidor_id', 'turma_id', 'turno_id', 'permite_lancar_faltas_componente', 'disciplinas','tipo_nota', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'servidor_id', 'turma_id', 'turno_id', 'permite_lancar_faltas_componente', 'disciplinas', 'disciplinas_serie', 'updated_at', 'deleted_at'];
 
             $vinculos = Portabilis_Array_Utils::filterSet($vinculos, $attrs);
 
             $vinculos = array_map(function ($vinculo) {
+                if (is_null($vinculo['disciplinas_serie'])) {
+                    $vinculo['disciplinas_serie'] = [];
+                } elseif (is_string($vinculo['disciplinas_serie'])) {
+                    $collect = collect(explode(',', $vinculo['disciplinas_serie']));
+                    $collect = $collect->mapToGroups(function ($item, $key) {
+                        [$key, $value] = explode(' ', $item);
+                        return [$key => (int)$value];
+                    });
+
+                    $vinculo['disciplinas_serie'] = $collect;
+                }
+
                 if (is_null($vinculo['disciplinas'])) {
                     $vinculo['disciplinas'] = [];
                 } elseif (is_string($vinculo['disciplinas'])) {
-                    $vinculo['disciplinas'] = explode(',', $vinculo['disciplinas']);
+                    $vinculo['disciplinas'] = array_map(static function ($disciplina) {
+                        [$serie_id, $disciplina_id, $tipo_nota] = explode('|', $disciplina);
+
+                        return [
+                            'id' => (int)$disciplina_id,
+                            'serie_id' => (int)$serie_id,
+                            'tipo_nota' => $tipo_nota == '' ? null : (int)$tipo_nota
+                        ];
+                    }, explode(',', $vinculo['disciplinas']));
                 }
 
                 return $vinculo;
@@ -259,7 +293,7 @@ class ServidorController extends ApiCoreController
 
         $unificationsQuery->person();
 
-        return ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])];
+        return ['unificacoes' => $unificationsQuery->get(['id', 'main_id', 'duplicates_id', 'created_at', 'active'])];
     }
 
     /**

@@ -4,18 +4,18 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class RecursosRealizacaoProvas
 {
-    const NENHUM = 14;
-    const AUXILIO_LEDOR = 1;
-    const AUXILIO_TRANSCRICAO = 2;
-    const GUIA_INTERPRETE = 3;
-    const TRADUTOR_INTERPRETE_DE_LIBRAS = 4;
-    const LEITURA_LABIAL = 5;
-    const PROVA_AMPLIADA_FONTE_18 = 10;
-    const PROVA_SUPERAMPLIADA_FONTE_24 = 8;
-    const MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE = 9;
-    const CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL = 11;
-    const PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS = 12;
-    const PROVA_EM_VIDEO_EM_LIBRAS = 13;
+    public const NENHUM = 14;
+    public const AUXILIO_LEDOR = 1;
+    public const AUXILIO_TRANSCRICAO = 2;
+    public const GUIA_INTERPRETE = 3;
+    public const TRADUTOR_INTERPRETE_DE_LIBRAS = 4;
+    public const LEITURA_LABIAL = 5;
+    public const PROVA_AMPLIADA_FONTE_18 = 10;
+    public const PROVA_SUPERAMPLIADA_FONTE_24 = 8;
+    public const MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE = 9;
+    public const CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL = 11;
+    public const PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS = 12;
+    public const PROVA_EM_VIDEO_EM_LIBRAS = 13;
 
     public static function getDescriptiveValues()
     {

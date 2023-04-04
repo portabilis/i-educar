@@ -22,11 +22,11 @@ class clsPmieducarEscolaSerie extends Model
 
     public function __construct($ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null, $anos_letivos = [])
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_serie";
 
-        $this->_campos_lista = $this->_todos_campos = 'es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas, ARRAY_TO_JSON(es.anos_letivos) AS anos_letivos ';
+        $this->_campos_lista = $this->_todos_campos = 'es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas, ARRAY_TO_JSON(es.anos_letivos) AS anos_letivos';
 
         if (is_numeric($ref_usuario_cad)) {
             $this->ref_usuario_cad = $ref_usuario_cad;
@@ -99,6 +99,7 @@ class clsPmieducarEscolaSerie extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
+
             if (($this->hora_inicial)) {
                 $campos .= "{$gruda}hora_inicial";
                 $valores .= "{$gruda}'{$this->hora_inicial}'";
@@ -141,7 +142,6 @@ class clsPmieducarEscolaSerie extends Model
             if (is_array($this->anos_letivos)) {
                 $campos .= "{$gruda}anos_letivos";
                 $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
-                $grupo = ', ';
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -161,6 +161,7 @@ class clsPmieducarEscolaSerie extends Model
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -225,7 +226,7 @@ class clsPmieducarEscolaSerie extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null)
     {
@@ -363,7 +364,7 @@ class clsPmieducarEscolaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -381,7 +382,7 @@ class clsPmieducarEscolaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

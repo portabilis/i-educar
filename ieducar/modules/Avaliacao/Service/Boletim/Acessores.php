@@ -2,12 +2,12 @@
 
 trait Avaliacao_Service_Boletim_Acessores
 {
-    use Avaliacao_Service_Boletim_Avaliacao,
-        Avaliacao_Service_Boletim_FaltaAluno,
-        Avaliacao_Service_Boletim_NotaAluno,
-        Avaliacao_Service_Boletim_ParecerDescritivoAluno,
-        Avaliacao_Service_Boletim_RegraAvaliacao,
-        Avaliacao_Service_Boletim_Validators;
+    use Avaliacao_Service_Boletim_Avaliacao;
+    use Avaliacao_Service_Boletim_FaltaAluno;
+    use Avaliacao_Service_Boletim_NotaAluno;
+    use Avaliacao_Service_Boletim_ParecerDescritivoAluno;
+    use Avaliacao_Service_Boletim_RegraAvaliacao;
+    use Avaliacao_Service_Boletim_Validators;
 
     /**
      * @var array
@@ -18,6 +18,7 @@ trait Avaliacao_Service_Boletim_Acessores
         'usuario' => null,
         'turmaId' => null,
         'ignorarDispensasParciais' => false,
+        'etapa' => null,
     ];
 
     /**
@@ -465,20 +466,14 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getParecerDescritivoAbstractDataMapper()
     {
         if (is_null($this->_parecerDescritivoAbstractDataMapper)) {
-            switch ($this->getRegraAvaliacaoTipoParecerDescritivo()) {
-                case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
-                case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
-                    $class = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
-                    break;
-
-                case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
-                case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
-                    $class = 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper';
-                    break;
-            }
+            $class = match ($this->getRegraAvaliacaoTipoParecerDescritivo()) {
+                RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL, RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL => 'Avaliacao_Model_ParecerDescritivoGeralDataMapper',
+                RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE, RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE => 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper',
+                default => null
+            };
 
             // Se não usar parecer descritivo, retorna NULL
-            if (!isset($class)) {
+            if ($class === null) {
                 return null;
             }
 

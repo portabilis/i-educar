@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacySchoolGrade extends Model
+class LegacySchoolGrade extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -24,7 +27,6 @@ class LegacySchoolGrade extends Model
         'ref_cod_escola',
         'ref_cod_serie',
         'ref_usuario_cad',
-        'data_cadastro',
         'anos_letivos',
         'hora_inicial',
         'hora_final',
@@ -37,20 +39,18 @@ class LegacySchoolGrade extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @return int
-     */
-    public function getSchoolIdAttribute()
+    protected function schoolId(): Attribute
     {
-        return $this->ref_cod_escola;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_escola
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getGradeIdAttribute()
+    protected function gradeId(): Attribute
     {
-        return $this->ref_cod_serie;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_serie
+        );
     }
 
     /**
@@ -58,8 +58,8 @@ class LegacySchoolGrade extends Model
      *
      * @return BelongsTo
      */
-    public function grade()
+    public function grade(): BelongsTo
     {
-        return $this->belongsTo(LegacyLevel::class, 'ref_cod_serie');
+        return $this->belongsTo(LegacyGrade::class, 'ref_cod_serie');
     }
 }

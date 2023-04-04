@@ -51,7 +51,7 @@ trait InteractWithDatabase
     {
         try {
             return $this->newQuery()->findOrFail($identifier);
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             $this->redirectToIndex();
         }
     }
@@ -90,7 +90,7 @@ trait InteractWithDatabase
     {
         try {
             $this->newQuery()->create($attributes);
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             $this->mensagem = 'Cadastro não realizado.<br>';
 
             return false;
@@ -113,7 +113,7 @@ trait InteractWithDatabase
 
         try {
             $model->update($attributes);
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             $this->mensagem = 'Edição não realizada.<br>';
 
             return false;
@@ -135,7 +135,7 @@ trait InteractWithDatabase
 
         try {
             $model->findOrFail($identifier)->delete;
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             $this->mensagem = 'Exclusão não realizada.<br>';
 
             return false;

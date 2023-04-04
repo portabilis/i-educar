@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Phone
@@ -20,6 +21,9 @@ class LegacyPhone extends Model
      * @var string
      */
     protected $table = 'cadastro.fone_pessoa';
+
+    public const CREATED_AT = 'data_cad';
+    public const UPDATED_AT = 'data_rev';
 
     /**
      * @var string
@@ -40,16 +44,7 @@ class LegacyPhone extends Model
         'data_cad',
         'idpes_rev',
         'data_rev',
-        'origem_gravacao',
-        'idpes_cad',
-        'data_cad',
-        'operacao',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @inheritDoc
@@ -63,5 +58,10 @@ class LegacyPhone extends Model
             $model->data_cad = now();
             $model->operacao = 'I';
         });
+    }
+
+    public function person(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'idpes');
     }
 }

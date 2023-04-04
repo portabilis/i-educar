@@ -73,7 +73,7 @@ class Portabilis_String_Utils
 
     public static function encoding($str)
     {
-        return mb_detect_encoding($str, 'UTF-8, ', $strict = true);
+        return mb_detect_encoding($str, 'UTF-8', true);
     }
 
     public static function camelize($str)

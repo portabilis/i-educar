@@ -1,16 +1,19 @@
 <?php
 
+use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyRole;
+
 return new class extends clsDetalhe {
     public $titulo;
 
-    public $cod_servidor_alocacao = null;
-    public $ref_cod_servidor = null;
-    public $ref_cod_instituicao = null;
-    public $ref_cod_servidor_funcao = null;
-    public $ref_cod_funcionario_vinculo = null;
-    public $ano = null;
-    public $data_admissao = null;
-    public $data_saida = null;
+    public $cod_servidor_alocacao;
+    public $ref_cod_servidor;
+    public $ref_cod_instituicao;
+    public $ref_cod_servidor_funcao;
+    public $ref_cod_funcionario_vinculo;
+    public $ano;
+    public $data_admissao;
+    public $data_saida;
 
     public function Gerar()
     {
@@ -63,13 +66,8 @@ return new class extends clsDetalhe {
 
         //Função
         if ($this->ref_cod_servidor_funcao) {
-            $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $this->ref_cod_servidor_funcao);
-            $funcaoServidor = $funcaoServidor->detalhe();
-
-            $funcao = new clsPmieducarFuncao($funcaoServidor['ref_cod_funcao']);
-            $funcao = $funcao->detalhe();
-
-            $this->addDetalhe(['Função', "{$funcao['nm_funcao']}"]);
+            $employeeRole = LegacyEmployeeRole::find($this->ref_cod_servidor_funcao);
+            $this->addDetalhe(['Função', $employeeRole->role->name]);
         }
 
         //Vinculo

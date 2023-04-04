@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="" method="post">
+    <form id="formcadastro" action="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id) }}" method="post">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
                 <tr>
@@ -45,22 +45,24 @@
                 </tr>
                 <tr id="tr_ano">
                     <td class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></td>
+                    @if($schoolClass->begin_academic_year && $schoolClass->end_academic_year)
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
+                    @else
+                    <td class="formmdtd" valign="top"><span class="form">O calendário letivo não está definido para a turma.</span></td>
+                    @endif
                 </tr>
             </tbody>
         </table>
-    </form>
-
-    <form action="{{ route('enrollments.batch.enroll', ['schoolClass' => $schoolClass->id]) }}" method="post" class="open-sans">
-
         <h3>Alunos matriculados e não enturmados</h3>
 
         <p>
             <div>
             @if($schoolClass->school->institution->allowRegistrationOutAcademicYear)
                 <span class="text-muted">A data de enturmação deve ser maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span>
-            @else
+            @elseif($schoolClass->begin_academic_year && $schoolClass->end_academic_year)
                 <span class="text-muted">A data da enturmação deve ser entre:</span> <strong>{{ $schoolClass->begin_academic_year->format('d/m/Y') }}</strong> e <strong>{{ $schoolClass->end_academic_year->format('d/m/Y') }}</strong><span class="text-muted">, maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span>
+            @else
+                <span class="text-muted"><strong>O calendário letivo não está definido para a turma.</strong></span>
             @endif
             </div>
         </p>
@@ -138,15 +140,19 @@
         <div style="text-align: center">
             <button class="btn-green" type="submit">Enturmar</button>
             <a href="javascript:void(0)" class="btn registration-btn-check" >Selecionar todos</a>
-            <a href="{{ route('enrollments.batch.cancel.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Desenturmar em lote</a>
-            <a href="{{ url('intranet/educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=' . $schoolClass->id) }}" class="btn">Copiar enturmações</a>
-            <a href="{{ url('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
+            <a href="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Desenturmar em lote</a>
+            <a href="{{ Asset::get('intranet/educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=' . $schoolClass->id) }}" class="btn">Copiar enturmações</a>
+            <a href="{{ Asset::get('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
         </div>
 
     </form>
 
     <script>
         $j(document).ready(function () {
+            $j('#formcadastro').submit(function (e) {
+                $j('button[type="submit"]').attr("disabled", true).text('Enturmando ...');
+                return true;
+            });
             $j('.registration-check-master').change(function () {
                 if ($j(this).prop('checked')) {
                     $j('.registration-check').prop('checked', true);

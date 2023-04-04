@@ -8,7 +8,7 @@ class Portabilis_View_Helper_DynamicInput_SituacaoMatricula extends Portabilis_V
     {
         $resources = EnrollmentStatusFilter::getDescriptiveValues();
 
-        return $this->insertOption(10, 'Todas', $resources);
+        return $this->insertOption(EnrollmentStatusFilter::ALL, 'Todas', $resources);
     }
 
     protected function defaultOptions()

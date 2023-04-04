@@ -15,9 +15,9 @@ class AddForeignKeysInModulesEducacensoCodEscolaTable extends Migration
     {
         Schema::table('modules.educacenso_cod_escola', function (Blueprint $table) {
             $table->foreign('cod_escola')
-               ->references('cod_escola')
-               ->on('pmieducar.escola')
-               ->onDelete('cascade');
+                ->references('cod_escola')
+                ->on('pmieducar.escola')
+                ->onDelete('cascade');
         });
     }
 

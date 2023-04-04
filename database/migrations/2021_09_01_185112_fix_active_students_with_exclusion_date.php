@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\LegacyStudent;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\IeducarStudent;
 
 class FixActiveStudentsWithExclusionDate extends Migration
 {
@@ -12,7 +12,7 @@ class FixActiveStudentsWithExclusionDate extends Migration
      */
     public function up()
     {
-        IeducarStudent::where('ativo', 1)
+        LegacyStudent::where('ativo', 1)
             ->update(['data_exclusao' => null]);
     }
 

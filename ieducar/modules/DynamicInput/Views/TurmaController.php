@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
+
 class TurmaController extends ApiCoreController
 {
     protected function canGetTurmas()
@@ -12,12 +14,9 @@ class TurmaController extends ApiCoreController
 
     protected function turmasPorAno($escolaId, $ano)
     {
-        $anoLetivo = new clsPmieducarEscolaAnoLetivo();
-        $anoLetivo->ref_cod_escola = $escolaId;
-        $anoLetivo->ano = $ano;
-        $anoLetivo = $anoLetivo->detalhe();
+        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq($ano)->value('turmas_por_ano');
 
-        return ($anoLetivo['turmas_por_ano'] == 1);
+        return $turmasPorAno === 1;
     }
 
     protected function getTurmas()
@@ -38,34 +37,37 @@ class TurmaController extends ApiCoreController
                 if (is_numeric($ano)) {
                     $sql = '
                         SELECT
-                            cod_turma AS id,
-                            nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
-                        FROM pmieducar.turma
-                        WHERE ref_ref_cod_escola = $1
+                            t.cod_turma AS id,
+                            t.nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
+                        FROM pmieducar.turma AS t
+                        LEFT JOIN pmieducar.turma_serie AS ts ON ts.turma_id = t.cod_turma
+                        WHERE t.ref_ref_cod_escola = $1
                         AND (
-                            ref_ref_cod_serie = $2
-                            OR ref_ref_cod_serie_mult = $2
+                            t.ref_ref_cod_serie = $2
+                            OR ts.serie_id = $2
                         )
-                        AND ativo = 1
-                        AND visivel != \'f\'
-                        AND turma.ano = $3
-                        ORDER BY nm_turma asc
+                        AND t.ativo = 1
+                        AND t.visivel != \'f\'
+                        AND t.ano = $3
+                        ORDER BY t.nm_turma ASC
                     ';
 
                     $turmas = $this->fetchPreparedQuery($sql, [$escolaId, $serieId, $ano]);
                 } else {
                     $sql = '
                         SELECT
-                            cod_turma AS id,
-                            nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
-                        FROM pmieducar.turma
-                        WHERE ref_ref_cod_escola = $1
+                            t.cod_turma AS id,
+                            t.nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
+                        FROM pmieducar.turma AS t
+                        LEFT JOIN pmieducar.turma_serie AS ts ON ts.turma_id = t.cod_turma
+                        WHERE t.ref_ref_cod_escola = $1
                         AND (
-                            ref_ref_cod_serie = $2
-                            OR ref_ref_cod_serie_mult = $2
-                        ) and ativo = 1
-                        AND visivel != \'f\'
-                        ORDER BY nm_turma asc
+                            t.ref_ref_cod_serie = $2
+                            OR ts.serie_id = $2
+                        )
+                        AND t.ativo = 1
+                        AND t.visivel != \'f\'
+                        ORDER BY t.nm_turma ASC
                     ';
 
                     $turmas = $this->fetchPreparedQuery($sql, [$escolaId, $serieId]);

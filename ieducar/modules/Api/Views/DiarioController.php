@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
@@ -18,7 +19,7 @@ class DiarioController extends ApiCoreController
         return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
     }
 
-    protected function getComponentesPorTurma($turmaId)
+    protected function getComponentesPorTurma($turmaId,$matriculaId = null)
     {
         $objTurma = new clsPmieducarTurma($turmaId);
         $detTurma = $objTurma->detalhe();
@@ -26,7 +27,16 @@ class DiarioController extends ApiCoreController
         $serieId = $detTurma['ref_ref_cod_serie'];
         $ano = $detTurma['ano'];
 
+        //obtem a série da matrícula
+        if ($matriculaId && $detTurma['multiseriada'] == 1) {
+            $serieId = $this->getSeriePorMatricula($matriculaId) ?: $serieId;
+        }
+
         return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId, null, null, null, null, null, $ano);
+    }
+
+    private function getSeriePorMatricula($matriculaId) {
+        return \App\Models\LegacyRegistration::where('cod_matricula',$matriculaId)->value('ref_ref_cod_serie');
     }
 
     protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
@@ -42,10 +52,9 @@ class DiarioController extends ApiCoreController
         return $valid;
     }
 
-    protected function validateComponenteTurma($turmaId, $componenteCurricularId)
+    protected function validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId = null)
     {
-        $componentesTurma = $this->getComponentesPorTurma($turmaId);
-
+        $componentesTurma = $this->getComponentesPorTurma($turmaId,$matriculaId);
         if ($componentesTurma instanceof CoreExt_Entity) {
             $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
         } else {
@@ -57,7 +66,11 @@ class DiarioController extends ApiCoreController
             $componentesTurma = $componentes[0];
         }
 
-        $valid = in_array($componenteCurricularId, $componentesTurma);
+        $valid = false;
+        if (is_array($componentesTurma)) {
+            $valid = in_array($componenteCurricularId, $componentesTurma);
+        }
+
         if (!$valid) {
             $this->messenger->append("Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.", 'error');
             $this->appendResponse('error', [
@@ -75,7 +88,7 @@ class DiarioController extends ApiCoreController
     {
         try {
             $this->serviceBoletim($turmaId, $alunoId)->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
             // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
             // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
         }
@@ -86,7 +99,7 @@ class DiarioController extends ApiCoreController
         try {
             $this->serviceBoletim($turmaId, $alunoId)->saveFaltas();
             $this->serviceBoletim($turmaId, $alunoId)->promover();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
             //...
         }
     }
@@ -206,7 +219,7 @@ class DiarioController extends ApiCoreController
                 }
 
                 foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                    if (!$this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                    if (!$this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                         continue;
                     }
 
@@ -286,6 +299,7 @@ class DiarioController extends ApiCoreController
 
             $this->messenger->append('Notas postadas com sucesso!', 'success');
         }
+
     }
 
     protected function postRecuperacoes()
@@ -303,7 +317,7 @@ class DiarioController extends ApiCoreController
                     }
 
                     foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                             $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
 
                             if (is_null($notaOriginal)) {
@@ -367,19 +381,12 @@ class DiarioController extends ApiCoreController
     private function defineCampoTipoRecuperacao($matriculaId)
     {
         $regra = $this->getRegra($matriculaId);
-        $campoRecuperacao = '';
 
-        switch ($regra->get('tipoRecuperacaoParalela')) {
-            case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
-                $campoRecuperacao = 'notaRecuperacaoParalela';
-                break;
-
-            case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS:
-                $campoRecuperacao = 'notaRecuperacaoEspecifica';
-                break;
-        }
-
-        return $campoRecuperacao;
+        return match ((int)$regra->get('tipoRecuperacaoParalela')) {
+            RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA => 'notaRecuperacaoParalela',
+            RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS => 'notaRecuperacaoEspecifica',
+            default => '',
+        };
     }
 
     protected function postFaltasPorComponente()
@@ -409,7 +416,7 @@ class DiarioController extends ApiCoreController
                     foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
                         if ($matriculaId) {
                             if ($this->validateMatricula($matriculaId)) {
-                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                                     $valor = $faltaTurmaAlunoDisciplina['valor'];
 
                                     $falta = new Avaliacao_Model_FaltaComponente([
@@ -484,11 +491,11 @@ class DiarioController extends ApiCoreController
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
-                                    'parecer' => $parecerTurmaAlunoComponente['valor'],
+                                    'parecer' => $this->removeHtmlTags($parecerTurmaAlunoComponente['valor']),
                                     'etapa' => $etapa,
                                 ]);
 
@@ -523,7 +530,7 @@ class DiarioController extends ApiCoreController
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
-                                    'parecer' => $parecerTurmaAlunoComponente['valor'],
+                                    'parecer' => $this->removeHtmlTags($parecerTurmaAlunoComponente['valor']),
                                 ]);
 
                                 $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
@@ -554,7 +561,7 @@ class DiarioController extends ApiCoreController
                         }
 
                         $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral([
-                            'parecer' => $parecerTurmaAluno['valor'],
+                            'parecer' => $this->removeHtmlTags($parecerTurmaAluno['valor']),
                             'etapa' => $etapa,
                         ]);
 
@@ -575,7 +582,7 @@ class DiarioController extends ApiCoreController
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-                    $parecer = $parecerTurmaAluno['valor'];
+                    $parecer = $this->removeHtmlTags($parecerTurmaAluno['valor']);
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
                     if (!empty($matriculaId)) {
@@ -643,6 +650,11 @@ class DiarioController extends ApiCoreController
         }
 
         return $val;
+    }
+
+    public function removeHtmlTags(string $text = ''): string
+    {
+        return (new RemoveHtmlTagsStringService())->execute($text);
     }
 
     public function Gerar()

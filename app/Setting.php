@@ -9,16 +9,16 @@ class Setting extends Model
 {
     use DateSerializer;
 
-    const TYPE_STRING = 'string';
-    const TYPE_FLOAT = 'float';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_BOOLEAN = 'boolean';
+    public const TYPE_STRING = 'string';
+    public const TYPE_FLOAT = 'float';
+    public const TYPE_INTEGER = 'integer';
+    public const TYPE_BOOLEAN = 'boolean';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'key', 'value', 'type', 'description', 'setting_category_id', 'hint'
+        'key', 'value', 'type', 'description', 'setting_category_id', 'hint', 'maxlength'
     ];
 
     /**
@@ -43,7 +43,7 @@ class Setting extends Model
                     return false;
                 }
 
-                return (boolean) $value;
+                return (bool) $value;
         }
 
         return $value;

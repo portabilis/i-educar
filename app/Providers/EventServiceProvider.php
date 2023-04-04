@@ -4,15 +4,20 @@ namespace App\Providers;
 
 use App\Events\RegistrationEvent;
 use App\Events\TransferEvent;
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\Listeners\AcceptTransferRequestListener;
 use App\Listeners\AuthenticatedUser;
 use App\Listeners\ConfigureAuthenticatedUserForAudit;
 use App\Listeners\CopyTransferDataListener;
+use App\Listeners\ForgetCachedUserListener;
 use App\Listeners\LoginLegacySession;
 use App\Listeners\MessageSendingListener;
 use App\Listeners\NotificationWhenResetPassword;
 use App\Listeners\TransferNotificationListener;
+use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use App\Models\SchoolManager;
+use App\Observers\LegacyRegistrationDisciplinaryOccurrenceTypeObserver;
 use App\Observers\SchoolManagerObserver;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Login;
@@ -52,7 +57,13 @@ class EventServiceProvider extends ServiceProvider
         ],
         MessageSending::class => [
             MessageSendingListener::class,
-        ]
+        ],
+        UserUpdated::class => [
+            ForgetCachedUserListener::class,
+        ],
+        UserDeleted::class => [
+            ForgetCachedUserListener::class,
+        ],
     ];
 
     /**
@@ -65,5 +76,16 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         SchoolManager::observe(SchoolManagerObserver::class);
+        LegacyRegistrationDisciplinaryOccurrenceType::observe(LegacyRegistrationDisciplinaryOccurrenceTypeObserver::class);
+    }
+
+    /**
+     * Determine if events and listeners should be automatically discovered.
+     *
+     * @return bool
+     */
+    public function shouldDiscoverEvents()
+    {
+        return false;
     }
 }

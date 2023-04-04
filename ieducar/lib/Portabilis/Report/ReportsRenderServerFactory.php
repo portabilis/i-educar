@@ -2,6 +2,7 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use iEducar\Reports\Contracts\ReportRenderContract;
 use Illuminate\Support\Facades\Log;
 
 class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_ReportFactory
@@ -114,7 +115,16 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         $params['timezone'] = $this->timezone;
 
         $data = [];
-        if ($report->useJson()) {
+
+        if ($report->useHtml()) {
+            $data = $report->getHtmlData();
+            $payload = [
+                'view' => 'reports::' . $templateName,
+                'parameters' => $data['main'],
+                'orientation' => $data['orientation'] ?? null,
+            ];
+            return app(ReportRenderContract::class)->render($payload);
+        } elseif ($report->useJson()) {
             $params['datasource'] = 'json';
             $this->url = str_replace('/deprecated', '', $this->url);
             $this->sourcePath = str_replace('/deprecated', '', $this->sourcePath);
@@ -163,8 +173,6 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             throw new Exception($json['error'] ?? $json['message']);
         }
 
-        $report = base64_decode($json['data']['file']);
-
-        return $report;
+        return base64_decode($json['data']['file']);
     }
 }

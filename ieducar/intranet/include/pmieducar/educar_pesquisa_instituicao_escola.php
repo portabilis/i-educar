@@ -70,7 +70,7 @@
             }
 
             echo "<!-- {$this->ref_cod_instituicao} -->";
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes_instituicao, $this->ref_cod_instituicao, 'EscolaInstituicao();', null, null, null, null, $obrigatorio);
+            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes_instituicao, $this->ref_cod_instituicao, 'EscolaInstituicao();', null, null, null, null, $obrigatorio);
         }
 
         if ($nivel_usuario == 1 || $nivel_usuario == 2) {

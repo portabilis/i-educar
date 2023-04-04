@@ -28,6 +28,6 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portab
 
     protected function inputPlaceholder($inputOptions)
     {
-        return 'Informe o código ou nome da cidade';
+        return $inputOptions['placeholder'] ?? 'Informe o código ou nome da cidade';
     }
 }

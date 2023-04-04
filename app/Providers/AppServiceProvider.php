@@ -17,6 +17,7 @@ use Illuminate\Database\Schema\Builder as SchemaBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Telescope\TelescopeServiceProvider;
@@ -61,6 +62,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->loadLegacyMigrations();
+        }
+
+        if (env('ASSETS_SECURE')) {
+            URL::forceScheme('https');
         }
 
         $this->loadLegacyBootstrap();
@@ -122,7 +127,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(RepositoryServiceProvider::class);
         $this->app->singleton(Breadcrumb::class);
 
         if ($this->app->environment('development', 'local', 'testing')) {

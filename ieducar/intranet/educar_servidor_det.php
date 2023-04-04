@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyRole;
 use App\Models\LegacyUserType;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Facades\DB;
@@ -41,8 +42,7 @@ return new class extends clsDetalhe {
         $registro['ref_idesco'] = $det_ref_idesco['descricao'];
 
         // Função
-        $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], null, null, null, null, null, null, null, null, $this->ref_cod_instituicao);
-        $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
+        $det_ref_cod_funcao = LegacyRole::find($this->cod_funcao)?->getAttributes();
         $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 
         // Nome
@@ -65,26 +65,16 @@ return new class extends clsDetalhe {
         $lista = $obj->lista(
             null,
             $this->ref_cod_instituicao,
-            null,
-            null,
-            null,
-            $this->cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            date('Y'),
-            true
+            int_ref_cod_servidor: $this->cod_servidor,
+            bool_busca_nome: null,
+            boo_professor: 1,
+            ano: date('Y'),
+            desconsiderarAlocacoesComDataDeSaida: true
         );
 
         if ($lista) {
             // Passa todos os valores do registro para atributos do objeto
-            foreach ($lista as $campo => $val) {
+            foreach ($lista as $val) {
                 $temp = [];
                 $temp['carga_horaria'] = $val['carga_horaria'];
                 $temp['periodo'] = $val['periodo'];
@@ -112,7 +102,7 @@ return new class extends clsDetalhe {
         $docenteInep = null;
         try {
             $docenteInep = $docenteMapper->find(['docente' => $registro['cod_servidor']]);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         if (isset($docenteInep)) {
@@ -133,13 +123,6 @@ return new class extends clsDetalhe {
 
         if ($registro['ref_idesco']) {
             $this->addDetalhe(['Escolaridade', $registro['ref_idesco']]);
-        }
-
-        if ($registro['ref_cod_subnivel']) {
-            $obj_nivel = new clsPmieducarSubnivel($registro['ref_cod_subnivel']);
-            $det_nivel = $obj_nivel->detalhe();
-
-            $this->addDetalhe(['Nível', $det_nivel['nm_subnivel']]);
         }
 
         if ($registro['ref_cod_funcao']) {
@@ -297,23 +280,23 @@ return new class extends clsDetalhe {
             $this->array_botao[] = 'Alocar Servidor';
             $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_lst.php?{$get_padrao}\");";
 
-            $this->array_botao[] = 'Alterar Nível';
-            $this->array_botao_url_script[] = 'popless();';
-
             if ($lista) {
                 $this->array_botao[] = 'Substituir Horário Servidor';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
             }
 
-            $obj_afastamento = new clsPmieducarServidorAfastamento();
-            $afastamento = $obj_afastamento->afastado($this->cod_servidor, $this->ref_cod_instituicao);
+            $afastamento = EmployeeWithdrawal::query()
+                ->where('ref_cod_servidor', $this->cod_servidor)
+                ->where('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+                ->where('data_retorno', null)
+                ->first();
 
-            if (is_numeric($afastamento) && $afastamento == 0) {
+            if (is_null($afastamento)) {
                 $this->array_botao[] = 'Afastar Servidor';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}\");";
-            } elseif (is_numeric($afastamento)) {
+            } elseif ($afastamento instanceof EmployeeWithdrawal) {
                 $this->array_botao[] = 'Retornar Servidor';
-                $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=" . EmployeeReturn::SIM . '");';
+                $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento->sequencial}&retornar_servidor=" . EmployeeReturn::SIM . '");';
             }
 
             if ($this->isTeacher($this->cod_servidor)) {

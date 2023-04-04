@@ -1,17 +1,60 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyIndividual;
-use App\Models\LegacyPerson;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyIndividualFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyIndividual::class;
 
-$factory->define(LegacyIndividual::class, function (Faker $faker) {
-    return [
-        'idpes' => factory(LegacyPerson::class)->create(),
-        'data_cad' => now(),
-        'operacao' => $faker->randomElement(['I', 'A', 'E']),
-        'origem_gravacao' => $faker->randomElement(['M', 'U', 'C', 'O']),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'idpes' => static fn () => LegacyPersonFactory::new()->create(),
+            'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
+            'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
+            'idpes_mae' => static fn () => LegacyPersonFactory::new()->create(),
+            'idpes_pai' => static fn () => LegacyPersonFactory::new()->create(),
+            'idpes_responsavel' => static fn () =>LegacyPersonFactory::new()->create(),
+            'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
+        ];
+    }
+
+    public function father(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'idpes_pai' => LegacyIndividualFactory::new()->create(),
+            ];
+        });
+    }
+
+    public function mother(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'idpes_mae' => LegacyIndividualFactory::new()->create(),
+            ];
+        });
+    }
+    public function guardian(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'idpes_responsavel' => LegacyIndividualFactory::new()->create(),
+            ];
+        });
+    }
+}

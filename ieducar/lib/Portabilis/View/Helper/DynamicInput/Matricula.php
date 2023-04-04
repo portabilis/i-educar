@@ -9,12 +9,12 @@ class Portabilis_View_Helper_DynamicInput_Matricula extends Portabilis_View_Help
 
     protected function inputOptions($options)
     {
-        return $this->insertOption(null, 'Selecione uma matr&iacute;cula', $resources);
+        return $this->insertOption(null, 'Selecione uma matrícula', $resources);
     }
 
     protected function defaultOptions()
     {
-        return ['options' => ['label' => 'Matr&iacute;cula']];
+        return ['options' => ['label' => 'Matrícula']];
     }
 
     public function matricula($options = [])

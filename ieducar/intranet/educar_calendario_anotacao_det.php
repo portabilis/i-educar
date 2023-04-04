@@ -1,16 +1,11 @@
 <?php
 
+use App\Models\LegacyCalendarNote;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_calendario_anotacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -19,7 +14,6 @@ return new class extends clsDetalhe {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $dia;
     public $mes;
     public $ano;
@@ -35,27 +29,26 @@ return new class extends clsDetalhe {
 
         $this->cod_calendario_anotacao=$_GET['cod_calendario_anotacao'];
 
-        $tmp_obj = new clsPmieducarCalendarioAnotacao($this->cod_calendario_anotacao);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)->getAttributes();
 
         if (! $registro) {
             throw new HttpResponseException(
-                new RedirectResponse('educar_calendario_ano_letivo_lst.php')
+                response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
             );
         }
 
         if ($registro['cod_calendario_anotacao']) {
-            $this->addDetalhe([ 'Calendario Anotac&atilde;o', "{$registro['cod_calendario_anotacao']}"]);
+            $this->addDetalhe(detalhe: [ 'Calendario Anotacão', "{$registro['cod_calendario_anotacao']}"]);
         }
         if ($registro['nm_anotacao']) {
-            $this->addDetalhe([ 'Nome Anotac&atilde;o', "{$registro['nm_anotacao']}"]);
+            $this->addDetalhe(detalhe: [ 'Nome Anotacão', "{$registro['nm_anotacao']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descric&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe(detalhe: [ 'Descricão', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_calendario_anotacao_cad.php';
             $this->url_editar = "educar_calendario_anotacao_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}&cod_calendario_anotacao={$registro['cod_calendario_anotacao']}";
         }
@@ -66,7 +59,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calendario Anotacao';
+        $this->title = 'Calendario Anotacao';
         $this->processoAp = '620';
     }
 };

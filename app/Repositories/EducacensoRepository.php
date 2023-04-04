@@ -65,7 +65,7 @@ class EducacensoRepository
      */
     protected function fetchPreparedQuery($sql, $params = [])
     {
-        return DB::select(DB::raw($sql), $params);
+        return DB::select($sql, $params);
     }
 
     /**
@@ -88,35 +88,31 @@ class EducacensoRepository
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
             j.fantasia AS nome,
-            ep.cep AS cep,
-            municipio.cod_ibge AS "codigoIbgeMunicipio",
+            a.postal_code AS cep,
+            a.city_ibge_code AS "codigoIbgeMunicipio",
             districts.ibge_code AS "codigoIbgeDistrito",
-            l.nome AS logradouro,
-            ep.numero AS numero,
-            ep.complemento AS complemento,
-            bairro.nome AS bairro,
-            (SELECT COALESCE(
-              (SELECT min(fone_pessoa.ddd)
-                    FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes),
-              (SELECT min(ddd_telefone)
-                FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS ddd,
-            (SELECT COALESCE(
-              (SELECT min(fone_pessoa.fone)
-                    FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 1),
-              (SELECT min(telefone)
-                FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS telefone,
-            (SELECT COALESCE(
-              (SELECT min(fone_pessoa.fone)
-                    FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 2),
-              (SELECT min(fax)
-                FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS "telefoneOutro",
-            (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento WHERE ref_cod_escola = e.cod_escola))) AS email,
+            a.address AS logradouro,
+            a.number AS numero,
+            a.complement AS complemento,
+            a.neighborhood AS bairro,
+            (
+                SELECT min(fone_pessoa.ddd)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes
+            ) AS ddd,
+            (
+                SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes
+                AND fone_pessoa.tipo = 1
+            ) AS telefone,
+            (
+                SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes
+                AND fone_pessoa.tipo = 2
+            ) AS "telefoneOutro",
+            p.email AS email,
             i.orgao_regional AS "orgaoRegional",
             e.zona_localizacao AS "zonaLocalizacao",
             e.localizacao_diferenciada AS "localizacaoDiferenciada",
@@ -132,7 +128,51 @@ class EducacensoRepository
             (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSistemaS",
             (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
-            e.conveniada_com_poder_publico AS "conveniadaPoderPublico",
+            e.poder_publico_parceria_convenio AS "poderPublicoConveniado",
+            e.formas_contratacao_adm_publica_e_outras_instituicoes AS "formasContratacaoPoderPublico",
+            e.qtd_matriculas_atividade_complementar AS "qtdMatAtividadesComplentar",
+            e.qtd_atendimento_educacional_especializado AS "qtdMatAee",
+            e.qtd_ensino_regular_creche_par AS "qtdMatCrecheParcial",
+            e.qtd_ensino_regular_creche_int AS "qtdMatCrecheIntegral",
+            e.qtd_ensino_regular_pre_escola_par AS "qtdMatPreEscolaParcial",
+            e.qtd_ensino_regular_pre_escola_int AS "qtdMatPreEscolaIntegral",
+            e.qtd_ensino_regular_ensino_fund_anos_iniciais_par AS "qtdMatFundamentalIniciaisParcial",
+            e.qtd_ensino_regular_ensino_fund_anos_iniciais_int AS "qtdMatFundamentalIniciaisIntegral",
+            e.qtd_ensino_regular_ensino_fund_anos_finais_par AS "qtdMatFundamentalFinaisParcial",
+            e.qtd_ensino_regular_ensino_fund_anos_finais_int AS "qtdMatFundamentalFinaisIntegral",
+            e.qtd_ensino_regular_ensino_med_anos_iniciais_par AS "qtdMatEnsinoMedioParcial",
+            e.qtd_ensino_regular_ensino_med_anos_iniciais_int AS "qtdMatEnsinoMedioIntegral",
+            e.qtd_edu_especial_classe_especial_par AS "qdtMatClasseEspecialParcial",
+            e.qtd_edu_especial_classe_especial_int AS "qdtMatClasseEspecialIntegral",
+            e.qtd_edu_eja_ensino_fund AS "qdtMatEjaFundamental",
+            e.qtd_edu_eja_ensino_med AS "qtdMatEjaEnsinoMedio",
+            e.qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par AS "qtdMatEdProfIntegradaEjaFundamentalParcial",
+            e.qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int AS  "qtdMatEdProfIntegradaEjaFundamentalIntegral",
+            e.qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par AS "qtdMatEdProfIntegradaEjaNivelMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int AS "qtdMatEdProfIntegradaEjaNivelMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par AS "qtdMatEdProfConcomitanteEjaNivelMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int AS "qtdMatEdProfConcomitanteEjaNivelMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par AS "qtdMatEdProfIntercomentarEjaNivelMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int AS "qtdMatEdProfIntercomentarEjaNivelMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_inte_ensino_med_par AS "qtdMatEdProfIntegradaEnsinoMedioParcial",
+            e.qtd_edu_prof_quali_prof_tecinte_ensino_med_int AS "qtdMatEdProfIntegradaEnsinoMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_ensino_med_par AS "qtdMatEdProfConcomitenteEnsinoMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_ensino_med_int AS "qtdMatEdProfConcomitenteEnsinoMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par AS "qtdMatEdProfIntercomplementarEnsinoMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int AS "qtdMatEdProfIntercomplementarEnsinoMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par AS "qtdMatEdProfTecnicaIntegradaEnsinoMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int AS "qtdMatEdProfTecnicaIntegradaEnsinoMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par AS "qtdMatEdProfTecnicaConcomitanteEnsinoMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int AS "qtdMatEdProfTecnicaConcomitanteEnsinoMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par AS "qtdMatEdProfTecnicaIntercomplementarEnsinoMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int AS "qtdMatEdProfTecnicaIntercomplementarEnsinoMedioItegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med AS "qtdMatEdProfTecnicaSubsequenteEnsinoMedio",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par AS "qtdMatEdProfTecnicaIntegradaEjaNivelMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int AS "qtdMatEdProfTecnicaIntegradaEjaNivelMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par AS "qtdMatEdProfTecnicaConcomitanteEjaNivelMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int AS "qtdMatEdProfTecnicaConcomitanteEjaNivelMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par AS "qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int AS "qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioIntegral",
             e.cnpj_mantenedora_principal AS "cnpjMantenedoraPrincipal",
             j.cnpj AS "cnpjEscolaPrivada",
             e.regulamentacao AS "regulamentacao",
@@ -147,10 +187,10 @@ class EducacensoRepository
             e.orgao_vinculado_escola AS "orgaoVinculado",
             e.esfera_administrativa AS "esferaAdministrativa",
             e.cod_escola AS "idEscola",
-            municipio.idmun AS "idMunicipio",
+            a.city_id AS "idMunicipio",
             districts.id AS "idDistrito",
             i.cod_instituicao AS "idInstituicao",
-            uf.sigla_uf AS "siglaUf",
+            a.state_abbreviation AS "siglaUf",
             (SELECT EXTRACT(YEAR FROM min(ano_letivo_modulo.data_inicio))
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "anoInicioAnoLetivo",
@@ -163,15 +203,11 @@ class EducacensoRepository
             INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
             INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
             LEFT JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
-            LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-            LEFT JOIN public.bairro ON (bairro.idbai = ep.idbai)
-            LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
-            LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+            LEFT JOIN person_has_place php ON true
+                AND php.person_id = e.ref_idpes
+                AND php.type = 1
+            LEFT JOIN addresses a ON a.id = php.place_id
             LEFT JOIN public.districts ON (districts.id = e.iddis)
-
-            LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-            LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-            LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
             WHERE e.cod_escola = :school
 SQL;
 
@@ -188,7 +224,7 @@ SQL;
      */
     public function getDataForRecord10($school)
     {
-        $sql = '
+        $sql = <<<'SQL'
             SELECT
                 escola.cod_escola AS "codEscola",
                 educacenso_cod_escola.cod_escola_inep AS "codigoInep",
@@ -281,11 +317,11 @@ SQL;
                 escola.qtd_bombeiro as "qtdBombeiro",
                 escola.qtd_psicologo as "qtdPsicologo",
                 escola.qtd_fonoaudiologo as "qtdFonoaudiologo",
+                escola.nao_ha_funcionarios_para_funcoes as "semFuncionariosParaFuncoes",
                 escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos",
                 escola.orgaos_colegiados as "orgaosColegiados",
                 escola.exame_selecao_ingresso as "exameSelecaoIngresso",
                 escola.reserva_vagas_cotas as "reservaVagasCotas",
-                escola.organizacao_ensino as "organizacaoEnsino",
                 escola.instrumentos_pedagogicos as "instrumentosPedagogicos",
                 escola.compartilha_espacos_atividades_integracao AS "compartilhaEspacosAtividadesIntegracao",
                 escola.usa_espacos_equipamentos_atividades_regulares AS "usaEspacosEquipamentosAtividadesRegulares",
@@ -299,7 +335,7 @@ SQL;
             LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
             WHERE TRUE
                 AND escola.cod_escola = :school
-        ';
+SQL;
 
         return $this->fetchPreparedQuery($sql, [
             'school' => $school
@@ -395,8 +431,8 @@ SQL;
                 CASE WHEN fisica.sexo = 'M' THEN 1 ELSE 2 END AS "sexo",
                 raca.raca_educacenso AS "raca",
                 fisica.nacionalidade AS "nacionalidade",
-                CASE WHEN fisica.nacionalidade = 3 THEN pais.cod_ibge ELSE 76 END AS "paisNacionalidade",
-                municipio_nascimento.cod_ibge AS "municipioNascimento",
+                CASE WHEN fisica.nacionalidade = 3 THEN countries.ibge_code ELSE 76 END AS "paisNacionalidade",
+                municipio_nascimento.ibge_code AS "municipioNascimento",
                 CASE WHEN
                     true = (
                         SELECT true
@@ -419,8 +455,8 @@ SQL;
                 13 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
                 25 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
                 fisica.pais_residencia AS "paisResidencia",
-                endereco_pessoa.cep AS "cep",
-                municipio.cod_ibge AS "municipioResidencia",
+                addresses.postal_code AS "cep",
+                addresses.city_ibge_code AS "municipioResidencia",
                 fisica.zona_localizacao_censo AS "localizacaoResidencia",
                 fisica.localizacao_diferenciada AS "localizacaoDiferenciada",
                 dadosescola.nomeescola AS "nomeEscola",
@@ -436,11 +472,12 @@ SQL;
             ON fisica.idpes_mae = pessoa_mae.idpes
             LEFT JOIN cadastro.pessoa as pessoa_pai
             ON fisica.idpes_pai = pessoa_pai.idpes
-            LEFT JOIN public.municipio municipio_nascimento ON municipio_nascimento.idmun = fisica.idmun_nascimento
-            LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
-            LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
-            LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun
-            LEFT JOIN public.pais ON pais.idpais = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
+            LEFT JOIN public.cities municipio_nascimento ON municipio_nascimento.id = fisica.idmun_nascimento
+            LEFT JOIN person_has_place ON true
+                AND person_has_place.person_id = pessoa.idpes
+                AND person_has_place.type = 1
+            LEFT JOIN addresses ON addresses.id = person_has_place.place_id
+            LEFT JOIN public.countries ON countries.id = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
             LEFT JOIN LATERAL (
                  SELECT educacenso_cod_escola.cod_escola_inep,
                         educacenso_cod_escola.cod_escola,
@@ -478,15 +515,11 @@ SQL;
                 servidor.cod_servidor AS "codigoPessoa",
                 escolaridade.escolaridade AS "escolaridade",
                 servidor.tipo_ensino_medio_cursado AS "tipoEnsinoMedioCursado",
+                servidor.complementacao_pedagogica AS "complementacaoPedagogica",
                 tbl_formacoes.course_id AS "formacaoCurso",
                 tbl_formacoes.completion_year AS "formacaoAnoConclusao",
                 tbl_formacoes.college_id AS "formacaoInstituicao",
-                tbl_formacoes.discipline_id AS "formacaoComponenteCurricular",
-                coalesce(cardinality(servidor.pos_graduacao),0) as "countPosGraduacao",
-                (ARRAY[1] <@ servidor.pos_graduacao)::INT "posGraduacaoEspecializacao",
-                (ARRAY[2] <@ servidor.pos_graduacao)::INT "posGraduacaoMestrado",
-                (ARRAY[3] <@ servidor.pos_graduacao)::INT "posGraduacaoDoutorado",
-                (ARRAY[4] <@ servidor.pos_graduacao)::INT "posGraduacaoNaoPossui",
+                tbl_posgraduacoes.pos_graduate::text AS "posGraduacoes",
                 coalesce(cardinality(servidor.curso_formacao_continuada),0) as "countFormacaoContinuada",
                 (ARRAY[1] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaCreche",
                 (ARRAY[2] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaPreEscola",
@@ -516,15 +549,21 @@ SQL;
                 SELECT ARRAY_REMOVE(ARRAY_AGG(educacenso_curso_superior.curso_id), NULL) course_id,
                        ARRAY_REMOVE(ARRAY_AGG(completion_year), NULL) completion_year,
                        ARRAY_REMOVE(ARRAY_AGG(educacenso_ies.ies_id), NULL) college_id,
-                       ARRAY_REMOVE(ARRAY_AGG(discipline_id), NULL) discipline_id
+                       ARRAY_REMOVE(ARRAY_AGG(coalesce(discipline_id, 0)), NULL) discipline_id
                  FROM employee_graduations
                  JOIN modules.educacenso_curso_superior ON educacenso_curso_superior.id = employee_graduations.course_id
                  JOIN modules.educacenso_ies ON educacenso_ies.id = employee_graduations.college_id
                 WHERE employee_graduations.employee_id = servidor.cod_servidor
-            ) AS tbl_formacoes
+            ) AS tbl_formacoes,
+            LATERAL (
+                SELECT
+                    array_agg(
+                        row_to_json(employee_posgraduate)
+                    ) AS "pos_graduate"
+                FROM employee_posgraduate
+                WHERE employee_posgraduate.employee_id = servidor.cod_servidor
+            ) AS tbl_posgraduacoes
             WHERE servidor.cod_servidor IN ({$stringPersonId})
-
-
 SQL;
 
         return $this->fetchPreparedQuery($sql);

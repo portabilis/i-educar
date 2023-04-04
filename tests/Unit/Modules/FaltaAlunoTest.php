@@ -1,7 +1,5 @@
 <?php
 
-
-
 class FaltaAlunoTest extends UnitBaseTest
 {
     protected $_entity = null;

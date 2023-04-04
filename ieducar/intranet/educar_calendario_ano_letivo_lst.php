@@ -1,8 +1,13 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCalendarDay;
+use App\Models\LegacyCalendarDayNote;
+use App\Models\LegacyCalendarDayReason;
+use App\Models\LegacyCalendarYear;
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsListagem {
+return new class () extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -24,12 +29,12 @@ return new class extends clsListagem {
     {
         $obj_permissoes = new clsPermissoes();
 
-        $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         $retorno = null;
 
         if ($nivel > 7) {
-            $retorno = '
+            return '
                 <table width="100%" height="40%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">
                     <tbody>
                         <tr>
@@ -39,13 +44,11 @@ return new class extends clsListagem {
                         </tr>
                     </tbody>
                 </table>';
-
-            return $retorno;
         }
 
-        $this->breadcrumb('Calendários', [
-        url('intranet/educar_index.php') => 'Escola',
-      ]);
+        $this->breadcrumb(currentPage: 'Calendários', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
 
         $retorno = '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem"> <tbody>';
 
@@ -69,55 +72,53 @@ return new class extends clsListagem {
         }
 
         if (!$this->mes) {
-            $this->mes = date('n');
+            $this->mes = date(format: 'n');
         }
 
         if (!$this->ano) {
-            $this->ano = date('Y');
+            $this->ano = date(format: 'Y');
         }
 
         if (!$this->ref_cod_escola) {
-            $this->ref_cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
+            $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
         }
 
         if (!$this->ref_cod_instituicao) {
-            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         }
 
-        $get_escola  = 1;
+        $get_escola = 1;
         $obrigatorio = false;
         include 'educar_calendario_pesquisas.php';
 
-        $obj_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo();
-        $obj_calendario_ano_letivo->setOrderby('ano ASC');
-        $obj_calendario_ano_letivo->setLimite($this->limite, $this->offset);
+        $query = LegacyCalendarYear::query()
+            ->orderBy('ano')
+            ->limit($this->limite ?: 20)
+            ->offset($this->offset ?: 0);
 
         $lista = [];
-        $obj_calendario_ano_letivo->setOrderby('ano');
 
         switch ($nivel) {
-          // Poli-institucional
-          case 1:
-          case 2:
-          case 4:
-              if (!isset($this->ref_cod_escola)) {
-                  break;
-              }
+            // Poli-institucional
+            case 1:
+            case 2:
+            case 4:
+                if (!isset($this->ref_cod_escola)) {
+                    break;
+                }
+                if ($this->cod_calendario_ano_letivo) {
+                    $query->where('cod_calendario_ano_letivo', $this->cod_calendario_ano_letivo);
+                }
+                if ($this->ref_cod_escola) {
+                    $query->where('ref_cod_escola', $this->ref_cod_escola);
+                }
+                if (!isset($this->cod_calendario_ano_letivo)) {
+                    $query->where('ano', $this->ano);
+                }
+                $lista = $query->get()->toArray();
 
-              $lista = $obj_calendario_ano_letivo->lista(
-                  $this->cod_calendario_ano_letivo,
-                  $this->ref_cod_escola,
-                  null,
-                  null,
-                  (!isset($this->cod_calendario_ano_letivo) ? $this->ano : null),
-                  null,
-                  null,
-                  1
-              );
-              break;
-      }
-
-        $total = $obj_calendario_ano_letivo->_total;
+                break;
+        }
 
         if (empty($lista)) {
             if ($nivel == 4) {
@@ -141,67 +142,47 @@ return new class extends clsListagem {
         }
 
         // Monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $key => $registro) {
+        if (is_array(value: $lista) && count(value: $lista)) {
+            foreach ($lista as $registro) {
                 Session::put('calendario', [
-                  'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
-                  'ref_cod_instituicao' => $this->ref_cod_instituicao,
-                  'ref_cod_escola' => $this->ref_cod_escola,
-                  'ano' => $this->ano,
-                  'mes' => $this->mes
-              ]);
+                    'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
+                    'ref_cod_instituicao' => $this->ref_cod_instituicao,
+                    'ref_cod_escola' => $this->ref_cod_escola,
+                    'ano' => $this->ano,
+                    'mes' => $this->mes
+                ]);
 
                 // Nome da escola
-                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
+                $obj_ref_cod_escola = new clsPmieducarEscola(cod_escola: $registro['ref_cod_escola']);
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
                 // Início e término do ano letivo.
-                $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
+                $inicio_ano = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($registro['ano'])->min('data_inicio');
+                $fim_ano = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($registro['ano'])->max('data_fim');
 
-                $inicio_ano = $obj_ano_letivo_modulo->menorData(
-                    $registro['ano'],
-                    $this->ref_cod_escola
-                );
-
-                $fim_ano = $obj_ano_letivo_modulo->maiorData(
-                    $registro['ano'],
-                    $this->ref_cod_escola
-                );
-
-                $inicio_ano = explode('/', dataFromPgToBr($inicio_ano));
-                $fim_ano = explode('/', dataFromPgToBr($fim_ano));
+                $inicio_ano = explode(separator: '/', string: dataFromPgToBr(data_original: $inicio_ano));
+                $fim_ano = explode(separator: '/', string: dataFromPgToBr(data_original: $fim_ano));
 
                 // Turmas da escola
-                $turmas = App_Model_IedFinder::getTurmas($registro['ref_cod_escola']);
+                $turmas = App_Model_IedFinder::getTurmas(escolaId: $registro['ref_cod_escola']);
 
                 // Mapper de Calendario_Model_TurmaDataMapper
                 $calendarioTurmaMapper = new Calendario_Model_TurmaDataMapper();
 
                 $obj_calendario = new clsCalendario();
-                $obj_calendario->setLargura(600);
+                $obj_calendario->setLargura(int_largura: 600);
                 $obj_calendario->permite_trocar_ano = true;
 
-                $obj_calendario->setCorDiaSemana([0, 6], 'ROSA');
+                $obj_calendario->setCorDiaSemana(arr_dia_semana: [
+                    0,
+                    6
+                ], str_cor: 'ROSA');
 
-                $obj_dia_calendario = new clsPmieducarCalendarioDia(
-                    $registro['cod_calendario_ano_letivo'],
-                    $this->mes,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-                );
-
-                $lista_dia = $obj_dia_calendario->lista(
-                    $registro['cod_calendario_ano_letivo'],
-                    $this->mes,
-                    null,
-                    null,
-                    null,
-                    null
-                );
+                $lista_dia = LegacyCalendarDay::query()
+                    ->where('ref_cod_calendario_ano_letivo', $registro['cod_calendario_ano_letivo'])
+                    ->where('mes', $this->mes)
+                    ->get();
 
                 if ($lista_dia) {
                     $array_dias = [];
@@ -228,33 +209,32 @@ return new class extends clsListagem {
                         if ($dia['ref_cod_calendario_dia_motivo']) {
                             $array_dias[$dia['dia']] = $dia['dia'];
 
-                            $obj_motivo = new clsPmieducarCalendarioDiaMotivo($dia['ref_cod_calendario_dia_motivo']);
-                            $det_motivo = $obj_motivo->detalhe();
+                            $det_motivo = LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])->getAttributes();
 
                             /**
                              * @todo CoreExt_Enum?
                              */
-                            $tipo = mb_strtoupper($det_motivo['tipo']) == 'E' ? 'Dia Extra-Letivo' : 'Dia Não Letivo';
+                            $tipo = mb_strtoupper(string: $det_motivo['tipo']) == 'E' ? 'Dia Extra-Letivo' : 'Dia Não Letivo';
 
                             // Busca pelas turmas que estão marcadas para esse dia
                             $args = [
-                              'calendarioAnoLetivo' => $registro['cod_calendario_ano_letivo'],
-                              'mes' => $dia['mes'],
-                              'dia' => $dia['dia'],
-                              'ano' => $this->ano
-                          ];
+                                'calendarioAnoLetivo' => $registro['cod_calendario_ano_letivo'],
+                                'mes' => $dia['mes'],
+                                'dia' => $dia['dia'],
+                                'ano' => $this->ano
+                            ];
 
-                            $calendarioTurmas = $calendarioTurmaMapper->findAll([], $args);
+                            $calendarioTurmas = $calendarioTurmaMapper->findAll(where: $args);
 
                             $nomeTurmas = [];
                             foreach ($calendarioTurmas as $calendarioTurma) {
                                 $nomeTurmas[] = $turmas[$calendarioTurma->turma];
                             }
 
-                            if (0 == count($nomeTurmas)) {
+                            if (0 == count(value: $nomeTurmas)) {
                                 $calendarioTurmas = '';
                             } else {
-                                $calendarioTurmas = 'Turmas: <ul><li>' . implode('</li><li>', $nomeTurmas) . '</li></ul>';
+                                $calendarioTurmas = 'Turmas: <ul><li>' . implode(separator: '</li><li>', array: $nomeTurmas) . '</li></ul>';
                             }
 
                             $descricao = sprintf(
@@ -274,15 +254,15 @@ return new class extends clsListagem {
 
                             $array_descricao[$dia['dia']] = $descricao;
 
-                            if (mb_strtoupper($det_motivo['tipo']) == 'E') {
-                                $obj_calendario->adicionarLegenda('Extra Letivo', 'LARANJA_ESCURO');
-                                $obj_calendario->adicionarArrayDias('Extra Letivo', [$dia['dia']]);
-                            } elseif (mb_strtoupper($det_motivo['tipo']) == 'N') {
-                                $obj_calendario->adicionarLegenda('Não Letivo', '#VERDE_ESCURO');
-                                $obj_calendario->adicionarArrayDias('Não Letivo', [$dia['dia']]);
+                            if (mb_strtoupper(string: $det_motivo['tipo']) == 'E') {
+                                $obj_calendario->adicionarLegenda(str_legenda: 'Extra Letivo', str_cor: 'LARANJA_ESCURO');
+                                $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Extra Letivo', dias: [$dia['dia']]);
+                            } elseif (mb_strtoupper(string: $det_motivo['tipo']) == 'N') {
+                                $obj_calendario->adicionarLegenda(str_legenda: 'Não Letivo', str_cor: 'VERDE_ESCURO');
+                                $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: [$dia['dia']]);
                             }
 
-                            $obj_calendario->diaDescricao($array_dias, $array_descricao);
+                            $obj_calendario->diaDescricao(arr_dias: $array_dias, array_mensagem_dias: $array_descricao);
                         } elseif ($dia['descricao']) {
                             $array_dias[$dia['dia']] = $dia['dia'];
                             $descricao = sprintf(
@@ -297,42 +277,38 @@ return new class extends clsListagem {
                     }
 
                     if (!empty($array_dias)) {
-                        $obj_calendario->diaDescricao($array_dias, $array_descricao);
+                        $obj_calendario->diaDescricao(arr_dias: $array_dias, array_mensagem_dias: $array_descricao);
                     }
                 }
 
                 if ($this->mes <= (int)$inicio_ano[1] && $this->ano == (int)$inicio_ano[2]) {
                     if ($this->mes == (int)$inicio_ano[1]) {
-                        $obj_calendario->adicionarLegenda('Início Ano Letivo', 'AMARELO');
-                        $obj_calendario->adicionarArrayDias('Início Ano Letivo', [$inicio_ano[0]]);
+                        $obj_calendario->adicionarLegenda(str_legenda: 'Início Ano Letivo', str_cor: 'AMARELO');
+                        $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Início Ano Letivo', dias: [$inicio_ano[0]]);
                     }
 
                     $dia_inicio = (int)$inicio_ano[0];
                     $dias = [];
 
                     if ($this->mes < (int)$inicio_ano[1]) {
-                        $NumeroDiasMes = (int)date('t', $this->mes);
+                        $NumeroDiasMes = (int)date(format: 't', timestamp: $this->mes);
 
                         for ($d = 1; $d <= $NumeroDiasMes; $d++) {
                             $dias[] = $d;
                         }
 
-                        $obj_calendario->setLegendaPadrao('Não Letivo');
+                        $obj_calendario->setLegendaPadrao(str_legenda: 'Não Letivo');
 
-                        if (!empty($dias)) {
-                            $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
-                        }
+                        $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
                     } else {
-                        $dia_inicio;
-
                         for ($d = 1; $d < $dia_inicio; $d++) {
                             $dias[] = $d;
                         }
 
-                        $obj_calendario->setLegendaPadrao('Dias Letivos', 'AZUL_CLARO');
+                        $obj_calendario->setLegendaPadrao(str_legenda: 'Dias Letivos', str_cor: 'AZUL_CLARO');
                         if (!empty($dias)) {
-                            $obj_calendario->adicionarLegenda('Não Letivo', '#F7F7F7');
-                            $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
+                            $obj_calendario->adicionarLegenda(str_legenda: 'Não Letivo', str_cor: '#F7F7F7');
+                            $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
                         }
                     }
                 } elseif ($this->mes >= (int)$fim_ano[1] && $this->ano == (int)$fim_ano[2]) {
@@ -340,61 +316,56 @@ return new class extends clsListagem {
                     $dias = [];
 
                     if ($this->mes > (int)$fim_ano[1]) {
-                        $NumeroDiasMes = (int)date('t', $this->mes);
+                        $NumeroDiasMes = (int)date(format: 't', timestamp: $this->mes);
 
                         for ($d = 1; $d <= $NumeroDiasMes; $d++) {
                             $dias[] = $d;
                         }
 
-                        $obj_calendario->setLegendaPadrao('Não Letivo');
+                        $obj_calendario->setLegendaPadrao(str_legenda: 'Não Letivo');
 
-                        if (!empty($dias)) {
-                            $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
-                        }
+                        $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
                     } else {
-                        $NumeroDiasMes = (int)date('t', $this->mes);
+                        $NumeroDiasMes = (int)date(format: 't', timestamp: $this->mes);
 
                         for ($d = $fim_ano[0]; $d <= $NumeroDiasMes; $d++) {
                             $dias[] = $d;
                         }
 
-                        $obj_calendario->setLegendaPadrao('Dias Letivos', 'AZUL_CLARO');
+                        $obj_calendario->setLegendaPadrao(str_legenda: 'Dias Letivos', str_cor: 'AZUL_CLARO');
 
                         if (!empty($dias)) {
-                            $obj_calendario->adicionarLegenda('Não Letivo', '#F7F7F7');
-                            $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
+                            $obj_calendario->adicionarLegenda(str_legenda: 'Não Letivo', str_cor: '#F7F7F7');
+                            $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
                         }
                     }
 
                     if ($this->mes == (int)$fim_ano[1]) {
-                        $obj_calendario->adicionarLegenda('Término Ano Letivo', 'AMARELO');
-                        $obj_calendario->adicionarArrayDias('Término Ano Letivo', [$fim_ano[0]]);
+                        $obj_calendario->adicionarLegenda(str_legenda: 'Término Ano Letivo', str_cor: 'AMARELO');
+                        $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Término Ano Letivo', dias: [$fim_ano[0]]);
                     }
                 } else {
-                    $obj_calendario->setLegendaPadrao('Dias Letivos', 'AZUL_CLARO');
+                    $obj_calendario->setLegendaPadrao(str_legenda: 'Dias Letivos', str_cor: 'AZUL_CLARO');
                 }
 
-                $obj_calendario->setCorDiaSemana([0, 6], 'ROSA');
+                $obj_calendario->setCorDiaSemana(arr_dia_semana: [
+                    0,
+                    6
+                ], str_cor: 'ROSA');
 
-                $obj_anotacao = new clsPmieducarCalendarioDiaAnotacao();
-                $lista_anotacoes = $obj_anotacao->lista(
-                    null,
-                    $this->mes,
-                    $registro['cod_calendario_ano_letivo'],
-                    null,
-                    1
-                );
+                $lista_anotacoes = LegacyCalendarDayNote::query()
+                    ->where('ref_mes', $this->mes)
+                    ->where('ref_ref_cod_calendario_ano_letivo', $registro['cod_calendario_ano_letivo'])
+                    ->get();
 
-                if ($lista_anotacoes) {
-                    $dia_anotacao = [];
-                    foreach ($lista_anotacoes as $anotacao) {
-                        if ($this->mes == (int)$anotacao['ref_mes']) {
-                            $dia_anotacao[$anotacao['ref_dia']] = $anotacao['ref_dia'];
-                        }
+                $dia_anotacao = [];
+                foreach ($lista_anotacoes as $anotacao) {
+                    if ($this->mes == (int)$anotacao['ref_mes']) {
+                        $dia_anotacao[$anotacao['ref_dia']] = $anotacao['ref_dia'];
                     }
-
-                    $obj_calendario->adicionarIconeDias($dia_anotacao, 'A');
                 }
+
+                $obj_calendario->adicionarIconeDias(arr_dias: $dia_anotacao, id_icone: 'A');
 
                 $obj_calendario->all_days_url = sprintf(
                     'educar_calendario_anotacao_lst.php?ref_cod_calendario_ano_letivo=%s',
@@ -403,11 +374,11 @@ return new class extends clsListagem {
 
                 // Gera código HTML do calendário
                 $calendario = $obj_calendario->getCalendario(
-                    $this->mes,
-                    $this->ano,
-                    'mes_corrente',
-                    $_GET,
-                    ['cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo']]
+                    mes: $this->mes,
+                    ano: $this->ano,
+                    nome: 'mes_corrente',
+                    mixVariaveisMantidas: $_GET,
+                    formValues: ['cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo']]
                 );
 
                 $retorno .= sprintf(
@@ -427,7 +398,7 @@ return new class extends clsListagem {
             }
         }
 
-        if ($obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             if ($_POST && empty($lista) && Session::get('calendario.ultimo_valido')) {
                 $url = sprintf(
                     'educar_calendario_ano_letivo_lst.php?ref_cod_instituicao=%s&ref_cod_escola=%s&ano=%s',
@@ -466,17 +437,17 @@ return new class extends clsListagem {
         $retorno .= '</tbody> </table>';
 
         $scripts = [
-        '/intranet/scripts/calendario.js'
-      ];
+            '/intranet/scripts/calendario.js'
+        ];
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
 
         return $retorno;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calendários';
+        $this->title = 'Calendários';
         $this->processoAp = 620;
     }
 };

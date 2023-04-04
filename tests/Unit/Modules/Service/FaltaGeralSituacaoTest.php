@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSituacaoCommon
 {
     protected function setUp(): void

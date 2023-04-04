@@ -1,25 +1,17 @@
 <?php
 
 use App\Models\LegacySchoolClass;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClass\SchoolClassService;
 
 return new class extends clsCadastro {
     const PROCESSO_AP = 9998910;
-
     public $ano;
-
     public $ref_cod_instituicao;
-
     public $ref_cod_escola;
-
     public $ref_cod_curso;
-
     public $ref_cod_serie;
-
     public $ref_cod_turma;
-
     public $data_inicial;
-
     public $data_final;
 
     public function Inicializar()
@@ -36,17 +28,17 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            self::PROCESSO_AP,
-            $this->pessoa_logada,
-            7,
-            'educar_index.php'
+            int_processo_ap: self::PROCESSO_AP,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_index.php'
         );
 
         $this->nome_url_sucesso = 'Continuar';
         $this->url_cancelar = 'educar_index.php';
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Consulta de movimento mensal', ['educar_index.php' => 'Escola']);
+        $this->breadcrumb(currentPage: 'Consulta de movimento mensal', breadcrumbs: ['educar_index.php' => 'Escola']);
 
         return 'Novo';
     }
@@ -54,7 +46,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
-        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'], ['required' => false]);
+        $this->inputsHelper()->dynamic(helperNames: ['curso', 'serie', 'turma'], inputOptions: ['required' => false]);
 
         $options = [
             'label' => 'Modalidade',
@@ -67,23 +59,23 @@ return new class extends clsCadastro {
             ],
             'required' => true,
         ];
-        $this->inputsHelper()->select('modalidade', $options);
+        $this->inputsHelper()->select(attrName: 'modalidade', inputOptions: $options);
 
         $calendars = $this->getCalendars();
         $this->addHtml(
             view('form.calendar')
-                ->with('calendars', $calendars)
+                ->with(key: 'calendars', value: $calendars)
         );
 
         $this->inputsHelper()->dynamic(['dataInicial', 'dataFinal']);
 
-        Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
             '/intranet/scripts/movimento_mensal.js',
         ]);
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'
+        Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: [
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css'
         ]);
     }
 
@@ -92,10 +84,10 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            self::PROCESSO_AP,
-            $this->pessoa_logada,
-            7,
-            'index.php'
+            int_processo_ap: self::PROCESSO_AP,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'index.php'
         );
 
         $campos = [
@@ -139,17 +131,17 @@ return new class extends clsCadastro {
         }
 
         return LegacySchoolClass::query()
-            ->where('ano', ($this->getQueryString('ano') ?: date('Y')))
-            ->whereHas('course', function ($courseQuery) {
+            ->where(column: 'ano', operator: ($this->getQueryString('ano') ?: date('Y')))
+            ->whereHas(relation: 'course', callback: function ($courseQuery) {
                 $courseQuery->isEja();
             })
-            ->when($this->getQueryString('ref_cod_escola'), function ($query) {
+            ->when(value: $this->getQueryString('ref_cod_escola'), callback: function ($query) {
                 $query->where('ref_ref_cod_escola', $this->getQueryString('ref_cod_escola'));
             })
-            ->when($this->getQueryString('ref_cod_serie'), function ($query) {
+            ->when(value: $this->getQueryString('ref_cod_serie'), callback: function ($query) {
                 $query->where('ref_ref_cod_serie', $this->getQueryString('ref_cod_serie'));
             })
-            ->when($this->getQueryString('ref_cod_curso'), function ($query) {
+            ->when(value: $this->getQueryString('ref_cod_curso'), callback: function ($query) {
                 $query->where('ref_cod_curso', $this->getQueryString('ref_cod_curso'));
             })
             ->get(['cod_turma'])->pluck('cod_turma')->all();
@@ -157,7 +149,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Consulta de movimento mensal';
+        $this->title = 'Consulta de movimento mensal';
         $this->processoAp = 9998910;
     }
 };

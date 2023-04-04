@@ -1,11 +1,15 @@
 <?php
 
+use App\User;
+use App\Models\LegacyRace;
 use App\Services\UrlPresigner;
-use iEducar\Modules\Addressing\LegacyAddressingFields;
+use App\Models\LegacyInstitution;
+use Illuminate\Support\Facades\Auth;
+use iEducar\Support\View\SelectOptions;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
-use iEducar\Support\View\SelectOptions;
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
@@ -23,7 +27,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     protected $cod_aluno;
 
-    // Variáveis para controle da foto
     public $objPhoto;
 
     public $arquivoFoto;
@@ -34,16 +37,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     public $caminho_lst;
 
+    public $observacao;
+
     protected $_formMap = [
         'pessoa' => [
             'label' => 'Pessoa',
             'help' => '',
         ],
-
-        // 'rg' => array(
-        //   'label'  => 'Documento de identidade (RG)',
-        //   'help'   => '',
-        // ),
 
         'justificativa_falta_documentacao' => [
             'label' => 'Justificativa para a falta de documentação',
@@ -100,7 +100,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ],
 
         'deficiencias' => [
-            'label' => 'Deficiências / habilidades especiais',
+            'label' => 'Deficiências',
+            'help' => '',
+        ],
+
+        'transtornos' => [
+            'label' => 'Transtornos',
             'help' => '',
         ],
 
@@ -114,14 +119,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'help' => '',
         ],
 
-        /* *******************
-           ** Dados médicos **
-           ******************* */
         'sus' => ['label' => 'Número da Carteira do SUS'],
-
-        'altura' => ['label' => 'Altura/Metro'],
-
-        'peso' => ['label' => 'Peso/Kg'],
 
         'grupo_sanguineo' => ['label' => 'Grupo sanguíneo'],
 
@@ -205,10 +203,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'responsavel_parentesco_celular' => ['label' => 'Celular'],
 
-        /************
-         * MORADIA
-         ************/
-
         'moradia' => ['label' => 'Moradia'],
 
         'material' => ['label' => 'Material'],
@@ -265,30 +259,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'lixo' => ['label' => 'Possui lixo?'],
 
-        /************
-         * PROVA INEP
-         ************/
         'recursos_prova_inep' => ['label' => 'Recursos necessários para realização de provas'],
 
         'recebe_escolarizacao_em_outro_espaco' => ['label' => 'Recebe escolarização em outro espaço (diferente da escola)'],
 
-        'transporte_rota' => [
-            'label' => 'Rota',
-            'help' => '',
-        ],
-
-        'transporte_ponto' => [
-            'label' => 'Ponto de embarque',
-            'help' => '',
-        ],
-
-        'transporte_destino' => [
-            'label' => 'Destino (Caso for diferente da rota)',
-            'help' => '',
-        ],
-
-        'transporte_observacao' => [
-            'label' => 'Observações',
+        'observacao_aluno' => [
+            'label' => 'Observações do aluno',
             'help' => '',
         ]
     ];
@@ -319,8 +295,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
 
-        $labels_botucatu = config('legacy.app.mostrar_aplicacao') == 'botucatu';
-
         if ($configuracoes['justificativa_falta_documentacao_obrigatorio']) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
@@ -344,28 +318,31 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $foto = false;
 
         if (is_numeric($this->cod_pessoa_fj)) {
+            $personObject = new clsFisica($this->cod_pessoa_fj);
+            $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
             $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
-            if (count($detalheFoto)) {
+            if (is_array($detalheFoto) && count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
             }
         } else {
+            $this->observacao = '';
             $foto = false;
         }
 
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto)  . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</span>');
+            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</span>');
+            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         }
 
-        // código aluno
+
         $options = ['label' => _cl('aluno.detalhe.codigo_aluno'), 'disabled' => true, 'required' => false, 'size' => 25];
         $this->inputsHelper()->integer('id', $options);
 
-        // código aluno inep
+
         $options = ['label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 12];
 
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
@@ -374,7 +351,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $this->inputsHelper()->integer('aluno_inep_id', $options);
         }
 
-        // código aluno rede estadual
+
         $this->campoRA(
             'aluno_estado_id',
             'Código rede estadual do aluno (RA)',
@@ -382,7 +359,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             false
         );
 
-        // código aluno sistema
+
         if (config('legacy.app.alunos.mostrar_codigo_sistema')) {
             $options = [
                 'label' => config('legacy.app.alunos.codigo_sistema'),
@@ -393,20 +370,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $this->inputsHelper()->text('codigo_sistema', $options);
         }
 
-        // nome
+
         $options = ['label' => $this->_getLabel('pessoa'), 'size' => 68];
         $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
-        // data nascimento
+
         $options = ['label' => 'Data de nascimento', 'disabled' => true, 'required' => false, 'size' => 25, 'placeholder' => ''];
         $this->inputsHelper()->date('data_nascimento', $options);
 
-        // rg
-        // $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false, 'size' => 25);
-        // $this->inputsHelper()->integer('rg', $options);
-
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],
@@ -417,18 +390,17 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->text('rg', $options);
 
-        // data emissão rg
         $options = [
             'required' => false,
             'label' => '',
-            'placeholder' => 'Data emiss\u00e3o',
+            'placeholder' => 'Data emissão',
             'value' => $documentos['data_exp_rg'],
             'size' => 19
         ];
 
         $this->inputsHelper()->date('data_emissao_rg', $options);
 
-        $selectOptions = [ null => 'Órgão emissor' ];
+        $selectOptions = [null => 'Órgão emissor'];
         $orgaos        = new clsOrgaoEmissorRg();
         $orgaos        = $orgaos->lista();
 
@@ -439,31 +411,29 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
 
         $options = [
-          'required'  => false,
-          'label'     => '',
-          'value'     => $documentos['idorg_exp_rg'],
-          'resources' => $selectOptions,
-          'inline'    => true
+            'required'  => false,
+            'label'     => '',
+            'value'     => $documentos['idorg_exp_rg'],
+            'resources' => $selectOptions,
+            'inline'    => true
         ];
 
         $this->inputsHelper()->select('orgao_emissao_rg', $options);
 
-        // uf emissão rg
-
         $options = [
-          'required' => false,
-          'label'    => '',
-          'value'    => $documentos['sigla_uf_exp_rg']
+            'required' => false,
+            'label'    => '',
+            'value'    => $documentos['sigla_uf_exp_rg']
         ];
 
         $helperOptions = [
-          'attrName' => 'uf_emissao_rg'
+            'attrName' => 'uf_emissao_rg'
         ];
 
         $this->inputsHelper()->uf($options, $helperOptions);
 
         $nisPisPasep = '';
-        // cpf
+
         if (is_numeric($this->cod_pessoa_fj)) {
             $fisica = new clsFisica($this->cod_pessoa_fj);
             $fisica = $fisica->detalhe();
@@ -471,6 +441,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $nisPisPasep = int2Nis($fisica['nis_pis_pasep']);
         }
 
+       /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->ref_cod_instituicao) {
+            $obrigarCpf = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $obrigarCpf = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
+
+        $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
         $options = [
@@ -484,7 +466,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
-        // tipo de certidao civil
         $escolha_certidao = 'Tipo certidão civil';
         $selectOptions = [
             null => $escolha_certidao,
@@ -494,8 +475,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             92 => 'Casamento (antigo formato)'
         ];
 
-        // caso certidao nascimento novo formato tenha sido informado,
-        // considera este o tipo da certidão
         if (!empty($documentos['certidao_nascimento'])) {
             $tipoCertidaoCivil = 'certidao_nascimento_novo_formato';
         } elseif (!empty($documentos['certidao_casamento'])) {
@@ -514,7 +493,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('tipo_certidao_civil', $options);
 
-        // termo certidao civil
         $options = [
             'required' => false,
             'label' => '',
@@ -526,7 +504,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->integer('termo_certidao_civil', $options);
 
-        // livro certidao civil
         $options = [
             'required' => false,
             'label' => '',
@@ -539,7 +516,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->text('livro_certidao_civil', $options);
 
-        // folha certidao civil
+
         $options = [
             'required' => false,
             'label' => '',
@@ -551,7 +528,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->integer('folha_certidao_civil', $options);
 
-        // certidao nascimento (novo padrão)
         $placeholderCertidao = 'Certidão nascimento';
         $options = [
             'required' => false,
@@ -565,7 +541,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->integer('certidao_nascimento', $options);
 
-        // certidao casamento (novo padrão)
         $placeholderCertidao = 'Certidão casamento';
         $options = [
             'required' => false,
@@ -578,7 +553,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->integer('certidao_casamento', $options);
 
-        // uf emissão certidão civil
         $options = [
             'required' => false,
             'label' => 'Estado emissão / Data emissão',
@@ -592,7 +566,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->uf($options, $helperOptions);
 
-        // data emissão certidão civil
         $placeholderEmissao = 'Data emissão';
         $options = [
             'required' => false,
@@ -607,9 +580,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = [
             'label' => '',
             'required' => false
-          ];
+        ];
 
-        // cartório emissão certidão civil
         $labelCartorio = 'Cartório emissão';
         $options = [
             'required' => false,
@@ -621,22 +593,22 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
 
-        // justificativa_falta_documentacao
         $resources = [
             null => 'Selecione',
             1 => 'O(a) aluno(a) não possui os documentos pessoais solicitados',
             2 => 'A escola não dispõe ou não recebeu os documentos pessoais do(a) aluno(a)'
         ];
 
-        $options = ['label' => $this->_getLabel('justificativa_falta_documentacao'),
+        $options = [
+            'label' => $this->_getLabel('justificativa_falta_documentacao'),
             'resources' => $resources,
             'required' => false,
             'label_hint' => 'Pelo menos um dos documentos: CPF, NIS, Certidão de Nascimento (novo formato) deve ser informado para não precisar justificar a ausência de documentação',
-            'disabled' => true];
+            'disabled' => true
+        ];
 
         $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
-        // Passaporte
         $labelPassaporte = 'Passaporte';
         $options = [
             'required' => false,
@@ -648,7 +620,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->text('passaporte', $options);
 
-        // pai
         $options = [
             'required' => false,
             'label' => 'Nome autorizado a buscar o aluno / Parentesco',
@@ -671,7 +642,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->text('parentesco_um', $options);
 
-        //dois
         $options = [
             'required' => false,
             'label' => 'Nome autorizado a buscar o aluno / Parentesco',
@@ -693,7 +663,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->text('parentesco_dois', $options);
 
-        //tres
         $options = [
             'required' => false,
             'label' => 'Nome autorizado a buscar o aluno / Parentesco',
@@ -715,7 +684,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->text('parentesco_tres', $options);
 
-        //quatro
         $options = [
             'required' => false,
             'label' => 'Nome autorizado a buscar o aluno / Parentesco',
@@ -737,7 +705,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->text('parentesco_quatro', $options);
 
-        //cinco
         $options = [
             'required' => false,
             'label' => 'Nome autorizado a buscar o aluno / Parentesco',
@@ -762,27 +729,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputPai();
 
-        // mãe
         $this->inputMae();
-        /*    // pai
-            $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false, 'size' => 68);
-            $this->inputsHelper()->text('pai', $options);
 
-
-            // mãe
-            $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
-            $this->inputsHelper()->text('mae', $options);*/
-
-        // responsável
-
-        // tipo
 
         $label = $this->_getLabel('responsavel');
 
-        /*$tiposResponsavel = array(null           => $label,
-                                  'pai'          => 'Pai',
-                                  'mae'          => 'M&atilde;e',
-                                  'outra_pessoa' => 'Outra pessoa');*/
+
         $tiposResponsavel = [null => 'Informe uma Pessoa primeiro'];
         $options = [
             'label' => 'Responsável',
@@ -793,17 +745,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('tipo_responsavel', $options);
 
-        // nome
         $helperOptions = ['objectName' => 'responsavel'];
         $options = ['label' => '', 'size' => 50, 'required' => true];
 
         $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
-        // transporte publico
 
         $tiposTransporte = [
             null => 'Selecione',
-            'nenhum' => 'N&atilde;o utiliza',
+            'nenhum' => 'Não utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
         ];
@@ -827,35 +777,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        // Cria lista de rotas
-        $obj_rota = new clsModulesRotaTransporteEscolar();
-        $obj_rota->setOrderBy(' descricao asc ');
-        $lista_rota = $obj_rota->lista();
-        $rota_resources = ['' => 'Selecione uma rota'];
-        foreach ($lista_rota as $reg) {
-            $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
-        }
-
-        // Transporte Rota
-        $options = ['label' => $this->_getLabel('transporte_rota'), 'required' => false, 'resources' => $rota_resources];
-        $this->inputsHelper()->select('transporte_rota', $options);
-
-        // Ponto de Embarque
-        $options = ['label' => $this->_getLabel('transporte_ponto'), 'required' => false, 'resources' => ['' => 'Selecione uma rota acima']];
-        $this->inputsHelper()->select('transporte_ponto', $options);
-
-        // Transporte Destino
-        $options = ['label' => $this->_getLabel('transporte_destino'), 'required' => false];
-        $this->inputsHelper()->simpleSearchPessoaj('transporte_destino', $options);
-
-        // Transporte observacoes
-        $options = ['label' => $this->_getLabel('transporte_observacao'), 'required' => false, 'size' => 50, 'max_length' => 255];
-        $this->inputsHelper()->textArea('transporte_observacao', $options);
-
-        // religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-        // Benefícios
         $helperOptions = ['objectName' => 'beneficios'];
         $options = [
             'label' => 'Benefícios',
@@ -866,7 +789,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->multipleSearchBeneficios('', $options, $helperOptions);
 
-        // Deficiências / habilidades especiais
         $helperOptions = ['objectName' => 'deficiencias'];
         $options = [
             'label' => $this->_getLabel('deficiencias'),
@@ -877,7 +799,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 
-        // alfabetizado
+        $helperOptions = ['objectName' => 'transtornos'];
+        $options = [
+            'label' => $this->_getLabel('transtornos'),
+            'size' => 50,
+            'required' => false,
+            'options' => ['value' => null]
+        ];
+
+        $this->inputsHelper()->multipleSearchTranstornos('', $options, $helperOptions);
+
         $options = ['label' => $this->_getLabel('alfabetizado'), 'value' => 'checked'];
         $this->inputsHelper()->checkbox('alfabetizado', $options);
 
@@ -894,6 +825,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoArquivo('laudo_medico', $this->_getLabel('laudo_medico'), $this->laudo_medico, 40, '<br/> <span id=\'span-laudo_medico\' style=\'font-style: italic; font-size= 10px;\'\'> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 2MB</span>');
 
+        $options = ['label' => $this->_getLabel('observacao_aluno'), 'required' => false, 'size' => 50, 'max_length' => 255, 'value' => $this->observacao];
+        $this->inputsHelper()->textArea('observacao_aluno', $options);
+
         $this->inputsHelper()->hidden('url_laudo_medico');
 
         $laudo = config('legacy.app.alunos.laudo_medico_obrigatorio');
@@ -901,12 +835,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         if ($laudo == 1) {
             $this->inputsHelper()->hidden('url_laudo_medico_obrigatorio');
         }
-
-        /* *************************************
-           ** Dados para a Aba 'Ficha médica' **
-           ************************************* */
-
-        // Histórico de altura e peso
 
         $this->campoTabelaInicio('historico_altura_peso', 'Histórico de altura e peso', ['Data', 'Altura (m)', 'Peso (kg)']);
 
@@ -918,183 +846,131 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoTabelaFim();
 
-        // Fim histórico de altura e peso
-
-        // altura
-        $options = ['label' => $this->_getLabel('altura'), 'size' => 5, 'max_length' => 4, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->numeric('altura', $options);
-
-        // peso
-        $options = ['label' => $this->_getLabel('peso'), 'size' => 5, 'max_length' => 6, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->numeric('peso', $options);
-
-        // grupo_sanguineo
         $options = ['label' => $this->_getLabel('grupo_sanguineo'), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('grupo_sanguineo', $options);
 
-        // fator_rh
         $options = ['label' => $this->_getLabel('fator_rh'), 'size' => 5, 'max_length' => 1, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('fator_rh', $options);
 
-        // sus
         $options = ['label' => $this->_getLabel('sus'), 'size' => 20, 'max_length' => 20, 'required' => config('legacy.app.fisica.exigir_cartao_sus'), 'placeholder' => ''];
         $this->inputsHelper()->text('sus', $options);
 
-        // alergia_medicamento
         $options = ['label' => $this->_getLabel('alergia_medicamento'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('alergia_medicamento', $options);
 
-        // desc_alergia_medicamento
         $options = ['label' => $this->_getLabel('desc_alergia_medicamento'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_alergia_medicamento', $options);
 
-        // alergia_alimento
         $options = ['label' => $this->_getLabel('alergia_alimento'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('alergia_alimento', $options);
 
-        // desc_alergia_alimento
         $options = ['label' => $this->_getLabel('desc_alergia_alimento'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_alergia_alimento', $options);
 
-        // doenca_congenita
         $options = ['label' => $this->_getLabel('doenca_congenita'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('doenca_congenita', $options);
 
-        // desc_doenca_congenita
         $options = ['label' => $this->_getLabel('desc_doenca_congenita'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_doenca_congenita', $options);
 
-        // fumante
         $options = ['label' => $this->_getLabel('fumante'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('fumante', $options);
 
-        // doenca_caxumba
         $options = ['label' => $this->_getLabel('doenca_caxumba'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('doenca_caxumba', $options);
 
-        // doenca_sarampo
         $options = ['label' => $this->_getLabel('doenca_sarampo'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('doenca_sarampo', $options);
 
-        // doenca_rubeola
         $options = ['label' => $this->_getLabel('doenca_rubeola'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('doenca_rubeola', $options);
 
-        // doenca_catapora
         $options = ['label' => $this->_getLabel('doenca_catapora'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('doenca_catapora', $options);
 
-        // doenca_escarlatina
         $options = ['label' => $this->_getLabel('doenca_escarlatina'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('doenca_escarlatina', $options);
 
-        // doenca_coqueluche
         $options = ['label' => $this->_getLabel('doenca_coqueluche'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('doenca_coqueluche', $options);
 
-        // doenca_outras
         $options = ['label' => $this->_getLabel('doenca_outras'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('doenca_outras', $options);
 
-        // epiletico
         $options = ['label' => $this->_getLabel('epiletico'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('epiletico', $options);
 
-        // epiletico_tratamento
         $options = ['label' => $this->_getLabel('epiletico_tratamento'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('epiletico_tratamento', $options);
 
-        // hemofilico
         $options = ['label' => $this->_getLabel('hemofilico'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('hemofilico', $options);
 
-        // hipertenso
         $options = ['label' => $this->_getLabel('hipertenso'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('hipertenso', $options);
 
-        // asmatico
         $options = ['label' => $this->_getLabel('asmatico'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('asmatico', $options);
 
-        // diabetico
         $options = ['label' => $this->_getLabel('diabetico'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('diabetico', $options);
 
-        // insulina
         $options = ['label' => $this->_getLabel('insulina'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('insulina', $options);
 
-        // tratamento_medico
         $options = ['label' => $this->_getLabel('tratamento_medico'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('tratamento_medico', $options);
 
-        // desc_tratamento_medico
         $options = ['label' => $this->_getLabel('desc_tratamento_medico'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_tratamento_medico', $options);
 
-        // medicacao_especifica
         $options = ['label' => $this->_getLabel('medicacao_especifica'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('medicacao_especifica', $options);
 
-        // desc_medicacao_especifica
         $options = ['label' => $this->_getLabel('desc_medicacao_especifica'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_medicacao_especifica', $options);
 
-        // acomp_medico_psicologico
         $options = ['label' => $this->_getLabel('acomp_medico_psicologico'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('acomp_medico_psicologico', $options);
 
-        // desc_acomp_medico_psicologico
         $options = ['label' => $this->_getLabel('desc_acomp_medico_psicologico'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_acomp_medico_psicologico', $options);
 
-        // restricao_atividade_fisica
         $options = ['label' => $this->_getLabel('restricao_atividade_fisica'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('restricao_atividade_fisica', $options);
 
-        // desc_restricao_atividade_fisica
         $options = ['label' => $this->_getLabel('desc_restricao_atividade_fisica'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_restricao_atividade_fisica', $options);
 
-        // fratura_trauma
         $options = ['label' => $this->_getLabel('fratura_trauma'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('fratura_trauma', $options);
 
-        // desc_fratura_trauma
         $options = ['label' => $this->_getLabel('desc_fratura_trauma'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_fratura_trauma', $options);
 
-        // plano_saude
         $options = ['label' => $this->_getLabel('plano_saude'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('plano_saude', $options);
 
-        // desc_plano_saude
         $options = ['label' => $this->_getLabel('desc_plano_saude'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_plano_saude', $options);
 
-        // Levar para hospital mais próximo
         $options = ['label' => $this->_getLabel('aceita_hospital_proximo'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('aceita_hospital_proximo', $options);
 
-        // responsável hospital
         $options = ['label' => $this->_getLabel('desc_aceita_hospital_proximo'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_aceita_hospital_proximo', $options);
 
         $this->campoRotulo('tit_dados_responsavel', 'Em caso de emergência, caso não seja encontrado pais ou responsáveis, avisar');
 
-        // responsavel
         $options = ['label' => $this->_getLabel('responsavel'), 'size' => 50, 'max_length' => 50, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('responsavel', $options);
 
-        // responsavel_parentesco
         $options = ['label' => $this->_getLabel('responsavel_parentesco'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('responsavel_parentesco', $options);
 
-        // responsavel_parentesco_telefone
         $options = ['label' => $this->_getLabel('responsavel_parentesco_telefone'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('responsavel_parentesco_telefone', $options);
 
-        // responsavel_parentesco_celular
         $options = ['label' => $this->_getLabel('responsavel_parentesco_celular'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('responsavel_parentesco_celular', $options);
 
@@ -1250,7 +1126,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'required' => false,
             'options' => [
                 'values' => $this->recursos_prova_inep,
-                'all_values' => $recursosProvaInep]];
+                'all_values' => $recursosProvaInep
+            ]
+        ];
         $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
         $selectOptions = [
@@ -1267,7 +1145,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('recebe_escolarizacao_em_outro_espaco', $options);
 
-        // Projetos
+
         $this->campoTabelaInicio('projetos', 'Projetos', ['Projeto', 'Data inclusão', 'Data desligamento', 'Turno']);
 
         $this->inputsHelper()->text('projeto_cod_projeto', ['required' => false]);
@@ -1280,19 +1158,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoTabelaFim();
 
-        // Fim projetos
-
         $this->inputsHelper()->simpleSearchMunicipio('pessoa-aluno', ['required' => false, 'size' => 57], ['objectName' => 'naturalidade_aluno']);
 
         $enderecamentoObrigatorio = false;
         $desativarCamposDefinidosViaCep = true;
 
-        $this->viewAddress();
+        $this->viewAddress(true);
 
-        // zona localização
         $zonas = App_Model_ZonaLocalizacao::getInstance();
         $zonas = $zonas->getEnums();
-        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localiza&ccedil;&atilde;o', $zonas);
+        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localização', $zonas);
 
         $options = [
             'label' => '',
@@ -1307,7 +1182,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = [
             'label' => 'País de residência',
-            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL,
             'resources' => PaisResidencia::getDescriptiveValues(),
             'required' => true,
         ];
@@ -1315,8 +1190,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->select('pais_residencia', $options);
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
-        '/modules/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Endereco.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
         ]);
 
         $this->loadResourceAssets($this->getDispatcher());
@@ -1340,16 +1215,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->CampoOculto('obrigar_documento_pessoa', (int) $obrigarDocumentoPessoa);
         $this->CampoOculto('obrigar_telefone_pessoa', (int) $obrigarTelefonePessoa);
 
-        $racas         = new clsCadastroRaca();
-        $racas         = $racas->lista(null, null, null, null, null, null, null, true);
+        $race =  LegacyRace::query()
+            ->where('ativo', true)
+            ->orderBy('nm_raca')
+            ->pluck('nm_raca', 'cod_raca')
+            ->prepend( 'Selecione','')
+            ->toArray()
+        ;
 
-        foreach ($racas as $raca) {
-            $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
-        }
-
-        $selectOptions = [null => 'Selecione'] + Portabilis_Array_Utils::sortByValue($selectOptions);
-
-        $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
+        $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
         $zonas = [
             '' => 'Selecione',
@@ -1358,10 +1232,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
 
         $options = [
-          'label'       => 'Zona Localização',
-          'value'       => $this->zona_localizacao_censo,
-          'resources'   => $zonas,
-          'required'    => $obrigarCamposCenso,
+            'label'       => 'Zona Localização',
+            'value'       => $this->zona_localizacao_censo,
+            'resources'   => $zonas,
+            'required'    => $obrigarCamposCenso,
         ];
 
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
@@ -1390,12 +1264,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('tipo_nacionalidade', $options);
 
-        // pais origem
-
         $options = [
-          'label'       => '',
-          'placeholder' => 'Informe o nome do pais',
-          'required'    => $obrigarCamposCenso
+            'label'       => '',
+            'placeholder' => 'Informe o nome do pais',
+            'required'    => $obrigarCamposCenso
         ];
 
         $hiddenInputOptions = [
@@ -1405,8 +1277,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
 
         $helperOptions = [
-          'objectName'         => 'pais_origem',
-          'hiddenInputOptions' => $hiddenInputOptions
+            'objectName'         => 'pais_origem',
+            'hiddenInputOptions' => $hiddenInputOptions
         ];
         $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
     }
@@ -1428,9 +1300,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         }
 
         $parentId = $this->{$parentType . '_id'};
-
-        // mostra uma dica nos casos em que foi informado apenas o nome dos pais,
-        //pela antiga interface do cadastro de alunos.
 
         $hiddenInputOptions = ['options' => ['value' => $parentId]];
         $helperOptions = ['objectName' => $parentType, 'hiddenInputOptions' => $hiddenInputOptions];

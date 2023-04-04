@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,6 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LegacyDocument extends Model
 {
+    public const CREATED_AT = 'data_cad';
+
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -25,13 +30,12 @@ class LegacyDocument extends Model
      * @var array
      */
     protected $fillable = [
-        'idpes', 'rg', 'certidao_nascimento', 'data_cad', 'operacao', 'origem_gravacao'
+        'idpes',
+        'rg',
+        'certidao_nascimento',
+        'operacao',
+        'origem_gravacao'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The "booting" method of the model.
@@ -45,7 +49,24 @@ class LegacyDocument extends Model
         static::creating(function ($model) {
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
-            $model->data_cad = now()->format('Y-m-d');
         });
+    }
+
+    public function birthRegistration(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->tipo_cert_civil === 91) {
+                    $data = collect();
+                    $this->num_termo && $data->push('Termo: ' . $this->num_termo);
+                    $this->num_livro && $data->push('Livro: ' . $this->num_livro);
+                    $this->num_folha && $data->push('Folha: ' . $this->num_folha);
+
+                    return $data->implode(' ');
+                }
+
+                return $this->certidao_nascimento;
+            },
+        );
     }
 }

@@ -89,6 +89,8 @@ class clsPDF
         PDF_close($this->pdf);
         PDF_delete($this->pdf);
 
+        $len = null; // Fix SonarCloud
+
         if ($this->depurar) {
             echo "<b>PDF:</b> Finalizando o arquivo com tamanho de -> {$len}<br>";
         }
@@ -204,7 +206,7 @@ class clsPDF
     public function MakeCapa()
     {
         if ($this->depurar) {
-            echo '<b>PDF:</b> Confeccionando capa para relat&oacute;rio. <br>';
+            echo '<b>PDF:</b> Confeccionando capa para relatório. <br>';
         }
     }
 
@@ -212,7 +214,7 @@ class clsPDF
     {
         if (strlen($color) != 7 || $color[0] != '#') {
             if ($this->depurar) {
-                echo '<b>PDF:</b> N&atilde;o foi possivel setar o fundo. <br>';
+                echo '<b>PDF:</b> Não foi possivel setar o fundo. <br>';
             }
 
             return false;
@@ -221,7 +223,6 @@ class clsPDF
         $r = hexdec(substr($color, 1, 2)) / 255;
         $g = hexdec(substr($color, 3, 2)) / 255;
         $b = hexdec(substr($color, 5, 2)) / 255;
-        $a = $transparency;
 
         PDF_setcolor($this->pdf, 'fill', 'rgb', $r, $g, $b, 0);
 
@@ -236,7 +237,7 @@ class clsPDF
     {
         if (strlen($color) != 7 || $color[0] != '#') {
             if ($this->depurar) {
-                echo '<b>PDF:</b> N&atilde;o foi possivel setar a linha. <br>';
+                echo '<b>PDF:</b> Não foi possivel setar a linha. <br>';
             }
 
             return false;
@@ -245,7 +246,6 @@ class clsPDF
         $r = hexdec(substr($color, 1, 2)) / 255;
         $g = hexdec(substr($color, 3, 2)) / 255;
         $b = hexdec(substr($color, 5, 2)) / 255;
-        $a = $transparency;
 
         PDF_setcolor($this->pdf, 'both', 'rgb', $r, $g, $b, 0);
 
@@ -267,37 +267,17 @@ class clsPDF
 
     public function SetFont($fonte, $tamanho)
     {
-        $f_user = '';
-
-        switch ($fonte) {
-      case 'normal':
-        $f_user = 'Courier';
-        break;
-      case 'courier':
-        $f_user = 'Courier-Bold';
-        break;
-      case 'courierItalico':
-        $f_user = 'Courier-BoldOblique';
-        break;
-      case 'normalItalico':
-        $f_user = 'Helvetica-BoldOblique';
-        break;
-      case 'times':
-        $f_user = 'Times-Bold';
-        break;
-      case 'timesItalico':
-        $f_user = 'Times-BoldItalic';
-        break;
-      case 'symbol':
-        $f_user = 'ZapfDingbats';
-        break;
-      case 'monospaced':
-        $f_user = 'monospaced';
-        break;
-      default:
-        $f_user = 'Helvetica-Bold';
-    }
-
+        $f_user = match ($fonte) {
+            'normal' => 'Courier',
+            'courier' => 'Courier-Bold',
+            'courierItalico' => 'Courier-BoldOblique',
+            'normalItalico' => 'Helvetica-BoldOblique',
+            'times' => 'Times-Bold',
+            'timesItalico' => 'Times-BoldItalic',
+            'symbol' => 'ZapfDingbats',
+            'monospaced' => 'monospaced',
+            default => 'Helvetica-Bold',
+        };
         $font = PDF_findfont($this->pdf, $f_user, 'host', 0);
         PDF_setfont($this->pdf, $font, $tamanho);
 
@@ -572,23 +552,10 @@ class clsPDF
         $px1,
         $py1,
         $px2,
-        $py2,
-        $linha = 2.001,
-        $color1 = '#000000',
-        $color2 = '#000000'
+        $py2
     ) {
-        if ($teck2) {
-            $this->SetLine($linha);
-            $this->SetBoth($color1);
-            $this->SetFill($color2);
-        }
-
         PDF_moveto($this->pdf, $xo, $yo);
         PDF_curveto($this->pdf, $px1, $py1, $px2, $py2, $x, $y);
-
-        if ($teck) {
-            PDF_stroke($this->pdf);
-        }
 
         if ($this->depurar) {
             echo '<b>PDF:</b> Adicionado uma curva.<br>';

@@ -1,13 +1,9 @@
 <?php
 
-return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
+use App\Models\LegacyDisciplinaryOccurrenceType;
 
+return new class extends clsDetalhe {
+    public $titulo;
     public $cod_tipo_ocorrencia_disciplinar;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -21,12 +17,11 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Ocorr&ecirc;ncia Disciplinar - Detalhe';
+        $this->titulo = 'Tipo Ocorrência Disciplinar - Detalhe';
 
         $this->cod_tipo_ocorrencia_disciplinar=$_GET['cod_tipo_ocorrencia_disciplinar'];
 
-        $tmp_obj = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyDisciplinaryOccurrenceType::find($this->cod_tipo_ocorrencia_disciplinar)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
@@ -40,17 +35,17 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe([ 'Tipo Ocorr&ecirc;ncia Disciplinar', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe([ 'Tipo Ocorrência Disciplinar', "{$registro['nm_tipo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
         if ($registro['max_ocorrencias']) {
-            $this->addDetalhe([ 'M&aacute;ximo Ocorr&ecirc;ncias', "{$registro['max_ocorrencias']}"]);
+            $this->addDetalhe([ 'Máximo Ocorrências', "{$registro['max_ocorrencias']}"]);
         }
 
         if ($obj_permissao->permissao_cadastra(580, $this->pessoa_logada, 3)) {
@@ -67,7 +62,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Ocorr&ecirc;ncia Disciplinar';
+        $this->title = 'Tipo Ocorrência Disciplinar';
         $this->processoAp = '580';
     }
 };

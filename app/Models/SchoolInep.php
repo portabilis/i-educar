@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,11 +13,6 @@ class SchoolInep extends Model
      */
     protected $table = 'modules.educacenso_cod_escola';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_escola';
-
     protected $fillable = [
         'cod_escola',
         'cod_escola_inep',
@@ -26,15 +22,17 @@ class SchoolInep extends Model
         'updated_at'
     ];
 
-    public function getNumberAttribute()
+    protected function number(): Attribute
     {
-        return $this->cod_escola_inep;
+        return Attribute::make(
+            get: fn () => $this->cod_escola_inep,
+        );
     }
 
     /**
      * @return BelongsTo
      */
-    public function school()
+    public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'cod_escola', 'cod_escola');
     }

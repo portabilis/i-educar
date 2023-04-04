@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="" method="post">
+    <form id="formcadastro" action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
                 <tr>
@@ -51,7 +51,7 @@
         </table>
     </form>
 
-    <form action="{{ route('enrollments.batch.cancel', ['schoolClass' => $schoolClass->id]) }}" method="post" class="open-sans">
+    <form  id="enrollments-unenroll"  action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" method="post" class="open-sans">
 
         <h3>Alunos matriculados e enturmados</h3>
 
@@ -102,9 +102,9 @@
                                        {{ $success->first($enrollment->id) ? 'disabled' : '' }} />
                             </label>
                         </td>
-                        <td>{{ $enrollment->registration->cod_matricula }}</td>
-                        <td>{{ $enrollment->student_name }}</td>
-                        <td>{{ $enrollment->data_enturmacao->format('d/m/Y') }}</td>
+                        <td>{{ $enrollment?->registration?->cod_matricula }}</td>
+                        <td>{{ $enrollment?->student_name }}</td>
+                        <td>{{ $enrollment?->data_enturmacao->format('d/m/Y') }}</td>
                         <td>
                             {{ $success->first($enrollment->id) }}
                             {{ $fails->first($enrollment->id) }}
@@ -129,13 +129,15 @@
         <div style="text-align: center">
             <button class="btn-green" type="submit">Desenturmar</button>
             <a href="javascript:void(0)" class="btn enrollment-btn-check">Selecionar todos</a>
-            <a href="{{ route('enrollments.batch.enroll.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Enturmar em lote</a>
-            <a href="{{ url('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
+
+            <a href="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Enturmar em lote</a>
+            <a href="{{ Asset::get('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
         </div>
 
     </form>
 
     <script>
+
         $j(document).ready(function () {
             $j('.enrollment-check-master').change(function () {
                 if ($j(this).prop('checked')) {
@@ -154,6 +156,49 @@
                 $j('.enrollment-check').prop('checked', true);
             });
         });
+
+        $j('#enrollments-unenroll').submit(function (e) {
+            e.preventDefault();
+            makeDialog({
+                title: 'Atenção!',
+                content: 'O processo de desenturmação e enturmação manual ' +
+                    'não será considerado como remanejamento ou troca de turma, ' +
+                    'para isso você deve selecionar a turma nova e remanejar. Deseja continuar?',
+                maxWidth: 860,
+                width: 860,
+                modal: true,
+                buttons: [{
+                    text: 'OK',
+                    click: function () {
+                        e.currentTarget.submit();
+                        $j(this).dialog('destroy');
+                    }
+                },{
+                    text: 'Cancelar',
+                    click: function () {
+                        $j(this).dialog('destroy');
+                    }
+                }]
+            });
+        });
+
+        function makeDialog (params) {
+            let container = $j('#dialog-container');
+            if (container.length < 1) {
+                $j('body').append('<div id="dialog-container" style="width: 400px;"></div>');
+                container = $j('#dialog-container');
+            }
+
+            if (container.hasClass('ui-dialog-content')) {
+                container.dialog('destroy');
+            }
+
+            container.empty();
+            container.html(params.content);
+            delete params['content'];
+
+            container.dialog(params);
+        }
     </script>
 
 @endsection

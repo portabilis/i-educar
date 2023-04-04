@@ -31,7 +31,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     /**
      * @var CoreExt_DataMapper
      */
-    protected $_dataMapper = null;
+    protected $_dataMapper;
 
     /**
      * Array associativo para referências a objetos que serão carregados com
@@ -472,11 +472,11 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $key
      *
-     * @return string
+     * @return string|null
      */
     protected function _getReferenceClass($key)
     {
-        return isset($this->_references[$key]['class']) ? $this->_references[$key]['class'] : null;
+        return $this->_references[$key]['class'] ?? null;
     }
 
     /**
@@ -489,7 +489,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     public function _isReferenceDataMapper($key)
     {
         $class = $this->_getReferenceClass($key);
-        $reference = isset($this->_references[$key]['file']) ? $this->_references[$key]['file'] : null;
+        $reference = $this->_references[$key]['file'] ?? null;
 
         return $this->_isReferenceOf(
             $class,
@@ -519,21 +519,23 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     /**
      * Verifica se a referência é subclasse de $parentClass.
      *
-     * @param string $subClass
-     * @param string $subClassFile
+     * @param string|null $subClass
+     * @param string|null $subClassFile
      * @param string $parentClass
      *
      * @return bool
      */
-    private function _isReferenceOf($subClass, $subClassFile, $parentClass)
+    private function _isReferenceOf($subClass, $subClassFile, $parentClass): bool
     {
         static $required = [];
 
         if (is_string($subClass)) {
-            if (!in_array($subClassFile, $required)) {
+            if (!in_array($subClassFile, $required, true)) {
                 // Inclui o arquivo com a definição de subclasse para que o interpretador
                 // tenha o símbolo de comparação.
-                require_once $subClassFile;
+                if (class_exists($subClass) === false) {
+                    require_once $subClassFile;
+                }
                 $required[] = $subClassFile;
             }
 
@@ -546,7 +548,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     /**
      * Setter.
      *
-     * @param CoreExt_DataMapper $dataMapper
      *
      * @return CoreExt_Entity
      */
@@ -605,7 +606,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         if (true === array_key_exists($search, self::$_classStorage)) {
             self::_setStorageClassInstance($search, $instance, $sticky);
         } else {
-            if (!is_null($file)) {
+            if (!is_null($file) && !class_exists($class)) {
                 require_once $file;
             }
             self::$_classStorage[$search] = [
@@ -858,7 +859,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     /**
      * @see CoreExt_Entity_Validatable::setValidatorCollection()
      *
-     * @param array $validators
      * @param $overwrite TRUE para que as novas instâncias sobrescrevam as já existentes
      *
      * @return CoreExt_Entity
@@ -1066,9 +1066,9 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         switch (strtolower($this->_dataTypes[$key])) {
             case 'bool':
             case 'boolean':
-                if ($cmpVal == 't') {
+                if ($cmpVal === 't') {
                     $return = true;
-                } elseif ($cmpVal == 'f') {
+                } elseif ($cmpVal === 'f') {
                     $return = false;
                 } else {
                     $return = (bool) $cmpVal;
@@ -1076,11 +1076,11 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
                 break;
 
             case 'numeric':
-                $return = floatval($cmpVal);
+                $return = (float) $cmpVal;
                 break;
 
             case 'string':
-                $return = (string) $cmpVal;
+                $return = $cmpVal;
                 break;
         }
 

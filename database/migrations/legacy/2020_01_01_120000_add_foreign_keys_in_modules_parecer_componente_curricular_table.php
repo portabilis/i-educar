@@ -15,9 +15,9 @@ class AddForeignKeysInModulesParecerComponenteCurricularTable extends Migration
     {
         Schema::table('modules.parecer_componente_curricular', function (Blueprint $table) {
             $table->foreign('parecer_aluno_id')
-               ->references('id')
-               ->on('modules.parecer_aluno')
-               ->onDelete('cascade');
+                ->references('id')
+                ->on('modules.parecer_aluno')
+                ->onDelete('cascade');
         });
     }
 

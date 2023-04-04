@@ -6,20 +6,20 @@ use App\Contracts\Enum;
 
 class RegistrationStatus implements Enum
 {
-    const APPROVED = 1;
-    const REPROVED = 2;
-    const ONGOING = 3;
-    const TRANSFERRED = 4;
-    const RECLASSIFIED = 5;
-    const ABANDONED = 6;
-    const IN_EXAM = 7;
-    const APPROVED_PAST_EXAM = 8;
-    const APPROVED_WITHOUT_EXAM = 10;
-    const PRE_REGISTRATION = 11;
-    const APPROVED_WITH_DEPENDENCY = 12;
-    const APPROVED_BY_BOARD = 13;
-    const REPROVED_BY_ABSENCE = 14;
-    const DECEASED = 15;
+    public const APPROVED = 1;
+    public const REPROVED = 2;
+    public const ONGOING = 3;
+    public const TRANSFERRED = 4;
+    public const RECLASSIFIED = 5;
+    public const ABANDONED = 6;
+    public const IN_EXAM = 7;
+    public const APPROVED_PAST_EXAM = 8;
+    public const APPROVED_WITHOUT_EXAM = 10;
+    public const PRE_REGISTRATION = 11;
+    public const APPROVED_WITH_DEPENDENCY = 12;
+    public const APPROVED_BY_BOARD = 13;
+    public const REPROVED_BY_ABSENCE = 14;
+    public const DECEASED = 15;
 
     public function getDescriptiveValues(): array
     {

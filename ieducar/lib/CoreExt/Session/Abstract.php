@@ -15,7 +15,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @var CoreExt_Session_Storage_Interface
      */
-    protected $_sessionStorage = null;
+    protected $_sessionStorage;
 
     /**
      * @var array
@@ -24,8 +24,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
 
     /**
      * Construtor.
-     *
-     * @param array $options
      */
     public function __construct(array $options = [])
     {
@@ -92,8 +90,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
 
     /**
      * Setter.
-     *
-     * @param CoreExt_Session_Storage_Interface $storage
      */
     public function setSessionStorage(CoreExt_Session_Storage_Interface $storage)
     {
@@ -138,6 +134,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetexists.php
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         $value = $this->getSessionStorage()->read($offset);
@@ -148,6 +145,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetget.php
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if ($this->offsetExists($offset)) {
@@ -160,6 +158,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetset.php
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->getSessionStorage()->write((string) $offset, $value);
@@ -168,6 +167,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetunset.php
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->getSessionStorage()->remove($offset);
@@ -231,6 +231,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->getSessionStorage()->count();
@@ -243,6 +244,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      *
      * @link http://br.php.net/manual/en/iterator.current.php
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $this->getSessionData();
@@ -253,9 +255,10 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/iterator.key.php
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
-        $data = $this->getSessionData();
+        $this->getSessionData();
 
         return key($this->_sessionData);
     }
@@ -263,9 +266,10 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/iterator.next.php
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
-        $data = $this->getSessionData();
+        $this->getSessionData();
 
         next($this->_sessionData);
     }
@@ -273,9 +277,10 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/iterator.rewind.php
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
-        $data = $this->getSessionData();
+        $this->getSessionData();
 
         reset($this->_sessionData);
     }
@@ -283,10 +288,11 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @link http://br.php.net/manual/en/iterator.valid.php
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         $key = key($this->_sessionData);
 
-        return isset($key) ? true : false;
+        return isset($key);
     }
 }

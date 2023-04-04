@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_FaltaSituacaoCommon extends Avaliacao_Service_TestCommon
 {
     protected function _setUpFaltaAbstractDataMapperMock(

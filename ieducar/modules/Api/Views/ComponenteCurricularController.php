@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\LegacyInstitution;
 use App\Models\MigratedDiscipline;
+use Illuminate\Support\Facades\DB;
 
 class ComponenteCurricularController extends ApiCoreController
 {
@@ -59,6 +61,7 @@ class ComponenteCurricularController extends ApiCoreController
             $modified = $this->getRequest()->modified;
 
             $where = '';
+            $wheres = [];
             $params = [$instituicaoId];
 
             if ($areaConhecimentoId) {
@@ -105,23 +108,60 @@ class ComponenteCurricularController extends ApiCoreController
     public function getComponentesCurricularesPorSerie()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $serieId       = $this->getRequest()->serie_id;
+            $instituicaoId      = (int) $this->getRequest()->instituicao_id;
+            $serieId            = (int) $this->getRequest()->serie_id;
+            $areaDeConhecimento = (int) $this->getRequest()->area_conhecimento;
 
-            $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, tipo_nota, array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos, area_conhecimento_id, area_conhecimento.nome AS nome_area
+            $sql = '
+                SELECT componente_curricular.id,
+                       componente_curricular.nome,
+                       carga_horaria,
+                       tipo_nota,
+                       array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos,
+                       area_conhecimento_id,
+                       area_conhecimento.nome AS nome_area,
+                       componente_curricular_ano_escolar.hora_falta,
+                       exists (SELECT * FROM modules.componente_curricular_turma cct
+                                    INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                                    WHERE TRUE
+                                        AND cct.componente_curricular_id = componente_curricular.id
+                                        AND cct.ano_escolar_id =  $3
+                        ) contem_componente_curricular_turma,
+                        exists (
+                            select * from pmieducar.matricula m
+                            join modules.nota_aluno na on na.matricula_id = m.cod_matricula
+                            join modules.nota_componente_curricular ncc on ncc.nota_aluno_id = na.id
+                            where m.ref_ref_cod_serie = $3
+                            and ncc.componente_curricular_id = componente_curricular.id
+                        ) contem_notas,
+
+                        exists (
+                            select * from pmieducar.matricula m
+                            join modules.falta_aluno fa on fa.matricula_id  = m.cod_matricula
+                            join modules.falta_componente_curricular fcc on fcc.falta_aluno_id  = fa.id
+                            where m.ref_ref_cod_serie = $3
+                            and fcc.componente_curricular_id = componente_curricular.id
+                        ) contem_faltas,
+                         exists (
+                            select * from modules.parecer_componente_curricular pcc
+                            where pcc.componente_curricular_id = componente_curricular.id
+                        ) contem_paracer
                 FROM modules.componente_curricular
-               INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
-               INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
+                    INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
+                    INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
-                  AND ano_escolar_id = ' . $serieId . '
+                  AND ano_escolar_id = $3
+                  AND modules.area_conhecimento.id = $2
                 ORDER BY nome ';
-            $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
+            $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId, $areaDeConhecimento, $serieId]);
 
-            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area'];
+            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'hora_falta', 'contem_componente_curricular_turma', 'contem_notas', 'contem_faltas', 'contem_paracer'];
             $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
             foreach ($disciplinas as &$disciplina) {
                 $disciplina['anos_letivos'] = json_decode($disciplina['anos_letivos']);
+                $disciplina['hora_falta'] = (float) $disciplina['hora_falta'];
+                $disciplina['carga_horaria'] = (float) $disciplina['carga_horaria'];
             }
 
             return ['disciplinas' => $disciplinas];
@@ -135,13 +175,14 @@ class ComponenteCurricularController extends ApiCoreController
             $serieId       = $this->getRequest()->serie_id;
             $ano       = $this->getRequest()->ano;
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($serieId, $escolaId, null, null, null, true, $ano);
-            $componentesCurriculares = [];
-            $componentesCurriculares = array_map(function ($componente) {
+            $componente_curricular_turma = LegacyInstitution::whereHas('schools', fn ($q) => $q->where('cod_escola', $escolaId))->value('componente_curricular_turma');
+            $componentesCurriculares = array_map(function ($componente) use ($componente_curricular_turma){
                 return [
                     'id' => $componente->id,
                     'nome' => $componente->nome,
                     'carga_horaria' => $componente->cargaHoraria,
                     'abreviatura' => $componente->abreviatura,
+                    'permite_por_turma' => $componente_curricular_turma
                 ];
             }, array_values($componentes));
 
@@ -152,9 +193,21 @@ class ComponenteCurricularController extends ApiCoreController
     protected function getComponentesCurricularesForMultipleSearch()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $turmaId       = $this->getRequest()->turma_id;
-            $ano           = $this->getRequest()->ano;
-            $areaConhecimentoId           = $this->getRequest()->area_conhecimento_id;
+            $serieId = $this->getRequest()->serie_id;
+            $turmaId = $this->getRequest()->turma_id;
+            $ano = $this->getRequest()->ano;
+            $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
+            $allDisciplinesMulti = dbBool($this->getRequest()->allDisciplinesMulti);
+
+            $componentes = [];
+
+            if ($allDisciplinesMulti) {
+                $componentes = $this->getComponentesTurmaMulti($turmaId, $areaConhecimentoId);
+            }
+
+            if (count($componentes) > 0) {
+                return ['options' => $componentes];
+            }
 
             $sql = 'SELECT cc.id,
                        cc.nome
@@ -185,7 +238,7 @@ class ComponenteCurricularController extends ApiCoreController
                        cc.nome
                   FROM pmieducar.turma AS t
                 INNER JOIN pmieducar.escola_serie_disciplina esd ON (esd.ref_ref_cod_escola = t.ref_ref_cod_escola
-                                                                 AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
+                                                                 AND esd.ref_ref_cod_serie = coalesce($3, t.ref_ref_cod_serie)
                                                                  AND esd.ativo = 1)
                 INNER JOIN modules.componente_curricular cc ON (cc.id = esd.ref_cod_disciplina)
                 INNER JOIN modules.area_conhecimento ac ON (ac.id = cc.area_conhecimento_id)
@@ -198,7 +251,7 @@ class ComponenteCurricularController extends ApiCoreController
                   AND cc.id <> COALESCE(t.ref_cod_disciplina_dispensada,0)
                   ';
 
-                $params = [$turmaId, $ano];
+                $params = [$turmaId, $ano, $serieId];
 
                 if ($areaConhecimentoId) {
                     $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
@@ -215,6 +268,34 @@ class ComponenteCurricularController extends ApiCoreController
 
             return ['options' => $componentesCurriculares];
         }
+    }
+
+    private function getComponentesTurmaMulti($turmaId, $areaConhecimentoId) {
+        $areaConhecimentoId = explode(',', $areaConhecimentoId);
+        $query = DB::table('pmieducar.turma as t')
+        ->select('cc.id', 'cc.nome')
+        ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
+        ->join('pmieducar.escola_serie as es', function($join) {
+            $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
+            $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
+        })
+        ->join('pmieducar.escola_serie_disciplina as esd', function($join) {
+            $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
+            $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
+        })
+        ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
+        ->where('t.cod_turma', $turmaId)
+        ->whereRaw('t.ano = ANY(esd.anos_letivos)')
+        ->where('t.multiseriada', 1);
+
+        if (count(array_filter($areaConhecimentoId)) > 0) {
+            $query->whereIn('cc.area_conhecimento_id', $areaConhecimentoId);
+        }
+
+        return $query->distinct()
+            ->get()
+            ->pluck('nome', 'id')
+            ->toArray();
     }
 
     public function Gerar()

@@ -66,28 +66,6 @@
   }
   }
 
-  function getHabilitacao(xml_habilitacao)
-  {
-    var campoHabilitacao = document.getElementById('habilitacao');
-    var DOM_array = xml_habilitacao.getElementsByTagName( "habilitacao" );
-
-    if (DOM_array.length) {
-    campoHabilitacao.length = 1;
-    campoHabilitacao.options[0].text = 'Selecione uma habilitação';
-    campoHabilitacao.disabled = false;
-
-    for (var i = 0; i < DOM_array.length; i++) {
-    campoHabilitacao.options[campoHabilitacao.options.length] = new Option(
-    DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_habilitacao"),
-    false, false
-    );
-  }
-  }
-    else {
-    campoHabilitacao.options[0].text = 'A instituição não possui nenhuma habilitação';
-  }
-  }
-
   document.getElementById('ref_cod_instituicao').onchange = function()
   {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -107,11 +85,6 @@
     campoTipoRegime.disabled = true;
     campoTipoRegime.options[0].text = 'Carregando tipo de regime';
 
-    var campoHabilitacao = document.getElementById('habilitacao');
-    campoHabilitacao.length = 1;
-    campoHabilitacao.disabled = true;
-    campoHabilitacao.options[0].text = 'Carregando habilitação';
-
     var xml_nivel_ensino = new ajax(getNivelEnsino);
     xml_nivel_ensino.envia("educar_nivel_ensino_xml.php?ins="+campoInstituicao);
 
@@ -120,9 +93,6 @@
 
     var xml_tipo_regime = new ajax(getTipoRegime);
     xml_tipo_regime.envia("educar_tipo_regime_xml.php?ins="+campoInstituicao);
-
-    var xml_habilitacao = new ajax(getHabilitacao);
-    xml_habilitacao.envia("educar_habilitacao_xml.php?ins="+campoInstituicao);
 
     if (this.value == '') {
     $('img_nivel_ensino').style.display = 'none;';
@@ -135,51 +105,3 @@
     $('img_tipo_ensino').style.display = '';
   }
   }
-
-  function fixupEtapacursoSize(){
-  $j('.search-field input').css('height', '30px')
-}
-
-  $etapacurso = $j('#etapacurso');
-
-  $etapacurso.trigger('chosen:updated');
-  var testezin;
-
-  var handleGetEtapacurso = function(dataResponse) {
-  testezin = dataResponse['etapacurso'];
-
-  $j.each(dataResponse['etapacurso'], function(id, value) {
-
-  $etapacurso.children("[value=" + value + "]").attr('selected', '');
-});
-
-  $etapacurso.trigger('chosen:updated');
-}
-
-  var getEtapacurso = function() {
-
-  if ($j('#cod_curso').val()!='') {
-
-  var additionalVars = {
-  curso_id : $j('#cod_curso').val(),
-};
-
-  var options = {
-  url : getResourceUrlBuilder.buildUrl('/module/Api/etapacurso', 'etapacurso', additionalVars),
-  dataType : 'json',
-  data : {},
-  success : handleGetEtapacurso,
-};
-
-  getResource(options);
-}
-}
-
-  getEtapacurso();
-
-  $j(document).ready( function(){
-
-  fixupEtapacursoSize();
-});
-
-

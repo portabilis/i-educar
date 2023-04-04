@@ -54,10 +54,10 @@ return new class extends clsListagem {
             'Escola'
         ];
 
-        $this->addCabecalhos($lista_busca);
+        $this->addCabecalhos(coluna: $lista_busca);
 
-        $this->inputsHelper()->dynamic(['ano', 'instituicao'], ['required' => true]);
-        $this->inputsHelper()->dynamic(['escola', 'curso', 'serie', 'turma'], ['required' => false]);
+        $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao'], inputOptions: ['required' => true]);
+        $this->inputsHelper()->dynamic(helperNames: ['escola', 'curso', 'serie', 'turma'], inputOptions: ['required' => false]);
 
         if ($this->ref_cod_escola) {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;
@@ -72,65 +72,37 @@ return new class extends clsListagem {
         }
 
         $obj_turma = new clsPmieducarTurma();
-        $obj_turma->setOrderby('nm_turma ASC');
-        $obj_turma->setLimite($this->limite, $this->offset);
+        $obj_turma->setOrderby(strNomeCampo: 'nm_turma ASC');
+        $obj_turma->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         if (empty($this->ano)) {
-            $this->ano = date('Y');
+            $this->ano = date(format: 'Y');
         }
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
             $obj_turma->codUsuario = $this->pessoa_logada;
         }
 
         $lista = $obj_turma->lista3(
-            $this->ref_cod_turma,
-            null,
-            null,
-            $this->ref_cod_serie,
-            $this->ref_ref_cod_escola,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_curso,
-            $this->ref_cod_instituicao,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ano
+            int_cod_turma: $this->ref_cod_turma,
+            int_ref_ref_cod_serie: $this->ref_cod_serie,
+            int_ref_ref_cod_escola: $this->ref_ref_cod_escola,
+            int_ativo: 1,
+            int_ref_cod_curso: $this->ref_cod_curso,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao,
+            ano: $this->ano
         );
 
         $total = $obj_turma->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
-                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+                $obj_ref_cod_escola = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
-                $link = route('enrollments.batch.enroll.index', ['schoolClass' => $registro['cod_turma']]);
+                $link = route(name: 'enrollments.batch.enroll.index', parameters: ['schoolClass' => $registro['cod_turma']]);
 
                 $lista_busca = [
                     "<a href=\"{$link}\">{$registro['ano']}</a>",
@@ -151,25 +123,25 @@ return new class extends clsListagem {
                     $lista_busca[] = "<a href=\"{$link}\">-</a>";
                 }
 
-                $this->addLinhas($lista_busca);
+                $this->addLinhas(linha: $lista_busca);
             }
         }
-        $this->addPaginador2('educar_matriculas_turma_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_matriculas_turma_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de turmas para enturmações', [
+        $this->breadcrumb(currentPage: 'Listagem de turmas para enturmações', breadcrumbs: [
             'educar_index.php' => 'Escola',
         ]);
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-matriculas-turma-lst.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-matriculas-turma-lst.js');
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matrículas Turmas';
+        $this->title = 'Matrículas Turmas';
         $this->processoAp = '659';
     }
 };

@@ -1,13 +1,9 @@
 <?php
 
-return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
+use App\Models\LegacyDeficiency;
 
+return new class extends clsCadastro {
+    public $pessoa_logada;
     public $cod_deficiencia;
     public $nm_deficiencia;
 
@@ -18,23 +14,21 @@ return new class extends clsCadastro {
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(631, $this->pessoa_logada, 7, 'educar_deficiencia_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_deficiencia_lst.php');
 
         if (is_numeric($this->cod_deficiencia)) {
-            $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
-            $registro  = $obj->detalhe();
+            $registro  = LegacyDeficiency::find($this->cod_deficiencia)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
                 }
 
-                if ($obj_permissoes->permissao_excluir(631, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_deficiencia_det.php?cod_deficiencia={$registro["cod_deficiencia"]}" : "educar_deficiencia_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -43,21 +37,21 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
-        $this->campoOculto('cod_deficiencia', $this->cod_deficiencia);
 
-        // foreign keys
-
-        // text
-        $this->campoTexto('nm_deficiencia', 'Deficiência', $this->nm_deficiencia, 30, 255, true);
-
-        // data
+        $this->campoOculto(nome: 'cod_deficiencia', valor: $this->cod_deficiencia);
+        $this->campoTexto(nome: 'nm_deficiencia', campo: 'Deficiência', valor: $this->nm_deficiencia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
     }
 
     public function Novo()
     {
-        $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
-        $cadastrou = $obj->cadastra();
+        $cadastrou = false;
+        if (is_string($this->nm_deficiencia)) {
+            LegacyDeficiency::create([
+                'nm_deficiencia' => $this->nm_deficiencia
+            ]);
+            $cadastrou = true;
+        }
+
         if ($cadastrou) {
             echo "<script>
                         parent.document.getElementById('ref_cod_deficiencia').options[parent.document.getElementById('ref_cod_deficiencia').options.length] = new Option('$this->nm_deficiencia', '$cadastrou', false, false);
@@ -67,7 +61,7 @@ return new class extends clsCadastro {
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -82,7 +76,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Defici&ecirc;ncia';
+        $this->title = 'Deficiência';
         $this->processoAp = '631';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

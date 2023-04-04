@@ -12,7 +12,7 @@ class clsPmieducarServidorFuncao extends Model
 
     public function __construct($ref_ref_cod_instituicao = null, $ref_cod_servidor = null, $ref_cod_funcao = null, $matricula = null, $cod_servidor_funcao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_funcao";
 
@@ -128,7 +128,7 @@ class clsPmieducarServidorFuncao extends Model
      * Retorna uma lista filtrados de acordo com os parametros
      *
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_ref_cod_instituicao = null, $int_ref_cod_servidor = null, $int_ref_cod_funcao = null)
     {
@@ -147,11 +147,6 @@ class clsPmieducarServidorFuncao extends Model
         }
         if (is_numeric($int_ref_cod_funcao)) {
             $filtros .= "{$whereAnd} ref_cod_funcao = '{$int_ref_cod_funcao}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($matricula)) {
-            $filtros .= "{$whereAnd} matricula = '{$matricula}'";
             $whereAnd = ' AND ';
         }
 
@@ -188,7 +183,7 @@ class clsPmieducarServidorFuncao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -266,9 +261,6 @@ class clsPmieducarServidorFuncao extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_cod_funcao)) {
-        }
-
         return false;
     }
 
@@ -299,7 +291,7 @@ class clsPmieducarServidorFuncao extends Model
         if (is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor) && is_array($funcoes)) {
             $delete = "DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'";
             if (!empty($funcoes)) {
-                $delete .= ' AND cod_servidor_funcao NOT IN (' . implode($funcoes, ',') . ')';
+                $delete .= ' AND cod_servidor_funcao NOT IN (' . implode(',', $funcoes) . ')';
             }
 
             $db = new clsBanco();

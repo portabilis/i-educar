@@ -58,13 +58,13 @@
         @forelse($unifications as $unification)
             <tr>
                 <td>
-                    <a href="{{ route('person-log-unification.show', ['unification' => $unification->id]) }}">{{ $unification->getMainName()  }}</a>
+                    <a href="{{ $show = route('person-log-unification.show', ['unification' => $unification->id, 'name' => request('name'), 'cpf' => request('cpf'), 'page' => request('page')]) }}">{{ $unification->getMainName()  }}</a>
                 </td>
                 <td>
-                    <a href="{{ route('person-log-unification.show', ['unification' => $unification->id]) }}">{{ implode(', ', $unification->getDuplicatesName()) }}</a>
+                    <a href="{{ $show }}">{{ implode(', ', $unification->getDuplicatesName()) }}</a>
                 </td>
                 <td>
-                    <a href="{{ route('person-log-unification.show', ['unification' => $unification->id]) }}">{{ $unification->created_at->format('d/m/Y')  }}</a>
+                    <a href="{{ $show }}">{{ $unification->created_at->format('d/m/Y')  }}</a>
                 </td>
             </tr>
         @empty
@@ -93,9 +93,9 @@
 
 @prepend('scripts')
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
 @endprepend

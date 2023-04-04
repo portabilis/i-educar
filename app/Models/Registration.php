@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Registration\RegistrationBuilder;
 use App\Models\Registration\RegistrationScopes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,14 +17,15 @@ use Illuminate\Database\Query\Builder;
  */
 class Registration extends Model
 {
-    use RegistrationScopes, SoftDeletes;
+    use RegistrationScopes;
+    use SoftDeletes;
 
     /**
      * @param Builder $query
      *
      * @return RegistrationBuilder
      */
-    public function newEloquentBuilder($query)
+    public function newEloquentBuilder($query): RegistrationBuilder
     {
         return new RegistrationBuilder($query);
     }
@@ -31,16 +33,18 @@ class Registration extends Model
     /**
      * @return BelongsTo
      */
-    public function student()
+    public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }
 
     /**
-     * @return string
+     * @return Attribute
      */
-    public function getStatusDescriptionAttribute()
+    protected function statusDescription(): Attribute
     {
-        return (new RegistrationStatus)->getDescriptiveValues()[(int) $this->status];
+        return Attribute::make(
+            get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int)$this->status],
+        );
     }
 }
