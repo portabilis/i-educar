@@ -56,7 +56,7 @@ class TransferNotificationListener
 
     public function getUsers($process, $school)
     {
-        return DB::select(DB::raw('
+        return DB::select('
             SELECT cod_usuario
               FROM pmieducar.usuario u
               JOIN pmieducar.menu_tipo_usuario mtu ON mtu.ref_cod_tipo_usuario = u.ref_cod_tipo_usuario
@@ -66,7 +66,7 @@ class TransferNotificationListener
              WHERE m.process = :process
                AND u.ativo = 1
                AND (eu.ref_cod_escola = :school OR tu.nivel <= 2) --INSTITUCIONAL
-        '), [
+        ', [
             $process,
             $school
         ]);
