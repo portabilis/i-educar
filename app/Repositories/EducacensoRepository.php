@@ -65,7 +65,7 @@ class EducacensoRepository
      */
     protected function fetchPreparedQuery($sql, $params = [])
     {
-        return DB::select(DB::raw($sql), $params);
+        return DB::select($sql, $params);
     }
 
     /**
