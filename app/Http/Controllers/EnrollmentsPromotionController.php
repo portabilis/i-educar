@@ -51,7 +51,7 @@ class EnrollmentsPromotionController extends Controller
     {
         $sql = $this->getEnrollmentsByFilterSql();
 
-        $dbInformation = DB::select(DB::raw($sql), $data);
+        $dbInformation = DB::select($sql, $data);
 
         return array_map(fn ($item) => $item->cod_matricula, $dbInformation);
     }
