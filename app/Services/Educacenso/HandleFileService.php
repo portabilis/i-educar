@@ -2,6 +2,7 @@
 
 namespace App\Services\Educacenso;
 
+use App\Exceptions\Educacenso\InvalidFileDate;
 use App\Exceptions\Educacenso\InvalidFileYear;
 use App\Jobs\EducacensoImportJob;
 use App\Models\EducacensoImport;
@@ -91,6 +92,10 @@ class HandleFileService
     {
         $serviceYear = $this->yearImportService->getYear();
         $line = explode($this->yearImportService::DELIMITER, $school[0]);
+
+        if (is_bool($line[3])) {
+            throw new InvalidFileDate();
+        }
 
         $fileYear = \DateTime::createFromFormat('d/m/Y', $line[3])->format('Y');
 
