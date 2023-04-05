@@ -29,7 +29,7 @@ class EmployeeAllocationFactory extends Factory
             'dia_semana' => $this->faker->numberBetween(0, 7),
             'ano' => now()->year,
             'data_admissao' => $this->faker->date(),
-            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
             'ref_cod_escola' => LegacySchoolFactory::new()->create(),
             'ref_cod_servidor' => EmployeeFactory::new()->create(),
             'ref_cod_servidor_funcao' => LegacyEmployeeRoleFactory::new()->create(),

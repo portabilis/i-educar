@@ -25,7 +25,7 @@ class LegacyEducationLevelFactory extends Factory
             'ref_usuario_cad' => LegacyUserFactory::new()->current(),
             'nm_nivel' => $this->faker->firstName(),
             'descricao' => $this->faker->paragraph(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
         ];
     }
 }

@@ -23,7 +23,7 @@ class EmployeeFactory extends Factory
     {
         return [
             'id' => LegacyPersonFactory::new()->create(),
-            'institution_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'institution_id' => LegacyInstitutionFactory::new()->current(),
             'workload' => $this->faker->randomNumber(3),
             'ref_idesco' => LegacySchoolingDegreeFactory::new()->unique()->make(),
             'curso_formacao_continuada' => '{1}'

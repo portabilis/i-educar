@@ -13,7 +13,7 @@ class LegacySchoolFactory extends Factory
     {
         return [
             'ref_usuario_cad' => LegacyUserFactory::new()->current(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
             'sigla' => $this->faker->asciify(),
             'data_cadastro' => now(),
             'ref_idpes' => LegacyOrganizationFactory::new()->create(),

@@ -31,7 +31,7 @@ class LegacyCourseFactory extends Factory
             'sgl_curso' => $this->faker->word,
             'qtd_etapas' => $this->faker->randomElement([2, 3, 4]),
             'carga_horaria' => 800,
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
             'hora_falta' => 0.75,
             'ativo' => 1,
         ];

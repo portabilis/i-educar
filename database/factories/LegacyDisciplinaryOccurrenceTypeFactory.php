@@ -25,7 +25,7 @@ class LegacyDisciplinaryOccurrenceTypeFactory extends Factory
             'name' => $this->faker->firstName(),
             'description' => $this->faker->paragraph(),
             'max' => $this->faker->numberBetween(1, 5),
-            'institution_id' => fn () => LegacyInstitutionFactory::new()->unique()->make()
+            'institution_id' => fn () => LegacyInstitutionFactory::new()->current()
         ];
     }
 }

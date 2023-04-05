@@ -28,7 +28,7 @@ class LegacySchoolClassTypeFactory extends Factory
             'ref_usuario_cad' => LegacyUserFactory::new()->current(),
             'nm_tipo' => 'Tipo ' . $name,
             'sgl_tipo' => $abbreviation,
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
         ];
     }
 

@@ -13,7 +13,7 @@ class LegacyAbsenceDelayFactory extends Factory
     {
         return [
             'ref_cod_escola' => LegacySchoolFactory::new()->create(),
-            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
             'ref_cod_servidor' => EmployeeFactory::new()->create(),
             'tipo' => $this->faker->randomElement([1, 2]),
             'data_falta_atraso' => $this->faker->date(),

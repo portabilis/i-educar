@@ -26,7 +26,7 @@ class LegacyEvaluationRuleFactory extends Factory
     {
         return [
             'formula_media_id' => LegacyAverageFormulaFactory::new()->create(),
-            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->current(),
             'nome' => $this->faker->words(3, true),
             'tipo_nota' => $this->faker->randomElement([1, 2, 3, 4]),
             'tipo_progressao' => $this->faker->randomElement([1, 2, 3, 4]),

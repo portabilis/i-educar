@@ -23,7 +23,7 @@ class LegacySchoolClassTeacherFactory extends Factory
     {
         return [
             'ano' => now()->year,
-            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->current(),
             'turma_id' => LegacySchoolClassFactory::new()->create(),
             'servidor_id' => EmployeeFactory::new()->create(),
             'funcao_exercida' => 1,

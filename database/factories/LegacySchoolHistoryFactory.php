@@ -22,7 +22,7 @@ class LegacySchoolHistoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
             'ref_cod_aluno' => LegacyStudentFactory::new()->create(),
             'sequencial' => 1,
             'ref_usuario_exc' => LegacyUserFactory::new()->current(),

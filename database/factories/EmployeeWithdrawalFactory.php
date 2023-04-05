@@ -24,7 +24,7 @@ class EmployeeWithdrawalFactory extends Factory
         return [
             'ref_cod_servidor' => EmployeeFactory::new()->create(),
             'sequencial' => $this->faker->randomDigitNotZero(),
-            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
             'ref_cod_motivo_afastamento' => WithdrawalReasonFactory::new()->create(),
             'ref_usuario_cad' => LegacyUserFactory::new()->current(),
             'ref_usuario_exc' => LegacyUserFactory::new()->current(),

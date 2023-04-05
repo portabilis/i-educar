@@ -35,6 +35,11 @@ class LegacyInstitutionFactory extends Factory
         ];
     }
 
+    public function current(): LegacyInstitution
+    {
+        return LegacyInstitution::query()->first() ?? $this->create();
+    }
+
     public function unique(): self
     {
         return $this->state(function () {
