@@ -62,7 +62,7 @@ class Registro20Model extends Registro20
             $arrayColumns[39] ? FormaOrganizacaoTurma::ALTERNANCIA_REGULAR : null,
         ]);
 
-        $this->formasOrganizacaoTurma = (count($this->formasOrganizacaoTurma) === 1) ? $this->formasOrganizacaoTurma[0] : null;
+        $this->formasOrganizacaoTurma = (count($this->formasOrganizacaoTurma) === 1) ? $this->formasOrganizacaoTurma[array_key_first($this->formasOrganizacaoTurma)] : null;
 
         $this->unidadesCurriculares = array_filter([
             $arrayColumns[40] ? UnidadesCurriculares::ELETIVAS : null,
