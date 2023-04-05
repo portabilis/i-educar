@@ -33,6 +33,11 @@ class LegacyUserFactory extends Factory
         ];
     }
 
+    public function current(): LegacyUser
+    {
+        return LegacyUser::query()->first() ?? $this->create();
+    }
+
     public function admin(): static
     {
         return $this->state([

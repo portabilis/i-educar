@@ -22,7 +22,7 @@ class LegacyStageTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
             'nm_tipo' => $this->faker->word,
             'data_cadastro' => now(),
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),

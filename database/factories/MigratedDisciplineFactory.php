@@ -17,7 +17,7 @@ class MigratedDisciplineFactory extends Factory
             'new_discipline_id' => static fn () => LegacyDisciplineFactory::new()->create(),
             'grade_id' => static fn () => LegacyGradeFactory::new()->create(),
             'year' => Carbon::now()->year,
-            'created_by' => static fn () => LegacyUserFactory::new()->create(),
+            'created_by' => static fn () => LegacyUserFactory::new()->current(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

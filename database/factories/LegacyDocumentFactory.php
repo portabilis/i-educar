@@ -22,7 +22,7 @@ class LegacyDocumentFactory extends Factory
     public function definition(): array
     {
         return [
-            'idpes' => LegacyUserFactory::new()->unique()->make(),
+            'idpes' => LegacyUserFactory::new()->current(),
             'rg' => $this->faker->randomNumber(8),
             'certidao_nascimento' => $this->faker->randomNumber(8),
             'origem_gravacao' => 'M'

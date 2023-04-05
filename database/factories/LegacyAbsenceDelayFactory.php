@@ -21,8 +21,8 @@ class LegacyAbsenceDelayFactory extends Factory
             'qtd_min' => $this->faker->randomNumber(),
             'justificada' => $this->faker->randomElement([1, 2]),
             'ref_cod_servidor_funcao' => LegacyEmployeeRoleFactory::new()->create(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->create(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->create(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->current(),
         ];
     }
 }

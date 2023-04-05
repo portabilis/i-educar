@@ -26,8 +26,8 @@ class LegacyStudentFactory extends Factory
         return [
             'ref_idpes' => static fn () => LegacyIndividualFactory::new()->create(),
             'ref_cod_religiao' => static fn () => ReligionFactory::new()->create(),
-            'ref_usuario_cad' => static fn () => LegacyUserFactory::new()->create(),
-            'ref_usuario_exc' => static fn () => LegacyUserFactory::new()->create(),
+            'ref_usuario_cad' => static fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => static fn () => LegacyUserFactory::new()->current(),
             'tipo_responsavel' => 'a',
             'data_cadastro' => now(),
             'veiculo_transporte_escolar' => '{'.TransportationVehicleType::VAN.'}'

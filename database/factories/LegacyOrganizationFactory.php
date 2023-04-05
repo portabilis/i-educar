@@ -30,7 +30,7 @@ class LegacyOrganizationFactory extends Factory
             'cnpj' => $this->faker->numerify('##############'),
             'insc_estadual' => $this->faker->numerify('########'),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
-            'idpes_cad' => LegacyUserFactory::new()->unique()->make(),
+            'idpes_cad' => LegacyUserFactory::new()->current(),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'fantasia' => $person->name,
         ];

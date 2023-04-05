@@ -16,7 +16,7 @@ class LegacySchoolClassFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_turma' => $name = $this->faker->colorName,
             'sgl_turma' => mb_substr($name, 0, 3),
             'max_aluno' => $this->faker->numberBetween(10, 25),

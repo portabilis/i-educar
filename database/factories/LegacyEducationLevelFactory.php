@@ -22,7 +22,7 @@ class LegacyEducationLevelFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
             'nm_nivel' => $this->faker->firstName(),
             'descricao' => $this->faker->paragraph(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),

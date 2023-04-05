@@ -14,7 +14,7 @@ class LegacySchoolAcademicYearFactory extends Factory
         return [
             'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'ano' => now()->year,
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'andamento' => 1
         ];
     }

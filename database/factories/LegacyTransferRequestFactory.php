@@ -23,8 +23,8 @@ class LegacyTransferRequestFactory extends Factory
     {
         return [
             'ref_cod_transferencia_tipo' => LegacyTransferTypeFactory::new()->create(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->current(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
             'ref_cod_matricula_entrada' => fn () => LegacyRegistrationFactory::new()->create(),
             'ref_cod_matricula_saida' => fn () => LegacyRegistrationFactory::new()->create(),
             'observacao' => $this->faker->text,
