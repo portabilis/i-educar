@@ -55,6 +55,18 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Disciplina
+     *
+     * @param int $discipline
+     *
+     * @return LegacySchoolGradeDisciplineBuilder
+     */
+    public function whereDiscipline(int $discipline): self
+    {
+        return $this->where('ref_cod_disciplina', $discipline);
+    }
+
+    /**
      * Filtra os ativos
      *
      * @return LegacySchoolGradeDisciplineBuilder

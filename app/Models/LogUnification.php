@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LogUnificationBuilder;
+use App\Traits\LegacyAttribute;
 use Exception;
 use iEducar\Modules\Unification\LogUnificationTypeInterface;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class LogUnification extends Model
 {
+    use LegacyAttribute;
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LogUnificationBuilder::class;
+
     /**
      * @return BelongsTo
      */
@@ -114,25 +124,5 @@ class LogUnification extends Model
         }
 
         throw new Exception('Tipo de unificação inválido');
-    }
-
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeStudent($query)
-    {
-        return $query->where('type', Student::class);
-    }
-
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopePerson($query)
-    {
-        return $query->where('type', Individual::class);
     }
 }

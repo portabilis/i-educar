@@ -27,12 +27,9 @@ class LegacySchoolClassStage extends LegacyModel
      */
     protected string $builder = LegacySchoolClassStageBuilder::class;
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_inicio',
-        'data_fim',
+    protected $casts = [
+        'data_inicio' => 'date',
+        'data_fim' => 'date',
     ];
 
     /**

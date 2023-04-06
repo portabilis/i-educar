@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\View;
 
+use App\Models\DeficiencyType;
 use App\Models\EmployeeGraduationDiscipline;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
@@ -132,6 +133,15 @@ class SelectOptions
     public static function educacensoDeficiencies()
     {
         return self::getDefaultOption() + Deficiencias::getDescriptiveValues();
+    }
+    /**
+     * Retorna as opções disponíveis referentes ao tipo de deficiência
+     *
+     * @return array
+     */
+    public static function deficiencyTypes()
+    {
+        return self::getDefaultOption() + DeficiencyType::getDescriptiveValues();
     }
 
     /**

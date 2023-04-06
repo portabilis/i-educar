@@ -41,7 +41,10 @@ class LegacyEmployee extends Model
         'email',
     ];
 
-    protected $dates = ['data_reativa_conta', 'data_troca_senha'];
+    protected $casts = [
+        'data_reativa_conta' => 'date',
+        'data_troca_senha' => 'date',
+    ];
 
     protected function login(): Attribute
     {

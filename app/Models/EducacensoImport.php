@@ -17,8 +17,8 @@ class EducacensoImport extends Model
         'registration_date'
     ];
 
-    protected $dates = [
-        'registration_date',
+    protected $casts = [
+        'registration_date' => 'date',
     ];
 
     /**

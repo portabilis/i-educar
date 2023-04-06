@@ -13,11 +13,6 @@ class SchoolClassInep extends Model
      */
     protected $table = 'modules.educacenso_cod_turma';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_turma';
-
     protected $fillable = [
         'cod_turma',
         'cod_turma_inep',

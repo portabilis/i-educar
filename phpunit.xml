@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    bootstrap="vendor/autoload.php"
-    colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    defaultTestSuite="Feature,Pages,Diario,Educacenso,Unit">
-    <coverage processUncoveredFiles="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         backupGlobals="true"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Diario">
+            <directory suffix="Test.php">./tests/Api</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Extra</directory>
+            <directory suffix="Test.php">./tests/Feature</directory>
+        </testsuite>
+        <testsuite name="Pages">
+            <directory suffix="Test.php">./tests/Pages/</directory>
+        </testsuite>
+        <testsuite name="Educacenso">
+            <directory suffix="Test.php">./tests/Educacenso</directory>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <coverage>
         <include>
             <directory suffix=".php">./app</directory>
             <directory suffix=".php">./ieducar</directory>
@@ -46,24 +57,6 @@
             <file>ieducar/modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php</file>
         </exclude>
     </coverage>
-    <testsuites>
-        <testsuite name="Diario">
-            <directory suffix="Test.php">./tests/Api</directory>
-        </testsuite>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Extra</directory>
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-        <testsuite name="Pages">
-            <directory suffix="Test.php">./tests/Pages/</directory>
-        </testsuite>
-        <testsuite name="Educacenso">
-            <directory suffix="Test.php">./tests/Educacenso</directory>
-        </testsuite>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-    </testsuites>
     <php>
         <ini name="memory_limit" value="512M"/>
         <server name="APP_ENV" value="testing"/>

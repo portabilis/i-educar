@@ -115,11 +115,12 @@ class ComponenteCurricularController extends ApiCoreController
             $sql = '
                 SELECT componente_curricular.id,
                        componente_curricular.nome,
-                       carga_horaria::int,
+                       carga_horaria,
                        tipo_nota,
                        array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos,
                        area_conhecimento_id,
                        area_conhecimento.nome AS nome_area,
+                       componente_curricular_ano_escolar.hora_falta,
                        exists (SELECT * FROM modules.componente_curricular_turma cct
                                     INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
                                     WHERE TRUE
@@ -154,11 +155,13 @@ class ComponenteCurricularController extends ApiCoreController
                 ORDER BY nome ';
             $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId, $areaDeConhecimento, $serieId]);
 
-            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'contem_componente_curricular_turma', 'contem_notas', 'contem_faltas', 'contem_paracer'];
+            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'hora_falta', 'contem_componente_curricular_turma', 'contem_notas', 'contem_faltas', 'contem_paracer'];
             $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
             foreach ($disciplinas as &$disciplina) {
                 $disciplina['anos_letivos'] = json_decode($disciplina['anos_letivos']);
+                $disciplina['hora_falta'] = (float) $disciplina['hora_falta'];
+                $disciplina['carga_horaria'] = (float) $disciplina['carga_horaria'];
             }
 
             return ['disciplinas' => $disciplinas];
@@ -173,7 +176,6 @@ class ComponenteCurricularController extends ApiCoreController
             $ano       = $this->getRequest()->ano;
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($serieId, $escolaId, null, null, null, true, $ano);
             $componente_curricular_turma = LegacyInstitution::whereHas('schools', fn ($q) => $q->where('cod_escola', $escolaId))->value('componente_curricular_turma');
-            $componentesCurriculares = [];
             $componentesCurriculares = array_map(function ($componente) use ($componente_curricular_turma){
                 return [
                     'id' => $componente->id,

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;
@@ -167,6 +168,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('schoolclass.store');
     Route::delete('/turma', [SchoolClassController::class, 'delete'])
         ->name('schoolclass.delete');
+
+    Route::post('/enrollments-promotion', [EnrollmentsPromotionController::class, 'processEnrollmentsPromotionJobs'])
+        ->name('enrollments.promotion');
 
     Route::fallback([WebController::class, 'fallback']);
 });

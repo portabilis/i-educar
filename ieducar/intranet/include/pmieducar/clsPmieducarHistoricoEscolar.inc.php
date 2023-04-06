@@ -697,21 +697,6 @@ class clsPmieducarHistoricoEscolar extends Model
         return false;
     }
 
-    public function getCodNomeEscola()
-    {
-        $db = new clsBanco();
-        $db->Consulta("SELECT escola, ref_cod_escola
-                         FROM pmieducar.historico_escolar
-                        WHERE ref_cod_aluno = $this->ref_cod_aluno
-                          AND sequencial = $this->sequencial");
-
-        if ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-
-            return $tupla['escola'] . '-' . $tupla['ref_cod_escola'];
-        }
-    }
-
     /**
      * Exclui um registro
      *

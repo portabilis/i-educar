@@ -31,12 +31,9 @@ class LegacyActiveLooking extends LegacyModel
         'resultado_busca_ativa',
     ];
 
-    protected $dates = [
-        'data_inicio',
-        'data_fim',
-        'updated_at',
-        'created_at',
-        'deleted_at'
+    protected $casts = [
+        'data_inicio' => 'date',
+        'data_fim' => 'date',
     ];
 
     public array $legacy = [

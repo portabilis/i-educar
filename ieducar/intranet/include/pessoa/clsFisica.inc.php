@@ -154,10 +154,6 @@ class clsFisica
         } elseif ($idmun_nascimento == 'NULL') {
             $this->idmun_nascimento = $idmun_nascimento;
         }
-        $objOcupacao = new clsOcupacao($idocup);
-        if ($objOcupacao->detalhe()) {
-            $this->idocup = $idocup;
-        }
 
         $this->data_nasc                = $data_nasc;
         $this->sexo                     = $sexo;
@@ -287,10 +283,6 @@ class clsFisica
             if (is_string($this->ultima_empresa)) {
                 $campos .= ', ultima_empresa';
                 $valores .= ", '$this->ultima_empresa' ";
-            }
-            if (is_numeric($this->idocup)) {
-                $campos .= ', idocup';
-                $valores .= ", '$this->idocup' ";
             }
             if (is_string($this->nome_mae)) {
                 $campos .= ', nome_mae';
@@ -550,10 +542,6 @@ class clsFisica
             }
             if ($this->ultima_empresa) {
                 $set .= "$gruda ultima_empresa = '{$this->ultima_empresa}'";
-                $gruda = ', ';
-            }
-            if ($this->idocup) {
-                $set .= "$gruda idocup = '{$this->idocup}'";
                 $gruda = ', ';
             }
             if ($this->nome_mae) {
@@ -837,10 +825,6 @@ class clsFisica
             $where .= "{$whereAnd}ultima_empresa =  '$str_ultima_empresa'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_idocup)) {
-            $where .= "{$whereAnd}idocup = '$int_idocup'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($str_nome_mae)) {
             $where .= "{$whereAnd}nome_mae = '$str_nome_mae'";
             $whereAnd = ' AND ';
@@ -954,12 +938,11 @@ class clsFisica
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
-        $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, ref_cod_religiao FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+        $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, ref_cod_religiao FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-            $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
             $tupla['total'] = $total;
             $resultado[] = $tupla;
@@ -980,26 +963,24 @@ class clsFisica
     {
         if ($this->idpes) {
             $db = new clsBanco();
-            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada, observacao FROM {$this->schema}.{$this->tabela}
+            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada, observacao FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) WHERE fisica.idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
                 $tupla['idesco'] = new clsEscolaridade($tupla['idesco']);
                 $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-                $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
                 return $tupla;
             }
         } elseif ($this->cpf) {
             $db = new clsBanco();
-            $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
+            $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
                 $tupla['idesco'] = new clsEscolaridade($tupla['idesco']);
                 $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-                $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
                 return $tupla;
             }

@@ -23,7 +23,7 @@ class EducacensoImportFactory extends Factory
     {
         return [
             'year' => now()->year,
-            'school' => $this->faker->name,
+            'school' => $this->faker->name(),
             'user_id' => LegacyUserFactory::new()->unique()->make(),
             'finished' => $this->faker->boolean,
             'registration_date' => now()->format('Y-m-d')

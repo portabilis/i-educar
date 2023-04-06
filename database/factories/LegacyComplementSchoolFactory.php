@@ -23,12 +23,12 @@ class LegacyComplementSchoolFactory extends Factory
     {
         return [
             'id' => fn () => LegacySchoolFactory::new()->create(),
-            'name' => $this->faker->name,
-            'city' => $this->faker->name,
+            'name' => $this->faker->name(),
+            'city' => $this->faker->name(),
             'cep' => $this->faker->randomNumber(8),
             'number' => $this->faker->randomNumber(3),
             'complement' => $this->faker->word,
-            'address' => $this->faker->address,
+            'address' => $this->faker->address(),
             'district' => $this->faker->word,
             'created_by' => fn () => LegacyUserFactory::new()->unique()->make(),
             'deleted_by' => fn () => LegacyUserFactory::new()->unique()->make(),

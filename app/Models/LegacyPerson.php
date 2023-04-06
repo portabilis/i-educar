@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyPersonBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,12 +27,7 @@ class LegacyPerson extends LegacyModel
      */
     protected $primaryKey = 'idpes';
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_cad',
-    ];
+    protected string $builder = LegacyPersonBuilder::class;
 
     /**
      * @var array

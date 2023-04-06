@@ -61,14 +61,8 @@ class LegacyEnrollment extends LegacyModel
     protected $casts = [
         'tipo_itinerario' => LegacyArray::class,
         'composicao_itinerario' => LegacyArray::class,
-    ];
-
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_enturmacao',
-        'data_exclusao'
+        'data_enturmacao' => 'date',
+        'data_exclusao' => 'date',
     ];
 
     /**

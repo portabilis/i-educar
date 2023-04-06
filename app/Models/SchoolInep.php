@@ -13,11 +13,6 @@ class SchoolInep extends Model
      */
     protected $table = 'modules.educacenso_cod_escola';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_escola';
-
     protected $fillable = [
         'cod_escola',
         'cod_escola_inep',

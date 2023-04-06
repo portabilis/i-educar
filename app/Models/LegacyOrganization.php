@@ -22,14 +22,6 @@ class LegacyOrganization extends LegacyModel
     protected $primaryKey = 'idpes';
 
     /**
-     * @var array
-     */
-    protected $dates = [
-        'data_rev',
-        'data_cad',
-    ];
-
-    /**
      * Atributos legados para serem usados nas queries
      *
      * @var string[]
