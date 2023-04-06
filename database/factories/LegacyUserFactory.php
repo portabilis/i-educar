@@ -35,7 +35,11 @@ class LegacyUserFactory extends Factory
 
     public function current(): LegacyUser
     {
-        return LegacyUser::query()->first() ?? $this->create();
+        return LegacyUser::query()->first() ?? $this->create([
+            'cod_usuario' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
+            'ref_funcionario_cad' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
+            'ref_funcionario_exc' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
+        ]);
     }
 
     public function admin(): static

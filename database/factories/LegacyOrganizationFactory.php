@@ -8,18 +8,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyOrganizationFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyOrganization::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [

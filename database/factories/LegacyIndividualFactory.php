@@ -32,6 +32,13 @@ class LegacyIndividualFactory extends Factory
         ];
     }
 
+    public function current(): LegacyIndividual
+    {
+        return LegacyIndividual::query()->first() ?? $this->create([
+            'idpes' => fn () => LegacyPersonFactory::new()->current(),
+        ]);
+    }
+
     public function father(): self
     {
         return $this->state(function (array $attributes) {
