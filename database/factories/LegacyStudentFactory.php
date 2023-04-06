@@ -57,7 +57,7 @@ class LegacyStudentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'ref_idpes' => LegacyIndividualFactory::new()->father()->create(),
+                'ref_idpes' => fn () => LegacyIndividualFactory::new()->father()->create(),
                 'tipo_responsavel' => null
             ];
         });
@@ -67,7 +67,7 @@ class LegacyStudentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'ref_idpes' => LegacyIndividualFactory::new()->mother()->create(),
+                'ref_idpes' => fn () => LegacyIndividualFactory::new()->mother()->create(),
                 'tipo_responsavel' => null
             ];
         });
@@ -76,7 +76,7 @@ class LegacyStudentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'ref_idpes' => LegacyIndividualFactory::new()->guardian()->create(),
+                'ref_idpes' => fn () => LegacyIndividualFactory::new()->guardian()->create(),
                 'tipo_responsavel' => null
             ];
         });

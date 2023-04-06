@@ -29,16 +29,16 @@ class EmployeeAllocationFactory extends Factory
             'dia_semana' => $this->faker->numberBetween(0, 7),
             'ano' => now()->year,
             'data_admissao' => $this->faker->date(),
-            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'ref_cod_servidor' => EmployeeFactory::new()->create(),
-            'ref_cod_servidor_funcao' => LegacyEmployeeRoleFactory::new()->create(),
+            'ref_cod_servidor_funcao' => fn () => LegacyEmployeeRoleFactory::new()->create(),
             'ref_cod_funcionario_vinculo' => $this->faker->randomDigitNotZero(),
             'hora_atividade' => $this->faker->time(),
             'horas_excedentes' => $this->faker->time(),
             'data_saida' => now(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
         ];
     }
 }

@@ -12,11 +12,11 @@ class LegacySchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
             'sigla' => $this->faker->asciify(),
             'data_cadastro' => now(),
-            'ref_idpes' => LegacyOrganizationFactory::new()->create(),
+            'ref_idpes' => fn () => LegacyOrganizationFactory::new()->create(),
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
         ];

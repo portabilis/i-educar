@@ -36,7 +36,7 @@ class LegacyIndividualFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'idpes_pai' => LegacyIndividualFactory::new()->create(),
+                'idpes_pai' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }
@@ -45,7 +45,7 @@ class LegacyIndividualFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'idpes_mae' => LegacyIndividualFactory::new()->create(),
+                'idpes_mae' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }
@@ -53,7 +53,7 @@ class LegacyIndividualFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'idpes_responsavel' => LegacyIndividualFactory::new()->create(),
+                'idpes_responsavel' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }

@@ -22,15 +22,15 @@ class LegacyTransferRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_transferencia_tipo' => LegacyTransferTypeFactory::new()->create(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->current(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
+            'ref_cod_transferencia_tipo' => fn () => LegacyTransferTypeFactory::new()->create(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'ref_cod_matricula_entrada' => fn () => LegacyRegistrationFactory::new()->create(),
             'ref_cod_matricula_saida' => fn () => LegacyRegistrationFactory::new()->create(),
             'observacao' => $this->faker->text,
             'ativo' => 1,
             'data_transferencia' => now(),
-            'ref_cod_escola_destino' => LegacySchoolFactory::new()->create(),
+            'ref_cod_escola_destino' => fn () => LegacySchoolFactory::new()->create(),
         ];
     }
 }

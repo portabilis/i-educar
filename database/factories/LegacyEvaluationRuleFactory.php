@@ -25,14 +25,14 @@ class LegacyEvaluationRuleFactory extends Factory
     public function definition(): array
     {
         return [
-            'formula_media_id' => LegacyAverageFormulaFactory::new()->create(),
-            'instituicao_id' => LegacyInstitutionFactory::new()->current(),
+            'formula_media_id' => fn () => LegacyAverageFormulaFactory::new()->create(),
+            'instituicao_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'nome' => $this->faker->words(3, true),
             'tipo_nota' => $this->faker->randomElement([1, 2, 3, 4]),
             'tipo_progressao' => $this->faker->randomElement([1, 2, 3, 4]),
             'tipo_presenca' => $this->faker->randomElement([1, 2]),
-            'tabela_arredondamento_id' => LegacyRoundingTableFactory::new()->create(),
-            'tabela_arredondamento_id_conceitual' => LegacyRoundingTableFactory::new()->create(),
+            'tabela_arredondamento_id' => fn () => LegacyRoundingTableFactory::new()->create(),
+            'tabela_arredondamento_id_conceitual' => fn () => LegacyRoundingTableFactory::new()->create(),
         ];
     }
 
@@ -81,7 +81,7 @@ class LegacyEvaluationRuleFactory extends Factory
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
                 'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
-                'formula_recuperacao_id' => LegacyAverageFormulaFactory::new()->weightedAverageCalculation()->create(),
+                'formula_recuperacao_id' => fn () => LegacyAverageFormulaFactory::new()->weightedAverageCalculation()->create(),
                 'tipo_progressao' => RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA,
                 'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
                 'porcentagem_presenca' => 75,

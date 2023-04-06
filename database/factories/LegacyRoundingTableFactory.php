@@ -23,7 +23,7 @@ class LegacyRoundingTableFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitutionFactory::new()->current(),
+            'instituicao_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'nome' => $this->faker->words(3, true),
             'tipo_nota' => $this->faker->randomElement([1, 2]),
         ];

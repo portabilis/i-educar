@@ -25,7 +25,7 @@ class LegacyAverageFormulaFactory extends Factory
     public function definition(): array
     {
         return [
-            'institution_id' => LegacyInstitutionFactory::new()->current(),
+            'institution_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'name' => $this->faker->words(3, true),
             'average' => 'Se / Et',
         ];

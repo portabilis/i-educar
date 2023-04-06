@@ -26,9 +26,9 @@ class LegacyAcademicYearStageFactory extends Factory
         return [
             'ref_ano' => $schooAcademicYear->ano,
             'ref_ref_cod_escola' => $schooAcademicYear->ref_cod_escola,
-            'escola_ano_letivo_id' => LegacySchoolAcademicYearFactory::new()->create(),
+            'escola_ano_letivo_id' => fn () => LegacySchoolAcademicYearFactory::new()->create(),
             'sequencial' => 1,
-            'ref_cod_modulo' => LegacyStageTypeFactory::new()->unique()->make(),
+            'ref_cod_modulo' => fn () => LegacyStageTypeFactory::new()->unique()->make(),
             'data_inicio' => now()->subMonths(3),
             'data_fim' => now()->addMonths(3),
             'dias_letivos' => $this->faker->numberBetween(150, 200),

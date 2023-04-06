@@ -22,11 +22,11 @@ class LegacySchoolHistoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
-            'ref_cod_aluno' => LegacyStudentFactory::new()->create(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
+            'ref_cod_aluno' => fn () => LegacyStudentFactory::new()->create(),
             'sequencial' => 1,
-            'ref_usuario_exc' => LegacyUserFactory::new()->current(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'ano' => now()->year,
             'carga_horaria' => $this->faker->randomNumber(),
             'dias_letivos' => $this->faker->randomNumber(),
@@ -49,7 +49,7 @@ class LegacySchoolHistoryFactory extends Factory
             'historico_grade_curso_id' => null,
             'nm_curso' => $this->faker->word(),
             'aceleracao' => $this->faker->randomNumber(),
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'dependencia' => $this->faker->boolean,
             'posicao' => $this->faker->randomNumber(),
         ];

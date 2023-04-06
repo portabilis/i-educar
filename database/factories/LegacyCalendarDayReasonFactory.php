@@ -12,7 +12,7 @@ class LegacyCalendarDayReasonFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'sigla' => $this->faker->word,
             'descricao' => $this->faker->sentence,
             'tipo' => $this->faker->randomElement(['e', 'n']),

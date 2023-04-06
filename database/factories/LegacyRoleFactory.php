@@ -25,9 +25,9 @@ class LegacyRoleFactory extends Factory
             'nm_funcao' => $this->faker->colorName,
             'abreviatura' => $this->faker->hexColor,
             'professor' => 1,
-            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->current(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
     }
 }

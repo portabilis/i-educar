@@ -22,9 +22,9 @@ class LegacyRegimeTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_tipo' => $this->faker->firstName(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
     }
 }

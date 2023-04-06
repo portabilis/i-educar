@@ -23,9 +23,9 @@ class LegacyEmployeeRoleFactory extends Factory
     {
         return [
             'matricula' => $this->faker->randomDigitNotNull(),
-            'ref_cod_funcao' => LegacyRoleFactory::new()->create(),
+            'ref_cod_funcao' => fn () => LegacyRoleFactory::new()->create(),
             'ref_cod_servidor' => EmployeeFactory::new()->create(),
-            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
+            'ref_ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
     }
 }

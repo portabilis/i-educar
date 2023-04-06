@@ -22,7 +22,7 @@ class LegacyRegistrationScoreFactory extends Factory
     public function definition(): array
     {
         return [
-            'matricula_id' => LegacyRegistrationFactory::new()->create(),
+            'matricula_id' => fn () => LegacyRegistrationFactory::new()->create(),
         ];
     }
 }

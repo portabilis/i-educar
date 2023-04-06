@@ -12,17 +12,17 @@ class LegacyAbsenceDelayFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
-            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->current(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
+            'ref_ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
             'ref_cod_servidor' => EmployeeFactory::new()->create(),
             'tipo' => $this->faker->randomElement([1, 2]),
             'data_falta_atraso' => $this->faker->date(),
             'qtd_horas' => $this->faker->randomNumber(),
             'qtd_min' => $this->faker->randomNumber(),
             'justificada' => $this->faker->randomElement([1, 2]),
-            'ref_cod_servidor_funcao' => LegacyEmployeeRoleFactory::new()->create(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->current(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->current(),
+            'ref_cod_servidor_funcao' => fn () => LegacyEmployeeRoleFactory::new()->create(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
         ];
     }
 }

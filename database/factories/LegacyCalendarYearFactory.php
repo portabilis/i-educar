@@ -14,7 +14,7 @@ class LegacyCalendarYearFactory extends Factory
         return [
             'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->current(),
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'ano' => now()->year,
         ];
     }
