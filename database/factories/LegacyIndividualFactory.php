@@ -22,12 +22,12 @@ class LegacyIndividualFactory extends Factory
     public function definition(): array
     {
         return [
-            'idpes' => static fn () => LegacyPersonFactory::new()->create(),
+            'idpes' => fn () => LegacyPersonFactory::new()->create(),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
-            'idpes_mae' => static fn () => LegacyPersonFactory::new()->create(),
-            'idpes_pai' => static fn () => LegacyPersonFactory::new()->create(),
-            'idpes_responsavel' => static fn () =>LegacyPersonFactory::new()->create(),
+            'idpes_mae' => fn () => LegacyPersonFactory::new()->create(),
+            'idpes_pai' => fn () => LegacyPersonFactory::new()->create(),
+            'idpes_responsavel' => fn () =>LegacyPersonFactory::new()->create(),
             'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
         ];
     }
