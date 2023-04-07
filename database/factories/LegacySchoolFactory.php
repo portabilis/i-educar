@@ -22,6 +22,22 @@ class LegacySchoolFactory extends Factory
         ];
     }
 
+    public function withName(string $name): static
+    {
+        $person = LegacyPersonFactory::new()->create([
+            'nome' => $name,
+        ]);
+
+        $organization = LegacyOrganizationFactory::new()->create([
+            'idpes' => $person,
+            'fantasia' => $name,
+        ]);
+
+        return $this->state([
+            'ref_idpes' => $organization,
+        ]);
+    }
+
     public function withPhone(): static
     {
         return $this->afterCreating(function (LegacySchool $school) {
