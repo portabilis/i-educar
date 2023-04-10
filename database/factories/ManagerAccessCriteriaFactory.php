@@ -15,4 +15,9 @@ class ManagerAccessCriteriaFactory extends Factory
             'name' => $this->faker->name(),
         ];
     }
+
+    public function current(): ManagerAccessCriteria
+    {
+        return ManagerAccessCriteria::query()->first() ?? $this->create();
+    }
 }
