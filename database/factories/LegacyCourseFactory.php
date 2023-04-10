@@ -45,6 +45,30 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    public function withElementarySchool(): static
+    {
+        $age = 6;
+        $total = 9;
+
+        return $this->afterCreating(function (LegacyCourse $course) use ($age, $total) {
+            for ($year = 1; $year <= $total; $year++) {
+                LegacyGradeFactory::new()->create([
+                    'ref_cod_curso' => $course,
+                    'nm_serie' => $year . 'º ano',
+                    'descricao' => $year . 'º ano',
+                    'etapa_curso' => $year,
+                    'idade_inicial' => $age++,
+                    'idade_final' => $age,
+                    'concluinte' => intval($total === $year),
+                    'dias_letivos' => 200,
+                    'carga_horaria' => 800,
+                ]);
+            }
+        })->state([
+            'qtd_etapas' => $total,
+        ]);
+    }
+
     public function standardAcademicYear(): self
     {
         return $this->state(function (array $attributes) {
