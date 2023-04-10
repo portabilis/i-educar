@@ -384,15 +384,4 @@ class clsPmieducarHistoricoDisciplinas extends Model
 
         return false;
     }
-
-    public function getMaxSequencial($ref_cod_aluno)
-    {
-        if (is_numeric($ref_cod_aluno)) {
-            $db = new clsBanco();
-
-            return $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM {$this->_tabela} WHERE ref_cod_aluno = {$ref_cod_aluno}");
-        }
-
-        return false;
-    }
 }

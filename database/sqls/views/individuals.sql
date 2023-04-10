@@ -22,7 +22,6 @@ SELECT
     data_chegada_brasil AS arrived_at,
     idmun_nascimento AS city_id,
     -- ultima_empresa,
-    -- idocup numeric(6,0),
     nome_mae AS mother_name,
     nome_pai AS father_name,
     nome_conjuge AS spouse_name,

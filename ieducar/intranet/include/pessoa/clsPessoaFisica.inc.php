@@ -194,7 +194,6 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->data_chagada_brasil = $detalhe_fisica['data_chagada_brasil'] ?? null;
                 $this->idmun_nascimento = $detalhe_fisica['idmun_nascimento'];
                 $this->ultima_empresa = $detalhe_fisica['ultima_empresa'];
-                $this->idocup = $detalhe_fisica['idocup'];
                 $this->nome_mae = $detalhe_fisica['nome_mae'];
                 $this->nome_pai = $detalhe_fisica['nome_pai'];
                 $this->nome_conjuge = $detalhe_fisica['nome_conjuge'];
@@ -273,9 +272,6 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['ultima_empresa'] = $this->ultima_empresa;
                 $tupla[] = &$tupla['ultima_empresa'];
 
-                $tupla['idocup'] = $this->idocup;
-                $tupla[] = &$tupla['idocup'];
-
                 $tupla['nome_mae'] = $this->nome_mae;
                 $tupla[] = &$tupla['nome_mae'];
 
@@ -346,7 +342,6 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->data_chagada_brasil = $detalhe_fisica['data_chagada_brasil'];
                     $this->idmun_nascimento = $detalhe_fisica['idmun_nascimento'];
                     $this->ultima_empresa = $detalhe_fisica['ultima_empresa'];
-                    $this->idocup = $detalhe_fisica['idocup'];
                     $this->nome_mae = $detalhe_fisica['nome_mae'];
                     $this->nome_pai = $detalhe_fisica['nome_pai'];
                     $this->nome_conjuge = $detalhe_fisica['nome_conjuge'];
@@ -416,9 +411,6 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['ultima_empresa'] = $this->ultima_empresa;
                     $tupla[] = &$tupla['ultima_empresa'];
-
-                    $tupla['idocup'] = $this->idocup;
-                    $tupla[] = &$tupla['idocup'];
 
                     $tupla['nome_mae'] = $this->nome_mae;
                     $tupla[] = &$tupla['nome_mae'];

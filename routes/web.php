@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;
-use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;

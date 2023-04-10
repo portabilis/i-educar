@@ -47,10 +47,6 @@ class App_Unificacao_Servidor extends App_Unificacao_Base
             'coluna' => 'servidor_id'
         ],
         [
-            'tabela' => 'modules.docente_licenciatura',
-            'coluna' => 'servidor_id'
-        ],
-        [
             'tabela' => 'pmieducar.turma',
             'coluna' => 'ref_cod_regente'
         ],

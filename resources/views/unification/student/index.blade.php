@@ -23,6 +23,16 @@
                     @include('form.select-school')
                 </td>
             </tr>
+            <tr>
+                <td class="formmdtd" valign="top">
+                    <span class="form">Nome do aluno:</span>
+                </td>
+                <td class="formmdtd" valign="top">
+                    <span class="form">
+                        <input class="obrigatorio" type="text" name="name" id="name" value="{{old('name', Request::get('name'))}}" size="50" maxlength="255">
+                    </span>
+                </td>
+            </tr>
             </tbody>
         </table>
 

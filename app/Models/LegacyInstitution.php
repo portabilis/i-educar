@@ -49,12 +49,9 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         'orgao_regional'
     ];
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_base_remanejamento',
-        'data_educacenso',
+    protected $casts = [
+        'data_base_remanejamento' => 'date',
+        'data_educacenso' => 'date',
     ];
 
     /**
