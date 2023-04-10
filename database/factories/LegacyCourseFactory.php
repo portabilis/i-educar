@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LegacyCourse;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyCourseFactory extends Factory
@@ -34,6 +35,7 @@ class LegacyCourseFactory extends Factory
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
             'hora_falta' => 0.75,
             'ativo' => 1,
+            'modalidade_curso' => ModalidadeCurso::ENSINO_REGULAR,
         ];
     }
 
@@ -59,7 +61,7 @@ class LegacyCourseFactory extends Factory
                     'etapa_curso' => $year,
                     'idade_inicial' => $age++,
                     'idade_final' => $age,
-                    'concluinte' => intval($total === $year),
+                    'concluinte' => $total === $year ? 2 : 1,
                     'dias_letivos' => 200,
                     'carga_horaria' => 800,
                 ]);
