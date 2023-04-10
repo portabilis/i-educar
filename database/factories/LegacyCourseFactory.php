@@ -23,9 +23,9 @@ class LegacyCourseFactory extends Factory
     {
         return [
             'ref_usuario_cad' => 1,
-            'ref_cod_tipo_regime' => fn () => LegacyRegimeTypeFactory::new()->create(),
-            'ref_cod_nivel_ensino' => fn () => LegacyEducationLevelFactory::new()->create(),
-            'ref_cod_tipo_ensino' => fn () => LegacyEducationTypeFactory::new()->create(),
+            'ref_cod_tipo_regime' => fn () => LegacyRegimeTypeFactory::new()->current(),
+            'ref_cod_nivel_ensino' => fn () => LegacyEducationLevelFactory::new()->current(),
+            'ref_cod_tipo_ensino' => fn () => LegacyEducationTypeFactory::new()->current(),
             'nm_curso' => $this->faker->words(3, true),
             'descricao' => $this->faker->words(3, true),
             'sgl_curso' => $this->faker->word,
@@ -35,6 +35,14 @@ class LegacyCourseFactory extends Factory
             'hora_falta' => 0.75,
             'ativo' => 1,
         ];
+    }
+
+    public function withName(string $name): static
+    {
+        return $this->state([
+            'nm_curso' => $name,
+            'descricao' => $name,
+        ]);
     }
 
     public function standardAcademicYear(): self

@@ -28,4 +28,9 @@ class LegacyEducationLevelFactory extends Factory
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
     }
+
+    public function current(): LegacyEducationLevel
+    {
+        return LegacyEducationLevel::query()->first() ?? $this->create();
+    }
 }
