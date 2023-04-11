@@ -23,6 +23,36 @@ class LegacyStudentFactory extends Factory
         ];
     }
 
+    public function withAge(int $age): static
+    {
+        return $this->afterMaking(function (LegacyStudent $student) use ($age) {
+            $year = now()->year - $age;
+            $date = $this->faker->dateTimeBetween("$year-01-01", "$year-12-31");
+
+            $student->individual->update([
+                'data_nasc' => $date,
+            ]);
+        });
+    }
+
+    public function male(): static
+    {
+        return $this->afterMaking(function (LegacyStudent $student) {
+            $student->individual->update([
+                'sexo' => 'M',
+            ]);
+        });
+    }
+
+    public function female(): static
+    {
+        return $this->afterMaking(function (LegacyStudent $student) {
+            $student->individual->update([
+                'sexo' => 'F',
+            ]);
+        });
+    }
+
     public function inactive(): static
     {
         return $this->state(function () {
