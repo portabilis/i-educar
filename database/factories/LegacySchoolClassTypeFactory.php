@@ -32,6 +32,14 @@ class LegacySchoolClassTypeFactory extends Factory
         ];
     }
 
+    public function current(): LegacySchoolClassType
+    {
+        return LegacySchoolClassType::query()->first() ?? $this->create([
+            'nm_tipo' => 'Tipo de Turma Padrão',
+            'sgl_tipo' => 'P',
+        ]);
+    }
+
     public function unique(): self
     {
         return $this->state(function () {
