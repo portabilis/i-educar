@@ -2,30 +2,29 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
 use App\Models\LegacyIndividual;
+use App_Model_ZonaLocalizacao;
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\People\MaritalStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyIndividualFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyIndividual::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [
             'idpes' => fn () => LegacyPersonFactory::new()->create(),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
-            'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
+            'zona_localizacao_censo' => App_Model_ZonaLocalizacao::URBANA,
+            'data_nasc' => $this->faker->dateTimeBetween(),
+            'sexo' => $this->faker->randomElement(['F', 'M']),
+            'ideciv' => MaritalStatus::SINGLE,
+            'pais_residencia' => PaisResidencia::BRASIL,
+            'idmun_nascimento' => City::query()->inRandomOrder()->first(),
             'idpes_pai' => null,
             'idpes_mae' => null,
         ];
@@ -40,7 +39,7 @@ class LegacyIndividualFactory extends Factory
 
     public function father(): self
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'idpes_pai' => fn () => LegacyIndividualFactory::new()->create(),
             ];
@@ -49,7 +48,7 @@ class LegacyIndividualFactory extends Factory
 
     public function mother(): self
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'idpes_mae' => fn () => LegacyIndividualFactory::new()->create(),
             ];
@@ -57,7 +56,7 @@ class LegacyIndividualFactory extends Factory
     }
     public function guardian(): self
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'idpes_responsavel' => fn () => LegacyIndividualFactory::new()->create(),
             ];
