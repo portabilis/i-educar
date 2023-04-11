@@ -143,4 +143,28 @@ class LegacySchoolFactory extends Factory
             });
         });
     }
+
+    public function withSemesterAsStageType(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            $semester = LegacyStageTypeFactory::new()->semester();
+
+            LegacySchoolAcademicYearFactory::new()
+                ->withStageType($semester)
+                ->withSchool($school)
+                ->create();
+        });
+    }
+
+    public function withBimonthlyAsStageType(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            $bimonthly = LegacyStageTypeFactory::new()->bimonthly();
+
+            LegacySchoolAcademicYearFactory::new()
+                ->withStageType($bimonthly)
+                ->withSchool($school)
+                ->create();
+        });
+    }
 }
