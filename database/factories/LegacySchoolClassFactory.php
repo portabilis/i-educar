@@ -109,6 +109,7 @@ class LegacySchoolClassFactory extends Factory
                 ->where('ref_cod_curso', $schoolClass->ref_cod_curso)
                 ->first();
 
+            # TODO
             $schoolGrade = LegacySchoolGradeFactory::new()->useSchoolCourse($schoolCourse)->create();
 
             LegacySchoolClassGradeFactory::new()->create([

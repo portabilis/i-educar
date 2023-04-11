@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\LegacyCourse;
 use App\Models\LegacySchool;
 use App_Model_ZonaLocalizacao;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -69,6 +70,23 @@ class LegacySchoolFactory extends Factory
                 'school_id' => $school,
                 'chief' => true, // Gestor Principal
             ]);
+        });
+    }
+
+    public function withCourse(LegacyCourse $course): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) use ($course) {
+            $schoolCourse = LegacySchoolCourseFactory::new()->create([
+                'ref_cod_escola' => $school,
+                'ref_cod_curso' => $course,
+            ]);
+
+            $course->grades->each(fn ($grade) => LegacySchoolGradeFactory::new()
+                ->create([
+                    'ref_cod_escola' => $school,
+                    'ref_cod_serie' => $grade,
+                    'anos_letivos' => $schoolCourse->anos_letivos,
+                ]));
         });
     }
 }
