@@ -3,24 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\LegacyStudent;
-use App\Models\TransportationVehicleType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyStudentFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyStudent::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [
@@ -30,13 +19,13 @@ class LegacyStudentFactory extends Factory
             'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
             'tipo_responsavel' => 'a',
             'data_cadastro' => now(),
-            'veiculo_transporte_escolar' => '{'.TransportationVehicleType::VAN.'}'
+            'tipo_transporte' => 0,
         ];
     }
 
-    public function inactive()
+    public function inactive(): static
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'ativo' => 0,
                 'data_exclusao' => Carbon::now()
@@ -44,18 +33,18 @@ class LegacyStudentFactory extends Factory
         });
     }
 
-    public function notGuardian()
+    public function notGuardian(): static
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'tipo_responsavel' => null
             ];
         });
     }
 
-    public function father()
+    public function father(): static
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'ref_idpes' => fn () => LegacyIndividualFactory::new()->father()->create(),
                 'tipo_responsavel' => null
@@ -63,18 +52,18 @@ class LegacyStudentFactory extends Factory
         });
     }
 
-    public function mother()
+    public function mother(): static
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'ref_idpes' => fn () => LegacyIndividualFactory::new()->mother()->create(),
                 'tipo_responsavel' => null
             ];
         });
     }
-    public function guardian()
+    public function guardian(): static
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'ref_idpes' => fn () => LegacyIndividualFactory::new()->guardian()->create(),
                 'tipo_responsavel' => null
