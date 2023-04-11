@@ -8,6 +8,7 @@ return new class extends clsDetalhe {
     public $ref_serie_destino;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
+    public $id;
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
@@ -16,13 +17,9 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Sequência Enturmação - Detalhe';
 
-        $this->ref_serie_origem = $_GET['ref_serie_origem'];
-        $this->ref_serie_destino = $_GET['ref_serie_destino'];
-
+        $this->id = $_GET['id'];
 
         $registro = LegacySequenceGrade::query()
-            ->whereGradeOrigin($this->ref_serie_origem)
-            ->whereGradeDestiny($this->ref_serie_destino)
             ->with([
                 'gradeOrigin:cod_serie,nm_serie,ref_cod_curso',
                 'gradeDestiny:cod_serie,nm_serie,ref_cod_curso',
@@ -30,7 +27,7 @@ return new class extends clsDetalhe {
                 'gradeDestiny.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
                 'gradeOrigin.course.institution:cod_instituicao,nm_instituicao'
             ])
-            ->first();
+            ->find($this->id);
 
         if (! $registro) {
             $this->simpleRedirect('educar_sequencia_serie_lst.php');
@@ -58,7 +55,7 @@ return new class extends clsDetalhe {
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3)) {
             $this->url_novo = 'educar_sequencia_serie_cad.php';
-            $this->url_editar = "educar_sequencia_serie_cad.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}";
+            $this->url_editar = "educar_sequencia_serie_cad.php?id={$this->id}";
         }
 
         $this->url_cancelar = 'educar_sequencia_serie_lst.php';

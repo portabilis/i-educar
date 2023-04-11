@@ -16,6 +16,7 @@ return new class extends clsCadastro {
     public $ref_serie_destino;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
+    public $id;
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
@@ -31,28 +32,21 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->ref_serie_origem=$_GET['ref_serie_origem'];
-        $this->ref_serie_destino=$_GET['ref_serie_destino'];
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
+        if (is_numeric($this->id)) {
+            $registro = LegacySequenceGrade::query()
+                ->find($this->id);
 
-        if (is_numeric($this->ref_serie_origem) && is_numeric($this->ref_serie_destino)) {
-            $registro =  LegacySequenceGrade::query()
-                ->whereGradeOrigin($this->ref_serie_origem)
-                ->whereGradeDestiny($this->ref_serie_destino)
-                ->first();
+            $this->ref_serie_origem = $registro['ref_serie_origem'];
+            $this->ref_serie_destino = $registro['ref_serie_destino'];
 
             if ($registro) {
-                $obj_ref_serie_origem = new clsPmieducarSerie($this->ref_serie_origem);
-                $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
-                $this->ref_curso_origem = $det_ref_serie_origem['ref_cod_curso'];
-                $obj_ref_curso_origem = new clsPmieducarCurso($this->ref_curso_origem);
-                $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-                $this->ref_cod_instituicao = $det_ref_curso_origem['ref_cod_instituicao'];
-                $obj_ref_serie_destino = new clsPmieducarSerie($this->ref_serie_destino);
-                $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
-                $this->ref_curso_destino = $det_ref_serie_destino['ref_cod_curso'];
+                $this->ref_curso_origem = $registro->gradeOrigin->ref_cod_curso;
+                $this->ref_cod_instituicao = $registro->gradeOrigin->course->ref_cod_instituicao;
+                $this->ref_curso_destino = $registro->gradeDestiny->ref_cod_curso;
 
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -65,7 +59,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}" : 'educar_sequencia_serie_lst.php';
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_sequencia_serie_det.php?id={$this->id}" : 'educar_sequencia_serie_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
@@ -166,9 +160,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
         $det_sequencia = LegacySequenceGrade::query()
-            ->whereGradeOrigin($this->ref_serie_origem)
-            ->whereGradeDestiny($this->ref_serie_destino)
-            ->first();
+            ->find($this->id);
 
         if (!$det_sequencia) {
             $cadastrou = LegacySequenceGrade::create([
@@ -212,7 +204,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        //echo "clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);";
         $obj = LegacySequenceGrade::query()
             ->whereGradeOrigin($this->ref_serie_origem)
             ->whereGradeDestiny($this->ref_serie_destino)
@@ -221,10 +212,8 @@ return new class extends clsCadastro {
 
         if (!$obj) {
             $objEdicao = LegacySequenceGrade::query()
-                ->whereGradeOrigin($this->serie_origem_old)
-                ->whereGradeDestiny($this->serie_destino_old)
                 ->active()
-                ->first();
+                ->find(request('id'));
 
             $objEdicao->fill([
                 'ref_serie_origem' => $this->ref_serie_origem,
@@ -254,9 +243,7 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
         $obj = LegacySequenceGrade::query()
-            ->whereGradeOrigin($this->ref_serie_origem)
-            ->whereGradeDestiny($this->ref_serie_destino)
-            ->first();
+            ->find(request('id'));
 
         if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';

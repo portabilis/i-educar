@@ -128,15 +128,16 @@ return new class extends clsListagem {
         // monta a lista
         if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
+                $url = "educar_sequencia_serie_det.php?id={$registro->id}";
                 $lista_busca = [
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro->gradeOrigin->course->name}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro->gradeOrigin->name}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro->gradeDestiny->course->name}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro->gradeDestiny->name}</a>"
+                    "<a href=\"{$url}\">{$registro->gradeOrigin->course->name}</a>",
+                    "<a href=\"{$url}\">{$registro->gradeOrigin->name}</a>",
+                    "<a href=\"{$url}\">{$registro->gradeDestiny->course->name}</a>",
+                    "<a href=\"{$url}\">{$registro->gradeDestiny->name}</a>"
                 ];
 
                 if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro->gradeOrigin->course->institution->name}</a>";
+                    $lista_busca[] = "<a href=\"{$url}\">{$registro->gradeOrigin->course->institution->name}</a>";
                 }
                 $this->addLinhas($lista_busca);
             }
