@@ -17,11 +17,11 @@ class LegacyRegistrationDisciplinaryOccurrenceTypeFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_matricula' => LegacyRegistrationFactory::new()->create(),
-            'ref_cod_tipo_ocorrencia_disciplinar' => LegacyDisciplinaryOccurrenceTypeFactory::new()->create(),
+            'ref_cod_matricula' => fn () => LegacyRegistrationFactory::new()->create(),
+            'ref_cod_tipo_ocorrencia_disciplinar' => fn () => LegacyDisciplinaryOccurrenceTypeFactory::new()->create(),
             'sequencial' => 1,
             'ref_usuario_exc' => null,
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'observacao' => $this->faker->paragraph(),
             'data_exclusao' => null,
             'visivel_pais' => fn () => $this->faker->boolean()

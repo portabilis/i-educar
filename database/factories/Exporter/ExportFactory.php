@@ -15,7 +15,7 @@ class ExportFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => LegacyUserFactory::new()->unique()->make(),
+            'user_id' => fn () => LegacyUserFactory::new()->current(),
             'model' => Enrollment::class,
             'fields' => ['registration_id'],
             'hash' =>  md5(time()),

@@ -16,9 +16,9 @@ class LogUnificationFactory extends Factory
             'type' => Student::class,
             'duplicates_id' => '[]',
             'active' => $this->faker->boolean(),
-            'main_id' => static fn () => LegacyStudentFactory::new()->create(),
-            'created_by' => static fn () => LegacyIndividualFactory::new()->create(),
-            'updated_by' => static fn () => LegacyIndividualFactory::new()->create(),
+            'main_id' => fn () => LegacyStudentFactory::new()->create(),
+            'created_by' => fn () => LegacyIndividualFactory::new()->create(),
+            'updated_by' => fn () => LegacyIndividualFactory::new()->create(),
         ];
     }
 }

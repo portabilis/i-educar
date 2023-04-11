@@ -12,9 +12,9 @@ class LegacyCalendarYearFactory extends Factory
     public function definition()
     {
         return [
-            'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'ano' => now()->year,
         ];
     }
