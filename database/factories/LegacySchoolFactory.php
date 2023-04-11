@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\LegacyCourse;
 use App\Models\LegacySchool;
-use App\Models\LegacySchoolCourse;
 use App_Model_ZonaLocalizacao;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;

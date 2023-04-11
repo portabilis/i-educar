@@ -54,7 +54,7 @@ class LegacyCourseFactory extends Factory
 
         return $this->afterCreating(function (LegacyCourse $course) use ($age, $total) {
             for ($year = 1; $year <= $total; $year++) {
-                LegacyGradeFactory::new()->create([
+                $to = LegacyGradeFactory::new()->create([
                     'ref_cod_curso' => $course,
                     'nm_serie' => $year . 'º ano',
                     'descricao' => $year . 'º ano',
@@ -65,6 +65,15 @@ class LegacyCourseFactory extends Factory
                     'dias_letivos' => 200,
                     'carga_horaria' => 800,
                 ]);
+
+                if (isset($from)) {
+                    LegacyGradeSequenceFactory::new()->create([
+                        'ref_serie_origem' => $from,
+                        'ref_serie_destino' => $to,
+                    ]);
+                }
+
+                $from = $to;
             }
         })->state([
             'qtd_etapas' => $total,
