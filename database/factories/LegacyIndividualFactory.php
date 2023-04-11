@@ -15,13 +15,19 @@ class LegacyIndividualFactory extends Factory
 
     public function definition(): array
     {
+        $male = $this->faker->boolean();
+        $name = $male ? $this->faker->firstNameMale() : $this->faker->firstNameFemale();
+        $gender = $male ? 'M' : 'F';
+
         return [
-            'idpes' => fn () => LegacyPersonFactory::new()->create(),
+            'idpes' => fn () => LegacyPersonFactory::new()->create([
+                'nome' => $name,
+            ]),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
             'zona_localizacao_censo' => App_Model_ZonaLocalizacao::URBANA,
             'data_nasc' => $this->faker->dateTimeBetween(),
-            'sexo' => $this->faker->randomElement(['F', 'M']),
+            'sexo' => $gender,
             'ideciv' => MaritalStatus::SINGLE,
             'pais_residencia' => PaisResidencia::BRASIL,
             'idmun_nascimento' => City::query()->inRandomOrder()->first(),
@@ -34,6 +40,16 @@ class LegacyIndividualFactory extends Factory
     {
         return LegacyIndividual::query()->first() ?? $this->create([
             'idpes' => fn () => LegacyPersonFactory::new()->current(),
+        ]);
+    }
+
+    public function withAge(int $age): static
+    {
+        $year = now()->year - $age;
+        $date = $this->faker->dateTimeBetween("$year-01-01", "$year-12-31");
+
+        return $this->state([
+            'data_nasc' => $date,
         ]);
     }
 
