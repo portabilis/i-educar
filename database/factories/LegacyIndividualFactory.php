@@ -26,6 +26,8 @@ class LegacyIndividualFactory extends Factory
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
             'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
+            'idpes_pai' => null,
+            'idpes_mae' => null,
         ];
     }
 
