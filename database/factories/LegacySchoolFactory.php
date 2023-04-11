@@ -96,12 +96,24 @@ class LegacySchoolFactory extends Factory
         return $this->afterCreating(function (LegacySchool $school) use ($course) {
             $course->grades->each(fn ($grade) => LegacySchoolClassFactory::new()
                 ->create([
-                    'nm_turma' => $grade->name . ' A',
+                    'nm_turma' => $grade->name . ' Matutino',
                     'sgl_turma' => mb_substr($grade->name, 0, 1),
                     'turma_turno_id' => LegacyPeriodFactory::new()->morning(),
                     'ref_ref_cod_escola' => $school,
                     'ref_ref_cod_serie' => $grade,
                     'ref_cod_curso' => $course,
+                    'max_aluno' => 20,
+                ]));
+
+            $course->grades->each(fn ($grade) => LegacySchoolClassFactory::new()
+                ->create([
+                    'nm_turma' => $grade->name . ' Vespertino',
+                    'sgl_turma' => mb_substr($grade->name, 0, 1),
+                    'turma_turno_id' => LegacyPeriodFactory::new()->afternoon(),
+                    'ref_ref_cod_escola' => $school,
+                    'ref_ref_cod_serie' => $grade,
+                    'ref_cod_curso' => $course,
+                    'max_aluno' => 20,
                 ]));
         });
     }
@@ -111,10 +123,12 @@ class LegacySchoolFactory extends Factory
         return $this->afterCreating(function (LegacySchool $school) use ($count) {
             $school->schoolClasses->each(function (LegacySchoolClass $schoolClass) use ($count) {
                 for ($i = 0; $i < $count; $i++) {
+                    $random = $this->faker->randomElement([0, 1, -1]);
+
                     $individual = LegacyIndividualFactory::new()
                         ->father()
                         ->mother()
-                        ->withAge($schoolClass->grade->idade_inicial)
+                        ->withAge($schoolClass->grade->idade_inicial + $random)
                         ->create();
 
                     $student = LegacyStudentFactory::new()->create([

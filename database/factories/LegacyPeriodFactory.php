@@ -23,4 +23,11 @@ class LegacyPeriodFactory extends Factory
             'nome' => 'Matutino',
         ]);
     }
+
+    public function afternoon(): LegacyPeriod
+    {
+        return LegacyPeriod::query()->where('nome', 'Vespertino')->first() ?? $this->create([
+            'nome' => 'Vespertino',
+        ]);
+    }
 }

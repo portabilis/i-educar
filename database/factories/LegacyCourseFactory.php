@@ -59,6 +59,7 @@ class LegacyCourseFactory extends Factory
                     'nm_serie' => $year . 'º ano',
                     'descricao' => $year . 'º ano',
                     'etapa_curso' => $year,
+                    'idade_ideal' => $age,
                     'idade_inicial' => $age++,
                     'idade_final' => $age,
                     'concluinte' => $total === $year ? 2 : 1,
