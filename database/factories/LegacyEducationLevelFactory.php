@@ -31,6 +31,9 @@ class LegacyEducationLevelFactory extends Factory
 
     public function current(): LegacyEducationLevel
     {
-        return LegacyEducationLevel::query()->first() ?? $this->create();
+        return LegacyEducationLevel::query()->first() ?? $this->create([
+            'nm_nivel' => 'Nível de Ensino Padrão',
+            'descricao' => 'Nível de Ensino Padrão',
+        ]);
     }
 }

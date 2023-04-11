@@ -31,6 +31,8 @@ class LegacyEducationTypeFactory extends Factory
 
     public function current(): LegacyEducationType
     {
-        return LegacyEducationType::query()->first() ?? $this->create();
+        return LegacyEducationType::query()->first() ?? $this->create([
+            'nm_tipo' => 'Tipo de Ensino Padrão',
+        ]);
     }
 }

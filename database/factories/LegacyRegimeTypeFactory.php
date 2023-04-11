@@ -30,6 +30,8 @@ class LegacyRegimeTypeFactory extends Factory
 
     public function current(): LegacyRegimeType
     {
-        return LegacyRegimeType::query()->first() ?? $this->create();
+        return LegacyRegimeType::query()->first() ?? $this->create([
+            'nm_tipo' => 'Tipo de Regime Padrão',
+        ]);
     }
 }
