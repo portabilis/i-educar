@@ -22,7 +22,7 @@ class LegacyGeneralDescriptiveOpinionFactory extends Factory
     public function definition(): array
     {
         return [
-            'parecer_aluno_id' => LegacyStudentDescriptiveOpinionFactory::new()->create(),
+            'parecer_aluno_id' => fn () => LegacyStudentDescriptiveOpinionFactory::new()->create(),
             'parecer' => $this->faker->text,
             'etapa' => $this->faker->randomElement(['1', '2', '3', '4']),
         ];

@@ -22,7 +22,7 @@ class LegacyKnowledgeAreaFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'instituicao_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'nome' => $this->faker->words(3, true),
         ];
     }

@@ -27,7 +27,7 @@ class EducacensoInstitutionFactory extends Factory
             'dependencia_administrativa_id' => 1,
             'tipo_instituicao_id' => $this->faker->numberBetween(10000, 99999),
             'uf' => 'SC',
-            'user_id' => LegacyUserFactory::new()->unique()->make(),
+            'user_id' => fn () => LegacyUserFactory::new()->current(),
             'created_at' => now(),
         ];
     }

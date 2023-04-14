@@ -71,6 +71,7 @@ class LegacyRegistration extends LegacyModel
 
     protected $casts = [
         'data_matricula' => 'date',
+        'data_cancel' => 'date',
     ];
 
     public array $legacy = [

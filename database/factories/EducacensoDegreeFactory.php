@@ -25,7 +25,7 @@ class EducacensoDegreeFactory extends Factory
             'curso_id' => $this->faker->uuid,
             'nome' => $this->faker->name(),
             'classe_id' => $this->faker->randomDigitNotZero(),
-            'user_id' => LegacyUserFactory::new()->unique()->make(),
+            'user_id' => fn () => LegacyUserFactory::new()->current(),
             'created_at' => now(),
             'grau_academico' => $this->faker->numberBetween(1, 5)
         ];

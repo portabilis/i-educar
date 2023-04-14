@@ -21,7 +21,7 @@ class LegacySchoolGradeFactory extends Factory
             'ref_cod_serie' => fn () => LegacyGradeFactory::new()->create([
                 'ref_cod_curso' => $schoolCourse->course,
             ]),
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'data_cadastro' => now(),
             'ativo' => 1,
             'anos_letivos' => $schoolCourse->anos_letivos,
