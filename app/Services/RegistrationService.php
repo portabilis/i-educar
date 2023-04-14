@@ -111,6 +111,9 @@ class RegistrationService
                 $data['transferencia_observacoes'],
                 $registration
             );
+
+            $registration->data_cancel = DateTime::createFromFormat('d/m/Y', $data['transferencia_data']);
+            $registration->saveOrFail();
         }
 
         if ($newStatus == App_Model_MatriculaSituacao::RECLASSIFICADO) {
