@@ -248,7 +248,7 @@ class PromocaoApiController extends ApiCoreController
 
                 if ($hasNotaOrParecerInEtapa) {
                     // FIXME #parameters
-                    $falta = $this->boletimService()->getFalta($etapa) ? $this->boletimService()->getFalta($etapa)?->quantidade : null;
+                    $falta = $this->boletimService()->getFalta($etapa)?->quantidade;
 
                     if (is_null($falta)) {
                         $notaFalta = new Avaliacao_Model_FaltaGeral([
