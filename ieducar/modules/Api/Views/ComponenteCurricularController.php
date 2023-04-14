@@ -108,23 +108,60 @@ class ComponenteCurricularController extends ApiCoreController
     public function getComponentesCurricularesPorSerie()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $serieId       = $this->getRequest()->serie_id;
+            $instituicaoId      = (int) $this->getRequest()->instituicao_id;
+            $serieId            = (int) $this->getRequest()->serie_id;
+            $areaDeConhecimento = (int) $this->getRequest()->area_conhecimento;
 
-            $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, tipo_nota, array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos, area_conhecimento_id, area_conhecimento.nome AS nome_area
+            $sql = '
+                SELECT componente_curricular.id,
+                       componente_curricular.nome,
+                       carga_horaria,
+                       tipo_nota,
+                       array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos,
+                       area_conhecimento_id,
+                       area_conhecimento.nome AS nome_area,
+                       componente_curricular_ano_escolar.hora_falta,
+                       exists (SELECT * FROM modules.componente_curricular_turma cct
+                                    INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                                    WHERE TRUE
+                                        AND cct.componente_curricular_id = componente_curricular.id
+                                        AND cct.ano_escolar_id =  $3
+                        ) contem_componente_curricular_turma,
+                        exists (
+                            select * from pmieducar.matricula m
+                            join modules.nota_aluno na on na.matricula_id = m.cod_matricula
+                            join modules.nota_componente_curricular ncc on ncc.nota_aluno_id = na.id
+                            where m.ref_ref_cod_serie = $3
+                            and ncc.componente_curricular_id = componente_curricular.id
+                        ) contem_notas,
+
+                        exists (
+                            select * from pmieducar.matricula m
+                            join modules.falta_aluno fa on fa.matricula_id  = m.cod_matricula
+                            join modules.falta_componente_curricular fcc on fcc.falta_aluno_id  = fa.id
+                            where m.ref_ref_cod_serie = $3
+                            and fcc.componente_curricular_id = componente_curricular.id
+                        ) contem_faltas,
+                         exists (
+                            select * from modules.parecer_componente_curricular pcc
+                            where pcc.componente_curricular_id = componente_curricular.id
+                        ) contem_paracer
                 FROM modules.componente_curricular
-               INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
-               INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
+                    INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
+                    INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
-                  AND ano_escolar_id = ' . $serieId . '
+                  AND ano_escolar_id = $3
+                  AND modules.area_conhecimento.id = $2
                 ORDER BY nome ';
-            $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
+            $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId, $areaDeConhecimento, $serieId]);
 
-            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area'];
+            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area', 'hora_falta', 'contem_componente_curricular_turma', 'contem_notas', 'contem_faltas', 'contem_paracer'];
             $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
             foreach ($disciplinas as &$disciplina) {
                 $disciplina['anos_letivos'] = json_decode($disciplina['anos_letivos']);
+                $disciplina['hora_falta'] = (float) $disciplina['hora_falta'];
+                $disciplina['carga_horaria'] = (float) $disciplina['carga_horaria'];
             }
 
             return ['disciplinas' => $disciplinas];
@@ -139,7 +176,6 @@ class ComponenteCurricularController extends ApiCoreController
             $ano       = $this->getRequest()->ano;
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($serieId, $escolaId, null, null, null, true, $ano);
             $componente_curricular_turma = LegacyInstitution::whereHas('schools', fn ($q) => $q->where('cod_escola', $escolaId))->value('componente_curricular_turma');
-            $componentesCurriculares = [];
             $componentesCurriculares = array_map(function ($componente) use ($componente_curricular_turma){
                 return [
                     'id' => $componente->id,

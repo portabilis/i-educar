@@ -119,11 +119,14 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
             }
         } elseif ($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
             foreach ($this->_tabelaValores as $tabelaValor) {
-                $notaString = strval($return);
-                $notaString = explode('.', $return);
+                $notaString = explode('.', (string)($return));
 
                 $notaInteira = $notaString[0];
-                $casaDecimalNota = $notaString[1];
+                if (array_key_exists(1, $notaString)) {
+                    $casaDecimalNota = $notaString[1];
+                } else {
+                    $casaDecimalNota = 0;
+                }
 
                 if ($casaDecimalNota == $tabelaValor->nome) {
                     switch ($tabelaValor->get('acao')) {

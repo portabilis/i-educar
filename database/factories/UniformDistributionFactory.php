@@ -17,8 +17,8 @@ class UniformDistributionFactory extends Factory
     public function definition()
     {
         return [
-            'student_id' => LegacyStudentFactory::new()->create(),
-            'school_id' => LegacySchoolFactory::new()->create(),
+            'student_id' => fn () => LegacyStudentFactory::new()->create(),
+            'school_id' => fn () => LegacySchoolFactory::new()->create(),
             'year' => now()->year,
             'distribution_date' => now()->format('d/m/Y'),
             'complete_kit' => $this->faker->boolean,

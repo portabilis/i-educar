@@ -22,7 +22,7 @@ class LegacyDisciplineDescriptiveOpinionFactory extends Factory
     public function definition(): array
     {
         return [
-            'parecer_aluno_id' => LegacyStudentDescriptiveOpinionFactory::new()->create(),
+            'parecer_aluno_id' => fn () => LegacyStudentDescriptiveOpinionFactory::new()->create(),
             'componente_curricular_id' =>fn () => LegacyDisciplineFactory::new()->create(),
             'parecer' => $this->faker->text,
             'etapa' => $this->faker->randomDigitNotZero(),

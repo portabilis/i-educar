@@ -22,22 +22,27 @@ class LegacyIndividualFactory extends Factory
     public function definition(): array
     {
         return [
-            'idpes' => static fn () => LegacyPersonFactory::new()->create(),
+            'idpes' => fn () => LegacyPersonFactory::new()->create(),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
-            'idpes_mae' => static fn () => LegacyPersonFactory::new()->create(),
-            'idpes_pai' => static fn () => LegacyPersonFactory::new()->create(),
-            'idpes_responsavel' => static fn () =>LegacyPersonFactory::new()->create(),
-            'data_nasc' => now()->format('Y-m-d'),
             'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
+            'idpes_pai' => null,
+            'idpes_mae' => null,
         ];
+    }
+
+    public function current(): LegacyIndividual
+    {
+        return LegacyIndividual::query()->first() ?? $this->create([
+            'idpes' => fn () => LegacyPersonFactory::new()->current(),
+        ]);
     }
 
     public function father(): self
     {
         return $this->state(function (array $attributes) {
             return [
-                'idpes_pai' => LegacyIndividualFactory::new()->create(),
+                'idpes_pai' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }
@@ -46,7 +51,7 @@ class LegacyIndividualFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'idpes_mae' => LegacyIndividualFactory::new()->create(),
+                'idpes_mae' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }
@@ -54,7 +59,7 @@ class LegacyIndividualFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'idpes_responsavel' => LegacyIndividualFactory::new()->create(),
+                'idpes_responsavel' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }

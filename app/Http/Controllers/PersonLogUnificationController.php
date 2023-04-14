@@ -28,7 +28,7 @@ class PersonLogUnificationController extends Controller
                         $individualQuery->where('cpf', str_replace(['.', '-'], '', $cpf));
                     });
                 });
-            });
+            })->latest();
 
         return view('unification.person.index', ['unifications' => $unificationsQuery->paginate(20)]);
     }

@@ -694,7 +694,9 @@
       }
 
       if (areasConhecimentoSerie) {
-        selectOptions = areasConhecimentoSerie;
+        areasConhecimentoSerie.forEach((area) => {
+          selectOptions[area.id] = area.nome
+        });
       }
 
       updateChozen(areaConhecimentoField, selectOptions);

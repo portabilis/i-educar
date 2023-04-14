@@ -5,6 +5,7 @@ use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacyStudent;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -389,14 +390,7 @@ return new class extends clsCadastro {
 
         //novas regras matricula aluno
         $this->ano = $_POST['ano'];
-        $anoLetivoEmAndamentoEscola = new clsPmieducarEscolaAnoLetivo();
-
-        $anoLetivoEmAndamentoEscola = $anoLetivoEmAndamentoEscola->lista(
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_ano: $this->ano,
-            int_andamento: 1, /*somente em andamento */
-            int_ativo: 1
-        );
+        $anoLetivoEmAndamentoEscola = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->inProgress()->active()->exists();
 
         $objEscolaSerie = new clsPmieducarEscolaSerie();
         $dadosEscolaSerie = $objEscolaSerie->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
@@ -405,7 +399,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (is_array(value: $anoLetivoEmAndamentoEscola)) {
+        if ($anoLetivoEmAndamentoEscola) {
             $db = new clsBanco();
 
             $db->Consulta(consulta: "SELECT ref_ref_cod_serie, ref_cod_curso

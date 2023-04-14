@@ -149,10 +149,10 @@ class Registro002019ImportTest extends TestCase
         $model = new Registro00();
 
         $model->codigoInep = $faker->numerify('########');
-        $model->nome = $faker->name;
+        $model->nome = $faker->name();
         $model->codigoIbgeMunicipio = $faker->numerify('########');
         $model->codigoIbgeDistrito = $faker->numerify('########');
-        $model->bairro = $faker->name;
+        $model->bairro = $faker->name();
         $model->numero = $faker->randomNumber(2);
 
         return $model;

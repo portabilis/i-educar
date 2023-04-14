@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyInstitution;
+use App\Models\LegacySchoolAcademicYear;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro {
@@ -40,12 +41,11 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $anoLetivo = new clsPmieducarEscolaAnoLetivo();
-        $anoLetivo = $anoLetivo->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ano: null, int_ref_usuario_cad: null, int_ref_usuario_exc: null, int_andamento: 1);
+        $anoLetivos = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->inProgress()->active()->get(['id']);
 
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
-        if (count(value: $anoLetivo) > 1) {
+        if ($anoLetivos->count() > 1) {
             Session::now('notice', 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.');
 
             return false;
@@ -53,12 +53,10 @@ return new class extends clsCadastro {
 
         // Valida se a data da matrícula não é menor que a data do início do
         // ano letivo.
+        $anoLetivo = $anoLetivos->first();
+        $dataInicio = $anoLetivo->academicYearStages()->orderBySequencial()->value('data_inicio');
 
-        $obj = new clsPmieducarAnoLetivoModulo();
-        $obj->setOrderBy(strNomeCampo: 'sequencial ASC');
-        $registros = $obj->lista(int_ref_ano: $anoLetivo[0]['ano'], int_ref_ref_cod_escola: $this->ref_cod_escola);
-
-        $inicioAnoLetivo = $registros[0]['data_inicio'];
+        $inicioAnoLetivo = $dataInicio->format('Y-m-d');
 
         /** @var LegacyInstitution $instituicao */
         $instituicao = app(abstract: LegacyInstitution::class);

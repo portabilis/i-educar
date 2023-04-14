@@ -23,7 +23,7 @@ class FileRelationFactory extends Factory
     {
         return [
             'type' => 'App\Models\LegacyIndividual',
-            'relation_id' => LegacyIndividualFactory::new()->create(),
+            'relation_id' => fn () => LegacyIndividualFactory::new()->create(),
             'file_id' => FileFactory::new()->create(),
         ];
     }

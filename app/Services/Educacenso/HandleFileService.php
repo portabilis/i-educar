@@ -66,7 +66,7 @@ class HandleFileService
     {
         $import = new EducacensoImport();
         $import->year = $this->yearImportService->getYear();
-        $import->school = utf8_encode($this->yearImportService->getSchoolNameByFile($school));
+        $import->school = mb_convert_encoding($this->yearImportService->getSchoolNameByFile($school), 'UTF-8');
         $import->user_id = $this->user->id;
         $import->registration_date = $this->yearImportService->registrationDate;
         $import->finished = false;

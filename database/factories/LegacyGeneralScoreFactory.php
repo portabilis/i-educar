@@ -22,7 +22,7 @@ class LegacyGeneralScoreFactory extends Factory
     public function definition(): array
     {
         return [
-            'nota_aluno_id' => LegacyRegistrationScoreFactory::new()->create(),
+            'nota_aluno_id' => fn () => LegacyRegistrationScoreFactory::new()->create(),
             'nota' => $this->faker->randomFloat(1, 0, 10),
             'nota_arredondada' => $this->faker->randomFloat(1, 0, 10),
             'etapa' => 1,

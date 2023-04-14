@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyRole;
+
 return new class extends clsDetalhe {
     public $titulo;
 
@@ -63,13 +66,8 @@ return new class extends clsDetalhe {
 
         //Função
         if ($this->ref_cod_servidor_funcao) {
-            $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $this->ref_cod_servidor_funcao);
-            $funcaoServidor = $funcaoServidor->detalhe();
-
-            $funcao = new clsPmieducarFuncao($funcaoServidor['ref_cod_funcao']);
-            $funcao = $funcao->detalhe();
-
-            $this->addDetalhe(['Função', "{$funcao['nm_funcao']}"]);
+            $employeeRole = LegacyEmployeeRole::find($this->ref_cod_servidor_funcao);
+            $this->addDetalhe(['Função', $employeeRole->role->name]);
         }
 
         //Vinculo

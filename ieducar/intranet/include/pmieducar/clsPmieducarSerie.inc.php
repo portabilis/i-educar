@@ -729,38 +729,6 @@ class clsPmieducarSerie extends Model
     }
 
     /**
-     * Seleciona as série que não estejam cadastradas na escola.
-     *
-     * @param int $ref_cod_curso
-     * @param int $ref_cod_escola
-     *
-     * @return array
-     */
-    public function getNotEscolaSerie($ref_cod_curso, $ref_cod_escola)
-    {
-        $db = new clsBanco();
-        $sql = "SELECT *
-            FROM
-              pmieducar.serie s
-            WHERE s.ref_cod_curso = '{$ref_cod_curso}'
-            AND s.cod_serie NOT IN
-            (
-              SELECT es.ref_cod_serie
-              FROM pmieducar.escola_serie es
-              WHERE es.ref_cod_escola = '{$ref_cod_escola}'
-            )";
-
-        $db->Consulta($sql);
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla;
-        }
-
-        return $resultado;
-    }
-
-    /**
      * Verifica se a data de nascimento enviada por parâmetro está dentro do período de corte etário pré-definido.
      *
      * @param int $dataNascimento

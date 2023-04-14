@@ -22,7 +22,7 @@ class LegacyIndividualPictureFactory extends Factory
     public function definition(): array
     {
         return [
-            'idpes' => LegacyPersonFactory::new()->create(),
+            'idpes' => fn () => LegacyPersonFactory::new()->create(),
             'caminho' => $this->faker->imageUrl(),
         ];
     }

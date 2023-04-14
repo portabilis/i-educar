@@ -2,7 +2,7 @@
 
 use App\Models\UniformDistribution;
 
-return new class extends clsCadastro {
+return new class () extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -16,18 +16,21 @@ return new class extends clsCadastro {
         $retorno = 'Novo';
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         if (is_numeric(request('ref_cod_aluno')) && is_numeric(request('cod_distribuicao_uniforme'))) {
-            $this->uniformDistribution = UniformDistribution::find(request('cod_distribuicao_uniforme'));
-
-            if ($this->uniformDistribution) {
+            $exists = UniformDistribution::query()
+                        ->where('id', request('cod_distribuicao_uniforme'))
+                        ->exists();
+            if ($exists) {
+                $this->uniformDistribution = UniformDistribution::find(request('cod_distribuicao_uniforme'));
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
-
                 $retorno = 'Editar';
+            } else {
+                $this->uniformDistribution = new UniformDistribution();
             }
         } else {
             $this->uniformDistribution = new UniformDistribution();
@@ -90,7 +93,6 @@ return new class extends clsCadastro {
         ]);
 
         $this->campoQuebra();
-
 
         $this->inputsHelper()->checkbox(attrName: 'complete_kit', inputOptions: [
             'label' => 'Kit completo', 'value' => request(key: 'complete_kit', default: $this->uniformDistribution->complete_kit)
@@ -311,7 +313,7 @@ return new class extends clsCadastro {
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         $exists = UniformDistribution::where('student_id', request('ref_cod_aluno'))
             ->where('year', request('year'))
@@ -319,6 +321,13 @@ return new class extends clsCadastro {
 
         if ($exists) {
             $this->mensagem = 'Já existe uma distribuição cadastrada para este ano, por favor, verifique.<br>';
+
+            return false;
+        }
+
+        if (request('type') == 'Entregue' && request('distribution_date') == null) {
+            $this->mensagem = 'Informe a Data da distribuição do uniforme.<br>';
+
             return false;
         }
 
@@ -330,10 +339,11 @@ return new class extends clsCadastro {
         $this->uniformDistribution = UniformDistribution::create(request()->all());
 
         if ($this->uniformDistribution) {
-            $this->redirectIf(condition: true, url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+            $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -342,7 +352,7 @@ return new class extends clsCadastro {
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         $uniformDistribution = UniformDistribution::where('student_id', request('ref_cod_aluno'))
             ->where('year', request('year'))
@@ -350,6 +360,7 @@ return new class extends clsCadastro {
 
         if ($uniformDistribution->id != request('cod_distribuicao_uniforme')) {
             $this->mensagem = 'Já existe uma distribuição cadastrada para este ano, por favor, verifique.<br>';
+
             return false;
         }
 
@@ -361,25 +372,27 @@ return new class extends clsCadastro {
         $uniformDistribution->update(request()->all());
 
         if ($uniformDistribution->save()) {
-            $this->redirectIf(condition: true, url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+            $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
     public function Excluir()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+        $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         $obj = UniformDistribution::find(request('id'));
 
         if ($obj->delete()) {
-            $this->redirectIf(condition: true, url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno=".request('ref_cod_aluno'));
+            $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

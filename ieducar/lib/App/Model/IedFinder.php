@@ -1468,21 +1468,14 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getEtapasEscola($ano, $escola)
     {
-        $etapas = self::addClassToStorage(
-            'clsPmieducarAnoLetivoModulo',
-            null,
-            'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php'
-        );
-
-        $etapas->ref_ano = $ano;
-        $etapas->ref_ref_cod_escola = $escola;
-
-        $etapas = $etapas->getEtapas();
+        $academicYearStage = LegacyAcademicYearStage::query()
+            ->whereYearEq($ano)
+            ->whereSchool($escola)
+            ->get();
 
         $ret = [];
-
-        foreach ($etapas as $etapa) {
-            $ret[$etapa['id']] = $etapa['nome'];
+        foreach ($academicYearStage as $etapa) {
+            $ret[$etapa->sequencial] = $etapa->module->nm_tipo;
         }
 
         return $ret;

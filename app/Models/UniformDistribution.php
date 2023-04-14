@@ -19,10 +19,6 @@ class UniformDistribution extends Model
         'distribution_date' => 'date:d/m/Y',
     ];
 
-    protected $dates = [
-        'distribution_date'
-    ];
-
     protected $fillable = [
         'student_id',
         'year',
@@ -67,7 +63,7 @@ class UniformDistribution extends Model
     protected function distributionDate(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => Carbon::createFromFormat('d/m/Y', $value),
+            set: fn ($value) => $value ? Carbon::createFromFormat('d/m/Y', $value) : null,
         );
     }
 }

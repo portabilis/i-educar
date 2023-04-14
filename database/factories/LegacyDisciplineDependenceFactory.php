@@ -29,7 +29,7 @@ class LegacyDisciplineDependenceFactory extends Factory
             'ref_cod_escola' => $schoolGradeDiscipline->ref_ref_cod_escola,
             'ref_cod_serie' => $schoolGradeDiscipline->ref_ref_cod_serie,
             'observacao' => $this->faker->text(200),
-            'cod_disciplina_dependencia' => LegacyDisciplineFactory::new()->create(),
+            'cod_disciplina_dependencia' => fn () => LegacyDisciplineFactory::new()->create(),
         ];
     }
 }

@@ -17,10 +17,6 @@ class LegacyAccess extends LegacyModel
      */
     protected $primaryKey = 'cod_acesso';
 
-    protected $dates = [
-        'data_hora'
-    ];
-
     public array $legacy = [
         'id' => 'cod_acesso',
         'access' => 'data_hora',

@@ -2,6 +2,7 @@
 
 use App\Models\Employee;
 use App\Models\LegacyInstitution;
+use App\Models\LegacySchoolClass;
 use App\Services\iDiarioService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
@@ -24,6 +25,8 @@ return new class extends clsCadastro {
     public $ref_cod_turma;
     public $unidades_curriculares;
     public $turma_estrutura_curricular;
+    public $nm_turma;
+    public $copia = false;
 
     public function Inicializar()
     {
@@ -58,6 +61,7 @@ return new class extends clsCadastro {
                 $this->tipo_vinculo = $registro['tipo_vinculo'];
                 $this->permite_lancar_faltas_componente = $registro['permite_lancar_faltas_componente'];
                 $this->turma_turno_id = $registro['turno_id'];
+                $this->nm_turma = $registro['nm_turma'];
 
                 $obj_turma = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
                 $obj_turma = $obj_turma->detalhe();
@@ -76,6 +80,7 @@ return new class extends clsCadastro {
                 }
 
                 if (isset($_GET['copia'])) {
+                    $this->copia = true;
                     $this->ano = date(format: 'Y');
                 }
             }
@@ -106,11 +111,19 @@ return new class extends clsCadastro {
         }
 
         if (isset($_GET['copia'])) {
-            $ano = null;
+            $this->ano = $ano = date(format: 'Y');
+            $this->ref_cod_turma = LegacySchoolClass::query()
+                ->where('ref_ref_cod_escola', $this->ref_cod_escola)
+                ->where('ref_ref_cod_serie', $this->ref_cod_serie)
+                ->where('ref_cod_curso', $this->ref_cod_curso)
+                ->where('ano', $this->ano)
+                ->where('nm_turma', $this->nm_turma)
+                ->value('cod_turma');
         }
 
         $this->campoOculto(nome: 'id', valor: $this->id);
         $this->campoOculto(nome: 'servidor_id', valor: $this->servidor_id);
+        $this->campoOculto(nome: 'copia', valor: (int) $this->copia);
         $this->inputsHelper()->dynamic(helperNames: 'ano', inputOptions: ['value' => (is_null(value: $ano) ? date(format: 'Y') : $ano)]);
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'curso', 'serie', 'turma']);
 

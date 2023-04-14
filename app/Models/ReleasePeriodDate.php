@@ -15,9 +15,9 @@ class ReleasePeriodDate extends Model
 
     public $timestamps = false;
 
-    protected $dates = [
-        'start_date',
-        'end_date'
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     /**

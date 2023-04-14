@@ -11,7 +11,7 @@ class Portabilis_Messenger
     {
         if (empty($ignoreIfHasMsgWithType) || !$this->hasMsgWithType($ignoreIfHasMsgWithType)) {
             if ($encodeToUtf8) {
-                $msg = utf8_encode($msg);
+                $msg = mb_convert_encoding($msg, 'UTF-8');
             }
 
             $this->_msgs[] = ['msg' => $msg, 'type' => $type];

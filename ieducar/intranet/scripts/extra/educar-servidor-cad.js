@@ -239,9 +239,8 @@ let handleExisteServidor = function (dataResponse) {
 function direcionaParaDetalhe(dataResponse) {
   window.setTimeout(
     function() {
-      document.location = '/intranet/educar_servidor_det.php?cod_servidor=' + dataResponse.id + '&ref_cod_instituicao=1';
-      }, 300)
-  ;
+      document.location = '/intranet/educar_servidor_det.php?cod_servidor=' + dataResponse.id + '&ref_cod_instituicao=' + dataResponse.instituicao_id;
+      }, 300);
 }
 
 function makeDialog (params) {
