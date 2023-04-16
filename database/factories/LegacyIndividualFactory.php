@@ -6,7 +6,6 @@ use App\Models\City;
 use App\Models\LegacyIndividual;
 use App_Model_ZonaLocalizacao;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
-use iEducar\Modules\People\MaritalStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyIndividualFactory extends Factory
@@ -28,7 +27,7 @@ class LegacyIndividualFactory extends Factory
             'zona_localizacao_censo' => App_Model_ZonaLocalizacao::URBANA,
             'data_nasc' => $this->faker->dateTimeBetween(),
             'sexo' => $gender,
-            'ideciv' => MaritalStatus::SINGLE,
+            'ideciv' => fn () => LegacyMaritalStatusFactory::new()->current(),
             'pais_residencia' => PaisResidencia::BRASIL,
             'idmun_nascimento' => City::query()->inRandomOrder()->first(),
             'idpes_pai' => null,
