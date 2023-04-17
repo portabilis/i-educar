@@ -9,7 +9,6 @@ use App\Models\Registration;
 use App\Models\Religion;
 use App\Models\Student;
 use App\Models\TransportationProvider;
-use App\Models\TransportationVehicleType;
 use Tests\ViewTestCase;
 
 class StudentTest extends ViewTestCase
