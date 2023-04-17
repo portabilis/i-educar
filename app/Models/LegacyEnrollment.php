@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Casts\LegacyArray;
+use App\Models\Builders\LegacyEnrollmentBuilder;
 use App\Support\Database\DateSerializer;
 use DateTime;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -39,6 +39,8 @@ class LegacyEnrollment extends LegacyModel
      */
     protected $primaryKey = 'id';
 
+    protected string $builder = LegacyEnrollmentBuilder::class;
+
     /**
      * @var array
      */
@@ -65,15 +67,6 @@ class LegacyEnrollment extends LegacyModel
         'data_exclusao' => 'date',
     ];
 
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('ativo', true);
-    }
 
     protected function date(): Attribute
     {
