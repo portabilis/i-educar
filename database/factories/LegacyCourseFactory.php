@@ -81,6 +81,54 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    public function withEarlyChildhoodEducation(): static
+    {
+        return $this->afterCreating(function (LegacyCourse $course) {
+            $default = [
+                'ref_cod_curso' => $course,
+                'descricao' => null,
+                'idade_ideal' => null,
+                'concluinte' => 1,
+                'dias_letivos' => 200,
+                'carga_horaria' => 800,
+            ];
+
+            $bercario = LegacyGradeFactory::new()->create(array_merge($default, [
+                'nm_serie' => 'Berçário',
+                'etapa_curso' => 1,
+                'idade_inicial' => 0,
+                'idade_final' => 3,
+            ]));
+
+            $maternal = LegacyGradeFactory::new()->create(array_merge($default, [
+                'nm_serie' => 'Maternal',
+                'etapa_curso' => 2,
+                'idade_inicial' => 3,
+                'idade_final' => 4,
+            ]));
+
+            LegacyGradeSequenceFactory::new()->create([
+                'ref_serie_origem' => $bercario,
+                'ref_serie_destino' => $maternal,
+            ]);
+
+            $preescolar = LegacyGradeFactory::new()->create(array_merge($default, [
+                'nm_serie' => 'Pré-Escolar',
+                'etapa_curso' => 3,
+                'idade_inicial' => 4,
+                'idade_final' => 5,
+                'concluinte' => 2,
+            ]));
+
+            LegacyGradeSequenceFactory::new()->create([
+                'ref_serie_origem' => $maternal,
+                'ref_serie_destino' => $preescolar,
+            ]);
+        })->state([
+            'qtd_etapas' => 3,
+        ]);
+    }
+
     public function standardAcademicYear(): self
     {
         return $this->state(function (array $attributes) {
