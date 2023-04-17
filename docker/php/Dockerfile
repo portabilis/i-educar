@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.2-fpm-alpine
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
@@ -9,7 +9,7 @@ ENV COMPOSER_DISABLE_XDEBUG_WARN=1
 ENV XDEBUG_IDEKEY xdebug
 ENV XDEBUG_CLIENT_HOST 127.0.0.1
 ENV XDEBUG_CLIENT_PORT 9003
-ENV XDEBUG_MODE off
+ENV XDEBUG_MODE dev,debug,coverage
 ENV XDEBUG_START_WITH_REQUEST off
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

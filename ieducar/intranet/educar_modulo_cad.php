@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyStageType;
 
 return new class extends clsCadastro {
@@ -185,10 +186,9 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $obj = new clsPmieducarAnoLetivoModulo($this->cod_modulo);
-        $result = $obj->lista(int_ref_cod_modulo: $this->cod_modulo);
-
-        return !empty($result);
+        return LegacyAcademicYearStage::query()
+            ->where('ref_cod_modulo', $this->cod_modulo)
+            ->exists();
     }
 
     public function existeEtapaNaTurma()

@@ -3,6 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
+#[AllowDynamicProperties]
 abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interface
 {
     /**

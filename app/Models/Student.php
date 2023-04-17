@@ -13,11 +13,14 @@ class Student extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
     public function individual(): BelongsTo
     {
         return $this->belongsTo(Individual::class);
+    }
+
+    public function person(): BelongsTo
+    {
+        return $this->belongsTo(Person::class, 'individual_id');
     }
 
     public function religion(): BelongsTo
@@ -89,7 +92,7 @@ class Student extends Model
             get: function () {
                 $value = str_replace(['{', '}'], '', $this->transportation_vehicle_type);
 
-                return (new TransportationVehicleType())->getDescriptiveValues()[(int)$value];
+                return (new TransportationVehicleType())->getDescriptiveValues()[(int)$value] ?? null;
             }
         );
     }

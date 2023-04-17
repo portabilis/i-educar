@@ -214,7 +214,9 @@ abstract class EloquentTestCase extends TestCase
                 }
             } elseif ($type instanceof BelongsTo) {
                 $model = $factory->create();
-                $this->assertInstanceOf($class, $model->{$relation});
+                $message = 'Failed asserting that relation [%s] is an instance of class [%s].';
+                $message = sprintf($message, $relation, $class);
+                $this->assertInstanceOf($class, $model->{$relation}, $message);
             }
         }
     }

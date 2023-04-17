@@ -26,7 +26,7 @@ class clsPmieducarEscolaSerie extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_serie";
 
-        $this->_campos_lista = $this->_todos_campos = 'es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas, ARRAY_TO_JSON(es.anos_letivos) AS anos_letivos ';
+        $this->_campos_lista = $this->_todos_campos = 'es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas, ARRAY_TO_JSON(es.anos_letivos) AS anos_letivos';
 
         if (is_numeric($ref_usuario_cad)) {
             $this->ref_usuario_cad = $ref_usuario_cad;
@@ -99,6 +99,7 @@ class clsPmieducarEscolaSerie extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
+
             if (($this->hora_inicial)) {
                 $campos .= "{$gruda}hora_inicial";
                 $valores .= "{$gruda}'{$this->hora_inicial}'";

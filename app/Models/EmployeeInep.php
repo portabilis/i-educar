@@ -18,18 +18,9 @@ class EmployeeInep extends LegacyModel
      */
     protected $table = 'modules.educacenso_cod_docente';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_servidor';
-
     protected $fillable = [
         'cod_servidor',
         'cod_docente_inep'
-    ];
-
-    public array $legacy = [
-        'id' => 'cod_servidor',
     ];
 
     protected function number(): Attribute

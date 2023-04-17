@@ -5,6 +5,7 @@ namespace App\Models\Exporter\Builders;
 use App\Support\Database\JoinableBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\DB;
 
 class EnrollmentEloquentBuilder extends Builder
 {
@@ -236,5 +237,52 @@ class EnrollmentEloquentBuilder extends Builder
         }
 
         return $this;
+    }
+
+    public function transport($columns)
+    {
+        if (in_array('tipo_transporte', $columns)) {
+            unset($columns[array_search('tipo_transporte', $columns)]);
+
+            $this->addSelect(DB::raw('
+                CASE aluno.tipo_transporte
+                    WHEN 0 THEN \'Não utiliza\'::varchar
+                    WHEN 1 THEN \'Estadual\'::varchar
+                    WHEN 2 THEN \'Municipal\'::varchar
+                    ELSE \'Não utiliza\'::varchar
+                END AS tipo_transporte
+            '));
+        }
+
+        if (in_array('veiculo_transporte_escolar', $columns)) {
+            unset($columns[array_search('veiculo_transporte_escolar', $columns)]);
+            $this->addSelect(DB::raw('
+                COALESCE(
+                    (SELECT string_agg(CASE veiculo
+                            WHEN 1 THEN \'Rodoviário - Vans/Kombis\'::varchar
+                            WHEN 2 THEN \'Rodoviário - Microônibus\'::varchar
+                            WHEN 3 THEN \'Rodoviário - Ônibus\'::varchar
+                            WHEN 4 THEN \'Rodoviário - Bicicleta\'::varchar
+                            WHEN 5 THEN \'Rodoviário - Tração animal\'::varchar
+                            WHEN 6 THEN \'Rodoviário - Outro\'::varchar
+                            WHEN 7 THEN \'Aquaviário/Embarcação - Capacidade de até 5 alunos\'::varchar
+                            WHEN 8 THEN \'Aquaviário/Embarcação - Capacidade entre 5 a 15 alunos\'::varchar
+                            WHEN 9 THEN \'Aquaviário/Embarcação - Capacidade entre 15 a 35 alunos\'::varchar
+                            WHEN 10 THEN \'Aquaviário/Embarcação - Capacidade acima de 35 alunos\'::varchar
+                            WHEN 11 THEN \'Ferroviário - Trem/Metrô\'::varchar
+                            ELSE \'Não Informado\'::varchar
+                        END, \' | \') as veiculo_transporte_escolar
+                    FROM UNNEST(aluno.veiculo_transporte_escolar) as veiculo)
+                , \'Não informado\') AS veiculo_transporte_escolar
+            '));
+        }
+
+        $this->addSelect(
+            $this->joinColumns('aluno', $columns)
+        );
+
+        return $this->leftJoin('pmieducar.aluno as aluno', function (JoinClause $join) {
+            $join->on('exporter_student.student_id', '=', 'aluno.cod_aluno');
+        });
     }
 }

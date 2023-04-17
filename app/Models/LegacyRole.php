@@ -44,6 +44,13 @@ class LegacyRole extends LegacyModel
         );
     }
 
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->nm_funcao
+        );
+    }
+
     public function employeeRoles(): HasMany
     {
         return $this->hasMany(LegacyEmployeeRole::class, 'ref_cod_funcao');

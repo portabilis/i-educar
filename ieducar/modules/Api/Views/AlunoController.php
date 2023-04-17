@@ -14,6 +14,7 @@ use App\Models\LogUnification;
 use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
 use App\User;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -244,7 +245,9 @@ class AlunoController extends ApiCoreController
         }
 
         if ($strictValitation) {
-            if (validaCPF($cpf)) {
+            $ignoreValidateCpf = LegacyIndividual::where('nacionalidade', Nacionalidade::ESTRANGEIRA)->whereKey($this->getRequest()->pessoa_id)->exists();
+
+            if ($ignoreValidateCpf || validaCPF($cpf)) {
                 return true;
             }
             $this->messenger->append("O CPF informado é inválido");
@@ -549,7 +552,7 @@ class AlunoController extends ApiCoreController
     {
         $individual = LegacyIndividual::find($this->getRequest()->pessoa_id,['idpes']);
         $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
-        $news = array_filter($this->getRequest()->deficiencias);
+        $news = array_filter(array_merge($this->getRequest()->deficiencias, $this->getRequest()->transtornos));
         $individual->deficiency()->sync($news);
 
         $diff = array_merge(array_diff($old, $news),array_diff($news,$old));

@@ -84,6 +84,8 @@ class Enrollment extends Model
                 'disabilities.disabilities' => 'Deficiências',
                 'modalidade_ensino' => 'Modalidade de ensino cursada',
                 'technological_resources' => 'Recursos tecnológicos',
+                'transport.tipo_transporte' => 'Transporte escolar público',
+                'transport.veiculo_transporte_escolar' => 'Veículo utilizado',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',

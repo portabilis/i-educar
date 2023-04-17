@@ -12,7 +12,7 @@ class LegacyPersonFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome' => $this->faker->name,
+            'nome' => $this->faker->name(),
             'data_cad' => now(),
             'tipo' => $this->faker->randomElement(['F', 'J']),
             'situacao' => $this->faker->randomElement(['A', 'I', 'P']),
@@ -20,5 +20,10 @@ class LegacyPersonFactory extends Factory
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'email' => $this->faker->email(),
         ];
+    }
+
+    public function current(): LegacyPerson
+    {
+        return LegacyPerson::query()->first() ?? $this->create();
     }
 }

@@ -20,11 +20,11 @@ class LegacyTransferTypeFactory extends Factory
     public function definition()
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
             'nm_tipo' => $this->faker->firstName(),
             'desc_tipo' => $this->faker->paragraph(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make()
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current()
         ];
     }
 }

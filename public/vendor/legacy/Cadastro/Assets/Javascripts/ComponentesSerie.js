@@ -67,19 +67,55 @@ $j("#ref_cod_area_conhecimento").change(function() {
     chosenOldArray = chosenArray;
 } );
 
-function checkAll(id){
-    var isChecked = $j('#check-all-'+id).is(':checked');
-    $j( '.check_componente_area_' + id).prop( "checked", isChecked );
-    $j( '.area_conhecimento_' + id + ' .carga_horaria').prop("disabled", !isChecked);
-    $j( '.area_conhecimento_' + id + ' .tipo_nota').prop("disabled", !isChecked);
-    $j( '.area_conhecimento_' + id + ' .anos_letivos').prop("disabled", !isChecked);
-    $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
-    if(!isChecked){
-        $j( '.area_conhecimento_' + id + ' .carga_horaria').val('');
-        $j( '.area_conhecimento_' + id + ' .tipo_nota').val('');
-        $j( '.area_conhecimento_' + id + ' .anos_letivos').val('');
-        $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
+function verificaComponenteBloqueado(element) {
+
+  const id = element.id.split('_').last()
+  const input = document.getElementById('componente_' + id);
+
+  return input.hasAttribute('disabled')
+}
+
+function disableComponent(elements, isChecked, isAnosLetivos = false) {
+  elements.each(function () {
+    let isBlock = verificaComponenteBloqueado(this)
+
+    if (isBlock) {
+      return;
     }
+    $j(this).prop("disabled", !isChecked);
+  })
+
+  if (!isChecked) {
+    $j(this).val('');
+  }
+
+  if (isAnosLetivos) {
+    $j(this).trigger("chosen:updated");
+  }
+}
+
+function checkAll(id) {
+    const isChecked = $j('#check-all-'+id).is(':checked');
+
+    $j( '.check_componente_area_' + id).each(function () {
+      let isDisabled = $j(this).prop('disabled');
+
+      if (isDisabled ) {
+        return;
+      }
+
+      $j(this).prop( "checked", isChecked );
+    });
+
+    const cargasHorarias = $j( '.area_conhecimento_' + id + ' .carga_horaria');
+    const tiposNotas = $j( '.area_conhecimento_' + id + ' .tipo_nota');
+    const anosLetivos = $j( '.area_conhecimento_' + id + ' .anos_letivos');
+    const horasFalta = $j( '.area_conhecimento_' + id + ' .hora_falta');
+
+    disableComponent(cargasHorarias, isChecked);
+    disableComponent(tiposNotas, isChecked);
+    disableComponent(horasFalta, isChecked);
+    disableComponent(anosLetivos, isChecked, true);
 }
 
 function reloadChosenAnosLetivos($element){
@@ -155,12 +191,16 @@ function defaultModal(componenteId) {
 function habilitaComponente(componenteId) {
   $j( '#componente_' + componenteId).attr('checked','checked')
   $j( '#carga_horaria_' + componenteId ).prop("disabled", false);
+  $j( '#hora_falta_' + componenteId ).prop("disabled", false);
   $j( '#tipo_nota_' + componenteId ).prop("disabled", false);
   $j( '#anos_letivos_' + componenteId ).prop("disabled", false);
+
+  reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ))
 }
 
 function desabilitaComponente(componenteId) {
     $j( '#carga_horaria_' + componenteId ).prop("disabled", true).val('');
+    $j( '#hora_falta_' + componenteId ).prop("disabled", true);
     $j( '#tipo_nota_' + componenteId ).prop("disabled", true).val('');
     $j( '#anos_letivos_' + componenteId ).prop("disabled", true).val('');
     reloadChosenAnosLetivos($j( '#anos_letivos_' + componenteId ));
@@ -308,6 +348,7 @@ function handleCarregaDadosComponentesSerie(response){
     componentes.forEach(function(componente) {
       $j( '#componente_' + componente.id).prop( "checked", true );
       $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
+      $j( '#hora_falta_' + componente.id ).val(Math.round(componente.hora_falta * 60)).prop("disabled", false);
       $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
       $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
 
@@ -509,6 +550,9 @@ function htmlSubCabecalhoAreaConhecimento(id){
                     <b>Carga horária</b>
                 </td>
                 <td>
+                    <b>Hora falta (min)</b>
+                </td>
+                <td>
                     <b>Tipo de nota</b>
                 </td>
                 <td>
@@ -572,6 +616,17 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
                            value=""
                            disabled>
                            ` + iconCloneCargaHoraria + `
+                </td>
+                <td>
+                    <input type="text"
+                           size="5"
+                           maxlength="5"
+                           name="componentes[` + id + componente_id + `][hora_falta]"
+                           class="carga_horaria"
+                           id="hora_falta_` + componente_id + `"
+                           value=""
+                           disabled>
+
                 </td>
                 <td>
                     <select name="componentes[` + id + componente_id + `][tipo_nota]"

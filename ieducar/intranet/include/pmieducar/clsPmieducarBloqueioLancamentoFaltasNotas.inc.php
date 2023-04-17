@@ -261,33 +261,4 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
 
         return false;
     }
-
-    /**
-     * Retorna um boleano identificando se está atualmente dentro do periodo para lançamento de faltas notas
-     * registros.
-     *
-     * @return bool
-     */
-    public function verificaPeriodo()
-    {
-        if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola)) {
-            if (!$this->existe()) {
-                return true;
-            }
-            $db = new clsBanco();
-
-            $db->Consulta("SELECT 1
-                       FROM pmieducar.bloqueio_lancamento_faltas_notas
-                      WHERE ref_cod_escola = {$this->ref_cod_escola}
-                        AND ano = {$this->ano}
-                        AND etapa = {$this->etapa}
-                        AND data_inicio <= now()::date
-                        AND data_fim >= now()::date");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
 }

@@ -92,7 +92,7 @@ function excluirLaudoMedico(event) {
 function laudoMedicoObrigatorio() {
   $j("#laudo_medico").addClass("error");
   messageUtils.error(
-    "Deve ser anexado um laudo médico para alunos com deficiências"
+    "Deve ser anexado um laudo médico para alunos com deficiências ou transtornos"
   );
 }
 
@@ -199,7 +199,7 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
-  if ($j("#deficiencias").val().length > 1) {
+  if ($j("#deficiencias").val().length > 1 || $j("#transtornos").val().length > 1) {
     let laudos = $j("#url_laudo_medico").val();
     let temLaudos = false;
 
@@ -208,7 +208,7 @@ var newSubmitForm = function (event) {
     }
 
     var additionalVars = {
-      deficiencias: $j("#deficiencias").val(),
+      deficiencias: $j.merge($j("#deficiencias").val(), $j("#transtornos").val()),
     };
 
     var options = {
@@ -1183,12 +1183,15 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#religiao_id").val(dataResponse.religiao_id);
 
   $deficiencias = $j("#deficiencias");
+  $transtornos = $j("#transtornos");
 
   $j.each(dataResponse.deficiencias, function (id, nome) {
     $deficiencias.children("[value=" + id + "]").attr("selected", "");
+    $transtornos.children("[value=" + id + "]").attr("selected", "");
   });
 
   $deficiencias.trigger("chosen:updated");
+  $transtornos.trigger("chosen:updated");
 
   function habilitaRecursosProvaInep() {
     var deficiencias = $j("#deficiencias").val();
@@ -1301,7 +1304,7 @@ var handleGetPersonDetails = function (dataResponse) {
 
   var mascara = null;
 
-  if (cpf) {
+  if (cpf && (obrigarCPF.val() == 0 || !ignoreValidation.includes(cpf))) {
     mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
   }
 

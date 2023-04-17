@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyDeficiency;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
@@ -7,7 +8,9 @@ return new class extends clsCadastro {
     public $cod_deficiencia;
     public $nm_deficiencia;
     public $deficiencia_educacenso;
+    public $deficiency_type_id;
     public $exigir_laudo_medico;
+    public $acao_enviar = 'acaoEnviar()';
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -18,8 +21,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_deficiencia_lst.php');
 
         if (is_numeric($this->cod_deficiencia)) {
-            $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
-            $registro  = $obj->detalhe();
+            $registro  = LegacyDeficiency::find($this->cod_deficiencia)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -36,7 +38,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb(currentPage: $nomeMenu . ' deficiência', breadcrumbs: [
+        $this->breadcrumb(currentPage: $nomeMenu . ' deficiência ou transtorno', breadcrumbs: [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
 
@@ -53,29 +55,41 @@ return new class extends clsCadastro {
         // foreign keys
 
         // text
-        $this->campoTexto(nome: 'nm_deficiencia', campo: 'Deficiência', valor: $this->nm_deficiencia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'nm_deficiencia', campo: 'Deficiência ou transtorno', valor: $this->nm_deficiencia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+
+        $options = [
+            'label' => 'Tipo',
+            'resources' => SelectOptions::deficiencyTypes(),
+            'value' => $this->deficiency_type_id
+        ];
+        $this->inputsHelper()->select(attrName: 'deficiency_type_id', inputOptions: $options);
 
         $options = [
             'label' => 'Deficiência educacenso',
             'resources' => SelectOptions::educacensoDeficiencies(),
             'value' => $this->deficiencia_educacenso,
             'label_hint' => 'Deficiências definidas como "Outras" não serão exportadas no arquivo do Censo',
+            'required' => false
         ];
 
         $this->inputsHelper()->select(attrName: 'deficiencia_educacenso', inputOptions: $options);
         $this->campoCheck(nome: 'exigir_laudo_medico', campo: 'Exigir laudo médico?', valor: dbBool($this->exigir_laudo_medico));
-        $this->campoCheck(nome: 'desconsidera_regra_diferenciada', campo: 'Desconsiderar deficiência na regra de avaliação diferenciada', valor: dbBool($this->desconsidera_regra_diferenciada));
+        $this->campoCheck(nome: 'desconsidera_regra_diferenciada', campo: 'Desconsiderar deficiência ou transtorno na regra de avaliação diferenciada', valor: dbBool($this->desconsidera_regra_diferenciada));
     }
 
     public function Novo()
     {
-        $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
-        $obj->nm_deficiencia = $this->nm_deficiencia;
-        $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
-        $obj->desconsidera_regra_diferenciada = !is_null($this->desconsidera_regra_diferenciada);
-        $obj->exigir_laudo_medico = !is_null($this->exigir_laudo_medico);
+        $cadastrou = false;
+        if (is_string($this->nm_deficiencia)) {
+            $cadastrou = LegacyDeficiency::create([
+                'nm_deficiencia' => $this->nm_deficiencia,
+                'deficiencia_educacenso' => is_numeric($this->deficiencia_educacenso) ? $this->deficiencia_educacenso : null,
+                'deficiency_type_id' => is_numeric($this->deficiency_type_id) ? $this->deficiency_type_id : null,
+                'desconsidera_regra_diferenciada' => !is_null($this->desconsidera_regra_diferenciada),
+                'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico)
+            ]);
+        }
 
-        $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_deficiencia_lst.php');
@@ -88,13 +102,19 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
-        $obj->nm_deficiencia = $this->nm_deficiencia;
-        $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
-        $obj->desconsidera_regra_diferenciada = !is_null($this->desconsidera_regra_diferenciada);
-        $obj->exigir_laudo_medico = !is_null($this->exigir_laudo_medico);
+        $editou = false;
+        if (is_numeric($this->cod_deficiencia)) {
+            $obj = LegacyDeficiency::find($this->cod_deficiencia);
+            $obj->fill([
+                'nm_deficiencia' => $this->nm_deficiencia,
+                'deficiencia_educacenso' => is_numeric($this->deficiencia_educacenso) ? $this->deficiencia_educacenso : null,
+                'deficiency_type_id' => is_numeric($this->deficiency_type_id) ? $this->deficiency_type_id : null,
+                'desconsidera_regra_diferenciada' => !is_null($this->desconsidera_regra_diferenciada),
+                'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico)
+            ]);
+            $editou = $obj->save();
+        }
 
-        $editou = $obj->edita();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_deficiencia_lst.php');
@@ -107,8 +127,8 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $obj = new clsCadastroDeficiencia(cod_deficiencia: $this->cod_deficiencia, nm_deficiencia: $this->nm_deficiencia);
-        $excluiu = $obj->excluir();
+        $obj = LegacyDeficiency::find($this->cod_deficiencia);
+        $excluiu = $obj->delete();
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_deficiencia_lst.php');

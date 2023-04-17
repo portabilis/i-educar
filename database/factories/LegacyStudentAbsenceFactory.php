@@ -23,7 +23,7 @@ class LegacyStudentAbsenceFactory extends Factory
     public function definition(): array
     {
         return [
-            'matricula_id' => static fn () => LegacyRegistrationFactory::new()->create(),
+            'matricula_id' => fn () => LegacyRegistrationFactory::new()->create(),
             'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,
         ];
     }

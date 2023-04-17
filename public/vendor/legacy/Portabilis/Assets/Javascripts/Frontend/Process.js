@@ -5,7 +5,8 @@
 var processOptions = {
 
   // options that can be overwritten in child
-
+  showNewSearchButton: true,
+  clearSearchDiv: false,
   validatesResourcesAfterSearch : true,
 };
 
@@ -154,8 +155,19 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
       );
     }
 
+    function clearSearchInformationDiv()
+    {
+      $navActions.html('');
+    }
+
     function showNewSearchActions() {
-      showNewSearchButton();
+      if (processOptions.showNewSearchButton) {
+        showNewSearchButton();
+      }
+      if (processOptions.clearSearchDiv) {
+        clearSearchInformationDiv()
+      }
+
       showNextSelectionButton();
 
       $('.disable-on-search').removeAttr('disabled');
@@ -239,7 +251,10 @@ var $resultTable = $j('#form_resultado .tablelistagem').addClass('horizontal-exp
 
 
     function handleSearchError(response) {
-      showNewSearchButton();
+
+      if (processOptions.showNewSearchButton) {
+        showNewSearchButton();
+      }
 
       handleMessages([{type : 'error', msg : 'Ocorreu um erro ao carregar o recurso '+ RESOURCES_NAME +', por favor tente novamente, detalhes:' + response.responseText}], '');
 
