@@ -21,6 +21,7 @@ use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
+use iEducar\Support\Exceptions\Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -165,22 +166,25 @@ class EnrollmentService
         }
 
         DB::beginTransaction();
+        try {
+            $enrollment->ref_usuario_exc = $this->user->getKey();
+            $enrollment->data_exclusao = $date;
+            $enrollment->ativo = 0;
+            $enrollment->save();
 
-        $enrollment->ref_usuario_exc = $this->user->getKey();
-        $enrollment->data_exclusao = $date;
-        $enrollment->ativo = 0;
-        $enrollment->save();
+            $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
 
-        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
-
-        // Se a matrícula anterior data de saída antes da data base (ou não houver data base)
-        // reordena o sequencial da turma de origem
-        if (!$relocationDate || $date < $relocationDate) {
-            $this->reorderSchoolClass($enrollment);
+            // Se a matrícula anterior data de saída antes da data base (ou não houver data base)
+            // reordena o sequencial da turma de origem
+            if (!$relocationDate || $date < $relocationDate) {
+                $this->reorderSchoolClass($enrollment);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return false;
         }
 
         DB::commit();
-
         return true;
     }
 
