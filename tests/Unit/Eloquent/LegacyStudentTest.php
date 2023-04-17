@@ -81,6 +81,10 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testScopeMale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'M']);
         LegacyStudentFactory::new()->create([
             'ref_idpes' => $individual
@@ -91,6 +95,10 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testScopeFemale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'F']);
         $student2 = LegacyStudentFactory::new()->create([
             'ref_idpes' => $individual

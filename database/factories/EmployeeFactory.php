@@ -24,9 +24,25 @@ class EmployeeFactory extends Factory
         return [
             'id' => fn () => LegacyPersonFactory::new()->create(),
             'institution_id' => fn () => LegacyInstitutionFactory::new()->current(),
-            'workload' => $this->faker->randomNumber(3),
+            'workload' => 40,
             'ref_idesco' => fn () => LegacySchoolingDegreeFactory::new()->unique()->make(),
             'curso_formacao_continuada' => '{1}'
         ];
+    }
+
+    public function current(): Employee
+    {
+        return Employee::query()->first() ?? $this->create([
+            'id' => fn () => LegacyPersonFactory::new()->current(),
+        ]);
+    }
+
+    public function withTeacherFunction(): static
+    {
+        return $this->afterCreating(function (Employee $employee) {
+            LegacyEmployeeRoleFactory::new()->create([
+                'ref_cod_servidor' => $employee,
+            ]);
+        });
     }
 }

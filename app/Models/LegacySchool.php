@@ -89,6 +89,9 @@ class LegacySchool extends Model
         'compartilha_espacos_atividades_integracao',
         'usa_espacos_equipamentos_atividades_regulares',
         'exame_selecao_ingresso',
+        'ref_idpes_gestor',
+        'cargo_gestor',
+        'nao_ha_funcionarios_para_funcoes',
     ];
 
     protected function id(): Attribute

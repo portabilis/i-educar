@@ -15,4 +15,9 @@ class ManagerRoleFactory extends Factory
             'name' => $this->faker->name(),
         ];
     }
+
+    public function current(): ManagerRole
+    {
+        return ManagerRole::query()->first() ?? $this->create();
+    }
 }

@@ -87,10 +87,6 @@ class LegacyIndividual extends Model
         'ideciv'
     ];
 
-    protected $casts = [
-        'data_nasc' => 'date:d/m/Y'
-    ];
-
     /**
      * @return BelongsToMany
      */

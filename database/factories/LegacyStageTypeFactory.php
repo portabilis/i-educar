@@ -34,6 +34,36 @@ class LegacyStageTypeFactory extends Factory
         ];
     }
 
+    public function semester(): LegacyStageType
+    {
+        $data = [
+            'nm_tipo' => 'Semestre',
+            'num_etapas' => 2,
+        ];
+
+        return LegacyStageType::query()->where($data)->first() ?? $this->create($data);
+    }
+
+    public function bimonthly(): LegacyStageType
+    {
+        $data = [
+            'nm_tipo' => 'Bimestral',
+            'num_etapas' => 4,
+        ];
+
+        return LegacyStageType::query()->where($data)->first() ?? $this->create($data);
+    }
+
+    public function quarterly(): LegacyStageType
+    {
+        $data = [
+            'nm_tipo' => 'Trimestral',
+            'num_etapas' => 3,
+        ];
+
+        return LegacyStageType::query()->where($data)->first() ?? $this->create($data);
+    }
+
     public function unique()
     {
         return $this->state(function () {
