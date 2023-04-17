@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,5 +27,16 @@ class LegacyGradeFactory extends Factory
             'importar_serie_pre_matricula' => false,
             'dias_letivos' => $this->faker->numberBetween(100, 200),
         ];
+    }
+
+    public function withEvaluationRule(): static
+    {
+        return $this->afterCreating(function (LegacyGrade $grade) {
+            LegacyEvaluationRuleGradeYearFactory::new()->create([
+                'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->current(),
+                'regra_avaliacao_diferenciada_id' => LegacyEvaluationRuleFactory::new()->current(),
+                'serie_id' => $grade,
+            ]);
+        });
     }
 }
