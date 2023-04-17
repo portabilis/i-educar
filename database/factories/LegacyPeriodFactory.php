@@ -30,4 +30,11 @@ class LegacyPeriodFactory extends Factory
             'nome' => 'Vespertino',
         ]);
     }
+
+    public function full(): LegacyPeriod
+    {
+        return LegacyPeriod::query()->where('nome', 'Integral')->first() ?? $this->create([
+            'nome' => 'Integral',
+        ]);
+    }
 }
