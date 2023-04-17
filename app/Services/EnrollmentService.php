@@ -396,7 +396,7 @@ class EnrollmentService
             ->orderBy('sequencial_fechamento')
             ->get(['id','sequencial_fechamento', 'updated_at'])
             ->each(static function (LegacyEnrollment $enrollment, $index) {
-                $enrollment->sequencial_fechamento = ++$index;
+                $enrollment->sequencial_fechamento = $index + 1;
                 $enrollment->save();
             });
 
