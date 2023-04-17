@@ -38,32 +38,15 @@ class LegacyKnowledgeAreaFactory extends Factory
     public function withEarlyChildhoodEducationDisciplines(): static
     {
         return $this->afterCreating(function (LegacyKnowledgeArea $knowledgeArea) {
-            LegacyDisciplineFactory::new()->createMany([
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'O eu, o outro e o nós',
-                    'abbreviation' => 'EF',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Corpo, gestos e movimento',
-                    'abbreviation' => 'EF',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Traços, sons, cores e formas',
-                    'abbreviation' => 'EF',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Escuta, fala, pensamento e imaginação',
-                    'abbreviation' => 'EF',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Espaços, tempos, quantidades, relações e transformações',
-                    'abbreviation' => 'EF',
-                ],
+            LegacyDisciplineFactory::new()->state([
+                'area_conhecimento_id' => $knowledgeArea,
+                'abbreviation' => 'EF',
+            ])->createMany([
+                ['name' => 'O eu, o outro e o nós'],
+                ['name' => 'Corpo, gestos e movimento'],
+                ['name' => 'Traços, sons, cores e formas'],
+                ['name' => 'Escuta, fala, pensamento e imaginação'],
+                ['name' => 'Espaços, tempos, quantidades, relações e transformações'],
             ]);
         });
     }
@@ -71,52 +54,18 @@ class LegacyKnowledgeAreaFactory extends Factory
     public function withElementarySchoolDisciplines(): static
     {
         return $this->afterCreating(function (LegacyKnowledgeArea $knowledgeArea) {
-            LegacyDisciplineFactory::new()->createMany([
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Ensino Religioso',
-                    'abbreviation' => 'ENR',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'História',
-                    'abbreviation' => 'HIS',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Geografia',
-                    'abbreviation' => 'GEO',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Matemática',
-                    'abbreviation' => 'MAT',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Ciências',
-                    'abbreviation' => 'CIE',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Língua Portuguesa',
-                    'abbreviation' => 'POR',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Língua Inglesa',
-                    'abbreviation' => 'ING',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Artes',
-                    'abbreviation' => 'ART',
-                ],
-                [
-                    'area_conhecimento_id' => $knowledgeArea,
-                    'name' => 'Educação Física',
-                    'abbreviation' => 'EDF',
-                ],
+            LegacyDisciplineFactory::new()->state([
+                'area_conhecimento_id' => $knowledgeArea,
+            ])->createMany([
+                ['name' => 'Ensino Religioso', 'abbreviation' => 'ENR'],
+                ['name' => 'História', 'abbreviation' => 'HIS'],
+                ['name' => 'Geografia', 'abbreviation' => 'GEO'],
+                ['name' => 'Matemática', 'abbreviation' => 'MAT'],
+                ['name' => 'Ciências', 'abbreviation' => 'CIE'],
+                ['name' => 'Língua Portuguesa', 'abbreviation' => 'POR'],
+                ['name' => 'Língua Inglesa', 'abbreviation' => 'ING'],
+                ['name' => 'Artes', 'abbreviation' => 'ART'],
+                ['name' => 'Educação Física', 'abbreviation' => 'EDF'],
             ]);
         });
     }

@@ -84,6 +84,7 @@ class LegacySchoolFactory extends Factory
             ]);
 
             $course->grades->each(fn ($grade) => LegacySchoolGradeFactory::new()
+                ->withDisciplines()
                 ->create([
                     'ref_cod_escola' => $school,
                     'ref_cod_serie' => $grade,
