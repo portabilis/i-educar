@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyDiscipline;
+use App\Models\LegacyGrade;
+use App\Models\LegacyKnowledgeArea;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -127,6 +130,18 @@ class LegacyCourseFactory extends Factory
         })->state([
             'qtd_etapas' => 3,
         ]);
+    }
+
+    public function withKnowledgeArea(LegacyKnowledgeArea $knowledgeArea): static
+    {
+        return $this->afterCreating(function (LegacyCourse $course) use ($knowledgeArea) {
+            $course->grades->each(function (LegacyGrade $grade) use ($knowledgeArea) {
+                $knowledgeArea->disciplines->each(fn (LegacyDiscipline $discipline) => LegacyDisciplineAcademicYearFactory::new()->create([
+                    'componente_curricular_id' => $discipline,
+                    'ano_escolar_id' => $grade,
+                ]));
+            });
+        });
     }
 
     public function standardAcademicYear(): self
