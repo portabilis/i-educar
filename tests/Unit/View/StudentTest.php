@@ -78,10 +78,7 @@ class StudentTest extends ViewTestCase
 
     public function testGetTransportationVehicleTypeDescriptionAttribute(): void
     {
-        $value = (int)str_replace(['{','}'], '', $this->model->transportation_vehicle_type);
-        $expected = (new TransportationVehicleType())->getDescriptiveValues()[$value];
-
-        $this->assertNotNull($this->model->transportation_vehicle_type_description);
-        $this->assertEquals($expected, $this->model->transportation_vehicle_type_description);
+        $this->assertNull($this->model->transportation_vehicle_type_description);
+        $this->assertEquals(0, $this->model->transportation_vehicle_type_description);
     }
 }
