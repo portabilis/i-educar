@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use SequencialEnturmacao;
 use Throwable;
 
@@ -163,9 +164,12 @@ class EnrollmentService
             throw new PreviousEnrollCancellationDateException($enrollment->registration, $date);
         }
 
+        DB::beginTransaction();
+
         $enrollment->ref_usuario_exc = $this->user->getKey();
         $enrollment->data_exclusao = $date;
         $enrollment->ativo = 0;
+        $enrollment->save();
 
         $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
 
@@ -175,7 +179,9 @@ class EnrollmentService
             $this->reorderSchoolClass($enrollment);
         }
 
-        return $enrollment->saveOrFail();
+        DB::commit();
+
+        return true;
     }
 
     /**
@@ -381,11 +387,12 @@ class EnrollmentService
         }
 
         $schoolClass = $enrollment->schoolClass;
-        $schoolClass->enrollments()->where('sequencial_fechamento', '>', $enrollment->sequencial_fechamento)
+        $schoolClass->enrollments()
+            ->valid()
             ->orderBy('sequencial_fechamento')
-            ->get()
-            ->each(function (LegacyEnrollment $enrollment) {
-                $enrollment->sequencial_fechamento -= 1;
+            ->get(['id','sequencial_fechamento', 'updated_at'])
+            ->each(static function (LegacyEnrollment $enrollment, $index) {
+                $enrollment->sequencial_fechamento = ++$index;
                 $enrollment->save();
             });
 
