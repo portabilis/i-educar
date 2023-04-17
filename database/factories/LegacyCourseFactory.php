@@ -57,7 +57,7 @@ class LegacyCourseFactory extends Factory
 
         return $this->afterCreating(function (LegacyCourse $course) use ($age, $total) {
             for ($year = 1; $year <= $total; $year++) {
-                $to = LegacyGradeFactory::new()->create([
+                $to = LegacyGradeFactory::new()->withEvaluationRule()->create([
                     'ref_cod_curso' => $course,
                     'nm_serie' => $year . 'º ano',
                     'descricao' => $year . 'º ano',
@@ -96,14 +96,14 @@ class LegacyCourseFactory extends Factory
                 'carga_horaria' => 800,
             ];
 
-            $bercario = LegacyGradeFactory::new()->create(array_merge($default, [
+            $bercario = LegacyGradeFactory::new()->withEvaluationRule()->create(array_merge($default, [
                 'nm_serie' => 'Berçário',
                 'etapa_curso' => 1,
                 'idade_inicial' => 0,
                 'idade_final' => 3,
             ]));
 
-            $maternal = LegacyGradeFactory::new()->create(array_merge($default, [
+            $maternal = LegacyGradeFactory::new()->withEvaluationRule()->create(array_merge($default, [
                 'nm_serie' => 'Maternal',
                 'etapa_curso' => 2,
                 'idade_inicial' => 3,
@@ -115,7 +115,7 @@ class LegacyCourseFactory extends Factory
                 'ref_serie_destino' => $maternal,
             ]);
 
-            $preescolar = LegacyGradeFactory::new()->create(array_merge($default, [
+            $preescolar = LegacyGradeFactory::new()->withEvaluationRule()->create(array_merge($default, [
                 'nm_serie' => 'Pré-Escolar',
                 'etapa_curso' => 3,
                 'idade_inicial' => 4,
