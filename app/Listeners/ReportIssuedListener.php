@@ -13,7 +13,7 @@ class ReportIssuedListener
             'render' => $event->render,
             'template' => $event->template,
             'success' => $event->success,
-            'date' => now()->format('Y-m-d'),
+            'date' => now(),
         ]);
     }
 }
