@@ -70,6 +70,17 @@ class LegacyKnowledgeAreaFactory extends Factory
         });
     }
 
+    public function withOneDiscipline(): static
+    {
+        return $this->afterCreating(function (LegacyKnowledgeArea $knowledgeArea) {
+            LegacyDisciplineFactory::new()->state([
+                'area_conhecimento_id' => $knowledgeArea,
+            ])->createMany([
+                ['name' => 'Disciplina Padrão', 'abbreviation' => 'DIP'],
+            ]);
+        });
+    }
+
     public function unique(): self
     {
         return $this->state(function () {

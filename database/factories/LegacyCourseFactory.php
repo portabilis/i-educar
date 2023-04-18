@@ -132,6 +132,26 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    public function withOneGrade(): static
+    {
+        return $this->afterCreating(function (LegacyCourse $course) {
+            $to = LegacyGradeFactory::new()->withEvaluationRule()->create([
+                'ref_cod_curso' => $course,
+                'nm_serie' => 'Série Padrão',
+                'descricao' => null,
+                'etapa_curso' => 1,
+                'idade_ideal' => 10,
+                'idade_inicial' => 9,
+                'idade_final' => 10,
+                'concluinte' => 2,
+                'dias_letivos' => 200,
+                'carga_horaria' => 800,
+            ]);
+        })->state([
+            'qtd_etapas' => 1,
+        ]);
+    }
+
     public function withKnowledgeArea(LegacyKnowledgeArea $knowledgeArea): static
     {
         return $this->afterCreating(function (LegacyCourse $course) use ($knowledgeArea) {
