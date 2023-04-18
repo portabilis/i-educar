@@ -24,11 +24,11 @@ class LegacyDisciplineScoreFactory extends Factory
         return [
             'nota_aluno_id' => fn () => LegacyRegistrationScoreFactory::new()->create(),
             'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
-            'etapa' => $this->faker->randomElement([2, 3, 4]),
-            'nota' => 10,
-            'nota_arredondada' => 10,
+            'etapa' => $this->faker->randomElement([1, 2, 3, 4]),
+            'nota' => $score = $this->faker->randomFloat(1, 0, 10),
+            'nota_arredondada' => $score,
             'nota_recuperacao' => null,
-            'nota_original' => 10,
+            'nota_original' => $score,
             'nota_recuperacao_especifica' => null,
         ];
     }
