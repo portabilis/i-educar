@@ -232,4 +232,9 @@ class LegacySchool extends Model
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes_secretario_escolar');
     }
+
+    public function registrations(): HasMany
+    {
+        return $this->hasMany(LegacyRegistration::class, 'ref_ref_cod_escola');
+    }
 }
