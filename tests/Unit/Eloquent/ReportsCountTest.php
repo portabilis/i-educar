@@ -52,20 +52,24 @@ class ReportsCountTest extends EloquentTestCase
             'date' => now(),
         ]);
 
-        $this->assertDatabaseHas(ReportsCount::class, [
+        $this->assertDatabaseHas(
+            ReportsCount::class,
+            [
                 'render' => 'html',
                 'template' => 'relatorio_html',
                 'success' => true,
                 'date' => now(),
                 'count' => 3
             ]
-        )->assertDatabaseHas(ReportsCount::class, [
+        )->assertDatabaseHas(
+            ReportsCount::class,
+            [
             'render' => 'html',
             'template' => 'relatorio_html',
             'success' => false,
             'date' => now(),
             'count' => 2
         ]
-    );
+        );
     }
 }
