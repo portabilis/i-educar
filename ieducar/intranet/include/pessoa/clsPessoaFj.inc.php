@@ -74,7 +74,7 @@ class clsPessoaFj extends Model
             $str_tipo_pessoa
         );
 
-        if (count($listaPessoa) > 0) {
+        if ($listaPessoa && count($listaPessoa) > 0) {
             return $listaPessoa;
         }
 
