@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyPeriod;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App_Model_ZonaLocalizacao;
@@ -131,6 +132,50 @@ class LegacySchoolFactory extends Factory
                         ->withEnrollment($schoolClass)
                         ->create();
                 }
+            });
+        });
+    }
+
+    public function withScoresForEachStudent(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            $stages = $school->stages()->count();
+
+            $school->registrations()->get()->each(function (LegacyRegistration $registration) use ($stages) {
+                $registrationScore = LegacyRegistrationScoreFactory::new()->create([
+                    'matricula_id' => $registration,
+                ]);
+
+                $registration->grade->allDisciplines->each(fn ($discipline) => LegacyDisciplineScoreFactory::new()
+                    ->count($stages)
+                    ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
+                    ->create([
+                        'nota_aluno_id' => $registrationScore,
+                        'componente_curricular_id' => $discipline,
+                    ])
+                );
+            });
+        });
+    }
+
+    public function withAbsencesForEachStudent(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            $stages = $school->stages()->count();
+
+            $school->registrations()->get()->each(function (LegacyRegistration $registration) use ($stages) {
+                $absence = LegacyStudentAbsenceFactory::new()->discipline()->create([
+                    'matricula_id' => $registration,
+                ]);
+
+                $registration->grade->allDisciplines->each(fn ($discipline) => LegacyDisciplineAbsenceFactory::new()
+                    ->count($stages)
+                    ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
+                    ->create([
+                        'falta_aluno_id' => $absence,
+                        'componente_curricular_id' => $discipline,
+                    ])
+                );
             });
         });
     }
