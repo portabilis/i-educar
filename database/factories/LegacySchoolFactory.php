@@ -8,6 +8,8 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App_Model_ZonaLocalizacao;
+use Database\Factories\Concerns\ReleaseAbsencesForStudentsFactory;
+use Database\Factories\Concerns\ReleaseScoresForStudentsFactory;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
@@ -139,44 +141,14 @@ class LegacySchoolFactory extends Factory
     public function withScoresForEachStudent(): static
     {
         return $this->afterCreating(function (LegacySchool $school) {
-            $stages = $school->stages()->count();
-
-            $school->registrations()->get()->each(function (LegacyRegistration $registration) use ($stages) {
-                $registrationScore = LegacyRegistrationScoreFactory::new()->create([
-                    'matricula_id' => $registration,
-                ]);
-
-                $registration->grade->allDisciplines->each(fn ($discipline) => LegacyDisciplineScoreFactory::new()
-                    ->count($stages)
-                    ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
-                    ->create([
-                        'nota_aluno_id' => $registrationScore,
-                        'componente_curricular_id' => $discipline,
-                    ])
-                );
-            });
+            ReleaseScoresForStudentsFactory::fromSchool($school);
         });
     }
 
     public function withAbsencesForEachStudent(): static
     {
         return $this->afterCreating(function (LegacySchool $school) {
-            $stages = $school->stages()->count();
-
-            $school->registrations()->get()->each(function (LegacyRegistration $registration) use ($stages) {
-                $absence = LegacyStudentAbsenceFactory::new()->discipline()->create([
-                    'matricula_id' => $registration,
-                ]);
-
-                $registration->grade->allDisciplines->each(fn ($discipline) => LegacyDisciplineAbsenceFactory::new()
-                    ->count($stages)
-                    ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
-                    ->create([
-                        'falta_aluno_id' => $absence,
-                        'componente_curricular_id' => $discipline,
-                    ])
-                );
-            });
+            ReleaseAbsencesForStudentsFactory::fromSchool($school);
         });
     }
 
