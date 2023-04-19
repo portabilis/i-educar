@@ -390,7 +390,7 @@ class EnrollmentService
 
         $schoolClass = $enrollment->schoolClass;
         $schoolClass->enrollments()
-            ->valid()
+            ->whereValid()
             ->orderBy('sequencial_fechamento')
             ->get(['id','sequencial_fechamento', 'updated_at'])
             ->each(static function (LegacyEnrollment $enrollment, $index) {

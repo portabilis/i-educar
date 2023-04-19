@@ -29,19 +29,15 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
      *
      * @return LegacyEnrollmentBuilder
      */
-    public function valid(): self
+    public function whereValid(): self
     {
         return $this->where(function ($q) {
             $q->active();
-            $q->orWhere(static function ($q) {
-                $q->notActive();
-                $q->where(function ($q) {
-                    $q->where('transferido', true);
-                    $q->orWhere('remanejado', true);
-                    $q->orWhere('reclassificado', true);
-                    $q->orWhere('abandono', true);
-                });
-            });
+            $q->orWhere('transferido', true);
+            $q->orWhere('remanejado', true);
+            $q->orWhere('reclassificado', true);
+            $q->orWhere('abandono', true);
+            $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
         });
     }
 }
