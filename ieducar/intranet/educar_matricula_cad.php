@@ -1031,16 +1031,6 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $enrollments = LegacyEnrollment::query()
-            ->where('ref_cod_matricula', $this->cod_matricula)
-            ->get();
-
-        $enrollmentService = app(EnrollmentService::class);
-
-        foreach ($enrollments as $enrollment) {
-            $enrollmentService->reorderSchoolClass($enrollment);
-        }
-
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_excluir(
@@ -1110,6 +1100,16 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
+            $enrollments = LegacyEnrollment::query()
+                ->where('ref_cod_matricula', $this->cod_matricula)
+                ->get();
+
+            $enrollmentService = app(EnrollmentService::class);
+
+            foreach ($enrollments as $enrollment) {
+                $enrollmentService->reorderSchoolClass($enrollment);
+            }
+
             $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
