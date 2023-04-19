@@ -238,8 +238,6 @@ class EnrollmentService
             throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 
-        $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);
-
         $existsActiveEnrollment = $registration->enrollments()
             ->where('ativo', 1)
             ->where('ref_cod_turma', $schoolClass->id)
@@ -253,7 +251,7 @@ class EnrollmentService
         $enrollment = $registration->enrollments()->create([
             'ref_cod_turma' => $schoolClass->id,
             'sequencial' => $registration->enrollments()->max('sequencial') + 1,
-            'sequencial_fechamento' => $sequenceInSchoolClass,
+            'sequencial_fechamento' => $this->getSequenceSchoolClass($registration, $schoolClass, $date),
             'ref_usuario_cad' => $this->user->getKey(),
             'data_cadastro' => Carbon::now(),
             'data_enturmacao' => $date,
