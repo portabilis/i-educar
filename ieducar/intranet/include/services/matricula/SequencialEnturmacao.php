@@ -363,9 +363,11 @@ class SequencialEnturmacao
                 WHERE matricula.ativo = 1
                 AND ref_cod_matricula = ?
                 AND ref_cod_turma = ?
+                AND (matricula_turma.ativo = 1 OR transferido OR remanejado OR reclassificado OR abandono OR matricula.dependencia)
                 AND (sequencial = (SELECT max(sequencial) FROM pmieducar.matricula_turma mt
                                                           WHERE mt.ref_cod_matricula = ref_cod_matricula
                                                             AND mt.ref_cod_turma = ref_cod_turma
+                                                            AND (mt.ativo = 1 OR mt.transferido OR mt.remanejado OR mt.reclassificado OR mt.abandono OR matricula.dependencia)
                                                           ))
             ',
             [
