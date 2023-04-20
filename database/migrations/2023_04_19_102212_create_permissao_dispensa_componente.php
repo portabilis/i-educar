@@ -20,14 +20,16 @@ return new class () extends Migration {
             'process' => 628,
             'ativo' => true
         ]);
-        $userTypes = LegacyUserType::all();
-        $userTypes->each(static function (LegacyUserType $userType) use ($menu) {
-            $userType->menus()->attach($menu, [
-                'visualiza' => 1,
-                'cadastra' => 1,
-                'exclui' => 1
-            ]);
-        });
+        if ($menu) {
+            $userTypes = LegacyUserType::all();
+            $userTypes->each(static function (LegacyUserType $userType) use ($menu) {
+                $userType->menus()->attach($menu, [
+                    'visualiza' => 1,
+                    'cadastra' => 1,
+                    'exclui' => 1
+                ]);
+            });
+        }
     }
 
     public function down(): void
