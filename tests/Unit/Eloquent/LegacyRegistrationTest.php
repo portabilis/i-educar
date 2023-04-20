@@ -8,6 +8,7 @@ use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRuleGradeYear;
 use App\Models\LegacyGrade;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacyStudent;
@@ -93,6 +94,10 @@ class LegacyRegistrationTest extends EloquentTestCase
 
     public function testScopeMale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual1 = LegacyIndividualFactory::new()->create([
             'sexo' => 'M'
         ]);
@@ -120,6 +125,10 @@ class LegacyRegistrationTest extends EloquentTestCase
 
     public function testScopeFemale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual1 = LegacyIndividualFactory::new()->create([
             'sexo' => 'M'
         ]);

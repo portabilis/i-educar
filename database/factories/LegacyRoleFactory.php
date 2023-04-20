@@ -30,4 +30,12 @@ class LegacyRoleFactory extends Factory
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
     }
+
+    public function current(): LegacyRole
+    {
+        return LegacyRole::query()->first() ?? $this->create([
+            'nm_funcao' => 'Professor',
+            'abreviatura' => 'Prof',
+        ]);
+    }
 }

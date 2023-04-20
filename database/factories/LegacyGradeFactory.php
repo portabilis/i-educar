@@ -13,7 +13,7 @@ class LegacyGradeFactory extends Factory
     {
         return [
             'nm_serie' => $this->faker->words(3, true),
-            'ref_usuario_cad' => 1,
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'ref_cod_curso' => fn () => LegacyCourseFactory::new()->create(),
             'etapa_curso' => $this->faker->randomElement([1, 2, 3, 4]),
             'carga_horaria' => 800,

@@ -28,4 +28,11 @@ class LegacyEducationTypeFactory extends Factory
             'atividade_complementar' => $this->faker->boolean(),
         ];
     }
+
+    public function current(): LegacyEducationType
+    {
+        return LegacyEducationType::query()->first() ?? $this->create([
+            'nm_tipo' => 'Tipo de Ensino Padrão',
+        ]);
+    }
 }

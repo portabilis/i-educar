@@ -87,10 +87,6 @@ class LegacyIndividual extends Model
         'ideciv'
     ];
 
-    protected $casts = [
-        'data_nasc' => 'date:d/m/Y'
-    ];
-
     /**
      * @return BelongsToMany
      */
@@ -211,6 +207,19 @@ class LegacyIndividual extends Model
     {
         return Attribute::make(
             get: fn () => !empty($this->nome_social) ? $this->nome_social : null
+        );
+    }
+
+    protected function realName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->social_name) {
+                    return $this->social_name;
+                }
+
+                return $this->person->name;
+            }
         );
     }
 

@@ -54,7 +54,13 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         'logradouro',
         'nm_responsavel',
         'nm_instituicao',
-        'orgao_regional'
+        'orgao_regional',
+        'data_base_remanejamento',
+        'data_base_transferencia',
+        'data_expiracao_reserva_vaga',
+        'data_base_matricula',
+        'data_fechamento',
+        'data_educacenso',
     ];
 
     protected $casts = [
@@ -117,7 +123,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
      */
     public function isMandatoryCensoFields(): bool
     {
-        return (bool)$this->obrigar_campos_censo;
+        return (bool) $this->obrigar_campos_censo;
     }
 
     protected function id(): Attribute
@@ -130,7 +136,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected function allowRegistrationOutAcademicYear(): Attribute
     {
         return Attribute::make(
-            get: fn () => (bool)$this->permitir_matricula_fora_periodo_letivo
+            get: fn () => (bool) $this->permitir_matricula_fora_periodo_letivo
         );
     }
 

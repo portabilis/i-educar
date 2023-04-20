@@ -27,4 +27,11 @@ class LegacyRegimeTypeFactory extends Factory
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
     }
+
+    public function current(): LegacyRegimeType
+    {
+        return LegacyRegimeType::query()->first() ?? $this->create([
+            'nm_tipo' => 'Tipo de Regime Padrão',
+        ]);
+    }
 }

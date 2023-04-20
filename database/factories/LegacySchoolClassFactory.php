@@ -19,10 +19,10 @@ class LegacySchoolClassFactory extends Factory
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_turma' => $name = $this->faker->colorName,
             'sgl_turma' => mb_substr($name, 0, 3),
-            'max_aluno' => $this->faker->numberBetween(10, 25),
+            'max_aluno' => 10,
             'data_cadastro' => now(),
             'turma_turno_id' => fn () => LegacyPeriodFactory::new()->create(),
-            'ref_cod_turma_tipo' => fn () => LegacySchoolClassTypeFactory::new()->unique()->make(),
+            'ref_cod_turma_tipo' => fn () => LegacySchoolClassTypeFactory::new()->current(),
             'ref_ref_cod_escola' => fn () => $this->getSchoolGrade()->school_id,
             'ref_ref_cod_serie' => fn () => $this->getSchoolGrade()->grade_id,
             'ref_cod_curso' => fn () => $this->getSchoolGrade()->grade->course_id,
@@ -31,7 +31,7 @@ class LegacySchoolClassFactory extends Factory
             'multiseriada' => false,
             'ano' => now()->year,
             'visivel' => true,
-            'ativo' => 1
+            'ativo' => 1,
         ];
     }
 
@@ -109,6 +109,7 @@ class LegacySchoolClassFactory extends Factory
                 ->where('ref_cod_curso', $schoolClass->ref_cod_curso)
                 ->first();
 
+            # TODO
             $schoolGrade = LegacySchoolGradeFactory::new()->useSchoolCourse($schoolCourse)->create();
 
             LegacySchoolClassGradeFactory::new()->create([

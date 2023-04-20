@@ -15,4 +15,9 @@ class ManagerLinkTypeFactory extends Factory
             'name' => $this->faker->name(),
         ];
     }
+
+    public function current(): ManagerLinkType
+    {
+        return ManagerLinkType::query()->first() ?? $this->create();
+    }
 }
