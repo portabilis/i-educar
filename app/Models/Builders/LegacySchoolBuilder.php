@@ -22,6 +22,18 @@ class LegacySchoolBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por nome
+     *
+     * @param string $name
+     *
+     * @return LegacySchoolBuilder
+     */
+    public function whereName(string $name): self
+    {
+        return $this->whereHas('organization', static fn ($q) => $q->whereRaw('unaccent(fantasia) ~* unaccent(?)', $name));
+    }
+
+    /**
      * Ordena por nome
      *
      * @param string $direction
@@ -63,5 +75,10 @@ class LegacySchoolBuilder extends LegacyBuilder
     public function active(): self
     {
         return $this->where('escola.ativo', 1);
+    }
+
+    public function whereActive(int $active): self
+    {
+        return $this->where('escola.ativo', $active);
     }
 }
