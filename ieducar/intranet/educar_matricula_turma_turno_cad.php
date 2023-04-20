@@ -72,7 +72,7 @@ return new class extends clsCadastro {
                 $turnos[clsPmieducarTurma::TURNO_NOTURNO] = 'Noturno';
             }
 
-            $this->campoLista(nome: "turno[{$enturmacao->ref_cod_turma}-{$enturmacao->sequencial}]", campo: "Turno do aluno na turma: {$enturmacao->schoolClass->name}}", valor: $turnos, default: $enturmacao->turno_id, descricao: 'Não é necessário preencher o campo quando o aluno cursar o turno INTEGRAL', obrigatorio: false);
+            $this->campoLista(nome: "turno[{$enturmacao->ref_cod_turma}-{$enturmacao->sequencial}]", campo: "Turno do aluno na turma: {$enturmacao->schoolClass->name}", valor: $turnos, default: $enturmacao->turno_id, descricao: 'Não é necessário preencher o campo quando o aluno cursar o turno INTEGRAL', obrigatorio: false);
         }
 
         $this->acao_enviar = 'showConfirmationMessage(this)';
