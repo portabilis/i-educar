@@ -1102,7 +1102,7 @@ return new class extends clsCadastro {
                 ->where('ref_cod_matricula', $this->cod_matricula)
                 ->get();
 
-            $enrollmentService = new EnrollmentService();
+            $enrollmentService = new EnrollmentService(auth()->user());
 
             foreach ($enrollments as $enrollment) {
                 $enrollmentService->reorderSchoolClass($enrollment);
