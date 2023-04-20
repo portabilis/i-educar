@@ -3,11 +3,13 @@
 use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySequenceGrade;
 use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -1096,6 +1098,16 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
+            $enrollments = LegacyEnrollment::query()
+                ->where('ref_cod_matricula', $this->cod_matricula)
+                ->get();
+
+            $enrollmentService = new EnrollmentService();
+
+            foreach ($enrollments as $enrollment) {
+                $enrollmentService->reorderSchoolClass($enrollment);
+            }
+
             $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
