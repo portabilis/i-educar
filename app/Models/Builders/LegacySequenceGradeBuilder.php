@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Builders;
+
 class LegacySequenceGradeBuilder extends LegacyBuilder
 {
     /**
@@ -43,6 +44,7 @@ class LegacySequenceGradeBuilder extends LegacyBuilder
      * Filtra por Curso de Origem
      *
      * @param int $course
+     *
      * @return LegacySequenceGradeBuilder
      */
     public function whereCourseOrigin(int $course): self
@@ -54,6 +56,7 @@ class LegacySequenceGradeBuilder extends LegacyBuilder
      * Filtra por Curso de Destino
      *
      * @param int $course
+     *
      * @return LegacySequenceGradeBuilder
      */
     public function whereCourseDestiny(int $course): self
