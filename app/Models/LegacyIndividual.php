@@ -26,10 +26,6 @@ class LegacyIndividual extends Model
      */
     protected $primaryKey = 'idpes';
 
-    protected $dates = [
-        'data_nasc',
-    ];
-
     /**
      * @var array
      */
@@ -53,7 +49,6 @@ class LegacyIndividual extends Model
         'data_chegada_brasil',
         'idmun_nascimento',
         'ultima_empresa',
-        'idocup',
         'nome_mae',
         'nome_pai',
         'nome_conjuge',
@@ -90,10 +85,6 @@ class LegacyIndividual extends Model
         'pais_residencia',
         'localizacao_diferenciada',
         'ideciv'
-    ];
-
-    protected $casts = [
-        'data_nasc' => 'date:d/m/Y'
     ];
 
     /**
@@ -216,6 +207,19 @@ class LegacyIndividual extends Model
     {
         return Attribute::make(
             get: fn () => !empty($this->nome_social) ? $this->nome_social : null
+        );
+    }
+
+    protected function realName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->social_name) {
+                    return $this->social_name;
+                }
+
+                return $this->person->name;
+            }
         );
     }
 

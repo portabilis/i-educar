@@ -12,11 +12,11 @@ class WithdrawalReasonFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_exc' => LegacyUserFactory::new(),
-            'ref_usuario_cad' => LegacyUserFactory::new(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new(),
             'nm_motivo' => $this->faker->word(),
             'descricao' => $this->faker->text(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()
         ];
     }
 }

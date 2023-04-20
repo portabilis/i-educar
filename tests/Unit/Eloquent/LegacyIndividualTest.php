@@ -18,9 +18,6 @@ class LegacyIndividualTest extends EloquentTestCase
         'deficiency' => LegacyDeficiency::class,
         'person' => LegacyPerson::class,
         'student' => LegacyStudent::class,
-        'mother' => LegacyPerson::class,
-        'father' => LegacyPerson::class,
-        'responsible' => LegacyPerson::class,
         'document' => LegacyDocument::class,
         'picture' => LegacyIndividualPicture::class,
     ];

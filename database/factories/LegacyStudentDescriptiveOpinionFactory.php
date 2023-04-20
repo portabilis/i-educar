@@ -23,7 +23,7 @@ class LegacyStudentDescriptiveOpinionFactory extends Factory
     public function definition(): array
     {
         return [
-            'matricula_id' => static fn () => LegacyRegistrationFactory::new()->create(),
+            'matricula_id' => fn () => LegacyRegistrationFactory::new()->create(),
             'parecer_descritivo' => $this->faker->randomElement([
                 RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
                 RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,

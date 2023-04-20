@@ -1004,24 +1004,6 @@ class clsPmieducarMatriculaTurma extends Model
     }
 
     /**
-     * Retorna se existe alguma enturmação ativa para matrícula e turma informada.
-     *
-     * @return bool
-     */
-    public function existeEnturmacaoAtiva()
-    {
-        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' AND ativo = 1 ");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
-    /**
      * Exclui um registro.
      *
      * @return bool

@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\EmployeeAllocation;
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeeInep;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyIndividual;
@@ -137,6 +138,17 @@ class EmployeeTest extends EloquentTestCase
 
         $this->assertCount(1, $employee->disciplines);
         $this->assertInstanceOf(LegacyDiscipline::class, $employee->disciplines->first());
+    }
+
+    /** @test  */
+    public function relationshipCourses(): void
+    {
+        $employee = EmployeeFactory::new()->hasAttached(LegacyCourseFactory::new(), [
+            'ref_ref_cod_instituicao' => $this->model->institution_id,
+        ], 'courses')->create();
+
+        $this->assertCount(1, $employee->courses);
+        $this->assertInstanceOf(LegacyCourse::class, $employee->courses->first());
     }
 
     protected function getLegacyAttributes(): array

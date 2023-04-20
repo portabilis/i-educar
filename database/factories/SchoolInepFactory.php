@@ -22,7 +22,7 @@ class SchoolInepFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_escola' => LegacySchoolFactory::new()->create(),
+            'cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'cod_escola_inep' => $this->faker->numerify('########'),
         ];
     }

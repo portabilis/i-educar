@@ -22,13 +22,18 @@ class LegacyEmployeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_pessoa_fj' => function () {
-                return LegacyIndividualFactory::new()->create()->idpes;
-            },
+            'ref_cod_pessoa_fj' => fn () => LegacyIndividualFactory::new()->create()->idpes,
             'matricula' => $this->faker->randomDigitNotNull(),
             'senha' => $this->faker->password(),
             'email' => $this->faker->email(),
             'ativo' => 1
         ];
+    }
+
+    public function current(): LegacyEmployee
+    {
+        return LegacyEmployee::query()->first() ?? $this->create([
+            'ref_cod_pessoa_fj' => fn () => LegacyIndividualFactory::new()->current()->idpes,
+        ]);
     }
 }

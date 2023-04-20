@@ -163,7 +163,7 @@ let verificaEscolaridade = () => {
 
   $j.getJSON(`/escolaridade/${escolaridade}`)
   .done((escolaridade) => {
-    if (escolaridade['escolaridade'] === 7 || escolaridade['escolaridade'] === 6) {
+    if (escolaridade['schooling'] === 7 || escolaridade['schooling'] === 6) {
       habilitaTipoEnsinoMedio();
     } else {
       bloqueiaTipoEnsinoMedio();

@@ -16,7 +16,7 @@ class RemoveHtmlTagsServiceTest extends TestCase
         self::assertTrue(preg_match($pattern, $parecer) === 0);
     }
 
-    public function provideData()
+    public static function provideData()
     {
         return [
             [

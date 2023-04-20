@@ -43,15 +43,20 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testGetGuardianName(): void
     {
-        $join = $this->model->individual->mother->name . ', ' . $this->model->individual->father->name;
-        $expected = match ($this->model->guardianType) {
-            'm' => $this->model->individual->mother->name,
-            'p' => $this->model->individual->father->name,
-            'r' => $this->model->individual->responsible->name,
+        $individual = LegacyIndividualFactory::new()->father()->mother()->guardian()->create();
+        $model = LegacyStudentFactory::new()->create([
+            'ref_idpes' => $individual,
+        ]);
+
+        $join = $model->individual->mother->name . ', ' . $model->individual->father->name;
+        $expected = match ($model->guardianType) {
+            'm' => $model->individual->mother->name,
+            'p' => $model->individual->father->name,
+            'r' => $model->individual->responsible->name,
             'a' => strlen($join) < 3 ? null : $join,
             default => null
         };
-        $this->assertEquals($expected, $this->model->getGuardianName());
+        $this->assertEquals($expected, $model->getGuardianName());
     }
 
     public function testGetGuardianCpf(): void
@@ -76,6 +81,10 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testScopeMale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'M']);
         LegacyStudentFactory::new()->create([
             'ref_idpes' => $individual
@@ -86,6 +95,10 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testScopeFemale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'F']);
         $student2 = LegacyStudentFactory::new()->create([
             'ref_idpes' => $individual

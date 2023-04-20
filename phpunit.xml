@@ -1,77 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    bootstrap="vendor/autoload.php"
-    colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    defaultTestSuite="Feature,Pages,Diario,Educacenso,Unit">
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">./app</directory>
-            <directory suffix=".php">./ieducar</directory>
-            <directory suffix=".php">./src</directory>
-        </include>
-        <exclude>
-            <directory>./packages</directory>
-            <directory>./public</directory>
-            <directory suffix="_xml.php">./ieducar</directory>
-            <directory suffix="_xml2.php">./ieducar</directory>
-            <file>ieducar/intranet/educar_busca_ativa_cad.php</file>
-            <file>ieducar/intranet/educar_busca_ativa_lst.php</file>
-            <file>ieducar/intranet/educar_calendario_pesquisas.php</file>
-            <file>ieducar/intranet/educar_consulta_movimento_geral_lst.php</file>
-            <file>ieducar/intranet/educar_consulta_movimento_mensal_lst.php</file>
-            <file>ieducar/intranet/educar_matricula_cad_curso_segue_padrao.php</file>
-            <file>ieducar/intranet/educar_quadro_horarios_pesquisas.php</file>
-            <file>ieducar/intranet/educar_tombo_automatico.ajax.php</file>
-            <file>ieducar/intranet/include/pmieducar/educar_campo_lista.php</file>
-            <file>ieducar/intranet/include/pmieducar/educar_pesquisa_biblioteca_cliente.php</file>
-            <file>ieducar/intranet/include/pmieducar/educar_pesquisa_curso_serie.php</file>
-            <file>ieducar/intranet/include/pmieducar/educar_pesquisa_instituicao_escola.php</file>
-            <file>ieducar/intranet/logof.php</file>
-            <file>ieducar/intranet/manutencao.php</file>
-            <file>ieducar/intranet/migra_alunos.php</file>
-            <file>ieducar/intranet/suspenso.php</file>
-            <file>ieducar/intranet/upload_just_pdf.php</file>
-            <file>ieducar/intranet/upload.php</file>
-            <file>ieducar/module/index.php</file>
-            <file>ieducar/modules/Educacenso/Views/IesAjaxController.php</file>
-            <file>ieducar/modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php</file>
-        </exclude>
-    </coverage>
-    <testsuites>
-        <testsuite name="Diario">
-            <directory suffix="Test.php">./tests/Api</directory>
-        </testsuite>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Extra</directory>
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-        <testsuite name="Pages">
-            <directory suffix="Test.php">./tests/Pages/</directory>
-        </testsuite>
-        <testsuite name="Educacenso">
-            <directory suffix="Test.php">./tests/Educacenso</directory>
-        </testsuite>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-    </testsuites>
-    <php>
-        <ini name="memory_limit" value="512M"/>
-        <server name="APP_ENV" value="testing"/>
-        <server name="BCRYPT_ROUNDS" value="4"/>
-        <server name="CACHE_DRIVER" value="array"/>
-        <server name="MAIL_MAILER" value="array"/>
-        <server name="QUEUE_CONNECTION" value="sync"/>
-        <server name="SESSION_DRIVER" value="array"/>
-        <server name="TELESCOPE_ENABLED" value="false"/>
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd" backupGlobals="true" bootstrap="vendor/autoload.php" colors="true">
+  <testsuites>
+    <testsuite name="Diario">
+      <directory suffix="Test.php">./tests/Api</directory>
+    </testsuite>
+    <testsuite name="Feature">
+      <directory suffix="Test.php">./tests/Extra</directory>
+      <directory suffix="Test.php">./tests/Feature</directory>
+    </testsuite>
+    <testsuite name="Pages">
+      <directory suffix="Test.php">./tests/Pages/</directory>
+    </testsuite>
+    <testsuite name="Educacenso">
+      <directory suffix="Test.php">./tests/Educacenso</directory>
+    </testsuite>
+    <testsuite name="Unit">
+      <directory suffix="Test.php">./tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <coverage/>
+  <php>
+    <ini name="memory_limit" value="512M"/>
+    <server name="APP_ENV" value="testing"/>
+    <server name="BCRYPT_ROUNDS" value="4"/>
+    <server name="CACHE_DRIVER" value="array"/>
+    <server name="MAIL_MAILER" value="array"/>
+    <server name="QUEUE_CONNECTION" value="sync"/>
+    <server name="SESSION_DRIVER" value="array"/>
+    <server name="TELESCOPE_ENABLED" value="false"/>
+  </php>
+  <source>
+    <include>
+      <directory suffix=".php">./app</directory>
+      <directory suffix=".php">./ieducar</directory>
+      <directory suffix=".php">./src</directory>
+    </include>
+    <exclude>
+      <directory>./packages</directory>
+      <directory>./public</directory>
+      <directory suffix="_xml.php">./ieducar</directory>
+      <directory suffix="_xml2.php">./ieducar</directory>
+      <file>ieducar/intranet/educar_busca_ativa_cad.php</file>
+      <file>ieducar/intranet/educar_busca_ativa_lst.php</file>
+      <file>ieducar/intranet/educar_calendario_pesquisas.php</file>
+      <file>ieducar/intranet/educar_consulta_movimento_geral_lst.php</file>
+      <file>ieducar/intranet/educar_consulta_movimento_mensal_lst.php</file>
+      <file>ieducar/intranet/educar_matricula_cad_curso_segue_padrao.php</file>
+      <file>ieducar/intranet/educar_quadro_horarios_pesquisas.php</file>
+      <file>ieducar/intranet/educar_tombo_automatico.ajax.php</file>
+      <file>ieducar/intranet/include/pmieducar/educar_campo_lista.php</file>
+      <file>ieducar/intranet/include/pmieducar/educar_pesquisa_biblioteca_cliente.php</file>
+      <file>ieducar/intranet/include/pmieducar/educar_pesquisa_curso_serie.php</file>
+      <file>ieducar/intranet/include/pmieducar/educar_pesquisa_instituicao_escola.php</file>
+      <file>ieducar/intranet/logof.php</file>
+      <file>ieducar/intranet/manutencao.php</file>
+      <file>ieducar/intranet/migra_alunos.php</file>
+      <file>ieducar/intranet/suspenso.php</file>
+      <file>ieducar/intranet/upload_just_pdf.php</file>
+      <file>ieducar/intranet/upload.php</file>
+      <file>ieducar/module/index.php</file>
+      <file>ieducar/modules/Educacenso/Views/IesAjaxController.php</file>
+      <file>ieducar/modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php</file>
+    </exclude>
+  </source>
 </phpunit>

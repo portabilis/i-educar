@@ -22,12 +22,10 @@ class LegacyUserTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'nm_tipo' => $this->faker->firstName,
+            'nm_tipo' => $this->faker->firstName(),
             'nivel' => $this->faker->randomElement([1, 2, 3, 4]),
-            'ref_funcionario_cad' => function () {
-                return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
-            },
-            'data_cadastro' => $this->faker->dateTime,
+            'ref_funcionario_cad' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
+            'data_cadastro' => $this->faker->dateTime(),
         ];
     }
 }

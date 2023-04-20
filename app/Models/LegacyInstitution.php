@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyInstitutionBuilder;
 use App\Services\RelocationDate\RelocationDateProvider;
 use App\Traits\HasLegacyDates;
 use DateTime;
@@ -34,6 +35,13 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected $primaryKey = 'cod_instituicao';
 
     /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LegacyInstitutionBuilder::class;
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -46,26 +54,24 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         'logradouro',
         'nm_responsavel',
         'nm_instituicao',
-        'orgao_regional'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $dates = [
+        'orgao_regional',
         'data_base_remanejamento',
+        'data_base_transferencia',
+        'data_expiracao_reserva_vaga',
+        'data_base_matricula',
+        'data_fechamento',
         'data_educacenso',
     ];
 
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('ativo', 1);
-    }
+    protected $casts = [
+        'data_base_remanejamento' => 'date',
+        'data_educacenso' => 'date',
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_instituicao',
+        'name' => 'nm_instituicao',
+    ];
 
     /**
      * @return HasOne
@@ -117,7 +123,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
      */
     public function isMandatoryCensoFields(): bool
     {
-        return (bool)$this->obrigar_campos_censo;
+        return (bool) $this->obrigar_campos_censo;
     }
 
     protected function id(): Attribute
@@ -130,7 +136,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected function allowRegistrationOutAcademicYear(): Attribute
     {
         return Attribute::make(
-            get: fn () => (bool)$this->permitir_matricula_fora_periodo_letivo
+            get: fn () => (bool) $this->permitir_matricula_fora_periodo_letivo
         );
     }
 

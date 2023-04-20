@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class LegacyOrganization extends Model
+class LegacyOrganization extends LegacyModel
 {
     /**
      * @var string
@@ -23,11 +22,13 @@ class LegacyOrganization extends Model
     protected $primaryKey = 'idpes';
 
     /**
-     * @var array
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
      */
-    protected $dates = [
-        'data_rev',
-        'data_cad',
+    public array $legacy = [
+        'id' => 'idpes',
+        'fantasy' => 'fantasia'
     ];
 
     /**

@@ -19,7 +19,7 @@ class Registro20Model extends Registro20
         $this->codigoEscolaInep = $arrayColumns[2];
         $this->codTurma = $arrayColumns[3];
         $this->inepTurma = $arrayColumns[4];
-        $this->nomeTurma = utf8_decode($arrayColumns[5]);
+        $this->nomeTurma = mb_convert_encoding($arrayColumns[5], 'ISO-8859-1', 'UTF-8');
         $this->tipoMediacaoDidaticoPedagogico = $arrayColumns[6];
         $this->horaInicial = $arrayColumns[7];
         $this->horaInicialMinuto = $arrayColumns[8];
@@ -62,7 +62,7 @@ class Registro20Model extends Registro20
             $arrayColumns[39] ? FormaOrganizacaoTurma::ALTERNANCIA_REGULAR : null,
         ]);
 
-        $this->formasOrganizacaoTurma = (count($this->formasOrganizacaoTurma) === 1) ? $this->formasOrganizacaoTurma[0] : null;
+        $this->formasOrganizacaoTurma = (count($this->formasOrganizacaoTurma) === 1) ? $this->formasOrganizacaoTurma[array_key_first($this->formasOrganizacaoTurma)] : null;
 
         $this->unidadesCurriculares = array_filter([
             $arrayColumns[40] ? UnidadesCurriculares::ELETIVAS : null,
@@ -75,7 +75,7 @@ class Registro20Model extends Registro20
             $arrayColumns[47] ? UnidadesCurriculares::TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS : null,
         ]);
 
-        $this->componentes = $this->getComponentesByImportFile(array_slice($arrayColumns, 47, 73));
+        $this->componentes = $this->getComponentesByImportFile(array_slice($arrayColumns, 47, 26));
     }
 
     private function getComponentesByImportFile($componentesImportacao)

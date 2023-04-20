@@ -7,6 +7,9 @@ return new class () extends clsListagem {
     {
         $this->titulo = 'Pessoas Físicas';
 
+        $par_nome = str_replace(array('[',']', '{', '}', '(', ')', '\\', '/'),'', $this->getQueryString(name: 'nm_pessoa')) ?: false;
+        $par_id_federal = idFederal2Int(str: $this->getQueryString(name: 'id_federal')) ?: false;
+
         $this->addCabecalhos(
             coluna: [
                 'Nome',
@@ -16,7 +19,7 @@ return new class () extends clsListagem {
         $this->campoTexto(
             nome: 'nm_pessoa',
             campo: 'Nome',
-            valor: $this->getQueryString(name: 'nm_pessoa'),
+            valor: $par_nome,
             tamanhovisivel: '50',
             tamanhomaximo: '255'
         );
@@ -24,19 +27,17 @@ return new class () extends clsListagem {
         $this->campoCpf(
             nome: 'id_federal',
             campo: 'CPF',
-            valor: $this->getQueryString(name: 'id_federal')
+            valor: $par_id_federal
         );
-
-        $par_nome = $this->getQueryString(name: 'nm_pessoa') ?: false;
-        $par_id_federal = idFederal2Int(str: $this->getQueryString(name: 'id_federal')) ?: false;
 
         // Paginador
         $limite = 10;
         $iniciolimit = ($this->getQueryString(name: "pagina_{$this->nome}")) ? $this->getQueryString(name: "pagina_{$this->nome}") * $limite - $limite : 0;
 
+
         $lista = LegacyPerson::query()->filter([
             'name' => $par_nome,
-            'cpf' => $par_id_federal,
+            'cpf' => is_numeric($par_id_federal) ? $par_id_federal : null,
         ])->select([
             'idpes',
             'nome',

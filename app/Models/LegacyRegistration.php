@@ -69,17 +69,27 @@ class LegacyRegistration extends LegacyModel
         'bloquear_troca_de_situacao'
     ];
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_matricula'
+    protected $casts = [
+        'data_matricula' => 'date',
+        'data_cancel' => 'date',
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_matricula',
+        'student_id' => 'ref_cod_aluno'
     ];
 
     protected function id(): Attribute
     {
         return Attribute::make(
             get: fn () =>  $this->cod_matricula
+        );
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () =>  $this->student->name
         );
     }
 

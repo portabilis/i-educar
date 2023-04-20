@@ -22,8 +22,8 @@ class LegacyDisciplineAcademicYearFactory extends Factory
     public function definition(): array
     {
         return [
-            'componente_curricular_id' => LegacyDisciplineFactory::new()->create(),
-            'ano_escolar_id' => LegacySchoolFactory::new()->create(),
+            'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
+            'ano_escolar_id' => fn () => LegacySchoolFactory::new()->create(),
             'carga_horaria' => 100,
             'tipo_nota' => $this->faker->randomElement([1, 2]),
             'anos_letivos' => '{' . now()->year . '}',
