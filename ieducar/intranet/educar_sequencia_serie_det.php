@@ -1,11 +1,14 @@
 <?php
 
+use App\Models\LegacySequenceGrade;
+
 return new class extends clsDetalhe {
     public $titulo;
     public $ref_serie_origem;
     public $ref_serie_destino;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
+    public $id;
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
@@ -14,62 +17,45 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Sequência Enturmação - Detalhe';
 
-        $this->ref_serie_origem = $_GET['ref_serie_origem'];
-        $this->ref_serie_destino = $_GET['ref_serie_destino'];
+        $this->id = $_GET['id'];
 
-        $tmp_obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacySequenceGrade::query()
+            ->with([
+                'gradeOrigin:cod_serie,nm_serie,ref_cod_curso',
+                'gradeDestiny:cod_serie,nm_serie,ref_cod_curso',
+                'gradeOrigin.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
+                'gradeDestiny.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
+                'gradeOrigin.course.institution:cod_instituicao,nm_instituicao'
+            ])
+            ->find($this->id);
 
         if (! $registro) {
             $this->simpleRedirect('educar_sequencia_serie_lst.php');
         }
-
-        $obj_ref_serie_origem = new clsPmieducarSerie($registro['ref_serie_origem']);
-        $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
-        $nm_serie_origem = $det_ref_serie_origem['nm_serie'];
-        $registro['ref_curso_origem'] = $det_ref_serie_origem['ref_cod_curso'];
-        $obj_ref_curso_origem = new clsPmieducarCurso($registro['ref_curso_origem']);
-        $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-        $nm_curso_origem = $det_ref_curso_origem['nm_curso'];
-        $registro['ref_cod_instituicao'] = $det_ref_curso_origem['ref_cod_instituicao'];
-
-        $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-        $det_instituicao = $obj_instituicao->detalhe();
-        $registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
-
-        $obj_ref_serie_destino = new clsPmieducarSerie($registro['ref_serie_destino']);
-        $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
-        $nm_serie_destino = $det_ref_serie_destino['nm_serie'];
-        $registro['ref_curso_destino'] = $det_ref_serie_destino['ref_cod_curso'];
-
-        $obj_ref_curso_destino = new clsPmieducarCurso($registro['ref_curso_destino']);
-        $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
-        $nm_curso_destino = $det_ref_curso_destino['nm_curso'];
-
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+            if ($registro->gradeOrigin->course->institution) {
+                $this->addDetalhe([ 'Instituição', "{$registro->gradeOrigin->course->institution->name}"]);
             }
         }
-        if ($nm_curso_origem) {
-            $this->addDetalhe([ 'Curso Origem', "{$nm_curso_origem}"]);
+        if ($registro->gradeOrigin->course) {
+            $this->addDetalhe([ 'Curso Origem', "{$registro->gradeOrigin->course->name}"]);
         }
-        if ($nm_serie_origem) {
-            $this->addDetalhe([ 'Série Origem', "{$nm_serie_origem}"]);
+        if ($registro->gradeOrigin) {
+            $this->addDetalhe([ 'Série Origem', "{$registro->gradeOrigin->name}"]);
         }
-        if ($nm_curso_destino) {
-            $this->addDetalhe([ 'Curso Destino', "{$nm_curso_destino}"]);
+        if ($registro->gradeDestiny->course) {
+            $this->addDetalhe([ 'Curso Destino', "{$registro->gradeDestiny->course->name}"]);
         }
-        if ($nm_serie_destino) {
-            $this->addDetalhe([ 'Série Destino', "{$nm_serie_destino}"]);
+        if ($registro->gradeDestiny) {
+            $this->addDetalhe([ 'Série Destino', "{$registro->gradeDestiny->name}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3)) {
             $this->url_novo = 'educar_sequencia_serie_cad.php';
-            $this->url_editar = "educar_sequencia_serie_cad.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}";
+            $this->url_editar = "educar_sequencia_serie_cad.php?id={$this->id}";
         }
 
         $this->url_cancelar = 'educar_sequencia_serie_lst.php';

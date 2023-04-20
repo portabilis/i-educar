@@ -131,6 +131,11 @@ class LegacyCourse extends LegacyModel
         );
     }
 
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
+    }
+
     /**
      * Relacionamento com as series
      *
