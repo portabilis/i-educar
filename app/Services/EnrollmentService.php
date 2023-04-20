@@ -166,6 +166,7 @@ class EnrollmentService
         }
 
         DB::beginTransaction();
+
         try {
             $enrollment->ref_usuario_exc = $this->user->getKey();
             $enrollment->data_exclusao = $date;
@@ -181,10 +182,12 @@ class EnrollmentService
             }
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
 
         DB::commit();
+
         return true;
     }
 

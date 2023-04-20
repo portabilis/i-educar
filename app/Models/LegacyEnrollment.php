@@ -67,7 +67,6 @@ class LegacyEnrollment extends LegacyModel
         'data_exclusao' => 'date',
     ];
 
-
     protected function date(): Attribute
     {
         return Attribute::make(
