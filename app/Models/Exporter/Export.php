@@ -137,6 +137,17 @@ class Export extends Model
                     $query->whereRaw("{$column} {$operator} ({$value})");
 
                     break;
+                case '@>':
+                    if (is_array($value)) {
+                        $query->where(function ($q) use ($column, $value) {
+                            foreach ($value as $v) {
+                                $q->orWhereRaw("{$column} @> ('{{$v}}')");
+                            }
+                        });
+                    } else {
+                        $query->whereRaw("{$column} @> ('{{$value}}')");
+                    }
+                    break;
             }
         }
     }
