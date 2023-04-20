@@ -74,10 +74,22 @@ class LegacyRegistration extends LegacyModel
         'data_cancel' => 'date',
     ];
 
+    public array $legacy = [
+        'id' => 'cod_matricula',
+        'student_id' => 'ref_cod_aluno'
+    ];
+
     protected function id(): Attribute
     {
         return Attribute::make(
             get: fn () =>  $this->cod_matricula
+        );
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () =>  $this->student->name
         );
     }
 

@@ -40,6 +40,11 @@ class LegacyStudent extends LegacyModel
         'tipo_responsavel',
     ];
 
+    public array $legacy = [
+        'id' => 'cod_aluno',
+        'person_id' => 'ref_idpes'
+    ];
+
     /**
      * @return BelongsTo
      */

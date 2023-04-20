@@ -210,6 +210,19 @@ class LegacyIndividual extends Model
         );
     }
 
+    protected function realName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->social_name) {
+                    return $this->social_name;
+                }
+
+                return $this->person->name;
+            }
+        );
+    }
+
     protected function birthdate(): Attribute
     {
         return Attribute::make(

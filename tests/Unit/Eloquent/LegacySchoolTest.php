@@ -50,6 +50,7 @@ class LegacySchoolTest extends EloquentTestCase
     {
         return [
             'id' => 'cod_escola',
+            'person_id' => 'ref_idpes',
             'name' => 'fantasia'
         ];
     }
