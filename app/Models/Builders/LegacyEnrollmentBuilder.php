@@ -21,7 +21,7 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
      */
     public function notActive(): self
     {
-        return $this->where('matricula_turma.ativo', 1);
+        return $this->where('matricula_turma.ativo', 0);
     }
 
     /**
