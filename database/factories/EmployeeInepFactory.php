@@ -24,7 +24,7 @@ class EmployeeInepFactory extends Factory
         return [
             'cod_servidor' => EmployeeFactory::new()->create(),
             'cod_docente_inep' => $this->faker->randomNumber(3),
-            'nome_inep' => $this->faker->name,
+            'nome_inep' => $this->faker->name(),
             'fonte' => 'U',
         ];
     }

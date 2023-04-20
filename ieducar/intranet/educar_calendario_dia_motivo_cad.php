@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCalendarDayReason;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -28,8 +29,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(int_processo_ap: 576, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_dia_motivo_lst.php');
 
         if (is_numeric(value: $this->cod_calendario_dia_motivo)) {
-            $obj = new clsPmieducarCalendarioDiaMotivo(cod_calendario_dia_motivo: $this->cod_calendario_dia_motivo);
-            $registro  = $obj->detalhe();
+            $registro  = LegacyCalendarDayReason::find($this->cod_calendario_dia_motivo)->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -58,12 +58,9 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'cod_calendario_dia_motivo', valor: $this->cod_calendario_dia_motivo);
 
         if ($this->cod_calendario_dia_motivo) {
-            $obj_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo(cod_calendario_dia_motivo: $this->cod_calendario_dia_motivo);
-            $obj_calendario_dia_motivo_det = $obj_calendario_dia_motivo->detalhe();
-            $this->ref_cod_escola = $obj_calendario_dia_motivo_det['ref_cod_escola'];
-            $obj_ref_cod_escola = new clsPmieducarEscola(cod_escola: $this->ref_cod_escola);
-            $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-            $this->ref_cod_instituicao = $det_ref_cod_escola['ref_cod_instituicao'];
+            $obj_calendario_dia_motivo_det = LegacyCalendarDayReason::find($this->cod_calendario_dia_motivo);
+            $this->ref_cod_escola = $obj_calendario_dia_motivo_det->school->getKey();
+            $this->ref_cod_instituicao = $obj_calendario_dia_motivo_det->school->institution->getKey();
         }
 
         $this->inputsHelper()->dynamic(helperNames: ['instituicao','escola']);
@@ -77,9 +74,15 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarCalendarioDiaMotivo(ref_cod_escola: $this->ref_cod_escola, ref_usuario_cad: $this->pessoa_logada, sigla: $this->sigla, descricao: $this->descricao, tipo: $this->tipo, ativo: 1, nm_motivo: $this->nm_motivo);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $obj = new LegacyCalendarDayReason();
+        $obj->ref_cod_escola = $this->ref_cod_escola;
+        $obj->ref_usuario_cad = $this->pessoa_logada;
+        $obj->sigla = $this->sigla;
+        $obj->descricao = $this->descricao;
+        $obj->tipo = $this->tipo;
+        $obj->nm_motivo = $this->nm_motivo;
+
+        if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_calendario_dia_motivo_lst.php')
@@ -87,15 +90,18 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarCalendarioDiaMotivo(cod_calendario_dia_motivo: $this->cod_calendario_dia_motivo, ref_cod_escola: $this->ref_cod_escola, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, sigla: $this->sigla, descricao: $this->descricao, tipo: $this->tipo, data_cadastro: null, data_exclusao: null, ativo: 1, nm_motivo: $this->nm_motivo);
-        $editou = $obj->edita();
-        if ($editou) {
+        $obj = LegacyCalendarDayReason::find($this->cod_calendario_dia_motivo);
+        $obj->sigla = $this->sigla;
+        $obj->descricao = $this->descricao;
+        $obj->tipo = $this->tipo;
+        $obj->nm_motivo = $this->nm_motivo;
+
+        if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
             throw new HttpResponseException(
@@ -104,23 +110,20 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarCalendarioDiaMotivo(cod_calendario_dia_motivo: $this->cod_calendario_dia_motivo, ref_usuario_exc: $this->pessoa_logada, ativo: 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $obj = LegacyCalendarDayReason::find($this->cod_calendario_dia_motivo);
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_calendario_dia_motivo_lst')
+                response: new RedirectResponse(url: 'educar_calendario_dia_motivo_lst.php')
             );
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 

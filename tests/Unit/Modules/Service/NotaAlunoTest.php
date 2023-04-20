@@ -21,15 +21,12 @@ class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
             ->method('save')
             ->with($notaSave)
             ->willReturn(true);
-
         $mock
             ->expects(self::exactly(2))
             ->method('findAll')
-            ->withConsecutive(
-                [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]],
-                [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]]
-            )
             ->willReturnOnConsecutiveCalls([], [$notaAluno]);
+
+        $this->assertEquals(1, $this->_getConfigOption('matricula', 'cod_matricula'));
 
         $this->_setNotaAlunoDataMapperMock($mock);
 

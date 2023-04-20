@@ -25,11 +25,19 @@ class LegacySchoolClassTypeFactory extends Factory
         $abbreviation = mb_substr($this->faker->colorName, 0, 5);
 
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_tipo' => 'Tipo ' . $name,
             'sgl_tipo' => $abbreviation,
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
+    }
+
+    public function current(): LegacySchoolClassType
+    {
+        return LegacySchoolClassType::query()->first() ?? $this->create([
+            'nm_tipo' => 'Tipo de Turma Padrão',
+            'sgl_tipo' => 'P',
+        ]);
     }
 
     public function unique(): self

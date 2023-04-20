@@ -304,12 +304,4 @@ class clsPmieducarTipoUsuario extends Model
 
         return $this->edita();
     }
-
-    public function possuiUsuarioRelacionado()
-    {
-        $db = new clsBanco();
-        $resultado = $db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE ref_cod_tipo_usuario = {$this->cod_tipo_usuario}");
-
-        return (bool) $resultado;
-    }
 }

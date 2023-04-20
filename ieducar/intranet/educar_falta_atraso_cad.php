@@ -139,6 +139,12 @@ return new class extends clsCadastro {
             )
         );
 
+        if ($this->tipo == 1 && ($this->qtd_horas == '' || $this->qtd_min == '')) {
+            $this->mensagem = 'Preencha os campos de quantidade de horas e minutos.<br>';
+
+            return false;
+        }
+
         if ($this->tipo == 1) {
             $obj = new LegacyAbsenceDelay();
             $obj->ref_cod_escola = $this->ref_cod_escola;
@@ -206,6 +212,13 @@ return new class extends clsCadastro {
                 $this->ref_cod_instituicao
             )
         );
+
+        if ($this->tipo == 1 && ($this->qtd_horas == '' || $this->qtd_min == '')) {
+            $this->mensagem = 'Preencha os campos de quantidade de horas e minutos.<br>';
+
+            return false;
+        }
+
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
         if ($this->tipo == 1) {
             $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);

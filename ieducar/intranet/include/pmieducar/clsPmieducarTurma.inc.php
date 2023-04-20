@@ -633,57 +633,6 @@ class clsPmieducarTurma extends Model
     }
 
     /**
-     * volta o maior modulo comum (antes do exame) permitido nessa turma
-     *
-     * @return unknown
-     */
-    public function maxModulos()
-    {
-        if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
-            // ve se o curso segue o padrao escolar
-            $padrao = $db->CampoUnico("SELECT c.padrao_ano_escolar FROM {$this->_schema}curso c, {$this->_tabela} t WHERE cod_turma = {$this->cod_turma} AND c.cod_curso = t.ref_cod_curso AND c.ativo = 1 AND t.ativo = 1");
-            if ($padrao) {
-                // segue o padrao
-                $cod_escola = $db->CampoUnico("SELECT ref_ref_cod_escola FROM {$this->_tabela} WHERE cod_turma = {$this->cod_turma} AND ativo = 1");
-                $ano = $db->CampoUnico("SELECT COALESCE(MAX(ano),0) FROM {$this->_schema}escola_ano_letivo WHERE ref_cod_escola = {$cod_escola} AND andamento = 1 AND ativo = 1");
-                if ($ano) {
-                    return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) FROM {$this->_schema}ano_letivo_modulo WHERE ref_ref_cod_escola = {$cod_escola} AND ref_ano = {$ano}");
-                }
-            } else {
-                // nao segue o padrao escolar
-                return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) FROM {$this->_schema}turma_modulo WHERE ref_cod_turma = {$this->cod_turma}");
-            }
-        }
-
-        return false;
-    }
-
-    public function getCurso()
-    {
-        if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_curso, ref_ref_cod_serie FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'");
-            $db->ProximoRegistro();
-            list($cod_curso, $cod_serie) = $db->Tupla();
-            if (is_numeric($cod_curso)) {
-                return $cod_curso;
-            }
-
-            if (is_numeric($cod_serie)) {
-                $db->Consulta("SELECT ref_cod_curso FROM {$this->_schema}serie WHERE cod_serie = '{$cod_serie}'");
-                $db->ProximoRegistro();
-                list($cod_curso) = $db->Tupla();
-                if (is_numeric($cod_curso)) {
-                    return $cod_curso;
-                }
-            }
-
-            return false;
-        }
-    }
-
-    /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
      * @return array|false

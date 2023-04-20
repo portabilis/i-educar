@@ -23,14 +23,23 @@ class LegacyUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_usuario' => static fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
-            'ref_cod_instituicao' => static fn () => LegacyInstitutionFactory::new()->unique()->make(),
-            'ref_funcionario_cad' => static fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
-            'ref_funcionario_exc' => static fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
-            'ref_cod_tipo_usuario' => static fn () => LegacyUserTypeFactory::new()->create()->cod_tipo_usuario,
-            'data_cadastro' => $this->faker->dateTime,
+            'cod_usuario' => fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
+            'ref_funcionario_cad' => fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
+            'ref_funcionario_exc' => fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
+            'ref_cod_tipo_usuario' => fn () => LegacyUserTypeFactory::new()->create()->cod_tipo_usuario,
+            'data_cadastro' => $this->faker->dateTime(),
             'ativo' => 1,
         ];
+    }
+
+    public function current(): LegacyUser
+    {
+        return LegacyUser::query()->first() ?? $this->create([
+            'cod_usuario' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
+            'ref_funcionario_cad' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
+            'ref_funcionario_exc' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
+        ]);
     }
 
     public function admin(): static

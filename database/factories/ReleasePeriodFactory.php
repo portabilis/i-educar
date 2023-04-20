@@ -15,7 +15,7 @@ class ReleasePeriodFactory extends Factory
         return [
             'year' => Carbon::today()->year,
             'stage' => $this->faker->randomNumber(),
-            'stage_type_id' => LegacyStageTypeFactory::new()->create()
+            'stage_type_id' => fn () => LegacyStageTypeFactory::new()->create()
         ];
     }
 }

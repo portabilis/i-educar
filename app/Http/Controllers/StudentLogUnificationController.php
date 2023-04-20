@@ -29,6 +29,9 @@ class StudentLogUnificationController extends Controller
                 });
             });
         }
+        $unificationsQuery->when($request->get('name'), fn ($q, $name) => $q->name($name));
+
+        $unificationsQuery->latest();
 
         return view('unification.student.index', ['unifications' => $unificationsQuery->paginate(20)]);
     }

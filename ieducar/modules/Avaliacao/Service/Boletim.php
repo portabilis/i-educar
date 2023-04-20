@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStudentAbsence;
 use App\Services\CyclicRegimeService;
 use App\Services\StageScoreCalculationService;
@@ -246,7 +248,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
         }
 
-        $etapaAtual = ($_GET['etapa'] ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($_GET['etapa'] ?? null);
+        $etapa = $this->getOption('etapa') ?: ($_GET['etapa'] ?? null);
+
+        $etapaAtual = ($etapa ?? null) === 'Rc' ? $maiorEtapaUtilizada : ($etapa ?? null);
 
         $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
             $codMatricula,
@@ -1300,6 +1304,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 return $disciplina->id;
             }, $disciplinasNaoReprovativas);
 
+            $totalHorasFaltaComponentes = 0;
             foreach ($faltas as $key => $falta) {
                 // Total de faltas do componente
                 $componenteTotal = array_sum(CoreExt_Entity::entityFilterAttr(
@@ -1327,9 +1332,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $faltasComponentes[$id]->porcentagemPresenca = null;
                 $faltasComponentes[$id]->total = $componenteTotal;
 
+                $componenteHoraFalta = $this->getHoraFalta($enrollmentData, (int)$id);
+
                 // Calcula a quantidade de horas/faltas no componente
-                $faltasComponentes[$id]->horasFaltas =
-                    $this->_calculateHoraFalta($componenteTotal, $presenca->cursoHoraFalta);
+                $quantidadeHoraFaltaDoComponente = $this->_calculateHoraFalta($componenteTotal, $componenteHoraFalta);
+
+                $faltasComponentes[$id]->horasFaltas =  $quantidadeHoraFaltaDoComponente;
 
                 // Calcula a porcentagem de falta no componente
                 $faltasComponentes[$id]->porcentagemFalta =
@@ -1373,6 +1381,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 if (!in_array($id, $disciplinasNaoReprovativas)) {
                     // Adiciona a quantidade de falta do componente ao total geral de faltas
                     $total += $componenteTotal;
+
+                    // Faz somas de todas as horas faltas por compomente
+                    $totalHorasFaltaComponentes += $quantidadeHoraFaltaDoComponente;
                 }
             }
 
@@ -1393,18 +1404,23 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         } // fim if por_componente
 
         $presenca->totalFaltas = $total;
-        $presenca->horasFaltas = $this->_calculateHoraFalta($total, $presenca->cursoHoraFalta);
 
         if ($tipoFaltaGeral) {
+            // Quando é tipoFaltaGeral a carga horária é do curso
+            $presenca->horasFaltas = $this->_calculateHoraFalta($total, $presenca->cursoHoraFalta);
             $presenca->porcentagemFalta = $this->_calculatePorcentagem(
                 $presenca->diasLetivos,
                 $presenca->totalFaltas,
                 false
             );
-        } elseif ($tipoFaltaPorComponente) {
+        }
+
+        if ($tipoFaltaPorComponente) {
+            // Quando é $tipoFaltaPorComponente a carga horária é a soma da quantidade de horas faltas dos componentes reprovativos $totalHorasFaltaComponentes
+            $presenca->horasFaltas = $totalHorasFaltaComponentes;
             $presenca->porcentagemFalta = $this->_calculatePorcentagem(
                 $presenca->cargaHoraria,
-                $presenca->horasFaltas,
+                $totalHorasFaltaComponentes,
                 false
             );
         }
@@ -1563,20 +1579,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
 
-            // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
-            $situacaoFaltaCc = new stdClass();
-            $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-
-            // caso possua situacaoFalta para o componente substitui situacao inicializada
-            if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId])) {
-                $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
-            }
-
             // pega situação nota geral ou do componente
             if ($tipoNotaNenhum) {
                 $situacaoNota = $situacaoNotas->situacao;
             } else {
-                $situacaoNota = $situacaoNotaCc->situacao;
+                $situacaoNota = $situacaoNotaCc?->situacao;
             }
 
             // pega situacao da falta componente ou geral.
@@ -3551,5 +3558,43 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $diasLetivos;
+    }
+
+    /**
+     *
+     * @param $registration
+     * @param int $disciplineId
+     * @return \Illuminate\Database\Eloquent\HigherOrderBuilderProxy|mixed|void
+     */
+    private function getHoraFalta(array $registration, int $disciplineId)
+    {
+        $year   = $registration['ano'];
+        $grade  = $registration['ref_ref_cod_serie'];
+        $school = $registration['ref_ref_cod_escola'];
+
+        $legacySchoolGradeDiscipline = LegacySchoolGradeDiscipline::query()
+            ->whereYearEq($year)
+            ->whereGrade($grade)
+            ->whereSchool($school)
+            ->whereDiscipline($disciplineId)
+            ->value('hora_falta')
+        ;
+
+        if ($legacySchoolGradeDiscipline) {
+            return (float) $legacySchoolGradeDiscipline;
+        }
+
+        $legacyDisciplineAcademicYear = LegacyDisciplineAcademicYear::query()
+            ->whereGrade($grade)
+            ->whereDiscipline($disciplineId)
+            ->whereYearEq($year)
+            ->value('hora_falta')
+        ;
+
+        if ($legacyDisciplineAcademicYear) {
+            return (float) $legacyDisciplineAcademicYear;
+        }
+
+        return $this->getOption('cursoHoraFalta');
     }
 }

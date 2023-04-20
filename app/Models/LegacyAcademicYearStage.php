@@ -26,12 +26,9 @@ class LegacyAcademicYearStage extends LegacyModel
      */
     protected string $builder = LegacyAcademicYearStageBuilder::class;
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_inicio',
-        'data_fim',
+    protected $casts = [
+        'data_inicio' => 'date',
+        'data_fim' => 'date',
     ];
 
     /**
@@ -53,7 +50,7 @@ class LegacyAcademicYearStage extends LegacyModel
      */
     public $timestamps = false;
 
-    public function module(): BelongsTo
+    public function stageType(): BelongsTo
     {
         return $this->belongsTo(LegacyStageType::class, 'ref_cod_modulo');
     }

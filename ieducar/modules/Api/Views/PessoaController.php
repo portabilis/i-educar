@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Models\PersonHasPlace;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -656,6 +657,7 @@ class PessoaController extends ApiCoreController
 
         $_servidor['exist'] = $exist;
         $_servidor['id'] = $id;
+        $_servidor['instituicao_id'] = LegacyInstitution::active()->first()->cod_instituicao;
         $_servidor['nome'] = $exist ? $this->loadPessoa($id)['nome'] : null;
 
         return $_servidor;

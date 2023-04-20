@@ -4,6 +4,7 @@ use App\Events\TransferEvent;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
 use App\Models\LegacyTransferType;
+use App\Models\LegacyUser;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
@@ -227,11 +228,18 @@ return new class extends clsCadastro {
         $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
-            $obj = new clsPmieducarMatricula(cod_matricula: $this->ref_cod_matricula, ref_cod_reserva_vaga: null, ref_ref_cod_escola: null, ref_ref_cod_serie: null, ref_usuario_exc: $this->pessoa_logada);
-            $obj->data_cancel = $this->data_cancel;
-            $obj->edita();
+            $registration = LegacyRegistration::find($this->ref_cod_matricula);
+            $exists = LegacyUser::query()
+                ->whereKey($registration->ref_usuario_cad)
+                ->exists();
 
-            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(columns: ['id'], where: ['matricula_id' => $obj->cod_matricula]);
+            $registration->update([
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'ref_usuario_cad' => $exists ? $registration->ref_usuario_cad : $this->pessoa_logada,
+                'data_cancel' => $this->data_cancel,
+            ]);
+
+            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(columns: ['id'], where: ['matricula_id' => $this->ref_cod_matricula]);
 
             if ($notasAluno && count(value: $notasAluno)) {
                 $notaAlunoId = $notasAluno[0]->get('id');

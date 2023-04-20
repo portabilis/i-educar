@@ -50,6 +50,7 @@ class LegacySchoolGradeDiscipline extends Model
         'etapas_utilizadas',
         'updated_at',
         'anos_letivos',
+        'hora_falta',
     ];
 
     protected function id(): Attribute

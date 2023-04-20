@@ -48,7 +48,7 @@ class LegacyStudentMedicalRecordFactory extends Factory
             'desc_fratura_trauma' => $this->faker->words(7, true),
             'plano_saude' => $this->faker->randomElement(['S', 'N']),
             'desc_plano_saude' => $this->faker->word,
-            'responsavel' => $this->faker->name,
+            'responsavel' => $this->faker->name(),
             'responsavel_parentesco' => $this->faker->randomElement(['pai', 'mae', 'irmao', 'irma', 'tio', 'tia', 'avô', 'avó', 'outro']),
             'responsavel_parentesco_telefone' => '(99) 9999-9999',
             'responsavel_parentesco_celular' => '(99) 99999-9999',

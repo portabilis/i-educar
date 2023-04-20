@@ -71,7 +71,7 @@ class SchoolManager extends Model
      */
     public function isChief(): bool
     {
-        return $this->chief;
+        return (bool)$this->chief;
     }
 
     /**

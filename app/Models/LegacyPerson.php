@@ -32,13 +32,6 @@ class LegacyPerson extends LegacyModel
     /**
      * @var array
      */
-    protected $dates = [
-        'data_cad',
-    ];
-
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nome',
         'data_cad',
@@ -47,6 +40,11 @@ class LegacyPerson extends LegacyModel
         'origem_gravacao',
         'operacao',
         'email'
+    ];
+
+    public array $legacy = [
+        'id' => 'idpes',
+        'name' => 'nome',
     ];
 
     /**

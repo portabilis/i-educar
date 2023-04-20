@@ -1265,7 +1265,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function appendMsg($msg, $type = 'error', $encodeToUtf8 = false)
     {
         if ($encodeToUtf8) {
-            $msg = utf8_encode($msg);
+            $msg = mb_convert_encoding($msg, 'UTF-8');
         }
 
         //error_log("$type msg: '$msg'");

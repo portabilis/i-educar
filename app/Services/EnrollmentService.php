@@ -21,8 +21,10 @@ use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
+use iEducar\Support\Exceptions\Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use SequencialEnturmacao;
 use Throwable;
 
@@ -163,19 +165,30 @@ class EnrollmentService
             throw new PreviousEnrollCancellationDateException($enrollment->registration, $date);
         }
 
-        $enrollment->ref_usuario_exc = $this->user->getKey();
-        $enrollment->data_exclusao = $date;
-        $enrollment->ativo = 0;
+        DB::beginTransaction();
 
-        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+        try {
+            $enrollment->ref_usuario_exc = $this->user->getKey();
+            $enrollment->data_exclusao = $date;
+            $enrollment->ativo = 0;
+            $enrollment->save();
 
-        // Se a matrícula anterior data de saída antes da data base (ou não houver data base)
-        // reordena o sequencial da turma de origem
-        if (!$relocationDate || $date < $relocationDate) {
-            $this->reorderSchoolClass($enrollment);
+            $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+            // Se a matrícula anterior data de saída antes da data base (ou não houver data base)
+            // reordena o sequencial da turma de origem
+            if (!$relocationDate || $date < $relocationDate) {
+                $this->reorderSchoolClass($enrollment);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return false;
         }
 
-        return $enrollment->saveOrFail();
+        DB::commit();
+
+        return true;
     }
 
     /**
@@ -228,8 +241,6 @@ class EnrollmentService
             throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 
-        $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);
-
         $existsActiveEnrollment = $registration->enrollments()
             ->where('ativo', 1)
             ->where('ref_cod_turma', $schoolClass->id)
@@ -243,7 +254,7 @@ class EnrollmentService
         $enrollment = $registration->enrollments()->create([
             'ref_cod_turma' => $schoolClass->id,
             'sequencial' => $registration->enrollments()->max('sequencial') + 1,
-            'sequencial_fechamento' => $sequenceInSchoolClass,
+            'sequencial_fechamento' => $this->getSequenceSchoolClass($registration, $schoolClass, $date),
             'ref_usuario_cad' => $this->user->getKey(),
             'data_cadastro' => Carbon::now(),
             'data_enturmacao' => $date,
@@ -381,11 +392,12 @@ class EnrollmentService
         }
 
         $schoolClass = $enrollment->schoolClass;
-        $schoolClass->enrollments()->where('sequencial_fechamento', '>', $enrollment->sequencial_fechamento)
+        $schoolClass->enrollments()
+            ->whereValid()
             ->orderBy('sequencial_fechamento')
-            ->get()
-            ->each(function (LegacyEnrollment $enrollment) {
-                $enrollment->sequencial_fechamento -= 1;
+            ->get(['id','sequencial_fechamento', 'updated_at'])
+            ->each(static function (LegacyEnrollment $enrollment, $index) {
+                $enrollment->sequencial_fechamento = $index + 1;
                 $enrollment->save();
             });
 

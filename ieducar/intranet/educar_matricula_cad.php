@@ -3,10 +3,13 @@
 use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySequenceGrade;
 use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -939,7 +942,6 @@ return new class extends clsCadastro {
     public function permiteMatriculaSerieDestino()
     {
         $objMatricula = new clsPmieducarMatricula;
-        $objSequenciaSerie = new clsPmieducarSequenciaSerie;
 
         $dadosUltimaMatricula = $objMatricula->getDadosUltimaMatricula(codAluno: $this->ref_cod_aluno);
         $this->situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
@@ -957,8 +959,7 @@ return new class extends clsCadastro {
         }
 
         if (in_array(needle: $this->situacaoUltimaMatricula, haystack: $aprovado)) {
-            $serieNovaMatricula = $objSequenciaSerie->lista(int_ref_serie_origem: $this->serieUltimaMatricula);
-            $serieNovaMatricula = $serieNovaMatricula[0]['ref_serie_destino'];
+            $serieNovaMatricula = LegacySequenceGrade::query()->whereGradeOrigin( $this->serieUltimaMatricula)->active()->value('ref_serie_destino');
         } elseif (in_array(needle: $this->situacaoUltimaMatricula, haystack: $reprovado)) {
             $serieNovaMatricula = $this->serieUltimaMatricula;
         }
@@ -1046,12 +1047,11 @@ return new class extends clsCadastro {
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-        $obj_sequencia = new clsPmieducarSequenciaSerie();
-
-        $lst_sequencia = $obj_sequencia->lista(
-            int_ref_serie_destino: $ref_cod_serie,
-            int_ativo: 1
-        );
+        $lst_sequencia = LegacySequenceGrade::query()
+            ->whereGradeDestiny($ref_cod_serie)
+            ->active()
+            ->get()
+            ->toArray();
 
         // Verifica se a série da matrícula cancelada é sequência de alguma outra série
         if (is_array(value: $lst_sequencia)) {
@@ -1098,6 +1098,16 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
+            $enrollments = LegacyEnrollment::query()
+                ->where('ref_cod_matricula', $this->cod_matricula)
+                ->get();
+
+            $enrollmentService = new EnrollmentService();
+
+            foreach ($enrollments as $enrollment) {
+                $enrollmentService->reorderSchoolClass($enrollment);
+            }
+
             $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
