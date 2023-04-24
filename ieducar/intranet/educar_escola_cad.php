@@ -208,52 +208,6 @@ return new class extends clsCadastro {
         'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social'
     ];
 
-    public $inputsMatriculasAtendidasPorConvenio = [
-        'qtd_matriculas_atividade_complementar' => 'Atividade complementar',
-        'qtd_atendimento_educacional_especializado' => 'Atendimento educacional especializado',
-        'qtd_ensino_regular_creche_par' => 'Ensino Regular - Creche - Parcial',
-        'qtd_ensino_regular_creche_int' => 'Ensino Regular - Creche - Integral',
-        'qtd_ensino_regular_pre_escola_par' => 'Ensino Regular - Pré-escola - Parcial',
-        'qtd_ensino_regular_pre_escola_int' => 'Ensino Regular - Pré-escola - Integral',
-        'qtd_ensino_regular_ensino_fund_anos_iniciais_par' => 'Ensino Regular - Ensino Fundamental - Anos Iniciais - Parcial',
-        'qtd_ensino_regular_ensino_fund_anos_iniciais_int' => 'Ensino Regular - Ensino Fundamental - Anos Iniciais - Integral',
-        'qtd_ensino_regular_ensino_fund_anos_finais_par' => 'Ensino Regular - Ensino Fundamental - Anos Finais - Parcial',
-        'qtd_ensino_regular_ensino_fund_anos_finais_int' => 'Ensino Regular - Ensino Fundamental - Anos Finais - Integral',
-        'qtd_ensino_regular_ensino_med_anos_iniciais_par' => 'Ensino Regular - Ensino Médio - Parcial',
-        'qtd_ensino_regular_ensino_med_anos_iniciais_int' => 'Ensino Regular - Ensino Médio - Integral',
-        'qtd_edu_especial_classe_especial_par' => 'Educação Especial - Classe especial - Parcial',
-        'qtd_edu_especial_classe_especial_int' => 'Educação Especial - Classe especial - Integral',
-        'qtd_edu_eja_ensino_fund' => 'Educação de Jovens e Adultos (EJA) - Ensino fundamental',
-        'qtd_edu_eja_ensino_med' => 'Educação de Jovens e Adultos (EJA) - Ensino médio',
-        'qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par' => 'Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Parcial',
-        'qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int' => 'Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Integral',
-        'qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par' => 'Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int' => 'Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par' => 'Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par' => 'educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_inte_ensino_med_par' => 'Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Parcial',
-        'qtd_edu_prof_quali_prof_tecinte_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_ensino_med_par' => 'Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med' => 'Educação Profissional - Educação profissional técnica de nível médio - Subsequente ao ensino médio',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral',
-    ];
-
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -929,13 +883,6 @@ return new class extends clsCadastro {
 
             $this->campoOculto(nome: 'incluir_curso', valor: '');
             $this->campoQuebra();
-
-            $this->campoRotulo(nome: 'matriculas_atendidas_convenio', campo: '<b>Número de matrículas atendidas por meio da parceria ou convênio</b>');
-
-            foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $label) {
-                $options = ['label' => $label, 'value' => $this->{$key}, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
-                $this->inputsHelper()->integer(attrName: $key, inputOptions: $options);
-            }
 
             $helperOptions = ['objectName' => 'local_funcionamento'];
             $options = [
@@ -1701,10 +1648,6 @@ return new class extends clsCadastro {
             $obj->{$key} = $this->{$key};
         }
 
-        foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $value) {
-            $obj->{$key} = $this->{$key};
-        }
-
         return $obj;
     }
 
@@ -1934,8 +1877,7 @@ return new class extends clsCadastro {
             $this->validaEquipamentosAcessoInternet() &&
             $this->validaQuantidadeComputadoresAlunos() &&
             $this->validaQuantidadeEquipamentosEnsino() &&
-            $this->validaLinguasIndigenas() &&
-            $this->validaMatriculasAtendidasPorConvenio();
+            $this->validaLinguasIndigenas();
     }
 
     protected function validaOcupacaoPredio()
@@ -2553,38 +2495,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção Quantidade de profissionais</b> da aba Recursos.';
-
-        return false;
-    }
-
-    protected function validaMatriculasAtendidasPorConvenio()
-    {
-        if ($this->poder_publico_parceria_convenio === null) {
-            return true;
-        }
-
-        if (!in_array(needle: 1, haystack: $this->poder_publico_parceria_convenio) && !in_array(needle: 2, haystack: $this->poder_publico_parceria_convenio)) {
-            return true;
-        }
-
-        $algumCampoPreenchido = false;
-        foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $label) {
-            if ($this->{$key} == '0') {
-                $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
-
-                return false;
-            }
-
-            if ((int)$this->{$key} > 0) {
-                $algumCampoPreenchido = true;
-            }
-        }
-
-        if ($algumCampoPreenchido) {
-            return true;
-        }
-
-        $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Número de matrículas atendidas por meio da parceria ou convênio</b> da aba <b>Matrículas atendidas por convênio.</b>';
 
         return false;
     }
