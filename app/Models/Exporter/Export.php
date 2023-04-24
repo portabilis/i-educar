@@ -147,6 +147,7 @@ class Export extends Model
                     } else {
                         $query->whereRaw("{$column} @> ('{{$value}}')");
                     }
+
                     break;
             }
         }
