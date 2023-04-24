@@ -126,7 +126,6 @@ class clsPmieducarEscola extends Model
     public $nao_ha_funcionarios_para_funcoes;
     public $iddis;
     public $poder_publico_parceria_convenio;
-    public $formas_contratacao_adm_publica_e_outras_instituicoes;
     public $qtd_matriculas_atividade_complementar;
     public $qtd_atendimento_educacional_especializado;
     public $qtd_ensino_regular_creche_par;
@@ -220,7 +219,6 @@ class clsPmieducarEscola extends Model
             e.nao_ha_funcionarios_para_funcoes,
           e.iddis,
             e.poder_publico_parceria_convenio,
-            e.formas_contratacao_adm_publica_e_outras_instituicoes,
             e.qtd_matriculas_atividade_complementar,
             e.qtd_atendimento_educacional_especializado,
             e.qtd_ensino_regular_creche_par,
@@ -1048,11 +1046,6 @@ class clsPmieducarEscola extends Model
             if (is_string($this->poder_publico_parceria_convenio)) {
                 $campos .= "{$gruda}poder_publico_parceria_convenio";
                 $valores .= "{$gruda}'{{$this->poder_publico_parceria_convenio}}'";
-            }
-
-            if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
-                $campos .= "{$gruda}formas_contratacao_adm_publica_e_outras_instituicoes";
-                $valores .= "{$gruda}'{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
             }
 
             if (is_numeric($this->qtd_matriculas_atividade_complementar)) {
@@ -2201,16 +2194,6 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}='{{$this->poder_publico_parceria_convenio}}'";
             } else {
                 $gruda .= "poder_publico_parceria_convenio";
-                $set .= "{$gruda}=NULL";
-            }
-
-            if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
-                $gruda = ', ';
-                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
-                $set .= "{$gruda}='{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
-            } else {
-                $gruda = ', ';
-                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
                 $set .= "{$gruda}=NULL";
             }
 
