@@ -6,7 +6,6 @@ use App\Models\Registration;
 use App\Models\RegistrationStatus;
 use App\Models\Student;
 use Database\Factories\LegacyIndividualFactory;
-use Database\Factories\LegacyPersonFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacyStudentFactory;
 use Tests\ViewTestCase;
@@ -30,21 +29,16 @@ class RegistrationTest extends ViewTestCase
 
     public function testDoesntHaveFather(): void
     {
-        //registration without father
-        $individual1 = LegacyIndividualFactory::new()->create(['idpes_pai' => null]);
-        $student1 = LegacyStudentFactory::new()->create(['ref_idpes' => $individual1]);
-        $model1 = $this->factory->forView($student1->cod_aluno)->make();
-
         //registration with father
-        $individual2 = LegacyIndividualFactory::new()->create(['idpes_pai' => LegacyPersonFactory::new()]);
+        $individual2 = LegacyIndividualFactory::new()->father()->create();
         $student2 = LegacyStudentFactory::new()->create(['ref_idpes' => $individual2]);
         $this->factory->forView($student2->cod_aluno)->make();
 
         $collection = $this->instanceNewViewModel()->doesntHaveFather()->get();
-        $found = array_intersect_key($model1->getAttributes(), $collection->first()->getAttributes());
+        $found = array_intersect_key($this->model->getAttributes(), $collection->first()->getAttributes());
 
         $this->assertCount(1, $collection);
-        $this->assertEquals($model1->getAttributes(), $found);
+        $this->assertEquals($this->model->getAttributes(), $found);
     }
 
     public function testStudentIsActive(): void

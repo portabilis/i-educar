@@ -33,7 +33,7 @@ class EnrollmentFactory extends Factory
             $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder();
             $seed->run();
         }
-        $institution = LegacyInstitutionFactory::new()->create();
+        $institution = LegacyInstitutionFactory::new()->current();
         $school = LegacySchoolFactory::new()->create([
             'ref_cod_instituicao' => $institution->id
         ]);

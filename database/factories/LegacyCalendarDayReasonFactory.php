@@ -12,13 +12,13 @@ class LegacyCalendarDayReasonFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'sigla' => $this->faker->word,
             'descricao' => $this->faker->sentence,
             'tipo' => $this->faker->randomElement(['e', 'n']),
             'nm_motivo' => $this->faker->word,
-            'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
         ];
     }
 }

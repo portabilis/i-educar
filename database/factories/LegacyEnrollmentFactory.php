@@ -25,9 +25,9 @@ class LegacyEnrollmentFactory extends Factory
             'ref_cod_matricula' => fn () => LegacyRegistrationFactory::new()->create(),
             'ref_cod_turma' => fn () => LegacySchoolClassFactory::new()->create(),
             'sequencial' => 1,
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'turno_id' => 1,
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
+            'turno_id' => fn () => LegacyPeriodFactory::new()->morning(),
             'data_enturmacao' => now(),
         ];
     }

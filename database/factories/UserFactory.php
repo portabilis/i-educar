@@ -26,7 +26,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_usuario' => LegacyEmployeeFactory::new()->create(),
+            'cod_usuario' => fn () => LegacyEmployeeFactory::new()->create(),
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),

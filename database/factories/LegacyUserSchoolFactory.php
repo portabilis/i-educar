@@ -12,7 +12,7 @@ class LegacyUserSchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_usuario' => fn () => LegacyUserFactory::new()->create(),
+            'ref_cod_usuario' => fn () => LegacyUserFactory::new()->current(),
             'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
         ];
     }

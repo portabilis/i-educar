@@ -23,19 +23,23 @@
                 <td class="formmdtd" valign="top"><span class="form">Data da unificação:</span></td>
                 <td class="formmdtd" valign="top"><span class="form">{{ $unification->created_at->format('d/m/Y H:i:s') }}</span></td>
             </tr>
-            <tr>
-                <td class="formmdtd" valign="top"><span class="form">Feita por:</span></td>
-                <td class="formmdtd" valign="top"><span class="form"></span>{{ $unification->createdBy->real_name }}</td>
-            </tr>
+            @if($unification->createdBy)
+                <tr>
+                    <td class="formmdtd" valign="top"><span class="form">Feita por:</span></td>
+                    <td class="formmdtd" valign="top"><span class="form"></span>{{ $unification->createdBy->real_name }}</td>
+                </tr>
+            @endif
             @if(!$unification->active)
                 <tr>
                     <td class="formmdtd" valign="top"><span class="form">Desfeita em:</span></td>
                     <td class="formmdtd" valign="top"><span class="form">{{ $unification->updated_at->format('d/m/Y H:i:s') }}</span></td>
                 </tr>
-                <tr>
-                    <td class="formmdtd" valign="top"><span class="form">Desfeita por:</span></td>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $unification->updatedBy->real_name }}</span></td>
-                </tr>
+                @if($unification->updatedBy)
+                    <tr>
+                        <td class="formmdtd" valign="top"><span class="form">Desfeita por:</span></td>
+                        <td class="formmdtd" valign="top"><span class="form">{{ $unification->updatedBy->real_name }}</span></td>
+                    </tr>
+                @endif
             @endif
             </tbody>
         </table>

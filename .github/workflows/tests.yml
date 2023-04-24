@@ -54,7 +54,10 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
+          extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
+        env:
+          update: true
 
       - name: Get composer cache directory
         id: composer-cache

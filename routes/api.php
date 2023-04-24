@@ -2,10 +2,19 @@
 
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\DisciplineController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
+use App\Http\Controllers\Api\GradeController;
+use App\Http\Controllers\Api\InstitutionController;
 use App\Http\Controllers\Api\People\LegacyDeficiencyController;
+use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\ReligionController;
+use App\Http\Controllers\Api\SchoolClassController;
+use App\Http\Controllers\Api\SchoolController;
+use App\Http\Controllers\Api\SituationController;
+use App\Http\Controllers\Api\StageController;
 use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +59,18 @@ Route::get('/school-class/calendars', 'Api\SchoolClassController@getCalendars');
 Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getStages');
 
 Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
+
+Route::group(['middleware' => 'auth:sanctum','namespace' => 'Api'], static function () {
+    Route::resource('institution', InstitutionController::class)->only(['index']);
+    Route::resource('school', SchoolController::class)->only(['index']);
+    Route::resource('course', CourseController::class)->only(['index']);
+    Route::resource('grade', GradeController::class)->only(['index']);
+    Route::resource('school-class', SchoolClassController::class)->only(['index']);
+    Route::resource('registration', RegistrationController::class)->only(['index']);
+    Route::resource('situation', SituationController::class)->only(['index']);
+    Route::resource('discipline', DisciplineController::class)->only(['index']);
+    Route::resource('stage', StageController::class)->only(['index']);
+});
 
 Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Api\Resource'], static function () {
     Route::get('course', 'Course\ResourceCourseController@index')->name('course');

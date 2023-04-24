@@ -1,5 +1,6 @@
 <?php
 
+#[AllowDynamicProperties]
 class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Framework\TestCase
 {
     protected $_frontController = null;

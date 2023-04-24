@@ -7,20 +7,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyInstitutionFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyInstitution::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
+        $date = now()->month(3)->day(31);
+
         return [
             'ref_usuario_cad' => 1,
             'ref_idtlog' => 'AV',
@@ -32,7 +24,18 @@ class LegacyInstitutionFactory extends Factory
             'nm_responsavel' => $this->faker->name(),
             'data_cadastro' => now(),
             'nm_instituicao' => $this->faker->company(),
+            'data_base_remanejamento' => $date,
+            'data_base_transferencia' => $date,
+            'data_expiracao_reserva_vaga' => $date,
+            'data_base_matricula' => $date->year(1990),
+            'data_fechamento' => $date->year(1990),
+            'data_educacenso' => now()->month(5)->day(31),
         ];
+    }
+
+    public function current(): LegacyInstitution
+    {
+        return LegacyInstitution::query()->first() ?? $this->create();
     }
 
     public function unique(): self

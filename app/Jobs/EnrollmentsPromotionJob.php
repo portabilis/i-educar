@@ -29,6 +29,6 @@ class EnrollmentsPromotionJob implements ShouldQueue
     public function handle(DatabaseManager $manager, PromocaoApiController $promocaoApiController): void
     {
         $manager->setDefaultConnection($this->databaseConnection);
-        $promocaoApiController->processEnrollmentsPromotion($this->user, $this->enrollmentId);
+        @$promocaoApiController->processEnrollmentsPromotion($this->user, $this->enrollmentId);
     }
 }

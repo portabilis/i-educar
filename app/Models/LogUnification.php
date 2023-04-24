@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class LogUnification extends Model
 {
-
     use LegacyAttribute;
 
     /**
@@ -31,7 +30,7 @@ class LogUnification extends Model
      */
     public function updatedBy()
     {
-        return $this->belongsTo(Individual::class, 'updated_by', 'id');
+        return $this->belongsTo(LegacyIndividual::class, 'updated_by');
     }
 
     /**
@@ -39,7 +38,7 @@ class LogUnification extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(Individual::class, 'created_by', 'id');
+        return $this->belongsTo(LegacyIndividual::class, 'created_by');
     }
 
     /**

@@ -92,7 +92,7 @@ class Student extends Model
             get: function () {
                 $value = str_replace(['{', '}'], '', $this->transportation_vehicle_type);
 
-                return (new TransportationVehicleType())->getDescriptiveValues()[(int)$value];
+                return (new TransportationVehicleType())->getDescriptiveValues()[(int)$value] ?? null;
             }
         );
     }

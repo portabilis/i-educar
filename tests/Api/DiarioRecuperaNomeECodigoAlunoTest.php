@@ -31,6 +31,11 @@ class DiarioRecuperaNomeECodigoAlunoTest extends TestCase
             ]
         );
 
-        $this->assertStringContainsString($student->name, $response->getContent());
+        $this->assertStringContainsString(
+            \Portabilis_String_Utils::toUtf8($student->name, [
+                'transform' => true
+            ]),
+            $response->getContent()
+        );
     }
 }

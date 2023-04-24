@@ -22,8 +22,8 @@ class LegacyDisciplineScoreFactory extends Factory
     public function definition(): array
     {
         return [
-            'nota_aluno_id' => LegacyRegistrationScoreFactory::new()->create(),
-            'componente_curricular_id' => LegacyDisciplineFactory::new()->create(),
+            'nota_aluno_id' => fn () => LegacyRegistrationScoreFactory::new()->create(),
+            'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
             'etapa' => $this->faker->randomElement([2, 3, 4]),
         ];
     }

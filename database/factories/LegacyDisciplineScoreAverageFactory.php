@@ -22,7 +22,7 @@ class LegacyDisciplineScoreAverageFactory extends Factory
     public function definition(): array
     {
         return [
-            'nota_aluno_id' => LegacyRegistrationScoreFactory::new()->create(),
+            'nota_aluno_id' => fn () => LegacyRegistrationScoreFactory::new()->create(),
             'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
             'media' => $this->faker->randomFloat(1, 0, 10),
             'media_arredondada' => $this->faker->randomFloat(1, 0, 10),

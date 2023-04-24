@@ -248,7 +248,7 @@ class PromocaoApiController extends ApiCoreController
 
                 if ($hasNotaOrParecerInEtapa) {
                     // FIXME #parameters
-                    $falta = $this->boletimService()->getFalta($etapa) ? $this->boletimService()->getFalta($etapa)->quantidade : null;
+                    $falta = $this->boletimService()->getFalta($etapa)?->quantidade;
 
                     if (is_null($falta)) {
                         $notaFalta = new Avaliacao_Model_FaltaGeral([
@@ -270,7 +270,7 @@ class PromocaoApiController extends ApiCoreController
 
                     if ($regraNaoUsaNota || trim($nota) != '' || trim($parecer) != '') {
                         // FIXME #parameters
-                        $falta = $this->boletimService()->getFalta($etapa, $key)->quantidade;
+                        $falta = $this->boletimService()->getFalta($etapa, $key)?->quantidade;
 
                         if (is_null($falta)) {
                             // FIXME #parameters

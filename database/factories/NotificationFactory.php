@@ -16,7 +16,7 @@ class NotificationFactory extends Factory
             'text' => $this->faker->text(),
             'link' => $this->faker->url,
             'read_at' => Carbon::now(),
-            'user_id' =>  fn () => LegacyUserFactory::new()->create(),
+            'user_id' =>  fn () => LegacyUserFactory::new()->current(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'type_id' => fn () => NotificationTypeFactory::new()->create()

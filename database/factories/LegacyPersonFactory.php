@@ -21,4 +21,9 @@ class LegacyPersonFactory extends Factory
             'email' => $this->faker->email(),
         ];
     }
+
+    public function current(): LegacyPerson
+    {
+        return LegacyPerson::query()->first() ?? $this->create();
+    }
 }
