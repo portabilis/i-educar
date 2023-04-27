@@ -1603,6 +1603,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $avaliableTimeService = new AvailableTimeService();
 
         $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate)->onlySchoolClassesInformedOnCensus();
+        $alunos = collect($alunos);
 
         foreach ($alunos as $aluno) {
             $nomeEscola = mb_strtoupper($aluno->nomeEscola);
@@ -1646,6 +1647,44 @@ class EducacensoAnaliseController extends ApiCoreController
                 ) {
                     $mensagem[] = [
                         'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a estrutura curricular da turma {$nomeTurma} é itinerário formativo, portanto é necessário informar o tipo do itinerário formativo do(a) aluno(a) {$nomeAluno}.",
+                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
+                        'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
+                        'fail' => true
+                    ];
+                }
+
+                if (
+                    in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $aluno->estruturaCurricularTurma) &&
+                    !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $aluno->estruturaCurricularTurma) &&
+                    $aluno->tipoItinerarioNaoPreenchido() &&
+                    $alunos->where('codigoAluno', $codigoAluno) &&
+                    $alunos
+                        ->where('codigoAluno', $codigoAluno)
+                        ->whereNotIn('codigoTurma', $codigoTurma)
+                        ->whereIn('etapaTurma', [1, 2])
+                        ->isNotEmpty()
+                ) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) {$nomeAluno} possui matrículas em turmas exclusivamente de Itinerário formativo e também em turmas de Educação Infantil (etapa 1 ou 2).",
+                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
+                        'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
+                        'fail' => true
+                    ];
+                }
+
+                if (
+                    in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $aluno->estruturaCurricularTurma) &&
+                    !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $aluno->estruturaCurricularTurma) &&
+                    $aluno->tipoItinerarioNaoPreenchido() &&
+                    $alunos->where('codigoAluno', $codigoAluno) &&
+                    $alunos
+                        ->where('codigoAluno', $codigoAluno)
+                        ->whereNotIn('codigoTurma', $codigoTurma)
+                        ->whereIn('etapaTurma', [14, 15, 16, 17, 18])
+                        ->isNotEmpty()
+                ) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) {$nomeAluno} possui matrículas em turmas exclusivamente de Itinerário formativo e também em turmas de Ensino Fundamental - Anos iniciais (etapa 14, 15, 16, 17 ou 18).",
                         'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
                         'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
                         'fail' => true
