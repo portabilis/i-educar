@@ -34,16 +34,22 @@ function habilitaCamposFormacaoTecnica() {
 
     if (compositions.includes('5')) {
         $j('#itinerary_course').removeAttr('disabled');
-        $j('#concomitant_itinerary').removeAttr('disabled');
         addSpanRequiredField('tr_itinerary_course');
-        addSpanRequiredField('tr_concomitant_itinerary');
+        if ($j('#show_concomitant_itinerary').val() == '1') {
+            $j('#concomitant_itinerary').removeAttr('disabled');
+            addSpanRequiredField('tr_concomitant_itinerary');
+        }
     } else {
+        if ($j('#show_concomitant_itinerary').val() == '1') {
+            $j('#concomitant_itinerary').attr('disabled', 'disabled');
+            $j('#concomitant_itinerary').val('');
+            removeSpanRequiredField('tr_concomitant_itinerary');
+        } else {
+            $j('#tr_concomitant_itinerary').hide();
+        }
         $j('#itinerary_course').attr('disabled', 'disabled');
-        $j('#concomitant_itinerary').attr('disabled', 'disabled');
         $j('#itinerary_course').val('');
-        $j('#concomitant_itinerary').val('');
         removeSpanRequiredField('tr_itinerary_course');
-        removeSpanRequiredField('tr_concomitant_itinerary');
     }
 }
 

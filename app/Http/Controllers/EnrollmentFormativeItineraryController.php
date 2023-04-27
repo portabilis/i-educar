@@ -44,7 +44,8 @@ class EnrollmentFormativeItineraryController extends Controller
             'itineraryType' => TipoItinerarioFormativo::getDescriptiveValues(),
             'itineraryComposition' => TipoItinerarioFormativo::getDescriptiveValuesOfItineraryComposition(),
             'itineraryCourse' => TipoCursoItinerario::getDescriptiveValues(),
-            'technicalCourses' => json_decode($technicalCourses, true)
+            'technicalCourses' => json_decode($technicalCourses, true),
+            'showConcomitantItinerary' => !in_array(1, transformStringFromDBInArray($enrollment->schoolClass->estrutura_curricular))
         ]);
     }
 

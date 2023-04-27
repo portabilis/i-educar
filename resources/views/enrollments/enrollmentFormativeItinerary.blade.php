@@ -92,6 +92,7 @@
                         </select>
                     </td>
                 </tr>
+                <input type="hidden" name="show_concomitant_itinerary" id="show_concomitant_itinerary" value="{{ $showConcomitantItinerary ? 1 : 0 }}">
                 <tr>
                     <td colspan="2">
                     <input type="hidden" id="enrollment_id" name="enrollment_id" value="{{ $enrollment->id }}">

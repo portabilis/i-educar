@@ -19,7 +19,7 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
         $itineraryCompositions = array_keys(TipoItinerarioFormativo::getDescriptiveValuesOfItineraryComposition());
 
         return [
-            'itinerary_type' => 'nullable|array|max:4',
+            'itinerary_type' => 'required',
             'itinerary_type.*' => ['required', 'integer', Rule::in($itineraryTypes)],
             'itinerary_composition' => ['nullable', 'array', 'max:4'],
             'itinerary_composition.*' => ['required', 'integer', Rule::in($itineraryCompositions)],
@@ -37,7 +37,7 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'itinerary_composition',
             'required',
             function ($input) {
-                return in_array(TipoItinerarioFormativo::ITINERARIO_INTEGRADO, $input->itinerary_type ?: []);
+                return TipoItinerarioFormativo::ITINERARIO_INTEGRADO == $input->itinerary_type;
             }
         );
 
@@ -53,7 +53,8 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'concomitant_itinerary',
             'required',
             function ($input) {
-                return in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $input->itinerary_composition ?: []);
+                return in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $input->itinerary_composition ?: []) &&
+                    $input->show_concomitant_itinerary === '1';
             }
         );
 
