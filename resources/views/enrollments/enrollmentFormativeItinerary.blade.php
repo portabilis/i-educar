@@ -69,6 +69,19 @@
                         </select>
                     </td>
                 </tr>
+                <tr id="tr_technical_course">
+                    <td>
+                        Código do curso técnico:
+                    </td>
+                    <td>
+                        <select name="technical_course" id="technical_course" class="select-default">
+                            <option value="">Selecione</option>
+                            @foreach($technicalCourses as $key => $course)
+                                <option {{ $enrollment->cod_curso_profissional === $key ? 'selected' : '' }} value="{{ $key }}">{{ $course }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                </tr>
                 <tr id="tr_concomitant_itinerary">
                     <td>Itinerário concomitante intercomplementar à matrícula de formação geral básica:</td>
                     <td>
@@ -120,6 +133,7 @@
                 const itinerary_composition =  $j('#itinerary_composition').val();
                 const concomitant_itinerary =  $j('#concomitant_itinerary').val();
                 const itinerary_course =  $j('#itinerary_course').val();
+                const technical_course =  $j('#technical_course').val();
                 const enrollment_id =  $j('#enrollment_id').val();
 
                 const dataToSend = {
@@ -127,6 +141,7 @@
                     itinerary_composition:itinerary_composition,
                     concomitant_itinerary:concomitant_itinerary,
                     itinerary_course:itinerary_course,
+                    technical_course:technical_course,
                     enrollment_id:enrollment_id
                 };
 

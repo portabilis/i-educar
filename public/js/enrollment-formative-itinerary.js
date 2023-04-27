@@ -1,8 +1,10 @@
 habilitaComposicaoItinerario();
 habilitaCamposFormacaoTecnica();
+habilitaCampoCursoTecnico();
 
 $j('#itinerary_type').change(habilitaComposicaoItinerario);
 $j('#itinerary_composition').change(habilitaCamposFormacaoTecnica);
+$j('#itinerary_course').change(habilitaCampoCursoTecnico);
 
 function habilitaComposicaoItinerario() {
     let types = [];
@@ -42,6 +44,23 @@ function habilitaCamposFormacaoTecnica() {
         $j('#concomitant_itinerary').val('');
         removeSpanRequiredField('tr_itinerary_course');
         removeSpanRequiredField('tr_concomitant_itinerary');
+    }
+}
+
+function habilitaCampoCursoTecnico() {
+    let types = [];
+
+    if ($j('#itinerary_course').val()) {
+        types = $j('#itinerary_course').val();
+    }
+
+    if (types.includes('1')) {
+        $j('#technical_course').removeAttr('disabled');
+        addSpanRequiredField('tr_technical_course');
+    } else {
+        removeSpanRequiredField('tr_technical_course');
+        $j('#technical_course').attr('disabled', 'disabled');
+        $j('#technical_course').val('');
     }
 }
 

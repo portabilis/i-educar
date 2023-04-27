@@ -25,6 +25,7 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'itinerary_composition.*' => ['required', 'integer', Rule::in($itineraryCompositions)],
             'itinerary_course' => ['nullable', 'in:1,2'],
             'concomitant_itinerary' => ['nullable', 'boolean'],
+            'technical_course' => ['nullable', 'integer', 'required_if:itinerary_course,1']
         ];
     }
 
@@ -67,6 +68,7 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'itinerary_composition.required' => 'O campo <b>Tipo do curso do itinerário de formação técnica e profissional</b> deve ser preenchido quando o campo <b>Composição do itinerário formativo integrado</b> for <b>Formação técnica profissional</b>.',
             'itinerary_course.required' => 'O campo <b>Tipo do curso do itinerário de formação técnica e profissional</b> deve ser preenchido quando o campo <b>Composição do itinerário formativo integrado</b> for <b>Formação técnica profissional</b>.',
             'concomitant_itinerary.required' => 'O campo <b>Itinerário concomitante intercomplementar à matrícula de formação geral básica</b> deve ser preenchido quando o campo <b>Composição do itinerário formativo integrado</b> for <b>Formação técnica profissional</b>.',
+            'technical_course.required_if' => 'O campo <b>Código do curso técnico</b> deve ser preenchido quando o campo <b>Tipo do curso do itinerário de formação técnica e profissional</b> for <b>Curso técnico</b>.',
         ];
     }
 
@@ -77,6 +79,7 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'itinerary_composition' => 'Composição do itinerário formativo integrado',
             'itinerary_course' => 'Tipo do curso do itinerário de formação técnica e profissional',
             'concomitant_itinerary' => 'Itinerário concomitante intercomplementar à matrícula de formação geral básica',
+            'technical_course' => 'Curso Técnico',
         ];
     }
 }
