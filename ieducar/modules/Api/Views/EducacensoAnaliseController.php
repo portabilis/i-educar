@@ -1658,8 +1658,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $aluno->estruturaCurricularTurma) &&
                     $aluno->tipoItinerarioNaoPreenchido() &&
                     $alunos->where('codigoAluno', $codigoAluno) &&
-                    $alunos
-                        ->where('codigoAluno', $codigoAluno)
+                    $alunos->where('codigoAluno', $codigoAluno)
                         ->whereNotIn('codigoTurma', $codigoTurma)
                         ->whereIn('etapaTurma', [1, 2])
                         ->isNotEmpty()
@@ -1677,8 +1676,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $aluno->estruturaCurricularTurma) &&
                     $aluno->tipoItinerarioNaoPreenchido() &&
                     $alunos->where('codigoAluno', $codigoAluno) &&
-                    $alunos
-                        ->where('codigoAluno', $codigoAluno)
+                    $alunos->where('codigoAluno', $codigoAluno)
                         ->whereNotIn('codigoTurma', $codigoTurma)
                         ->whereIn('etapaTurma', [14, 15, 16, 17, 18])
                         ->isNotEmpty()
