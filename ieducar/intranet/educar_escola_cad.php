@@ -190,6 +190,7 @@ return new class extends clsCadastro {
     public $poder_publico_parceria_convenio;
     public $formas_contratacao_adm_publica_e_outras_instituicoes;
     public $nao_ha_funcionarios_para_funcoes;
+    public $formas_contratacao_parceria_escola_secretaria;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -485,6 +486,7 @@ return new class extends clsCadastro {
 
         $this->poder_publico_parceria_convenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
         $this->formas_contratacao_adm_publica_e_outras_instituicoes = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
+        $this->formas_contratacao_parceria_escola_secretaria = transformStringFromDBInArray($this->formas_contratacao_parceria_escola_secretaria);
     }
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
@@ -782,6 +784,28 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->poder_publico_parceria_convenio,
+                    'all_values' => $resources
+                ]
+            ];
+
+            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+
+            $helperOptions = ['objectName' => 'formas_contratacao_parceria_escola_secretaria'];
+            $resources = [
+                1 => 'Termo de colaboração (Lei nº 13.019/2014)',
+                2 => 'Termo de fomento (Lei nº 13.019/2014)',
+                3 => 'Acordo de cooperação (Lei nº 13.019/2014)',
+                4 => 'Contrato de prestação de serviço',
+                5 => 'Termo de cooperação técnica e financeira',
+                6 => 'Contrato de consórcio público/Convênio de cooperação'
+            ];
+
+            $options = [
+                'label' => 'Forma(s) de contratação da parceria ou convênio entre a escola e a <strong>Secretaria estadual</strong> de educação',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->formas_contratacao_parceria_escola_secretaria,
                     'all_values' => $resources
                 ]
             ];
@@ -1722,6 +1746,7 @@ return new class extends clsCadastro {
         $obj->iddis = (int)$this->district_id;
         $obj->poder_publico_parceria_convenio = $this->poder_publico_parceria_convenio;
         $obj->formas_contratacao_adm_publica_e_outras_instituicoes = $this->formas_contratacao_adm_publica_e_outras_instituicoes;
+        $obj->formas_contratacao_parceria_escola_secretaria = $this->formas_contratacao_parceria_escola_secretaria;
 
         foreach ($this->inputsRecursos as $key => $value) {
             $obj->{$key} = $this->{$key};
@@ -1797,6 +1822,7 @@ return new class extends clsCadastro {
         $this->codigo_lingua_indigena = $this->transformArrayInString($this->codigo_lingua_indigena);
         $this->poder_publico_parceria_convenio = $this->transformArrayInString($this->poder_publico_parceria_convenio);
         $this->formas_contratacao_adm_publica_e_outras_instituicoes = $this->transformArrayInString($this->formas_contratacao_adm_publica_e_outras_instituicoes);
+        $this->formas_contratacao_parceria_escola_secretaria = $this->transformArrayInString($this->formas_contratacao_parceria_escola_secretaria);
     }
 
     private function transformArrayInString($value): ?string
@@ -1962,8 +1988,57 @@ return new class extends clsCadastro {
             $this->validaQuantidadeComputadoresAlunos() &&
             $this->validaQuantidadeEquipamentosEnsino() &&
             $this->validaLinguasIndigenas() &&
+            $this->validaFormasContratacaoParceriaEscolaSecretaria() &&
             $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
             $this->validaMatriculasAtendidasPorConvenio();
+    }
+
+    protected function validaFormasContratacaoParceriaEscolaSecretaria(): bool
+    {
+        $formasDeContratacao = $this->formas_contratacao_parceria_escola_secretaria;
+
+        $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 4];
+        if (is_array($formasDeContratacao) && in_array(needle: (int)$this->dependencia_administrativa, haystack: $acceptDependenciaAdministrativa, strict: true)) {
+
+            $data = array_filter(array: $formasDeContratacao,
+                callback: static fn($forma) => in_array(needle: (int)$forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
+            );
+
+            if (count($data) !== 0) {
+                $this->mensagem = 'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação</b> foi preenchido incorretamente.';
+                return false;
+            }
+        }
+
+        $categoriaEscolaPrivadaLista = [2, 3, 4];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [5, 6];
+        if (is_array($formasDeContratacao) && in_array(needle: (int)$this->categoria_escola_privada, haystack: $categoriaEscolaPrivadaLista, strict: true)) {
+
+            $data = array_filter(array: $formasDeContratacao,
+                callback: static fn($forma) => !in_array(needle: (int)$forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
+            );
+
+            if (count($data) === 0) {
+                $this->mensagem = 'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação</b> foi preenchido incorretamente.';
+                return false;
+            }
+        }
+
+        if ((int)$this->categoria_escola_privada === 1) {
+
+            if ($formasDeContratacao === null || !in_array(needle: 4, haystack: $formasDeContratacao)) {
+                $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+                return false;
+            }
+
+            if (count($formasDeContratacao) > 1) {
+                $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected function validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes(): bool

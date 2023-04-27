@@ -127,6 +127,7 @@ class clsPmieducarEscola extends Model
     public $iddis;
     public $poder_publico_parceria_convenio;
     public $formas_contratacao_adm_publica_e_outras_instituicoes;
+    public $formas_contratacao_parceria_escola_secretaria;
     public $qtd_matriculas_atividade_complementar;
     public $qtd_atendimento_educacional_especializado;
     public $qtd_ensino_regular_creche_par;
@@ -221,6 +222,7 @@ class clsPmieducarEscola extends Model
           e.iddis,
             e.poder_publico_parceria_convenio,
             e.formas_contratacao_adm_publica_e_outras_instituicoes,
+            e.formas_contratacao_parceria_escola_secretaria,
             e.qtd_matriculas_atividade_complementar,
             e.qtd_atendimento_educacional_especializado,
             e.qtd_ensino_regular_creche_par,
@@ -1053,6 +1055,11 @@ class clsPmieducarEscola extends Model
             if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
                 $campos .= "{$gruda}formas_contratacao_adm_publica_e_outras_instituicoes";
                 $valores .= "{$gruda}'{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
+            }
+
+            if (is_string($this->formas_contratacao_parceria_escola_secretaria)) {
+                $campos .= "{$gruda}formas_contratacao_parceria_escola_secretaria";
+                $valores .= "{$gruda}'{{$this->formas_contratacao_parceria_escola_secretaria}}'";
             }
 
             if (is_numeric($this->qtd_matriculas_atividade_complementar)) {
@@ -2211,6 +2218,16 @@ class clsPmieducarEscola extends Model
             } else {
                 $gruda = ', ';
                 $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
+                $set .= "{$gruda}=NULL";
+            }
+
+            if (is_string($this->formas_contratacao_parceria_escola_secretaria)) {
+                $gruda = ', ';
+                $gruda .= "formas_contratacao_parceria_escola_secretaria";
+                $set .= "{$gruda}='{{$this->formas_contratacao_parceria_escola_secretaria}}'";
+            } else {
+                $gruda = ', ';
+                $gruda .= "formas_contratacao_parceria_escola_secretaria";
                 $set .= "{$gruda}=NULL";
             }
 
