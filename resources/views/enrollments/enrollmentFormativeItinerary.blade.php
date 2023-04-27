@@ -29,12 +29,14 @@
                     <td>{{ $enrollment->schoolClass->name ?? null }}</td>
                 </tr>
                 <tr id="tr_itinerary_type">
-                    <td>Tipo do itinerário formativo:</td>
+                    <td>
+                        Trilha de aprofundamento do itinerário formativo:
+                    </td>
                     <td>
                         @php
                             $types = $enrollment->tipo_itinerario;
                         @endphp
-                        <select name="itinerary_type" id="itinerary_type" multiple="multiple" class="select-default">
+                        <select name="itinerary_type" id="itinerary_type" class="select-default">
                             @foreach($itineraryType as $key => $type)
                                 <option {{ in_array($key, $types) ? 'selected' : '' }} value="{{ $key }}">{{ $type }}</option>
                             @endforeach
@@ -42,7 +44,9 @@
                     </td>
                 </tr>
                 <tr id="tr_itinerary_composition">
-                    <td>Composição do itinerário formativo integrado:</td>
+                    <td>
+                        Composição do itinerário formativo integrado (entre as áreas de conhecimento ou entre as áreas de conhecimento e a formação técnica profissional):
+                    </td>
                     <td>
                         @php
                             $compositions = $enrollment->composicao_itinerario;
@@ -104,7 +108,6 @@
 
     (function ($) {
         $(document).ready(function () {
-            multipleSearchHelper.setup('itinerary_type', '', 'multiple', 'multiple');
             $j('#itinerary_type').trigger('chosen:updated');
             multipleSearchHelper.setup('itinerary_composition', '', 'multiple', 'multiple');
             $j('#itinerary_composition').trigger('chosen:updated');
