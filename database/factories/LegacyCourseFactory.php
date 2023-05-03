@@ -139,6 +139,7 @@ class LegacyCourseFactory extends Factory
                 $knowledgeArea->disciplines->each(fn (LegacyDiscipline $discipline) => LegacyDisciplineAcademicYearFactory::new()->create([
                     'componente_curricular_id' => $discipline,
                     'ano_escolar_id' => $grade,
+                    'hora_falta' => null,
                 ]));
             });
         });
