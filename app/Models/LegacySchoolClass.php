@@ -65,7 +65,7 @@ class LegacySchoolClass extends Model
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'cod_turma',
         'name' => 'nm_turma',
         'year' => 'ano'
@@ -230,6 +230,13 @@ class LegacySchoolClass extends Model
     {
         return Attribute::make(
             get: fn () => $this->stages()->orderBy('sequencial')->value('data_inicio'),
+        );
+    }
+
+    protected function multiseries(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->multiseriada === 1,
         );
     }
 

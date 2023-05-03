@@ -42,6 +42,11 @@ class LegacyPerson extends LegacyModel
         'email'
     ];
 
+    public array $legacy = [
+        'id' => 'idpes',
+        'name' => 'nome',
+    ];
+
     /**
      * @inheritDoc
      */

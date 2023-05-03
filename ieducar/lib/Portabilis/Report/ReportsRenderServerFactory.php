@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\ReportIssued;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use iEducar\Reports\Contracts\ReportRenderContract;
@@ -154,6 +155,8 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         ];
 
         $response = $client->request('POST', $this->url, $payload);
+
+        ReportIssued::dispatch($report->useJson() ? 'json' : 'jasper', $templateName, $response->getStatusCode() === 200);
 
         $json = json_decode($response->getBody()->getContents(), true);
 

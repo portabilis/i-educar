@@ -709,9 +709,8 @@ class clsPmieducarServidor extends Model
              * na query.
              */
             if (!$int_ref_cod_disciplina && !$int_ref_cod_curso) {
-                $servidorDisciplina = new clsPmieducarServidorDisciplina();
-                $disciplinas = $servidorDisciplina->lista(null, null, $str_not_in_servidor);
-                if (is_array($disciplinas)) {
+                $disciplinas = DB::table('pmieducar.servidor_disciplina')->when(is_numeric($str_not_in_servidor), static fn ($q) => $q->where('ref_cod_servidor', $str_not_in_servidor))->get()->toArray();
+                if (! empty($disciplinas)) {
                     $codDisciplinas = array_column($disciplinas, 'ref_cod_disciplina');
                     $codDisciplinas = implode(',', $codDisciplinas);
                     $servidorDisciplinas = "

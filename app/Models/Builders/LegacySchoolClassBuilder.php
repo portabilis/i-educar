@@ -30,6 +30,11 @@ class LegacySchoolClassBuilder extends LegacyBuilder
         return $this->where('ativo', 1);
     }
 
+    public function whereActive(int $active): self
+    {
+        return $this->where('ativo', $active);
+    }
+
     /**
      * Filtra por Serie
      *
