@@ -148,19 +148,34 @@ class ExportController extends Controller
                 'value' => intval($year),
             ];
         }
-
         if ($request->input('ref_cod_escola')) {
-            $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'in',
-                'value' => [$request->input('ref_cod_escola')]
-            ];
+            if ($request->get('status') == 2) {
+                $data['filters'][] = [
+                    'column' => $table . '.school_filter_id',
+                    'operator' => '@>',
+                    'value' => $request->input('ref_cod_escola')
+                ];
+            } else {
+                $data['filters'][] = [
+                    'column' => $table . '.school_id',
+                    'operator' => 'in',
+                    'value' => [$request->input('ref_cod_escola')]
+                ];
+            }
         } elseif ($request->user()->isSchooling()) {
-            $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'in',
-                'value' => $request->user()->schools->pluck('cod_escola')->all(),
-            ];
+            if ($request->get('status') == 2) {
+                $data['filters'][] = [
+                    'column' => $table . '.school_filter_id',
+                    'operator' => '@>',
+                    'value' => $request->user()->schools->pluck('cod_escola')->all()
+                ];
+            } else {
+                $data['filters'][] = [
+                    'column' => $table . '.school_id',
+                    'operator' => 'in',
+                    'value' => $request->user()->schools->pluck('cod_escola')->all(),
+                ];
+            }
         }
 
         return $data;
