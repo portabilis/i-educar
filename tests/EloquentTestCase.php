@@ -53,7 +53,7 @@ abstract class EloquentTestCase extends TestCase
             $this->getEloquentModelName()
         );
 
-        if ($this->factoryModifier) {
+        if (isset($this->factoryModifier)) {
             $modifier = $this->factoryModifier;
             $factory = $modifier($factory);
         }
@@ -72,7 +72,7 @@ abstract class EloquentTestCase extends TestCase
             $this->getEloquentModelName()
         );
 
-        if ($this->factoryModifier) {
+        if (isset($this->factoryModifier)) {
             $modifier = $this->factoryModifier;
             $factory = $modifier($factory);
         }
@@ -201,7 +201,7 @@ abstract class EloquentTestCase extends TestCase
             $this->getEloquentModelName()
         );
 
-        if ($this->factoryModifier) {
+        if (isset($this->factoryModifier)) {
             $modifier = $this->factoryModifier;
             $factory = $modifier($factory);
         }
