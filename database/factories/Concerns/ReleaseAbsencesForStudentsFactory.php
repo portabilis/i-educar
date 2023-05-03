@@ -18,7 +18,8 @@ class ReleaseAbsencesForStudentsFactory
                 'matricula_id' => $registration,
             ]);
 
-            $registration->grade->allDisciplines->each(fn ($discipline) => LegacyDisciplineAbsenceFactory::new()
+            $registration->grade->allDisciplines->each(
+                fn ($discipline) => LegacyDisciplineAbsenceFactory::new()
                 ->count($stages)
                 ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
                 ->create([

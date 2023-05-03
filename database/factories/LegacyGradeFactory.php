@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
