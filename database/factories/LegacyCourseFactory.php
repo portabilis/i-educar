@@ -11,18 +11,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyCourseFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyCourse::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [
@@ -42,6 +32,9 @@ class LegacyCourseFactory extends Factory
         ];
     }
 
+    /**
+     * Altera o nome do curso.
+     */
     public function withName(string $name): static
     {
         return $this->state([
@@ -50,6 +43,9 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    /**
+     * Adiciona as séries padrão do curso "Ensino Fundamental".
+     */
     public function withElementarySchool(): static
     {
         $age = 6;
@@ -84,6 +80,9 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    /**
+     * Adiciona as séries padrão do curso "Educação Infantil".
+     */
     public function withEarlyChildhoodEducation(): static
     {
         return $this->afterCreating(function (LegacyCourse $course) {
@@ -132,6 +131,9 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    /**
+     * Vincula às séries do curso as disciplinas da área de conhecimento.
+     */
     public function withKnowledgeArea(LegacyKnowledgeArea $knowledgeArea): static
     {
         return $this->afterCreating(function (LegacyCourse $course) use ($knowledgeArea) {
@@ -145,6 +147,9 @@ class LegacyCourseFactory extends Factory
         });
     }
 
+    /**
+     * Adiciona a série padrão.
+     */
     public function withOneGrade(): static
     {
         return $this->afterCreating(function (LegacyCourse $course) {
@@ -165,6 +170,9 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    /**
+     * Define o curso como padrão ano escolar.
+     */
     public function standardAcademicYear(): self
     {
         return $this->state(function (array $attributes) {
