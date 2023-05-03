@@ -7,21 +7,11 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDisciplineDependenceFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyDisciplineDependence::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
-        $schoolGradeDiscipline = LegacySchoolGradeDisciplineFactory::new()->create();
+        $schoolGradeDiscipline = LegacySchoolGradeDisciplineFactory::new()->withLegacyDefinition()->create();
 
         return [
             'ref_cod_matricula' => fn () => LegacyRegistrationFactory::new()->create(),

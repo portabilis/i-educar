@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyDiscipline;
+use App\Models\LegacyGrade;
+use App\Models\LegacyKnowledgeArea;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -54,7 +57,7 @@ class LegacyCourseFactory extends Factory
 
         return $this->afterCreating(function (LegacyCourse $course) use ($age, $total) {
             for ($year = 1; $year <= $total; $year++) {
-                $to = LegacyGradeFactory::new()->create([
+                $to = LegacyGradeFactory::new()->withEvaluationRule()->create([
                     'ref_cod_curso' => $course,
                     'nm_serie' => $year . 'º ano',
                     'descricao' => $year . 'º ano',
@@ -79,6 +82,67 @@ class LegacyCourseFactory extends Factory
         })->state([
             'qtd_etapas' => $total,
         ]);
+    }
+
+    public function withEarlyChildhoodEducation(): static
+    {
+        return $this->afterCreating(function (LegacyCourse $course) {
+            $default = [
+                'ref_cod_curso' => $course,
+                'descricao' => null,
+                'idade_ideal' => null,
+                'concluinte' => 1,
+                'dias_letivos' => 200,
+                'carga_horaria' => 800,
+            ];
+
+            $bercario = LegacyGradeFactory::new()->withEvaluationRule()->create(array_merge($default, [
+                'nm_serie' => 'Berçário',
+                'etapa_curso' => 1,
+                'idade_inicial' => 0,
+                'idade_final' => 3,
+            ]));
+
+            $maternal = LegacyGradeFactory::new()->withEvaluationRule()->create(array_merge($default, [
+                'nm_serie' => 'Maternal',
+                'etapa_curso' => 2,
+                'idade_inicial' => 3,
+                'idade_final' => 4,
+            ]));
+
+            LegacyGradeSequenceFactory::new()->create([
+                'ref_serie_origem' => $bercario,
+                'ref_serie_destino' => $maternal,
+            ]);
+
+            $preescolar = LegacyGradeFactory::new()->withEvaluationRule()->create(array_merge($default, [
+                'nm_serie' => 'Pré-Escolar',
+                'etapa_curso' => 3,
+                'idade_inicial' => 4,
+                'idade_final' => 5,
+                'concluinte' => 2,
+            ]));
+
+            LegacyGradeSequenceFactory::new()->create([
+                'ref_serie_origem' => $maternal,
+                'ref_serie_destino' => $preescolar,
+            ]);
+        })->state([
+            'qtd_etapas' => 3,
+        ]);
+    }
+
+    public function withKnowledgeArea(LegacyKnowledgeArea $knowledgeArea): static
+    {
+        return $this->afterCreating(function (LegacyCourse $course) use ($knowledgeArea) {
+            $course->grades->each(function (LegacyGrade $grade) use ($knowledgeArea) {
+                $knowledgeArea->disciplines->each(fn (LegacyDiscipline $discipline) => LegacyDisciplineAcademicYearFactory::new()->create([
+                    'componente_curricular_id' => $discipline,
+                    'ano_escolar_id' => $grade,
+                    'hora_falta' => null,
+                ]));
+            });
+        });
     }
 
     public function standardAcademicYear(): self

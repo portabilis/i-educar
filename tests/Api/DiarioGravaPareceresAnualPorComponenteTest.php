@@ -82,6 +82,7 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
             'componente_curricular_id' => $discipline,
             'ano_escolar_id' => $schoolClass->grade_id,
             'anos_letivos' => $schoolGrade->anos_letivos,
+            'hora_falta' => null,
         ]);
 
         $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYearFactory::new()->create([

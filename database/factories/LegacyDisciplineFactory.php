@@ -26,7 +26,8 @@ class LegacyDisciplineFactory extends Factory
             'knowledge_area_id' => fn () => LegacyKnowledgeAreaFactory::new()->unique()->make(),
             'name' => $this->faker->colorName,
             'abbreviation' => $this->faker->hexColor,
-            'tipo_base' => 0
+            'tipo_base' => 0,
+            'codigo_educacenso' => 99,
         ];
     }
 }

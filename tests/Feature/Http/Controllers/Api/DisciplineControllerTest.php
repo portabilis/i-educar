@@ -54,7 +54,8 @@ class DisciplineControllerTest extends TestCase
         ]);
         LegacyDisciplineAcademicYearFactory::new()->create([
             'ano_escolar_id' => $grade,
-            'componente_curricular_id' => $this->discipline
+            'componente_curricular_id' => $this->discipline,
+            'hora_falta' => null,
         ]);
         LegacyDisciplineSchoolClassFactory::new()->create([
             'componente_curricular_id' => $this->discipline,

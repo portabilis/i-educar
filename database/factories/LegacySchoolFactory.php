@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyPeriod;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App_Model_ZonaLocalizacao;
@@ -83,6 +84,7 @@ class LegacySchoolFactory extends Factory
             ]);
 
             $course->grades->each(fn ($grade) => LegacySchoolGradeFactory::new()
+                ->withDisciplines()
                 ->create([
                     'ref_cod_escola' => $school,
                     'ref_cod_serie' => $grade,
@@ -91,25 +93,14 @@ class LegacySchoolFactory extends Factory
         });
     }
 
-    public function withClassroomsForEachGrade(LegacyCourse $course): static
+    public function withClassroomsForEachGrade(LegacyCourse $course, LegacyPeriod $period): static
     {
-        return $this->afterCreating(function (LegacySchool $school) use ($course) {
+        return $this->afterCreating(function (LegacySchool $school) use ($course, $period) {
             $course->grades->each(fn ($grade) => LegacySchoolClassFactory::new()
                 ->create([
-                    'nm_turma' => $grade->name . ' Matutino',
+                    'nm_turma' => $grade->name . ' ' . $period->name,
                     'sgl_turma' => mb_substr($grade->name, 0, 1),
-                    'turma_turno_id' => LegacyPeriodFactory::new()->morning(),
-                    'ref_ref_cod_escola' => $school,
-                    'ref_ref_cod_serie' => $grade,
-                    'ref_cod_curso' => $course,
-                    'max_aluno' => 20,
-                ]));
-
-            $course->grades->each(fn ($grade) => LegacySchoolClassFactory::new()
-                ->create([
-                    'nm_turma' => $grade->name . ' Vespertino',
-                    'sgl_turma' => mb_substr($grade->name, 0, 1),
-                    'turma_turno_id' => LegacyPeriodFactory::new()->afternoon(),
+                    'turma_turno_id' => $period,
                     'ref_ref_cod_escola' => $school,
                     'ref_ref_cod_serie' => $grade,
                     'ref_cod_curso' => $course,

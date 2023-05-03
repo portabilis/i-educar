@@ -160,16 +160,23 @@ class LegacyGrade extends LegacyModel
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_serie');
     }
 
+    # TODO remover
     public function schoolGradeDisciplines()
     {
         return $this->hasMany(LegacySchoolGradeDiscipline::class, 'ref_ref_cod_serie');
     }
 
+    # TODO remover
     public function academicYearDisciplines()
     {
         return $this->belongsToMany(LegacyDiscipline::class, 'modules.componente_curricular_ano_escolar', 'ano_escolar_id', 'componente_curricular_id')
             ->withPivot(
                 'hora_falta'
             );
+    }
+
+    public function allDisciplines(): HasMany
+    {
+        return $this->hasMany(LegacyDisciplineAcademicYear::class, 'ano_escolar_id');
     }
 }
