@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyPeriod;
-use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App_Model_ZonaLocalizacao;

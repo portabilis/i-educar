@@ -132,6 +132,19 @@ class LegacyCourseFactory extends Factory
         ]);
     }
 
+    public function withKnowledgeArea(LegacyKnowledgeArea $knowledgeArea): static
+    {
+        return $this->afterCreating(function (LegacyCourse $course) use ($knowledgeArea) {
+            $course->grades->each(function (LegacyGrade $grade) use ($knowledgeArea) {
+                $knowledgeArea->disciplines->each(fn (LegacyDiscipline $discipline) => LegacyDisciplineAcademicYearFactory::new()->create([
+                    'componente_curricular_id' => $discipline,
+                    'ano_escolar_id' => $grade,
+                    'hora_falta' => null,
+                ]));
+            });
+        });
+    }
+
     public function withOneGrade(): static
     {
         return $this->afterCreating(function (LegacyCourse $course) {
@@ -150,18 +163,6 @@ class LegacyCourseFactory extends Factory
         })->state([
             'qtd_etapas' => 1,
         ]);
-    }
-
-    public function withKnowledgeArea(LegacyKnowledgeArea $knowledgeArea): static
-    {
-        return $this->afterCreating(function (LegacyCourse $course) use ($knowledgeArea) {
-            $course->grades->each(function (LegacyGrade $grade) use ($knowledgeArea) {
-                $knowledgeArea->disciplines->each(fn (LegacyDiscipline $discipline) => LegacyDisciplineAcademicYearFactory::new()->create([
-                    'componente_curricular_id' => $discipline,
-                    'ano_escolar_id' => $grade,
-                ]));
-            });
-        });
     }
 
     public function standardAcademicYear(): self
