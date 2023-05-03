@@ -17,6 +17,9 @@ class LegacyKnowledgeAreaFactory extends Factory
         ];
     }
 
+    /**
+     * Retorna a área de conhecimento "Educação Infantil".
+     */
     public function earlyChildhoodEducation(): LegacyKnowledgeArea
     {
         $data = [
@@ -26,6 +29,9 @@ class LegacyKnowledgeAreaFactory extends Factory
         return LegacyKnowledgeArea::query()->where($data)->first() ?? $this->withEarlyChildhoodEducationDisciplines()->create($data);
     }
 
+    /**
+     * Retorna a área de conhecimento "Ensino Fundamental".
+     */
     public function elementarySchool(): LegacyKnowledgeArea
     {
         $data = [
@@ -35,6 +41,9 @@ class LegacyKnowledgeAreaFactory extends Factory
         return LegacyKnowledgeArea::query()->where($data)->first() ?? $this->withElementarySchoolDisciplines()->create($data);
     }
 
+    /**
+     * Adiciona as disciplinas padrão da área de conhecimento "Educação Infantil".
+     */
     public function withEarlyChildhoodEducationDisciplines(): static
     {
         return $this->afterCreating(function (LegacyKnowledgeArea $knowledgeArea) {
@@ -51,6 +60,9 @@ class LegacyKnowledgeAreaFactory extends Factory
         });
     }
 
+    /**
+     * Adiciona as disciplinas padrão da área de conhecimento "Ensino Fundamental".
+     */
     public function withElementarySchoolDisciplines(): static
     {
         return $this->afterCreating(function (LegacyKnowledgeArea $knowledgeArea) {
@@ -70,6 +82,27 @@ class LegacyKnowledgeAreaFactory extends Factory
         });
     }
 
+    /**
+     * Adiciona disciplinas padrão.
+     */
+    public function withOneDiscipline(): static
+    {
+        return $this->afterCreating(function (LegacyKnowledgeArea $knowledgeArea) {
+            LegacyDisciplineFactory::new()->state([
+                'area_conhecimento_id' => $knowledgeArea,
+            ])->createMany([
+                ['name' => 'Disciplina Padrão', 'abbreviation' => 'DIP'],
+            ]);
+        });
+    }
+
+    /**
+     * Adiciona disciplinas padrão.
+     *
+     * @deprecated
+     * @see LegacyKnowledgeAreaFactory::earlyChildhoodEducation()
+     * @see LegacyKnowledgeAreaFactory::elementarySchool()
+     */
     public function unique(): self
     {
         return $this->state(function () {

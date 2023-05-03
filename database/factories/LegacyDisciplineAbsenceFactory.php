@@ -24,7 +24,7 @@ class LegacyDisciplineAbsenceFactory extends Factory
         return [
             'falta_aluno_id' => fn () => LegacyStudentAbsenceFactory::new()->create(),
             'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
-            'quantidade' => $this->faker->randomDigitNotZero(),
+            'quantidade' => $this->faker->numberBetween(0, 15),
             'etapa' => $this->faker->numberBetween(1, 2),
         ];
     }
