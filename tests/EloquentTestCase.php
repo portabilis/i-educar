@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Models\LegacyModel;
+use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,8 @@ abstract class EloquentTestCase extends TestCase
     protected $relations = [];
 
     protected Model $model;
+
+    protected ?Closure $factoryModifier;
 
     public function setUp(): void
     {
@@ -50,6 +53,11 @@ abstract class EloquentTestCase extends TestCase
             $this->getEloquentModelName()
         );
 
+        if ($this->factoryModifier) {
+            $modifier = $this->factoryModifier;
+            $factory = $modifier($factory);
+        }
+
         return $factory->make()->toArray();
     }
 
@@ -63,6 +71,11 @@ abstract class EloquentTestCase extends TestCase
         $factory = Factory::factoryForModel(
             $this->getEloquentModelName()
         );
+
+        if ($this->factoryModifier) {
+            $modifier = $this->factoryModifier;
+            $factory = $modifier($factory);
+        }
 
         return $factory->make()->toArray();
     }
@@ -187,6 +200,11 @@ abstract class EloquentTestCase extends TestCase
         $factory = Factory::factoryForModel(
             $this->getEloquentModelName()
         );
+
+        if ($this->factoryModifier) {
+            $modifier = $this->factoryModifier;
+            $factory = $modifier($factory);
+        }
 
         foreach ($this->relations as $relation => $class) {
             $type = $this->model->{$relation}();
