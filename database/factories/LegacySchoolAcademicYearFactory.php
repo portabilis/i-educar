@@ -31,15 +31,11 @@ class LegacySchoolAcademicYearFactory extends Factory
     public function withStageType(LegacyStageType $stageType): static
     {
         return $this->afterCreating(function (LegacySchoolAcademicYear $schoolAcademicYear) use ($stageType) {
-            $total = $stageType->num_etapas;
-
-            for ($stage = 1; $stage <= $total; $stage++) {
-                LegacyAcademicYearStageFactory::new()->create([
+            for ($stage = 1; $stage <= $stageType->num_etapas; $stage++) {
+                LegacyAcademicYearStageFactory::new()->withStageType($stageType, sequence: $stage)->create([
                     'escola_ano_letivo_id' => $schoolAcademicYear,
                     'ref_ano' => $schoolAcademicYear->ano,
                     'ref_ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
-                    'ref_cod_modulo' => $stageType,
-                    'sequencial' => $stage,
                 ]);
             }
         });

@@ -8,18 +8,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyUserFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyUser::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [
@@ -33,6 +23,9 @@ class LegacyUserFactory extends Factory
         ];
     }
 
+    /**
+     * Retorna o usuário padrão do sistema.
+     */
     public function current(): LegacyUser
     {
         return LegacyUser::query()->first() ?? $this->create([
@@ -42,6 +35,9 @@ class LegacyUserFactory extends Factory
         ]);
     }
 
+    /**
+     * Altera o nível do usuário para "admin".
+     */
     public function admin(): static
     {
         return $this->state([
@@ -53,6 +49,9 @@ class LegacyUserFactory extends Factory
         ]);
     }
 
+    /**
+     * Altera o nível do usuário para "institucional".
+     */
     public function institutional(): static
     {
         return $this->state([
@@ -64,6 +63,12 @@ class LegacyUserFactory extends Factory
         ]);
     }
 
+    /**
+     * Retorna o primeiro usuário do sistema.
+     *
+     * @see LegacyUserFactory::current()
+     * @deprecated
+     */
     public function unique()
     {
         return $this->state(function () {
@@ -81,6 +86,9 @@ class LegacyUserFactory extends Factory
         });
     }
 
+    /**
+     * Adiciona o nível de acesso ao usuário.
+     */
     public function withAccess($process, $view = true, $modify = true, $remove = true): static
     {
         return $this->afterCreating(function (LegacyUser $user) use ($process, $view, $modify, $remove) {

@@ -56,7 +56,8 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
             'componente_curricular_id' => $discipline,
             'ano_escolar_id' => $schoolClass->grade_id,
             'anos_letivos' => $schoolGrade->anos_letivos,
-            'tipo_nota' => 1
+            'tipo_nota' => 1,
+            'hora_falta' => null,
         ]);
 
         $employee = EmployeeFactory::new()->create();

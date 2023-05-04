@@ -27,4 +27,11 @@ class LegacyStudentAbsenceFactory extends Factory
             'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,
         ];
     }
+
+    public function discipline(): static
+    {
+        return $this->state([
+            'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+        ]);
+    }
 }
