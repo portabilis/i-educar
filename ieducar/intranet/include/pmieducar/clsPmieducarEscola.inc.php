@@ -126,7 +126,6 @@ class clsPmieducarEscola extends Model
     public $nao_ha_funcionarios_para_funcoes;
     public $iddis;
     public $poder_publico_parceria_convenio;
-    public $formas_contratacao_adm_publica_e_outras_instituicoes;
     public $qtd_matriculas_atividade_complementar;
     public $qtd_atendimento_educacional_especializado;
     public $qtd_ensino_regular_creche_par;
@@ -143,33 +142,6 @@ class clsPmieducarEscola extends Model
     public $qtd_edu_especial_classe_especial_int;
     public $qtd_edu_eja_ensino_fund;
     public $qtd_edu_eja_ensino_med;
-    public $qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par;
-    public $qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int;
-    public $qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par;
-    public $qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int;
-    public $qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par;
-    public $qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int;
-    public $qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par;
-    public $qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int;
-    public $qtd_edu_prof_quali_prof_tec_inte_ensino_med_par;
-    public $qtd_edu_prof_quali_prof_tecinte_ensino_med_int;
-    public $qtd_edu_prof_quali_prof_tec_conc_ensino_med_par;
-    public $qtd_edu_prof_quali_prof_tec_conc_ensino_med_int;
-    public $qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par;
-    public $qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par;
-    public $qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int;
 
     public function __construct(
         $cod_escola = null,
@@ -218,9 +190,8 @@ class clsPmieducarEscola extends Model
             e.qtd_vice_diretor,
             e.qtd_orientador_comunitario,
             e.nao_ha_funcionarios_para_funcoes,
-          e.iddis,
+            e.iddis,
             e.poder_publico_parceria_convenio,
-            e.formas_contratacao_adm_publica_e_outras_instituicoes,
             e.qtd_matriculas_atividade_complementar,
             e.qtd_atendimento_educacional_especializado,
             e.qtd_ensino_regular_creche_par,
@@ -236,34 +207,7 @@ class clsPmieducarEscola extends Model
             e.qtd_edu_especial_classe_especial_par,
             e.qtd_edu_especial_classe_especial_int,
             e.qtd_edu_eja_ensino_fund,
-            e.qtd_edu_eja_ensino_med,
-            e.qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par,
-            e.qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int,
-            e.qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par,
-            e.qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int,
-            e.qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par,
-            e.qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int,
-            e.qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par,
-            e.qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int,
-            e.qtd_edu_prof_quali_prof_tec_inte_ensino_med_par,
-            e.qtd_edu_prof_quali_prof_tecinte_ensino_med_int,
-            e.qtd_edu_prof_quali_prof_tec_conc_ensino_med_par,
-            e.qtd_edu_prof_quali_prof_tec_conc_ensino_med_int,
-            e.qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par,
-            e.qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par,
-            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int
+            e.qtd_edu_eja_ensino_med
           ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -1050,11 +994,6 @@ class clsPmieducarEscola extends Model
                 $valores .= "{$gruda}'{{$this->poder_publico_parceria_convenio}}'";
             }
 
-            if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
-                $campos .= "{$gruda}formas_contratacao_adm_publica_e_outras_instituicoes";
-                $valores .= "{$gruda}'{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
-            }
-
             if (is_numeric($this->qtd_matriculas_atividade_complementar)) {
                 $campos .= "{$gruda}qtd_matriculas_atividade_complementar";
                 $valores .= "{$gruda}'{$this->qtd_matriculas_atividade_complementar}'";
@@ -1149,167 +1088,6 @@ class clsPmieducarEscola extends Model
                 $campos .= "{$gruda}qtd_edu_eja_ensino_med";
                 $valores .= "{$gruda}'{$this->qtd_edu_eja_ensino_med}'";
                 $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_inte_ensino_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_ensino_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_inte_ensino_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tecinte_ensino_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tecinte_ensino_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tecinte_ensino_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_ensino_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_ensino_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int)) {
-                $campos .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int";
-                $valores .= "{$gruda}'{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int}'";
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
@@ -2204,16 +1982,6 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}=NULL";
             }
 
-            if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
-                $gruda = ', ';
-                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
-                $set .= "{$gruda}='{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
-            } else {
-                $gruda = ', ';
-                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
-                $set .= "{$gruda}=NULL";
-            }
-
             $gruda = ', ';
             if (is_numeric($this->qtd_matriculas_atividade_complementar)) {
                 $set .= "{$gruda}qtd_matriculas_atividade_complementar = '{$this->qtd_matriculas_atividade_complementar}'";
@@ -2325,195 +2093,6 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}qtd_edu_eja_ensino_med = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par = '{$this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int = '{$this->qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par = '{$this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int = '{$this->qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par = '{$this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int = '{$this->qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par = '{$this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int = '{$this->qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_inte_ensino_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_ensino_med_par = '{$this->qtd_edu_prof_quali_prof_tec_inte_ensino_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_inte_ensino_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tecinte_ensino_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tecinte_ensino_med_int = '{$this->qtd_edu_prof_quali_prof_tecinte_ensino_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tecinte_ensino_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_ensino_med_par = '{$this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_ensino_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_ensino_med_int = '{$this->qtd_edu_prof_quali_prof_tec_conc_ensino_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_ensino_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par = '{$this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int = '{$this->qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par = NULL";
-            }
-
-            if (is_numeric($this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int)) {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int = '{$this->qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int = NULL";
             }
 
             if ($set) {
