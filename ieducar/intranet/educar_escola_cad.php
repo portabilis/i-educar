@@ -1928,9 +1928,8 @@ return new class extends clsCadastro {
         $categoriaEscolaPrivadaLista = [2, 3, 4];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [5, 6];
         if (is_array($formasDeContratacao) && in_array(needle: (int)$this->categoria_escola_privada, haystack: $categoriaEscolaPrivadaLista, strict: true)) {
-
             $data = array_filter(array: $formasDeContratacao,
-                callback: static fn($forma) => !in_array(needle: (int)$forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
+                callback: static fn($forma) => in_array(needle: (int)$forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
             );
 
             if (count($data) !== 0) {
