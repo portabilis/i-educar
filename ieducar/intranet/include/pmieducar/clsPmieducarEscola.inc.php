@@ -1980,7 +1980,7 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente = '{$this->qtd_tradutor_interprete_libras_outro_ambiente}'";
             } elseif (is_null($this->qtd_tradutor_interprete_libras_outro_ambiente) || $this->qtd_tradutor_interprete_libras_outro_ambiente == '') {
                 $gruda = ', ';
-                $set .= "{$gruda}qtd_tradutor_interprete_libras_outros_ambientes = NULL ";
+                $set .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente = NULL ";
             }
 
             if (is_integer($this->iddis) && $this->iddis > 0) {
