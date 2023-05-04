@@ -1904,10 +1904,10 @@ return new class extends clsCadastro {
             $this->validaQuantidadeComputadoresAlunos() &&
             $this->validaQuantidadeEquipamentosEnsino() &&
             $this->validaLinguasIndigenas() &&
-            $this->validaFormasContratacaoParceriaEscolaSecretaria() ;
+            $this->validaFormasContratacaoParceriaEscolaSecretariaEstadual() ;
     }
 
-    protected function validaFormasContratacaoParceriaEscolaSecretaria(): bool
+    protected function validaFormasContratacaoParceriaEscolaSecretariaEstadual(): bool
     {
         $formasDeContratacao = $this->formas_contratacao_parceria_escola_secretaria_estadual;
 
@@ -1933,7 +1933,7 @@ return new class extends clsCadastro {
                 callback: static fn($forma) => !in_array(needle: (int)$forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
             );
 
-            if (count($data) === 0) {
+            if (count($data) !== 0) {
                 $this->mensagem = 'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação</b> foi preenchido incorretamente.';
                 return false;
             }
@@ -1952,6 +1952,7 @@ return new class extends clsCadastro {
             }
         }
 
+        dd('passou');
         return true;
     }
 
