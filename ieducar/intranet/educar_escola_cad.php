@@ -189,7 +189,7 @@ return new class extends clsCadastro {
     public bool $pesquisaPessoaJuridica = true;
     public $poder_publico_parceria_convenio;
     public $nao_ha_funcionarios_para_funcoes;
-    public $formas_contratacao_parceria_escola_secretaria;
+    public $formas_contratacao_parceria_escola_secretaria_estadual;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -438,7 +438,7 @@ return new class extends clsCadastro {
         }
 
         $this->poder_publico_parceria_convenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
-        $this->formas_contratacao_parceria_escola_secretaria = transformStringFromDBInArray($this->formas_contratacao_parceria_escola_secretaria);
+        $this->formas_contratacao_parceria_escola_secretaria_estadual = transformStringFromDBInArray($this->formas_contratacao_parceria_escola_secretaria_estadual);
     }
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
@@ -742,7 +742,7 @@ return new class extends clsCadastro {
 
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
-            $helperOptions = ['objectName' => 'formas_contratacao_parceria_escola_secretaria'];
+            $helperOptions = ['objectName' => 'formas_contratacao_parceria_escola_secretaria_estadual'];
             $resources = [
                 1 => 'Termo de colaboração (Lei nº 13.019/2014)',
                 2 => 'Termo de fomento (Lei nº 13.019/2014)',
@@ -757,7 +757,7 @@ return new class extends clsCadastro {
                 'size' => 50,
                 'required' => false,
                 'options' => [
-                    'values' => $this->formas_contratacao_parceria_escola_secretaria,
+                    'values' => $this->formas_contratacao_parceria_escola_secretaria_estadual,
                     'all_values' => $resources
                 ]
             ];
@@ -1667,7 +1667,7 @@ return new class extends clsCadastro {
         $obj->nao_ha_funcionarios_para_funcoes = $this->nao_ha_funcionarios_para_funcoes !== null;
         $obj->iddis = (int)$this->district_id;
         $obj->poder_publico_parceria_convenio = $this->poder_publico_parceria_convenio;
-        $obj->formas_contratacao_parceria_escola_secretaria = $this->formas_contratacao_parceria_escola_secretaria;
+        $obj->formas_contratacao_parceria_escola_secretaria_estadual = $this->formas_contratacao_parceria_escola_secretaria_estadual;
 
         foreach ($this->inputsRecursos as $key => $value) {
             $obj->{$key} = $this->{$key};
@@ -1738,7 +1738,7 @@ return new class extends clsCadastro {
         $this->reserva_vagas_cotas = $this->transformArrayInString($this->reserva_vagas_cotas);
         $this->codigo_lingua_indigena = $this->transformArrayInString($this->codigo_lingua_indigena);
         $this->poder_publico_parceria_convenio = $this->transformArrayInString($this->poder_publico_parceria_convenio);
-        $this->formas_contratacao_parceria_escola_secretaria = $this->transformArrayInString($this->formas_contratacao_parceria_escola_secretaria);
+        $this->formas_contratacao_parceria_escola_secretaria_estadual = $this->transformArrayInString($this->formas_contratacao_parceria_escola_secretaria_estadual);
     }
 
     private function transformArrayInString($value): ?string
@@ -1909,7 +1909,7 @@ return new class extends clsCadastro {
 
     protected function validaFormasContratacaoParceriaEscolaSecretaria(): bool
     {
-        $formasDeContratacao = $this->formas_contratacao_parceria_escola_secretaria;
+        $formasDeContratacao = $this->formas_contratacao_parceria_escola_secretaria_estadual;
 
         $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 4];

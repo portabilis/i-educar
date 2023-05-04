@@ -213,7 +213,7 @@ function obrigaCampoRegulamentacao() {
 function obrigaCampoFormaDeContratacaoEscolaSecretaria() {
   const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
   const naoPossueParceriaOuConvenio = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.NAO_POSSUI_PARCERIA_OU_CONVENIO.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
-  const obj = $j('#formas_contratacao_parceria_escola_secretaria');
+  const obj = $j('#formas_contratacao_parceria_escola_secretaria_estadual');
 
   if (obrigarCamposCenso && secretariaEstadual) {
     obj.makeRequired();
@@ -253,21 +253,21 @@ function habilitaCampoFormaDeContratacaoEscolaSecretaria() {
   const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
 
   if (!poderPublico) {
-    $j("#formas_contratacao_parceria_escola_secretaria").prop('disabled', true);
-    $j("#formas_contratacao_parceria_escola_secretaria").val('');
-    $j("#formas_contratacao_parceria_escola_secretaria").trigger("chosen:updated");
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").trigger("chosen:updated");
     return;
   }
 
   if (!secretariaEstadual) {
-    $j("#formas_contratacao_parceria_escola_secretaria").prop('disabled', true);
-    $j("#formas_contratacao_parceria_escola_secretaria").val('');
-    $j("#formas_contratacao_parceria_escola_secretaria").trigger("chosen:updated");
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").trigger("chosen:updated");
     return;
   }
 
-  $j("#formas_contratacao_parceria_escola_secretaria").prop('disabled', false);
-  $j("#formas_contratacao_parceria_escola_secretaria").trigger("chosen:updated");
+  $j("#formas_contratacao_parceria_escola_secretaria_estadual").prop('disabled', false);
+  $j("#formas_contratacao_parceria_escola_secretaria_estadual").trigger("chosen:updated");
 }
 
 function habilitaCampoFormaDeContratacao() {

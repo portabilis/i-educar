@@ -126,7 +126,7 @@ class clsPmieducarEscola extends Model
     public $nao_ha_funcionarios_para_funcoes;
     public $iddis;
     public $poder_publico_parceria_convenio;
-    public $formas_contratacao_parceria_escola_secretaria;
+    public $formas_contratacao_parceria_escola_secretaria_estadual;
     public $qtd_matriculas_atividade_complementar;
     public $qtd_atendimento_educacional_especializado;
     public $qtd_ensino_regular_creche_par;
@@ -193,7 +193,7 @@ class clsPmieducarEscola extends Model
             e.nao_ha_funcionarios_para_funcoes,
             e.iddis,
             e.poder_publico_parceria_convenio,
-            e.formas_contratacao_parceria_escola_secretaria,
+            e.formas_contratacao_parceria_escola_secretaria_estadual,
             e.qtd_matriculas_atividade_complementar,
             e.qtd_atendimento_educacional_especializado,
             e.qtd_ensino_regular_creche_par,
@@ -996,9 +996,9 @@ class clsPmieducarEscola extends Model
                 $valores .= "{$gruda}'{{$this->poder_publico_parceria_convenio}}'";
             }
 
-            if (is_string($this->formas_contratacao_parceria_escola_secretaria)) {
-                $campos .= "{$gruda}formas_contratacao_parceria_escola_secretaria";
-                $valores .= "{$gruda}'{{$this->formas_contratacao_parceria_escola_secretaria}}'";
+            if (is_string($this->formas_contratacao_parceria_escola_secretaria_estadual)) {
+                $campos .= "{$gruda}formas_contratacao_parceria_escola_secretaria_estadual";
+                $valores .= "{$gruda}'{{$this->formas_contratacao_parceria_escola_secretaria_estadual}}'";
             }
 
             if (is_numeric($this->qtd_matriculas_atividade_complementar)) {
@@ -1989,13 +1989,13 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}=NULL";
             }
 
-            if (is_string($this->formas_contratacao_parceria_escola_secretaria)) {
+            if (is_string($this->formas_contratacao_parceria_escola_secretaria_estadual)) {
                 $gruda = ', ';
-                $gruda .= "formas_contratacao_parceria_escola_secretaria";
-                $set .= "{$gruda}='{{$this->formas_contratacao_parceria_escola_secretaria}}'";
+                $gruda .= "formas_contratacao_parceria_escola_secretaria_estadual";
+                $set .= "{$gruda}='{{$this->formas_contratacao_parceria_escola_secretaria_estadual}}'";
             } else {
                 $gruda = ', ';
-                $gruda .= "formas_contratacao_parceria_escola_secretaria";
+                $gruda .= "formas_contratacao_parceria_escola_secretaria_estadual";
                 $set .= "{$gruda}=NULL";
             }
 
