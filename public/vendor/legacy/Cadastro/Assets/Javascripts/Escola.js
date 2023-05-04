@@ -124,9 +124,9 @@ let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 window.addEventListener(
   'load', function () {
     obrigaCampoFormaDeContratacao();
-    obrigaCampoFormaDeContratacaoEscolaSecretaria()
+    obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual()
     habilitaCampoFormaDeContratacao();
-    habilitaCampoFormaDeContratacaoEscolaSecretaria();
+    habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
     habilitaAbaMatriculasAtendidas();
     obrigarCnpjMantenedora();
   },false
@@ -159,9 +159,9 @@ $j('#predio_compartilhado_outra_escola').on('change', function () {
 
 $j('#poder_publico_parceria_convenio').on('change', function () {
   obrigaCampoFormaDeContratacao();
-  obrigaCampoFormaDeContratacaoEscolaSecretaria();
+  obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual();
   habilitaCampoFormaDeContratacao();
-  habilitaCampoFormaDeContratacaoEscolaSecretaria();
+  habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
 });
 
 function habilitaRecuros() {
@@ -210,7 +210,7 @@ function obrigaCampoRegulamentacao() {
   }
 }
 
-function obrigaCampoFormaDeContratacaoEscolaSecretaria() {
+function obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual() {
   const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
   const naoPossueParceriaOuConvenio = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.NAO_POSSUI_PARCERIA_OU_CONVENIO.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
   const obj = $j('#formas_contratacao_parceria_escola_secretaria_estadual');
@@ -234,7 +234,7 @@ function obrigaCampoFormaDeContratacao() {
   const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
   const naoPossueParceriaOuConvenio = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.NAO_POSSUI_PARCERIA_OU_CONVENIO.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
 
-  if (obrigarCamposCenso && (secretariaEstadual  || secretariaMunicipal)) {
+  if (obrigarCamposCenso && (secretariaEstadual || secretariaMunicipal)) {
     $j('#formas_contratacao_adm_publica_e_outras_instituicoes').makeRequired();
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").prop('disabled', false);
   } else {
@@ -248,7 +248,7 @@ function obrigaCampoFormaDeContratacao() {
   }
 }
 
-function habilitaCampoFormaDeContratacaoEscolaSecretaria() {
+function habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual() {
   const poderPublico = $j('#poder_publico_parceria_convenio').val();
   const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
 
@@ -687,9 +687,9 @@ $j(document).ready(function() {
       habilitarCampoUnidadeVinculada();
       habilitaCampoPoderPublicoOuConvenio();
       obrigaCampoFormaDeContratacao();
-      obrigaCampoFormaDeContratacaoEscolaSecretaria();
+      obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual();
       habilitaCampoFormaDeContratacao();
-      habilitaCampoFormaDeContratacaoEscolaSecretaria();
+      habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
     }
   );
 
