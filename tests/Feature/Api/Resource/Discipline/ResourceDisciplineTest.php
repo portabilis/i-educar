@@ -68,7 +68,8 @@ class ResourceDisciplineTest extends TestCase
 
                 //componente curricular ano escolar
                 $discipline_academic_years = LegacyDisciplineAcademicYearFactory::new()->count(2)->create([
-                    'ano_escolar_id' => $grade->id
+                    'ano_escolar_id' => $grade->id,
+                    'hora_falta' => null,
                 ]);
 
                 $discipline_academic_years->each(function ($discipline_academic_year) use ($school, $grade) {
