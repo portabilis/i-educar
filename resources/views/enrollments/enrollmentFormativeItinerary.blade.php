@@ -36,7 +36,7 @@
                         @php
                             $types = $enrollment->tipo_itinerario;
                         @endphp
-                        <select name="itinerary_type" id="itinerary_type" class="select-default">
+                        <select name="itinerary_type" id="itinerary_type" multiple="multiple" class="select-default">
                             @foreach($itineraryType as $key => $type)
                                 <option {{ in_array($key, $types) ? 'selected' : '' }} value="{{ $key }}">{{ $type }}</option>
                             @endforeach
@@ -122,6 +122,7 @@
 
     (function ($) {
         $(document).ready(function () {
+            multipleSearchHelper.setup('itinerary_type', '', 'multiple', 'multiple');
             $j('#itinerary_type').trigger('chosen:updated');
             multipleSearchHelper.setup('itinerary_composition', '', 'multiple', 'multiple');
             $j('#itinerary_composition').trigger('chosen:updated');
