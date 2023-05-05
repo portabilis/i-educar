@@ -125,8 +125,10 @@ window.addEventListener(
   'load', function () {
     obrigaCampoFormaDeContratacao();
     obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual()
+    obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal()
     habilitaCampoFormaDeContratacao();
     habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+    habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
     habilitaAbaMatriculasAtendidas();
     obrigarCnpjMantenedora();
   },false
@@ -160,8 +162,10 @@ $j('#predio_compartilhado_outra_escola').on('change', function () {
 $j('#poder_publico_parceria_convenio').on('change', function () {
   obrigaCampoFormaDeContratacao();
   obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+  obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
   habilitaCampoFormaDeContratacao();
   habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+  habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
 });
 
 function habilitaRecuros() {
@@ -229,6 +233,25 @@ function obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual() {
   }
 }
 
+function obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal() {
+  const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+  const naoPossueParceriaOuConvenio = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.NAO_POSSUI_PARCERIA_OU_CONVENIO.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+  const obj = $j('#formas_contratacao_parceria_escola_secretaria_municipal');
+
+  if (obrigarCamposCenso && secretariaMunicipal) {
+    obj.makeRequired();
+    obj.prop('disabled', false);
+  } else {
+    obj.makeUnrequired();
+    obj.prop('disabled', true);
+  }
+
+  if (naoPossueParceriaOuConvenio) {
+    obj.makeUnrequired();
+    obj.prop('disabled', true);
+  }
+}
+
 function obrigaCampoFormaDeContratacao() {
   const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
   const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
@@ -268,6 +291,28 @@ function habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual() {
 
   $j("#formas_contratacao_parceria_escola_secretaria_estadual").prop('disabled', false);
   $j("#formas_contratacao_parceria_escola_secretaria_estadual").trigger("chosen:updated");
+}
+
+function habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal() {
+  const poderPublico = $j('#poder_publico_parceria_convenio').val();
+  const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+
+  if (!poderPublico) {
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").trigger("chosen:updated");
+    return;
+  }
+
+  if (!secretariaMunicipal) {
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").trigger("chosen:updated");
+    return;
+  }
+
+  $j("#formas_contratacao_parceria_escola_secretaria_municipal").prop('disabled', false);
+  $j("#formas_contratacao_parceria_escola_secretaria_municipal").trigger("chosen:updated");
 }
 
 function habilitaCampoFormaDeContratacao() {
@@ -688,8 +733,10 @@ $j(document).ready(function() {
       habilitaCampoPoderPublicoOuConvenio();
       obrigaCampoFormaDeContratacao();
       obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+      obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
       habilitaCampoFormaDeContratacao();
       habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+      habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
     }
   );
 
