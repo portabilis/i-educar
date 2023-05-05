@@ -21,18 +21,23 @@ function habilitaComposicaoItinerario() {
         $j('#itinerary_composition').attr('disabled', 'disabled');
         $j('#itinerary_composition').val([]).trigger('chosen:updated');
         removeSpanRequiredField('tr_itinerary_composition');
-        habilitaCamposFormacaoTecnica();
     }
+    habilitaCamposFormacaoTecnica();
 }
 
 function habilitaCamposFormacaoTecnica() {
+    let types = [];
     let compositions = [];
+
+    if ($j('#itinerary_type').val()) {
+        types = $j('#itinerary_type').val();
+    }
 
     if ($j('#itinerary_composition').val()) {
         compositions = $j('#itinerary_composition').val();
     }
 
-    if (compositions.includes('5')) {
+    if (compositions.includes('5') && types.includes('5')) {
         $j('#itinerary_course').removeAttr('disabled');
         addSpanRequiredField('tr_itinerary_course');
         if ($j('#show_concomitant_itinerary').val() == '1') {
