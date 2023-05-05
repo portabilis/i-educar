@@ -161,7 +161,7 @@ return new class extends clsDetalhe {
             $unidadeCurricular = transformStringFromDBInArray(string: $turma['unidade_curricular']) ?? [];
             $turmaItineraria = in_array(needle: 2, haystack: $estruturaCurricular);
             $turmaFormacaoBasica = in_array(needle: 1, haystack: $estruturaCurricular);
-            $etapasItinerario = [25, 26, 27, 28, 29, 35, 36, 37, 38 , 71];
+            $etapasItinerario = [25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 67, 71, 74];
 
             if (in_array(UnidadesCurriculares::TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS, $unidadeCurricular) &&
                 in_array($turma['etapa_educacenso'], $etapasItinerario)
