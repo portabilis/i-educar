@@ -1957,7 +1957,7 @@ return new class extends clsCadastro {
             }
         }
 
-        if ((int)$this->categoria_escola_privada === 1) {
+        if ($formasDeContratacao && (int)$this->categoria_escola_privada === 1) {
 
             if ($formasDeContratacao === null || !in_array(needle: 4, haystack: $formasDeContratacao)) {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
@@ -2004,7 +2004,7 @@ return new class extends clsCadastro {
             }
         }
 
-        if ((int)$this->categoria_escola_privada === 1) {
+        if ($formasDeContratacao && (int)$this->categoria_escola_privada === 1) {
 
             if ($formasDeContratacao === null || !in_array(needle: 4, haystack: $formasDeContratacao)) {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
