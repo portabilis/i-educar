@@ -40,7 +40,7 @@ class InepExamValidatorTest extends TestCase
     public function testProvaAmpliadaAndAnotherForbiddenOptionChoosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18, RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
-        $deficiencies = [Deficiencias::BAIXA_VISAO];
+        $deficiencies = [Deficiencias::BAIXA_VISAO, Deficiencias::VISAO_MONOCULAR];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -252,7 +252,7 @@ class InepExamValidatorTest extends TestCase
     public function testCdComAudioAndAllowedDeficiencyChoosed()
     {
         $resources = [RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL];
-        $deficiencies = [Deficiencias::CEGUEIRA];
+        $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::VISAO_MONOCULAR];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());

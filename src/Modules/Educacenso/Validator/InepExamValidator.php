@@ -98,6 +98,7 @@ class InepExamValidator implements EducacensoValidator
             [
                 Deficiencias::CEGUEIRA,
                 Deficiencias::BAIXA_VISAO,
+                Deficiencias::VISAO_MONOCULAR,
                 Deficiencias::SURDOCEGUEIRA,
                 Deficiencias::DEFICIENCIA_FISICA,
                 Deficiencias::DEFICIENCIA_INTELECTUAL,
@@ -126,6 +127,7 @@ class InepExamValidator implements EducacensoValidator
             [
                 Deficiencias::CEGUEIRA,
                 Deficiencias::BAIXA_VISAO,
+                Deficiencias::VISAO_MONOCULAR,
                 Deficiencias::SURDOCEGUEIRA,
                 Deficiencias::DEFICIENCIA_FISICA,
                 Deficiencias::DEFICIENCIA_INTELECTUAL,
@@ -248,6 +250,7 @@ class InepExamValidator implements EducacensoValidator
             RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24,
             [
                 Deficiencias::BAIXA_VISAO,
+                Deficiencias::VISAO_MONOCULAR,
                 Deficiencias::SURDOCEGUEIRA,
             ],
             [
@@ -272,6 +275,7 @@ class InepExamValidator implements EducacensoValidator
             [
                 Deficiencias::CEGUEIRA,
                 Deficiencias::BAIXA_VISAO,
+                Deficiencias::VISAO_MONOCULAR,
                 Deficiencias::SURDOCEGUEIRA,
                 Deficiencias::DEFICIENCIA_FISICA,
                 Deficiencias::DEFICIENCIA_INTELECTUAL,
