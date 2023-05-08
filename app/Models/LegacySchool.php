@@ -79,6 +79,7 @@ class LegacySchool extends LegacyModel
         'codigo_ies',
         'qtd_vice_diretor',
         'qtd_orientador_comunitario',
+        'qtd_tradutor_interprete_libras_outro_ambiente',
         'latitude',
         'longitude',
         'predio_compartilhado_outra_escola',

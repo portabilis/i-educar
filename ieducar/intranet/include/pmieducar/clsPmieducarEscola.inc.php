@@ -123,6 +123,7 @@ class clsPmieducarEscola extends Model
     public $qtd_fonoaudiologo;
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
+    public $qtd_tradutor_interprete_libras_outro_ambiente;
     public $nao_ha_funcionarios_para_funcoes;
     public $iddis;
     public $poder_publico_parceria_convenio;
@@ -191,6 +192,7 @@ class clsPmieducarEscola extends Model
             e.qtd_fonoaudiologo,
             e.qtd_vice_diretor,
             e.qtd_orientador_comunitario,
+            e.qtd_tradutor_interprete_libras_outro_ambiente,
             e.nao_ha_funcionarios_para_funcoes,
             e.iddis,
             e.poder_publico_parceria_convenio,
@@ -967,6 +969,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->qtd_orientador_comunitario)) {
                 $campos .= "{$gruda}qtd_orientador_comunitario";
                 $valores .= "{$gruda}$this->qtd_orientador_comunitario";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->qtd_tradutor_interprete_libras_outro_ambiente)) {
+                $campos .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente";
+                $valores .= "{$gruda}$this->qtd_tradutor_interprete_libras_outro_ambiente";
                 $gruda = ', ';
             }
 
@@ -1978,6 +1986,15 @@ class clsPmieducarEscola extends Model
             } elseif (is_null($this->qtd_orientador_comunitario) || $this->qtd_orientador_comunitario == '') {
                 $gruda = ', ';
                 $set .= "{$gruda}qtd_orientador_comunitario = NULL ";
+            }
+
+
+            if (is_numeric($this->qtd_tradutor_interprete_libras_outro_ambiente) && $this->qtd_tradutor_interprete_libras_outro_ambiente > 0) {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente = '{$this->qtd_tradutor_interprete_libras_outro_ambiente}'";
+            } elseif (is_null($this->qtd_tradutor_interprete_libras_outro_ambiente) || $this->qtd_tradutor_interprete_libras_outro_ambiente == '') {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente = NULL ";
             }
 
             if (is_integer($this->iddis) && $this->iddis > 0) {

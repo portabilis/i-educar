@@ -183,6 +183,7 @@ return new class extends clsCadastro {
     public $qtd_fonoaudiologo;
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
+    public $qtd_tradutor_interprete_libras_outro_ambiente;
     public $iddis;
     public $pessoaj_idpes;
     public $pessoaj_id;
@@ -207,7 +208,8 @@ return new class extends clsCadastro {
         'qtd_psicologo' => 'Psicólogo(a) Escolar',
         'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
         'qtd_vice_diretor' => 'Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira',
-        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social'
+        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social',
+        'qtd_tradutor_interprete_libras_outro_ambiente' => 'Tradutor e Intérprete de Libras para atendimento em outros ambientes da escola que não seja sala de aula'
     ];
 
     public function Inicializar()
