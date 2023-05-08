@@ -12,6 +12,7 @@ class DeficiencyValidator implements EducacensoValidator
         Deficiencias::BAIXA_VISAO,
         Deficiencias::SURDEZ,
         Deficiencias::SURDOCEGUEIRA,
+        Deficiencias::VISAO_MONOCULAR,
     ];
     private const BAIXA_VISAO_FORBIDDEN_DEFICIENCIES = [
         Deficiencias::SURDOCEGUEIRA,
@@ -21,6 +22,11 @@ class DeficiencyValidator implements EducacensoValidator
         Deficiencias::SURDOCEGUEIRA,
     ];
     private const DEFICIENCIA_AUDITIVA_FORBIDDEN_DEFICIENCIES = [
+        Deficiencias::SURDOCEGUEIRA,
+    ];
+
+    private const VISAO_MONOCULAR_FORBIDDEN_DEFICIENCIES = [
+        Deficiencias::CEGUEIRA,
         Deficiencias::SURDOCEGUEIRA,
     ];
 
@@ -55,6 +61,10 @@ class DeficiencyValidator implements EducacensoValidator
                 Deficiencias::DEFICIENCIA_AUDITIVA,
                 self::DEFICIENCIA_AUDITIVA_FORBIDDEN_DEFICIENCIES,
             ],
+            [
+                Deficiencias::VISAO_MONOCULAR,
+                self::VISAO_MONOCULAR_FORBIDDEN_DEFICIENCIES,
+            ]
         ];
 
         foreach ($validations as $validation) {
