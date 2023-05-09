@@ -124,7 +124,11 @@ let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 window.addEventListener(
   'load', function () {
     obrigaCampoFormaDeContratacao();
+    obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual()
+    obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal()
     habilitaCampoFormaDeContratacao();
+    habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+    habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
     habilitaAbaMatriculasAtendidas();
     obrigarCnpjMantenedora();
   },false
@@ -157,7 +161,11 @@ $j('#predio_compartilhado_outra_escola').on('change', function () {
 
 $j('#poder_publico_parceria_convenio').on('change', function () {
   obrigaCampoFormaDeContratacao();
+  obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+  obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
   habilitaCampoFormaDeContratacao();
+  habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+  habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
 });
 
 function habilitaRecuros() {
@@ -177,7 +185,8 @@ function habilitaRecuros() {
     $j('#qtd_psicologo'),
     $j('#qtd_fonoaudiologo'),
     $j('#qtd_vice_diretor'),
-    $j('#qtd_orientador_comunitario')
+    $j('#qtd_orientador_comunitario'),
+    $j('#qtd_tradutor_interprete_libras_outro_ambiente'),
   ];
 
   const isChecked = $j('#nao_ha_funcionarios_para_funcoes').is(':checked');
@@ -206,19 +215,42 @@ function obrigaCampoRegulamentacao() {
   }
 }
 
-$j('#poder_publico_parceria_convenio').on('change', function () {
-  habilitaAbaMatriculasAtendidas();
-});
-
-function habilitaAbaMatriculasAtendidas() {
+function obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual() {
   const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
-  const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+  const naoPossueParceriaOuConvenio = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.NAO_POSSUI_PARCERIA_OU_CONVENIO.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+  const obj = $j('#formas_contratacao_parceria_escola_secretaria_estadual');
 
-  if (secretariaEstadual || secretariaMunicipal) {
-    $j('#tab2').show();
-    return;
+  if (obrigarCamposCenso && secretariaEstadual) {
+    obj.makeRequired();
+    obj.prop('disabled', false);
+  } else {
+    obj.makeUnrequired();
+    obj.prop('disabled', true);
   }
-  $j('#tab2').hide();
+
+  if (naoPossueParceriaOuConvenio) {
+    obj.makeUnrequired();
+    obj.prop('disabled', true);
+  }
+}
+
+function obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal() {
+  const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+  const naoPossueParceriaOuConvenio = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.NAO_POSSUI_PARCERIA_OU_CONVENIO.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+  const obj = $j('#formas_contratacao_parceria_escola_secretaria_municipal');
+
+  if (obrigarCamposCenso && secretariaMunicipal) {
+    obj.makeRequired();
+    obj.prop('disabled', false);
+  } else {
+    obj.makeUnrequired();
+    obj.prop('disabled', true);
+  }
+
+  if (naoPossueParceriaOuConvenio) {
+    obj.makeUnrequired();
+    obj.prop('disabled', true);
+  }
 }
 
 function obrigaCampoFormaDeContratacao() {
@@ -226,7 +258,7 @@ function obrigaCampoFormaDeContratacao() {
   const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
   const naoPossueParceriaOuConvenio = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.NAO_POSSUI_PARCERIA_OU_CONVENIO.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
 
-  if (obrigarCamposCenso && (secretariaEstadual  || secretariaMunicipal)) {
+  if (obrigarCamposCenso && (secretariaEstadual || secretariaMunicipal)) {
     $j('#formas_contratacao_adm_publica_e_outras_instituicoes').makeRequired();
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").prop('disabled', false);
   } else {
@@ -238,6 +270,50 @@ function obrigaCampoFormaDeContratacao() {
     $j('#formas_contratacao_adm_publica_e_outras_instituicoes').makeUnrequired();
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").prop('disabled', true);
   }
+}
+
+function habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual() {
+  const poderPublico = $j('#poder_publico_parceria_convenio').val();
+  const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+
+  if (!poderPublico) {
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").trigger("chosen:updated");
+    return;
+  }
+
+  if (!secretariaEstadual) {
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_estadual").trigger("chosen:updated");
+    return;
+  }
+
+  $j("#formas_contratacao_parceria_escola_secretaria_estadual").prop('disabled', false);
+  $j("#formas_contratacao_parceria_escola_secretaria_estadual").trigger("chosen:updated");
+}
+
+function habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal() {
+  const poderPublico = $j('#poder_publico_parceria_convenio').val();
+  const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+
+  if (!poderPublico) {
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").trigger("chosen:updated");
+    return;
+  }
+
+  if (!secretariaMunicipal) {
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").prop('disabled', true);
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").val('');
+    $j("#formas_contratacao_parceria_escola_secretaria_municipal").trigger("chosen:updated");
+    return;
+  }
+
+  $j("#formas_contratacao_parceria_escola_secretaria_municipal").prop('disabled', false);
+  $j("#formas_contratacao_parceria_escola_secretaria_municipal").trigger("chosen:updated");
 }
 
 function habilitaCampoFormaDeContratacao() {
@@ -360,7 +436,6 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
   $j('td .formdktd:first').append(
     '<div id="tabControl"><ul>' +
     '<li><div id="tab1" class="escolaTab"><span class="tabText">Dados gerais</span></div></li>' +
-    '<li><div id="tab2" class="escolaTab"> <span class="tabText">Matrículas atendidas por convênio</span></div></li>' +
     '<li><div id="tab3" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li>' +
     '<li><div id="tab4" class="escolaTab"> <span class="tabText">Dependências</span></div></li>' +
     '<li><div id="tab5" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li>' +
@@ -375,20 +450,16 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
-  linha_inicial_matriculas_atendidas_convenio = $j('#tr_matriculas_atendidas_convenio').index()-2;
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-2;
   linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-2;
   linha_inicial_equipamento = $j('#tr_equipamentos').index()-2;
   linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-3;
   linha_inicial_dados = $j('#tatendimento_aee').index()-2;
 
-  // Esconde os campos da primeira ao carregar a tela.
-  $j('#tab2').hide();
-
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
   $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
   $j('.tablecadastro > tbody > tr').each(function(index, row) {
-    if ( index >= linha_inicial_matriculas_atendidas_convenio){
+    if ( index >= linha_inicial_infra){
       if (row.id !== 'stop') {
         row.hide();
       } else {
@@ -408,7 +479,7 @@ $j(document).ready(function() {
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab1').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro > tbody > tr').each(function(index, row) {
-        if (index >= linha_inicial_matriculas_atendidas_convenio) {
+        if (index >= linha_inicial_infra) {
           if (row.id !== 'stop') {
             row.hide();
           } else {
@@ -420,24 +491,6 @@ $j(document).ready(function() {
       });
     }
   );
-
-  // INFRA
-  $j('#tab2').click(
-    function(){
-      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
-      $j('#tab2').toggleClass('escolaTab escolaTab-active')
-      $j('.tablecadastro > tbody > tr').each(function(index, row) {
-        if (row.id !== 'stop'){
-          if (index >= linha_inicial_matriculas_atendidas_convenio && index < linha_inicial_infra) {
-            row.show();
-          } else if (index > 0){
-            row.hide();
-          }
-        }else {
-          return false;
-        }
-      });
-    });
 
   // DEPENDENCIAS
   $j('#tab3').click(
@@ -680,7 +733,11 @@ $j(document).ready(function() {
       habilitarCampoUnidadeVinculada();
       habilitaCampoPoderPublicoOuConvenio();
       obrigaCampoFormaDeContratacao();
+      obrigaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+      obrigaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
       habilitaCampoFormaDeContratacao();
+      habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
+      habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
     }
   );
 

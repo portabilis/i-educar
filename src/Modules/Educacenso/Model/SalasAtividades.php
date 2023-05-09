@@ -12,6 +12,7 @@ class SalasAtividades
     public const RECURSOS_AEE = 6;
     public const REPOUSO_ALUNO = 7;
     public const EDUCACAO_PROFISSIONAL = 8;
+    public const ESTUDIO_GRAVACAO_EDICAO = 9;
 
     public static function getDescriptiveValues()
     {
@@ -24,6 +25,7 @@ class SalasAtividades
             self::RECURSOS_AEE => 'Sala de recursos multifuncionais para Atendimento Educacional Especializado (AEE)',
             self::REPOUSO_ALUNO => 'Sala de repouso para aluno(a)',
             self::EDUCACAO_PROFISSIONAL => 'Salas de oficinas da educação profissional',
+            self::ESTUDIO_GRAVACAO_EDICAO => 'Estúdio de gravação e edição'
         ];
     }
 }

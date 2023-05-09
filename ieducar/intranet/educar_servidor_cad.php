@@ -404,6 +404,8 @@ return new class () extends clsCadastro {
                     9 => 'Educação do campo',
                     10 => 'Educação ambiental',
                     11 => 'Educação em direitos humanos',
+                    18 => 'Educação bilíngue de surdos',
+                    19 => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
                     12 => 'Gênero e diversidade sexual',
                     13 => 'Direitos de criança e adolescente',
                     14 => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',

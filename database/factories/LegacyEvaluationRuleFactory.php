@@ -10,18 +10,8 @@ use RegraAvaliacao_Model_TipoProgressao;
 
 class LegacyEvaluationRuleFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyEvaluationRule::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [
@@ -34,6 +24,17 @@ class LegacyEvaluationRuleFactory extends Factory
             'tabela_arredondamento_id' => fn () => LegacyRoundingTableFactory::new()->create(),
             'tabela_arredondamento_id_conceitual' => fn () => LegacyRoundingTableFactory::new()->create(),
         ];
+    }
+
+    public function current(): LegacyEvaluationRule
+    {
+        $data = [
+            'nome' => 'Regra de Avaliação Padrão',
+        ];
+
+        $rule = LegacyEvaluationRule::query()->where($data)->first();
+
+        return $rule ?? $this->progressaoCalculoMediaRecuperacaoPonderada()->create($data);
     }
 
     public function withoutScore(): self
