@@ -107,7 +107,7 @@ class TeacherEloquentBuilder extends Builder
                     WHEN ' . FuncaoExercida::APOIO_ALUNOS_DEFICIENCIA . ' THEN \'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)\'::varchar
                     WHEN ' . FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL . ' THEN \'Instrutor da Educação Profissional\'::varchar
                     ELSE \'Não Informado\'::varchar
-                END AS funcao_exercida
+                END AS "Função Exercida"
             '));
         }
 
@@ -121,7 +121,7 @@ class TeacherEloquentBuilder extends Builder
                     WHEN ' . TipoVinculo::TERCEIRIZADO . ' THEN \'Contrato terceirizado\'::varchar
                     WHEN ' . TipoVinculo::CLT . ' THEN \'Contrato CLT\'::varchar
                     ELSE \'Não Informado\'::varchar
-                END AS tipo_vinculo
+                END AS "Tipo Vínculo"
             '));
         }
 
