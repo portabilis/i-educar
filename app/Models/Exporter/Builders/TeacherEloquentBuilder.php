@@ -96,7 +96,7 @@ class TeacherEloquentBuilder extends Builder
             unset($columns[array_search('funcao_exercida', $columns)]);
 
             $this->addSelect(DB::raw('
-                CASE pt.funcao_exercida
+                CASE allocations.funcao_exercida
                     WHEN ' . FuncaoExercida::DOCENTE . ' THEN \'Docente\'::varchar
                     WHEN ' . FuncaoExercida::AUXILIAR_EDUCACIONAL . ' THEN \'Auxiliar/Assistente educacional\'::varchar
                     WHEN ' . FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR . ' THEN \'Profissional/Monitor de atividade complementar\'::varchar
@@ -107,7 +107,7 @@ class TeacherEloquentBuilder extends Builder
                     WHEN ' . FuncaoExercida::APOIO_ALUNOS_DEFICIENCIA . ' THEN \'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)\'::varchar
                     WHEN ' . FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL . ' THEN \'Instrutor da Educação Profissional\'::varchar
                     ELSE \'Não Informado\'::varchar
-                END AS "Função exercida"
+                END AS funcao_exercida
             '));
         }
 
@@ -115,13 +115,13 @@ class TeacherEloquentBuilder extends Builder
             unset($columns[array_search('tipo_vinculo', $columns)]);
 
             $this->addSelect(DB::raw('
-                CASE pt.tipo_vinculo
+                CASE allocations.tipo_vinculo
                     WHEN ' . TipoVinculo::EFETIVO . ' THEN \'Concursado/efetivo/estável\'::varchar
                     WHEN ' . TipoVinculo::TEMPORARIO . ' THEN \'Contrato temporário\'::varchar
                     WHEN ' . TipoVinculo::TERCEIRIZADO . ' THEN \'Contrato terceirizado\'::varchar
                     WHEN ' . TipoVinculo::CLT . ' THEN \'Contrato CLT\'::varchar
                     ELSE \'Não Informado\'::varchar
-                END AS "Tipo de vínculo"
+                END AS tipo_vinculo
             '));
         }
 
@@ -129,10 +129,10 @@ class TeacherEloquentBuilder extends Builder
             $this->joinColumns('pt', $columns)
         );
 
-        return $this->leftJoin('modules.professor_turma as pt', function (JoinClause $join) {
-            $join->on('pt.servidor_id', '=', 'exporter_teacher.cod_servidor')
-                ->whereRaw('pt.ano = exporter_teacher.year')
-                ->whereRaw('pt.turma_id = exporter_teacher.school_class_id');
+        return $this->leftJoin('modules.professor_turma as allocations', function (JoinClause $join) {
+            $join->on('allocations.servidor_id', '=', 'exporter_teacher.cod_servidor')
+                ->whereRaw('allocations.ano = exporter_teacher.year')
+                ->whereRaw('allocations.turma_id = exporter_teacher.school_class_id');
         });
     }
 }
