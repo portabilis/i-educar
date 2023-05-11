@@ -1441,15 +1441,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$gestor->especificacaoCriterioAcesso && $gestor->criterioAcesso == SchoolManagerAccessCriteria::OUTRO) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} possui o critério de acesso ao cargo definido como \"outros\", portanto é necessário informar a especificação do critério.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Especificação do critério de acesso)',
-                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                    'fail' => true
-                ];
-            }
-
             if (!$gestor->tipoVinculo &&
                 $gestor->cargo === SchoolManagerRole::DIRETOR &&
                 $gestor->isDependenciaAdministrativaPublica() &&
