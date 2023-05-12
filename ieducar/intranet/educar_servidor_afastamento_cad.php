@@ -481,6 +481,14 @@ return new class () extends clsCadastro {
 
     public function Editar()
     {
+        $this->data_saida = formatDateParse($this->data_saida, 'Y-m-d');
+        if ($this->data_saida == null || $this->data_saida <= date('Y-m-d', strtotime('-1 year'))) {
+            $this->data_saida = null;
+            $this->mensagem = 'Data de Afastamento Inválida.<br>';
+
+            return false;
+        }
+
         $urlPermite = sprintf(
             'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
             $this->ref_cod_servidor,
