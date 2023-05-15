@@ -339,14 +339,19 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (
-            (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
-            in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado))
-            && empty(array_filter($escola->formasContratacaoPoderPublico))
-        ) {
+        if (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) && empty(array_filter($escola->formasContratacaoPoderPublicoEstadual))) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se as formas de contratação entre a Administração Pública e outras instituições foram informadas.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Formas de contratação entre a Administração Pública e outras instituições)',
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se as formas de contratação entre a escola e a Secretaria estadual de educação foram informadas.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) && empty(array_filter($escola->formasContratacaoPoderPublicoMunicipal))) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se as formas de contratação entre a escola e a Secretaria municipal de educação foram informadas.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria municipal de educação)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
@@ -355,26 +360,28 @@ class EducacensoAnaliseController extends ApiCoreController
         $formasContratacaoValidator = new FormasContratacaoEscolaValidator(
             $escola->dependenciaAdministrativa,
             $escola->categoriaEscolaPrivada,
-            $escola->formasContratacaoPoderPublico
+            $escola->formasContratacaoPoderPublicoEstadual
         );
 
         if (!$formasContratacaoValidator->isValid()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que as formas de contratação entre a Administração Pública e outras instituições foram informadas incorretamente.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Formas de contratação entre a Administração Pública e outras instituições)',
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que as formas de contratação entre a escola e a Secretaria estadual de educação foram informadas incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
         }
 
-        if (
-            (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
-            in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado)) &&
-            $escola->NaoPossuiQuantidadeDeMatriculasAtendidas()
-        ) {
+        $formasContratacaoValidator = new FormasContratacaoEscolaValidator(
+            $escola->dependenciaAdministrativa,
+            $escola->categoriaEscolaPrivada,
+            $escola->formasContratacaoPoderPublicoMunicipal
+        );
+
+        if (!$formasContratacaoValidator->isValid()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente ao Número de matrículas atendidas por meio da parceria ou convênio, portanto é necessário informar pelo menos um dos campos.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Matrículas atendidas por convênio > Seção: Número de matrículas atendidas por meio da parceria ou convênio)',
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que as formas de contratação entre a escola e a Secretaria municipal de educação foram informadas incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria municipal de educação)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
@@ -882,6 +889,15 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
+            if (empty($turma->classe_com_lingua_brasileira_sinais)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Informe se a turma é de ensino desenvolvido com a Língua Brasileira de Sinais.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita como segunda língua (bilingue para surdos))',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
             if ((empty($turma->horaInicial) || empty($turma->horaFinal)) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial, portanto é necessário informar os horários de funcionamento.",
@@ -1133,17 +1149,6 @@ class EducacensoAnaliseController extends ApiCoreController
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
-            }
-
-            if (count($turma->unidadesCurricularesSemDocenteVinculado()) > 0) {
-                foreach ($turma->unidadesCurricularesSemDocenteVinculado() as $unidadeCurricular) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a unidade curricular {$unidadeCurricular} faz parte da turma {$nomeTurma}, portanto deve haver um docente vinculado à mesma.",
-                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Unidade(s) curricular(es) que leciona)',
-                        'linkPath' => '/intranet/educar_servidor_lst.php',
-                        'fail' => true
-                    ];
-                }
             }
 
             if (empty($turma->codCursoProfissional) && in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 39, 40, 64, 74])) {

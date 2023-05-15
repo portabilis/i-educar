@@ -136,12 +136,12 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
      */
     public function transportePublicoRequired()
     {
-        $tiposMediacaoPresencialSemiPresencial = [
+        $tiposMediacaoPresencial = [
             TipoMediacaoDidaticoPedagogico::PRESENCIAL
         ];
 
         return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO
-            && in_array($this->tipoMediacaoTurma, $tiposMediacaoPresencialSemiPresencial)
+            && in_array($this->tipoMediacaoTurma, $tiposMediacaoPresencial)
             && $this->paisResidenciaAluno == PaisResidencia::BRASIL;
     }
 

@@ -43,6 +43,17 @@ class Register30StudentDataAnalysis implements AnalysisInterface
         );
         $arrayRecursos = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep));
 
+        $etapasCpfObrigatorio = [69, 70, 72, 71, 67, 73, 74];
+
+        if (in_array($data->dadosAluno->etapaTurma, $etapasCpfObrigatorio) && empty($data['cpf'])) {
+            $this->messages[] = [
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) ({$data->nomePessoa}) se trata de um(a) aluno(a) vinculado à uma turma da ({$data->dadosAluno->etapaTurmaDescritiva()}), portanto é necessário informar o cpf",
+                'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: CPF)',
+                'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
+                'fail' => true
+            ];
+        }
+
         if (!$arrayDeficiencias && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o curso ou a turma do(a) aluno(a) {$data->nomePessoa} é de AEE, portanto é necessário informar qual a sua deficiência.",
