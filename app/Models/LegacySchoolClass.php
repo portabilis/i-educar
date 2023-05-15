@@ -451,7 +451,7 @@ class LegacySchoolClass extends Model
 
     public function viewDisciplines(): HasMany
     {
-        return $this->hasMany(Discipline::class, 'id', 'cod_turma');
+        return $this->hasMany(Discipline::class, 'cod_turma', 'cod_turma');
     }
 
     /**
