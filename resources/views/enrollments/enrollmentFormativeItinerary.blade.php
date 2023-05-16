@@ -29,7 +29,9 @@
                     <td>{{ $enrollment->schoolClass->name ?? null }}</td>
                 </tr>
                 <tr id="tr_itinerary_type">
-                    <td>Tipo do itinerário formativo:</td>
+                    <td>
+                        Trilha de aprofundamento do itinerário formativo:
+                    </td>
                     <td>
                         @php
                             $types = $enrollment->tipo_itinerario;
@@ -42,7 +44,9 @@
                     </td>
                 </tr>
                 <tr id="tr_itinerary_composition">
-                    <td>Composição do itinerário formativo integrado:</td>
+                    <td>
+                        Composição do itinerário formativo integrado (entre as áreas de conhecimento ou entre as áreas de conhecimento e a formação técnica profissional):
+                    </td>
                     <td>
                         @php
                             $compositions = $enrollment->composicao_itinerario;
@@ -65,6 +69,19 @@
                         </select>
                     </td>
                 </tr>
+                <tr id="tr_technical_course">
+                    <td>
+                        Código do curso técnico:
+                    </td>
+                    <td>
+                        <select name="technical_course" id="technical_course" class="select-default">
+                            <option value="">Selecione</option>
+                            @foreach($technicalCourses as $key => $course)
+                                <option {{ $enrollment->cod_curso_profissional === $key ? 'selected' : '' }} value="{{ $key }}">{{ $course }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                </tr>
                 <tr id="tr_concomitant_itinerary">
                     <td>Itinerário concomitante intercomplementar à matrícula de formação geral básica:</td>
                     <td>
@@ -75,6 +92,7 @@
                         </select>
                     </td>
                 </tr>
+                <input type="hidden" name="show_concomitant_itinerary" id="show_concomitant_itinerary" value="{{ $showConcomitantItinerary ? 1 : 0 }}">
                 <tr>
                     <td colspan="2">
                     <input type="hidden" id="enrollment_id" name="enrollment_id" value="{{ $enrollment->id }}">
@@ -117,6 +135,7 @@
                 const itinerary_composition =  $j('#itinerary_composition').val();
                 const concomitant_itinerary =  $j('#concomitant_itinerary').val();
                 const itinerary_course =  $j('#itinerary_course').val();
+                const technical_course =  $j('#technical_course').val();
                 const enrollment_id =  $j('#enrollment_id').val();
 
                 const dataToSend = {
@@ -124,6 +143,7 @@
                     itinerary_composition:itinerary_composition,
                     concomitant_itinerary:concomitant_itinerary,
                     itinerary_course:itinerary_course,
+                    technical_course:technical_course,
                     enrollment_id:enrollment_id
                 };
 
