@@ -483,7 +483,7 @@ return new class () extends clsCadastro {
     public function Editar()
     {
         $this->data_saida = formatDateParse(str_replace('%2F', '/', $this->data_saida), 'Y-m-d');
-        if ($this->data_saida == null || $this->data_saida <= date('Y-m-d', strtotime('-1 year'))) {
+        if ($this->data_saida == null) {
             $this->data_saida = null;
             $this->mensagem = 'Data de Afastamento Inválida.<br>';
 
