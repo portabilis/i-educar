@@ -68,6 +68,8 @@ class Registro30 implements RegistroEducacenso
 
     public $deficienciaAutismo;
 
+    public $deficienciaVisaoMonocular;
+
     public $inepAluno;
 
     public $recursoLedor;
@@ -155,6 +157,10 @@ class Registro30 implements RegistroEducacenso
     public $formacaoContinuadaEducacaoOutros;
 
     public $formacaoContinuadaEducacaoNenhum;
+
+    public $formacaoContinuadaEducacaoBilingueSurdos;
+
+    public $formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao;
 
     public $email;
 
