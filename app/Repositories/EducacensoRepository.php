@@ -129,7 +129,6 @@ class EducacensoRepository
             (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
             e.poder_publico_parceria_convenio AS "poderPublicoConveniado",
-            e.formas_contratacao_adm_publica_e_outras_instituicoes AS "formasContratacaoPoderPublico",
             e.formas_contratacao_parceria_escola_secretaria_municipal AS "formasContratacaoPoderPublicoMunicipal",
             e.formas_contratacao_parceria_escola_secretaria_estadual AS "formasContratacaoPoderPublicoEstadual",
             e.qtd_matriculas_atividade_complementar AS "qtdMatAtividadesComplentar",
