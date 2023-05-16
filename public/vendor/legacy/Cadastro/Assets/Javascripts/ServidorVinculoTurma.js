@@ -143,6 +143,19 @@ $j(document).ready(function() {
     }
   };
 
+  function verificaUnidadesCurricularesQueLeciona() {
+      if ($j('#outras_unidades_curriculares_obrigatorias').val() != 0 &&
+          $j('#outras_unidades_curriculares_obrigatorias').val() != '' &&
+          $j('#outras_unidades_curriculares_obrigatorias').val() != null &&
+          ($j('#funcao_exercida').val() == '1' || $j('#funcao_exercida').val() == '5')) {
+          $j('#unidades_curriculares_leciona').closest('tr').show();
+      } else {
+          $j('#unidades_curriculares_leciona').closest('tr').hide();
+          $j('#unidades_curriculares_leciona').attr('checked', false);
+      }
+  }
+  verificaUnidadesCurricularesQueLeciona();
+
   $j('#ref_cod_escola').on('change', getDependenciaAdministrativaEscola);
   getDependenciaAdministrativaEscola();
 
@@ -152,6 +165,7 @@ $j(document).ready(function() {
   });
 
   $j('#funcao_exercida').on('change', verificaObrigatoriedadeTipoVinculo);
+  $j('#funcao_exercida').on('change', verificaUnidadesCurricularesQueLeciona());
 
   let toggleProfessorAreaEspecifica = function (tipoPresenca) {
     //se o tipo de presença for falta global
@@ -188,6 +202,10 @@ $j(document).ready(function() {
 
   function handleGetTurnoTurma(dataResponse) {
     toggleTurno(dataResponse['turma_turno_id']);
+    if (dataResponse['outras_unidades_curriculares_obrigatorias']) {
+        $j('#outras_unidades_curriculares_obrigatorias').val(dataResponse['outras_unidades_curriculares_obrigatorias']);
+        verificaUnidadesCurricularesQueLeciona();
+    }
     unidadesCurriculares(dataResponse);
   }
 
