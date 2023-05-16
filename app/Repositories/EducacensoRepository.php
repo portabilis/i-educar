@@ -329,7 +329,8 @@ SQL;
                 pessoa.url AS "url",
                 escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico",
                 escola.qtd_vice_diretor AS "qtdViceDiretor",
-                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario"
+                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario",
+                escola.qtd_tradutor_interprete_libras_outro_ambiente AS "qtdTradutorInterpreteLibrasOutroAmbiente"
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
             INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes

@@ -431,6 +431,14 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function salasAtividadesEstudioGravacaoEdicao()
+    {
+        return in_array(SalasAtividades::ESTUDIO_GRAVACAO_EDICAO, $this->salasAtividades);
+    }
+
+    /**
+     * @return bool
+     */
     public function dormitoriosAluno()
     {
         return in_array(Dormitorios::ALUNO, $this->dormitorios);
@@ -1029,6 +1037,15 @@ class Registro10 extends Registro10Fields
     {
         return in_array(InstrumentosPedagogicos::MATERIAIS_PRATICA_DESPORTIVA, $this->instrumentosPedagogicos);
     }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosMateriaisEducacaoSurdos()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAIS_EDUCACAO_SURDOS, $this->instrumentosPedagogicos);
+    }
+
 
     /**
      * @return bool

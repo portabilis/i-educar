@@ -620,6 +620,11 @@ class Registro10Fields implements RegistroEducacenso
     public $qtdOrientadorComunitario;
 
     /**
+     * @var int
+     */
+    public $qtdTradutorInterpreteLibrasOutroAmbiente;
+
+    /**
      * @var array
      */
     public $orgaosColegiados;
