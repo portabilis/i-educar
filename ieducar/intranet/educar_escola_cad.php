@@ -1317,7 +1317,7 @@ return new class extends clsCadastro {
 
             $helperOptions = ['objectName' => 'instrumentos_pedagogicos'];
             $options = [
-                'label' => 'Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem',
+                'label' => 'Instrumentos e materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino-aprendizagem',
                 'size' => 50,
                 'required' => false,
                 'options' => [

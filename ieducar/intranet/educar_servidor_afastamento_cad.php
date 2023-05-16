@@ -148,10 +148,11 @@ return new class () extends clsCadastro {
         }
         // Se edição, mostra a data de afastamento
         elseif ($this->status == clsCadastro::EDITAR) {
+            $this->campoOculto('data_saida', $this->data_saida);
             $this->campoRotulo('data_saida', 'Data de Afastamento', $this->data_saida);
         }
 
-        // Se edição, mostra campo para entrar com data de retorno
+        // Se edição, mostra campo para entrar com data de retornoc
         if ($this->retornar_servidor == EmployeeReturn::SIM || $this->data_retorno) {
             $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
         }
@@ -481,6 +482,14 @@ return new class () extends clsCadastro {
 
     public function Editar()
     {
+        $this->data_saida = formatDateParse(str_replace('%2F', '/', $this->data_saida), 'Y-m-d');
+        if ($this->data_saida == null || $this->data_saida <= date('Y-m-d', strtotime('-1 year'))) {
+            $this->data_saida = null;
+            $this->mensagem = 'Data de Afastamento Inválida.<br>';
+
+            return false;
+        }
+
         $urlPermite = sprintf(
             'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
             $this->ref_cod_servidor,
@@ -489,18 +498,17 @@ return new class () extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
-        $exitDate = $this->data_saida ? dataToBanco(str_replace('%2F', '/', $this->data_saida)) : $this->data_saida;
+
         $returnDate = $this->data_retorno ? dataToBanco($this->data_retorno) : $this->data_retorno;
 
-        if ($exitDate && $returnDate) {
-            $exitDate = Carbon::createFromFormat('Y-m-d', $exitDate);
+        if ($this->data_saida && $returnDate) {
             $returnDate = Carbon::createFromFormat('Y-m-d', $returnDate);
+            $exitDate = Carbon::createFromFormat('Y-m-d', $this->data_saida);
             if (!$this->validateDates($exitDate, $returnDate)) {
                 $this->mensagem = 'A data de retorno não pode ser inferior à data de afastamento.';
 
                 return false;
             }
-            $exitDate = $exitDate->format('Y-m-d');
             $returnDate = $returnDate->format('Y-m-d');
         }
 
@@ -514,7 +522,7 @@ return new class () extends clsCadastro {
             $withdrawal->ref_cod_motivo_afastamento = $this->ref_cod_motivo_afastamento;
         }
         $withdrawal->data_retorno = $returnDate;
-        $withdrawal->data_saida = $exitDate;
+        $withdrawal->data_saida = $this->data_saida;
 
         $editou = $withdrawal->save();
         if ($editou) {
