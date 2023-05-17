@@ -235,6 +235,12 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
+        if (empty($this->etapa)) {
+            $this->mensagem = 'É necessário informar pelo menos uma etapa.';
+
+            return false;
+        }
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 

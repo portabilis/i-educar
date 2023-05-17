@@ -11,7 +11,10 @@ class CheckPostedDataService
 {
     public function hasDataPostedInGrade($discipline, $level, $year = null, $school = null)
     {
-        $schoolClassQuery = LegacyGrade::find($level)->schoolClass();
+        $schoolClassQuery = LegacyGrade::find($level)
+            ->schoolClass()
+            ->active()
+            ->whereHas('viewDisciplines');
 
         if ($year) {
             $schoolClassQuery->where('ano', $year);

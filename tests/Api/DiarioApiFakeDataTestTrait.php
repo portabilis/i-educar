@@ -162,6 +162,8 @@ trait DiarioApiFakeDataTestTrait
             LegacyDisciplineAcademicYearFactory::new()->create([
                 'componente_curricular_id' => $discipline->id,
                 'ano_escolar_id' => $schoolClass->grade_id,
+                'carga_horaria' => 100,
+                'hora_falta' => null,
             ]);
 
             LegacySchoolGradeDisciplineFactory::new()->create([

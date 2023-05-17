@@ -3,9 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyPeriod;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App_Model_ZonaLocalizacao;
+use Database\Factories\Concerns\ReleaseAbsencesForStudentsFactory;
+use Database\Factories\Concerns\ReleaseScoresForStudentsFactory;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
@@ -37,6 +40,9 @@ class LegacySchoolFactory extends Factory
         ];
     }
 
+    /**
+     * Altera o nome da escola.
+     */
     public function withName(string $name): static
     {
         $person = LegacyPersonFactory::new()->create([
@@ -53,6 +59,9 @@ class LegacySchoolFactory extends Factory
         ]);
     }
 
+    /**
+     * Adiciona telefone para a escola.
+     */
     public function withPhone(): static
     {
         return $this->afterCreating(function (LegacySchool $school) {
@@ -63,6 +72,9 @@ class LegacySchoolFactory extends Factory
         });
     }
 
+    /**
+     * Define o usuário "admin" como diretor da escola.
+     */
     public function withAdminAsDirector(): static
     {
         return $this->afterCreating(function (LegacySchool $school) {
@@ -74,6 +86,9 @@ class LegacySchoolFactory extends Factory
         });
     }
 
+    /**
+     * Vincula o curso, suas séres e disciplinas à escola.
+     */
     public function withCourse(LegacyCourse $course): static
     {
         return $this->afterCreating(function (LegacySchool $school) use ($course) {
@@ -83,6 +98,7 @@ class LegacySchoolFactory extends Factory
             ]);
 
             $course->grades->each(fn ($grade) => LegacySchoolGradeFactory::new()
+                ->withDisciplines()
                 ->create([
                     'ref_cod_escola' => $school,
                     'ref_cod_serie' => $grade,
@@ -91,25 +107,17 @@ class LegacySchoolFactory extends Factory
         });
     }
 
-    public function withClassroomsForEachGrade(LegacyCourse $course): static
+    /**
+     * Adiciona uma turma para o turno e para cada série da escola.
+     */
+    public function withClassroomsForEachGrade(LegacyCourse $course, LegacyPeriod $period): static
     {
-        return $this->afterCreating(function (LegacySchool $school) use ($course) {
+        return $this->afterCreating(function (LegacySchool $school) use ($course, $period) {
             $course->grades->each(fn ($grade) => LegacySchoolClassFactory::new()
                 ->create([
-                    'nm_turma' => $grade->name . ' Matutino',
+                    'nm_turma' => $grade->name . ' ' . $period->name,
                     'sgl_turma' => mb_substr($grade->name, 0, 1),
-                    'turma_turno_id' => LegacyPeriodFactory::new()->morning(),
-                    'ref_ref_cod_escola' => $school,
-                    'ref_ref_cod_serie' => $grade,
-                    'ref_cod_curso' => $course,
-                    'max_aluno' => 20,
-                ]));
-
-            $course->grades->each(fn ($grade) => LegacySchoolClassFactory::new()
-                ->create([
-                    'nm_turma' => $grade->name . ' Vespertino',
-                    'sgl_turma' => mb_substr($grade->name, 0, 1),
-                    'turma_turno_id' => LegacyPeriodFactory::new()->afternoon(),
+                    'turma_turno_id' => $period,
                     'ref_ref_cod_escola' => $school,
                     'ref_ref_cod_serie' => $grade,
                     'ref_cod_curso' => $course,
@@ -118,6 +126,9 @@ class LegacySchoolFactory extends Factory
         });
     }
 
+    /**
+     * Adiciona alunos para cada turma da escola.
+     */
     public function withStudentsForEachClassrooms(int $count = 1): static
     {
         return $this->afterCreating(function (LegacySchool $school) use ($count) {
@@ -144,6 +155,29 @@ class LegacySchoolFactory extends Factory
         });
     }
 
+    /**
+     * Lança notas para cada aluno da escola.
+     */
+    public function withScoresForEachStudent(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            ReleaseScoresForStudentsFactory::fromSchool($school);
+        });
+    }
+
+    /**
+     * Lança faltas para cada aluno da escola.
+     */
+    public function withAbsencesForEachStudent(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            ReleaseAbsencesForStudentsFactory::fromSchool($school);
+        });
+    }
+
+    /**
+     * Inicia um ano letivo do tipo "semestre".
+     */
     public function withSemesterAsStageType(): static
     {
         return $this->afterCreating(function (LegacySchool $school) {
@@ -156,6 +190,9 @@ class LegacySchoolFactory extends Factory
         });
     }
 
+    /**
+     * Inicia um ano letivo do tipo "bimestre".
+     */
     public function withBimonthlyAsStageType(): static
     {
         return $this->afterCreating(function (LegacySchool $school) {
