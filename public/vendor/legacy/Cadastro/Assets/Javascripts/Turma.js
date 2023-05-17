@@ -446,6 +446,14 @@ $j(document).ready(function() {
       valida();
     }
   }
+  $j('#outras_unidades_curriculares_obrigatorias').on('change', function(){
+    if ($j('#outras_unidades_curriculares_obrigatorias').val().length < 4) {
+      alert('O campo Outras Unidades Curriculares deve conter no mínimo 4 caracteres.');
+      $j('#btn_enviar').hide();
+    } else {
+      $j('#btn_enviar').show();
+    }
+  });
 
   $j('#ano').on('change', function(){
     $j('#ano_letivo').val($j('#ano').val());
