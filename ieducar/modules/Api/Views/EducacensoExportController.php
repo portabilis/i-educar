@@ -488,7 +488,7 @@ class EducacensoExportController extends ApiCoreController
         $registro50Model = new Registro50();
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-        $quantidadeComponentes = 15;
+        $quantidadeComponentes = 25;
         $quantidadeUnidadesCurriculares = 8;
 
         /** @var Registro50[] $docentes */
