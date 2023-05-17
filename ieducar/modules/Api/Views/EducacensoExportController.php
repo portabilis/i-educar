@@ -521,6 +521,8 @@ class EducacensoExportController extends ApiCoreController
                 $data[] = $docente->unidadesCurriculares === null ? '' : (int) in_array($count, $docente->unidadesCurriculares);
             }
 
+            $data[] = $docente->outrasUnidadesCurricularesObrigatorias;
+
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }
 
