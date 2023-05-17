@@ -136,6 +136,8 @@ class LegacySchoolClass extends Model
         'estrutura_curricular',
         'formas_organizacao_turma',
         'unidade_curricular',
+        'outras_unidades_curriculares_obrigatorias',
+        'classe_com_lingua_brasileira_sinais'
     ];
 
     protected function id(): Attribute

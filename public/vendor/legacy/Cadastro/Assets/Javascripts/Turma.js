@@ -39,6 +39,10 @@ let verificaEtapaEducacenso = ()=>{
   }
 }
 
+let verificaOutrasUnidadesCurricularesObrigatorias = ()=> {
+  $j("#outras_unidades_curriculares_obrigatorias").prop('disabled', ! $j('#estrutura_curricular').val().includes("2"));
+}
+
 let verificaFormaOrganizacaoTurma = ()=> {
   const etapasInvalidas = ['1', '2', '3', '24', '62'];
   const escolarizacao = $j('#tipo_atendimento').val() == '0';
@@ -71,7 +75,7 @@ let verificaUnidadeCurricular = ()=> {
 
 let verificaLocalFuncionamentoDiferenciado = () => {
   $j('#local_funcionamento_diferenciado').makeUnrequired();
-  let habilitaCampo = [1, 2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
+  let habilitaCampo = [1].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
   $j('#local_funcionamento_diferenciado').prop('disabled', !habilitaCampo);
 
   if (habilitaCampo) {
@@ -94,6 +98,7 @@ $j('#estrutura_curricular').change(function() {
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
   verificaFormaOrganizacaoTurma();
+  verificaOutrasUnidadesCurricularesObrigatorias();
 });
 
 verificaLocalFuncionamentoDiferenciado();
@@ -425,6 +430,7 @@ $j(document).ready(function() {
       verificaFormaOrganizacaoTurma();
       verificaUnidadeCurricular();
       habilitaUnidadeCurricular();
+      verificaOutrasUnidadesCurricularesObrigatorias();
     });
 
   // fix checkboxs
@@ -440,6 +446,14 @@ $j(document).ready(function() {
       valida();
     }
   }
+  $j('#outras_unidades_curriculares_obrigatorias').on('change', function(){
+    if ($j('#outras_unidades_curriculares_obrigatorias').val().length < 4) {
+      alert('O campo Outras Unidades Curriculares deve conter no mínimo 4 caracteres.');
+      $j('#btn_enviar').hide();
+    } else {
+      $j('#btn_enviar').show();
+    }
+  });
 
   $j('#ano').on('change', function(){
     $j('#ano_letivo').val($j('#ano').val());
