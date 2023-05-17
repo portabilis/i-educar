@@ -12,10 +12,10 @@ return new class () extends Migration {
      */
     public function up()
     {
-        $this->dropView('public.educacenso_record20');
+        $this->dropView('public.educacenso_record60');
 
         $this->executeSqlFile(
-            __DIR__ . '/../sqls/views/public.educacenso_record20-2023-05-17.sql'
+            __DIR__ . '/../sqls/views/public.educacenso_record60-2023-05-17.sql'
         );
     }
 
@@ -26,10 +26,10 @@ return new class () extends Migration {
      */
     public function down()
     {
-        $this->dropView('public.educacenso_record20');
+        $this->dropView('public.educacenso_record60');
 
         $this->executeSqlFile(
-            __DIR__ . '/../sqls/views/public.educacenso_record20-2022-07-26.sql'
+            __DIR__ . '/../sqls/views/public.educacenso_record60-2022-07-26.sql'
         );
     }
 };
