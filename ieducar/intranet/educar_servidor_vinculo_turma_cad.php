@@ -158,7 +158,7 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Outra(s) unidade(s) curricular(es) obrigatória(s);',
-            'value' => 1,
+            'value' => $this->unidades_curriculares_leciona,
         ];
 
         $this->inputsHelper()->checkbox(attrName: 'unidades_curriculares_leciona', inputOptions: $options);
