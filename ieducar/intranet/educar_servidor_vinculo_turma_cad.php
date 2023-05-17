@@ -28,8 +28,8 @@ return new class extends clsCadastro {
     public $turma_estrutura_curricular;
     public $nm_turma;
     public $copia = false;
-    public $outrasUnidadesCurricularesObrigatorias = false;
-    public $unidades_curriculares_leciona = false;
+    public $apresentar_outras_unidades_curriculares_obrigatorias = false;
+    public $outras_unidades_curriculares_obrigatorias;
 
     public function Inicializar()
     {
@@ -71,8 +71,8 @@ return new class extends clsCadastro {
                 $this->ref_cod_curso = $obj_turma['ref_cod_curso'];
                 $this->ref_cod_serie = $obj_turma['ref_ref_cod_serie'];
                 $this->turma_estrutura_curricular = $obj_turma['estrutura_curricular'];
-                $this->outrasUnidadesCurricularesObrigatorias = $registro->schoolClass->outras_unidades_curriculares_obrigatorias ?? false;
-                $this->unidades_curriculares_leciona = $registro['unidades_curriculares_leciona'];
+                $this->apresentar_outras_unidades_curriculares_obrigatorias = $registro->schoolClass->outras_unidades_curriculares_obrigatorias ?? false;
+                $this->outras_unidades_curriculares_obrigatorias = $registro['outras_unidades_curriculares_obrigatorias'];
 
                 if (is_string(value: $registro['unidades_curriculares'])) {
                     $this->unidades_curriculares = explode(separator: ',', string: str_replace(search: ['{', '}'], replace: '', subject: $registro['unidades_curriculares']));
@@ -126,7 +126,7 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'id', valor: $this->id);
         $this->campoOculto(nome: 'servidor_id', valor: $this->servidor_id);
         $this->campoOculto(nome: 'copia', valor: (int) $this->copia);
-        $this->campoOculto(nome: 'outras_unidades_curriculares_obrigatorias', valor: (int) $this->outrasUnidadesCurricularesObrigatorias);
+        $this->campoOculto(nome: 'apresentar_outras_unidades_curriculares_obrigatorias', valor: $this->apresentar_outras_unidades_curriculares_obrigatorias);
 
 
         $this->inputsHelper()->dynamic(helperNames: 'ano', inputOptions: ['value' => (is_null(value: $ano) ? date(format: 'Y') : $ano)]);
@@ -156,12 +156,16 @@ return new class extends clsCadastro {
         ];
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
-        $options = [
+        $this->inputsHelper()->select(attrName: 'outras_unidades_curriculares_obrigatorias', inputOptions: [
             'label' => 'Outra(s) unidade(s) curricular(es) obrigatória(s);',
-            'value' => $this->unidades_curriculares_leciona,
-        ];
-
-        $this->inputsHelper()->checkbox(attrName: 'unidades_curriculares_leciona', inputOptions: $options);
+            'resources' => [
+                '' => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ],
+            'value' => $this->outras_unidades_curriculares_obrigatorias,
+            'required' => false
+        ]);
 
         $resources = SelectOptions::tiposVinculoServidor();
         $options = [
@@ -240,7 +244,8 @@ return new class extends clsCadastro {
             funcao_exercida: $this->funcao_exercida,
             tipo_vinculo: $this->tipo_vinculo,
             permite_lancar_faltas_componente: $this->permite_lancar_faltas_componente,
-            turno_id: $this->turma_turno_id
+            turno_id: $this->turma_turno_id,
+            outras_unidades_curriculares_obrigatorias: $this->outras_unidades_curriculares_obrigatorias
         );
         $id = $professorTurma->existe2();
         if ($id) {
@@ -279,7 +284,8 @@ return new class extends clsCadastro {
             tipo_vinculo: $this->tipo_vinculo,
             permite_lancar_faltas_componente: $this->permite_lancar_faltas_componente,
             turno_id: $this->turma_turno_id,
-            unidades_curriculares: $this->unidades_curriculares
+            unidades_curriculares: $this->unidades_curriculares,
+            outras_unidades_curriculares_obrigatorias: $this->outras_unidades_curriculares_obrigatorias
         );
 
         if (!$this->validaCamposCenso()) {
