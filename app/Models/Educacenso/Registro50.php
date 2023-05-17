@@ -135,7 +135,7 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
 
     /**
      * @var int
-     *             Campo usado somente na análise
+     *          Campo usado somente na análise
      */
     public $outrasUnidadesCurricularesObrigatorias;
 
