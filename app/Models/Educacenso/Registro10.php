@@ -1046,7 +1046,6 @@ class Registro10 extends Registro10Fields
         return in_array(InstrumentosPedagogicos::MATERIAIS_EDUCACAO_SURDOS, $this->instrumentosPedagogicos);
     }
 
-
     /**
      * @return bool
      */

@@ -110,7 +110,6 @@ class Registro10 extends AbstractRegistro
             $data->salasAtividadesEducacaoProfissional() ?: 0, // 75	Salas de oficinas da educação profissional
             $data->salasAtividadesEstudioGravacaoEdicao() ?: 0, // 76	Salas de Estúdio de gravação e ediçã
 
-
             $data->naoPossuiDependencias() ?: 0, // 77	Nenhuma das dependências relacionadas
             $data->recursosAcessibilidadeCorrimao() ?: 0, // 78	Corrimão e guarda-corpos
             $data->recursosAcessibilidadeElevador() ?: 0, // 79	Elevador
