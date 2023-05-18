@@ -889,7 +889,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (empty($turma->classe_com_lingua_brasileira_sinais)) {
+            if (empty($turma->classeComLinguaBrasileiraSinais)) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Informe se a turma é de ensino desenvolvido com a Língua Brasileira de Sinais.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita como segunda língua (bilingue para surdos))',
