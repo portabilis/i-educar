@@ -4,6 +4,7 @@ namespace Tests\Educacenso\Export;
 
 use App\Models\Country;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use App\Services\Educacenso\HandleFileService;
 use App\Services\Educacenso\ImportServiceFactory;
 use App\User;
@@ -144,6 +145,11 @@ class ExportTest extends TestCase
     /** @test */
     public function validationExportCensoRegistro20()
     {
+        LegacySchoolClass::where('ativo', 1)
+            ->update([
+                'classe_com_lingua_brasileira_sinais' => 0
+            ]);
+
         $data20 = [
             'oper' => 'get',
             'resource' => 'registro-20',
