@@ -106,7 +106,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $detalhe_aluno['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $detalhe_aluno['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
             $this->url_novo   = sprintf(
                 'educar_dispensa_disciplina_cad.php?ref_cod_matricula=%d',
                 $this->ref_cod_matricula
@@ -129,6 +129,6 @@ return new class extends clsDetalhe {
     public function Formular()
     {
         $this->title = 'Dispensa Componente Curricular';
-        $this->processoAp = 578;
+        $this->processoAp = 628;
     }
 };
