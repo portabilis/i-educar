@@ -75,6 +75,8 @@ class TeacherTest extends ViewTestCase
                 'employee_postgraduates_complete' => 'Pós-Graduações concluídas',
                 'continuing_education_course' => 'Outros cursos de formação continuada',
                 'employee_graduation_complete' => 'Curso(s) superior(es) concluído(s)',
+                'allocations.funcao_exercida' => 'Função exercida',
+                'allocations.tipo_vinculo' => 'Tipo de vínculo',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',
