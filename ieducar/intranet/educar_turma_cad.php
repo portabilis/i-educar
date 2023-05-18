@@ -546,6 +546,7 @@ return new class extends clsCadastro {
             'value' => $this->outras_unidades_curriculares_obrigatorias,
             'cols' => 45,
             'max_length' => 500,
+            'disabled' => true
         ];
 
         $this->inputsHelper()->textArea('outras_unidades_curriculares_obrigatorias', $options);

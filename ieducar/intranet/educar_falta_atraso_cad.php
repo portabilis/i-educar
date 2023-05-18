@@ -94,7 +94,7 @@ return new class extends clsCadastro {
 
         $funcoesDoServidor = $this->getFuncoesServidor($this->ref_cod_servidor);
         $funcoesDoServidor = array_replace([null => 'Selecione'], $funcoesDoServidor);
-        $this->campoLista(nome: 'ref_cod_servidor_funcao', campo: 'Função', valor: $funcoesDoServidor, default: $this->ref_cod_servidor_funcao, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
+        $this->campoLista(nome: 'ref_cod_servidor_funcao', campo: 'Função', valor: $funcoesDoServidor, default: $this->ref_cod_servidor_funcao, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: true);
 
         $this->campoNumero(nome: 'qtd_horas', campo: 'Quantidade de Horas', valor: $this->qtd_horas, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoNumero(nome: 'qtd_min', campo: 'Quantidade de Minutos', valor: $this->qtd_min, tamanhovisivel: 30, tamanhomaximo: 255);
@@ -218,6 +218,8 @@ return new class extends clsCadastro {
 
             return false;
         }
+
+        dd('eu');
 
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
         if ($this->tipo == 1) {
