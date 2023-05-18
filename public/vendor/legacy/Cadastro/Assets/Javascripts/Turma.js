@@ -447,7 +447,7 @@ $j(document).ready(function() {
     }
   }
   $j('#outras_unidades_curriculares_obrigatorias').on('change', function(){
-    if ($j('#outras_unidades_curriculares_obrigatorias').val().length < 4) {
+    if ($j('#outras_unidades_curriculares_obrigatorias').val().length > 0 && $j('#outras_unidades_curriculares_obrigatorias').val().length < 4) {
       alert('O campo Outras Unidades Curriculares deve conter no mínimo 4 caracteres.');
       $j('#btn_enviar').hide();
     } else {
