@@ -339,7 +339,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) && empty(array_filter($escola->formasContratacaoPoderPublicoEstadual))) {
+        if (in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado) && empty(array_filter($escola->formasContratacaoPoderPublicoEstadual))) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se as formas de contratação entre a escola e a Secretaria estadual de educação foram informadas.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação)',
