@@ -37,11 +37,15 @@ class EnrollmentFormativeItineraryController extends Controller
 
         $this->menu(578);
 
+        $technicalCourses = file_get_contents(base_path('ieducar/intranet/educacenso_json/cursos_da_educacao_profissional.json'));
+
         return view('enrollments.enrollmentFormativeItinerary', [
             'enrollment' => $enrollment,
             'itineraryType' => TipoItinerarioFormativo::getDescriptiveValues(),
             'itineraryComposition' => TipoItinerarioFormativo::getDescriptiveValuesOfItineraryComposition(),
             'itineraryCourse' => TipoCursoItinerario::getDescriptiveValues(),
+            'technicalCourses' => json_decode($technicalCourses, true),
+            'showConcomitantItinerary' => !in_array(1, transformStringFromDBInArray($enrollment->schoolClass->estrutura_curricular))
         ]);
     }
 
@@ -51,6 +55,7 @@ class EnrollmentFormativeItineraryController extends Controller
         $enrollment->composicao_itinerario = $request->get('itinerary_composition');
         $enrollment->curso_itinerario = $request->get('itinerary_course');
         $enrollment->itinerario_concomitante = $request->get('concomitant_itinerary');
+        $enrollment->cod_curso_profissional = $request->get('itinerary_course');
 
         $enrollment->save();
 

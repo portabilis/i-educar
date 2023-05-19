@@ -57,7 +57,8 @@ class LegacyEnrollment extends LegacyModel
         'composicao_itinerario',
         'curso_itinerario',
         'itinerario_concomitante',
-        'etapa_educacenso'
+        'etapa_educacenso',
+        'cod_curso_profissional'
     ];
 
     protected $casts = [
