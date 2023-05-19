@@ -45,7 +45,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
 
         $etapasCpfObrigatorio = [69, 70, 72, 71, 67, 73, 74];
 
-        if (in_array($data->dadosAluno->etapaTurma, $etapasCpfObrigatorio) && empty($data['cpf'])) {
+        if (in_array($data->dadosAluno->etapaTurma, $etapasCpfObrigatorio) && empty($data->cpf)) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) ({$data->nomePessoa}) se trata de um(a) aluno(a) vinculado à uma turma da ({$data->dadosAluno->etapaTurmaDescritiva()}), portanto é necessário informar o cpf",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: CPF)',
