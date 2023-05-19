@@ -14,6 +14,8 @@ use Database\Factories\DistrictFactory;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\StateFactory;
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\FormasContratacaoPoderPublico;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\UploadedFile;
@@ -87,6 +89,18 @@ class ExportTest extends TestCase
         ));
 
         $this->legacySchool = LegacySchool::first();
+
+        $this->legacySchool->update([
+            'poder_publico_parceria_convenio' => '{'.DependenciaAdministrativaEscola::MUNICIPAL.'}',
+            'formas_contratacao_parceria_escola_secretaria_municipal' => '{'.FormasContratacaoPoderPublico::CONTRATO_CONSORCIO.'}',
+        ]);
+
+        $this->legacySchool->refresh();
+
+        LegacySchoolClass::where('ativo', 1)
+            ->update([
+                'classe_com_lingua_brasileira_sinais' => 1
+            ]);
     }
 
     /** @test */
@@ -145,11 +159,6 @@ class ExportTest extends TestCase
     /** @test */
     public function validationExportCensoRegistro20()
     {
-        LegacySchoolClass::where('ativo', 1)
-            ->update([
-                'classe_com_lingua_brasileira_sinais' => 0
-            ]);
-
         $data20 = [
             'oper' => 'get',
             'resource' => 'registro-20',

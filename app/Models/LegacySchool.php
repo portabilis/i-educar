@@ -90,6 +90,7 @@ class LegacySchool extends LegacyModel
         'ref_idpes_gestor',
         'cargo_gestor',
         'nao_ha_funcionarios_para_funcoes',
+        'formas_contratacao_parceria_escola_secretaria_municipal',
     ];
 
     protected function id(): Attribute
