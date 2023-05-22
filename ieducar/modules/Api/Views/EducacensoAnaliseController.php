@@ -339,7 +339,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) && empty(array_filter($escola->formasContratacaoPoderPublicoEstadual))) {
+        if (in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado) && empty(array_filter($escola->formasContratacaoPoderPublicoEstadual))) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se as formas de contratação entre a escola e a Secretaria estadual de educação foram informadas.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação)',
@@ -891,7 +891,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (is_null($turma->classeComLinguaBrasileiraSinais)) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Informe se a turma é de ensino desenvolvido com a Língua Brasileira de Sinais.",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Informe se a turma {$nomeTurma} é de ensino desenvolvido com a Língua Brasileira de Sinais.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita como segunda língua (bilingue para surdos))',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
