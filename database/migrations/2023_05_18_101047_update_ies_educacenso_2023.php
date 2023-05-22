@@ -15,20 +15,22 @@ return new class () extends Migration {
             ->where('ref_cod_tipo_usuario', LegacyUserType::LEVEL_ADMIN)
             ->first();
 
-        foreach ($file as $line) {
-            $data = str_getcsv(
-                string: $line,
-                separator: ';'
-            );
+        if ($admin) {
+            foreach ($file as $line) {
+                $data = str_getcsv(
+                    string: $line,
+                    separator: ';'
+                );
 
-            EducacensoInstitution::updateOrCreate([
-                'ies_id' => $data[0],
-            ], [
-                'nome' => $data[1],
-                'dependencia_administrativa_id' => $data[2],
-                'tipo_instituicao_id' => $data[3],
-                'user_id' => $admin->getKey(),
-            ]);
+                EducacensoInstitution::updateOrCreate([
+                    'ies_id' => $data[0],
+                ], [
+                    'nome' => $data[1],
+                    'dependencia_administrativa_id' => $data[2],
+                    'tipo_instituicao_id' => $data[3],
+                    'user_id' => $admin->getKey(),
+                ]);
+            }
         }
     }
 };
