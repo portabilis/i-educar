@@ -20,24 +20,14 @@ return new class () extends Migration {
                 'nome' => $data[7],
                 'classe_id' => $data[0],
                 'user_id' => 1,
-                'grau_academico' => $this->getGrauAcademico($data[8]),
+                'grau_academico' => match (mb_strtoupper($data[8])) {
+                    'TECNOLÓGICO' => EducacensoDegree::GRAU_TECNOLOGICO,
+                    'LICENCIATURA' => EducacensoDegree::GRAU_LICENCIATURA,
+                    'BACHARELADO' => EducacensoDegree::GRAU_BACHARELADO,
+                    'SEQUENCIAL' => EducacensoDegree::GRAU_SEQUENCIAL,
+                    default => 0,
+                },
             ]);
-        }
-    }
-
-    private function getGrauAcademico(string $grau): int
-    {
-        switch(mb_strtoupper($grau)) {
-            case 'TECNOLÓGICO':
-                return EducacensoDegree::GRAU_TECNOLOGICO;
-            case 'LICENCIATURA':
-                return EducacensoDegree::GRAU_LICENCIATURA;
-            case 'BACHARELADO':
-                return EducacensoDegree::GRAU_BACHARELADO;
-            case 'SEQUENCIAL':
-                return EducacensoDegree::GRAU_SEQUENCIAL;
-            default:
-                return 0;
         }
     }
 };
