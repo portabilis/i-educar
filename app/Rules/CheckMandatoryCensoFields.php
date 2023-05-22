@@ -274,7 +274,7 @@ class CheckMandatoryCensoFields implements Rule
                 App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
             ]
         )) {
-            $this->message = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Semipresencial ou Educação a Distância.';
+            $this->message = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Educação a Distância.';
 
             return false;
         }

@@ -189,6 +189,8 @@ class Registro00 extends AbstractRegistro
         $data->cnpjMantenedoraPrincipal = $this->cnpjToCenso($data->cnpjMantenedoraPrincipal);
         $data->poderPublicoConveniado = Portabilis_Utils_Database::pgArrayToArray($data->poderPublicoConveniado);
         $data->formasContratacaoPoderPublico = Portabilis_Utils_Database::pgArrayToArray($data->formasContratacaoPoderPublico);
+        $data->formasContratacaoPoderPublicoEstadual = Portabilis_Utils_Database::pgArrayToArray($data->formasContratacaoPoderPublicoEstadual);
+        $data->formasContratacaoPoderPublicoMunicipal = Portabilis_Utils_Database::pgArrayToArray($data->formasContratacaoPoderPublicoMunicipal);
 
         return $data;
     }

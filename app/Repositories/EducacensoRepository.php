@@ -130,6 +130,8 @@ class EducacensoRepository
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
             e.poder_publico_parceria_convenio AS "poderPublicoConveniado",
             e.formas_contratacao_adm_publica_e_outras_instituicoes AS "formasContratacaoPoderPublico",
+            e.formas_contratacao_parceria_escola_secretaria_municipal AS "formasContratacaoPoderPublicoMunicipal",
+            e.formas_contratacao_parceria_escola_secretaria_estadual AS "formasContratacaoPoderPublicoEstadual",
             e.qtd_matriculas_atividade_complementar AS "qtdMatAtividadesComplentar",
             e.qtd_atendimento_educacional_especializado AS "qtdMatAee",
             e.qtd_ensino_regular_creche_par AS "qtdMatCrecheParcial",
