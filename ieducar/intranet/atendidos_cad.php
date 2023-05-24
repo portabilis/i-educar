@@ -643,7 +643,7 @@ return new class extends clsCadastro {
             'resources' => $tiposNacionalidade,
             'required' => $obrigarCamposCenso,
             'inline' => true,
-            'value' => $this->retorno === 'Novo' ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade
+            'value' => $this->retorno === 'Novo' ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade //Quando for novo registro, preenche com o valor default brasileiro
         ];
 
         $this->inputsHelper()->select(attrName: 'tipo_nacionalidade', inputOptions: $options);

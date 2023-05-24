@@ -1261,7 +1261,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'resources'   => $tiposNacionalidade,
             'required'    => $obrigarCamposCenso,
             'inline'      => true,
-            'value'       => $this->getRequest()->id == null ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade
+            'value'       => $this->getRequest()->id == null ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade //Quando for novo registro, preenche com o valor default brasileiro
         ];
 
         $this->inputsHelper()->select('tipo_nacionalidade', $options);
