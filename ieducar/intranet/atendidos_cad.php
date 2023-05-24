@@ -10,6 +10,7 @@ use App\Models\LegacyUser;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
@@ -631,6 +632,7 @@ return new class extends clsCadastro {
 
         // tipos
         $tiposNacionalidade = [
+            '' => 'Selecione',
             '1' => 'Brasileira',
             '2' => 'Naturalizado brasileiro',
             '3' => 'Estrangeira'
@@ -641,7 +643,7 @@ return new class extends clsCadastro {
             'resources' => $tiposNacionalidade,
             'required' => $obrigarCamposCenso,
             'inline' => true,
-            'value' => $this->tipo_nacionalidade
+            'value' => $this->retorno === 'Novo' ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade
         ];
 
         $this->inputsHelper()->select(attrName: 'tipo_nacionalidade', inputOptions: $options);
