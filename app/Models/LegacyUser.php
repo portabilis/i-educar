@@ -68,4 +68,9 @@ class LegacyUser extends DefaultUser
     {
         return $this->belongsTo(LegacyEmployee::class, 'ref_funcionario_exc');
     }
+
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
+    }
 }

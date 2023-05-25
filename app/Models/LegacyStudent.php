@@ -72,6 +72,13 @@ class LegacyStudent extends LegacyModel
         );
     }
 
+    protected function realName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->person->real_name
+        );
+    }
+
     /**
      * @return BelongsTo
      */
