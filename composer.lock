@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77099e6a0cf0cfca9ad3f27e6f509588",
+    "content-hash": "ed7c68d5dde7dc5abed39c4bca95c505",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -419,52 +419,6 @@
                 }
             ],
             "time": "2022-04-01T19:23:25+00:00"
-        },
-        {
-            "name": "cossou/jasperphp",
-            "version": "2.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cossou/JasperPHP.git",
-                "reference": "d24bc69aaaf55beb2a76a0db2a572e81f6baee09"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cossou/JasperPHP/zipball/d24bc69aaaf55beb2a76a0db2a572e81f6baee09",
-                "reference": "d24bc69aaaf55beb2a76a0db2a572e81f6baee09",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "JasperPHP": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hélder Duarte",
-                    "email": "cossou@gmail.com"
-                }
-            ],
-            "description": "Create Reports in PHP with JasperReports",
-            "homepage": "https://github.com/cossou/JasperPHP",
-            "keywords": [
-                "jasper",
-                "jasperreports",
-                "java",
-                "pdf",
-                "reports"
-            ],
-            "support": {
-                "issues": "https://github.com/cossou/JasperPHP/issues",
-                "source": "https://github.com/cossou/JasperPHP/tree/master"
-            },
-            "abandoned": "geekcom/phpjasper",
-            "time": "2018-11-16T11:45:31+00:00"
         },
         {
             "name": "dex/composer-plug-and-play",
