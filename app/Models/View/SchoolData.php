@@ -27,6 +27,15 @@ class SchoolData extends Model
         );
     }
 
+    protected function cellphone(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->celular ? '(' . $this->celular_ddd . ') ' . $this->celular : '(##) #####-####' ;
+            }
+        );
+    }
+
     protected function address(): Attribute
     {
         return Attribute::make(
