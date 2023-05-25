@@ -348,7 +348,10 @@ function handleCarregaDadosComponentesSerie(response){
     componentes.forEach(function(componente) {
       $j( '#componente_' + componente.id).prop( "checked", true );
       $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
-      $j( '#hora_falta_' + componente.id ).val(Math.round(componente.hora_falta * 60)).prop("disabled", false);
+      if(componente.hora_falta != null) {
+          $j( '#hora_falta_' + componente.id ).val(Math.round(componente.hora_falta * 60)).prop("disabled", false);
+      }
+      $j( '#hora_falta_' + componente.id ).prop("disabled", false);
       $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
       $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
 

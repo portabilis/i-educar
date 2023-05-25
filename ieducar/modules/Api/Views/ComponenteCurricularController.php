@@ -160,7 +160,7 @@ class ComponenteCurricularController extends ApiCoreController
 
             foreach ($disciplinas as &$disciplina) {
                 $disciplina['anos_letivos'] = json_decode($disciplina['anos_letivos']);
-                $disciplina['hora_falta'] = (float) $disciplina['hora_falta'];
+                $disciplina['hora_falta'] = $disciplina['hora_falta'] ? (float) $disciplina['hora_falta'] : null;
                 $disciplina['carga_horaria'] = (float) $disciplina['carga_horaria'];
             }
 
