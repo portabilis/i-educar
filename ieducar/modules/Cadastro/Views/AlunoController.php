@@ -4,6 +4,7 @@ use App\User;
 use App\Models\LegacyRace;
 use App\Services\UrlPresigner;
 use App\Models\LegacyInstitution;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Support\Facades\Auth;
 use iEducar\Support\View\SelectOptions;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
@@ -1249,6 +1250,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
         $tiposNacionalidade = [
+            '' => 'Selecione',
             '1'  => 'Brasileiro',
             '2'  => 'Naturalizado brasileiro',
             '3'  => 'Estrangeiro'
@@ -1259,7 +1261,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'resources'   => $tiposNacionalidade,
             'required'    => $obrigarCamposCenso,
             'inline'      => true,
-            'value'       => $this->tipo_nacionalidade
+            'value'       => $this->getRequest()->id == null ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade //Quando for novo registro, preenche com o valor default brasileiro
         ];
 
         $this->inputsHelper()->select('tipo_nacionalidade', $options);
