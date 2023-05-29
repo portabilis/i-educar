@@ -16,7 +16,7 @@ submitButton.click(function(){
     let anos_letivos = $j('[name="componentes['+key+'][anos_letivos]"]').val() || [];
 
     if (hora_falta != null) {
-        hora_falta / 60;
+        hora_falta = hora_falta / 60;
     } else {
         hora_falta = null;
     }
