@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\DeficiencyType;
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 
 class TurmaController extends ApiCoreController
@@ -190,6 +192,12 @@ class TurmaController extends ApiCoreController
 
         if ($tipoDiferenciado && $tipoDiferenciado != $tipo) {
             $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+        } else {
+            $exists = LegacySchoolClass::query()->whereDifferentStudents($codTurma)->exists();
+
+            if ($exists) {
+                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+            }
         }
 
         return ['tipo-boletim' => $tipos[$tipo]];
