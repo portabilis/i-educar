@@ -198,6 +198,10 @@ SQL;
             $tipo_nota = $tipo_nota === 0 ? 'NULL' : $tipo_nota;
             $anosLetivosFormatados = Portabilis_Utils_Database::arrayToPgArray($anosLetivos);
 
+            if (is_null($hora_falta)) {
+                $hora_falta = ' NULL';
+            }
+
             $sql = "
                 INSERT INTO
                     {$this->_tabela}
