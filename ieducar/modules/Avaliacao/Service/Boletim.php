@@ -3111,6 +3111,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     // Salva a média
                     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
 
+                    // Atualiza a nota arredondada baseada nas casas decimais da Regra de Avaliação
+                    // Essa opção só esta acessível através da atualização de matrículas
                     if ($this->isUpdateScore()) {
                         $score = \App\Models\LegacyDisciplineScore::query()
                             ->where('nota_aluno_id', $this->_getNotaAluno()->id)
