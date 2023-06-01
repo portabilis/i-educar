@@ -140,6 +140,35 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         );
     }
 
+    protected function address(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => implode(', ', [
+                $this->logradouro,
+                $this->numero,
+                $this->bairro,
+            ]) . ' - ' . $this->cidade . ' - ' . $this->ref_sigla_uf . ' - CEP:' . $this->cep
+        );
+    }
+
+    protected function phone(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->telefone ? '(' . $this->ddd_telefone . ') ' . $this->telefone : '(##) ####-####' ;
+            }
+        );
+    }
+
+    protected function cellphone(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return '(##) #####-####' ;
+            }
+        );
+    }
+
     /**
      * @return HasMany
      */
