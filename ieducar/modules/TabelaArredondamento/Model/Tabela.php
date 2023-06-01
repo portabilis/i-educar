@@ -76,7 +76,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
             $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
         }
 
-        $return = Portabilis_Utils_Float::limitDecimal($value, ['limit' => $limitDecimalRound]);
+        $return = Portabilis_Utils_Float::limitDecimal($value, ['limit' => $limitDecimalRound ?? 1]);
 
         // Se não houver tabela com valores de arredondamento irá retornar o valor
         if (!count($this->_tabelaValores) > 0) {
