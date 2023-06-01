@@ -35,7 +35,7 @@ class EmployeePosgraduate extends Model
      * Filtra pelo ID do servidor
      *
      * @param Builder $query
-     * @param $employeeId
+     * @param         $employeeId
      *
      * @return Builder
      */
