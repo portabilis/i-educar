@@ -494,7 +494,7 @@ SQL;
                  FROM cadastro.fisica_deficiencia
                  JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
                  WHERE fisica_deficiencia.ref_idpes = fisica.idpes
-                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,25,13)
+                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,8,25,13)
                  GROUP BY 1
                  ) deficiencias ON true
 

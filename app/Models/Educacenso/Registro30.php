@@ -240,6 +240,7 @@ class Registro30 implements RegistroEducacenso
             $this->deficienciaSurdoCegueira,
             $this->deficienciaFisica,
             $this->deficienciaIntelectual,
+            $this->deficienciaVisaoMonocular
         ];
 
         if (empty($this->arrayDeficiencias)) {
