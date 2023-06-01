@@ -199,9 +199,18 @@ class LegacyRegistration extends LegacyModel
             'pmieducar.matricula_turma',
             'ref_cod_matricula',
             'ref_cod_turma',
-        )->wherePivot('ativo', 1)
-            ->where('pmieducar.turma.ativo', 1)
+        )->where('pmieducar.turma.ativo', 1)
             ->orderBy('matricula_turma.sequencial', 'desc');
+    }
+
+    public function transferStart(): HasOne
+    {
+        return $this->hasOne(LegacyTransferRequest::class, 'ref_cod_matricula_entrada');
+    }
+
+    public function transferEnd(): HasOne
+    {
+        return $this->hasOne(LegacyTransferRequest::class, 'ref_cod_matricula_saida');
     }
 
     public function registrationStores(): HasMany
