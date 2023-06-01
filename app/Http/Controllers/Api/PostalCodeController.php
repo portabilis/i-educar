@@ -49,7 +49,7 @@ class PostalCodeController extends Controller
         return response()->json([
             'postal_code' => $data->cep,
             'address' => $data->logradouro,
-            'complement' => $data->complemento,
+            'complement' => preg_replace("/[^a-zA-Z0-9 \/–\ .]/", '', $data->complemento),
             'neighborhood' => $data->bairro,
             'city_name' => $data->localidade,
             'state_abbreviation' => $data->uf,
