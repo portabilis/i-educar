@@ -6,6 +6,22 @@ use Illuminate\Support\Collection;
 
 class Util
 {
+    public static function formatWorkload(float|null $workload): string
+    {
+        if ($workload) {
+            $hour = (int)$workload;
+            $workload -= $hour;
+            $minutes = round($workload * 60);
+            if ($minutes < 10) {
+                $minutes = '0' . $minutes;
+            }
+
+            return $hour . ':' . $minutes;
+        }
+
+        return '00:00';
+    }
+
     public static function format(mixed $value, int $decimalPlaces = 1): string
     {
         return number_format($value, $decimalPlaces, ',', '.');
