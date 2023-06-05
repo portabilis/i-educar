@@ -26,6 +26,10 @@ class LegacyTransferRequest extends LegacyModel
 
     public string $builder = LegacyTransferRequestBuilder::class;
 
+    protected $casts = [
+        'data_transferencia' => 'date'
+    ];
+
     /**
      * @var array
      */
