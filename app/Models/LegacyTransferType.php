@@ -6,6 +6,7 @@ use App\Traits\Ativo;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyTransferType extends LegacyModel
@@ -36,6 +37,13 @@ class LegacyTransferType extends LegacyModel
         'data_exclusao',
         'ativo',
     ];
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->nm_tipo,
+        );
+    }
 
     /**
      * @return HasMany

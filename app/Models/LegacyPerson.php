@@ -88,6 +88,19 @@ class LegacyPerson extends LegacyModel
         );
     }
 
+    protected function realName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (empty($this->individual->social_name)) {
+                    return $this->nome;
+                }
+
+                return $this->individual->social_name;
+            }
+        );
+    }
+
     /**
      * @return HasMany
      */

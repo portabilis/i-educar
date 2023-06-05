@@ -212,6 +212,10 @@ class Registro20 implements RegistroEducacenso
 
     public $tipoAtividadeComplementar6;
 
+    public $classeComLinguaBrasileiraSinais;
+
+    public $outrasUnidadesCurricularesObrigatorias;
+
     /**
      * @return bool
      */

@@ -129,7 +129,8 @@ class EducacensoRepository
             (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
             e.poder_publico_parceria_convenio AS "poderPublicoConveniado",
-            e.formas_contratacao_adm_publica_e_outras_instituicoes AS "formasContratacaoPoderPublico",
+            e.formas_contratacao_parceria_escola_secretaria_municipal AS "formasContratacaoPoderPublicoMunicipal",
+            e.formas_contratacao_parceria_escola_secretaria_estadual AS "formasContratacaoPoderPublicoEstadual",
             e.qtd_matriculas_atividade_complementar AS "qtdMatAtividadesComplentar",
             e.qtd_atendimento_educacional_especializado AS "qtdMatAee",
             e.qtd_ensino_regular_creche_par AS "qtdMatCrecheParcial",
@@ -328,7 +329,8 @@ SQL;
                 pessoa.url AS "url",
                 escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico",
                 escola.qtd_vice_diretor AS "qtdViceDiretor",
-                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario"
+                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario",
+                escola.qtd_tradutor_interprete_libras_outro_ambiente AS "qtdTradutorInterpreteLibrasOutroAmbiente"
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
             INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
@@ -451,6 +453,7 @@ SQL;
                 5 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaSurdoCegueira",
                 6 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaFisica",
                 7 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaIntelectual",
+                8 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaVisaoMonocular",
                 CASE WHEN array_length(deficiencias.array_deficiencias, 1) > 1 THEN 1 ELSE 0 END "deficienciaMultipla",
                 13 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
                 25 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
@@ -491,7 +494,7 @@ SQL;
                  FROM cadastro.fisica_deficiencia
                  JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
                  WHERE fisica_deficiencia.ref_idpes = fisica.idpes
-                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,25,13)
+                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,8,25,13)
                  GROUP BY 1
                  ) deficiencias ON true
 
@@ -532,6 +535,8 @@ SQL;
                 (ARRAY[9] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoCampo",
                 (ARRAY[10] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoAmbiental",
                 (ARRAY[11] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoDireitosHumanos",
+                (ARRAY[18] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoBilingueSurdos",
+                (ARRAY[19] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao",
                 (ARRAY[12] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaGeneroDiversidadeSexual",
                 (ARRAY[13] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaDireitosCriancaAdolescente",
                 (ARRAY[14] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoRelacoesEticoRaciais",

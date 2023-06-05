@@ -6,6 +6,7 @@ use App\Models\Builders\LegacyEvaluationRuleBuilder;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -94,19 +95,11 @@ class LegacyEvaluationRule extends Model
     }
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
     public function deficiencyEvaluationRule()
     {
         return $this->belongsTo(__CLASS__, 'regra_diferenciada_id');
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function deficiencyEvaluationRules()
-    {
-        return $this->hasMany(__CLASS__, 'regra_diferenciada_id');
     }
 
     /**
