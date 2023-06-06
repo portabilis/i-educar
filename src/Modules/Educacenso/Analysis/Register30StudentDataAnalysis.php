@@ -47,7 +47,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
 
         if (in_array($data->dadosAluno->etapaTurma, $etapasCpfObrigatorio) && empty($data->cpf)) {
             $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) {$data->nomePessoa} se trata de um(a) aluno(a) vinculado à uma turma da ({$data->dadosAluno->etapaTurmaDescritiva()}), sendo necessário informar o CPF na hora do fechamento da escola, portanto será exportada com o campo vazio",
+                'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) {$data->nomePessoa} se trata de um(a) aluno(a) vinculado à uma turma da ({$data->dadosAluno->etapaTurmaDescritiva()}), sendo necessário informar o CPF na hora do fechamento da escola, portanto será exportada com o campo vazio. </span>",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: CPF)',
                 'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
                 'fail' => false
