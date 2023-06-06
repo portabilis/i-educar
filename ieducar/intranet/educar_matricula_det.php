@@ -4,6 +4,7 @@ use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyBenefit;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -157,12 +158,14 @@ return new class extends clsDetalhe {
             }
 
             $estruturaCurricular = transformStringFromDBInArray(string: $turma['estrutura_curricular']) ?? [];
+            $unidadeCurricular = transformStringFromDBInArray(string: $turma['unidade_curricular']) ?? [];
             $turmaItineraria = in_array(needle: 2, haystack: $estruturaCurricular);
             $turmaFormacaoBasica = in_array(needle: 1, haystack: $estruturaCurricular);
-            $etapasItinerario = [25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 71, 74];
+            $etapasItinerario = [25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 67, 71, 74];
 
-            if (($turmaItineraria && count(value: $estruturaCurricular) === 1) ||
-                ($turmaItineraria && $turmaFormacaoBasica && in_array(needle: $turma['etapa_educacenso'], haystack: $etapasItinerario))) {
+            if (in_array(UnidadesCurriculares::TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS, $unidadeCurricular) &&
+                in_array($turma['etapa_educacenso'], $etapasItinerario)
+            ) {
                 $existeTurmaItineraria = true;
             }
 
@@ -303,7 +306,7 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
 
                 // Apenas libera a dispensa de disciplina quando o aluno estiver enturmado
-                if ($registro['ref_ref_cod_serie'] && $existeTurma) {
+                if ($this->permissao_visualizar_componente() && $registro['ref_ref_cod_serie'] && $existeTurma) {
                     $this->array_botao[] = 'Dispensa de componentes curriculares';
                     $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
@@ -457,6 +460,18 @@ return new class extends clsDetalhe {
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_excluir(int_processo_ap: 627, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true);
+    }
+
+    public function permissao_visualizar_componente()
+    {
+        $user = Auth::user();
+        $allow = Gate::allows(ability: 'view', arguments: 628);
+
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
     }
 
     public function permissao_busca_ativa()

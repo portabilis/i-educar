@@ -79,6 +79,7 @@ class LegacySchool extends LegacyModel
         'codigo_ies',
         'qtd_vice_diretor',
         'qtd_orientador_comunitario',
+        'qtd_tradutor_interprete_libras_outro_ambiente',
         'latitude',
         'longitude',
         'predio_compartilhado_outra_escola',
@@ -89,6 +90,7 @@ class LegacySchool extends LegacyModel
         'ref_idpes_gestor',
         'cargo_gestor',
         'nao_ha_funcionarios_para_funcoes',
+        'formas_contratacao_parceria_escola_secretaria_municipal',
     ];
 
     protected function id(): Attribute
@@ -228,5 +230,10 @@ class LegacySchool extends LegacyModel
     public function secretary(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes_secretario_escolar');
+    }
+
+    public function registrations(): HasMany
+    {
+        return $this->hasMany(LegacyRegistration::class, 'ref_ref_cod_escola');
     }
 }

@@ -76,7 +76,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
                     (float) $componenteUpdate['carga_horaria'],
                     intval($componenteUpdate['tipo_nota']),
                     $componenteUpdate['anos_letivos'],
-                    (float) $componenteUpdate['hora_falta'],
+                    $componenteUpdate['hora_falta'] ? (float) $componenteUpdate['hora_falta'] : null,
                 );
             }
         }
@@ -88,7 +88,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
                     (float)$componenteInsert['carga_horaria'],
                     (int)$componenteInsert['tipo_nota'],
                     $componenteInsert['anos_letivos'],
-                    (float)$componenteInsert['hora_falta'],
+                    $componenteInsert['hora_falta'] ? (float) $componenteInsert['hora_falta'] : null,
                 );
             }
         }
@@ -198,6 +198,10 @@ SQL;
             $tipo_nota = $tipo_nota === 0 ? 'NULL' : $tipo_nota;
             $anosLetivosFormatados = Portabilis_Utils_Database::arrayToPgArray($anosLetivos);
 
+            if (is_null($hora_falta)) {
+                $hora_falta = ' NULL';
+            }
+
             $sql = "
                 INSERT INTO
                     {$this->_tabela}
@@ -238,6 +242,9 @@ SQL;
 
             if (is_numeric($hora_falta)) {
                 $set .= "{$gruda}hora_falta = {$hora_falta}";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}hora_falta = NULL";
                 $gruda = ', ';
             }
 

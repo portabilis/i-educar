@@ -26,6 +26,8 @@ class clsModulesProfessorTurma extends Model
 
     public $unidades_curriculares;
 
+    public $outras_unidades_curriculares_obrigatorias;
+
     /**
      * Construtor.
      *
@@ -49,7 +51,8 @@ class clsModulesProfessorTurma extends Model
         $tipo_vinculo = null,
         $permite_lancar_faltas_componente = null,
         $turno_id = null,
-        $unidades_curriculares = null
+        $unidades_curriculares = null,
+        $outras_unidades_curriculares_obrigatorias = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
@@ -96,6 +99,12 @@ class clsModulesProfessorTurma extends Model
             $this->permite_lancar_faltas_componente = '1';
         } else {
             $this->permite_lancar_faltas_componente = '0';
+        }
+
+        if (isset($outras_unidades_curriculares_obrigatorias) && $outras_unidades_curriculares_obrigatorias) {
+            $this->outras_unidades_curriculares_obrigatorias = '1';
+        } else {
+            $this->outras_unidades_curriculares_obrigatorias = '0';
         }
     }
 
@@ -175,6 +184,12 @@ class clsModulesProfessorTurma extends Model
             } else {
                 $campos .= "{$gruda}unidades_curriculares";
                 $valores .= "{$gruda}NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->outras_unidades_curriculares_obrigatorias)) {
+                $campos .= "{$gruda}outras_unidades_curriculares_obrigatorias";
+                $valores .= "{$gruda}'{$this->outras_unidades_curriculares_obrigatorias}'";
                 $gruda = ', ';
             }
 
@@ -265,6 +280,11 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}unidades_curriculares = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->outras_unidades_curriculares_obrigatorias)) {
+                $set .= "{$gruda}outras_unidades_curriculares_obrigatorias = '{$this->outras_unidades_curriculares_obrigatorias}'";
                 $gruda = ', ';
             }
 

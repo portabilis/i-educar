@@ -10,12 +10,16 @@ class RegistrationService
             return bcdiv(((($academicDays - $absenceTotal) * 100) / $academicDays), 1, 1);
         }
 
+        if (empty($gradeWorkload)) {
+            return 100.0;
+        }
+
         return bcdiv(100 - (($absenceTotal * ($courseHourAbsence * 100)) / $gradeWorkload), 1, 1);
     }
 
     public static function frequencyByDiscipline(int $absence, float $hourAbsence, float $disciplineWorkload): float
     {
-        if ($absence) {
+        if ($absence && !empty($disciplineWorkload)) {
             return bcdiv(100 - (($absence * $hourAbsence * 100) / $disciplineWorkload), 1, 1);
         }
 

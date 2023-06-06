@@ -26,6 +26,10 @@ class LegacyIndividual extends Model
      */
     protected $primaryKey = 'idpes';
 
+    protected $casts = [
+        'data_nasc' => 'date',
+    ];
+
     /**
      * @var array
      */
@@ -163,6 +167,11 @@ class LegacyIndividual extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(LegacyCity::class, 'idmun_nascimento', 'idmun');
+    }
+
+    public function cityBirth(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'idmun_nascimento');
     }
 
     /**

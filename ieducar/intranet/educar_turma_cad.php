@@ -78,6 +78,8 @@ return new class extends clsCadastro {
     public $nome_url_cancelar = 'Cancelar';
     public $url_cancelar = 'educar_turma_lst.php';
     public $ano;
+    public $outras_unidades_curriculares_obrigatorias;
+    public $classe_com_lingua_brasileira_sinais;
 
     public function Inicializar()
     {
@@ -537,6 +539,18 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
+        $options = [
+            'required' => false,
+            'label' => 'Outra(s) unidade(s) curricular(es) obrigatória(s)',
+            'label_hint' => 'Informe outras unidades curriculares que a turma trabalha separadas por ponto e vírgula (;)',
+            'value' => $this->outras_unidades_curriculares_obrigatorias,
+            'cols' => 45,
+            'max_length' => 500,
+            'disabled' => true
+        ];
+
+        $this->inputsHelper()->textArea('outras_unidades_curriculares_obrigatorias', $options);
+
         $cursos = loadJson(file: 'educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
             'type' => 'single'];
@@ -552,6 +566,15 @@ return new class extends clsCadastro {
 
         $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select(attrName: 'local_funcionamento_diferenciado', inputOptions: $options);
+
+        $resources = [
+            null => 'Selecione',
+            1 => 'Sim',
+            2 => 'Não'
+        ];
+
+        $options = ['label' => 'Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita como segunda língua (bilingue para surdos)', 'resources' => $resources, 'value' => $this->classe_com_lingua_brasileira_sinais, 'required' => $obrigarCamposCenso, 'size' => 70];
+        $this->inputsHelper()->select(attrName: 'classe_com_lingua_brasileira_sinais', inputOptions: $options);
 
         $options = ['label' => 'Não informar esta turma no Censo escolar',
             'value' => $this->nao_informar_educacenso,

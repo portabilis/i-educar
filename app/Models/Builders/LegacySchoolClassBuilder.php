@@ -2,10 +2,23 @@
 
 namespace App\Models\Builders;
 
+use App\Models\DeficiencyType;
 use Illuminate\Support\Collection;
 
 class LegacySchoolClassBuilder extends LegacyBuilder
 {
+    public function whereDifferentStudents($schoolClass): self
+    {
+        return $this->whereKey($schoolClass)
+            ->whereHas('enrollments', function ($q) {
+                $q->whereValid();
+                $q->whereHas('registration', function ($q) {
+                    $q->active();
+                    $q->whereHas('student.individual.deficiency', fn ($q) => $q->where('desconsidera_regra_diferenciada', false)->where('deficiency_type_id', DeficiencyType::DEFICIENCY));
+                });
+            });
+    }
+
     /**
      * Retorna o recurso para os selects dos formulários
      *
