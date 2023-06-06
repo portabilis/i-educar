@@ -104,9 +104,17 @@ class LegacyPerson extends LegacyModel
     /**
      * @return HasMany
      */
-    public function phone(): HasMany
+    public function phones(): HasMany
     {
         return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function phone(): HasOne
+    {
+        return $this->hasOne(LegacyPhone::class, 'idpes', 'idpes');
     }
 
     /**

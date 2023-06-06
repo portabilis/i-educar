@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -63,5 +64,20 @@ class LegacyPhone extends Model
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes');
+    }
+
+    protected function number(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->fone) {
+                    $ddd = $this->ddd ? sprintf('(%s)&nbsp;', $this->ddd) : null;
+
+                    return $ddd . $this->fone;
+                }
+
+                return null;
+            },
+        );
     }
 }
