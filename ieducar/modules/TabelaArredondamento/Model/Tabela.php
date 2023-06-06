@@ -69,14 +69,14 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
      *
      * @return mixed
      */
-    public function round($value, $tipoNota)
+    public function round($value, $tipoNota, $limitDecimalRound = 1)
     {
         // carrega tabela de arredondamento, caso ainda não tenha sido carregada.
         if (0 == count($this->_tabelaValores)) {
             $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
         }
 
-        $return = Portabilis_Utils_Float::limitDecimal($value, ['limit' => 1]);
+        $return = Portabilis_Utils_Float::limitDecimal($value, ['limit' => $limitDecimalRound ?? 1]);
 
         // Se não houver tabela com valores de arredondamento irá retornar o valor
         if (!count($this->_tabelaValores) > 0) {
