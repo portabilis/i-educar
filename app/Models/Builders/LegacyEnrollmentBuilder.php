@@ -2,6 +2,8 @@
 
 namespace App\Models\Builders;
 
+use App\Models\RegistrationStatus;
+
 class LegacyEnrollmentBuilder extends LegacyBuilder
 {
     /**
@@ -12,6 +14,21 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     public function active(): self
     {
         return $this->where('matricula_turma.ativo', 1);
+    }
+
+    /**
+     * Filtra por ativo por situação
+     *
+     * @param int $situation
+     * @return LegacyEnrollmentBuilder
+     */
+    public function activeBySituation(int $situation): self
+    {
+        if (!in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
+            $this->active();
+        }
+
+        return $this->whereValid();
     }
 
     /**
