@@ -833,19 +833,15 @@ JS;
                     }
                 }
             }
-
-            $funcoesRemovidas = $funcoes;
-
-            foreach ($listFuncoesCadastradas as $funcao) {
-                unset($funcoesRemovidas[$funcao]);
-            }
-
-            if (count($funcoesRemovidas) > 0) {
-                $this->excluiDisciplinas(array_keys($funcoesRemovidas));
-            }
-
-            $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
         }
+        $funcoesRemovidas = $funcoes;
+        foreach ($listFuncoesCadastradas as $funcao) {
+            unset($funcoesRemovidas[$funcao]);
+        }
+        if (count($funcoesRemovidas) > 0) {
+            $this->excluiDisciplinas(array_keys($funcoesRemovidas));
+        }
+        $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
     }
 
     public function excluiFuncoes()
