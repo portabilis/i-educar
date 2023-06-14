@@ -741,7 +741,7 @@ return new class extends clsCadastro {
         $this->campoTexto(nome: 'pessoa_contato', campo: 'Pessoa de contato na empresa', valor: $this->pessoa_contato, tamanhovisivel: '50', tamanhomaximo: '255');
 
         $fileService = new FileService(urlPresigner: new UrlPresigner);
-        $files = $this->cod_pessoa_fj ? $fileService->getFiles(relation: LegacyIndividual::find($this->cod_pessoa_fj)) : [];
+        $files = $this->cod_pessoa_fj && is_numeric($this->cod_pessoa_fj) ? $fileService->getFiles(relation: LegacyIndividual::find($this->cod_pessoa_fj)) : [];
         $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files])->render());
 
         // after change pessoa pai / mae
