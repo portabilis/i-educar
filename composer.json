@@ -54,7 +54,7 @@
         "laravel/telescope": "^4.7",
         "mockery/mockery": "^1.4.3",
         "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "10.2.1",
         "spatie/laravel-ignition": "^2.0",
         "uderline/openapi-php-attributes": "^1.5"
     },
