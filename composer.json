@@ -19,7 +19,7 @@
         "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
         "dex/composer-plug-and-play": "^0.18",
-        "dex/frontier": "^0.5.0",
+        "dex/frontier": "^0.7.0",
         "doctrine/dbal": "^3.3",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
@@ -52,7 +52,7 @@
         "laravel/telescope": "^4.7",
         "mockery/mockery": "^1.4.3",
         "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "10.2.1",
         "spatie/laravel-ignition": "^2.0",
         "uderline/openapi-php-attributes": "^1.5"
     },

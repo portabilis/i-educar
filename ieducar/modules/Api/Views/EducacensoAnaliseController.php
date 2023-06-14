@@ -1182,49 +1182,59 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             } else {
                 $componenteIds = $turma->componentesIds();
-                $codigosEducacenso = $turma->componentesCodigosEducacenso();
 
-                $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
-
-                $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
-
-                foreach ($disciplinesWithoutTeacher as $discipline) {
+                if (empty($componenteIds)) {
                     $mensagem[] = [
-                        'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
-                        'path' => '(Servidores > Cadastros > Servidores)',
-                        'linkPath' => '/intranet/educar_servidor_lst.php',
-                        'fail' => $educacaoDistancia
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma disciplina da turma {$nomeTurma} foi informada",
+                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Componentes curriculares definidos em séries da escola)',
+                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                        'fail' => true
                     ];
-                }
+                } else {
+                    $codigosEducacenso = $turma->componentesCodigosEducacenso();
 
-                $componenteNulo = null;
+                    $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
 
-                foreach ($componentes as $componente) {
-                    if (empty($componente->codigo_educacenso)) {
-                        $componenteNulo = $componente;
+                    $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
+
+                    foreach ($disciplinesWithoutTeacher as $discipline) {
+                        $mensagem[] = [
+                            'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
+                            'path' => '(Servidores > Cadastros > Servidores)',
+                            'linkPath' => '/intranet/educar_servidor_lst.php',
+                            'fail' => $educacaoDistancia
+                        ];
+                    }
+
+                    $componenteNulo = null;
+
+                    foreach ($componentes as $componente) {
+                        if (empty($componente->codigo_educacenso)) {
+                            $componenteNulo = $componente;
+
+                            break;
+                        }
+
+                        if (in_array($componente->codigo_educacenso, $turma->getForbiddenDisciplines())) {
+                            $mensagem[] = [
+                                'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->nome} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.</span>",
+                                'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
+                                'linkPath' => "/module/ComponenteCurricular/edit?id={$componente->id}",
+                                'fail' => false
+                            ];
+                        }
+                    }
+
+                    if ($componenteNulo) {
+                        $mensagem = [[
+                            'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a disciplina do educacenso foi informada para a disciplina {$componente->nome}.",
+                            'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
+                            'linkPath' => "/module/ComponenteCurricular/edit?id={$componenteNulo->id}",
+                            'fail' => true
+                        ]];
 
                         break;
                     }
-
-                    if (in_array($componente->codigo_educacenso, $turma->getForbiddenDisciplines())) {
-                        $mensagem[] = [
-                            'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->nome} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.</span>",
-                            'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
-                            'linkPath' => "/module/ComponenteCurricular/edit?id={$componente->id}",
-                            'fail' => false
-                        ];
-                    }
-                }
-
-                if ($componenteNulo) {
-                    $mensagem = [[
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a disciplina do educacenso foi informada para a disciplina {$componente->nome}.",
-                        'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
-                        'linkPath' => "/module/ComponenteCurricular/edit?id={$componenteNulo->id}",
-                        'fail' => true
-                    ]];
-
-                    break;
                 }
             }
         }
