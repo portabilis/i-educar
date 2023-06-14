@@ -20,6 +20,7 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
      * Filtra por ativo por situação
      *
      * @param int $situation
+     *
      * @return LegacyEnrollmentBuilder
      */
     public function activeBySituation(int $situation): self
