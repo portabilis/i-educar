@@ -119,13 +119,7 @@
             "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
-            "chmod ug+x .git/hooks/*"
-        ],
-        "post-update-cmd": [
-            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
-            "chmod ug+x .git/hooks/*"
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
