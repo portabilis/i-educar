@@ -48,6 +48,7 @@
         "brianium/paratest": "^7.0",
         "fakerphp/faker": "^1.15",
         "filp/whoops": "^2.14",
+        "laravel/pint": "^1.10",
         "laravel/sail": "^1.0",
         "laravel/telescope": "^4.7",
         "mockery/mockery": "^1.4.3",
