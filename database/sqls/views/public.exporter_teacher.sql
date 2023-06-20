@@ -79,14 +79,15 @@ on escolaridade.idesco = servidor.ref_idesco,
     ) AS employee_graduation,
 	LATERAL (
 		SELECT CONCAT_WS(', ',
-				CASE WHEN ep.type_id = 1 THEN 'Especialização' ELSE NULL::VARCHAR END,
-				CASE WHEN ep.type_id = 2 THEN 'Mestrado' ELSE NULL::VARCHAR END,
-				CASE WHEN ep.type_id = 3 THEN 'Doutorado' ELSE NULL::VARCHAR END,
-				CASE WHEN ep.type_id = 4 THEN 'Não tem pós-graduação concluída' ELSE NULL::VARCHAR END
+				CASE WHEN epg.type_id = 1 THEN 'Especialização' ELSE NULL::VARCHAR END,
+				CASE WHEN epg.type_id = 2 THEN 'Mestrado' ELSE NULL::VARCHAR END,
+				CASE WHEN epg.type_id = 3 THEN 'Doutorado' ELSE NULL::VARCHAR END,
+				CASE WHEN epg.type_id = 4 THEN 'Não tem pós-graduação concluída' ELSE NULL::VARCHAR END
 				)
 		 AS complete
-        FROM employee_posgraduate as ep
-        where ep.employee_id = servidor.cod_servidor
+        FROM pmieducar.servidor as serv
+                 LEFT JOIN employee_posgraduate as epg ON epg.employee_id = serv.cod_servidor
+        WHERE servidor.cod_servidor = epg.employee_id
 	) AS employee_postgraduates
 
 order by
