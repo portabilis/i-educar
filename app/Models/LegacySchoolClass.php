@@ -202,6 +202,34 @@ class LegacySchoolClass extends Model
         );
     }
 
+    protected function daysOfWeekName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $diff = array_diff([2,3,4,5,6], $this->dias_semana);
+
+                if (count($diff) === 0) {
+                    return 'Seg à Sex';
+                }
+
+                $daysOfWeek = array_map(function ($day) {
+                    return match ($day) {
+                        '1' => 'Dom',
+                        '2' => 'Seg',
+                        '3' => 'Ter',
+                        '4' => 'Qua',
+                        '5' => 'Qui',
+                        '6' => 'Sex',
+                        '7' => 'Sab',
+                        default => null
+                    };
+                }, $this->dias_semana);
+
+                return implode(', ', $daysOfWeek);
+            },
+        );
+    }
+
     protected function exemptedDisciplineId(): Attribute
     {
         return Attribute::make(
@@ -310,6 +338,16 @@ class LegacySchoolClass extends Model
     public function enrollments(): HasMany
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_turma', 'cod_turma');
+    }
+
+    /**
+     * Relacionamento com professor.
+     *
+     * @return HasMany
+     */
+    public function schoolClassTeachers(): HasMany
+    {
+        return $this->hasMany(LegacySchoolClassTeacher::class, 'turma_id');
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builders\EmployeeAllocationBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class EmployeeAllocation extends LegacyModel
 {
@@ -34,6 +35,21 @@ class EmployeeAllocation extends LegacyModel
         'horas_excedentes',
         'data_saida'
     ];
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return match ($this->periodo) {
+                    1 => 'Matutino',
+                    2 => 'Vespertino',
+                    3 => 'Noturno',
+                    4 => 'Integral',
+                    default => null
+                };
+            },
+        );
+    }
 
     public function school()
     {
