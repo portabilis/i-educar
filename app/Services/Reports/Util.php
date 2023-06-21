@@ -6,6 +6,20 @@ use Illuminate\Support\Collection;
 
 class Util
 {
+    public static function sumTimes(array|Collection $times): string
+    {
+        $minutes = 0;
+        foreach ($times as $time) {
+            list($hour, $minute) = explode(':', $time);
+            $minutes += $hour * 60;
+            $minutes += $minute;
+        }
+        $hours = floor($minutes / 60);
+        $minutes -= $hours * 60;
+
+        return sprintf('%02d:%02d', $hours, $minutes);
+    }
+
     public static function formatWorkload(float|null $workload): string
     {
         if ($workload) {
