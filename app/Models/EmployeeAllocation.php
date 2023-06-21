@@ -36,7 +36,7 @@ class EmployeeAllocation extends LegacyModel
         'data_saida'
     ];
 
-    protected function name(): Attribute
+    protected function periodName(): Attribute
     {
         return Attribute::make(
             get: function () {
