@@ -16,7 +16,6 @@ class PoderPublicoConveniado implements EducacensoExportRule
     public static function handle(RegistroEducacenso $registro00): RegistroEducacenso
     {
         if ($registro00->podePublicoConveniado == ModelPoderPublicoConveniado::NAO_POSSUI) {
-            $registro00->formasContratacaoPoderPublico = null;
             $registro00->qtdMatAtividadesComplentar = null;
             $registro00->qtdMatAee = null;
             $registro00->qtdMatCrecheParcial = null;

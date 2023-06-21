@@ -40,4 +40,13 @@ class RegistrationStatus implements Enum
             self::DECEASED => 'Falecido',
         ];
     }
+
+    public static function getStatusInactive(): array
+    {
+        return [
+            RegistrationStatus::ABANDONED,
+            RegistrationStatus::TRANSFERRED,
+            RegistrationStatus::DECEASED
+        ];
+    }
 }

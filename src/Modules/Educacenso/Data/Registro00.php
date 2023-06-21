@@ -112,64 +112,27 @@ class Registro00 extends AbstractRegistro
             $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::ESTADUAL, $record->poderPublicoConveniado) : '', // 33	Secretaria estadual
             $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::MUNICIPAL, $record->poderPublicoConveniado) : '', // 34	Secretaria Municipal
             $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::NAO_POSSUI, $record->poderPublicoConveniado) : '', // 35	Não possui parceria ou convênio
-            $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublico) : '', // 36	Termo de colaboração (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublico) : '', // 37	Termo de fomento (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublico) : '', // 38	Acordo de cooperação (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_PRESTACAO_SERVICO, $record->formasContratacaoPoderPublico) : '', // 39	Contrato de prestação de serviço
-            $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COOPERACAO_TECNICA, $record->formasContratacaoPoderPublico) : '', // 40	Termo de cooperação técnica e financeira
-            $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_CONSORCIO, $record->formasContratacaoPoderPublico) : '', // 41	Contrato de consórcio público/Convênio de cooperação
-            $record->qtdMatAtividadesComplentar, // 42	Atividade complementar
-            $record->qtdMatAee, // 43	Atendimento educacional especializado
-            $record->qtdMatCrecheParcial, // 44	Ensino Regular - Creche - Parcial
-            $record->qtdMatCrecheIntegral, // 45	Ensino Regular - Creche - Integral
-            $record->qtdMatPreEscolaParcial, // 46	Ensino Regular - Pré-escola - Parcial
-            $record->qtdMatPreEscolaIntegral, // 47	Ensino Regular - Pré-escola - Integral
-            $record->qtdMatFundamentalIniciaisParcial, // 48	Ensino Regular - Ensino Fundamental - Anos Iniciais - Parcial
-            $record->qtdMatFundamentalIniciaisIntegral, // 49	Ensino Regular - Ensino Fundamental - Anos Iniciais - Integral
-            $record->qtdMatFundamentalFinaisParcial, // 50	Ensino Regular - Ensino Fundamental - Anos Finais - Parcial
-            $record->qtdMatFundamentalFinaisIntegral, // 51	Ensino Regular - Ensino Fundamental - Anos Finais - Integral
-            $record->qtdMatEnsinoMedioParcial, // 52	Ensino Regular - Ensino Médio - Parcial
-            $record->qtdMatEnsinoMedioIntegral, // 53	Ensino Regular - Ensino Médio - Integral
-            $record->qdtMatClasseEspecialParcial, // 54	Educação Especial - Classe especial - Parcial
-            $record->qdtMatClasseEspecialIntegral, // 55	Educação Especial - Classe especial - Integral
-            $record->qdtMatEjaFundamental, // 56	Educação de Jovens e Adultos (EJA) - Ensino fundamental
-            $record->qtdMatEjaEnsinoMedio, // 57	Educação de Jovens e Adultos (EJA) - Ensino médio
-            $record->qtdMatEdProfIntegradaEjaFundamentalParcial, // 58	Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Parcial
-            $record->qtdMatEdProfIntegradaEjaFundamentalIntegral, // 59	Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Integral
-            $record->qtdMatEdProfIntegradaEjaNivelMedioParcial, // 60	Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEdProfIntegradaEjaNivelMedioIntegral, // 61	Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEdProfConcomitanteEjaNivelMedioParcial, // 62	Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEdProfConcomitanteEjaNivelMedioIntegral, // 63	Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEdProfIntercomentarEjaNivelMedioParcial, // 64	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEdProfIntercomentarEjaNivelMedioIntegral, // 65	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEdProfIntegradaEnsinoMedioParcial, // 66	Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Parcial
-            $record->qtdMatEdProfIntegradaEnsinoMedioIntegral, // 67	Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Integral
-            $record->qtdMatEdProfConcomitenteEnsinoMedioParcial, // 68	Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Parcial
-            $record->qtdMatEdProfConcomitenteEnsinoMedioIntegral, // 69	Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Integral
-            $record->qtdMatEdProfIntercomplementarEnsinoMedioParcial, // 70	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Parcial
-            $record->qtdMatEdProfIntercomplementarEnsinoMedioIntegral, // 71	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Integral
-            $record->qtdMatEdProfTecnicaIntegradaEnsinoMedioParcial, // 72	Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Parcial
-            $record->qtdMatEdProfTecnicaIntegradaEnsinoMedioIntegral, // 73	Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Integral
-            $record->qtdMatEdProfTecnicaConcomitanteEnsinoMedioParcial, // 74	Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Parcial
-            $record->qtdMatEdProfTecnicaConcomitanteEnsinoMedioIntegral, // 75	Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Integral
-            $record->qtdMatEdProfTecnicaIntercomplementarEnsinoMedioParcial, // 76	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Parcial
-            $record->qtdMatEdProfTecnicaIntercomplementarEnsinoMedioItegral, // 77	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Integral
-            $record->qtdMatEdProfTecnicaSubsequenteEnsinoMedio, // 78	Educação Profissional - Educação profissional técnica de nível médio - Subsequente ao ensino médio
-            $record->qtdMatEdProfTecnicaIntegradaEjaNivelMedioParcial, // 79	Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEdProfTecnicaIntegradaEjaNivelMedioIntegral, // 80	Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEdProfTecnicaConcomitanteEjaNivelMedioParcial, // 81	Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEdProfTecnicaConcomitanteEjaNivelMedioIntegral, // 82	Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioParcial, // 83	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioIntegral, // 84	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral
-            $record->cnpjMantenedoraPrincipal, // 85	CNPJ da mantenedora principal da escola privada
-            $record->cnpjEscolaPrivada, // 86	Número do CNPJ da escola privada
-            $record->regulamentacao, // 87	Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educaçãof
-            $record->esferaFederal, // 88	Federal
-            $record->esferaEstadual, // 89	Estadual
-            $record->esferaMunicipal, // 90	Municipal
-            $record->unidadeVinculada, // 91	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
-            $record->inepEscolaSede, // 92	Código da Escola Sede
-            $record->codigoIes, // 93	Código da IES
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublicoEstadual) : '', // 36	Termo de colaboração (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublicoEstadual) : '', // 37	Termo de fomento (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublicoEstadual) : '', // 38	Acordo de cooperação (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_PRESTACAO_SERVICO, $record->formasContratacaoPoderPublicoEstadual) : '', // 39	Contrato de prestação de serviço
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COOPERACAO_TECNICA, $record->formasContratacaoPoderPublicoEstadual) : '', // 40	Termo de cooperação técnica e financeira
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_CONSORCIO, $record->formasContratacaoPoderPublicoEstadual) : '', // 41	Contrato de consórcio público/Convênio de cooperação
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 42	Termo de colaboração (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 43	Termo de fomento (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 44	Acordo de cooperação (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_PRESTACAO_SERVICO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 45 Contrato de prestação de serviço
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COOPERACAO_TECNICA, $record->formasContratacaoPoderPublicoMunicipal) : '', // 46 Termo de cooperação técnica e financeira
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_CONSORCIO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 47 Contrato de consórcio público/Convênio de cooperação
+            $record->cnpjMantenedoraPrincipal, // 48	CNPJ da mantenedora principal da escola privada
+            $record->cnpjEscolaPrivada, // 49	Número do CNPJ da escola privada
+            $record->regulamentacao, // 50	Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educaçãof
+            $record->esferaFederal, // 51	Federal
+            $record->esferaEstadual, // 52	Estadual
+            $record->esferaMunicipal, // 53	Municipal
+            $record->unidadeVinculada, // 54	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
+            $record->inepEscolaSede, // 55	Código da Escola Sede
+            $record->codigoIes, // 56	Código da IES
         ];
     }
 
@@ -188,7 +151,6 @@ class Registro00 extends AbstractRegistro
         $data->cnpjEscolaPrivada = $this->cnpjToCenso($data->cnpjEscolaPrivada);
         $data->cnpjMantenedoraPrincipal = $this->cnpjToCenso($data->cnpjMantenedoraPrincipal);
         $data->poderPublicoConveniado = Portabilis_Utils_Database::pgArrayToArray($data->poderPublicoConveniado);
-        $data->formasContratacaoPoderPublico = Portabilis_Utils_Database::pgArrayToArray($data->formasContratacaoPoderPublico);
         $data->formasContratacaoPoderPublicoEstadual = Portabilis_Utils_Database::pgArrayToArray($data->formasContratacaoPoderPublicoEstadual);
         $data->formasContratacaoPoderPublicoMunicipal = Portabilis_Utils_Database::pgArrayToArray($data->formasContratacaoPoderPublicoMunicipal);
 
