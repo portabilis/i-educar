@@ -99,7 +99,7 @@
         }
     },
     "scripts": {
-        "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
+        "format": "vendor/bin/pint",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
