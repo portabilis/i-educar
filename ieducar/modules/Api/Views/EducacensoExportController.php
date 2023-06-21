@@ -361,6 +361,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->deficiencia,
                 $pessoa->deficienciaCegueira,
                 $pessoa->deficienciaBaixaVisao,
+                $pessoa->deficienciaVisaoMonocular,
                 $pessoa->deficienciaSurdez,
                 $pessoa->deficienciaAuditiva,
                 $pessoa->deficienciaSurdoCegueira,
@@ -431,6 +432,8 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->formacaoContinuadaEducacaoCampo,
                 $pessoa->formacaoContinuadaEducacaoAmbiental,
                 $pessoa->formacaoContinuadaEducacaoDireitosHumanos,
+                $pessoa->formacaoContinuadaEducacaoBilingueSurdos,
+                $pessoa->formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao,
                 $pessoa->formacaoContinuadaGeneroDiversidadeSexual,
                 $pessoa->formacaoContinuadaDireitosCriancaAdolescente,
                 $pessoa->formacaoContinuadaEducacaoRelacoesEticoRaciais,
@@ -485,7 +488,7 @@ class EducacensoExportController extends ApiCoreController
         $registro50Model = new Registro50();
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-        $quantidadeComponentes = 15;
+        $quantidadeComponentes = 25;
         $quantidadeUnidadesCurriculares = 8;
 
         /** @var Registro50[] $docentes */
@@ -517,6 +520,8 @@ class EducacensoExportController extends ApiCoreController
             for ($count = 1; $count <= $quantidadeUnidadesCurriculares; $count++) {
                 $data[] = $docente->unidadesCurriculares === null ? '' : (int) in_array($count, $docente->unidadesCurriculares);
             }
+
+            $data[] = $docente->outrasUnidadesCurricularesObrigatorias;
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }
@@ -565,6 +570,7 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->composicaoItinerarioCienciasHumanas,
                 $aluno->composicaoItinerarioFormacaoTecnica,
                 $aluno->cursoItinerario,
+                $aluno->codCursoProfissional,
                 $aluno->itinerarioConcomitante,
                 $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas,
                 $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma,

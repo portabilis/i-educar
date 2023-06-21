@@ -16,6 +16,8 @@ class EnrollmentsPromotionController extends Controller
     {
         $data = $this->getResquetData($request);
 
+        $updateScore = $request->boolean('atualizar_notas', false);
+
         $enrollmentsIds = $this->loadEnrollmentsByFilter($data);
 
         $userId = $request->user()->id;
@@ -23,7 +25,7 @@ class EnrollmentsPromotionController extends Controller
 
         $jobs = [];
         foreach ($enrollmentsIds as $item) {
-            $jobs[] = new EnrollmentsPromotionJob($userId, $item, $databaseConnection);
+            $jobs[] = new EnrollmentsPromotionJob($userId, $item, $databaseConnection, $updateScore);
         }
 
         if (empty($jobs)) {

@@ -134,6 +134,12 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
     public $estruturaCurricular;
 
     /**
+     * @var int
+     *          Campo usado somente na análise
+     */
+    public $outrasUnidadesCurricularesObrigatorias;
+
+    /**
      * @return bool
      */
     public function isTitularOrTutor()

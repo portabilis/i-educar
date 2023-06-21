@@ -2333,7 +2333,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($nota, 1);
         }
 
-        return $this->getRegraAvaliacaoTabelaArredondamento()->round($nota, 1);
+        return $this->getRegraAvaliacaoTabelaArredondamento()->round($nota, 1, $this->getRegraAvaliacaoQtdCasasDecimais());
     }
 
     /**
@@ -2404,7 +2404,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         //Reduz a média sem arredondar para quantidade de casas decimais permitidas
         $media = bcdiv($media, 1, $this->getRegraAvaliacaoQtdCasasDecimais());
 
-        return $this->getRegraAvaliacaoTabelaArredondamento()->round($media, 2);
+        return $this->getRegraAvaliacaoTabelaArredondamento()->round($media, 2, $this->getRegraAvaliacaoQtdCasasDecimais());
     }
 
     /**
@@ -3110,6 +3110,22 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                     // Salva a média
                     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+
+                    // Atualiza a nota arredondada baseada nas casas decimais da Regra de Avaliação
+                    // Essa opção só esta acessível através da atualização de matrículas
+                    if ($this->isUpdateScore()) {
+                        $score = \App\Models\LegacyDisciplineScore::query()
+                            ->where('nota_aluno_id', $this->_getNotaAluno()->id)
+                            ->where('componente_curricular_id', $id)
+                            ->where('etapa', $etapa)
+                            ->first();
+
+                        if ($score && !$locked) {
+                            $score->update([
+                                'nota_arredondada' => $this->getRegraAvaliacaoTabelaArredondamento()->round($score->nota, 1, $this->getRegraAvaliacaoQtdCasasDecimais())
+                            ]);
+                        }
+                    }
 
                     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();

@@ -28,6 +28,7 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $composicaoItinerarioCienciasNatureza;
     public $composicaoItinerarioCienciasHumanas;
     public $composicaoItinerarioFormacaoTecnica;
+    public $codCursoProfissional;
     public $cursoItinerario;
     public $itinerarioConcomitante;
     public $tipoAtendimentoDesenvolvimentoFuncoesGognitivas;

@@ -218,7 +218,7 @@ class clsPessoaFj extends Model
      */
     public function detalhe()
     {
-        if ($this->idpes) {
+        if ($this->idpes && is_numeric($this->idpes)) {
             $objPessoa = new clsPessoa_($this->idpes);
             $detalhePessoa = $objPessoa->detalhe();
 
