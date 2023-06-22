@@ -1,6 +1,6 @@
 create view public.exporter_teacher as
 select
-    p.*,
+    distinct p.*,
     pt.ano as year,
 	c.nm_curso as course,
 	s.nm_serie as grade,
@@ -70,27 +70,24 @@ on escolaridade.idesco = servidor.ref_idesco,
     ) form,
     LATERAL (
          SELECT STRING_AGG(
-			('['||educacenso_curso_superior.nome || ', '
-			||completion_year
-			||', '||educacenso_ies.nome
-			||', '||employee_graduation_disciplines.name
-			||']')::varchar, ';') as complete
+                    ('['||CONCAT_WS(', ',educacenso_curso_superior.nome,completion_year,educacenso_ies.nome,employee_graduation_disciplines.name)||']')::varchar, ';') as complete
 		 FROM employee_graduations
 		 JOIN modules.educacenso_curso_superior ON educacenso_curso_superior.id = employee_graduations.course_id
 		 JOIN modules.educacenso_ies ON educacenso_ies.id = employee_graduations.college_id
-		 JOIN employee_graduation_disciplines ON employee_graduations.discipline_id = employee_graduation_disciplines.id
+		 LEFT JOIN employee_graduation_disciplines ON employee_graduations.discipline_id = employee_graduation_disciplines.id
 		WHERE employee_graduations.employee_id = servidor.cod_servidor
     ) AS employee_graduation,
 	LATERAL (
 		SELECT CONCAT_WS(', ',
-				CASE WHEN (ARRAY[1] <@ serv.pos_graduacao)::bool THEN 'Especialização'::VARCHAR ELSE NULL::VARCHAR END,
-				CASE WHEN (ARRAY[2] <@ serv.pos_graduacao)::bool THEN 'Mestrado'::VARCHAR ELSE NULL::VARCHAR END,
-				CASE WHEN (ARRAY[3] <@ serv.pos_graduacao)::bool THEN 'Doutorado'::VARCHAR ELSE NULL::VARCHAR END,
-				CASE WHEN (ARRAY[4] <@ serv.pos_graduacao)::bool THEN 'Não tem pós-graduação concluída'::VARCHAR ELSE NULL::VARCHAR END
+				CASE WHEN epg.type_id = 1 THEN 'Especialização' ELSE NULL::VARCHAR END,
+				CASE WHEN epg.type_id = 2 THEN 'Mestrado' ELSE NULL::VARCHAR END,
+				CASE WHEN epg.type_id = 3 THEN 'Doutorado' ELSE NULL::VARCHAR END,
+				CASE WHEN epg.type_id = 4 THEN 'Não tem pós-graduação concluída' ELSE NULL::VARCHAR END
 				)
 		 AS complete
-		FROM pmieducar.servidor as serv
-		where serv.cod_servidor = servidor.cod_servidor
+        FROM pmieducar.servidor as serv
+                 LEFT JOIN employee_posgraduate as epg ON epg.employee_id = serv.cod_servidor
+        WHERE servidor.cod_servidor = epg.employee_id
 	) AS employee_postgraduates
 
 order by
