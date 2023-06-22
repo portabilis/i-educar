@@ -91,7 +91,7 @@ from modules.professor_turma pt
                     AS complete
          FROM pmieducar.servidor as serv
          LEFT JOIN employee_posgraduate as epg ON epg.employee_id = serv.cod_servidor
-         WHERE servidor.cod_servidor = epg.employee_id
+         WHERE servidor.cod_servidor = serv.cod_servidor
          ) AS employee_postgraduates
 order by
     p.name,
