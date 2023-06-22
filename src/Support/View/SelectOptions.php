@@ -236,4 +236,12 @@ class SelectOptions
     {
         return self::getDefaultOption() + LocalizacaoDiferenciadaEscola::getDescriptiveValues();
     }
+
+    public static function formats()
+    {
+        return self::getDefaultOption() + [
+            'csv' => 'CSV',
+            'pdf' => 'PDF'
+        ];
+    }
 }
