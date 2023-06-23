@@ -24,6 +24,7 @@ class LegacyPhone extends Model
     protected $table = 'cadastro.fone_pessoa';
 
     public const CREATED_AT = 'data_cad';
+
     public const UPDATED_AT = 'data_rev';
 
     /**
@@ -48,7 +49,7 @@ class LegacyPhone extends Model
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function boot()
     {

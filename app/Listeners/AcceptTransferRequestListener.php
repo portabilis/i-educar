@@ -11,9 +11,6 @@ class AcceptTransferRequestListener
      */
     private $service;
 
-    /**
-     * @param TransferRegistrationDataService $service
-     */
     public function __construct(TransferRegistrationDataService $service)
     {
         $this->service = $service;
@@ -23,7 +20,6 @@ class AcceptTransferRequestListener
      * Handle the event.
      *
      * @param object $event
-     *
      * @return void
      */
     public function handle($event)
@@ -37,14 +33,10 @@ class AcceptTransferRequestListener
         $this->acceptTransferRequest($transfer, $event->registration);
     }
 
-    /**
-     * @param $transfer
-     * @param $newRegistration
-     */
     private function acceptTransferRequest($transfer, $newRegistration)
     {
         $transfer->update([
-            'ref_cod_matricula_entrada' => $newRegistration->cod_matricula
+            'ref_cod_matricula_entrada' => $newRegistration->cod_matricula,
         ]);
     }
 }

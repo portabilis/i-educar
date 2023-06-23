@@ -3,31 +3,57 @@
 class clsDocumento
 {
     public $idpes;
+
     public $rg;
+
     public $data_exp_rg;
+
     public $sigla_uf_exp_rg;
+
     public $tipo_cert_civil;
+
     public $num_termo;
+
     public $num_livro;
+
     public $num_folha;
+
     public $data_emissao_cert_civil;
+
     public $sigla_uf_cert_civil;
+
     public $cartorio_cert_civil;
+
     public $num_cart_trabalho;
+
     public $serie_cart_trabalho;
+
     public $data_emissao_cart_trabalho;
+
     public $sigla_uf_cart_trabalho;
+
     public $num_tit_eleitor;
+
     public $zona_tit_eleitor;
+
     public $secao_tit_eleitor;
+
     public $idorg_exp_rg;
+
     public $certidao_nascimento;
+
     public $certidao_casamento;
+
     public $cartorio_cert_civil_inep;
+
     public $passaporte;
+
     public $comprovante_residencia;
+
     public $declaracao_trabalho_autonomo;
+
     public $tabela;
+
     public $schema = 'cadastro';
 
     public function __construct(
@@ -544,7 +570,6 @@ class clsDocumento
     public function exclui()
     {
         if (is_numeric($this->idpes)) {
-
 
             return true;
         }

@@ -32,7 +32,7 @@ class DiarioRecuperaTurmasEscolaTest extends TestCase
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -86,17 +86,17 @@ class DiarioRecuperaTurmasEscolaTest extends TestCase
                                 0 => [
                                     'serie_id' => $schoolGrade->grade_id,
                                     'regra_avaliacao_id' => null,
-                                ]
+                                ],
                             ],
                             'ref_cod_regente' => null,
                             'updated_at' => $schoolClass->updated_at->format('Y-m-d H:i:s'),
                             'deleted_at' => null,
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'turmas-por-escola',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

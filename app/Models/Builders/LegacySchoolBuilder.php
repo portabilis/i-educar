@@ -8,10 +8,6 @@ class LegacySchoolBuilder extends LegacyBuilder
 {
     /**
      * Retorna o recurso para os selects dos formulários
-     *
-     * @param array $filters
-     *
-     * @return Collection
      */
     public function getResource(array $filters = []): Collection
     {
@@ -23,10 +19,6 @@ class LegacySchoolBuilder extends LegacyBuilder
 
     /**
      * Filtra por nome
-     *
-     * @param string $name
-     *
-     * @return LegacySchoolBuilder
      */
     public function whereName(string $name): self
     {
@@ -35,10 +27,6 @@ class LegacySchoolBuilder extends LegacyBuilder
 
     /**
      * Ordena por nome
-     *
-     * @param string $direction
-     *
-     * @return LegacySchoolBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
@@ -47,10 +35,6 @@ class LegacySchoolBuilder extends LegacyBuilder
 
     /**
      * Filtra por Instituição
-     *
-     * @param int $institution
-     *
-     * @return LegacySchoolBuilder
      */
     public function whereInstitution(int $institution): self
     {
@@ -59,8 +43,6 @@ class LegacySchoolBuilder extends LegacyBuilder
 
     /**
      * Realiza a junçao com organização
-     *
-     * @return LegacySchoolBuilder
      */
     public function joinOrganization(): self
     {
@@ -69,8 +51,6 @@ class LegacySchoolBuilder extends LegacyBuilder
 
     /**
      * Filtra por Ativo
-     *
-     * @return LegacySchoolBuilder
      */
     public function active(): self
     {

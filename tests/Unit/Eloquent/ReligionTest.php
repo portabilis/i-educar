@@ -12,9 +12,6 @@ class ReligionTest extends EloquentTestCase
         'individual' => LegacyIndividual::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return Religion::class;

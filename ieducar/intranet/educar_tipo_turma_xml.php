@@ -9,7 +9,7 @@ if (is_numeric(value: $_GET['ins'])) {
     $db = new clsBanco();
     $db->Consulta(consulta: "SELECT cod_turma_tipo, nm_tipo FROM pmieducar.turma_tipo WHERE ref_cod_instituicao = '{$_GET['ins']}' AND ativo = 1 ORDER BY nm_tipo ASC");
     while ($db->ProximoRegistro()) {
-        list($cod, $nome) = $db->Tupla();
+        [$cod, $nome] = $db->Tupla();
         echo "  <item>{$cod}</item>\n";
         echo "  <item>{$nome}</item>\n";
     }

@@ -24,6 +24,6 @@ class SchoolHistoryStatusTest extends EnumTestCase
 
     protected function getEnumName(): string
     {
-        return  SchoolHistoryStatus::class;
+        return SchoolHistoryStatus::class;
     }
 }

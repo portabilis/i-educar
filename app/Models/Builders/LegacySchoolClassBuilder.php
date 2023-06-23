@@ -21,10 +21,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Retorna o recurso para os selects dos formulários
-     *
-     * @param array $filters
-     *
-     * @return Collection
      */
     public function getResource(array $filters = []): Collection
     {
@@ -35,8 +31,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Filtra por ativo
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function active(): self
     {
@@ -50,10 +44,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Filtra por Serie
-     *
-     * @param int $grade
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function whereGrade(int $grade): self
     {
@@ -67,10 +57,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Filtra por Escola
-     *
-     * @param int $school
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function whereSchool(int $school): self
     {
@@ -80,7 +66,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     /**
      * Filtra por acesso escola
      *
-     * @param int $user
      *
      * @return $this
      */
@@ -93,10 +78,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Filtra por ano e em progresso
-     *
-     * @param int $year
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function whereInProgressYear(int $year): self
     {
@@ -108,8 +89,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Filtra por ano escolar em progresso
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function whereInProgress(): self
     {
@@ -120,10 +99,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Filtra por Curso
-     *
-     * @param int $course
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function whereCourse(int $course): self
     {
@@ -137,10 +112,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Ordena por nome
-     *
-     * @param string $direction
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
@@ -149,10 +120,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
     /**
      * Filtra por Instituição
-     *
-     * @param int $institution
-     *
-     * @return LegacySchoolClassBuilder
      */
     public function whereInstitution(int $institution): self
     {
@@ -162,7 +129,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     /**
      * Filtra por ano
      *
-     * @param int $year
      *
      * @return $this
      */
@@ -174,7 +140,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     /**
      * Filtra por turno
      *
-     * @param int $shift_id
      *
      * @return $this
      */
@@ -186,7 +151,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     /**
      * Filtra visibilidade
      *
-     * @param bool $visible
      *
      * @return $this
      */
@@ -198,13 +162,12 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     /**
      * Filtra por nome do curso
      *
-     * @param string $name
      *
      * @return $this
      */
     public function whereName(string $name): self
     {
-        $name = str_replace(['(',')', '[', ']'], '', $name);
+        $name = str_replace(['(', ')', '[', ']'], '', $name);
 
         return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)', preg_replace("/\([^)]+\)/", '', $name));
     }

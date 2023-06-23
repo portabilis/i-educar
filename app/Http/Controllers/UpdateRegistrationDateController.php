@@ -13,8 +13,6 @@ use Illuminate\View\View;
 class UpdateRegistrationDateController extends Controller
 {
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)
@@ -31,8 +29,6 @@ class UpdateRegistrationDateController extends Controller
     /**
      * Atualiza a data de entrada e enturmação de acordo com o filtro
      *
-     * @param UpdateRegistrationDateRequest $request
-     * @param RegistrationService           $registrationService
      *
      * @return \Illuminate\Http\RedirectResponse
      */

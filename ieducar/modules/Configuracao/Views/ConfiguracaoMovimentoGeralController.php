@@ -12,69 +12,71 @@ class clsIndexBase extends clsBase
 class ConfiguracaoMovimentoGeralController extends clsCadastro
 {
     private $configDataMapper;
-    protected $_formMap    = [
+
+    protected $_formMap = [
         'serie-0' => [
             'label' => 'Educação infantil',
-            'coluna'=> 0,
+            'coluna' => 0,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-1' => [
             'label' => '1° ano',
-            'coluna'=> 1,
-            'value' => []
+            'coluna' => 1,
+            'value' => [],
         ],
         'serie-2' => [
             'label' => '2° ano',
-            'coluna'=> 2,
+            'coluna' => 2,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-3' => [
             'label' => '3° ano',
-            'coluna'=> 3,
+            'coluna' => 3,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-4' => [
             'label' => '4° ano',
-            'coluna'=> 4,
+            'coluna' => 4,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-5' => [
             'label' => '5° ano',
-            'coluna'=> 5,
+            'coluna' => 5,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-6' => [
             'label' => '6° ano',
-            'coluna'=> 6,
+            'coluna' => 6,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-7' => [
             'label' => '7° ano',
-            'coluna'=> 7,
+            'coluna' => 7,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-8' => [
             'label' => '8° ano',
-            'coluna'=> 8,
+            'coluna' => 8,
             'value' => [],
-            'help'  => ''
+            'help' => '',
         ],
         'serie-9' => [
             'label' => '9° ano',
-            'coluna'=> 9,
+            'coluna' => 9,
             'value' => [],
-            'help'  => ''
-        ]
+            'help' => '',
+        ],
     ];
 
     public $_titulo = 'Configuração movimento geral';
+
     public $_processoAp = 9998867;
 
     public function Inicializar()
@@ -101,7 +103,7 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
     {
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
         foreach ($this->configDataMapper->findAll() as $config) {
-            $config;
+
             $series = $this->_formMap['serie-'.$config->get('coluna')]['value'];
 
             $series[] = $config->get('serie');

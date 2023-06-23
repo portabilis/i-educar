@@ -11,7 +11,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCurso extends Portabil
     {
         $defaultOptions = [
             'objectName' => 'curso',
-            'max_selected_options' => 3
+            'max_selected_options' => 3,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

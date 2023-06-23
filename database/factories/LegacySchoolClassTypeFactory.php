@@ -16,8 +16,6 @@ class LegacySchoolClassTypeFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -50,7 +48,7 @@ class LegacySchoolClassTypeFactory extends Factory
             }
 
             return [
-                'cod_turma_tipo' => $schoolClassType->getKey()
+                'cod_turma_tipo' => $schoolClassType->getKey(),
             ];
         });
     }

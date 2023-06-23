@@ -6,7 +6,9 @@ use iEducar\Legacy\Model;
 class clsCadastroEscolaridade extends Model
 {
     public $idesco;
+
     public $descricao;
+
     public $escolaridade;
 
     /**
@@ -212,7 +214,7 @@ class clsCadastroEscolaridade extends Model
      */
     public function findUsages()
     {
-        if (! is_numeric($this->idesco)) {
+        if (!is_numeric($this->idesco)) {
             return false;
         }
 

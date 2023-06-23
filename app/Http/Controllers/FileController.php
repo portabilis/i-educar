@@ -16,7 +16,7 @@ class FileController extends Controller
             $url = $fileService->upload($file);
         } catch (Throwable $e) {
             return [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
 

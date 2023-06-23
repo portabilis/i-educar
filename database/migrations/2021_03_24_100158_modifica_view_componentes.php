@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 class ModificaViewComponentes extends Migration
 {
     use AsView;
+
     /**
      * Run the migrations.
      *

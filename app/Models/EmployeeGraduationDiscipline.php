@@ -9,7 +9,7 @@ class EmployeeGraduationDiscipline extends LegacyModel
     public $timestamps = false;
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function employeeGraduations(): HasMany

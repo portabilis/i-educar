@@ -17,28 +17,14 @@ class ResourceGradeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @var LegacyCourse
-     */
     private LegacyCourse $course;
-    /**
-     * @var Collection
-     */
+
     private Collection $schools;
 
-    /**
-     * @var LegacyGrade
-     */
     private LegacyGrade $grade;
 
-    /**
-     * @var LegacySchool
-     */
     private LegacySchool $school;
 
-    /**
-     * @var string
-     */
     private string $route = 'api.resource.grade';
 
     protected function setUp(): void
@@ -57,7 +43,7 @@ class ResourceGradeTest extends TestCase
             LegacyGradeFactory::new()->count(3)->create(['ref_cod_curso' => $this->course->id])->each(function ($grade) use ($school) {
                 LegacySchoolGradeFactory::new()->create([
                     'ref_cod_serie' => $grade->id,
-                    'ref_cod_escola' => $school->id
+                    'ref_cod_escola' => $school->id,
                 ]);
             });
         });
@@ -73,14 +59,14 @@ class ResourceGradeTest extends TestCase
                 $this->route,
                 [
                     'course' => $this->course->id,
-                    'school' => $this->school
+                    'school' => $this->school,
                 ]
             )
         );
 
         $grades = LegacyGrade::getResource([
             'course' => $this->course->id,
-            'school' => $this->school->id
+            'school' => $this->school->id,
         ]);
 
         $response->assertSuccessful()
@@ -89,15 +75,15 @@ class ResourceGradeTest extends TestCase
                 'data' => [
                     '*' => [
                         'id',
-                        'name'
-                    ]
-                ]
+                        'name',
+                    ],
+                ],
             ]);
 
         foreach ($grades as $key => $grade) {
             $response->assertJsonFragment([
                 'id' => $grade['id'],
-                'name' => $grade['name']
+                'name' => $grade['name'],
             ]);
         }
     }
@@ -110,7 +96,7 @@ class ResourceGradeTest extends TestCase
         $grades = LegacyGrade::getResource([
             'course' => $this->course->id,
             'gradeExclude' => $grade_exclude_id,
-            'schoolExclude' => $school_exclude_id
+            'schoolExclude' => $school_exclude_id,
         ]);
 
         $response = $this->getJson(
@@ -119,7 +105,7 @@ class ResourceGradeTest extends TestCase
                 [
                     'course' => $this->course->id,
                     'grade_exclude' => $grade_exclude_id,
-                    'school_exclude' => $school_exclude_id
+                    'school_exclude' => $school_exclude_id,
                 ]
             )
         );
@@ -130,15 +116,15 @@ class ResourceGradeTest extends TestCase
                 'data' => [
                     '*' => [
                         'id',
-                        'name'
-                    ]
-                ]
+                        'name',
+                    ],
+                ],
             ]);
 
         foreach ($grades as $key => $grade) {
             $response->assertJsonFragment([
                 'id' => $grade['id'],
-                'name' => $grade['name']
+                'name' => $grade['name'],
             ]);
         }
     }
@@ -157,7 +143,7 @@ class ResourceGradeTest extends TestCase
             'course' => 'Curso',
             'school' => 'Escola',
             'grade_exclude' => 'Serie',
-            'school_exclude' => 'Escola'
+            'school_exclude' => 'Escola',
         ]));
 
         $response->assertOk();

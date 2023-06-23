@@ -146,7 +146,7 @@ class RegraController extends ApiCoreController
             $regrasRecuperacao = $this->fetchPreparedQuery($sql, $params);
             $regrasRecuperacao = Portabilis_Array_Utils::filterSet($regrasRecuperacao, [
                 'id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas',
-                'media', 'nota_maxima', 'updated_at', 'deleted_at'
+                'media', 'nota_maxima', 'updated_at', 'deleted_at',
             ]);
 
             foreach ($regrasRecuperacao as &$regra) {
@@ -154,7 +154,7 @@ class RegraController extends ApiCoreController
             }
 
             return [
-                'regras-recuperacao' => $regrasRecuperacao
+                'regras-recuperacao' => $regrasRecuperacao,
             ];
         }
     }
@@ -204,7 +204,7 @@ class RegraController extends ApiCoreController
                 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
                 'nota_maxima_exame', 'updated_at', 'regra_diferenciada_id',
-                'tipo_calculo_recuperacao_paralela'
+                'tipo_calculo_recuperacao_paralela',
             ];
 
             $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
@@ -238,7 +238,7 @@ class RegraController extends ApiCoreController
                 'tipo_recuperacao',
                 'media_recuperacao_paralela',
                 'nota_maxima_geral',
-                'nota_maxima_exame'
+                'nota_maxima_exame',
             ];
 
             $regra = Portabilis_Array_Utils::filterSet($regra, $atributos);
@@ -306,7 +306,7 @@ class RegraController extends ApiCoreController
         $regras = Portabilis_Array_Utils::filterSet($regras, $attrs);
 
         return [
-            'regras' => $regras
+            'regras' => $regras,
         ];
     }
 

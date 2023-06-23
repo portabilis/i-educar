@@ -4,7 +4,8 @@ use App\Models\LegacySequenceGrade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -13,19 +14,29 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_serie_origem;
+
     public $ref_serie_destino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $id;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $ref_cod_instituicao;
+
     public $ref_curso_origem;
+
     public $ref_curso_destino;
 
     public $serie_origem_old;
+
     public $serie_destino_old;
 
     public function Inicializar()
@@ -83,7 +94,7 @@ return new class extends clsCadastro {
         if ($nivel_usuario == 1) {
             $GLOBALS['nivel_usuario_fora'] = 1;
             $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = [ '' => 'Selecione' ];
+            $opcoes = ['' => 'Selecione'];
             $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
             if (is_array($lista)) {
@@ -98,8 +109,8 @@ return new class extends clsCadastro {
             $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
         }
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         // EDITAR
         if ($this->ref_cod_instituicao) {
@@ -119,8 +130,8 @@ return new class extends clsCadastro {
 
         // primary keys
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
             $objTemp = new clsPmieducarSerie();
@@ -165,9 +176,9 @@ return new class extends clsCadastro {
         if (!$det_sequencia) {
             $cadastrou = LegacySequenceGrade::create([
                 'ref_serie_origem' => $this->ref_serie_origem,
-                'ref_serie_destino' =>  $this->ref_serie_destino,
+                'ref_serie_destino' => $this->ref_serie_destino,
                 'ref_usuario_cad' => $this->pessoa_logada,
-                'ativo' => 1
+                'ativo' => 1,
             ]);
 
             if ($cadastrou) {
@@ -180,9 +191,9 @@ return new class extends clsCadastro {
         } else {
             $det_sequencia->fill([
                 'ref_serie_origem' => $this->ref_serie_origem,
-                'ref_serie_destino' =>  $this->ref_serie_destino,
+                'ref_serie_destino' => $this->ref_serie_destino,
                 'ref_usuario_cad' => $this->pessoa_logada,
-                'ativo' => 1
+                'ativo' => 1,
             ]);
 
             if ($det_sequencia->save()) {
@@ -218,7 +229,7 @@ return new class extends clsCadastro {
             $objEdicao->fill([
                 'ref_serie_origem' => $this->ref_serie_origem,
                 'ref_serie_destino' => $this->ref_serie_destino,
-                'ref_usuario_exc' => $this->pessoa_logada
+                'ref_usuario_exc' => $this->pessoa_logada,
             ]);
 
             if ($objEdicao->save()) {

@@ -7,9 +7,6 @@ use App\Models\SchoolClassInep;
 class SchoolClassInepService
 {
     /**
-     * @param $codTurma
-     * @param $codigoInepEducacenso
-     *
      * @return SchoolClassInep
      */
     public function store($codTurma, $codigoInepEducacenso)

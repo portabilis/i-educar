@@ -5,10 +5,15 @@ namespace iEducar\Modules\Educacenso\Model;
 class MantenedoraDaEscolaPrivada
 {
     public const GRUPOS_EMPRESARIAIS = 1;
+
     public const SINDICATOS_TRABALHISTAS = 2;
+
     public const ORGANIZACOES_NAO_GOVERNAMENTAIS = 3;
+
     public const INSTITUICOES_SIM_FINS_LUCRATIVOS = 4;
+
     public const SISTEMA_S = 5;
+
     public const OSCIP = 6;
 
     /**

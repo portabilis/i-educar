@@ -3,10 +3,15 @@
 class clsFisicaCpf
 {
     public $idpes;
+
     public $cpf;
+
     public $idpes_cad;
+
     public $idpes_rev;
+
     public $tabela;
+
     public $schema;
 
     public function __construct($idpes = false, $cpf = false, $idpes_cad = false, $idpes_rev = false)

@@ -2,18 +2,19 @@
 
 use App\Models\LegacyPerson;
 
-return new class () extends clsListagem {
+return new class() extends clsListagem
+{
     public function Gerar()
     {
         $this->titulo = 'Pessoas Físicas';
 
-        $par_nome = str_replace(array('[',']', '{', '}', '(', ')', '\\', '/'),'', $this->getQueryString(name: 'nm_pessoa')) ?: false;
+        $par_nome = str_replace(['[', ']', '{', '}', '(', ')', '\\', '/'], '', $this->getQueryString(name: 'nm_pessoa')) ?: false;
         $par_id_federal = idFederal2Int(str: $this->getQueryString(name: 'id_federal')) ?: false;
 
         $this->addCabecalhos(
             coluna: [
                 'Nome',
-                'CPF'
+                'CPF',
             ]
         );
         $this->campoTexto(
@@ -33,7 +34,6 @@ return new class () extends clsListagem {
         // Paginador
         $limite = 10;
         $iniciolimit = ($this->getQueryString(name: "pagina_{$this->nome}")) ? $this->getQueryString(name: "pagina_{$this->nome}") * $limite - $limite : 0;
-
 
         $lista = LegacyPerson::query()->filter([
             'name' => $par_nome,
@@ -62,7 +62,7 @@ return new class () extends clsListagem {
                 $cpf = $pessoa->individual?->cpf ?? int2CPF(int: $pessoa->individual->cpf);
                 $this->addLinhas(linha: [
                     "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>$nome</a>",
-                    $cpf
+                    $cpf,
                 ]);
             }
         }

@@ -6,7 +6,7 @@ class CoreExt_Validate_ChoiceTest extends PHPUnit\Framework\TestCase
 
     protected $_choices = [
         'bit' => [0, 1],
-        'various' => ['sim', 'não', 'nda']
+        'various' => ['sim', 'não', 'nda'],
     ];
 
     protected function setUp(): void

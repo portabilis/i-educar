@@ -5,22 +5,22 @@ namespace iEducar\Modules\ValueObjects;
 class EmployeeGraduationValueObject
 {
     /**
-     * @var integer
+     * @var int
      */
     public $employeeId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $courseId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $completionYear;
 
     /**
-     * @var integer
+     * @var int
      */
     public $collegeId;
 }

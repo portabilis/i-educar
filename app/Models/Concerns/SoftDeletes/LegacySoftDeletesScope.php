@@ -18,8 +18,6 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param Builder $builder
-     * @param Model   $model
      *
      * @return void
      */
@@ -31,7 +29,6 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     /**
      * Extend the query builder with the needed functions.
      *
-     * @param Builder $builder
      *
      * @return void
      */
@@ -53,13 +50,12 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     /**
      * Get the "deleted at" column for the builder.
      *
-     * @param Builder $builder
      *
      * @return string
      */
     protected function getDeletedAtColumn(Builder $builder)
     {
-        if (count((array)$builder->getQuery()->joins) > 0) {
+        if (count((array) $builder->getQuery()->joins) > 0) {
             return $builder->getModel()->getQualifiedDeletedAtColumn();
         }
 
@@ -69,7 +65,6 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     /**
      * Add the restore extension to the builder.
      *
-     * @param Builder $builder
      *
      * @return void
      */
@@ -85,7 +80,6 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     /**
      * Add the with-trashed extension to the builder.
      *
-     * @param Builder $builder
      *
      * @return void
      */
@@ -103,7 +97,6 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     /**
      * Add the without-trashed extension to the builder.
      *
-     * @param Builder $builder
      *
      * @return void
      */
@@ -120,7 +113,6 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     /**
      * Add the only-trashed extension to the builder.
      *
-     * @param Builder $builder
      *
      * @return void
      */

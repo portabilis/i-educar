@@ -17,8 +17,6 @@ abstract class ImportService
      * Faz a importação dos dados a partir da string do arquivo do censo
      *
      * @param array $importString
-     * @param       $user
-     *
      * @return void
      */
     public function import($importString, $user)
@@ -32,7 +30,6 @@ abstract class ImportService
      * Importa uma linha
      *
      * @param string $line
-     * @param        $user
      */
     private function importLine($line, $user)
     {
@@ -58,7 +55,6 @@ abstract class ImportService
     /**
      * Retorna o ID da linha (registro)
      *
-     * @param $line
      *
      * @return string
      */
@@ -72,7 +68,6 @@ abstract class ImportService
     /**
      * Retorna a classe responsável por importar o registro da linha
      *
-     * @param $lineId
      *
      * @return RegistroImportInterface
      */
@@ -88,17 +83,14 @@ abstract class ImportService
     /**
      * Retorna o nome da escola a partir da string do arquivo de importação
      *
-     * @param $school
      *
      * @return string
      */
     abstract public function getSchoolNameByFile($school);
 
     /**
-     *
      * Trata os dados após a importação, caso seja necessário ajustar para eventuais mudanças de um
      * ano para o outro
-     *
      */
     abstract public function adaptData();
 }

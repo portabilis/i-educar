@@ -39,7 +39,6 @@ abstract class Portabilis_Report_ReportCore
      *
      * @param array $options
      * @param array $defaultOptions
-     *
      * @return array
      */
     protected static function mergeOptions($options, $defaultOptions)
@@ -52,7 +51,6 @@ abstract class Portabilis_Report_ReportCore
      *
      * @param string $name
      * @param string $value
-     *
      * @return void
      */
     public function addArg($name, $value)
@@ -68,7 +66,6 @@ abstract class Portabilis_Report_ReportCore
      * Adiciona o nome de um parâmetro obrigatório.
      *
      * @param string $name
-     *
      * @return void
      */
     public function addRequiredArg($name)
@@ -96,7 +93,6 @@ abstract class Portabilis_Report_ReportCore
      * Renderiza o relatório.
      *
      * @param array $options
-     *
      * @return mixed
      *
      * @throws CoreExt_Exception
@@ -106,7 +102,7 @@ abstract class Portabilis_Report_ReportCore
     {
         $options = self::mergeOptions($options, [
             'report_factory' => null,
-            'options' => []
+            'options' => [],
         ]);
 
         $this->validatesPresenseOfRequiredArgs();
@@ -204,7 +200,6 @@ abstract class Portabilis_Report_ReportCore
      * para gerar novos campos, formatações, etc.
      *
      * @param array $data
-     *
      * @return array
      */
     public function modify($data)

@@ -35,9 +35,9 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
         $value = self::$_model->replaceAliasTokens($value);
 
         $tokensAvailable = $this->_getTokens();
-        $valueTokens     = explode(' ', $value);
-        $missingTokens   = [];
-        $numericTokens   = [];
+        $valueTokens = explode(' ', $value);
+        $missingTokens = [];
+        $numericTokens = [];
 
         // Verifica se alguma token não permitida foi utilizada
         foreach ($valueTokens as $tk) {
@@ -91,7 +91,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
         if ($this->_hasOption('excludeToken') &&
         is_array($this->getOption('excludeToken')) &&
         0 < count($this->getOption('excludeToken'))
-    ) {
+        ) {
             $excludeToken = $this->getOption('excludeToken');
             foreach ($tokens as $token) {
                 if (!in_array($token, $excludeToken)) {

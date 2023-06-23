@@ -1,7 +1,9 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $cd_agenda;
+
     public $nm_agenda;
 
     public function Gerar()
@@ -10,7 +12,7 @@ return new class extends clsListagem {
 
         $this->titulo = 'Agendas que eu posso editar';
 
-        $this->addCabecalhos(coluna: [ 'Agenda' ]);
+        $this->addCabecalhos(coluna: ['Agenda']);
 
         $this->campoTexto(nome: 'pesquisa', campo: 'Agenda', valor: '', tamanhovisivel: 50, tamanhomaximo: 255);
 
@@ -32,14 +34,14 @@ return new class extends clsListagem {
         $db1 = new clsBanco();
         $db1->Consulta(consulta: $sql);
         while ($db1->ProximoRegistro()) {
-            list($cd_agenda, $propriedade) = $db1->Tupla();
+            [$cd_agenda, $propriedade] = $db1->Tupla();
 
             $db2 = new clsBanco();
             $db2->Consulta(consulta: "SELECT nm_agenda, ref_ref_cod_pessoa_own FROM agenda WHERE cod_agenda = {$cd_agenda} {$and}");
             while ($db2->ProximoRegistro()) {
-                list($nm_agenda, $cod_pessoa_own) = $db2->Tupla();
+                [$nm_agenda, $cod_pessoa_own] = $db2->Tupla();
                 $this->addLinhas(linha: [
-                "<a href='agenda.php?cod_agenda={$cd_agenda}'><img src='imagens/noticia.jpg' border=0>$nm_agenda</a>"]);
+                    "<a href='agenda.php?cod_agenda={$cd_agenda}'><img src='imagens/noticia.jpg' border=0>$nm_agenda</a>"]);
             }
         }
 
@@ -48,7 +50,7 @@ return new class extends clsListagem {
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage:'Agendas');
+        $this->breadcrumb(currentPage: 'Agendas');
     }
 
     public function Formular()

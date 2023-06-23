@@ -105,7 +105,6 @@ class User extends Authenticatable
 
     /**
      * @param string $password
-     *
      * @return void
      */
     public function setPasswordAttribute($password)
@@ -124,7 +123,6 @@ class User extends Authenticatable
 
     /**
      * @param string $token
-     *
      * @return void
      */
     public function setRememberTokenAttribute($token)

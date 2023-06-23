@@ -20,12 +20,12 @@ class ReleaseScoresForStudentsFactory
 
             $registration->grade->allDisciplines->each(
                 fn ($discipline) => LegacyDisciplineScoreFactory::new()
-                ->count($stages)
-                ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
-                ->create([
-                    'nota_aluno_id' => $registrationScore,
-                    'componente_curricular_id' => $discipline,
-                ])
+                    ->count($stages)
+                    ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
+                    ->create([
+                        'nota_aluno_id' => $registrationScore,
+                        'componente_curricular_id' => $discipline,
+                    ])
             );
         });
     }

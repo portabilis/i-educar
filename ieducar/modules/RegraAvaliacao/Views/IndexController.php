@@ -3,7 +3,9 @@
 class IndexController extends Core_Controller_Page_ListController
 {
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
+
     protected $_titulo = 'Listagem de regras de avaliação';
+
     protected $_processoAp = 947;
 
     protected $_tableMap = [
@@ -14,7 +16,7 @@ class IndexController extends Core_Controller_Page_ListController
         'Média exame' => 'mediaRecuperacao',
         'Fórmula média' => 'formulaMedia',
         'Fórmula recuperação' => 'formulaRecuperacao',
-        'Recuperação paralela' => 'tipoRecuperacaoParalela'
+        'Recuperação paralela' => 'tipoRecuperacaoParalela',
     ];
 
     protected function _preRender()

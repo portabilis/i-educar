@@ -19,7 +19,7 @@ class DiarioRecuperaTabelasArredondamentoTest extends TestCase
         $data = [
             'oper' => 'get',
             'resource' => 'tabelas-de-arredondamento',
-            'instituicao_id' => $valueRoundingTable->roundingTable->instituicao_id
+            'instituicao_id' => $valueRoundingTable->roundingTable->instituicao_id,
         ];
         $response = $this->getResource('/module/Api/Regra', $data);
 
@@ -38,15 +38,15 @@ class DiarioRecuperaTabelasArredondamentoTest extends TestCase
                                     'valor_maximo' => number_format($valueRoundingTable->valor_maximo, 3, '.'),
                                     'casa_decimal_exata' => $valueRoundingTable->casa_decimal_exata,
                                     'acao' => $valueRoundingTable->acao,
-                                ]
+                                ],
                             ],
                             'updated_at' => $valueRoundingTable->roundingTable->updated_at->format('Y-m-d H:i:s'),
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'tabelas-de-arredondamento',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

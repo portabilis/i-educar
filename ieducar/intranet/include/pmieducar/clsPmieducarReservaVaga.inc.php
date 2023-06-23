@@ -5,15 +5,25 @@ use iEducar\Legacy\Model;
 class clsPmieducarReservaVaga extends Model
 {
     public $cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_aluno;
+
     public $cpf_responsavel;
 
     /**
@@ -235,22 +245,21 @@ class clsPmieducarReservaVaga extends Model
      *
      * @return array|bool Retorna um array com registro(s) ou FALSE em caso de erro.
      *
-     * @var int    $int_cod_reserva_vaga
-     * @var int    $int_ref_ref_cod_escola
-     * @var int    $int_ref_ref_cod_serie
-     * @var int    $int_ref_usuario_exc
-     * @var int    $int_ref_usuario_cad
-     * @var int    $int_ref_cod_aluno
-     * @var string $date_data_cadastro_ini
-     * @var string $date_data_cadastro_fim
-     * @var string $date_data_exclusao_ini
-     * @var string $date_data_exclusao_fim
-     * @var int    $int_ativo
-     * @var int    $int_ref_cod_instituicao
-     * @var int    $int_ref_cod_curso
-     * @var string $str_nm_aluno
-     * @var int    $int_cpf_responsavel
-     *
+     * @var int   
+     * @var int   
+     * @var int   
+     * @var int   
+     * @var int   
+     * @var int   
+     * @var string
+     * @var string
+     * @var string
+     * @var string
+     * @var int   
+     * @var int   
+     * @var int   
+     * @var string
+     * @var int   
      */
     public function lista(
         $int_cod_reserva_vaga = null,

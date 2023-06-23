@@ -28,7 +28,7 @@ class LegacyBenefitFactory extends Factory
             'created_by' => fn () => LegacyUserFactory::new()->current(),
             'deleted_by' => fn () => LegacyUserFactory::new()->current(),
             'name' => $this->faker->firstName(),
-            'description' => $this->faker->paragraph()
+            'description' => $this->faker->paragraph(),
         ];
     }
 }

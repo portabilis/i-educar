@@ -6,7 +6,6 @@ interface CoreExt_Validate_Validatable
      * Retorna TRUE caso a propriedade seja válida.
      *
      * @param string $key
-     *
      * @return bool
      */
     public function isValid($key = '');
@@ -15,7 +14,6 @@ interface CoreExt_Validate_Validatable
      * Configura um CoreExt_Validate_Interface para uma propriedade da classe.
      *
      * @param string                     $key
-     *
      * @return CoreExt_Validate_Validatable Provê interface fluída
      */
     public function setValidator($key, CoreExt_Validate_Interface $validator);
@@ -25,8 +23,7 @@ interface CoreExt_Validate_Validatable
      * classe ou NULL caso nenhum validador esteja atribuído.
      *
      * @param string $key
-     *
-     * @return CoreExt_Validate_Interface|NULL
+     * @return CoreExt_Validate_Interface|null
      */
     public function getValidator($key);
 }

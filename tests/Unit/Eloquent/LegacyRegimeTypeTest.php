@@ -11,12 +11,9 @@ class LegacyRegimeTypeTest extends EloquentTestCase
 {
     public $relations = [
         'institution' => LegacyInstitution::class,
-        'courses' => LegacyCourse::class
+        'courses' => LegacyCourse::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyRegimeType::class;

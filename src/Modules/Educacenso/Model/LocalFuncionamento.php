@@ -5,10 +5,15 @@ namespace iEducar\Modules\Educacenso\Model;
 class LocalFuncionamento
 {
     public const PREDIO_ESCOLAR = 3;
+
     public const SALAS_OUTRA_ESCOLA = 7;
+
     public const GALPAO = 8;
+
     public const UNIDADE_ATENDIMENTO_SOCIOEDUCATIVA = 9;
+
     public const UNIDADE_PRISIONAL = 10;
+
     public const OUTROS = 11;
 
     /**

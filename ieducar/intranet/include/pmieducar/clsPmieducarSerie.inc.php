@@ -5,25 +5,45 @@ use iEducar\Legacy\Model;
 class clsPmieducarSerie extends Model
 {
     public $cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_curso;
+
     public $nm_serie;
+
     public $etapa_curso;
+
     public $concluinte;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $regra_avaliacao_id;
+
     public $regra_avaliacao_diferenciada_id;
+
     public $idade_inicial;
+
     public $idade_final;
+
     public $idade_ideal;
+
     public $alerta_faixa_etaria;
+
     public $bloquear_matricula_faixa_etaria;
+
     public $exigir_inep;
+
     public $importar_serie_pre_matricula;
+
     public $descricao;
 
     public function __construct(
@@ -310,8 +330,8 @@ class clsPmieducarSerie extends Model
                 $valores[] = ' false ';
             }
 
-            $campos = join(', ', $campos);
-            $valores = join(', ', $valores);
+            $campos = implode(', ', $campos);
+            $valores = implode(', ', $valores);
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
@@ -437,7 +457,7 @@ class clsPmieducarSerie extends Model
                 $set[] = 'importar_serie_pre_matricula = false ';
             }
 
-            $set = join(', ', $set);
+            $set = implode(', ', $set);
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_serie = '{$this->cod_serie}'");
@@ -582,7 +602,7 @@ class clsPmieducarSerie extends Model
 
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
-        $filtros = join(' AND ', $filtros);
+        $filtros = implode(' AND ', $filtros);
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
@@ -641,7 +661,7 @@ class clsPmieducarSerie extends Model
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
-        $filtros = join(' AND ', $filtros);
+        $filtros = implode(' AND ', $filtros);
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
@@ -732,8 +752,7 @@ class clsPmieducarSerie extends Model
      * Verifica se a data de nascimento enviada por parâmetro está dentro do período de corte etário pré-definido.
      *
      * @param int $dataNascimento
-     *
-     * @return boolean
+     * @return bool
      */
     public function verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano)
     {
@@ -798,7 +817,7 @@ class clsPmieducarSerie extends Model
 
         $params = [
             'params' => $this->cod_serie,
-            'return_only' => 'first-field'
+            'return_only' => 'first-field',
         ];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);

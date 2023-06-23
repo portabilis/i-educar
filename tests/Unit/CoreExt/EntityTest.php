@@ -19,7 +19,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     public function testPrintDaInstancia()
     {
         $this->outputBuffer(true);
-        print new CoreExt_EntityStub();
+        echo new CoreExt_EntityStub();
         $output = $this->outputBuffer(false);
         $this->assertEquals('CoreExt_EntityStub', $output);
     }
@@ -102,7 +102,7 @@ class CoreExt_EntityTest extends UnitBaseTest
             'id' => 1,
             'nome' => 'fooBar',
             'estadoCivil' => 'solteiro',
-            'doador' => true
+            'doador' => true,
         ];
         $entity = new CoreExt_EntityStub($data);
         $this->assertEquals($data, $entity->toArray());
@@ -144,7 +144,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     public function testAtributosDaInstanciaSaoValidos()
     {
         $data = [
-            'nome' => 'fooBar'
+            'nome' => 'fooBar',
         ];
         $entity = new CoreExt_EntityStub($data);
         $this->assertTrue($entity->isValid('nome'), 'Failed asserting isValid() for "nome" attribute.');
@@ -159,7 +159,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     public function testValidacaoGeralRetornaFalseSeUmAtributoForInvalido()
     {
         $data = [
-            'nome' => ''
+            'nome' => '',
         ];
         $entity = new CoreExt_EntityStub($data);
         $this->assertFalse($entity->isValid());
@@ -180,13 +180,13 @@ class CoreExt_EntityTest extends UnitBaseTest
             'nome' => ' FooBar Jr ',
             'sexo' => 1,
             'tipoSanguineo' => 1,
-            'peso' => '12,5'
+            'peso' => '12,5',
         ];
         $child = new CoreExt_ChildEntityStub($data);
 
         $data = [
             'nome' => ' FooBar ',
-            'filho' => $child
+            'filho' => $child,
         ];
         $entity = new CoreExt_ParentEntityStub($data);
 
@@ -211,7 +211,7 @@ class CoreExt_EntityTest extends UnitBaseTest
             'nome' => 'fooBar ',
             'sexo' => 1,
             'tipoSanguineo' => 1,
-            'peso' => '12,5'
+            'peso' => '12,5',
         ];
         $entity = new CoreExt_ChildEntityStub($data);
 
@@ -284,7 +284,7 @@ class CoreExt_EntityTest extends UnitBaseTest
             'id' => 1,
             'nome' => 'fooBar',
             'estadoCivil' => 'solteiro',
-            'doador' => true
+            'doador' => true,
         ];
         $entity = new CoreExt_EntityStub($data);
         $array = $entity->filterAttr('id');
@@ -297,7 +297,7 @@ class CoreExt_EntityTest extends UnitBaseTest
             'id' => 1,
             'nome' => 'fooBar',
             'estadoCivil' => 'solteiro',
-            'doador' => true
+            'doador' => true,
         ];
         $entity = new CoreExt_EntityStub($data);
 
@@ -316,7 +316,7 @@ class CoreExt_EntityTest extends UnitBaseTest
             'id' => 1,
             'nome' => 'fooBar',
             'estadoCivil' => 'solteiro',
-            'doador' => true
+            'doador' => true,
         ];
 
         $data2['id'] = 2;
@@ -472,7 +472,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     {
         $data = [
             'nome' => 'fooBar',
-            'filho' => 1
+            'filho' => 1,
         ];
 
         $expected = new CoreExt_ChildEntityStub(['id' => 1, 'nome' => 'barFoo']);
@@ -519,7 +519,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $data = [
             'id' => 1,
             'nome' => 'fooBar',
-            'filho' => $expected
+            'filho' => $expected,
         ];
 
         // O método "find" não deve ser chamado pois "child" já existe como atributo
@@ -551,7 +551,7 @@ class CoreExt_EntityTest extends UnitBaseTest
 
         $data = [
             'id' => 1,
-            'nome' => 'fooBar'
+            'nome' => 'fooBar',
         ];
 
         // O método "find" não deve ser chamado pois "child" já existe como atributo
@@ -575,7 +575,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $data = [
             'id' => 1,
             'nome' => 'fooBar',
-            'filho' => $expected
+            'filho' => $expected,
         ];
 
         $parent = new CoreExt_ParentEntityStub($data);

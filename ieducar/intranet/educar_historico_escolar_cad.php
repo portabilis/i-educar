@@ -4,43 +4,80 @@ use App\Models\Country;
 use App\Models\LegacyInstitution;
 use App\Models\State;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $ref_cod_aluno;
+
     public $sequencial;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ano;
+
     public $carga_horaria;
+
     public $dias_letivos;
+
     public $ref_cod_escola;
+
     public $escola;
+
     public $escola_cidade;
+
     public $escola_uf;
+
     public $observacao;
+
     public $aprovado;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $posicao;
+
     public $ref_cod_instituicao;
+
     public $nm_curso;
+
     public $nm_serie;
+
     public $origem;
+
     public $extra_curricular;
+
     public $ref_cod_matricula;
+
     public $faltas_globalizadas;
+
     public $cb_faltas_globalizadas;
+
     public $frequencia;
+
     public $historico_disciplinas;
+
     public $nm_disciplina;
+
     public $nota;
+
     public $faltas;
+
     public $ordenamento;
+
     public $carga_horaria_disciplina;
+
     public $disciplinaDependencia;
+
     public $excluir_disciplina;
+
     public $ultimo_sequencial;
+
     public $aceleracao;
+
     public $dependencia;
 
     public function Inicializar()
@@ -196,7 +233,7 @@ return new class extends clsCadastro {
         $obs_options = [
             'required' => false,
             'label' => 'Observação',
-            'value' => $this->observacao
+            'value' => $this->observacao,
         ];
         $this->inputsHelper()->textArea(attrName: 'observacao', inputOptions: $obs_options);
 
@@ -210,7 +247,7 @@ return new class extends clsCadastro {
             6 => 'Abandono',
             12 => 'Aprovado com dependência',
             13 => 'Aprovado pelo conselho',
-            14 => 'Reprovado por faltas'
+            14 => 'Reprovado por faltas',
         ];
 
         $this->campoLista(nome: 'aprovado', campo: 'Situação', valor: $opcoes, default: $this->aprovado);
@@ -272,7 +309,7 @@ return new class extends clsCadastro {
                 '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
                 '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
                 '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
-                '/vendor/legacy/Cadastro/Assets/Javascripts/HistoricoEscolar.js'
+                '/vendor/legacy/Cadastro/Assets/Javascripts/HistoricoEscolar.js',
             ]
         );
     }

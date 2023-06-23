@@ -30,9 +30,6 @@ class iDiarioService
     protected $apiToken;
 
     /**
-     * @param LegacyInstitution $institution
-     * @param Client            $http
-     *
      * @return void
      */
     public function __construct(LegacyInstitution $institution, Client $http)
@@ -49,19 +46,13 @@ class iDiarioService
         $this->apiToken = trim($configs->token_novo_educacao);
     }
 
-    /**
-     * @param int $unitId
-     * @param int $step
-     *
-     * @return bool
-     */
     public function getStepActivityByUnit(int $unitId, int $year, int $step): bool
     {
         try {
             $response = $this->get('/api/v2/step_activity', [
                 'unity_id' => $unitId,
                 'year' => $year,
-                'step_number' => $step
+                'step_number' => $step,
             ]);
             $body = trim((string) $response->getBody());
 
@@ -75,19 +66,13 @@ class iDiarioService
         return false;
     }
 
-    /**
-     * @param int $classroomId
-     * @param int $step
-     *
-     * @return bool
-     */
     public function getStepActivityByClassroom(int $classroomId, int $year, int $step): bool
     {
         try {
             $response = $this->get('/api/v2/step_activity', [
                 'classroom_id' => $classroomId,
                 'year' => $year,
-                'step_number' => $step
+                'step_number' => $step,
             ]);
             $body = trim((string) $response->getBody());
 
@@ -121,7 +106,7 @@ class iDiarioService
     {
         $data = [
             'classrooms' => implode(',', $classroomId),
-            'discipline' => $disciplineId
+            'discipline' => $disciplineId,
         ];
 
         try {
@@ -139,9 +124,6 @@ class iDiarioService
     }
 
     /**
-     * @param string $path
-     * @param array  $query
-     *
      * @return mixed
      */
     protected function get(string $path, array $query)
@@ -149,8 +131,8 @@ class iDiarioService
         return $this->http->request('GET', $this->apiUrl . $path, [
             'query' => $query,
             'headers' => [
-                'token' => $this->apiToken
-            ]
+                'token' => $this->apiToken,
+            ],
         ]);
     }
 
@@ -161,18 +143,13 @@ class iDiarioService
     }
 
     /**
-     * @param int       $studentId
-     * @param \DateTime $exitDate
-     *
      * @doc https://github.com/portabilis/novo-educacao/pull/3626#issue-577687036
-     *
-     * @return array
      */
     public function getStudentActivity(int $studentId, \DateTime $exitDate): array
     {
         $data = [
             'student_id' => $studentId,
-            'exit_date' => $exitDate->format('Y-m-d')
+            'exit_date' => $exitDate->format('Y-m-d'),
         ];
 
         try {

@@ -17,7 +17,7 @@ class LegacyCalendarDayReasonFactory extends Factory
             'descricao' => $this->faker->sentence,
             'tipo' => $this->faker->randomElement(['e', 'n']),
             'nm_motivo' => $this->faker->word,
-            'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
         ];
     }

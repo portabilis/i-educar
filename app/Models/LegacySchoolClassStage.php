@@ -22,8 +22,6 @@ class LegacySchoolClassStage extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacySchoolClassStageBuilder::class;
 

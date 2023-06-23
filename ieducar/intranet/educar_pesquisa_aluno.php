@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -30,7 +31,9 @@ return new class extends clsListagem {
     public $offset;
 
     public $ref_cod_aluno;
+
     public $nm_aluno;
+
     public $cod_aluno;
 
     public $ref_cod_escola;
@@ -51,7 +54,7 @@ return new class extends clsListagem {
         $this->titulo = 'Aluno - Listagem';
 
         $this->addCabecalhos([
-            'Aluno'
+            'Aluno',
         ]);
 
         $this->campoNumero(nome: 'cod_aluno', campo: 'Código Aluno', valor: $this->cod_aluno, tamanhovisivel: 8, tamanhomaximo: 20);
@@ -59,7 +62,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_aluno = new clsPmieducarAluno();
         $obj_aluno->setOrderby('nome_aluno ASC');
@@ -86,7 +89,7 @@ return new class extends clsListagem {
                 }
 
                 $this->addLinhas([
-                    "<a href=\"javascript:void(0);\" {$script}>{$display}</a>"
+                    "<a href=\"javascript:void(0);\" {$script}>{$display}</a>",
                 ]);
             }
         }

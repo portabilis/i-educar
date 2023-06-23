@@ -52,9 +52,9 @@ class clsCalendario
     public $array_icone = [
         'A' => [
             'nome' => 'Anotações',
-            'link' => ''
+            'link' => '',
         ],
-        ''
+        '',
     ];
 
     /**
@@ -248,7 +248,6 @@ class clsCalendario
      * @param int    $ano
      * @param string $nome
      * @param mixed  mixVariaveisMantidas
-     *
      * @return string
      *
      * @todo   Substituir código de geração de calendário por uma biblioteca
@@ -291,7 +290,7 @@ class clsCalendario
             '9' => 'SETEMBRO',
             '10' => 'OUTUBRO',
             '11' => 'NOVEMBRO',
-            '12' => 'DEZEMBRO'
+            '12' => 'DEZEMBRO',
         ];
 
         // Qual o primeiro dia do mes
@@ -564,7 +563,7 @@ class clsCalendario
                 $style_dia = sprintf('background-color: %s;', $this->array_cor_dia_padrao[$DiaSemana]);
             }
 
-            if (key_exists($diaCorrente, $this->array_dias)) {
+            if (array_key_exists($diaCorrente, $this->array_dias)) {
                 $key = $this->array_dias[$diaCorrente];
                 $cor = $this->array_cor[$key];
                 $style_dia = sprintf('background-color: %s;', $cor);
@@ -584,13 +583,13 @@ class clsCalendario
                 );
             }
 
-            if (key_exists($diaCorrente, $this->array_onclick_dias)) {
+            if (array_key_exists($diaCorrente, $this->array_onclick_dias)) {
                 $onclick = sprintf('onclick="%s;"', $this->array_onclick_dias[$diaCorrente]);
             }
 
             $icone = '';
 
-            if (key_exists($diaCorrente, $this->array_icone_dias)) {
+            if (array_key_exists($diaCorrente, $this->array_icone_dias)) {
                 $icone = sprintf(
                     '<i class="fa fa-pencil-square-o anotacao" aria-hidden="true"></i>',
                     $this->array_icone[$this->array_icone_dias[$diaCorrente]]['link'],
@@ -602,7 +601,7 @@ class clsCalendario
             $diaCorrente_ = strlen($diaCorrente) == 1 ? '0' . $diaCorrente : $diaCorrente;
             $NomeMes = strtolower($NomeMes);
 
-            if (key_exists($diaCorrente, $this->array_div_flutuante_dias)) {
+            if (array_key_exists($diaCorrente, $this->array_div_flutuante_dias)) {
                 $message = "onmouseover=\"ShowContent('{$diaCorrente}','{$mes}','{$ano}','{$nome}'); return true;\"";
                 $mouseout = "onmouseout=\"HideContent(event,'{$diaCorrente}','{$mes}','{$ano}','{$nome}')\" ";
                 $mensagens .= "
@@ -738,13 +737,11 @@ class clsCalendario
      * // <input id="cal_formFieldKey" name="formFieldKey" type="hidden" value="formFieldValue" />
      * </code>
      *
-     * @access protected
      *
      * @param array $formValues   Array associativo onde a chave torna-se o
      *                            o valor dos atributos id e name do campo hidden.
      * @param array $invalidNames Array com nomes inválidos para campos. Útil
      *                            para evitar que sejam criados campos duplicados.
-     *
      * @return string String com o HTML dos campos hidden gerados.
      *
      * @since  Método disponível desde a versão 1.2.0

@@ -1,9 +1,13 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $nm_vinculo;
+
     public $cod_vinculo;
+
     public $abreviatura;
+
     protected $db;
 
     public function __construct()
@@ -83,8 +87,8 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $count = (int)$this->db->CampoUnico(consulta: "SELECT COUNT(*) FROM pmieducar.servidor_alocacao WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
-        $count += (int)$this->db->CampoUnico(consulta: "SELECT COUNT(*) FROM portal.funcionario WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
+        $count = (int) $this->db->CampoUnico(consulta: "SELECT COUNT(*) FROM pmieducar.servidor_alocacao WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
+        $count += (int) $this->db->CampoUnico(consulta: "SELECT COUNT(*) FROM portal.funcionario WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
 
         if ($count > 0) {
             $this->mensagem = 'Não é possível remover. Já existem funcionários cadastrados e alocados com este vínculo.';
@@ -109,7 +113,7 @@ return new class extends clsCadastro {
             $sql .= " AND cod_funcionario_vinculo <> {$id}";
         }
 
-        $count = (int)$this->db->CampoUnico(consulta: $sql);
+        $count = (int) $this->db->CampoUnico(consulta: $sql);
 
         return $count > 0;
     }

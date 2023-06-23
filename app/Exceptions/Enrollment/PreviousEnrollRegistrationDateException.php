@@ -10,9 +10,6 @@ class PreviousEnrollRegistrationDateException extends RuntimeException
 {
     /**
      * A data de enturmação é anterior a data de matrícula.
-     *
-     * @param DateTime           $date
-     * @param LegacyRegistration $registration
      */
     public function __construct(DateTime $date, LegacyRegistration $registration)
     {

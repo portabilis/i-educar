@@ -9,7 +9,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      */
     protected $_options = [
         'sessionstorage' => null,
-        'session_auto_start' => true
+        'session_auto_start' => true,
     ];
 
     /**
@@ -67,7 +67,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      * Verifica se uma opção está setada.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _hasOption($key)
@@ -80,8 +79,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      * setada.
      *
      * @param string $key
-     *
-     * @return mixed|NULL
+     * @return mixed|null
      */
     public function getOption($key)
     {
@@ -105,7 +103,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     {
         if (is_null($this->_sessionStorage)) {
             $this->setSessionStorage(new CoreExt_Session_Storage_Default([
-                'session_auto_start' => $this->getOption('session_auto_start')
+                'session_auto_start' => $this->getOption('session_auto_start'),
             ]));
         }
 
@@ -192,7 +190,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      * @link  http://php.net/manual/en/language.oop5.overloading.php
      *
      * @param string|int $key
-     *
      * @return mixed
      */
     public function __get($key)
@@ -206,7 +203,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      * @link  http://php.net/manual/en/language.oop5.overloading.php
      *
      * @param string|int $key
-     *
      * @return bool
      */
     public function __isset($key)

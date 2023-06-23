@@ -14,7 +14,7 @@ class VersionControllerTest extends TestCase
                 [
                     'entity',
                     'version',
-                    'build'
+                    'build',
                 ]
             );
     }

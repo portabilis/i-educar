@@ -35,7 +35,7 @@ class LegacyRegimeTypeTest extends TestCase
             'ref_cod_instituicao' => $type->ref_cod_instituicao,
             'ref_usuario_cad' => $user->getKey(),
             'nm_tipo' => $type->nm_tipo,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 
@@ -68,7 +68,7 @@ class LegacyRegimeTypeTest extends TestCase
             'ref_usuario_exc' => $user->getKey(),
             'ref_cod_instituicao' => $editType->ref_cod_instituicao,
             'nm_tipo' => $editType->nm_tipo,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 }

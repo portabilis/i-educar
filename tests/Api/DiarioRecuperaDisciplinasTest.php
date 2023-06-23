@@ -19,7 +19,7 @@ class DiarioRecuperaDisciplinasTest extends TestCase
         $data = [
             'oper' => 'get',
             'resource' => 'componentes-curriculares',
-            'instituicao_id' => $discipline->instituicao_id
+            'instituicao_id' => $discipline->instituicao_id,
         ];
         $response = $this->getResource('/module/Api/ComponenteCurricular', $data);
 
@@ -34,12 +34,12 @@ class DiarioRecuperaDisciplinasTest extends TestCase
                             'nome_area' => $discipline->knowledgeArea->nome,
                             'ordenamento' => $discipline->ordenamento,
                             'updated_at' => $discipline->updated_at->format('Y-m-d H:i:s'),
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'componentes-curriculares',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

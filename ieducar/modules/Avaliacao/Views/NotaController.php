@@ -2,12 +2,17 @@
 
 class NotaController extends Core_Controller_Page_EditController
 {
-    protected $_dataMapper        = 'Avaliacao_Model_NotaComponenteDataMapper';
-    protected $_titulo            = 'Avaliação do aluno | Nota';
-    protected $_processoAp        = 642;
+    protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
+
+    protected $_titulo = 'Avaliação do aluno | Nota';
+
+    protected $_processoAp = 642;
+
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-    protected $_saveOption        = true;
-    protected $_deleteOption      = false;
+
+    protected $_saveOption = true;
+
+    protected $_deleteOption = false;
 
     /**
      * @var Avaliacao_Service_Boletim
@@ -42,7 +47,7 @@ class NotaController extends Core_Controller_Page_EditController
     /**
      * @var Avaliacao_Model_FaltaAbstract
      */
-    protected $_falta   = null;
+    protected $_falta = null;
 
     /**
      * @var Avaliacao_Model_ParecerDescritivoAbstract
@@ -58,16 +63,16 @@ class NotaController extends Core_Controller_Page_EditController
         $usuario = \Illuminate\Support\Facades\Auth::id();
 
         $this->_options = [
-      'new_success'         => 'boletim',
-      'new_success_params'  => ['matricula' => $this->getRequest()->matricula],
-      'edit_success'        => 'boletim',
-      'edit_success_params' => ['matricula' => $this->getRequest()->matricula],
-    ];
+            'new_success' => 'boletim',
+            'new_success_params' => ['matricula' => $this->getRequest()->matricula],
+            'edit_success' => 'boletim',
+            'edit_success_params' => ['matricula' => $this->getRequest()->matricula],
+        ];
 
         $this->_service = new Avaliacao_Service_Boletim([
-      'matricula' => $this->getRequest()->matricula,
-      'usuario'   => $usuario
-    ]);
+            'matricula' => $this->getRequest()->matricula,
+            'usuario' => $usuario,
+        ]);
 
         $this->_regra = $this->_service->getRegra();
     }
@@ -100,8 +105,8 @@ class NotaController extends Core_Controller_Page_EditController
      */
     protected function _initEditar()
     {
-        $this->_nota    = $this->_service->getNotaComponente($this->_componenteCurricular, $this->_etapa);
-        $this->_falta   = $this->_service->getFalta($this->_etapa, $this->_componenteCurricular);
+        $this->_nota = $this->_service->getNotaComponente($this->_componenteCurricular, $this->_etapa);
+        $this->_falta = $this->_service->getFalta($this->_etapa, $this->_componenteCurricular);
         $this->_parecer = $this->_service->getParecerDescritivo($this->_etapa, $this->_componenteCurricular);
 
         return true;
@@ -158,29 +163,29 @@ class NotaController extends Core_Controller_Page_EditController
     protected function _save()
     {
         $nota = new Avaliacao_Model_NotaComponente([
-      'componenteCurricular' => $this->getRequest()->componenteCurricular,
-      'nota' => urldecode($this->getRequest()->nota),
-      'etapa' => $this->getRequest()->etapa
-    ]);
+            'componenteCurricular' => $this->getRequest()->componenteCurricular,
+            'nota' => urldecode($this->getRequest()->nota),
+            'etapa' => $this->getRequest()->etapa,
+        ]);
 
         $this->_service->addNota($nota);
 
         if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             $quantidade = 0 < $this->getRequest()->falta ? (int) $this->getRequest()->falta : 0;
             $falta = new Avaliacao_Model_FaltaComponente([
-        'componenteCurricular' => $this->getRequest()->componenteCurricular,
-        'quantidade' => $quantidade,
-        'etapa' => $this->getRequest()->etapa
-      ]);
+                'componenteCurricular' => $this->getRequest()->componenteCurricular,
+                'quantidade' => $quantidade,
+                'etapa' => $this->getRequest()->etapa,
+            ]);
             $this->_service->addFalta($falta);
         }
 
         if (trim($this->getRequest()->parecer) != '' && $this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
             $parecer = new Avaliacao_Model_ParecerDescritivoComponente([
-        'componenteCurricular' => $this->getRequest()->componenteCurricular,
-        'parecer'              => $this->getRequest()->parecer,
-        'etapa'                => $this->getRequest()->etapa
-      ]);
+                'componenteCurricular' => $this->getRequest()->componenteCurricular,
+                'parecer' => $this->getRequest()->parecer,
+                'etapa' => $this->getRequest()->etapa,
+            ]);
             $this->_service->addParecer($parecer);
         }
 

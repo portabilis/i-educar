@@ -45,7 +45,7 @@ class PersonFactory extends Factory
                         'U' => 3,
                         'O' => 4
                     };
-                }
+                },
             ];
         });
     }

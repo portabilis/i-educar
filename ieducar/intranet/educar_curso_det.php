@@ -3,30 +3,50 @@
 use App\Models\LegacyCourse;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
-use App\Models\LegacyQualificationCourse;
 use App\Models\LegacyRegimeType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $cod_curso;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_regime;
+
     public $ref_cod_nivel_ensino;
+
     public $ref_cod_tipo_ensino;
+
     public $nm_curso;
+
     public $sgl_curso;
+
     public $qtd_etapas;
+
     public $carga_horaria;
+
     public $ato_poder_publico;
+
     public $habilitacao;
+
     public $objetivo_curso;
+
     public $publico_alvo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $padrao_ano_escolar;
+
     public $hora_falta;
 
     public function Gerar()

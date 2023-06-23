@@ -7,17 +7,11 @@ use iEducar\Modules\ValueObjects\EmployeePosgraduateValueObject;
 
 class EmployeePosgraduateService
 {
-    /**
-     * @param $employee
-     */
     public function deleteAll($employee)
     {
         EmployeePosgraduate::ofEmployee($employee)->delete();
     }
 
-    /**
-     * @param EmployeePosgraduateValueObject $valueObject
-     */
     public function storePosgraduate(EmployeePosgraduateValueObject $valueObject)
     {
         EmployeePosgraduate::create([

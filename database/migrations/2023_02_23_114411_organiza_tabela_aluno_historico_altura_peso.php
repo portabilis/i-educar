@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.aluno_historico_altura_peso DROP CONSTRAINT IF EXISTS pmieducar_aluno_historico_altura_peso_ref_cod_aluno_foreign;');

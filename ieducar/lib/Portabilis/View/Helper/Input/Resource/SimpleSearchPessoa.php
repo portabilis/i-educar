@@ -32,7 +32,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
         $defaultOptions = [
             'objectName' => 'pessoa',
             'apiController' => 'Pessoa',
-            'apiResource' => 'pessoa-search'
+            'apiResource' => 'pessoa-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

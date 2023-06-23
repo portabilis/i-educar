@@ -3,12 +3,19 @@
 class clsPessoaJuridica extends clsPessoaFj
 {
     public $idpes;
+
     public $cnpj;
+
     public $fantasia;
+
     public $insc_estadual;
+
     public $capital_social;
+
     public $banco = 'gestao_homolog';
+
     public $schema_cadastro = 'cadastro';
+
     public $codUsuario;
 
     public function __construct($int_idpes = false, $numeric_cnpj = false, $str_fantasia = false, $numeric_insc_estadual = false, $numeric_capital_social = false)
@@ -114,7 +121,7 @@ class clsPessoaJuridica extends clsPessoaFj
         for ($i = 1; $i < func_num_args(); $i++) {
             $campo = func_get_arg($i);
             $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
-            $resultado[$campo] =  &$resultado[$pos];
+            $resultado[$campo] = &$resultado[$pos];
             $pos++;
         }
         if (count($resultado) > 0) {
@@ -133,7 +140,7 @@ class clsPessoaJuridica extends clsPessoaFj
         for ($i = 1; $i < func_num_args(); $i++) {
             $campo = func_get_arg($i);
             $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
-            $resultado[$campo] =  &$resultado[$pos];
+            $resultado[$campo] = &$resultado[$pos];
             $pos++;
         }
         if (count($resultado) > 0) {

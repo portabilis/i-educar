@@ -13,7 +13,7 @@ class Religion extends Model
     protected $table = 'pmieducar.religions';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function individual(): HasMany

@@ -11,7 +11,7 @@ class FormulaTest extends UnitBaseTest
         'E4' => 5,
         'Et' => 4,
         'Se' => 20,
-        'Rc' => 0
+        'Rc' => 0,
     ];
 
     protected function setUp(): void

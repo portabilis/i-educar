@@ -32,7 +32,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCursoSuperior extends Po
             'objectName' => 'cursosuperior',
             'apiController' => 'CursoSuperior',
             'apiResource' => 'cursosuperior-search',
-            'showIdOnValue' => false
+            'showIdOnValue' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

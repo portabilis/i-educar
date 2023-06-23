@@ -2,11 +2,16 @@
 
 use Illuminate\Support\Facades\Session;
 
-return new class () extends clsListagem {
+return new class() extends clsListagem
+{
     public $cpf;
+
     public $cnpj;
+
     public $matricula;
+
     public $campo_busca;
+
     public $chave_campo;
 
     public function Gerar()
@@ -25,7 +30,7 @@ return new class () extends clsListagem {
         $this->chave_campo = $_GET['chave_campo'];
 
         if ($_GET['campos']) {
-            $parametros       = new clsParametrosPesquisas();
+            $parametros = new clsParametrosPesquisas();
             $parametros->deserializaCampos($_GET['campos']);
             Session::put('campos', $parametros->geraArrayComAtributos());
             unset($_GET['campos']);
@@ -48,7 +53,6 @@ return new class () extends clsListagem {
 
             if ($this->cpf == null || validaCPF($this->cpf)) {
 
-
                 if (!empty(request('campo_busca') || !empty(request('cpf')))) {
                     $chave_busca = request('campo_busca');
                     $cpf = request(key: 'cpf', default: '');
@@ -56,7 +60,7 @@ return new class () extends clsListagem {
                 }
 
                 // Paginador
-                $limite      = 10;
+                $limite = 10;
                 $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
                 if (is_numeric($this->chave_campo)) {
@@ -103,17 +107,17 @@ return new class () extends clsListagem {
                             $funcao .= ' )';
                         }
 
-                        $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                        $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                         $total = $pessoa['total'];
                     }
                 } else {
-                    $this->addLinhas([ 'Não existe nenhum resultado a ser apresentado.' ]);
+                    $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);
                 }
             } else {
-                $this->addLinhas([ 'Informado um CPF Inválido' ]);
+                $this->addLinhas(['Informado um CPF Inválido']);
             }
         } elseif ($parametros->getPessoa() == 'J') {
-            $this->addCabecalhos([ 'CNPJ', 'Nome' ]);
+            $this->addCabecalhos(['CNPJ', 'Nome']);
 
             // Filtros de Busca
             $this->campoTexto(nome: 'campo_busca', campo: 'Pessoa', valor: $this->campo_busca, tamanhovisivel: 35, tamanhomaximo: 255, descricao: 'Código/Nome');
@@ -127,11 +131,11 @@ return new class () extends clsListagem {
             $this->campoCnpj(nome: 'cnpj', campo: 'CNPJ', valor: $this->cnpj);
 
             $chave_busca = @$_GET['campo_busca'];
-            $cnpj        = @$_GET['cnpj'];
-            $busca       = @$_GET['busca'];
+            $cnpj = @$_GET['cnpj'];
+            $busca = @$_GET['busca'];
 
             // Paginador
-            $limite      = 10;
+            $limite = 10;
             $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
             if ($busca == 'S') {
@@ -148,9 +152,9 @@ return new class () extends clsListagem {
             }
             if ($lst_pessoa) {
                 foreach ($lst_pessoa as $pessoa) {
-                    $funcao         = ' set_campo_pesquisa(';
-                    $virgula        = '';
-                    $cont           = 0;
+                    $funcao = ' set_campo_pesquisa(';
+                    $virgula = '';
+                    $cont = 0;
                     $pessoa['cnpj'] = (is_numeric($pessoa['cnpj'])) ? int2CNPJ($pessoa['cnpj']) : null;
                     foreach ($parametros->getCampoNome() as $campo) {
                         $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
@@ -168,25 +172,25 @@ return new class () extends clsListagem {
                         $funcao .= ' )';
                     }
 
-                    $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                    $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                     $total = $pessoa['total'];
                 }
             } else {
-                $this->addLinhas([ 'Não existe nenhum resultado a ser apresentado.' ]);
+                $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);
             }
         } elseif ($parametros->getPessoa() == 'FJ') {
-            $this->addCabecalhos([ 'CNPJ/CPF', 'Nome' ]);
+            $this->addCabecalhos(['CNPJ/CPF', 'Nome']);
 
             // Filtros de Busca
             $this->campoTexto(nome: 'campo_busca', campo: 'Pessoa', valor: $this->campo_busca, tamanhovisivel: 50, tamanhomaximo: 255, descricao: 'Código/Nome');
             $this->campoIdFederal(nome: 'id_federal', campo: 'CNPJ/CPF', valor: ($this->id_federal) ? int2IdFederal($this->id_federal) : '');
 
             $chave_busca = @$_GET['campo_busca'];
-            $id_federal  = @$_GET['id_federal'];
-            $busca       = @$_GET['busca'];
+            $id_federal = @$_GET['id_federal'];
+            $busca = @$_GET['busca'];
 
             // Paginador
-            $limite      = 10;
+            $limite = 10;
             $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
             if ($busca == 'S') {
                 if (is_numeric($chave_busca)) {
@@ -202,9 +206,9 @@ return new class () extends clsListagem {
             }
             if ($lst_pessoa) {
                 foreach ($lst_pessoa as $pessoa) {
-                    $funcao               = ' set_campo_pesquisa(';
-                    $virgula              = '';
-                    $cont                 = 0;
+                    $funcao = ' set_campo_pesquisa(';
+                    $virgula = '';
+                    $cont = 0;
                     foreach ($parametros->getCampoNome() as $campo) {
                         $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
                         if ($parametros->getCampoTipo($cont) === 'text') {
@@ -229,36 +233,36 @@ return new class () extends clsListagem {
                             //
                         } else {
                             if ($det_pes['tipo'] == 'J') {
-                                $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                                $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                             } else {
-                                $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                                $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                             }
                         }
                     } else {
                         if ($det_pes['tipo'] == 'J') {
-                            $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                            $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                         } else {
-                            $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                            $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                         }
                     }
                     $total = $pessoa['_total'];
                 }
             } else {
-                $this->addLinhas([ 'Não existe nenhum resultado a ser apresentado.' ]);
+                $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);
             }
         } elseif ($parametros->getPessoa() == 'FUNC') {
-            $this->addCabecalhos([ 'Matricula', 'Nome' ]);
+            $this->addCabecalhos(['Matricula', 'Nome']);
 
             // Filtros de Busca
             $this->campoTexto(nome: 'campo_busca', campo: 'Pessoa', valor: $this->campo_busca, tamanhovisivel: 50, tamanhomaximo: 255, descricao: 'Código/Nome');
             $this->campoNumero(nome: 'matricula', campo: 'Matricula', valor: $this->matricula, tamanhovisivel: 15, tamanhomaximo: 255);
 
             $chave_busca = @$_GET['campo_busca'];
-            $cpf         = @$_GET['cpf'];
-            $busca       = @$_GET['busca'];
+            $cpf = @$_GET['cpf'];
+            $busca = @$_GET['busca'];
 
             // Paginador
-            $limite      = 10;
+            $limite = 10;
             $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
             if ($busca == 'S') {
@@ -275,9 +279,9 @@ return new class () extends clsListagem {
             }
             if ($lst_pessoa) {
                 foreach ($lst_pessoa as $pessoa) {
-                    $funcao        = ' set_campo_pesquisa(';
-                    $virgula       = '';
-                    $cont          = 0;
+                    $funcao = ' set_campo_pesquisa(';
+                    $virgula = '';
+                    $cont = 0;
                     $pessoa['cpf'] = (is_numeric($pessoa['cpf'])) ? int2CPF($pessoa['cpf']) : null;
                     foreach ($parametros->getCampoNome() as $campo) {
                         $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
@@ -298,15 +302,15 @@ return new class () extends clsListagem {
                         if ($parametros->getPessoaTela() == 'frame') {
                             //
                         } else {
-                            $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['matricula']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                            $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['matricula']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                         }
                     } else {
-                        $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['matricula']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                        $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['matricula']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                     }
                     $total = $pessoa['_total'];
                 }
             } else {
-                $this->addLinhas([ 'Não existe nenhum resultado a ser apresentado.' ]);
+                $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);
             }
         }
 
@@ -320,8 +324,8 @@ return new class () extends clsListagem {
     public function Formular()
     {
         $this->title = 'Pesquisa por Pessoa!';
-        $this->processoAp         = '0';
-        $this->renderMenu         = false;
+        $this->processoAp = '0';
+        $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };

@@ -11,24 +11,42 @@ use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Support\View\SelectOptions;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $id;
+
     public $ano;
+
     public $servidor_id;
+
     public $funcao_exercida;
+
     public $tipo_vinculo;
+
     public $permite_lancar_faltas_componente;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_serie;
+
     public $ref_cod_turma;
+
     public $unidades_curriculares;
+
     public $turma_estrutura_curricular;
+
     public $nm_turma;
+
     public $copia = false;
+
     public $apresentar_outras_unidades_curriculares_obrigatorias = false;
+
     public $outras_unidades_curriculares_obrigatorias;
 
     public function Inicializar()
@@ -96,7 +114,7 @@ return new class extends clsCadastro {
         $this->nome_url_cancelar = 'Cancelar';
 
         $this->breadcrumb(currentPage: 'Vínculo do professor à turma', breadcrumbs: [
-            'educar_servidores_index.php' => 'Servidores'
+            'educar_servidores_index.php' => 'Servidores',
         ]);
 
         return $retorno;
@@ -128,7 +146,6 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'copia', valor: (int) $this->copia);
         $this->campoOculto(nome: 'apresentar_outras_unidades_curriculares_obrigatorias', valor: $this->apresentar_outras_unidades_curriculares_obrigatorias);
 
-
         $this->inputsHelper()->dynamic(helperNames: 'ano', inputOptions: ['value' => (is_null(value: $ano) ? date(format: 'Y') : $ano)]);
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'curso', 'serie', 'turma']);
 
@@ -139,7 +156,7 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Função exercida',
             'resources' => $resources,
-            'value' => $this->funcao_exercida
+            'value' => $this->funcao_exercida,
         ];
         $this->inputsHelper()->select(attrName: 'funcao_exercida', inputOptions: $options);
 
@@ -151,8 +168,8 @@ return new class extends clsCadastro {
             'required' => false,
             'options' => [
                 'values' => $this->unidades_curriculares,
-                'all_values' => UnidadesCurriculares::getDescriptiveValues()
-            ]
+                'all_values' => UnidadesCurriculares::getDescriptiveValues(),
+            ],
         ];
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -161,10 +178,10 @@ return new class extends clsCadastro {
             'resources' => [
                 '' => 'Selecione',
                 0 => 'Não',
-                1 => 'Sim'
+                1 => 'Sim',
             ],
             'value' => $this->outras_unidades_curriculares_obrigatorias,
-            'required' => false
+            'required' => false,
         ]);
 
         $resources = SelectOptions::tiposVinculoServidor();
@@ -172,7 +189,7 @@ return new class extends clsCadastro {
             'label' => 'Tipo do vínculo',
             'resources' => $resources,
             'value' => $this->tipo_vinculo,
-            'required' => false
+            'required' => false,
         ];
         $this->inputsHelper()->select(attrName: 'tipo_vinculo', inputOptions: $options);
 
@@ -185,7 +202,7 @@ return new class extends clsCadastro {
             ],
             'value' => $this->turma_turno_id,
             'required' => false,
-            'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
+            'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico',
         ];
 
         if ($this->tipoacao === 'Editar' && $this->existeLancamentoIDiario(professorId: $this->servidor_id, turmaId: $this->ref_cod_turma)) {
@@ -197,7 +214,7 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Professor de área específica?',
             'value' => $this->permite_lancar_faltas_componente,
-            'help' => 'Marque esta opção somente se o professor leciona uma disciplina específica na turma selecionada.'
+            'help' => 'Marque esta opção somente se o professor leciona uma disciplina específica na turma selecionada.',
         ];
 
         $this->inputsHelper()->checkbox(attrName: 'permite_lancar_faltas_componente', inputOptions: $options);
@@ -205,7 +222,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->multipleSearchComponenteCurricular(attrName: null, inputOptions: ['label' => 'Componentes lecionados', 'required' => true], helperOptions: ['searchForArea' => true, 'allDisciplinesMulti' => true]);
 
         $scripts = [
-            '/vendor/legacy/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
@@ -224,6 +241,7 @@ return new class extends clsCadastro {
 
         if (!isset($this->ref_cod_turma)) {
             $this->mensagem = 'É necessário selecionar uma turma';
+
             return false;
         }
 
@@ -251,6 +269,7 @@ return new class extends clsCadastro {
         if ($id) {
             $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
             $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
+
             return false;
         }
 
@@ -300,6 +319,7 @@ return new class extends clsCadastro {
         if ($id) {
             $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
             $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
+
             return false;
         }
 
@@ -387,13 +407,13 @@ return new class extends clsCadastro {
             FuncaoExercida::DOCENTE_TUTOR_EAD,
         ];
 
-        $etapas_instrutor_educacao_pŕofissional = [30,31,32,33,34,39,40,73,74,64,67,68];
+        $etapas_instrutor_educacao_pŕofissional = [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68];
 
-        if ($this->funcao_exercida == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL && (($turma['estrutura_curricular'] && !in_array(needle: '2', haystack: transformStringFromDBInArray(string: $turma['estrutura_curricular']), strict: true)) || !in_array(needle: $turma['etapa_educacenso'], haystack: $etapas_instrutor_educacao_pŕofissional, strict: true))){
-           $opcoes = \Str::replaceLast(search: ', ', replace: ' ou ', subject: implode(separator: ', ', array: $etapas_instrutor_educacao_pŕofissional));
-           $this->mensagem = "O campo: <b>Função exercida</b> pode ser <b>Instrutor da Educação Profissional</b> apenas quando o campo <b>Estrutura Curricular</b> da turma for: <b>Itinerário formativo</b> e o campo <b>Etapa de ensino</b> for uma das opções: {$opcoes}.";
+        if ($this->funcao_exercida == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL && (($turma['estrutura_curricular'] && !in_array(needle: '2', haystack: transformStringFromDBInArray(string: $turma['estrutura_curricular']), strict: true)) || !in_array(needle: $turma['etapa_educacenso'], haystack: $etapas_instrutor_educacao_pŕofissional, strict: true))) {
+            $opcoes = \Str::replaceLast(search: ', ', replace: ' ou ', subject: implode(separator: ', ', array: $etapas_instrutor_educacao_pŕofissional));
+            $this->mensagem = "O campo: <b>Função exercida</b> pode ser <b>Instrutor da Educação Profissional</b> apenas quando o campo <b>Estrutura Curricular</b> da turma for: <b>Itinerário formativo</b> e o campo <b>Etapa de ensino</b> for uma das opções: {$opcoes}.";
 
-           return false;
+            return false;
         }
 
         if ($turma['tipo_mediacao_didatico_pedagogico'] == TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array(needle: $this->funcao_exercida, haystack: $funcoesEad)) {
@@ -420,9 +440,8 @@ return new class extends clsCadastro {
     /**
      * Verifica se existe lançamento no iDiario
      *
-     * @param integer $professorId
-     * @param integer $turmaId
-     *
+     * @param int $professorId
+     * @param int $turmaId
      * @return bool
      */
     private function existeLancamentoIDiario($professorId, $turmaId)

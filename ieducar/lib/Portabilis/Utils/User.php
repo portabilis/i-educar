@@ -3,7 +3,9 @@
 class Portabilis_Utils_User
 {
     public static $_currentUserId;
+
     public static $_nivelAcesso;
+
     public static $_permissoes;
 
     public static function currentUserId()
@@ -44,7 +46,7 @@ class Portabilis_Utils_User
             'POLI_INSTITUCIONAL' => 1,
             'INSTITUCIONAL' => 2,
             'SOMENTE_ESCOLA' => 4,
-            'SOMENTE_BIBLIOTECA' => 8
+            'SOMENTE_BIBLIOTECA' => 8,
         ];
 
         if (!isset($niveisAcesso[$nivelAcessoType])) {

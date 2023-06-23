@@ -1,14 +1,14 @@
 <?php
 
-    header(header: 'Content-type: text/xml');
+header(header: 'Content-type: text/xml');
 
-    Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    if (is_numeric(value: $_GET['ins'])) {
-        $db = new clsBanco();
-        $db->Consulta(consulta: "
+if (is_numeric(value: $_GET['ins'])) {
+    $db = new clsBanco();
+    $db->Consulta(consulta: "
         SELECT
             cod_nivel_ensino
             , nm_nivel
@@ -21,11 +21,11 @@
             nm_nivel ASC
         ");
 
-        if ($db->numLinhas()) {
-            while ($db->ProximoRegistro()) {
-                list($cod, $nome) = $db->Tupla();
-                echo "  <nivel_ensino cod_nivel_ensino=\"{$cod}\">{$nome}</nivel_ensino>\n";
-            }
+    if ($db->numLinhas()) {
+        while ($db->ProximoRegistro()) {
+            [$cod, $nome] = $db->Tupla();
+            echo "  <nivel_ensino cod_nivel_ensino=\"{$cod}\">{$nome}</nivel_ensino>\n";
         }
     }
-    echo '</query>';
+}
+echo '</query>';

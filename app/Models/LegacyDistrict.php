@@ -45,7 +45,7 @@ class LegacyDistrict extends Model
     public $timestamps = false;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function boot()
     {

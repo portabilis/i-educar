@@ -3,7 +3,9 @@
 class RegraAvaliacao_Model_SerieAnoDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'RegraAvaliacao_Model_SerieAno';
+
     protected $_tableName = 'regra_avaliacao_serie_ano';
+
     protected $_tableSchema = 'modules';
 
     protected $_attributeMap = [

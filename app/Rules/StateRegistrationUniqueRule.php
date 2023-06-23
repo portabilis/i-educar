@@ -24,14 +24,13 @@ class StateRegistrationUniqueRule implements Rule
      *
      * @param string $attribute
      * @param mixed  $value
-     *
      * @return bool
      */
     public function passes($attribute, $value)
     {
         return LegacyStudent::query()
             ->where('aluno_estado_id', $value)
-            ->when($this->studentToIgnore, function ($query) use ($value) {
+            ->when($this->studentToIgnore, function ($query) {
                 $query->where('cod_aluno', '<>', $this->studentToIgnore->getKey());
             })
             ->doesntExist();

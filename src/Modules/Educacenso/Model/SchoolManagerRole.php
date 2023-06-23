@@ -9,6 +9,7 @@ class SchoolManagerRole
     use DescriptionValue;
 
     public const DIRETOR = 1;
+
     public const OUTRO = 2;
 
     /**

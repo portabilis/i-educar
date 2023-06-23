@@ -22,7 +22,7 @@ class SchoolData extends Model
     {
         return Attribute::make(
             get: function () {
-                return $this->telefone ? '(' . $this->telefone_ddd . ') ' . $this->telefone : '(##) ####-####' ;
+                return $this->telefone ? '(' . $this->telefone_ddd . ') ' . $this->telefone : '(##) ####-####';
             }
         );
     }
@@ -31,7 +31,7 @@ class SchoolData extends Model
     {
         return Attribute::make(
             get: function () {
-                return $this->celular ? '(' . $this->celular_ddd . ') ' . $this->celular : '(##) #####-####' ;
+                return $this->celular ? '(' . $this->celular_ddd . ') ' . $this->celular : '(##) #####-####';
             }
         );
     }
@@ -41,7 +41,7 @@ class SchoolData extends Model
         return Attribute::make(
             get: fn () => implode(', ', [
                 $this->logradouro,
-                $this->bairro
+                $this->bairro,
             ])
         );
     }

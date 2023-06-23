@@ -11,12 +11,9 @@ class LegacySchoolingDegreeTest extends EloquentTestCase
 {
     protected $relations = [
         'employees' => Employee::class,
-        'individuals' => LegacyIndividual::class
+        'individuals' => LegacyIndividual::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchoolingDegree::class;

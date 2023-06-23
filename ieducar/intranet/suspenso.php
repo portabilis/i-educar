@@ -59,7 +59,7 @@ $reason = $configuracoes['ieducar_suspension_message'];
             } else {
                 echo 'Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.';
             }
-          ?>
+?>
         </p>
       </div>
     </div>

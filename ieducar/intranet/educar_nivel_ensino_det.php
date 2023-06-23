@@ -2,7 +2,8 @@
 
 use App\Models\LegacyEducationLevel;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -11,13 +12,21 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_nivel_ensino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_nivel;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()

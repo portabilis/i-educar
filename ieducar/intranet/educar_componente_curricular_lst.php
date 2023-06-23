@@ -1,14 +1,23 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_cod_instituicao;
+
     public $nome;
+
     public $abreviatura;
+
     public $tipo_base;
+
     public $area_conhecimento_id;
 
     public function Gerar()
@@ -16,14 +25,14 @@ return new class extends clsListagem {
         $this->titulo = 'Componentes curriculares - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
             'Nome',
             'Abreviatura',
             'Base',
-            'área de conhecimento'
+            'área de conhecimento',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -34,7 +43,7 @@ return new class extends clsListagem {
 
         $this->addCabecalhos($lista_busca);
 
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto(nome: 'nome', campo: 'Nome', valor: $this->nome, tamanhovisivel: 41, tamanhomaximo: 255);
@@ -45,11 +54,11 @@ return new class extends clsListagem {
         $tipos = Portabilis_Array_Utils::insertIn(key: null, value: 'Selecionar', array: $tipos);
 
         $options = [
-            'label'       => 'Base Curricular',
+            'label' => 'Base Curricular',
             'placeholder' => 'Base curricular',
-            'value'       => $this->tipo_base,
-            'resources'   => $tipos,
-            'required'    => false
+            'value' => $this->tipo_base,
+            'resources' => $tipos,
+            'required' => false,
         ];
 
         $this->inputsHelper()->select(attrName: 'tipo_base', inputOptions: $options);
@@ -68,18 +77,18 @@ return new class extends clsListagem {
         $areas = Portabilis_Array_Utils::insertIn(key: null, value: 'Selecionar', array: $areas);
 
         $options = [
-            'label'       => 'Área de conhecimento',
+            'label' => 'Área de conhecimento',
             'placeholder' => 'Área de conhecimento',
-            'value'       => $this->area_conhecimento_id,
-            'resources'   => $areas,
-            'required'    => false
+            'value' => $this->area_conhecimento_id,
+            'resources' => $areas,
+            'required' => false,
         ];
 
         $this->inputsHelper()->select(attrName: 'area_conhecimento_id', inputOptions: $options);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $objCC = new clsModulesComponenteCurricular();
         $objCC->setOrderby('cc.nome ASC');
@@ -106,7 +115,7 @@ return new class extends clsListagem {
                     "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['nome']}</a>",
                     "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['abreviatura']}</a>",
                     "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">".$tipos[$registro['tipo_base']].'</a>',
-                    "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['area_conhecimento']}</a>"
+                    "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['area_conhecimento']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

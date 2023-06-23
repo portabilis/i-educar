@@ -23,7 +23,7 @@ class LegacyScoreExam extends Model
     protected $fillable = [
         'ref_cod_matricula',
         'ref_cod_componente_curricular',
-        'nota_exame'
+        'nota_exame',
     ];
 
     /**

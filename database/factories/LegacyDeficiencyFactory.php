@@ -15,7 +15,7 @@ class LegacyDeficiencyFactory extends Factory
             'name' => $this->faker->word(),
             'educacenso' => $this->faker->randomNumber(1, 10),
             'disregards_different_rule' => $this->faker->boolean(),
-            'require_medical_report' => $this->faker->boolean()
+            'require_medical_report' => $this->faker->boolean(),
         ];
     }
 }

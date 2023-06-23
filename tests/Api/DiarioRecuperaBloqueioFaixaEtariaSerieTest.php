@@ -33,7 +33,7 @@ class DiarioRecuperaBloqueioFaixaEtariaSerieTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'bloqueio-faixa-etaria',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

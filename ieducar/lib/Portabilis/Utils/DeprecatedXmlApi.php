@@ -15,6 +15,6 @@ class Portabilis_Utils_DeprecatedXmlApi
             . "<!-- $comment -->"
             . "<$rootNodeName xmlns='$xmlns'></$rootNodeName>";
 
-        die($emptyQuery);
+        exit($emptyQuery);
     }
 }

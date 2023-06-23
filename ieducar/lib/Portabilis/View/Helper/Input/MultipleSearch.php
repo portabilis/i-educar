@@ -10,7 +10,7 @@ class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper
             'apiController' => ucwords($objectName),
             'apiResource' => $objectName . '-search',
             'searchPath' => '',
-            'type' => 'multiple'
+            'type' => 'multiple',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

@@ -2,7 +2,8 @@
 
 use App\Models\Religion;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -11,30 +12,36 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_religiao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_religiao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
     {
         $this->titulo = 'Religiao - Detalhe';
 
-        $this->cod_religiao=$_GET['cod_religiao'];
+        $this->cod_religiao = $_GET['cod_religiao'];
 
         $registro = Religion::findOrFail(id: $this->cod_religiao, columns: ['id', 'name'])?->getAttributes();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect(url: 'educar_religiao_lst.php');
         }
 
         if ($registro['id']) {
-            $this->addDetalhe(detalhe: [ 'Religião', "{$registro['id']}"]);
+            $this->addDetalhe(detalhe: ['Religião', "{$registro['id']}"]);
         }
         if ($registro['name']) {
-            $this->addDetalhe(detalhe: [ 'Nome Religião', "{$registro['name']}"]);
+            $this->addDetalhe(detalhe: ['Nome Religião', "{$registro['name']}"]);
         }
 
         //** Verificacao de permissao para cadastro

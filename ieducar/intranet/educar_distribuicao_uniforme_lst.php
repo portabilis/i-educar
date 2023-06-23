@@ -3,14 +3,22 @@
 use App\Models\LegacyStudent;
 use App\Models\UniformDistribution;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_distribuicao_uniforme;
+
     public $ref_cod_aluno;
+
     public $ano;
+
     public $kit_completo;
 
     public function Gerar()
@@ -27,7 +35,7 @@ return new class extends clsListagem {
             $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 
-        $this->addCabecalhos(coluna: [ 'Ano', 'Kit completo', 'Tipo', 'Data da Distribuição' ]);
+        $this->addCabecalhos(coluna: ['Ano', 'Kit completo', 'Tipo', 'Data da Distribuição']);
 
         $obj_permissao = new clsPermissoes();
         $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
@@ -63,7 +71,7 @@ return new class extends clsListagem {
                     "<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$uniformDistribution->student_id}&cod_distribuicao_uniforme={$uniformDistribution->id}\">{$uniformDistribution->year}</a>",
                     "<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$uniformDistribution->student_id}&cod_distribuicao_uniforme={$uniformDistribution->id}\">{$complete_kit}</a>",
                     "<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$uniformDistribution->student_id}&cod_distribuicao_uniforme={$uniformDistribution->id}\">{$uniformDistribution->type}</a>",
-                    "<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$uniformDistribution->student_id}&cod_distribuicao_uniforme={$uniformDistribution->id}\">{$uniformDistribution->distribution_date?->format('d/m/Y')}</a>"
+                    "<a href=\"educar_distribuicao_uniforme_det.php?ref_cod_aluno={$uniformDistribution->student_id}&cod_distribuicao_uniforme={$uniformDistribution->id}\">{$uniformDistribution->distribution_date?->format('d/m/Y')}</a>",
                 ];
 
                 $this->addLinhas(linha: $lista_busca);
@@ -72,11 +80,11 @@ return new class extends clsListagem {
         $this->addPaginador2(strUrl: 'educar_distribuicao_uniforme_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: 20);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
-            $this->acao = "go(\"educar_distribuicao_uniforme_cad.php?ref_cod_aluno=".request(key: 'ref_cod_aluno')."\")";
+            $this->acao = 'go("educar_distribuicao_uniforme_cad.php?ref_cod_aluno='.request(key: 'ref_cod_aluno').'")';
             $this->nome_acao = 'Novo';
         }
         $this->array_botao[] = 'Voltar';
-        $this->array_botao_url[] = "educar_aluno_det.php?cod_aluno=".request(key: 'ref_cod_aluno');
+        $this->array_botao_url[] = 'educar_aluno_det.php?cod_aluno='.request(key: 'ref_cod_aluno');
 
         $this->largura = '100%';
 

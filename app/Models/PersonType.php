@@ -7,6 +7,7 @@ use App\Contracts\Enum;
 class PersonType implements Enum
 {
     public const INDIVIDUAL = 1;
+
     public const ORGANIZATION = 2;
 
     public function getDescriptiveValues(): array

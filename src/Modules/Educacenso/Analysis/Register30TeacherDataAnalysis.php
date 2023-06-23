@@ -32,7 +32,7 @@ class Register30TeacherDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) {$data->nomePessoa} se trata de um(a) docente com nacionalidade {$data->nomeNacionalidade}, portanto é necessário informar o CPF.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: CPF)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
     }

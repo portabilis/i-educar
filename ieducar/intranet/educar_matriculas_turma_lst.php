@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Titulo no topo da pagina
      *
@@ -51,7 +52,7 @@ return new class extends clsListagem {
             'Turma',
             'Série',
             'Curso',
-            'Escola'
+            'Escola',
         ];
 
         $this->addCabecalhos(coluna: $lista_busca);
@@ -106,7 +107,7 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"{$link}\">{$registro['ano']}</a>",
-                    "<a href=\"{$link}\">{$registro['nm_turma']}</a>"
+                    "<a href=\"{$link}\">{$registro['nm_turma']}</a>",
                 ];
 
                 if ($registro['ref_ref_cod_serie']) {

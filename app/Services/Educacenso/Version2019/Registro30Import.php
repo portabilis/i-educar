@@ -54,10 +54,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
-     * @param RegistroEducacenso $model
      * @param int                $year
-     * @param                    $user
-     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -83,8 +80,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $arrayColumns
-     *
      * @return Registro30|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
@@ -181,8 +176,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $name
-     *
      * @return LegacyPerson|null
      */
     private function createFiliacao($name)
@@ -212,7 +205,6 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param LegacyPerson $person
-     *
      * @return LegacyStudent mixed
      */
     protected function getOrCreateStudent($person)
@@ -246,17 +238,16 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param LegacyPerson $person
-     *
      * @return Employee
      */
     protected function getOrCreateEmployee($person)
     {
         return Employee::firstOrCreate([
             'cod_servidor' => $person->getKey(),
-            'ref_cod_instituicao' => $this->institution->getKey()
+            'ref_cod_instituicao' => $this->institution->getKey(),
         ], [
             'carga_horaria' => 0,
-            'data_cadastro' => now()
+            'data_cadastro' => now(),
         ]);
     }
 
@@ -294,8 +285,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $person
-     *
      * @return LegacyRace
      */
     private function getOrCreateRace($person)
@@ -382,8 +371,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $raca
-     *
      * @return string
      */
     private function getRaceName($raca)
@@ -401,8 +388,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $cpf
-     *
      * @return LegacyPerson|null
      */
     private function getPersonByCpf($cpf)
@@ -422,8 +407,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $cityIbge
-     *
      * @return LegacyCity|null
      */
     private function getCity($cityIbge)
@@ -438,8 +421,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $countryIbge
-     *
      * @return Country|null
      */
     private function getCountry($countryIbge)
@@ -510,8 +491,6 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param $array
-     *
      * @return string
      */
     private function getPostgresIntegerArray($array)
@@ -519,9 +498,6 @@ class Registro30Import implements RegistroImportInterface
         return '{' . implode(',', $array) . '}';
     }
 
-    /**
-     * @param LegacyStudent $student
-     */
     protected function createCertidaoNascimento(LegacyStudent $student)
     {
         if (empty($this->model->certidaoNascimento)) {
@@ -529,7 +505,7 @@ class Registro30Import implements RegistroImportInterface
         }
 
         LegacyDocument::updateOrCreate(
-            ['idpes' => $student->person->getKey(),],
+            ['idpes' => $student->person->getKey()],
             [
                 'certidao_nascimento' => $this->model->certidaoNascimento,
                 'origem_gravacao' => 'U',
@@ -539,9 +515,6 @@ class Registro30Import implements RegistroImportInterface
         );
     }
 
-    /**
-     * @param LegacyStudent $student
-     */
     private function storeStudentData(LegacyStudent $student)
     {
         $this->createStudentInep($student);
@@ -552,9 +525,6 @@ class Registro30Import implements RegistroImportInterface
         $student->save();
     }
 
-    /**
-     * @param Employee $employee
-     */
     protected function storeEmployeeData(Employee $employee)
     {
         $this->createEmployeeInep($employee);
@@ -566,9 +536,6 @@ class Registro30Import implements RegistroImportInterface
         $employee->save();
     }
 
-    /**
-     * @param Employee $employee
-     */
     private function createEscolaridade(Employee $employee)
     {
         if ($employee->schoolingDegree()->count()) {
@@ -579,7 +546,7 @@ class Registro30Import implements RegistroImportInterface
             ['idesco' => $this->model->escolaridade],
             [
                 'descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade',
-                'escolaridade' => $this->model->escolaridade
+                'escolaridade' => $this->model->escolaridade,
             ]
         );
 
@@ -587,9 +554,6 @@ class Registro30Import implements RegistroImportInterface
         $employee->save();
     }
 
-    /**
-     * @param Employee $employee
-     */
     private function createEmployeeGraduations(Employee $employee)
     {
         $arrayCursos = array_filter($this->model->formacaoCurso);

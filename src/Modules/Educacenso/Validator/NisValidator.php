@@ -5,6 +5,7 @@ namespace iEducar\Modules\Educacenso\Validator;
 class NisValidator implements EducacensoValidator
 {
     private $message;
+
     private $nis;
 
     public function __construct(string $nis)
@@ -12,9 +13,6 @@ class NisValidator implements EducacensoValidator
         $this->nis = $nis;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if ($this->isOnlyZeroDigits()) {
@@ -26,9 +24,6 @@ class NisValidator implements EducacensoValidator
         return true;
     }
 
-    /**
-     * @return bool
-     */
     private function isOnlyZeroDigits(): bool
     {
         return preg_match('/^(0)\1*$/u', $this->nis);

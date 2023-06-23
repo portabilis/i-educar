@@ -11,9 +11,9 @@ use Throwable;
 trait InteractWithDatabase
 {
     /**
-     * @throws Exception
-     *
      * @return string
+     *
+     * @throws Exception
      */
     public function model()
     {
@@ -26,9 +26,9 @@ trait InteractWithDatabase
     }
 
     /**
-     * @throws Exception
-     *
      * @return Builder
+     *
+     * @throws Exception
      */
     public function newQuery()
     {
@@ -44,7 +44,6 @@ trait InteractWithDatabase
 
     /**
      * @param int $identifier
-     *
      * @return EloquentModel
      */
     public function find($identifier)
@@ -59,11 +58,9 @@ trait InteractWithDatabase
     /**
      * @param int          $limit
      * @param int          $offset
-     * @param Closure|null $modifier
+     * @return array
      *
      * @throws Exception
-     *
-     * @return array
      */
     public function paginate($limit, $offset, Closure $modifier = null)
     {
@@ -81,10 +78,9 @@ trait InteractWithDatabase
 
     /**
      * @param array $attributes
+     * @return bool
      *
      * @throws Exception
-     *
-     * @return bool
      */
     public function create($attributes)
     {
@@ -102,10 +98,9 @@ trait InteractWithDatabase
     /**
      * @param int   $identifier
      * @param array $attributes
+     * @return bool
      *
      * @throws Exception
-     *
-     * @return bool
      */
     public function update($identifier, $attributes)
     {
@@ -124,10 +119,9 @@ trait InteractWithDatabase
 
     /**
      * @param int $identifier
+     * @return bool
      *
      * @throws Exception
-     *
-     * @return bool
      */
     public function delete($identifier)
     {

@@ -1,7 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
-
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -10,11 +10,13 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
 
     public $ano;
 
     public $nm_escola;
+
     public $nm_instituicao;
 
     public $pdf;
@@ -37,7 +39,7 @@ return new class extends clsCadastro {
         $this->ano = $ano_atual = date(format: 'Y');
 
         $lim = 5;
-        for ($a = date(format: 'Y') ; $a < $ano_atual + $lim ; $a++) {
+        for ($a = date(format: 'Y'); $a < $ano_atual + $lim; $a++) {
             $anos["{$a}"] = "{$a}";
         }
 
@@ -49,7 +51,7 @@ return new class extends clsCadastro {
         $obrigatorio = false;
         $instituicao_obrigatorio = true;
 
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         if ($this->ref_cod_escola) {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;
