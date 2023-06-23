@@ -30,14 +30,15 @@ return new class extends clsCadastro
     public $titulo_avaliacao;
 
     public $ref_ref_cod_instituicao;
+
     public $id;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_servidor=$_GET['ref_cod_servidor'];
-        $this->ref_ref_cod_instituicao=$_GET['ref_ref_cod_instituicao'];
+        $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
+        $this->ref_ref_cod_instituicao = $_GET['ref_ref_cod_instituicao'];
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
@@ -113,6 +114,7 @@ return new class extends clsCadastro
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -130,6 +132,7 @@ return new class extends clsCadastro
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -145,6 +148,7 @@ return new class extends clsCadastro
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

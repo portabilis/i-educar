@@ -73,11 +73,10 @@ return new class extends clsListagem
             ->where('employee_id', $this->ref_cod_servidor)
             ->count();
 
-
         $avaliacoes->each(function (PerformanceEvaluation $avaliacao) use ($nivel_usuario) {
             $lista_busca = [
                 "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">{$avaliacao->title}</a>",
-                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">{$avaliacao->employee->person->name}</a>"
+                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">{$avaliacao->employee->person->name}</a>",
             ];
 
             if ($nivel_usuario == 1) {

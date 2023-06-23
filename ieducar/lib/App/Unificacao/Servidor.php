@@ -16,7 +16,7 @@ class App_Unificacao_Servidor extends App_Unificacao_Base
     protected $chavesManterTodosVinculos = [
         [
             'tabela' => 'public.performance_evaluations',
-            'coluna' => 'employee_id'
+            'coluna' => 'employee_id',
         ],
         [
             'tabela' => 'pmieducar.falta_atraso',
