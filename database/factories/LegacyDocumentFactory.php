@@ -16,16 +16,14 @@ class LegacyDocumentFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'idpes' => LegacyUserFactory::new()->unique()->make(),
+            'idpes' => fn () => LegacyUserFactory::new()->current(),
             'rg' => $this->faker->randomNumber(8),
             'certidao_nascimento' => $this->faker->randomNumber(8),
-            'origem_gravacao' => 'M'
+            'origem_gravacao' => 'M',
         ];
     }
 }

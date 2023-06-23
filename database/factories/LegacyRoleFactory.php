@@ -16,8 +16,6 @@ class LegacyRoleFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -25,9 +23,17 @@ class LegacyRoleFactory extends Factory
             'nm_funcao' => $this->faker->colorName,
             'abreviatura' => $this->faker->hexColor,
             'professor' => 1,
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
+    }
+
+    public function current(): LegacyRole
+    {
+        return LegacyRole::query()->first() ?? $this->create([
+            'nm_funcao' => 'Professor',
+            'abreviatura' => 'Prof',
+        ]);
     }
 }

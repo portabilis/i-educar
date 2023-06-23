@@ -40,9 +40,11 @@ class LegacyStudent extends LegacyModel
         'tipo_responsavel',
     ];
 
-    /**
-     * @return BelongsTo
-     */
+    public array $legacy = [
+        'id' => 'cod_aluno',
+        'person_id' => 'ref_idpes',
+    ];
+
     public function individual(): BelongsTo
     {
         return $this->belongsTo(LegacyIndividual::class, 'ref_idpes');
@@ -67,9 +69,13 @@ class LegacyStudent extends LegacyModel
         );
     }
 
-    /**
-     * @return BelongsTo
-     */
+    protected function realName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->person->real_name
+        );
+    }
+
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
@@ -80,9 +86,6 @@ class LegacyStudent extends LegacyModel
         return $this->hasMany(LegacyRegistration::class, 'ref_cod_aluno');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function guardians(): BelongsToMany
     {
         return $this->belongsToMany(

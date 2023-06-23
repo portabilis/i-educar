@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\RegistrationEvent;
+use App\Events\ReportIssued;
 use App\Events\TransferEvent;
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
@@ -14,6 +15,7 @@ use App\Listeners\ForgetCachedUserListener;
 use App\Listeners\LoginLegacySession;
 use App\Listeners\MessageSendingListener;
 use App\Listeners\NotificationWhenResetPassword;
+use App\Listeners\ReportIssuedListener;
 use App\Listeners\TransferNotificationListener;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use App\Models\SchoolManager;
@@ -50,7 +52,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         RegistrationEvent::class => [
             CopyTransferDataListener::class,
-            AcceptTransferRequestListener::class
+            AcceptTransferRequestListener::class,
         ],
         TransferEvent::class => [
             TransferNotificationListener::class,
@@ -63,6 +65,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserDeleted::class => [
             ForgetCachedUserListener::class,
+        ],
+        ReportIssued::class => [
+            ReportIssuedListener::class,
         ],
     ];
 

@@ -8,7 +8,9 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 class DifferentiatedLocationValidator implements EducacensoValidator
 {
     private $message = '';
+
     private $differentiatedLocation;
+
     private $locationZone;
 
     public function __construct($differentiatedLocation, $locationZone)
@@ -17,9 +19,6 @@ class DifferentiatedLocationValidator implements EducacensoValidator
         $this->locationZone = $locationZone;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if (LocalizacaoDiferenciadaPessoa::AREA_ASSENTAMENTO == $this->differentiatedLocation &&

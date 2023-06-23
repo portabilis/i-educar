@@ -212,6 +212,10 @@ class Registro20 implements RegistroEducacenso
 
     public $tipoAtividadeComplementar6;
 
+    public $classeComLinguaBrasileiraSinais;
+
+    public $outrasUnidadesCurricularesObrigatorias;
+
     /**
      * @return bool
      */
@@ -279,11 +283,11 @@ class Registro20 implements RegistroEducacenso
 
                 break;
             case ModalidadeCurso::EDUCACAO_ESPECIAL:
-                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]}";
+                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}";
 
                 break;
             case ModalidadeCurso::EJA:
-                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}, {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
             case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
@@ -427,7 +431,7 @@ class Registro20 implements RegistroEducacenso
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function presencial()
     {
@@ -435,7 +439,7 @@ class Registro20 implements RegistroEducacenso
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function educacaoDistancia()
     {
@@ -492,7 +496,7 @@ class Registro20 implements RegistroEducacenso
     {
         return in_array($this->estruturaCurricular, [
             EstruturaCurricular::FORMACAO_GERAL_BASICA,
-            EstruturaCurricular::NAO_SE_APLICA
+            EstruturaCurricular::NAO_SE_APLICA,
         ]);
     }
 }

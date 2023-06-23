@@ -55,8 +55,6 @@ class LegacySchoolGrade extends LegacyModel
 
     /**
      * Relacionamento com a série.
-     *
-     * @return BelongsTo
      */
     public function grade(): BelongsTo
     {

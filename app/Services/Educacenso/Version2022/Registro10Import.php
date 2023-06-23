@@ -16,10 +16,7 @@ class Registro10Import extends Registro10Import2020
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
-     * @param RegistroEducacenso $model
      * @param int                $year
-     * @param                    $user
-     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -42,8 +39,6 @@ class Registro10Import extends Registro10Import2020
     }
 
     /**
-     * @param $arrayColumns
-     *
      * @return Registro10|RegistroEducacenso
      */
     public static function getModel($arrayColumns)

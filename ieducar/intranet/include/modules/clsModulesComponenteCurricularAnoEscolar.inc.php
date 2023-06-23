@@ -5,11 +5,17 @@ use iEducar\Legacy\Model;
 class clsModulesComponenteCurricularAnoEscolar extends Model
 {
     public $componente_curricular_id;
+
     public $ano_escolar_id;
+
     public $carga_horaria;
+
     public $hora_falta;
+
     public $tipo_nota;
+
     public $componentes;
+
     public $updateInfo;
 
     public function __construct(
@@ -33,7 +39,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             'hora_falta',
         ];
 
-        $this->_campos_lista = join(', ', $campos) . ' ';
+        $this->_campos_lista = implode(', ', $campos) . ' ';
         $this->_todos_campos = $this->_campos_lista;
 
         if (is_numeric($componente_curricular_id)) {
@@ -76,7 +82,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
                     (float) $componenteUpdate['carga_horaria'],
                     intval($componenteUpdate['tipo_nota']),
                     $componenteUpdate['anos_letivos'],
-                    (float) $componenteUpdate['hora_falta'],
+                    $componenteUpdate['hora_falta'] ? (float) $componenteUpdate['hora_falta'] : null,
                 );
             }
         }
@@ -84,11 +90,11 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
         if ($this->updateInfo['insert']) {
             foreach ($this->updateInfo['insert'] as $componenteInsert) {
                 $this->cadastraComponente(
-                    (int)$componenteInsert['id'],
-                    (float)$componenteInsert['carga_horaria'],
-                    (int)$componenteInsert['tipo_nota'],
+                    (int) $componenteInsert['id'],
+                    (float) $componenteInsert['carga_horaria'],
+                    (int) $componenteInsert['tipo_nota'],
                     $componenteInsert['anos_letivos'],
-                    (float)$componenteInsert['hora_falta'],
+                    $componenteInsert['hora_falta'] ? (float) $componenteInsert['hora_falta'] : null,
                 );
             }
         }
@@ -152,7 +158,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
     {
         $retorno = [
             'inseridos' => [],
-            'removidos' => []
+            'removidos' => [],
         ];
 
         $sql = <<<SQL
@@ -198,6 +204,10 @@ SQL;
             $tipo_nota = $tipo_nota === 0 ? 'NULL' : $tipo_nota;
             $anosLetivosFormatados = Portabilis_Utils_Database::arrayToPgArray($anosLetivos);
 
+            if (is_null($hora_falta)) {
+                $hora_falta = ' NULL';
+            }
+
             $sql = "
                 INSERT INTO
                     {$this->_tabela}
@@ -238,6 +248,9 @@ SQL;
 
             if (is_numeric($hora_falta)) {
                 $set .= "{$gruda}hora_falta = {$hora_falta}";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}hora_falta = NULL";
                 $gruda = ', ';
             }
 

@@ -5,19 +5,33 @@ use iEducar\Legacy\Model;
 class clsPmieducarTransferenciaSolicitacao extends Model
 {
     public $cod_transferencia_solicitacao;
+
     public $ref_cod_transferencia_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_matricula_entrada;
+
     public $ref_cod_matricula_saida;
+
     public $observacao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $data_transferencia;
+
     public $ref_cod_escola_destino;
+
     public $escola_destino_externa;
+
     public $estado_escola_destino_externa;
+
     public $municipio_escola_destino_externa;
 
     public function __construct($cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null, $estado_escola_destino_externa = null, $municipio_escola_destino_externa = null)
@@ -241,24 +255,6 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     }
 
     /**
-     *
-     * Apaga os registros de uma matricula em uma escola que foi a aceitação da transferencia
-     *
-     * @return boolean
-     */
-    public function desativaEntradaTransferencia()
-    {
-        if (is_numeric($this->cod_transferencia_solicitacao)) {
-            $db = new clsBanco();
-            $db->Consulta("UPDATE {$this->_tabela} SET ref_cod_matricula_entrada = NULL, data_transferencia = NULL,ref_usuario_exc = NULL, data_exclusao = NULL WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
      * @return array|false
@@ -377,7 +373,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
         if ($parar) {
-            die($sql);
+            exit($sql);
         }
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} ts, {$this->_schema}matricula m {$filtros}");
 
@@ -458,7 +454,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     /**
      * Retorna se existe solicitações para matrícula.
      *
-     * @return boolean
+     * @return bool
      */
     public function existSolicitacaoTransferenciaAtiva()
     {

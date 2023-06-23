@@ -24,11 +24,6 @@ class TransferRegistrationDataService
      */
     private $copyDescriptiveOpinionService;
 
-    /**
-     * @param CopyAbsenceService            $copyAbsenceService
-     * @param CopyScoreService              $copyScoreService
-     * @param CopyDescriptiveOpinionService $copyDescriptiveOpinionService
-     */
     public function __construct(
         CopyAbsenceService $copyAbsenceService,
         CopyScoreService $copyScoreService,
@@ -40,8 +35,6 @@ class TransferRegistrationDataService
     }
 
     /**
-     * @param LegacyRegistration $registration
-     *
      * @throws StagesAreNotSame
      * @throws MissingDescriptiveOpinionType
      */
@@ -63,9 +56,6 @@ class TransferRegistrationDataService
     }
 
     /**
-     * @param LegacyRegistration $newRegistration
-     * @param LegacyRegistration $oldRegistration
-     *
      * @return bool
      */
     public function hasSameStages(
@@ -79,8 +69,6 @@ class TransferRegistrationDataService
     }
 
     /**
-     * @param LegacyRegistration $registration
-     *
      * @return LegacyTransferRequest
      */
     public function getTransfer(LegacyRegistration $registration)

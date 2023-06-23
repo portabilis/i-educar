@@ -5,37 +5,69 @@ use Illuminate\Support\Facades\Auth;
 class clsPessoaFisica extends clsPessoaFj
 {
     public $idpes;
+
     public $data_nasc;
+
     public $sexo;
+
     public $idpes_mae;
+
     public $idpes_pai;
+
     public $idpes_responsavel;
+
     public $idesco;
+
     public $ideciv;
+
     public $idpes_con;
+
     public $data_uniao;
+
     public $data_obito;
+
     public $nacionalidade;
+
     public $idpais_estrangeiro;
+
     public $data_chagada_brasil;
+
     public $idmun_nascimento;
+
     public $ultima_empresa;
+
     public $idocup;
+
     public $nome_mae;
+
     public $nome_pai;
+
     public $nome_conjuge;
+
     public $nome_responsavel;
+
     public $justificativa_provisorio;
+
     public $cpf;
+
     public $ref_cod_religiao;
+
     public $tipo_endereco;
+
     public $ativo;
+
     public $data_exclusao;
+
     public $zona_localizacao_censo;
+
     public $localizacao_diferenciada;
+
     public $nome_social;
+
     public $pais_residencia;
+
     public $banco = 'pmi';
+
     public $schema_cadastro = 'cadastro';
 
     /**
@@ -194,7 +226,6 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->data_chagada_brasil = $detalhe_fisica['data_chagada_brasil'] ?? null;
                 $this->idmun_nascimento = $detalhe_fisica['idmun_nascimento'];
                 $this->ultima_empresa = $detalhe_fisica['ultima_empresa'];
-                $this->idocup = $detalhe_fisica['idocup'];
                 $this->nome_mae = $detalhe_fisica['nome_mae'];
                 $this->nome_pai = $detalhe_fisica['nome_pai'];
                 $this->nome_conjuge = $detalhe_fisica['nome_conjuge'];
@@ -273,9 +304,6 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['ultima_empresa'] = $this->ultima_empresa;
                 $tupla[] = &$tupla['ultima_empresa'];
 
-                $tupla['idocup'] = $this->idocup;
-                $tupla[] = &$tupla['idocup'];
-
                 $tupla['nome_mae'] = $this->nome_mae;
                 $tupla[] = &$tupla['nome_mae'];
 
@@ -346,7 +374,6 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->data_chagada_brasil = $detalhe_fisica['data_chagada_brasil'];
                     $this->idmun_nascimento = $detalhe_fisica['idmun_nascimento'];
                     $this->ultima_empresa = $detalhe_fisica['ultima_empresa'];
-                    $this->idocup = $detalhe_fisica['idocup'];
                     $this->nome_mae = $detalhe_fisica['nome_mae'];
                     $this->nome_pai = $detalhe_fisica['nome_pai'];
                     $this->nome_conjuge = $detalhe_fisica['nome_conjuge'];
@@ -416,9 +443,6 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['ultima_empresa'] = $this->ultima_empresa;
                     $tupla[] = &$tupla['ultima_empresa'];
-
-                    $tupla['idocup'] = $this->idocup;
-                    $tupla[] = &$tupla['idocup'];
 
                     $tupla['nome_mae'] = $this->nome_mae;
                     $tupla[] = &$tupla['nome_mae'];

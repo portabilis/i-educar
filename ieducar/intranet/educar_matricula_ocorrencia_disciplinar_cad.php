@@ -3,7 +3,8 @@
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -12,17 +13,27 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_ocorrencia_disciplinar;
+
     public $ref_cod_matricula;
+
     public $ref_cod_tipo_ocorrencia_disciplinar;
+
     public $sequencial;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $observacao;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $data_cadastro;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
 
     public $hora_cadastro;
@@ -165,7 +176,6 @@ return new class extends clsCadastro {
         $detalhe_mat = $obj_ref_cod_matricula->detalhe();
         $this->ref_cod_instituicao = $detalhe_mat['ref_cod_instituicao'];
 
-
         $obj = new LegacyRegistrationDisciplinaryOccurrenceType();
         $obj->ref_cod_matricula = $this->ref_cod_matricula;
         $obj->ref_cod_tipo_ocorrencia_disciplinar = $this->ref_cod_tipo_ocorrencia_disciplinar;
@@ -181,7 +191,7 @@ return new class extends clsCadastro {
 
                 if (is_array($resposta->errors)) {
                     echo 'Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0];
-                    die;
+                    exit;
                 }
             }
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -196,6 +206,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -227,6 +238,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -245,6 +257,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

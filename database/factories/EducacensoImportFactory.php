@@ -16,17 +16,15 @@ class EducacensoImportFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'year' => now()->year,
-            'school' => $this->faker->name,
-            'user_id' => LegacyUserFactory::new()->unique()->make(),
+            'school' => $this->faker->name(),
+            'user_id' => fn () => LegacyUserFactory::new()->current(),
             'finished' => $this->faker->boolean,
-            'registration_date' => now()->format('Y-m-d')
+            'registration_date' => now()->format('Y-m-d'),
         ];
     }
 }

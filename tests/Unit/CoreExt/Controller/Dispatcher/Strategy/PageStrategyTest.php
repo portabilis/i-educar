@@ -1,8 +1,10 @@
 <?php
 
+#[AllowDynamicProperties]
 class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Framework\TestCase
 {
     protected $_frontController = null;
+
     protected $_pageStrategy = null;
 
     public function __construct($name = null, array $data = [], $dataName = '')

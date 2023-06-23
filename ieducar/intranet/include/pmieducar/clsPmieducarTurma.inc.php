@@ -6,53 +6,99 @@ use Illuminate\Support\Facades\Cache;
 class clsPmieducarTurma extends Model
 {
     const TURNO_MATUTINO = 1;
+
     const TURNO_VESPERTINO = 2;
+
     const TURNO_NOTURNO = 3;
+
     const TURNO_INTEGRAL = 4;
 
     public $cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $ref_cod_infra_predio_comodo;
+
     public $nm_turma;
+
     public $sgl_turma;
+
     public $max_aluno;
+
     public $multiseriada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_turma_tipo;
+
     public $hora_inicial = false;
+
     public $hora_final = false;
+
     public $hora_inicio_intervalo = false;
+
     public $hora_fim_intervalo = false;
+
     public $ano;
+
     public $ref_cod_regente;
+
     public $ref_cod_instituicao_regente;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_ref_cod_serie_mult;
+
     public $ref_ref_cod_escola_mult;
+
     public $visivel;
+
     public $data_fechamento;
+
     public $tipo_atendimento = false;
+
     public $cod_curso_profissional;
+
     public $etapa_educacenso;
+
     public $ref_cod_disciplina_dispensada;
+
     public $parecer_1_etapa;
+
     public $parecer_2_etapa;
+
     public $parecer_3_etapa;
+
     public $parecer_4_etapa;
+
     public $nao_informar_educacenso;
+
     public $tipo_mediacao_didatico_pedagogico = false;
+
     public $dias_semana;
+
     public $atividades_complementares;
+
     public $atividades_aee;
+
     public $local_funcionamento_diferenciado;
+
     public $listarNaoInformarEducacenso = true;
+
     public $codUsuario;
+
     public $tipo_boletim_diferenciado = false;
 
     public function __construct($cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $data_fechamento = null, $ref_cod_disciplina_dispensada = null)
@@ -63,7 +109,7 @@ class clsPmieducarTurma extends Model
 
         $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
         t.tipo_atendimento, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado, t.estrutura_curricular, t.formas_organizacao_turma, t.unidade_curricular';
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado, t.estrutura_curricular, t.formas_organizacao_turma, t.unidade_curricular, t.outras_unidades_curriculares_obrigatorias, t.classe_com_lingua_brasileira_sinais';
 
         if (is_numeric($ref_cod_turma_tipo)) {
             $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
@@ -630,57 +676,6 @@ class clsPmieducarTurma extends Model
         }
 
         return false;
-    }
-
-    /**
-     * volta o maior modulo comum (antes do exame) permitido nessa turma
-     *
-     * @return unknown
-     */
-    public function maxModulos()
-    {
-        if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
-            // ve se o curso segue o padrao escolar
-            $padrao = $db->CampoUnico("SELECT c.padrao_ano_escolar FROM {$this->_schema}curso c, {$this->_tabela} t WHERE cod_turma = {$this->cod_turma} AND c.cod_curso = t.ref_cod_curso AND c.ativo = 1 AND t.ativo = 1");
-            if ($padrao) {
-                // segue o padrao
-                $cod_escola = $db->CampoUnico("SELECT ref_ref_cod_escola FROM {$this->_tabela} WHERE cod_turma = {$this->cod_turma} AND ativo = 1");
-                $ano = $db->CampoUnico("SELECT COALESCE(MAX(ano),0) FROM {$this->_schema}escola_ano_letivo WHERE ref_cod_escola = {$cod_escola} AND andamento = 1 AND ativo = 1");
-                if ($ano) {
-                    return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) FROM {$this->_schema}ano_letivo_modulo WHERE ref_ref_cod_escola = {$cod_escola} AND ref_ano = {$ano}");
-                }
-            } else {
-                // nao segue o padrao escolar
-                return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) FROM {$this->_schema}turma_modulo WHERE ref_cod_turma = {$this->cod_turma}");
-            }
-        }
-
-        return false;
-    }
-
-    public function getCurso()
-    {
-        if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_curso, ref_ref_cod_serie FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'");
-            $db->ProximoRegistro();
-            list($cod_curso, $cod_serie) = $db->Tupla();
-            if (is_numeric($cod_curso)) {
-                return $cod_curso;
-            }
-
-            if (is_numeric($cod_serie)) {
-                $db->Consulta("SELECT ref_cod_curso FROM {$this->_schema}serie WHERE cod_serie = '{$cod_serie}'");
-                $db->ProximoRegistro();
-                list($cod_curso) = $db->Tupla();
-                if (is_numeric($cod_curso)) {
-                    return $cod_curso;
-                }
-            }
-
-            return false;
-        }
     }
 
     /**

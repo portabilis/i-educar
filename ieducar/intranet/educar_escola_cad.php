@@ -43,7 +43,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     use LegacyAddressingFields;
 
     /**
@@ -54,142 +55,282 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_escola;
+
     public $ref_usuario_cad;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $ref_idpes;
+
     public $cnpj;
+
     public $sigla;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_escola;
+
     public $passou;
+
     public $escola_curso;
+
     public $escola_curso_autorizacao;
+
     public $escola_curso_anos_letivos;
+
     public $ref_cod_curso;
+
     public $autorizacao;
+
     public $fantasia;
+
     public $p_ddd_telefone_1;
+
     public $p_telefone_1;
+
     public $p_ddd_telefone_2;
+
     public $p_telefone_2;
+
     public $p_ddd_telefone_mov;
+
     public $p_telefone_mov;
+
     public $p_ddd_telefone_fax;
+
     public $p_telefone_fax;
+
     public $p_email;
+
     public $p_http;
+
     public $tipo_pessoa;
+
     public $situacao_funcionamento;
+
     public $dependencia_administrativa;
+
     public $orgao_vinculado_escola;
+
     public $latitude;
+
     public $longitude;
+
     public $regulamentacao;
+
     public $gestor_id;
+
     public $cargo_gestor;
+
     public $email_gestor;
+
     public $local_funcionamento;
+
     public $condicao;
+
     public $predio_compartilhado_outra_escola;
+
     public $codigo_inep_escola_compartilhada;
+
     public $codigo_inep_escola_compartilhada2;
+
     public $codigo_inep_escola_compartilhada3;
+
     public $codigo_inep_escola_compartilhada4;
+
     public $codigo_inep_escola_compartilhada5;
+
     public $codigo_inep_escola_compartilhada6;
+
     public $agua_potavel_consumo;
+
     public $abastecimento_agua;
+
     public $abastecimento_energia;
+
     public $esgoto_sanitario;
+
     public $destinacao_lixo;
+
     public $tratamento_lixo;
+
     public $alimentacao_escolar_alunos;
+
     public $compartilha_espacos_atividades_integracao;
+
     public $usa_espacos_equipamentos_atividades_regulares;
+
     public $salas_funcionais;
+
     public $salas_gerais;
+
     public $banheiros;
+
     public $laboratorios;
+
     public $salas_atividades;
+
     public $dormitorios;
+
     public $areas_externas;
+
     public $recursos_acessibilidade;
+
     public $possui_dependencias;
+
     public $numero_salas_utilizadas_dentro_predio;
+
     public $numero_salas_utilizadas_fora_predio;
+
     public $numero_salas_climatizadas;
+
     public $numero_salas_acessibilidade;
+
     public $total_funcionario;
+
     public $atendimento_aee;
+
     public $fundamental_ciclo;
+
     public $organizacao_ensino;
+
     public $instrumentos_pedagogicos;
+
     public $orgaos_colegiados;
+
     public $exame_selecao_ingresso;
+
     public $reserva_vagas_cotas;
+
     public $projeto_politico_pedagogico;
+
     public $localizacao_diferenciada;
+
     public $educacao_indigena;
+
     public $lingua_ministrada;
+
     public $codigo_lingua_indigena;
+
     public $equipamentos;
+
     public $uso_internet;
+
     public $rede_local;
+
     public $equipamentos_acesso_internet;
+
     public $quantidade_computadores_alunos_mesa;
+
     public $quantidade_computadores_alunos_portateis;
+
     public $quantidade_computadores_alunos_tablets;
+
     public $lousas_digitais;
+
     public $televisoes;
+
     public $dvds;
+
     public $aparelhos_de_som;
+
     public $projetores_digitais;
+
     public $acesso_internet;
+
     public $ato_criacao;
+
     public $ato_autorizativo;
+
     public $secretario_id;
+
     public $utiliza_regra_diferenciada;
+
     public $categoria_escola_privada;
+
     public $conveniada_com_poder_publico;
+
     public $mantenedora_escola_privada;
+
     public $cnpj_mantenedora_principal;
+
     public $incluir_curso;
+
     public $excluir_curso;
+
     public $sem_cnpj;
+
     public $com_cnpj;
+
     public $esfera_administrativa;
+
     public $managers_inep_id;
+
     public $managers_role_id;
+
     public $servidor_id;
+
     public $managers_access_criteria_id;
+
     public $managers_link_type_id;
+
     public $managers_chief;
+
     public $managers_email;
+
     public $qtd_secretario_escolar;
+
     public $qtd_auxiliar_administrativo;
+
     public $qtd_apoio_pedagogico;
+
     public $qtd_coordenador_turno;
+
     public $qtd_tecnicos;
+
     public $qtd_bibliotecarios;
+
     public $qtd_segurancas;
+
     public $qtd_auxiliar_servicos_gerais;
+
     public $qtd_nutricionistas;
+
     public $qtd_profissionais_preparacao;
+
     public $qtd_bombeiro;
+
     public $qtd_psicologo;
+
     public $qtd_fonoaudiologo;
+
     public $qtd_vice_diretor;
+
     public $qtd_orientador_comunitario;
+
+    public $qtd_tradutor_interprete_libras_outro_ambiente;
+
     public $iddis;
+
     public $pessoaj_idpes;
+
     public $pessoaj_id;
+
     public bool $pesquisaPessoaJuridica = true;
+
     public $poder_publico_parceria_convenio;
-    public $formas_contratacao_adm_publica_e_outras_instituicoes;
+
     public $nao_ha_funcionarios_para_funcoes;
+
+    public $formas_contratacao_parceria_escola_secretaria_estadual;
+
+    public $formas_contratacao_parceria_escola_secretaria_municipal;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -206,53 +347,8 @@ return new class extends clsCadastro {
         'qtd_psicologo' => 'Psicólogo(a) Escolar',
         'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
         'qtd_vice_diretor' => 'Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira',
-        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social'
-    ];
-
-    public $inputsMatriculasAtendidasPorConvenio = [
-        'qtd_matriculas_atividade_complementar' => 'Atividade complementar',
-        'qtd_atendimento_educacional_especializado' => 'Atendimento educacional especializado',
-        'qtd_ensino_regular_creche_par' => 'Ensino Regular - Creche - Parcial',
-        'qtd_ensino_regular_creche_int' => 'Ensino Regular - Creche - Integral',
-        'qtd_ensino_regular_pre_escola_par' => 'Ensino Regular - Pré-escola - Parcial',
-        'qtd_ensino_regular_pre_escola_int' => 'Ensino Regular - Pré-escola - Integral',
-        'qtd_ensino_regular_ensino_fund_anos_iniciais_par' => 'Ensino Regular - Ensino Fundamental - Anos Iniciais - Parcial',
-        'qtd_ensino_regular_ensino_fund_anos_iniciais_int' => 'Ensino Regular - Ensino Fundamental - Anos Iniciais - Integral',
-        'qtd_ensino_regular_ensino_fund_anos_finais_par' => 'Ensino Regular - Ensino Fundamental - Anos Finais - Parcial',
-        'qtd_ensino_regular_ensino_fund_anos_finais_int' => 'Ensino Regular - Ensino Fundamental - Anos Finais - Integral',
-        'qtd_ensino_regular_ensino_med_anos_iniciais_par' => 'Ensino Regular - Ensino Médio - Parcial',
-        'qtd_ensino_regular_ensino_med_anos_iniciais_int' => 'Ensino Regular - Ensino Médio - Integral',
-        'qtd_edu_especial_classe_especial_par' => 'Educação Especial - Classe especial - Parcial',
-        'qtd_edu_especial_classe_especial_int' => 'Educação Especial - Classe especial - Integral',
-        'qtd_edu_eja_ensino_fund' => 'Educação de Jovens e Adultos (EJA) - Ensino fundamental',
-        'qtd_edu_eja_ensino_med' => 'Educação de Jovens e Adultos (EJA) - Ensino médio',
-        'qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par' => 'Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Parcial',
-        'qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int' => 'Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Integral',
-        'qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par' => 'Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int' => 'Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par' => 'Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par' => 'educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_inte_ensino_med_par' => 'Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Parcial',
-        'qtd_edu_prof_quali_prof_tecinte_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_ensino_med_par' => 'Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Integral',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Parcial',
-        'qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med' => 'Educação Profissional - Educação profissional técnica de nível médio - Subsequente ao ensino médio',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral',
+        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social',
+        'qtd_tradutor_interprete_libras_outro_ambiente' => 'Tradutor e Intérprete de Libras para atendimento em outros ambientes da escola que não seja sala de aula',
     ];
 
     public function Inicializar()
@@ -268,7 +364,7 @@ return new class extends clsCadastro {
         $this->pesquisaPessoaJuridica = true;
 
         if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
-            $pessoaJuridicaId = (int)$_POST['pessoaj_id'];
+            $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
             if (!$this->pessoaJuridicaContemEscola($pessoaJuridicaId)) {
                 return false;
             }
@@ -484,7 +580,8 @@ return new class extends clsCadastro {
         }
 
         $this->poder_publico_parceria_convenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
-        $this->formas_contratacao_adm_publica_e_outras_instituicoes = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
+        $this->formas_contratacao_parceria_escola_secretaria_estadual = transformStringFromDBInArray($this->formas_contratacao_parceria_escola_secretaria_estadual);
+        $this->formas_contratacao_parceria_escola_secretaria_municipal = transformStringFromDBInArray($this->formas_contratacao_parceria_escola_secretaria_municipal);
     }
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
@@ -498,6 +595,7 @@ return new class extends clsCadastro {
                 array_key_exists(key: 'cod_escola', array: $current) &&
                 is_numeric($current['cod_escola'])) {
                 $this->mensagem = "Escola criada, para<a href=\"educar_escola_cad.php?cod_escola={$current['cod_escola']}\"> editar clique aqui.</a>";
+
                 return false;
             }
         }
@@ -523,7 +621,7 @@ return new class extends clsCadastro {
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
-        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int)$obrigarCamposCenso);
+        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int) $obrigarCamposCenso);
         $this->campoOculto(nome: 'pessoaj_id_oculto', valor: $this->pessoaj_id);
         $this->campoOculto(nome: 'pessoaj_id', valor: $this->pessoaj_id);
 
@@ -569,7 +667,7 @@ return new class extends clsCadastro {
                 if ($this->ref_cod_instituicao) {
                     $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
                 } else {
-                    die('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                    exit('Usuário não é do nivel poli-institucional e não possui uma instituição');
                 }
             }
 
@@ -638,7 +736,7 @@ return new class extends clsCadastro {
                 if ($this->ref_cod_instituicao) {
                     $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
                 } else {
-                    die('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                    exit('Usuário não é do nivel poli-institucional e não possui uma instituição');
                 }
             }
 
@@ -703,8 +801,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->orgao_vinculado_escola,
-                    'all_values' => $orgaos
-                ]
+                    'all_values' => $orgaos,
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -712,14 +810,14 @@ return new class extends clsCadastro {
                 null => 'Selecione',
                 0 => 'Não',
                 1 => 'Sim',
-                2 => 'Em tramitação'
+                2 => 'Em tramitação',
             ];
             $options = [
                 'label' => 'Regulamentação/Autorização no conselho ou órgão público de educação',
                 'resources' => $resources,
                 'value' => $this->regulamentacao,
                 'size' => 70,
-                'required' => false
+                'required' => false,
             ];
             $this->inputsHelper()->select(attrName: 'regulamentacao', inputOptions: $options);
 
@@ -746,8 +844,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->mantenedora_escola_privada,
-                    'all_values' => $mantenedoras
-                ]
+                    'all_values' => $mantenedoras,
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -756,7 +854,7 @@ return new class extends clsCadastro {
                 1 => 'Particular',
                 2 => 'Comunitária',
                 3 => 'Confessional',
-                4 => 'Filantrópica'
+                4 => 'Filantrópica',
             ];
 
             $options = [
@@ -764,7 +862,7 @@ return new class extends clsCadastro {
                 'resources' => $resources,
                 'value' => $this->categoria_escola_privada,
                 'required' => false,
-                'size' => 70
+                'size' => 70,
             ];
 
             $this->inputsHelper()->select(attrName: 'categoria_escola_privada', inputOptions: $options);
@@ -773,7 +871,7 @@ return new class extends clsCadastro {
             $resources = [
                 1 => 'Secretaria estadual',
                 2 => 'Secretaria municipal',
-                3 => 'Não possui parceria ou convênio'
+                3 => 'Não possui parceria ou convênio',
             ];
 
             $options = [
@@ -782,31 +880,44 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->poder_publico_parceria_convenio,
-                    'all_values' => $resources
-                ]
+                    'all_values' => $resources,
+                ],
             ];
 
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
-
-            $helperOptions = ['objectName' => 'formas_contratacao_adm_publica_e_outras_instituicoes'];
+            $helperOptions = ['objectName' => 'formas_contratacao_parceria_escola_secretaria_estadual'];
             $resources = [
                 1 => 'Termo de colaboração (Lei nº 13.019/2014)',
                 2 => 'Termo de fomento (Lei nº 13.019/2014)',
                 3 => 'Acordo de cooperação (Lei nº 13.019/2014)',
                 4 => 'Contrato de prestação de serviço',
                 5 => 'Termo de cooperação técnica e financeira',
-                6 => 'Contrato de consórcio público/Convênio de cooperação'
+                6 => 'Contrato de consórcio público/Convênio de cooperação',
             ];
 
             $options = [
-                'label' => 'Formas de contratação entre a Administração Pública e outras instituições',
+                'label' => 'Forma(s) de contratação da parceria ou convênio entre a escola e a <strong>Secretaria estadual</strong> de educação',
                 'size' => 50,
                 'required' => false,
                 'options' => [
-                    'values' => $this->formas_contratacao_adm_publica_e_outras_instituicoes,
-                    'all_values' => $resources
-                ]
+                    'values' => $this->formas_contratacao_parceria_escola_secretaria_estadual,
+                    'all_values' => $resources,
+                ],
+            ];
+
+            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+
+            $helperOptions = ['objectName' => 'formas_contratacao_parceria_escola_secretaria_municipal'];
+
+            $options = [
+                'label' => 'Forma(s) de contratação da parceria ou convênio entre a escola e a <strong>Secretaria municipal</strong> de educação',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->formas_contratacao_parceria_escola_secretaria_municipal,
+                    'all_values' => $resources,
+                ],
             ];
 
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
@@ -815,7 +926,7 @@ return new class extends clsCadastro {
                 '' => 'Selecione',
                 1 => 'Estadual',
                 2 => 'Municipal',
-                3 => 'Estadual e Municipal'
+                3 => 'Estadual e Municipal',
             ];
 
             $this->campoCnpj(nome: 'cnpj_mantenedora_principal', campo: 'CNPJ da mantenedora principal da escola privada', valor: $this->cnpj_mantenedora_principal);
@@ -825,7 +936,7 @@ return new class extends clsCadastro {
             $options = [
                 'label' => 'Secretário escolar',
                 'size' => 50,
-                'required' => false
+                'required' => false,
             ];
             $this->inputsHelper()->simpleSearchPessoa(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -938,7 +1049,7 @@ return new class extends clsCadastro {
             $this->campoTexto(nome: 'autorizacao', campo: 'Autorização', valor: '', tamanhovisivel: 30, tamanhomaximo: 255);
 
             $helperOptions = [
-                'objectName' => 'adicionar_anos_letivos'
+                'objectName' => 'adicionar_anos_letivos',
             ];
 
             $options = [
@@ -947,20 +1058,13 @@ return new class extends clsCadastro {
                 'size' => 50,
                 'value' => '',
                 'options' => [
-                    'all_values' => $this->sugestaoAnosLetivos()
-                ]
+                    'all_values' => $this->sugestaoAnosLetivos(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
             $this->campoOculto(nome: 'incluir_curso', valor: '');
             $this->campoQuebra();
-
-            $this->campoRotulo(nome: 'matriculas_atendidas_convenio', campo: '<b>Número de matrículas atendidas por meio da parceria ou convênio</b>');
-
-            foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $label) {
-                $options = ['label' => $label, 'value' => $this->{$key}, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
-                $this->inputsHelper()->integer(attrName: $key, inputOptions: $options);
-            }
 
             $helperOptions = ['objectName' => 'local_funcionamento'];
             $options = [
@@ -970,7 +1074,7 @@ return new class extends clsCadastro {
                     'all_values' => SelectOptions::locaisFuncionamentoEscola(),
                 ],
                 'size' => 70,
-                'required' => $obrigarCamposCenso
+                'required' => $obrigarCamposCenso,
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -997,7 +1101,7 @@ return new class extends clsCadastro {
                 'resources' => $resources,
                 'value' => $this->predio_compartilhado_outra_escola,
                 'size' => 70,
-                'required' => false
+                'required' => false,
             ];
             $this->inputsHelper()->select(attrName: 'predio_compartilhado_outra_escola', inputOptions: $options);
 
@@ -1006,14 +1110,14 @@ return new class extends clsCadastro {
             $resources = [
                 null => 'Selecione',
                 0 => 'Não',
-                1 => 'Sim'
+                1 => 'Sim',
             ];
             $options = [
                 'label' => 'Fornecimento de água potável para consumo',
                 'resources' => $resources,
                 'value' => $this->agua_potavel_consumo,
                 'required' => $obrigarCamposCenso,
-                'size' => 70
+                'size' => 70,
             ];
             $this->inputsHelper()->select(attrName: 'agua_potavel_consumo', inputOptions: $options);
 
@@ -1060,7 +1164,7 @@ return new class extends clsCadastro {
                         2 => 'Queima',
                         7 => 'Enterra',
                         5 => 'Leva a uma destinação final licenciada pelo poder público',
-                        3 => 'Descarta em outra área',]]];
+                        3 => 'Descarta em outra área', ]]];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
             $helperOptions = ['objectName' => 'tratamento_lixo'];
@@ -1070,8 +1174,8 @@ return new class extends clsCadastro {
                 'required' => $obrigarCamposCenso,
                 'options' => [
                     'values' => $this->tratamento_lixo,
-                    'all_values' => TratamentoLixo::getDescriptiveValues()
-                ]
+                    'all_values' => TratamentoLixo::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1080,7 +1184,7 @@ return new class extends clsCadastro {
                 'value' => $this->alimentacao_escolar_alunos,
                 'required' => $obrigarCamposCenso,
                 'prompt' => 'Selecione',
-                'size' => 70
+                'size' => 70,
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'alimentacao_escolar_alunos', inputOptions: $options);
 
@@ -1089,7 +1193,7 @@ return new class extends clsCadastro {
                 'value' => $this->compartilha_espacos_atividades_integracao,
                 'required' => false,
                 'prompt' => 'Selecione',
-                'size' => 70
+                'size' => 70,
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'compartilha_espacos_atividades_integracao', inputOptions: $options);
 
@@ -1098,7 +1202,7 @@ return new class extends clsCadastro {
                 'value' => $this->usa_espacos_equipamentos_atividades_regulares,
                 'required' => false,
                 'prompt' => 'Selecione',
-                'size' => 70
+                'size' => 70,
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'usa_espacos_equipamentos_atividades_regulares', inputOptions: $options);
 
@@ -1108,7 +1212,7 @@ return new class extends clsCadastro {
                 'value' => $this->possui_dependencias,
                 'required' => $obrigarCamposCenso,
                 'prompt' => 'Selecione',
-                'size' => 40
+                'size' => 40,
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'possui_dependencias', inputOptions: $options);
 
@@ -1119,8 +1223,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->salas_gerais,
-                    'all_values' => SalasGerais::getDescriptiveValues()
-                ]
+                    'all_values' => SalasGerais::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1131,8 +1235,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->salas_funcionais,
-                    'all_values' => SalasFuncionais::getDescriptiveValues()
-                ]
+                    'all_values' => SalasFuncionais::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1143,8 +1247,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->banheiros,
-                    'all_values' => Banheiros::getDescriptiveValues()
-                ]
+                    'all_values' => Banheiros::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1155,8 +1259,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->laboratorios,
-                    'all_values' => Laboratorios::getDescriptiveValues()
-                ]
+                    'all_values' => Laboratorios::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1167,8 +1271,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->salas_atividades,
-                    'all_values' => SalasAtividades::getDescriptiveValues()
-                ]
+                    'all_values' => SalasAtividades::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1179,8 +1283,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->dormitorios,
-                    'all_values' => Dormitorios::getDescriptiveValues()
-                ]
+                    'all_values' => Dormitorios::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1191,8 +1295,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->areas_externas,
-                    'all_values' => AreasExternas::getDescriptiveValues()
-                ]
+                    'all_values' => AreasExternas::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1203,8 +1307,8 @@ return new class extends clsCadastro {
                 'required' => $obrigarCamposCenso,
                 'options' => [
                     'values' => $this->recursos_acessibilidade,
-                    'all_values' => RecursosAcessibilidade::getDescriptiveValues()
-                ]
+                    'all_values' => RecursosAcessibilidade::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1227,8 +1331,8 @@ return new class extends clsCadastro {
                 'required' => $this->validarCamposObrigatoriosCenso(),
                 'options' => [
                     'values' => $this->equipamentos,
-                    'all_values' => Equipamentos::getDescriptiveValues()
-                ]
+                    'all_values' => Equipamentos::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1239,8 +1343,8 @@ return new class extends clsCadastro {
                 'required' => $obrigarCamposCenso,
                 'options' => [
                     'values' => $this->uso_internet,
-                    'all_values' => UsoInternet::getDescriptiveValues()
-                ]
+                    'all_values' => UsoInternet::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1259,8 +1363,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->rede_local,
-                    'all_values' => RedeLocal::getDescriptiveValues()
-                ]
+                    'all_values' => RedeLocal::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1271,8 +1375,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->equipamentos_acesso_internet,
-                    'all_values' => EquipamentosAcessoInternet::getDescriptiveValues()
-                ]
+                    'all_values' => EquipamentosAcessoInternet::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1341,7 +1445,7 @@ return new class extends clsCadastro {
                 'prompt' => 'Selecione',
                 'value' => $this->fundamental_ciclo,
                 'required' => false,
-                'disabled' => !$habilitaFundamentalCiclo
+                'disabled' => !$habilitaFundamentalCiclo,
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'fundamental_ciclo', inputOptions: $options);
 
@@ -1353,13 +1457,13 @@ return new class extends clsCadastro {
 
             $helperOptions = ['objectName' => 'instrumentos_pedagogicos'];
             $options = [
-                'label' => 'Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem',
+                'label' => 'Instrumentos e materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino-aprendizagem',
                 'size' => 50,
                 'required' => false,
                 'options' => [
                     'values' => $this->instrumentos_pedagogicos,
-                    'all_values' => InstrumentosPedagogicos::getDescriptiveValues()
-                ]
+                    'all_values' => InstrumentosPedagogicos::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1370,8 +1474,8 @@ return new class extends clsCadastro {
                 'required' => $obrigarCamposCenso,
                 'options' => [
                     'values' => $this->orgaos_colegiados,
-                    'all_values' => OrgaosColegiados::getDescriptiveValues()
-                ]
+                    'all_values' => OrgaosColegiados::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1392,8 +1496,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->reserva_vagas_cotas,
-                    'all_values' => ReservaVagasCotas::getDescriptiveValues()
-                ]
+                    'all_values' => ReservaVagasCotas::getDescriptiveValues(),
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1401,7 +1505,7 @@ return new class extends clsCadastro {
                 null => 'Selecione',
                 0 => 'Não sei',
                 1 => 'Sim',
-                2 => 'A escola não possui projeto político pedagógico/proposta pedagógica'
+                2 => 'A escola não possui projeto político pedagógico/proposta pedagógica',
             ];
             $options = [
                 'resources' => $resources,
@@ -1434,7 +1538,7 @@ return new class extends clsCadastro {
             $resources = [
                 null => 'Selecione',
                 1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena'
+                2 => 'Língua Indígena',
             ];
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
             $options = ['label' => 'Língua em que o ensino é ministrado',
@@ -1458,8 +1562,8 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->codigo_lingua_indigena,
-                    'all_values' => $resources
-                ]
+                    'all_values' => $resources,
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1469,7 +1573,7 @@ return new class extends clsCadastro {
                 'resources' => $resources,
                 'value' => $this->unidade_vinculada_outra_instituicao,
                 'size' => 70,
-                'required' => false
+                'required' => false,
             ];
             $this->inputsHelper()->select(attrName: 'unidade_vinculada_outra_instituicao', inputOptions: $options);
 
@@ -1477,13 +1581,13 @@ return new class extends clsCadastro {
 
             $options = [
                 'label' => 'Código da IES',
-                'required' => false
+                'required' => false,
             ];
             $helperOptions = [
                 'objectName' => 'codigo_ies',
                 'hiddenInputOptions' => [
-                    'options' => ['value' => $this->codigo_ies]
-                ]
+                    'options' => ['value' => $this->codigo_ies],
+                ],
             ];
             $this->inputsHelper()->simpleSearchIes(attrName: null, inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1539,15 +1643,16 @@ return new class extends clsCadastro {
         }
 
         if (!isset($this->pessoaj_id_oculto) ||
-            !is_int((int)$this->pessoaj_id_oculto)
+            !is_int((int) $this->pessoaj_id_oculto)
         ) {
             $this->mensagem = 'Erro ao selecionar a pessoa jurídica';
+
             return false;
         }
 
         $this->preparaDados();
 
-        $pessoaJuridica = (new clsJuridica((int)$this->pessoaj_id_oculto))->detalhe();
+        $pessoaJuridica = (new clsJuridica((int) $this->pessoaj_id_oculto))->detalhe();
 
         if ($pessoaJuridica === false) {
             throw new \iEducar\Support\Exceptions\Exception('Pessoa jurídica não encontrada');
@@ -1556,7 +1661,7 @@ return new class extends clsCadastro {
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
-        $cod_escola = $this->cadastraEscola((int)$this->pessoaj_id_oculto);
+        $cod_escola = $this->cadastraEscola((int) $this->pessoaj_id_oculto);
 
         if ($cod_escola === false) {
             return false;
@@ -1591,15 +1696,17 @@ return new class extends clsCadastro {
                 return false;
             }
         }
+
         return true;
     }
 
     public function validaCnpjMantenedora(): bool
     {
-        if ((int)$this->dependencia_administrativa === DependenciaAdministrativaEscola::PRIVADA &&
+        if ((int) $this->dependencia_administrativa === DependenciaAdministrativaEscola::PRIVADA &&
             !empty($this->cnpj_mantenedora_principal) &&
             !validaCNPJ($this->cnpj_mantenedora_principal)) {
             $this->mensagem = 'O CNPJ da mantenedora principal é inválido. Favor verificar.';
+
             return false;
         }
 
@@ -1623,6 +1730,7 @@ return new class extends clsCadastro {
 
                 if (!$cadastrou_) {
                     $this->mensagem = 'Cadastro não realizado.<br>';
+
                     return false;
                 }
             }
@@ -1719,15 +1827,12 @@ return new class extends clsCadastro {
         $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
         $obj->esfera_administrativa = $this->esfera_administrativa;
         $obj->nao_ha_funcionarios_para_funcoes = $this->nao_ha_funcionarios_para_funcoes !== null;
-        $obj->iddis = (int)$this->district_id;
+        $obj->iddis = (int) $this->district_id;
         $obj->poder_publico_parceria_convenio = $this->poder_publico_parceria_convenio;
-        $obj->formas_contratacao_adm_publica_e_outras_instituicoes = $this->formas_contratacao_adm_publica_e_outras_instituicoes;
+        $obj->formas_contratacao_parceria_escola_secretaria_estadual = $this->formas_contratacao_parceria_escola_secretaria_estadual;
+        $obj->formas_contratacao_parceria_escola_secretaria_municipal = $this->formas_contratacao_parceria_escola_secretaria_municipal;
 
         foreach ($this->inputsRecursos as $key => $value) {
-            $obj->{$key} = $this->{$key};
-        }
-
-        foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $value) {
             $obj->{$key} = $this->{$key};
         }
 
@@ -1759,6 +1864,7 @@ return new class extends clsCadastro {
 
         if ($cod_escola === false) {
             $this->mensagem = 'Cadastro não realizado<br>';
+
             return false;
         }
 
@@ -1796,7 +1902,8 @@ return new class extends clsCadastro {
         $this->reserva_vagas_cotas = $this->transformArrayInString($this->reserva_vagas_cotas);
         $this->codigo_lingua_indigena = $this->transformArrayInString($this->codigo_lingua_indigena);
         $this->poder_publico_parceria_convenio = $this->transformArrayInString($this->poder_publico_parceria_convenio);
-        $this->formas_contratacao_adm_publica_e_outras_instituicoes = $this->transformArrayInString($this->formas_contratacao_adm_publica_e_outras_instituicoes);
+        $this->formas_contratacao_parceria_escola_secretaria_estadual = $this->transformArrayInString($this->formas_contratacao_parceria_escola_secretaria_estadual);
+        $this->formas_contratacao_parceria_escola_secretaria_municipal = $this->transformArrayInString($this->formas_contratacao_parceria_escola_secretaria_municipal);
     }
 
     private function transformArrayInString($value): ?string
@@ -1862,6 +1969,7 @@ return new class extends clsCadastro {
 
         if ($edita === false) {
             $this->mensagem = 'Edição não efetuada.<br>';
+
             return false;
         }
 
@@ -1901,6 +2009,7 @@ return new class extends clsCadastro {
 
         if ($excluiu === false) {
             $this->mensagem = 'Exclusão não realizada.<br>';
+
             return false;
         }
 
@@ -1962,51 +2071,105 @@ return new class extends clsCadastro {
             $this->validaQuantidadeComputadoresAlunos() &&
             $this->validaQuantidadeEquipamentosEnsino() &&
             $this->validaLinguasIndigenas() &&
-            $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
-            $this->validaMatriculasAtendidasPorConvenio();
+            $this->validaFormasContratacaoParceriaEscolaSecretariaEstadual() &&
+            $this->validaFormasContratacaoParceriaEscolaSecretariaMunicipal();
     }
 
-    protected function validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes(): bool
+    protected function validaFormasContratacaoParceriaEscolaSecretariaEstadual(): bool
     {
-        $formasDeContratacao = $this->formas_contratacao_adm_publica_e_outras_instituicoes;
+        $formasDeContratacao = $this->formas_contratacao_parceria_escola_secretaria_estadual;
 
         $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 4];
-        if (is_array($formasDeContratacao) && in_array(needle: (int)$this->dependencia_administrativa, haystack: $acceptDependenciaAdministrativa, strict: true)) {
+        if (is_array($formasDeContratacao) && in_array(needle: (int) $this->dependencia_administrativa, haystack: $acceptDependenciaAdministrativa, strict: true)) {
 
             $data = array_filter(array: $formasDeContratacao,
-                callback: static fn($forma) => in_array(needle: (int)$forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
+                callback: static fn ($forma) => in_array(needle: (int) $forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
             );
 
             if (count($data) !== 0) {
-                $this->mensagem = 'O campo <b>Formas de contratação entre a Administração Pública e outras instituições</b> foi preenchido incorretamente.';
+                $this->mensagem = 'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação</b> foi preenchido incorretamente.';
+
                 return false;
             }
         }
 
         $categoriaEscolaPrivadaLista = [2, 3, 4];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [5, 6];
-        if (is_array($formasDeContratacao) && in_array(needle: (int)$this->categoria_escola_privada, haystack: $categoriaEscolaPrivadaLista, strict: true)) {
-
+        if (is_array($formasDeContratacao) && in_array(needle: (int) $this->categoria_escola_privada, haystack: $categoriaEscolaPrivadaLista, strict: true)) {
             $data = array_filter(array: $formasDeContratacao,
-                callback: static fn($forma) => !in_array(needle: (int)$forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
+                callback: static fn ($forma) => in_array(needle: (int) $forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
             );
 
-            if (count($data) === 0) {
-                $this->mensagem = 'O campo <b>Formas de contratação entre a Administração Pública e outras instituições</b> foi preenchido incorretamente.';
+            if (count($data) !== 0) {
+                $this->mensagem = 'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação</b> foi preenchido incorretamente.';
+
                 return false;
             }
         }
 
-        if ((int)$this->categoria_escola_privada === 1) {
+        if ($formasDeContratacao && (int) $this->categoria_escola_privada === 1) {
 
             if ($formasDeContratacao === null || !in_array(needle: 4, haystack: $formasDeContratacao)) {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+
                 return false;
             }
 
             if (count($formasDeContratacao) > 1) {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function validaFormasContratacaoParceriaEscolaSecretariaMunicipal(): bool
+    {
+        $formasDeContratacao = $this->formas_contratacao_parceria_escola_secretaria_municipal;
+
+        $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 4];
+        if (is_array($formasDeContratacao) && in_array(needle: (int) $this->dependencia_administrativa, haystack: $acceptDependenciaAdministrativa, strict: true)) {
+
+            $data = array_filter(array: $formasDeContratacao,
+                callback: static fn ($forma) => in_array(needle: (int) $forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
+            );
+
+            if (count($data) !== 0) {
+                $this->mensagem = 'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria municipal de educação</b> foi preenchido incorretamente.';
+
+                return false;
+            }
+        }
+
+        $categoriaEscolaPrivadaLista = [2, 3, 4];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [5, 6];
+        if (is_array($formasDeContratacao) && in_array(needle: (int) $this->categoria_escola_privada, haystack: $categoriaEscolaPrivadaLista, strict: true)) {
+            $data = array_filter(array: $formasDeContratacao,
+                callback: static fn ($forma) => in_array(needle: (int) $forma, haystack: $notAcceptFormasDeContratoInDependenciaAdministrativa, strict: true)
+            );
+
+            if (count($data) !== 0) {
+                $this->mensagem = 'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria municipal de educação</b> foi preenchido incorretamente.';
+
+                return false;
+            }
+        }
+
+        if ($formasDeContratacao && (int) $this->categoria_escola_privada === 1) {
+
+            if ($formasDeContratacao === null || !in_array(needle: 4, haystack: $formasDeContratacao)) {
+                $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+
+                return false;
+            }
+
+            if (count($formasDeContratacao) > 1) {
+                $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+
                 return false;
             }
         }
@@ -2043,6 +2206,7 @@ return new class extends clsCadastro {
 
         if (empty($cidyId)) {
             $this->mensagem = 'Cidade não informada';
+
             return false;
         }
 
@@ -2061,6 +2225,7 @@ return new class extends clsCadastro {
 
         if (!$esferaAdministrativaValidator->isValid()) {
             $this->mensagem = $esferaAdministrativaValidator->getMessage();
+
             return false;
         }
 
@@ -2121,7 +2286,7 @@ return new class extends clsCadastro {
     {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
-        $msgDDDInvalido = "O campo: DDD, possui um valor inválido";
+        $msgDDDInvalido = 'O campo: DDD, possui um valor inválido';
         $listDDDInvalidos = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 23, 25, 26, 29, 30, 36, 39, 40, 50, 52, 56, 57, 58, 59, 60, 70, 72, 76, 78, 80, 90];
 
         if (!empty($valorDDD) && empty($valorTelefone)) {
@@ -2136,7 +2301,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!empty($valorDDD) && (strlen((int)$valorDDD) !== 2 || in_array(needle: (int)$valorDDD, haystack: $listDDDInvalidos))) {
+        if (!empty($valorDDD) && (strlen((int) $valorDDD) !== 2 || in_array(needle: (int) $valorDDD, haystack: $listDDDInvalidos))) {
             $this->mensagem = $msgDDDInvalido;
 
             return false;
@@ -2165,6 +2330,7 @@ return new class extends clsCadastro {
     {
         if (str_starts_with(haystack: $inep, needle: '0')) {
             $this->mensagem = "O campo: {$nomeCampo} não pode iniciar com 0.";
+
             return false;
         }
 
@@ -2265,7 +2431,7 @@ return new class extends clsCadastro {
         $options =
             [
                 'resources' => $resources,
-                'required' => false
+                'required' => false,
             ];
         $this->inputsHelper()->select(attrName: 'managers_chief', inputOptions: $options);
 
@@ -2274,28 +2440,25 @@ return new class extends clsCadastro {
 
     /**
      * @param SchoolManager $schoolManager
-     *
      * @return array
      */
     protected function makeRowManagerTable($key, $schoolManager)
     {
         return [
-                $this->managers_inep_id[$key] ?? $schoolManager->employee->inep->number,
-                $this->managers_individual_nome[$key] ?? $schoolManager->individual->real_name,
-                $this->managers_role_id[$key] ?? $schoolManager->role_id,
+            $this->managers_inep_id[$key] ?? $schoolManager->employee->inep->number,
+            $this->managers_individual_nome[$key] ?? $schoolManager->individual->real_name,
+            $this->managers_role_id[$key] ?? $schoolManager->role_id,
             null,
-                $this->managers_chief[$key] ?? (int)$schoolManager->chief,
-                $this->servidor_id[$key] ?? $schoolManager->employee_id,
-                $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
-                $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
-                $this->managers_email[$key] ?? $schoolManager->individual->person->email,
+            $this->managers_chief[$key] ?? (int) $schoolManager->chief,
+            $this->servidor_id[$key] ?? $schoolManager->employee_id,
+            $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
+            $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
+            $this->managers_email[$key] ?? $schoolManager->individual->person->email,
         ];
     }
 
     /**
      * Salva os gestores da escola
-     *
-     * @param $schoolId
      */
     protected function storeManagers($schoolId)
     {
@@ -2355,7 +2518,7 @@ return new class extends clsCadastro {
             ],
             [
                 'servidor_id.max' => 'Informe no máximo 3 Gestores escolares',
-                'managers_inep_id.*.size' => 'O campo: Código INEP do gestor(a) deve conter 12 dígitos'
+                'managers_inep_id.*.size' => 'O campo: Código INEP do gestor(a) deve conter 12 dígitos',
             ]
         );
     }
@@ -2478,8 +2641,8 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
-        if ((int)$this->numero_salas_climatizadas > $totalSalas) {
+        $totalSalas = (int) $this->numero_salas_utilizadas_dentro_predio + (int) $this->numero_salas_utilizadas_fora_predio;
+        if ((int) $this->numero_salas_climatizadas > $totalSalas) {
             $this->mensagem = 'O campo: <b>Número de salas de aula climatizadas</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
 
             return false;
@@ -2497,8 +2660,10 @@ return new class extends clsCadastro {
 
         if (!preg_match(pattern: $pattern, subject: $this->complement)) {
             $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
             return false;
         }
+
         return true;
     }
 
@@ -2510,8 +2675,8 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
-        if ((int)$this->numero_salas_acessibilidade > $totalSalas) {
+        $totalSalas = (int) $this->numero_salas_utilizadas_dentro_predio + (int) $this->numero_salas_utilizadas_fora_predio;
+        if ((int) $this->numero_salas_acessibilidade > $totalSalas) {
             $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
 
             return false;
@@ -2576,7 +2741,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-
         if (is_array($this->orgaos_colegiados) && in_array(needle: OrgaosColegiados::NENHUM, haystack: $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
 
@@ -2602,7 +2766,8 @@ return new class extends clsCadastro {
     {
         if (is_array($this->equipamentos_acesso_internet) && in_array(needle: 2, haystack: $this->equipamentos_acesso_internet) &&
             is_array($this->rede_local) && !in_array(needle: 3, haystack: $this->rede_local)) {
-            $this->mensagem = "O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.";
+            $this->mensagem = 'O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.';
+
             return false;
         }
 
@@ -2619,7 +2784,7 @@ return new class extends clsCadastro {
                 return false;
             }
 
-            if ((int)$this->{$key} > 0) {
+            if ((int) $this->{$key} > 0) {
                 $algumCampoPreenchido = true;
             }
         }
@@ -2629,38 +2794,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção Quantidade de profissionais</b> da aba Recursos.';
-
-        return false;
-    }
-
-    protected function validaMatriculasAtendidasPorConvenio()
-    {
-        if ($this->poder_publico_parceria_convenio === null) {
-            return true;
-        }
-
-        if (!in_array(needle: 1, haystack: $this->poder_publico_parceria_convenio) && !in_array(needle: 2, haystack: $this->poder_publico_parceria_convenio)) {
-            return true;
-        }
-
-        $algumCampoPreenchido = false;
-        foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $label) {
-            if ($this->{$key} == '0') {
-                $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
-
-                return false;
-            }
-
-            if ((int)$this->{$key} > 0) {
-                $algumCampoPreenchido = true;
-            }
-        }
-
-        if ($algumCampoPreenchido) {
-            return true;
-        }
-
-        $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Número de matrículas atendidas por meio da parceria ou convênio</b> da aba <b>Matrículas atendidas por convênio.</b>';
 
         return false;
     }

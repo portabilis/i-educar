@@ -27,7 +27,7 @@ class ComponenteCurricularController extends ApiCoreController
                 '__' . $componenteCurricular['id']
             ] = [
                 'value' => mb_strtoupper($componenteCurricular['nome'], 'UTF-8'),
-                'group' => mb_strtoupper($areaConhecimento, 'UTF-8')
+                'group' => mb_strtoupper($areaConhecimento, 'UTF-8'),
             ];
         }
 

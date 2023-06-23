@@ -3,18 +3,25 @@
 namespace App\Models\View;
 
 use App\Casts\LegacyArray;
+use App\Models\Builders\DisciplineBuilder;
+use App\Models\LegacyModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class Discipline extends Model
+class Discipline extends LegacyModel
 {
     protected $table = 'relatorio.view_componente_curricular';
 
     public $timestamps = false;
 
+    protected string $builder = DisciplineBuilder::class;
+
     protected $casts = [
-      'tipos_base' => LegacyArray::class
+        'tipos_base' => LegacyArray::class,
+    ];
+
+    public array $legacy = [
+        'name' => 'nome',
     ];
 
     protected function workload(): Attribute

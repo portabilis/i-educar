@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyInstitutionBuilder;
 use App\Services\RelocationDate\RelocationDateProvider;
 use App\Traits\HasLegacyDates;
 use DateTime;
@@ -34,6 +35,11 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected $primaryKey = 'cod_instituicao';
 
     /**
+     * Builder dos filtros
+     */
+    protected string $builder = LegacyInstitutionBuilder::class;
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -46,30 +52,25 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         'logradouro',
         'nm_responsavel',
         'nm_instituicao',
-        'orgao_regional'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $dates = [
+        'orgao_regional',
         'data_base_remanejamento',
+        'data_base_transferencia',
+        'data_expiracao_reserva_vaga',
+        'data_base_matricula',
+        'data_fechamento',
         'data_educacenso',
     ];
 
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('ativo', 1);
-    }
+    protected $casts = [
+        'data_base_remanejamento' => 'date',
+        'data_educacenso' => 'date',
+    ];
 
-    /**
-     * @return HasOne
-     */
+    public array $legacy = [
+        'id' => 'cod_instituicao',
+        'name' => 'nm_instituicao',
+    ];
+
     public function generalConfiguration(): HasOne
     {
         return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
@@ -112,12 +113,10 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 
     /**
      * Indica se os campos do Censo são obrigatórios.
-     *
-     * @return bool
      */
     public function isMandatoryCensoFields(): bool
     {
-        return (bool)$this->obrigar_campos_censo;
+        return (bool) $this->obrigar_campos_censo;
     }
 
     protected function id(): Attribute
@@ -130,13 +129,39 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected function allowRegistrationOutAcademicYear(): Attribute
     {
         return Attribute::make(
-            get: fn () => (bool)$this->permitir_matricula_fora_periodo_letivo
+            get: fn () => (bool) $this->permitir_matricula_fora_periodo_letivo
         );
     }
 
-    /**
-     * @return HasMany
-     */
+    protected function address(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => implode(', ', [
+                $this->logradouro,
+                $this->numero,
+                $this->bairro,
+            ]) . ' - ' . $this->cidade . ' - ' . $this->ref_sigla_uf . ' - CEP:' . $this->cep
+        );
+    }
+
+    protected function phone(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->telefone ? '(' . $this->ddd_telefone . ') ' . $this->telefone : '(##) ####-####';
+            }
+        );
+    }
+
+    protected function cellphone(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return '(##) #####-####';
+            }
+        );
+    }
+
     public function schools(): HasMany
     {
         return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
@@ -144,8 +169,6 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 
     /**
      * Regras de avaliação
-     *
-     * @return HasMany
      */
     public function evaluationRules(): HasMany
     {

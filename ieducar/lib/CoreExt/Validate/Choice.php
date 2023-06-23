@@ -16,7 +16,7 @@ class CoreExt_Validate_Choice extends CoreExt_Validate_Abstract
 
         $options['multiple_error'] = [
             'singular' => $options['choice_error'],
-            'plural' => 'As opções "@value" não existem.'
+            'plural' => 'As opções "@value" não existem.',
         ];
 
         return $options;
@@ -56,7 +56,6 @@ class CoreExt_Validate_Choice extends CoreExt_Validate_Abstract
      * Retorna um array de strings ou um valor numérico como string.
      *
      * @param array|int|float $value
-     *
      * @return array|string
      */
     protected function _getStringArray($value)

@@ -45,7 +45,7 @@ class StateController extends ResourceController
         $accessLevel = $request->user()->getLevel();
 
         return [
-            new StateRestrictOperationRule($accessLevel)
+            new StateRestrictOperationRule($accessLevel),
         ];
     }
 
@@ -55,7 +55,7 @@ class StateController extends ResourceController
 
         return [
             new StateRestrictOperationRule($accessLevel),
-            new AddressingStateRule()
+            new AddressingStateRule(),
         ];
     }
 }

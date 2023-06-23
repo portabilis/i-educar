@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 class LegacyPerson extends LegacyModel
 {
     public const CREATED_AT = 'data_cad';
+
     public const UPDATED_AT = 'data_rev';
 
     /**
@@ -32,13 +33,6 @@ class LegacyPerson extends LegacyModel
     /**
      * @var array
      */
-    protected $dates = [
-        'data_cad',
-    ];
-
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nome',
         'data_cad',
@@ -46,11 +40,16 @@ class LegacyPerson extends LegacyModel
         'situacao',
         'origem_gravacao',
         'operacao',
-        'email'
+        'email',
+    ];
+
+    public array $legacy = [
+        'id' => 'idpes',
+        'name' => 'nome',
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function boot()
     {
@@ -79,7 +78,7 @@ class LegacyPerson extends LegacyModel
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () =>  $this->nome
+            get: fn () => $this->nome
         );
     }
 
@@ -90,25 +89,34 @@ class LegacyPerson extends LegacyModel
         );
     }
 
-    /**
-     * @return HasMany
-     */
-    public function phone(): HasMany
+    protected function realName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (empty($this->individual->social_name)) {
+                    return $this->nome;
+                }
+
+                return $this->individual->social_name;
+            }
+        );
+    }
+
+    public function phones(): HasMany
     {
         return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes');
     }
 
-    /**
-     * @return HasOne
-     */
+    public function phone(): HasOne
+    {
+        return $this->hasOne(LegacyPhone::class, 'idpes', 'idpes');
+    }
+
     public function individual(): HasOne
     {
         return $this->hasOne(LegacyIndividual::class, 'idpes', 'idpes');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function deficiencies(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -121,17 +129,11 @@ class LegacyPerson extends LegacyModel
         );
     }
 
-    /**
-     * @return HasOne
-     */
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class, 'cod_servidor', 'idpes');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function considerableDeficiencies(): BelongsToMany
     {
         return $this->deficiencies()->where('desconsidera_regra_diferenciada', false);

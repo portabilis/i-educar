@@ -2,7 +2,8 @@
 
 use App\Models\LegacyRace;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -32,11 +33,17 @@ return new class extends clsListagem {
     public $__offset;
 
     public $cod_raca;
+
     public $idpes_exc;
+
     public $idpes_cad;
+
     public $nm_raca;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -46,11 +53,11 @@ return new class extends clsListagem {
         $this->__titulo = 'Raça - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos(coluna: [
-            'Raça'
+            'Raça',
         ]);
 
         // outros Filtros
@@ -58,12 +65,11 @@ return new class extends clsListagem {
 
         // Paginador
         $this->__limite = 20;
-        $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
+        $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->__limite - $this->__limite : 0;
 
-        $query =  LegacyRace::query()
+        $query = LegacyRace::query()
             ->where(column: 'ativo', operator: true)
             ->orderBy(column: 'nm_raca', direction: 'ASC');
-
 
         if (is_string(value: $this->nm_raca)) {
             $query->where(column: 'nm_raca', operator: 'ilike', value: '%' . $this->nm_raca . '%');
@@ -85,7 +91,7 @@ return new class extends clsListagem {
                 $registro['data_exclusao_br'] = date(format: 'd/m/Y H:i', timestamp: $registro['data_exclusao_time']);
 
                 $this->addLinhas(linha: [
-                    "<a href=\"educar_raca_det.php?cod_raca={$registro['cod_raca']}\">{$registro['nm_raca']}</a>"
+                    "<a href=\"educar_raca_det.php?cod_raca={$registro['cod_raca']}\">{$registro['nm_raca']}</a>",
                 ]);
             }
         }

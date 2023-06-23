@@ -56,7 +56,7 @@ class TeacherTest extends ViewTestCase
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
-                'race' => 'Raça'
+                'race' => 'Raça',
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -75,6 +75,8 @@ class TeacherTest extends ViewTestCase
                 'employee_postgraduates_complete' => 'Pós-Graduações concluídas',
                 'continuing_education_course' => 'Outros cursos de formação continuada',
                 'employee_graduation_complete' => 'Curso(s) superior(es) concluído(s)',
+                'allocations.funcao_exercida' => 'Função exercida',
+                'allocations.tipo_vinculo' => 'Tipo de vínculo',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',
@@ -88,7 +90,7 @@ class TeacherTest extends ViewTestCase
                 'place.state_abbreviation' => 'Sigla do Estado',
                 'place.state' => 'Estado',
                 'place.country' => 'País',
-            ]
+            ],
         ];
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
     }
@@ -98,12 +100,12 @@ class TeacherTest extends ViewTestCase
         $found = Teacher::query()->person([
             'id',
             'name',
-            'email'
+            'email',
         ])->first();
         $expected = [
             'person.id',
             'person.name',
-            'person.email'
+            'person.email',
         ];
         $this->assertInstanceOf(Teacher::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
@@ -114,7 +116,7 @@ class TeacherTest extends ViewTestCase
         $found = Teacher::query()->disabilities()->first();
         $this->assertInstanceOf(Teacher::class, $found);
         $expected = [
-            'Deficiências'
+            'Deficiências',
         ];
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
@@ -124,7 +126,7 @@ class TeacherTest extends ViewTestCase
         $found = Teacher::query()->phones()->first();
         $this->assertInstanceOf(Teacher::class, $found);
         $expected = [
-            'Telefones'
+            'Telefones',
         ];
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
@@ -142,7 +144,7 @@ class TeacherTest extends ViewTestCase
             'city',
             'state_abbreviation',
             'state',
-            'country'
+            'country',
         ])->first();
         $this->assertInstanceOf(Teacher::class, $found);
         $expected = [
@@ -156,7 +158,7 @@ class TeacherTest extends ViewTestCase
             'Cidade',
             'Sigla do Estado',
             'Estado',
-            'País'
+            'País',
         ];
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
@@ -166,7 +168,7 @@ class TeacherTest extends ViewTestCase
         $found = Teacher::query()->disciplines()->first();
         $this->assertInstanceOf(Teacher::class, $found);
         $expected = [
-            'Disciplinas'
+            'Disciplinas',
         ];
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }

@@ -22,7 +22,7 @@ class MapeamentoDeficienciasAluno
             10 => '26',
             11 => '27',
             12 => '28',
-            13 => '29'
+            13 => '29',
         ];
     }
 }

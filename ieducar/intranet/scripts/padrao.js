@@ -158,34 +158,8 @@ function formataCEP(campo, e)
 
 function formataCPF(campo, e)
 {
-  if (typeof window.event != 'undefined') {
-    if (window.event.keyCode != 46) {
-      if ((campo.value.length == 3) || (campo.value.length == 7)) {
-        campo.value += '.';
-      }
-    }
-
-    if (window.event.keyCode != 45) {
-      if (campo.value.length == 11) {
-        campo.value += '-';
-      }
-    }
-  }
-  else {
-    if (e.which != 8) {
-      if (e.which != 46) {
-        if ((campo.value.length == 3) || (campo.value.length == 7)) {
-          campo.value += '.';
-        }
-      }
-
-      if (e.which != 45) {
-        if (campo.value.length == 11) {
-          campo.value += '-';
-        }
-      }
-    }
-  }
+  cpf = campo.value.replace(/[^\d]/g, "");
+  campo.value = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 
 function formataIdFederal(campo, e)

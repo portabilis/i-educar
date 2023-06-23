@@ -5,7 +5,7 @@ namespace iEducar\Modules\Stages\Exceptions;
 class StagesNotInformedByTeacherException extends MissingStagesException
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function getExceptionCode()
     {

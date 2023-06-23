@@ -51,9 +51,6 @@ class LegacyUser extends DefaultUser
         );
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function type(): BelongsTo
     {
         return $this->belongsTo(LegacyUserType::class, 'ref_cod_tipo_usuario');
@@ -67,5 +64,10 @@ class LegacyUser extends DefaultUser
     public function deletedByEmployee(): BelongsTo
     {
         return $this->belongsTo(LegacyEmployee::class, 'ref_funcionario_exc');
+    }
+
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
     }
 }

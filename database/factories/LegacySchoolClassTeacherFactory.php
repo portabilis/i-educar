@@ -16,19 +16,17 @@ class LegacySchoolClassTeacherFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'ano' => now()->year,
-            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
-            'turma_id' => LegacySchoolClassFactory::new()->create(),
+            'instituicao_id' => fn () => LegacyInstitutionFactory::new()->current(),
+            'turma_id' => fn () => LegacySchoolClassFactory::new()->create(),
             'servidor_id' => EmployeeFactory::new()->create(),
             'funcao_exercida' => 1,
             'tipo_vinculo' => 2,
-            'turno_id' => LegacyPeriodFactory::new()->create()
+            'turno_id' => fn () => LegacyPeriodFactory::new()->create(),
         ];
     }
 }

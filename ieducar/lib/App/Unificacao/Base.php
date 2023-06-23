@@ -6,13 +6,21 @@ use Illuminate\Support\Facades\DB;
 class App_Unificacao_Base
 {
     protected $chavesManterPrimeiroVinculo = [];
+
     protected $chavesManterTodosVinculos = [];
+
     protected $chavesDeletarDuplicados = [];
+
     protected $triggersNecessarias = [];
+
     protected $codigoUnificador;
+
     protected $codigosDuplicados;
+
     protected $codPessoaLogada;
+
     protected $db;
+
     protected $unificationId;
 
     /**
@@ -192,10 +200,6 @@ class App_Unificacao_Base
 
     /**
      * Grava log das tabelas alteradas pela unificação
-     *
-     * @param $oldKeys
-     * @param $table
-     * @param $columnKey
      */
     private function storeLogOldDataByKeys($oldKeys, $table, $columnKey)
     {
@@ -218,9 +222,6 @@ class App_Unificacao_Base
     /**
      * Retorna dados da tabela de acordo com a chave informada
      *
-     * @param $table
-     * @param $key
-     * @param $value
      *
      * @return \Illuminate\Support\Collection
      */
@@ -229,12 +230,12 @@ class App_Unificacao_Base
         if (Schema::hasTable($table)) {
             return DB::table($table)->whereIn($key, [$value])->get();
         }
+
         return collect();
     }
 
     /**
      * @param $tableName string
-     *
      * @return string
      */
     private function buildSqlExtraBeforeUnification(string $tableName)

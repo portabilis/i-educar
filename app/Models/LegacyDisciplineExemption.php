@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class LegacyDisciplineExemption
  *
  * @property LegacyRegistration $registration
- * @property integer            cod_dispensa
+ * @property int            cod_dispensa
  */
 class LegacyDisciplineExemption extends LegacyModel
 {
@@ -43,7 +43,7 @@ class LegacyDisciplineExemption extends LegacyModel
         'data_exclusao',
         'observacao',
         'cod_dispensa',
-        'batch'
+        'batch',
     ];
 
     public array $legacy = [
@@ -56,44 +56,32 @@ class LegacyDisciplineExemption extends LegacyModel
         'observation' => 'observacao',
         'created_at' => 'data_cadastro',
         'deleted_at' => 'data_exclusao',
-        'active' => 'ativo'
+        'active' => 'ativo',
     ];
 
-    protected $dates = [
-        'data_exclusao'
+    protected $casts = [
+        'updated_at' => 'date:d/m/Y H:i:s',
+        'data_exclusao' => 'datetime',
     ];
-
-    protected $casts = ['updated_at' => 'date:d/m/Y H:i:s'];
 
     /**
      * Relação com a matrícula.
-     *
-     * @return BelongsTo
      */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function type(): BelongsTo
     {
         return $this->belongsTo(LegacyExemptionType::class, 'ref_cod_tipo_dispensa');
     }
 
-    /**
-     * @return HasMany
-     */
     public function stages(): HasMany
     {
         return $this->hasMany(LegacyExemptionStage::class, 'ref_cod_dispensa', 'cod_dispensa');
@@ -106,8 +94,6 @@ class LegacyDisciplineExemption extends LegacyModel
 
     /**
      * @param Builder $query
-     *
-     * @return Builder
      */
     public function scopeActive($query): Builder
     {

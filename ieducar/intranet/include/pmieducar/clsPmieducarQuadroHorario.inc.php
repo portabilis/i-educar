@@ -5,12 +5,19 @@ use iEducar\Legacy\Model;
 class clsPmieducarQuadroHorario extends Model
 {
     public $cod_quadro_horario;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_turma;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ano;
 
     public function __construct($cod_quadro_horario = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_turma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ano = null)

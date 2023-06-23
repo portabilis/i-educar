@@ -46,7 +46,7 @@ class QueryFactory
                     $tmpValues[':' . $key . '_' . $k] = $v;
                 }
 
-                $query = str_replace(':' . $key, join(', ', array_keys($tmpValues)), $query);
+                $query = str_replace(':' . $key, implode(', ', array_keys($tmpValues)), $query);
 
                 $values += $tmpValues;
             } else {

@@ -16,17 +16,16 @@ class LegacyDisciplineFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'institution_id' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
-            'knowledge_area_id' => LegacyKnowledgeAreaFactory::new()->unique()->make(),
+            'institution_id' => fn () => LegacyInstitutionFactory::new()->current(),
+            'knowledge_area_id' => fn () => LegacyKnowledgeAreaFactory::new()->unique()->make(),
             'name' => $this->faker->colorName,
             'abbreviation' => $this->faker->hexColor,
-            'tipo_base' => 0
+            'tipo_base' => 0,
+            'codigo_educacenso' => 99,
         ];
     }
 }

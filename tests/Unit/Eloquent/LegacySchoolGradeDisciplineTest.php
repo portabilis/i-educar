@@ -4,6 +4,7 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacySchoolGradeDiscipline;
+use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Tests\EloquentTestCase;
 
 class LegacySchoolGradeDisciplineTest extends EloquentTestCase
@@ -12,9 +13,6 @@ class LegacySchoolGradeDisciplineTest extends EloquentTestCase
         'discipline' => LegacyDiscipline::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchoolGradeDiscipline::class;
@@ -24,8 +22,17 @@ class LegacySchoolGradeDisciplineTest extends EloquentTestCase
     {
         return [
             'id' => 'ref_cod_disciplina',
-            'workload' => 'carga_horaria'
+            'workload' => 'carga_horaria',
         ];
+    }
+
+    public function setUp(): void
+    {
+        $this->factoryModifier = function (LegacySchoolGradeDisciplineFactory $factory) {
+            return $factory->withLegacyDefinition();
+        };
+
+        parent::setUp();
     }
 
     /** @test */

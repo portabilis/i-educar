@@ -16,7 +16,7 @@ class PersonFactory extends Factory
         $person = LegacyPersonFactory::new()->create();
         LegacyIndividualFactory::new()->create([
             'idpes' => $person->idpes,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
 
         $instance = new $this->model();

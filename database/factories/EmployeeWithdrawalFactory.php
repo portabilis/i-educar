@@ -16,18 +16,16 @@ class EmployeeWithdrawalFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'ref_cod_servidor' => EmployeeFactory::new()->create(),
             'sequencial' => $this->faker->randomDigitNotZero(),
-            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
             'ref_cod_motivo_afastamento' => WithdrawalReasonFactory::new()->create(),
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_exc' => LegacyUserFactory::new()->create(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
             'data_retorno' => now(),
             'data_saida' => now(),
         ];

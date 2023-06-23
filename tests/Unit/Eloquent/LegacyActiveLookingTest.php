@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class LegacyActiveLookingTest extends EloquentTestCase
 {
     public $relations = [
-        'registration' =>  LegacyRegistration::class,
+        'registration' => LegacyRegistration::class,
     ];
 
     /**

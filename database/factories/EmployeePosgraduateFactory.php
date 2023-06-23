@@ -16,14 +16,12 @@ class EmployeePosgraduateFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'employee_id' => EmployeeFactory::new()->create(),
-            'entity_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'entity_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'type_id' => $this->faker->randomDigitNotZero(),
             'area_id' => $this->faker->randomDigitNotZero(),
             'completion_year' => now()->year,

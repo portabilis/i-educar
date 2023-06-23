@@ -18,7 +18,6 @@ class clsPermissoes
      * @param string $str_pagina_redirecionar         Caminho para o qual a requisição será encaminhada caso o usuário não tenha privilégios suficientes para a operação de cadastro
      * @param bool   $super_usuario                   TRUE para verificar se o usuário é super usuário
      * @param bool   $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
-     *
      * @return bool|void
      */
     public function permissao_cadastra(
@@ -55,11 +54,8 @@ class clsPermissoes
      * @param string $str_pagina_redirecionar         Caminho para o qual a requisição será encaminhada caso o usuário não tenha privilégios suficientes para a operação de cadastro
      * @param bool   $super_usuario                   TRUE para verificar se o usuário é super usuário
      * @param bool   $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
-     *
      * @param int    $int_processo_ap                 Identificador de processo
-     *
      * @return bool|void
-     *
      */
     public function permissao_excluir(
         $int_processo_ap,
@@ -93,7 +89,6 @@ class clsPermissoes
      * - 8: Biblioteca
      *
      * @param int $int_idpes_usuario
-     *
      * @return bool|int Retorna FALSE caso o usuário não exista
      */
     public function nivel_acesso($int_idpes_usuario)
@@ -116,7 +111,6 @@ class clsPermissoes
      * vinculado.
      *
      * @param int $int_idpes_usuario
-     *
      * @return bool|int Retorna FALSE caso o usuário não exista
      */
     public function getInstituicao($int_idpes_usuario)
@@ -135,7 +129,6 @@ class clsPermissoes
      * Retorna o código identificador da escola ao qual o usuário está vinculado.
      *
      * @param int $int_idpes_usuario
-     *
      * @return bool|int Retorna FALSE caso o usuário não exista
      */
     public function getEscola($int_idpes_usuario)
@@ -154,7 +147,6 @@ class clsPermissoes
      * Retorna lista de código identificador da escola ao qual o usuário está vinculado.
      *
      * @param int $int_idpes_usuario
-     *
      * @return bool|array Retorna FALSE caso o usuário não exista
      */
     public function getEscolas($int_idpes_usuario)
@@ -173,7 +165,6 @@ class clsPermissoes
      * Retorna um array associativo com os códigos identificadores da escola e
      * da instituição ao qual o usuário está vinculado.
      *
-     * @param $int_idpes_usuario
      *
      * @return array|bool Retorna FALSE caso o usuário não exista
      */
@@ -185,7 +176,7 @@ class clsPermissoes
         if ($detalhe_usuario) {
             return [
                 'instituicao' => $detalhe_usuario['ref_cod_instituicao'],
-                'escola' => $detalhe_usuario['ref_cod_escola']
+                'escola' => $detalhe_usuario['ref_cod_escola'],
             ];
         }
 
@@ -201,7 +192,6 @@ class clsPermissoes
      * o usuário está vinculado.
      *
      * @param int $int_idpes_usuario
-     *
      * @return array|int Retorna o inteiro "0" caso o usuário não esteja vinculado
      *                   a uma biblioteca
      */

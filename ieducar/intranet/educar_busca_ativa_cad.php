@@ -9,18 +9,26 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $id;
+
     public $ref_cod_matricula;
+
     public $ref_cod_aluno;
+
     public $data_inicio;
+
     public $data_fim;
+
     public $ativo;
+
     public $observacoes;
+
     public $resultado_busca_ativa;
 
     public function __construct()
@@ -31,6 +39,7 @@ return new class extends clsCadastro {
 
         if ($user->isLibrary()) {
             $this->simpleRedirect(url: '/intranet/index.php');
+
             return false;
         }
 
@@ -92,7 +101,7 @@ return new class extends clsCadastro {
             'label' => 'Data de início',
             'placeholder' => 'dd/mm/yyyy',
             'required' => true,
-            'value' => $dataInicio
+            'value' => $dataInicio,
         ]);
 
         $dataFim = $this->data_fim ? (new DateTime(datetime: $this->data_fim))->format(format: 'd/m/Y') : null;
@@ -101,7 +110,7 @@ return new class extends clsCadastro {
             'label' => 'Data de retorno/abandono',
             'placeholder' => 'dd/mm/yyyy',
             'required' => false,
-            'value' => $dataFim
+            'value' => $dataFim,
         ]);
 
         $options = [
@@ -109,7 +118,7 @@ return new class extends clsCadastro {
             'resources' => SelectOptions::activeSearchResultOptions(),
             'value' => $this->resultado_busca_ativa,
             'required' => true,
-            'style'=> null
+            'style' => null,
         ];
 
         $this->inputsHelper()->select(attrName: 'resultado_busca_ativa', inputOptions: $options);
@@ -121,7 +130,7 @@ return new class extends clsCadastro {
             'cols' => 60,
             'rows' => 5,
             'placeholder' => '',
-            'required' => false
+            'required' => false,
         ];
         $this->inputsHelper()->textArea(attrName: 'observacoes', inputOptions: $textAreaSettings);
 
@@ -150,16 +159,19 @@ return new class extends clsCadastro {
         } catch (ValidationException $e) {
             $this->mensagem = $e->validator->errors()->first();
             DB::rollBack();
+
             return false;
         } catch (Exception $e) {
             $this->mensagem = $e->getMessage();
             DB::rollBack();
+
             return false;
         }
         $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 
         if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT) {
             $this->simpleRedirect(url: 'educar_abandono_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
+
             return true;
         }
 
@@ -188,6 +200,7 @@ return new class extends clsCadastro {
         } catch (Exception) {
             DB::rollBack();
             $this->mensagem = 'Exclusão não realizada.';
+
             return false;
         }
 
@@ -212,7 +225,7 @@ return new class extends clsCadastro {
 
     private function buildObjectBeforeStore()
     {
-        if(empty($this->id)){
+        if (empty($this->id)) {
             $legacyActiveLooking = new LegacyActiveLooking();
         } else {
             $legacyActiveLooking = LegacyActiveLooking::find($this->id);
@@ -233,7 +246,7 @@ return new class extends clsCadastro {
                 'data_inicio' => $this->data_inicio,
                 'data_fim' => $this->data_fim,
                 'observacoes' => $this->observacoes,
-                'resultado_busca_ativa' => $this->resultado_busca_ativa
+                'resultado_busca_ativa' => $this->resultado_busca_ativa,
             ]
         );
     }

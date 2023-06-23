@@ -17,13 +17,11 @@ class LegacyRoundingTableFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'instituicao_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'nome' => $this->faker->words(3, true),
             'tipo_nota' => $this->faker->randomElement([1, 2]),
         ];

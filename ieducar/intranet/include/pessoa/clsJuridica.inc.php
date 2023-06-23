@@ -3,14 +3,23 @@
 class clsJuridica
 {
     public $idpes;
+
     public $idpes_cad;
+
     public $idpes_rev;
+
     public $cnpj;
+
     public $fantasia;
+
     public $insc_estadual;
+
     public $capital_social;
+
     public $codUsuario;
+
     public $tabela;
+
     public $schema;
 
     /**
@@ -124,8 +133,8 @@ class clsJuridica
 
             if (is_numeric($this->cnpj)) {
                 $set[] = " cnpj = '{$this->cnpj}' ";
-            }else{
-                $set[] = " cnpj = NULL ";
+            } else {
+                $set[] = ' cnpj = NULL ';
             }
 
             if ($set) {

@@ -14,9 +14,6 @@ class HasDifferentStepsOfChildEducationValidator implements EducacensoValidator
         $this->school = $school;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         $childrenEducationSteps = [1, 2, 3];

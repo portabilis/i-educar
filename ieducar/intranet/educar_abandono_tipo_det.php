@@ -2,31 +2,40 @@
 
 use App\Models\LegacyAbandonmentType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
     public $titulo;
+
     public $cod_abandono_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nome;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
     {
         $this->titulo = 'Abandono Tipo - Detalhe';
 
-        $this->cod_abandono_tipo=$_GET['cod_abandono_tipo'];
+        $this->cod_abandono_tipo = $_GET['cod_abandono_tipo'];
 
         $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->getAttributes();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect(url: 'educar_abandono_tipo_lst.php');
         }
 
@@ -38,11 +47,11 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(detalhe: [ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nome']) {
-            $this->addDetalhe(detalhe: [ 'Motivo Abandono', "{$registro['nome']}"]);
+            $this->addDetalhe(detalhe: ['Motivo Abandono', "{$registro['nome']}"]);
         }
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 950, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_abandono_tipo_cad.php';

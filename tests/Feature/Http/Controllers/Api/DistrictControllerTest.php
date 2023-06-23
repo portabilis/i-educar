@@ -24,7 +24,9 @@ use Tests\ResourceTestCase;
 class DistrictControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/district';
+
     protected string $model = District::class;
+
     protected string $factory = DistrictFactory::class;
 
     #[

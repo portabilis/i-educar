@@ -13,8 +13,8 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
         'tipoNota' => [
             'value' => 1,
             'class' => 'RegraAvaliacao_Model_Nota_TipoValor',
-            'file' => 'RegraAvaliacao/Model/Nota/TipoValor.php'
-        ]
+            'file' => 'RegraAvaliacao/Model/Nota/TipoValor.php',
+        ],
     ];
 
     /**
@@ -58,25 +58,24 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
         return [
             'instituicao' => new CoreExt_Validate_Choice(['choices' => $instituicoes]),
             'nome' => new CoreExt_Validate_String(['min' => 5, 'max' => 50]),
-            'tipoNota' => new CoreExt_Validate_Choice(['choices' => $tipoNotas])
+            'tipoNota' => new CoreExt_Validate_Choice(['choices' => $tipoNotas]),
         ];
     }
 
     /**
      * Arredonda a nota de acordo com a tabela de valores da instância atual.
      *
-     * @param $value
      *
      * @return mixed
      */
-    public function round($value, $tipoNota)
+    public function round($value, $tipoNota, $limitDecimalRound = 1)
     {
         // carrega tabela de arredondamento, caso ainda não tenha sido carregada.
         if (0 == count($this->_tabelaValores)) {
             $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
         }
 
-        $return = Portabilis_Utils_Float::limitDecimal($value, ['limit' => 1]);
+        $return = Portabilis_Utils_Float::limitDecimal($value, ['limit' => $limitDecimalRound ?? 1]);
 
         // Se não houver tabela com valores de arredondamento irá retornar o valor
         if (!count($this->_tabelaValores) > 0) {
@@ -119,11 +118,14 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
             }
         } elseif ($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
             foreach ($this->_tabelaValores as $tabelaValor) {
-                $notaString = strval($return);
-                $notaString = explode('.', $return);
+                $notaString = explode('.', (string) ($return));
 
                 $notaInteira = $notaString[0];
-                $casaDecimalNota = $notaString[1];
+                if (array_key_exists(1, $notaString)) {
+                    $casaDecimalNota = $notaString[1];
+                } else {
+                    $casaDecimalNota = 0;
+                }
 
                 if ($casaDecimalNota == $tabelaValor->nome) {
                     switch ($tabelaValor->get('acao')) {
@@ -175,10 +177,8 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
      * );
      * </code>
      *
-     * @param FormulaMedia_Model_Formula $formula
-     * @param array                      $data
      *
-     * @return TabelaArredondamento_Model_TabelaValor|NULL Retorna NULL caso
+     * @return TabelaArredondamento_Model_TabelaValor|null Retorna NULL caso
      *                                                     nenhuma instância de TabelaArredondamento_Model_TabelaValor corresponda
      *                                                     ao valor esperado
      *
@@ -224,10 +224,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     }
 
     /**
-     * @param FormulaMedia_Model_Formula $formula
-     * @param array                      $values
-     *
-     * @return TabelaArredondamento_Model_TabelaValor|NULL
+     * @return TabelaArredondamento_Model_TabelaValor|null
      */
     protected function _getBestResultFromValuesArray(FormulaMedia_Model_Formula $formula, array $values)
     {
@@ -240,6 +237,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
 
             if (is_null($best)) {
                 $best = $rounded;
+
                 continue;
             }
 

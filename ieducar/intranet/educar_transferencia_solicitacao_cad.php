@@ -4,41 +4,64 @@ use App\Events\TransferEvent;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
 use App\Models\LegacyTransferType;
+use App\Models\LegacyUser;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_transferencia_solicitacao;
+
     public $ref_cod_transferencia_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_matricula_entrada;
+
     public $ref_cod_matricula_saida;
+
     public $observacao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $data_transferencia;
+
     public $data_cancel;
+
     public $ref_cod_matricula;
+
     public $transferencia_tipo;
+
     public $ref_cod_aluno;
+
     public $nm_aluno;
+
     public $escola_destino_externa;
+
     public $estado_escola_destino_externa;
+
     public $municipio_escola_destino_externa;
+
     public $ref_cod_escola;
+
     public $ref_cod_escola_destino;
+
     public $escola_em_outro_municipio;
 
     public function __construct()
     {
         parent::__construct();
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: [
-            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
         ]);
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
-            '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js',
         ]);
     }
 
@@ -135,7 +158,6 @@ return new class extends clsCadastro {
         $this->campoTexto(nome: 'estado_escola_destino_externa', campo: 'Estado da escola ', valor: '', tamanhovisivel: 20, tamanhomaximo: 50);
         $this->campoTexto(nome: 'municipio_escola_destino_externa', campo: 'Município da escola ', valor: '', tamanhovisivel: 20, tamanhomaximo: 50);
 
-
         $opcoesMotivo = LegacyTransferType::query()
             ->where(column: 'ativo', operator: 1)
             ->where(column: 'ref_cod_instituicao', operator: $ref_cod_instituicao)
@@ -162,11 +184,13 @@ return new class extends clsCadastro {
         if (is_null(value: $det_matricula['data_matricula'])) {
             if (substr(string: $det_matricula['data_cadastro'], offset: 0, length: 10) > $this->data_cancel) {
                 $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
                 return false;
             }
         } elseif (substr(string: $det_matricula['data_matricula'], offset: 0, length: 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
-                return false;
+            $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
+            return false;
         }
 
         $obj->data_cancel = $this->data_cancel;
@@ -227,11 +251,18 @@ return new class extends clsCadastro {
         $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
-            $obj = new clsPmieducarMatricula(cod_matricula: $this->ref_cod_matricula, ref_cod_reserva_vaga: null, ref_ref_cod_escola: null, ref_ref_cod_serie: null, ref_usuario_exc: $this->pessoa_logada);
-            $obj->data_cancel = $this->data_cancel;
-            $obj->edita();
+            $registration = LegacyRegistration::find($this->ref_cod_matricula);
+            $exists = LegacyUser::query()
+                ->whereKey($registration->ref_usuario_cad)
+                ->exists();
 
-            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(columns: ['id'], where: ['matricula_id' => $obj->cod_matricula]);
+            $registration->update([
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'ref_usuario_cad' => $exists ? $registration->ref_usuario_cad : $this->pessoa_logada,
+                'data_cancel' => $this->data_cancel,
+            ]);
+
+            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(columns: ['id'], where: ['matricula_id' => $this->ref_cod_matricula]);
 
             if ($notasAluno && count(value: $notasAluno)) {
                 $notaAlunoId = $notasAluno[0]->get('id');

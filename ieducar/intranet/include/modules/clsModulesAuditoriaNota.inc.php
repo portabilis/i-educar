@@ -5,17 +5,27 @@ use Illuminate\Support\Facades\Auth;
 class clsModulesAuditoriaNota
 {
     public $notaAntiga;
+
     public $notaNova;
+
     public $stringNotaAntiga;
+
     public $stringNotaNova;
+
     public $usuario;
+
     public $operacao;
+
     public $rotina;
+
     public $dataHora;
+
     public $turma;
 
     const OPERACAO_INCLUSAO = 1;
+
     const OPERACAO_ALTERACAO = 2;
+
     const OPERACAO_EXCLUSAO = 3;
 
     public function __construct($notaAntiga, $notaNova, $turmaId)

@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\ReportIssued;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use iEducar\Reports\Contracts\ReportRenderContract;
@@ -48,7 +49,6 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
      *
      * @param array  $payload
      * @param string $response
-     *
      * @return void
      */
     protected function log($payload, $response)
@@ -63,7 +63,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setSettings($config)
     {
@@ -86,17 +86,16 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
      *
      * @param Portabilis_Report_ReportCore $report
      * @param array                        $options
+     * @return string
      *
      * @throws GuzzleException
      * @throws Exception
-     *
-     * @return string
      */
     public function dumps($report, $options = [])
     {
         $options = self::mergeOptions($options, [
             'add_logo_name_arg' => true,
-            'encoding' => 'uncoded'
+            'encoding' => 'uncoded',
         ]);
 
         if ($options['add_logo_name_arg'] and !$this->logo) {
@@ -106,7 +105,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         }
 
         $client = new Client([
-            'http_errors' => false
+            'http_errors' => false,
         ]);
 
         $templateName = $report->templateName();
@@ -123,6 +122,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
                 'parameters' => $data['main'],
                 'orientation' => $data['orientation'] ?? null,
             ];
+
             return app(ReportRenderContract::class)->render($payload);
         } elseif ($report->useJson()) {
             $params['datasource'] = 'json';
@@ -150,10 +150,12 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Token ' . $this->token,
-            ]
+            ],
         ];
 
         $response = $client->request('POST', $this->url, $payload);
+
+        ReportIssued::dispatch($report->useJson() ? 'json' : 'jasper', $templateName, $response->getStatusCode() === 200);
 
         $json = json_decode($response->getBody()->getContents(), true);
 

@@ -44,7 +44,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
 
     protected $_primaryKey = [
         'id' => 'id',
-        'instituicao' => 'instituicao_id'
+        'instituicao' => 'instituicao_id',
     ];
 
     /**
@@ -60,7 +60,6 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     /**
      * Setter.
      *
-     * @param FormulaMedia_Model_FormulaDataMapper $mapper
      *
      * @return RegraAvaliacao_Model_RegraDataMapper
      */
@@ -88,7 +87,6 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     /**
      * Setter.
      *
-     * @param TabelaArredondamento_Model_TabelaDataMapper $mapper
      *
      * @return CoreExt_DataMapper Provê interface fluída
      */
@@ -123,8 +121,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function findFormulaMediaFinal($where = [])
     {
         return $this->_findFormulaMedia(
-            [$this->_getTableColumn('tipoFormula') =>
-                FormulaMedia_Model_TipoFormula::MEDIA_FINAL]
+            [$this->_getTableColumn('tipoFormula') => FormulaMedia_Model_TipoFormula::MEDIA_FINAL]
         );
     }
 
@@ -136,15 +133,13 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function findFormulaMediaRecuperacao($where = [])
     {
         return $this->_findFormulaMedia(
-            [$this->_getTableColumn('tipoFormula')
-                => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO]
+            [$this->_getTableColumn('tipoFormula') => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO]
         );
     }
 
     /**
      * Finder genérico para FormulaMedia_Model_Formula.
      *
-     * @param array $where
      *
      * @return array Array de objetos FormulaMedia_Model_Formula
      */
@@ -157,7 +152,6 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
      * Finder para instâncias de TabelaArredondamento_Model_Tabela. Utiliza
      * o valor de instituição por instâncias que referenciem a mesma instituição.
      *
-     * @param RegraAvaliacao_Model_Regra $instance
      *
      * @return array
      */
@@ -178,7 +172,6 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     /**
      * Setter.
      *
-     * @param RegraAvaliacao_Model_RegraRecuperacaoDataMapper $mapper
      *
      * @return CoreExt_DataMapper Provê interface fluída
      */
@@ -210,19 +203,18 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
      * referências a instância RegraAvaliacao_Model_Regra passada como
      * parâmetro.
      *
-     * @param RegraAvaliacao_Model_Regra $instance
      *
      * @return array Um array de instâncias RegraAvaliacao_Model_RegraRecuperacao
      */
     public function findRegraRecuperacao(RegraAvaliacao_Model_Regra $instance)
     {
         $where = [
-      'regraAvaliacao' => $instance->id
-    ];
+            'regraAvaliacao' => $instance->id,
+        ];
 
         $orderby = [
-      'etapasRecuperadas' => 'ASC'
-    ];
+            'etapasRecuperadas' => 'ASC',
+        ];
 
         return $this->getRegraRecuperacaoDataMapper()->findAll(
             [],

@@ -6,19 +6,32 @@ use App\Models\LegacyCalendarNote;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_calendario_anotacao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_anotacao;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $dia;
+
     public $mes;
+
     public $ano;
+
     public $ref_ref_cod_calendario_ano_letivo;
 
     public function Inicializar()
@@ -89,7 +102,7 @@ return new class () extends clsCadastro {
 
         if (!$exists) {
             $obj_dia = new LegacyCalendarDay();
-            $obj_dia->cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
+            $obj_dia->ref_cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
             $obj_dia->mes = $this->mes;
             $obj_dia->dia = $this->dia;
             $obj_dia->ref_usuario_cad = $this->pessoa_logada;
@@ -161,6 +174,7 @@ return new class () extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

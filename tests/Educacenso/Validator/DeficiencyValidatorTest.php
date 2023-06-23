@@ -30,6 +30,7 @@ class DeficiencyValidatorTest extends TestCase
             Deficiencias::BAIXA_VISAO,
             Deficiencias::SURDEZ,
             Deficiencias::SURDOCEGUEIRA,
+            Deficiencias::VISAO_MONOCULAR,
         ];
 
         $randomIndex = array_rand($forbiddenDeficiencies);

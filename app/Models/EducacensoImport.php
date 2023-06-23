@@ -14,11 +14,11 @@ class EducacensoImport extends Model
         'school',
         'user_id',
         'finished',
-        'registration_date'
+        'registration_date',
     ];
 
-    protected $dates = [
-        'registration_date',
+    protected $casts = [
+        'registration_date' => 'date',
     ];
 
     /**

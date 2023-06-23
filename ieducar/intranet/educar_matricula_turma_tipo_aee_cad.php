@@ -3,9 +3,12 @@
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_matricula;
+
     public $ref_cod_aluno;
+
     public $tipo_atendimento;
 
     public function Inicializar()
@@ -112,8 +115,8 @@ return new class extends clsCadastro {
 
         $arrayEnturmacoes = [];
         foreach ($enturmacoes as $enturmacao) {
-            $turma         = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
-            $turma         = $turma->detalhe();
+            $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
+            $turma = $turma->detalhe();
 
             if ($turma['tipo_atendimento'] == TipoAtendimentoTurma::AEE) {
                 $arrayEnturmacoes[] = $enturmacao;

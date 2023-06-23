@@ -9,10 +9,15 @@ use App\Models\Place;
 trait LegacyAddressingFields
 {
     protected $address;
+
     protected $number;
+
     protected $complement;
+
     protected $neighborhood;
+
     protected $city_id;
+
     protected $postal_code;
 
     protected function loadAddress($person)
@@ -98,7 +103,7 @@ trait LegacyAddressingFields
             'label' => 'Endereço',
             'disabled' => $disabled,
             'value' => $this->address,
-            'required' => $enderecamentoObrigatorio
+            'required' => $enderecamentoObrigatorio,
         ]);
 
         $this->inputsHelper()->integer('number', [
@@ -116,14 +121,14 @@ trait LegacyAddressingFields
             'disabled' => $disabled,
             'placeholder' => 'Complemento',
             'value' => $this->complement,
-            'max_length' => 20
+            'max_length' => 20,
         ]);
 
         $this->inputsHelper()->text('neighborhood', [
             'label' => 'Bairro',
             'disabled' => $disabled,
             'value' => $this->neighborhood,
-            'required' => $enderecamentoObrigatorio
+            'required' => $enderecamentoObrigatorio,
         ]);
 
         $this->inputsHelper()->simpleSearchMunicipio('city', [

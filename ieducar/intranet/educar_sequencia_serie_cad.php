@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\LegacySequenceGrade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -12,43 +14,50 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_serie_origem;
+
     public $ref_serie_destino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
+    public $id;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $ref_cod_instituicao;
+
     public $ref_curso_origem;
+
     public $ref_curso_destino;
 
     public $serie_origem_old;
+
     public $serie_destino_old;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_serie_origem=$_GET['ref_serie_origem'];
-        $this->ref_serie_destino=$_GET['ref_serie_destino'];
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
+        if (is_numeric($this->id)) {
+            $registro = LegacySequenceGrade::query()
+                ->find($this->id);
 
-        if (is_numeric($this->ref_serie_origem) && is_numeric($this->ref_serie_destino)) {
-            $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino);
-            $registro  = $obj->detalhe();
+            $this->ref_serie_origem = $registro['ref_serie_origem'];
+            $this->ref_serie_destino = $registro['ref_serie_destino'];
+
             if ($registro) {
-                $obj_ref_serie_origem = new clsPmieducarSerie($this->ref_serie_origem);
-                $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
-                $this->ref_curso_origem = $det_ref_serie_origem['ref_cod_curso'];
-                $obj_ref_curso_origem = new clsPmieducarCurso($this->ref_curso_origem);
-                $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-                $this->ref_cod_instituicao = $det_ref_curso_origem['ref_cod_instituicao'];
-                $obj_ref_serie_destino = new clsPmieducarSerie($this->ref_serie_destino);
-                $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
-                $this->ref_curso_destino = $det_ref_serie_destino['ref_cod_curso'];
+                $this->ref_curso_origem = $registro->gradeOrigin->ref_cod_curso;
+                $this->ref_cod_instituicao = $registro->gradeOrigin->course->ref_cod_instituicao;
+                $this->ref_curso_destino = $registro->gradeDestiny->ref_cod_curso;
 
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -61,7 +70,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}" : 'educar_sequencia_serie_lst.php';
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_sequencia_serie_det.php?id={$this->id}" : 'educar_sequencia_serie_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
@@ -85,7 +94,7 @@ return new class extends clsCadastro {
         if ($nivel_usuario == 1) {
             $GLOBALS['nivel_usuario_fora'] = 1;
             $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = [ '' => 'Selecione' ];
+            $opcoes = ['' => 'Selecione'];
             $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
             if (is_array($lista)) {
@@ -100,8 +109,8 @@ return new class extends clsCadastro {
             $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
         }
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         // EDITAR
         if ($this->ref_cod_instituicao) {
@@ -121,8 +130,8 @@ return new class extends clsCadastro {
 
         // primary keys
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
             $objTemp = new clsPmieducarSerie();
@@ -161,11 +170,17 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        $obj_sequencia = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino);
-        $det_sequencia = $obj_sequencia->detalhe();
+        $det_sequencia = LegacySequenceGrade::query()
+            ->find($this->id);
+
         if (!$det_sequencia) {
-            $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, null, $this->pessoa_logada, null, null, 1);
-            $cadastrou = $obj->cadastra();
+            $cadastrou = LegacySequenceGrade::create([
+                'ref_serie_origem' => $this->ref_serie_origem,
+                'ref_serie_destino' => $this->ref_serie_destino,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ativo' => 1,
+            ]);
+
             if ($cadastrou) {
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
 
@@ -174,9 +189,14 @@ return new class extends clsCadastro {
                 );
             }
         } else {
-            $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);
-            $editou = $obj->edita();
-            if ($editou) {
+            $det_sequencia->fill([
+                'ref_serie_origem' => $this->ref_serie_origem,
+                'ref_serie_destino' => $this->ref_serie_destino,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ativo' => 1,
+            ]);
+
+            if ($det_sequencia->save()) {
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
                 throw new HttpResponseException(
@@ -195,12 +215,24 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        //echo "clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);";
-        $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);
-        $existe = $obj->existe();
-        if (!$existe) {
-            $editou = $obj->editar($this->serie_origem_old, $this->serie_destino_old);
-            if ($editou) {
+        $obj = LegacySequenceGrade::query()
+            ->whereGradeOrigin($this->ref_serie_origem)
+            ->whereGradeDestiny($this->ref_serie_destino)
+            ->active()
+            ->first();
+
+        if (!$obj) {
+            $objEdicao = LegacySequenceGrade::query()
+                ->active()
+                ->find(request('id'));
+
+            $objEdicao->fill([
+                'ref_serie_origem' => $this->ref_serie_origem,
+                'ref_serie_destino' => $this->ref_serie_destino,
+                'ref_usuario_exc' => $this->pessoa_logada,
+            ]);
+
+            if ($objEdicao->save()) {
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
                 throw new HttpResponseException(
@@ -221,10 +253,10 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
+        $obj = LegacySequenceGrade::query()
+            ->find(request('id'));
 
-        $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
 
             throw new HttpResponseException(

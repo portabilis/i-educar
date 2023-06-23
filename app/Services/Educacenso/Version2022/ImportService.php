@@ -20,7 +20,6 @@ class ImportService extends ImportServiceVersion2020
     /**
      * Retorna a classe responsável por importar o registro da linha
      *
-     * @param $lineId
      *
      * @return RegistroImportInterface
      */

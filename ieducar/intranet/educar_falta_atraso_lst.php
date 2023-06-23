@@ -3,19 +3,32 @@
 use App\Models\LegacyAbsenceDelay;
 use App\Services\EmployeeService;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_cod_escola;
+
     public $ref_ref_cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_servidor;
+
     public $tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -36,7 +49,7 @@ return new class extends clsListagem {
             'Tipo',
             'Dia',
             'Horas',
-            'Minutos'
+            'Minutos',
         ]);
 
         $fisica = new clsPessoaFisica($this->ref_cod_servidor);
@@ -48,12 +61,12 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: [
             'required' => false,
             'show-select' => true,
-            'value' => $this->ref_cod_instituicao
+            'value' => $this->ref_cod_instituicao,
         ]);
         $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: [
             'required' => false,
             'show-select' => true,
-            'value' => $this->ref_cod_escola
+            'value' => $this->ref_cod_escola,
         ]);
 
         // Paginador
@@ -130,7 +143,7 @@ return new class extends clsListagem {
                     'ref_cod_servidor' => $registro['ref_cod_servidor'],
                     'ref_cod_escola' => $registro['ref_cod_escola'],
                     'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
-                ]
+                ],
             ];
 
             $dt = new DateTime($registro['data_falta_atraso']);
@@ -142,10 +155,9 @@ return new class extends clsListagem {
                 $urlHelper->l(text: $tipo, path: $url, options: $options),
                 $urlHelper->l(text: $data, path: $url, options: $options),
                 $urlHelper->l(text: $horas_aux, path: $url, options: $options),
-                $urlHelper->l(text: $minutos_aux, path: $url, options: $options)
+                $urlHelper->l(text: $minutos_aux, path: $url, options: $options),
             ]);
         }
-
 
         $this->addPaginador2(
             strUrl: 'educar_falta_atraso_lst.php',
@@ -159,7 +171,7 @@ return new class extends clsListagem {
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao[] = [
                 'name' => 'Novo',
-                'css-extra' => 'btn-green'
+                'css-extra' => 'btn-green',
             ];
 
             $this->array_botao_url[] = sprintf(

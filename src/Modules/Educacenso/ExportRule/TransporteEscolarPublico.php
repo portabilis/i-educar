@@ -12,14 +12,11 @@ class TransporteEscolarPublico implements EducacensoExportRule
 {
     /**
      * @param Registro60 $registro60
-     *
-     * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro60): RegistroEducacenso
     {
         $arrayTipoMediacao = [
             TipoMediacaoDidaticoPedagogico::PRESENCIAL,
-            TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
         ];
 
         if ($registro60->tipoAtendimentoTurma != TipoAtendimentoTurma::ESCOLARIZACAO ||

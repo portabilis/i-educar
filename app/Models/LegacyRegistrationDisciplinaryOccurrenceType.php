@@ -36,7 +36,7 @@ class LegacyRegistrationDisciplinaryOccurrenceType extends LegacyModel
         'data_exclusao',
         'ativo',
         'visivel_pais',
-        'updated_at'
+        'updated_at',
     ];
 
     public function registration(): BelongsTo

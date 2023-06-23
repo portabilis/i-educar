@@ -2,22 +2,38 @@
 
 class calendario
 {
-    public $meses = [ 1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro' ];
+    public $meses = [1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'];
+
     public $meses_dias;
+
     public $time;
+
     public $data;
+
     public $data_arr;
+
     public $data_db;
+
     public $dia;
+
     public $mes;
+
     public $mes_wolz;
+
     public $ano;
+
     public $dia_semana;
+
     public $deslocamento_entrada;
+
     public $deslocamento_saida;
+
     public $ultimo_dia;
+
     public $url_default;
+
     public $url_uniao;
+
     public $url_var;
 
     public function __construct($time, $url_default = '#', $url_var = 'time')
@@ -34,7 +50,7 @@ class calendario
         $this->mes_wolz = date('n', $this->time);
         $this->ano = date('Y', $this->time);
 
-        $this->data_arr = [ $this->dia, $this->mes, $this->ano ];
+        $this->data_arr = [$this->dia, $this->mes, $this->ano];
 
         $this->dia_semana = date('w', $this->time);
         $this->deslocamento_entrada = date('w', mktime(0, 0, 0, $this->mes, 1, $this->ano)) - 1;
@@ -95,7 +111,7 @@ class calendario
         $sel_ano_atual_real = date('Y', time());
         // percorre do ano passado ateh 5 anos pra frente
         for ($i = $sel_ano_atual_real - 1; $i < $sel_ano_atual_real + 5; $i++) {
-            $dif_dias = date('L', mktime(0, 0, 0, 1, 1, $i)) ? 31622400: 31536000;
+            $dif_dias = date('L', mktime(0, 0, 0, 1, 1, $i)) ? 31622400 : 31536000;
             $time = $this->time + ($i - $sel_ano_atual) * $dif_dias;
             //echo ( ( $i - $sel_ano_atual ) * $dif_dias ) . " -<br>";
 
@@ -126,7 +142,7 @@ class calendario
         $aux_finalizador = $aux_finalizador + 10 - $this->deslocamento_saida;
 
         $t_aux = 0;
-        for ($aux=$aux_desloc; $aux<=$aux_finalizador; $aux++) {
+        for ($aux = $aux_desloc; $aux <= $aux_finalizador; $aux++) {
             $data = mktime(0, 0, 0, $this->mes, $aux, $this->ano);
             if ($comeco) {
                 $retorno .= "<tr>\n";

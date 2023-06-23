@@ -5,13 +5,21 @@ use iEducar\Legacy\Model;
 class clsPmieducarEscolaSerieDisciplina extends Model
 {
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $ref_cod_disciplina;
+
     public $ativo;
+
     public $carga_horaria;
+
     public $etapas_especificas;
+
     public $etapas_utilizadas;
+
     public $anos_letivos;
+
     public $hora_falta;
 
     public function __construct(
@@ -381,7 +389,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
             $conc = '';
 
             foreach ($disciplinas as $disciplina) {
-                for ($i = 0; $i < sizeof($disciplina); $i++) {
+                for ($i = 0; $i < count($disciplina); $i++) {
                     $disciplina_in .= "{$conc}{$disciplina[$i]}";
                     $conc = ',';
                 }
@@ -402,34 +410,10 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         return false;
     }
 
-    public function setAtivoDisciplinaSerie($ativo)
-    {
-        if (is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_ref_cod_serie) && is_numeric($ativo)) {
-            $db = new clsBanco();
-            $db->Consulta("UPDATE {$this->_tabela} set ativo = '$ativo' WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_cod_disciplina ='{$this->ref_cod_disciplina}'");
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function desativarDisciplinasSerie()
-    {
-        if (is_numeric($this->ref_ref_cod_serie)) {
-            $db = new clsBanco();
-            $db->Consulta("UPDATE {$this->_tabela} set ativo = '0' WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}'");
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function excluirNaoSelecionados(array $listaComponentesSelecionados)
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
-            $componentesSelecionados = join(',', $listaComponentesSelecionados);
+            $componentesSelecionados = implode(',', $listaComponentesSelecionados);
 
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' and ref_cod_disciplina not in ({$componentesSelecionados})");
@@ -443,7 +427,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
     public function existeDependencia(array $listaComponentesSelecionados, bool $exclusao = false)
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
-            $componentesSelecionados = join(',', $listaComponentesSelecionados);
+            $componentesSelecionados = implode(',', $listaComponentesSelecionados);
 
             $condicao = 'NOT IN';
             if ($exclusao) {
@@ -460,33 +444,6 @@ class clsPmieducarEscolaSerieDisciplina extends Model
                                                    WHERE disciplina_dependencia.ref_cod_disciplina {$condicao} ({$componentesSelecionados})
                                                      AND disciplina_dependencia.ref_cod_escola = {$this->_tabela}.ref_ref_cod_escola
                                                      AND disciplina_dependencia.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie))";
-
-            return dbBool($db->CampoUnico($sql));
-        }
-
-        return false;
-    }
-
-    public function existeDispensa(array $listaComponentesSelecionados)
-    {
-        if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
-            $componentesSelecionados = join(',', $listaComponentesSelecionados);
-
-            $db = new clsBanco();
-            $sql = "SELECT EXISTS (SELECT 1
-                                     FROM {$this->_tabela}
-                                    WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}'
-                                      AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'
-                                      AND ref_cod_disciplina NOT IN ({$componentesSelecionados})
-                                      AND EXISTS (SELECT 1
-                                                    FROM pmieducar.dispensa_disciplina
-                                                   WHERE dispensa_disciplina.ref_cod_disciplina NOT IN ({$componentesSelecionados})
-                                                     AND dispensa_disciplina.ref_cod_escola = {$this->_tabela}.ref_ref_cod_escola
-                                                     AND dispensa_disciplina.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie
-                                                     AND dispensa_disciplina.ref_cod_disciplina IN (SELECT ref_cod_disciplina
-                                                                                                      FROM pmieducar.escola_serie_disciplina esd
-                                                                                                     WHERE dispensa_disciplina.ref_cod_escola = esd.ref_ref_cod_escola
-                                                                                                       AND dispensa_disciplina.ref_cod_serie = esd.ref_ref_cod_serie)))";
 
             return dbBool($db->CampoUnico($sql));
         }

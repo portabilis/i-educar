@@ -46,7 +46,6 @@ class Core_View extends clsBase
      * Setter
      *
      * @param string $titulo
-     *
      * @return Core_View Provê interface fluída
      */
     public function setTitulo($titulo)
@@ -70,7 +69,6 @@ class Core_View extends clsBase
      * Setter.
      *
      * @param int $processo
-     *
      * @return Core_View Provê interface fluída
      */
     public function setProcessoAp($processo)

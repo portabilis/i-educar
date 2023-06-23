@@ -12,7 +12,6 @@ class PersonEloquentBuilder extends Builder
 
     /**
      * @param array $columns
-     *
      * @return PersonEloquentBuilder
      */
     public function mother($columns)
@@ -28,7 +27,6 @@ class PersonEloquentBuilder extends Builder
 
     /**
      * @param array $columns
-     *
      * @return PersonEloquentBuilder
      */
     public function father($columns)
@@ -44,7 +42,6 @@ class PersonEloquentBuilder extends Builder
 
     /**
      * @param array $columns
-     *
      * @return PersonEloquentBuilder
      */
     public function guardian($columns)
@@ -88,7 +85,6 @@ class PersonEloquentBuilder extends Builder
 
     /**
      * @param array $columns
-     *
      * @return PersonEloquentBuilder
      */
     public function place($columns)

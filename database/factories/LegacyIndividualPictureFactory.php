@@ -16,13 +16,11 @@ class LegacyIndividualPictureFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'idpes' => LegacyPersonFactory::new()->create(),
+            'idpes' => fn () => LegacyPersonFactory::new()->create(),
             'caminho' => $this->faker->imageUrl(),
         ];
     }

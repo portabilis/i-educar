@@ -16,15 +16,13 @@ class LegacySchoolCourseFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
             'ref_cod_curso' => fn () => LegacyCourseFactory::new()->create(),
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'data_cadastro' => now(),
             'ativo' => 1,
             'autorizacao' => $this->faker->sentence,

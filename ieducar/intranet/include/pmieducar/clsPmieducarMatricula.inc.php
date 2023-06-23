@@ -5,42 +5,70 @@ use iEducar\Legacy\Model;
 class clsPmieducarMatricula extends Model
 {
     public const MODELO_SEMIPRESENCIAL = 0;
+
     public const MODELO_EAD = 1;
+
     public const MODELO_OFF_LINE = 2;
+
     public const MODELO_PRESENCIAL = 3;
 
     public const MODELOS_DE_ENSINO = [
-          self::MODELO_PRESENCIAL => 'Presencial' ,
-          self::MODELO_SEMIPRESENCIAL => 'Semipresencial' ,
-          self::MODELO_EAD => 'EAD' ,
-          self::MODELO_OFF_LINE => 'Off-line' ,
+        self::MODELO_PRESENCIAL => 'Presencial',
+        self::MODELO_SEMIPRESENCIAL => 'Semipresencial',
+        self::MODELO_EAD => 'EAD',
+        self::MODELO_OFF_LINE => 'Off-line',
     ];
 
     public $cod_matricula;
+
     public $ref_cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $ref_cod_abandono;
+
     public $aprovado;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ano;
+
     public $ultima_matricula;
+
     public $modulo;
+
     public $descricao_reclassificacao;
+
     public $matricula_reclassificacao;
+
     public $formando;
+
     public $ref_cod_curso;
+
     public $semestre;
+
     public $data_matricula;
+
     public $data_cancel;
+
     public $observacoes;
+
     public $turno_pre_matricula;
+
     public $dependencia;
+
     public $modalidade_ensino;
 
     /**
@@ -1216,32 +1244,12 @@ class clsPmieducarMatricula extends Model
         return $resultado;
     }
 
-    public function getFimSequencia()
-    {
-        $db = new clsBanco();
-        $sql = 'SELECT o.ref_serie_destino
-                  FROM pmieducar.sequencia_serie o
-                 WHERE NOT EXISTS (SELECT 1
-                                     FROM pmieducar.sequencia_serie d
-                                    WHERE o.ref_serie_destino = d.ref_serie_origem)';
-
-        $db->Consulta($sql);
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla;
-        }
-
-        return $resultado;
-    }
-
     /**
      * Seta a matricula para abandono e seta a observação passada por parâmetro
      *
-     * @return boolean
+     * @return bool
      *
      * @author lucassch
-     *
      */
     public function cadastraObs($obs, $tipoAbandono)
     {
@@ -1344,19 +1352,6 @@ class clsPmieducarMatricula extends Model
         return false;
     }
 
-    public function aprova_matricula_andamento_curso_sem_avaliacao()
-    {
-        if (is_numeric($this->ref_ref_cod_escola)) {
-            $db = new clsBanco();
-            $consulta = "UPDATE {$this->_tabela} SET aprovado = 1 , ref_usuario_exc = {$this->ref_usuario_exc} , data_exclusao = NOW() WHERE ano = {$this->ano} AND ref_ref_cod_escola = {$this->ref_ref_cod_escola} AND exists (SELECT 1 FROM {$this->_schema}curso c WHERE c.cod_curso = ref_cod_curso)";
-            $db->Consulta($consulta);
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function matriculaAlunoAndamento($aluno, $anoLetivo, $showErrors = true)
     {
         if ($aluno && $anoLetivo) {
@@ -1372,244 +1367,10 @@ class clsPmieducarMatricula extends Model
                 'params' => [$anoLetivo, $aluno],
                 'show_errors' => !$showErrors,
                 'return_only' => 'first-line',
-                'messenger' => ''
+                'messenger' => '',
             ];
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-        }
-
-        return false;
-    }
-
-    public function getTotalAlunosEscola(
-        $cod_escola,
-        $cod_curso,
-        $cod_serie,
-        $ano = null,
-        $semestre = null
-    ) {
-        if (is_numeric($cod_escola) && is_numeric($cod_curso)) {
-            if (!is_numeric($ano)) {
-                $ano = date('Y');
-            }
-
-            if (is_numeric($cod_serie)) {
-                $where = " AND ref_ref_cod_serie = {$cod_serie} ";
-            }
-
-            if (is_numeric($semestre)) {
-                $where .= " AND semestre = {$semestre} ";
-            }
-
-            $select = "SELECT count(1) as total_alunos_serie,
-                              ref_ref_cod_serie as cod_serie,
-                              nm_serie
-                         FROM pmieducar.matricula,
-                              pmieducar.serie
-                        WHERE serie.cod_serie = ref_ref_cod_serie
-                          AND ref_ref_cod_escola = {$cod_escola}
-                          AND serie.ref_cod_curso = {$cod_curso}
-                          AND ano = {$ano}
-                          $where
-                          AND ultima_matricula = 1
-                          AND aprovado IN (1,2,3)
-                          AND matricula.ativo = 1
-                     GROUP BY ref_ref_cod_serie,
-                              ref_ref_cod_escola,
-                              nm_serie";
-
-            $db = new clsBanco();
-            $db->Consulta($select);
-            $total_registros = $db->numLinhas();
-
-            if (!$total_registros) {
-                return false;
-            }
-
-            $resultados = [];
-            $total = 0;
-
-            while ($db->ProximoRegistro()) {
-                $registro = $db->Tupla();
-                $total += $registro['total_alunos_serie'];
-                $resultados[$registro['cod_serie']] = $registro;
-            }
-
-            $array_inicio_sequencias = clsPmieducarMatricula::getInicioSequencia();
-            $db = new clsBanco();
-
-            foreach ($array_inicio_sequencias as $serie_inicio) {
-                $seq_ini = $serie_inicio[0];
-                $seq_correta = false;
-                $series[$cod_serie] = $cod_serie;
-
-                do {
-                    $sql = "SELECT o.ref_serie_origem,
-                                   s.nm_serie,
-                                   o.ref_serie_destino,
-                                   s.ref_cod_curso as ref_cod_curso_origem,
-                                   sd.ref_cod_curso as ref_cod_curso_destino
-                              FROM pmieducar.sequencia_serie o,
-                                   pmieducar.serie s,
-                                   pmieducar.serie sd
-                             WHERE s.cod_serie = o.ref_serie_origem
-                               AND s.cod_serie = $seq_ini
-                               AND sd.cod_serie = o.ref_serie_destino";
-
-                    $db->Consulta($sql);
-                    $db->ProximoRegistro();
-                    $tupla = $db->Tupla();
-                    $seq_ini = $serie_destino = $tupla['ref_serie_destino'];
-                    $series[$tupla['ref_serie_destino']] = $tupla['ref_serie_destino'];
-                    $sql = "SELECT 1
-                              FROM pmieducar.sequencia_serie s
-                             WHERE s.ref_serie_origem = $seq_ini";
-
-                    $true = $db->CampoUnico($sql);
-                } while ($true);
-
-                $obj_serie = new clsPmieducarSerie($serie_destino);
-                $obj_serie->detalhe();
-
-                if ($cod_serie == $serie_destino) {
-                    $seq_correta = true;
-                }
-            }
-
-            if ($series) {
-                $resultados2 = [];
-
-                foreach ($series as $key => $serie) {
-                    if (key_exists($key, $resultados)) {
-                        $resultados[$key]['_total'] = $total;
-                        $resultados2[] = $resultados[$key];
-                    }
-                }
-            }
-
-            return $resultados2;
-        }
-
-        return false;
-    }
-
-    public function getTotalAlunosIdadeSexoEscola(
-        $cod_escola,
-        $cod_curso,
-        $cod_serie,
-        $ano = null,
-        $semestre = null
-    ) {
-        if (is_numeric($cod_escola) && is_numeric($cod_curso)) {
-            if (!is_numeric($ano)) {
-                $ano = date('Y');
-            }
-
-            if (is_numeric($cod_serie)) {
-                $where = " AND ref_ref_cod_serie = {$cod_serie} ";
-            }
-
-            if (is_numeric($semestre)) {
-                $where .= " AND m.semestre = {$semestre} ";
-            }
-
-            $select = "SELECT m.ref_ref_cod_serie as cod_serie,
-                              nm_serie,
-                              COUNT(1) as total_alunos_serie,
-                              COALESCE ( EXTRACT ( YEAR FROM ( age(now(),data_nasc) ) )::text , '-' ) as idade,
-                              f.sexo
-                         FROM pmieducar.aluno a,
-                              pmieducar.matricula m,
-                              cadastro.fisica f,
-                              pmieducar.serie
-                        WHERE a.cod_aluno = m.ref_cod_aluno
-                          AND a.ref_idpes = idpes
-                          AND ref_ref_cod_serie = cod_serie
-                          AND m.ref_ref_cod_escola = $cod_escola
-                          AND ano = $ano
-                          AND ultima_matricula = 1
-                          AND aprovado IN ( 1,2,3)
-                          AND m.ref_cod_curso = $cod_curso
-                          $where
-                     GROUP BY m.ref_ref_cod_serie,
-                              nm_serie,
-                              EXTRACT ( YEAR FROM ( age(now(),data_nasc) ) ),
-                              f.sexo
-                     ORDER BY EXTRACT ( YEAR FROM ( age(now(),data_nasc) ) ),
-                              f.sexo";
-
-            $db = new clsBanco();
-            $db->Consulta($select);
-            $total_registros = $db->numLinhas();
-
-            if (!$total_registros) {
-                return false;
-            }
-
-            $resultados = [];
-            $total = 0;
-
-            while ($db->ProximoRegistro()) {
-                $registro = $db->Tupla();
-                $total += $registro['total_alunos_serie'];
-                $resultados[] = $registro;
-            }
-
-            $array_inicio_sequencias = clsPmieducarMatricula::getInicioSequencia();
-            $db = new clsBanco();
-
-            foreach ($array_inicio_sequencias as $serie_inicio) {
-                $seq_ini = $serie_inicio[0];
-                $seq_correta = false;
-                $series[$cod_serie] = $cod_serie;
-                do {
-                    $sql = "SELECT o.ref_serie_origem,
-                                   s.nm_serie,
-                                   o.ref_serie_destino,
-                                   s.ref_cod_curso as ref_cod_curso_origem,
-                                   sd.ref_cod_curso as ref_cod_curso_destino
-                              FROM pmieducar.sequencia_serie o
-                                   pmieducar.serie s
-                                   pmieducar.serie sd
-                             WHERE s.cod_serie = o.ref_serie_origem
-                               AND s.cod_serie = $seq_ini
-                               AND sd.cod_serie = o.ref_serie_destino";
-
-                    $db->Consulta($sql);
-                    $db->ProximoRegistro();
-                    $tupla = $db->Tupla();
-                    $seq_ini = $serie_destino = $tupla['ref_serie_destino'];
-                    $series[$tupla['ref_serie_destino']] = $tupla['ref_serie_destino'];
-                    $sql = "SELECT 1
-                              FROM pmieducar.sequencia_serie s
-                             WHERE s.ref_serie_origem = $seq_ini";
-
-                    $true = $db->CampoUnico($sql);
-                } while ($true);
-
-                $obj_serie = new clsPmieducarSerie($serie_destino);
-                $obj_serie->detalhe();
-
-                if ($cod_serie == $serie_destino) {
-                    $seq_correta = true;
-                }
-            }
-
-            if ($series) {
-                $resultados2 = [];
-
-                foreach ($series as $key => $serie) {
-                    foreach ($resultados as $key2 => $resultado) {
-                        if ($key == $resultado['cod_serie']) {
-                            $resultados[$key2]['_total'] = $total;
-                            $resultados2[] = $resultados[$key2];
-                            unset($resultados[$key2]);
-                        }
-                    }
-                }
-            }
-
-            return $resultados2;
         }
 
         return false;

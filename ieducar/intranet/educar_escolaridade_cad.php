@@ -2,11 +2,16 @@
 
 use iEducar\Support\View\SelectOptions;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $idesco;
+
     public $descricao;
+
     public $escolaridade;
+
     public $findUsage;
 
     protected function loadAssets()

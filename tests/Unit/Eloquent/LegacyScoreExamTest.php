@@ -12,9 +12,6 @@ class LegacyScoreExamTest extends EloquentTestCase
         'registration' => LegacyRegistration::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyScoreExam::class;

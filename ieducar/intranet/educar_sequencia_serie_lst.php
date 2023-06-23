@@ -1,18 +1,31 @@
 <?php
 
-return new class extends clsListagem {
+use App\Models\LegacySequenceGrade;
 
+return new class extends clsListagem
+{
     public $limite;
+
     public $offset;
+
     public $ref_serie_origem;
+
     public $ref_serie_destino;
+
     public $ref_curso_origem;
+
     public $ref_curso_destino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -20,14 +33,14 @@ return new class extends clsListagem {
         $this->titulo = 'Sequência Enturmação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
             'Curso Origem',
             'Série Origem',
             'Curso Destino',
-            'Série Destino'
+            'Série Destino',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -40,7 +53,7 @@ return new class extends clsListagem {
         // Filtros de Foreign Keys
         if ($nivel_usuario == 1) {
             $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = [ '' => 'Selecione' ];
+            $opcoes = ['' => 'Selecione'];
             $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
             if (is_array($lista)) {
@@ -55,8 +68,8 @@ return new class extends clsListagem {
             $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
         }
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         // EDITAR
         if ($this->ref_cod_instituicao) {
@@ -76,15 +89,15 @@ return new class extends clsListagem {
 
         // primary keys
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
             $objTemp = new clsPmieducarSerie();
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');;
+                    $opcoes[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
                 }
             }
         }
@@ -103,58 +116,39 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
-        $obj_sequencia_serie = new clsPmieducarSequenciaSerie();
-        $obj_sequencia_serie->setOrderby('data_cadastro ASC');
-        $obj_sequencia_serie->setLimite($this->limite, $this->offset);
-
-        $lista = $obj_sequencia_serie->lista(
-            int_ref_serie_origem: $this->ref_serie_origem,
-            int_ref_serie_destino: $this->ref_serie_destino,
-            int_ativo: 1,
-            int_ref_curso_origem: $this->ref_curso_origem,
-            int_ref_curso_destino: $this->ref_curso_destino,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
-
-        $total = $obj_sequencia_serie->_total;
+        $lista = LegacySequenceGrade::query()
+            ->filter([
+                'institution' => $this->ref_cod_instituicao,
+                'grade_origin' => $this->ref_serie_origem,
+                'grade_destiny' => $this->ref_serie_destino,
+                'course_origin' => $this->ref_curso_origem,
+                'course_destiny' => $this->ref_curso_destino,
+            ])
+            ->with([
+                'gradeOrigin:cod_serie,nm_serie,ref_cod_curso',
+                'gradeDestiny:cod_serie,nm_serie,ref_cod_curso',
+                'gradeOrigin.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
+                'gradeDestiny.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
+                'gradeOrigin.course.institution:cod_instituicao,nm_instituicao',
+            ])
+            ->active()
+            ->orderBy('data_cadastro')
+            ->paginate(perPage: $this->limite, pageName: "pagina_{$this->nome}");
+        $total = $lista->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
-                $obj_ref_serie_origem = new clsPmieducarSerie($registro['ref_serie_origem']);
-                $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
-                $serie_origem = $det_ref_serie_origem['nm_serie'];
-                $registro['ref_curso_origem'] = $det_ref_serie_origem['ref_cod_curso'];
-
-                $obj_ref_curso_origem = new clsPmieducarCurso($registro['ref_curso_origem']);
-                $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-                $registro['ref_curso_origem'] = $det_ref_curso_origem['nm_curso'] . (!empty($det_ref_curso_origem['descricao']) ? ' - ' . $det_ref_curso_origem['descricao'] : '');
-                $registro['ref_cod_instituicao'] = $det_ref_curso_origem['ref_cod_instituicao'];
-
-                $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $det_instituicao = $obj_instituicao->detalhe();
-                $registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
-
-                $obj_ref_serie_destino = new clsPmieducarSerie($registro['ref_serie_destino']);
-                $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
-                $serie_destino = $det_ref_serie_destino['nm_serie'];
-                $registro['ref_curso_destino'] = $det_ref_serie_destino['ref_cod_curso'];
-
-                $obj_ref_curso_destino = new clsPmieducarCurso($registro['ref_curso_destino']);
-                $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
-                $registro['ref_curso_destino'] = $det_ref_curso_destino['nm_curso'] . (!empty($det_ref_curso_destino['descricao']) ? ' - ' . $det_ref_curso_destino['descricao'] : '');
-
+                $url = "educar_sequencia_serie_det.php?id={$registro->id}";
                 $lista_busca = [
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_origem']}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$serie_origem}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_destino']}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$serie_destino}</a>"
+                    "<a href=\"{$url}\">{$registro->gradeOrigin->course->name}</a>",
+                    "<a href=\"{$url}\">{$registro->gradeOrigin->name}</a>",
+                    "<a href=\"{$url}\">{$registro->gradeDestiny->course->name}</a>",
+                    "<a href=\"{$url}\">{$registro->gradeDestiny->name}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_cod_instituicao']}</a>";
+                    $lista_busca[] = "<a href=\"{$url}\">{$registro->gradeOrigin->course->institution->name}</a>";
                 }
                 $this->addLinhas($lista_busca);
             }

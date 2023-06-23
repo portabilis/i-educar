@@ -23,26 +23,26 @@ class TeacherFactory extends Factory
         $person = LegacyPersonFactory::new()->create();
         LegacyIndividualFactory::new()->create([
             'idpes' => $person->idpes,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
         EmployeeFactory::new()->create([
-            'cod_servidor' => $person
+            'cod_servidor' => $person,
         ]);
         $school = LegacySchoolFactory::new()->create();
         $grade = LegacyGradeFactory::new()->create();
         LegacySchoolGradeFactory::new()->create([
             'ref_cod_escola' => $school,
-            'ref_cod_serie' => $grade
+            'ref_cod_serie' => $grade,
         ]);
         $course = LegacyCourseFactory::new()->create();
         $schoolClass = LegacySchoolClassFactory::new()->create([
             'ref_ref_cod_serie' => $grade,
             'ref_cod_curso' => $course,
-            'ref_ref_cod_escola' => $school
+            'ref_ref_cod_escola' => $school,
         ]);
         LegacySchoolClassTeacherFactory::new()->create([
             'turma_id' => $schoolClass,
-            'servidor_id' => $person
+            'servidor_id' => $person,
         ]);
         $instance = new $this->model();
 

@@ -17,15 +17,15 @@ class SchoolManagerFactory extends Factory
             'employee_id' => static function () {
                 $individual = LegacyIndividualFactory::new()->create();
                 EmployeeFactory::new()->create([
-                    'id' => $individual->idpes
+                    'id' => $individual->idpes,
                 ]);
 
                 return $individual;
             },
-            'school_id' => static fn () => LegacySchoolFactory::new()->create(),
-            'role_id' => static fn () => ManagerRoleFactory::new()->create(),
-            'access_criteria_id' => static fn () => ManagerAccessCriteriaFactory::new()->create(),
-            'link_type_id' => static fn () => ManagerLinkTypeFactory::new()->create(),
+            'school_id' => fn () => LegacySchoolFactory::new()->create(),
+            'role_id' => fn () => ManagerRoleFactory::new()->current(),
+            'access_criteria_id' => fn () => ManagerAccessCriteriaFactory::new()->current(),
+            'link_type_id' => fn () => ManagerLinkTypeFactory::new()->current(),
         ];
     }
 }

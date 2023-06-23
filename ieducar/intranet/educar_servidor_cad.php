@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeePosgraduate;
 use App\Models\LegacyAbsenceDelay;
@@ -16,28 +17,50 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_servidor;
+
     public $ref_cod_instituicao;
+
     public $ref_idesco;
+
     public $ref_cod_funcao = [];
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao_original;
+
     public $curso_formacao_continuada;
+
     public $complementacao_pedagogica;
+
     public $multi_seriado;
+
     public $tipo_ensino_medio_cursado;
+
     public $matricula = [];
+
     public $cod_servidor_funcao = [];
+
     public $total_horas_alocadas;
+
     public $cod_docente_inep;
+
     public $docente = false;
+
     public $employee_course_id;
+
     public $employee_completion_year;
+
     public $employee_college_id;
 
     public function Inicializar()
@@ -131,15 +154,14 @@ return new class () extends clsCadastro {
                         }
                     }
                 }
-
-                $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
-                $lst_servidor_disciplina = $obj_servidor_disciplina->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
+                $employee = Employee::find($this->cod_servidor, ['cod_servidor']);
+                $lst_servidor_disciplina = $employee->disciplines()->wherePivot('ref_ref_cod_instituicao', $this->ref_cod_instituicao)->get(['id']);
 
                 Session::forget("servant:{$this->cod_servidor}");
 
-                if ($lst_servidor_disciplina) {
+                if ($lst_servidor_disciplina->isNotEmpty()) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
-                        $funcoes[$disciplina['ref_cod_funcao']][$disciplina['ref_cod_curso']][] = $disciplina['ref_cod_disciplina'];
+                        $funcoes[$disciplina->pivot->ref_cod_funcao][$disciplina->pivot->ref_cod_curso][] = $disciplina->id;
                     }
 
                     // Armazena na sessão para permitir a alteração via modal
@@ -239,7 +261,7 @@ return new class () extends clsCadastro {
                 'required' => false,
                 'label_hint' => 'Somente números',
                 'max_length' => 12,
-                'placeholder' => 'INEP'
+                'placeholder' => 'INEP',
             ]
         );
 
@@ -248,7 +270,7 @@ return new class () extends clsCadastro {
             'label' => 'Deficiências',
             'size' => 50,
             'required' => false,
-            'options' => ['value' => null]
+            'options' => ['value' => null],
         ];
 
         $this->inputsHelper()->multipleSearchDeficiencias(
@@ -381,7 +403,7 @@ return new class () extends clsCadastro {
             'label' => 'Tipo de ensino médio cursado',
             'resources' => SelectOptions::tiposEnsinoMedioCursados(),
             'value' => $this->tipo_ensino_medio_cursado,
-            'required' => false
+            'required' => false,
         ];
 
         $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
@@ -404,14 +426,16 @@ return new class () extends clsCadastro {
                     9 => 'Educação do campo',
                     10 => 'Educação ambiental',
                     11 => 'Educação em direitos humanos',
+                    18 => 'Educação bilíngue de surdos',
+                    19 => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
                     12 => 'Gênero e diversidade sexual',
                     13 => 'Direitos de criança e adolescente',
                     14 => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',
                     17 => 'Gestão Escolar',
                     15 => 'Outros',
-                    16 => 'Nenhum'
-                ]
-            ]
+                    16 => 'Nenhum',
+                ],
+            ],
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
@@ -427,7 +451,7 @@ return new class () extends clsCadastro {
             'options' => [
                 'values' => $this->complementacao_pedagogica,
                 'all_values' => $opcoesComplementacaoPedagogica,
-            ]
+            ],
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
@@ -441,7 +465,7 @@ return new class () extends clsCadastro {
 
         $styles = [
             '/vendor/legacy/Cadastro/Assets/Stylesheets/Servidor.css',
-            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
@@ -781,12 +805,13 @@ JS;
                 $listFuncoesCadastradas[] = $cod_servidor_funcao;
             }
         }
-        if (! $existe_funcao_professor) {
+        if (!$existe_funcao_professor) {
             $this->excluiDisciplinas(array_keys($funcoes));
             $this->excluiCursos();
         }
 
         $cursos_servidor = [];
+        $employee = Employee::find($this->cod_servidor, ['cod_servidor']);
 
         if ($existe_funcao_professor) {
             $this->excluiDisciplinas(array_keys($funcoes));
@@ -796,16 +821,18 @@ JS;
                     $cursos_servidor[] = $curso;
 
                     foreach ($disciplinas as $disciplina) {
-                        $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
-                            $disciplina,
-                            $this->ref_cod_instituicao,
-                            $this->cod_servidor,
-                            $curso,
-                            $funcao
-                        );
-
-                        if (! $obj_servidor_disciplina->existe()) {
-                            $obj_servidor_disciplina->cadastra();
+                        $exists = $employee->disciplines()
+                            ->where('id', $disciplina)
+                            ->wherePivot('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+                            ->wherePivot('ref_cod_funcao', $funcao)
+                            ->wherePivot('ref_cod_curso', $curso)
+                            ->exists();
+                        if (!$exists) {
+                            $employee->disciplines()->attach($disciplina, [
+                                'ref_ref_cod_instituicao' => $this->ref_cod_instituicao,
+                                'ref_cod_funcao' => $funcao,
+                                'ref_cod_curso' => $curso,
+                            ]);
                         }
                     }
                 }
@@ -817,26 +844,26 @@ JS;
                 $this->excluiCursos();
 
                 foreach ($cursos_servidor as $curso) {
-                    $obj_curso_servidor = new clsPmieducarServidorCursoMinistra($curso, $this->ref_cod_instituicao, $this->cod_servidor);
-
-                    if (!$obj_curso_servidor->existe()) {
-                        $obj_curso_servidor->cadastra();
+                    $exists = $employee->courses()
+                        ->where('cod_curso', $curso)
+                        ->wherePivot('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+                        ->exists();
+                    if (!$exists) {
+                        $employee->courses()->attach($curso, [
+                            'ref_ref_cod_instituicao' => $this->ref_cod_instituicao,
+                        ]);
                     }
                 }
             }
-
-            $funcoesRemovidas = $funcoes;
-
-            foreach ($listFuncoesCadastradas as $funcao) {
-                unset($funcoesRemovidas[$funcao]);
-            }
-
-            if (count($funcoesRemovidas) > 0) {
-                $this->excluiDisciplinas(array_keys($funcoesRemovidas));
-            }
-
-            $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
         }
+        $funcoesRemovidas = $funcoes;
+        foreach ($listFuncoesCadastradas as $funcao) {
+            unset($funcoesRemovidas[$funcao]);
+        }
+        if (count($funcoesRemovidas) > 0) {
+            $this->excluiDisciplinas(array_keys($funcoesRemovidas));
+        }
+        $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
     }
 
     public function excluiFuncoes()
@@ -875,14 +902,28 @@ JS;
 
     public function excluiDisciplinas($funcao)
     {
-        $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(null, $this->ref_cod_instituicao, $this->cod_servidor);
-        $obj_servidor_disciplina->excluirTodos($funcao);
+        if (is_numeric($this->ref_cod_instituicao) &&
+            is_numeric($this->cod_servidor)) {
+            $employee = Employee::query()->find($this->cod_servidor, ['cod_servidor']);
+            $filter = null;
+            if (is_array($funcao) && count($funcao) && $funcao[0] !== '') {
+                $filter = array_filter($funcao, fn ($item) => ctype_digit((string) $item));
+            }
+            $employee->disciplines()
+                ->wherePivot('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+                ->when($filter, fn ($q) => $q->wherePivotIn('ref_cod_funcao', $filter))
+                ->detach();
+        }
     }
 
     public function excluiCursos()
     {
-        $obj_servidor_curso = new clsPmieducarServidorCursoMinistra(null, $this->ref_cod_instituicao, $this->cod_servidor);
-        $obj_servidor_curso->excluirTodos();
+        if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->cod_servidor)) {
+            $employee = Employee::query()->find($this->cod_servidor, ['cod_servidor']);
+            $employee->courses()
+                ->wherePivot('ref_ref_cod_instituicao', $this->ref_cod_instituicao)
+                ->detach();
+        }
     }
 
     protected function createOrUpdateDeficiencias()
@@ -971,8 +1012,6 @@ JS;
     }
 
     /**
-     * @param $employeeId
-     *
      * @return array|mixed
      */
     protected function fillEmployeeGraduations($employeeId)

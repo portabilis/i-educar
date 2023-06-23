@@ -22,12 +22,9 @@ class LegacyStudentTest extends EloquentTestCase
         'person' => LegacyPerson::class,
         'registrations' => LegacyRegistration::class,
         'inep' => StudentInep::class,
-        'benefits' => LegacyBenefit::class
+        'benefits' => LegacyBenefit::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyStudent::class;
@@ -43,15 +40,20 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testGetGuardianName(): void
     {
-        $join = $this->model->individual->mother->name . ', ' . $this->model->individual->father->name;
-        $expected = match ($this->model->guardianType) {
-            'm' => $this->model->individual->mother->name,
-            'p' => $this->model->individual->father->name,
-            'r' => $this->model->individual->responsible->name,
+        $individual = LegacyIndividualFactory::new()->father()->mother()->guardian()->create();
+        $model = LegacyStudentFactory::new()->create([
+            'ref_idpes' => $individual,
+        ]);
+
+        $join = $model->individual->mother->name . ', ' . $model->individual->father->name;
+        $expected = match ($model->guardianType) {
+            'm' => $model->individual->mother->name,
+            'p' => $model->individual->father->name,
+            'r' => $model->individual->responsible->name,
             'a' => strlen($join) < 3 ? null : $join,
             default => null
         };
-        $this->assertEquals($expected, $this->model->getGuardianName());
+        $this->assertEquals($expected, $model->getGuardianName());
     }
 
     public function testGetGuardianCpf(): void
@@ -76,9 +78,13 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testScopeMale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'M']);
         LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual
+            'ref_idpes' => $individual,
         ]);
         $found = $this->instanceNewEloquentModel()->male()->get();
         $this->assertCount(1, $found);
@@ -86,13 +92,17 @@ class LegacyStudentTest extends EloquentTestCase
 
     public function testScopeFemale(): void
     {
+        LegacyIndividual::query()->update([
+            'sexo' => null,
+        ]);
+
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'F']);
         $student2 = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual
+            'ref_idpes' => $individual,
         ]);
         $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [
             $student2->cod_aluno,
-            $this->model->cod_aluno
+            $this->model->cod_aluno,
         ])->get();
         $this->assertCount(1, $found);
     }

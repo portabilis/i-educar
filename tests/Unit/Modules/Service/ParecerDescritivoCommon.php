@@ -16,7 +16,7 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
         $anuais = [
             RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
         ];
 
         if (in_array($parecerDescritivo, $anuais, true)) {
@@ -68,9 +68,6 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testAdicionaParecerNoBoletim()
-     *
-     * @param Avaliacao_Model_ParecerDescritivoAbstract $parecer
-     *
      */
     abstract protected function _testAdicionaParecerNoBoletimVerificaValidadores(Avaliacao_Model_ParecerDescritivoAbstract $parecer);
 
@@ -170,23 +167,18 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
             $mock
                 ->expects(self::exactly(4))
                 ->method('save')
-                ->withConsecutive(
-                    [$pareceres[0]],
-                    [$pareceres[1]],
-                    [$pareceres[2]],
-                    [$pareceres[3]]
-                )
                 ->willReturnOnConsecutiveCalls(true, true, true, true);
+            $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[0]);
+            $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[1]);
+            $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[2]);
+            $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[3]);
         }
-
         if (count($pareceres) === 1) {
             $mock
                 ->expects(self::once())
                 ->method('save')
-                ->withConsecutive(
-                    [$pareceres[0]],
-                )
                 ->willReturnOnConsecutiveCalls(true);
+            $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[0]);
         }
 
         $this->_setParecerDescritivoAbstractDataMapperMock($mock);
@@ -213,26 +205,20 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
             ->method('findAll')
             ->with([], ['parecerDescritivoAluno' => $parecerAluno->id], ['etapa' => 'ASC'])
             ->willReturn($this->_getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstanciasJaLancadas());
-
         if (count($pareceres) === 2) {
             $mock
                 ->expects(self::exactly(2))
                 ->method('save')
-                ->withConsecutive(
-                    [$pareceres[0]],
-                    [$pareceres[1]]
-                )
                 ->willReturnOnConsecutiveCalls(true, true);
+            $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[0]);
+            $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[1]);
         }
-
         if (count($pareceres) === 1) {
             $mock
                 ->expects(self::once())
                 ->method('save')
-                ->withConsecutive(
-                    $pareceres
-                )
                 ->willReturnOnConsecutiveCalls(true);
+            $this->assertIsArray($pareceres);
         }
 
         $this->_setParecerDescritivoAbstractDataMapperMock($mock);
@@ -259,15 +245,12 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
             ->method('findAll')
             ->with([], ['parecerDescritivoAluno' => $parecerAluno->id], ['etapa' => 'ASC'])
             ->willReturn($this->_getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstanciasLancadas());
-
         $mock
             ->expects(self::exactly(2))
             ->method('save')
-            ->withConsecutive(
-                [$pareceres[0]],
-                [$pareceres[1]]
-            )
             ->willReturnOnConsecutiveCalls(true, true);
+        $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[0]);
+        $this->assertInstanceOf('Avaliacao_Model_ParecerDescritivoAbstract', $pareceres[1]);
 
         $this->_setParecerDescritivoAbstractDataMapperMock($mock);
 

@@ -1,7 +1,9 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_agenda;
+
     public $link;
 
     public function __construct()
@@ -16,7 +18,7 @@ return new class extends clsCadastro {
 
     public function semDesc($data_atual)
     {
-        $diasSemana = [ 'Domingo', 'Segunda Feira', 'Terça Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sabado' ];
+        $diasSemana = ['Domingo', 'Segunda Feira', 'Terça Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sabado'];
 
         return $diasSemana[date(format: 'w', timestamp: strtotime(datetime: $data_atual))];
     }
@@ -68,7 +70,7 @@ return new class extends clsCadastro {
 
         $this->campoData(nome: 'data_fim', campo: 'Data Final', valor: $this->data_fim);
 
-        $this->campoRadio(nome: 'impressora', campo: 'Tipo de Impressora', valor: [ 'Laser', 'Jato de Tinta' ], default: $this->impressora);
+        $this->campoRadio(nome: 'impressora', campo: 'Tipo de Impressora', valor: ['Laser', 'Jato de Tinta'], default: $this->impressora);
 
         if ($this->link) {
             $this->campoRotulo(nome: 'arquivo', campo: 'Arquivo', valor: "<a href='$this->link'>Clique aqui para visualizar</a>");
@@ -87,13 +89,13 @@ return new class extends clsCadastro {
             $data_inicio = urldecode(string: $this->data_inicio);
             $data_inicio = explode(separator: '/', string: $data_inicio);
             $data_inicio = "{$data_inicio[2]}-{$data_inicio[1]}-{$data_inicio[0]}";
-            $where .= "'{$data_inicio} 00:00:00' <= data_inicio AND " ;
+            $where .= "'{$data_inicio} 00:00:00' <= data_inicio AND ";
         }
         if (!empty($this->data_fim)) {
             $data_fim = urldecode(string: $this->data_fim);
             $data_fim = explode(separator: '/', string: $data_fim);
             $data_fim = "{$data_fim[2]}-{$data_fim[1]}-{$data_fim[0]}";
-            $where .= "'{$data_fim} 23:59:59' >= data_fim AND " ;
+            $where .= "'{$data_fim} 23:59:59' >= data_fim AND ";
         }
 
         $compromissos = [];
@@ -119,8 +121,8 @@ return new class extends clsCadastro {
         $db->Consulta(consulta: "SELECT cod_agenda_compromisso, versao FROM agenda_compromisso WHERE ativo = 1 AND ref_cod_agenda = {$this->cod_agenda} AND $where data_fim IS NOT NULL ORDER BY data_inicio ASC ");
 
         while ($db->ProximoRegistro()) {
-            list($cod_comp, $versao) = $db->Tupla();
-            $compromissos[] = [ 'cod' => $cod_comp, 'versao' => $versao ];
+            [$cod_comp, $versao] = $db->Tupla();
+            $compromissos[] = ['cod' => $cod_comp, 'versao' => $versao];
         }
 
         if (count(value: $compromissos)) {
@@ -132,7 +134,7 @@ return new class extends clsCadastro {
                     // inicializacao de variaveis
                     $qtd_tit_copia_desc = 5;
 
-                    list($data_inicio, $data_fim, $titulo, $descricao) = $db->Tupla();
+                    [$data_inicio, $data_fim, $titulo, $descricao] = $db->Tupla();
 
                     // TITULO
                     if ($titulo) {
@@ -157,7 +159,7 @@ return new class extends clsCadastro {
                             $data_ant = substr(string: $data_inicio, offset: 0, length: 10);
                         } else {
                             if ($hora_comp == '00:00') {
-                                $relatorio->novalinha([ date(format: 'd/m/Y', timestamp: strtotime(datetime: $data_inicio))." - $descricao"], 0, 13 * (count(value: explode(separator: "\n", string: $descricao)) + 1), false, 'arial', false, true);
+                                $relatorio->novalinha([date(format: 'd/m/Y', timestamp: strtotime(datetime: $data_inicio))." - $descricao"], 0, 13 * (count(value: explode(separator: "\n", string: $descricao)) + 1), false, 'arial', false, true);
                             } else {
                                 $relatorio->novalinha(texto: ["{$hora_comp} as {$hora_fim} {$disp_titulo}"], deslocamento: 0, altura: 13 * (count(value: explode(separator: "\n", string: $disp_titulo))));
                                 $linhas = count(value: explode(separator: "\n", string: $descricao));
@@ -171,7 +173,7 @@ return new class extends clsCadastro {
                             $data_ant = substr(string: $data_inicio, offset: 0, length: 10);
                         }
                         if ($hora_comp == '00:00') {
-                            $relatorio->novalinha([ date(format: 'd/m/Y', timestamp: strtotime(datetime: $data_inicio))." - $descricao"], 0, 13 + 10 * (strlen(string: $descricao) / 60), false, 'arial', false, true);
+                            $relatorio->novalinha([date(format: 'd/m/Y', timestamp: strtotime(datetime: $data_inicio))." - $descricao"], 0, 13 + 10 * (strlen(string: $descricao) / 60), false, 'arial', false, true);
                         } else {
                             if ($titulo || $descricao) {
                                 $textoLinha = '';
@@ -198,7 +200,7 @@ return new class extends clsCadastro {
             $this->link = $relatorio->fechaPdf();
         }
 
-        return  true;
+        return true;
     }
 
     public function Formular()

@@ -2,6 +2,7 @@
 
 namespace App\Services\Educacenso;
 
+use App\Exceptions\Educacenso\InvalidFileDate;
 use App\Exceptions\Educacenso\InvalidFileYear;
 use App\Jobs\EducacensoImportJob;
 use App\Models\EducacensoImport;
@@ -27,10 +28,6 @@ class HandleFileService
      */
     private $jobs;
 
-    /**
-     * @param ImportService $yearImportService
-     * @param User          $user
-     */
     public function __construct(ImportService $yearImportService, User $user)
     {
         $this->yearImportService = $yearImportService;
@@ -39,8 +36,6 @@ class HandleFileService
 
     /**
      * Processa o arquivo de importação do censo
-     *
-     * @param UploadedFile $file
      */
     public function handleFile(UploadedFile $file)
     {
@@ -59,14 +54,13 @@ class HandleFileService
     /**
      * Cria o processo de importação de uma escola
      *
-     * @param $school
      * @param $year
      */
     public function createImportProcess($school)
     {
         $import = new EducacensoImport();
         $import->year = $this->yearImportService->getYear();
-        $import->school = utf8_encode($this->yearImportService->getSchoolNameByFile($school));
+        $import->school = mb_convert_encoding($this->yearImportService->getSchoolNameByFile($school), 'UTF-8');
         $import->user_id = $this->user->id;
         $import->registration_date = $this->yearImportService->registrationDate;
         $import->finished = false;
@@ -91,6 +85,10 @@ class HandleFileService
     {
         $serviceYear = $this->yearImportService->getYear();
         $line = explode($this->yearImportService::DELIMITER, $school[0]);
+
+        if (is_bool($line[3])) {
+            throw new InvalidFileDate();
+        }
 
         $fileYear = \DateTime::createFromFormat('d/m/Y', $line[3])->format('Y');
 

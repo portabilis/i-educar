@@ -32,7 +32,7 @@ class RemoveDuplicatedLibraryMenu extends Migration
             ->where('process', 598)
             ->update([
                 'process' => 599,
-                'description' => 'Categorias de obras'
+                'description' => 'Categorias de obras',
             ]);
     }
 }

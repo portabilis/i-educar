@@ -5,7 +5,6 @@
  *
  * @param int $num
  * @param int $digitos
- *
  * @return string
  */
 function addLeadingZero($num, $digitos = 2)
@@ -29,9 +28,8 @@ function idFederal2int($str)
     return str_replace(' ', '', ltrim($id_federal, '0'));
 }
 
-
-
-function validaCPF($cpf) {
+function validaCPF($cpf)
+{
     // Extrai somente os números
     $cpf = preg_replace('/[^0-9]/is', '', $cpf);
 
@@ -53,10 +51,9 @@ function validaCPF($cpf) {
             return false;
         }
     }
+
     return true;
 }
-
-
 
 function int2CPF($int)
 {
@@ -74,7 +71,7 @@ function loadJson($file)
 
 function int2CNPJ($int)
 {
-    $int = preg_replace('/[\D]/', '', $int );
+    $int = preg_replace('/[\D]/', '', $int);
     if (strlen($int) < 14) {
         $str = str_repeat('0', 14 - strlen($int)) . $int;
     } else {
@@ -89,7 +86,6 @@ function int2CNPJ($int)
  * Formata um valor numérico em uma representação string de CEP.
  *
  * @param string|int $int
- *
  * @return string
  */
 function int2CEP($int)
@@ -105,10 +101,10 @@ function int2CEP($int)
 
 function limpa_acentos($str_nome)
 {
-    $procura1   = ['á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ç', 'ã', 'õ', 'ô', 'ê'];
+    $procura1 = ['á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ç', 'ã', 'õ', 'ô', 'ê'];
     $substitui1 = ['a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'c', 'a', 'o', 'o', 'e'];
 
-    $procura2   = ['Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Ç', 'Ã', 'Õ', 'Ê', 'Ô'];
+    $procura2 = ['Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Ç', 'Ã', 'Õ', 'Ê', 'Ô'];
     $substitui2 = ['A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'C', 'A', 'O', 'E', 'O'];
 
     $str_nome = str_replace($procura1, $substitui1, $str_nome);
@@ -122,7 +118,6 @@ function limpa_acentos($str_nome)
  * @param string|null $data_original data que será transformada
  * @param bool $h_m           determina se o a data retornada incluirá hora e minuto
  * @param bool $h_m_s         determina se o a data retornada incluirá hora, minuto e segundo
- *
  * @return string
  */
 function dataToBrasil(?string $data_original, bool $h_m = false, bool $h_m_s = false)
@@ -148,7 +143,6 @@ function dataToBrasil(?string $data_original, bool $h_m = false, bool $h_m_s = f
  * Formata a data para o formato do banco
  *
  * @param string $data_original data que será transformada
- *
  * @return string
  *
  * @todo $data_original = NULL sempre será TRUE. Verificar que código chama
@@ -188,7 +182,6 @@ function dataToBanco($data_original, $inicial = null)
  * Formata uma data vinda do postgre
  *
  * @param string $data_original data que será transformada
- *
  * @return string
  */
 function dataFromPgToTime($data_original)
@@ -225,7 +218,6 @@ function dataFromPgToBr($data_original, $formatacao = 'd/m/Y')
  *
  * @param string $text
  * @param bool   $reverse
- *
  * @return string
  *
  * @todo Onde essa função é chamada? Transformação totalmente desnecessária.
@@ -233,9 +225,9 @@ function dataFromPgToBr($data_original, $formatacao = 'd/m/Y')
 function extendChars($text, $reverse = false)
 {
     $chars = ['Ã', 'Â', 'Á', 'À', 'Ä', 'É', 'Ê', 'È', 'Ë', 'Í', 'Ì', 'Ï', 'Î', 'Ô', 'Õ', 'Ó', 'Ò', 'Ö', 'Ú', 'Ù', 'Û', 'Ü', 'Ý', 'Ñ', 'Ç',
-        'ã', 'â', 'á', 'à', 'ä', 'é', 'ê', 'è', 'ë', 'í', 'ì', 'ï', 'î', 'ô', 'õ', 'ó', 'ò', 'ö', 'ú', 'ù', 'û', 'ü', 'ý', 'ñ', 'ç' ];
+        'ã', 'â', 'á', 'à', 'ä', 'é', 'ê', 'è', 'ë', 'í', 'ì', 'ï', 'î', 'ô', 'õ', 'ó', 'ò', 'ö', 'ú', 'ù', 'û', 'ü', 'ý', 'ñ', 'ç'];
     $extends = ['&Atilde;', '&Acirc;', '&Aacute;', '&Agrave;', '&Auml;', '&Eacute;', '&Ecirc;', '&Egrave;', '&Euml;', '&Iacute;', '&Igrave;', '&Iuml;', '&Icirc;',   '&Ocirc;', '&Otilde;', '&Oacute;', '&Ograve;', '&Ouml;', '&Uacute;', '&Ugrave;', '&Ucirc;', '&Uuml;', '&Yacute;', '&Ntilde;', '&Ccedil;',
-        '&atilde;', '&acirc;', '&aacute;', '&agrave;', '&auml;', '&eacute;', '&ecirc;', '&egrave;', '&euml;', '&iacute;', '&igrave;', '&iuml;', '&icirc;',   '&ocirc;', '&otilde;', '&oacute;', '&ograve;', '&ouml;', '&uacute;', '&ugrave;', '&ucirc;', '&uuml;', '&yacute;', '&ntilde;', '&ccedil;' ];
+        '&atilde;', '&acirc;', '&aacute;', '&agrave;', '&auml;', '&eacute;', '&ecirc;', '&egrave;', '&euml;', '&iacute;', '&igrave;', '&iuml;', '&icirc;',   '&ocirc;', '&otilde;', '&oacute;', '&ograve;', '&ouml;', '&uacute;', '&ugrave;', '&ucirc;', '&uuml;', '&yacute;', '&ntilde;', '&ccedil;'];
 
     if ($reverse) {
         return str_replace($extends, $chars, $text);
@@ -324,13 +316,12 @@ function int2IdFederal($int)
  * 'true', 't', true, 1, '1', 'yes', 'y', 'sim', 's'
  *
  * @param mixed $val
- *
  * @return bool
  */
 function dbBool($val)
 {
-    return ($val === 'true' || $val === 't' || $val === true || $val == 1 ||
-        $val === 'yes' || $val === 'y' || $val === 'sim' || $val === 's');
+    return $val === 'true' || $val === 't' || $val === true || $val == 1 ||
+        $val === 'yes' || $val === 'y' || $val === 'sim' || $val === 's';
 }
 
 function int2Nis($nis)
@@ -350,7 +341,7 @@ function validaCNPJ($cnpj = null)
         return false;
     }
 
-    $cnpj = preg_replace("/[^0-9]/", "", $cnpj);
+    $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
     $cnpj = str_pad($cnpj, 14, '0', STR_PAD_LEFT);
 
     if (strlen($cnpj) != 14) {
@@ -364,8 +355,9 @@ function validaCNPJ($cnpj = null)
     return validaDigitosCNPJ($cnpj);
 }
 
-function verificaSequencia($cnpj) {
-    return ($cnpj == '00000000000000' ||
+function verificaSequencia($cnpj)
+{
+    return $cnpj == '00000000000000' ||
         $cnpj == '11111111111111' ||
         $cnpj == '22222222222222' ||
         $cnpj == '33333333333333' ||
@@ -374,7 +366,7 @@ function verificaSequencia($cnpj) {
         $cnpj == '66666666666666' ||
         $cnpj == '77777777777777' ||
         $cnpj == '88888888888888' ||
-        $cnpj == '99999999999999');
+        $cnpj == '99999999999999';
 }
 
 function validaDigitosCNPJ($cnpj): bool
@@ -402,12 +394,13 @@ function validaDigitosCNPJ($cnpj): bool
     $digitoVerificador1 = $soma1 % 11 < 2 ? 0 : 11 - $soma1 % 11;
     $digitoVerificador2 = $soma2 % 11 < 2 ? 0 : 11 - $soma2 % 11;
 
-    return (((int) $cnpj[12] === $digitoVerificador1) && ((int)$cnpj[13] === $digitoVerificador2));
+    return ((int) $cnpj[12] === $digitoVerificador1) && ((int) $cnpj[13] === $digitoVerificador2);
 }
 
 function isEmptyDbArray($value): bool
 {
     $value = explode(',', str_replace(['{', '}'], '', $value));
+
     return empty($value[0]);
 }
 
@@ -416,7 +409,7 @@ function isArrayEmpty($value): bool
     return is_array($value) && empty($value[0]);
 }
 
- function transformStringFromDBInArray($string): ?array
+function transformStringFromDBInArray($string): ?array
 {
     if (is_string($string)) {
         return explode(',', str_replace(['{', '}'], '', $string));
@@ -430,12 +423,12 @@ function transformDBArrayInString($value): ?string
     return is_array($value) ? '{' . implode(',', array_filter($value)) . '}' : null;
 }
 
-if (! function_exists('formatDateParse')) {
+if (!function_exists('formatDateParse')) {
     function formatDateParse($date, $outputFormat = 'd/m/Y')
     {
         $formats = [
             'd/m/Y',
-            'Y-m-d'
+            'Y-m-d',
         ];
         foreach ($formats as $format) {
             $dateObj = DateTime::createFromFormat($format, $date);
@@ -446,6 +439,7 @@ if (! function_exists('formatDateParse')) {
         if ($dateObj === false) {
             return null;
         }
+
         return $dateObj->format($outputFormat);
     }
 }

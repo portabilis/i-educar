@@ -19,13 +19,11 @@ class LegacyAverageFormulaFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'institution_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'institution_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'name' => $this->faker->words(3, true),
             'average' => 'Se / Et',
         ];

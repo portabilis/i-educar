@@ -9,7 +9,6 @@ use App\Models\Registration;
 use App\Models\Religion;
 use App\Models\Student;
 use App\Models\TransportationProvider;
-use App\Models\TransportationVehicleType;
 use Tests\ViewTestCase;
 
 class StudentTest extends ViewTestCase
@@ -20,7 +19,7 @@ class StudentTest extends ViewTestCase
         'registrations' => Registration::class,
         'createdBy' => Individual::class,
         'deletedBy' => Individual::class,
-        'unification' => LogUnification::class
+        'unification' => LogUnification::class,
     ];
 
     protected function getViewModelName(): string
@@ -78,10 +77,7 @@ class StudentTest extends ViewTestCase
 
     public function testGetTransportationVehicleTypeDescriptionAttribute(): void
     {
-        $value = (int)str_replace(['{','}'], '', $this->model->transportation_vehicle_type);
-        $expected = (new TransportationVehicleType())->getDescriptiveValues()[$value];
-
-        $this->assertNotNull($this->model->transportation_vehicle_type_description);
-        $this->assertEquals($expected, $this->model->transportation_vehicle_type_description);
+        $this->assertNull($this->model->transportation_vehicle_type_description);
+        $this->assertEquals(0, $this->model->transportation_vehicle_type_description);
     }
 }

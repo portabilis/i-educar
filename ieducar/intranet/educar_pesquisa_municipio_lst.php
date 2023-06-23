@@ -4,7 +4,8 @@ use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -34,13 +35,15 @@ return new class extends clsListagem {
     public $offset;
 
     public $idmun;
+
     public $nome;
+
     public $sigla_uf;
 
     public function Gerar()
     {
         Session::put(key: [
-            'campo1' => $_GET['campo1'] ? $_GET['campo1'] : Session::get(key: 'campo1')
+            'campo1' => $_GET['campo1'] ? $_GET['campo1'] : Session::get(key: 'campo1'),
         ]);
         Session::save();
         Session::start();
@@ -48,14 +51,14 @@ return new class extends clsListagem {
         $this->titulo = 'Municipio - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         //
 
         $this->addCabecalhos(coluna: [
             'Cidade',
-            'Estado'
+            'Estado',
         ]);
 
         $array_uf = ['' => 'Todos'] + State::getListKeyAbbreviation()->toArray();
@@ -71,7 +74,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $cities = City::query()
             ->with(relations: 'state')
@@ -89,7 +92,7 @@ return new class extends clsListagem {
             $script = " onclick=\"addSel1('{$campo1}','{$city->id}','{$city->name}'); fecha();\"";
             $this->addLinhas(linha: [
                 "<a href=\"javascript:void(0);\" {$script}>{$city->name}</a>",
-                "<a href=\"javascript:void(0);\" {$script}>{$city->state->name}</a>"
+                "<a href=\"javascript:void(0);\" {$script}>{$city->state->name}</a>",
             ]);
         }
 

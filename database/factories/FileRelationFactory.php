@@ -16,14 +16,12 @@ class FileRelationFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'type' => 'App\Models\LegacyIndividual',
-            'relation_id' => LegacyIndividualFactory::new()->create(),
+            'relation_id' => fn () => LegacyIndividualFactory::new()->create(),
             'file_id' => FileFactory::new()->create(),
         ];
     }

@@ -16,12 +16,9 @@ class LegacySchoolHistoryTest extends EloquentTestCase
         'institution' => LegacyInstitution::class,
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
-        'school' => LegacySchool::class
+        'school' => LegacySchool::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchoolHistory::class;

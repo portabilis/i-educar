@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -9,29 +10,38 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $sequencial;
+
     public $ref_cod_servidor;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $titulo_avaliacao;
+
     public $ref_ref_cod_instituicao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_servidor=$_GET['ref_cod_servidor'];
-        $this->ref_ref_cod_instituicao=$_GET['ref_ref_cod_instituicao'];
-        $this->sequencial=$_GET['sequencial'];
+        $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
+        $this->ref_ref_cod_instituicao = $_GET['ref_ref_cod_instituicao'];
+        $this->sequencial = $_GET['sequencial'];
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
         if (is_numeric($this->sequencial) && is_numeric($this->ref_cod_servidor)) {
             $obj = new clsPmieducarAvaliacaoDesempenho(sequencial: $this->sequencial, ref_cod_servidor: $this->ref_cod_servidor, ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

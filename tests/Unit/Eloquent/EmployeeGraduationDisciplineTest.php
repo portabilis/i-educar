@@ -9,12 +9,9 @@ use Tests\EloquentTestCase;
 class EmployeeGraduationDisciplineTest extends EloquentTestCase
 {
     protected $relations = [
-        'employeeGraduations' => EmployeeGraduation::class
+        'employeeGraduations' => EmployeeGraduation::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return EmployeeGraduationDiscipline::class;

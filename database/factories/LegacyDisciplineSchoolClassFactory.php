@@ -16,16 +16,14 @@ class LegacyDisciplineSchoolClassFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
             'ano_escolar_id' => fn () => LegacyGradeFactory::new()->create(),
-            'escola_id' => LegacySchoolFactory::new()->create(),
-            'turma_id' => LegacySchoolClassFactory::new()->create(),
+            'escola_id' => fn () => LegacySchoolFactory::new()->create(),
+            'turma_id' => fn () => LegacySchoolClassFactory::new()->create(),
             'carga_horaria' => $this->faker->randomNumber(3),
             'docente_vinculado' => 0,
             'etapas_especificas' => 0,

@@ -2,24 +2,42 @@
 
 use App\Models\LegacyExemptionType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_cod_matricula;
+
     public $ref_cod_serie;
+
     public $ref_cod_escola;
+
     public $ref_cod_disciplina;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_dispensa;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $observacao;
+
     public $ref_sequencial;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_turma;
 
     public function Gerar()
@@ -44,10 +62,10 @@ return new class extends clsListagem {
         $lst_matricula = $obj_matricula->lista(int_cod_matricula: $this->ref_cod_matricula);
 
         if (is_array(value: $lst_matricula)) {
-            $det_matricula             = array_shift(array: $lst_matricula);
+            $det_matricula = array_shift(array: $lst_matricula);
             $this->ref_cod_instituicao = $det_matricula['ref_cod_instituicao'];
-            $this->ref_cod_escola      = $det_matricula['ref_ref_cod_escola'];
-            $this->ref_cod_serie       = $det_matricula['ref_ref_cod_serie'];
+            $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
+            $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
             $obj_matricula_turma = new clsPmieducarMatriculaTurma();
             $lst_matricula_turma = $obj_matricula_turma->lista(
@@ -58,8 +76,8 @@ return new class extends clsListagem {
             );
 
             if (is_array(value: $lst_matricula_turma)) {
-                $det                  = array_shift(array: $lst_matricula_turma);
-                $this->ref_cod_turma  = $det['ref_cod_turma'];
+                $det = array_shift(array: $lst_matricula_turma);
+                $this->ref_cod_turma = $det['ref_cod_turma'];
                 $this->ref_sequencial = $det['sequencial'];
             }
         }
@@ -69,7 +87,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: [
             'Disciplina',
             'Tipo Dispensa',
-            'Data Dispensa'
+            'Data Dispensa',
         ]);
 
         $opcoes = LegacyExemptionType::query()
@@ -136,7 +154,7 @@ return new class extends clsListagem {
             foreach ($lista as $registro) {
                 // muda os campos data
                 $registro['data_cadastro_time'] = strtotime(datetime: substr(string: $registro['data_cadastro'], offset: 0, length: 16));
-                $registro['data_cadastro_br']   = date(format: 'd/m/Y', timestamp: $registro['data_cadastro_time']);
+                $registro['data_cadastro_br'] = date(format: 'd/m/Y', timestamp: $registro['data_cadastro_time']);
 
                 // Tipo da dispensa
                 $det_ref_cod_tipo_dispensa = LegacyExemptionType::find($registro['ref_cod_tipo_dispensa'])?->getAttributes();
@@ -146,18 +164,18 @@ return new class extends clsListagem {
                 $componente = $componenteMapper->find(pkey: $registro['ref_cod_disciplina']);
 
                 // Dados para a url
-                $url     = 'educar_dispensa_disciplina_det.php';
+                $url = 'educar_dispensa_disciplina_det.php';
                 $options = ['query' => [
-                    'ref_cod_matricula'  => $registro['ref_cod_matricula'],
-                    'ref_cod_serie'      => $registro['ref_cod_serie'],
-                    'ref_cod_escola'     => $registro['ref_cod_escola'],
-                    'ref_cod_disciplina' => $registro['ref_cod_disciplina']
+                    'ref_cod_matricula' => $registro['ref_cod_matricula'],
+                    'ref_cod_serie' => $registro['ref_cod_serie'],
+                    'ref_cod_escola' => $registro['ref_cod_escola'],
+                    'ref_cod_disciplina' => $registro['ref_cod_disciplina'],
                 ]];
 
                 $this->addLinhas(linha: [
                     $urlHelper->l(text: $componente->nome, path: $url, options: $options),
                     $urlHelper->l(text: $registro['ref_cod_tipo_dispensa'], path: $url, options: $options),
-                    $urlHelper->l(text: $registro['data_cadastro_br'], path: $url, options: $options)
+                    $urlHelper->l(text: $registro['data_cadastro_br'], path: $url, options: $options),
                 ]);
             }
         }
@@ -172,16 +190,16 @@ return new class extends clsListagem {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $det_matricula['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $det_matricula['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
             $this->array_botao_url[] = 'educar_dispensa_disciplina_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;
             $this->array_botao[] = [
                 'name' => 'Novo',
-                'css-extra' => 'btn-green'
+                'css-extra' => 'btn-green',
             ];
         }
 
         $this->array_botao_url[] = 'educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula;
-        $this->array_botao[]     = 'Voltar';
+        $this->array_botao[] = 'Voltar';
 
         $this->largura = '100%';
 
@@ -193,6 +211,6 @@ return new class extends clsListagem {
     public function Formular()
     {
         $this->title = 'Dispensa Componente Curricular';
-        $this->processoAp = 578;
+        $this->processoAp = 628;
     }
 };

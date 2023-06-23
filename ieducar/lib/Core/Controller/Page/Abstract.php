@@ -72,7 +72,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * como public para manter compatibilidade com as classes cls(Cadastro|Detalhe|
      * Listagem) que acessam o array diretamente.
      *
-     * @var array|NULL
+     * @var array|null
      */
     public $array_botao;
 
@@ -81,7 +81,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * como public para manter compatibilidade com as classes cls(Cadastro|Detalhe|
      * Listagem) que acessam o array diretamente.
      *
-     * @var array|NULL
+     * @var array|null
      */
     public $array_botao_url;
 
@@ -96,7 +96,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     private $_output = [];
 
     /**
-     * @var integer
+     * @var int
      */
     public $pessoa_logada;
 
@@ -111,7 +111,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     public function __construct()
     {
         $this->_options['id_usuario'] = Auth::id();
-        $this->pessoa_logada          = Auth::id();
+        $this->pessoa_logada = Auth::id();
     }
 
     /**
@@ -175,7 +175,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Setter.
      *
      * @param CoreExt_Controller|string $dataMapper
-     *
      * @return Core_Controller_Page_Interface Provê interface fluída
      *
      * @throws Core_Controller_Page_Exception|CoreExt_Exception_InvalidArgumentException
@@ -235,7 +234,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Se nenhuma instância CoreExt_Entity existir, tenta instanciar uma através
      * de CoreExt_DataMapper.
      *
-     * @return CoreExt_Entity|NULL
+     * @return CoreExt_Entity|null
      *
      * @throws Core_Controller_Page_Exception
      */
@@ -284,7 +283,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Setter.
      *
      * @param int $processoAp
-     *
      * @return Core_Controller_Page_Abstract
      */
     public function setBaseProcessoAp($processoAp)
@@ -354,7 +352,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      *
      * @param string $label
      * @param string $url
-     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     public function addBotao($label, $url)
@@ -404,7 +401,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Core_Controller_Page_Abstract.
      *
      * @param string $data A string HTML a ser adiciona após o conteúdo.
-     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     public function appendOutput($data)
@@ -433,7 +429,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Core_Controller_Page_Abstract.
      *
      * @param string $data A string HTML a ser adiciona após o conteúdo.
-     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     public function prependOutput($data)
@@ -461,8 +456,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Retorna o conteúdo a ser adicionado a saída de acordo com a região.
      *
      * @param string $pos Região para retornar o conteúdo a ser adicionado na saída.
-     *
-     * @return string|NULL Conteúdo da região separado por uma quebra de linha ou
+     * @return string|null Conteúdo da região separado por uma quebra de linha ou
      *                     NULL caso a região não exista.
      */
     private function _getOutput($pos = 'prepend')

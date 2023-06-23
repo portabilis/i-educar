@@ -20,15 +20,11 @@ use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
 use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
 use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
-use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
-use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\ItinerarioFormativoAluno;
 use iEducar\Modules\Educacenso\ExportRule\PoderPublicoResponsavelTransporte;
 use iEducar\Modules\Educacenso\ExportRule\RecebeEscolarizacaoOutroEspaco;
 use iEducar\Modules\Educacenso\ExportRule\RegrasEspecificasRegistro30;
 use iEducar\Modules\Educacenso\ExportRule\RegrasGeraisRegistro30;
-use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
-use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\ExportRule\TiposAee;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoGestor;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
@@ -49,29 +45,47 @@ class EducacensoExportController extends ApiCoreController
     use Formatters;
 
     public $ref_cod_escola;
+
     public $ref_cod_escola_;
+
     public $ref_cod_serie;
+
     public $ref_cod_serie_;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
+
     public $hora_fim_intervalo_;
 
     public $ano;
+
     public $ref_cod_instituicao;
+
     public $msg = '';
+
     public $error = false;
 
     public $turma_presencial_ou_semi;
 
     const TECNOLOGO = 1;
+
     const LICENCIATURA = 2;
+
     const BACHARELADO = 3;
 
     protected function educacensoExport()
@@ -91,7 +105,7 @@ class EducacensoExportController extends ApiCoreController
         if ($this->error) {
             return [
                 'error' => true,
-                'mensagem' => $this->msg
+                'mensagem' => $this->msg,
             ];
         }
 
@@ -115,7 +129,7 @@ class EducacensoExportController extends ApiCoreController
         if ($this->error) {
             return [
                 'error' => true,
-                'mensagem' => $this->msg
+                'mensagem' => $this->msg,
             ];
         }
 
@@ -347,7 +361,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->inepEscola,
                 $pessoa->codigoPessoa,
                 $pessoa->getInep(),
-                (string)$pessoa->cpf,
+                (string) $pessoa->cpf,
                 $pessoa->nomePessoa,
                 $pessoa->dataNascimento,
                 $pessoa->filiacao,
@@ -361,6 +375,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->deficiencia,
                 $pessoa->deficienciaCegueira,
                 $pessoa->deficienciaBaixaVisao,
+                $pessoa->deficienciaVisaoMonocular,
                 $pessoa->deficienciaSurdez,
                 $pessoa->deficienciaAuditiva,
                 $pessoa->deficienciaSurdoCegueira,
@@ -431,6 +446,8 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->formacaoContinuadaEducacaoCampo,
                 $pessoa->formacaoContinuadaEducacaoAmbiental,
                 $pessoa->formacaoContinuadaEducacaoDireitosHumanos,
+                $pessoa->formacaoContinuadaEducacaoBilingueSurdos,
+                $pessoa->formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao,
                 $pessoa->formacaoContinuadaGeneroDiversidadeSexual,
                 $pessoa->formacaoContinuadaDireitosCriancaAdolescente,
                 $pessoa->formacaoContinuadaEducacaoRelacoesEticoRaciais,
@@ -470,7 +487,7 @@ class EducacensoExportController extends ApiCoreController
                 $gestor->inepGestor,
                 $gestor->cargo,
                 $gestor->criterioAcesso,
-                $gestor->tipoVinculo
+                $gestor->tipoVinculo,
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
@@ -485,7 +502,7 @@ class EducacensoExportController extends ApiCoreController
         $registro50Model = new Registro50();
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-        $quantidadeComponentes = 15;
+        $quantidadeComponentes = 25;
         $quantidadeUnidadesCurriculares = 8;
 
         /** @var Registro50[] $docentes */
@@ -517,6 +534,8 @@ class EducacensoExportController extends ApiCoreController
             for ($count = 1; $count <= $quantidadeUnidadesCurriculares; $count++) {
                 $data[] = $docente->unidadesCurriculares === null ? '' : (int) in_array($count, $docente->unidadesCurriculares);
             }
+
+            $data[] = $docente->outrasUnidadesCurricularesObrigatorias;
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }
@@ -565,6 +584,7 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->composicaoItinerarioCienciasHumanas,
                 $aluno->composicaoItinerarioFormacaoTecnica,
                 $aluno->cursoItinerario,
+                $aluno->codCursoProfissional,
                 $aluno->itinerarioConcomitante,
                 $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas,
                 $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma,
@@ -589,7 +609,7 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->veiculoTransporteAquaviarioCapacidade5,
                 $aluno->veiculoTransporteAquaviarioCapacidade5a15,
                 $aluno->veiculoTransporteAquaviarioCapacidade15a35,
-                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35
+                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35,
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
@@ -640,7 +660,7 @@ class EducacensoExportController extends ApiCoreController
 
         extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, [
             'return_only' => 'first-row',
-            'params' => [$escolaId]
+            'params' => [$escolaId],
         ]));
 
         $r89s3 = $this->cpfToCenso($r89s3);
@@ -676,7 +696,7 @@ class EducacensoExportController extends ApiCoreController
 
         extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, [
             'return_only' => 'first-row',
-            'params' => [$escolaId, $matriculaId]
+            'params' => [$escolaId, $matriculaId],
         ]));
 
         $turma = new clsPmieducarTurma($turmaId);
@@ -747,7 +767,7 @@ class EducacensoExportController extends ApiCoreController
 
         extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, [
             'return_only' => 'first-row',
-            'params' => [$escolaId, $matriculaId]
+            'params' => [$escolaId, $matriculaId],
         ]));
 
         $turma = new clsPmieducarTurma($turmaId);
@@ -818,11 +838,6 @@ class EducacensoExportController extends ApiCoreController
 
     /**
      * Retorna true se o grau acadêmido informado for bacharelado ou tecnólogo e se a situação informada for concluído
-     *
-     * @param $grauAcademico
-     * @param $situacao
-     *
-     * @return bool
      */
     private function isCursoSuperiorBachareladoOuTecnologoCompleto($grauAcademico, $situacao): bool
     {
@@ -832,7 +847,7 @@ class EducacensoExportController extends ApiCoreController
 
         return in_array($grauAcademico, [
             self::BACHARELADO,
-            self::TECNOLOGO
+            self::TECNOLOGO,
         ]);
     }
 }

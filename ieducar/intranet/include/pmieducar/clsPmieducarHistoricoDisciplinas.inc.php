@@ -77,7 +77,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
         }
 
         if (is_numeric($carga_horaria_disciplina)) {
-            $this->carga_horaria_disciplina = (int)$carga_horaria_disciplina;
+            $this->carga_horaria_disciplina = (int) $carga_horaria_disciplina;
         }
 
         if (is_bool($dependencia)) {
@@ -380,17 +380,6 @@ class clsPmieducarHistoricoDisciplinas extends Model
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_aluno = '{$ref_cod_aluno}' AND ref_sequencial = '{$ref_sequencial}'");
 
             return true;
-        }
-
-        return false;
-    }
-
-    public function getMaxSequencial($ref_cod_aluno)
-    {
-        if (is_numeric($ref_cod_aluno)) {
-            $db = new clsBanco();
-
-            return $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM {$this->_tabela} WHERE ref_cod_aluno = {$ref_cod_aluno}");
         }
 
         return false;

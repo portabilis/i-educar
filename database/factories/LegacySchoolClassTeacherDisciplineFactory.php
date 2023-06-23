@@ -16,13 +16,11 @@ class LegacySchoolClassTeacherDisciplineFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'professor_turma_id' => LegacySchoolClassTeacherFactory::new()->create(),
+            'professor_turma_id' => fn () => LegacySchoolClassTeacherFactory::new()->create(),
             'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
         ];
     }

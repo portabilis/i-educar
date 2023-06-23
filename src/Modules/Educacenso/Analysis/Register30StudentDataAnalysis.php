@@ -43,12 +43,23 @@ class Register30StudentDataAnalysis implements AnalysisInterface
         );
         $arrayRecursos = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep));
 
+        $etapasCpfObrigatorio = [69, 70, 72, 71, 67, 73, 74];
+
+        if (in_array($data->dadosAluno->etapaTurma, $etapasCpfObrigatorio) && empty($data->cpf)) {
+            $this->messages[] = [
+                'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) {$data->nomePessoa} se trata de um(a) aluno(a) vinculado à uma turma da ({$data->dadosAluno->etapaTurmaDescritiva()}), sendo necessário informar o CPF na hora do fechamento da escola, portanto será exportada com o campo vazio. </span>",
+                'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: CPF)',
+                'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
+                'fail' => false,
+            ];
+        }
+
         if (!$arrayDeficiencias && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o curso ou a turma do(a) aluno(a) {$data->nomePessoa} é de AEE, portanto é necessário informar qual a sua deficiência.",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Deficiências / habilidades especiais)',
                 'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -58,7 +69,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a)  {$data->nomePessoa} possui deficiência, portanto é necessário informar qual o recurso para a realização de provas o(a) mesmo(a) necessita ou já recebe.",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados educacenso > Campo: Recursos necessários para realização de provas)',
                 'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -68,7 +79,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que o(s) recurso(s) necessário(s) para realização de provas foi preenchido incorretamente para o(a) aluno(a) {$data->nomePessoa}.",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Recursos necessários para realização de provas)',
                 'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -78,7 +89,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verifique se a certidão de nascimento (nova) do(a) aluno(a) {$data->nomePessoa} foi preenchida corretamente.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Tipo certidão civil (novo formato))',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -87,7 +98,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verifique se a certidão de nascimento (nova) do(a) aluno(a) {$data->nomePessoa} possui 32 dígitos.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Tipo certidão civil (novo formato))',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -96,7 +107,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que o ano de registro da certidão de nascimento (nova) do(a) aluno(a) {$data->nomePessoa}, é anterior ao ano do nascimento ou posterior ao ano corrente (Posições de 11 a 14 do número da certidão).",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Tipo certidão civil (novo formato))',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
     }

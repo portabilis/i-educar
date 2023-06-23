@@ -16,13 +16,11 @@ class LegacyGeneralConfigurationFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->create(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->create(), // create()
         ];
     }
 }

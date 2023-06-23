@@ -16,13 +16,11 @@ class LegacyRemedialRuleFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->create(),
+            'regra_avaliacao_id' => fn () => LegacyEvaluationRuleFactory::new()->create(),
             'descricao' => $this->faker->text(20),
             'etapas_recuperadas' => $this->faker->randomElement(['1', '2', '3', '4']),
             'substitui_menor_nota' => $this->faker->boolean,

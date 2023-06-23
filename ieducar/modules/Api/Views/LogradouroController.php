@@ -38,7 +38,7 @@ class LogradouroController extends ApiCoreController
         $nome = $this->toUtf8($resource['name'], ['transform' => true]);
         $municipio = $this->toUtf8($resource['municipio'], ['transform' => true]);
 
-        return $this->getRequest()->exibir_municipio ? "$id - $tipo $nome - $municipio": "$tipo $nome";
+        return $this->getRequest()->exibir_municipio ? "$id - $tipo $nome - $municipio" : "$tipo $nome";
     }
 
     public function Gerar()

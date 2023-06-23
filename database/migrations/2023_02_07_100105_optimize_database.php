@@ -5,7 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     use AsView;
 
     public function up()
@@ -32,7 +33,7 @@ return new class () extends Migration {
                 'ref_ano',
                 'ref_ref_cod_escola',
                 'sequencial',
-                'ref_cod_modulo'
+                'ref_cod_modulo',
             ]);
         });
 
@@ -59,11 +60,11 @@ return new class () extends Migration {
             $table->renameColumn('data_cadastro', 'created_at');
             $table->index([
                 'ref_cod_escola',
-                'ano'
+                'ano',
             ]);
             $table->unique([
                 'ref_cod_escola',
-                'ano'
+                'ano',
             ]);
         });
 

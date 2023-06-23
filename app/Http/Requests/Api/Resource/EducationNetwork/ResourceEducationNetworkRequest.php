@@ -9,14 +9,14 @@ class ResourceEducationNetworkRequest extends ResourceRequest
     public function rules(): array
     {
         return [
-            'institution' => ['required', 'integer', 'min:1']
+            'institution' => ['required', 'integer', 'min:1'],
         ];
     }
 
     public function attributes()
     {
         return [
-            'institution' => 'Instituição'
+            'institution' => 'Instituição',
         ];
     }
 }

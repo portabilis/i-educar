@@ -6,6 +6,7 @@ use App\Models\Builders\LegacyEvaluationRuleBuilder;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -21,11 +22,15 @@ class LegacyEvaluationRule extends Model
     public const CREATED_AT = null;
 
     public const PARALLEL_REMEDIAL_NONE = 0;
+
     public const PARALLEL_REMEDIAL_PER_STAGE = 1;
+
     public const PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE = 2;
 
     public const PARALLEL_REMEDIAL_REPLACE_SCORE = 1;
+
     public const PARALLEL_REMEDIAL_AVERAGE_SCORE = 2;
+
     public const PARALLEL_REMEDIAL_SUM_SCORE = 3;
 
     /**
@@ -42,8 +47,6 @@ class LegacyEvaluationRule extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacyEvaluationRuleBuilder::class;
 
@@ -53,7 +56,7 @@ class LegacyEvaluationRule extends Model
      * @var string[]
      */
     public array $legacy = [
-        'name' => 'nome'
+        'name' => 'nome',
     ];
 
     /**
@@ -94,19 +97,11 @@ class LegacyEvaluationRule extends Model
     }
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
     public function deficiencyEvaluationRule()
     {
         return $this->belongsTo(__CLASS__, 'regra_diferenciada_id');
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function deficiencyEvaluationRules()
-    {
-        return $this->hasMany(__CLASS__, 'regra_diferenciada_id');
     }
 
     /**

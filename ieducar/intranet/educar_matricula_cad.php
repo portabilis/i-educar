@@ -3,10 +3,13 @@
 use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySequenceGrade;
 use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -14,8 +17,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsCadastro {
-
+return new class extends clsCadastro
+{
     public $cod_matricula;
 
     public $ref_cod_reserva_vaga;
@@ -145,7 +148,7 @@ return new class extends clsCadastro {
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
-            $this->nome_url_sucesso ='Gravar enturmações';
+            $this->nome_url_sucesso = 'Gravar enturmações';
         }
 
         $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
@@ -158,7 +161,7 @@ return new class extends clsCadastro {
                 attrName: 'dependencia',
                 inputOptions: [
                     'label' => 'Matrícula de dependência?',
-                    'value' => $this->dependencia
+                    'value' => $this->dependencia,
                 ]
             );
         }
@@ -323,11 +326,13 @@ return new class extends clsCadastro {
 
         if (!$this->validaAlunoAtivo()) {
             $this->mensagem = 'Não é possível matricular alunos inativos ou inexistentes.';
+
             return false;
         }
 
         if (!$this->validaPeriodoDeMatriculasPelaDataFechamento()) {
             $this->mensagem = 'Não é possível matricular alunos após a data de fechamento.';
+
             return false;
         }
 
@@ -840,7 +845,6 @@ return new class extends clsCadastro {
 
                 if ($ultimaMatriculaSerieAno->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO) {
                     /** @var LegacyRegistration $registration */
-
                     $registration = LegacyRegistration::find(id: $this->cod_matricula);
 
                     $mensagem = '';
@@ -939,7 +943,6 @@ return new class extends clsCadastro {
     public function permiteMatriculaSerieDestino()
     {
         $objMatricula = new clsPmieducarMatricula;
-        $objSequenciaSerie = new clsPmieducarSequenciaSerie;
 
         $dadosUltimaMatricula = $objMatricula->getDadosUltimaMatricula(codAluno: $this->ref_cod_aluno);
         $this->situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
@@ -957,8 +960,7 @@ return new class extends clsCadastro {
         }
 
         if (in_array(needle: $this->situacaoUltimaMatricula, haystack: $aprovado)) {
-            $serieNovaMatricula = $objSequenciaSerie->lista(int_ref_serie_origem: $this->serieUltimaMatricula);
-            $serieNovaMatricula = $serieNovaMatricula[0]['ref_serie_destino'];
+            $serieNovaMatricula = LegacySequenceGrade::query()->whereGradeOrigin($this->serieUltimaMatricula)->active()->value('ref_serie_destino');
         } elseif (in_array(needle: $this->situacaoUltimaMatricula, haystack: $reprovado)) {
             $serieNovaMatricula = $this->serieUltimaMatricula;
         }
@@ -970,12 +972,12 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function validaAlunoAtivo() : bool
+    private function validaAlunoAtivo(): bool
     {
         return LegacyStudent::where('cod_aluno', $this->ref_cod_aluno)->active()->exists();
     }
 
-    private function validaPeriodoDeMatriculasPelaDataFechamento() : bool
+    private function validaPeriodoDeMatriculasPelaDataFechamento(): bool
     {
         $instituicao = app(abstract: LegacyInstitution::class);
 
@@ -1046,12 +1048,11 @@ return new class extends clsCadastro {
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-        $obj_sequencia = new clsPmieducarSequenciaSerie();
-
-        $lst_sequencia = $obj_sequencia->lista(
-            int_ref_serie_destino: $ref_cod_serie,
-            int_ativo: 1
-        );
+        $lst_sequencia = LegacySequenceGrade::query()
+            ->whereGradeDestiny($ref_cod_serie)
+            ->active()
+            ->get()
+            ->toArray();
 
         // Verifica se a série da matrícula cancelada é sequência de alguma outra série
         if (is_array(value: $lst_sequencia)) {
@@ -1098,6 +1099,16 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
+            $enrollments = LegacyEnrollment::query()
+                ->where('ref_cod_matricula', $this->cod_matricula)
+                ->get();
+
+            $enrollmentService = new EnrollmentService(auth()->user());
+
+            foreach ($enrollments as $enrollment) {
+                $enrollmentService->reorderSchoolClass($enrollment);
+            }
+
             $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
@@ -1257,9 +1268,9 @@ return new class extends clsCadastro {
             int_ref_cod_serie: $this->ref_cod_serie,
             int_ref_cod_curso: $this->ref_cod_curso,
             int_ref_cod_escola: $this->ref_cod_escola,
-            int_turma_turno_id:  $det_t['turma_turno_id'],
-            int_ano_turma:  $det_t['ano'],
-            dependencia:  'f'
+            int_turma_turno_id: $det_t['turma_turno_id'],
+            int_ano_turma: $det_t['ano'],
+            dependencia: 'f'
         );
 
         return $obj_mt->_total;

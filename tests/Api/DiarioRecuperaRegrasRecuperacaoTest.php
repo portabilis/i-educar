@@ -18,7 +18,7 @@ class DiarioRecuperaRegrasRecuperacaoTest extends TestCase
         $data = [
             'oper' => 'get',
             'resource' => 'regras-recuperacao',
-            'instituicao_id' => $remedialRule->evaluationRule->instituicao_id
+            'instituicao_id' => $remedialRule->evaluationRule->instituicao_id,
         ];
         $response = $this->getResource('/module/Api/Regra', $data);
 
@@ -31,18 +31,18 @@ class DiarioRecuperaRegrasRecuperacaoTest extends TestCase
                             'regra_avaliacao_id' => $remedialRule->evaluationRule->getKey(),
                             'descricao' => $remedialRule->descricao,
                             'etapas_recuperadas' => [
-                                $remedialRule->etapas_recuperadas
+                                $remedialRule->etapas_recuperadas,
                             ],
                             'media' => $remedialRule->media,
                             'nota_maxima' => $remedialRule->nota_maxima,
                             'updated_at' => $remedialRule->updated_at->format('Y-m-d H:i:s'),
                             'deleted_at' => null,
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'regras-recuperacao',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

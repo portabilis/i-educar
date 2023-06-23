@@ -108,7 +108,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'pt_BR',
 
     /*
     |--------------------------------------------------------------------------
@@ -178,7 +178,7 @@ return [
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\AssetServiceProvider::class,
-        App\Providers\HorizonServiceProvider::class
+        App\Providers\HorizonServiceProvider::class,
     ],
 
     /*

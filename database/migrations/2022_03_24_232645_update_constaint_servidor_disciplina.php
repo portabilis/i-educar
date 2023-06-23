@@ -21,7 +21,7 @@ class UpdateConstaintServidorDisciplina extends Migration
             'ref_ref_cod_instituicao',
             'ref_cod_servidor',
             'ref_cod_curso',
-            'ref_cod_funcao'
+            'ref_cod_funcao',
         ];
 
         $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
@@ -39,7 +39,7 @@ class UpdateConstaintServidorDisciplina extends Migration
             'ref_cod_disciplina',
             'ref_ref_cod_instituicao',
             'ref_cod_servidor',
-            'ref_cod_curso'
+            'ref_cod_curso',
         ];
 
         $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');

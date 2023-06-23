@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -9,24 +10,28 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
+
     public $ref_ano;
+
     public $ano;
+
     public $data_inicio;
+
     public $data_fim;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_instituicao=$_GET['ref_cod_instituicao'];
-        $this->ref_ano=$_GET['ref_ano'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $this->ref_ano = $_GET['ref_ano'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 21251, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_bloqueio_ano_letivo_lst.php');
 
         if (is_numeric(value: $this->ref_cod_instituicao) && is_numeric(value: $this->ref_ano)) {
             $obj = new clsPmieducarBloqueioAnoLetivo(ref_cod_instituicao: $this->ref_cod_instituicao, ref_ano: $this->ref_ano);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

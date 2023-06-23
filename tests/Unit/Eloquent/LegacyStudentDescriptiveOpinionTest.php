@@ -16,12 +16,9 @@ class LegacyStudentDescriptiveOpinionTest extends EloquentTestCase
         'registration' => LegacyRegistration::class,
         'descriptiveOpinions' => LegacyGeneralDescriptiveOpinion::class,
         'descriptiveOpinionByDiscipline' => LegacyDisciplineDescriptiveOpinion::class,
-        'generalDescriptiveOpinion' => LegacyGeneralDescriptiveOpinion::class
+        'generalDescriptiveOpinion' => LegacyGeneralDescriptiveOpinion::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyStudentDescriptiveOpinion::class;
@@ -32,7 +29,7 @@ class LegacyStudentDescriptiveOpinionTest extends EloquentTestCase
         $model = Factory::factoryForModel(
             $this->getEloquentModelName()
         )->new()->create([
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
         ]);
         $this->assertTrue($model->isByDiscipline());
     }
@@ -42,7 +39,7 @@ class LegacyStudentDescriptiveOpinionTest extends EloquentTestCase
         $model = Factory::factoryForModel(
             $this->getEloquentModelName()
         )->new()->create([
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
         ]);
         $this->assertTrue($model->isGeneral());
     }

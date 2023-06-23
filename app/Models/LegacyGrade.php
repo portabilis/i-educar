@@ -34,8 +34,6 @@ class LegacyGrade extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacyGradeBuilder::class;
 
@@ -49,7 +47,7 @@ class LegacyGrade extends LegacyModel
         'name' => 'nm_serie',
         'description' => 'descricao',
         'created_at' => 'data_cadastro',
-        'course_id' => 'ref_cod_curso'
+        'course_id' => 'ref_cod_curso',
     ];
 
     /**
@@ -77,7 +75,7 @@ class LegacyGrade extends LegacyModel
         'idade_ideal',
         'exigir_inep',
         'importar_serie_pre_matricula',
-        'descricao'
+        'descricao',
     ];
 
     protected function name(): Attribute
@@ -95,8 +93,6 @@ class LegacyGrade extends LegacyModel
 
     /**
      * Regras de avaliação
-     *
-     * @return BelongsToMany
      */
     public function evaluationRules(): BelongsToMany
     {
@@ -132,8 +128,6 @@ class LegacyGrade extends LegacyModel
 
     /**
      * Escolas
-     *
-     * @return BelongsToMany
      */
     public function schools(): BelongsToMany
     {
@@ -142,8 +136,6 @@ class LegacyGrade extends LegacyModel
 
     /**
      * Relacionamento com o curso.
-     *
-     * @return BelongsTo
      */
     public function course(): BelongsTo
     {
@@ -152,11 +144,29 @@ class LegacyGrade extends LegacyModel
 
     /**
      * Relacionamento com a turma.
-     *
-     * @return HasMany
      */
     public function schoolClass(): HasMany
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_serie');
+    }
+
+    // TODO remover
+    public function schoolGradeDisciplines()
+    {
+        return $this->hasMany(LegacySchoolGradeDiscipline::class, 'ref_ref_cod_serie');
+    }
+
+    // TODO remover
+    public function academicYearDisciplines()
+    {
+        return $this->belongsToMany(LegacyDiscipline::class, 'modules.componente_curricular_ano_escolar', 'ano_escolar_id', 'componente_curricular_id')
+            ->withPivot(
+                'hora_falta'
+            );
+    }
+
+    public function allDisciplines(): HasMany
+    {
+        return $this->hasMany(LegacyDisciplineAcademicYear::class, 'ano_escolar_id');
     }
 }

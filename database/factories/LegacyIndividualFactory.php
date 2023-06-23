@@ -2,58 +2,79 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
 use App\Models\LegacyIndividual;
+use App_Model_ZonaLocalizacao;
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyIndividualFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyIndividual::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
+        $male = $this->faker->boolean();
+        $name = $male ? $this->faker->firstNameMale() : $this->faker->firstNameFemale();
+        $gender = $male ? 'M' : 'F';
+
         return [
-            'idpes' => static fn () => LegacyPersonFactory::new()->create(),
+            'idpes' => fn () => LegacyPersonFactory::new()->create([
+                'nome' => $name,
+            ]),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
-            'idpes_mae' => static fn () => LegacyPersonFactory::new()->create(),
-            'idpes_pai' => static fn () => LegacyPersonFactory::new()->create(),
-            'idpes_responsavel' => static fn () =>LegacyPersonFactory::new()->create(),
-            'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
+            'zona_localizacao_censo' => App_Model_ZonaLocalizacao::URBANA,
+            'data_nasc' => $this->faker->dateTimeBetween(),
+            'sexo' => $gender,
+            'ideciv' => fn () => LegacyMaritalStatusFactory::new()->current(),
+            'pais_residencia' => PaisResidencia::BRASIL,
+            'idmun_nascimento' => City::query()->inRandomOrder()->first(),
+            'idpes_pai' => null,
+            'idpes_mae' => null,
         ];
+    }
+
+    public function current(): LegacyIndividual
+    {
+        return LegacyIndividual::query()->first() ?? $this->create([
+            'idpes' => fn () => LegacyPersonFactory::new()->current(),
+        ]);
+    }
+
+    public function withAge(int $age): static
+    {
+        $year = now()->year - $age;
+        $date = $this->faker->dateTimeBetween("$year-01-01", "$year-12-31");
+
+        return $this->state([
+            'data_nasc' => $date,
+        ]);
     }
 
     public function father(): self
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
-                'idpes_pai' => LegacyIndividualFactory::new()->create(),
+                'idpes_pai' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }
 
     public function mother(): self
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
-                'idpes_mae' => LegacyIndividualFactory::new()->create(),
+                'idpes_mae' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }
+
     public function guardian(): self
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
-                'idpes_responsavel' => LegacyIndividualFactory::new()->create(),
+                'idpes_responsavel' => fn () => LegacyIndividualFactory::new()->create(),
             ];
         });
     }

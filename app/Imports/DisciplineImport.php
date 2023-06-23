@@ -28,8 +28,6 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
     }
 
     /**
-     * @param array $row
-     *
      * @return Model
      */
     public function model(array $row)

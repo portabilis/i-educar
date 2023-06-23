@@ -21,7 +21,9 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
     use LoginFirstUser;
 
     private LegacyIndividual $individual;
+
     private LegacyStudent $student;
+
     private LegacyStudent $studentTwo;
 
     protected function setUp(): void
@@ -80,7 +82,7 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
                 [
                     'idpes' => $individualSecondary->getKey(),
                     'pessoa_principal' => false,
-                ]
+                ],
             ]),
         ];
 
@@ -109,10 +111,10 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $this->assertNotNull($logsOldData);
         $this->assertCount(2, $logsOldData);
         $this->assertEquals($logsOldData[0]->keys[0], [
-            'idpes_rev' => $individualSecondary->getKey()
+            'idpes_rev' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[1]->keys[0], [
-            'idpes_cad' => $individualSecondary->getKey()
+            'idpes_cad' => $individualSecondary->getKey(),
         ]);
 
         $logsOldData = LogUnificationOldData::query()
@@ -123,10 +125,10 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $this->assertNotNull($logsOldData);
         $this->assertCount(2, $logsOldData);
         $this->assertEquals($logsOldData[0]->keys[0], [
-            'idpes_exc' => $individualSecondary->getKey()
+            'idpes_exc' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[1]->keys[0], [
-            'idpes_cad' => $individualSecondary->getKey()
+            'idpes_cad' => $individualSecondary->getKey(),
         ]);
 
         $logsOldData = LogUnificationOldData::query()
@@ -137,13 +139,13 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $this->assertNotNull($logsOldData);
         $this->assertCount(3, $logsOldData);
         $this->assertEquals($logsOldData[0]->keys[0], [
-            'idpes' => $individualSecondary->getKey()
+            'idpes' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[1]->keys[0], [
-            'idpes_rev' => $individualSecondary->getKey()
+            'idpes_rev' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[2]->keys[0], [
-            'idpes_cad' => $individualSecondary->getKey()
+            'idpes_cad' => $individualSecondary->getKey(),
         ]);
 
         $logsOldData = LogUnificationOldData::query()
@@ -154,28 +156,28 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $this->assertNotNull($logsOldData);
         $this->assertCount(8, $logsOldData);
         $this->assertEquals($logsOldData[0]->keys[0], [
-            'idpes' => $individualSecondary->getKey()
+            'idpes' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[1]->keys[0], [
-            'idpes' => $individual->getKey()
+            'idpes' => $individual->getKey(),
         ]);
         $this->assertEquals($logsOldData[2]->keys[0], [
-            'idpes_mae' => $individualSecondary->getKey()
+            'idpes_mae' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[3]->keys[0], [
-            'idpes_pai' => $individualSecondary->getKey()
+            'idpes_pai' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[4]->keys[0], [
-            'idpes_responsavel' => $individualSecondary->getKey()
+            'idpes_responsavel' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[5]->keys[0], [
-            'idpes_con' => $individualSecondary->getKey()
+            'idpes_con' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[6]->keys[0], [
-            'idpes_rev' => $individualSecondary->getKey()
+            'idpes_rev' => $individualSecondary->getKey(),
         ]);
         $this->assertEquals($logsOldData[7]->keys[0], [
-            'idpes_cad' => $individualSecondary->getKey()
+            'idpes_cad' => $individualSecondary->getKey(),
         ]);
 
         $this->assertDatabaseHas($fone, [

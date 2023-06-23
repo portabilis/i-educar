@@ -5,19 +5,33 @@ use iEducar\Legacy\Model;
 class clsPmieducarQuadroHorarioHorarios extends Model
 {
     public $ref_cod_quadro_horario;
+
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_disciplina;
+
     public $sequencial;
+
     public $ref_cod_instituicao_substituto;
+
     public $ref_cod_instituicao_servidor;
+
     public $ref_servidor_substituto;
+
     public $ref_servidor;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $dia_semana;
 
     public function __construct(
@@ -62,7 +76,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_ref_cod_disciplina,
-                'anoEscolar' => $ref_ref_cod_serie
+                'anoEscolar' => $ref_ref_cod_serie,
             ]);
 
             if (1 == count($componenteAnos)) {
@@ -558,7 +572,6 @@ class clsPmieducarQuadroHorarioHorarios extends Model
      * sendo de responsabilidade do código cliente
      *
      * @param int $int_ref_cod_servidor_substituto Código do servidor que substituirá o atual
-     *
      * @return bool TRUE em caso de sucesso, FALSE caso contrário
      */
     public function substituir_servidor($int_ref_cod_servidor_substituto)
@@ -659,62 +672,6 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             $db->Consulta("UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_quadro_horario = '{$this->ref_cod_quadro_horario}'");
 
             return true;
-        }
-
-        return false;
-    }
-
-    public function listaHoras(
-        $int_ref_cod_instituicao_servidor = null,
-        $int_ativo = null,
-        $int_dia_semana = null
-    ) {
-        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} qhh";
-        $filtros = '';
-
-        $whereAnd = ' WHERE ';
-
-        if (is_numeric($int_ref_cod_instituicao_servidor)) {
-            $filtros .= "{$whereAnd} qhh.ref_cod_instituicao_servidor = '{$int_ref_cod_instituicao_servidor}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ativo)) {
-            $filtros .= "{$whereAnd} qhh.ativo = '{$int_ativo}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_dia_semana)) {
-            $filtros .= "{$whereAnd} qhh.dia_semana <> '{$int_dia_semana}'";
-            $whereAnd = ' AND ';
-        }
-
-        $db = new clsBanco();
-        $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado = [];
-
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} qhh {$filtros}");
-
-        $db->Consulta($sql);
-
-        if ($countCampos > 1) {
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                $tupla['_total'] = $this->_total;
-                $resultado[] = $tupla;
-            }
-        } else {
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-                $resultado[] = $tupla[$this->_campos_lista];
-            }
-        }
-
-        if (count($resultado)) {
-            return $resultado;
         }
 
         return false;

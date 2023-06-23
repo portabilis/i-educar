@@ -13,7 +13,6 @@ class LegacyCity extends Model
     /**
      * @var string
      */
-
     protected $table = 'public.municipio';
 
     /**
@@ -50,7 +49,7 @@ class LegacyCity extends Model
     public $timestamps = false;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function boot()
     {

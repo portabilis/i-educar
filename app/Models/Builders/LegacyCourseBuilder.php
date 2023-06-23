@@ -9,10 +9,6 @@ class LegacyCourseBuilder extends LegacyBuilder
 {
     /**
      * Retorna o recurso para os selects dos formulários
-     *
-     * @param array $filters
-     *
-     * @return Collection
      */
     public function getResource(array $filters = []): Collection
     {
@@ -23,11 +19,15 @@ class LegacyCourseBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por nome
+     */
+    public function whereName(string $name): self
+    {
+        return $this->whereRaw('unaccent(nm_curso) ~* unaccent(?)', $name);
+    }
+
+    /**
      * Filtra por Instituição
-     *
-     * @param int $institution
-     *
-     * @return LegacyCourseBuilder
      */
     public function whereInstitution(int $institution): self
     {
@@ -36,10 +36,6 @@ class LegacyCourseBuilder extends LegacyBuilder
 
     /**
      * Ordena por nome
-     *
-     * @param string $direction
-     *
-     * @return LegacyCourseBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
@@ -48,10 +44,6 @@ class LegacyCourseBuilder extends LegacyBuilder
 
     /**
      * Filtra por Curso
-     *
-     * @param int $course
-     *
-     * @return LegacyCourseBuilder
      */
     public function whereCourse(int $course): self
     {
@@ -60,10 +52,6 @@ class LegacyCourseBuilder extends LegacyBuilder
 
     /**
      * Filtra por  Padrão Ano Escolar
-     *
-     * @param int $standard_calendar
-     *
-     * @return LegacyCourseBuilder
      */
     public function whereStandardCalendar(int $standard_calendar): self
     {
@@ -72,10 +60,6 @@ class LegacyCourseBuilder extends LegacyBuilder
 
     /**
      * Filtra por Escola
-     *
-     * @param int $school
-     *
-     * @return LegacyCourseBuilder
      */
     public function whereSchool(int $school, ?int $year = null): self
     {
@@ -96,17 +80,12 @@ class LegacyCourseBuilder extends LegacyBuilder
 
     /**
      * Filtra por modalidade
-     *
-     * @return LegacyCourseBuilder
      */
     public function hasModality(): self
     {
         return $this->where('modalidade_curso', '>', 0);
     }
 
-    /**
-     * @return LegacyCourseBuilder
-     */
     public function registrationsActiveCurrentYear(): self
     {
         return $this->join('pmieducar.matricula', 'curso.cod_curso', 'matricula.ref_cod_curso')
@@ -114,9 +93,6 @@ class LegacyCourseBuilder extends LegacyBuilder
             ->where('matricula.ativo', 1);
     }
 
-    /**
-     * @return LegacyCourseBuilder
-     */
     public function registrationsActiveLastYear(): self
     {
         return $this->join('pmieducar.matricula', 'curso.cod_curso', 'matricula.ref_cod_curso')
@@ -126,18 +102,19 @@ class LegacyCourseBuilder extends LegacyBuilder
 
     /**
      * Filtra por ativo
-     *
-     * @return LegacyCourseBuilder
      */
     public function active(): self
     {
         return $this->where('curso.ativo', 1);
     }
 
+    public function whereActive(int $active): self
+    {
+        return $this->where('curso.ativo', $active);
+    }
+
     /**
      * Filtra por modalidade Eja
-     *
-     * @return LegacyCourseBuilder
      */
     public function isEja(): self
     {

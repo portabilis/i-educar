@@ -59,7 +59,7 @@ class AreaConhecimentoController extends ApiCoreController
             $areas = Portabilis_Array_Utils::filterSet($areas, $attrs);
 
             return [
-                'areas' => $areas
+                'areas' => $areas,
             ];
         }
     }
@@ -96,7 +96,7 @@ class AreaConhecimentoController extends ApiCoreController
 
         $paramsSql = [$serieId];
 
-        $areasDeConhecimento =  $this->fetchPreparedQuery($sql, $paramsSql);
+        $areasDeConhecimento = $this->fetchPreparedQuery($sql, $paramsSql);
 
         $attrs = ['id', 'nome', 'nome_agrupador', 'anos_letivos'];
         $areasDeConhecimento = Portabilis_Array_Utils::filterSet($areasDeConhecimento, $attrs);

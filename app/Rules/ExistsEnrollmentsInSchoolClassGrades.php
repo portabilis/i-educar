@@ -14,13 +14,12 @@ class ExistsEnrollmentsInSchoolClassGrades implements Rule
      *
      * @param string $attribute
      * @param mixed  $value
-     *
      * @return bool
      */
     public function passes($attribute, $value)
     {
         $schoolClass = $value['turma'];
-        $gradesToDelete =  $value['grades_delete'];
+        $gradesToDelete = $value['grades_delete'];
 
         $gradesWithEnrollments = LegacyEnrollment::query()
             ->where('ref_cod_turma', $schoolClass->getKey())

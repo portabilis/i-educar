@@ -16,16 +16,21 @@ class LegacyEducationTypeFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_tipo' => $this->faker->firstName(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
             'atividade_complementar' => $this->faker->boolean(),
         ];
+    }
+
+    public function current(): LegacyEducationType
+    {
+        return LegacyEducationType::query()->first() ?? $this->create([
+            'nm_tipo' => 'Tipo de Ensino Padrão',
+        ]);
     }
 }

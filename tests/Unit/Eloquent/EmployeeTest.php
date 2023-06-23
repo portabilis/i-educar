@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\EmployeeAllocation;
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeeInep;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyIndividual;
@@ -116,7 +117,7 @@ class EmployeeTest extends EloquentTestCase
     {
         EmployeeAllocationFactory::new()->create([
             'ref_cod_servidor' => $this->model,
-            'ref_cod_escola' => LegacySchoolFactory::new()->create()
+            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
         ]);
 
         $this->assertCount(1, $this->model->schools);
@@ -132,11 +133,22 @@ class EmployeeTest extends EloquentTestCase
         $employee = EmployeeFactory::new()->hasAttached(LegacyDisciplineFactory::new(), [
             'ref_ref_cod_instituicao' => $this->model->institution_id,
             'ref_cod_curso' => $course->id,
-            'ref_cod_funcao' => $employeeRole->id
+            'ref_cod_funcao' => $employeeRole->id,
         ], 'disciplines')->create();
 
         $this->assertCount(1, $employee->disciplines);
         $this->assertInstanceOf(LegacyDiscipline::class, $employee->disciplines->first());
+    }
+
+    /** @test  */
+    public function relationshipCourses(): void
+    {
+        $employee = EmployeeFactory::new()->hasAttached(LegacyCourseFactory::new(), [
+            'ref_ref_cod_instituicao' => $this->model->institution_id,
+        ], 'courses')->create();
+
+        $this->assertCount(1, $employee->courses);
+        $this->assertInstanceOf(LegacyCourse::class, $employee->courses->first());
     }
 
     protected function getLegacyAttributes(): array
@@ -145,7 +157,7 @@ class EmployeeTest extends EloquentTestCase
             'id' => 'cod_servidor',
             'workload' => 'carga_horaria',
             'created_at' => 'data_cadastro',
-            'institution_id' => 'ref_cod_instituicao'
+            'institution_id' => 'ref_cod_instituicao',
         ];
     }
 }

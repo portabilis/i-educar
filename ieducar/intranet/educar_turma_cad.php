@@ -9,60 +9,114 @@ use App\Models\LegacyStageType;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_serie;
+
     public $ref_cod_serie_;
+
     public $ref_ref_cod_escola;
+
     public $nm_turma;
+
     public $sgl_turma;
+
     public $max_aluno;
+
     public $multiseriada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_turma_tipo;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_cod_escola_;
+
     public $padrao_ano_escolar = 1;
+
     public $ref_cod_regente;
+
     public $ref_cod_instituicao_regente;
+
     public $turma_modulo = [];
+
     public $incluir_modulo;
+
     public $excluir_modulo;
+
     public $visivel;
+
     public $tipo_atendimento;
+
     public $atividades_complementares;
+
     public $cod_curso_profissional;
+
     public $etapa_educacenso;
+
     public $formas_organizacao_turma;
+
     public $ref_cod_disciplina_dispensada;
+
     public $codigo_inep_educacenso;
+
     public $estrutura_curricular;
+
     public $tipo_mediacao_didatico_pedagogico;
+
     public $unidade_curricular;
+
     public $dias_semana;
+
     public $tipo_boletim;
+
     public $tipo_boletim_diferenciado;
+
     public $sequencial;
+
     public $ref_cod_modulo;
+
     public $data_inicio;
+
     public $data_fim;
+
     public $dias_letivos;
+
     public $etapas_especificas;
+
     public $etapas_utilizadas;
+
     public $local_funcionamento_diferenciado;
+
     public $definirComponentePorEtapa;
+
     public $modulos = [];
+
     public $retorno;
+
     public $dias_da_semana = [
         '' => 'Selecione',
         1 => 'Domingo',
@@ -71,13 +125,22 @@ return new class extends clsCadastro {
         4 => 'Quarta',
         5 => 'Quinta',
         6 => 'Sexta',
-        7 => 'Sábado'
+        7 => 'Sábado',
     ];
+
     public $nao_informar_educacenso;
+
     public $ano_letivo;
+
     public $nome_url_cancelar = 'Cancelar';
+
     public $url_cancelar = 'educar_turma_lst.php';
+
     public $ano;
+
+    public $outras_unidades_curriculares_obrigatorias;
+
+    public $classe_com_lingua_brasileira_sinais;
 
     public function Inicializar()
     {
@@ -181,7 +244,7 @@ return new class extends clsCadastro {
 
         if (is_numeric(value: $this->cod_turma)) {
             if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
-                $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where(column: 'cod_turma', operator: $this->cod_turma)->doesntExist();
+                $not_access = LegacySchoolClass::filter(['school_user' => $this->pessoa_logada])->where(column: 'cod_turma', operator: $this->cod_turma)->doesntExist();
                 if ($not_access) {
                     $this->simpleRedirect(url: 'educar_turma_lst.php');
                 }
@@ -203,7 +266,7 @@ return new class extends clsCadastro {
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
-        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int)$obrigarCamposCenso);
+        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int) $obrigarCamposCenso);
         $this->campoOculto(nome: 'cod_turma', valor: $this->cod_turma);
         $this->campoOculto(nome: 'ref_cod_escola_', valor: $this->ref_cod_escola);
         $this->campoOculto(nome: 'ref_cod_curso_', valor: $this->ref_cod_curso);
@@ -329,7 +392,7 @@ return new class extends clsCadastro {
         $this->campoCheck(nome: 'visivel', campo: 'Ativo', valor: $ativo);
 
         $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
-        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
+        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'tipo_mediacao_didatico_pedagogico', inputOptions: $options);
 
         $this->campoQuebra2();
@@ -472,7 +535,7 @@ return new class extends clsCadastro {
             4 => 'Atividade complementar',
             5 => 'Atendimento educacional especializado (AEE)'];
 
-        $options = ['label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => $obrigarCamposCenso, 'size' => 70,];
+        $options = ['label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => $obrigarCamposCenso, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'tipo_atendimento', inputOptions: $options);
 
         $helperOptions = ['objectName' => 'estrutura_curricular'];
@@ -482,12 +545,12 @@ return new class extends clsCadastro {
             'size' => 70,
             'options' => [
                 'values' => $this->estrutura_curricular,
-                'all_values'=> [
+                'all_values' => [
                     1 => 'Formação geral básica',
                     2 => 'Itinerário formativo',
-                    3 => 'Não se aplica'
-                ]
-            ]
+                    3 => 'Não se aplica',
+                ],
+            ],
         ];
 
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
@@ -518,10 +581,10 @@ return new class extends clsCadastro {
             3 => 'Ciclo(s)',
             4 => 'Grupos não seriados com base na idade ou competência',
             5 => 'Módulos',
-            6 => 'Alternância regular de períodos de estudos'
+            6 => 'Alternância regular de períodos de estudos',
         ];
 
-        $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'formas_organizacao_turma', inputOptions: $options);
 
         $helperOptions = ['objectName' => 'unidade_curricular'];
@@ -531,11 +594,23 @@ return new class extends clsCadastro {
             'size' => 70,
             'options' => [
                 'values' => $this->unidade_curricular,
-                'all_values'=> UnidadesCurriculares::getDescriptiveValues()
-            ]
+                'all_values' => UnidadesCurriculares::getDescriptiveValues(),
+            ],
         ];
 
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+
+        $options = [
+            'required' => false,
+            'label' => 'Outra(s) unidade(s) curricular(es) obrigatória(s)',
+            'label_hint' => 'Informe outras unidades curriculares que a turma trabalha separadas por ponto e vírgula (;)',
+            'value' => $this->outras_unidades_curriculares_obrigatorias,
+            'cols' => 45,
+            'max_length' => 500,
+            'disabled' => true,
+        ];
+
+        $this->inputsHelper()->textArea('outras_unidades_curriculares_obrigatorias', $options);
 
         $cursos = loadJson(file: 'educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
@@ -550,8 +625,17 @@ return new class extends clsCadastro {
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'local_funcionamento_diferenciado', inputOptions: $options);
+
+        $resources = [
+            null => 'Selecione',
+            1 => 'Sim',
+            2 => 'Não',
+        ];
+
+        $options = ['label' => 'Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita como segunda língua (bilingue para surdos)', 'resources' => $resources, 'value' => $this->classe_com_lingua_brasileira_sinais, 'required' => $obrigarCamposCenso, 'size' => 70];
+        $this->inputsHelper()->select(attrName: 'classe_com_lingua_brasileira_sinais', inputOptions: $options);
 
         $options = ['label' => 'Não informar esta turma no Censo escolar',
             'value' => $this->nao_informar_educacenso,
@@ -750,7 +834,7 @@ return new class extends clsCadastro {
         foreach ($this->modulos as $modulo) {
             $retorno[$modulo['cod_modulo']] = [
                 'label' => $modulo['nm_tipo'],
-                'etapas' => (int)$modulo['num_etapas']
+                'etapas' => (int) $modulo['num_etapas'],
             ];
         }
 

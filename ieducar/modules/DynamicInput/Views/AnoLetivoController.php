@@ -2,7 +2,6 @@
 
 use App\Models\LegacySchoolGrade;
 
-
 class AnoLetivoController extends ApiCoreController
 {
     protected function canGetAnosLetivos()
@@ -30,7 +29,7 @@ class AnoLetivoController extends ApiCoreController
             }
         }
 
-        return (empty($situacaoIn) ? '' : 'and al.andamento in ('. implode(',', $situacaoIn) . ')');
+        return empty($situacaoIn) ? '' : 'and al.andamento in ('. implode(',', $situacaoIn) . ')';
     }
 
     protected function getAnosLetivos()
@@ -57,7 +56,7 @@ class AnoLetivoController extends ApiCoreController
             $anosLetivos = App_Model_IedFinder::getAnosLetivosEscolaSerie($this->getRequest()->escola_id, $this->getRequest()->serie_id);
             asort($anosLetivos);
 
-            return [ 'options' => $anosLetivos ];
+            return ['options' => $anosLetivos];
         }
     }
 
@@ -70,9 +69,10 @@ class AnoLetivoController extends ApiCoreController
             ->where('ref_cod_escola', $escolaId)
             ->whereIn('ref_cod_serie', $series)
             ->get()
-            ->map(function($schoolGrade) {
+            ->map(function ($schoolGrade) {
                 $anosLetivos = str_replace(['{', '}'], '', $schoolGrade->anos_letivos);
                 $anosLetivos = explode(',', $anosLetivos);
+
                 return [
                     'ref_cod_serie' => $schoolGrade->ref_cod_serie,
                     'anos_letivos' => $anosLetivos,

@@ -16,12 +16,10 @@ class StudentRotatePictureController extends Controller
     /**
      * Rotaciona uma imagem e a substitui no storage.
      *
-     * @param Request       $request
-     * @param LegacyStudent $student
-     *
-     * @throws Exception
      *
      * @return array
+     *
+     * @throws Exception
      */
     public function rotate(Request $request, LegacyStudent $student, UrlPresigner $presigner)
     {

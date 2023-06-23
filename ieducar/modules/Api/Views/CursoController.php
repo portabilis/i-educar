@@ -5,7 +5,6 @@ use App\Models\LegacySchoolCourse;
 
 class CursoController extends ApiCoreController
 {
-
     protected function canGetCursos()
     {
         return $this->validatesPresenceOf('instituicao_id');
@@ -167,7 +166,7 @@ class CursoController extends ApiCoreController
 
             $cursos = Portabilis_Array_Utils::filterSet($cursos, $attrs);
 
-            return ['cursos' => $cursos ];
+            return ['cursos' => $cursos];
         }
     }
 
@@ -245,7 +244,7 @@ class CursoController extends ApiCoreController
             $this->appendResponse($this->getModalidadeCurso());
         } elseif ($this->isRequestFor('get', 'cursos-multiple-search')) {
             $this->appendResponse($this->getCursosMultipleSearch());
-        }  elseif ($this->isRequestFor('get', 'cursos-da-escola')) {
+        } elseif ($this->isRequestFor('get', 'cursos-da-escola')) {
             $this->appendResponse($this->getCursosDaEscola());
         } elseif ($this->isRequestFor('get', 'dados-curso')) {
             $this->appendResponse($this->getDadosDoCurso());

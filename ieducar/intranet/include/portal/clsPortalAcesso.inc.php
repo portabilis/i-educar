@@ -5,11 +5,17 @@ use iEducar\Legacy\Model;
 class clsPortalAcesso extends Model
 {
     public $cod_acesso;
+
     public $data_hora;
+
     public $ip_externo;
+
     public $ip_interno;
+
     public $cod_pessoa;
+
     public $obs;
+
     public $sucesso;
 
     public function __construct($cod_acesso = null, $data_hora = null, $ip_externo = null, $ip_interno = null, $cod_pessoa = null, $obs = null, $sucesso = null)

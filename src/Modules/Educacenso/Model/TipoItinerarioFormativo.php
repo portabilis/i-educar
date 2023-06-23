@@ -5,10 +5,15 @@ namespace iEducar\Modules\Educacenso\Model;
 class TipoItinerarioFormativo
 {
     public const LINGUANGENS = 1;
+
     public const MATEMATICA = 2;
+
     public const CIENCIAS_NATUREZA = 3;
+
     public const CIENCIAS_HUMANAS = 4;
+
     public const FORMACAO_TECNICA = 5;
+
     public const ITINERARIO_INTEGRADO = 6;
 
     public static function getDescriptiveValues()
@@ -19,7 +24,7 @@ class TipoItinerarioFormativo
             self::CIENCIAS_NATUREZA => 'Ciências da natureza e suas tecnologias',
             self::CIENCIAS_HUMANAS => 'Ciências humanas e sociais aplicadas',
             self::FORMACAO_TECNICA => 'Formação técnica e profissional',
-            self::ITINERARIO_INTEGRADO => 'Itinerário formativo integrado',
+            self::ITINERARIO_INTEGRADO => 'Itinerário formativo integrado (entre as áreas de conhecimento ou entre as áreas de conhecimento e a formação técnica profissional)',
         ];
     }
 

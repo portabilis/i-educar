@@ -15,8 +15,14 @@ submitButton.click(function(){
     let tipo_nota    = $j('[name="componentes['+key+'][tipo_nota]"]').val();
     let anos_letivos = $j('[name="componentes['+key+'][anos_letivos]"]').val() || [];
 
+    if (hora_falta != null) {
+        hora_falta = hora_falta / 60;
+    } else {
+        hora_falta = null;
+    }
+
     if(check){
-      arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota, anos_letivos: anos_letivos, hora_falta: hora_falta / 60});
+      arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota, anos_letivos: anos_letivos, hora_falta: hora_falta});
     }
   });
   atualizaComponentesSerie(arrayComponentes);

@@ -46,7 +46,6 @@ class Registro00Import extends Registro00Import2019
         }
 
         $school->poder_publico_parceria_convenio = transformDBArrayInString($model->poderPublicoConveniado) ?: null;
-        $school->formas_contratacao_adm_publica_e_outras_instituicoes = transformDBArrayInString($model->formasContratacaoPoderPublico) ?: null;
         $school->qtd_matriculas_atividade_complementar = $model->qtdMatAtividadesComplentar ?: null;
         $school->qtd_atendimento_educacional_especializado = $model->qtdMatAee ?: null;
         $school->qtd_ensino_regular_creche_par = $model->qtdMatCrecheParcial ?: null;
@@ -95,8 +94,6 @@ class Registro00Import extends Registro00Import2019
     }
 
     /**
-     * @param $arrayColumns
-     *
      * @return Registro00|RegistroEducacenso
      */
     public static function getModel($arrayColumns)

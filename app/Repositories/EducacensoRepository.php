@@ -10,7 +10,6 @@ class EducacensoRepository
     /**
      * @param int $year
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord20($year, $school)
@@ -22,7 +21,6 @@ class EducacensoRepository
 
     /**
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord40($school)
@@ -34,7 +32,6 @@ class EducacensoRepository
     /**
      * @param int $year
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord50($year, $school)
@@ -47,7 +44,6 @@ class EducacensoRepository
     /**
      * @param int $year
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord60($year, $school)
@@ -58,20 +54,15 @@ class EducacensoRepository
     }
 
     /**
-     * @param       $sql
      * @param array $params
-     *
      * @return array
      */
     protected function fetchPreparedQuery($sql, $params = [])
     {
-        return DB::select(DB::raw($sql), $params);
+        return DB::select($sql, $params);
     }
 
     /**
-     * @param $school
-     * @param $year
-     *
      * @return array
      */
     public function getDataForRecord00($school, $year)
@@ -129,7 +120,8 @@ class EducacensoRepository
             (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
             e.poder_publico_parceria_convenio AS "poderPublicoConveniado",
-            e.formas_contratacao_adm_publica_e_outras_instituicoes AS "formasContratacaoPoderPublico",
+            e.formas_contratacao_parceria_escola_secretaria_municipal AS "formasContratacaoPoderPublicoMunicipal",
+            e.formas_contratacao_parceria_escola_secretaria_estadual AS "formasContratacaoPoderPublicoEstadual",
             e.qtd_matriculas_atividade_complementar AS "qtdMatAtividadesComplentar",
             e.qtd_atendimento_educacional_especializado AS "qtdMatAee",
             e.qtd_ensino_regular_creche_par AS "qtdMatCrecheParcial",
@@ -218,8 +210,6 @@ SQL;
     }
 
     /**
-     * @param $school
-     *
      * @return array
      */
     public function getDataForRecord10($school)
@@ -328,7 +318,8 @@ SQL;
                 pessoa.url AS "url",
                 escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico",
                 escola.qtd_vice_diretor AS "qtdViceDiretor",
-                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario"
+                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario",
+                escola.qtd_tradutor_interprete_libras_outro_ambiente AS "qtdTradutorInterpreteLibrasOutroAmbiente"
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
             INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
@@ -338,13 +329,11 @@ SQL;
 SQL;
 
         return $this->fetchPreparedQuery($sql, [
-            'school' => $school
+            'school' => $school,
         ]);
     }
 
     /**
-     * @param $school
-     *
      * @return array
      */
     public function getDataForRecord40($school)
@@ -355,9 +344,6 @@ SQL;
     }
 
     /**
-     * @param $school
-     * @param $year
-     *
      * @return array
      */
     public function getDataForRecord20($school, $year)
@@ -368,9 +354,6 @@ SQL;
     }
 
     /**
-     * @param $classroomId
-     * @param $disciplineIds
-     *
      * @return array
      */
     public function getDisciplinesWithoutTeacher($classroomId, $disciplineIds)
@@ -415,7 +398,7 @@ SQL;
             return [];
         }
 
-        $stringPersonId = join(',', $arrayPersonId);
+        $stringPersonId = implode(',', $arrayPersonId);
         $sql = <<<SQL
             SELECT
                 '30' AS registro,
@@ -451,6 +434,7 @@ SQL;
                 5 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaSurdoCegueira",
                 6 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaFisica",
                 7 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaIntelectual",
+                8 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaVisaoMonocular",
                 CASE WHEN array_length(deficiencias.array_deficiencias, 1) > 1 THEN 1 ELSE 0 END "deficienciaMultipla",
                 13 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
                 25 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
@@ -491,7 +475,7 @@ SQL;
                  FROM cadastro.fisica_deficiencia
                  JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
                  WHERE fisica_deficiencia.ref_idpes = fisica.idpes
-                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,25,13)
+                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,8,25,13)
                  GROUP BY 1
                  ) deficiencias ON true
 
@@ -508,7 +492,7 @@ SQL;
             return [];
         }
 
-        $stringPersonId = join(',', $arrayEmployeeId);
+        $stringPersonId = implode(',', $arrayEmployeeId);
         $sql = <<<SQL
             SELECT DISTINCT
                 servidor.ref_cod_instituicao AS "codigoInstituicao",
@@ -532,6 +516,8 @@ SQL;
                 (ARRAY[9] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoCampo",
                 (ARRAY[10] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoAmbiental",
                 (ARRAY[11] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoDireitosHumanos",
+                (ARRAY[18] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoBilingueSurdos",
+                (ARRAY[19] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao",
                 (ARRAY[12] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaGeneroDiversidadeSexual",
                 (ARRAY[13] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaDireitosCriancaAdolescente",
                 (ARRAY[14] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoRelacoesEticoRaciais",
@@ -575,7 +561,7 @@ SQL;
             return [];
         }
 
-        $stringStudentId = join(',', $arrayStudentId);
+        $stringStudentId = implode(',', $arrayStudentId);
         $sql = <<<SQL
             SELECT DISTINCT
                 aluno.ref_idpes AS "codigoPessoa",

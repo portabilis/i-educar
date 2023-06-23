@@ -16,9 +16,9 @@ abstract class AddSchema
     /**
      * Add schema into root schema.
      *
-     * @throws Exception
-     *
      * @return string
+     *
+     * @throws Exception
      */
     public function handle()
     {

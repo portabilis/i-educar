@@ -12,7 +12,7 @@ class LegacySchoolingDegreeFactory extends Factory
     public function definition(): array
     {
         return [
-            'description' => $this->faker->name,
+            'description' => $this->faker->name(),
             'schooling' => 1,
         ];
     }
@@ -27,7 +27,7 @@ class LegacySchoolingDegreeFactory extends Factory
             }
 
             return [
-                'id' => $schooling->getKey()
+                'id' => $schooling->getKey(),
             ];
         });
     }

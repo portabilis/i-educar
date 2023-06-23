@@ -11,7 +11,6 @@ class CacheManager extends LaravelCacheManager
     /**
      * Invalida todas as entradas de cache de acordo com as tags passadas
      *
-     * @param $tags
      *
      * @return Repository
      */
@@ -30,7 +29,6 @@ class CacheManager extends LaravelCacheManager
      *
      * @param string $method
      * @param array  $parameters
-     *
      * @return mixed
      */
     public function __call($method, $parameters)
@@ -49,7 +47,6 @@ class CacheManager extends LaravelCacheManager
     /**
      * Checks if cache driver supports tags use
      *
-     * @param $store
      *
      * @return bool
      */
@@ -71,7 +68,6 @@ class CacheManager extends LaravelCacheManager
     /**
      * Checks if cache driver supports prefix use
      *
-     * @param $store
      *
      * @return bool
      */

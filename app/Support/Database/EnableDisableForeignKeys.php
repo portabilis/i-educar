@@ -10,7 +10,6 @@ trait EnableDisableForeignKeys
      * Disable foreign keys check.
      *
      * @param string $table
-     *
      * @return void
      */
     protected function disableForeignKeys($table)
@@ -22,7 +21,6 @@ trait EnableDisableForeignKeys
      * Enable foreign keys check.
      *
      * @param string $table
-     *
      * @return void
      */
     protected function enableForeignKeys($table)

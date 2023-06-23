@@ -23,7 +23,7 @@ if (is_numeric($_GET['ins'])) {
 
     if ($db->numLinhas()) {
         while ($db->ProximoRegistro()) {
-            list($cod, $nome) = $db->Tupla();
+            [$cod, $nome] = $db->Tupla();
             echo "  <tipo_regime cod_tipo_regime=\"{$cod}\">{$nome}</tipo_regime>\n";
         }
     }

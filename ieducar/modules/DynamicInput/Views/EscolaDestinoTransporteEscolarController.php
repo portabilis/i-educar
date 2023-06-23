@@ -4,7 +4,7 @@ class EscolaDestinoTransporteEscolarController extends ApiCoreController
 {
     protected function getEscolaDestinoTransporteEscolar()
     {
-        $sql    = 'SELECT idpes AS id,
+        $sql = 'SELECT idpes AS id,
                        nome AS nome
                           FROM cadastro.pessoa
                           WHERE idpes IN

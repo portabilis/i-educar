@@ -12,10 +12,10 @@ class StudentInepFactory extends Factory
     public function definition(): array
     {
         return [
-            'student_id' => LegacyStudentFactory::new()->create(),
+            'student_id' => fn () => LegacyStudentFactory::new()->create(),
             'number' => $this->faker->randomNumber(),
             'name' => $this->faker->word(),
-            'font' => $this->faker->word()
+            'font' => $this->faker->word(),
         ];
     }
 }

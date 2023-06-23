@@ -6,33 +6,60 @@ use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyRegimeType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_curso;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_regime;
+
     public $ref_cod_nivel_ensino;
+
     public $ref_cod_tipo_ensino;
+
     public $nm_curso;
+
     public $sgl_curso;
+
     public $qtd_etapas;
+
     public $carga_horaria;
+
     public $ato_poder_publico;
+
     public $objetivo_curso;
+
     public $publico_alvo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $padrao_ano_escolar;
+
     public $hora_falta;
+
     public $incluir;
+
     public $excluir_;
+
     public $curso_sem_avaliacao = true;
+
     public $multi_seriado;
+
     public $modalidade_curso;
+
     public $importar_curso_pre_matricula;
+
     public $descricao;
 
     public function Inicializar()
@@ -88,7 +115,7 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'cod_curso', valor: $this->cod_curso);
 
         $obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // Nível ensino
         $opcoes = ['' => 'Selecione'];
@@ -228,7 +255,7 @@ return new class extends clsCadastro {
             1 => 'Ensino regular',
             2 => 'Educação especial',
             3 => 'Educação de Jovens e Adultos (EJA)',
-            4 => 'Educação profissional'
+            4 => 'Educação profissional',
         ];
 
         $options = ['label' => 'Modalidade do curso', 'resources' => $resources, 'value' => $this->modalidade_curso];
@@ -243,8 +270,8 @@ return new class extends clsCadastro {
             'required' => false,
             'options' => [
                 'values' => $etapas,
-                'all_values' => $etapasEducacenso
-            ]
+                'all_values' => $etapasEducacenso,
+            ],
         ], helperOptions: [
             'objectName' => 'etapacurso',
         ]);
@@ -295,6 +322,7 @@ return new class extends clsCadastro {
             }
 
             $this->mensagem = 'Cadastro não realizado.<br>';
+
             return false;
         }
 
@@ -351,8 +379,10 @@ return new class extends clsCadastro {
             }
 
             $this->mensagem = 'Edição não realizada.<br>';
+
             return false;
         }
+
         return true;
     }
 

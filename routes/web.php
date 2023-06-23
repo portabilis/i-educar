@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;
@@ -140,7 +141,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 
     Route::get('/exportacoes', 'ExportController@index')->middleware('can:view:' . Process::DATA_EXPORT)->name('export.index');
-    Route::get('/exportacoes/novo', [ExportController::class,'form'])->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
+    Route::get('/exportacoes/novo', [ExportController::class, 'form'])->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
@@ -167,6 +168,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('schoolclass.store');
     Route::delete('/turma', [SchoolClassController::class, 'delete'])
         ->name('schoolclass.delete');
+
+    Route::post('/enrollments-promotion', [EnrollmentsPromotionController::class, 'processEnrollmentsPromotionJobs'])
+        ->name('enrollments.promotion');
 
     Route::fallback([WebController::class, 'fallback']);
 });

@@ -2,7 +2,8 @@
 
 use App\Models\WithdrawalReason;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -32,13 +33,21 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_motivo_afastamento;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_motivo;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -46,11 +55,11 @@ return new class extends clsListagem {
         $this->titulo = 'Motivo Afastamento - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
-            'Motivo de Afastamento'
+            'Motivo de Afastamento',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -62,7 +71,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: $lista_busca);
 
         $get_escola = false;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
         $this->campoTexto(nome: 'nm_motivo', campo: 'Motivo de Afastamento', valor: $this->nm_motivo, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
@@ -89,7 +98,7 @@ return new class extends clsListagem {
                 $det_instituicao = $obj_instituicao->detalhe();
 
                 $lista_busca = [
-                    "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}\">{$registro['nm_motivo']}</a>"
+                    "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}\">{$registro['nm_motivo']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

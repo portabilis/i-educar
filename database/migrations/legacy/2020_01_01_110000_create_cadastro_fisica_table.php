@@ -32,7 +32,6 @@ class CreateCadastroFisicaTable extends Migration
                     data_chegada_brasil date,
                     idmun_nascimento numeric(6,0),
                     ultima_empresa character varying(150),
-                    idocup numeric(6,0),
                     nome_mae character varying(150),
                     nome_pai character varying(150),
                     nome_conjuge character varying(150),

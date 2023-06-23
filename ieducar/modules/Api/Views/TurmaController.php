@@ -1,44 +1,40 @@
 <?php
 
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 
 class TurmaController extends ApiCoreController
 {
-
     // validators
     protected function validatesTurmaId()
     {
-        return (
+        return
             $this->validatesPresenceOf('id') &&
-            $this->validatesExistenceOf('turma', $this->getRequest()->id)
-        );
+            $this->validatesExistenceOf('turma', $this->getRequest()->id);
     }
 
     protected function canGetTurmasPorEscola()
     {
-        return (
+        return
             $this->validatesPresenceOf('escola') &&
             $this->validatesPresenceOf('ano') &&
-            $this->validatesPresenceOf('instituicao_id')
-        );
+            $this->validatesPresenceOf('instituicao_id');
     }
 
     // validations
     protected function canGet()
     {
-        return (
+        return
             $this->canAcceptRequest() &&
-            $this->validatesTurmaId()
-        );
+            $this->validatesTurmaId();
     }
 
     protected function canGetAlunosExameTurma()
     {
-        return (
+        return
             $this->validatesPresenceOf('instituicao_id') &&
             $this->validatesPresenceOf('turma_id') &&
-            $this->validatesPresenceOf('disciplina_id')
-        );
+            $this->validatesPresenceOf('disciplina_id');
     }
 
     // api
@@ -104,7 +100,7 @@ class TurmaController extends ApiCoreController
             'aluno',
             'data_enturmacao',
             'ord_dependencia',
-            'data_fechamaneto'
+            'data_fechamaneto',
         ];
         $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
@@ -114,7 +110,7 @@ class TurmaController extends ApiCoreController
                 $aluno['cod_matricula'],
                 $aluno['sequencial_fechamento'],
                 $aluno['sequencial'],
-                $key + 1
+                $key + 1,
             ];
 
             $sql = '
@@ -141,7 +137,7 @@ class TurmaController extends ApiCoreController
             $lstNomes[] = [
                 'nome' => limpa_acentos(mb_strtoupper($matricula['nome'])),
                 'ref_cod_matricula' => $matricula['ref_cod_matricula'],
-                'sequencial' => $matricula['sequencial']
+                'sequencial' => $matricula['sequencial'],
             ];
         }
 
@@ -149,8 +145,8 @@ class TurmaController extends ApiCoreController
         array_unshift($lstNomes, 'indice zero');
         $quantidadeAlunos = count($lstNomes);
 
-        for ($i=1; $i < $quantidadeAlunos; $i++) {
-            $sql ='UPDATE pmieducar.matricula_turma
+        for ($i = 1; $i < $quantidadeAlunos; $i++) {
+            $sql = 'UPDATE pmieducar.matricula_turma
                 SET sequencial_fechamento ='.$i.'
               WHERE matricula_turma.ref_cod_turma = '. $codTurma .'
                 AND matricula_turma.ref_cod_matricula = '. $lstNomes[$i]['ref_cod_matricula'];
@@ -174,9 +170,9 @@ class TurmaController extends ApiCoreController
 
         if ((int) $turma['multiseriada'] === 1) {
             $boletimPorSerie = LegacySchoolClassGrade::query()
-            ->where('turma_id', $turma)
-            ->where('serie_id', $serie)
-            ->first();
+                ->where('turma_id', $turma)
+                ->where('serie_id', $serie)
+                ->first();
 
             if ($boletimPorSerie instanceof LegacySchoolClassGrade) {
                 $boletimPorSerie->toArray();
@@ -190,6 +186,12 @@ class TurmaController extends ApiCoreController
 
         if ($tipoDiferenciado && $tipoDiferenciado != $tipo) {
             $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+        } else {
+            $exists = LegacySchoolClass::query()->whereDifferentStudents($codTurma)->exists();
+
+            if ($exists) {
+                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+            }
         }
 
         return ['tipo-boletim' => $tipos[$tipo]];
@@ -267,7 +269,7 @@ class TurmaController extends ApiCoreController
 
             $turmas = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'series_regras','ref_cod_regente', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'series_regras', 'ref_cod_regente', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
 
             foreach ($turmas as $key => $turma) {
@@ -308,7 +310,7 @@ class TurmaController extends ApiCoreController
 
         $params = [$instituicaoId, $turmaId, $disciplinaId];
         $alunos = $this->fetchPreparedQuery($sql, $params);
-        $attrs = ['id','nota_exame'];
+        $attrs = ['id', 'nota_exame'];
         $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
         return ['alunos' => $alunos];

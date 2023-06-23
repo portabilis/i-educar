@@ -21,7 +21,6 @@ class SocialAssistance extends Model
 
     /**
      * @param Builder $query
-     *
      * @return EnrollmentEloquentBuilder
      */
     public function newEloquentBuilder($query)
@@ -66,7 +65,6 @@ class SocialAssistance extends Model
 
     /**
      * @param string $column
-     *
      * @return string
      */
     public function alias($column)

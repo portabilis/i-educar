@@ -23,7 +23,7 @@ class LegacyIndividualEndpointTestCreate extends TestCase
         $faker = Factory::create();
 
         $maritalStatus = LegacyMaritalStatus::create([
-            'descricao' => 'Solteiro'
+            'descricao' => 'Solteiro',
         ]);
 
         $race = LegacyRaceFactory::new()->create();
@@ -34,7 +34,7 @@ class LegacyIndividualEndpointTestCreate extends TestCase
         $individual = LegacyIndividualFactory::new()->make([
             'idmun_nascimento' => $city,
             'data_nasc' => now(),
-            'sexo' => 'M'
+            'sexo' => 'M',
         ]);
 
         $request = [
@@ -79,7 +79,7 @@ class LegacyIndividualEndpointTestCreate extends TestCase
             'sexo' => $individual->sexo,
             'data_nasc' => $individual->data_nasc,
         ])->assertDatabaseHas($individual->person->getTable(), [
-            'nome' => 'DOMINIC TORRETO'
+            'nome' => 'DOMINIC TORRETO',
         ])->assertDatabaseHas('cadastro.fisica_raca', [
             'ref_cod_raca' => $race->getKey(),
         ]);

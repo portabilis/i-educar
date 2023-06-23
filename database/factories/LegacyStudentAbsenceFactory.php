@@ -17,14 +17,19 @@ class LegacyStudentAbsenceFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'matricula_id' => static fn () => LegacyRegistrationFactory::new()->create(),
+            'matricula_id' => fn () => LegacyRegistrationFactory::new()->create(),
             'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,
         ];
+    }
+
+    public function discipline(): static
+    {
+        return $this->state([
+            'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+        ]);
     }
 }

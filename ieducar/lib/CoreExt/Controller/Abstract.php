@@ -3,6 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
+#[AllowDynamicProperties]
 abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interface
 {
     /**
@@ -59,7 +60,6 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      * Verifica se uma opção está setada.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _hasOption($key)
@@ -72,8 +72,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      * setada.
      *
      * @param string $key
-     *
-     * @return mixed|NULL
+     * @return mixed|null
      */
     public function getOption($key)
     {
@@ -206,7 +205,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             302 => 'HTTP/1.1 302 Found',
             303 => 'HTTP/1.1 303 See Other',
             304 => 'HTTP/1.1 304 Not Modified',
-            305 => 'HTTP/1.1 305 Use Proxy'
+            305 => 'HTTP/1.1 305 Use Proxy',
         ];
 
         if (empty($codes[$code])) {
@@ -226,7 +225,6 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      *
      * @param bool   $condition
      * @param string $url
-     *
      * @return void
      *
      * @throws HttpResponseException

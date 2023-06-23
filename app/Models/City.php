@@ -59,17 +59,19 @@ class City extends Model
 
     /**
      * @param string $name
-     *
      * @return Builder
      */
     public static function queryFindByName($name)
     {
-        return static::query()->whereRaw("translate(upper(name),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$name}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')");
+        $name = str_replace('\'', '\'\'', $name);
+
+        return static::query()->whereRaw(
+            "translate(upper(name),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$name}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')"
+        );
     }
 
     /**
      * @param int $id
-     *
      * @return string
      */
     public static function getNameById($id)

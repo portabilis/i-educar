@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Models\LegacyModel;
+use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,8 @@ abstract class EloquentTestCase extends TestCase
     protected $relations = [];
 
     protected Model $model;
+
+    protected ?Closure $factoryModifier;
 
     public function setUp(): void
     {
@@ -50,6 +53,11 @@ abstract class EloquentTestCase extends TestCase
             $this->getEloquentModelName()
         );
 
+        if (isset($this->factoryModifier)) {
+            $modifier = $this->factoryModifier;
+            $factory = $modifier($factory);
+        }
+
         return $factory->make()->toArray();
     }
 
@@ -63,6 +71,11 @@ abstract class EloquentTestCase extends TestCase
         $factory = Factory::factoryForModel(
             $this->getEloquentModelName()
         );
+
+        if (isset($this->factoryModifier)) {
+            $modifier = $this->factoryModifier;
+            $factory = $modifier($factory);
+        }
 
         return $factory->make()->toArray();
     }
@@ -85,7 +98,6 @@ abstract class EloquentTestCase extends TestCase
      * @return Model
      *
      * @see Model::save()
-     *
      */
     protected function createNewModel()
     {
@@ -139,7 +151,6 @@ abstract class EloquentTestCase extends TestCase
      * @return void
      *
      * @throws Exception
-     *
      */
     public function testDeleteUsingEloquent()
     {
@@ -188,6 +199,11 @@ abstract class EloquentTestCase extends TestCase
             $this->getEloquentModelName()
         );
 
+        if (isset($this->factoryModifier)) {
+            $modifier = $this->factoryModifier;
+            $factory = $modifier($factory);
+        }
+
         foreach ($this->relations as $relation => $class) {
             $type = $this->model->{$relation}();
 
@@ -214,7 +230,9 @@ abstract class EloquentTestCase extends TestCase
                 }
             } elseif ($type instanceof BelongsTo) {
                 $model = $factory->create();
-                $this->assertInstanceOf($class, $model->{$relation});
+                $message = 'Failed asserting that relation [%s] is an instance of class [%s].';
+                $message = sprintf($message, $relation, $class);
+                $this->assertInstanceOf($class, $model->{$relation}, $message);
             }
         }
     }

@@ -222,220 +222,225 @@ class Registro00 implements RegistroEducacenso
     /**
      * @var array
      */
-    public $formasContratacaoPoderPublico;
+    public $formasContratacaoPoderPublicoEstadual;
 
     /**
-     * @var integer
+     * @var array
+     */
+    public $formasContratacaoPoderPublicoMunicipal;
+
+    /**
+     * @var int
      */
     public $qtdMatAtividadesComplentar;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatAee;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatCrecheParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatCrecheIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatPreEscolaParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatPreEscolaIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalIniciaisParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalIniciaisIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalFinaisParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalFinaisIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qdtMatClasseEspecialParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qdtMatClasseEspecialIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qdtMatEjaFundamental;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEjaEnsinoMedio;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaFundamentalParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaFundamentalIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitanteEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitanteEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomentarEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomentarEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitenteEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitenteEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomplementarEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomplementarEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEnsinoMedioItegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaSubsequenteEnsinoMedio;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioIntegral;
 
@@ -455,22 +460,22 @@ class Registro00 implements RegistroEducacenso
     public $orgaoVinculado;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idEscola;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idInstituicao;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idMunicipio;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idDistrito;
 
@@ -488,49 +493,4 @@ class Registro00 implements RegistroEducacenso
      * @var string Campo usado na validação
      */
     public $anoFimAnoLetivo;
-
-    public function NaoPossuiQuantidadeDeMatriculasAtendidas()
-    {
-        return
-            !$this->qtdMatAtividadesComplentar &&
-            !$this->qtdMatAee &&
-            !$this->qtdMatCrecheParcial &&
-            !$this->qtdMatCrecheIntegral &&
-            !$this->qtdMatPreEscolaParcial &&
-            !$this->qtdMatPreEscolaIntegral &&
-            !$this->qtdMatFundamentalIniciaisParcial &&
-            !$this->qtdMatFundamentalIniciaisIntegral &&
-            !$this->qtdMatFundamentalFinaisParcial &&
-            !$this->qtdMatFundamentalFinaisIntegral &&
-            !$this->qtdMatEnsinoMedioParcial &&
-            !$this->qtdMatEnsinoMedioIntegral &&
-            !$this->qtdMatEjaEnsinoMedio &&
-            !$this->qtdMatEdProfIntegradaEjaFundamentalParcial &&
-            !$this->qtdMatEdProfIntegradaEjaFundamentalIntegral &&
-            !$this->qtdMatEdProfIntegradaEjaNivelMedioParcial &&
-            !$this->qtdMatEdProfIntegradaEjaNivelMedioIntegral &&
-            !$this->qtdMatEdProfConcomitanteEjaNivelMedioParcial &&
-            !$this->qtdMatEdProfConcomitanteEjaNivelMedioIntegral &&
-            !$this->qtdMatEdProfIntercomentarEjaNivelMedioParcial &&
-            !$this->qtdMatEdProfIntercomentarEjaNivelMedioIntegral &&
-            !$this->qtdMatEdProfIntegradaEnsinoMedioParcial &&
-            !$this->qtdMatEdProfIntegradaEnsinoMedioIntegral &&
-            !$this->qtdMatEdProfConcomitenteEnsinoMedioParcial &&
-            !$this->qtdMatEdProfConcomitenteEnsinoMedioIntegral &&
-            !$this->qtdMatEdProfIntercomplementarEnsinoMedioParcial &&
-            !$this->qtdMatEdProfIntercomplementarEnsinoMedioIntegral &&
-            !$this->qtdMatEdProfTecnicaIntegradaEnsinoMedioParcial &&
-            !$this->qtdMatEdProfTecnicaIntegradaEnsinoMedioIntegral &&
-            !$this->qtdMatEdProfTecnicaConcomitanteEnsinoMedioParcial &&
-            !$this->qtdMatEdProfTecnicaConcomitanteEnsinoMedioIntegral &&
-            !$this->qtdMatEdProfTecnicaIntercomplementarEnsinoMedioParcial &&
-            !$this->qtdMatEdProfTecnicaIntercomplementarEnsinoMedioItegral &&
-            !$this->qtdMatEdProfTecnicaSubsequenteEnsinoMedio &&
-            !$this->qtdMatEdProfTecnicaIntegradaEjaNivelMedioParcial &&
-            !$this->qtdMatEdProfTecnicaIntegradaEjaNivelMedioIntegral &&
-            !$this->qtdMatEdProfTecnicaConcomitanteEjaNivelMedioParcial &&
-            !$this->qtdMatEdProfTecnicaConcomitanteEjaNivelMedioIntegral &&
-            !$this->qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioParcial &&
-            !$this->qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioIntegral;
-    }
 }

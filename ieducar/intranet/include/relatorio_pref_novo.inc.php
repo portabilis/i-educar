@@ -3,27 +3,46 @@
 class relatoriosPref
 {
     public $titulo_relatorio;
+
     public $pdf;
-    public $altura=0;
+
+    public $altura = 0;
+
     public $texto;
+
     public $lembretes;
-    public $num_linhas=0;
+
+    public $num_linhas = 0;
+
     public $espacoEntreLinhas;
-    public $numeroPagina=0;
+
+    public $numeroPagina = 0;
+
     public $capa;
+
     public $rodape;
+
     public $lastMod;
+
     public $cabecalho;
+
     public $margem_esquerda = 50;
+
     public $margem_direita = 50;
+
     public $margem_topo = 50;
+
     public $margem_fundo = 50;
+
     public $txt_padding_left = 5;
+
     public $largura;
+
     public $alturaUltimaLinha = 13;
+
     public $qtd_pagina = 0;
 
-    public function __construct($nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha='A4', $cabecalho='')
+    public function __construct($nome, $espacoEntreLinhas = 80, $capa = false, $rodape = false, $tipoFolha = 'A4', $cabecalho = '')
     {
         $this->pdf = new clsPDF($nome, 'Cartas Folhas de Rosto', $tipoFolha, '', false, false);
         $this->titulo_relatorio = $nome;
@@ -31,10 +50,10 @@ class relatoriosPref
         $this->cabecalho = $cabecalho;
         $this->espacoEntreLinhas = $espacoEntreLinhas;
         $this->largura = $this->pdf->largura;
-        if ($capa && ! ($capa[0] == '' && $capa[1] = '')) {
+        if ($capa && !($capa[0] == '' && $capa[1] = '')) {
             $this->pdf->OpenPage();
             $linha = 0.0001;
-            $cores = [ '#000000', '#111111', '#222222', '#333333', '#444444', '#555555', '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB', '#CCCCCC', '#DDDDDD', '#FFFFFF' ];
+            $cores = ['#000000', '#111111', '#222222', '#333333', '#444444', '#555555', '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB', '#CCCCCC', '#DDDDDD', '#FFFFFF'];
             $x = 100;
             $y = 150;
             $xMod = 7;
@@ -56,7 +75,7 @@ class relatoriosPref
         }
     }
 
-    public function setMargem($esquerda=50, $direita=50, $topo=50, $fundo=50)
+    public function setMargem($esquerda = 50, $direita = 50, $topo = 50, $fundo = 50)
     {
         $this->margem_direita = $direita;
         $this->margem_esquerda = $esquerda;
@@ -105,9 +124,9 @@ class relatoriosPref
     }
 
     // funcao para ser chamada a cada nova linha
-    public function novalinha($texto, $deslocamento=0, $altura=13, $titulo=false, $fonte='arial', $divisoes=false, $lembretes=false, $extra_hor_spaco_antes = 0, $extra_hor_spaco_depois = 0)
+    public function novalinha($texto, $deslocamento = 0, $altura = 13, $titulo = false, $fonte = 'arial', $divisoes = false, $lembretes = false, $extra_hor_spaco_antes = 0, $extra_hor_spaco_depois = 0)
     {
-        if (! $divisoes) {
+        if (!$divisoes) {
             $divisoes = $this->espacoEntreLinhas;
         }
         $cor = '#000000';
@@ -122,7 +141,7 @@ class relatoriosPref
         }
 
         //Verifica se é o fim da página
-        if ($this->altura +$altura > ($this->pdf->altura * 0.80) || $this->qtd_pagina >2 && $lembretes == false) {
+        if ($this->altura + $altura > ($this->pdf->altura * 0.80) || $this->qtd_pagina > 2 && $lembretes == false) {
             $this->fillText();
             //  if($this->altura == 0 || $this->qtd_pagina >2)
             //  {
@@ -142,9 +161,9 @@ class relatoriosPref
             $this->alturaUltimaLinha = $altura;
         }
         if ($lembretes) {
-            $this->lembretes[] = ['texto'=>$texto, 'altura'=>$this->altura, 'fonte'=>$fonte, 'desloc'=>$deslocamento, 'alturaLinha'=>$altura, 'fundo'=>$fundo, 'cor'=>$cor, 'titulo'=>$titulo, 'divisoes'=>$divisoes, 'alturaultimalinha'=>$this->alturaUltimaLinha ];
+            $this->lembretes[] = ['texto' => $texto, 'altura' => $this->altura, 'fonte' => $fonte, 'desloc' => $deslocamento, 'alturaLinha' => $altura, 'fundo' => $fundo, 'cor' => $cor, 'titulo' => $titulo, 'divisoes' => $divisoes, 'alturaultimalinha' => $this->alturaUltimaLinha];
         } else {
-            $this->texto[] = ['texto'=>$texto, 'altura'=>$this->altura, 'fonte'=>$fonte, 'desloc'=>$deslocamento, 'alturaLinha'=>$altura, 'fundo'=>$fundo, 'cor'=>$cor, 'titulo'=>$titulo, 'divisoes'=>$divisoes, 'alturaultimalinha'=>$this->alturaUltimaLinha ];
+            $this->texto[] = ['texto' => $texto, 'altura' => $this->altura, 'fonte' => $fonte, 'desloc' => $deslocamento, 'alturaLinha' => $altura, 'fundo' => $fundo, 'cor' => $cor, 'titulo' => $titulo, 'divisoes' => $divisoes, 'alturaultimalinha' => $this->alturaUltimaLinha];
         }
 
         $this->altura += $extra_hor_spaco_depois;
@@ -159,7 +178,7 @@ class relatoriosPref
                 if (!$linha['titulo']) {
                     $this->num_linhas++;
                 }
-                $mod = ($linha['alturaLinha'] - $linha['alturaultimalinha'] > 0) ? ($linha['alturaLinha'] - $linha['alturaultimalinha']): 0;
+                $mod = ($linha['alturaLinha'] - $linha['alturaultimalinha'] > 0) ? ($linha['alturaLinha'] - $linha['alturaultimalinha']) : 0;
                 $mod += ($linha['alturaLinha'] > $this->lastMod) ? $this->lastMod : 0;
                 // se for titulo ou linha impar desenha uma caixa no fundo
                 if ($this->num_linhas % 2 || $linha['titulo']) {
@@ -170,21 +189,21 @@ class relatoriosPref
                 // passa as colunas escrevendo elas
                 foreach ($linha['texto'] as $texto) {
                     $posx = $this->margem_esquerda + $this->txt_padding_left + $i + $linha['desloc'];
-                    $this->pdf->Write($texto, $posx, $linha['altura']+$mod, $this->largura - $this->margem_direita - $posx, $linha['alturaLinha'], $linha['fonte'], '10', $linha['cor'], 'left');
-                    $colSum = (is_array($linha['divisoes']))? $linha['divisoes'][$col]: $linha['divisoes'];
+                    $this->pdf->Write($texto, $posx, $linha['altura'] + $mod, $this->largura - $this->margem_direita - $posx, $linha['alturaLinha'], $linha['fonte'], '10', $linha['cor'], 'left');
+                    $colSum = (is_array($linha['divisoes'])) ? $linha['divisoes'][$col] : $linha['divisoes'];
                     $i += $colSum;
                     $col++;
                 }
-                $this->lastMod = $mod ;
+                $this->lastMod = $mod;
             }
         }
 
-        for ($i = 0; $i<2;$i++) {
+        for ($i = 0; $i < 2; $i++) {
             $lembrete = $this->lembretes[$i];
             if (is_array($lembrete)) {
                 $lembrete = $lembrete['texto'][0];
             }
-            if ($i==1) {
+            if ($i == 1) {
                 $this->pdf->Write("$lembrete", 52, 842, 250, 80, 'Arial', 8, '#000000', 'left');
             } else {
                 $this->pdf->Write("$lembrete", 300, 842, 250, 80, 'Arial', 8, '#000000', 'left');
@@ -192,8 +211,8 @@ class relatoriosPref
 
             //print_r($lembrete);
         }
-        $this->texto ='';
-        $this->lembretes ='';
+        $this->texto = '';
+        $this->lembretes = '';
         $this->altura = 0;
         $this->fechaPagina();
     }

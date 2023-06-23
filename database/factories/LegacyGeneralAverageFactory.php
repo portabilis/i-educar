@@ -16,13 +16,11 @@ class LegacyGeneralAverageFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'nota_aluno_id' => LegacyRegistrationScoreFactory::new()->create(),
+            'nota_aluno_id' => fn () => LegacyRegistrationScoreFactory::new()->create(),
             'media' => $this->faker->randomFloat(4, 0, 10),
             'media_arredondada' => $this->faker->randomFloat(2, 0, 10),
             'etapa' => 1,

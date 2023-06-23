@@ -9,8 +9,8 @@ $abbreviation = $_GET['abbreviation'] ?? null;
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
-print '<query>' . PHP_EOL;
+echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+echo '<query>' . PHP_EOL;
 
 if ($id == strval(intval($id))) {
     $key = 'id';
@@ -22,7 +22,7 @@ if ($id == strval(intval($id))) {
     $states = State::query()->where('country_id', $id)->pluck('name', $key);
 
     foreach ($states as $id => $name) {
-        print sprintf(
+        echo sprintf(
             '  <estado id="%s">%s</estado>' . PHP_EOL,
             $id,
             $name
@@ -30,4 +30,4 @@ if ($id == strval(intval($id))) {
     }
 }
 
-print '</query>';
+echo '</query>';

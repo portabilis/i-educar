@@ -3,8 +3,11 @@
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
+
     protected $_titulo = 'Processamento histórico';
+
     protected $_processoAp = 999613;
+
     protected $_formMap = [];
 
     protected function _preRender()
@@ -28,7 +31,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     {
         Portabilis_View_Helper_Application::loadStylesheet($this, [
             '/vendor/legacy/HistoricoEscolar/Static/styles/processamento.css',
-            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css'
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css',
         ]);
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
@@ -37,7 +40,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             'curso',
             [
                 'required' => false,
-                'label_hint' => _cl('historico.cadastro.curso_detalhe')
+                'label_hint' => _cl('historico.cadastro.curso_detalhe'),
             ]
         );
 
@@ -45,7 +48,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             'serie',
             [
                 'required' => false,
-                'label' => _cl('historico.cadastro.serie')
+                'label' => _cl('historico.cadastro.serie'),
             ]
         );
 
@@ -240,7 +243,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
                 '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
                 '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-                '/vendor/legacy/HistoricoEscolar/Static/scripts/processamento.js'
+                '/vendor/legacy/HistoricoEscolar/Static/scripts/processamento.js',
             ]
         );
     }

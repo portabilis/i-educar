@@ -12,7 +12,7 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
     {
         return new Avaliacao_Model_ParecerDescritivoComponente([
             'componenteCurricular' => 1,
-            'parecer' => 'Ok.'
+            'parecer' => 'Ok.',
         ]);
     }
 
@@ -20,7 +20,7 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
     {
         return new Avaliacao_Model_ParecerDescritivoComponente([
             'componenteCurricular' => 1,
-            'parecer' => 'N/D.'
+            'parecer' => 'N/D.',
         ]);
     }
 
@@ -30,23 +30,23 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 4
-            ])
+                'etapa' => 4,
+            ]),
         ];
     }
 
@@ -56,13 +56,13 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 2,
                 'parecer' => 'N/D.',
-                'etapa' => 1
-            ])
+                'etapa' => 1,
+            ]),
         ];
     }
 
@@ -73,14 +73,14 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
                 'id' => 1,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'id' => 2,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 1
-            ])
+                'etapa' => 1,
+            ]),
         ];
     }
 
@@ -90,12 +90,12 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/A.',
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
-                'parecer' => 'N/D.'
-            ])
+                'parecer' => 'N/D.',
+            ]),
         ];
     }
 
@@ -106,25 +106,25 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
                 'id' => 1,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'id' => 2,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'id' => 3,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'id' => 4,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
     }

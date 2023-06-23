@@ -6,10 +6,6 @@ use App\Models\Builders\LegacyAcademicYearStageBuilder;
 use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- *
- * @package App\Models
- */
 class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
@@ -21,17 +17,12 @@ class LegacyAcademicYearStage extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacyAcademicYearStageBuilder::class;
 
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_inicio',
-        'data_fim',
+    protected $casts = [
+        'data_inicio' => 'date',
+        'data_fim' => 'date',
     ];
 
     /**
@@ -45,7 +36,7 @@ class LegacyAcademicYearStage extends LegacyModel
         'data_inicio',
         'data_fim',
         'dias_letivos',
-        'escola_ano_letivo_id'
+        'escola_ano_letivo_id',
     ];
 
     /**
@@ -53,7 +44,7 @@ class LegacyAcademicYearStage extends LegacyModel
      */
     public $timestamps = false;
 
-    public function module(): BelongsTo
+    public function stageType(): BelongsTo
     {
         return $this->belongsTo(LegacyStageType::class, 'ref_cod_modulo');
     }

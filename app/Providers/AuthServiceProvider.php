@@ -60,13 +60,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
         $this->registerGates();
         $this->registerUserProviders();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function register()
     {

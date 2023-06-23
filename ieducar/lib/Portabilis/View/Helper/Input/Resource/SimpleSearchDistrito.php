@@ -10,7 +10,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabi
             'objectName' => 'distrito',
             'apiController' => 'Distrito',
             'apiResource' => 'distrito-search',
-            'showIdOnValue' => false
+            'showIdOnValue' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

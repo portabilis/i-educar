@@ -31,7 +31,7 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -46,7 +46,7 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => 3
+            'parecer_descritivo' => 3,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -60,6 +60,7 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
             'componente_curricular_id' => $discipline,
             'ano_escolar_id' => $schoolClass->grade_id,
             'anos_letivos' => $schoolGrade->anos_letivos,
+            'hora_falta' => null,
         ]);
 
         $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYearFactory::new()->create([
@@ -92,9 +93,9 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
                 $enrollment->ref_cod_turma => [
                     $registration->ref_cod_aluno => [
                         'valor' => 'Desenvolve atividades com autonomia e responsabilidade, demonstrando interesse e iniciativa.',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->postResource('/module/Api/Diario', $data);
@@ -107,10 +108,10 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
                     'msgs' => [
                         0 => [
                             'msg' => 'Pareceres postados com sucesso!',
-                            'type' => 'success'
-                        ]
+                            'type' => 'success',
+                        ],
                     ],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

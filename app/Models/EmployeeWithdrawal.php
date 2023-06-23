@@ -25,25 +25,19 @@ class EmployeeWithdrawal extends LegacyModel
         'ref_cod_motivo_afastamento',
         'data_retorno',
         'data_saida',
-        'sequencial'
+        'sequencial',
     ];
 
-    protected $dates = [
-        'data_retorno',
-        'data_saida',
+    protected $casts = [
+        'data_retorno' => 'date',
+        'data_saida' => 'date',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'ref_cod_servidor');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function reason(): BelongsTo
     {
         return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento');

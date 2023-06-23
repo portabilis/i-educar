@@ -29,7 +29,7 @@ class LegacyDisciplineScore extends Model
         'etapa',
         'nota_recuperacao',
         'nota_original',
-        'nota_recuperacao_especifica'
+        'nota_recuperacao_especifica',
     ];
 
     /**
@@ -53,6 +53,16 @@ class LegacyDisciplineScore extends Model
     public function score(int $decimalPlaces = 1, bool $isGeneralAbsence = false): string|null
     {
         $score = $isGeneralAbsence ? 0 : $this->nota_arredondada;
+        if (!is_numeric($score) || empty($score)) {
+            return $score;
+        }
+
+        return Util::format($score, $decimalPlaces);
+    }
+
+    public function recoveryScore(int $decimalPlaces = 1, bool $isGeneralAbsence = false): string|null
+    {
+        $score = $isGeneralAbsence ? 0 : $this->nota_recuperacao ?? $this->nota_recuperacao_especifica;
         if (!is_numeric($score) || empty($score)) {
             return $score;
         }

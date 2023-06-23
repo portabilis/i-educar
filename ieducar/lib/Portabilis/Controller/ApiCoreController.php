@@ -214,8 +214,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $response = [
                 'msgs' => [[
                     'msg' => 'Erro inesperado no servidor. Por favor, tente novamente.',
-                    'type' => 'error'
-                ]]
+                    'type' => 'error',
+                ]],
             ];
 
             $response = SafeJson::encode($response);
@@ -286,7 +286,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $defaultOptions = [
             'schema_name' => 'pmieducar',
             'field_name' => "cod_{$resourceName}",
-            'add_msg_on_error' => true
+            'add_msg_on_error' => true,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -324,7 +324,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $defaultOptions = [
             'schema_name' => 'pmieducar',
             'field_name' => "cod_{$resourceName}",
-            'add_msg_on_error' => true
+            'add_msg_on_error' => true,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -345,7 +345,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
             'params' => $params,
             'show_errors' => !$hideExceptions,
             'return_only' => $returnOnly,
-            'messenger' => $this->messenger
+            'messenger' => $this->messenger,
         ];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -384,14 +384,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $entity = $this->tryGetEntityOf($dataMapper, $id);
 
-        return (is_null($entity) ? $this->createEntityOf($dataMapper) : $entity);
+        return is_null($entity) ? $this->createEntityOf($dataMapper) : $entity;
     }
 
     protected function deleteEntityOf($dataMapper, $id)
     {
         $entity = $this->tryGetEntityOf($dataMapper, $id);
 
-        return (is_null($entity) ? true : $dataMapper->delete($entity));
+        return is_null($entity) ? true : $dataMapper->delete($entity);
     }
 
     protected function saveEntity($dataMapper, $entity)
@@ -408,7 +408,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
                 }
             }
 
-            $msg = 'Erro ao salvar o recurso ' . $dataMapper->resourceName() . ': ' . join(', ', $msgs);
+            $msg = 'Erro ao salvar o recurso ' . $dataMapper->resourceName() . ': ' . implode(', ', $msgs);
 
             $this->messenger->append($msg, 'error', true);
         }
@@ -424,7 +424,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return Portabilis_String_Utils::toUtf8($str, $options);
     }
 
-
     protected function safeString($str, $transform = true)
     {
         return $this->toUtf8($str, ['transform' => $transform]);
@@ -432,7 +431,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function safeStringForDb($str)
     {
-        return filter_var($str, FILTER_SANITIZE_ADD_SLASHES);;
+        return filter_var($str, FILTER_SANITIZE_ADD_SLASHES);
     }
 
     protected function defaultSearchOptions()
@@ -445,7 +444,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
             'idAttr' => "cod_$resourceName",
             'labelAttr' => 'nome',
             'selectFields' => [],
-            'sqlParams' => []
+            'sqlParams' => [],
         ];
     }
 
@@ -464,7 +463,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $labelAttr = $searchOptions['labelAttr'];
 
         $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
-        $selectFields = join(', ', $searchOptions['selectFields']);
+        $selectFields = implode(', ', $searchOptions['selectFields']);
 
         return "select distinct $selectFields from $namespace.$table where $idAttr::varchar like $1||'%' order by $idAttr limit 15";
     }
@@ -479,7 +478,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $labelAttr = $searchOptions['labelAttr'];
 
         $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
-        $selectFields = join(', ', $searchOptions['selectFields']);
+        $selectFields = implode(', ', $searchOptions['selectFields']);
 
         return "select distinct $selectFields from $namespace.$table where lower($labelAttr) like '%'||lower($1)||'%' order by $labelAttr limit 15";
     }

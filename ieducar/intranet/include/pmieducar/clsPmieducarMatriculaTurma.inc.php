@@ -5,24 +5,43 @@ use iEducar\Legacy\Model;
 class clsPmieducarMatriculaTurma extends Model
 {
     public $ref_cod_matricula;
+
     public $ref_cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_turma_transf;
+
     public $sequencial;
+
     public $data_enturmacao;
+
     public $sequencial_fechamento;
+
     public $etapa_educacenso;
+
     public $turma_unificada;
+
     public $turno_id;
+
     public $tipo_atendimento = false;
+
     public $transferido = false;
+
     public $remanejado = false;
+
     public $reclassificado = false;
+
     public $falecido = false;
+
     public $abandono = false;
 
     public function __construct(
@@ -253,7 +272,7 @@ class clsPmieducarMatriculaTurma extends Model
 
             if (is_bool($this->transferido)) {
                 $transferido = $this->transferido ? 'true' : 'false';
-                if ((int)$this->ativo === 1) {
+                if ((int) $this->ativo === 1) {
                     $transferido = 'false';
                 }
 
@@ -263,7 +282,7 @@ class clsPmieducarMatriculaTurma extends Model
 
             if (is_bool($this->remanejado)) {
                 $remanejado = $this->remanejado ? 'true' : 'false';
-                if ((int)$this->ativo === 1) {
+                if ((int) $this->ativo === 1) {
                     $remanejado = 'false';
                 }
 
@@ -649,7 +668,7 @@ class clsPmieducarMatriculaTurma extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         if ($parar) {
-            die($sql);
+            exit($sql);
         }
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} mt, cadastro.pessoa , {$this->_schema}matricula m, {$this->_schema}aluno al, {$this->_schema}curso c, {$this->_schema}turma t, {$this->_schema}instituicao i{$tab_aluno} {$from} {$filtros} {$where}");
@@ -995,24 +1014,6 @@ class clsPmieducarMatriculaTurma extends Model
             is_numeric($this->sequencial)) {
             $db = new clsBanco();
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' AND sequencial = '{$this->sequencial}' AND ativo = 1 ");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
-    /**
-     * Retorna se existe alguma enturmação ativa para matrícula e turma informada.
-     *
-     * @return bool
-     */
-    public function existeEnturmacaoAtiva()
-    {
-        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' AND ativo = 1 ");
             $db->ProximoRegistro();
 
             return $db->Tupla();

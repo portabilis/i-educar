@@ -620,6 +620,11 @@ class Registro10Fields implements RegistroEducacenso
     public $qtdOrientadorComunitario;
 
     /**
+     * @var int
+     */
+    public $qtdTradutorInterpreteLibrasOutroAmbiente;
+
+    /**
      * @var array
      */
     public $orgaosColegiados;
@@ -675,85 +680,166 @@ class Registro10Fields implements RegistroEducacenso
     public $semFuncionariosParaFuncoes;
 
     public $registro;
+
     public $localFuncionamentoPredioEscolar;
+
     public $localFuncionamentoSalasOutraEscola;
+
     public $localFuncionamentoGalpao;
+
     public $localFuncionamentoUnidadeAtendimentoSocioeducativa;
+
     public $localFuncionamentoUnidadePrisional;
+
     public $localFuncionamentoOutros;
+
     public $tratamentoLixoSeparacao;
+
     public $tratamentoLixoReaproveitamento;
+
     public $tratamentoLixoReciclagem;
+
     public $tratamentoLixoNaoFaz;
+
     public $dependenciaBanheiro;
+
     public $dependenciaBanheiroFuncionarios;
+
     public $dependenciaDormitorioAluno;
+
     public $dependenciaDormitorioProfessor;
+
     public $dependenciaPiscina;
+
     public $dependenciaSalaRepouso;
+
     public $dependenciaSalaArtes;
+
     public $dependenciaSalaMusica;
+
     public $dependenciaSalaDanca;
+
     public $dependenciaSalaMultiuso;
+
     public $dependenciaTerreirao;
+
     public $dependenciaViveiro;
+
     public $dependenciaSalaSecretaria;
+
     public $recursoCorrimao;
+
     public $recursoElevador;
+
     public $recursoPisosTateis;
+
     public $recursoPortaVaoLivre;
+
     public $recursoRampas;
+
     public $recursoSinalizacaoSonora;
+
     public $recursoSinalizacaoTatil;
+
     public $recursoSinalizacaoVisual;
+
     public $recursoNenhum;
+
     public $equipamentosScanner;
+
     public $equipamentosNenhum;
+
     public $acessoInternetAdministrativo;
+
     public $acessoInternetProcessoEnsino;
+
     public $acessoInternetAlunos;
+
     public $acessoInternetComunidade;
+
     public $acessoInternetNaoPossui;
+
     public $computadoresMesaAcessoInternet;
+
     public $dispositovosPessoaisAcessoInternet;
+
     public $internetBandaLarga;
+
     public $redeLocalCabo;
+
     public $redeLocalWireless;
+
     public $redeLocalNaoExiste;
+
     public $organizacaoEnsinoSerieAno;
+
     public $organizacaoEnsinoPeriodosSemestrais;
+
     public $organizacaoEnsinoGrupos;
+
     public $organizacaoEnsinoCiclos;
+
     public $organizacaoEnsinoModulos;
+
     public $organizacaoEnsinoAlternancia;
+
     public $instrumentosPedagogicosAcervo;
+
     public $instrumentosPedagogicosBrinquedos;
+
     public $instrumentosPedagogicosMateriaisCientificos;
+
     public $instrumentosPedagogicosEquipamentosSom;
+
     public $instrumentosPedagogicosInstrumentos;
+
     public $instrumentosPedagogicosJogos;
+
     public $instrumentosPedagogicosAtividadesCulturais;
+
     public $instrumentosPedagogicosEducacaoProfissional;
+
     public $instrumentosPedagogicosPraticaDesportiva;
+
     public $instrumentosPedagogicosEducacaoIndigena;
+
     public $instrumentosPedagogicosEducacaoEtnicoRacial;
+
     public $instrumentosPedagogicosEducacaoCampo;
+
     public $instrumentosPedagogicosNenhum;
+
     public $linguaIndigena;
+
     public $linguaPortuguesa;
+
     public $linguaIndigena1;
+
     public $linguaIndigena2;
+
     public $linguaIndigena3;
+
     public $reservaVagasCotasAutodeclaracao;
+
     public $reservaVagasCotasRenda;
+
     public $reservaVagasCotasEscolaPublica;
+
     public $reservaVagasCotasPCD;
+
     public $reservaVagasCotasOutros;
+
     public $reservaVagasCotasNaoFaz;
+
     public $orgaoColegiadoAssociacaoPais;
+
     public $orgaoColegiadoAssociacaoPaisMestres;
+
     public $orgaoColegiadoConselho;
+
     public $orgaoColegiadoGremio;
+
     public $orgaoColegiadoOutros;
+
     public $orgaoColegiadoNaoExiste;
 }

@@ -12,9 +12,6 @@ class EmployeeInepTest extends EloquentTestCase
         'employee' => Employee::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return EmployeeInep::class;
@@ -24,12 +21,5 @@ class EmployeeInepTest extends EloquentTestCase
     public function getNumberAttribute(): void
     {
         $this->assertEquals($this->model->cod_docente_inep, $this->model->number);
-    }
-
-    protected function getLegacyAttributes(): array
-    {
-        return [
-            'id' => 'cod_servidor',
-        ];
     }
 }

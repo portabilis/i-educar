@@ -20,7 +20,6 @@ class AnoController extends Core_Controller_Page_EditController
     /**
      * Setter.
      *
-     * @param array $entries
      *
      * @return Core_Controller_Page Provê interface fluída
      */
@@ -47,7 +46,6 @@ class AnoController extends Core_Controller_Page_EditController
      * Getter.
      *
      * @param int $id
-     *
      * @return ComponenteCurricular_Model_AnoEscolar
      */
     public function getEntry($id)
@@ -60,7 +58,6 @@ class AnoController extends Core_Controller_Page_EditController
      * por $id existe.
      *
      * @param int $id
-     *
      * @return bool
      */
     public function hasEntry($id)
@@ -97,7 +94,6 @@ class AnoController extends Core_Controller_Page_EditController
      * Retorna o nome de um curso.
      *
      * @param int $id
-     *
      * @return string
      */
     protected function _getCursoNome($id)
@@ -114,7 +110,7 @@ class AnoController extends Core_Controller_Page_EditController
         $this->setOptions(['edit_success_params' => ['id' => $this->getRequest()->cid]]);
         $this->setEntries(
             $this->getDataMapper()->findAll([], [
-                'componenteCurricular' => $this->getRequest()->cid
+                'componenteCurricular' => $this->getRequest()->cid,
             ])
         );
 
@@ -124,10 +120,10 @@ class AnoController extends Core_Controller_Page_EditController
                 'path' => 'view',
                 'options' => [
                     'query' => [
-                        'id' => $this->getRequest()->cid
-                    ]
-                ]
-            ]
+                        'id' => $this->getRequest()->cid,
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -153,7 +149,7 @@ class AnoController extends Core_Controller_Page_EditController
         try {
             $this->setEntity(
                 $this->getDataMapper()->createNewEntityInstance([
-                    'componenteCurricular' => $this->getRequest()->cid
+                    'componenteCurricular' => $this->getRequest()->cid,
                 ])
             );
         } catch (Exception $e) {

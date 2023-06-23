@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchVeiculo extends Portabil
         $defaultOptions = [
             'objectName' => 'veiculo',
             'apiController' => 'Veiculo',
-            'apiResource' => 'veiculo-search'
+            'apiResource' => 'veiculo-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

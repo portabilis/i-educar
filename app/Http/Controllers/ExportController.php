@@ -18,8 +18,6 @@ use Illuminate\View\View;
 class ExportController extends Controller
 {
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)
@@ -41,9 +39,6 @@ class ExportController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Export  $export
-     *
      * @return View
      */
     public function form(Request $request, Export $export)
@@ -64,8 +59,6 @@ class ExportController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function export(Request $request)
@@ -91,8 +84,6 @@ class ExportController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     protected function filter(Request $request)
@@ -148,28 +139,41 @@ class ExportController extends Controller
                 'value' => intval($year),
             ];
         }
-
         if ($request->input('ref_cod_escola')) {
-            $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'in',
-                'value' => [$request->input('ref_cod_escola')]
-            ];
+            if ($request->get('status') == 2) {
+                $data['filters'][] = [
+                    'column' => $table . '.school_filter_id',
+                    'operator' => '@>',
+                    'value' => $request->input('ref_cod_escola'),
+                ];
+            } else {
+                $data['filters'][] = [
+                    'column' => $table . '.school_id',
+                    'operator' => 'in',
+                    'value' => [$request->input('ref_cod_escola')],
+                ];
+            }
         } elseif ($request->user()->isSchooling()) {
-            $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'in',
-                'value' => $request->user()->schools->pluck('cod_escola')->all(),
-            ];
+            if ($request->get('status') == 2) {
+                $data['filters'][] = [
+                    'column' => $table . '.school_filter_id',
+                    'operator' => '@>',
+                    'value' => $request->user()->schools->pluck('cod_escola')->all(),
+                ];
+            } else {
+                $data['filters'][] = [
+                    'column' => $table . '.school_id',
+                    'operator' => 'in',
+                    'value' => $request->user()->schools->pluck('cod_escola')->all(),
+                ];
+            }
         }
 
         return $data;
     }
 
     /**
-     * @param Request $request
      * @param array   $data
-     *
      * @return array
      */
     public function filterTeachers(Request $request, $data)
@@ -188,7 +192,7 @@ class ExportController extends Controller
             $data['filters'][] = [
                 'column' => 'exporter_teacher.school_id',
                 'operator' => 'in',
-                'value' => [$request->input('ref_cod_escola')]
+                'value' => [$request->input('ref_cod_escola')],
             ];
         } elseif ($request->user()->isSchooling()) {
             $data['filters'][] = [
@@ -202,9 +206,7 @@ class ExportController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param array   $data
-     *
      * @return array
      */
     public function filterStages(Request $request, $data)
@@ -223,7 +225,7 @@ class ExportController extends Controller
             $data['filters'][] = [
                 'column' => 'exporter_stages.school_id',
                 'operator' => 'in',
-                'value' => [$request->input('ref_cod_escola')]
+                'value' => [$request->input('ref_cod_escola')],
             ];
         } elseif ($request->user()->isSchooling()) {
             $data['filters'][] = [
@@ -238,6 +240,6 @@ class ExportController extends Controller
 
     private function buildFileName($fileName): string
     {
-        return str_replace(' ', '_', $fileName . '_'. Carbon::now()->toDateTimeString() .  '.csv') ;
+        return str_replace(' ', '_', $fileName . '_'. Carbon::now()->toDateTimeString() .  '.csv');
     }
 }

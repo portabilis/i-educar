@@ -13,7 +13,7 @@ class LegacyEducacensoStages extends LegacyModel
     ];
 
     public array $legacy = [
-        'name' => 'nome'
+        'name' => 'nome',
     ];
 
     public $timestamps = false;

@@ -18,8 +18,11 @@ class EducacensoDegree extends Model
     protected $primaryKey = 'id';
 
     public const GRAU_TECNOLOGICO = 1;
+
     public const GRAU_LICENCIATURA = 2;
+
     public const GRAU_BACHARELADO = 3;
+
     public const GRAU_SEQUENCIAL = 4;
 
     protected $fillable = [
@@ -28,7 +31,7 @@ class EducacensoDegree extends Model
         'classe_id',
         'user_id',
         'created_at',
-        'grau_academico'
+        'grau_academico',
     ];
 
     public function employeeGraduations(): HasMany

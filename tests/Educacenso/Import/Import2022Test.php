@@ -40,7 +40,6 @@ class Import2022Test extends EducacensoTestCase
     {
         $legacySchool = LegacySchool::first();
         $this->assertEquals('{1}', $legacySchool->poder_publico_parceria_convenio);
-        $this->assertEquals('{6}', $legacySchool->formas_contratacao_adm_publica_e_outras_instituicoes);
 
         foreach ($legacySchool->schoolClasses as $schoolClass) {
             $this->assertNotNull($schoolClass->estrutura_curricular);

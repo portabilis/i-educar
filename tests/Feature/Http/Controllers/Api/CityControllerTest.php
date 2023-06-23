@@ -24,7 +24,9 @@ use Tests\ResourceTestCase;
 class CityControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/city';
+
     protected string $model = City::class;
+
     protected string $factory = CityFactory::class;
 
     #[
@@ -128,7 +130,7 @@ class CityControllerTest extends ResourceTestCase
         $response->assertStatus(422);
 
         $response->assertJson([
-            'message' => 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.'
+            'message' => 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.',
         ]);
 
         $this->assertCount(1, $response->json('errors'));

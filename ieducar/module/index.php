@@ -26,4 +26,4 @@ $frontController->setOptions(
 $frontController->dispatch();
 
 // Resultado
-print $frontController->getViewContents();
+echo $frontController->getViewContents();

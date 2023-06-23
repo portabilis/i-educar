@@ -16,8 +16,6 @@ class LegacyEnrollmentFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -25,9 +23,9 @@ class LegacyEnrollmentFactory extends Factory
             'ref_cod_matricula' => fn () => LegacyRegistrationFactory::new()->create(),
             'ref_cod_turma' => fn () => LegacySchoolClassFactory::new()->create(),
             'sequencial' => 1,
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'turno_id' => 1,
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
+            'turno_id' => fn () => LegacyPeriodFactory::new()->morning(),
             'data_enturmacao' => now(),
         ];
     }
@@ -36,7 +34,7 @@ class LegacyEnrollmentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
-                'ativo' => 1
+                'ativo' => 1,
             ]);
         });
     }
@@ -45,7 +43,7 @@ class LegacyEnrollmentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
-                'ativo' => 0
+                'ativo' => 0,
             ]);
         });
     }

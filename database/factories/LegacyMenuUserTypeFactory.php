@@ -18,13 +18,13 @@ class LegacyMenuUserTypeFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(
+            'ref_cod_tipo_usuario' => fn () => LegacyUserTypeFactory::new()->create(
                 [
                     'nivel' => $this->faker->randomElement([
                         App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL,
                         App_Model_NivelTipoUsuario::INSTITUCIONAL,
                         App_Model_NivelTipoUsuario::ESCOLA,
-                        App_Model_NivelTipoUsuario::BIBLIOTECA
+                        App_Model_NivelTipoUsuario::BIBLIOTECA,
                     ]),
                 ]
             ),
@@ -39,9 +39,9 @@ class LegacyMenuUserTypeFactory extends Factory
     {
         return $this->state(
             [
-                'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(
+                'ref_cod_tipo_usuario' => fn () => LegacyUserTypeFactory::new()->create(
                     ['nivel' => App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL]
-                )
+                ),
             ]
         );
     }
@@ -50,9 +50,9 @@ class LegacyMenuUserTypeFactory extends Factory
     {
         return $this->state(
             [
-                'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(
+                'ref_cod_tipo_usuario' => fn () => LegacyUserTypeFactory::new()->create(
                     ['nivel' => App_Model_NivelTipoUsuario::INSTITUCIONAL]
-                )
+                ),
             ]
         );
     }
@@ -61,9 +61,9 @@ class LegacyMenuUserTypeFactory extends Factory
     {
         return $this->state(
             [
-                'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(
+                'ref_cod_tipo_usuario' => fn () => LegacyUserTypeFactory::new()->create(
                     ['nivel' => App_Model_NivelTipoUsuario::ESCOLA]
-                )
+                ),
             ]
         );
     }
@@ -72,9 +72,9 @@ class LegacyMenuUserTypeFactory extends Factory
     {
         return $this->state(
             [
-                'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(
+                'ref_cod_tipo_usuario' => fn () => LegacyUserTypeFactory::new()->create(
                     ['nivel' => App_Model_NivelTipoUsuario::ESCOLA]
-                )
+                ),
             ]
         );
     }

@@ -26,6 +26,10 @@ class LegacyTransferRequest extends LegacyModel
 
     public string $builder = LegacyTransferRequestBuilder::class;
 
+    protected $casts = [
+        'data_transferencia' => 'date',
+    ];
+
     /**
      * @var array
      */
@@ -47,8 +51,6 @@ class LegacyTransferRequest extends LegacyModel
 
     /**
      * Relação com a matricula de saída.
-     *
-     * @return BelongsTo
      */
     public function oldRegistration(): BelongsTo
     {
@@ -57,25 +59,17 @@ class LegacyTransferRequest extends LegacyModel
 
     /**
      * Relação com a matricula de entrada.
-     *
-     * @return BelongsTo
      */
     public function newRegistration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula_entrada');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transferType(): BelongsTo
     {
         return $this->belongsTo(LegacyTransferType::class, 'ref_cod_transferencia_tipo');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function destinationSchool(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola_destino');

@@ -21,7 +21,6 @@ class Student extends Model
 
     /**
      * @param Builder $query
-     *
      * @return StudentEloquentBuilder
      */
     public function newEloquentBuilder($query)
@@ -63,7 +62,7 @@ class Student extends Model
                 'race' => 'Raça',
                 'religion' => 'Religião',
                 'height' => 'Altura',
-                'weight' => 'Peso'
+                'weight' => 'Peso',
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -194,7 +193,6 @@ class Student extends Model
 
     /**
      * @param string $column
-     *
      * @return string
      */
     public function alias($column)

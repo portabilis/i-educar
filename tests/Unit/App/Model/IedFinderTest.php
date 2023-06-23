@@ -17,7 +17,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             'nome' => null,
             'descricao' => null,
             'valorMinimo' => -1,
-            'valorMaximo' => 0
+            'valorMaximo' => 0,
         ];
 
         $tabelaValores = [];
@@ -62,7 +62,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             ),
             2 => new ComponenteCurricular_Model_Componente(
                 ['id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100]
-            )
+            ),
         ];
 
         $expected = $returnComponenteMock;
@@ -81,7 +81,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             ),
             new ComponenteCurricular_Model_Turma(
                 ['componenteCurricular' => 2, 'cargaHoraria' => null]
-            )
+            ),
         ];
 
         $turmaMock = $this->getCleanMock('ComponenteCurricular_Model_TurmaDataMapper');
@@ -97,14 +97,14 @@ class App_Model_IedFinderTest extends UnitBaseTest
         return [
             'componenteMock' => $componenteMock,
             'turmaMock' => $turmaMock,
-            'expected' => $expected
+            'expected' => $expected,
         ];
     }
 
     public function testGetCurso()
     {
         $returnValue = [
-            'nm_curso' => 'Ensino Fundamental'
+            'nm_curso' => 'Ensino Fundamental',
         ];
 
         $mock = $this->getCleanMock('clsPmieducarCurso');
@@ -159,7 +159,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             Mockery::mock(clsPmieducarSerie::class, function (MockInterface $mock) {
                 $returnValue = [
                     1 => ['cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'pré'],
-                    2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'ser']
+                    2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'ser'],
                 ];
                 $mock
                     ->shouldReceive('setOrderby')
@@ -193,15 +193,14 @@ class App_Model_IedFinderTest extends UnitBaseTest
                         null
                     )
                     ->once()
-                    ->andReturn([$returnValue[1]])
-                ;
+                    ->andReturn([$returnValue[1]]);
             })
         );
 
         $series = App_Model_IedFinder::getSeries();
         $test = [
             1 => 'PRÉ',
-            2 => 'SER'
+            2 => 'SER',
         ];
 
         $this->assertEquals(
@@ -212,7 +211,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
         $series = App_Model_IedFinder::getSeries(1);
         $testFilter = [
-            1 => 'PRÉ'
+            1 => 'PRÉ',
         ];
 
         $this->assertEquals(
@@ -264,7 +263,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             ),
             4 => new ComponenteCurricular_Model_Componente(
                 ['id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60]
-            )
+            ),
         ];
 
         $expected = $returnAnoEscolar;
@@ -345,7 +344,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             'tipoProgressao' => RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
             'tipoPresenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
             'media' => 6,
-            'tabelaArredondamento' => $this->_getTabelaArredondamento()
+            'tabelaArredondamento' => $this->_getTabelaArredondamento(),
         ]);
 
         // Marca como "old", para indicar que foi recuperado via CoreExt_DataMapper
@@ -360,7 +359,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             'aprovado' => 1,
             'serie_regra_avaliacao_id' => 1,
             'ref_cod_aluno' => 1,
-            'escola_utiliza_regra_diferenciada' => null
+            'escola_utiliza_regra_diferenciada' => null,
         ];
 
         // Mock para RegraAvaliacao_Model_DataMapper
@@ -390,7 +389,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
         // Retorna para clsPmieducarDispensaDisciplina
         $returnDispensa = [
-            ['ref_cod_matricula' => 1, 'ref_cod_disciplina' => 2]
+            ['ref_cod_matricula' => 1, 'ref_cod_disciplina' => 2],
         ];
 
         // Mock para clsPmieducarDispensaDisciplina
@@ -412,7 +411,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             'ref_ref_cod_escola' => 1,
             'ref_cod_turma' => 1,
             'ano' => null,
-            'dependencia' => null
+            'dependencia' => null,
         ];
 
         $componentes = App_Model_IedFinder::getComponentesPorMatricula(
@@ -456,7 +455,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 1],
             ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 2],
             ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 3],
-            ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 4]
+            ['ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 4],
         ];
 
         $turmaModuloMock = $this->getCleanMock('clsPmieducarTurmaModulo');
@@ -476,7 +475,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             'ref_ref_cod_escola' => 1,
             'ref_cod_curso' => 1,
             'ref_cod_turma' => 1,
-            'ano' => 2018
+            'ano' => 2018,
         ];
         $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1, $matricula);
 

@@ -16,13 +16,11 @@ class LegacyActiveLookingFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'registration_id' => LegacyRegistrationFactory::new()->create(),
+            'registration_id' => fn () => LegacyRegistrationFactory::new()->create(),
             'start' => now()->subDays(7),
             'end' => now(),
             'obs' => $this->faker->paragraph,

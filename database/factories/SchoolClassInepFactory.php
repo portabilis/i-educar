@@ -16,13 +16,11 @@ class SchoolClassInepFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'cod_turma' => LegacySchoolClassFactory::new()->create(),
+            'cod_turma' => fn () => LegacySchoolClassFactory::new()->create(),
             'cod_turma_inep' => $this->faker->numerify('########'),
         ];
     }

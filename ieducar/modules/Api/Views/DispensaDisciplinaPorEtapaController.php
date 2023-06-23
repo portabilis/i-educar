@@ -7,7 +7,7 @@ class DispensaDisciplinaPorEtapaController extends ApiCoreController
         return $this->validatesPresenceOf([
             'ref_cod_matricula',
             'componentecurricular',
-            'etapas'
+            'etapas',
         ]);
     }
 
@@ -55,7 +55,7 @@ class DispensaDisciplinaPorEtapaController extends ApiCoreController
         return $notaComponenteCurricularMapper->findAll([], [
             'nota_aluno_id' => $notaAluno,
             'componente_curricular_id' => $disciplinaId,
-            'etapa' => $etapa
+            'etapa' => $etapa,
         ]);
     }
 

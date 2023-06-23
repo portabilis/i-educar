@@ -29,7 +29,7 @@ class LegacyCopySchoolClassTeacherTest extends TestCase
         ]);
 
         $turmaAtual = LegacySchoolClassFactory::new()->create([
-            'ref_cod_instituicao' => $instituicao->getKey()
+            'ref_cod_instituicao' => $instituicao->getKey(),
         ]);
 
         $request = [

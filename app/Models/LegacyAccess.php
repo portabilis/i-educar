@@ -5,6 +5,7 @@ namespace App\Models;
 class LegacyAccess extends LegacyModel
 {
     public const CREATED_AT = 'data_hora';
+
     public const UPDATED_AT = null;
 
     /**
@@ -16,10 +17,6 @@ class LegacyAccess extends LegacyModel
      * @var string
      */
     protected $primaryKey = 'cod_acesso';
-
-    protected $dates = [
-        'data_hora'
-    ];
 
     public array $legacy = [
         'id' => 'cod_acesso',

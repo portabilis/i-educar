@@ -7,14 +7,22 @@ use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_cod_matricula;
+
     public $data_inicio;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_turma;
 
     public function __construct()
@@ -25,6 +33,7 @@ return new class extends clsListagem {
 
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
+
             return false;
         }
 
@@ -54,7 +63,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: [
             'Data de início',
             'Data de finalização',
-            'Resultado da busca ativa'
+            'Resultado da busca ativa',
         ]);
 
         $this->limite = 20;
@@ -78,11 +87,10 @@ return new class extends clsListagem {
                 $row['data_fim_br'] = $legacyActiveLooking->end?->format('d/m/Y');
 
                 $url = 'educar_busca_ativa_cad.php';
-                $options = ['query' =>
-                    [
-                        'id' => $legacyActiveLooking->id,
-                        'ref_cod_matricula' => $this->ref_cod_matricula
-                    ]
+                $options = ['query' => [
+                    'id' => $legacyActiveLooking->id,
+                    'ref_cod_matricula' => $this->ref_cod_matricula,
+                ],
                 ];
 
                 $row['active_looking_result'] = ActiveLooking::getDescription(value: $legacyActiveLooking->result);
@@ -90,7 +98,7 @@ return new class extends clsListagem {
                 $this->addLinhas(linha: [
                     $urlHelper->l(text: $row['data_inicio_br'], path: $url, options: $options),
                     $urlHelper->l(text: $row['data_fim_br'], path: $url, options: $options),
-                    $urlHelper->l(text: $row['active_looking_result'], path: $url, options: $options)
+                    $urlHelper->l(text: $row['active_looking_result'], path: $url, options: $options),
                 ]);
             }
         }
@@ -109,7 +117,7 @@ return new class extends clsListagem {
             $this->array_botao_url[] = 'educar_busca_ativa_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;
             $this->array_botao[] = [
                 'name' => 'Novo',
-                'css-extra' => 'btn-green'
+                'css-extra' => 'btn-green',
             ];
         }
 

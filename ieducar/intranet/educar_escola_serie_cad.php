@@ -9,32 +9,58 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $ref_cod_escola_;
+
     public $ref_cod_serie;
+
     public $ref_cod_serie_;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
+
     public $hora_fim_intervalo_;
+
     public $ref_cod_curso;
+
     public $escola_serie_disciplina;
+
     public $ref_cod_disciplina;
+
     public $incluir_disciplina;
+
     public $excluir_disciplina;
+
     public $disciplinas;
+
     public $carga_horaria;
+
     public $etapas_especificas;
+
     public $etapas_utilizadas;
+
     public $definirComponentePorEtapa;
+
     public $anos_letivos;
+
     public $componente_anos_letivos;
+
     private $escolaSerieService;
 
     public function Inicializar()
@@ -146,7 +172,7 @@ return new class () extends clsCadastro {
             $lst_serie = $obj_serie->lista(
                 [
                     'ref_cod_curso' => $this->ref_cod_curso,
-                    'ativo' => 1
+                    'ativo' => 1,
                 ]
             );
 
@@ -166,7 +192,7 @@ return new class () extends clsCadastro {
         );
 
         $helperOptions = [
-            'objectName' => 'anos_letivos'
+            'objectName' => 'anos_letivos',
         ];
 
         $this->anos_letivos = array_values(array_intersect($this->anos_letivos ?? [], $this->getAnosLetivosDisponiveis()));
@@ -177,8 +203,8 @@ return new class () extends clsCadastro {
             'size' => 50,
             'options' => [
                 'values' => $this->anos_letivos,
-                'all_values' => $this->getAnosLetivosDisponiveis()
-            ]
+                'all_values' => $this->getAnosLetivosDisponiveis(),
+            ],
         ];
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -220,7 +246,7 @@ return new class () extends clsCadastro {
                 foreach ($registros as $campo) {
                     $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
                     $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = (float) $campo['carga_horaria'];
-                    $this->escola_serie_disciplina_hora_falta[$campo['ref_cod_disciplina']] = round( $campo['hora_falta'] * 60 );
+                    $this->escola_serie_disciplina_hora_falta[$campo['ref_cod_disciplina']] = round($campo['hora_falta'] * 60);
                     $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = $campo['anos_letivos'] ?: [];
 
                     if ($this->definirComponentePorEtapa) {
@@ -238,12 +264,12 @@ return new class () extends clsCadastro {
             $disciplinas = '';
             $conteudo = '';
             $lista = LegacyDisciplineAcademicYear::query()
-                 ->whereGrade($this->ref_cod_serie)
-                 ->with('discipline')
-                 ->get()
-                 ->mapWithKeys(function ($item) {
-                     return [$item['componente_curricular_id'] => $item];
-                 })->sort();
+                ->whereGrade($this->ref_cod_serie)
+                ->with('discipline')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item['componente_curricular_id'] => $item];
+                })->sort();
 
             if (is_iterable($lista)) {
 
@@ -328,14 +354,13 @@ return new class () extends clsCadastro {
                     $cargaComponente = (float) $registro->carga_horaria;
                     $etapas_utilizadas = $this->escola_serie_disciplina_etapa_utilizada[$registro->id];
 
-
                     $conteudo .= '<div style="margin-bottom: 10px; float: left">';
                     $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check_{$registro->id}' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro->discipline->nome}</label>";
                     $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->discipline->abreviatura}</span>";
                     $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' class='carga_horaria' id='carga_horaria_{$registro->id}' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7' data-id='$registro->id'></label>";
                     $conteudo .= "  <label style='display: block; float: left;  width: 180px;'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</label>";
                     $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' class='hora_falta' id='hora_falta_{$registro->id}' name='hora_falta[$registro->id]' value='{$horaFalta}' size='5' maxlength='7' data-id='$registro->id'></label>";
-                    $conteudo .= "  <label style='display: block; float: left;  width: 180px;'><input type='checkbox' id='usar_componente_hora_falta[]' name='usar_componente_hora_falta[$registro->id]' value='1' " . ($usarHoraFaltaComponente == true ? $checked : '') . "></label>";
+                    $conteudo .= "  <label style='display: block; float: left;  width: 180px;'><input type='checkbox' id='usar_componente_hora_falta[]' name='usar_componente_hora_falta[$registro->id]' value='1' " . ($usarHoraFaltaComponente == true ? $checked : '') . '></label>';
 
                     $conteudo .= "
                             <select name='componente_anos_letivos[{$registro->id}][]'
@@ -437,7 +462,7 @@ return new class () extends clsCadastro {
                         etapas_especificas: $this->etapas_especificas[$key],
                         etapas_utilizadas: $this->etapas_utilizadas[$key],
                         anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: $this->hora_falta[$key] === null ? null : $this->hora_falta[$key]  / 60
+                        hora_falta: empty($this->hora_falta[$key]) ? null : $this->hora_falta[$key] / 60
                     );
 
                     if ($obj->existe()) {
@@ -527,9 +552,8 @@ return new class () extends clsCadastro {
                     if (isset($this->usar_componente_hora_falta[$key])) {
                         $hora_falta = null;
                     } else {
-                        $hora_falta = $this->hora_falta[$key];;
+                        $hora_falta = $this->hora_falta[$key];
                     }
-
 
                     $etapas_especificas = $this->etapas_especificas[$key];
                     $etapas_utilizadas = $this->etapas_utilizadas[$key];
@@ -543,9 +567,8 @@ return new class () extends clsCadastro {
                         etapas_especificas: $etapas_especificas,
                         etapas_utilizadas: $etapas_utilizadas,
                         anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: $hora_falta === null ? null : $hora_falta / 60
+                        hora_falta: empty($hora_falta) ? null : $hora_falta / 60
                     );
-
 
                     $existe = $obj->existe();
 
@@ -601,7 +624,7 @@ return new class () extends clsCadastro {
             $this->simpleRedirect("educar_escola_serie_cad.php?ref_cod_escola={$this->ref_cod_escola_}&ref_cod_serie={$this->ref_cod_serie_}");
 
             return false;
-        };
+        }
 
         $excluiu = $obj->excluir();
 
@@ -631,7 +654,7 @@ return new class () extends clsCadastro {
         $scripts = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
             '/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js',
-            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensas.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensas.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
@@ -668,7 +691,6 @@ return new class () extends clsCadastro {
                 $hora_falta = $this->hora_falta[$componenteId];
             }
 
-
             $anosLetivos = $this->componente_anos_letivos[$componenteId] ?: [];
             $anosLetivos = array_map(callback: function ($ano) {
                 return (int) $ano;
@@ -682,7 +704,7 @@ return new class () extends clsCadastro {
                 'hora_falta' => $hora_falta,
                 'etapas_especificas' => $this->etapas_especificas[$componenteId],
                 'etapas_utilizadas' => $this->etapas_utilizadas[$componenteId],
-                'anos_letivos' => $anosLetivos
+                'anos_letivos' => $anosLetivos,
             ];
         }
 
@@ -750,7 +772,7 @@ return new class () extends clsCadastro {
                     ', options: ['params' => [
                         (int) $insert['ref_cod_disciplina'],
                         $this->ref_cod_serie,
-                        $ano
+                        $ano,
                     ]]);
 
                     $count = (int) $info[0]['count'] ?? 0;
@@ -783,7 +805,7 @@ return new class () extends clsCadastro {
                 ', options: ['params' => [
                     (int) $componenteId,
                     $this->ref_cod_serie,
-                    $this->ref_cod_escola
+                    $this->ref_cod_escola,
                 ]]);
 
                 $count = (int) $info[0]['count'] ?? 0;
@@ -792,10 +814,10 @@ return new class () extends clsCadastro {
                     $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
                 }
 
-                $hasDataPosted = $service->hasDataPostedInGrade(discipline: (int)$componenteId, level: $this->ref_cod_serie, school: $this->ref_cod_escola);
+                $hasDataPosted = $service->hasDataPostedInGrade(discipline: (int) $componenteId, level: $this->ref_cod_serie, school: $this->ref_cod_escola);
 
                 if ($hasDataPosted) {
-                    $discipline = LegacyDiscipline::find((int)$componenteId);
+                    $discipline = LegacyDiscipline::find((int) $componenteId);
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e escola.', $discipline->nome);
                 }
 
@@ -811,10 +833,10 @@ return new class () extends clsCadastro {
             foreach ($analise['atualizar'] as $update) {
                 if (!empty($update['anos_letivos_remover'])) {
                     foreach ($update['anos_letivos_remover'] as $ano) {
-                        $hasDataPosted = $service->hasDataPostedInGrade(discipline: (int)$update['ref_cod_disciplina'], level: $this->ref_cod_serie, year: $ano, school: $this->ref_cod_escola);
+                        $hasDataPosted = $service->hasDataPostedInGrade(discipline: (int) $update['ref_cod_disciplina'], level: $this->ref_cod_serie, year: $ano, school: $this->ref_cod_escola);
 
                         if ($hasDataPosted) {
-                            $discipline = LegacyDiscipline::find((int)$update['ref_cod_disciplina']);
+                            $discipline = LegacyDiscipline::find((int) $update['ref_cod_disciplina']);
                             $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série, ano e escola.', $ano, $discipline->nome);
                         }
 
@@ -847,7 +869,7 @@ return new class () extends clsCadastro {
                         ', options: ['params' => [
                             (int) $update['ref_cod_disciplina'],
                             $this->ref_cod_serie,
-                            $ano
+                            $ano,
                         ]]);
 
                         $count = (int) $info[0]['count'] ?? 0;
@@ -861,7 +883,7 @@ return new class () extends clsCadastro {
         }
 
         if ($erros) {
-            $msg = join(separator: "\n", array: $erros);
+            $msg = implode(separator: "\n", array: $erros);
 
             throw new \Exception($msg);
         }

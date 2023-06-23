@@ -16,14 +16,12 @@ class LegacySchoolClassStageFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'ref_cod_turma' => LegacySchoolClassFactory::new()->create(),
-            'ref_cod_modulo' => LegacyStageTypeFactory::new()->unique()->make(),
+            'ref_cod_turma' => fn () => LegacySchoolClassFactory::new()->create(),
+            'ref_cod_modulo' => fn () => LegacyStageTypeFactory::new()->unique()->make(),
             'sequencial' => $this->faker->numberBetween(1, 9),
             'data_inicio' => now()->subMonths(3),
             'data_fim' => now()->addMonths(3),

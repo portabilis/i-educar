@@ -13,7 +13,6 @@ class CheckGradesAndAbsencesInStageIDiarioExists implements Rule
      *
      * @param string            $attribute
      * @param LegacySchoolClass $value
-     *
      * @return bool
      */
     public function passes($attribute, $value)

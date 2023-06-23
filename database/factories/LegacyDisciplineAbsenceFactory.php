@@ -16,15 +16,13 @@ class LegacyDisciplineAbsenceFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'falta_aluno_id' => fn () => LegacyStudentAbsenceFactory::new()->create(),
             'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
-            'quantidade' => $this->faker->randomDigitNotZero(),
+            'quantidade' => $this->faker->numberBetween(0, 15),
             'etapa' => $this->faker->numberBetween(1, 2),
         ];
     }

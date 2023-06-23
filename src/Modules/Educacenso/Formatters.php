@@ -38,7 +38,7 @@ trait Formatters
                 '/(ñ)/',
                 '/(Ñ)/',
                 '/(ç)/',
-                '/(Ç)/'
+                '/(Ç)/',
             ],
             explode(' ', 'a A e E i I o O u U n N c C'),
             $string
@@ -57,7 +57,7 @@ trait Formatters
         $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
         //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 
         //Elimina espaços indesejados
@@ -79,7 +79,7 @@ trait Formatters
         $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
         //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 
         //Elimina espaços indesejados
@@ -99,7 +99,7 @@ trait Formatters
         $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
 
         //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 
         return $string;
@@ -117,7 +117,7 @@ trait Formatters
         $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
         //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 
         return $string;

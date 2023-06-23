@@ -23,7 +23,7 @@ class LegacyValueRoundingTable extends Model
         'valor_maximo',
         'casa_decimal_exata',
         'acao',
-        'observacao'
+        'observacao',
     ];
 
     /**

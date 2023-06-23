@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use App\Models\LegacyRegistration;
 use App\Services\GlobalAverageService;
@@ -7,29 +7,53 @@ use iEducar\Legacy\Model;
 class clsPmieducarHistoricoEscolar extends Model
 {
     public $ref_cod_aluno;
+
     public $sequencial;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ano;
+
     public $carga_horaria;
+
     public $dias_letivos;
+
     public $ref_cod_escola;
+
     public $escola;
+
     public $escola_cidade;
+
     public $escola_uf;
+
     public $observacao;
+
     public $aprovado;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $faltas_globalizadas;
+
     public $frequencia;
+
     public $dependencia;
+
     public $posicao;
+
     public $ref_cod_instituicao;
+
     public $nm_serie;
+
     public $origem;
+
     public $extra_curricular;
+
     public $ref_cod_matricula;
 
     public function __construct($ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null, $historico_grade_curso_id = null, $aceleracao = null, $ref_cod_escola = null, $dependencia = false, $posicao = null)
@@ -697,21 +721,6 @@ class clsPmieducarHistoricoEscolar extends Model
         return false;
     }
 
-    public function getCodNomeEscola()
-    {
-        $db = new clsBanco();
-        $db->Consulta("SELECT escola, ref_cod_escola
-                         FROM pmieducar.historico_escolar
-                        WHERE ref_cod_aluno = $this->ref_cod_aluno
-                          AND sequencial = $this->sequencial");
-
-        if ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-
-            return $tupla['escola'] . '-' . $tupla['ref_cod_escola'];
-        }
-    }
-
     /**
      * Exclui um registro
      *
@@ -810,7 +819,7 @@ class clsPmieducarHistoricoEscolar extends Model
         $db->Consulta($sql);
 
         while ($db->ProximoRegistro()) {
-            list($disciplinas[]) = $db->Tupla();
+            [$disciplinas[]] = $db->Tupla();
         }
 
         return $disciplinas;

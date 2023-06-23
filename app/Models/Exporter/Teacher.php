@@ -21,7 +21,6 @@ class Teacher extends Model
 
     /**
      * @param Builder $query
-     *
      * @return TeacherEloquentBuilder
      */
     public function newEloquentBuilder($query)
@@ -57,7 +56,7 @@ class Teacher extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
-                'race' => 'Raça'
+                'race' => 'Raça',
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -76,6 +75,8 @@ class Teacher extends Model
                 'employee_postgraduates_complete' => 'Pós-Graduações concluídas',
                 'continuing_education_course' => 'Outros cursos de formação continuada',
                 'employee_graduation_complete' => 'Curso(s) superior(es) concluído(s)',
+                'allocations.funcao_exercida' => 'Função exercida',
+                'allocations.tipo_vinculo' => 'Tipo de vínculo',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',
@@ -108,7 +109,6 @@ class Teacher extends Model
 
     /**
      * @param string $column
-     *
      * @return string
      */
     public function alias($column)

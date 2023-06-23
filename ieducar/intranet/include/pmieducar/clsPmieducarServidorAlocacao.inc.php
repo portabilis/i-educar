@@ -5,25 +5,45 @@ use iEducar\Legacy\Model;
 class clsPmieducarServidorAlocacao extends Model
 {
     public $cod_servidor_alocacao;
+
     public $ref_ref_cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_escola;
+
     public $ref_cod_servidor;
+
     public $ref_cod_servidor_funcao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $carga_horaria;
+
     public $periodo;
+
     public $ref_cod_funcionario_vinculo;
+
     public $ano;
+
     public $codUsuario;
+
     public $dataAdmissao;
+
     public $dataSaida;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $hora_atividade;
+
     public $horas_excedentes;
 
     /**
@@ -591,31 +611,6 @@ class clsPmieducarServidorAlocacao extends Model
         return false;
     }
 
-    public function listaEscolas($int_ref_ref_cod_instituicao = null)
-    {
-        if (!is_numeric($int_ref_ref_cod_instituicao)) {
-            return false;
-        }
-
-        $sql = "SELECT DISTINCT ref_cod_escola FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$int_ref_ref_cod_instituicao}' AND ativo = '1'";
-
-        $db = new clsBanco();
-        $resultado = [];
-
-        $db->Consulta($sql);
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla;
-        }
-
-        if (count($resultado)) {
-            return $resultado;
-        }
-
-        return false;
-    }
-
     /**
      * Retorna um array com os dados de um registro.
      *
@@ -676,37 +671,6 @@ class clsPmieducarServidorAlocacao extends Model
     }
 
     /**
-     * Exclui um registro baseado no período da alocação.
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    public function excluir_horario()
-    {
-        if (is_numeric($this->ref_cod_servidor)
-            && is_numeric($this->ref_ref_cod_instituicao)
-            && is_numeric($this->ref_cod_escola)
-            && is_numeric($this->periodo)
-        ) {
-            $db = new clsBanco();
-            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND periodo = '$this->periodo'");
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function excluiAlocacoesServidor($ref_cod_servidor)
-    {
-        $db = new clsBanco();
-        $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_servidor = '{$ref_cod_servidor}'");
-
-        return true;
-    }
-
-    /**
      * Substitui a alocação entre servidores
      *
      * Substitui a alocação entre servidores, atualizando a tabela
@@ -716,7 +680,6 @@ class clsPmieducarServidorAlocacao extends Model
      * do servidor a ser substituido.
      *
      * @param int $int_ref_cod_servidor_substituto Código do servidor que substituirá o atual
-     *
      * @return bool TRUE em caso de sucesso, FALSE caso contrário
      *
      * @throws Exception

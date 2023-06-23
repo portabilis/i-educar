@@ -11,7 +11,7 @@ class NotificationTest extends EloquentTestCase
 {
     protected $relations = [
         'type' => NotificationType::class,
-        'user' => LegacyUser::class
+        'user' => LegacyUser::class,
     ];
 
     protected function getEloquentModelName(): string

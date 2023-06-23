@@ -2,21 +2,25 @@
 
 use App\Models\LegacyPerson;
 
-return new class () extends clsListagem {
+return new class() extends clsListagem
+{
     public function Gerar()
     {
         $this->titulo = 'Pessoas Físicas';
 
+        $par_nome = str_replace(['[', ']', '{', '}', '(', ')', '\\', '/'], '', $this->getQueryString(name: 'nm_pessoa')) ?: false;
+        $par_id_federal = idFederal2Int(str: $this->getQueryString(name: 'id_federal')) ?: false;
+
         $this->addCabecalhos(
             coluna: [
                 'Nome',
-                'CPF'
+                'CPF',
             ]
         );
         $this->campoTexto(
             nome: 'nm_pessoa',
             campo: 'Nome',
-            valor: $this->getQueryString(name: 'nm_pessoa'),
+            valor: $par_nome,
             tamanhovisivel: '50',
             tamanhomaximo: '255'
         );
@@ -24,11 +28,8 @@ return new class () extends clsListagem {
         $this->campoCpf(
             nome: 'id_federal',
             campo: 'CPF',
-            valor: $this->getQueryString(name: 'id_federal')
+            valor: $par_id_federal
         );
-
-        $par_nome = $this->getQueryString(name: 'nm_pessoa') ?: false;
-        $par_id_federal = idFederal2Int(str: $this->getQueryString(name: 'id_federal')) ?: false;
 
         // Paginador
         $limite = 10;
@@ -36,7 +37,7 @@ return new class () extends clsListagem {
 
         $lista = LegacyPerson::query()->filter([
             'name' => $par_nome,
-            'cpf' => $par_id_federal,
+            'cpf' => is_numeric($par_id_federal) ? $par_id_federal : null,
         ])->select([
             'idpes',
             'nome',
@@ -61,7 +62,7 @@ return new class () extends clsListagem {
                 $cpf = $pessoa->individual?->cpf ?? int2CPF(int: $pessoa->individual->cpf);
                 $this->addLinhas(linha: [
                     "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>$nome</a>",
-                    $cpf
+                    $cpf,
                 ]);
             }
         }

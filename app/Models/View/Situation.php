@@ -19,7 +19,7 @@ class Situation extends Model
         $query->whereIn('cod_situacao', [
             App_Model_MatriculaSituacao::APROVADO,
             App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA,
-            App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO
+            App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO,
         ]);
     }
 
@@ -31,7 +31,7 @@ class Situation extends Model
                     ->whereColumn('nota_aluno_id', 'nota_aluno.id')
                     ->where('situacao', App_Model_MatriculaSituacao::APROVADO_APOS_EXAME)
             );
-            $query->aproved();
+            $query->approved();
         } else {
             $query->where('cod_situacao', $situation);
         }

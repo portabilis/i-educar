@@ -59,10 +59,6 @@ class App_Unificacao_Aluno
         }
     }
 
-    /**
-     * @param $codAlunos
-     * @param $unificationId
-     */
     private static function logData($codAlunos, $unificationId)
     {
         self::logHistoricos($codAlunos, $unificationId);
@@ -70,10 +66,6 @@ class App_Unificacao_Aluno
         self::logAlunos($codAlunos, $unificationId);
     }
 
-    /**
-     * @param $duplicatesId
-     * @param $unificationId
-     */
     private static function logHistoricos($duplicatesId, $unificationId)
     {
         $historicos = DB::table('pmieducar.historico_escolar')->whereIn('ref_cod_aluno', $duplicatesId)->get();
@@ -83,15 +75,11 @@ class App_Unificacao_Aluno
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.historico_escolar';
             $logData->keys = json_encode([['id' => $historico->id]]);
-            $logData->old_data = json_encode((array)$historico);
+            $logData->old_data = json_encode((array) $historico);
             $logData->save();
         }
     }
 
-    /**
-     * @param $duplicatesId
-     * @param $unificationId
-     */
     private static function logMatriculas($duplicatesId, $unificationId)
     {
         $matriculas = DB::table('pmieducar.matricula')->whereIn('ref_cod_aluno', $duplicatesId)->get();
@@ -101,15 +89,11 @@ class App_Unificacao_Aluno
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.matricula';
             $logData->keys = json_encode([['cod_matricula' => $matricula->cod_matricula]]);
-            $logData->old_data = json_encode((array)$matricula);
+            $logData->old_data = json_encode((array) $matricula);
             $logData->save();
         }
     }
 
-    /**
-     * @param $duplicatesId
-     * @param $unificationId
-     */
     private static function logAlunos($duplicatesId, $unificationId)
     {
         $alunos = DB::table('pmieducar.aluno')->whereIn('cod_aluno', $duplicatesId)->get();
@@ -119,7 +103,7 @@ class App_Unificacao_Aluno
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.aluno';
             $logData->keys = json_encode([['cod_aluno' => $aluno->cod_aluno]]);
-            $logData->old_data = json_encode((array)$aluno);
+            $logData->old_data = json_encode((array) $aluno);
             $logData->save();
         }
     }

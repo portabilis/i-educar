@@ -17,9 +17,6 @@ class LegacyRoleTest extends EloquentTestCase
         'createdByUser' => LegacyUser::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyRole::class;

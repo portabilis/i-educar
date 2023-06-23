@@ -5,7 +5,9 @@ namespace iEducar\Modules\Educacenso\Model;
 class Laboratorios
 {
     public const INFORMATICA = 1;
+
     public const CIENCIAS = 2;
+
     public const EDUCACAO_PROFISSIONAL = 3;
 
     public static function getDescriptiveValues()

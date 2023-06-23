@@ -15,12 +15,9 @@ class LegacyRegistrationScoreTest extends EloquentTestCase
         'registration' => LegacyRegistration::class,
         'generalAverages' => LegacyGeneralAverage::class,
         'disciplineScoreAverages' => LegacyDisciplineScoreAverage::class,
-        'disciplineScores' => LegacyDisciplineScore::class
+        'disciplineScores' => LegacyDisciplineScore::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyRegistrationScore::class;

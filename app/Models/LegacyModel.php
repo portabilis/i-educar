@@ -38,7 +38,8 @@ class LegacyModel extends Model
             $legacy = array_flip($this->legacy);
             $newAttributes = [];
             foreach (parent::attributesToArray() as $key => $value) {
-                $newAttributes[$legacy[$key] ?? $key] = $value;
+                $newKey = $legacy[$key] ?? $key;
+                $newAttributes[$newKey] = method_exists($this, $newKey) ? $this->{$newKey} : $value;
             }
 
             return $newAttributes;

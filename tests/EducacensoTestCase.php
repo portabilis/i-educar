@@ -40,7 +40,9 @@ abstract class EducacensoTestCase extends TestCase
     use WithoutMiddleware;
 
     protected int $year;
+
     protected User $user;
+
     protected Carbon $dateEnrollment;
 
     public function setUp(): void
@@ -55,7 +57,7 @@ abstract class EducacensoTestCase extends TestCase
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoOrgaoRegionalTableSeeder']);
 
         $country = Country::updateOrCreate([
-            'id' => 1
+            'id' => 1,
         ], [
             'name' => 'Brasil',
             'ibge_code' => '76',
@@ -73,7 +75,7 @@ abstract class EducacensoTestCase extends TestCase
                 ]),
                 'name' => 'IÇARA',
                 'ibge_code' => '4207007',
-            ])
+            ]),
         ]);
 
         $this->user = LegacyUserFactory::new()->admin()->create();
@@ -148,7 +150,7 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals($this->year, $legacyAcademicYearStage->data_inicio->year);
         $this->assertEquals($this->year, $legacyAcademicYearStage->data_fim->year);
 
-        $module = $legacyAcademicYearStage->module;
+        $module = $legacyAcademicYearStage->stageType;
         $this->assertNotNull($module);
         $this->assertInstanceOf(LegacyStageType::class, $module);
         $this->assertEquals($legacyAcademicYearStage->ref_cod_modulo, $module->cod_modulo);
@@ -192,7 +194,7 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertNotNull($legacySchool->schoolClasses);
         $this->assertCount(2, $legacySchool->schoolClasses);
 
-        list($schoolClasses01, $schoolClasses02) = $legacySchool->schoolClasses;
+        [$schoolClasses01, $schoolClasses02] = $legacySchool->schoolClasses;
 
         $this->assertEquals($this->user->cod_usuario, $schoolClasses01->ref_usuario_cad);
         $this->assertEquals($legacySchool->cod_escola, $schoolClasses01->ref_ref_cod_escola);
@@ -205,7 +207,7 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertNotNull($schoolClasses01->etapa_educacenso);
         $this->assertTrue(in_array($schoolClasses01->etapa_educacenso, [
             22,
-            35
+            35,
         ]));
         $this->assertEquals('13:15:00', $schoolClasses01->hora_inicial);
         $this->assertEquals('17:15:00', $schoolClasses01->hora_final);
@@ -226,7 +228,7 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertNotNull($schoolClasses02->etapa_educacenso);
         $this->assertTrue(in_array($schoolClasses02->etapa_educacenso, [
             22,
-            35
+            35,
         ]));
         $this->assertEquals('13:15:00', $schoolClasses02->hora_inicial);
         $this->assertEquals('17:15:00', $schoolClasses02->hora_final);
@@ -440,7 +442,7 @@ abstract class EducacensoTestCase extends TestCase
                 23,
                 56,
                 64,
-                72
+                72,
             ])) {
                 $this->assertNotNull($enrollment->etapa_educacenso);
             }

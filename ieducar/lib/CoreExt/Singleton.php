@@ -46,7 +46,6 @@ abstract class CoreExt_Singleton
      * Retorna uma instância singleton, instanciando-a quando necessário.
      *
      * @param string $self Nome da subclasse de CoreExt_Singleton que será instanciada
-     *
      * @return CoreExt_Singleton
      */
     protected static function _getInstance($self)

@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Casts\LegacyArray;
+use App\Models\Builders\LegacyEnrollmentBuilder;
+use App\Models\View\SituationReport;
 use App\Support\Database\DateSerializer;
 use DateTime;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -27,6 +29,7 @@ class LegacyEnrollment extends LegacyModel
     use DateSerializer;
 
     public const CREATED_AT = 'data_cadastro';
+
     public const UPDATED_AT = 'updated_at';
 
     /**
@@ -38,6 +41,8 @@ class LegacyEnrollment extends LegacyModel
      * @var string
      */
     protected $primaryKey = 'id';
+
+    protected string $builder = LegacyEnrollmentBuilder::class;
 
     /**
      * @var array
@@ -55,31 +60,16 @@ class LegacyEnrollment extends LegacyModel
         'composicao_itinerario',
         'curso_itinerario',
         'itinerario_concomitante',
-        'etapa_educacenso'
+        'etapa_educacenso',
+        'cod_curso_profissional',
     ];
 
     protected $casts = [
         'tipo_itinerario' => LegacyArray::class,
         'composicao_itinerario' => LegacyArray::class,
+        'data_enturmacao' => 'date',
+        'data_exclusao' => 'date',
     ];
-
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'data_enturmacao',
-        'data_exclusao'
-    ];
-
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('ativo', true);
-    }
 
     protected function date(): Attribute
     {
@@ -148,9 +138,6 @@ class LegacyEnrollment extends LegacyModel
         return $this->belongsTo(LegacyPeriod::class, 'turno_id')->withDefault();
     }
 
-    /**
-     * @return HasOne
-     */
     public function registrationScore(): HasOne
     {
         return $this->hasOne(LegacyRegistrationScore::class, 'matricula_id', 'ref_cod_matricula');
@@ -179,5 +166,10 @@ class LegacyEnrollment extends LegacyModel
     public function getStudentId()
     {
         return $this->registration->student->cod_aluno;
+    }
+
+    public function situations(): HasMany
+    {
+        return $this->hasMany(SituationReport::class, 'cod_matricula', 'ref_cod_matricula');
     }
 }

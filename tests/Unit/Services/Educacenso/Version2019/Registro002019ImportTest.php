@@ -92,7 +92,7 @@ class Registro002019ImportTest extends TestCase
         $schoolInep = SchoolInep::where('cod_escola_inep', $model->codigoInep)->first();
         /** @var LegacySchool $school */
         $school = $schoolInep->school;
-        $phones = $school->person->phone;
+        $phones = $school->person->phones;
 
         $this->assertCount(1, $phones);
         $this->assertEquals((int) $model->telefone, (int) $phones->first()->fone);
@@ -149,10 +149,10 @@ class Registro002019ImportTest extends TestCase
         $model = new Registro00();
 
         $model->codigoInep = $faker->numerify('########');
-        $model->nome = $faker->name;
+        $model->nome = $faker->name();
         $model->codigoIbgeMunicipio = $faker->numerify('########');
         $model->codigoIbgeDistrito = $faker->numerify('########');
-        $model->bairro = $faker->name;
+        $model->bairro = $faker->name();
         $model->numero = $faker->randomNumber(2);
 
         return $model;

@@ -4,6 +4,7 @@ namespace Tests\Educacenso\Export;
 
 use App\Models\Country;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use App\Services\Educacenso\HandleFileService;
 use App\Services\Educacenso\ImportServiceFactory;
 use App\User;
@@ -13,6 +14,8 @@ use Database\Factories\DistrictFactory;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\StateFactory;
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\FormasContratacaoPoderPublico;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\UploadedFile;
@@ -24,8 +27,11 @@ class ExportTest extends TestCase
     use WithoutMiddleware;
 
     protected int $year;
+
     protected User $user;
+
     protected Carbon $dateEnrollment;
+
     protected LegacySchool $legacySchool;
 
     public function setUp(): void
@@ -41,7 +47,7 @@ class ExportTest extends TestCase
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoOrgaoRegionalTableSeeder']);
 
         $country = Country::updateOrCreate([
-            'id' => 1
+            'id' => 1,
         ], [
             'name' => 'Brasil',
             'ibge_code' => '76',
@@ -59,7 +65,7 @@ class ExportTest extends TestCase
                 ]),
                 'name' => 'IÇARA',
                 'ibge_code' => '4207007',
-            ])
+            ]),
         ]);
 
         $this->year = 2022;
@@ -67,7 +73,7 @@ class ExportTest extends TestCase
 
         $this->user = LegacyUserFactory::new()->admin()->create([
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->create([
-                'data_educacenso' => '2022-05-30'
+                'data_educacenso' => '2022-05-30',
             ]),
         ]);
 
@@ -86,6 +92,18 @@ class ExportTest extends TestCase
         ));
 
         $this->legacySchool = LegacySchool::first();
+
+        $this->legacySchool->update([
+            'poder_publico_parceria_convenio' => '{'.DependenciaAdministrativaEscola::MUNICIPAL.'}',
+            'formas_contratacao_parceria_escola_secretaria_municipal' => '{'.FormasContratacaoPoderPublico::CONTRATO_CONSORCIO.'}',
+        ]);
+
+        $this->legacySchool->refresh();
+
+        LegacySchoolClass::where('ativo', 1)
+            ->update([
+                'classe_com_lingua_brasileira_sinais' => 1,
+            ]);
     }
 
     /** @test */
@@ -109,7 +127,7 @@ class ExportTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'registro-00',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             )
             ->assertJsonCount(0, 'mensagens');
@@ -136,7 +154,7 @@ class ExportTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'registro-10',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }
@@ -169,7 +187,7 @@ class ExportTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'registro-20',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }
@@ -202,7 +220,7 @@ class ExportTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'registro-30',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }
@@ -228,7 +246,7 @@ class ExportTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'registro-40',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }
@@ -252,7 +270,7 @@ class ExportTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'registro-50',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }
@@ -276,7 +294,7 @@ class ExportTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'registro-60',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

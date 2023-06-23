@@ -16,13 +16,11 @@ class LegacyRaceFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'idpes_cad' => LegacyUserFactory::new()->unique()->make(),
+            'idpes_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_raca' => $this->faker->colorName(),
             'raca_educacenso' => random_int(0, 5),
         ];

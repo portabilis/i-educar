@@ -37,7 +37,7 @@ class DiarioGravaNotaTest extends TestCase
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $year = LegacySchoolAcademicYearFactory::new()->create([
@@ -67,7 +67,7 @@ class DiarioGravaNotaTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => 3
+            'parecer_descritivo' => 3,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -81,6 +81,7 @@ class DiarioGravaNotaTest extends TestCase
             'componente_curricular_id' => $discipline,
             'ano_escolar_id' => $schoolClass->grade_id,
             'anos_letivos' => $schoolGrade->anos_letivos,
+            'hora_falta' => null,
         ]);
 
         $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYearFactory::new()->create([
@@ -100,7 +101,7 @@ class DiarioGravaNotaTest extends TestCase
 
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_matricula' => $registration,
-            'ref_cod_turma' => $schoolClass
+            'ref_cod_turma' => $schoolClass,
         ]);
 
         LegacySchoolGradeDisciplineFactory::new()->create([
@@ -119,11 +120,11 @@ class DiarioGravaNotaTest extends TestCase
                     $student->getKey() => [
                         $discipline->getKey() => [
                             'nota' => 6,
-                            'recuperacao' => 2
-                        ]
-                    ]
-                ]
-            ]
+                            'recuperacao' => 2,
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->getResource('/module/Api/Diario', $data);
@@ -131,15 +132,15 @@ class DiarioGravaNotaTest extends TestCase
         $response->assertSuccessful()
             ->assertJson(
                 [
-                    'oper'=> 'post',
-                    'resource'=> 'notas',
-                    'msgs'=> [
+                    'oper' => 'post',
+                    'resource' => 'notas',
+                    'msgs' => [
                         [
-                            'msg'=> 'Notas postadas com sucesso!',
-                            'type'=> 'success'
-                        ]
+                            'msg' => 'Notas postadas com sucesso!',
+                            'type' => 'success',
+                        ],
                     ],
-                    'any_error_msg'=> false
+                    'any_error_msg' => false,
                 ]
             );
     }

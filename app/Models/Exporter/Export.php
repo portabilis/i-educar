@@ -51,7 +51,6 @@ class Export extends Model
 
     /**
      * @param int $code
-     *
      * @return mixed
      */
     public function getExportByCode($code)
@@ -116,9 +115,6 @@ class Export extends Model
         return $query;
     }
 
-    /**
-     * @param Builder $query
-     */
     public function applyFilters(Builder $query)
     {
         foreach ($this->filters as $filter) {
@@ -135,6 +131,18 @@ class Export extends Model
                 case 'in':
                     $value = implode(', ', $value);
                     $query->whereRaw("{$column} {$operator} ({$value})");
+
+                    break;
+                case '@>':
+                    if (is_array($value)) {
+                        $query->where(function ($q) use ($column, $value) {
+                            foreach ($value as $v) {
+                                $q->orWhereRaw("{$column} @> ('{{$v}}')");
+                            }
+                        });
+                    } else {
+                        $query->whereRaw("{$column} @> ('{{$value}}')");
+                    }
 
                     break;
             }

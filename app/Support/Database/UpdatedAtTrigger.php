@@ -20,7 +20,6 @@ trait UpdatedAtTrigger
      * Retorna o nome da trigger para a tabela.
      *
      * @param string $table
-     *
      * @return string
      */
     private function generateTriggerName($table)
@@ -32,7 +31,6 @@ trait UpdatedAtTrigger
      * Atualiza a coluna updated_at com a data atual.
      *
      * @param string $table
-     *
      * @return void
      */
     public function createUpdatedAtTrigger($table)
@@ -53,7 +51,6 @@ trait UpdatedAtTrigger
      * Remove a trigger da tabela.
      *
      * @param string $table
-     *
      * @return void
      */
     public function dropUpdatedAtTrigger($table)

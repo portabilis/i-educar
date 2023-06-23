@@ -3,17 +3,19 @@
 class CoreExt_EntityCompoundDataMapperStub extends CoreExt_DataMapper
 {
     protected $_entityClass = 'CoreExt_EntityCompoundStub';
+
     protected $_tableName = 'matricula';
+
     protected $_tableSchema = '';
 
     protected $_attributeMap = [
         'pessoa' => 'pessoa_id',
-        'curso' => 'curso_id'
+        'curso' => 'curso_id',
     ];
 
     protected $_primaryKey = [
         'pessoa' => 'pessoa',
-        'curso' => 'curso'
+        'curso' => 'curso',
     ];
 
     /**
@@ -22,7 +24,6 @@ class CoreExt_EntityCompoundDataMapperStub extends CoreExt_DataMapper
      * SQL compatível com SQLite.
      *
      * @param clsBancoPdo $db
-     *
      * @return mixed Retorna FALSE em caso de erro
      */
     public static function createTable(clsBanco $db)

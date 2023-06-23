@@ -5,27 +5,49 @@ use iEducar\Legacy\Model;
 class clsPmieducarCandidatoFilaUnica extends Model
 {
     public $cod_candidato_fila_unica;
+
     public $ref_cod_aluno;
+
     public $ref_cod_serie;
+
     public $ref_cod_turno;
+
     public $ref_cod_pessoa_cad;
+
     public $ref_cod_pessoa_exc;
+
     public $ref_cod_matricula;
+
     public $ano_letivo;
+
     public $data_nasc;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $data_solicitacao;
+
     public $hora_solicitacao;
+
     public $horario_inicial;
+
     public $horario_final;
+
     public $situacao;
+
     public $via_judicial;
+
     public $via_judicial_doc;
+
     public $protocolo;
+
     public $ativo;
+
     public $sexo;
+
     public $ideciv;
+
     public $comments;
 
     public function __construct(
@@ -819,7 +841,6 @@ class clsPmieducarCandidatoFilaUnica extends Model
      * aguardando na fila.
      *
      * @param int $cod_candidato_fila_unica
-     *
      * @return array
      *
      * @throws Exception

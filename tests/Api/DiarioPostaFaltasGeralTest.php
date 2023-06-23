@@ -32,7 +32,7 @@ class DiarioPostaFaltasGeralTest extends TestCase
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -62,6 +62,7 @@ class DiarioPostaFaltasGeralTest extends TestCase
             'componente_curricular_id' => $discipline,
             'ano_escolar_id' => $schoolClass->grade_id,
             'anos_letivos' => $schoolGrade->anos_letivos,
+            'hora_falta' => null,
         ]);
 
         $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYearFactory::new()->create([
@@ -94,9 +95,9 @@ class DiarioPostaFaltasGeralTest extends TestCase
                 $enrollment->ref_cod_turma => [
                     $registration->ref_cod_aluno => [
                         'valor' => 2,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->postResource('/module/Api/Diario', $data);
@@ -109,10 +110,10 @@ class DiarioPostaFaltasGeralTest extends TestCase
                     'msgs' => [
                         0 => [
                             'msg' => 'Faltas postadas com sucesso!',
-                            'type' => 'success'
-                        ]
+                            'type' => 'success',
+                        ],
                     ],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
 

@@ -9,8 +9,11 @@ class TipoAtendimentoTurma
     use DescriptionValue;
 
     public const ESCOLARIZACAO = 0;
+
     public const CLASSE_HOSPITALAR = 1;
+
     public const ATIVIDADE_COMPLEMENTAR = 4;
+
     public const AEE = 5;
 
     /**

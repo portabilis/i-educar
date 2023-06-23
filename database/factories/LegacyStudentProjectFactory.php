@@ -20,8 +20,8 @@ class LegacyStudentProjectFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_projeto' => LegacyProjectFactory::new(),
-            'ref_cod_aluno' => LegacyStudentFactory::new(),
+            'ref_cod_projeto' => fn () => LegacyProjectFactory::new(),
+            'ref_cod_aluno' => fn () => LegacyStudentFactory::new(),
             'turno' => $this->faker->numberBetween(1, 4),
             'data_inclusao' => now(),
             'data_desligamento' => now(),

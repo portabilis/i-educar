@@ -3,28 +3,51 @@
 class clsPmieducarConfiguracoesGerais
 {
     public $ref_cod_instituicao;
+
     public $permite_relacionamento_posvendas;
+
     public $url_novo_educacao;
+
     public $token_novo_educacao = false;
+
     public $mostrar_codigo_inep_aluno;
+
     public $justificativa_falta_documentacao_obrigatorio;
+
     public $tamanho_min_rede_estadual;
+
     public $modelo_boletim_professor;
+
     public $custom_labels;
+
     public $url_cadastro_usuario;
+
     public $active_on_ieducar;
+
     public $ieducar_image;
+
     public $ieducar_entity_name;
+
     public $ieducar_login_footer;
+
     public $ieducar_external_footer;
+
     public $ieducar_internal_footer;
+
     public $facebook_url;
+
     public $twitter_url;
+
     public $linkedin_url;
+
     public $ieducar_suspension_message;
+
     public $bloquear_cadastro_aluno;
+
     public $situacoes_especificas_atestados;
+
     public $emitir_ato_autorizativo;
+
     public $emitir_ato_criacao_credenciamento;
 
     /**

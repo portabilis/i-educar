@@ -5,8 +5,11 @@ use iEducar\Legacy\Model;
 class clsPmieducarTurmaDisciplina extends Model
 {
     public $ref_cod_turma;
+
     public $ref_cod_disciplina;
+
     public $ref_cod_escola;
+
     public $ref_cod_serie;
 
     public function __construct($ref_cod_turma = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null)
@@ -227,7 +230,7 @@ class clsPmieducarTurmaDisciplina extends Model
             $disciplina_in = '';
             $conc = '';
             foreach ($disciplinas as $disciplina) {
-                for ($i = 0; $i < sizeof($disciplina); $i++) {
+                for ($i = 0; $i < count($disciplina); $i++) {
                     $disciplina_in .= "{$conc}{$disciplina[$i]}";
                     $conc = ',';
                 }
@@ -243,62 +246,6 @@ class clsPmieducarTurmaDisciplina extends Model
             }
 
             return $resultado;
-        }
-
-        return false;
-    }
-
-    public function jah_existe()
-    {
-        if (is_array($this->ref_cod_disciplina) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_escola)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_turma FROM {$this->_tabela} WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_serie = '{$this->ref_cod_serie}' AND ref_cod_escola = '{$this->ref_cod_escola}'");
-
-            $resultado = [];
-
-            while ($db->ProximoRegistro()) {
-                $resultado[] = $db->Tupla();
-            }
-
-            return $resultado;
-        }
-
-        return false;
-    }
-
-    public function eh_usado($disciplina)
-    {
-        if (is_numeric($disciplina) && is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_escola)) {
-            $db = new clsBanco();
-
-            return $db->CampoUnico("SELECT 1
-                            FROM pmieducar.dispensa_disciplina dd
-                            WHERE
-                                    dd.disc_ref_ref_cod_disciplina = {$disciplina}
-                                AND dd.disc_ref_ref_cod_turma = {$this->ref_cod_turma}
-                                AND dd.disc_ref_ref_cod_serie = {$this->ref_cod_serie}
-                                AND dd.disc_ref_ref_cod_escola = {$this->ref_cod_escola}
-
-                            UNION
-
-                            SELECT 1
-                            FROM pmieducar.falta_aluno fa
-                            WHERE
-                                    fa.disc_ref_ref_cod_disciplina = {$disciplina}
-                                AND fa.disc_ref_ref_cod_turma = {$this->ref_cod_turma}
-                                AND fa.ref_ref_cod_turma = {$this->ref_cod_turma}
-                                AND fa.disc_ref_ref_cod_serie = {$this->ref_cod_serie}
-                                AND fa.disc_ref_ref_cod_escola = {$this->ref_cod_escola}
-
-                            UNION
-
-                            SELECT 1
-                            FROM pmieducar.quadro_horario_horarios qhh
-                            WHERE
-                                    qhh.ref_ref_cod_disciplina = {$disciplina}
-                                AND qhh.ref_ref_cod_turma = {$this->ref_cod_turma}
-                                AND qhh.ref_ref_cod_serie = {$this->ref_cod_serie}
-                                AND qhh.ref_ref_cod_escola = {$this->ref_cod_escola}");
         }
 
         return false;

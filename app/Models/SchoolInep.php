@@ -13,18 +13,13 @@ class SchoolInep extends Model
      */
     protected $table = 'modules.educacenso_cod_escola';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_escola';
-
     protected $fillable = [
         'cod_escola',
         'cod_escola_inep',
         'nome_inep',
         'fonte',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected function number(): Attribute
@@ -34,9 +29,6 @@ class SchoolInep extends Model
         );
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'cod_escola', 'cod_escola');
