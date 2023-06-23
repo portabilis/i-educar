@@ -10,7 +10,7 @@ class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_C
 
         $defaultInputOptions = [
             'id' => $options['objectName'] . $spacer . $attrName,
-            'value' => ''
+            'value' => '',
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

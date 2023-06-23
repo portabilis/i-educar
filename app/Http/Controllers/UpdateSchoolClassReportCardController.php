@@ -15,11 +15,9 @@ use Portabilis_Model_Report_TipoBoletim;
 class UpdateSchoolClassReportCardController extends Controller
 {
     /**
-     * @param Request $request
+     * @return RedirectResponse|View
      *
      * @throws CoreExt_Exception
-     *
-     * @return RedirectResponse|View
      */
     public function index(Request $request)
     {
@@ -40,8 +38,6 @@ class UpdateSchoolClassReportCardController extends Controller
     }
 
     /**
-     * @param UpdateSchoolClassReportCardRequest $request
-     *
      * @return RedirectResponse
      */
     public function update(UpdateSchoolClassReportCardRequest $request)

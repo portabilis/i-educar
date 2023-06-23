@@ -70,9 +70,9 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
      * @todo   Funções de controle de buffer não funcionam por conta de chamadas
      *         a die() e exit() nas classes clsDetalhe, clsCadastro e clsListagem.
      *
-     * @throws CoreExt_Exception_FileNotFoundException
-     *
      * @return bool
+     *
+     * @throws CoreExt_Exception_FileNotFoundException
      */
     public function dispatch()
     {

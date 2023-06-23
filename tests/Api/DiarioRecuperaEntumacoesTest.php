@@ -20,7 +20,7 @@ class DiarioRecuperaEntumacoesTest extends TestCase
         $registration = LegacyRegistrationFactory::new()->create([
             'ref_ref_cod_escola' => $school,
             'dependencia' => 't',
-            'aprovado' => 12
+            'aprovado' => 12,
         ]);
 
         $enrollment = LegacyEnrollmentFactory::new()->create([
@@ -31,7 +31,7 @@ class DiarioRecuperaEntumacoesTest extends TestCase
             'oper' => 'get',
             'resource' => 'movimentacao-enturmacao',
             'ano' => now()->year,
-            'escola' => $school->getKey()
+            'escola' => $school->getKey(),
         ];
 
         $response = $this->getResource('/module/Api/Matricula', $data);
@@ -54,12 +54,12 @@ class DiarioRecuperaEntumacoesTest extends TestCase
                             'serie_id' => $registration->ref_ref_cod_serie,
                             'updated_at' => $enrollment->updated_at->format('Y-m-d H:i:s'),
                             'deleted_at' => $enrollment->deleted_at?->format('Y-m-d H:i:s'),
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'movimentacao-enturmacao',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

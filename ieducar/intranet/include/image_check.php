@@ -6,10 +6,15 @@ use Illuminate\Support\Facades\Storage;
 class PictureController
 {
     public $imageFile;
+
     public $errorMessage;
+
     public $maxWidth;
+
     public $maxHeight;
+
     public $maxSize;
+
     public $suportedExtensions;
 
     public function __construct(
@@ -18,8 +23,7 @@ class PictureController
         $maxHeight = null,
         $maxSize = null,
         $suportedExtensions = null
-    )
-    {
+    ) {
         $this->imageFile = $imageFile;
 
         if ($maxWidth != null) {
@@ -50,9 +54,9 @@ class PictureController
     /**
      * Envia imagem caso seja vÃ¡lida e retorna caminho
      *
-     * @return String
-     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+     * @return string
      *
+     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
      */
     public function sendPicture()
     {
@@ -74,9 +78,9 @@ class PictureController
     /**
      * Verifica se a imagem Ã© vÃ¡lida
      *
-     * @return boolean
-     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+     * @return bool
      *
+     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
      */
     public function validatePicture()
     {
@@ -110,9 +114,9 @@ class PictureController
     /**
      * Retorna a mensagem de erro
      *
-     * @return String
-     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+     * @return string
      *
+     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
      */
     public function getErrorMessage()
     {

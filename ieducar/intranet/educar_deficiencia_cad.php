@@ -3,25 +3,33 @@
 use App\Models\LegacyDeficiency;
 use iEducar\Support\View\SelectOptions;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_deficiencia;
+
     public $nm_deficiencia;
+
     public $deficiencia_educacenso;
+
     public $deficiency_type_id;
+
     public $exigir_laudo_medico;
+
     public $acao_enviar = 'acaoEnviar()';
+
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_deficiencia=$_GET['cod_deficiencia'];
+        $this->cod_deficiencia = $_GET['cod_deficiencia'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_deficiencia_lst.php');
 
         if (is_numeric($this->cod_deficiencia)) {
-            $registro  = LegacyDeficiency::find($this->cod_deficiencia)?->getAttributes();
+            $registro = LegacyDeficiency::find($this->cod_deficiencia)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -60,7 +68,7 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Tipo',
             'resources' => SelectOptions::deficiencyTypes(),
-            'value' => $this->deficiency_type_id
+            'value' => $this->deficiency_type_id,
         ];
         $this->inputsHelper()->select(attrName: 'deficiency_type_id', inputOptions: $options);
 
@@ -69,7 +77,7 @@ return new class extends clsCadastro {
             'resources' => SelectOptions::educacensoDeficiencies(),
             'value' => $this->deficiencia_educacenso,
             'label_hint' => 'Deficiências definidas como "Outras" não serão exportadas no arquivo do Censo',
-            'required' => false
+            'required' => false,
         ];
 
         $this->inputsHelper()->select(attrName: 'deficiencia_educacenso', inputOptions: $options);
@@ -86,7 +94,7 @@ return new class extends clsCadastro {
                 'deficiencia_educacenso' => is_numeric($this->deficiencia_educacenso) ? $this->deficiencia_educacenso : null,
                 'deficiency_type_id' => is_numeric($this->deficiency_type_id) ? $this->deficiency_type_id : null,
                 'desconsidera_regra_diferenciada' => !is_null($this->desconsidera_regra_diferenciada),
-                'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico)
+                'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico),
             ]);
         }
 
@@ -110,7 +118,7 @@ return new class extends clsCadastro {
                 'deficiencia_educacenso' => is_numeric($this->deficiencia_educacenso) ? $this->deficiencia_educacenso : null,
                 'deficiency_type_id' => is_numeric($this->deficiency_type_id) ? $this->deficiency_type_id : null,
                 'desconsidera_regra_diferenciada' => !is_null($this->desconsidera_regra_diferenciada),
-                'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico)
+                'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico),
             ]);
             $editou = $obj->save();
         }

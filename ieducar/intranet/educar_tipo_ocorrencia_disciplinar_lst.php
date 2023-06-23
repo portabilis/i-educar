@@ -2,20 +2,34 @@
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_tipo_ocorrencia_disciplinar;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $max_ocorrencias;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -23,12 +37,12 @@ return new class extends clsListagem {
         $this->titulo = 'Tipo Ocorrência Disciplinar - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
             'Tipo Ocorrência Disciplinar',
-            'Máximo Ocorrências'
+            'Máximo Ocorrências',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -39,7 +53,7 @@ return new class extends clsListagem {
 
         $this->addCabecalhos($lista_busca);
 
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto('nm_tipo', 'Tipo Ocorrência Disciplinar', $this->nm_tipo, 30, 255, false);
@@ -47,7 +61,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $query = LegacyDisciplinaryOccurrenceType::query()
             ->where('ativo', 1)
@@ -61,7 +75,7 @@ return new class extends clsListagem {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 
-        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
+        $result = $query->paginate($this->limite, '*', 'pagina_'.$this->nome);
 
         $lista = $result->items();
         $total = $result->total();
@@ -75,7 +89,7 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">{$registro['nm_tipo']}</a>",
-                    "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">{$registro['max_ocorrencias']}</a>"
+                    "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">{$registro['max_ocorrencias']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

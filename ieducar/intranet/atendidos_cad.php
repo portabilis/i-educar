@@ -20,47 +20,81 @@ use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     use LegacyAddressingFields;
 
     public $cod_pessoa_fj;
+
     public $nm_pessoa;
+
     public $nome_social;
+
     public $id_federal;
+
     public $data_nasc;
+
     public $ddd_telefone_1;
+
     public $telefone_1;
+
     public $ddd_telefone_2;
+
     public $telefone_2;
+
     public $ddd_telefone_mov;
+
     public $telefone_mov;
+
     public $ddd_telefone_fax;
+
     public $telefone_fax;
+
     public $email;
+
     public $tipo_pessoa;
+
     public $sexo;
+
     public $busca_pessoa;
+
     public $retorno;
+
     public $cor_raca;
+
     public $sus;
+
     public $nis_pis_pasep;
+
     public $ocupacao;
+
     public $empresa;
+
     public $ddd_telefone_empresa;
+
     public $telefone_empresa;
+
     public $pessoa_contato;
+
     public $renda_mensal;
+
     public $data_admissao;
+
     public $zona_localizacao_censo;
+
     public $localizacao_diferenciada;
+
     public $pais_residencia;
 
     // Variáveis para controle da foto
     public $objPhoto;
+
     public $arquivoFoto;
+
     public $file_delete;
 
     public $caminho_det;
+
     public $caminho_lst;
 
     public function Inicializar()
@@ -75,7 +109,7 @@ return new class extends clsCadastro {
             $this->retorno = 'Editar';
             $objPessoa = new clsPessoaFisica();
 
-            list($this->nm_pessoa, $this->id_federal, $this->data_nasc,
+            [$this->nm_pessoa, $this->id_federal, $this->data_nasc,
                 $this->ddd_telefone_1, $this->telefone_1, $this->ddd_telefone_2,
                 $this->telefone_2, $this->ddd_telefone_mov, $this->telefone_mov,
                 $this->ddd_telefone_fax, $this->telefone_fax, $this->email,
@@ -84,52 +118,52 @@ return new class extends clsCadastro {
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
                 $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia
-                ) =
-                $objPessoa->queryRapida(
-                    $this->cod_pessoa_fj,
-                    'nome',
-                    'cpf',
-                    'data_nasc',
-                    'ddd_1',
-                    'fone_1',
-                    'ddd_2',
-                    'fone_2',
-                    'ddd_mov',
-                    'fone_mov',
-                    'ddd_fax',
-                    'fone_fax',
-                    'email',
-                    'tipo',
-                    'sexo',
-                    'ideciv',
-                    'idpes_pai',
-                    'idpes_mae',
-                    'nacionalidade',
-                    'idpais_estrangeiro',
-                    'idmun_nascimento',
-                    'letra',
-                    'sus',
-                    'nis_pis_pasep',
-                    'ocupacao',
-                    'empresa',
-                    'ddd_telefone_empresa',
-                    'telefone_empresa',
-                    'pessoa_contato',
-                    'renda_mensal',
-                    'data_admissao',
-                    'falecido',
-                    'ref_cod_religiao',
-                    'zona_localizacao_censo',
-                    'localizacao_diferenciada',
-                    'nome_social',
-                    'pais_residencia'
-                );
+            ] =
+            $objPessoa->queryRapida(
+                $this->cod_pessoa_fj,
+                'nome',
+                'cpf',
+                'data_nasc',
+                'ddd_1',
+                'fone_1',
+                'ddd_2',
+                'fone_2',
+                'ddd_mov',
+                'fone_mov',
+                'ddd_fax',
+                'fone_fax',
+                'email',
+                'tipo',
+                'sexo',
+                'ideciv',
+                'idpes_pai',
+                'idpes_mae',
+                'nacionalidade',
+                'idpais_estrangeiro',
+                'idmun_nascimento',
+                'letra',
+                'sus',
+                'nis_pis_pasep',
+                'ocupacao',
+                'empresa',
+                'ddd_telefone_empresa',
+                'telefone_empresa',
+                'pessoa_contato',
+                'renda_mensal',
+                'data_admissao',
+                'falecido',
+                'ref_cod_religiao',
+                'zona_localizacao_censo',
+                'localizacao_diferenciada',
+                'nome_social',
+                'pais_residencia'
+            );
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
 
             $this->id_federal = is_numeric(value: $this->id_federal) ? int2CPF(int: $this->id_federal) : '';
             $this->nis_pis_pasep = int2Nis(nis: $this->nis_pis_pasep);
-            $this->renda_mensal = number_format(num: (float)$this->renda_mensal, decimals: 2, decimal_separator: ',', thousands_separator: '.');
+            $this->renda_mensal = number_format(num: (float) $this->renda_mensal, decimals: 2, decimal_separator: ',', thousands_separator: '.');
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr(data_original: $this->data_admissao) : '';
 
@@ -139,10 +173,10 @@ return new class extends clsCadastro {
         }
 
         $this->fexcluir = is_numeric(value: $this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
-                int_processo_ap: 43,
-                int_idpes_usuario: $this->pessoa_logada,
-                int_soma_nivel_acesso: 7
-            );
+            int_processo_ap: 43,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7
+        );
 
         $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
 
@@ -157,12 +191,11 @@ return new class extends clsCadastro {
         $this->form_enctype = ' enctype=\'multipart/form-data\'';
         $camposObrigatorios = !config(key: 'legacy.app.remove_obrigatorios_cadastro_pessoa') == 1;
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
-        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int)$obrigarCamposCenso);
+        $this->campoOculto(nome: 'obrigar_campos_censo', valor: (int) $obrigarCamposCenso);
         $this->url_cancelar = $this->retorno == 'Editar' ?
             'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
         $objPessoa = new clsPessoaFisica(int_idpes: $this->cod_pessoa_fj);
-
 
         $detalhe = $objPessoa->queryRapida(
             $this->cod_pessoa_fj,
@@ -254,10 +287,10 @@ return new class extends clsCadastro {
             'resources' => [
                 '' => 'Sexo',
                 'M' => 'Masculino',
-                'F' => 'Feminino'
+                'F' => 'Feminino',
             ],
             'inline' => true,
-            'required' => $camposObrigatorios
+            'required' => $camposObrigatorios,
         ];
 
         $this->inputsHelper()->select(attrName: 'sexo', inputOptions: $options);
@@ -266,7 +299,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->estadoCivil(inputOptions: [
             'label' => '',
-            'required' => empty($parentType) && $camposObrigatorios
+            'required' => empty($parentType) && $camposObrigatorios,
         ]);
 
         // data nascimento
@@ -274,7 +307,7 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Data de nascimento',
             'value' => $this->data_nasc,
-            'required' => empty($parentType) && $camposObrigatorios
+            'required' => empty($parentType) && $camposObrigatorios,
         ];
 
         $this->inputsHelper()->date(attrName: 'data_nasc', inputOptions: $options);
@@ -290,7 +323,6 @@ return new class extends clsCadastro {
         $documentos->idpes = $this->cod_pessoa_fj;
         $documentos = $documentos->detalhe();
 
-
         $options = [
             'required' => false,
             'label' => 'RG / Data emissão',
@@ -298,7 +330,7 @@ return new class extends clsCadastro {
             'value' => $documentos['rg'],
             'max_length' => 25,
             'size' => 27,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: 'rg', inputOptions: $options);
@@ -310,7 +342,7 @@ return new class extends clsCadastro {
             'label' => '',
             'placeholder' => 'Data emissão',
             'value' => $documentos['data_exp_rg'],
-            'size' => 19
+            'size' => 19,
         ];
 
         $this->inputsHelper()->date(attrName: 'data_emissao_rg', inputOptions: $options);
@@ -332,7 +364,7 @@ return new class extends clsCadastro {
             'label' => '',
             'value' => $documentos['idorg_exp_rg'],
             'resources' => $selectOptions,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->select(attrName: 'orgao_emissao_rg', inputOptions: $options);
@@ -342,11 +374,11 @@ return new class extends clsCadastro {
         $options = [
             'required' => false,
             'label' => '',
-            'value' => $documentos['sigla_uf_exp_rg']
+            'value' => $documentos['sigla_uf_exp_rg'],
         ];
 
         $helperOptions = [
-            'attrName' => 'uf_emissao_rg'
+            'attrName' => 'uf_emissao_rg',
         ];
 
         $this->inputsHelper()->uf(inputOptions: $options, helperOptions: $helperOptions);
@@ -359,7 +391,7 @@ return new class extends clsCadastro {
             'placeholder' => '',
             'value' => $this->nis_pis_pasep,
             'max_length' => 11,
-            'size' => 20
+            'size' => 20,
         ];
 
         $this->inputsHelper()->integer(attrName: 'nis_pis_pasep', inputOptions: $options);
@@ -372,7 +404,7 @@ return new class extends clsCadastro {
             'placeholder' => '',
             'value' => $this->sus,
             'max_length' => 20,
-            'size' => 20
+            'size' => 20,
         ];
 
         $this->inputsHelper()->text(attrNames: 'sus', inputOptions: $options);
@@ -384,7 +416,7 @@ return new class extends clsCadastro {
             'certidao_nascimento_novo_formato' => 'Nascimento (novo formato)',
             91 => 'Nascimento (antigo formato)',
             'certidao_casamento_novo_formato' => 'Casamento (novo formato)',
-            92 => 'Casamento (antigo formato)'
+            92 => 'Casamento (antigo formato)',
         ];
 
         // caso certidao nascimento novo formato tenha sido informado,
@@ -402,7 +434,7 @@ return new class extends clsCadastro {
             'label' => 'Tipo certidão civil',
             'value' => $tipoCertidaoCivil,
             'resources' => $selectOptions,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->select(attrName: 'tipo_certidao_civil', inputOptions: $options);
@@ -415,7 +447,7 @@ return new class extends clsCadastro {
             'placeholder' => 'Termo',
             'value' => $documentos['num_termo'],
             'max_length' => 8,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: 'termo_certidao_civil', inputOptions: $options);
@@ -429,7 +461,7 @@ return new class extends clsCadastro {
             'value' => $documentos['num_livro'],
             'max_length' => 8,
             'size' => 15,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->text(attrNames: 'livro_certidao_civil', inputOptions: $options);
@@ -442,7 +474,7 @@ return new class extends clsCadastro {
             'placeholder' => 'Folha',
             'value' => $documentos['num_folha'],
             'max_length' => 4,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: 'folha_certidao_civil', inputOptions: $options);
@@ -456,7 +488,7 @@ return new class extends clsCadastro {
             'value' => $documentos['certidao_nascimento'],
             'max_length' => 32,
             'size' => 32,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: 'certidao_nascimento', inputOptions: $options);
@@ -469,7 +501,7 @@ return new class extends clsCadastro {
             'placeholder' => 'Certidão casamento',
             'value' => $documentos['certidao_casamento'],
             'max_length' => 32,
-            'size' => 32
+            'size' => 32,
         ];
 
         $this->inputsHelper()->integer(attrName: 'certidao_casamento', inputOptions: $options);
@@ -481,11 +513,11 @@ return new class extends clsCadastro {
             'label' => 'Estado emissão / Data emissão',
             'label_hint' => 'Informe o estado para poder informar o código do cartório',
             'value' => $documentos['sigla_uf_cert_civil'],
-            'inline' => true
+            'inline' => true,
         ];
 
         $helperOptions = [
-            'attrName' => 'uf_emissao_certidao_civil'
+            'attrName' => 'uf_emissao_certidao_civil',
         ];
 
         $this->inputsHelper()->uf(inputOptions: $options, helperOptions: $helperOptions);
@@ -497,7 +529,7 @@ return new class extends clsCadastro {
             'label' => '',
             'placeholder' => 'Data emissão',
             'value' => $documentos['data_emissao_cert_civil'],
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->date(attrName: 'data_emissao_certidao_civil', inputOptions: $options);
@@ -519,7 +551,7 @@ return new class extends clsCadastro {
             'label' => 'Passaporte',
             'value' => $documentos['passaporte'],
             'cols' => 45,
-            'max_length' => 20
+            'max_length' => 20,
         ];
 
         $this->inputsHelper()->text(attrNames: 'passaporte', inputOptions: $options);
@@ -532,7 +564,7 @@ return new class extends clsCadastro {
             'placeholder' => 'Carteira de trabalho',
             'value' => $documentos['num_cart_trabalho'],
             'max_length' => 7,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: 'carteira_trabalho', inputOptions: $options);
@@ -544,7 +576,7 @@ return new class extends clsCadastro {
             'label' => '',
             'placeholder' => 'Série',
             'value' => $documentos['serie_cart_trabalho'],
-            'max_length' => 5
+            'max_length' => 5,
         ];
 
         $this->inputsHelper()->integer(attrName: 'serie_carteira_trabalho', inputOptions: $options);
@@ -555,11 +587,11 @@ return new class extends clsCadastro {
             'required' => false,
             'label' => 'Estado emissão / Data emissão',
             'value' => $documentos['sigla_uf_cart_trabalho'],
-            'inline' => true
+            'inline' => true,
         ];
 
         $helperOptions = [
-            'attrName' => 'uf_emissao_carteira_trabalho'
+            'attrName' => 'uf_emissao_carteira_trabalho',
         ];
 
         $this->inputsHelper()->uf(inputOptions: $options, helperOptions: $helperOptions);
@@ -570,7 +602,7 @@ return new class extends clsCadastro {
             'required' => false,
             'label' => '',
             'placeholder' => 'Data emissão',
-            'value' => $documentos['data_emissao_cart_trabalho']
+            'value' => $documentos['data_emissao_cart_trabalho'],
         ];
 
         $this->inputsHelper()->date(attrName: 'data_emissao_carteira_trabalho', inputOptions: $options);
@@ -583,7 +615,7 @@ return new class extends clsCadastro {
             'placeholder' => 'Titulo eleitor',
             'value' => $documentos['num_tit_eleitor'],
             'max_length' => 13,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: 'titulo_eleitor', inputOptions: $options);
@@ -596,7 +628,7 @@ return new class extends clsCadastro {
             'placeholder' => 'Zona',
             'value' => $documentos['zona_tit_eleitor'],
             'max_length' => 4,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: 'zona_titulo_eleitor', inputOptions: $options);
@@ -608,7 +640,7 @@ return new class extends clsCadastro {
             'label' => '',
             'placeholder' => 'Seção',
             'value' => $documentos['secao_tit_eleitor'],
-            'max_length' => 4
+            'max_length' => 4,
         ];
 
         $this->inputsHelper()->integer(attrName: 'secao_titulo_eleitor', inputOptions: $options);
@@ -635,7 +667,7 @@ return new class extends clsCadastro {
             '' => 'Selecione',
             '1' => 'Brasileira',
             '2' => 'Naturalizado brasileiro',
-            '3' => 'Estrangeira'
+            '3' => 'Estrangeira',
         ];
 
         $options = [
@@ -643,7 +675,7 @@ return new class extends clsCadastro {
             'resources' => $tiposNacionalidade,
             'required' => $obrigarCamposCenso,
             'inline' => true,
-            'value' => $this->retorno === 'Novo' ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade //Quando for novo registro, preenche com o valor default brasileiro
+            'value' => $this->retorno === 'Novo' ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade, //Quando for novo registro, preenche com o valor default brasileiro
         ];
 
         $this->inputsHelper()->select(attrName: 'tipo_nacionalidade', inputOptions: $options);
@@ -653,16 +685,16 @@ return new class extends clsCadastro {
         $options = [
             'label' => '',
             'placeholder' => 'Informe o nome do pais',
-            'required' => true
+            'required' => true,
         ];
 
         $hiddenInputOptions = [
-            'options' => ['value' => $this->pais_origem_id]
+            'options' => ['value' => $this->pais_origem_id],
         ];
 
         $helperOptions = [
             'objectName' => 'pais_origem',
-            'hiddenInputOptions' => $hiddenInputOptions
+            'hiddenInputOptions' => $hiddenInputOptions,
         ];
 
         $this->inputsHelper()->simpleSearchPaisSemBrasil(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
@@ -671,7 +703,7 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Falecido?',
             'required' => false,
-            'value' => dbBool(val: $this->falecido)
+            'value' => dbBool(val: $this->falecido),
         ];
 
         $this->inputsHelper()->checkbox(attrName: 'falecido', inputOptions: $options);
@@ -680,12 +712,12 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Naturalidade',
-            'required' => $naturalidadeObrigatoria && $camposObrigatorios
+            'required' => $naturalidadeObrigatoria && $camposObrigatorios,
         ];
 
         $helperOptions = [
             'objectName' => 'naturalidade',
-            'hiddenInputOptions' => ['options' => ['value' => $this->naturalidade_id]]
+            'hiddenInputOptions' => ['options' => ['value' => $this->naturalidade_id]],
         ];
 
         $this->inputsHelper()->simpleSearchMunicipio(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
@@ -693,7 +725,7 @@ return new class extends clsCadastro {
         // Religião
         $this->inputsHelper()->religiao(inputOptions: [
             'required' => false,
-            'label' => 'Religião'
+            'label' => 'Religião',
         ]);
 
         $this->viewAddress(optionalFields: true);
@@ -711,7 +743,7 @@ return new class extends clsCadastro {
             'resources' => [
                 '' => 'Selecione',
                 1 => 'Urbana',
-                2 => 'Rural'
+                2 => 'Rural',
             ],
             'required' => $obrigarCamposCenso,
         ]);
@@ -741,7 +773,7 @@ return new class extends clsCadastro {
         $this->campoTexto(nome: 'pessoa_contato', campo: 'Pessoa de contato na empresa', valor: $this->pessoa_contato, tamanhovisivel: '50', tamanhomaximo: '255');
 
         $fileService = new FileService(urlPresigner: new UrlPresigner);
-        $files = $this->cod_pessoa_fj ? $fileService->getFiles(relation: LegacyIndividual::find($this->cod_pessoa_fj)) : [];
+        $files = $this->cod_pessoa_fj && is_numeric($this->cod_pessoa_fj) ? $fileService->getFiles(relation: LegacyIndividual::find($this->cod_pessoa_fj)) : [];
         $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files])->render());
 
         // after change pessoa pai / mae
@@ -780,6 +812,7 @@ return new class extends clsCadastro {
         if ($user) {
             UserUpdated::dispatch($user);
         }
+
         return $this->createOrUpdate(pessoaIdOrNull: $this->cod_pessoa_fj);
     }
 
@@ -904,14 +937,14 @@ return new class extends clsCadastro {
         $hiddenInputOptions = ['options' => ['value' => $parentId]];
         $helperOptions = [
             'objectName' => $parentType,
-            'hiddenInputOptions' => $hiddenInputOptions
+            'hiddenInputOptions' => $hiddenInputOptions,
         ];
 
         $options = [
             'label' => 'Pessoa ' . $parentTypeLabel,
             'size' => 50,
             'required' => false,
-            'input_hint' => $inputHint
+            'input_hint' => $inputHint,
         ];
 
         $this->inputsHelper()->simpleSearchPessoa(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
@@ -1259,6 +1292,7 @@ return new class extends clsCadastro {
             return true;
         }
         $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+
         return preg_match(pattern: $pattern, subject: $this->complement);
     }
 
@@ -1330,8 +1364,8 @@ return new class extends clsCadastro {
 
     public function createOrUpdateRaca($pessoaId, $corRaca)
     {
-        $pessoaId = (int)$pessoaId;
-        $corRaca = (int)$corRaca;
+        $pessoaId = (int) $pessoaId;
+        $corRaca = (int) $corRaca;
 
         if ($corRaca == 0) {
             return false;
@@ -1460,7 +1494,7 @@ return new class extends clsCadastro {
             'value' => $this->{"ddd_telefone_{$type}"},
             'max_length' => 3,
             'size' => 3,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: "ddd_telefone_{$type}", inputOptions: $options);
@@ -1472,7 +1506,7 @@ return new class extends clsCadastro {
             'label' => '',
             'placeholder' => $typeLabel,
             'value' => $this->{"telefone_{$type}"},
-            'max_length' => 11
+            'max_length' => 11,
         ];
 
         $this->inputsHelper()->integer(attrName: "telefone_{$type}", inputOptions: $options);

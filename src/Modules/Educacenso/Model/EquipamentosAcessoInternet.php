@@ -5,6 +5,7 @@ namespace iEducar\Modules\Educacenso\Model;
 class EquipamentosAcessoInternet
 {
     public const COMPUTADOR_MESA = 1;
+
     public const DISPOSITIVOS_PESSOAIS = 2;
 
     public static function getDescriptiveValues()

@@ -1,11 +1,12 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public function Gerar()
     {
         $this->titulo = 'Empresas';
 
-        $this->addCabecalhos(coluna: ['Razão Social', 'Nome Fantasia' ]);
+        $this->addCabecalhos(coluna: ['Razão Social', 'Nome Fantasia']);
 
         $this->campoTexto(nome: 'fantasia', campo: 'Nome Fantasia', valor: $_GET['fantasia'], tamanhovisivel: '50', tamanhomaximo: '255');
         $this->campoTexto(nome: 'razao_social', campo: 'Razão Social', valor: $_GET['razao_social'], tamanhovisivel: '50', tamanhomaximo: '255');
@@ -13,7 +14,7 @@ return new class extends clsListagem {
 
         // Paginador
         $limite = 10;
-        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
         $par_razao = false;
         $par_cnpj = false;
         $opcoes = false;
@@ -32,7 +33,7 @@ return new class extends clsListagem {
             }
         }
         if ($_GET['id_federal']) {
-            $par_cnpj =  idFederal2Int(str: $_GET['id_federal']);
+            $par_cnpj = idFederal2Int(str: $_GET['id_federal']);
         }
 
         $objPessoa = new clsPessoaJuridica();
@@ -49,7 +50,7 @@ return new class extends clsListagem {
                 $cod_empresa = $empresa['idpes'];
                 $razao_social = $db->escapeString(string: $empresa['nome']);
                 $nome_fantasia = $db->escapeString(string: $empresa['fantasia']);
-                $this->addLinhas(linha: [ "<a href='empresas_det.php?cod_empresa={$cod_empresa}'><img src='imagens/noticia.jpg' border=0>$razao_social</a>", "<a href='empresas_det.php?cod_empresa={$cod_empresa}'>{$nome_fantasia}</a>" ]);
+                $this->addLinhas(linha: ["<a href='empresas_det.php?cod_empresa={$cod_empresa}'><img src='imagens/noticia.jpg' border=0>$razao_social</a>", "<a href='empresas_det.php?cod_empresa={$cod_empresa}'>{$nome_fantasia}</a>"]);
             }
         }
         // Paginador

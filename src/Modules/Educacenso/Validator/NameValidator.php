@@ -13,9 +13,6 @@ class NameValidator implements EducacensoValidator
         $this->name = mb_strtoupper($name);
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if ($this->hasFourRepeatedCharaters()) {
@@ -33,9 +30,6 @@ class NameValidator implements EducacensoValidator
         return true;
     }
 
-    /**
-     * @return bool
-     */
     private function hasOnlyCharactersAllowed(): bool
     {
         $pattern = '/^[a-zA-Z\ \'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇ]+$/';
@@ -43,9 +37,6 @@ class NameValidator implements EducacensoValidator
         return preg_match($pattern, mb_strtoupper($this->name));
     }
 
-    /**
-     * @return bool
-     */
     private function hasFourRepeatedCharaters(): bool
     {
         return preg_match('/(.)\1\1\1/', $this->name);

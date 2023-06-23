@@ -13,7 +13,7 @@ class NotificationTypeFactory extends Factory
     {
         return [
             'id' => $this->faker->numberBetween(1000, 2000),
-            'name' => $this->faker->text(50)
+            'name' => $this->faker->text(50),
         ];
     }
 }

@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $chave_campo;
+
     public $importarCpf;
 
     public function Gerar()
@@ -21,7 +23,6 @@ return new class extends clsListagem {
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
 
-
         $this->addCabecalhos(['Matrícula', 'CPF', 'Funcionário']);
 
         // Filtros de Busca
@@ -38,7 +39,7 @@ return new class extends clsListagem {
 
         // Paginador
         $limite = 10;
-        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
         $this->chave_campo = $_GET['chave_campo'];
         $this->campoOculto(nome: 'chave_campo', valor: $this->chave_campo);
@@ -74,9 +75,9 @@ return new class extends clsListagem {
                 $det_cod_servidor = $obj_cod_servidor->detalhe();
                 $det_cod_servidor = $det_cod_servidor['idpes']->detalhe();
 
-                $funcao  = ' set_campo_pesquisa(';
+                $funcao = ' set_campo_pesquisa(';
                 $virgula = '';
-                $cont    = 0;
+                $cont = 0;
 
                 foreach ($parametros->getCampoNome() as $campo) {
                     if ($parametros->getCampoTipo($cont) == 'text') {
@@ -118,7 +119,7 @@ return new class extends clsListagem {
                 $this->addLinhas(["
                     <a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario['matricula']}</a>",
                     "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$det_cod_servidor['cpf']}</a>",
-                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario['nome']}</a>" ]);
+                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario['nome']}</a>"]);
                 $total = $funcionario['_total'];
             }
         }
@@ -132,8 +133,8 @@ return new class extends clsListagem {
     public function Formular()
     {
         $this->title = 'Pesquisa por Funcionário!';
-        $this->processoAp         = '0';
-        $this->renderMenu         = false;
+        $this->processoAp = '0';
+        $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };

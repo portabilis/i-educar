@@ -22,7 +22,7 @@ class LegacyAverageFormula extends LegacyModel
         'nome',
         'formula_media',
         'tipo_formula',
-        'substitui_menor_nota_rc'
+        'substitui_menor_nota_rc',
     ];
 
     /**

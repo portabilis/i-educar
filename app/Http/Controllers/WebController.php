@@ -30,7 +30,7 @@ class WebController extends Controller
     {
         return [
             'name' => LegacyInstitution::value('nm_instituicao'),
-            'logo' => config('legacy.report.logo_file_name')
+            'logo' => config('legacy.report.logo_file_name'),
         ];
     }
 

@@ -1,7 +1,9 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $cod_bloqueio;
 
     public function Gerar()
@@ -20,11 +22,11 @@ return new class extends clsDetalhe {
 
         //Nome da etapa
         $etapas = [
-      1 => '1ª Etapa',
-      2 => '2ª Etapa',
-      3 => '3ª Etapa',
-      4 => '4ª Etapa'
-    ];
+            1 => '1ª Etapa',
+            2 => '2ª Etapa',
+            3 => '3ª Etapa',
+            4 => '4ª Etapa',
+        ];
         $registro['etapa'] = $etapas[$registro['etapa']];
 
         // Dados da escola
@@ -55,16 +57,16 @@ return new class extends clsDetalhe {
         $obj_permissoes = new clsPermissoes();
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
-            $this->url_novo   = 'educar_bloqueio_lancamento_faltas_notas_cad.php';
+            $this->url_novo = 'educar_bloqueio_lancamento_faltas_notas_cad.php';
             $this->url_editar = sprintf('educar_bloqueio_lancamento_faltas_notas_cad.php?cod_bloqueio=%d', $this->cod_bloqueio);
         }
 
         $this->url_cancelar = 'educar_bloqueio_lancamento_faltas_notas_lst.php';
-        $this->largura      = '100%';
+        $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Detalhe de bloqueio de lançamento de notas e faltas por etapa', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()

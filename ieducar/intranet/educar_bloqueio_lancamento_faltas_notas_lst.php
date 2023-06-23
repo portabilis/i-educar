@@ -1,14 +1,23 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ano;
+
     public $ref_cod_escola;
+
     public $etapa;
+
     public $data_inicio;
+
     public $data_fim;
 
     public function Gerar()
@@ -25,7 +34,7 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos(coluna: [
-            'Escola', 'Ano', 'Etapa', 'Data início', 'Data fim'
+            'Escola', 'Ano', 'Etapa', 'Data início', 'Data fim',
         ]);
 
         $this->inputsHelper()->dynamic(helperNames: ['ano'], inputOptions: ['required' => false]);
@@ -33,11 +42,11 @@ return new class extends clsListagem {
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
-        $get_escola      = true;
-        $obrigatorio     = false;
+        $get_escola = true;
+        $obrigatorio = false;
         $exibe_nm_escola = true;
 
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // Paginador
         $this->limite = 20;
@@ -65,14 +74,14 @@ return new class extends clsListagem {
                     1 => '1ª Etapa',
                     2 => '2ª Etapa',
                     3 => '3ª Etapa',
-                    4 => '4ª Etapa'
+                    4 => '4ª Etapa',
                 ];
                 $nm_etapa = $etapas[$registro['etapa']];
 
                 // Dados para a url
-                $url     = 'educar_bloqueio_lancamento_faltas_notas_det.php';
+                $url = 'educar_bloqueio_lancamento_faltas_notas_det.php';
                 $options = ['query' => [
-                    'cod_bloqueio'  => $registro['cod_bloqueio']
+                    'cod_bloqueio' => $registro['cod_bloqueio'],
                 ]];
 
                 $this->addLinhas(linha: [
@@ -80,7 +89,7 @@ return new class extends clsListagem {
                     $urlHelper->l(text: $registro['ano'], path: $url, options: $options),
                     $urlHelper->l(text: $nm_etapa, path: $url, options: $options),
                     $urlHelper->l(text: dataToBrasil(data_original: $registro['data_inicio']), path: $url, options: $options),
-                    $urlHelper->l(text: dataToBrasil(data_original: $registro['data_fim']), path: $url, options: $options)
+                    $urlHelper->l(text: dataToBrasil(data_original: $registro['data_fim']), path: $url, options: $options),
                 ]);
             }
         }
@@ -97,7 +106,7 @@ return new class extends clsListagem {
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao_url[] = 'educar_bloqueio_lancamento_faltas_notas_cad.php';
-            $this->array_botao[]     = 'Novo';
+            $this->array_botao[] = 'Novo';
         }
 
         $this->largura = '100%';

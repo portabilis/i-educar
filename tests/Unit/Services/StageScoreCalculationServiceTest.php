@@ -13,7 +13,7 @@ class StageScoreCalculationServiceTest extends TestCase
     private $service;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {

@@ -10,7 +10,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
 
     protected $_primaryKey = [
         'id' => 'id',
-        'instituicao' => 'instituicao_id'
+        'instituicao' => 'instituicao_id',
     ];
 
     protected $_attributeMap = [
@@ -22,11 +22,11 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
         'tipo_base' => 'tipo_base',
         'codigo_educacenso' => 'codigo_educacenso',
         'ordenamento' => 'ordenamento',
-        'desconsidera_para_progressao' => 'desconsidera_para_progressao'
+        'desconsidera_para_progressao' => 'desconsidera_para_progressao',
     ];
 
     protected $_notPersistable = [
-        'cargaHoraria'
+        'cargaHoraria',
     ];
 
     /**
@@ -42,7 +42,6 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     /**
      * Setter.
      *
-     * @param AreaConhecimento_Model_AreaDataMapper $mapper
      *
      * @return ComponenteCurricular_Model_ComponenteDataMapper Provê interface fluída
      */
@@ -70,7 +69,6 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     /**
      * Setter.
      *
-     * @param ComponenteCurricular_Model_AnoEscolarDataMapper $mapper
      *
      * @return ComponenteCurricular_Model_ComponenteCurricular Provê interface fluída
      */
@@ -108,7 +106,6 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     /**
      * @param int $componenteCurricular
      * @param int $anoEscolar
-     *
      * @return ComponenteCurricular_Model_Componente
      *
      * @throws Exception
@@ -117,11 +114,11 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     {
         $anoEscolar = $this->getAnoEscolarDataMapper()->find([
             'componenteCurricular' => $componenteCurricular,
-            'anoEscolar'           =>  $anoEscolar
+            'anoEscolar' => $anoEscolar,
         ]);
 
         $componenteCurricular = $this->find([
-            'id'          => $componenteCurricular,
+            'id' => $componenteCurricular,
         ]);
 
         $componenteCurricular->cargaHoraria = $anoEscolar->cargaHoraria;
@@ -133,7 +130,6 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
      * Busca um componente curricular por nome.
      *
      * @param string $name
-     *
      * @return CoreExt_Entity|null
      *
      * @throws Exception

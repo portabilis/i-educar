@@ -37,7 +37,7 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
 
         $styles = [
             '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Process.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Process.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
@@ -45,7 +45,7 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
         $scripts = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
             '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
-            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
         ];
 
         if (!$this->backwardCompatibility) {

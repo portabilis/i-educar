@@ -1,21 +1,21 @@
 <?php
 
-    header('Content-type: text/xml');
+header('Content-type: text/xml');
 
-    Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
-    if (is_numeric($_GET['esc'])) {
-        $db = new clsBanco();
-        if ($_GET['lim']) {
-            $lim = 'limit 5';
-        }
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
+if (is_numeric($_GET['esc'])) {
+    $db = new clsBanco();
+    if ($_GET['lim']) {
+        $lim = 'limit 5';
+    }
 
-        if ($_GET['ano_atual']) {
-            $ano_tual = " AND ano >= {$_GET['ano_atual']} ";
-        }
+    if ($_GET['ano_atual']) {
+        $ano_tual = " AND ano >= {$_GET['ano_atual']} ";
+    }
 
-        $db->Consulta("
+    $db->Consulta("
                 SELECT
                     ano
                 FROM
@@ -26,10 +26,10 @@
                 ORDER BY
                     ano asc $lim
                 ");
-        while ($db->ProximoRegistro()) {
-            list($ano) = $db->Tupla();
-            echo "  <ano>{$ano}</ano>\n";
-        }
+    while ($db->ProximoRegistro()) {
+        [$ano] = $db->Tupla();
+        echo "  <ano>{$ano}</ano>\n";
     }
+}
 
-    echo '</query>';
+echo '</query>';

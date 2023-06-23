@@ -3,11 +3,13 @@
 class CoreExt_ChildEntityDataMapperStub extends CoreExt_DataMapper
 {
     protected $_entityClass = 'CoreExt_ChildEntityStub';
+
     protected $_tableName = 'child';
+
     protected $_tableSchema = '';
 
     protected $_attributeMap = [
-        'tipoSanguineo' => 'tipo_sanguineo'
+        'tipoSanguineo' => 'tipo_sanguineo',
     ];
 
     /**
@@ -16,7 +18,6 @@ class CoreExt_ChildEntityDataMapperStub extends CoreExt_DataMapper
      * SQL compatível com SQLite.
      *
      * @param clsBancoPdo $db
-     *
      * @return mixed Retorna FALSE em caso de erro
      */
     public static function createTable(clsBanco $db)

@@ -3,7 +3,6 @@
 namespace Tests\Api;
 
 use Database\Factories\LegacyStudentFactory;
-
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -16,9 +15,9 @@ class DiarioRecuperaDadosAlunoTest extends TestCase
     {
         $student = LegacyStudentFactory::new()->create();
         $data = [
-            'oper'=> 'get',
+            'oper' => 'get',
             'resource' => 'aluno',
-            'id' =>  $student->cod_aluno
+            'id' => $student->cod_aluno,
         ];
         $response = $this->getResource('/module/Api/Aluno', $data);
 
@@ -47,7 +46,7 @@ class DiarioRecuperaDadosAlunoTest extends TestCase
                 'sus',
                 'tipo_responsavel',
                 'tipo_transporte',
-                'url_laudo_medico'
+                'url_laudo_medico',
             ]
         );
     }

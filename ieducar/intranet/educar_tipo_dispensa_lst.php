@@ -2,19 +2,32 @@
 
 use App\Models\LegacyExemptionType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_tipo_dispensa;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -22,11 +35,11 @@ return new class extends clsListagem {
         $this->titulo = 'Tipo Dispensa - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
-            'Tipo Dispensa'
+            'Tipo Dispensa',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -37,7 +50,7 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         // Filtros de Foreign Keys
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto('nm_tipo', 'Tipo Dispensa', $this->nm_tipo, 30, 255, false);
@@ -70,7 +83,7 @@ return new class extends clsListagem {
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_tipo_dispensa_det.php?cod_tipo_dispensa={$registro['cod_tipo_dispensa']}\">{$registro['nm_tipo']}</a>"
+                    "<a href=\"educar_tipo_dispensa_det.php?cod_tipo_dispensa={$registro['cod_tipo_dispensa']}\">{$registro['nm_tipo']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

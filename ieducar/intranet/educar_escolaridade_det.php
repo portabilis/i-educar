@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Referência a usuário da sessão
      *
@@ -16,6 +17,7 @@ return new class extends clsDetalhe {
     public $titulo = '';
 
     public $idesco;
+
     public $descricao;
 
     public function Gerar()
@@ -27,7 +29,7 @@ return new class extends clsDetalhe {
         $tmp_obj = new clsCadastroEscolaridade($this->idesco);
         $registro = $tmp_obj->detalhe();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect('educar_escolaridade_lst.php');
         }
 
@@ -37,16 +39,16 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3)) {
-            $this->url_novo   = 'educar_escolaridade_cad.php';
+            $this->url_novo = 'educar_escolaridade_cad.php';
             $this->url_editar = 'educar_escolaridade_cad.php?idesco=' . $registro['idesco'];
         }
 
         $this->url_cancelar = 'educar_escolaridade_lst.php';
-        $this->largura      = '100%';
+        $this->largura = '100%';
 
         $this->breadcrumb('Detalhe da escolaridade', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 
     public function Formular()

@@ -6,6 +6,7 @@ use App\Traits\Ativo;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyTransferType extends LegacyModel
@@ -37,9 +38,13 @@ class LegacyTransferType extends LegacyModel
         'ativo',
     ];
 
-    /**
-     * @return HasMany
-     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->nm_tipo,
+        );
+    }
+
     public function transferRequests(): HasMany
     {
         return $this->hasMany(LegacyTransferRequest::class, 'ref_cod_transferencia_tipo');

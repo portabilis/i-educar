@@ -11,7 +11,6 @@ trait AsView
      *
      * @param string      $view
      * @param string|null $version
-     *
      * @return void
      */
     public function createView($view, $version = null)
@@ -29,7 +28,6 @@ trait AsView
      * Drop a view if exists.
      *
      * @param string $view
-     *
      * @return void
      */
     public function dropView($view)

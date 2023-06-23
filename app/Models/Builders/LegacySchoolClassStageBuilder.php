@@ -6,10 +6,6 @@ class LegacySchoolClassStageBuilder extends LegacyBuilder
 {
     /**
      * Filtra por escola
-     *
-     * @param int $schoolClass
-     *
-     * @return LegacySchoolClassStageBuilder
      */
     public function whereSchoolClass(int $schoolClass): self
     {
@@ -18,8 +14,6 @@ class LegacySchoolClassStageBuilder extends LegacyBuilder
 
     /**
      * Ordena por Sequencial
-     *
-     * @return LegacySchoolClassStageBuilder
      */
     public function orderBySequencial(): self
     {

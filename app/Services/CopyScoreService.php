@@ -17,9 +17,6 @@ class CopyScoreService implements CopyRegistrationData
      */
     private $service;
 
-    /**
-     * @param RegistrationEvaluationRuleService $service
-     */
     public function __construct(RegistrationEvaluationRuleService $service)
     {
         $this->service = $service;
@@ -27,9 +24,6 @@ class CopyScoreService implements CopyRegistrationData
 
     /**
      * Copia notas de uma matrícula pra outra
-     *
-     * @param LegacyRegistration $newRegistration
-     * @param LegacyRegistration $oldRegistration
      */
     public function copy(
         LegacyRegistration $newRegistration,
@@ -50,8 +44,6 @@ class CopyScoreService implements CopyRegistrationData
     /**
      * Verifica se os tipos de notas das duas regras são iguais
      *
-     * @param LegacyEvaluationRule $newEvaluationRule
-     * @param LegacyEvaluationRule $oldEvaluationRule
      *
      * @return bool
      */
@@ -66,7 +58,6 @@ class CopyScoreService implements CopyRegistrationData
     /**
      * Cria o registro em nota_aluno pra nova matrícula
      *
-     * @param LegacyRegistration $newRegistration
      *
      * @return LegacyStudentScore
      */
@@ -81,10 +72,6 @@ class CopyScoreService implements CopyRegistrationData
 
     /**
      * Copia as notas para a matrícula nova
-     *
-     * @param LegacyStudentScore   $studentScore
-     * @param LegacyEvaluationRule $newEvaluationRule
-     * @param LegacyRegistration   $oldRegistration
      */
     private function createScore(
         LegacyStudentScore $studentScore,
@@ -106,9 +93,6 @@ class CopyScoreService implements CopyRegistrationData
 
     /**
      * Copia nota por componente
-     *
-     * @param LegacyStudentScore $studentScore
-     * @param LegacyRegistration $oldRegistration
      */
     private function copyDisciplineScore(
         LegacyStudentScore $studentScore,
@@ -126,7 +110,7 @@ class CopyScoreService implements CopyRegistrationData
                     'etapa' => $score->etapa,
                     'nota_recuperacao' => $score->nota_recuperacao,
                     'nota_original' => $score->nota_original,
-                    'nota_recuperacao_especifica' => $score->nota_recuperacao_especifica
+                    'nota_recuperacao_especifica' => $score->nota_recuperacao_especifica,
                 ]
             );
         }
@@ -134,9 +118,6 @@ class CopyScoreService implements CopyRegistrationData
 
     /**
      * Copia nota geral
-     *
-     * @param LegacyStudentScore $studentScore
-     * @param LegacyRegistration $oldRegistration
      */
     private function copyGeneralScore(
         LegacyStudentScore $studentScore,

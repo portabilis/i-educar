@@ -11,11 +11,10 @@ class ActiveLookingService
     public function store(LegacyActiveLooking $activeLooking, LegacyRegistration $registration)
     {
         validator(
-            ['active_looking' =>
-                [
-                    'registration' => $registration,
-                    'active_looking' => $activeLooking,
-                ]
+            ['active_looking' => [
+                'registration' => $registration,
+                'active_looking' => $activeLooking,
+            ],
             ],
             ['active_looking' => new CanStoreActiveLooking()]
         )->validate();

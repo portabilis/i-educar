@@ -38,7 +38,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Insira no máximo 100 letras no nome da pessoa {$data->nomePessoa}.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Nome)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -48,7 +48,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. O nome da pessoa {$data->nomePessoa} está inválido. ".$nameValidator->getMessage(),
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Nome)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -57,7 +57,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a data de nascimento da pessoa {$data->nomePessoa} foi informada.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Data de nascimento)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -68,7 +68,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => " Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. A data de nascimento da pessoa {$data->nomePessoa} não pode ser maior que a data de referência do Educacenso ({$dataReferenciaDatetime->format('d/m/Y')}).",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Data de nascimento)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -77,7 +77,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Insira no máximo 100 letras no nome da mãe de {$data->nomePessoa}.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Pessoa mãe)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -87,7 +87,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. O nome da mãe de {$data->nomePessoa} está inválido. ".$nameValidator->getMessage(),
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Pessoa mãe)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -96,7 +96,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Insira no máximo 100 letras no nome do pai de {$data->nomePessoa}.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Pessoa pai)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -106,7 +106,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. O nome do pai de {$data->nomePessoa} está inválido. ".$nameValidator->getMessage(),
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Pessoa pai)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -115,7 +115,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se o sexo da pessoa {$data->nomePessoa} foi informado.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Sexo)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -124,7 +124,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a raça da pessoa {$data->nomePessoa} foi informado.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Raça)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -133,7 +133,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se o nacionalidade da pessoa {$data->nomePessoa} foi informado.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Nacionalidade)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -142,7 +142,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que a nacionalidade da pessoa {$data->nomePessoa} é estrangeira, portanto o país de origem deve ser informado.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Nacionalidade)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -151,7 +151,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que a nacionalidade da pessoa {$data->nomePessoa} é estrangeira, portanto o país de origem não pode ser Brasil.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Nacionalidade)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -160,7 +160,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a naturalidade da pessoa {$data->nomePessoa} foi informada.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Naturalidade)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -177,7 +177,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que a pessoa {$data->nomePessoa} possui o campo de deficiências preenchido incorretamente: " . $deficiencyValidator->getMessage(),
                 'path' => $path,
                 'linkPath' => $linkPath,
-                'fail' => true
+                'fail' => true,
             ];
         }
     }

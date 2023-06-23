@@ -5,9 +5,13 @@ namespace iEducar\Modules\Educacenso\Model;
 class AbastecimentoAgua
 {
     public const REDE_PUBLICA = 1;
+
     public const POCO_ARTESIANO = 2;
+
     public const CACIMBA_CISTERNA_POCO = 3;
+
     public const FONTE = 4;
+
     public const INEXISTENTE = 5;
 
     public static function getDescriptiveValues()

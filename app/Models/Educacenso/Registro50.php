@@ -80,31 +80,31 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
     public $nomeDocente;
 
     /**
-     * @var integer
+     * @var int
      *              Campo usado somente na análise
      */
     public $idServidor;
 
     /**
-     * @var integer
+     * @var int
      *              Campo usado somente na análise
      */
     public $idInstituicao;
 
     /**
-     * @var integer
+     * @var int
      *              Campo usado somente na análise
      */
     public $idAlocacao;
 
     /**
-     * @var integer
+     * @var int
      *              Campo usado somente na análise
      */
     public $tipoMediacaoTurma;
 
     /**
-     * @var integer
+     * @var int
      *              Campo usado somente na análise
      */
     public $tipoAtendimentoTurma;
@@ -134,6 +134,12 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
     public $estruturaCurricular;
 
     /**
+     * @var int
+     *          Campo usado somente na análise
+     */
+    public $outrasUnidadesCurricularesObrigatorias;
+
+    /**
      * @return bool
      */
     public function isTitularOrTutor()
@@ -161,7 +167,6 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
      * Retorna a propriedade da classe correspondente ao dado no arquivo do censo
      *
      * @param int $column
-     *
      * @return string
      */
     public function getProperty($column)

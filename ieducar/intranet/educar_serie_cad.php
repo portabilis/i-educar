@@ -1,52 +1,78 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
 
     public $cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_curso;
+
     public $nm_serie;
+
     public $etapa_curso;
+
     public $concluinte;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $regras_ano_letivo;
+
     public $regras_avaliacao_id;
+
     public $regras_avaliacao_diferenciada_id;
+
     public $anos_letivos;
 
     public $regra_avaliacao_id;
+
     public $observacao_historico;
+
     public $dias_letivos;
+
     public $regra_avaliacao_diferenciada_id;
 
     public $ref_cod_instituicao;
 
     public $disciplina_serie;
+
     public $ref_cod_disciplina;
+
     public $incluir_disciplina;
+
     public $excluir_disciplina;
 
     public $idade_inicial;
+
     public $idade_ideal;
+
     public $idade_final;
 
     public $alerta_faixa_etaria;
+
     public $bloquear_matricula_faixa_etaria;
+
     public $exigir_inep;
+
     public $importar_serie_pre_matricula;
+
     public $descricao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_serie=$_GET['cod_serie'];
+        $this->cod_serie = $_GET['cod_serie'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -97,7 +123,7 @@ return new class extends clsCadastro {
                         'anoLetivo',
                     ],
                     [
-                        'serie' => $this->cod_serie
+                        'serie' => $this->cod_serie,
                     ],
                     ['ano_letivo' => 'DESC'],
                     false
@@ -144,10 +170,10 @@ return new class extends clsCadastro {
 
         $obrigatorio = true;
         $get_curso = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, true);
-        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false,false, '','Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false, false, '', 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
 
         $opcoes = ['' => 'Selecione'];
 
@@ -164,7 +190,7 @@ return new class extends clsCadastro {
                 }
             }
 
-            for ($i=1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++) {
+            for ($i = 1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++) {
                 $opcoes[$i] = "Etapa {$i}";
             }
         }
@@ -181,7 +207,7 @@ return new class extends clsCadastro {
 
         $regras = ['' => 'Selecione'] + $regras;
 
-        $this->campoTabelaInicio('regras', 'Regras de avaliação', ['Regra de avaliação (padrão)','Regra de avaliação (alternativa)<br><font size=-1; color=gray>O campo deve ser preenchido se existirem escolas avaliadas de forma alternativa (ex.: escola rural, indígena, etc)</font>', 'Ano escolar'], $this->regras_ano_letivo);
+        $this->campoTabelaInicio('regras', 'Regras de avaliação', ['Regra de avaliação (padrão)', 'Regra de avaliação (alternativa)<br><font size=-1; color=gray>O campo deve ser preenchido se existirem escolas avaliadas de forma alternativa (ex.: escola rural, indígena, etc)</font>', 'Ano escolar'], $this->regras_ano_letivo);
         $this->campoLista('regras_avaliacao_id', 'Regra de avaliação (padrão)', $regras, $this->regras_avaliacao_id);
         $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação (alternativa)', $regras, $this->regras_avaliacao_diferenciada_id, '', false, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', false, false);
         $this->campoNumero('anos_letivos', 'Ano letivo', $this->anos_letivos, 4, 4, true);
@@ -229,6 +255,7 @@ return new class extends clsCadastro {
 
         if ($this->regras_avaliacao_id === null) {
             $this->mensagem = 'Regra de avaliação não cadastrada';
+
             return false;
         }
 
@@ -279,6 +306,7 @@ return new class extends clsCadastro {
 
         if ($this->regras_avaliacao_id === null) {
             $this->mensagem = 'Regra de avaliação não cadastrada';
+
             return false;
         }
 
@@ -379,7 +407,7 @@ return new class extends clsCadastro {
             'anoLetivo',
         ], [
             'serie' => $this->cod_serie,
-            ' not ano_letivo = any(\'{'.$anosParaManter.'}\') '
+            ' not ano_letivo = any(\'{'.$anosParaManter.'}\') ',
         ], [], false);
 
         foreach ($regrasSerieAnoDeletar as $regra) {

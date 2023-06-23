@@ -13,8 +13,6 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
 {
     /**
      * @param Registro30 $registro30
-     *
-     * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro30): RegistroEducacenso
     {
@@ -23,6 +21,7 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
         }
 
         if (!$registro30->deficiencia) {
+            $registro30->deficienciaVisaoMonocular = null;
             $registro30->deficienciaCegueira = null;
             $registro30->deficienciaBaixaVisao = null;
             $registro30->deficienciaSurdez = null;

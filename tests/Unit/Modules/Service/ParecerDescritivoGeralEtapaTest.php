@@ -11,14 +11,14 @@ class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Servic
     protected function _getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
     {
         return new Avaliacao_Model_ParecerDescritivoGeral([
-            'parecer' => 'Ok.'
+            'parecer' => 'Ok.',
         ]);
     }
 
     protected function _getTestAdicionaParecerNoBoletim()
     {
         return new Avaliacao_Model_ParecerDescritivoGeral([
-            'parecer' => 'N/D.'
+            'parecer' => 'N/D.',
         ]);
     }
 
@@ -27,12 +27,12 @@ class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Servic
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
-                'etapa' => 3
-            ])
+                'etapa' => 3,
+            ]),
         ];
     }
 
@@ -42,13 +42,13 @@ class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Servic
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 2
-            ])
+                'etapa' => 2,
+            ]),
         ];
     }
 
@@ -57,20 +57,20 @@ class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Servic
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'etapa' => 1,
-                'parecer' => 'N/D.'
+                'parecer' => 'N/D.',
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'etapa' => 2,
-                'parecer' => 'N/D.'
+                'parecer' => 'N/D.',
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'etapa' => 3,
-                'parecer' => 'N/D.'
+                'parecer' => 'N/D.',
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'etapa' => 4,
-                'parecer' => 'N/D.'
-            ])
+                'parecer' => 'N/D.',
+            ]),
         ];
     }
 
@@ -79,11 +79,11 @@ class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Servic
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
-            ])
+            ]),
         ];
     }
 
@@ -93,22 +93,22 @@ class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Servic
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 2,
                 'parecer' => 'N/D.',
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 3,
                 'parecer' => 'N/D.',
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 4,
                 'parecer' => 'N/D.',
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
     }

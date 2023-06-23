@@ -2,15 +2,20 @@
 
 use App\Models\Backup;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $__titulo;
 
     public $__limite;
 
     public $__offset;
+
     public $idBackup;
+
     public $caminho;
+
     public $data_backup;
 
     public function Gerar()
@@ -18,12 +23,12 @@ return new class extends clsListagem {
         $this->__titulo = 'Backups';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos(coluna: [
             'Download',
-            'Data backup'
+            'Data backup',
         ]);
 
         // Filtros de Foreign Keys
@@ -55,7 +60,7 @@ return new class extends clsListagem {
 
                 $this->addLinhas(linha: [
                     "<a href=\"$url\">{$registro['caminho']}</a>",
-                    "<a href=\"$url\">{$dataBackup}</a>"
+                    "<a href=\"$url\">{$dataBackup}</a>",
                 ]);
             }
         }

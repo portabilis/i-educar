@@ -9,7 +9,9 @@ use Tests\ResourceTestCase;
 class DeficiencyControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/person/deficiency';
+
     protected string $model = LegacyDeficiency::class;
+
     protected string $factory = LegacyDeficiencyFactory::class;
 
     public function testIndex(): void

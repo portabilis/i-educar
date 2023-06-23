@@ -3,6 +3,7 @@
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
     protected $_titulo = 'Lançamento por turma';
+
     protected $_processoAp = 642;
 
     public function Gerar()
@@ -13,7 +14,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
         $this->inputsHelper()->input('ano', 'ano');
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa']);
         $this->inputsHelper()->dynamic(['componenteCurricularForDiario'], ['required' => $componenteRequired]);
-        $this->inputsHelper()->dynamic(['matricula'], ['required' => false ]);
+        $this->inputsHelper()->dynamic(['matricula'], ['required' => false]);
 
         $navegacaoTab = [
             '1' => 'Horizontal(padrão)',
@@ -21,7 +22,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
         ];
 
         $options = [
-            'label' =>'Navegação do cursor(tab)',
+            'label' => 'Navegação do cursor(tab)',
             'resources' => $navegacaoTab,
             'required' => false,
             'inline' => true,

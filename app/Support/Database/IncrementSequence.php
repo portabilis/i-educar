@@ -9,7 +9,6 @@ trait IncrementSequence
     /**
      * @param string $table
      * @param string $column
-     *
      * @return void
      */
     public function incrementSequence($table, $column = 'id')

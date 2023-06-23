@@ -2,12 +2,12 @@
 
 namespace App\Models\Builders;
 
+use App\Models\RegistrationStatus;
+
 class LegacyEnrollmentBuilder extends LegacyBuilder
 {
     /**
      * Filtra por ativo
-     *
-     * @return LegacyEnrollmentBuilder
      */
     public function active(): self
     {
@@ -15,9 +15,19 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por ativo por situação
+     */
+    public function activeBySituation(int $situation): self
+    {
+        if (!in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
+            $this->active();
+        }
+
+        return $this->whereValid();
+    }
+
+    /**
      * Filtra por não ativo
-     *
-     * @return LegacyEnrollmentBuilder
      */
     public function notActive(): self
     {
@@ -26,8 +36,6 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
 
     /**
      * Filtra por validos
-     *
-     * @return LegacyEnrollmentBuilder
      */
     public function whereValid(): self
     {

@@ -3,12 +3,17 @@
 class ApiExternaController
 {
     private $url;
+
     private $curl;
+
     private $params;
+
     private $tipoRequisicao;
+
     private $recurso;
 
     const REQUISICAO_GET = 1;
+
     const REQUISICAO_POST = 2;
 
     public function __construct($options)

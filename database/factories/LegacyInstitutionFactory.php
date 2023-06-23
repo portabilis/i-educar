@@ -48,7 +48,7 @@ class LegacyInstitutionFactory extends Factory
             }
 
             return [
-                'cod_instituicao' => $institution->getKey()
+                'cod_instituicao' => $institution->getKey(),
             ];
         });
     }

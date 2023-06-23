@@ -8,28 +8,50 @@ use App\Models\LegacyStageType;
 use App\Models\View\Discipline;
 use Illuminate\Support\Facades\DB;
 
-return new class () extends clsDetalhe {
+return new class() extends clsDetalhe
+{
     public $titulo;
+
     public $cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $nm_turma;
+
     public $sgl_turma;
+
     public $max_aluno;
+
     public $multiseriada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_turma_tipo;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_cod_instituicao_regente;
+
     public $ref_cod_regente;
 
     public function Gerar()
@@ -45,19 +67,19 @@ return new class () extends clsDetalhe {
             4 => 'Quarta',
             5 => 'Quinta',
             6 => 'Sexta',
-            7 => 'Sábado'
+            7 => 'Sábado',
         ];
 
         $not_access = false;
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
-            $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where(column: 'cod_turma', operator: $this->cod_turma)->doesntExist();
+            $not_access = LegacySchoolClass::filter(['school_user' => $this->pessoa_logada])->where(column: 'cod_turma', operator: $this->cod_turma)->doesntExist();
         }
 
         $lst_obj = (new clsPmieducarTurma())->lista(
             int_cod_turma: $this->cod_turma,
             visivel: [
                 'true',
-                'false'
+                'false',
             ]
         );
 
@@ -103,7 +125,7 @@ return new class () extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Instituição',
-                    $registro['ref_cod_instituicao']
+                    $registro['ref_cod_instituicao'],
                 ]
             );
         }
@@ -112,7 +134,7 @@ return new class () extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Escola',
-                    $registro['ref_ref_cod_escola']
+                    $registro['ref_ref_cod_escola'],
                 ]
             );
         }
@@ -144,7 +166,7 @@ return new class () extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Professor/Regente',
-                    $det['nome']
+                    $det['nome'],
                 ]
             );
         }
@@ -153,7 +175,7 @@ return new class () extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Tipo de Turma',
-                    $registro['ref_cod_turma_tipo']
+                    $registro['ref_cod_turma_tipo'],
                 ]
             );
         }
@@ -162,7 +184,7 @@ return new class () extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Turma',
-                    $registro['nm_turma']
+                    $registro['nm_turma'],
                 ]
             );
         }
@@ -171,7 +193,7 @@ return new class () extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     _cl(key: 'turma.detalhe.sigla'),
-                    $registro['sgl_turma']
+                    $registro['sgl_turma'],
                 ]
             );
         }
@@ -180,7 +202,7 @@ return new class () extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Máximo de Alunos',
-                    $registro['max_aluno']
+                    $registro['max_aluno'],
                 ]
             );
         }
@@ -188,7 +210,7 @@ return new class () extends clsDetalhe {
         $this->addDetalhe(
             detalhe: [
                 'Situação',
-                dbBool(val: $registro['visivel']) ? 'Ativo' : 'Desativo'
+                dbBool(val: $registro['visivel']) ? 'Ativo' : 'Desativo',
             ]
         );
 
@@ -198,7 +220,7 @@ return new class () extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Hora Inicial',
-                        $registro['hora_inicial']
+                        $registro['hora_inicial'],
                     ]
                 );
             }
@@ -208,7 +230,7 @@ return new class () extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Hora Final',
-                        $registro['hora_final']
+                        $registro['hora_final'],
                     ]
                 );
             }
@@ -218,7 +240,7 @@ return new class () extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Hora Início Intervalo',
-                        $registro['hora_inicio_intervalo']
+                        $registro['hora_inicio_intervalo'],
                     ]
                 );
             }
@@ -228,7 +250,7 @@ return new class () extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Hora Fim Intervalo',
-                        $registro['hora_fim_intervalo']
+                        $registro['hora_fim_intervalo'],
                     ]
                 );
             }
@@ -242,7 +264,7 @@ return new class () extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Dia da Semana',
-                        $diasSemana
+                        $diasSemana,
                     ]
                 );
             }
@@ -303,7 +325,7 @@ return new class () extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Módulo',
-                        $tabela
+                        $tabela,
                     ]
                 );
             }
@@ -317,7 +339,7 @@ return new class () extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Dia da Semana',
-                        $diasSemana
+                        $diasSemana,
                     ]
                 );
             }
@@ -366,7 +388,7 @@ return new class () extends clsDetalhe {
         $scripts = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/vendor/legacy/Cadastro/Assets/Javascripts/TurmaDet.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TurmaDet.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
@@ -396,7 +418,6 @@ return new class () extends clsDetalhe {
         $this->addDetalhe(detalhe: ['Componentes curriculares',
             '<a id="show-detail" href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $disciplinas . '</div>']);
     }
-
 
     public function montaListaComponentesMulti()
     {
@@ -468,7 +489,7 @@ return new class () extends clsDetalhe {
             ->groupBy([
                 'cc.id',
                 'workload',
-                'name'
+                'name',
             ])
             ->orderBy(column: 'workload', direction: 'desc')
             ->get();
@@ -476,9 +497,9 @@ return new class () extends clsDetalhe {
         return $componentes->each(callback: function ($item) use ($componentes) {
             $item->order = $componentes->where(key: 'id', operator: $item->id)->max(callback: 'workload');
         })->sortBy(callback: [
-            ['order', 'desc' ],
+            ['order', 'desc'],
             ['id', 'asc'],
-            ['name', 'asc']
+            ['name', 'asc'],
         ]);
     }
 

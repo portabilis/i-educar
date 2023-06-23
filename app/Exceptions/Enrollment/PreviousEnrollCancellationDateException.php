@@ -11,9 +11,6 @@ class PreviousEnrollCancellationDateException extends RuntimeException
     /**
      * A data de cancelamento da enturmação é anterior a data de
      * matrícula.
-     *
-     * @param LegacyRegistration $registration
-     * @param DateTime           $cancellationDate
      */
     public function __construct(LegacyRegistration $registration, DateTime $cancellationDate)
     {

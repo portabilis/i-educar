@@ -18,8 +18,6 @@ class BatchExemptionService
 
     /**
      * BatchExemptionService constructor.
-     *
-     * @param ExemptionService $exemptionService
      */
     public function __construct(ExemptionService $exemptionService)
     {

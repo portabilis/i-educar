@@ -2,22 +2,31 @@
 
 use App\Models\LegacyEducationType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $cod_tipo_ensino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
     {
         $this->titulo = 'Tipo Ensino - Detalhe';
 
-        $this->cod_tipo_ensino=$_GET['cod_tipo_ensino'];
+        $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
         $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
         if (!$registro) {
@@ -29,7 +38,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_tipo_ensino']) {
-            $this->addDetalhe([ 'Tipo Ensino', "{$registro['cod_tipo_ensino']}"]);
+            $this->addDetalhe(['Tipo Ensino', "{$registro['cod_tipo_ensino']}"]);
         }
 
         if ($registro['ref_cod_instituicao']) {
@@ -37,10 +46,10 @@ return new class extends clsDetalhe {
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe([ 'Nome Tipo', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(['Nome Tipo', "{$registro['nm_tipo']}"]);
         }
 
         //** Verificacao de permissao para cadastro ou edicao

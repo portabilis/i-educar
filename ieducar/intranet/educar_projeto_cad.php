@@ -3,7 +3,8 @@
 use App\Models\LegacyProject;
 use App\Models\LegacyStudentProject;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -12,14 +13,16 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_projeto;
+
     public $nome;
+
     public $observacao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_projeto=$_GET['cod_projeto'];
+        $this->cod_projeto = $_GET['cod_projeto'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 21250, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_projeto_lst.php');
@@ -71,6 +74,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_projeto_lst.php');
         }
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -85,6 +89,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_projeto_lst.php');
         }
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -96,6 +101,7 @@ return new class extends clsCadastro {
 
         if ($count > 0) {
             $this->mensagem = 'Você não pode excluir esse projeto, pois ele possui alunos vinculados.<br>';
+
             return false;
         }
 
@@ -106,6 +112,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_projeto_lst.php');
         }
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

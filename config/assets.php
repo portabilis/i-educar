@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'version' => '0.1.54',
+    'version' => '0.1.55',
 
     /*
     |--------------------------------------------------------------------------
@@ -42,5 +42,5 @@ return [
     | config version numbers on external files
     |
     */
-    'auto' => false
+    'auto' => false,
 ];

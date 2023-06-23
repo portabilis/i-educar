@@ -7,7 +7,9 @@ use iEducar\Modules\Educacenso\Model\Deficiencias;
 class Registro30 implements RegistroEducacenso
 {
     public const TIPO_MANAGER = 'manager';
+
     public const TIPO_TEACHER = 'teacher';
+
     public const TIPO_STUDENT = 'student';
 
     public $tipos = [];
@@ -67,6 +69,8 @@ class Registro30 implements RegistroEducacenso
     public $deficienciaAltasHabilidades;
 
     public $deficienciaAutismo;
+
+    public $deficienciaVisaoMonocular;
 
     public $inepAluno;
 
@@ -156,6 +160,10 @@ class Registro30 implements RegistroEducacenso
 
     public $formacaoContinuadaEducacaoNenhum;
 
+    public $formacaoContinuadaEducacaoBilingueSurdos;
+
+    public $formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao;
+
     public $email;
 
     public $paisResidencia;
@@ -222,7 +230,7 @@ class Registro30 implements RegistroEducacenso
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function deficienciaMultipla()
     {
@@ -234,6 +242,7 @@ class Registro30 implements RegistroEducacenso
             $this->deficienciaSurdoCegueira,
             $this->deficienciaFisica,
             $this->deficienciaIntelectual,
+            $this->deficienciaVisaoMonocular,
         ];
 
         if (empty($this->arrayDeficiencias)) {
@@ -263,7 +272,6 @@ class Registro30 implements RegistroEducacenso
     /**
      * Remove "Altas habilidades/Superdotação" do array de deficiências informado
      *
-     * @param $arrayDeficiencias
      *
      * @return string
      */

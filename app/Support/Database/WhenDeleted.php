@@ -13,7 +13,6 @@ trait WhenDeleted
      * @param string $from
      * @param string $to
      * @param array  $columns
-     *
      * @return void
      */
     public function whenDeletedMoveTo($from, $to, $columns)
@@ -31,7 +30,6 @@ trait WhenDeleted
      * Apaga a trigger e a função que movem os dados excluídos da $table.
      *
      * @param string $table
-     *
      * @return void
      */
     public function dropTriggerWhenDeleted($table)
@@ -49,7 +47,6 @@ trait WhenDeleted
      * Retorna o nome da função para a tabela.
      *
      * @param string $table
-     *
      * @return string
      */
     public function getFunctionName($table)
@@ -61,7 +58,6 @@ trait WhenDeleted
      * Retorna o nome da trigger para a tabela.
      *
      * @param string $table
-     *
      * @return string
      */
     public function getTriggerName($table)
@@ -73,7 +69,6 @@ trait WhenDeleted
      * Retorna as colunas que deverem ser inseridas.
      *
      * @param array $columns
-     *
      * @return string
      */
     public function getColumns($columns)
@@ -88,7 +83,6 @@ trait WhenDeleted
      * Retorna os valores que deverão ser inseridos na tabela.
      *
      * @param array $columns
-     *
      * @return string
      */
     public function getColumnsValues($columns)
@@ -109,7 +103,6 @@ trait WhenDeleted
      * @param string $from
      * @param string $to
      * @param array  $fromColumns
-     *
      * @return string
      */
     public function getCreateFunctionSql($from, $to, $fromColumns)
@@ -135,7 +128,6 @@ trait WhenDeleted
      * Retorna o SQL que apaga a função.
      *
      * @param string $table
-     *
      * @return string
      */
     public function getDropFunctionSql($table)
@@ -149,7 +141,6 @@ trait WhenDeleted
      * Retorna o SQL que cria a trigger.
      *
      * @param string $table
-     *
      * @return string
      */
     public function getCreateTriggerSql($table)
@@ -168,7 +159,6 @@ trait WhenDeleted
      * Retorna o SQL que cria a trigger.
      *
      * @param string $table
-     *
      * @return string
      */
     public function getDropTriggerSql($table)

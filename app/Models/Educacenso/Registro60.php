@@ -11,49 +11,95 @@ use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 class Registro60 implements RegistroEducacenso, ItemOfRegistro30
 {
     public $registro;
+
     public $inepEscola;
+
     public $codigoPessoa;
+
     public $inepAluno;
+
     public $inepTurma;
+
     public $matriculaAluno;
+
     public $etapaAluno;
+
     public $tipoItinerarioLinguagens;
+
     public $tipoItinerarioMatematica;
+
     public $tipoItinerarioCienciasNatureza;
+
     public $tipoItinerarioCienciasHumanas;
+
     public $tipoItinerarioFormacaoTecnica;
+
     public $tipoItinerarioIntegrado;
+
     public $composicaoItinerarioLinguagens;
+
     public $composicaoItinerarioMatematica;
+
     public $composicaoItinerarioCienciasNatureza;
+
     public $composicaoItinerarioCienciasHumanas;
+
     public $composicaoItinerarioFormacaoTecnica;
+
+    public $codCursoProfissional;
+
     public $cursoItinerario;
+
     public $itinerarioConcomitante;
+
     public $tipoAtendimentoDesenvolvimentoFuncoesGognitivas;
+
     public $tipoAtendimentoDesenvolvimentoVidaAutonoma;
+
     public $tipoAtendimentoEnriquecimentoCurricular;
+
     public $tipoAtendimentoEnsinoInformaticaAcessivel;
+
     public $tipoAtendimentoEnsinoLibras;
+
     public $tipoAtendimentoEnsinoLinguaPortuguesa;
+
     public $tipoAtendimentoEnsinoSoroban;
+
     public $tipoAtendimentoEnsinoBraile;
+
     public $tipoAtendimentoEnsinoOrientacaoMobilidade;
+
     public $tipoAtendimentoEnsinoCaa;
+
     public $tipoAtendimentoEnsinoRecursosOpticosNaoOpticos;
+
     public $recebeEscolarizacaoOutroEspacao;
+
     public $transportePublico;
+
     public $poderPublicoResponsavelTransporte;
+
     public $veiculoTransporteBicicleta;
+
     public $veiculoTransporteMicroonibus;
+
     public $veiculoTransporteOnibus;
+
     public $veiculoTransporteTracaoAnimal;
+
     public $veiculoTransporteVanKonbi;
+
     public $veiculoTransporteOutro;
+
     public $veiculoTransporteAquaviarioCapacidade5;
+
     public $veiculoTransporteAquaviarioCapacidade5a15;
+
     public $veiculoTransporteAquaviarioCapacidade15a35;
+
     public $veiculoTransporteAquaviarioCapacidadeAcima35;
+
     public $modalidadeCurso;
 
     /**
@@ -92,7 +138,7 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $estruturaCurricularTurma;
 
     /**
-     * @var integer Campo usado somente na análise
+     * @var int Campo usado somente na análise
      */
     public $enturmacaoId;
 
@@ -137,7 +183,7 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public function transportePublicoRequired()
     {
         $tiposMediacaoPresencial = [
-            TipoMediacaoDidaticoPedagogico::PRESENCIAL
+            TipoMediacaoDidaticoPedagogico::PRESENCIAL,
         ];
 
         return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO

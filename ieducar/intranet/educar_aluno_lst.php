@@ -3,34 +3,62 @@
 use App\Models\DataSearch\StudentFilter;
 use App\Models\LegacyStudent;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_inep;
+
     public $aluno_estado_id;
+
     public $cod_aluno;
+
     public $ref_cod_religiao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_idpes;
+
     public $ativo;
+
     public $nome_aluno;
+
     public $mat_aluno;
+
     public $identidade;
+
     public $matriculado;
+
     public $inativado;
+
     public $nome_responsavel;
+
     public $nome_pai;
+
     public $nome_mae;
+
     public $data_nascimento;
+
     public $ano;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_serie;
+
     public $cpf_aluno;
+
     public $rg_aluno;
+
     public $situacao_matricula_id;
 
     public function Gerar()
@@ -67,11 +95,11 @@ return new class extends clsListagem {
         $this->campoTexto(nome: 'nome_responsavel', campo: 'Nome do Responsável', valor: $this->nome_responsavel, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoRotulo(nome: 'filtros_matricula', campo: '<b>Filtros de alunos</b>');
 
-        $this->inputsHelper()->integer(attrName: 'ano', inputOptions: ['required' => false, 'value'=> $this->ano,'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
+        $this->inputsHelper()->integer(attrName: 'ano', inputOptions: ['required' => false, 'value' => $this->ano, 'max_length' => 4, 'label_hint' => 'Retorna alunos com matrículas no ano selecionado']);
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic(helperNames: 'escolaSemFiltroPorUsuario', inputOptions: ['required' => false, 'value' => $this->ref_cod_escola,'label_hint'=>'Retorna alunos com matrículas na escola selecionada']);
-        $this->inputsHelper()->dynamic(helperNames: 'curso', inputOptions: ['required' => false,'label_hint'=>'Retorna alunos com matrículas no curso selecionado']);
-        $this->inputsHelper()->dynamic(helperNames: 'serie', inputOptions: ['required' => false,'label_hint'=>'Retorna alunos com matrículas na série selecionada']);
+        $this->inputsHelper()->dynamic(helperNames: 'escolaSemFiltroPorUsuario', inputOptions: ['required' => false, 'value' => $this->ref_cod_escola, 'label_hint' => 'Retorna alunos com matrículas na escola selecionada']);
+        $this->inputsHelper()->dynamic(helperNames: 'curso', inputOptions: ['required' => false, 'label_hint' => 'Retorna alunos com matrículas no curso selecionado']);
+        $this->inputsHelper()->dynamic(helperNames: 'serie', inputOptions: ['required' => false, 'label_hint' => 'Retorna alunos com matrículas na série selecionada']);
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
@@ -88,7 +116,7 @@ return new class extends clsListagem {
             'Nome do Aluno',
             'Nome da Mãe',
             'Nome do Responsável',
-            'CPF Responsável'
+            'CPF Responsável',
         ];
 
         $this->addCabecalhos(coluna: array_filter(array: $cabecalhos));
@@ -138,17 +166,17 @@ return new class extends clsListagem {
             }
 
             $nomeResponsavel = mb_strtoupper(string: $student->getGuardianName() ?? '-');
-            $cpfResponsavel  = ucfirst(string: $student->getGuardianCpf());
-            $nomeMae         = mb_strtoupper(string: $student->individual->mother->name ?? '-');
+            $cpfResponsavel = ucfirst(string: $student->getGuardianCpf());
+            $nomeMae = mb_strtoupper(string: $student->individual->mother->name ?? '-');
 
             $linhas = array_filter(array: [
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
-                $configuracoes['mostrar_codigo_inep_aluno'] ===  1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->inepNumber</a>" : null,
+                $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->inepNumber</a>" : null,
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>"
-                ]);
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>",
+            ]);
 
             $this->addLinhas(linha: $linhas);
         }

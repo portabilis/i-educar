@@ -13,9 +13,6 @@ class SplitFileService
      */
     private $file;
 
-    /**
-     * @param UploadedFile $file
-     */
     public function __construct(UploadedFile $file)
     {
         $this->file = $file;
@@ -62,7 +59,6 @@ class SplitFileService
 
     /**
      * @param string $line
-     *
      * @return bool
      */
     private function isNewSchoolLine($line)

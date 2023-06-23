@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 class Asset extends Facade
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected static function getFacadeAccessor()
     {

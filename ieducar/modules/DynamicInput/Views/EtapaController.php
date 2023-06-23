@@ -9,6 +9,7 @@ class EtapaController extends ApiCoreController
            $this->validatesId('turma') &&
            $this->validatesPresenceOf('ano');
     }
+
     protected function canGetEtapasEscola()
     {
         return $this->validatesId('escola');
@@ -19,12 +20,12 @@ class EtapaController extends ApiCoreController
         if ($this->canGetEtapas()) {
             $cursoId = $this->getRequest()->curso_id;
 
-            $sql             = 'select padrao_ano_escolar from pmieducar.curso where cod_curso = $1 and ativo = 1';
+            $sql = 'select padrao_ano_escolar from pmieducar.curso where cod_curso = $1 and ativo = 1';
             $padraoAnoLetivo = $this->fetchPreparedQuery($sql, [$cursoId], true, 'first-field');
 
             if ($padraoAnoLetivo == 1) {
                 $escolaId = $this->getRequest()->escola_id;
-                $ano      = $this->getRequest()->ano;
+                $ano = $this->getRequest()->ano;
 
                 $sql = 'select padrao.sequencial as etapa, modulo.nm_tipo as nome from pmieducar.ano_letivo_modulo
                 as padrao, pmieducar.modulo where padrao.ref_ano = $1 and padrao.ref_ref_cod_escola = $2
@@ -52,7 +53,7 @@ class EtapaController extends ApiCoreController
     {
         if ($this->canGetEtapasEscola()) {
             $escolaId = $this->getRequest()->escola_id;
-            $ano      = $this->getRequest()->ano;
+            $ano = $this->getRequest()->ano;
 
             $sql = 'select padrao.sequencial as etapa, modulo.nm_tipo as nome from pmieducar.ano_letivo_modulo
                 as padrao, pmieducar.modulo where padrao.ref_ano = $1 and padrao.ref_ref_cod_escola = $2

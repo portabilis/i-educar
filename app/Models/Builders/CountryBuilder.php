@@ -8,10 +8,6 @@ class CountryBuilder extends LegacyBuilder
 {
     /**
      * Retorna o recurso para os selects dos formulários
-     *
-     * @param array $filters
-     *
-     * @return Collection
      */
     public function getResource(array $filters = []): Collection
     {
@@ -23,7 +19,6 @@ class CountryBuilder extends LegacyBuilder
     /**
      * Filtra por nome do curso
      *
-     * @param string $name
      *
      * @return $this
      */
@@ -45,7 +40,6 @@ class CountryBuilder extends LegacyBuilder
     /**
      * Ordena por nome
      *
-     * @param string $direction
      *
      * @return $this
      */

@@ -97,6 +97,11 @@ trait Avaliacao_Service_Boletim_Acessores
     protected $_currentComponenteCurricular;
 
     /**
+     * @var bool
+     */
+    protected $_updateScore = false;
+
+    /**
      * Componentes que o aluno cursa, indexado pelo id de
      * ComponenteCurricular_Model_Componente.
      *
@@ -116,8 +121,6 @@ trait Avaliacao_Service_Boletim_Acessores
 
     /**
      * @see CoreExt_Configurable::setOptions()
-     *
-     * @param array $options
      *
      * @return $this
      *
@@ -199,6 +202,11 @@ trait Avaliacao_Service_Boletim_Acessores
             unset($options['componenteCurricularId']);
         }
 
+        if (isset($options['updateScore'])) {
+            $this->setUpdateScore($options['updateScore']);
+            unset($options['updateScore']);
+        }
+
         $defaultOptions = array_keys($this->getOptions());
         $passedOptions = array_keys($options);
 
@@ -215,7 +223,6 @@ trait Avaliacao_Service_Boletim_Acessores
 
     /**
      * @param string $key
-     *
      * @return mixed
      */
     public function getOption($key)
@@ -226,7 +233,6 @@ trait Avaliacao_Service_Boletim_Acessores
     /**
      * @param string $key
      * @param mixed  $value
-     *
      * @return $this
      */
     public function setOption($key, $value)
@@ -249,8 +255,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param ComponenteCurricular_Model_ComponenteDataMapper $mapper
-     *
      * @return $this
      */
     public function setComponenteDataMapper(ComponenteCurricular_Model_ComponenteDataMapper $mapper)
@@ -273,8 +277,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param ComponenteCurricular_Model_TurmaDataMapper $mapper
-     *
      * @return $this
      */
     public function setComponenteTurmaDataMapper(ComponenteCurricular_Model_TurmaDataMapper $mapper)
@@ -297,8 +299,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param RegraAvaliacao_Model_RegraDataMapper $mapper
-     *
      * @return $this
      */
     public function setRegraDataMapper(RegraAvaliacao_Model_RegraDataMapper $mapper)
@@ -321,8 +321,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_NotaAlunoDataMapper $mapper
-     *
      * @return $this
      */
     public function setNotaAlunoDataMapper(Avaliacao_Model_NotaAlunoDataMapper $mapper)
@@ -345,8 +343,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_NotaComponenteDataMapper $mapper
-     *
      * @return $this
      */
     public function setNotaComponenteDataMapper(Avaliacao_Model_NotaComponenteDataMapper $mapper)
@@ -369,8 +365,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_NotaComponenteMediaDataMapper $mapper
-     *
      * @return $this
      */
     public function setNotaComponenteMediaDataMapper(Avaliacao_Model_NotaComponenteMediaDataMapper $mapper)
@@ -393,8 +387,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_FaltaAlunoDataMapper $mapper
-     *
      * @return $this
      */
     public function setFaltaAlunoDataMapper(Avaliacao_Model_FaltaAlunoDataMapper $mapper)
@@ -412,11 +404,11 @@ trait Avaliacao_Service_Boletim_Acessores
         if (is_null($this->_faltaAbstractDataMapper)) {
             switch ($this->getRegraAvaliacaoTipoPresenca()) {
                 case RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE:
-                                        $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaComponenteDataMapper());
+                    $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaComponenteDataMapper());
                     break;
 
                 case RegraAvaliacao_Model_TipoPresenca::GERAL:
-                                        $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaGeralDataMapper());
+                    $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaGeralDataMapper());
                     break;
             }
         }
@@ -425,8 +417,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_FaltaAbstractDataMapper $mapper
-     *
      * @return $this
      */
     public function setFaltaAbstractDataMapper(Avaliacao_Model_FaltaAbstractDataMapper $mapper)
@@ -449,8 +439,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper
-     *
      * @return $this
      */
     public function setParecerDescritivoAlunoDataMapper(Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper)
@@ -484,8 +472,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper
-     *
      * @return $this
      */
     public function setParecerDescritivoAbstractDataMapper(Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper)
@@ -526,8 +512,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_NotaGeralDataMapper $mapper
-     *
      * @return $this
      */
     public function setNotaGeralDataMapper(Avaliacao_Model_NotaGeralDataMapper $mapper)
@@ -550,8 +534,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param Avaliacao_Model_MediaGeralDataMapper $mapper
-     *
      * @return $this
      */
     public function setMediaGeralDataMapper(Avaliacao_Model_MediaGeralDataMapper $mapper)
@@ -571,7 +553,6 @@ trait Avaliacao_Service_Boletim_Acessores
 
     /**
      * @param int $componenteCurricularId
-     *
      * @return $this
      */
     public function setComponenteCurricularId($componenteCurricularId)
@@ -591,7 +572,6 @@ trait Avaliacao_Service_Boletim_Acessores
 
     /**
      * @param int $componenteId
-     *
      * @return $this
      */
     public function setCurrentComponenteCurricular($componenteId)
@@ -610,8 +590,6 @@ trait Avaliacao_Service_Boletim_Acessores
     }
 
     /**
-     * @param array $componentes
-     *
      * @return $this
      */
     protected function _setComponentes(array $componentes)
@@ -619,5 +597,15 @@ trait Avaliacao_Service_Boletim_Acessores
         $this->_componentes = $componentes;
 
         return $this;
+    }
+
+    public function isUpdateScore(): bool
+    {
+        return $this->_updateScore;
+    }
+
+    public function setUpdateScore(bool $updateScore): void
+    {
+        $this->_updateScore = $updateScore;
     }
 }

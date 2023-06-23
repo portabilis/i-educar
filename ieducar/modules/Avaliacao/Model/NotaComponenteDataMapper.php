@@ -3,7 +3,9 @@
 class Avaliacao_Model_NotaComponenteDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_NotaComponente';
+
     protected $_tableName = 'nota_componente_curricular';
+
     protected $_tableSchema = 'modules';
 
     protected $_primaryKey = [
@@ -19,7 +21,7 @@ class Avaliacao_Model_NotaComponenteDataMapper extends CoreExt_DataMapper
         'etapa' => 'etapa',
         'notaRecuperacaoParalela' => 'nota_recuperacao',
         'notaOriginal' => 'nota_original',
-        'notaRecuperacaoEspecifica' => 'nota_recuperacao_especifica'
+        'notaRecuperacaoEspecifica' => 'nota_recuperacao_especifica',
 
     ];
 }

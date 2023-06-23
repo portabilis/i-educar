@@ -13,8 +13,6 @@ use Illuminate\View\View;
 class UpdateRegistrationStatusController extends Controller
 {
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)
@@ -31,8 +29,6 @@ class UpdateRegistrationStatusController extends Controller
     /**
      * Atualiza a situação das matrículas de acordo com o filtro
      *
-     * @param UpdateRegistrationStatusRequest $request
-     * @param RegistrationService             $registrationService
      *
      * @return \Illuminate\Http\RedirectResponse
      */

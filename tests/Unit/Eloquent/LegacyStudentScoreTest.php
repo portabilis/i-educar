@@ -17,12 +17,9 @@ class LegacyStudentScoreTest extends EloquentTestCase
         'scoreGeneral' => LegacyGeneralScore::class,
         'scoreByDiscipline' => LegacyDisciplineScore::class,
         'averageByDiscipline' => LegacyDisciplineScoreAverage::class,
-        'averageGeneral' => LegacyGeneralAverage::class
+        'averageGeneral' => LegacyGeneralAverage::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyStudentScore::class;

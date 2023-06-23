@@ -14,13 +14,14 @@ class WhenDeletedTest extends TestCase
     private $instance;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->instance = new class () {
+        $this->instance = new class()
+        {
             use WhenDeleted;
         };
     }

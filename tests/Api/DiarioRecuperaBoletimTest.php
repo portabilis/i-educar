@@ -19,10 +19,10 @@ class DiarioRecuperaBoletimTest extends UnitBaseTest
 
         $enrollment = LegacyEnrollmentFactory::new()->create();
         $data = [
-            'oper'=> 'get',
+            'oper' => 'get',
             'resource' => 'boletim',
-            'matricula_id' =>  $enrollment->ref_cod_matricula,
-            'escola_id' =>  $enrollment->schoolClass()->first()->schoolId
+            'matricula_id' => $enrollment->ref_cod_matricula,
+            'escola_id' => $enrollment->schoolClass()->first()->schoolId,
         ];
 
         $response = $this->getResource('/module/Api/Report?', $data);

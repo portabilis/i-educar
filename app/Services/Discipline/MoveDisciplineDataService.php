@@ -24,16 +24,13 @@ class MoveDisciplineDataService implements ToCollection
      */
     private $messages;
 
-    /**
-     * @param Output $output
-     */
     public function __construct(Output $output)
     {
         $this->output = $output;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function collection(Collection $rows)
     {
@@ -87,11 +84,6 @@ class MoveDisciplineDataService implements ToCollection
         ];
     }
 
-    /**
-     * @param MoveDisciplineDataInterface $moveDataServices
-     *
-     * @return MoveDisciplineDataService
-     */
     public function setMoveDataService(MoveDisciplineDataInterface $moveDataServices): MoveDisciplineDataService
     {
         $this->moveDataServices[] = $moveDataServices;
@@ -102,10 +94,10 @@ class MoveDisciplineDataService implements ToCollection
     /**
      * Adiciona uma mensagem de informação
      *
-     * @param integer $disciplineFrom
-     * @param integer $disciplineTo
+     * @param int $disciplineFrom
+     * @param int $disciplineTo
      * @param string  $copier
-     * @param integer $updatedResources
+     * @param int $updatedResources
      */
     private function addInfoMessage($disciplineFrom, $disciplineTo, $copier, $updatedResources)
     {

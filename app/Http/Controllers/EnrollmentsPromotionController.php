@@ -16,6 +16,8 @@ class EnrollmentsPromotionController extends Controller
     {
         $data = $this->getResquetData($request);
 
+        $updateScore = $request->boolean('atualizar_notas', false);
+
         $enrollmentsIds = $this->loadEnrollmentsByFilter($data);
 
         $userId = $request->user()->id;
@@ -23,13 +25,13 @@ class EnrollmentsPromotionController extends Controller
 
         $jobs = [];
         foreach ($enrollmentsIds as $item) {
-            $jobs[] = new EnrollmentsPromotionJob($userId, $item, $databaseConnection);
+            $jobs[] = new EnrollmentsPromotionJob($userId, $item, $databaseConnection, $updateScore);
         }
 
         if (empty($jobs)) {
             return response()->json([
                 'message' => 'Não foi possível encontrar matrículas com os parâmetros enviados',
-                'status' => 'notice'
+                'status' => 'notice',
             ]);
         }
 
@@ -43,7 +45,7 @@ class EnrollmentsPromotionController extends Controller
 
         return response()->json([
             'message' => 'Matrículas enviadas para atualização. O processo de demorar alguns minutos, aguarde a notificação antes de realizar a mesma atualização.',
-            'status' => 'success'
+            'status' => 'success',
         ]);
     }
 

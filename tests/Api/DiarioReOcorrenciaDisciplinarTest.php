@@ -18,10 +18,10 @@ class DiarioReOcorrenciaDisciplinarTest extends TestCase
         $enrollment = LegacyRegistrationDisciplinaryOccurrenceTypeFactory::new()->create(['visivel_pais' => true]);
 
         $data = [
-            'oper'=> 'get',
+            'oper' => 'get',
             'resource' => 'ocorrencias_disciplinares',
-            'aluno_id' =>  $enrollment->registration()->first()->ref_cod_aluno,
-            'escola' =>  $enrollment->registration()->first()->ref_ref_cod_escola
+            'aluno_id' => $enrollment->registration()->first()->ref_cod_aluno,
+            'escola' => $enrollment->registration()->first()->ref_ref_cod_escola,
         ];
 
         $response = $this->getResource('/module/Api/Aluno', $data);
@@ -41,8 +41,8 @@ class DiarioReOcorrenciaDisciplinarTest extends TestCase
                         'aluno_id',
                         'escola_id',
                         'updated_at',
-                        'deleted_at'
-                    ]
+                        'deleted_at',
+                    ],
                 ],
             ]
         );

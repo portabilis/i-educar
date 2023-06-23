@@ -18,7 +18,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portab
         $defaultOptions = [
             'objectName' => 'municipio',
             'apiController' => 'Municipio',
-            'apiResource' => 'municipio-search'
+            'apiResource' => 'municipio-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

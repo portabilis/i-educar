@@ -8,7 +8,7 @@ class CoreExt_Validate_Email extends CoreExt_Validate_Abstract
     protected function _getDefaultOptions()
     {
         return [
-            'invalid' => 'Email inválido.'
+            'invalid' => 'Email inválido.',
         ];
     }
 

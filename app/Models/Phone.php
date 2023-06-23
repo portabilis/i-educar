@@ -32,9 +32,6 @@ class Phone extends Model
 
     protected $keyType = 'string';
 
-    /**
-     * @return BelongsTo
-     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'person_id');
@@ -50,9 +47,6 @@ class Phone extends Model
         return $this->belongsTo(LegacyUser::class, 'updated_by');
     }
 
-    /**
-     * @return Attribute
-     */
     protected function formattedNumber(): Attribute
     {
         return Attribute::make(

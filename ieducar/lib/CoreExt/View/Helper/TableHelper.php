@@ -3,7 +3,9 @@
 class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract implements \Stringable
 {
     protected $_header = [];
+
     protected $_body = [];
+
     protected $_footer = [];
 
     /**
@@ -46,7 +48,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      * seguintes atributos:
      *
      * - data: o valor que será impresso na célula (td) da tabela
-     * - colspan: valor inteiro para colspan {@link }
+     * - colspan: valor inteiro para colspan {@link}
      * - attributes: array associativo onde o nome do atributo é o índice
      *
      * <code>
@@ -71,7 +73,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      * //   </thead>
      * </code>
      *
-     * @param array $cols
      *
      * @return CoreExt_View_Helper_TableHelper Provê interface fluída
      */
@@ -85,7 +86,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
     /**
      * Adiciona um array para um row de tabela para a tag corpo (tbody).
      *
-     * @param $cols
      *
      * @return CoreExt_View_Helper_TableHelper Provê interface fluída
      *
@@ -101,7 +101,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
     /**
      * Adiciona um array para um row de tabela para a tag rodapé (tfooter).
      *
-     * @param $cols
      *
      * @return CoreExt_View_Helper_TableHelper Provê interface fluída
      *
@@ -137,7 +136,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      * Cria a seção thead de uma tabela.
      *
      * @param bool $indent
-     *
      * @return string
      */
     public function createHeader($indent = false)
@@ -149,7 +147,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      * Cria a seção tbody de uma tabela.
      *
      * @param bool $indent
-     *
      * @return string
      */
     public function createBody($indent = false)
@@ -161,7 +158,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      * Cria a seção tfooter de uma tabela.
      *
      * @param bool $indent
-     *
      * @return string
      */
     public function createFooter($indent = false)
@@ -174,7 +170,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      *
      * @param string $name
      * @param bool   $indent
-     *
      * @return string
      */
     protected function _getTag($name, $indent = true)
@@ -190,7 +185,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      * @param string $closure
      * @param array  $rows
      * @param bool   $indent
-     *
      * @return string
      */
     protected function _createHtml($closure, $rows = [], $indent = false)

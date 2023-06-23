@@ -19,7 +19,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
             'apiController' => 'ComponenteCurricular',
             'apiResource' => 'componentecurricular-search',
             'searchForArea' => false,
-            'allDisciplinesMulti' => false
+            'allDisciplinesMulti' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

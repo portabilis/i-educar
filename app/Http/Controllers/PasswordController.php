@@ -68,7 +68,7 @@ class PasswordController extends Controller
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function credentials(Request $request)
     {

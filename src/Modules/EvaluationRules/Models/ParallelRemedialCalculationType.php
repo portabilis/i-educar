@@ -5,7 +5,9 @@ namespace iEducar\Modules\EvaluationRules\Models;
 class ParallelRemedialCalculationType
 {
     public const REPLACE_SCORE = 1;
+
     public const AVERAGE_SCORE = 2;
+
     public const SUM_SCORE = 3;
 
     /**

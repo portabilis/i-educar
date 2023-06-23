@@ -23,9 +23,6 @@ class EmployeePosgraduate extends Model
         'completion_year',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
@@ -35,8 +32,6 @@ class EmployeePosgraduate extends Model
      * Filtra pelo ID do servidor
      *
      * @param Builder $query
-     * @param $employeeId
-     *
      * @return Builder
      */
     public function scopeOfEmployee($query, $employeeId)

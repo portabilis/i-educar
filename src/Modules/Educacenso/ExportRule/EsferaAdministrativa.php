@@ -10,14 +10,12 @@ class EsferaAdministrativa implements EducacensoExportRule
 {
     /**
      * @param Registro00 $registro00
-     *
-     * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro00): RegistroEducacenso
     {
         $values = [
             Regulamentacao::SIM,
-            Regulamentacao::EM_TRAMITACAO
+            Regulamentacao::EM_TRAMITACAO,
         ];
 
         if (in_array($registro00->regulamentacao, $values)) {

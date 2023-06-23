@@ -9,12 +9,9 @@ use Tests\EloquentTestCase;
 class LegacyKnowledgeAreaTest extends EloquentTestCase
 {
     protected $relations = [
-        'institution' => LegacyInstitution::class
+        'institution' => LegacyInstitution::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyKnowledgeArea::class;

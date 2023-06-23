@@ -2,7 +2,6 @@
 
 class IesController extends ApiCoreController
 {
-
     // search options
     protected function searchOptions()
     {

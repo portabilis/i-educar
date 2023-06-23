@@ -31,7 +31,7 @@ class EvaluationRuleNotAllowGeneralAbsence extends Exception
     public function getExtraInfo()
     {
         return [
-            'school_class_id' => $this->schoolClassId
+            'school_class_id' => $this->schoolClassId,
         ];
     }
 }

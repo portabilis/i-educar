@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchEscola extends Portabili
         $defaultOptions = [
             'objectName' => 'escola',
             'apiController' => 'Escola',
-            'apiResource' => 'escola-search'
+            'apiResource' => 'escola-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

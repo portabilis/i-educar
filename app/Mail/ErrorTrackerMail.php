@@ -25,10 +25,6 @@ class ErrorTrackerMail extends Mailable implements ShouldQueue
 
     /**
      * Create a new message instance.
-     *
-     * @param $to
-     * @param $subject
-     * @param $content
      */
     public function __construct($to, $subject, $content)
     {

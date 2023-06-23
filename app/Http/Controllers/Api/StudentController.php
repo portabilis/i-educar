@@ -12,12 +12,10 @@ class StudentController extends Controller
     /**
      * Atualiza a inscrição estadual de um aluno.
      *
-     * @param UpdateStateRegistrationRequest $request
-     * @param LegacyStudent                  $student
-     *
-     * @throws Throwable
      *
      * @return array
+     *
+     * @throws Throwable
      */
     public function updateStateRegistration(UpdateStateRegistrationRequest $request, LegacyStudent $student)
     {

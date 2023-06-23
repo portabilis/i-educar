@@ -15,9 +15,6 @@ class TransferNotificationListener
      */
     protected $service;
 
-    /**
-     * @param NotificationService $service
-     */
     public function __construct(NotificationService $service)
     {
         $this->service = $service;
@@ -27,7 +24,6 @@ class TransferNotificationListener
      * Handle the event.
      *
      * @param object $event
-     *
      * @return void
      */
     public function handle($event)
@@ -68,7 +64,7 @@ class TransferNotificationListener
                AND (eu.ref_cod_escola = :school OR tu.nivel <= 2) --INSTITUCIONAL
         ', [
             $process,
-            $school
+            $school,
         ]);
     }
 }

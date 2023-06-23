@@ -54,7 +54,6 @@ class DatabaseRestoreCommand extends Command
      * Drop old database if exists and create it again.
      *
      * @param string $database
-     *
      * @return void
      */
     private function dropAndCreateDatabase($database)
@@ -78,7 +77,6 @@ class DatabaseRestoreCommand extends Command
      *
      * @param string $database
      * @param string $filename
-     *
      * @return void
      */
     private function restoreDatabaseUsingBackupFile($database, $filename)

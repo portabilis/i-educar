@@ -5,16 +5,27 @@ use iEducar\Legacy\Model;
 class clsPmieducarQuadroHorarioHorariosAux extends Model
 {
     public $ref_cod_quadro_horario;
+
     public $sequencial;
+
     public $ref_cod_disciplina;
+
     public $ref_cod_escola;
+
     public $ref_cod_serie;
+
     public $ref_cod_instituicao_servidor;
+
     public $ref_servidor;
+
     public $dia_semana;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $identificador;
+
     public $data_cadastro;
 
     public function __construct($ref_cod_quadro_horario = null, $sequencial = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null, $ref_cod_instituicao_servidor = null, $ref_servidor = null, $dia_semana = null, $hora_inicial = null, $hora_final = null, $identificador = null)
@@ -206,18 +217,17 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @param integer int_ref_cod_disciplina
-     * @param integer int_ref_cod_escola
-     * @param integer int_ref_cod_serie
-     * @param integer int_ref_cod_instituicao_servidor
-     * @param integer int_ref_servidor
-     * @param integer int_dia_semana
+     * @param int int_ref_cod_disciplina
+     * @param int int_ref_cod_escola
+     * @param int int_ref_cod_serie
+     * @param int int_ref_cod_instituicao_servidor
+     * @param int int_ref_servidor
+     * @param int int_dia_semana
      * @param string time_hora_inicial_ini
      * @param string time_hora_inicial_fim
      * @param string time_hora_final_ini
      * @param string time_hora_final_fim
      * @param string str_identificador
-     *
      * @return array|false
      */
     public function lista($int_ref_cod_disciplina = null, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_cod_instituicao_servidor = null, $int_ref_servidor = null, $int_dia_semana = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $str_identificador = null, $str_data_cadastro_ini = null, $str_data_cadastro_fim = null)

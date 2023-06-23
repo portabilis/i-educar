@@ -58,7 +58,7 @@ class LegacyStudentFactory extends Factory
         return $this->state(function () {
             return [
                 'ativo' => 0,
-                'data_exclusao' => Carbon::now()
+                'data_exclusao' => Carbon::now(),
             ];
         });
     }
@@ -67,7 +67,7 @@ class LegacyStudentFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'tipo_responsavel' => null
+                'tipo_responsavel' => null,
             ];
         });
     }
@@ -77,7 +77,7 @@ class LegacyStudentFactory extends Factory
         return $this->state(function () {
             return [
                 'ref_idpes' => fn () => LegacyIndividualFactory::new()->father()->create(),
-                'tipo_responsavel' => null
+                'tipo_responsavel' => null,
             ];
         });
     }
@@ -87,16 +87,17 @@ class LegacyStudentFactory extends Factory
         return $this->state(function () {
             return [
                 'ref_idpes' => fn () => LegacyIndividualFactory::new()->mother()->create(),
-                'tipo_responsavel' => null
+                'tipo_responsavel' => null,
             ];
         });
     }
+
     public function guardian(): static
     {
         return $this->state(function () {
             return [
                 'ref_idpes' => fn () => LegacyIndividualFactory::new()->guardian()->create(),
-                'tipo_responsavel' => null
+                'tipo_responsavel' => null,
             ];
         });
     }

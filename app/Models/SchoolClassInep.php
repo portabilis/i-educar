@@ -19,7 +19,7 @@ class SchoolClassInep extends Model
         'nome_inep',
         'fonte',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected function number(): Attribute
@@ -29,9 +29,6 @@ class SchoolClassInep extends Model
         );
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function schoolClass(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolClass::class, 'cod_turma', 'cod_turma');

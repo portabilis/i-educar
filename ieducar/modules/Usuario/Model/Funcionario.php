@@ -7,11 +7,11 @@ class Usuario_Model_Funcionario extends CoreExt_Entity
         'email' => null,
         'senha' => null,
         'data_troca_senha' => null,
-        'status_token' => null
+        'status_token' => null,
     ];
 
     protected $_dataTypes = [
-        'matricula' => 'string'
+        'matricula' => 'string',
     ];
 
     protected $_references = [];
@@ -28,7 +28,7 @@ class Usuario_Model_Funcionario extends CoreExt_Entity
     public function getDefaultValidatorCollection()
     {
         return [
-            'email' => new CoreExt_Validate_Email()
+            'email' => new CoreExt_Validate_Email(),
         ];
     }
 

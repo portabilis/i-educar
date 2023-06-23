@@ -13,6 +13,7 @@ class LegacyAbandonmentType extends LegacyModel
     use HasInstitution;
 
     public const CREATED_AT = 'data_cadastro';
+
     public const UPDATED_AT = null;
 
     /**
@@ -33,6 +34,6 @@ class LegacyAbandonmentType extends LegacyModel
         'ref_usuario_cad',
         'nome',
         'data_exclusao',
-        'ativo'
+        'ativo',
     ];
 }

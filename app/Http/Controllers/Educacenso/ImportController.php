@@ -37,8 +37,6 @@ class ImportController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)

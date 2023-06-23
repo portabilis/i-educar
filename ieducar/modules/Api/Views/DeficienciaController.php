@@ -59,7 +59,7 @@ class DeficienciaController extends ApiCoreController
         });
 
         return [
-            'deficiencias' => $deficiencias
+            'deficiencias' => $deficiencias,
         ];
     }
 

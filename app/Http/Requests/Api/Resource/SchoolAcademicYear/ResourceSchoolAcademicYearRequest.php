@@ -11,7 +11,7 @@ class ResourceSchoolAcademicYearRequest extends ResourceRequest
         return [
             'school' => ['required', 'integer', 'min:1'],
             'year_gte' => ['nullable', 'integer', 'digits:4'],
-            'limit' => ['nullable', 'integer']
+            'limit' => ['nullable', 'integer'],
         ];
     }
 
@@ -19,7 +19,7 @@ class ResourceSchoolAcademicYearRequest extends ResourceRequest
     {
         return [
             'school' => 'Escola',
-            'year_gte' => 'Ano'
+            'year_gte' => 'Ano',
         ];
     }
 }

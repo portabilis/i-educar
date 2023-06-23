@@ -101,10 +101,12 @@ class clsModulesProfessorTurma extends Model
             $this->permite_lancar_faltas_componente = '0';
         }
 
-        if (isset($outras_unidades_curriculares_obrigatorias) && $outras_unidades_curriculares_obrigatorias) {
-            $this->outras_unidades_curriculares_obrigatorias = '1';
+        if (isset($outras_unidades_curriculares_obrigatorias) && ($outras_unidades_curriculares_obrigatorias) == 1) {
+            $this->outras_unidades_curriculares_obrigatorias = 1;
+        } elseif (isset($outras_unidades_curriculares_obrigatorias) && ($outras_unidades_curriculares_obrigatorias) == 0) {
+            $this->outras_unidades_curriculares_obrigatorias = 0;
         } else {
-            $this->outras_unidades_curriculares_obrigatorias = '0';
+            $this->outras_unidades_curriculares_obrigatorias = null;
         }
     }
 
@@ -183,7 +185,7 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             } else {
                 $campos .= "{$gruda}unidades_curriculares";
-                $valores .= "{$gruda}NULL";
+                $valores .= "{$gruda}null";
                 $gruda = ', ';
             }
 
@@ -191,11 +193,14 @@ class clsModulesProfessorTurma extends Model
                 $campos .= "{$gruda}outras_unidades_curriculares_obrigatorias";
                 $valores .= "{$gruda}'{$this->outras_unidades_curriculares_obrigatorias}'";
                 $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}outras_unidades_curriculares_obrigatorias";
+                $valores .= "{$gruda}null";
+                $gruda = ', ';
             }
 
             $campos .= "{$gruda}updated_at";
             $valores .= "{$gruda} CURRENT_TIMESTAMP";
-
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
@@ -286,6 +291,9 @@ class clsModulesProfessorTurma extends Model
             if (is_numeric($this->outras_unidades_curriculares_obrigatorias)) {
                 $set .= "{$gruda}outras_unidades_curriculares_obrigatorias = '{$this->outras_unidades_curriculares_obrigatorias}'";
                 $gruda = ', ';
+            } else {
+                $set .= "{$gruda}outras_unidades_curriculares_obrigatorias = NULL";
+                $gruda = ', ';
             }
 
             $set .= "{$gruda}updated_at = CURRENT_TIMESTAMP";
@@ -315,7 +323,6 @@ class clsModulesProfessorTurma extends Model
      * @param null $ref_cod_turma
      * @param null $funcao_exercida
      * @param null $tipo_vinculo
-     *
      * @return array|bool
      *
      * @throws Exception
@@ -566,7 +573,7 @@ class clsModulesProfessorTurma extends Model
 
     public function retornaNomeDoComponente($idComponente)
     {
-        $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper;
+        $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper();
         $componente = $mapperComponente->find(['id' => $idComponente]);
 
         return $componente->nome;

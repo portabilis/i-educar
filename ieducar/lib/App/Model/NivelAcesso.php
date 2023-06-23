@@ -28,15 +28,18 @@
 class App_Model_NivelAcesso extends CoreExt_Enum
 {
     const POLI_INSTITUCIONAL = 1;
+
     const INSTITUCIONAL = 3;
+
     const SOMENTE_ESCOLA = 7;
+
     const SOMENTE_BIBLIOTECA = 11;
 
     protected $_data = [
         self::POLI_INSTITUCIONAL => 'Poli-institucional',
         self::INSTITUCIONAL => 'Institucional',
         self::SOMENTE_ESCOLA => 'Somente escola',
-        self::SOMENTE_BIBLIOTECA => 'Somente biblioteca'
+        self::SOMENTE_BIBLIOTECA => 'Somente biblioteca',
     ];
 
     public static function getInstance()

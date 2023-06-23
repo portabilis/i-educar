@@ -12,7 +12,9 @@ class LegacyAbsenceDelayCompensate extends LegacyModel
     use HasLegacyUserAction;
 
     public const CREATED_AT = 'data_cadastro';
+
     public const UPDATED_AT = null;
+
     public const DELETED_AT = 'data_exclusao';
 
     protected $table = 'pmieducar.falta_atraso_compensado';

@@ -5,7 +5,8 @@ use App\Setting;
 use App\SettingCategory;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         $configutarion = LegacyGeneralConfiguration::query()->first();

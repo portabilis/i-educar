@@ -8,7 +8,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
 
         $nota = new Avaliacao_Model_NotaComponente([
             'componenteCurricular' => 1,
-            'nota' => '5.1'
+            'nota' => '5.1',
         ]);
 
         // Atribuição simples
@@ -31,7 +31,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
 
         $nota = new Avaliacao_Model_NotaComponente([
             'componenteCurricular' => 1,
-            'nota' => 5.72
+            'nota' => 5.72,
         ]);
 
         $notaOriginal = clone $nota;
@@ -82,22 +82,22 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 7.25,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 9.25,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 8,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 8.5,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
 
@@ -106,7 +106,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
             'componenteCurricular' => 1,
             'media' => 8.25,
             'mediaArredondada' => 8,
-            'etapa' => 4
+            'etapa' => 4,
         ]);
 
         $media->markOld();
@@ -185,13 +185,13 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 7.25,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 9.25,
-                'etapa' => 3
-            ])
+                'etapa' => 3,
+            ]),
         ];
 
         $notasPersistidas = [
@@ -201,7 +201,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
                 'componenteCurricular' => 1,
                 'nota' => 8.25,
                 'notaArredondada' => 8,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'id' => 2,
@@ -209,8 +209,8 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
                 'componenteCurricular' => 1,
                 'nota' => 9.5,
                 'notaArredondada' => 9,
-                'etapa' => 2
-            ])
+                'etapa' => 2,
+            ]),
         ];
 
         $mediasPersistidas = [
@@ -219,8 +219,8 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
                 'componenteCurricular' => 1,
                 'media' => 4.4375,
                 'mediaArredondada' => 4,
-                'etapa' => 2
-            ])
+                'etapa' => 2,
+            ]),
         ];
 
         $mediasPersistidas[0]->markOld();

@@ -5,10 +5,15 @@ use iEducar\Legacy\Model;
 class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
 {
     public $cod_bloqueio;
+
     public $ano;
+
     public $ref_cod_escola;
+
     public $etapa;
+
     public $data_inicio;
+
     public $data_fim;
 
     public function __construct(

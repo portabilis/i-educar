@@ -33,7 +33,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
         $defaultOptions = [
             'objectName' => 'documentos',
             'apiController' => '',
-            'apiResource' => ''
+            'apiResource' => '',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

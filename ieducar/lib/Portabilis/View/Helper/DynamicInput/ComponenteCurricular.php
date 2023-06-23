@@ -22,7 +22,7 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
             'id' => null,
             'turmaId' => null,
             'options' => [],
-            'resources' => []
+            'resources' => [],
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -39,7 +39,7 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
             'input_hint' => '',
             'disabled' => false,
             'required' => true,
-            'multiple' => false
+            'multiple' => false,
         ];
 
         $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);

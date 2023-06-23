@@ -32,7 +32,7 @@ class ComponenteCurricularController extends ApiCoreController
 
         $array = [];
 
-        $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, [ 'params' => [$this->getRequest()->id] ]);
+        $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$this->getRequest()->id]]);
 
         foreach ($resources as $reg) {
             $array[] = $reg['componente_curricular_id'];
@@ -43,7 +43,7 @@ class ComponenteCurricularController extends ApiCoreController
 
     public function canGetComponentesCurriculares()
     {
-        return  $this->validatesPresenceOf('instituicao_id');
+        return $this->validatesPresenceOf('instituicao_id');
     }
 
     public function canGetComponentesCurricularesPorEscolaSerieAno()
@@ -108,8 +108,8 @@ class ComponenteCurricularController extends ApiCoreController
     public function getComponentesCurricularesPorSerie()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $instituicaoId      = (int) $this->getRequest()->instituicao_id;
-            $serieId            = (int) $this->getRequest()->serie_id;
+            $instituicaoId = (int) $this->getRequest()->instituicao_id;
+            $serieId = (int) $this->getRequest()->serie_id;
             $areaDeConhecimento = (int) $this->getRequest()->area_conhecimento;
 
             $sql = '
@@ -172,21 +172,21 @@ class ComponenteCurricularController extends ApiCoreController
     {
         if ($this->canGetComponentesCurricularesPorEscolaSerieAno()) {
             $escolaId = $this->getRequest()->escola_id;
-            $serieId       = $this->getRequest()->serie_id;
-            $ano       = $this->getRequest()->ano;
+            $serieId = $this->getRequest()->serie_id;
+            $ano = $this->getRequest()->ano;
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($serieId, $escolaId, null, null, null, true, $ano);
             $componente_curricular_turma = LegacyInstitution::whereHas('schools', fn ($q) => $q->where('cod_escola', $escolaId))->value('componente_curricular_turma');
-            $componentesCurriculares = array_map(function ($componente) use ($componente_curricular_turma){
+            $componentesCurriculares = array_map(function ($componente) use ($componente_curricular_turma) {
                 return [
                     'id' => $componente->id,
                     'nome' => $componente->nome,
                     'carga_horaria' => $componente->cargaHoraria,
                     'abreviatura' => $componente->abreviatura,
-                    'permite_por_turma' => $componente_curricular_turma
+                    'permite_por_turma' => $componente_curricular_turma,
                 ];
             }, array_values($componentes));
 
-            return [ 'componentes_curriculares' => $componentesCurriculares ];
+            return ['componentes_curriculares' => $componentesCurriculares];
         }
     }
 
@@ -270,23 +270,24 @@ class ComponenteCurricularController extends ApiCoreController
         }
     }
 
-    private function getComponentesTurmaMulti($turmaId, $areaConhecimentoId) {
+    private function getComponentesTurmaMulti($turmaId, $areaConhecimentoId)
+    {
         $areaConhecimentoId = explode(',', $areaConhecimentoId);
         $query = DB::table('pmieducar.turma as t')
-        ->select('cc.id', 'cc.nome')
-        ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
-        ->join('pmieducar.escola_serie as es', function($join) {
-            $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
-            $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
-        })
-        ->join('pmieducar.escola_serie_disciplina as esd', function($join) {
-            $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
-            $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
-        })
-        ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
-        ->where('t.cod_turma', $turmaId)
-        ->whereRaw('t.ano = ANY(esd.anos_letivos)')
-        ->where('t.multiseriada', 1);
+            ->select('cc.id', 'cc.nome')
+            ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
+            ->join('pmieducar.escola_serie as es', function ($join) {
+                $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
+                $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
+            })
+            ->join('pmieducar.escola_serie_disciplina as esd', function ($join) {
+                $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
+                $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
+            })
+            ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
+            ->where('t.cod_turma', $turmaId)
+            ->whereRaw('t.ano = ANY(esd.anos_letivos)')
+            ->where('t.multiseriada', 1);
 
         if (count(array_filter($areaConhecimentoId)) > 0) {
             $query->whereIn('cc.area_conhecimento_id', $areaConhecimentoId);

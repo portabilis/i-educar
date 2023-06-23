@@ -16,9 +16,6 @@ class Registro60 extends AbstractRegistro
     protected $model;
 
     /**
-     * @param $school
-     * @param $year
-     *
      * @return Registro60Model[]
      */
     public function getData($school, $year)
@@ -35,8 +32,6 @@ class Registro60 extends AbstractRegistro
     }
 
     /**
-     * @param $data
-     *
      * @return Registro60Model
      */
     protected function hydrateModel($data)

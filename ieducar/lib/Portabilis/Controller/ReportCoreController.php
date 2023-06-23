@@ -29,7 +29,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     protected $report;
 
-
     /**
      * Usada em relatório onde não possui ações cadastrar, atualizar ou excluir
      *
@@ -92,7 +91,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      * Altera os headers que irão na resposta da requisição.
      *
      * @param string $result
-     *
      * @return void
      */
     public function headers($result)
@@ -142,7 +140,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
             flush();
 
             echo $result;
-            die();
+            exit();
         } catch (Exception $e) {
             if (config('legacy.modules.error.track')) {
                 $tracker = TrackerFactory::getTracker(config('legacy.modules.error.tracker_name'));
@@ -225,13 +223,12 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      * Adiciona uma mensagem de erro de validação.
      *
      * @param string $message
-     *
      * @return void
      */
     public function addValidationError($message)
     {
         $this->validationErrors[] = [
-            'message' => $message
+            'message' => $message,
         ];
     }
 
@@ -272,7 +269,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      * Renderiza uma mensagem de erro.
      *
      * @param string $details
-     *
      * @return void
      */
     public function renderError($details = '')
@@ -289,7 +285,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      * Carrega assets utilizados.
      *
      * @param object $dispatcher
-     *
      * @return void
      */
     protected function loadResourceAssets($dispatcher)
@@ -317,7 +312,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     public function appendFixups()
     {
-        $js = <<<EOT
+        $js = <<<'EOT'
 
 <script type="text/javascript">
   function printReport() {

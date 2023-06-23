@@ -77,7 +77,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
         }
 
         if (is_numeric($carga_horaria_disciplina)) {
-            $this->carga_horaria_disciplina = (int)$carga_horaria_disciplina;
+            $this->carga_horaria_disciplina = (int) $carga_horaria_disciplina;
         }
 
         if (is_bool($dependencia)) {

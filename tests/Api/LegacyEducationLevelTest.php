@@ -37,7 +37,7 @@ class LegacyEducationLevelTest extends TestCase
             'ref_usuario_cad' => $user->getKey(),
             'nm_nivel' => $type->nm_nivel,
             'descricao' => $type->descricao,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 
@@ -71,7 +71,7 @@ class LegacyEducationLevelTest extends TestCase
             'ref_cod_instituicao' => $editType->ref_cod_instituicao,
             'nm_nivel' => $editType->nm_nivel,
             'descricao' => $editType->descricao,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 }

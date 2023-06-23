@@ -44,8 +44,6 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      * Construtor.
      *
      * Pode receber array com opções de configuração da classe.
-     *
-     * @param array $options
      */
     public function __construct(array $options = [])
     {
@@ -60,7 +58,6 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      * Método de checagem de opções inspirado na técnica empregada no
      * {@link http://www.symfony-project.org symfony framework}.
      *
-     * @param array $options
      *
      * @throws InvalidArgumentException Lança exceção não verificada caso alguma
      *                                  opção passada ao método não exista na definição da classe
@@ -91,7 +88,6 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      * Verifica se uma opção está setada.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _hasOption($key)
@@ -106,8 +102,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      * setada.
      *
      * @param string $key
-     *
-     * @return mixed|NULL
+     * @return mixed|null
      */
     public function getOption($key)
     {
@@ -148,7 +143,6 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      * método com a lógica de validação adequada.
      *
      * @param string $value
-     *
      * @return bool
      */
     abstract protected function _validate($value);
@@ -157,7 +151,6 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      * Realiza uma sanitização
      *
      * @param mixed $value
-     *
      * @return mixed
      */
     protected function _sanitize($value)
@@ -172,7 +165,6 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      * valor NULL e zero (0) numérico.
      *
      * @param mixed $value
-     *
      * @return bool
      */
     protected function _isEmpty($value)
@@ -211,7 +203,6 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      *
      * @param array|string $key     O identificador da mensagem no array $_options
      * @param array        $options Array associativo para substituição de valores
-     *
      * @return string
      *
      * @todo   Implementar substituição com formatação padrão, semelhante ao

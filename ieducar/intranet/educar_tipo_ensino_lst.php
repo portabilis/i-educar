@@ -2,18 +2,30 @@
 
 use App\Models\LegacyEducationType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_tipo_ensino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -21,11 +33,11 @@ return new class extends clsListagem {
         $this->titulo = 'Tipo Ensino - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $get_escola = false;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
@@ -33,13 +45,13 @@ return new class extends clsListagem {
             case 1:
                 $this->addCabecalhos([
                     'Tipo Ensino',
-                    'Instituição'
+                    'Instituição',
                 ]);
                 break;
 
             default:
                 $this->addCabecalhos([
-                    'Tipo Ensino'
+                    'Tipo Ensino',
                 ]);
                 break;
         }
@@ -80,13 +92,13 @@ return new class extends clsListagem {
                     case 1:
                         $this->addLinhas([
                             "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['nm_tipo']}</a>",
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['ref_cod_instituicao']}</a>"
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['ref_cod_instituicao']}</a>",
                         ]);
                         break;
 
                     default:
                         $this->addLinhas([
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['nm_tipo']}</a>"
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['nm_tipo']}</a>",
                         ]);
                         break;
                 }

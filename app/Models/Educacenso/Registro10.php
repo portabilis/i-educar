@@ -431,6 +431,14 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function salasAtividadesEstudioGravacaoEdicao()
+    {
+        return in_array(SalasAtividades::ESTUDIO_GRAVACAO_EDICAO, $this->salasAtividades);
+    }
+
+    /**
+     * @return bool
+     */
     public function dormitoriosAluno()
     {
         return in_array(Dormitorios::ALUNO, $this->dormitorios);
@@ -673,10 +681,9 @@ class Registro10 extends Registro10Fields
      */
     public function EquipamentosPreenchidosIncorretamente()
     {
-        return (
+        return
             in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos) &&
-            count($this->equipamentos) > 1
-        );
+            count($this->equipamentos) > 1;
     }
 
     /**
@@ -705,11 +712,10 @@ class Registro10 extends Registro10Fields
 
     public function quantidadeComputadoresAlunosNaoPreenchida()
     {
-        return (
+        return
             $this->quantidadeComputadoresAlunosMesa == null &&
             $this->quantidadeComputadoresAlunosPortateis == null &&
-            $this->quantidadeComputadoresAlunosTablets == null
-        );
+            $this->quantidadeComputadoresAlunosTablets == null;
     }
 
     /**
@@ -1016,10 +1022,9 @@ class Registro10 extends Registro10Fields
      */
     public function instrumentosPedagogicosPreenchidosIncorretamente()
     {
-        return (
+        return
             in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentosPedagogicos) &&
-            count($this->instrumentosPedagogicos) > 1
-        );
+            count($this->instrumentosPedagogicos) > 1;
     }
 
     /**
@@ -1028,6 +1033,14 @@ class Registro10 extends Registro10Fields
     public function instrumentosPedagogicosMateriaisPraticaDesportiva()
     {
         return in_array(InstrumentosPedagogicos::MATERIAIS_PRATICA_DESPORTIVA, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosMateriaisEducacaoSurdos()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAIS_EDUCACAO_SURDOS, $this->instrumentosPedagogicos);
     }
 
     /**

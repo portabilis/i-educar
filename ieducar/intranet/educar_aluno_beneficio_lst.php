@@ -2,7 +2,8 @@
 
 use App\Models\LegacyBenefit;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -32,12 +33,19 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_aluno_beneficio;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_beneficio;
+
     public $desc_beneficio;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -45,11 +53,11 @@ return new class extends clsListagem {
         $this->titulo = 'Benefício Aluno - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos(coluna: [
-            'Beneficio'
+            'Beneficio',
         ]);
 
         // outros Filtros
@@ -57,7 +65,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $query = LegacyBenefit::query()
             ->where(column: 'ativo', operator: 1)
@@ -76,7 +84,7 @@ return new class extends clsListagem {
         if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 $this->addLinhas(linha: [
-                    "<a href=\"educar_aluno_beneficio_det.php?cod_aluno_beneficio={$registro['cod_aluno_beneficio']}\">{$registro['nm_beneficio']}</a>"
+                    "<a href=\"educar_aluno_beneficio_det.php?cod_aluno_beneficio={$registro['cod_aluno_beneficio']}\">{$registro['nm_beneficio']}</a>",
                 ]);
             }
         }

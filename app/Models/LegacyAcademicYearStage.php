@@ -6,10 +6,6 @@ use App\Models\Builders\LegacyAcademicYearStageBuilder;
 use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- *
- * @package App\Models
- */
 class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
@@ -21,8 +17,6 @@ class LegacyAcademicYearStage extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacyAcademicYearStageBuilder::class;
 
@@ -42,7 +36,7 @@ class LegacyAcademicYearStage extends LegacyModel
         'data_inicio',
         'data_fim',
         'dias_letivos',
-        'escola_ano_letivo_id'
+        'escola_ano_letivo_id',
     ];
 
     /**

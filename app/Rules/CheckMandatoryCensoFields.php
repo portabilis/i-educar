@@ -38,7 +38,7 @@ class CheckMandatoryCensoFields implements Rule
         37,
         38,
         41,
-        56
+        56,
     ];
 
     public const ETAPAS_ESPECIAL_SUBSTITUTIVAS = [
@@ -81,7 +81,7 @@ class CheckMandatoryCensoFields implements Rule
         74,
         64,
         67,
-        68
+        68,
     ];
 
     public string $message = '';
@@ -91,7 +91,6 @@ class CheckMandatoryCensoFields implements Rule
      *
      * @param string $attribute
      * @param mixed  $params
-     *
      * @return bool
      */
     public function passes($attribute, $params)
@@ -183,16 +182,16 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ((int)$course->modalidade_curso === ModalidadeCurso::ENSINO_REGULAR &&
+        if ((int) $course->modalidade_curso === ModalidadeCurso::ENSINO_REGULAR &&
             isset($params->etapa_educacenso) &&
-            !in_array((int)$params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
+            !in_array((int) $params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
             $this->message = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                 . implode(',', self::ETAPAS_ENSINO_REGULAR) . '.';
 
             return false;
         }
 
-        if ((int)$course->modalidade_curso === ModalidadeCurso::EDUCACAO_ESPECIAL &&
+        if ((int) $course->modalidade_curso === ModalidadeCurso::EDUCACAO_ESPECIAL &&
             isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, self::ETAPAS_ESPECIAL_SUBSTITUTIVAS)) {
             $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
@@ -201,7 +200,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ((int)$course->modalidade_curso === ModalidadeCurso::EJA &&
+        if ((int) $course->modalidade_curso === ModalidadeCurso::EJA &&
             isset($params->etapa_educacenso) &&
             !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
             $this->message = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
@@ -227,7 +226,7 @@ class CheckMandatoryCensoFields implements Rule
 
         $localDeFuncionamentoData = [
             App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO,
-            App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL
+            App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL,
         ];
 
         if (in_array($params->local_funcionamento_diferenciado, $localDeFuncionamentoData) &&
@@ -271,7 +270,7 @@ class CheckMandatoryCensoFields implements Rule
         if ($params->tipo_atendimento != TipoAtendimentoTurma::ESCOLARIZACAO && in_array(
             $params->tipo_mediacao_didatico_pedagogico,
             [
-                App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
+                App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA,
             ]
         )) {
             $this->message = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Educação a Distância.';
@@ -280,7 +279,7 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         $course = LegacyCourse::find($params->ref_cod_curso);
-        if ((int)$params->tipo_atendimento === TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
+        if ((int) $params->tipo_atendimento === TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
             $this->message = 'Quando a modalidade do curso é: <b>Educação de Jovens e Adultos (EJA)</b>, o campo <b>Tipo de atendimento</b> não pode ser <b>Atividade complementar</b>';
 
             return false;
@@ -297,7 +296,7 @@ class CheckMandatoryCensoFields implements Rule
             $localFuncionamentoEscola = explode(',', str_replace(['{', '}'], '', $localFuncionamentoEscola));
         }
 
-        $localFuncionamentoEscola = (array)$localFuncionamentoEscola;
+        $localFuncionamentoEscola = (array) $localFuncionamentoEscola;
 
         if (!in_array(
             9,
@@ -381,36 +380,36 @@ class CheckMandatoryCensoFields implements Rule
             3 => 'Ciclo(s)',
             4 => 'Grupos não seriados com base na idade ou competência',
             5 => 'Módulos',
-            6 => 'Alternância regular de períodos de estudos'
+            6 => 'Alternância regular de períodos de estudos',
         ];
 
         $validOptionCorrelationForEtapaEnsino = [
             FormaOrganizacaoTurma::SERIE_ANO => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67,
             ],
             FormaOrganizacaoTurma::SEMESTRAL => [
-                25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 69, 70, 71, 72, 73, 74, 67, 68
+                25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 69, 70, 71, 72, 73, 74, 67, 68,
             ],
             FormaOrganizacaoTurma::CICLOS => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56,
             ],
             FormaOrganizacaoTurma::NAO_SERIADO => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67, 68
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67, 68,
             ],
             FormaOrganizacaoTurma::MODULES => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67,68
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 64, 69, 70, 71, 72, 73, 74, 67, 68,
             ],
             FormaOrganizacaoTurma::ALTERNANCIA_REGULAR => [
-                19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 69, 70, 71, 72, 73, 74, 67, 68
-            ]
+                19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 69, 70, 71, 72, 73, 74, 67, 68,
+            ],
         ];
 
         if (isset($params->formas_organizacao_turma) &&
             isset($params->etapa_educacenso) &&
-            !in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int)$params->formas_organizacao_turma], true)
+            !in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int) $params->formas_organizacao_turma], true)
         ) {
             $todasEtapasEducacenso = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/etapas_ensino.json');
-            $this->message = "Não é possível selecionar a opção: <b>{$validOption[(int)$params->formas_organizacao_turma]}</b>, no campo: <b>Formas de organização da turma</b> quando o campo: Etapa de ensino for: {$todasEtapasEducacenso[$params->etapa_educacenso]}.";
+            $this->message = "Não é possível selecionar a opção: <b>{$validOption[(int) $params->formas_organizacao_turma]}</b>, no campo: <b>Formas de organização da turma</b> quando o campo: Etapa de ensino for: {$todasEtapasEducacenso[$params->etapa_educacenso]}.";
 
             return false;
         }

@@ -12,7 +12,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAreasConhecimento exte
         $defaultOptions = [
             'objectName' => 'areaconhecimento',
             'apiController' => 'AreaConhecimento',
-            'apiResource' => 'areaconhecimento-search'
+            'apiResource' => 'areaconhecimento-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

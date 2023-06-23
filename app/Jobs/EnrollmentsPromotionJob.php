@@ -22,13 +22,18 @@ class EnrollmentsPromotionJob implements ShouldQueue
     public function __construct(
         private int $user,
         private int $enrollmentId,
-        private string $databaseConnection
+        private string $databaseConnection,
+        private bool $updateScore = false
     ) {
     }
 
     public function handle(DatabaseManager $manager, PromocaoApiController $promocaoApiController): void
     {
         $manager->setDefaultConnection($this->databaseConnection);
-        @$promocaoApiController->processEnrollmentsPromotion($this->user, $this->enrollmentId);
+        @$promocaoApiController->processEnrollmentsPromotion(
+            userId: $this->user,
+            enrollmentsId: $this->enrollmentId,
+            updateScore: $this->updateScore
+        );
     }
 }

@@ -2,7 +2,6 @@
 
 class CursoSuperiorController extends ApiCoreController
 {
-
     // search options
     protected function sqlsForStringSearch()
     {
@@ -34,7 +33,7 @@ class CursoSuperiorController extends ApiCoreController
         $sqls = $this->sqlsForStringSearch();
         $params = $this->sqlParams($query);
 
-        if (! is_array($sqls)) {
+        if (!is_array($sqls)) {
             $sqls = [$sqls];
         }
 
