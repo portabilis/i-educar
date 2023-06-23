@@ -47,12 +47,12 @@ class CriaAnoLetivoTest extends TestCase
         ]);
 
         $course = LegacyCourseFactory::new()->standardAcademicYear()->create(
-            ['ref_cod_instituicao'=> $school->ref_cod_instituicao]
+            ['ref_cod_instituicao' => $school->ref_cod_instituicao]
         );
 
         $grade = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -65,7 +65,7 @@ class CriaAnoLetivoTest extends TestCase
             'ref_ref_cod_serie' => $schoolGrade->grade_id,
             'ref_cod_curso' => $course,
             'ref_cod_instituicao' => $school->ref_cod_instituicao,
-            'ano' => $schoolAcademicYearFactory->ano
+            'ano' => $schoolAcademicYearFactory->ano,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create(
@@ -97,11 +97,11 @@ class CriaAnoLetivoTest extends TestCase
             'servidor_id' => $employee,
             'turma_id' => $schoolClass,
             'turno_id' => $period,
-            'ano' => $schoolAcademicYearFactory->ano
+            'ano' => $schoolAcademicYearFactory->ano,
         ]);
 
         $role = LegacyRoleFactory::new()->create([
-            'ref_cod_instituicao' => $school->ref_cod_instituicao
+            'ref_cod_instituicao' => $school->ref_cod_instituicao,
         ]);
 
         $legacyEmployeeRole = LegacyEmployeeRoleFactory::new()->create(
@@ -117,23 +117,23 @@ class CriaAnoLetivoTest extends TestCase
             'ref_cod_escola' => $school->getKey(),
             'ref_cod_servidor' => $employee,
             'ref_cod_servidor_funcao' => $legacyEmployeeRole,
-            'ano' => $schoolAcademicYearFactory->ano
+            'ano' => $schoolAcademicYearFactory->ano,
         ]);
 
         LegacySchoolClassTeacherDisciplineFactory::new()->create([
             'professor_turma_id' => $legacySchoolClassTeacher,
-            'componente_curricular_id' => $discipline
+            'componente_curricular_id' => $discipline,
         ]);
 
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $school,
-            'serie_id'  => $grade,
-            'turma_id'  => $schoolClass
+            'serie_id' => $grade,
+            'turma_id' => $schoolClass,
         ]);
 
         $stageType = LegacyStageTypeFactory::new()->create([
-           'ref_cod_instituicao' => $school->ref_cod_instituicao,
-            'num_etapas' => 1
+            'ref_cod_instituicao' => $school->ref_cod_instituicao,
+            'num_etapas' => 1,
         ]);
 
         LegacySchoolClassStageFactory::new()->create([
@@ -152,7 +152,7 @@ class CriaAnoLetivoTest extends TestCase
             'copiar_alocacoes_demais_servidores' => true,
             'data_inicio' => ['01/01/' . $nextYear],
             'data_fim' => ['10/10/' . $nextYear],
-            'dias_letivos' => [100]
+            'dias_letivos' => [100],
         ];
 
         $this->post('/intranet/educar_ano_letivo_modulo_cad.php?ref_cod_escola=' . $school->getKey() . '&ano=' . $nextYear, $request)
@@ -160,7 +160,7 @@ class CriaAnoLetivoTest extends TestCase
 
         $this->assertDatabaseHas($schoolAcademicYearFactory, [
             'ano' => $nextYear,
-            'ref_cod_escola'=> $school->getKey()
+            'ref_cod_escola' => $school->getKey(),
         ]);
 
         $this->assertDatabaseHas(
@@ -170,7 +170,7 @@ class CriaAnoLetivoTest extends TestCase
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
                 'ref_cod_curso' => $course->getKey(),
                 'ref_cod_instituicao' => $school->ref_cod_instituicao,
-                'ano' => $nextYear
+                'ano' => $nextYear,
             ]
         );
 
@@ -181,7 +181,7 @@ class CriaAnoLetivoTest extends TestCase
                 'ref_cod_modulo' => $stageType->getKey(),
                 'ref_ano' => $nextYear,
                 'data_inicio' => '01/01/' . $nextYear,
-                'data_fim' => '10/10/' . $nextYear
+                'data_fim' => '10/10/' . $nextYear,
             ]
         );
 
@@ -191,7 +191,7 @@ class CriaAnoLetivoTest extends TestCase
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
                 'ref_cod_curso' => $course->getKey(),
                 'ref_cod_instituicao' => $school->ref_cod_instituicao,
-                'ano' => $nextYear
+                'ano' => $nextYear,
             ]
         )->first();
 
@@ -201,7 +201,7 @@ class CriaAnoLetivoTest extends TestCase
                 'servidor_id' => $employee->getKey(),
                 'turma_id' => $newSchoolClass->getKey(),
                 'turno_id' => $period->getKey(),
-                'ano' => $nextYear
+                'ano' => $nextYear,
             ]
         );
 
@@ -212,21 +212,21 @@ class CriaAnoLetivoTest extends TestCase
                 'ref_cod_escola' => $school->getKey(),
                 'ref_cod_servidor' => $employee->getKey(),
                 'ref_cod_servidor_funcao' => $legacyEmployeeRole->getKey(),
-                'ano' => $nextYear
+                'ano' => $nextYear,
             ]
         );
 
         $professorTurma = LegacySchoolClassTeacher::query()->where(
             [
                 'ano' => $nextYear,
-                'servidor_id' => $employee->getKey()
+                'servidor_id' => $employee->getKey(),
             ]
         )->get();
 
         $this->assertCount(1, $professorTurma);
         $this->assertDatabaseHas(LegacySchoolClassTeacherDiscipline::class, [
             'professor_turma_id' => $professorTurma->first()->getKey(),
-            'componente_curricular_id' => $discipline->getKey()
+            'componente_curricular_id' => $discipline->getKey(),
         ]);
 
         $this->assertDatabaseHas(LegacySchoolClassStage::class, [
@@ -251,12 +251,12 @@ class CriaAnoLetivoTest extends TestCase
         ]);
 
         $course = LegacyCourseFactory::new()->standardAcademicYear()->create(
-            ['ref_cod_instituicao'=> $school->ref_cod_instituicao]
+            ['ref_cod_instituicao' => $school->ref_cod_instituicao]
         );
 
         $grade = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -269,7 +269,7 @@ class CriaAnoLetivoTest extends TestCase
             'ref_ref_cod_serie' => $schoolGrade->grade_id,
             'ref_cod_curso' => $course,
             'ref_cod_instituicao' => $school->ref_cod_instituicao,
-            'ano' => $schoolAcademicYearFactory->ano
+            'ano' => $schoolAcademicYearFactory->ano,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create(
@@ -278,8 +278,8 @@ class CriaAnoLetivoTest extends TestCase
 
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $schoolGrade->school_id,
-            'serie_id'  => $schoolGrade->grade_id,
-            'turma_id'  => $schoolClass,
+            'serie_id' => $schoolGrade->grade_id,
+            'turma_id' => $schoolClass,
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -307,11 +307,11 @@ class CriaAnoLetivoTest extends TestCase
             'servidor_id' => $employee,
             'turma_id' => $schoolClass,
             'turno_id' => $period,
-            'ano' => $schoolAcademicYearFactory->ano
+            'ano' => $schoolAcademicYearFactory->ano,
         ]);
 
         $role = LegacyRoleFactory::new()->create([
-            'ref_cod_instituicao' => $school->ref_cod_instituicao
+            'ref_cod_instituicao' => $school->ref_cod_instituicao,
         ]);
 
         $legacyEmployeeRole = LegacyEmployeeRoleFactory::new()->create(
@@ -327,21 +327,21 @@ class CriaAnoLetivoTest extends TestCase
             'ref_cod_escola' => $school->getKey(),
             'ref_cod_servidor' => $employee,
             'ref_cod_servidor_funcao' => $legacyEmployeeRole,
-            'ano' => $schoolAcademicYearFactory->ano
+            'ano' => $schoolAcademicYearFactory->ano,
         ]);
 
         LegacySchoolClassTeacherDisciplineFactory::new()->create([
             'professor_turma_id' => $legacySchoolClassTeacher,
-            'componente_curricular_id' => $discipline
+            'componente_curricular_id' => $discipline,
         ]);
 
         $courseNew = LegacyCourseFactory::new()->standardAcademicYear()->create(
-            ['ref_cod_instituicao'=> $school->ref_cod_instituicao]
+            ['ref_cod_instituicao' => $school->ref_cod_instituicao]
         );
 
         $gradeNew = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $courseNew,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         LegacySchoolGradeFactory::new()->create([
@@ -351,19 +351,19 @@ class CriaAnoLetivoTest extends TestCase
 
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $school,
-            'serie_id'  => $grade,
-            'turma_id'  => $schoolClass
+            'serie_id' => $grade,
+            'turma_id' => $schoolClass,
         ]);
 
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $school,
-            'serie_id'  => $gradeNew,
-            'turma_id'  => $schoolClass
+            'serie_id' => $gradeNew,
+            'turma_id' => $schoolClass,
         ]);
 
         $stageType = LegacyStageTypeFactory::new()->create([
             'ref_cod_instituicao' => $school->ref_cod_instituicao,
-            'num_etapas' => 1
+            'num_etapas' => 1,
         ]);
 
         LegacySchoolClassStageFactory::new()->create([
@@ -382,7 +382,7 @@ class CriaAnoLetivoTest extends TestCase
             'copiar_alocacoes_demais_servidores' => true,
             'data_inicio' => ['01/01/' . $nextYear],
             'data_fim' => ['10/10/' . $nextYear],
-            'dias_letivos' => [100]
+            'dias_letivos' => [100],
         ];
 
         $this->post('/intranet/educar_ano_letivo_modulo_cad.php?ref_cod_escola=' . $school->getKey() . '&ano=' . $nextYear, $request)
@@ -390,7 +390,7 @@ class CriaAnoLetivoTest extends TestCase
 
         $this->assertDatabaseHas($schoolAcademicYearFactory, [
             'ano' => $nextYear,
-            'ref_cod_escola'=> $school->getKey()
+            'ref_cod_escola' => $school->getKey(),
         ]);
 
         $this->assertDatabaseHas(
@@ -400,7 +400,7 @@ class CriaAnoLetivoTest extends TestCase
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
                 'ref_cod_curso' => $course->getKey(),
                 'ref_cod_instituicao' => $school->ref_cod_instituicao,
-                'ano' => $nextYear
+                'ano' => $nextYear,
             ]
         );
 
@@ -410,7 +410,7 @@ class CriaAnoLetivoTest extends TestCase
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
                 'ref_cod_curso' => $course->getKey(),
                 'ref_cod_instituicao' => $school->ref_cod_instituicao,
-                'ano' => $nextYear
+                'ano' => $nextYear,
             ]
         )->first();
 
@@ -422,8 +422,8 @@ class CriaAnoLetivoTest extends TestCase
         // Turma multsseriada
         $this->assertDatabaseHas(LegacySchoolClassGrade::class, [
             'escola_id' => $school->getKey(),
-            'serie_id'  => $grade->getKey(),
-            'turma_id'  => $newSchoolClass->getKey()
+            'serie_id' => $grade->getKey(),
+            'turma_id' => $newSchoolClass->getKey(),
         ]);
     }
 }

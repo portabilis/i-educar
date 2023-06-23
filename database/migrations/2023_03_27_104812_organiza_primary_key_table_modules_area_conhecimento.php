@@ -3,7 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         DB::unprepared('ALTER TABLE IF EXISTS modules.componente_curricular DROP CONSTRAINT IF EXISTS componente_curricular_area_conhecimento_fk;');

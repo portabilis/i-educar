@@ -20,9 +20,6 @@ class Notification extends Model
         'type_id',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function type(): BelongsTo
     {
         return $this->belongsTo(NotificationType::class);

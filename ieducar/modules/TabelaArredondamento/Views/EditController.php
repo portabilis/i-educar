@@ -3,63 +3,70 @@
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';
+
     protected $_titulo = 'Cadastro de tabela de arredondamento de notas';
+
     protected $_processoAp = 949;
+
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+
     protected $_saveOption = true;
+
     protected $_deleteOption = false;
+
     protected $valor_minimo = [];
+
     protected $valor_maximo = [];
 
     protected $_formMap = [
         'instituicao' => [
             'label' => 'Instituição',
-            'help' => ''
+            'help' => '',
         ],
         'nome' => [
             'label' => 'Nome',
-            'help' => 'Um nome para a tabela. Exemplo: "<em>Tabela genérica de conceitos</em>".'
+            'help' => 'Um nome para a tabela. Exemplo: "<em>Tabela genérica de conceitos</em>".',
         ],
         'tipoNota' => [
             'label' => 'Tipo de nota',
-            'help' => ''
+            'help' => '',
         ],
         'arredondarNota' => [
             'label' => 'Arredondar nota da etapa',
-            'help' => ''
+            'help' => '',
         ],
         'valor_nome' => [
             'label' => 'Rótulo da nota:',
-            'help' => 'Exemplos: A, B, C (conceituais)<br /><b>6,5<b>, <b>7,5<b> (numéricas)'
+            'help' => 'Exemplos: A, B, C (conceituais)<br /><b>6,5<b>, <b>7,5<b> (numéricas)',
         ],
         'valor_descricao' => [
             'label' => '<span style="padding-left: 10px"></span>Descrição:',
-            'help' => 'Exemplos: Bom, Regular, Em Processo.'
+            'help' => 'Exemplos: Bom, Regular, Em Processo.',
         ],
         'valor_observacao' => [
             'label' => '<span style="padding-left: 10px"></span>Observação:',
-            'help' => 'Exemplos: Quando o(a) aluno(a) desenvolve as atividades sem dificuldades.'
+            'help' => 'Exemplos: Quando o(a) aluno(a) desenvolve as atividades sem dificuldades.',
         ],
         'valor_valor_minimo' => [
             'label' => '<span style="padding-left: 10px"></span>Valor mínimo:',
-            'help' => 'O valor numérico mínimo da nota.'
+            'help' => 'O valor numérico mínimo da nota.',
         ],
         'valor_valor_maximo' => [
             'label' => '<span style="padding-left: 10px"></span>Valor máximo:',
-            'help' => 'O valor numérico máximo da nota.'
+            'help' => 'O valor numérico máximo da nota.',
         ],
         'acao' => [
             'label' => '<span style="padding-left: 10px"></span>Ação:',
-            'help' => 'A ação de arredondamento da nota.'
+            'help' => 'A ação de arredondamento da nota.',
         ],
         'casa_decimal' => [
             'label' => '<span style="padding-left: 10px"></span>Casa decimal:',
-            'help' => 'A casa decimal exata para qual a nota deve ser arredondada.'
+            'help' => 'A casa decimal exata para qual a nota deve ser arredondada.',
         ],
         'casa_decimal_exata' => [
             'label' => '<span style="padding-left: 10px"></span>Casa decimal exata:',
-            'help' => 'A casa decimal a ser arredondada.'
-        ]
+            'help' => 'A casa decimal a ser arredondada.',
+        ],
     ];
 
     /**
@@ -72,7 +79,6 @@ class EditController extends Core_Controller_Page_EditController
     /**
      * Setter.
      *
-     * @param array $valores
      *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
@@ -99,7 +105,6 @@ class EditController extends Core_Controller_Page_EditController
      * Getter
      *
      * @param int $id
-     *
      * @return TabelaArredondamento_Model_TabelaValor
      */
     protected function _getValor($id)
@@ -178,7 +183,7 @@ class EditController extends Core_Controller_Page_EditController
         unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
         unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL]);
 
-        if ($this->getEntity()->id!='') {
+        if ($this->getEntity()->id != '') {
             $this->campoTexto(
                 'tipoNota',
                 $this->_getLabel('tipoNota'),
@@ -253,7 +258,7 @@ class EditController extends Core_Controller_Page_EditController
                 'Descrição',
                 'Observação',
                 'Valor mínimo',
-                'Valor máximo'
+                'Valor máximo',
             ],
             $this->tabela_arredondamento_valor
         );
@@ -358,7 +363,7 @@ class EditController extends Core_Controller_Page_EditController
             $this->tabela_arredondamento_valor[$i][] = $i;
             $this->tabela_arredondamento_valor[$i][] = $acao;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->casaDecimalExata;
-        };
+        }
 
         // Inicio da tabela
         $this->campoTabelaInicio(
@@ -369,7 +374,7 @@ class EditController extends Core_Controller_Page_EditController
                 'Nome',
                 'Casa decimal',
                 'Ação',
-                'Casa decimal exata'
+                'Casa decimal exata',
             ],
             $this->tabela_arredondamento_valor
         );
@@ -506,7 +511,7 @@ class EditController extends Core_Controller_Page_EditController
                 'valor_minimo' => $this->valor_minimo[$i],
                 'valor_maximo' => $this->valor_maximo[$i],
                 'valor_acao' => $this->valor_acao[$i],
-                'valor_casa_decimal_exata' => $this->valor_casa_decimal_exata[$i]
+                'valor_casa_decimal_exata' => $this->valor_casa_decimal_exata[$i],
             ];
         }
 
@@ -527,7 +532,7 @@ class EditController extends Core_Controller_Page_EditController
                 'valorMinimo' => str_replace(',', '.', $valores[$i]['valor_minimo']),
                 'valorMaximo' => str_replace(',', '.', $valores[$i]['valor_maximo']),
                 'acao' => $valores[$i]['valor_acao'],
-                'casaDecimalExata' => $valores[$i]['valor_casa_decimal_exata']
+                'casaDecimalExata' => $valores[$i]['valor_casa_decimal_exata'],
             ];
 
             $instance = new TabelaArredondamento_Model_TabelaValor($data);

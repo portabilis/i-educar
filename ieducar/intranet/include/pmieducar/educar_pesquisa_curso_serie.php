@@ -12,7 +12,6 @@
  *
  * @author Adriano Erik Weiguert Nagasava
  */
-
 $permissoes = new clsPermissoes();
 $privilegio = $permissoes->nivel_acesso($this->pessoa_logada);
 
@@ -26,9 +25,9 @@ if ($editar) {
 }
 
 if ($privilegio == 4) {
-    $opcoes = [ '' => 'Selecione' ];
+    $opcoes = ['' => 'Selecione'];
     $objTemp = new clsPmieducarEscolaCurso();
-    $lista   = $objTemp->lista($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, 1);
+    $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, 1);
     if ($lista) {
         $series = '';
         $ESeries = '';
@@ -49,7 +48,7 @@ if ($privilegio == 4) {
     }
     $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, 'CursoSerie();', false, '', '', false, $obrigatorio);
 
-    $opcoes = [ '' => 'Selecione' ];
+    $opcoes = ['' => 'Selecione'];
     $objTemp = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada));
     $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada));
     if (is_array($lista) && count($lista)) {
@@ -72,8 +71,8 @@ if ($privilegio == 4) {
 
     // foreign keys
 
-    include('include/pmieducar/educar_pesquisa_instituicao_escola.php');
-    $opcoes = [ '' => 'Selecione' ];
+    include 'include/pmieducar/educar_pesquisa_instituicao_escola.php';
+    $opcoes = ['' => 'Selecione'];
     $obj_escola = new clsPmieducarEscola(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
     $lst_escola = $obj_escola->lista(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
     if ($lst_escola) {
@@ -81,7 +80,7 @@ if ($privilegio == 4) {
         $series = '';
         foreach ($lst_escola as $escola) {
             $objTemp = new clsPmieducarEscolaCurso();
-            $lista   = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
+            $lista = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
             if ($lista) {
                 foreach ($lista as $registro) {
@@ -109,7 +108,7 @@ if ($privilegio == 4) {
     }
     $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, 'CursoSerie();', false, '', '', false, $obrigatorio);
 
-    $opcoes = [ '' => 'Selecione' ];
+    $opcoes = ['' => 'Selecione'];
     $objTemp = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada));
     $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada));
     if (is_array($lista) && count($lista)) {
@@ -132,8 +131,8 @@ if ($privilegio == 4) {
 
     // foreign keys
 
-    include('include/pmieducar/educar_pesquisa_instituicao_escola.php');
-    $opcoes = [ '' => 'Selecione' ];
+    include 'include/pmieducar/educar_pesquisa_instituicao_escola.php';
+    $opcoes = ['' => 'Selecione'];
     $obj_escola = new clsPmieducarEscola(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
     $lst_escola = $obj_escola->lista(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
     if ($lst_escola) {
@@ -141,7 +140,7 @@ if ($privilegio == 4) {
         $series = '';
         foreach ($lst_escola as $escola) {
             $objTemp = new clsPmieducarEscolaCurso();
-            $lista   = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
+            $lista = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
             if ($lista) {
                 foreach ($lista as $registro) {
@@ -169,7 +168,7 @@ if ($privilegio == 4) {
     }
     $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, 'CursoSerie();', false, '', '', false, $obrigatorio);
 
-    $opcoes = [ '' => 'Selecione' ];
+    $opcoes = ['' => 'Selecione'];
     $objTemp = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada));
     $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada));
     if (is_array($lista) && count($lista)) {

@@ -16,10 +16,7 @@ class Registro40Import extends Registro40Import2019
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
-     * @param RegistroEducacenso $model
      * @param int                $year
-     * @param                    $user
-     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -37,8 +34,6 @@ class Registro40Import extends Registro40Import2019
     }
 
     /**
-     * @param $arrayColumns
-     *
      * @return Registro40|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
@@ -49,9 +44,6 @@ class Registro40Import extends Registro40Import2019
         return $registro;
     }
 
-    /**
-     * @return Employee|null
-     */
     private function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepGestor;
@@ -68,11 +60,6 @@ class Registro40Import extends Registro40Import2019
         return $employeeInep->employee ?? null;
     }
 
-    /**
-     * @param Employee $employee
-     *
-     * @return void
-     */
     private function createOrUpdateManager(Employee $employee): void
     {
         $school = $this->getSchool();

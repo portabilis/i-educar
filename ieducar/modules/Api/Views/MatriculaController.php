@@ -19,10 +19,9 @@ class MatriculaController extends ApiCoreController
 
     protected function canDeleteAbandono()
     {
-        return (
+        return
             $this->validatesPresenceOf('id') &&
-            $this->validatesExistenceOf('matricula', $this->getRequest()->id)
-        );
+            $this->validatesExistenceOf('matricula', $this->getRequest()->id);
     }
 
     // search options
@@ -35,7 +34,7 @@ class MatriculaController extends ApiCoreController
 
         return [
             'sqlParams' => [$escolaId, $ano, $andamento, $utilizaFiltroAbandonoTransferencia],
-            'selectFields' => ['aluno_id']
+            'selectFields' => ['aluno_id'],
         ];
     }
 
@@ -117,7 +116,6 @@ class MatriculaController extends ApiCoreController
      * @return array
      *
      * @deprecated
-     *
      */
     public function getTransferredRegistrations()
     {
@@ -141,8 +139,7 @@ class MatriculaController extends ApiCoreController
                                 'ref_cod_aluno' => 'string',
                                 'cod_matricula' => 'string',
                             ]
-                        )
-                    ;
+                        );
                 }
             )
             ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
@@ -216,7 +213,7 @@ class MatriculaController extends ApiCoreController
             'escola_id',
             'curso_id',
             'serie_id',
-            'turma_id'
+            'turma_id',
         ];
 
         return Portabilis_Array_Utils::filter($dadosMatricula, $attrs);
@@ -557,8 +554,8 @@ class MatriculaController extends ApiCoreController
                         'oper' => 'post',
                         'resource' => 'promocao',
                         'instituicao_id' => $instituicaoId,
-                        'matricula_id' => $matriculaId
-                    ]
+                        'matricula_id' => $matriculaId,
+                    ],
                 ]
             );
 
@@ -640,12 +637,15 @@ class MatriculaController extends ApiCoreController
             app(EnrollmentService::class)->updateExitDate($lastEnrollment, $exitDate);
         } catch (ValidationException $ex) {
             DB::rollBack();
+
             return $this->messenger->append('Não foi possível alterar a data de saída desta matrícula. '.$ex->validator->errors()->first(), 'error');
         } catch (Exception $ex) {
             DB::rollBack();
+
             return $this->messenger->append('Ocorreu um erro desconhecido ao tentar alterar a data de saída. Por favor entre em contato com o suporte.', 'error');
         }
         DB::commit();
+
         return $this->messenger->append('Data de saída atualizada com sucesso.', 'success');
     }
 
@@ -953,7 +953,6 @@ class MatriculaController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
 
-
         $legacyActiveLooking = LegacyActiveLooking::withTrashed()
             ->select('busca_ativa.*')
             ->selectRaw("CASE resultado_busca_ativa
@@ -964,7 +963,7 @@ class MatriculaController extends ApiCoreController
             ->join('pmieducar.matricula', 'ref_cod_matricula', '=', 'cod_matricula')
             ->where('ano', $ano);
 
-        if($modified){
+        if ($modified) {
             $legacyActiveLooking->where('busca_ativa.updated_at', '>=', $modified);
         }
 
@@ -982,7 +981,7 @@ class MatriculaController extends ApiCoreController
                 'resultado_busca_ativa' => $item->resultado_busca_ativa,
                 'updated_at' => $item->updated_at,
                 'created_at' => $item->created_at,
-                'deleted_at' => $item->deleted_at
+                'deleted_at' => $item->deleted_at,
             ];
         });
 

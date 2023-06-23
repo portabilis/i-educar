@@ -3,7 +3,8 @@
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -33,19 +34,31 @@ return new class extends clsListagem {
     public $offset;
 
     public $ref_cod_matricula;
+
     public $ref_cod_tipo_ocorrencia_disciplinar;
+
     public $sequencial;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $observacao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_ref_cod_serie;
+
     public $ref_cod_turma;
 
     public function Gerar()
@@ -53,7 +66,7 @@ return new class extends clsListagem {
         $this->titulo = 'Matricula Ocorrência Disciplinar - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         if (!$this->ref_cod_matricula) {
@@ -65,7 +78,7 @@ return new class extends clsListagem {
         $this->addCabecalhos([
             'Tipo de Ocorrência Disciplinar',
             'Série ',
-            'Turma'
+            'Turma',
         ]);
 
         $matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
@@ -102,8 +115,7 @@ return new class extends clsListagem {
         }
 
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $query = LegacyRegistrationDisciplinaryOccurrenceType::query()
             ->where('ativo', 1)
@@ -148,7 +160,7 @@ return new class extends clsListagem {
                 $this->addLinhas([
                     "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$registro['nm_tipo']}</a>",
                     "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$registro['ref_ref_cod_serie']}</a>",
-                    "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$det_turma['nm_turma']}</a>"
+                    "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$det_turma['nm_turma']}</a>",
                 ]);
             }
         }
@@ -158,10 +170,10 @@ return new class extends clsListagem {
         $this->array_botao = [];
         $this->array_botao_url = [];
         if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-            $this->array_botao_url[]= "educar_matricula_ocorrencia_disciplinar_cad.php?ref_cod_matricula={$this->ref_cod_matricula}";
+            $this->array_botao_url[] = "educar_matricula_ocorrencia_disciplinar_cad.php?ref_cod_matricula={$this->ref_cod_matricula}";
             $this->array_botao[] = [
                 'name' => 'Novo',
-                'css-extra' => 'btn-green'
+                'css-extra' => 'btn-green',
             ];
         }
 

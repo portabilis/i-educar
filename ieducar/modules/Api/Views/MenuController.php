@@ -23,7 +23,7 @@ class MenuController extends ApiCoreController
                 [
                     'link' => '',
                     'label' => 'Sem resultados.',
-                ]
+                ],
             ];
         }
 

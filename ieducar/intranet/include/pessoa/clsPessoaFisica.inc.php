@@ -5,37 +5,69 @@ use Illuminate\Support\Facades\Auth;
 class clsPessoaFisica extends clsPessoaFj
 {
     public $idpes;
+
     public $data_nasc;
+
     public $sexo;
+
     public $idpes_mae;
+
     public $idpes_pai;
+
     public $idpes_responsavel;
+
     public $idesco;
+
     public $ideciv;
+
     public $idpes_con;
+
     public $data_uniao;
+
     public $data_obito;
+
     public $nacionalidade;
+
     public $idpais_estrangeiro;
+
     public $data_chagada_brasil;
+
     public $idmun_nascimento;
+
     public $ultima_empresa;
+
     public $idocup;
+
     public $nome_mae;
+
     public $nome_pai;
+
     public $nome_conjuge;
+
     public $nome_responsavel;
+
     public $justificativa_provisorio;
+
     public $cpf;
+
     public $ref_cod_religiao;
+
     public $tipo_endereco;
+
     public $ativo;
+
     public $data_exclusao;
+
     public $zona_localizacao_censo;
+
     public $localizacao_diferenciada;
+
     public $nome_social;
+
     public $pais_residencia;
+
     public $banco = 'pmi';
+
     public $schema_cadastro = 'cadastro';
 
     /**

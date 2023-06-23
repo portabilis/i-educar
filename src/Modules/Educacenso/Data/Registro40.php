@@ -20,8 +20,7 @@ class Registro40 extends AbstractRegistro
     protected $modelArray;
 
     /**
-     * @param integer $escolaId
-     *
+     * @param int $escolaId
      * @return Registro40Model[]
      */
     public function getData($escolaId)
@@ -38,8 +37,6 @@ class Registro40 extends AbstractRegistro
     }
 
     /**
-     * @param $escolaId
-     *
      * @return Registro40Model[]
      */
     public function getExportFormatData($escolaId)

@@ -31,11 +31,6 @@ trait JoinableBuilder
 
     /**
      * Obtem dinamicamente filtrado a lista de colunas da relação
-     *
-     * @param string $relation
-     * @param array  $columns
-     *
-     * @return array|null
      */
     public function getLegacyExportedColumns(string $relation, array $columns): array|null
     {

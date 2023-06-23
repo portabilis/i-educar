@@ -175,7 +175,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
 
         // Nota da etapa de recuperação
         $score = [
-            'Rc' => 8
+            'Rc' => 8,
         ];
 
         // Lança nota para a etapa de Recuperação
@@ -227,7 +227,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
 
         // Nota da etapa de recuperação
         $score = [
-            'Rc' => 5
+            'Rc' => 5,
         ];
 
         // Lança nota para a etapa de Recuperação
@@ -317,7 +317,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
 
         // Nota da etapa de recuperação
         $score = [
-            'Rc' => 8
+            'Rc' => 8,
         ];
 
         // Lança nota para a etapa de Recuperação
@@ -384,14 +384,14 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             1 => 7,
             2 => 7,
             3 => 7,
-            4 => 7
+            4 => 7,
         ];
 
         $absence = [
             1 => 2,
             2 => 2,
             3 => 2,
-            4 => 2
+            4 => 2,
         ];
 
         foreach ($disciplines as $discipline) {
@@ -430,14 +430,14 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             1 => 7,
             2 => 7,
             3 => 7,
-            4 => 7
+            4 => 7,
         ];
 
         $absence = [
             1 => 2,
             2 => 2,
             3 => 2,
-            4 => 2
+            4 => 2,
         ];
 
         foreach ($disciplines as $discipline) {

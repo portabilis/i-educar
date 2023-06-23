@@ -26,6 +26,6 @@ return [
     ],
     'excluded_exceptions' => [
         App_Model_Exception::class,
-        DisciplinesWithoutInformedHoursException::class
+        DisciplinesWithoutInformedHoursException::class,
     ],
 ];

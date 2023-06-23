@@ -8,7 +8,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabili
             'objectName' => 'bairro',
             'apiController' => 'Bairro',
             'apiResource' => 'bairro-search',
-            'showIdOnValue' => false
+            'showIdOnValue' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

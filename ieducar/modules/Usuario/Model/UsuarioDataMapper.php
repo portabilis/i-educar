@@ -4,7 +4,7 @@ class Usuario_Model_UsuarioDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Usuario_Model_Usuario';
 
-    protected $_tableName   = 'usuario';
+    protected $_tableName = 'usuario';
 
     protected $_tableSchema = 'pmieducar';
 
@@ -17,10 +17,10 @@ class Usuario_Model_UsuarioDataMapper extends CoreExt_DataMapper
         'tipoUsuarioId' => 'ref_cod_tipo_usuario',
         'dataCadastro' => 'data_cadastro',
         'dataExclusao' => 'data_exclusao',
-        'ativo' => 'ativo'
+        'ativo' => 'ativo',
     ];
 
     protected $_primaryKey = [
-        'id' => 'cod_usuario'
+        'id' => 'cod_usuario',
     ];
 }

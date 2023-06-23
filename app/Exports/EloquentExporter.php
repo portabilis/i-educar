@@ -13,8 +13,6 @@ class EloquentExporter
 
     /**
      * EloquentExporter constructor.
-     *
-     * @param Export $export
      */
     public function __construct(Export $export)
     {

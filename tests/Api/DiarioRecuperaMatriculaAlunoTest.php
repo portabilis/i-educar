@@ -16,9 +16,9 @@ class DiarioRecuperaMatriculaAlunoTest extends TestCase
         $enrollment = LegacyEnrollmentFactory::new()->create();
 
         $data = [
-            'oper'=> 'get',
+            'oper' => 'get',
             'resource' => 'matriculas',
-            'aluno_id' =>  $enrollment->getStudentId()
+            'aluno_id' => $enrollment->getStudentId(),
         ];
 
         $response = $this->getResource('/module/Api/Aluno', $data);
@@ -46,11 +46,11 @@ class DiarioRecuperaMatriculaAlunoTest extends TestCase
                         'turma_nome',
                         'ultima_enturmacao',
                         'user_can_access',
-                    ]
+                    ],
                 ],
                 'msgs',
                 'oper',
-                'resource'
+                'resource',
             ]
         );
     }

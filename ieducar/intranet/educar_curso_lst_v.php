@@ -3,35 +3,64 @@
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $__pessoa_logada;
+
     public $__titulo;
+
     public $__limite;
+
     public $__offset;
+
     public $cod_curso;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_regime;
+
     public $ref_cod_nivel_ensino;
+
     public $ref_cod_tipo_ensino;
+
     public $ref_cod_tipo_avaliacao;
+
     public $nm_curso;
+
     public $sgl_curso;
+
     public $qtd_etapas;
+
     public $frequencia_minima;
+
     public $media;
+
     public $media_exame;
+
     public $falta_ch_globalizada;
+
     public $carga_horaria;
+
     public $ato_poder_publico;
+
     public $edicao_final;
+
     public $objetivo_curso;
+
     public $publico_alvo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $padrao_ano_escolar;
+
     public $hora_falta;
 
     public function Gerar()
@@ -47,7 +76,7 @@ return new class extends clsListagem {
             'Curso',
             'Nivel Ensino',
             'Tipo Ensino',
-            'Instituicão'
+            'Instituicão',
         ]);
 
         $this->campoTexto(nome: 'nm_curso', campo: 'Curso', valor: $this->nm_curso, tamanhovisivel: 30, tamanhomaximo: 255);
@@ -109,7 +138,7 @@ return new class extends clsListagem {
                     "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['nm_curso']}</a>",
                     "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_nivel_ensino']}</a>",
                     "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_tipo_ensino']}</a>",
-                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_instituicao']}</a>"
+                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_instituicao']}</a>",
                 ]);
             }
         }

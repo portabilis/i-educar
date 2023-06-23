@@ -6,10 +6,6 @@ class LegacyInstitutionBuilder extends LegacyBuilder
 {
     /**
      * Filtra por Instituição
-     *
-     * @param int $institution
-     *
-     * @return LegacyInstitutionBuilder
      */
     public function whereInstitution(int $institution): self
     {
@@ -18,10 +14,6 @@ class LegacyInstitutionBuilder extends LegacyBuilder
 
     /**
      * Filtra por nome
-     *
-     * @param string $name
-     *
-     * @return LegacyInstitutionBuilder
      */
     public function whereName(string $name): self
     {
@@ -30,10 +22,6 @@ class LegacyInstitutionBuilder extends LegacyBuilder
 
     /**
      * Ordena por nome
-     *
-     * @param string $direction
-     *
-     * @return LegacyInstitutionBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
@@ -42,8 +30,6 @@ class LegacyInstitutionBuilder extends LegacyBuilder
 
     /**
      * Filtra por ativo
-     *
-     * @return LegacyInstitutionBuilder
      */
     public function active(): self
     {

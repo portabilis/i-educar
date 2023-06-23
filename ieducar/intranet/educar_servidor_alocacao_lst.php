@@ -2,19 +2,30 @@
 
 use App\Models\LegacyRole;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
 
     public $ref_cod_servidor;
+
     public $ref_cod_funcao;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $ano_letivo;
 
     public function Gerar()
@@ -41,7 +52,7 @@ return new class extends clsListagem {
             'Carga horária',
             'Data admissão',
             'Data saída',
-            'Vínculo'
+            'Vínculo',
         ]);
 
         $fisica = new clsPessoaFisica($this->ref_cod_servidor);
@@ -115,9 +126,9 @@ return new class extends clsListagem {
 
                 //Periodo
                 $periodo = [
-                    1  => 'Matutino',
-                    2  => 'Vespertino',
-                    3  => 'Noturno'
+                    1 => 'Matutino',
+                    2 => 'Vespertino',
+                    3 => 'Noturno',
                 ];
 
                 //Função
@@ -135,7 +146,7 @@ return new class extends clsListagem {
                     $url->l($funcao['nm_funcao'], $path, $options),
                     $url->l($registro['ano'], $path, $options),
                     $url->l($periodo[$registro['periodo']], $path, $options),
-                    $url->l($horas =  substr($registro['carga_horaria'], 0, - 3), $path, $options),
+                    $url->l($horas = substr($registro['carga_horaria'], 0, -3), $path, $options),
                     $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_admissao']), $path, $options),
                     $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_saida']), $path, $options),
                     $url->l($funcionarioVinculo, $path, $options),
@@ -150,10 +161,10 @@ return new class extends clsListagem {
         $this->array_botao = [];
         $this->array_botao_url = [];
         if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-            $this->array_botao_url[]= "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+            $this->array_botao_url[] = "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
             $this->array_botao[] = [
                 'name' => 'Novo',
-                'css-extra' => 'btn-green'
+                'css-extra' => 'btn-green',
             ];
         }
 

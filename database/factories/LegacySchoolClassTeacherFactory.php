@@ -16,8 +16,6 @@ class LegacySchoolClassTeacherFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -28,7 +26,7 @@ class LegacySchoolClassTeacherFactory extends Factory
             'servidor_id' => EmployeeFactory::new()->create(),
             'funcao_exercida' => 1,
             'tipo_vinculo' => 2,
-            'turno_id' => fn () => LegacyPeriodFactory::new()->create()
+            'turno_id' => fn () => LegacyPeriodFactory::new()->create(),
         ];
     }
 }

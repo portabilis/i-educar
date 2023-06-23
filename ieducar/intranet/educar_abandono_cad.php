@@ -2,7 +2,8 @@
 
 use App\Models\LegacyAbandonmentType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -11,31 +12,47 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_transferencia_solicitacao;
+
     public $ref_cod_transferencia_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_matricula_entrada;
+
     public $ref_cod_matricula_saida;
+
     public $observacao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $data_transferencia;
+
     public $data_cancel;
+
     public $ref_cod_instituicao;
+
     public $abandono_tipo;
 
     public $ref_cod_matricula;
+
     public $transferencia_tipo;
+
     public $ref_cod_aluno;
+
     public $nm_aluno;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
         $obj_permissoes = new clsPermissoes();
 
@@ -120,7 +137,7 @@ return new class extends clsCadastro {
                     $detEnturmacao = $enturmacao->detalhe();
                     $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
-                    if (! $enturmacao->edita()) {
+                    if (!$enturmacao->edita()) {
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;

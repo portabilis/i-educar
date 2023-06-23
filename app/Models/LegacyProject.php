@@ -24,7 +24,7 @@ class LegacyProject extends Model
 
     protected $fillable = [
         'nome',
-        'observacao'
+        'observacao',
     ];
 
     public function studentProjects(): HasMany

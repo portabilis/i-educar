@@ -2,7 +2,6 @@
 
 class MunicipioController extends ApiCoreController
 {
-
     // search options
     protected function searchOptions()
     {
@@ -39,19 +38,19 @@ class MunicipioController extends ApiCoreController
     {
         if ($this->canSearch()) {
 
-            $fields = " DISTINCT sigla_uf,
+            $fields = ' DISTINCT sigla_uf,
                     idmun AS id,
                     nome AS name,
-                    LENGTH(nome) AS size ";
+                    LENGTH(nome) AS size ';
 
-            if($onlyName === true) {
-                $fields = "
+            if ($onlyName === true) {
+                $fields = '
                     nome AS id,
                     nome AS name,
-                    LENGTH(nome) AS size ";
+                    LENGTH(nome) AS size ';
             }
 
-            if (is_numeric($this->getRequest()->query)){
+            if (is_numeric($this->getRequest()->query)) {
                 $where = 'AND idmun = :idmun';
                 $field = 'idmun';
             } else {

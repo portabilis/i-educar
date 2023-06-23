@@ -1,31 +1,42 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
 
     public $ref_cod_turma;
+
     public $ref_cod_serie;
+
     public $ref_cod_curso;
+
     public $ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $cod_quadro_horario;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastra;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_turma       = $_GET['ref_cod_turma'];
-        $this->ref_cod_serie       = $_GET['ref_cod_serie'];
-        $this->ref_cod_curso       = $_GET['ref_cod_curso'];
-        $this->ref_cod_escola      = $_GET['ref_cod_escola'];
+        $this->ref_cod_turma = $_GET['ref_cod_turma'];
+        $this->ref_cod_serie = $_GET['ref_cod_serie'];
+        $this->ref_cod_curso = $_GET['ref_cod_curso'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-        $this->cod_quadro_horario  = $_GET['ref_cod_quadro_horario'];
-        $this->ano                 = $_GET['ano'];
+        $this->cod_quadro_horario = $_GET['ref_cod_quadro_horario'];
+        $this->ano = $_GET['ano'];
 
         if (is_numeric(value: $this->cod_quadro_horario)) {
             $obj_quadro_horario = new clsPmieducarQuadroHorario(cod_quadro_horario: $this->cod_quadro_horario);
@@ -62,8 +73,8 @@ return new class extends clsCadastro {
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb(currentPage: $nomeMenu . ' quadro de horários', breadcrumbs: [
-        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }

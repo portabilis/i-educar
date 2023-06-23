@@ -1,18 +1,25 @@
 <?php
 
 use App\Models\LegacyEmployeeRole;
-use App\Models\LegacyRole;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
 
     public $cod_servidor_alocacao;
+
     public $ref_cod_servidor;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_servidor_funcao;
+
     public $ref_cod_funcionario_vinculo;
+
     public $ano;
+
     public $data_admissao;
+
     public $data_saida;
 
     public function Gerar()
@@ -29,13 +36,13 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_servidor_lst.php');
         }
 
-        $this->ref_cod_servidor            = $registro['ref_cod_servidor'];
-        $this->ref_cod_instituicao         = $registro['ref_ref_cod_instituicao'];
-        $this->ref_cod_servidor_funcao     = $registro['ref_cod_servidor_funcao'];
-        $this->data_admissao               = $registro['data_admissao'];
-        $this->data_saida                  = $registro['data_saida'];
+        $this->ref_cod_servidor = $registro['ref_cod_servidor'];
+        $this->ref_cod_instituicao = $registro['ref_ref_cod_instituicao'];
+        $this->ref_cod_servidor_funcao = $registro['ref_cod_servidor_funcao'];
+        $this->data_admissao = $registro['data_admissao'];
+        $this->data_saida = $registro['data_saida'];
         $this->ref_cod_funcionario_vinculo = $registro['ref_cod_funcionario_vinculo'];
-        $this->ano                         = $registro['ano'];
+        $this->ano = $registro['ano'];
 
         //Nome do servidor
         $fisica = new clsPessoaFisica($this->ref_cod_servidor);
@@ -54,15 +61,15 @@ return new class extends clsDetalhe {
 
         //Periodo
         $periodo = [
-            1  => 'Matutino',
-            2  => 'Vespertino',
-            3  => 'Noturno'
+            1 => 'Matutino',
+            2 => 'Vespertino',
+            3 => 'Noturno',
         ];
 
         $this->addDetalhe(['Periodo', "{$periodo[$registro['periodo']]}"]);
 
         //Carga horária
-        $this->addDetalhe(['Carga horária', substr($registro['carga_horaria'], 0, - 3)]);
+        $this->addDetalhe(['Carga horária', substr($registro['carga_horaria'], 0, -3)]);
 
         //Função
         if ($this->ref_cod_servidor_funcao) {
@@ -88,7 +95,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-            $this->url_novo   = "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+            $this->url_novo = "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
             $this->url_editar = "educar_servidor_alocacao_cad.php?cod_servidor_alocacao={$this->cod_servidor_alocacao}";
         }
 

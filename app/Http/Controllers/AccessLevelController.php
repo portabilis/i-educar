@@ -28,9 +28,6 @@ class AccessLevelController extends Controller
     }
 
     /**
-     * @param Request        $request
-     * @param LegacyUserType $userType
-     *
      * @throws Throwable
      */
     private function store(Request $request, LegacyUserType $userType)
@@ -49,7 +46,7 @@ class AccessLevelController extends Controller
                     'visualiza' => intval($level >= LegacyUserType::CAN_VIEW),
                     'cadastra' => intval($level >= LegacyUserType::CAN_MODIFY),
                     'exclui' => intval($level >= LegacyUserType::CAN_REMOVE),
-                ]
+                ],
             ];
         });
 
@@ -61,8 +58,6 @@ class AccessLevelController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function new(Request $request)
@@ -75,9 +70,6 @@ class AccessLevelController extends Controller
     }
 
     /**
-     * @param Request        $request
-     * @param LegacyUserType $userType
-     *
      * @return View
      */
     public function show(Request $request, LegacyUserType $userType)
@@ -114,9 +106,6 @@ class AccessLevelController extends Controller
     }
 
     /**
-     * @param Request        $request
-     * @param LegacyUserType $userType
-     *
      * @return RedirectResponse
      */
     public function create(Request $request, LegacyUserType $userType)
@@ -135,9 +124,6 @@ class AccessLevelController extends Controller
     }
 
     /**
-     * @param Request        $request
-     * @param LegacyUserType $userType
-     *
      * @return RedirectResponse
      */
     public function update(Request $request, LegacyUserType $userType)
@@ -156,12 +142,9 @@ class AccessLevelController extends Controller
     }
 
     /**
-     * @param LegacyUserType $userType
-     * @param Connection     $connection
+     * @return RedirectResponse
      *
      * @throws Exception
-     *
-     * @return RedirectResponse
      */
     public function delete(LegacyUserType $userType, Connection $connection)
     {

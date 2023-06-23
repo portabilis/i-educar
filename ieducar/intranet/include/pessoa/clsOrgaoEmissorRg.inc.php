@@ -3,10 +3,15 @@
 class clsOrgaoEmissorRg
 {
     public $idorg_rg;
+
     public $sigla;
+
     public $descricao;
+
     public $situacao;
+
     public $tabela;
+
     public $schema = 'cadastro';
 
     public function __construct($int_idorg_rg = false, $str_sigla = false, $str_descricao = false, $str_situacao = false)
@@ -68,7 +73,6 @@ class clsOrgaoEmissorRg
         if (is_numeric($this->idorg_rg)) {
             $objDocumento = new clsDocumento(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg);
             if (!count($objDocumento->lista(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg))) {
-
 
                 return true;
             }

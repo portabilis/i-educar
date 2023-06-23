@@ -5,6 +5,7 @@ namespace iEducar\Modules\Educacenso\Model;
 class Dormitorios
 {
     public const ALUNO = 1;
+
     public const PROFESSOR = 2;
 
     public static function getDescriptiveValues()

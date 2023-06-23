@@ -19,7 +19,7 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
         $faker = Factory::create();
 
         $individual = LegacyIndividualFactory::new()->create([
-            'sexo' => 'M'
+            'sexo' => 'M',
         ]);
         $newIndividual = LegacyIndividualFactory::new()->make([
             'data_nasc' => now()->subYears(18),
@@ -27,7 +27,7 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
 
         $request = [
             'tipoacao' => 'Editar',
-            'cod_pessoa_fj' => (string)$individual->getKey(),
+            'cod_pessoa_fj' => (string) $individual->getKey(),
         ];
 
         $data = [

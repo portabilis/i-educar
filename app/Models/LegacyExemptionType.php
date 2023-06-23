@@ -42,7 +42,7 @@ class LegacyExemptionType extends LegacyModel
         'name' => 'nm_tipo',
         'description' => 'descricao',
         'deleted_at' => 'data_exclusao',
-        'active' => 'ativo'
+        'active' => 'ativo',
     ];
 
     public function disciplineExemptions(): HasMany

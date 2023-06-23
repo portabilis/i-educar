@@ -21,9 +21,9 @@ class EnrollmentFormativeItineraryController extends Controller
         $this->menu(578);
 
         $registration = LegacyRegistration::query()->with([
-                'enrollments:id,ref_cod_matricula,ref_cod_turma,sequencial,ativo,data_enturmacao,data_exclusao',
-                'enrollments.schoolClass:cod_turma,nm_turma,ano'
-            ])
+            'enrollments:id,ref_cod_matricula,ref_cod_turma,sequencial,ativo,data_enturmacao,data_exclusao',
+            'enrollments.schoolClass:cod_turma,nm_turma,ano',
+        ])
             ->findOrFail($id, ['cod_matricula']);
 
         return view('enrollments.enrollmentFormativeItineraryList', ['registration' => $registration]);
@@ -45,7 +45,7 @@ class EnrollmentFormativeItineraryController extends Controller
             'itineraryComposition' => TipoItinerarioFormativo::getDescriptiveValuesOfItineraryComposition(),
             'itineraryCourse' => TipoCursoItinerario::getDescriptiveValues(),
             'technicalCourses' => json_decode($technicalCourses, true),
-            'showConcomitantItinerary' => !in_array(1, transformStringFromDBInArray($enrollment->schoolClass->estrutura_curricular))
+            'showConcomitantItinerary' => !in_array(1, transformStringFromDBInArray($enrollment->schoolClass->estrutura_curricular)),
         ]);
     }
 

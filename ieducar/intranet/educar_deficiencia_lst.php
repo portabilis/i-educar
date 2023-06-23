@@ -2,12 +2,18 @@
 
 use App\Models\LegacyDeficiency;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_deficiencia;
+
     public $nm_deficiencia;
 
     public function Gerar()
@@ -15,11 +21,11 @@ return new class extends clsListagem {
         $this->titulo = 'Deficiência e transtorno - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos([
-            'Deficiência e transtorno'
+            'Deficiência e transtorno',
         ]);
 
         // Filtros de Foreign Keys
@@ -42,7 +48,7 @@ return new class extends clsListagem {
                 // pega detalhes de foreign_keys
 
                 $this->addLinhas([
-                    "<a href=\"educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}\">{$registro['nm_deficiencia']}</a>"
+                    "<a href=\"educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}\">{$registro['nm_deficiencia']}</a>",
                 ]);
             }
         }

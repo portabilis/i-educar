@@ -30,7 +30,7 @@ class LegacySchoolClassType extends LegacyModel
         'ref_usuario_cad',
         'nm_tipo',
         'sgl_tipo',
-        'ativo'
+        'ativo',
     ];
 
     public function schoolClasses(): HasMany

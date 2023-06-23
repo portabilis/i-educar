@@ -49,9 +49,6 @@ class LegacySchoolHistory extends LegacyModel
         'posicao',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');

@@ -17,6 +17,7 @@ class LegacyUnificationStudentNotHistoryTest extends TestCase
     use LoginFirstUser;
 
     private LegacyStudent $studentOne;
+
     private LegacyStudent $studentTwo;
 
     protected function setUp(): void
@@ -76,7 +77,7 @@ class LegacyUnificationStudentNotHistoryTest extends TestCase
         $this->assertCount(1, $logOldDataStudent);
         $logOldDataStudent = $logOldDataStudent->first();
         $this->assertEquals($logOldDataStudent->keys[0], [
-            'cod_aluno' => $this->studentTwo->getKey()
+            'cod_aluno' => $this->studentTwo->getKey(),
         ]);
 
         $logOldDataRegistration = LogUnificationOldData::query()
@@ -88,7 +89,7 @@ class LegacyUnificationStudentNotHistoryTest extends TestCase
         $this->assertCount(1, $logOldDataRegistration);
         $logOldDataRegistration = $logOldDataRegistration->first();
         $this->assertEquals($logOldDataRegistration->keys[0], [
-            'cod_matricula' => $registration->getKey()
+            'cod_matricula' => $registration->getKey(),
         ]);
 
         $this->assertDatabaseHas($log, [

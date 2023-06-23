@@ -11,7 +11,7 @@ class LegacyUserTypeTest extends EloquentTestCase
 {
     protected $relations = [
         'users' => LegacyUser::class,
-        'menus' => Menu::class
+        'menus' => Menu::class,
     ];
 
     public function getEloquentModelName(): string
@@ -25,7 +25,7 @@ class LegacyUserTypeTest extends EloquentTestCase
         $this->assertEquals($this->model->nivel, $this->model->level);
         $this->assertEquals($this->model->nm_tipo, $this->model->name);
         $this->assertEquals($this->model->descricao, $this->model->description);
-        $this->assertEquals((bool)$this->model->ativo, $this->model->active);
+        $this->assertEquals((bool) $this->model->ativo, $this->model->active);
     }
 
     public function testGetProcesses(): void

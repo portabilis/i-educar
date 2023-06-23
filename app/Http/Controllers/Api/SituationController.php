@@ -10,7 +10,7 @@ class SituationController extends ResourceController
     public function index(): array
     {
         return [
-          'data' => EnrollmentStatusFilter::getDescriptiveValues()
+            'data' => EnrollmentStatusFilter::getDescriptiveValues(),
         ];
     }
 }

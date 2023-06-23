@@ -21,7 +21,7 @@ class LegacyStudentProject extends Model
         'data_inclusao',
         'data_desligamento',
         'ref_cod_projeto',
-        'turno'
+        'turno',
     ];
 
     public function student()

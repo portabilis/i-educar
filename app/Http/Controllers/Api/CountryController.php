@@ -45,7 +45,7 @@ class CountryController extends ResourceController
         $accessLevel = $request->user()->getLevel();
 
         return [
-            new CountryRestrictOperationRule($accessLevel)
+            new CountryRestrictOperationRule($accessLevel),
         ];
     }
 
@@ -55,7 +55,7 @@ class CountryController extends ResourceController
 
         return [
             new CountryRestrictOperationRule($accessLevel),
-            new AddressingCountryRule()
+            new AddressingCountryRule(),
         ];
     }
 }

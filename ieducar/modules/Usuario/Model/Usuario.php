@@ -11,7 +11,7 @@ class Usuario_Model_Usuario extends CoreExt_Entity
         'tipoUsuarioId' => null,
         'dataCadastro' => null,
         'dataExclusao' => null,
-        'ativo' => null
+        'ativo' => null,
     ];
 
     public function getDataMapper()

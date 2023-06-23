@@ -14,6 +14,7 @@ class LegacyOrganization extends LegacyModel
     protected $table = 'cadastro.juridica';
 
     public const CREATED_AT = 'data_cad';
+
     public const UPDATED_AT = 'data_rev';
 
     /**
@@ -28,7 +29,7 @@ class LegacyOrganization extends LegacyModel
      */
     public array $legacy = [
         'id' => 'idpes',
-        'fantasy' => 'fantasia'
+        'fantasy' => 'fantasia',
     ];
 
     /**
@@ -51,7 +52,7 @@ class LegacyOrganization extends LegacyModel
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function boot()
     {

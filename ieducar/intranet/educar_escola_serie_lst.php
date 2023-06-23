@@ -2,20 +2,34 @@
 
 use App\Models\LegacyGrade;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $limite;
+
     public $offset;
+
     public $ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
+
     public $ref_cod_curso;
+
     public $ref_ref_cod_serie;
 
     public function Gerar()
@@ -53,7 +67,7 @@ return new class extends clsListagem {
 
         // Editar
         if ($this->ref_cod_curso) {
-            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->get(['nm_serie','cod_serie']);
+            $series = LegacyGrade::where('ativo', 1)->where('ref_cod_curso', $this->ref_cod_curso)->orderBy('nm_serie')->get(['nm_serie', 'cod_serie']);
 
             foreach ($series as $serie) {
                 $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
@@ -112,7 +126,7 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_serie}</a>",
-                    "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_curso']}</a>"
+                    "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_curso']}</a>",
                 ];
 
                 $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_escola}</a>";
@@ -143,7 +157,6 @@ return new class extends clsListagem {
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
-
 
     public function makeExtra()
     {

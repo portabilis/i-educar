@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     const PROCESSO_AP = 9998900;
 
     public $ano;
@@ -39,7 +40,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao']);
-        $this->inputsHelper()->multipleSearchCurso(attrName: '', inputOptions: ['label' => 'Cursos','required' => false]);
+        $this->inputsHelper()->multipleSearchCurso(attrName: '', inputOptions: ['label' => 'Cursos', 'required' => false]);
         $this->inputsHelper()->dynamic(helperNames: ['dataInicial', 'dataFinal']);
     }
 

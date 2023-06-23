@@ -9,7 +9,6 @@ class SchoolManagerObserver
     /**
      * Handle the school manager "created" event.
      *
-     * @param SchoolManager $schoolManager
      *
      * @return void
      */
@@ -25,7 +24,6 @@ class SchoolManagerObserver
     /**
      * Handle the school manager "deleted" event.
      *
-     * @param SchoolManager $schoolManager
      *
      * @return void
      */
@@ -38,12 +36,6 @@ class SchoolManagerObserver
         $this->updateManagerDataSchool($schoolManager, null, null, null);
     }
 
-    /**
-     * @param SchoolManager $schoolManager
-     * @param               $individualId
-     * @param               $roleId
-     * @param               $managerEmail
-     */
     private function updateManagerDataSchool(SchoolManager $schoolManager, $individualId, $roleId, $managerEmail)
     {
         $school = $schoolManager->school;

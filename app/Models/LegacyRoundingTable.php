@@ -20,20 +20,14 @@ class LegacyRoundingTable extends Model
     protected $fillable = [
         'instituicao_id',
         'nome',
-        'tipo_nota'
+        'tipo_nota',
     ];
 
-    /**
-     * @return HasMany
-     */
     public function roundingValues(): HasMany
     {
         return $this->hasMany(LegacyValueRoundingTable::class, 'tabela_arredondamento_id', 'id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function evaluationRules(): HasMany
     {
         return $this->hasMany(LegacyEvaluationRule::class, 'tabela_arredondamento_id');

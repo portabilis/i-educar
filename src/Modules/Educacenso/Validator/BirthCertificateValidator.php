@@ -5,7 +5,9 @@ namespace iEducar\Modules\Educacenso\Validator;
 class BirthCertificateValidator implements EducacensoValidator
 {
     private $message;
+
     private $birthCertificate;
+
     private $birthDate;
 
     public function __construct($birthCertificate, $birthDate)
@@ -14,9 +16,6 @@ class BirthCertificateValidator implements EducacensoValidator
         $this->birthDate = $birthDate;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if (!$this->validateCertificateLength() || !$this->validateCertificateDigits()) {
@@ -51,12 +50,9 @@ class BirthCertificateValidator implements EducacensoValidator
         $shouldBeNumericOrXDigits = substr($this->birthCertificate, 30, 30);
 
         return ctype_digit($shouldBeNumericDigits) && preg_match('/^[0-9, X]*$/', $shouldBeNumericOrXDigits);
-        ;
+
     }
 
-    /**
-     * @return bool
-     */
     public function validateCertificateYear(): bool
     {
         $certificateYear = $this->certificateYear();

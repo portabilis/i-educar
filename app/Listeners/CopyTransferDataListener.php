@@ -13,9 +13,6 @@ class CopyTransferDataListener
      */
     protected $service;
 
-    /**
-     * @param TransferRegistrationDataService $service
-     */
     public function __construct(TransferRegistrationDataService $service)
     {
         $this->service = $service;
@@ -25,11 +22,10 @@ class CopyTransferDataListener
      * Handle the event.
      *
      * @param object $event
+     * @return void
      *
      * @throws MissingDescriptiveOpinionType
      * @throws StagesAreNotSame
-     *
-     * @return void
      */
     public function handle($event)
     {

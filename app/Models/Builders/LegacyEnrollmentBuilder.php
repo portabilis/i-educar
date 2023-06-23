@@ -8,8 +8,6 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
 {
     /**
      * Filtra por ativo
-     *
-     * @return LegacyEnrollmentBuilder
      */
     public function active(): self
     {
@@ -18,10 +16,6 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
 
     /**
      * Filtra por ativo por situação
-     *
-     * @param int $situation
-     *
-     * @return LegacyEnrollmentBuilder
      */
     public function activeBySituation(int $situation): self
     {
@@ -34,8 +28,6 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
 
     /**
      * Filtra por não ativo
-     *
-     * @return LegacyEnrollmentBuilder
      */
     public function notActive(): self
     {
@@ -44,8 +36,6 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
 
     /**
      * Filtra por validos
-     *
-     * @return LegacyEnrollmentBuilder
      */
     public function whereValid(): self
     {

@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Storage;
 class FileControllerPdf
 {
     public $file;
+
     public $errorMessage;
+
     public $maxSize;
+
     public $suportedExtensions;
 
     public function __construct(
@@ -17,10 +20,10 @@ class FileControllerPdf
     ) {
         $this->file = $file;
 
-        if ($maxSize!=null) {
+        if ($maxSize != null) {
             $this->maxSize = $maxSize;
         } else {
-            $this->maxSize = 2048*1024;
+            $this->maxSize = 2048 * 1024;
         }
 
         if ($suportedExtensions != null) {
@@ -89,6 +92,6 @@ class FileControllerPdf
         }
         $l = strlen($name) - $i;
 
-        return substr($name, $i+1, $l);
+        return substr($name, $i + 1, $l);
     }
 }

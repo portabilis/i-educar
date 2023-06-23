@@ -12,7 +12,6 @@ class SplitFileServiceTest extends TestCase
     /**
      * Instancia o service que faz o split do arquivo
      *
-     * @param $fileName
      *
      * @return SplitFileService
      */
@@ -56,7 +55,6 @@ class SplitFileServiceTest extends TestCase
     /**
      * Retorna o tamanho de um generator
      *
-     * @param Generator $generator
      *
      * @return int
      */

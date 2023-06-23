@@ -38,7 +38,7 @@ class EnrollmentServiceTest extends TestCase
     private $service;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {
@@ -61,10 +61,9 @@ class EnrollmentServiceTest extends TestCase
     /**
      * Cancelamento de enturmação com sucesso.
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testCancelEnrollment()
     {
@@ -86,10 +85,9 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao cancelar uma enturmação devido a data de saída ser anterior ao
      * início do ano letivo.
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testCancellationDateBeforeAcademicYearException()
     {
@@ -114,10 +112,9 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao cancelar uma enturmação devido a data de saída ser posterior ao
      * fim do ano letivo.
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testCancellationDateAfterAcademicYearException()
     {
@@ -139,10 +136,9 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao cancelar uma enturmação devido a data de saída ser anterior que
      * a data de enturmação.
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testPreviousCancellationDateException()
     {
@@ -226,10 +222,9 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao enturmar uma matrícula devido a data de entrada ser anterior ao
      * início do ano letivo.
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testEnrollDateBeforeAcademicYearException()
     {
@@ -258,10 +253,9 @@ class EnrollmentServiceTest extends TestCase
      * Permite matrícular antes do início do ano letivo se o parâmetro permitir_matricula_fora_periodo_letivo
      * estiver habilitado na instituição
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testEnrollDateBeforeAcademicYearAllowed()
     {
@@ -290,10 +284,9 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao enturmar uma matrícula devido a data de entrada ser posterior ao
      * fim do ano letivo.
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testEnrollDateAfterAcademicYearException()
     {
@@ -318,10 +311,9 @@ class EnrollmentServiceTest extends TestCase
     /**
      * A data de enturmação é anterior a data de matrícula.
      *
-     * @throws Throwable
-     *
      * @return void
      *
+     * @throws Throwable
      */
     public function testPreviousEnrollDateException()
     {
@@ -409,13 +401,13 @@ class EnrollmentServiceTest extends TestCase
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
-            'sequencial' => 3
+            'sequencial' => 3,
         ]);
 
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
-            'sequencial' => 5
+            'sequencial' => 5,
         ]);
 
         $this->service->reorder($enrollment->registration);
@@ -423,17 +415,17 @@ class EnrollmentServiceTest extends TestCase
         $this->assertDatabaseHas('pmieducar.matricula_turma', [
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
-            'sequencial' => 2
+            'sequencial' => 2,
         ]);
         $this->assertDatabaseHas('pmieducar.matricula_turma', [
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
-            'sequencial' => 3
+            'sequencial' => 3,
         ]);
         $this->assertDatabaseMissing('pmieducar.matricula_turma', [
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
-            'sequencial' => 5
+            'sequencial' => 5,
         ]);
     }
 }

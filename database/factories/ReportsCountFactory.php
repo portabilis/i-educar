@@ -18,7 +18,7 @@ class ReportsCountFactory extends Factory
             'render' => $this->faker->randomElement(['json', 'jasper', 'html']),
             'template' => $this->faker->randomElement(['template1', 'template2', 'template3']),
             'success' => $this->faker->boolean,
-            'date' => now()
+            'date' => now(),
         ];
     }
 }

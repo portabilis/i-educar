@@ -11,12 +11,9 @@ class LegacySchoolClassTypeTest extends EloquentTestCase
 {
     public $relations = [
         'institution' => LegacyInstitution::class,
-        'schoolClasses' => LegacySchoolClass::class
+        'schoolClasses' => LegacySchoolClass::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchoolClassType::class;

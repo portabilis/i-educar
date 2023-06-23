@@ -15,7 +15,7 @@ class StudentInepFactory extends Factory
             'student_id' => fn () => LegacyStudentFactory::new()->create(),
             'number' => $this->faker->randomNumber(),
             'name' => $this->faker->word(),
-            'font' => $this->faker->word()
+            'font' => $this->faker->word(),
         ];
     }
 }

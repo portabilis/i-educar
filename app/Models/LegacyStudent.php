@@ -42,12 +42,9 @@ class LegacyStudent extends LegacyModel
 
     public array $legacy = [
         'id' => 'cod_aluno',
-        'person_id' => 'ref_idpes'
+        'person_id' => 'ref_idpes',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function individual(): BelongsTo
     {
         return $this->belongsTo(LegacyIndividual::class, 'ref_idpes');
@@ -79,9 +76,6 @@ class LegacyStudent extends LegacyModel
         );
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
@@ -92,9 +86,6 @@ class LegacyStudent extends LegacyModel
         return $this->hasMany(LegacyRegistration::class, 'ref_cod_aluno');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function guardians(): BelongsToMany
     {
         return $this->belongsToMany(

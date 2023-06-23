@@ -1,4 +1,5 @@
 <?php
+
 use App\Models\LegacyDeficiency;
 use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
@@ -21,11 +22,10 @@ class ServidorController extends ApiCoreController
 
     protected function canGetServidoresDisciplinasTurmas()
     {
-        return (
+        return
             $this->validatesPresenceOf('ano') &&
             $this->validatesPresenceOf('instituicao_id') &&
-            $this->validatesPresenceOf('escola')
-        );
+            $this->validatesPresenceOf('escola');
     }
 
     protected function canGetServidores()
@@ -223,7 +223,8 @@ class ServidorController extends ApiCoreController
                     $collect = collect(explode(',', $vinculo['disciplinas_serie']));
                     $collect = $collect->mapToGroups(function ($item, $key) {
                         [$key, $value] = explode(' ', $item);
-                        return [$key => (int)$value];
+
+                        return [$key => (int) $value];
                     });
 
                     $vinculo['disciplinas_serie'] = $collect;
@@ -236,9 +237,9 @@ class ServidorController extends ApiCoreController
                         [$serie_id, $disciplina_id, $tipo_nota] = explode('|', $disciplina);
 
                         return [
-                            'id' => (int)$disciplina_id,
-                            'serie_id' => (int)$serie_id,
-                            'tipo_nota' => $tipo_nota == '' ? null : (int)$tipo_nota
+                            'id' => (int) $disciplina_id,
+                            'serie_id' => (int) $serie_id,
+                            'tipo_nota' => $tipo_nota == '' ? null : (int) $tipo_nota,
                         ];
                     }, explode(',', $vinculo['disciplinas']));
                 }
@@ -324,7 +325,7 @@ class ServidorController extends ApiCoreController
         $arrayEducacensoDeficiencies = [];
 
         foreach ($deficiencies as $deficiency) {
-            $arrayEducacensoDeficiencies[] = $databaseDeficiencies[(int)$deficiency];
+            $arrayEducacensoDeficiencies[] = $databaseDeficiencies[(int) $deficiency];
         }
 
         return $arrayEducacensoDeficiencies;

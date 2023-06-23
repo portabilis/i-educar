@@ -25,7 +25,6 @@ class RegistrationReorderCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param EnrollmentService $service
      *
      * @return mixed
      */

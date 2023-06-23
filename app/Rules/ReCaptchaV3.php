@@ -12,7 +12,7 @@ class ReCaptchaV3 implements Rule
     /**
      * Create a new rule instance.
      *
-     * @return boolean
+     * @return bool
      */
     public function passes($attribute, $value)
     {
@@ -42,7 +42,6 @@ class ReCaptchaV3 implements Rule
     /**
      * Retorna o score do recaptcha
      *
-     * @param $response
      *
      * @return float
      */

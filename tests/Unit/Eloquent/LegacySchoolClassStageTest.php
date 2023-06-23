@@ -11,12 +11,9 @@ class LegacySchoolClassStageTest extends EloquentTestCase
 {
     protected $relations = [
         'stageType' => LegacyStageType::class,
-        'schoolClass' => LegacySchoolClass::class
+        'schoolClass' => LegacySchoolClass::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchoolClassStage::class;

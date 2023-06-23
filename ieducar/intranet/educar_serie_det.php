@@ -1,19 +1,31 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
 
     public $cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_curso;
+
     public $nm_serie;
+
     public $etapa_curso;
+
     public $concluinte;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $regra_avaliacao_id;
 
     public $ref_cod_instituicao;
@@ -22,7 +34,7 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Série - Detalhe';
 
-        $this->cod_serie=$_GET['cod_serie'];
+        $this->cod_serie = $_GET['cod_serie'];
 
         $tmp_obj = new clsPmieducarSerie($this->cod_serie);
         $registro = $tmp_obj->detalhe();
@@ -47,7 +59,7 @@ return new class extends clsDetalhe {
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
                 $this->addDetalhe(['Instituição',
-          $registro['ref_cod_instituicao']]);
+                    $registro['ref_cod_instituicao']]);
             }
         }
 
@@ -100,13 +112,13 @@ return new class extends clsDetalhe {
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe da série', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function getRegrasAvaliacao()
     {
-        $query = <<<SQL
+        $query = <<<'SQL'
             SELECT
                 ra.id,
                 ra.nome,
@@ -124,7 +136,7 @@ return new class extends clsDetalhe {
 SQL;
 
         $regras = Portabilis_Utils_Database::fetchPreparedQuery($query, [
-            'params' => [$this->cod_serie]
+            'params' => [$this->cod_serie],
         ]);
 
         if (empty($regras)) {
@@ -138,7 +150,7 @@ SQL;
             if (!isset($retorno[$regra['id']])) {
                 $retorno[$regra['id']] = [
                     'nome' => $regra['nome'],
-                    'anos' => [(int) $regra['ano_letivo']]
+                    'anos' => [(int) $regra['ano_letivo']],
                 ];
             } else {
                 $retorno[$regra['id']]['anos'][] = (int) $regra['ano_letivo'];
@@ -148,10 +160,10 @@ SQL;
         $html = [];
 
         foreach ($retorno as $r) {
-            $html[] = sprintf('%s (%s)', $r['nome'], join(', ', $r['anos']));
+            $html[] = sprintf('%s (%s)', $r['nome'], implode(', ', $r['anos']));
         }
 
-        return join('<br>', $html);
+        return implode('<br>', $html);
     }
 
     public function Formular()

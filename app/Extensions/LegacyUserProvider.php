@@ -21,8 +21,6 @@ class LegacyUserProvider implements UserProvider
 
     /**
      * Create a new database user provider.
-     *
-     * @param Hasher $hasher
      */
     public function __construct(Hasher $hasher)
     {
@@ -30,7 +28,7 @@ class LegacyUserProvider implements UserProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function retrieveById($identifier)
     {
@@ -38,7 +36,7 @@ class LegacyUserProvider implements UserProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function retrieveByToken($identifier, $token)
     {
@@ -54,7 +52,7 @@ class LegacyUserProvider implements UserProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @throws Throwable
      */
@@ -66,7 +64,7 @@ class LegacyUserProvider implements UserProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function retrieveByCredentials(array $credentials)
     {
@@ -76,13 +74,13 @@ class LegacyUserProvider implements UserProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         if ($user->isInactive()) {
             throw ValidationException::withMessages([
-                $user->login => __('auth.inactive')
+                $user->login => __('auth.inactive'),
             ]);
         }
 
@@ -101,8 +99,6 @@ class LegacyUserProvider implements UserProvider
     /**
      * Validate legacy credentials and rehash if correct.
      *
-     * @param User  $user
-     * @param array $credentials
      *
      * @return bool
      */
@@ -122,9 +118,7 @@ class LegacyUserProvider implements UserProvider
     /**
      * Rehash a legacy password that uses MD5.
      *
-     * @param User   $user
      * @param string $password
-     *
      * @return void
      */
     public function rehashPassword(User $user, $password)

@@ -3,7 +3,9 @@
 class Educacenso_Model_OrgaoRegionalDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Educacenso_Model_OrgaoRegional';
+
     protected $_tableName = 'educacenso_orgao_regional';
+
     protected $_tableSchema = 'modules';
 
     protected $_primaryKey = [

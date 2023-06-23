@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoaj extends Portabil
         $defaultOptions = [
             'objectName' => 'pessoaj',
             'apiController' => 'Pessoaj',
-            'apiResource' => 'pessoaj-search'
+            'apiResource' => 'pessoaj-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

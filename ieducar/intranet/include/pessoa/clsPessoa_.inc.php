@@ -6,20 +6,35 @@ use Illuminate\Support\Str;
 class clsPessoa_
 {
     public $idpes;
+
     public $nome;
+
     public $idpes_cad;
+
     public $data_cad;
+
     public $url;
+
     public $tipo;
+
     public $idpes_rev;
+
     public $data_rev;
+
     public $situacao;
+
     public $origem_gravacao;
+
     public $email;
+
     public $banco = 'gestao_homolog';
+
     public $schema_cadastro = 'cadastro';
+
     public $tabela_pessoa = 'pessoa';
+
     public $tabela_endereco = 'endereco_pessoa';
+
     public $tabela_telefone = 'fone_pessoa';
 
     public function __construct($int_idpes = false, $str_nome = false, $int_idpes_cad = false, $str_url = false, $int_tipo = false, $int_idpes_rev = false, $str_data_rev = false, $str_email = false)
@@ -216,7 +231,7 @@ class clsPessoa_
             $db->Consulta("SELECT idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, situacao, origem_gravacao, email FROM cadastro.pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                list($this->idpes, $this->nome, $this->idpes_cad, $this->data_cad, $this->url, $this->tipo, $this->idpes_rev, $this->data_rev, $this->situacao, $this->origem_gravacao, $this->email) = $tupla;
+                [$this->idpes, $this->nome, $this->idpes_cad, $this->data_cad, $this->url, $this->tipo, $this->idpes_rev, $this->data_rev, $this->situacao, $this->origem_gravacao, $this->email] = $tupla;
 
                 return $tupla;
             }

@@ -1,27 +1,49 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_instituicao;
+
     public $nm_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_idtlog;
+
     public $ref_sigla_uf;
+
     public $cep;
+
     public $cidade;
+
     public $bairro;
+
     public $logradouro;
+
     public $numero;
+
     public $complemento;
+
     public $nm_responsavel;
+
     public $ddd_telefone;
+
     public $telefone;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -29,17 +51,17 @@ return new class extends clsListagem {
         $this->titulo = 'Instituição - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos([ 'Nome da Instituição' ]);
+        $this->addCabecalhos(['Nome da Instituição']);
 
         // outros Filtros
         $this->campoTexto(nome: 'nm_instituicao', campo: 'Nome da Instituição', valor: $this->nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_instituicao = new clsPmieducarInstituicao();
         $obj_instituicao->setOrderby('nm_responsavel ASC');
@@ -67,7 +89,7 @@ return new class extends clsListagem {
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $this->addLinhas([
-                    "<a href=\"educar_instituicao_det.php?cod_instituicao={$registro['cod_instituicao']}\">{$registro['nm_instituicao']}</a>"
+                    "<a href=\"educar_instituicao_det.php?cod_instituicao={$registro['cod_instituicao']}\">{$registro['nm_instituicao']}</a>",
                 ]);
             }
         }

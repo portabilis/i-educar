@@ -9,7 +9,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Por
         $defaultOptions = [
             'objectName' => 'beneficios',
             'apiController' => 'Beneficio',
-            'apiResource' => 'beneficio-search'
+            'apiResource' => 'beneficio-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -28,6 +28,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Por
                 ->orderBy('nm_beneficio', 'ASC')
                 ->pluck('nm_beneficio', 'cod_aluno_beneficio');
         }
+
         return $this->insertOption(null, '', $resources);
     }
 

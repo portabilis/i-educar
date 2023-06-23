@@ -27,17 +27,11 @@ class LegacyStudentDescriptiveOpinion extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @return BelongsTo
-     */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'matricula_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function descriptiveOpinions(): HasMany
     {
         if ($this->isByDiscipline()) {
@@ -52,26 +46,17 @@ class LegacyStudentDescriptiveOpinion extends Model
         return $this->hasMany(LegacyDisciplineDescriptiveOpinion::class, 'parecer_aluno_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function generalDescriptiveOpinion(): HasMany
     {
         return $this->hasMany(LegacyGeneralDescriptiveOpinion::class, 'parecer_aluno_id');
     }
 
-    /**
-     * @return bool
-     */
     public function isByDiscipline(): bool
     {
         return $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
             || $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE;
     }
 
-    /**
-     * @return bool
-     */
     public function isGeneral(): bool
     {
         return $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL

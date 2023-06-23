@@ -18,8 +18,6 @@ class ConnectTenantDatabase
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param Closure $next
-     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -38,7 +36,6 @@ class ConnectTenantDatabase
     /**
      * Return tenant default connection name.
      *
-     * @param Request $request
      *
      * @return string
      */
@@ -70,7 +67,6 @@ class ConnectTenantDatabase
     /**
      * Set default tenant resolver.
      *
-     * @param Closure $resolver
      *
      * @return bool
      */

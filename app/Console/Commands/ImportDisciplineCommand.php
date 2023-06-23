@@ -26,7 +26,6 @@ class ImportDisciplineCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param Filesystem $filesystem
      *
      * @return mixed
      */

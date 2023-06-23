@@ -9,8 +9,6 @@ class RegrasEspecificasRegistro30 implements EducacensoExportRule
 {
     /**
      * @param Registro30 $registro30
-     *
-     * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro30): RegistroEducacenso
     {

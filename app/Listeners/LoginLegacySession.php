@@ -46,7 +46,6 @@ class LoginLegacySession
 
     /**
      * @param User $user
-     *
      * @return object
      */
     private function getLoggedUserInfo($user)
@@ -76,7 +75,7 @@ class LoginLegacySession
             'students_count' => $this->getStudentsCount(),
             'teachers_count' => $this->getTeachersCount(),
             'classes_count' => $this->getClassesCount(),
-            'picture' => $picture
+            'picture' => $picture,
         ];
     }
 
@@ -84,7 +83,6 @@ class LoginLegacySession
      * Handle the event.
      *
      * @param object $event
-     *
      * @return void
      */
     public function handle($event)
@@ -97,7 +95,7 @@ class LoginLegacySession
             'tipo_menu' => $event->user->employee->menu_type,
             'nivel' => $event->user->type->level,
             'logged_user' => $loggedUser,
-            'logged_user_picture' => $loggedUser->picture
+            'logged_user_picture' => $loggedUser->picture,
         ]);
     }
 }

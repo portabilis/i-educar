@@ -1,13 +1,13 @@
 <?php
 
-    header('Content-type: text/xml');
+header('Content-type: text/xml');
 
-    Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
-    if (is_numeric($_GET['ins'])) {
-        $db = new clsBanco();
-        $db->Consulta("
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
+if (is_numeric($_GET['ins'])) {
+    $db = new clsBanco();
+    $db->Consulta("
                 SELECT
                     cod_escola
                     , fantasia as nome
@@ -31,10 +31,10 @@
                     AND escola.ativo = 1
                 ORDER BY 2 ASC
             ");
-        while ($db->ProximoRegistro()) {
-            list($cod, $nome) = $db->Tupla();
-            $nome = htmlspecialchars($nome);
-            echo "  <escola cod_escola=\"{$cod}\">{$nome}</escola>\n";
-        }
+    while ($db->ProximoRegistro()) {
+        [$cod, $nome] = $db->Tupla();
+        $nome = htmlspecialchars($nome);
+        echo "  <escola cod_escola=\"{$cod}\">{$nome}</escola>\n";
     }
-    echo '</query>';
+}
+echo '</query>';

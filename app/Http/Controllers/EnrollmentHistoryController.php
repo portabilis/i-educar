@@ -10,7 +10,6 @@ class EnrollmentHistoryController extends Controller
      * Show the profile for the given user.
      *
      * @param int $id
-     *
      * @return View
      */
     public function show($id)

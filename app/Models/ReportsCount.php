@@ -19,7 +19,7 @@ class ReportsCount extends Model
     protected static function booted(): void
     {
         static::saving(function (ReportsCount $report) {
-            $report->count ++;
+            $report->count++;
         });
     }
 }

@@ -3,23 +3,41 @@
 class clsFuncionario extends clsPessoaFisica
 {
     public $idpes;
+
     public $matricula;
+
     public $senha;
+
     public $ativo;
+
     public $ref_sec;
+
     public $sequencial;
+
     public $opcao_menu;
+
     public $ref_cod_setor;
+
     public $ref_cod_funcionario_vinculo;
+
     public $tempo_expira_senha;
+
     public $data_expiracao;
+
     public $data_troca_senha;
+
     public $data_reativa_conta;
+
     public $ref_ref_cod_pessoa_fj;
+
     public $cpf;
+
     public $ref_cod_setor_new;
+
     public $schema_cadastro = 'cadastro';
+
     public $schema_portal = 'portal';
+
     public $tabela_pessoa = 'pessoa';
 
     public function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
@@ -162,7 +180,7 @@ class clsFuncionario extends clsPessoaFisica
             }
         } else {
             while ($db->ProximoRegistro()) {
-                $resultado = $db->Tupla();//$tupla;
+                $resultado = $db->Tupla(); //$tupla;
             }
         }
 
@@ -183,12 +201,12 @@ class clsFuncionario extends clsPessoaFisica
         $int_nivel = null,
         $int_ativo = null
     ) {
-        $sql = " SELECT DISTINCT f.ref_cod_pessoa_fj, pessoa.nome as nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
+        $sql = ' SELECT DISTINCT f.ref_cod_pessoa_fj, pessoa.nome as nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
                             FROM portal.funcionario f
                             INNER JOIN cadastro.pessoa pessoa ON (pessoa.idpes = f.ref_cod_pessoa_fj::numeric)
                             LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
                             LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
-                            LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ";
+                            LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ';
 
         $filtros = '';
         $filtro_pessoa = false;
@@ -280,14 +298,14 @@ class clsFuncionario extends clsPessoaFisica
 
             $db->Consulta("SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = '{$this->matricula}'");
             if ($db->ProximoRegistro()) {
-                list($this->idpes) = $db->Tupla();
+                [$this->idpes] = $db->Tupla();
                 $idpesOk = true;
             }
         } elseif (is_numeric($this->cpf)) {
             $db = new clsBanco();
             $db->Consulta("SELECT idpes FROM {$this->schema_cadastro}.fisica WHERE cpf = '{$this->cpf}'");
             if ($db->ProximoRegistro()) {
-                list($this->idpes) = $db->Tupla();
+                [$this->idpes] = $db->Tupla();
                 $idpesOk = true;
             }
         }
@@ -299,7 +317,7 @@ class clsFuncionario extends clsPessoaFisica
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->ref_cod_setor_new) = $tupla;
+                [$this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->ref_cod_setor_new] = $tupla;
 
                 $tupla['idpes'] = new clsPessoaFisica($tupla['ref_cod_pessoa_fj']);
                 $tupla[] = $tupla['idpes'];

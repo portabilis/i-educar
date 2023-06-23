@@ -15,12 +15,9 @@ class LegacyPersonTest extends EloquentTestCase
     protected $relations = [
         'phone' => LegacyPhone::class,
         'individual' => LegacyIndividual::class,
-        'employee' => Employee::class
+        'employee' => Employee::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyPerson::class;

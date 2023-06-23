@@ -14,6 +14,7 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
                 ->pluck('name', 'id')
                 ->prepend('Selecione', '');
         }
+
         return $this->insertOption(null, 'Religião', $resources);
     }
 

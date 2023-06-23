@@ -1,14 +1,23 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_instituicao;
+
     public $ref_ano;
+
     public $data_inicio;
+
     public $data_fim;
+
     public $ano;
 
     public function Gerar()
@@ -16,7 +25,7 @@ return new class extends clsListagem {
         $this->titulo = 'Bloqueio do ano letivo - Listagem';
 
         foreach ($_GET as $var => $val) {
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->ref_ano = $this->ano;
@@ -33,7 +42,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj = new clsPmieducarBloqueioAnoLetivo();
         $obj->setOrderby(strNomeCampo: 'instituicao ASC, ref_ano DESC');
@@ -56,7 +65,7 @@ return new class extends clsListagem {
                     "<a href=\"educar_bloqueio_ano_letivo_det.php?ref_cod_instituicao={$registro['ref_cod_instituicao']}&ref_ano={$registro['ref_ano']} \">{$registro['instituicao']}</a>",
                     "<a href=\"educar_bloqueio_ano_letivo_det.php?ref_cod_instituicao={$registro['ref_cod_instituicao']}&ref_ano={$registro['ref_ano']} \">{$registro['ref_ano']}</a>",
                     "<a href=\"educar_bloqueio_ano_letivo_det.php?ref_cod_instituicao={$registro['ref_cod_instituicao']}&ref_ano={$registro['ref_ano']} \">{$data_inicio}</a>",
-                    "<a href=\"educar_bloqueio_ano_letivo_det.php?ref_cod_instituicao={$registro['ref_cod_instituicao']}&ref_ano={$registro['ref_ano']} \">{$data_fim}</a>"
+                    "<a href=\"educar_bloqueio_ano_letivo_det.php?ref_cod_instituicao={$registro['ref_cod_instituicao']}&ref_ano={$registro['ref_ano']} \">{$data_fim}</a>",
                 ]);
             }
         }

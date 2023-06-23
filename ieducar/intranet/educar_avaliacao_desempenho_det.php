@@ -2,7 +2,8 @@
 
 use App\Models\PerformanceEvaluation;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *

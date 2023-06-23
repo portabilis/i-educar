@@ -20,7 +20,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     private $evaluationRule;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {

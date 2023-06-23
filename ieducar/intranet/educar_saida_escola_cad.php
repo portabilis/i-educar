@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -9,18 +10,22 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_matricula;
+
     public $ref_cod_aluno;
+
     public $escola;
+
     public $data_saida_escola;
+
     public $nm_aluno;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
-        $this->escola=$_GET['escola'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
+        $this->escola = $_GET['escola'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
@@ -32,8 +37,8 @@ return new class extends clsCadastro {
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
         $this->breadcrumb('Registro de saída da escola', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = 'Cancelar';
 

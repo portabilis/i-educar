@@ -9,7 +9,9 @@ use iEducar\Modules\Educacenso\Model\FormasContratacaoPoderPublico;
 class FormasContratacaoEscolaValidator implements EducacensoValidator
 {
     private $dependenciaAdministrativa;
+
     private $categoriaEscolaPrivada;
+
     private $formasContratacao;
 
     public function __construct(
@@ -22,9 +24,6 @@ class FormasContratacaoEscolaValidator implements EducacensoValidator
         $this->formasContratacao = $formasContratacao;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         return $this->validaDependenciaAdministrativa() && $this->validaCategoriaEscolaPrivada();

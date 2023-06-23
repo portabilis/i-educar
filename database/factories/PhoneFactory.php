@@ -22,7 +22,7 @@ class PhoneFactory extends Factory
 
         return $this->state(function (array $attributes) use ($model) {
             return [
-                'id' =>  $model->idpes.'-'.$model->tipo,
+                'id' => $model->idpes.'-'.$model->tipo,
                 'person_id' => $model->idpes,
                 'type_id' => $model->tipo,
                 'area_code' => $model->ddd,
@@ -30,7 +30,7 @@ class PhoneFactory extends Factory
                 'created_by' => $model->idpes_cad,
                 'updated_by' => $model->idpes_rev,
                 'created_at' => $model->data_cad,
-                'updated_at' => $model->data_rev
+                'updated_at' => $model->data_rev,
             ];
         });
     }

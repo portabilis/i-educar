@@ -8,7 +8,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchProjeto extends Portabil
             'objectName' => 'projeto',
             'apiController' => 'Projeto',
             'apiResource' => 'projeto-search',
-            'showIdOnValue' => false
+            'showIdOnValue' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

@@ -17,8 +17,6 @@ use Illuminate\View\View;
 class BatchExemptionController extends Controller
 {
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)

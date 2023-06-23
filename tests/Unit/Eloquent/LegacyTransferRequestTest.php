@@ -18,12 +18,9 @@ class LegacyTransferRequestTest extends EloquentTestCase
         'transferType' => LegacyTransferType::class,
         'destinationSchool' => LegacySchool::class,
         'createdByUser' => LegacyUser::class,
-        'deletedByUser' => LegacyUser::class
+        'deletedByUser' => LegacyUser::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyTransferRequest::class;

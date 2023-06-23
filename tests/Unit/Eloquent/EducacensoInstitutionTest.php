@@ -13,7 +13,7 @@ class EducacensoInstitutionTest extends EloquentTestCase
     protected $relations = [
         'schools' => LegacySchool::class,
         'employeeGraduations' => EmployeeGraduation::class,
-        'employees' => Employee::class
+        'employees' => Employee::class,
     ];
 
     /**

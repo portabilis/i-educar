@@ -3,6 +3,7 @@
 class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
 {
     protected $_frontController = null;
+
     protected $_path = null;
 
     public function __construct($name = null, array $data = [], $dataName = '')

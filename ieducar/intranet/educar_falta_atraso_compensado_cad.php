@@ -2,27 +2,39 @@
 
 use App\Models\LegacyAbsenceDelayCompensate;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_compensado;
+
     public $ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_servidor;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_inicio;
+
     public $data_fim;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_compensado      = $_GET['cod_compensado'];
-        $this->ref_cod_servidor    = $_GET['ref_cod_servidor'];
-        $this->ref_cod_escola      = $_GET['ref_cod_escola'];
+        $this->cod_compensado = $_GET['cod_compensado'];
+        $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes();
@@ -48,8 +60,8 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                $this->data_inicio   = dataFromPgToBr($this->data_inicio);
-                $this->data_fim      = dataFromPgToBr($this->data_fim);
+                $this->data_inicio = dataFromPgToBr($this->data_inicio);
+                $this->data_fim = dataFromPgToBr($this->data_fim);
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
@@ -81,9 +93,9 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
 
         // Foreign keys
-        $obrigatorio     = true;
+        $obrigatorio = true;
         $get_instituicao = true;
-        $get_escola      = true;
+        $get_escola = true;
         include 'include/pmieducar/educar_campo_lista.php';
 
         // Data
@@ -103,15 +115,15 @@ return new class extends clsCadastro {
 
         // Transforma a data para o formato aceito pelo banco
         $this->data_inicio = dataToBanco($this->data_inicio);
-        $this->data_fim    = dataToBanco($this->data_fim);
+        $this->data_fim = dataToBanco($this->data_fim);
 
         $obj = new LegacyAbsenceDelayCompensate();
-        $obj->ref_cod_servidor    = $this->ref_cod_servidor;
-        $obj->ref_cod_escola      = $this->ref_cod_escola;
+        $obj->ref_cod_servidor = $this->ref_cod_servidor;
+        $obj->ref_cod_escola = $this->ref_cod_escola;
         $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
-        $obj->data_inicio         = $this->data_inicio;
-        $obj->data_fim            = $this->data_fim;
-        $obj->ref_usuario_cad     = $this->pessoa_logada;
+        $obj->data_inicio = $this->data_inicio;
+        $obj->data_fim = $this->data_fim;
+        $obj->ref_usuario_cad = $this->pessoa_logada;
 
         if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
@@ -124,6 +136,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br />';
+
         return false;
     }
 
@@ -144,15 +157,15 @@ return new class extends clsCadastro {
 
         // Transforma a data para o formato aceito pelo banco
         $this->data_inicio = dataToBanco($this->data_inicio);
-        $this->data_fim    = dataToBanco($this->data_fim);
+        $this->data_fim = dataToBanco($this->data_fim);
 
         $obj = LegacyAbsenceDelayCompensate::find($this->cod_compensado);
-        $obj->ref_cod_servidor    = $this->ref_cod_servidor;
-        $obj->ref_cod_escola      = $this->ref_cod_escola;
+        $obj->ref_cod_servidor = $this->ref_cod_servidor;
+        $obj->ref_cod_escola = $this->ref_cod_escola;
         $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
-        $obj->data_inicio         = $this->data_inicio;
-        $obj->data_fim            = $this->data_fim;
-        $obj->ref_usuario_exc     = $this->pessoa_logada;
+        $obj->data_inicio = $this->data_inicio;
+        $obj->data_fim = $this->data_fim;
+        $obj->ref_usuario_exc = $this->pessoa_logada;
 
         if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
@@ -165,6 +178,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br />';
+
         return false;
     }
 
@@ -191,6 +205,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br />';
+
         return false;
     }
 

@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchAluno extends Portabilis
         $defaultOptions = [
             'objectName' => 'aluno',
             'apiController' => 'Aluno',
-            'apiResource' => 'aluno-search'
+            'apiResource' => 'aluno-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

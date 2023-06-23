@@ -3,19 +3,30 @@
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\PersonHasPlace;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $cod_escola;
+
     public $ref_usuario_cad;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $ref_idpes;
+
     public $sigla;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_escola;
 
     const POLI_INSTITUCIONAL = 1;
+
     const INSTITUCIONAL = 2;
 
     public function Gerar()
@@ -91,7 +102,7 @@ return new class extends clsDetalhe {
         if ($registro['zona_localizacao']) {
             $zona = App_Model_ZonaLocalizacao::getInstance();
             $this->addDetalhe(detalhe: [
-                'Zona Localização', $zona->getValue(key: $registro['zona_localizacao'])
+                'Zona Localização', $zona->getValue(key: $registro['zona_localizacao']),
             ]);
         }
 
@@ -227,7 +238,7 @@ return new class extends clsDetalhe {
 
                 //verifica se o ano nao possui matricula em andamento para permitir finalizar o ano
                 $obj_matricula_ano = new clsPmieducarMatricula();
-                $matricula_em_andamento = $obj_matricula_ano->lista(int_ref_ref_cod_escola: $this->cod_escola,int_aprovado: 3, int_ativo: 1,int_ultima_matricula: 1, int_ano: $ano['ano'],bool_curso_sem_avaliacao: false);
+                $matricula_em_andamento = $obj_matricula_ano->lista(int_ref_ref_cod_escola: $this->cod_escola, int_aprovado: 3, int_ativo: 1, int_ultima_matricula: 1, int_ano: $ano['ano'], bool_curso_sem_avaliacao: false);
 
                 if (!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1 && $canEdit) {
                     $excluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','finalizar');\" ><img src=\"imagens/i-educar/stop.png\"> Finalizar ano letivo</a></td>";

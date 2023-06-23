@@ -2,7 +2,8 @@
 
 use App\Models\PerformanceEvaluation;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -11,14 +12,23 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $sequencial;
+
     public $ref_cod_servidor;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $titulo_avaliacao;
+
     public $ref_ref_cod_instituicao;
     public $id;
 

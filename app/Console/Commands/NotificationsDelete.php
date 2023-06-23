@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class NotificationsDelete extends Command
 {
     use Connections;
+
     /**
      * The name and signature of the console command.
      *

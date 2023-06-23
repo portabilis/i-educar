@@ -1,14 +1,15 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
@@ -82,7 +83,7 @@ return new class extends clsCadastro {
                 foreach ($enturmacoes as $enturmacao) {
                     $enturmacao = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->ref_cod_matricula, ref_cod_turma: $enturmacao['ref_cod_turma'], ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, data_cadastro: null, data_exclusao: null, ativo: 0, ref_cod_turma_transf: null, sequencial: $enturmacao['sequencial']);
 
-                    if (! $enturmacao->edita()) {
+                    if (!$enturmacao->edita()) {
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
@@ -92,7 +93,7 @@ return new class extends clsCadastro {
                 }
 
                 $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
-                                    ->findAll(columns: ['id'], where: ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
+                    ->findAll(columns: ['id'], where: ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
 
                 if (!empty($notaAluno)) {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())

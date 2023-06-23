@@ -18,35 +18,63 @@ define('alBottomRight', 'valign=bottom align=right');
 class clsListagem extends clsCampos
 {
     public $nome = 'formulario';
+
     public $__titulo;
+
     public $titulo;
+
     public $largura;
+
     public $linhas;
+
     public $colunas;
+
     public $cabecalho;
+
     public $paginacao;
+
     public $tabulacao;
+
     public $method = 'GET';
+
     public $camposResultado;
+
     public $tituloFormResultado;
+
     public $funcAcao = '';
+
     public $funcAcaoNome = '';
+
     public $appendInTop = false;
+
     // Para adicionar uma classe CSS extra no botão configure o valor do
     // $this->array_botao como um array ex: $this->array_botao[] = ['name' => 'Novo', 'css-extra' => 'btn-green'];
     public $array_botao;
+
     public $array_botao_url;
+
     public $array_botao_script;
+
     public $show_botao_novo = true;
+
     public $acao_imprimir = false;
+
     public $valor_imprimir = 'Imprimir Arquivo';
+
     public $paginador = [];
+
     public $numeropaginador = 0;
+
     public $paginador2;
+
     public $rodape = '';
+
     public $ordenacao;
+
     public $campos_ordenacao;
+
     public $fonte;
+
     public $exibirBotaoSubmit = true;
 
     public function __construct()
@@ -63,7 +91,7 @@ class clsListagem extends clsCampos
 
         if (empty($_GET)) {
             if (!empty($previousFilters[$uri])) {
-                list($path, $ts) = explode('|', $previousFilters[$uri]);
+                [$path, $ts] = explode('|', $previousFilters[$uri]);
                 $diff = ((int) now()) - ((int) $ts);
 
                 if ($diff > 7200) { //duas horas
@@ -126,9 +154,9 @@ class clsListagem extends clsCampos
                 $intPaginaAtual = 1;
             }
 
-            if(!isset($_GET['pagina_formulario']) & !isset($_GET['pagina_'])) {
+            if (!isset($_GET['pagina_formulario']) & !isset($_GET['pagina_'])) {
                 $pagina_formulario = 1;
-            }else{
+            } else {
                 $pagina_formulario = (isset($_GET['pagina_formulario'])) ? $_GET['pagina_formulario'] : $_GET['pagina_'];
             }
 
@@ -151,7 +179,7 @@ class clsListagem extends clsCampos
                         $linkFixo .= "$key=$value&";
                     }
                 }
-            } else if (is_string($mixVariaveisMantidas)) {
+            } elseif (is_string($mixVariaveisMantidas)) {
                 $linkFixo .= "$mixVariaveisMantidas&";
             }
 
@@ -166,7 +194,7 @@ HTML;
             $strReturn .= '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
 
             // Setas de início e anterior
-            $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier): '';
+            $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier) : '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"> &lsaquo; </a></td> ";
@@ -177,15 +205,15 @@ HTML;
             $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? $_POST['ordenacao'] ?? null;
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
-                $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
+                $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
                 $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
                 $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a página " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
-            $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
+            $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
-            $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier): '';
+            $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier) : '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"> &raquo; </a></td> ";
 
             $strReturn .= '</tr></table>';
@@ -245,7 +273,7 @@ HTML;
 
             $barra = '<b>Filtros de busca</b>';
 
-            $retorno .=  "
+            $retorno .= "
                 <!-- begin formulario -->
                     <form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}' action=\"\">
                         <input name='busca' type='hidden' value='S'>";
@@ -255,7 +283,7 @@ HTML;
 
                 foreach ($this->campos as $nome => $componente) {
                     if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
-                        $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3]).'\'>';
+                        $retorno .= "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3]).'\'>';
                     }
                 }
             }
@@ -272,7 +300,7 @@ HTML;
                 </tr>";
 
             if (empty($this->campos)) {
-                $retorno .=  '
+                $retorno .= '
                     <tr>
                         <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>Não existem campos definidos para o formulário</span></td>
                     </tr>';
@@ -290,22 +318,22 @@ HTML;
                         <script type="text/javascript" language=\'javascript\'>';
 
             if ($this->funcAcao) {
-                $retorno .=  $this->funcAcao;
+                $retorno .= $this->funcAcao;
             } else {
-                $retorno .=  "function acao{$this->funcAcaoNome}() { document.{$this->__nome}.submit(); } ";
+                $retorno .= "function acao{$this->funcAcaoNome}() { document.{$this->__nome}.submit(); } ";
             }
 
-            $retorno .=  '</script>';
+            $retorno .= '</script>';
 
             if ($this->exibirBotaoSubmit) {
                 if (isset($this->botao_submit) && $this->botao_submit) {
-                    $retorno .=  '&nbsp;<input type=\'submit\' class=\'botaolistagem\' value=\'Buscar\' id=\'botao_busca\'>&nbsp;';
+                    $retorno .= '&nbsp;<input type=\'submit\' class=\'botaolistagem\' value=\'Buscar\' id=\'botao_busca\'>&nbsp;';
                 } else {
                     $retorno .= "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
                 }
             }
 
-            $retorno .=  '
+            $retorno .= '
                                 </td>
                             </tr>
                         </table>
@@ -326,7 +354,7 @@ HTML;
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
 
-        $retorno .=  "
+        $retorno .= "
             <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
                 <!-- listagem begin -->
                 <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
@@ -359,21 +387,21 @@ HTML;
                     $inicio = $fim = '';
 
                     if ($this->campos_ordenacao[$i] != '') {
-                        $_POST['fonte']  = empty($_POST['fonte']) ? 'imagens/nvp_setinha_down.gif' : $_POST['fonte'];
+                        $_POST['fonte'] = empty($_POST['fonte']) ? 'imagens/nvp_setinha_down.gif' : $_POST['fonte'];
                         $inicio = "<img name='seta' src='{$_POST['fonte']}' border='0' /> <a href='#' onclick='definirOrdenacao(\"{$this->campos_ordenacao[$i]}\");document.getElementById(\"form_resultado\").submit();'>";
                         $fim = '</a>';
                     }
 
-                    $retorno .=  "<td class='formdktd' $fmt style=\"font-weight:bold;\" valign='middle'>{$inicio}$texto{$fim}</td>";
+                    $retorno .= "<td class='formdktd' $fmt style=\"font-weight:bold;\" valign='middle'>{$inicio}$texto{$fim}</td>";
                 }
             }
 
-            $retorno .=  '</tr>';
+            $retorno .= '</tr>';
         }
 
         // Lista
         if (empty($this->linhas)) {
-            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informação para ser apresentada</td></tr>";
+            $retorno .= "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informação para ser apresentada</td></tr>";
         } else {
             reset($this->linhas);
 
@@ -388,6 +416,7 @@ HTML;
                         && $linha['tipo'] === 'html-puro'
                     ) {
                         $retorno .= $linha['conteudo'];
+
                         continue;
                     }
 
@@ -408,17 +437,17 @@ HTML;
                             $celula = str_replace('<img src=\'imagens/noticia.jpg\' border=0>', '<img src=\'imagens/noticia.jpg\' border=0 alt=\'\'>', $celula);
                         }
 
-                        $retornoTmp .=  "<td class='$classe' $fmt>$celula</td>";
+                        $retornoTmp .= "<td class='$classe' $fmt>$celula</td>";
                     }
                 } else {
-                    $retornoTmp .=  "<td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
+                    $retornoTmp .= "<td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
                 }
 
-                $retorno .=  '<tr>' . $retornoTmp . '</tr>';
+                $retorno .= '<tr>' . $retornoTmp . '</tr>';
             }
         }
 
-        $retorno .=  "
+        $retorno .= "
             <tr>
                 <td class='formdktd' colspan=\"{$ncols}\">&nbsp;</td>
             </tr>";
@@ -433,7 +462,7 @@ HTML;
         if (!empty($this->paginador)) {
             $ua = 0;
             $i = 0;
-            $retorno .=  "
+            $retorno .= "
                 <tr>
                     <td colspan='$ncols' align='center'>";
 
@@ -441,22 +470,22 @@ HTML;
                 if ($pagina[2]) {
                     switch ($pagina[0]) {
                         case '<<':
-                            $retorno .=  "<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            $retorno .= "<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>&nbsp;&nbsp;&nbsp;&nbsp;";
                             break;
                         case '-10':
-                            $retorno .=  "<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                            $retorno .= "<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>&nbsp;&nbsp;&nbsp;&nbsp;";
                             break;
                         case '>>':
-                            $retorno .=  "&nbsp;&nbsp;&nbsp;&nbsp;<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>";
+                            $retorno .= "&nbsp;&nbsp;&nbsp;&nbsp;<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>";
                             break;
                         case 'p10':
-                            $retorno .=  "&nbsp;&nbsp;&nbsp;&nbsp;<a href='{$pagina[1]}' class='nvp_paginador'>+10</a>";
+                            $retorno .= "&nbsp;&nbsp;&nbsp;&nbsp;<a href='{$pagina[1]}' class='nvp_paginador'>+10</a>";
                             break;
                         default:
-                            $retorno .=  "<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>&nbsp;";
+                            $retorno .= "<a href='{$pagina[1]}' class='nvp_paginador'>{$pagina[0]}</a>&nbsp;";
                     }
                 } else {
-                    $retorno .=  "<span class='linkBory' style='text-decoration: underline; color: black;'> {$pagina[0]} </span>&nbsp;";
+                    $retorno .= "<span class='linkBory' style='text-decoration: underline; color: black;'> {$pagina[0]} </span>&nbsp;";
                 }
 
                 if ($ua++ > 15) {
@@ -465,13 +494,13 @@ HTML;
                 }
             }
 
-            $retorno .=  '
+            $retorno .= '
                     </td>
                 </tr>';
         }
 
         if ($this->tituloFormResultado) {
-            $retorno .=  "
+            $retorno .= "
                 <tr>
                     <td class='formdktd' colspan=\"$ncols\" height='24'><span class='form'><b>{$this->tituloFormResultado}</b></span></td>
                 </tr>";
@@ -504,33 +533,33 @@ HTML;
 
                     switch ($tipo) {
                         case 'rotulo':
-                            $retorno .=  $componente[2];
+                            $retorno .= $componente[2];
                             break;
                         case 'texto':
-                            $retorno .=  "<input class='form' type='text' name='$nome' value='$componente[2]' size='$componente[3]' maxlength='$componente[4]'>\n";
+                            $retorno .= "<input class='form' type='text' name='$nome' value='$componente[2]' size='$componente[3]' maxlength='$componente[4]'>\n";
                             break;
                         case 'memo':
-                            $retorno .=  "<textarea class='form' name='$nome' cols='$componente[3]' rows='$componente[4]' wrap='virtual' >$componente[2]</textarea>\n";
+                            $retorno .= "<textarea class='form' name='$nome' cols='$componente[3]' rows='$componente[4]' wrap='virtual' >$componente[2]</textarea>\n";
                             break;
                         case 'lista':
-                            $retorno .=  "<select class='form' name='$nome'>\n";
+                            $retorno .= "<select class='form' name='$nome'>\n";
 
                             reset($componente[2]);
                             foreach ($componente[2] as $chave => $texto) {
-                                $retorno .=  '<option value=\'' . urlencode($chave) . '\'';
+                                $retorno .= '<option value=\'' . urlencode($chave) . '\'';
 
                                 if ($chave == $componente[3]) {
-                                    $retorno .=  ' selected';
+                                    $retorno .= ' selected';
                                 }
 
-                                $retorno .=  ">$texto</option>\n";
+                                $retorno .= ">$texto</option>\n";
                             }
 
-                            $retorno .=  "</select>\n";
+                            $retorno .= "</select>\n";
                             break;
                     }
 
-                    $retorno .=  '
+                    $retorno .= '
                                 </span>
                             </td>
                         </tr>';
@@ -549,12 +578,12 @@ HTML;
         }
 
         if (!empty($this->acao) && $this->show_botao_novo) {
-            $retorno .=  "
+            $retorno .= "
                 <tr>
                     <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
                 </tr>";
         } elseif ($this->acao_imprimir) {
-            $retorno .=  "
+            $retorno .= "
                 <tr>
                     <td colspan=\"$ncols\" align=\"center\">$botao</td>
                 </tr>";
@@ -618,7 +647,7 @@ HTML;
 
     public function inputsHelper()
     {
-        if (! isset($this->_inputsHelper)) {
+        if (!isset($this->_inputsHelper)) {
             $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
         }
 

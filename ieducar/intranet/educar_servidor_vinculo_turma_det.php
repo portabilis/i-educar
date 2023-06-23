@@ -1,16 +1,27 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $id;
+
     public $ano;
+
     public $servidor_id;
+
     public $funcao_exercida;
+
     public $tipo_vinculo;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_serie;
+
     public $ref_cod_turma;
 
     public function Gerar()
@@ -22,26 +33,26 @@ return new class extends clsDetalhe {
         $tmp_obj = new clsModulesProfessorTurma(id: $this->id);
         $registro = $tmp_obj->detalhe();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect(url: 'educar_servidor_professor_vinculo_lst.php');
         }
 
-        $resources_funcao = [  null => 'Selecione',
-                                1    => 'Docente',
-                                2    => 'Auxiliar/Assistente educacional',
-                                3    => 'Profissional/Monitor de atividade complementar',
-                                4    => 'Tradutor Intérprete de LIBRAS',
-                                5    => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
-                                6    => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD',
-                                7    => 'Guia-Intérprete',
-                                8    => 'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)',
-                                9    => 'Instrutor da Educação Profissional'];
+        $resources_funcao = [null => 'Selecione',
+            1 => 'Docente',
+            2 => 'Auxiliar/Assistente educacional',
+            3 => 'Profissional/Monitor de atividade complementar',
+            4 => 'Tradutor Intérprete de LIBRAS',
+            5 => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
+            6 => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD',
+            7 => 'Guia-Intérprete',
+            8 => 'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)',
+            9 => 'Instrutor da Educação Profissional'];
 
-        $resources_tipo = [  null => 'Selecione',
-                              1    => 'Concursado/efetivo/estável',
-                              2    => 'Contrato temporário',
-                              3    => 'Contrato terceirizado',
-                              4    => 'Contrato CLT'];
+        $resources_tipo = [null => 'Selecione',
+            1 => 'Concursado/efetivo/estável',
+            2 => 'Contrato temporário',
+            3 => 'Contrato terceirizado',
+            4 => 'Contrato CLT'];
 
         if ($registro['nm_escola']) {
             $this->addDetalhe(detalhe: ['Escola', $registro['nm_escola']]);
@@ -75,7 +86,7 @@ return new class extends clsDetalhe {
 
         $disciplinas = '';
 
-        $resources = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: [ 'params' => [$this->id] ]);
+        $resources = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: ['params' => [$this->id]]);
 
         foreach ($resources as $reg) {
             $disciplinas .= '<span style="background-color: #ccdce6; padding: 2px; border-radius: 3px;"><b>'.$reg['nome'].'</b></span> ';
@@ -119,8 +130,8 @@ return new class extends clsDetalhe {
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Detalhe do vínculo', breadcrumbs: [
-        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 
     public function Formular()

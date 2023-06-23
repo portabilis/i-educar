@@ -16,14 +16,12 @@ class LegacyDisciplineDescriptiveOpinionFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'parecer_aluno_id' => fn () => LegacyStudentDescriptiveOpinionFactory::new()->create(),
-            'componente_curricular_id' =>fn () => LegacyDisciplineFactory::new()->create(),
+            'componente_curricular_id' => fn () => LegacyDisciplineFactory::new()->create(),
             'parecer' => $this->faker->text,
             'etapa' => $this->faker->randomDigitNotZero(),
         ];

@@ -31,7 +31,7 @@ class EnrollmentsPromotionController extends Controller
         if (empty($jobs)) {
             return response()->json([
                 'message' => 'Não foi possível encontrar matrículas com os parâmetros enviados',
-                'status' => 'notice'
+                'status' => 'notice',
             ]);
         }
 
@@ -45,7 +45,7 @@ class EnrollmentsPromotionController extends Controller
 
         return response()->json([
             'message' => 'Matrículas enviadas para atualização. O processo de demorar alguns minutos, aguarde a notificação antes de realizar a mesma atualização.',
-            'status' => 'success'
+            'status' => 'success',
         ]);
     }
 

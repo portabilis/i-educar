@@ -21,18 +21,15 @@ class WithdrawalReason extends LegacyModel
 
     protected $fillable = [
         'nm_motivo',
-        'descricao'
+        'descricao',
     ];
 
     public array $legacy = [
         'id' => 'cod_motivo_afastamento',
         'name' => 'nm_motivo',
-        'description' => 'descricao'
+        'description' => 'descricao',
     ];
 
-    /**
-     * @return HasMany
-     */
     public function employeeWithdrawals(): HasMany
     {
         return $this->hasMany(EmployeeWithdrawal::class, 'ref_cod_motivo_afastamento');

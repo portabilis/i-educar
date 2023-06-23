@@ -3,25 +3,39 @@
 class clsPDF
 {
     public $nome;
+
     public $titulo;
+
     public $palavrasChaves;
+
     public $largura;
+
     public $altura;
+
     public $numeroPagina;
+
     public $renderCapa;
+
     public $pagOpened = false;
 
     public $caminho;
+
     public $linkArquivo;
+
     public $depurar;
+
     public $pdf;
 
     public $topmargin;
+
     public $bottommargirn;
+
     public $leftmargin;
+
     public $rigthmargin;
 
     public $listagem;
+
     public $detalhe;
 
     public $owner = 'PMI - Prefeitura Municipal de Itajaí';
@@ -49,22 +63,22 @@ class clsPDF
     {
         $caminho = 'tmp/';
         $lim_dir = opendir('tmp/');
-        $fonte   = base_path('ieducar/intranet/arquivos/fontes/FreeMonoBold.ttf');
+        $fonte = base_path('ieducar/intranet/arquivos/fontes/FreeMonoBold.ttf');
 
         while ($lim_file = readdir($lim_dir)) {
             if ($lim_file != '.' && $lim_file != '..') {
-                if (! (substr_count($lim_file, date('Y-m-d')))) {
+                if (!(substr_count($lim_file, date('Y-m-d')))) {
                     @unlink('tmp/' . $lim_file);
                 }
             }
         }
 
         $caminho .= date('Y-m-d') . '-';
-        list($usec, $sec) = explode(' ', microtime());
+        [$usec, $sec] = explode(' ', microtime());
         $caminho .= substr(md5($usec . $sec), 0, 8);
         $caminho .= '.pdf';
 
-        $this->caminho     = base_path('ieducar/intranet/' . $caminho);
+        $this->caminho = base_path('ieducar/intranet/' . $caminho);
         $this->LinkArquivo = $caminho;
 
         $this->pdf = PDF_new();
@@ -135,63 +149,63 @@ class clsPDF
     public function MakeTamPage($tamanhoFolha)
     {
         $this->largura = 0;
-        $this->altura  = 0;
+        $this->altura = 0;
 
-        $this->topmargin     = 50;
+        $this->topmargin = 50;
         $this->bottommargirn = 50;
-        $this->leftmargin  = 40;
+        $this->leftmargin = 40;
         $this->rigthmargin = 60;
 
         switch ($tamanhoFolha) {
-      case 'A0':
-        $this->largura  = 2380.0;
-        $this->altura   = 3368.0;
-        break;
-      case 'A1':
-        $this->largura  = 1684.0;
-        $this->altura   = 2380.0;
-        break;
-      case 'A2':
-        $this->largura  = 1190.0;
-        $this->altura   = 1684.0;
-        break;
-      case 'A3':
-        $this->largura  = 842.0;
-        $this->altura   = 1190.0;
-        break;
-      case 'A4':
-        $this->largura  = 595.0;
-        $this->altura   = 842.0;
-        break;
-      case 'A4h':
-        $this->largura  = 595.0;
-        $this->altura   = 842.0;
-        break;
-      case 'A5':
-        $this->largura  = 421.0;
-        $this->altura   = 595.0;
-        break;
-      case 'A6':
-        $this->largura  = 297.0;
-        $this->altura   = 421.0;
-        break;
-      case 'B5':
-        $this->largura  = 501.0;
-        $this->altura   = 709.0;
-        break;
-      case 'letter':
-        $this->largura  = 612.0;
-        $this->altura   = 792.0;
-        break;
-      case 'ledger':
-        $this->largura  = 1224.0;
-        $this->altura   = 792.0;
-        break;
-      case 'p11x17':
-        $this->largura  = 792.0;
-        $this->altura   = 1224.0;
-        break;
-    }
+            case 'A0':
+                $this->largura = 2380.0;
+                $this->altura = 3368.0;
+                break;
+            case 'A1':
+                $this->largura = 1684.0;
+                $this->altura = 2380.0;
+                break;
+            case 'A2':
+                $this->largura = 1190.0;
+                $this->altura = 1684.0;
+                break;
+            case 'A3':
+                $this->largura = 842.0;
+                $this->altura = 1190.0;
+                break;
+            case 'A4':
+                $this->largura = 595.0;
+                $this->altura = 842.0;
+                break;
+            case 'A4h':
+                $this->largura = 595.0;
+                $this->altura = 842.0;
+                break;
+            case 'A5':
+                $this->largura = 421.0;
+                $this->altura = 595.0;
+                break;
+            case 'A6':
+                $this->largura = 297.0;
+                $this->altura = 421.0;
+                break;
+            case 'B5':
+                $this->largura = 501.0;
+                $this->altura = 709.0;
+                break;
+            case 'letter':
+                $this->largura = 612.0;
+                $this->altura = 792.0;
+                break;
+            case 'ledger':
+                $this->largura = 1224.0;
+                $this->altura = 792.0;
+                break;
+            case 'p11x17':
+                $this->largura = 792.0;
+                $this->altura = 1224.0;
+                break;
+        }
 
         if ($this->depurar) {
             echo "<b>PDF:</b> Tamanho da pagina equivalente à -> {$tamanhoFolha}<br>";
@@ -210,7 +224,7 @@ class clsPDF
         }
     }
 
-    public function SetFill($color='#FFFFFF', $transparency = '0')
+    public function SetFill($color = '#FFFFFF', $transparency = '0')
     {
         if (strlen($color) != 7 || $color[0] != '#') {
             if ($this->depurar) {
@@ -314,7 +328,7 @@ class clsPDF
         }
 
         $image = realpath($image);
-        if (! is_readable($image)) {
+        if (!is_readable($image)) {
             throw new Exception('Caminho para arquivo de imagem inválido: "' . $image . '"');
         }
 
@@ -356,20 +370,20 @@ class clsPDF
         return false;
     }
 
-    public function Shape($tipo, $x, $y, $largura=0, $altura=0, $linha=0.001, $color='#000000', $color2='#FFFFFF')
+    public function Shape($tipo, $x, $y, $largura = 0, $altura = 0, $linha = 0.001, $color = '#000000', $color2 = '#FFFFFF')
     {
         $this->SetLine($linha);
         $this->SetBoth($color);
         $this->SetFill($color2);
 
         switch ($tipo) {
-      case 'ret':
-        PDF_rect($this->pdf, $x, $y, $largura, $altura);
-        break;
-      case 'elipse':
-        PDF_circle($this->pdf, $x, $y, $largura);
-        break;
-    }
+            case 'ret':
+                PDF_rect($this->pdf, $x, $y, $largura, $altura);
+                break;
+            case 'elipse':
+                PDF_circle($this->pdf, $x, $y, $largura);
+                break;
+        }
 
         PDF_fill_stroke($this->pdf);
 
@@ -400,7 +414,7 @@ class clsPDF
         $color = '#000000',
         $color2 = '#FFFFFF'
     ) {
-        $altura  = $y_bottomright - $y_topleft;
+        $altura = $y_bottomright - $y_topleft;
         $largura = $x_bottomright - $x_topleft;
         $this->quadrado_relativo(
             $x_topleft,
@@ -578,14 +592,14 @@ class clsPDF
         $this->SetBoth($color);
 
         switch ($local) {
-      case 'xy':
-        PDF_show_xy($this->pdf, $msg, $xo, $yo);
-        break;
-      default:
-        // 'box'
-        $yo = $this->altura - $yo;
-        PDF_show_boxed($this->pdf, $msg, $xo, $yo, $x, $y, $align, '');
-    }
+            case 'xy':
+                PDF_show_xy($this->pdf, $msg, $xo, $yo);
+                break;
+            default:
+                // 'box'
+                $yo = $this->altura - $yo;
+                PDF_show_boxed($this->pdf, $msg, $xo, $yo, $x, $y, $align, '');
+        }
 
         if ($this->depurar) {
             echo "<b>PDF:</b> Adicionado o texto: <pre>$msg</pre><br>";
@@ -700,7 +714,7 @@ class clsPDF
     public function PagAgenda($texto, $dia_semana_v, $data_atual_v, $lembrete)
     {
         $this->OpenPage();
-        $this->Shape('ret', 30, 30, $this->largura-60, $this->altura-60, 2);
+        $this->Shape('ret', 30, 30, $this->largura - 60, $this->altura - 60, 2);
         $this->InsertJpng('jpeg', 'imagens/brasao.jpg', 40, 95, 0.1);
 
         $msg = $this->titulo;
@@ -709,7 +723,7 @@ class clsPDF
         $lembrete = "Lembrete:\r\n".$lembrete;
 
         $this->Write($lembrete, 160, 150, 400, 115, 'courier', 8, '#333333', 'left');
-        $this->printData($this->altura-140, $dia_semana_v, $data_atual_v, 140);
+        $this->printData($this->altura - 140, $dia_semana_v, $data_atual_v, 140);
 
         $this->Write(
             $texto,
@@ -728,8 +742,8 @@ class clsPDF
 
     public function printData($al, $dia_semana_v, $data_atual_v, $l)
     {
-        $this->Shape('ret', 30, $al, $this->largura-60, 15, 2, '#000000', '#AAAAAA');
+        $this->Shape('ret', 30, $al, $this->largura - 60, 15, 2, '#000000', '#AAAAAA');
         $msg = "Dia: {$dia_semana_v} ({$data_atual_v})";
-        $this->Write($msg, 34, $l, $this->largura-62, 15, 'courier', 10, '#333333', 'left');
+        $this->Write($msg, 34, $l, $this->largura - 62, 15, 'courier', 10, '#333333', 'left');
     }
 }

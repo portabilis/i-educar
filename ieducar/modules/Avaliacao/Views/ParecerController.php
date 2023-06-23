@@ -2,12 +2,17 @@
 
 class ParecerController extends Core_Controller_Page_EditController
 {
-    protected $_dataMapper        = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
-    protected $_titulo            = 'Avaliação do aluno | Parecer Descritivo';
-    protected $_processoAp        = 642;
+    protected $_dataMapper = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
+
+    protected $_titulo = 'Avaliação do aluno | Parecer Descritivo';
+
+    protected $_processoAp = 642;
+
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-    protected $_saveOption        = true;
-    protected $_deleteOption      = false;
+
+    protected $_saveOption = true;
+
+    protected $_deleteOption = false;
 
     /**
      * @var Avaliacao_Service_Boletim
@@ -48,16 +53,16 @@ class ParecerController extends Core_Controller_Page_EditController
         $usuario = \Illuminate\Support\Facades\Auth::id();
 
         $this->_options = [
-      'new_success'         => 'boletim',
-      'new_success_params' => ['matricula' => $this->getRequest()->matricula],
-      'edit_success'        => 'boletim',
-      'edit_success_params' => ['matricula' => $this->getRequest()->matricula],
-    ];
+            'new_success' => 'boletim',
+            'new_success_params' => ['matricula' => $this->getRequest()->matricula],
+            'edit_success' => 'boletim',
+            'edit_success_params' => ['matricula' => $this->getRequest()->matricula],
+        ];
 
         $this->_service = new Avaliacao_Service_Boletim([
-      'matricula' => $this->getRequest()->matricula,
-      'usuario'   => $usuario
-    ]);
+            'matricula' => $this->getRequest()->matricula,
+            'usuario' => $usuario,
+        ]);
 
         $this->_regra = $this->_service->getRegra();
     }
@@ -67,8 +72,8 @@ class ParecerController extends Core_Controller_Page_EditController
      */
     protected function _initNovo()
     {
-        $this->_etapa                = $this->getRequest()->etapa;
-        $this->_matricula            = $this->getRequest()->matricula;
+        $this->_etapa = $this->getRequest()->etapa;
+        $this->_matricula = $this->getRequest()->matricula;
         $this->_componenteCurricular = $this->getRequest()->componenteCurricular;
 
         if (isset($this->_etapa) && isset($this->_matricula)) {
@@ -131,15 +136,15 @@ class ParecerController extends Core_Controller_Page_EditController
         // Instancia o objeto correto e passa para o service
         if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
             $parecer = new Avaliacao_Model_ParecerDescritivoComponente([
-        'componenteCurricular' => $this->getRequest()->componenteCurricular,
-        'parecer' => $this->getRequest()->parecer,
-        'etapa'   => $this->getRequest()->etapa
-      ]);
+                'componenteCurricular' => $this->getRequest()->componenteCurricular,
+                'parecer' => $this->getRequest()->parecer,
+                'etapa' => $this->getRequest()->etapa,
+            ]);
         } else {
             $parecer = new Avaliacao_Model_ParecerDescritivoGeral([
-        'parecer' => $this->getRequest()->parecer,
-        'etapa'   => $this->getRequest()->etapa
-      ]);
+                'parecer' => $this->getRequest()->parecer,
+                'etapa' => $this->getRequest()->etapa,
+            ]);
         }
 
         $this->_service->addParecer($parecer);

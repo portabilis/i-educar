@@ -5,52 +5,99 @@ use iEducar\Legacy\Model;
 class clsPmieducarInstituicao extends Model
 {
     public $cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_idtlog;
+
     public $ref_sigla_uf;
+
     public $cep;
+
     public $cidade;
+
     public $bairro;
+
     public $logradouro;
+
     public $numero;
+
     public $complemento;
+
     public $nm_responsavel;
+
     public $ddd_telefone;
+
     public $telefone;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_instituicao;
+
     public $data_base_remanejamento;
+
     public $data_base_transferencia;
+
     public $exigir_vinculo_turma_professor;
+
     public $controlar_espaco_utilizacao_aluno;
+
     public $percentagem_maxima_ocupacao_salas;
+
     public $quantidade_alunos_metro_quadrado;
+
     public $gerar_historico_transferencia;
+
     public $controlar_posicao_historicos;
+
     public $restringir_multiplas_enturmacoes;
+
     public $permissao_filtro_abandono_transferencia;
+
     public $data_base_matricula;
+
     public $multiplas_reserva_vaga;
+
     public $permitir_carga_horaria;
+
     public $reserva_integral_somente_com_renda;
+
     public $data_expiracao_reserva_vaga;
+
     public $componente_curricular_turma;
+
     public $reprova_dependencia_ano_concluinte;
+
     public $data_educacenso;
+
     public $exigir_dados_socioeconomicos;
+
     public $altera_atestado_para_declaracao;
+
     public $obrigar_campos_censo;
+
     public $obrigar_documento_pessoa;
+
     public $obrigar_cpf;
+
     public $orgao_regional;
+
     public $exigir_lancamentos_anteriores;
+
     public $exibir_apenas_professores_alocados;
+
     public $bloquear_vinculo_professor_sem_alocacao_escola;
+
     public $permitir_matricula_fora_periodo_letivo;
+
     public $ordenar_alunos_sequencial_enturmacao;
+
     public $obrigar_telefone_pessoa;
 
     public function __construct(
@@ -1238,7 +1285,7 @@ class clsPmieducarInstituicao extends Model
             true
         );
 
-        return COUNT($instituicoes) ? $instituicoes[0] : null;
+        return count($instituicoes) ? $instituicoes[0] : null;
     }
 
     /**

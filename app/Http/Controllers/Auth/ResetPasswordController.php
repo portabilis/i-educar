@@ -41,7 +41,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function rules()
     {
@@ -64,7 +64,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function credentials(Request $request)
     {

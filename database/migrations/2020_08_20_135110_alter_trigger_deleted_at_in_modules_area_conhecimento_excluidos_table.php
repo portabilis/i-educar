@@ -21,7 +21,7 @@ class AlterTriggerDeletedAtInModulesAreaConhecimentoExcluidosTable extends Migra
             'nome',
             'secao',
             'ordenamento_ac',
-            'agrupar_descritores'
+            'agrupar_descritores',
         ]);
     }
 
@@ -38,7 +38,7 @@ class AlterTriggerDeletedAtInModulesAreaConhecimentoExcluidosTable extends Migra
             'instituicao_id',
             'nome',
             'secao',
-            'ordenamento_ac'
+            'ordenamento_ac',
         ]);
     }
 }

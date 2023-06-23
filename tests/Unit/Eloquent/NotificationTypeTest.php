@@ -12,9 +12,6 @@ class NotificationTypeTest extends EloquentTestCase
         'notifications' => Notification::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return NotificationType::class;

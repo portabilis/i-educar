@@ -11,25 +11,25 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
         'cargaHoraria' => null,
         'codigo_educacenso' => null,
         'ordenamento' => 99999,
-        'desconsidera_para_progressao' => false
+        'desconsidera_para_progressao' => false,
     ];
 
     protected $_references = [
         'area_conhecimento' => [
             'value' => null,
             'class' => 'AreaConhecimento_Model_AreaDataMapper',
-            'file' => 'AreaConhecimento/Model/AreaDataMapper.php'
+            'file' => 'AreaConhecimento/Model/AreaDataMapper.php',
         ],
         'tipo_base' => [
             'value' => null,
             'class' => 'ComponenteCurricular_Model_TipoBase',
-            'file' => 'ComponenteCurricular/Model/TipoBase.php'
+            'file' => 'ComponenteCurricular/Model/TipoBase.php',
         ],
         'codigo_educacenso' => [
             'value' => null,
             'class' => 'ComponenteCurricular_Model_CodigoEducacenso',
-            'file' => 'ComponenteCurricular/Model/CodigoEducacenso.php'
-        ]
+            'file' => 'ComponenteCurricular/Model/CodigoEducacenso.php',
+        ],
     ];
 
     public function getDataMapper()
