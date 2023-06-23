@@ -3,23 +3,40 @@
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Auth;
 
-return new class {
+return new class
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_calendario_ano_letivo;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_serie;
+
     public $ref_cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ano;
+
     public $data_cadastra;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
+
     public $busca;
 
     public function renderHTML()
@@ -44,21 +61,21 @@ return new class {
         }
 
         app(abstract: Breadcrumb::class)->current(currentPage: 'Quadros de horários', pages: [
-        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         $retorno .= '
       <table width="100%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">
         <tbody>';
 
         if ($_POST) {
-            $this->ref_cod_turma       = $_POST['ref_cod_turma'] ?: null;
-            $this->ref_cod_serie       = $_POST['ref_cod_serie'] ?: null;
-            $this->ref_cod_curso       = $_POST['ref_cod_curso'] ?: null;
-            $this->ref_cod_escola      = $_POST['ref_cod_escola'] ?: null;
+            $this->ref_cod_turma = $_POST['ref_cod_turma'] ?: null;
+            $this->ref_cod_serie = $_POST['ref_cod_serie'] ?: null;
+            $this->ref_cod_curso = $_POST['ref_cod_curso'] ?: null;
+            $this->ref_cod_escola = $_POST['ref_cod_escola'] ?: null;
             $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ?: null;
-            $this->ano                 = $_POST['ano'] ?: null;
-            $this->busca               = $_GET['busca'] ?: null;
+            $this->ano = $_POST['ano'] ?: null;
+            $this->busca = $_GET['busca'] ?: null;
         }
 
         if ($_GET) {
@@ -81,13 +98,13 @@ return new class {
         // Componente curricular
         $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
-        $obrigatorio     = false;
+        $obrigatorio = false;
         $get_instituicao = true;
-        $get_escola      = true;
-        $get_ano         = true;
-        $get_curso       = true;
-        $get_serie       = true;
-        $get_turma       = true;
+        $get_escola = true;
+        $get_ano = true;
+        $get_curso = true;
+        $get_serie = true;
+        $get_turma = true;
         include 'educar_quadro_horarios_pesquisas.php';
 
         if ($this->busca == 'S') {
@@ -124,7 +141,7 @@ return new class {
 
                     for ($c = 1; $c <= 7; $c++) {
                         $obj_horarios = new clsPmieducarQuadroHorarioHorarios();
-                        $resultado    = $obj_horarios->retornaHorario(
+                        $resultado = $obj_horarios->retornaHorario(
                             int_ref_cod_instituicao_servidor: $this->ref_cod_instituicao,
                             int_ref_ref_cod_escola: $this->ref_cod_escola,
                             int_ref_ref_cod_serie: $this->ref_cod_serie,
@@ -133,7 +150,7 @@ return new class {
                         );
 
                         $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro['cod_quadro_horario']}, {$c}, {$this->ano} )'>";
-                        $componente = new  stdClass();
+                        $componente = new stdClass();
                         if (is_array(value: $resultado)) {
                             $resultado = $this->organizarHorariosIguais(valores: $resultado);
                             foreach ($resultado as $registro) {
@@ -224,6 +241,7 @@ return new class {
         return $retorno . '</tbody>
       </table>';
     }
+
     public function organizarHorariosIguais($valores)
     {
         $x = 1;

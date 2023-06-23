@@ -35,12 +35,9 @@ class LegacySchoolTest extends EloquentTestCase
         'organization' => LegacyOrganization::class,
         'inep' => SchoolInep::class,
         'schoolUsers' => LegacyUserSchool::class,
-        'schoolManagers' => SchoolManager::class
+        'schoolManagers' => SchoolManager::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchool::class;
@@ -51,7 +48,7 @@ class LegacySchoolTest extends EloquentTestCase
         return [
             'id' => 'cod_escola',
             'person_id' => 'ref_idpes',
-            'name' => 'fantasia'
+            'name' => 'fantasia',
         ];
     }
 
@@ -82,11 +79,11 @@ class LegacySchoolTest extends EloquentTestCase
         $grade = LegacyGradeFactory::new()->create();
         LegacySchoolGradeFactory::new()->create([
             'ref_cod_serie' => $grade,
-            'ref_cod_escola' => $school
+            'ref_cod_escola' => $school,
         ]);
         $schoolClass = LegacySchoolClassFactory::new()->create([
             'ref_ref_cod_escola' => $school,
-            'ref_ref_cod_serie' => $grade
+            'ref_ref_cod_serie' => $grade,
         ]);
         $this->assertCount(1, $school->schoolClasses);
         $this->assertInstanceOf(LegacySchoolClass::class, $school->schoolClasses->first());
@@ -96,11 +93,11 @@ class LegacySchoolTest extends EloquentTestCase
     {
         $school = LegacySchoolFactory::new()->create();
         $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create([
-            'ref_cod_escola' => $school
+            'ref_cod_escola' => $school,
         ]);
         $academicYearStage = LegacyAcademicYearStageFactory::new()->create([
             'ref_ref_cod_escola' => $school,
-            'ref_ano' => $schoolAcademicYear->year
+            'ref_ano' => $schoolAcademicYear->year,
         ]);
         $this->assertCount(1, $school->stages);
         $this->assertInstanceOf(LegacyAcademicYearStage::class, $school->stages->first());

@@ -83,7 +83,7 @@ class Portabilis_Array_Utils
      * $attrs  - atributo ou array de atributos para filtrar objeto
      *
      * Ex: $attrs = array('cod_escola' => 'id', 'nome')
-    */
+     */
     public static function filter($array, $attrs = [])
     {
         if (!is_array($attrs)) {

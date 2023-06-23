@@ -13,18 +13,18 @@ class CoreExt_ChildEntityStub extends CoreExt_Entity
         'sexo' => [
             'value' => null,
             'class' => 'CoreExt_EnumSexStub',
-            'file' => __DIR__ . '/EnumSex.php'
+            'file' => __DIR__ . '/EnumSex.php',
         ],
         'tipoSanguineo' => [
             'value' => null,
             'class' => 'CoreExt_EnumTipoSanguineoStub',
             'file' => __DIR__ . '/EnumTipoSanguineo.php',
-            'null' => true
-        ]
+            'null' => true,
+        ],
     ];
 
     protected $_dataTypes = [
-        'peso' => 'numeric'
+        'peso' => 'numeric',
     ];
 
     public function getDefaultValidatorCollection()

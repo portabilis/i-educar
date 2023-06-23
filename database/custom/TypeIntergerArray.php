@@ -13,10 +13,6 @@ class TypeIntergerArray extends PostgresGrammar
 
     /**
      * Create the column definition for a type array.
-     *
-     * @param Fluent $column
-     *
-     * @return string
      */
     protected function typeInt_Array(Fluent $column): string
     {

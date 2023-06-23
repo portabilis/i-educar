@@ -8,7 +8,6 @@ trait DropForeignKey
 {
     /**
      * @param string $table
-     *
      * @return string
      */
     protected function searchForeignKeysIn($table)
@@ -32,7 +31,6 @@ SQL;
 
     /**
      * @param string $table
-     *
      * @return string
      */
     protected function searchForeignKeysThatReferences($table)
@@ -58,7 +56,6 @@ SQL;
      * @param string $schema
      * @param string $table
      * @param string $name
-     *
      * @return void
      */
     protected function dropForeignKeyIn($schema, $table, $name)

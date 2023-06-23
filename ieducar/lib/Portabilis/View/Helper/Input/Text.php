@@ -25,7 +25,7 @@ class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Cor
             'input_hint' => '',
             'callback' => false,
             'event' => 'onKeyUp',
-            'disabled' => false
+            'disabled' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

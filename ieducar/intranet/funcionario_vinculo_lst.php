@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public function Gerar()
     {
         $this->titulo = 'Vínculos';
@@ -11,7 +12,7 @@ return new class extends clsListagem {
         $this->campoTexto('nome_', 'Nome', $nome_, '50', '255');
 
         $db = new clsBanco();
-        $sql  = 'SELECT cod_funcionario_vinculo, nm_vinculo FROM portal.funcionario_vinculo';
+        $sql = 'SELECT cod_funcionario_vinculo, nm_vinculo FROM portal.funcionario_vinculo';
         $where = '';
         $where_and = '';
 
@@ -29,17 +30,17 @@ return new class extends clsListagem {
         $db->Consulta("SELECT count(*) FROM portal.funcionario_vinculo $where");
         $db->ProximoRegistro();
 
-        list($total) = $db->Tupla();
+        [$total] = $db->Tupla();
 
         // Paginador
         $limite = 10;
-        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
         $sql .= " LIMIT $iniciolimit,$limite";
         $db->Consulta($sql);
 
         while ($db->ProximoRegistro()) {
-            list($cod_func_vinculo, $nome) = $db->Tupla();
-            $this->addLinhas([ "<img src='imagens/noticia.jpg' border=0> <a href='funcionario_vinculo_det.php?cod_func=$cod_func_vinculo'>$nome</a>"]);
+            [$cod_func_vinculo, $nome] = $db->Tupla();
+            $this->addLinhas(["<img src='imagens/noticia.jpg' border=0> <a href='funcionario_vinculo_det.php?cod_func=$cod_func_vinculo'>$nome</a>"]);
         }
 
         $this->largura = '100%';

@@ -26,12 +26,12 @@ class ValidateUserPasswordService
                 'password' => [
                     'A senha deve conter pelo menos ' .
                     self::MIN_LENGTH_PASSWORD .
-                    ' caracteres e uma combinação de letras maiúsculas e minúsculas, números e símbolos (!@#$%*).'
-                ]
+                    ' caracteres e uma combinação de letras maiúsculas e minúsculas, números e símbolos (!@#$%*).',
+                ],
             ]);
         } catch (\Exception $ex) {
             throw ValidationException::withMessages([
-                'password' => $ex->getMessage()
+                'password' => $ex->getMessage(),
             ]);
         }
     }
@@ -50,8 +50,8 @@ class ValidateUserPasswordService
                         ->mixedCase()
                         ->letters()
                         ->numbers()
-                        ->symbols()
-                ]
+                        ->symbols(),
+                ],
             ]
         )->validate();
     }

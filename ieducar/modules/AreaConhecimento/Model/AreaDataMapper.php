@@ -4,7 +4,7 @@ class AreaConhecimento_Model_AreaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'AreaConhecimento_Model_Area';
 
-    protected $_tableName   = 'area_conhecimento';
+    protected $_tableName = 'area_conhecimento';
 
     protected $_tableSchema = 'modules';
 
@@ -19,6 +19,6 @@ class AreaConhecimento_Model_AreaDataMapper extends CoreExt_DataMapper
 
     protected $_primaryKey = [
         'id' => 'id',
-        'instituicao' => 'instituicao_id'
+        'instituicao' => 'instituicao_id',
     ];
 }

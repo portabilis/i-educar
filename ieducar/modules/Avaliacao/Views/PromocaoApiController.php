@@ -9,13 +9,14 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
-use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use App\Models\View\Discipline;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use Illuminate\Support\Facades\Auth;
 
 class PromocaoApiController extends ApiCoreController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
+
     protected $_processoAp = 644;
 
     protected function canAcceptRequest()
@@ -70,7 +71,7 @@ class PromocaoApiController extends ApiCoreController
 
         $options = [
             'params' => [$this->getRequest()->ano, $currentMatriculaId, $escolaId, $cursoId, $serieId, $turmaId, $matricula, $regraDeAvaliacao],
-            'return_only' => 'first-field'
+            'return_only' => 'first-field',
         ];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -123,6 +124,7 @@ class PromocaoApiController extends ApiCoreController
                 'updateScore' => $params['updateScore'],
             ];
             $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($data);
+
             return $this->_boletimServices[$matriculaId];
         }
 
@@ -212,7 +214,7 @@ class PromocaoApiController extends ApiCoreController
             $stages = LegacyAcademicYearStage::query(['sequencial'])
                 ->where([
                     'ref_ref_cod_escola' => $escolaId,
-                    'ref_ano' => $ano
+                    'ref_ano' => $ano,
                 ])
                 ->where('data_fim', '<', now())
                 ->orderBy('sequencial');
@@ -254,7 +256,7 @@ class PromocaoApiController extends ApiCoreController
                     if (is_null($falta)) {
                         $notaFalta = new Avaliacao_Model_FaltaGeral([
                             'quantidade' => $defaultValue,
-                            'etapa' => $etapa
+                            'etapa' => $etapa,
                         ]);
                         // FIXME #parameters
                         $this->boletimService()->addFalta($notaFalta);
@@ -294,7 +296,7 @@ class PromocaoApiController extends ApiCoreController
 
     protected function matriculaId()
     {
-        return (isset($this->_matriculaId) ? $this->_matriculaId : $this->getRequest()->matricula_id);
+        return isset($this->_matriculaId) ? $this->_matriculaId : $this->getRequest()->matricula_id;
     }
 
     protected function setMatriculaId($id)
@@ -330,7 +332,6 @@ class PromocaoApiController extends ApiCoreController
                     AND (CASE WHEN $5 = 0  THEN TRUE ELSE $5 = mt.ref_cod_turma END)
                     AND (CASE WHEN $6 = 10 THEN TRUE WHEN $6 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)
                     AND (CASE WHEN $7 = 0  THEN TRUE ELSE $7 = ra.regra_avaliacao_id END)';
-
 
             $options = ['params' => [$this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId, $situacaoMatricula, $regraDeAvaliacao], 'return_only' => 'first-field'];
 
@@ -380,12 +381,12 @@ class PromocaoApiController extends ApiCoreController
             return [
                 'proximo_matricula_id' => $proximoMatriculaId,
                 'situacao_anterior' => $situacaoAnterior,
-                'nova_situacao' => $novaSituacao
+                'nova_situacao' => $novaSituacao,
             ];
         }
     }
 
-    protected function atualizaNotaExame($matriculaId) :void
+    protected function atualizaNotaExame($matriculaId): void
     {
         foreach (App_Model_IedFinder::getComponentesPorMatricula($matriculaId) as $_componente) {
             $componenteId = $_componente->get('id');
@@ -393,6 +394,7 @@ class PromocaoApiController extends ApiCoreController
 
             if (!empty($nota_exame)) {
                 $this->createOrUpdateNotaExame($matriculaId, $componenteId, $nota_exame);
+
                 return;
             }
 
@@ -404,14 +406,14 @@ class PromocaoApiController extends ApiCoreController
     {
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
-        return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+        return $obj->existe() ? $obj->edita() : $obj->cadastra();
     }
 
     protected function deleteNotaExame($matriculaId, $componenteCurricularId)
     {
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
 
-        return ($obj->excluir());
+        return $obj->excluir();
     }
 
     public function Gerar()
@@ -452,7 +454,6 @@ class PromocaoApiController extends ApiCoreController
      * Verifica se a regra de avaliação não usa nota
      *
      * @param int $tipoNota
-     *
      * @return bool
      */
     private function regraNaoUsaNota($tipoNota)

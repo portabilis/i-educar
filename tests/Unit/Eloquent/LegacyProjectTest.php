@@ -9,12 +9,9 @@ use Tests\EloquentTestCase;
 class LegacyProjectTest extends EloquentTestCase
 {
     protected $relations = [
-        'studentProjects' => LegacyStudentProject::class
+        'studentProjects' => LegacyStudentProject::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyProject::class;

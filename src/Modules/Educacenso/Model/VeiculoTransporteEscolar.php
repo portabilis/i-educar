@@ -5,15 +5,25 @@ namespace iEducar\Modules\Educacenso\Model;
 class VeiculoTransporteEscolar
 {
     public const VAN_KOMBI = 1;
+
     public const MICROONIBUS = 2;
+
     public const ONIBUS = 3;
+
     public const BICICLETA = 4;
+
     public const TRACAO_ANIMAL = 5;
+
     public const OUTRO = 6;
+
     public const CAPACIDADE_5 = 7;
+
     public const CAPACIDADE_5_15 = 8;
+
     public const CAPACIDADE_15_35 = 9;
+
     public const CAPACIDADE_35 = 10;
+
     public const TREM_METRO = 11;
 
     /**

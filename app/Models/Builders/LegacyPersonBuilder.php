@@ -11,7 +11,7 @@ class LegacyPersonBuilder extends LegacyBuilder
 
     public function whereCpf(string $cpf): self
     {
-        return  $this->whereHas(
+        return $this->whereHas(
             'individual',
             function ($query) use ($cpf) {
                 $query->when($cpf, fn ($q) => $q->where('cpf', $cpf));
@@ -21,7 +21,7 @@ class LegacyPersonBuilder extends LegacyBuilder
 
     public function active(): self
     {
-        return  $this->whereHas(
+        return $this->whereHas(
             'individual',
             function ($query) {
                 $query->where('ativo', 1);

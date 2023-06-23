@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Referência a usuário da sessão
      *
@@ -17,25 +18,31 @@ return new class extends clsDetalhe {
 
     // Atributos de mapeamento da tabela pmieducar.reserva_vaga
     public $ref_cod_escola;
+
     public $ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
     {
         $this->titulo = 'Reserva Vaga - Detalhe';
 
-        $this->ref_cod_serie  = $_GET['ref_cod_serie'];
+        $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
         $tmp_obj = new clsPmieducarEscolaSerie();
         $lst_obj = $tmp_obj->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
         $registro = array_shift(array: $lst_obj);
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect(url: 'educar_reserva_vaga_lst.php');
         }
 
@@ -134,7 +141,7 @@ return new class extends clsDetalhe {
                 }
                 $cont++;
 
-                $html .="
+                $html .= "
           <tr>
             <td class=$class width='35%'>{$turmas['nm_turma']}</td>
             <td class=$class width='15%'>{$turmas['max_aluno']}</td>
@@ -163,16 +170,16 @@ return new class extends clsDetalhe {
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 639, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao = ['Reservar Vaga', 'Vagas Reservadas'];
             $this->array_botao_url = ["educar_reserva_vaga_cad.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}",
-        'educar_reservada_vaga_lst.php?ref_cod_escola=' . $registro['ref_cod_escola'] .
-        '&ref_cod_serie=' . $registro['ref_cod_serie']];
+                'educar_reservada_vaga_lst.php?ref_cod_escola=' . $registro['ref_cod_escola'] .
+                '&ref_cod_serie=' . $registro['ref_cod_serie']];
         }
 
         $this->url_cancelar = 'educar_reserva_vaga_lst.php';
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Detalhe da reserva de vaga', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()

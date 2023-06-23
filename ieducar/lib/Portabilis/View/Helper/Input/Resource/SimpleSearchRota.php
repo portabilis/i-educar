@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchRota extends Portabilis_
         $defaultOptions = [
             'objectName' => 'rota',
             'apiController' => 'Rota',
-            'apiResource' => 'rota-search'
+            'apiResource' => 'rota-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

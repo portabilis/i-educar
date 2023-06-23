@@ -6,7 +6,6 @@ use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
-use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
 use App\Models\Religion;
 use App\Models\TransportationProvider;
@@ -18,27 +17,48 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $cod_aluno;
+
     public $ref_idpes_responsavel;
+
     public $idpes_pai;
+
     public $idpes_mae;
+
     public $ref_cod_pessoa_educ;
+
     public $ref_cod_aluno_beneficio;
+
     public $ref_cod_religiao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_idpes;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_pai;
+
     public $nm_mae;
+
     public $ref_cod_raca;
+
     public $sus;
+
     public $url_laudo_medico;
+
     public $url_documento;
+
     private $urlPresigner;
 
     public function Gerar()
@@ -277,7 +297,7 @@ return new class extends clsDetalhe {
                     'Nome Aluno',
                     $registro['nome_aluno'] . '<p><img id="student-picture" height="117" src="' . $url . '"/></p>'
                     . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
-                    . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
+                    . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>',
                 ]);
             } else {
                 $this->addDetalhe(detalhe: ['Nome Aluno', $registro['nome_aluno']]);
@@ -330,7 +350,7 @@ return new class extends clsDetalhe {
                 'NULL' => 'Selecione',
                 1 => 'Brasileiro',
                 2 => 'Naturalizado Brasileiro',
-                3 => 'Estrangeiro'
+                3 => 'Estrangeiro',
             ];
 
             $registro['nacionalidade'] = $lista_nacionalidade[$registro['nacionalidade']];
@@ -408,8 +428,8 @@ return new class extends clsDetalhe {
 
         if ($det_fisica['ref_cod_religiao']) {
             $nm_religiao = Religion::query()
-                    ->where(column: 'id', operator: $det_fisica['ref_cod_religiao'])
-                    ->value(column: 'name');
+                ->where(column: 'id', operator: $det_fisica['ref_cod_religiao'])
+                ->value(column: 'name');
 
             $this->addDetalhe(detalhe: ['Religião', $nm_religiao]);
         }
@@ -468,7 +488,7 @@ return new class extends clsDetalhe {
                         align=\'center\'>
                           <td>
                             <a href=\'' . $this->urlPresigner()->getPresignedUrl(url: $documento->url) . '\'
-                               target=\'_blank\' > Visualizar documento ' . (count(value: (array)$documento) > 1 ? ($key + 1) : '') . '
+                               target=\'_blank\' > Visualizar documento ' . (count(value: (array) $documento) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
                     </tr>';
@@ -587,7 +607,7 @@ return new class extends clsDetalhe {
             $this->array_botao_url_script = [
                 sprintf('go("educar_matricula_cad.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
                 sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
-                sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno'])
+                sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
             ];
 
             if ($titulo = config(key: 'legacy.app.alunos.sistema_externo.titulo')) {
@@ -630,7 +650,7 @@ return new class extends clsDetalhe {
 
             $this->addDetalhe(detalhe: [
                 'Possui alergia a algum medicamento',
-                ($reg['alergia_medicamento'] == 'S' ? 'Sim' : 'Não')
+                ($reg['alergia_medicamento'] == 'S' ? 'Sim' : 'Não'),
             ]);
 
             if (trim(string: $reg['desc_alergia_medicamento']) != '') {
@@ -639,7 +659,7 @@ return new class extends clsDetalhe {
 
             $this->addDetalhe(detalhe: [
                 'Possui alergia a algum alimento',
-                ($reg['alergia_alimento'] == 'S' ? 'Sim' : 'Não')
+                ($reg['alergia_alimento'] == 'S' ? 'Sim' : 'Não'),
             ]);
 
             if (trim(string: $reg['desc_alergia_alimento']) != '') {
@@ -648,7 +668,7 @@ return new class extends clsDetalhe {
 
             $this->addDetalhe(detalhe: [
                 'Possui alguma doenca congênita',
-                ($reg['doenca_congenita'] == 'S' ? 'Sim' : 'Não')
+                ($reg['doenca_congenita'] == 'S' ? 'Sim' : 'Não'),
             ]);
 
             if (trim(string: $reg['desc_doenca_congenita']) != '') {
@@ -682,7 +702,7 @@ return new class extends clsDetalhe {
 
             $this->addDetalhe(detalhe: [
                 'Ingere medicação específica',
-                ($reg['medicacao_especifica'] == 'S' ? 'Sim' : 'Não')
+                ($reg['medicacao_especifica'] == 'S' ? 'Sim' : 'Não'),
             ]);
 
             if (trim(string: $reg['desc_medicacao_especifica']) != '') {
@@ -691,7 +711,7 @@ return new class extends clsDetalhe {
 
             $this->addDetalhe(detalhe: [
                 'Acompanhamento médico ou psicológico',
-                ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim' : 'Não')
+                ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim' : 'Não'),
             ]);
 
             if (trim(string: $reg['desc_acomp_medico_psicologico']) != '') {
@@ -700,7 +720,7 @@ return new class extends clsDetalhe {
 
             $this->addDetalhe(detalhe: [
                 'Restrição para atividades físicas',
-                ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim' : 'Não')
+                ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim' : 'Não'),
             ]);
 
             if (trim(string: $reg['desc_restricao_atividade_fisica']) != '') {
@@ -737,20 +757,20 @@ return new class extends clsDetalhe {
                 $this->addDetalhe(detalhe: ['<span id=\'funiforme\'></span>Recebeu kit completo', 'Sim']);
                 $this->addDetalhe(detalhe: [
                     '<span id=\'ffuniforme\'></span>' . 'Data da distribuição',
-                    $uniformDistribution->distribution_date?->format('d/m/Y')
+                    $uniformDistribution->distribution_date?->format('d/m/Y'),
                 ]);
             } else {
                 $this->addDetalhe(detalhe: [
                     '<span id=\'funiforme\'></span>Recebeu kit completo',
-                    'Não'
+                    'Não',
                 ]);
                 $this->addDetalhe(detalhe: [
                     'Tipo',
-                    $uniformDistribution->type
+                    $uniformDistribution->type,
                 ]);
                 $this->addDetalhe(detalhe: [
                     'Data da distribuição',
-                    $uniformDistribution->distribution_date?->format('d/m/Y')
+                    $uniformDistribution->distribution_date?->format('d/m/Y'),
                 ]);
                 $this->addDetalhe(detalhe: ['Quantidade de agasalhos (jaqueta)', $uniformDistribution->coat_jacket_qty ?: '0']);
                 $this->addDetalhe(detalhe: ['Quantidade de agasalhos (calça)', $uniformDistribution->coat_pants_qty ?: '0']);
@@ -763,7 +783,7 @@ return new class extends clsDetalhe {
                 $this->addDetalhe(detalhe: ['Bermudas coton (feminino)', $uniformDistribution->shorts_coton_qty ?: '0']);
                 $this->addDetalhe(detalhe: [
                     '<span id=\'ffuniforme\'></span>' . 'Quantidade de tênis',
-                    $uniformDistribution->sneakers_qty ?: '0'
+                    $uniformDistribution->sneakers_qty ?: '0',
                 ]);
             }
         }
@@ -920,7 +940,7 @@ return new class extends clsDetalhe {
         $scripts = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=3',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);

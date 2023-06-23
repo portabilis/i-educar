@@ -16,7 +16,9 @@ class LegacyUnificationStudentMultipleStudentsTest extends TestCase
     use LoginFirstUser;
 
     private LegacyStudent $studentOne;
+
     private LegacyStudent $studentTwo;
+
     private LegacyStudent $studentThree;
 
     protected function setUp(): void
@@ -66,7 +68,7 @@ class LegacyUnificationStudentMultipleStudentsTest extends TestCase
         $this->assertNotNull($log);
         $this->assertEquals($log->duplicates_id, [
             $this->studentTwo->getKey(),
-            $this->studentThree->getKey()
+            $this->studentThree->getKey(),
         ]);
         $this->assertTrue($log->created_at->isToday());
         $this->assertTrue($log->updated_at->isToday());
@@ -80,10 +82,10 @@ class LegacyUnificationStudentMultipleStudentsTest extends TestCase
         $this->assertCount(2, $logOldDataStudent);
 
         $this->assertEquals($logOldDataStudent[0]->keys[0], [
-            'cod_aluno' => $this->studentTwo->getKey()
+            'cod_aluno' => $this->studentTwo->getKey(),
         ]);
         $this->assertEquals($logOldDataStudent[1]->keys[0], [
-            'cod_aluno' => $this->studentThree->getKey()
+            'cod_aluno' => $this->studentThree->getKey(),
         ]);
 
         $this->assertDatabaseHas($log, [

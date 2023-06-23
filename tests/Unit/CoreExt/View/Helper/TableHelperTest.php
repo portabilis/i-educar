@@ -75,7 +75,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
         $cols = [
             ['data' => 'Title'],
             ['data' => 'Item A', 'colspan' => 2],
-            ['data' => 'Item B', 'colspan' => 2]
+            ['data' => 'Item B', 'colspan' => 2],
         ];
 
         $cols2 = [
@@ -83,7 +83,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
             ['data' => 'Subitem A1'],
             ['data' => 'Subitem A2'],
             ['data' => 'Subitem B1'],
-            ['data' => 'Subitem B2']
+            ['data' => 'Subitem B2'],
         ];
 
         $table->addHeaderRow($cols);
@@ -102,7 +102,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
             ['data' => '1'],
             ['data' => '2'],
             ['data' => '3'],
-            ['data' => '4']
+            ['data' => '4'],
         ];
 
         $cols2 = [
@@ -110,7 +110,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
             ['data' => '1'],
             ['data' => '2'],
             ['data' => '3'],
-            ['data' => '4']
+            ['data' => '4'],
         ];
 
         $table->addBodyRow($cols);

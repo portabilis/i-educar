@@ -12,9 +12,6 @@ class FormulaTest extends TestCase
      */
     private $formula;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -97,11 +94,11 @@ class FormulaTest extends TestCase
         $recuperation = $this->formula->execFormulaMedia([
             'Et' => 4,
             'Se' => 20,
-            'Rc' => 7
+            'Rc' => 7,
         ]);
 
         $this->assertEquals(8, $average);
-        $this->assertEqualsWithDelta(5.8, $recuperation, 0.00001); # TODO entender o motivo de ser necessário
+        $this->assertEqualsWithDelta(5.8, $recuperation, 0.00001); // TODO entender o motivo de ser necessário
     }
 
     /**

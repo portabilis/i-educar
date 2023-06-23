@@ -4,7 +4,8 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
 
     public $data_matricula;
@@ -35,7 +36,7 @@ return new class extends clsCadastro {
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomatica.js',
-            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js',
         ]);
     }
 
@@ -98,7 +99,7 @@ return new class extends clsCadastro {
 
             if (count(value: $alunosSemInep) === 0) {
                 while ($result && $this->db->ProximoRegistro()) {
-                    list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
+                    [$matriculaId, $alunoId, $situacao, $nomeAluno] = $this->db->Tupla();
 
                     $this->db2->Consulta(
                         "

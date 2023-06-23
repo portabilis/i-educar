@@ -12,7 +12,6 @@ class StudentAbsenceService
     /**
      * @param LegacyRegistration   $registration
      * @param LegacyEvaluationRule $evaluationRule
-     *
      * @return LegacyStudentAbsence
      */
     public function getOrCreateStudentAbsence($registration, $evaluationRule)
@@ -29,7 +28,6 @@ class StudentAbsenceService
     /**
      * @param LegacyRegistration   $registration
      * @param LegacyEvaluationRule $evaluationRule
-     *
      * @return LegacyStudentAbsence
      */
     private function createStudentAbsence($registration, $evaluationRule)

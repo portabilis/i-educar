@@ -42,5 +42,5 @@ return [
     | config version numbers on external files
     |
     */
-    'auto' => false
+    'auto' => false,
 ];

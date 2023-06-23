@@ -7,15 +7,25 @@ use App\Contracts\Enum;
 class TransportationVehicleType implements Enum
 {
     public const VAN = 1;
+
     public const MICROBUS = 2;
+
     public const BUS = 3;
+
     public const BIKE = 4;
+
     public const ANIMAL_TRACTION = 5;
+
     public const OTHER = 6;
+
     public const BOAT_5 = 7;
+
     public const BOAT_5_15 = 8;
+
     public const BOAT_15_35 = 9;
+
     public const BOAT_35 = 10;
+
     public const TRAIN = 11;
 
     public function getDescriptiveValues(): array

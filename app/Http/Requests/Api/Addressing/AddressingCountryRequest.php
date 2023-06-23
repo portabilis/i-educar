@@ -11,7 +11,7 @@ class AddressingCountryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:255', Rule::unique('countries')->ignore($this->route('country'))],
-            'ibge_code' => ['nullable', Rule::unique('countries')->ignore($this->route('country'))]
+            'ibge_code' => ['nullable', Rule::unique('countries')->ignore($this->route('country'))],
         ];
     }
 
@@ -19,7 +19,7 @@ class AddressingCountryRequest extends FormRequest
     {
         return [
             'name' => 'Nome',
-            'ibge_code' => 'Código Ibge'
+            'ibge_code' => 'Código Ibge',
         ];
     }
 }

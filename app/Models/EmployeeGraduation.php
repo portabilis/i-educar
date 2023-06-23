@@ -12,12 +12,9 @@ class EmployeeGraduation extends LegacyModel
         'course_id',
         'completion_year',
         'college_id',
-        'discipline_id'
+        'discipline_id',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id');
@@ -37,8 +34,6 @@ class EmployeeGraduation extends LegacyModel
      * Filtra pelo ID do servidor
      *
      * @param Builder $query
-     * @param         $employeeId
-     *
      * @return Builder
      */
     public function scopeOfEmployee($query, $employeeId)

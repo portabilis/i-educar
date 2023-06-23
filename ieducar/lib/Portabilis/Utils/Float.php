@@ -15,7 +15,7 @@ class Portabilis_Utils_Float
     {
         if (!is_numeric($value)) {
             throw new Exception('Value must be numeric!');
-        } elseif (is_integer($value)) {
+        } elseif (is_int($value)) {
             return (float) $value;
         }
 
@@ -23,7 +23,7 @@ class Portabilis_Utils_Float
 
         $defaultOptions = ['limit' => 2,
             'decimal_point' => $locale['decimal_point'],
-            'thousands_sep' => $locale['thousands_sep']
+            'thousands_sep' => $locale['thousands_sep'],
         ];
 
         $options = self::mergeOptions($options, $defaultOptions);
@@ -33,7 +33,7 @@ class Portabilis_Utils_Float
 
         // Caso o $value seja uma nota fechada ex: 9.0 | 8.0 ,o retorno do
         // explode() é apenas um array com uma posição ex: [ 0 => 9].
-        if (! array_key_exists(1, $digits)) {
+        if (!array_key_exists(1, $digits)) {
             $digits[1] = 0;
         }
 

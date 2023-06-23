@@ -24,23 +24,12 @@ class ResourceSchoolClassTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @var LegacyInstitution
-     */
     private LegacyInstitution $institution;
-    /**
-     * @var LegacySchool
-     */
+
     private LegacySchool $school;
 
-    /**
-     * @var LegacyCourse
-     */
     private LegacyCourse $course;
 
-    /**
-     * @var LegacyGrade
-     */
     private LegacyGrade $grade;
 
     /**
@@ -48,9 +37,6 @@ class ResourceSchoolClassTest extends TestCase
      */
     private int $year;
 
-    /**
-     * @var string
-     */
     private string $route = 'api.resource.school-class';
 
     protected function setUp(): void
@@ -64,7 +50,7 @@ class ResourceSchoolClassTest extends TestCase
 
         //escolas / ano academico
         $schools = LegacySchoolFactory::new()->count(2)->hasAcademicYears()->create([
-            'ref_cod_instituicao' => $this->institution->id
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
 
         //escolas
@@ -79,7 +65,7 @@ class ResourceSchoolClassTest extends TestCase
                 //escola_curso
                 LegacySchoolCourseFactory::new()->create([
                     'ref_cod_curso' => $course->id,
-                    'ref_cod_escola' => $school->id
+                    'ref_cod_escola' => $school->id,
                 ]);
 
                 //series
@@ -87,7 +73,7 @@ class ResourceSchoolClassTest extends TestCase
                     //escol_serie
                     LegacySchoolGradeFactory::new()->create([
                         'ref_cod_serie' => $grade->id,
-                        'ref_cod_escola' => $school->id
+                        'ref_cod_escola' => $school->id,
                     ]);
 
                     //turmas
@@ -96,7 +82,7 @@ class ResourceSchoolClassTest extends TestCase
                         'ref_ref_cod_escola' => $school->id,
                         'ref_cod_curso' => $course->id,
                         'ref_cod_instituicao' => $this->institution->id,
-                        'ano' => $this->year
+                        'ano' => $this->year,
                     ]);
                 });
             });
@@ -122,17 +108,17 @@ class ResourceSchoolClassTest extends TestCase
             'data' => [
                 '*' => [
                     'id',
-                    'name'
-                ]
-            ]
+                    'name',
+                ],
+            ],
         ]);
 
-        $school_classes =  LegacySchoolClass::getResource([
+        $school_classes = LegacySchoolClass::getResource([
             'institution' => $this->institution->id,
             'school' => $this->school->id,
             'course' => $this->course->id,
             'grade' => $this->grade->id,
-            'in_progress_year' => $this->year
+            'in_progress_year' => $this->year,
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($school_classes) {

@@ -52,7 +52,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         RegistrationEvent::class => [
             CopyTransferDataListener::class,
-            AcceptTransferRequestListener::class
+            AcceptTransferRequestListener::class,
         ],
         TransferEvent::class => [
             TransferNotificationListener::class,
@@ -67,7 +67,7 @@ class EventServiceProvider extends ServiceProvider
             ForgetCachedUserListener::class,
         ],
         ReportIssued::class => [
-            ReportIssuedListener::class
+            ReportIssuedListener::class,
         ],
     ];
 

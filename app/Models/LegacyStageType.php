@@ -16,6 +16,7 @@ class LegacyStageType extends LegacyModel
     use HasInstitution;
 
     public const CREATED_AT = 'data_cadastro';
+
     public const UPDATED_AT = null;
 
     /**
@@ -40,7 +41,7 @@ class LegacyStageType extends LegacyModel
         'num_meses',
         'ref_cod_instituicao',
         'num_semanas',
-        'ativo'
+        'ativo',
     ];
 
     public function academicYearStages(): HasMany
@@ -62,8 +63,6 @@ class LegacyStageType extends LegacyModel
 
     /**
      * @param Builder $query
-     *
-     * @return Builder
      */
     public function scopeActive($query): Builder
     {
@@ -77,8 +76,6 @@ class LegacyStageType extends LegacyModel
      * @param string   $name
      * @param int      $stagesNumber
      * @param int|null $id
-     *
-     * @return bool
      */
     public static function alreadyExists($name, $stagesNumber, $id = null): bool
     {

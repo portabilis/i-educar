@@ -8,21 +8,21 @@ class RegraAvaliacao_Model_RegraRecuperacao extends CoreExt_Entity
         'etapasRecuperadas' => null,
         'substituiMenorNota' => null,
         'media' => null,
-        'notaMaxima' => null
+        'notaMaxima' => null,
     ];
 
     protected $_dataTypes = [
         'substituiMenorNota' => 'boolean',
         'media' => 'numeric',
-        'nota_maxima' => 'numeric'
+        'nota_maxima' => 'numeric',
     ];
 
     protected $_references = [
         'regraAvaliacao' => [
             'value' => null,
             'class' => 'RegraAvaliacao_Model_RegraDataMapper',
-            'file' => 'RegraAvaliacao/Model/RegraDataMapper.php'
-        ]
+            'file' => 'RegraAvaliacao/Model/RegraDataMapper.php',
+        ],
     ];
 
     /**
@@ -61,7 +61,7 @@ class RegraAvaliacao_Model_RegraRecuperacao extends CoreExt_Entity
             'descricao' => new CoreExt_Validate_String(['min' => 1, 'max' => 25]),
             'etapasRecuperadas' => new CoreExt_Validate_String(['min' => 1, 'max' => 25]),
             'media' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 100]),
-            'notaMaxima' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 100])
+            'notaMaxima' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 100]),
         ];
     }
 

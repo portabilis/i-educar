@@ -3,15 +3,24 @@
 use App\Models\LegacySchoolClass;
 use App\Services\SchoolClass\SchoolClassService;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     const PROCESSO_AP = 9998910;
+
     public $ano;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_serie;
+
     public $ref_cod_turma;
+
     public $data_inicial;
+
     public $data_final;
 
     public function Inicializar()
@@ -75,7 +84,7 @@ return new class extends clsCadastro {
         ]);
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: [
-            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css'
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css',
         ]);
     }
 

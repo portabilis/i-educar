@@ -10,6 +10,7 @@ abstract class clsBancoSQL_
      * @var int
      */
     const FETCH_ARRAY = 1;
+
     const FETCH_ASSOC = 2;
 
     /**
@@ -106,7 +107,7 @@ abstract class clsBancoSQL_
      */
     protected $_fetchOptions = [
         self::FETCH_ARRAY,
-        self::FETCH_ASSOC
+        self::FETCH_ASSOC,
     ];
 
     /**
@@ -239,7 +240,6 @@ abstract class clsBancoSQL_
      * Setter para o modo de fetch de resultados do banco de dados.
      *
      * @param int $fetchMode
-     *
      * @return clsBancoSQL_ Provê interface fluída
      */
     public function setFetchMode($fetchMode = self::FETCH_ARRAY)
@@ -267,7 +267,6 @@ abstract class clsBancoSQL_
      * Setter.
      *
      * @param bool $throw
-     *
      * @return clsBancoSQL_ Provê interface fluída
      */
     public function setThrowException($throw = false)
@@ -332,12 +331,10 @@ abstract class clsBancoSQL_
      * @param bool   $reescrever       (Opcional) SQL é reescrita para transformar
      *                                 sintaxe MySQL em PostgreSQL.
      * @param bool   $forceUseWritePdo Força o uso da conexão de escrita
-     *
-     * @throws Exception
-     *
      * @return bool|resource FALSE em caso de erro ou o identificador da consulta
      *                       em caso de sucesso.
      *
+     * @throws Exception
      */
     public function Consulta($consulta, $reescrever = true, $forceUseWritePdo = false)
     {
@@ -388,7 +385,6 @@ abstract class clsBancoSQL_
      * Retorna o último ID gerado por uma sequence.
      *
      * @param string $str_sequencia
-     *
      * @return bool|string
      */
     public function InsertId($str_sequencia = false)
@@ -396,7 +392,7 @@ abstract class clsBancoSQL_
         if ($str_sequencia) {
             $this->Consulta("SELECT currval('{$str_sequencia}'::text)", true, true);
             $this->ProximoRegistro();
-            list($valor) = $this->Tupla();
+            [$valor] = $this->Tupla();
 
             return $valor;
         }
@@ -461,7 +457,6 @@ abstract class clsBancoSQL_
      * Retorna o valor de um campo retornado por uma consulta SELECT.
      *
      * @param string $Nome
-     *
      * @return mixed
      */
     public function Campo($Nome)
@@ -483,7 +478,6 @@ abstract class clsBancoSQL_
      * Retorna o valor de um campo em uma query SELECT.
      *
      * @param unknown_type $consulta
-     *
      * @return array|null|false
      */
     public function UnicoCampo($consulta)
@@ -513,7 +507,6 @@ abstract class clsBancoSQL_
      * @param string $name   nome da consulta
      * @param string $query  sql para ser preparado
      * @param array  $params parametros para consulta
-     *
      * @return bool|resource FALSE em caso de erro ou o identificador da consulta
      *                       em caso de sucesso.
      */

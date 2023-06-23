@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPonto extends Portabilis
         $defaultOptions = [
             'objectName' => 'ponto',
             'apiController' => 'Ponto',
-            'apiResource' => 'ponto-search'
+            'apiResource' => 'ponto-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

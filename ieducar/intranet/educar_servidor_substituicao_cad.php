@@ -1,27 +1,43 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_servidor_alocacao;
+
     public $ref_ref_cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_escola;
+
     public $ref_cod_servidor;
+
     public $dia_semana;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $todos;
+
     public $alocacao_array = [];
+
     public $professor;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
-        $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
+        $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes();
@@ -49,7 +65,7 @@ return new class extends clsCadastro {
             $this->professor = $obj_servidor->isProfessor() == true ? 'true' : 'false';
 
             $obj = new clsPmieducarServidorAlocacao();
-            $lista  = $obj->lista(
+            $lista = $obj->lista(
                 int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
                 int_ref_cod_servidor: $this->ref_cod_servidor,
                 ano: 1
@@ -59,8 +75,8 @@ return new class extends clsCadastro {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($lista as $val) {
                     $temp = [];
-                    $temp['carga_horaria']  = $val['carga_horaria'];
-                    $temp['periodo']        = $val['periodo'];
+                    $temp['carga_horaria'] = $val['carga_horaria'];
+                    $temp['periodo'] = $val['periodo'];
                     $temp['ref_cod_escola'] = $val['ref_cod_escola'];
 
                     $this->alocacao_array[] = $temp;
@@ -82,8 +98,8 @@ return new class extends clsCadastro {
         $this->nome_url_cancelar = 'Cancelar';
 
         $this->breadcrumb(currentPage: 'Registro de substituição do servidor', breadcrumbs: [
-        url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }
@@ -100,12 +116,12 @@ return new class extends clsCadastro {
         $det = $objTemp->detalhe();
         if ($det) {
             foreach ($det as $key => $registro) {
-                $this->$key =  $registro;
+                $this->$key = $registro;
             }
         }
 
         if ($this->ref_cod_servidor) {
-            $objPessoa     = new clsPessoa_(int_idpes: $this->ref_cod_servidor);
+            $objPessoa = new clsPessoa_(int_idpes: $this->ref_cod_servidor);
             $detalhePessoa = $objPessoa->detalhe();
             $nm_servidor = $detalhePessoa['nome'];
         }
@@ -145,7 +161,7 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $professor  = isset($_POST['professor']) ? strtolower(string: $_POST['professor']) : 'FALSE';
+        $professor = isset($_POST['professor']) ? strtolower(string: $_POST['professor']) : 'FALSE';
         $substituto = isset($_POST['ref_cod_servidor_todos']) ? $_POST['ref_cod_servidor_todos'] : null;
 
         $permissoes = new clsPermissoes();

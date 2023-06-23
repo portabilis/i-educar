@@ -10,10 +10,15 @@ use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 class ValueTurmaMaisEducacao implements ValueInterface
 {
     private $dependenciaAdministrativa;
+
     private $tipoAtendimento;
+
     private $modalidade;
+
     private $etapaEnsino;
+
     private $turmaMaisEducacao;
+
     private $tipoMediacao;
 
     public function getValue()
@@ -113,7 +118,7 @@ class ValueTurmaMaisEducacao implements ValueInterface
     }
 
     /**
-     * @param integer $dependenciaAdministrativa
+     * @param int $dependenciaAdministrativa
      */
     public function setDependenciaAdministrativa($dependenciaAdministrativa)
     {
@@ -121,7 +126,7 @@ class ValueTurmaMaisEducacao implements ValueInterface
     }
 
     /**
-     * @param integer $tipoAtendimento
+     * @param int $tipoAtendimento
      */
     public function setTipoAtendimento($tipoAtendimento)
     {
@@ -129,7 +134,7 @@ class ValueTurmaMaisEducacao implements ValueInterface
     }
 
     /**
-     * @param integer $modalidade
+     * @param int $modalidade
      */
     public function setModalidade($modalidade)
     {
@@ -137,7 +142,7 @@ class ValueTurmaMaisEducacao implements ValueInterface
     }
 
     /**
-     * @param integer $etapaEnsino
+     * @param int $etapaEnsino
      */
     public function setEtapaEnsino($etapaEnsino)
     {
@@ -145,7 +150,7 @@ class ValueTurmaMaisEducacao implements ValueInterface
     }
 
     /**
-     * @param integer $turmaMaisEducacao
+     * @param int $turmaMaisEducacao
      */
     public function setTurmaMaisEducacao($turmaMaisEducacao)
     {
@@ -153,7 +158,7 @@ class ValueTurmaMaisEducacao implements ValueInterface
     }
 
     /**
-     * @param integer $tipoMediacao
+     * @param int $tipoMediacao
      */
     public function setTipoMediacao($tipoMediacao)
     {

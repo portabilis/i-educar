@@ -15,10 +15,6 @@ trait DiarioApiRequestTestTrait
 
     /**
      * @param LegacyEnrollment $enrollment
-     * @param                  $disciplineId
-     * @param                  $stage
-     * @param                  $score
-     *
      * @return array
      */
     public function postAbsence($enrollment, $disciplineId, $stage, $score)
@@ -168,9 +164,7 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de faltas e retorna o response da ultima chamada
      *
-     * @param array            $absences
      * @param LegacyDiscipline $discipline
-     *
      * @return array|null
      */
     private function postAbsenceForStages(array $absences, $discipline)
@@ -187,9 +181,7 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de notas e retorna o response da ultima chamada
      *
-     * @param array            $scores
      * @param LegacyDiscipline $discipline
-     *
      * @return array|null
      */
     private function postScoreForStages(array $scores, $discipline)

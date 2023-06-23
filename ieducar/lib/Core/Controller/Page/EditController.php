@@ -61,19 +61,19 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
 
         // Adiciona novos itens de configuração
         $this->_options = $this->_options + [
-                'save_action' => $this->_saveOption,
-                'delete_action' => $this->_deleteOption,
-                'nivel_acesso' => $this->_nivelAcessoOption,
-                'nivel_acesso_insuficiente' => $this->_nivelAcessoInsuficiente
-            ];
+            'save_action' => $this->_saveOption,
+            'delete_action' => $this->_deleteOption,
+            'nivel_acesso' => $this->_nivelAcessoOption,
+            'nivel_acesso_insuficiente' => $this->_nivelAcessoInsuficiente,
+        ];
 
         // Configura botões padrão
         if (0 < $this->getRequest()->id) {
             $this->setOptions([
                 'url_cancelar' => [
                     'path' => 'view',
-                    'options' => ['query' => ['id' => $this->getRequest()->id]]
-                ]
+                    'options' => ['query' => ['id' => $this->getRequest()->id]],
+                ],
             ]);
         }
 
@@ -102,7 +102,6 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
      * Retorna um label de um item de formulário.
      *
      * @param string $key
-     *
      * @return string
      */
     protected function _getLabel($key)
@@ -114,7 +113,6 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
      * Retorna uma string de ajuda para um item de formulário.
      *
      * @param string $key
-     *
      * @return string
      */
     protected function _getHelp($key)
@@ -127,7 +125,6 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
      * de formulário.
      *
      * @param string $key
-     *
      * @return mixed
      */
     protected function _getEntity($key)
@@ -140,7 +137,6 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
      * CoreExt_Entity.
      *
      * @param string $key
-     *
      * @return string
      */
     protected function _getEntityLabel($key)

@@ -3,6 +3,7 @@
 class RegraAvaliacao_Model_TipoPresenca extends CoreExt_Enum
 {
     const GERAL = 1;
+
     const POR_COMPONENTE = 2;
 
     protected $_data = [

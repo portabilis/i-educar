@@ -39,7 +39,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um array com as informações de escola a partir de seu código.
      *
      * @param int $id
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -69,7 +68,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * opcionalmente pelo código da instituição.
      *
      * @param int $instituicaoId
-     *
      * @return array
      */
     public static function getEscolas($instituicaoId = null)
@@ -96,7 +94,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * vinculadas a ele
      *
      * @param int $instituicaoId
-     *
      * @return array
      */
     public static function getEscolasByUser($instituicaoId)
@@ -117,8 +114,7 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um nome de curso, procurando pelo seu código.
      *
      * @param int $id
-     *
-     * @return string|FALSE
+     * @return string|false
      */
     public static function getCurso($id)
     {
@@ -139,7 +135,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * opcionalmente pelo código da escola.
      *
      * @param int $escolaId
-     *
      * @return array
      */
     public static function getCursos($escolaId = null)
@@ -172,7 +167,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um array com as informações da instituição a partir de seu código.
      *
      * @param int $codInstituicao
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -203,7 +197,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um array com as informações da série a partir de seu código.
      *
      * @param int $codSerie
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -238,7 +231,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param int|null $escolaId
      * @param int|null $cursoId
      * @param int|null $ano
-     *
      * @return array
      */
     public static function getSeries($instituicaoId = null, $escolaId = null, $cursoId = null, $ano = null)
@@ -283,7 +275,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um array com as informações da turma a partir de seu código.
      *
      * @param int $codTurma
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -317,7 +308,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param int|null $serieId
      * @param int|null $ano
      * @param int|null $ativo
-     *
      * @return array (cod_turma => nm_turma)
      */
     public static function getTurmas($escolaId, $serieId = null, $ano = null, $ativo = null)
@@ -384,7 +374,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int $escolaId
      * @param int $ano
-     *
      * @return array (cod_turma => nm_turma)
      */
     public static function getTurmasEducacenso($escolaId, $ano = null)
@@ -476,8 +465,8 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param null                                            $etapa
      * @param bool                                            $trazerDetalhes
      * @param null                                            $ano
-     *
      * @return array
+     *
      * @throws App_Model_Exception
      */
     public static function getEscolaSerieDisciplina(
@@ -543,7 +532,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param int                                             $serieId          O código do ano escolar/série da turma.
      * @param int                                             $escola           O código da escola da turma.
      * @param int                                             $turma            O código da turma.
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -651,7 +639,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * em $componentes possua uma carga horária (atributo cargaHoraria) nula.
      *
      * @param int                                             $anoEscolar
-     *
      * @return array
      *
      * @throws Exception
@@ -706,7 +693,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um array populado com os dados de uma matricula.
      *
      * @param int $codMatricula
-     *
      * @return array
      *
      * @throws EvaluationRuleNotDefinedInLevel
@@ -830,8 +816,8 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int                                  $codMatricula
      * @param array                                $matricula
-     *
      * @return RegraAvaliacao_Model_Regra
+     *
      * @throws App_Model_Exception
      */
     public static function getRegraAvaliacaoPorMatricula(
@@ -873,8 +859,8 @@ class App_Model_IedFinder extends CoreExt_Entity
      * da turma.
      *
      * @param int                                  $turmaId
-     *
      * @return RegraAvaliacao_Model_Regra
+     *
      * @throws App_Model_Exception
      */
     public static function getRegraAvaliacaoPorTurma(
@@ -913,7 +899,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param int|null                                        $turma
      * @param int|null                                        $matricula
      * @param bool                                            $trazerDetalhes
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -1008,7 +993,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param int $codMatricula
      * @param int $codSerie
      * @param int $codEscola
-     *
      * @return array
      */
     public static function getDisciplinasDispensadasPorMatricula(
@@ -1102,7 +1086,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param int $codMatricula
      * @param int $codSerie
      * @param int $codEscola
-     *
      * @return array
      */
     public static function getDisciplinasDependenciaPorMatricula(
@@ -1142,7 +1125,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int   $codMatricula
      * @param array $matricula
-     *
      * @return int
      *
      * @throws App_Model_Exception
@@ -1183,7 +1165,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @deprecated TODO remover no futuro #library-package
      *
      * @param int $id
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -1221,7 +1202,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @deprecated TODO remover no futuro #library-package
      *
      * @param int $instituicaoId
-     *
      * @return array
      */
     public static function getBibliotecas($instituicaoId = null, $escolaId = null)
@@ -1252,7 +1232,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @deprecated TODO remover no futuro #library-package
      *
      * @param int $bibliotecaId
-     *
      * @return array
      */
     public static function getBibliotecaSituacoes($bibliotecaId = null)
@@ -1283,7 +1262,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @deprecated TODO remover no futuro #library-package
      *
      * @param int $bibliotecaId
-     *
      * @return array
      */
     public static function getBibliotecaFontes($bibliotecaId = null)
@@ -1314,7 +1292,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @deprecated TODO remover no futuro #library-package
      *
      * @param int $bibliotecaId
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -1351,7 +1328,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * obrigatóriamente pelo código da escola e opcionalmente pelo código do aluno.
      *
      * @param int $id
-     *
      * @return array
      *
      * @throws App_Model_Exception
@@ -1382,7 +1358,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @deprecated TODO remover no futuro #library-package
      *
      * @param int $bibliotecaId
-     *
      * @return array
      */
     public static function getBibliotecaTiposCliente($bibliotecaId)
@@ -1410,7 +1385,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      *Retorna todas as áreas de conhecimento cadastradas para determinada instituição
      *
      * @param int $instituicaoId
-     *
      * @return array
      *
      * @throws Exception
@@ -1463,7 +1437,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int $ano
      * @param int $escola
-     *
      * @return array
      */
     public static function getEtapasEscola($ano, $escola)
@@ -1488,7 +1461,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int $turma
      * @param int $componente
-     *
      * @return array
      *
      * @throws Exception
@@ -1537,7 +1509,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int $enrollmentId
      * @param int $disciplineId
-     *
      * @return array
      *
      * @throws Exception
@@ -1690,7 +1661,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna as etapas da turma.
      *
      * @param int $turma
-     *
      * @return array|mixed
      *
      * @throws Exception
@@ -1735,13 +1705,12 @@ class App_Model_IedFinder extends CoreExt_Entity
         ';
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, [
-            'params' => [$turma]
+            'params' => [$turma],
         ]);
     }
 
     /**
      * @param int $etapaId
-     *
      * @return array|null
      *
      * @throws Exception
@@ -1751,7 +1720,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $sql = 'select * from pmieducar.modulo where cod_modulo = $1;';
 
         $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, [
-            'params' => [$etapaId]
+            'params' => [$etapaId],
         ]);
 
         if ($query && count($query)) {

@@ -5,7 +5,8 @@ use App\Models\LegacyUser;
 use App\Models\LegacyUserType;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         $file = file(database_path('csv/censo/2023/update_or_create_ies_2023.csv'));

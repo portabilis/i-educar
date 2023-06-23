@@ -15,7 +15,7 @@ class HistoricGradeYear extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'tipos_base' => LegacyArray::class
+        'tipos_base' => LegacyArray::class,
     ];
 
     public function gradeScore1(): Attribute

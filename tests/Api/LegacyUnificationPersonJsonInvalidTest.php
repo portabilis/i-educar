@@ -14,6 +14,7 @@ class LegacyUnificationPersonJsonInvalidTest extends TestCase
     use LoginFirstUser;
 
     private LegacyIndividual $individualOne;
+
     private LegacyIndividual $individualTwo;
 
     protected function setUp(): void
@@ -62,7 +63,7 @@ class LegacyUnificationPersonJsonInvalidTest extends TestCase
                 [
                     'idpes' => $this->individualOne->getKey(),
                     'pessoa_principal' => true,
-                ]
+                ],
             ]),
         ];
 

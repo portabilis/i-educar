@@ -17,7 +17,7 @@ class SchoolManagerFactory extends Factory
             'employee_id' => static function () {
                 $individual = LegacyIndividualFactory::new()->create();
                 EmployeeFactory::new()->create([
-                    'id' => $individual->idpes
+                    'id' => $individual->idpes,
                 ]);
 
                 return $individual;

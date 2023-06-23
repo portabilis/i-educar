@@ -15,12 +15,9 @@ class LegacyInstitutionTest extends EloquentTestCase
 {
     public $relations = [
         'generalConfiguration' => LegacyGeneralConfiguration::class,
-        'schools' => LegacySchool::class
+        'schools' => LegacySchool::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyInstitution::class;
@@ -54,24 +51,24 @@ class LegacyInstitutionTest extends EloquentTestCase
 
     public function testIsMandatoryCensoFields(): void
     {
-        $this->assertEquals((bool)$this->model->obrigar_campos_censo, $this->model->isMandatoryCensoFields());
+        $this->assertEquals((bool) $this->model->obrigar_campos_censo, $this->model->isMandatoryCensoFields());
     }
 
     public function testGetAllowRegistrationOutAcademicYearAttribute(): void
     {
-        $this->assertEquals((bool)$this->model->permitir_matricula_fora_periodo_letivo, $this->model->allowRegistrationOutAcademicYear);
+        $this->assertEquals((bool) $this->model->permitir_matricula_fora_periodo_letivo, $this->model->allowRegistrationOutAcademicYear);
     }
 
     public function testRelationshipEvaluationRules()
     {
         LegacyRoundingTableFactory::new()->create([
-            'instituicao_id' => $this->model
+            'instituicao_id' => $this->model,
         ]);
         LegacyEvaluationRuleFactory::new()->create([
             'formula_media_id' => LegacyAverageFormulaFactory::new()->create([
                 'institution_id' => $this->model,
             ]),
-            'instituicao_id' => $this->model
+            'instituicao_id' => $this->model,
         ]);
 
         $this->assertCount(1, $this->model->evaluationRules);

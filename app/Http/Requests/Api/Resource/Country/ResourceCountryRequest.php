@@ -9,14 +9,14 @@ class ResourceCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['nullable', 'min:1', 'max:255']
+            'name' => ['nullable', 'min:1', 'max:255'],
         ];
     }
 
     public function attributes()
     {
         return [
-            'name' => 'Nome'
+            'name' => 'Nome',
         ];
     }
 }

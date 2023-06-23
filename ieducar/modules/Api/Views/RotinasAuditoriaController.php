@@ -2,14 +2,13 @@
 
 class RotinasAuditoriaController extends ApiCoreController
 {
-
     // search options
     protected function searchOptions()
     {
         return [
             'namespace' => 'modules',
             'table' => 'auditoria_geral',
-            'idAttr' => 'rotina'
+            'idAttr' => 'rotina',
         ];
     }
 

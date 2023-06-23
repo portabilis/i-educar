@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -30,12 +31,19 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_abandono_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nome;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -43,11 +51,11 @@ return new class extends clsListagem {
         $this->titulo = 'Motivo Abandono - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
-            'Abandono'
+            'Abandono',
         ];
 
         $obj_permissao = new clsPermissoes();
@@ -59,7 +67,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: $lista_busca);
 
         // Filtros de Foreign Keys
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto(nome: 'nome', campo: 'Abandono', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
@@ -92,7 +100,7 @@ return new class extends clsListagem {
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_abandono_tipo_det.php?cod_abandono_tipo={$registro['cod_abandono_tipo']}\">{$registro['nome']}</a>"
+                    "<a href=\"educar_abandono_tipo_det.php?cod_abandono_tipo={$registro['cod_abandono_tipo']}\">{$registro['nome']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

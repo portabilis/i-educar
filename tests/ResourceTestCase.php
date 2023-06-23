@@ -17,10 +17,13 @@ class ResourceTestCase extends TestCase
     use DatabaseTransactions;
 
     protected string $uri = '/';
+
     protected string $model;
+
     protected string $factory;
 
     protected int $indexFactoryCount = 2;
+
     protected int $indexJsonCount = 1;
 
     protected int $showFactoryCount = 1;
@@ -56,7 +59,7 @@ class ResourceTestCase extends TestCase
 
         $response = $this->get($this->getUri(
             query: [
-                'show' => $this->showFactoryCount
+                'show' => $this->showFactoryCount,
             ]
         ));
 

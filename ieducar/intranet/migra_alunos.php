@@ -7,8 +7,8 @@ use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-return new class {
-
+return new class
+{
     private $pessoa_logada;
 
     public function __construct()
@@ -32,7 +32,6 @@ return new class {
             $this->processStuddents(studentCods: $data);
         }
 
-
         return '';
     }
 
@@ -47,7 +46,6 @@ return new class {
     {
         return min(value: $studentCods);
     }
-
 
     private function clearStudentList(string $pricipal, array $studentCods): array
     {
@@ -69,7 +67,7 @@ return new class {
 
         $alunosPrincipal = $this->getStudentDetails(id: $principal);
         $codPessoaPrincipal = $alunosPrincipal['ref_idpes'];
-        $codPessoas  = $this->buscaCodPessoas(studentCods: $studentCods);
+        $codPessoas = $this->buscaCodPessoas(studentCods: $studentCods);
 
         $this->unificaPessoas(codPessoaPrincipal: $codPessoaPrincipal, codPessoas: $codPessoas);
 
@@ -130,12 +128,10 @@ return new class {
         return $log->id;
     }
 
-
     /**
      * Retorna os nomes das pessoas unificadas
      *
-     * @param integer[] $duplicatesId
-     *
+     * @param int[] $duplicatesId
      * @return string[]
      */
     private function getNamesOfUnifiedPeople($duplicatesId)
@@ -162,6 +158,7 @@ return new class {
         } catch (CoreExt_Exception $exception) {
             $this->mensagem = $exception->getMessage();
             DB::rollBack();
+
             return false;
         }
     }
@@ -173,7 +170,7 @@ return new class {
 
     private function getStudents()
     {
-        $query = <<<SQL
+        $query = <<<'SQL'
             SELECT  array_agg(alunos.cod_aluno) alunos FROM (
 
             SELECT

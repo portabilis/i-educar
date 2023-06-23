@@ -2,24 +2,35 @@
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_tipo_ocorrencia_disciplinar;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $max_ocorrencias;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_tipo_ocorrencia_disciplinar=$_GET['cod_tipo_ocorrencia_disciplinar'];
+        $this->cod_tipo_ocorrencia_disciplinar = $_GET['cod_tipo_ocorrencia_disciplinar'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(580, $this->pessoa_logada, 3, 'educar_tipo_ocorrencia_disciplinar_lst.php');
@@ -55,7 +66,7 @@ return new class extends clsCadastro {
 
         // foreign keys
         $obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // text
         $this->campoTexto('nm_tipo', 'Tipo Ocorrência Disciplinar', $this->nm_tipo, 30, 255, true);
@@ -78,6 +89,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -97,6 +109,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -112,6 +125,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

@@ -12,14 +12,12 @@ trait HasLegacyUserAction
         $this->fillable = array_unique(array_merge($this->fillable, ['ref_usuario_exc', 'ref_usuario_cad']));
         $this->legacy = array_unique(array_merge($this->legacy, [
             'deleted_by' => 'ref_usuario_exc',
-            'created_by' => 'ref_usuario_cad'
+            'created_by' => 'ref_usuario_cad',
         ]));
     }
 
     /**
      * Usuário que criou
-     *
-     * @return BelongsTo
      */
     public function createdByUser(): BelongsTo
     {
@@ -28,8 +26,6 @@ trait HasLegacyUserAction
 
     /**
      * Usuário que deletou
-     *
-     * @return BelongsTo
      */
     public function deletedByUser(): BelongsTo
     {

@@ -11,7 +11,7 @@ class LegacyMenuUserTypeTest extends EloquentTestCase
 {
     protected $relations = [
         'menus' => Menu::class,
-        'userType' => LegacyUserType::class
+        'userType' => LegacyUserType::class,
     ];
 
     protected function getEloquentModelName(): string

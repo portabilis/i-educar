@@ -20,12 +20,12 @@ class ReleaseAbsencesForStudentsFactory
 
             $registration->grade->allDisciplines->each(
                 fn ($discipline) => LegacyDisciplineAbsenceFactory::new()
-                ->count($stages)
-                ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
-                ->create([
-                    'falta_aluno_id' => $absence,
-                    'componente_curricular_id' => $discipline,
-                ])
+                    ->count($stages)
+                    ->sequence(fn ($sequence) => ['etapa' => $sequence->index + 1])
+                    ->create([
+                        'falta_aluno_id' => $absence,
+                        'componente_curricular_id' => $discipline,
+                    ])
             );
         });
     }

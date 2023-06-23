@@ -9,9 +9,13 @@ use iEducar\Modules\Educacenso\Model\Regulamentacao;
 class AdministrativeDomainValidator implements EducacensoValidator
 {
     private $administrativeDomain;
+
     private $regulations;
+
     private $administrativeDependence;
+
     private $cityIbgeCode;
+
     private const BRASILIA = 5300108;
 
     public function __construct(
@@ -26,9 +30,6 @@ class AdministrativeDomainValidator implements EducacensoValidator
         $this->cityIbgeCode = $cityIbgeCode;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if ($this->regulations == Regulamentacao::NAO) {

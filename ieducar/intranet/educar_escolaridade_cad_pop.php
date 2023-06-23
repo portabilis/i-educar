@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -9,21 +10,23 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $idesco;
+
     public $descricao;
+
     public $escolaridade;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->idesco=$_GET['idesco'];
+        $this->idesco = $_GET['idesco'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4, 'educar_escolaridade_lst.php');
 
         if (is_numeric($this->idesco)) {
             $obj = new clsCadastroEscolaridade($this->idesco);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -36,7 +39,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_escolaridade_det.php?idesco={$registro["idesco"]}" : "educar_escolaridade_lst.php";
+        //      $this->url_cancelar = ($retorno == "Editar") ? "educar_escolaridade_det.php?idesco={$registro["idesco"]}" : "educar_escolaridade_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -52,11 +55,11 @@ return new class extends clsCadastro {
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, true);
 
         $resources = [1 => 'Fundamental incompleto',
-                           2 => 'Fundamental completo',
-                           3 => 'Ensino médio - Normal/Magistério',
-                           4 => 'Ensino médio - Normal/Magistério Indígena',
-                           5 => 'Ensino médio',
-                           6 => 'Superior'];
+            2 => 'Fundamental completo',
+            3 => 'Ensino médio - Normal/Magistério',
+            4 => 'Ensino médio - Normal/Magistério Indígena',
+            5 => 'Ensino médio',
+            6 => 'Superior'];
 
         $options = ['label' => 'Escolaridade', 'resources' => $resources, 'value' => $this->escolaridade];
         $this->inputsHelper()->select('escolaridade', $options);
@@ -72,7 +75,7 @@ return new class extends clsCadastro {
                         parent.document.getElementById('ref_idesco').value = '$cadastrou';
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-            die();
+            exit();
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';

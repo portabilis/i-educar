@@ -16,8 +16,6 @@ class LegacyEmployeeFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -26,7 +24,7 @@ class LegacyEmployeeFactory extends Factory
             'matricula' => $this->faker->randomDigitNotNull(),
             'senha' => $this->faker->password(),
             'email' => $this->faker->email(),
-            'ativo' => 1
+            'ativo' => 1,
         ];
     }
 

@@ -14,15 +14,15 @@ class ReligionRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:255',
-                'unique:App\Models\Religion,name'
-            ]
+                'unique:App\Models\Religion,name',
+            ],
         ];
     }
 
     public function attributes()
     {
         return [
-            'name' => 'Nome'
+            'name' => 'Nome',
         ];
     }
 }

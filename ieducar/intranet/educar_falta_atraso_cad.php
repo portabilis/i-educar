@@ -4,31 +4,47 @@ use App\Models\LegacyAbsenceDelay;
 use App\Services\EmployeeService;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_falta_atraso;
+
     public $ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_servidor;
+
     public $tipo;
+
     public $data_falta_atraso;
+
     public $qtd_horas;
+
     public $qtd_min;
+
     public $justificada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_servidor_funcao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_falta_atraso    = $_GET['cod_falta_atraso'];
-        $this->ref_cod_servidor    = $_GET['ref_cod_servidor'];
-        $this->ref_cod_escola      = $_GET['ref_cod_escola'];
+        $this->cod_falta_atraso = $_GET['cod_falta_atraso'];
+        $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes();
@@ -86,8 +102,8 @@ return new class extends clsCadastro {
         // @todo CoreExt_Enum
         $opcoes = [
             '' => 'Selecione',
-            1  => 'Atraso',
-            2  => 'Falta'
+            1 => 'Atraso',
+            2 => 'Falta',
         ];
 
         $this->campoLista(nome: 'tipo', campo: 'Tipo', valor: $opcoes, default: $this->tipo);
@@ -101,8 +117,8 @@ return new class extends clsCadastro {
 
         $opcoes = [
             '' => 'Selecione',
-            0  => 'Sim',
-            1  => 'Não'
+            0 => 'Sim',
+            1 => 'Não',
         ];
 
         $this->campoLista(nome: 'justificada', campo: 'Justificada', valor: $opcoes, default: $this->justificada);
@@ -235,8 +251,6 @@ return new class extends clsCadastro {
             $obj->justificada = $this->justificada;
             $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
 
-
-
         } elseif ($this->tipo == 2) {
             $obj_ser = new clsPmieducarServidor(
                 cod_servidor: $this->ref_cod_servidor,
@@ -245,7 +259,7 @@ return new class extends clsCadastro {
             );
 
             $det_ser = $obj_ser->detalhe();
-            $horas   = floor($det_ser['carga_horaria']);
+            $horas = floor($det_ser['carga_horaria']);
             $minutos = ($det_ser['carga_horaria'] - $horas) * 60;
 
             $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
@@ -270,6 +284,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br />';
+
         return false;
     }
 
@@ -300,6 +315,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

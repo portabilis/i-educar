@@ -48,7 +48,7 @@
         "brianium/paratest": "^7.0",
         "fakerphp/faker": "^1.15",
         "filp/whoops": "^2.14",
-        "friendsofphp/php-cs-fixer": "^3.2",
+        "laravel/pint": "^1.10",
         "laravel/sail": "^1.0",
         "laravel/telescope": "^4.7",
         "mockery/mockery": "^1.4.3",
@@ -99,8 +99,7 @@
         }
     },
     "scripts": {
-        "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
-        "fix-style": "vendor/bin/php-cs-fixer fix",
+        "format": "vendor/bin/pint",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
@@ -119,13 +118,7 @@
             "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
-            "chmod ug+x .git/hooks/*"
-        ],
-        "post-update-cmd": [
-            "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
-            "chmod ug+x .git/hooks/*"
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"

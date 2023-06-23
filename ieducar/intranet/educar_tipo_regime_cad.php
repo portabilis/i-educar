@@ -3,15 +3,24 @@
 use App\Models\LegacyCourse;
 use App\Models\LegacyRegimeType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_tipo_regime;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -56,7 +65,7 @@ return new class extends clsCadastro {
 
         $get_escola = false;
         $obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
         // text
         $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, true);
     }
@@ -75,6 +84,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -94,6 +104,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -105,6 +116,7 @@ return new class extends clsCadastro {
 
         if ($count > 0) {
             $this->mensagem = 'Você não pode excluir esse Tipo de Regime, pois ele possui vínculo com Curso(s).<br>';
+
             return false;
         }
 
@@ -118,6 +130,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

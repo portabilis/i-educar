@@ -21,22 +21,12 @@ class ResourceDisciplineTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @var LegacyCourse
-     */
     private LegacyCourse $course;
-    /**
-     * @var LegacyGrade
-     */
+
     private LegacyGrade $grade;
-    /**
-     * @var LegacySchool
-     */
+
     private LegacySchool $school;
 
-    /**
-     * @var string
-     */
     private string $route = 'api.resource.discipline';
 
     protected function setUp(): void
@@ -57,13 +47,13 @@ class ResourceDisciplineTest extends TestCase
             $courses->each(function ($course) use ($school) {
                 //series
                 $grade = LegacyGradeFactory::new()->create([
-                    'ref_cod_curso' => $course->id
+                    'ref_cod_curso' => $course->id,
                 ]);
 
                 //escol_serie
                 LegacySchoolGradeFactory::new()->create([
                     'ref_cod_serie' => $grade->id,
-                    'ref_cod_escola' => $school->id
+                    'ref_cod_escola' => $school->id,
                 ]);
 
                 //componente curricular ano escolar
@@ -77,7 +67,7 @@ class ResourceDisciplineTest extends TestCase
                     LegacySchoolGradeDisciplineFactory::new()->create([
                         'ref_ref_cod_serie' => $grade->id,
                         'ref_ref_cod_escola' => $school->id,
-                        'ref_cod_disciplina' => $discipline_academic_year->id
+                        'ref_cod_disciplina' => $discipline_academic_year->id,
                     ]);
                 });
             });
@@ -96,14 +86,14 @@ class ResourceDisciplineTest extends TestCase
                 '*' => [
                     'id',
                     'name',
-                    'workload'
-                ]
-            ]
+                    'workload',
+                ],
+            ],
         ]);
 
         $disciplines = LegacyDisciplineAcademicYear::getResource([
             'course' => $this->course->id,
-            'grade' => $this->grade->id
+            'grade' => $this->grade->id,
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($disciplines) {
@@ -129,14 +119,14 @@ class ResourceDisciplineTest extends TestCase
                 '*' => [
                     'id',
                     'name',
-                    'workload'
-                ]
-            ]
+                    'workload',
+                ],
+            ],
         ]);
 
         $disciplines = LegacySchoolGradeDiscipline::getResource([
             'school' => $this->school->id,
-            'grade' => $this->grade->id
+            'grade' => $this->grade->id,
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($disciplines) {

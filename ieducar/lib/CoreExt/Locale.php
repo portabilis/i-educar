@@ -44,7 +44,6 @@ class CoreExt_Locale extends CoreExt_Singleton
      * Setter.
      *
      * @param string $culture
-     *
      * @return CoreExt_Locale Provê interface fluída
      */
     public function setCulture($culture)
@@ -79,7 +78,7 @@ class CoreExt_Locale extends CoreExt_Singleton
      *
      * @link http://linux.die.net/man/3/setlocale Linux setlocale(3) man page
      *
-     * @param string|NULL $culture
+     * @param string|null $culture
      */
     public function setLocale($culture = null)
     {
@@ -88,16 +87,16 @@ class CoreExt_Locale extends CoreExt_Singleton
         }
 
         $actualCulture = $this->_setLocale(LC_ALL, [$culture . '.',
-      $culture . '.', $culture . '.ISO88591', $culture . '.iso88591',
-      $culture . '.ISO8859-1', $culture . '.iso8859-1', $culture . 'ISO_8859_1',
-      $culture . '.iso_8859_1', $culture . '.ISO8859_1', $culture . '.iso8859_1']);
+            $culture . '.', $culture . '.ISO88591', $culture . '.iso88591',
+            $culture . '.ISO8859-1', $culture . '.iso8859-1', $culture . 'ISO_8859_1',
+            $culture . '.iso_8859_1', $culture . '.ISO8859_1', $culture . '.iso8859_1']);
 
         if (false == $actualCulture) {
             $actualCulture = [];
-            $actualCulture['LC_ALL']     = $this->_setlocale(LC_ALL, ['C']);
+            $actualCulture['LC_ALL'] = $this->_setlocale(LC_ALL, ['C']);
             $actualCulture['LC_NUMERIC'] = $this->_setlocale(LC_NUMERIC, [$culture.'.UTF-8',
-        $culture . '.UTF8', $culture . '.utf-8', $culture . '.utf8',
-        $culture . '.UTF_8', $culture . '.utf_8']);
+                $culture . '.UTF8', $culture . '.utf-8', $culture . '.utf8',
+                $culture . '.UTF_8', $culture . '.utf_8']);
         }
 
         $this->actualCulture = $actualCulture;
@@ -111,8 +110,7 @@ class CoreExt_Locale extends CoreExt_Singleton
      * Chama a função setlocale().
      *
      * @param string $category
-     *
-     * @return NULL|string Retorna NULL em caso de erro
+     * @return null|string Retorna NULL em caso de erro
      */
     protected function _setLocale($category, array $locale)
     {
@@ -128,9 +126,7 @@ class CoreExt_Locale extends CoreExt_Singleton
     }
 
     /**
-     *
-     * @param string|NULL $index
-     *
+     * @param string|null $index
      * @return array|string
      */
     public function getCultureInfo($index = null)

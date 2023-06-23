@@ -2,21 +2,36 @@
 
 use App\Models\LegacySchoolClassType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $ref_cod_matricula;
+
     public $ref_cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_serie;
+
     public $ref_cod_escola;
+
     public $ref_cod_turma_origem;
+
     public $ref_cod_curso;
+
     public $ano_letivo;
+
     public $sequencial;
+
     public $data_enturmacao;
 
     public function Gerar()
@@ -98,7 +113,7 @@ return new class extends clsDetalhe {
 
         $det_aluno = $obj_aluno->lista(
             int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo:1
+            int_ativo: 1
         );
 
         $det_aluno = array_shift(array: $det_aluno);
@@ -192,7 +207,7 @@ return new class extends clsDetalhe {
                   <input type="hidden" name="data_enturmacao" value="">
                   <input type="hidden" name="sequencial" value="%d">
                 </form>
-            ', $this->ref_cod_turma_origem, $this->sequencial)
+            ', $this->ref_cod_turma_origem, $this->sequencial),
         ]);
 
         if (($totalVagas - $total_alunos <= 0) && !$dependente) {
@@ -278,7 +293,7 @@ return new class extends clsDetalhe {
             $jsEnturmacao
         );
 
-        print $script;
+        echo $script;
 
         $canCreate = new clsPermissoes();
         $canCreate = $canCreate->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);

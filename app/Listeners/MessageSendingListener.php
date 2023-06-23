@@ -6,9 +6,6 @@ use Illuminate\Mail\Events\MessageSending;
 
 class MessageSendingListener
 {
-    /**
-     * @param MessageSending $event
-     */
     public function handle(MessageSending $event)
     {
         $event->message

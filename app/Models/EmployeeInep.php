@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * EmployeeInep
  *
  * @property Employee $employee
- *
  */
 class EmployeeInep extends LegacyModel
 {
@@ -20,7 +19,7 @@ class EmployeeInep extends LegacyModel
 
     protected $fillable = [
         'cod_servidor',
-        'cod_docente_inep'
+        'cod_docente_inep',
     ];
 
     protected function number(): Attribute
@@ -30,9 +29,6 @@ class EmployeeInep extends LegacyModel
         );
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'cod_servidor', 'cod_servidor');

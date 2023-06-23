@@ -30,7 +30,7 @@ class LegacyDiscipline extends LegacyModel
         'tipo_base',
         'ordenamento',
         'codigo_educacenso',
-        'desconsidera_para_progressao'
+        'desconsidera_para_progressao',
     ];
 
     public array $legacy = [

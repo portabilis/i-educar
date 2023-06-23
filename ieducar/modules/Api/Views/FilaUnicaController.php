@@ -74,7 +74,7 @@ class FilaUnicaController extends ApiCoreController
             'letra',
             'complemento',
             'sexo',
-            'ideciv'
+            'ideciv',
         ];
 
         $aluno = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
@@ -100,15 +100,14 @@ class FilaUnicaController extends ApiCoreController
         $aluno = $this->getRequest()->aluno_id;
 
         if ($aluno && $anoLetivo) {
-            $legacySingleQueueCandidate= LegacySingleQueueCandidate::query()
+            $legacySingleQueueCandidate = LegacySingleQueueCandidate::query()
                 ->where([
-                    'ativo'=> 1,
+                    'ativo' => 1,
                     'ano_letivo' => $anoLetivo,
                     'ref_cod_aluno' => $aluno])
                 ->select('ref_cod_aluno AS cod_aluno', 'cod_candidato_fila_unica AS cod_candidato')
                 ->get()
-                ->first()
-            ;
+                ->first();
 
             if ($legacySingleQueueCandidate instanceof LegacySingleQueueCandidate) {
                 return $legacySingleQueueCandidate->toArray();
@@ -192,7 +191,7 @@ class FilaUnicaController extends ApiCoreController
                 'ddd_telefone',
                 'telefone',
                 'ddd_telefone_celular',
-                'telefone_celular'
+                'telefone_celular',
             ];
 
             $responsaveis = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);

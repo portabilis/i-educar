@@ -5,25 +5,30 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EditController extends Core_Controller_Page_EditController
 {
-    protected $_dataMapper        = 'FormulaMedia_Model_FormulaDataMapper';
-    protected $_titulo            = 'Cadastro de fórmula de cálculo de média';
-    protected $_processoAp        = 948;
+    protected $_dataMapper = 'FormulaMedia_Model_FormulaDataMapper';
+
+    protected $_titulo = 'Cadastro de fórmula de cálculo de média';
+
+    protected $_processoAp = 948;
+
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
-    protected $_saveOption        = true;
-    protected $_deleteOption      = true;
+
+    protected $_saveOption = true;
+
+    protected $_deleteOption = true;
 
     protected $_formMap = [
-    'instituicao' => [
-      'label'  => 'Instituição',
-      'help'   => ''
-    ],
-    'nome' => [
-      'label'  => 'Nome',
-      'help'   => ''
-    ],
-    'formulaMedia' => [
-      'label'  => 'Fórmula de média final',
-      'help'   => 'A fórmula de cálculo.<br />
+        'instituicao' => [
+            'label' => 'Instituição',
+            'help' => '',
+        ],
+        'nome' => [
+            'label' => 'Nome',
+            'help' => '',
+        ],
+        'formulaMedia' => [
+            'label' => 'Fórmula de média final',
+            'help' => 'A fórmula de cálculo.<br />
                    Variáveis disponíveis:<br />
                    &middot; En - Etapa n (de 1 a 10)<br />
                    &middot; Cn - Considera etapa n (de 1 a 10): 1 - Sim, 0 - Não<br />
@@ -37,20 +42,20 @@ class EditController extends Core_Controller_Page_EditController
                    &middot; (), +, /, *, x<br />
                    &middot; < > ? :
                    A variável "Rc" está disponível apenas<br />
-                   quando Tipo de fórmula for "Recuperação".'
-    ],
-    'tipoFormula' => [
-      'label'  => 'Tipo de fórmula',
-      'help'   => ''
-    ],
-    'substituiMenorNotaRc' => [
-      'label'  => 'Substitui menor nota por recuperação ',
-      'help'   => 'Substitui menor nota (En) por nota de recuperação (Rc) em ordem descrescente.<br/>
+                   quando Tipo de fórmula for "Recuperação".',
+        ],
+        'tipoFormula' => [
+            'label' => 'Tipo de fórmula',
+            'help' => '',
+        ],
+        'substituiMenorNotaRc' => [
+            'label' => 'Substitui menor nota por recuperação ',
+            'help' => 'Substitui menor nota (En) por nota de recuperação (Rc) em ordem descrescente.<br/>
                    Somente substitui quando Rc é maior que En.
                    Ex: E1 = 2, E2 = 3, E3 = 2, Rc = 5.
-                   Na fórmula será considerado: E1 = 2, E2 = 3, E3 = 5, Rc = 5.'
-    ]
-  ];
+                   Na fórmula será considerado: E1 = 2, E2 = 3, E3 = 5, Rc = 5.',
+        ],
+    ];
 
     public function _preRender()
     {
@@ -59,8 +64,8 @@ class EditController extends Core_Controller_Page_EditController
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
         $this->breadcrumb("$nomeMenu fórmula de média", [
-          url('intranet/educar_index.php') => 'Escola',
-      ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     /**

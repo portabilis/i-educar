@@ -13,7 +13,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchRotinasAuditoria extends
             'objectName' => 'rotinas-auditoria',
             'apiController' => 'RotinasAuditoria',
             'apiResource' => 'rotinas-auditoria-search',
-            'showIdOnValue' => false
+            'showIdOnValue' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

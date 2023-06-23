@@ -119,13 +119,12 @@ class SchoolHistoryService
      *
      * @param int $numberOfDisciplines número de disciplinas geradas no histórico
      * @param int $lineHeight          altura da linha
-     *
      * @return string
      */
     public function getBlankSpace($templateName, $numberOfDisciplines, $lineHeight)
     {
         $usedSpace = $this->getUsedSpaceByTemplate($templateName);
-        $numberOfBlankLines = (int) (((int)$usedSpace - ((int)$numberOfDisciplines * (int)$lineHeight)) / (int)$lineHeight);
+        $numberOfBlankLines = (int) (((int) $usedSpace - ((int) $numberOfDisciplines * (int) $lineHeight)) / (int) $lineHeight);
 
         return str_repeat('<br>', max($numberOfBlankLines, 0));
     }

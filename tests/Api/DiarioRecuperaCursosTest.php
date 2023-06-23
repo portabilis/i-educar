@@ -16,9 +16,9 @@ class DiarioRecuperaCursosTest extends TestCase
         $course = LegacyCourseFactory::new()->create();
 
         $data = [
-            'oper'=> 'get',
+            'oper' => 'get',
             'resource' => 'cursos',
-            'instituicao_id' =>  $course->ref_cod_instituicao
+            'instituicao_id' => $course->ref_cod_instituicao,
         ];
 
         $response = $this->getResource('/module/Api/Curso', $data);
@@ -31,11 +31,11 @@ class DiarioRecuperaCursosTest extends TestCase
                         'nome',
                         'updated_at',
                         'deleted_at',
-                    ]
+                    ],
                 ],
                 'msgs',
                 'oper',
-                'resource'
+                'resource',
             ]
         );
     }

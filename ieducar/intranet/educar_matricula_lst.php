@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Titulo no topo da pagina
      *
@@ -74,7 +75,7 @@ return new class extends clsListagem {
             'Situação',
             'Turma',
             'Série',
-            'Curso'
+            'Curso',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -92,7 +93,7 @@ return new class extends clsListagem {
         $get_escola = true;
         $get_curso = true;
         $get_escola_curso_serie = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         if ($this->ref_cod_escola) {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;

@@ -14,19 +14,10 @@ class ResourceAcademicYearTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @var LegacySchool
-     */
     private LegacySchool $school;
 
-    /**
-     * @var int
-     */
     private int $year;
 
-    /**
-     * @var string
-     */
     private string $route = 'api.resource.school-academic-year';
 
     protected function setUp(): void
@@ -35,10 +26,10 @@ class ResourceAcademicYearTest extends TestCase
         //escolas
         $schools = LegacySchoolFactory::new()->count(2)->create();
         $schools->each(function ($school) {
-            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->year]);
-            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->subYear()->year]);
-            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->subYears(2)->year]);
-            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->subYears(3)->year]);
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => now()->year]);
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => now()->subYear()->year]);
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => now()->subYears(2)->year]);
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => now()->subYears(3)->year]);
         });
         //escola
         $this->school = $schools->first();
@@ -54,14 +45,14 @@ class ResourceAcademicYearTest extends TestCase
         $response->assertJsonStructure([
             'data' => [
                 '*' => [
-                    'year'
-                ]
-            ]
+                    'year',
+                ],
+            ],
         ]);
 
         $academic_years = LegacySchoolAcademicYear::getResource([
             'school' => $this->school->id,
-            'year_gte' => $this->year
+            'year_gte' => $this->year,
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($academic_years) {

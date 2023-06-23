@@ -3,7 +3,8 @@
 use App\Models\LegacyIndividual;
 use App\Models\Religion;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -12,15 +13,18 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_religiao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_religiao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_religiao=$_GET['cod_religiao'];
+        $this->cod_religiao = $_GET['cod_religiao'];
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
@@ -71,6 +75,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -85,6 +90,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -95,6 +101,7 @@ return new class extends clsCadastro {
 
         if ($exists) {
             $this->mensagem = 'Você não pode excluir essa Religião, pois ela possui Pessoa(s) Física(s) vinculadas.<br>';
+
             return false;
         }
 
@@ -106,6 +113,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

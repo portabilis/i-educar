@@ -135,6 +135,7 @@ class SelectOptions
     {
         return self::getDefaultOption() + Deficiencias::getDescriptiveValues();
     }
+
     /**
      * Retorna as opções disponíveis referentes ao tipo de deficiência
      *

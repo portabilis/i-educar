@@ -3,33 +3,60 @@
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $nm_turma;
+
     public $sgl_turma;
+
     public $max_aluno;
+
     public $multiseriada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_turma_tipo;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_cod_escola;
+
     public $visivel;
+
     public $ano;
+
     public $ref_cod_serie;
 
     public function Gerar()
@@ -37,7 +64,7 @@ return new class extends clsListagem {
         $this->titulo = 'Turma - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
@@ -47,7 +74,7 @@ return new class extends clsListagem {
             'Série',
             'Curso',
             'Escola',
-            'Situação'
+            'Situação',
         ];
 
         $this->addCabecalhos(coluna: $lista_busca);
@@ -83,7 +110,7 @@ return new class extends clsListagem {
 
         // Editar
         if ($this->ref_cod_curso) {
-            $series = LegacyGrade::where(column: 'ativo', operator: 1)->where(column: 'ref_cod_curso', operator: $this->ref_cod_curso)->orderBy('nm_serie')->get(columns: ['nm_serie','cod_serie']);
+            $series = LegacyGrade::where(column: 'ativo', operator: 1)->where(column: 'ref_cod_curso', operator: $this->ref_cod_curso)->orderBy('nm_serie')->get(columns: ['nm_serie', 'cod_serie']);
 
             foreach ($series as $serie) {
                 $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
@@ -104,7 +131,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_turma = new clsPmieducarTurma();
         $obj_turma->setOrderby(strNomeCampo: 'nm_turma ASC');
@@ -132,29 +159,29 @@ return new class extends clsListagem {
                 'institution' => $this->ref_cod_instituicao,
                 'shift' => $this->turma_turno_id,
                 'visible' => $visivel,
-                'year_eq' => $this->ano
+                'year_eq' => $this->ano,
             ])
             ->with(relations: [
-                'school' => fn($q)=>$q->select('cod_escola','ref_idpes')->with('organization:idpes,fantasia'),
+                'school' => fn ($q) => $q->select('cod_escola', 'ref_idpes')->with('organization:idpes,fantasia'),
                 'course:cod_curso,nm_curso',
-                'grades'=> fn($q)=>$q->select('cod_serie','nm_serie','ref_cod_curso')->with('course:cod_curso,nm_curso')->orderBy('nm_serie'),
+                'grades' => fn ($q) => $q->select('cod_serie', 'nm_serie', 'ref_cod_curso')->with('course:cod_curso,nm_curso')->orderBy('nm_serie'),
                 'grade:cod_serie,nm_serie',
-                'period:id,nome'
+                'period:id,nome',
             ])
             ->active()
             ->orderBy(column: 'nm_turma')
-            ->paginate(perPage: $this->limite, columns: ['cod_turma', 'ano','nm_turma','ref_ref_cod_escola','turma_turno_id','ref_ref_cod_serie','ref_cod_curso','visivel','multiseriada'], pageName: 'pagina_' . $this->nome);
+            ->paginate(perPage: $this->limite, columns: ['cod_turma', 'ano', 'nm_turma', 'ref_ref_cod_escola', 'turma_turno_id', 'ref_ref_cod_serie', 'ref_cod_curso', 'visivel', 'multiseriada'], pageName: 'pagina_' . $this->nome);
 
         // monta a lista
         if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
                 $nm_escola = $registro->school->name;
-                $nm_serie = $registro->multiseriada ? $registro->grades->unique()->implode('name','<br>') : $registro->grade->name;
-                $nm_curso = $registro->multiseriada ? $registro->grades->unique('course.name')->implode('course.name','<br>') : $registro->course->name;
+                $nm_serie = $registro->multiseriada ? $registro->grades->unique()->implode('name', '<br>') : $registro->grade->name;
+                $nm_curso = $registro->multiseriada ? $registro->grades->unique('course.name')->implode('course.name', '<br>') : $registro->course->name;
 
                 $lista_busca = [
                     "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$registro->year}</a>",
-                    "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$registro->nm_turma}</a>"
+                    "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$registro->nm_turma}</a>",
                 ];
 
                 if ($registro->turma_turno_id) {

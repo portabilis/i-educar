@@ -12,7 +12,7 @@ class IndexController extends Core_Controller_Page_ListController
         'Nome' => 'nome',
         'Abreviatura' => 'abreviatura',
         'Base' => 'tipo_base',
-        'Área de conhecimento' => 'area_conhecimento'
+        'Área de conhecimento' => 'area_conhecimento',
     ];
 
     protected function _preRender()

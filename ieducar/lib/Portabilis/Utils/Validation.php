@@ -20,7 +20,7 @@ class Portabilis_Utils_Validation
             '66666666666',
             '77777777777',
             '88888888888',
-            '99999999999'
+            '99999999999',
         ];
 
         if (in_array($cpf, $cpfsInvalidos)) {
@@ -53,6 +53,6 @@ class Portabilis_Utils_Validation
             $segundoDigito = 0;
         }
 
-        return ($primeiroDigito == $cpf[9] && $segundoDigito == $cpf[10]);
+        return $primeiroDigito == $cpf[9] && $segundoDigito == $cpf[10];
     }
 }

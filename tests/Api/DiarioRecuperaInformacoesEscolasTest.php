@@ -42,12 +42,12 @@ class DiarioRecuperaInformacoesEscolasTest extends TestCase
                             'nome_responsavel',
                             'inep',
                             'ativo',
-                        ]
+                        ],
                     ],
                     'oper',
                     'resource',
                     'msgs',
-                    'any_error_msg'
+                    'any_error_msg',
                 ]
             )
             ->assertJson(
@@ -62,12 +62,12 @@ class DiarioRecuperaInformacoesEscolasTest extends TestCase
                             'logradouro' => $school->person->address->cep,
                             'bairro' => $school->person->place->address,
                             'email' => $school->person->email,
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'info-escolas',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

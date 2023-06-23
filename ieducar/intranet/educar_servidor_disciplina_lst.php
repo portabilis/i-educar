@@ -2,18 +2,30 @@
 
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_servidor;
+
     public $ref_cod_instituicao;
+
     public $ref_idesco;
+
     public $ref_cod_funcao;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_curso;
+
     public $ref_cod_disciplina;
+
     public $cursos_disciplina;
 
     public function Inicializar()
@@ -180,7 +192,7 @@ return new class extends clsCadastro {
         Session::start();
 
         echo "<script>parent.fechaExpansivel('{$_GET['div']}');</script>";
-        die;
+        exit;
     }
 
     public function Editar()
@@ -201,8 +213,8 @@ return new class extends clsCadastro {
     public function Formular()
     {
         $this->title = 'Servidor Disciplina';
-        $this->processoAp         = 0;
-        $this->renderMenu         = false;
+        $this->processoAp = 0;
+        $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };

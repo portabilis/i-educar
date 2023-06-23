@@ -14,13 +14,12 @@ class ConsultaMovimentoGeralController extends ConsultaBaseController
 {
     protected function canGetAlunos()
     {
-        return (
+        return
             $this->validatesPresenceOf('escola') &&
             $this->validatesPresenceOf('tipo') &&
             $this->validatesPresenceOf('data_inicial') &&
             $this->validatesPresenceOf('data_final') &&
-            $this->validatesPresenceOf('ano')
-        );
+            $this->validatesPresenceOf('ano');
     }
 
     protected function getData()

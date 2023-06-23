@@ -8,7 +8,7 @@ class ClsBancoTest extends TestCase
     {
         $data = [
             'id' => 1,
-            'hasChild' => true
+            'hasChild' => true,
         ];
 
         $db = new clsBanco();

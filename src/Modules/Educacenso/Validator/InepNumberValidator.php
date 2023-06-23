@@ -11,9 +11,6 @@ class InepNumberValidator implements EducacensoValidator
         $this->number = $number;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if (!$this->number) {

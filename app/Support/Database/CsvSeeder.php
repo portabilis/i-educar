@@ -25,9 +25,9 @@ abstract class CsvSeeder extends Seeder
     /**
      * Return CSV filename.
      *
-     * @throws Exception
-     *
      * @return string
+     *
+     * @throws Exception
      */
     public function getCsvFilename()
     {
@@ -41,9 +41,9 @@ abstract class CsvSeeder extends Seeder
     /**
      * Return model name.
      *
-     * @throws Exception
-     *
      * @return string
+     *
+     * @throws Exception
      */
     public function getModelName()
     {
@@ -57,9 +57,9 @@ abstract class CsvSeeder extends Seeder
     /**
      * Read a CSV file and return your content into a generator.
      *
-     * @throws Exception
-     *
      * @return Generator
+     *
+     * @throws Exception
      */
     public function read()
     {
@@ -80,9 +80,9 @@ abstract class CsvSeeder extends Seeder
     /**
      * Run seed.
      *
-     * @throws Exception
-     *
      * @return void
+     *
+     * @throws Exception
      */
     public function run()
     {

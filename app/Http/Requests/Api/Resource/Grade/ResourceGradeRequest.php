@@ -22,7 +22,7 @@ class ResourceGradeRequest extends ResourceRequest
             'course' => 'Curso',
             'school' => 'Escola',
             'grade_exclude' => 'Curso Excluído',
-            'school_exclude' => 'Escola Excluída'
+            'school_exclude' => 'Escola Excluída',
         ];
     }
 }

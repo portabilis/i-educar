@@ -16,8 +16,6 @@ class Registro20 extends AbstractRegistro
 
     /**
      * @param $escola
-     * @param $year
-     *
      * @return array
      */
     public function getData($school, $year)
@@ -34,9 +32,6 @@ class Registro20 extends AbstractRegistro
     }
 
     /**
-     * @param $escola
-     * @param $year
-     *
      * @return array
      */
     public function getExportFormatData($escola, $year)
@@ -54,7 +49,6 @@ class Registro20 extends AbstractRegistro
 
     /**
      * @param $Registro20Model
-     *
      * @return array
      */
     public function getRecordExportData($record)
@@ -138,15 +132,12 @@ class Registro20 extends AbstractRegistro
             $canExportComponente ? $this->getCensoValueForDiscipline(32, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 73 32. Estágio Curricular Supervisionado
             $canExportComponente ? $this->getCensoValueForDiscipline(33, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 74 33. Projeto de vida
             $canExportComponente ? $this->getCensoValueForDiscipline(99, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 75 99. Outras áreas do conhecimento
-            $record->classeComLinguaBrasileiraSinais == 1 ? 1 : 0 // 76 Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita
+            $record->classeComLinguaBrasileiraSinais == 1 ? 1 : 0, // 76 Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita
         ];
     }
 
     /**
-     * @param $discipline
-     * @param $disciplinesWithTeacher
-     *
-     * @return integer
+     * @return int
      */
     private function getCensoValueForDiscipline($discipline, $disciplines, $disciplinesWithTeacher)
     {
@@ -162,9 +153,6 @@ class Registro20 extends AbstractRegistro
     }
 
     /**
-     * @param $schoolClassId
-     * @param $disciplineIds
-     *
      * @return array
      */
     public function getDisciplinesWithoutTeacher($schoolClassId, $disciplineIds)
@@ -172,9 +160,6 @@ class Registro20 extends AbstractRegistro
         return $this->repository->getDisciplinesWithoutTeacher($schoolClassId, $disciplineIds);
     }
 
-    /**
-     * @param $data
-     */
     protected function hydrateModel($data)
     {
         $model = clone $this->model;

@@ -12,7 +12,7 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
     {
         return new Avaliacao_Model_ParecerDescritivoComponente([
             'componenteCurricular' => 1,
-            'parecer' => 'Ok.'
+            'parecer' => 'Ok.',
         ]);
     }
 
@@ -20,7 +20,7 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
     {
         return new Avaliacao_Model_ParecerDescritivoComponente([
             'componenteCurricular' => 1,
-            'parecer' => 'N/D.'
+            'parecer' => 'N/D.',
         ]);
     }
 
@@ -30,23 +30,23 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
+                'etapa' => 'An',
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 2,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
+                'etapa' => 'An',
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 3,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
+                'etapa' => 'An',
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 4,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
-            ])
+                'etapa' => 'An',
+            ]),
         ];
     }
 
@@ -56,13 +56,13 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
+                'etapa' => 'An',
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 2,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
-            ])
+                'etapa' => 'An',
+            ]),
         ];
     }
 
@@ -73,8 +73,8 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
                 'id' => 1,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
-            ])
+                'etapa' => 'An',
+            ]),
         ];
     }
 
@@ -84,12 +84,12 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
+                'etapa' => 'An',
             ]),
             new Avaliacao_Model_ParecerDescritivoComponente([
                 'componenteCurricular' => 2,
                 'parecer' => 'N/D.',
-            ])
+            ]),
         ];
     }
 
@@ -100,7 +100,7 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
                 'id' => 1,
                 'componenteCurricular' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
+                'etapa' => 'An',
             ]),
         ];
     }

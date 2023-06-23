@@ -16,8 +16,6 @@ class LegacyEnrollmentFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -36,7 +34,7 @@ class LegacyEnrollmentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
-                'ativo' => 1
+                'ativo' => 1,
             ]);
         });
     }
@@ -45,7 +43,7 @@ class LegacyEnrollmentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
-                'ativo' => 0
+                'ativo' => 0,
             ]);
         });
     }

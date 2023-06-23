@@ -12,6 +12,7 @@ class LegacyGradeSequence extends LegacyModel
     use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';
+
     public const UPDATED_AT = null;
 
     protected $table = 'pmieducar.sequencia_serie';

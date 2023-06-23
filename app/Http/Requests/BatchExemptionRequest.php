@@ -24,7 +24,7 @@ class BatchExemptionRequest extends FormRequest
             'stage' => 'required',
             'ref_cod_curso' => 'required',
             'ref_cod_escola' => 'required',
-            'stage_type' => 'required'
+            'stage_type' => 'required',
         ];
     }
 

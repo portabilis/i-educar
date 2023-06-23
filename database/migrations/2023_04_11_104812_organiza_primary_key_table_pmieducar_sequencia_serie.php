@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.sequencia_serie DROP CONSTRAINT IF EXISTS sequencia_serie_pkey;');
@@ -12,7 +13,7 @@ return new class () extends Migration {
             $table->increments('id');
             $table->unique([
                 'ref_serie_origem',
-                'ref_serie_destino'
+                'ref_serie_destino',
             ]);
             $table->timestamp('updated_at')->nullable();
         });
@@ -24,7 +25,7 @@ return new class () extends Migration {
             $table->dropColumn('updated_at');
             $table->dropUnique([
                 'ref_serie_origem',
-                'ref_serie_destino'
+                'ref_serie_destino',
             ]);
             $table->dropColumn('id');
         });

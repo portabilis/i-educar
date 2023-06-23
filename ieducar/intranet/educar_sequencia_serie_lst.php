@@ -2,19 +2,30 @@
 
 use App\Models\LegacySequenceGrade;
 
-return new class extends clsListagem {
-
+return new class extends clsListagem
+{
     public $limite;
+
     public $offset;
+
     public $ref_serie_origem;
+
     public $ref_serie_destino;
+
     public $ref_curso_origem;
+
     public $ref_curso_destino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -22,14 +33,14 @@ return new class extends clsListagem {
         $this->titulo = 'Sequência Enturmação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
             'Curso Origem',
             'Série Origem',
             'Curso Destino',
-            'Série Destino'
+            'Série Destino',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -42,7 +53,7 @@ return new class extends clsListagem {
         // Filtros de Foreign Keys
         if ($nivel_usuario == 1) {
             $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = [ '' => 'Selecione' ];
+            $opcoes = ['' => 'Selecione'];
             $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
             if (is_array($lista)) {
@@ -57,8 +68,8 @@ return new class extends clsListagem {
             $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
         }
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         // EDITAR
         if ($this->ref_cod_instituicao) {
@@ -78,15 +89,15 @@ return new class extends clsListagem {
 
         // primary keys
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
+        $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
             $objTemp = new clsPmieducarSerie();
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');;
+                    $opcoes[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
                 }
             }
         }
@@ -118,7 +129,7 @@ return new class extends clsListagem {
                 'gradeDestiny:cod_serie,nm_serie,ref_cod_curso',
                 'gradeOrigin.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
                 'gradeDestiny.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
-                'gradeOrigin.course.institution:cod_instituicao,nm_instituicao'
+                'gradeOrigin.course.institution:cod_instituicao,nm_instituicao',
             ])
             ->active()
             ->orderBy('data_cadastro')
@@ -133,7 +144,7 @@ return new class extends clsListagem {
                     "<a href=\"{$url}\">{$registro->gradeOrigin->course->name}</a>",
                     "<a href=\"{$url}\">{$registro->gradeOrigin->name}</a>",
                     "<a href=\"{$url}\">{$registro->gradeDestiny->course->name}</a>",
-                    "<a href=\"{$url}\">{$registro->gradeDestiny->name}</a>"
+                    "<a href=\"{$url}\">{$registro->gradeDestiny->name}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

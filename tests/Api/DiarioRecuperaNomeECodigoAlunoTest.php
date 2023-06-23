@@ -25,7 +25,7 @@ class DiarioRecuperaNomeECodigoAlunoTest extends TestCase
         $data = [
             'oper' => 'get',
             'resource' => 'aluno-search',
-            'query' => $student->name
+            'query' => $student->name,
         ];
         $response = $this->getResource('/module/Api/Aluno', $data);
 
@@ -39,7 +39,7 @@ class DiarioRecuperaNomeECodigoAlunoTest extends TestCase
                     'oper' => 'get',
                     'resource' => 'aluno-search',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

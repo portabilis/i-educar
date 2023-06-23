@@ -10,7 +10,7 @@ class LegacySequenceGradeTest extends EloquentTestCase
 {
     protected $relations = [
         'gradeOrigin' => LegacyGrade::class,
-        'gradeDestiny' => LegacyGrade::class
+        'gradeDestiny' => LegacyGrade::class,
     ];
 
     /**

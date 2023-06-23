@@ -23,9 +23,6 @@ abstract class AbstractRegistro
         $this->model = $model;
     }
 
-    /**
-     * @param $data
-     */
     protected function hydrateModel($data)
     {
         foreach ($data as $field => $value) {

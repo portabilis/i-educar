@@ -16,8 +16,6 @@ class LegacyValueRoundingTableFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -29,7 +27,7 @@ class LegacyValueRoundingTableFactory extends Factory
             'valor_maximo' => $this->faker->randomNumber(1),
             'casa_decimal_exata' => $this->faker->randomNumber(1),
             'acao' => $this->faker->randomNumber(1),
-            'observacao' => $this->faker->text(50)
+            'observacao' => $this->faker->text(50),
         ];
     }
 }
