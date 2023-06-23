@@ -245,21 +245,21 @@ class clsPmieducarReservaVaga extends Model
      *
      * @return array|bool Retorna um array com registro(s) ou FALSE em caso de erro.
      *
-     * @var int   
-     * @var int   
-     * @var int   
-     * @var int   
-     * @var int   
-     * @var int   
+     * @var int
+     * @var int
+     * @var int
+     * @var int
+     * @var int
+     * @var int
      * @var string
      * @var string
      * @var string
      * @var string
-     * @var int   
-     * @var int   
-     * @var int   
+     * @var int
+     * @var int
+     * @var int
      * @var string
-     * @var int   
+     * @var int
      */
     public function lista(
         $int_cod_reserva_vaga = null,
