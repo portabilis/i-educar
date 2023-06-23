@@ -32,7 +32,6 @@ abstract class Portabilis_Report_ReportFactory
      *
      * @param array $options
      * @param array $defaultOptions
-     *
      * @return array
      */
     protected static function mergeOptions($options, $defaultOptions)
@@ -44,7 +43,6 @@ abstract class Portabilis_Report_ReportFactory
      * Define as configurações dos relatórios.
      *
      * @param object $config
-     *
      * @return void
      */
     abstract public function setSettings($config);
@@ -54,7 +52,6 @@ abstract class Portabilis_Report_ReportFactory
      *
      * @param Portabilis_Report_ReportCore $report
      * @param array                        $options
-     *
      * @return mixed
      */
     abstract public function dumps($report, $options = []);

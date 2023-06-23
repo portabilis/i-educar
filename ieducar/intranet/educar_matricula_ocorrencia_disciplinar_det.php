@@ -3,7 +3,8 @@
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -12,22 +13,30 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $ref_cod_matricula;
+
     public $ref_cod_tipo_ocorrencia_disciplinar;
+
     public $sequencial;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $observacao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
     {
         $this->titulo = 'Matricula Ocorrencia Disciplinar - Detalhe';
 
-        $this->sequencial=$_GET['sequencial'];
-        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_tipo_ocorrencia_disciplinar=$_GET['ref_cod_tipo_ocorrencia_disciplinar'];
+        $this->sequencial = $_GET['sequencial'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_tipo_ocorrencia_disciplinar = $_GET['ref_cod_tipo_ocorrencia_disciplinar'];
 
         $registro = LegacyRegistrationDisciplinaryOccurrenceType::query()
             ->where('ref_cod_matricula', $this->ref_cod_matricula)
@@ -38,7 +47,7 @@ return new class extends clsDetalhe {
             ->first()
             ?->getAttributes();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
@@ -60,9 +69,8 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_cod_matricula']) {
-            $this->addDetalhe([ 'Matrícula', "{$registro['ref_cod_matricula']}"]);
+            $this->addDetalhe(['Matrícula', "{$registro['ref_cod_matricula']}"]);
         }
-
 
         $obj_ref_cod_matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
         if (is_array($obj_ref_cod_matricula)) {
@@ -80,27 +88,27 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Nome do Aluno', $det_aluno['nome_aluno']]);
 
         if ($registro['ref_ref_cod_serie']) {
-            $this->addDetalhe([ 'Série', "{$registro['ref_ref_cod_serie']}"]);
+            $this->addDetalhe(['Série', "{$registro['ref_ref_cod_serie']}"]);
         }
 
         if ($det_mat_turma['det_turma']) {
-            $this->addDetalhe([ 'Turma', "{$det_mat_turma['det_turma']}"]);
+            $this->addDetalhe(['Turma', "{$det_mat_turma['det_turma']}"]);
         }
 
         if ($registro['sequencial']) {
-            $this->addDetalhe([ 'N&uacute;mero da Ocorrência', "{$registro['sequencial']}"]);
+            $this->addDetalhe(['N&uacute;mero da Ocorrência', "{$registro['sequencial']}"]);
         }
         if ($registro['data_cadastro']) {
             if ($hora = dataFromPgToBr("{$registro['data_cadastro']}", 'H:i')) {
-                $this->addDetalhe([ 'Hora Ocorrência', $hora ]);
+                $this->addDetalhe(['Hora Ocorrência', $hora]);
             }
-            $this->addDetalhe([ 'Data Ocorrência', dataFromPgToBr("{$registro['data_cadastro']}", 'd/m/Y') ]);
+            $this->addDetalhe(['Data Ocorrência', dataFromPgToBr("{$registro['data_cadastro']}", 'd/m/Y')]);
         }
         if ($registro['ref_cod_tipo_ocorrencia_disciplinar']) {
-            $this->addDetalhe([ 'Tipo Ocorrência', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(['Tipo Ocorrência', "{$registro['nm_tipo']}"]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observação', nl2br("{$registro['observacao']}")]);
+            $this->addDetalhe(['Observação', nl2br("{$registro['observacao']}")]);
         }
 
         $obj_permissoes = new clsPermissoes();

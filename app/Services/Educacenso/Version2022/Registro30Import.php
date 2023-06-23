@@ -31,8 +31,6 @@ class Registro30Import extends Registro30Import2020
     }
 
     /**
-     * @param $arrayColumns
-     *
      * @return Registro30|RegistroEducacenso
      */
     public static function getModel($arrayColumns)

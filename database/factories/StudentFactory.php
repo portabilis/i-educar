@@ -17,11 +17,11 @@ class StudentFactory extends Factory
             'id' => $model->cod_aluno,
             'religion_id' => $model->ref_cod_religiao,
             'individual_id' => $model->ref_idpes,
-            'created_by' =>  $model->ref_usuario_cad,
+            'created_by' => $model->ref_usuario_cad,
             'deleted_by' => $model->ref_usuario_exc,
             'created_at' => $model->data_cadastro,
             'guardian_type' => 3,
-            'transportation_vehicle_type' => $model->veiculo_transporte_escolar
+            'transportation_vehicle_type' => $model->veiculo_transporte_escolar,
         ];
     }
 
@@ -34,13 +34,14 @@ class StudentFactory extends Factory
                 'id' => $model->cod_aluno,
                 'religion_id' => $model->ref_cod_religiao,
                 'individual_id' => $model->ref_idpes,
-                'created_by' =>  $model->ref_usuario_cad,
+                'created_by' => $model->ref_usuario_cad,
                 'deleted_by' => $model->ref_usuario_exc,
                 'created_at' => $model->data_cadastro,
                 'guardian_type' => null,
             ];
         });
     }
+
     public function father()
     {
         $model = LegacyStudentFactory::new()->father()->create();
@@ -50,7 +51,7 @@ class StudentFactory extends Factory
                 'id' => $model->cod_aluno,
                 'religion_id' => $model->ref_cod_religiao,
                 'individual_id' => $model->ref_idpes,
-                'created_by' =>  $model->ref_usuario_cad,
+                'created_by' => $model->ref_usuario_cad,
                 'deleted_by' => $model->ref_usuario_exc,
                 'created_at' => $model->data_cadastro,
                 'guardian_type' => null,
@@ -67,7 +68,7 @@ class StudentFactory extends Factory
                 'id' => $model->cod_aluno,
                 'religion_id' => $model->ref_cod_religiao,
                 'individual_id' => $model->ref_idpes,
-                'created_by' =>  $model->ref_usuario_cad,
+                'created_by' => $model->ref_usuario_cad,
                 'deleted_by' => $model->ref_usuario_exc,
                 'created_at' => $model->data_cadastro,
                 'guardian_type' => null,
@@ -84,7 +85,7 @@ class StudentFactory extends Factory
                 'id' => $model->cod_aluno,
                 'religion_id' => $model->ref_cod_religiao,
                 'individual_id' => $model->ref_idpes,
-                'created_by' =>  $model->ref_usuario_cad,
+                'created_by' => $model->ref_usuario_cad,
                 'deleted_by' => $model->ref_usuario_exc,
                 'created_at' => $model->data_cadastro,
                 'guardian_type' => null,

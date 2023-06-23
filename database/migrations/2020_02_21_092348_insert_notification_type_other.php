@@ -15,7 +15,7 @@ class InsertNotificationTypeOther extends Migration
     {
         DB::table('public.notification_type')->insert([
             'id' => NotificationType::OTHER,
-            'name' => 'Outros'
+            'name' => 'Outros',
         ]);
     }
 

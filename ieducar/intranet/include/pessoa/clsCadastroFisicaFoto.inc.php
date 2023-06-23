@@ -5,6 +5,7 @@ use iEducar\Legacy\Model;
 class clsCadastroFisicaFoto extends Model
 {
     public $idpes;
+
     public $caminho;
 
     /**

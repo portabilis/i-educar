@@ -230,217 +230,217 @@ class Registro00 implements RegistroEducacenso
     public $formasContratacaoPoderPublicoMunicipal;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatAtividadesComplentar;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatAee;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatCrecheParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatCrecheIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatPreEscolaParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatPreEscolaIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalIniciaisParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalIniciaisIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalFinaisParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatFundamentalFinaisIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qdtMatClasseEspecialParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qdtMatClasseEspecialIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qdtMatEjaFundamental;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEjaEnsinoMedio;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaFundamentalParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaFundamentalIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitanteEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitanteEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomentarEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomentarEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntegradaEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitenteEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfConcomitenteEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomplementarEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfIntercomplementarEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEnsinoMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEnsinoMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEnsinoMedioItegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaSubsequenteEnsinoMedio;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntegradaEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaConcomitanteEjaNivelMedioIntegral;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioParcial;
 
     /**
-     * @var integer
+     * @var int
      */
     public $qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioIntegral;
 
@@ -460,22 +460,22 @@ class Registro00 implements RegistroEducacenso
     public $orgaoVinculado;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idEscola;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idInstituicao;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idMunicipio;
 
     /**
-     * @var integer Campo usado na validação
+     * @var int Campo usado na validação
      */
     public $idDistrito;
 

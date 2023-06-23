@@ -22,29 +22,21 @@ class Registration extends Model
 
     /**
      * @param Builder $query
-     *
-     * @return RegistrationBuilder
      */
     public function newEloquentBuilder($query): RegistrationBuilder
     {
         return new RegistrationBuilder($query);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function statusDescription(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int)$this->status],
+            get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int) $this->status],
         );
     }
 }

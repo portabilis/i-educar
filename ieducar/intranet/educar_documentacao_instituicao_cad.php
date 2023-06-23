@@ -1,7 +1,9 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_instituicao;
 
     public function Inicializar()
@@ -12,7 +14,7 @@ return new class extends clsCadastro {
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->cod_instituicao=$_GET['cod_instituicao'];
+        $this->cod_instituicao = $_GET['cod_instituicao'];
 
         return $retorno;
     }

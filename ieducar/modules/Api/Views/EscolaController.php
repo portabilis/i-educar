@@ -5,6 +5,7 @@ use App\Models\LegacySchool;
 class EscolaController extends ApiCoreController
 {
     protected $_processoAp = 561;
+
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
 
     protected function canChange()
@@ -17,7 +18,7 @@ class EscolaController extends ApiCoreController
         $dataMapper = $this->getDataMapperFor('educacenso', 'escola');
         $entity = $this->tryGetEntityOf($dataMapper, $escolaId);
 
-        return (is_null($entity) ? null : $entity->get('escolaInep'));
+        return is_null($entity) ? null : $entity->get('escolaInep');
     }
 
     protected function createUpdateOrDestroyEducacensoEscola($escolaId)
@@ -275,7 +276,7 @@ class EscolaController extends ApiCoreController
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql_etapas, [$ano, $escola, $turma]);
-        $attrs_etapas= ['etapa', 'data_inicio', 'data_fim'];
+        $attrs_etapas = ['etapa', 'data_inicio', 'data_fim'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs_etapas);
 
         return ['etapas' => $etapas];
@@ -298,7 +299,7 @@ class EscolaController extends ApiCoreController
                 $this->getRequest()->ano,
                 $escolaId,
                 $this->getRequest()->curso_id, $this->getRequest()->serie_id,
-                $this->getRequest()->turma_turno_id
+                $this->getRequest()->turma_turno_id,
             ]
         );
     }
@@ -338,7 +339,7 @@ class EscolaController extends ApiCoreController
             $int_ref_cod_serie_mult = null,
             $int_semestre = null,
             $pegar_ano_em_andamento = false,
-            $parar=null,
+            $parar = null,
             $diario = false,
             $int_turma_turno_id = $this->getRequest()->turma_turno_id,
             $int_ano_turma = $this->getRequest()->ano
@@ -432,7 +433,7 @@ class EscolaController extends ApiCoreController
         if (empty($escolas)) {
             $this->messenger->append('Desculpe, mas não existem escolas cadastradas');
 
-            return [ 'escolas' => 0];
+            return ['escolas' => 0];
         } else {
             foreach ($escolas as &$escola) {
                 $escola['nome'] = Portabilis_String_Utils::toUtf8($escola['nome']);
@@ -459,10 +460,10 @@ class EscolaController extends ApiCoreController
                 'fone',
                 'nome_responsavel',
                 'inep',
-                'ativo'
+                'ativo',
             ];
 
-            return [ 'escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs)];
+            return ['escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs)];
         }
     }
 
@@ -487,7 +488,7 @@ class EscolaController extends ApiCoreController
 
         if (is_numeric($cod_usuario) && $nivel == App_Model_NivelTipoUsuario::ESCOLA) {
             $escolas = $this->getEscolasUsuarios($cod_usuario);
-            if (! empty($escolas['escolas'])) {
+            if (!empty($escolas['escolas'])) {
                 $escolas = implode(', ', $escolas['escolas']);
                 $sql .= " and escola.cod_escola in ({$escolas})";
             }
@@ -685,7 +686,7 @@ class EscolaController extends ApiCoreController
         ";
 
         $escolas = $this->fetchPreparedQuery($sql);
-        $attrs = ['escola_id','series_disciplinas_anos_letivos'];
+        $attrs = ['escola_id', 'series_disciplinas_anos_letivos'];
         $escolas = Portabilis_Array_Utils::filterSet($escolas, $attrs);
 
         foreach ($escolas as $key => $escola) {

@@ -76,7 +76,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
                     $retorno .= ' selected';
                 }
 
-                $retorno .=  ">$texto</option>";
+                $retorno .= ">$texto</option>";
             }
 
             $retorno .= '</select>';
@@ -265,7 +265,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
       <td>&nbsp;</td>
     </tr>', $validacao); ?>
 
-<?php if ($nivel_usuario == 1 || $nivel_usuario == 2): ?>
+<?php if ($nivel_usuario == 1 || $nivel_usuario == 2) { ?>
   <script type="text/javascript">
   var before_getEscola = function() {}
   var after_getEscola  = function() {}
@@ -318,6 +318,6 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
     }
   }
   </script>
-<?php endif; ?>
+<?php } ?>
 <?php
 }

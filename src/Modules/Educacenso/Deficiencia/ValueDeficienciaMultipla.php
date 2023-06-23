@@ -11,9 +11,6 @@ class ValueDeficienciaMultipla implements ValueInterface
      */
     private $combinacaoDeficiencias;
 
-    /**
-     * @var
-     */
     private $deficiencias;
 
     public function __construct(CombinacaoDeficienciaMultipla $combinacao, $deficiencias)
@@ -23,7 +20,7 @@ class ValueDeficienciaMultipla implements ValueInterface
     }
 
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getValue()
     {

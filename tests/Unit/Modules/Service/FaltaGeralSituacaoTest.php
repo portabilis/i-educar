@@ -38,17 +38,17 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
             new Avaliacao_Model_FaltaGeral([
                 'id' => 2,
                 'quantidade' => 5,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'id' => 3,
                 'quantidade' => 5,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'id' => 4,
                 'quantidade' => 5,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
 
@@ -81,22 +81,22 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
             new Avaliacao_Model_FaltaGeral([
                 'id' => 1,
                 'quantidade' => 180,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'id' => 2,
                 'quantidade' => 180,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'id' => 3,
                 'quantidade' => 180,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'id' => 4,
                 'quantidade' => 180,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
 

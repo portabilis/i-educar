@@ -8,7 +8,6 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      * Define as configurações dos relatórios.
      *
      * @param object $config
-     *
      * @return void
      */
     public function setSettings($config)
@@ -56,7 +55,6 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      *
      * @param Portabilis_Report_ReportCore $report
      * @param array                        $options
-     *
      * @return void
      *
      * @throws Exception
@@ -64,7 +62,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
     public function dumps($report, $options = [])
     {
         $options = self::mergeOptions($options, [
-            'add_logo_arg' => true
+            'add_logo_arg' => true,
         ]);
 
         if ($options['add_logo_arg']) {
@@ -112,7 +110,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
                 [
                     'driver' => 'json',
                     'json_query' => $report->getJsonQuery(),
-                    'data_file' => $dataFile
+                    'data_file' => $dataFile,
                 ],
                 false // Não executar em background garante que o erro será retornado
             )->execute();
@@ -151,7 +149,6 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      * Deleta o PDF gerado.
      *
      * @param string $file
-     *
      * @return void
      */
     public function destroyPDF($file)

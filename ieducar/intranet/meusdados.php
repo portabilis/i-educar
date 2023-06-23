@@ -7,22 +7,38 @@ use App\Services\UrlPresigner;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $nome;
+
     public $ddd_telefone;
+
     public $telefone;
+
     public $ddd_celular;
+
     public $celular;
+
     public $email;
+
     public $senha;
+
     public $senha_confirma;
+
     public $sexo;
+
     public $senha_old;
+
     public $matricula;
+
     public $matricula_old;
+
     public $receber_novidades;
+
     public $objPhoto;
+
     public $arquivoFoto;
+
     public $file_delete;
 
     public function Inicializar()
@@ -97,7 +113,7 @@ return new class extends clsCadastro {
             'value' => $this->ddd_telefone,
             'max_length' => 3,
             'size' => 3,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer('ddd_telefone', $options);
@@ -107,7 +123,7 @@ return new class extends clsCadastro {
             'label' => '',
             'placeholder' => 'Telefone',
             'value' => $this->telefone,
-            'max_length' => 11
+            'max_length' => 11,
         ];
 
         $this->inputsHelper()->integer('telefone', $options);
@@ -119,7 +135,7 @@ return new class extends clsCadastro {
             'value' => $this->ddd_celular,
             'max_length' => 3,
             'size' => 3,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer('ddd_celular', $options);
@@ -129,7 +145,7 @@ return new class extends clsCadastro {
             'label' => '',
             'placeholder' => 'Celular',
             'value' => $this->celular,
-            'max_length' => 11
+            'max_length' => 11,
         ];
 
         $this->inputsHelper()->integer('celular', $options);
@@ -141,7 +157,7 @@ return new class extends clsCadastro {
         $lista_sexos = [
             '' => 'Selecione',
             'M' => 'Masculino',
-            'F' => 'Feminino'
+            'F' => 'Feminino',
         ];
 
         $this->campoLista('sexo', 'Sexo', $lista_sexos, $this->sexo);
@@ -153,7 +169,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->checkbox('receber_novidades', [
             'label' => 'Desejo receber novidades do produto por e-mail',
-            'value' => $this->receber_novidades
+            'value' => $this->receber_novidades,
         ]);
     }
 
@@ -206,14 +222,16 @@ return new class extends clsCadastro {
         if ($senha_old != $this->senha) {
             if ($this->senha !== $this->senha_confirma) {
                 $this->mensagem = 'O campo de confirmação de senha deve ser igual ao campo de confirmação da senha.';
+
                 return false;
             }
             $legacyEmployee = LegacyEmployee::find($this->pessoa_logada);
             $changeUserPasswordService = app(ChangeUserPasswordService::class);
             try {
                 $changeUserPasswordService->execute($legacyEmployee, $this->senha);
-            } catch (ValidationException $ex){
+            } catch (ValidationException $ex) {
                 $this->mensagem = $ex->validator->errors()->first();
+
                 return false;
             }
         }
@@ -252,7 +270,7 @@ return new class extends clsCadastro {
 
         $rdStationParams = [
             'token' => config('legacy.app.rdstation.token'),
-            'private_token' => config('legacy.app.rdstation.private_token')
+            'private_token' => config('legacy.app.rdstation.private_token'),
         ];
 
         if (!empty($rdStationParams['token']) && !empty($rdStationParams['private_token'])) {
@@ -267,7 +285,7 @@ return new class extends clsCadastro {
 
         $this->mensagem .= 'Edição efetuada com sucesso.<br>';
         header('Location: index.php');
-        die();
+        exit();
     }
 
     // Retorna true caso a foto seja válida

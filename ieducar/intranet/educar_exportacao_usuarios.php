@@ -1,8 +1,11 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ano;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -17,8 +20,8 @@ return new class extends clsCadastro {
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
         $this->breadcrumb(currentPage: 'Exportação de usuários', breadcrumbs: [
-        url('intranet/educar_configuracoes_index.php') => 'Configurações',
-    ]);
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
 
         return 'Nova exportação';
     }
@@ -26,14 +29,14 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->inputsHelper()->dynamic(['instituicao']);
-        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['required' =>  false]);
+        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['required' => false]);
 
-        $resourcesStatus = [1  => 'Ativo',
-                       0  => 'Inativo'];
-        $optionsStatus   = ['label' => 'Status', 'resources' => $resourcesStatus, 'value' => 1];
+        $resourcesStatus = [1 => 'Ativo',
+            0 => 'Inativo'];
+        $optionsStatus = ['label' => 'Status', 'resources' => $resourcesStatus, 'value' => 1];
         $this->inputsHelper()->select(attrName: 'status', inputOptions: $optionsStatus);
 
-        $opcoes = [ '' => 'Selecione' ];
+        $opcoes = ['' => 'Selecione'];
 
         $objTemp = new clsPmieducarTipoUsuario();
         $objTemp->setOrderby('nm_tipo ASC');
@@ -47,7 +50,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $tamanho = sizeof($opcoes_);
+        $tamanho = count($opcoes_);
         echo "<script>\nvar cod_tipo_usuario = new Array({$tamanho});\n";
         foreach ($opcoes_ as $key => $valor) {
             echo "cod_tipo_usuario[{$key}] = {$valor};\n";
@@ -59,7 +62,7 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: '/vendor/legacy/ExportarUsuarios/exportarUsuarios.js');
 
         $this->nome_url_sucesso = 'Exportar';
-        $this->acao_enviar      = ' ';
+        $this->acao_enviar = ' ';
     }
 
     public function Formular()

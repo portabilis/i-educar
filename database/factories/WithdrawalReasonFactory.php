@@ -16,7 +16,7 @@ class WithdrawalReasonFactory extends Factory
             'ref_usuario_cad' => fn () => LegacyUserFactory::new(),
             'nm_motivo' => $this->faker->word(),
             'descricao' => $this->faker->text(),
-            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new(),
         ];
     }
 }

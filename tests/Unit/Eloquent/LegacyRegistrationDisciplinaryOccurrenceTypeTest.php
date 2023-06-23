@@ -13,12 +13,9 @@ class LegacyRegistrationDisciplinaryOccurrenceTypeTest extends EloquentTestCase
     protected $relations = [
         'registration' => LegacyRegistration::class,
         'disciplinarOccurrenceType' => LegacyDisciplinaryOccurrenceType::class,
-        'createdByUser' => LegacyUser::class
+        'createdByUser' => LegacyUser::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyRegistrationDisciplinaryOccurrenceType::class;

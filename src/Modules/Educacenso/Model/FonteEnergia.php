@@ -5,8 +5,11 @@ namespace iEducar\Modules\Educacenso\Model;
 class FonteEnergia
 {
     public const REDE_PUBLICA = 1;
+
     public const GERADOR_COMBUSTIVEL_FOSSIL = 2;
+
     public const FONTES_RENOVAVEIS = 3;
+
     public const INEXISTENTE = 4;
 
     public static function getDescriptiveValues()

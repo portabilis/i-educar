@@ -1,15 +1,25 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_pessoa;
+
     public $min_quantidade_falhas;
+
     public $ultimo_sucesso_ini;
+
     public $ultimo_sucesso_fim;
+
     public $quinto_erro_ini;
+
     public $quinto_erro_fim;
 
     public function Gerar()
@@ -33,7 +43,7 @@ return new class extends clsListagem {
         $this->titulo = 'Acesso - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos([
@@ -41,7 +51,7 @@ return new class extends clsListagem {
             'Nome Pessoa',
             'Falhas',
             'Ultimo Sucesso',
-            'Quinto Erro'
+            'Quinto Erro',
         ]);
 
         // Filtros de Foreign Keys
@@ -57,7 +67,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_acesso = new clsPortalAcesso();
         $obj_acesso->setOrderby('falha DESC');
@@ -92,7 +102,7 @@ return new class extends clsListagem {
                     "<a href=\"portal_acesso_lst.php?cod_pessoa_libera={$registro['cod_pessoa']}\">{$registro['nome']}</a>",
                     "<a href=\"portal_acesso_lst.php?cod_pessoa_libera={$registro['cod_pessoa']}\">{$registro['falha']}</a>",
                     "<a href=\"portal_acesso_lst.php?cod_pessoa_libera={$registro['cod_pessoa']}\">{$registro['ultimo_sucesso_br']}</a>",
-                    "<a href=\"portal_acesso_lst.php?cod_pessoa_libera={$registro['cod_pessoa']}\">{$registro['quinto_erro_br']}</a>"
+                    "<a href=\"portal_acesso_lst.php?cod_pessoa_libera={$registro['cod_pessoa']}\">{$registro['quinto_erro_br']}</a>",
                 ]);
             }
         }

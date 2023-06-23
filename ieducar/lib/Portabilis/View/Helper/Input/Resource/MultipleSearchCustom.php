@@ -8,7 +8,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabi
             'objectName' => 'custom',
             'apiController' => 'custom',
             'apiResource' => 'custom-search',
-            'type' => 'multiple'
+            'type' => 'multiple',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

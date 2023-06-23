@@ -14,9 +14,6 @@ class PersonHasPlaceTest extends EloquentTestCase
         'person' => Person::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return PersonHasPlace::class;

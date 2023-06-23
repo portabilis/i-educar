@@ -98,7 +98,6 @@ abstract class EloquentTestCase extends TestCase
      * @return Model
      *
      * @see Model::save()
-     *
      */
     protected function createNewModel()
     {
@@ -152,7 +151,6 @@ abstract class EloquentTestCase extends TestCase
      * @return void
      *
      * @throws Exception
-     *
      */
     public function testDeleteUsingEloquent()
     {

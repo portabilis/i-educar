@@ -8,38 +8,60 @@ use App\Models\LegacyUser;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_transferencia_solicitacao;
+
     public $ref_cod_transferencia_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_matricula_entrada;
+
     public $ref_cod_matricula_saida;
+
     public $observacao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $data_transferencia;
+
     public $data_cancel;
+
     public $ref_cod_matricula;
+
     public $transferencia_tipo;
+
     public $ref_cod_aluno;
+
     public $nm_aluno;
+
     public $escola_destino_externa;
+
     public $estado_escola_destino_externa;
+
     public $municipio_escola_destino_externa;
+
     public $ref_cod_escola;
+
     public $ref_cod_escola_destino;
+
     public $escola_em_outro_municipio;
 
     public function __construct()
     {
         parent::__construct();
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: [
-            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
         ]);
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
-            '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js',
         ]);
     }
 
@@ -136,7 +158,6 @@ return new class extends clsCadastro {
         $this->campoTexto(nome: 'estado_escola_destino_externa', campo: 'Estado da escola ', valor: '', tamanhovisivel: 20, tamanhomaximo: 50);
         $this->campoTexto(nome: 'municipio_escola_destino_externa', campo: 'Município da escola ', valor: '', tamanhovisivel: 20, tamanhomaximo: 50);
 
-
         $opcoesMotivo = LegacyTransferType::query()
             ->where(column: 'ativo', operator: 1)
             ->where(column: 'ref_cod_instituicao', operator: $ref_cod_instituicao)
@@ -163,11 +184,13 @@ return new class extends clsCadastro {
         if (is_null(value: $det_matricula['data_matricula'])) {
             if (substr(string: $det_matricula['data_cadastro'], offset: 0, length: 10) > $this->data_cancel) {
                 $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
                 return false;
             }
         } elseif (substr(string: $det_matricula['data_matricula'], offset: 0, length: 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
-                return false;
+            $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
+            return false;
         }
 
         $obj->data_cancel = $this->data_cancel;

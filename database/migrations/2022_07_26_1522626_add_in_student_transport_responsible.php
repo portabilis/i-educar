@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -14,8 +15,8 @@ return new class () extends Migration {
     {
         Schema::table('pmieducar.aluno', static function (Blueprint $table) {
             return $table
-              ->integer('tipo_transporte')
-              ->default(0);
+                ->integer('tipo_transporte')
+                ->default(0);
         });
     }
 

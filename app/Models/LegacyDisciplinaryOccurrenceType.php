@@ -32,7 +32,7 @@ class LegacyDisciplinaryOccurrenceType extends LegacyModel
         'descricao',
         'max_ocorrencias',
         'data_exclusao',
-        'ativo'
+        'ativo',
     ];
 
     public array $legacy = [
@@ -40,6 +40,6 @@ class LegacyDisciplinaryOccurrenceType extends LegacyModel
         'description' => 'descricao',
         'max' => 'max_ocorrencias',
         'deleted_at' => 'data_exclusao',
-        'active' => 'ativo'
+        'active' => 'ativo',
     ];
 }

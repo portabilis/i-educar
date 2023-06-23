@@ -17,7 +17,7 @@ class PaisSemBrasilController extends ApiCoreController
         $labelAttr = $searchOptions['labelAttr'];
 
         $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
-        $selectFields = join(', ', $searchOptions['selectFields']);
+        $selectFields = implode(', ', $searchOptions['selectFields']);
 
         return "select distinct $selectFields from $namespace.$table where $idAttr::varchar like $1||'%' AND nome <> 'Brasil' AND coalesce(cod_ibge, 0) <> 76 order by $idAttr limit 15";
     }
@@ -32,7 +32,7 @@ class PaisSemBrasilController extends ApiCoreController
         $labelAttr = $searchOptions['labelAttr'];
 
         $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
-        $selectFields = join(', ', $searchOptions['selectFields']);
+        $selectFields = implode(', ', $searchOptions['selectFields']);
 
         return "select distinct $selectFields from $namespace.$table where lower($labelAttr) like '%'||lower($1)||'%' AND nome <> 'Brasil' AND coalesce(cod_ibge, 0) <> 76 order by $labelAttr limit 15";
     }

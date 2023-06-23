@@ -8,8 +8,6 @@ use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 class EmployeeGraduationService
 {
     /**
-     * @param $employee
-     *
      * @return EmployeeGraduation[]
      */
     public function getEmployeeGraduations($employee)
@@ -17,9 +15,6 @@ class EmployeeGraduationService
         return EmployeeGraduation::ofEmployee($employee)->get();
     }
 
-    /**
-     * @param $employee
-     */
     public function deleteAll($employee)
     {
         $graduations = EmployeeGraduation::ofEmployee($employee)->get();
@@ -28,9 +23,6 @@ class EmployeeGraduationService
         }
     }
 
-    /**
-     * @param EmployeeGraduationValueObject $valueObject
-     */
     public function storeGraduation(EmployeeGraduationValueObject $valueObject)
     {
         $employeeGraduation = new EmployeeGraduation();

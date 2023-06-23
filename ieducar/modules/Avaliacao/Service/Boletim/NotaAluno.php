@@ -35,8 +35,6 @@ trait Avaliacao_Service_Boletim_NotaAluno
     }
 
     /**
-     * @param Avaliacao_Model_NotaAluno $nota
-     *
      * @return $this
      */
     protected function _setNotaAluno(Avaliacao_Model_NotaAluno $nota)

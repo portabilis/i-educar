@@ -11,7 +11,7 @@ class ResourceDisciplineRequest extends ResourceRequest
         return [
             'course' => ['nullable', 'integer', 'min:1'],
             'grade' => ['required_without_all:course,school', 'required_with:school', 'nullable', 'integer', 'min:1'],
-            'school' => ['nullable', 'integer', 'min:1']
+            'school' => ['nullable', 'integer', 'min:1'],
         ];
     }
 
@@ -20,7 +20,7 @@ class ResourceDisciplineRequest extends ResourceRequest
         return [
             'grade' => 'Série',
             'course' => 'Curso',
-            'school' => 'Escola'
+            'school' => 'Escola',
         ];
     }
 }

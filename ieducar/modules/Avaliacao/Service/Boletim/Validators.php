@@ -31,8 +31,6 @@ trait Avaliacao_Service_Boletim_Validators
     }
 
     /**
-     * @param array $validators
-     *
      * @return $this
      */
     public function setValidators(array $validators)
@@ -51,8 +49,6 @@ trait Avaliacao_Service_Boletim_Validators
     }
 
     /**
-     * @param array $validators
-     *
      * @return $this
      */
     public function setParecerValidators(array $validators)

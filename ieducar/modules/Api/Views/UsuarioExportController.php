@@ -19,7 +19,7 @@ class UsuarioExportController extends ApiCoreController
         );
 
         //Linhas do cabeçalho
-        $csv  = 'Nome,';
+        $csv = 'Nome,';
         $csv .= 'Matricula,';
         $csv .= 'E-mail,';
         $csv .= 'CPF,';

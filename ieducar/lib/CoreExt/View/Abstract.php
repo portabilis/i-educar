@@ -13,7 +13,6 @@ abstract class CoreExt_View_Abstract implements \Stringable
      * Setter.
      *
      * @param string $contents
-     *
      * @return CoreExt_View_Abstract Provê interface fluída.
      */
     public function setContents($contents)

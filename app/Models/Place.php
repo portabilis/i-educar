@@ -22,20 +22,14 @@ class Place extends Model
         'neighborhood',
         'postal_code',
         'latitude',
-        'longitude'
+        'longitude',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function personHasPlace(): HasMany
     {
         return $this->hasMany(PersonHasPlace::class);

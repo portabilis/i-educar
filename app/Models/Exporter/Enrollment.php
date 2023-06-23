@@ -21,7 +21,6 @@ class Enrollment extends Model
 
     /**
      * @param Builder $query
-     *
      * @return EnrollmentEloquentBuilder
      */
     public function newEloquentBuilder($query)
@@ -61,7 +60,7 @@ class Enrollment extends Model
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
                 'race' => 'Raça',
-                'religion' => 'Religião'
+                'religion' => 'Religião',
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -169,7 +168,6 @@ class Enrollment extends Model
 
     /**
      * @param string $column
-     *
      * @return string
      */
     public function alias($column)

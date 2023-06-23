@@ -12,7 +12,7 @@ class AddressingCityRequest extends FormRequest
         return [
             'state_id' => ['required', 'integer', Rule::exists('states', 'id')],
             'name' => ['required', 'max:255', Rule::unique('cities')->where('state_id', $this->get('state_id'))->ignore($this->route('city'))],
-            'ibge_code' => ['nullable', Rule::unique('cities')->ignore($this->route('city'))]
+            'ibge_code' => ['nullable', Rule::unique('cities')->ignore($this->route('city'))],
         ];
     }
 
@@ -21,7 +21,7 @@ class AddressingCityRequest extends FormRequest
         return [
             'state_id' => 'Estado',
             'name' => 'Nome',
-            'ibge_code' => 'Código Ibge'
+            'ibge_code' => 'Código Ibge',
         ];
     }
 }

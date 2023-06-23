@@ -8,10 +8,6 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
 {
     /**
      * Retorna o recurso para os selects dos formulários
-     *
-     * @param array $filters
-     *
-     * @return Collection
      */
     public function getResource(array $filters = []): Collection
     {
@@ -23,8 +19,6 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
 
     /**
      * Filtra somente os distintos por id
-     *
-     * @return LegacyDisciplineAcademicYearBuilder
      */
     public function distinctDiscipline(): self
     {
@@ -33,10 +27,6 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
 
     /**
      * Filtra por série
-     *
-     * @param int $grade
-     *
-     * @return LegacyDisciplineAcademicYearBuilder
      */
     public function whereGrade(int $grade): self
     {
@@ -45,10 +35,6 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
 
     /**
      * Filtra por curso
-     *
-     * @param int $course
-     *
-     * @return LegacyDisciplineAcademicYearBuilder
      */
     public function whereCourse(int $course): self
     {
@@ -60,7 +46,6 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
     /**
      * Filtra por ano letivo
      *
-     * @param int $year
      *
      * @return LegacySchoolGradeDisciplineBuilder
      */
@@ -72,7 +57,6 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
     /**
      * Filtra por Disciplina
      *
-     * @param int $discipline
      *
      * @return LegacySchoolGradeDisciplineBuilder
      */

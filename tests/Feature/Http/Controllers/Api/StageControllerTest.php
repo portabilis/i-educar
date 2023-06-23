@@ -40,22 +40,22 @@ class StageControllerTest extends TestCase
         $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
         LegacySchoolGradeFactory::new()->create([
             'ref_cod_escola' => $school,
-            'ref_cod_serie' => $grade
+            'ref_cod_serie' => $grade,
         ]);
         $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create([
             'ref_cod_escola' => $school,
-            'ano' => now()->year
+            'ano' => now()->year,
         ]);
         $academicYearState = LegacyAcademicYearStageFactory::new()->create([
             'ref_ano' => $schoolAcademicYear->ano,
             'ref_ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
-            'escola_ano_letivo_id' => $schoolAcademicYear
+            'escola_ano_letivo_id' => $schoolAcademicYear,
         ]);
         $response = $this->get("api/stage?course={$course->getKey()}");
         $expected = [
             'data' => [
-                $academicYearState->sequencial => $academicYearState->sequencial . 'º ' . mb_strtoupper($academicYearState->stageType->nm_tipo)
-            ]
+                $academicYearState->sequencial => $academicYearState->sequencial . 'º ' . mb_strtoupper($academicYearState->stageType->nm_tipo),
+            ],
         ];
         $response->assertOk();
         $response->assertJson($expected);
@@ -68,23 +68,23 @@ class StageControllerTest extends TestCase
         $course = LegacyCourseFactory::new()->create();
         LegacySchoolGradeFactory::new()->create([
             'ref_cod_escola' => $school,
-            'ref_cod_serie' => $grade
+            'ref_cod_serie' => $grade,
         ]);
         $schoolClass = LegacySchoolClassFactory::new()->create([
             'ref_ref_cod_escola' => $school,
             'ref_ref_cod_serie' => $grade,
-            'ref_cod_curso' => $course
+            'ref_cod_curso' => $course,
         ]);
 
         $schoolClassStage = LegacySchoolClassStageFactory::new()->create([
-            'ref_cod_turma' => $schoolClass
+            'ref_cod_turma' => $schoolClass,
         ]);
 
         $response = $this->get("api/stage?course={$course->getKey()}");
         $expected = [
             'data' => [
-                $schoolClassStage->sequencial => $schoolClassStage->sequencial . 'º ' . mb_strtoupper($schoolClassStage->stageType->nm_tipo)
-            ]
+                $schoolClassStage->sequencial => $schoolClassStage->sequencial . 'º ' . mb_strtoupper($schoolClassStage->stageType->nm_tipo),
+            ],
         ];
         $response->assertOk();
         $response->assertJson($expected);

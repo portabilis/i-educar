@@ -25,7 +25,7 @@ abstract class CoreExt_Session_Storage_Abstract implements CoreExt_Session_Stora
     protected $_options = [
         'session_name' => null,
         'session_auto_start' => true,
-        'session_auto_shutdown' => true
+        'session_auto_shutdown' => true,
     ];
 
     /**
@@ -76,7 +76,6 @@ abstract class CoreExt_Session_Storage_Abstract implements CoreExt_Session_Stora
      * Verifica se uma opção está setada.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _hasOption($key)
@@ -89,8 +88,7 @@ abstract class CoreExt_Session_Storage_Abstract implements CoreExt_Session_Stora
      * setada.
      *
      * @param string $key
-     *
-     * @return mixed|NULL
+     * @return mixed|null
      */
     public function getOption($key)
     {

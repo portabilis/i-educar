@@ -12,7 +12,7 @@ class SettingCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function settings()

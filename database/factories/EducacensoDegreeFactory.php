@@ -16,8 +16,6 @@ class EducacensoDegreeFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -27,7 +25,7 @@ class EducacensoDegreeFactory extends Factory
             'classe_id' => $this->faker->randomDigitNotZero(),
             'user_id' => fn () => LegacyUserFactory::new()->current(),
             'created_at' => now(),
-            'grau_academico' => $this->faker->numberBetween(1, 5)
+            'grau_academico' => $this->faker->numberBetween(1, 5),
         ];
     }
 }

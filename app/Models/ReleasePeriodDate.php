@@ -10,7 +10,7 @@ class ReleasePeriodDate extends Model
     protected $fillable = [
         'start_date',
         'end_date',
-        'release_period_id'
+        'release_period_id',
     ];
 
     public $timestamps = false;
@@ -20,9 +20,6 @@ class ReleasePeriodDate extends Model
         'end_date' => 'date',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function releasePeriod(): BelongsTo
     {
         return $this->belongsTo(ReleasePeriod::class);

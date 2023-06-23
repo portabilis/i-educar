@@ -5,7 +5,7 @@ header(header: 'Content-type: text/xml');
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
-if (is_numeric(value: $_GET['inst']) && is_numeric(value: $_GET['esc']) && is_numeric(value: $_GET['com']) && is_numeric(value: $_GET['cur'])&& is_numeric(value: $_GET['ser'])) {
+if (is_numeric(value: $_GET['inst']) && is_numeric(value: $_GET['esc']) && is_numeric(value: $_GET['com']) && is_numeric(value: $_GET['cur']) && is_numeric(value: $_GET['ser'])) {
     if (is_numeric(value: $_GET['not_tur'])) {
         $not_turma = " AND t.cod_turma != {$_GET['not_tur']} ";
     }
@@ -25,7 +25,7 @@ if (is_numeric(value: $_GET['inst']) && is_numeric(value: $_GET['esc']) && is_nu
 
     $db->Consulta(consulta: $consulta);
     while ($db->ProximoRegistro()) {
-        list($hora_inicial, $hora_final) = $db->Tupla();
+        [$hora_inicial, $hora_final] = $db->Tupla();
         echo "  <item>{$hora_inicial}</item>\n";
         echo "  <item>{$hora_final}</item>\n";
     }

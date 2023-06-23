@@ -12,7 +12,8 @@ class LegacyAttributeTest extends TestCase
 {
     public function testeBuilderCustom(): void
     {
-        $class = new class () extends Model {
+        $class = new class() extends Model
+        {
             use LegacyAttribute;
 
             public string $builder = LegacySchoolBuilder::class;
@@ -23,7 +24,8 @@ class LegacyAttributeTest extends TestCase
 
     public function testeBuilderDefault(): void
     {
-        $class = new class () extends Model {
+        $class = new class() extends Model
+        {
             use LegacyAttribute;
         };
 

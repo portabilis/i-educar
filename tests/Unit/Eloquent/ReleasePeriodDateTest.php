@@ -9,12 +9,9 @@ use Tests\EloquentTestCase;
 class ReleasePeriodDateTest extends EloquentTestCase
 {
     protected $relations = [
-        'releasePeriod' => ReleasePeriod::class
+        'releasePeriod' => ReleasePeriod::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return ReleasePeriodDate::class;

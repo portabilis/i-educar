@@ -12,7 +12,7 @@ class LegacyCalendarNoteFactory extends Factory
     public function definition()
     {
         return [
-            'ref_usuario_exc' =>  fn () => LegacyUserFactory::new()->current(),
+            'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_anotacao' => $this->faker->name,
             'descricao' => $this->faker->text,

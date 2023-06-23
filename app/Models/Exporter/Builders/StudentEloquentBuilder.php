@@ -17,7 +17,7 @@ class StudentEloquentBuilder extends Builder
             'mother.person' => [
                 'id' => 'm.idpes as ID da mãe',
                 'name' => 'm.nome as Nome da mãe',
-                'email' => 'm.email as E-mail da mãe'
+                'email' => 'm.email as E-mail da mãe',
             ],
             'mother.individual' => [
                 'social_name' => 'mf.nome_social as Nome social e/ou afetivo da mãe',
@@ -28,17 +28,17 @@ class StudentEloquentBuilder extends Builder
                 'occupation' => 'mf.ocupacao as Ocupação da mãe',
                 'organization' => 'mf.empresa as Empresa da mãe',
                 'monthly_income' => 'mf.renda_mensal as Renda Mensal da mãe',
-                'gender' => 'mf.sexo as Gênero da mãe'
+                'gender' => 'mf.sexo as Gênero da mãe',
             ],
             'mother.document' => [
                 'rg' => 'md.rg as RG da mãe',
                 'rg_issue_date' => 'md.data_exp_rg as RG (Data Emissão) da mãe',
-                'rg_state_abbreviation' => 'md.sigla_uf_exp_rg as RG (Estado) da mãe'
+                'rg_state_abbreviation' => 'md.sigla_uf_exp_rg as RG (Estado) da mãe',
             ],
             'father.person' => [
                 'id' => 'f.idpes as ID do pai',
                 'name' => 'f.nome as Nome do pai',
-                'email' => 'f.email as E-mail do pai'
+                'email' => 'f.email as E-mail do pai',
             ],
             'father.individual' => [
                 'social_name' => 'ff.nome_social as Nome social e/ou afetivo do pai',
@@ -49,17 +49,17 @@ class StudentEloquentBuilder extends Builder
                 'occupation' => 'ff.ocupacao as Ocupação do pai',
                 'organization' => 'ff.empresa as Empresa do pai',
                 'monthly_income' => 'ff.renda_mensal as Renda Mensal do pai',
-                'gender' => 'ff.sexo as Gênero do pai'
+                'gender' => 'ff.sexo as Gênero do pai',
             ],
             'father.document' => [
                 'rg' => 'fd.rg as RG do pai',
                 'rg_issue_date' => 'fd.data_exp_rg as RG (Data Emissão) do pai',
-                'rg_state_abbreviation' => 'fd.sigla_uf_exp_rg as RG (Estado) do pai'
+                'rg_state_abbreviation' => 'fd.sigla_uf_exp_rg as RG (Estado) do pai',
             ],
             'guardian.person' => [
                 'id' => 'g.idpes as ID do responsável',
                 'name' => 'g.nome as Nome do responsável',
-                'email' => 'g.email as E-mail do responsável'
+                'email' => 'g.email as E-mail do responsável',
             ],
             'guardian.individual' => [
                 'social_name' => 'gf.nome_social as Nome social e/ou afetivo do responsável',
@@ -70,12 +70,12 @@ class StudentEloquentBuilder extends Builder
                 'occupation' => 'gf.ocupacao as Ocupação do responsável',
                 'organization' => 'gf.empresa as Empresa do responsável',
                 'monthly_income' => 'gf.renda_mensal as Renda Mensal do responsável',
-                'gender' => 'gf.sexo as Gênero do responsável'
+                'gender' => 'gf.sexo as Gênero do responsável',
             ],
             'guardian.document' => [
                 'rg' => 'gd.rg as RG do responsável',
                 'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
-                'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável'
+                'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável',
             ],
             'place' => [
                 'address' => 'p.address as Logradouro',
@@ -88,8 +88,8 @@ class StudentEloquentBuilder extends Builder
                 'city' => 'c.name as Cidade',
                 'state_abbreviation' => 's.abbreviation as Sigla do Estado',
                 'state' => 's.name as Estado',
-                'country' => 'cn.name as País'
-            ]
+                'country' => 'cn.name as País',
+            ],
         ];
     }
 

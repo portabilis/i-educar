@@ -12,9 +12,6 @@ class EmployeeInepTest extends EloquentTestCase
         'employee' => Employee::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return EmployeeInep::class;

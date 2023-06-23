@@ -35,7 +35,7 @@ class LegacyAbandonmentTypeTest extends TestCase
             'ref_cod_instituicao' => $type->ref_cod_instituicao,
             'ref_usuario_cad' => $user->getKey(),
             'nome' => $type->nome,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 
@@ -67,7 +67,7 @@ class LegacyAbandonmentTypeTest extends TestCase
             'ref_cod_instituicao' => $editType->ref_cod_instituicao,
             'nome' => $editType->nome,
             'ref_usuario_exc' => $user->getKey(),
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 }

@@ -5,26 +5,47 @@ use iEducar\Legacy\Model;
 class clsPmieducarCurso extends Model
 {
     public $cod_curso;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_regime;
+
     public $ref_cod_nivel_ensino;
+
     public $ref_cod_tipo_ensino;
+
     public $nm_curso;
+
     public $sgl_curso;
+
     public $qtd_etapas;
+
     public $carga_horaria;
+
     public $ato_poder_publico;
+
     public $objetivo_curso;
+
     public $publico_alvo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $padrao_ano_escolar;
+
     public $hora_falta;
+
     public $modalidade_curso;
+
     public $importar_curso_pre_matricula;
+
     public $descricao;
 
     public function __construct(

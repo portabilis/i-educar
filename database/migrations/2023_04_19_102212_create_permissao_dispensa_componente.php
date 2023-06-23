@@ -6,14 +6,15 @@ use App\Models\LegacyUserType;
 use App\Process;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         $parent = Menu::query()->where('old', Process::MENU_SCHOOL)->first();
 
         if ($parent) {
             $menu = Menu::query()->updateOrCreate([
-                'old' => 628
+                'old' => 628,
             ], [
                 'parent_id' => $parent->getKey(),
                 'title' => 'Dispensar componente curricular na matrícula',
@@ -21,7 +22,7 @@ return new class () extends Migration {
                 'type' => 2,
                 'parent_old' => Process::MENU_SCHOOL,
                 'process' => 628,
-                'ativo' => true
+                'ativo' => true,
             ]);
             if ($menu) {
                 $userTypes = LegacyUserType::all();
@@ -29,7 +30,7 @@ return new class () extends Migration {
                     $userType->menus()->attach($menu, [
                         'visualiza' => 1,
                         'cadastra' => 1,
-                        'exclui' => 1
+                        'exclui' => 1,
                     ]);
                 });
             }

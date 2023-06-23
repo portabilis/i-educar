@@ -20,7 +20,7 @@ class DiarioRecuperaAlunosRecuperacaoTest extends TestCase
         $registration = LegacyRegistrationFactory::new()->create([
             'ref_ref_cod_escola' => $school,
             'dependencia' => 't',
-            'aprovado' => 12
+            'aprovado' => 12,
         ]);
 
         $dependence = LegacyDisciplineDependenceFactory::new()->create([
@@ -31,7 +31,7 @@ class DiarioRecuperaAlunosRecuperacaoTest extends TestCase
             'oper' => 'get',
             'resource' => 'matriculas-dependencia',
             'ano' => now()->year,
-            'escola' => $school->getKey()
+            'escola' => $school->getKey(),
         ];
 
         $response = $this->getResource('/module/Api/Matricula', $data);
@@ -44,13 +44,13 @@ class DiarioRecuperaAlunosRecuperacaoTest extends TestCase
                             'matricula_id' => $registration->getKey(),
                             'disciplina_id' => $dependence->ref_cod_disciplina,
                             'updated_at' => $dependence->updated_at->format('Y-m-d H:i:s'),
-                            'deleted_at' => null
-                        ]
+                            'deleted_at' => null,
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'matriculas-dependencia',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

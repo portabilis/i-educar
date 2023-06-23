@@ -8,9 +8,7 @@ interface CoreExt_Session_Storage_Interface extends CoreExt_Configurable
     public function start();
 
     /**
-     *
      * @param string $key
-     *
      * @return mixed
      */
     public function read($key);

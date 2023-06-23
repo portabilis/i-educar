@@ -5,17 +5,17 @@ namespace iEducar\Modules\Stages\Exceptions;
 class StagesNotInformedByCoordinatorException extends MissingStagesException
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function getExceptionMessage($missingStages)
     {
         $message = 'O secretário/coordenador deve lançar as notas das etapas: %s %s.';
 
-        return sprintf($message, join($this->stageName . ', ', $missingStages), $this->stageName);
+        return sprintf($message, implode($this->stageName . ', ', $missingStages), $this->stageName);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function getExceptionCode()
     {

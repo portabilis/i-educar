@@ -5,11 +5,17 @@ namespace iEducar\Modules\Transport;
 class Period
 {
     public const MORNING = 1;
+
     public const AFTERNOON = 2;
+
     public const NIGHT = 3;
+
     public const FULL_TIME = 4;
+
     public const MORNING_AND_AFTERNOON = 5;
+
     public const MORNING_AND_NIGHT = 6;
+
     public const AFTERNOON_NIGHT = 7;
 
     /**

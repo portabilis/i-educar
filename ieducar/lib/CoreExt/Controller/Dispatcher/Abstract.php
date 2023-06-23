@@ -16,7 +16,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
      */
     protected $_options = [
         'controller_default_name' => 'index',
-        'action_default_name' => 'index'
+        'action_default_name' => 'index',
     ];
 
     /**
@@ -51,8 +51,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
      * setada.
      *
      * @param string $key
-     *
-     * @return mixed|NULL
+     * @return mixed|null
      */
     public function getOption($key)
     {
@@ -63,7 +62,6 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
      * Verifica se uma opção está setada.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _hasOption($key)

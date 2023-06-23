@@ -5,8 +5,11 @@ namespace iEducar\Modules\Educacenso\Model;
 class ModalidadeCurso
 {
     public const ENSINO_REGULAR = 1;
+
     public const EDUCACAO_ESPECIAL = 2;
+
     public const EJA = 3;
+
     public const EDUCACAO_PROFISSIONAL = 4;
 
     /**

@@ -3,7 +3,8 @@
 use App\Setting;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,9 +13,9 @@ return new class () extends Migration {
     public function up()
     {
         Setting::query()->where([
-            'key' => 'legacy.educacenso.enable_export'
+            'key' => 'legacy.educacenso.enable_export',
         ])->firstOrFail()->update([
-            'value' => true
+            'value' => true,
         ]);
     }
 
@@ -26,9 +27,9 @@ return new class () extends Migration {
     public function down()
     {
         Setting::query()->where([
-            'key' => 'legacy.educacenso.enable_export'
+            'key' => 'legacy.educacenso.enable_export',
         ])->firstOrFail()->update([
-            'value' => false
+            'value' => false,
         ]);
     }
 };

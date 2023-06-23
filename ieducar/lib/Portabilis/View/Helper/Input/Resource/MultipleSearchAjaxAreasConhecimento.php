@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAjaxAreasConhecimento 
         $defaultOptions = [
             'objectName' => 'areasconhecimento',
             'apiController' => 'AreaConhecimentoController',
-            'apiResource' => 'areaconhecimento-search'
+            'apiResource' => 'areaconhecimento-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

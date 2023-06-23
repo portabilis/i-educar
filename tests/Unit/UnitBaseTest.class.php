@@ -15,7 +15,6 @@ abstract class UnitBaseTest extends TestCase
     /**
      * Setter para o atributo $_excludedMethods.
      *
-     * @param array $methods
      *
      * @return UnitBaseTest Provê interface fluída
      */
@@ -52,7 +51,6 @@ abstract class UnitBaseTest extends TestCase
      * Remove os métodos indicados por setExcludedMethods() da lista de métodos
      * a serem mockados.
      *
-     * @param array $methods
      *
      * @return array
      */
@@ -76,13 +74,10 @@ abstract class UnitBaseTest extends TestCase
      * _cleanMockMethodList().
      *
      * @param string $className
-     * @param array  $mockMethods
-     * @param array  $args
      * @param string $mockName
      * @param bool   $callOriginalConstructor
      * @param bool   $callOriginalClone
      * @param bool   $callOriginalAutoload
-     *
      * @return PHPUnit\Framework\MockObject\MockObject
      */
     public function getCleanMock(
@@ -139,7 +134,6 @@ abstract class UnitBaseTest extends TestCase
      * Controla o buffer de saída.
      *
      * @param bool $enable
-     *
      * @return bool|string
      */
     public function outputBuffer($enable = true)

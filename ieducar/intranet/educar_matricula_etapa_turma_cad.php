@@ -2,9 +2,12 @@
 
 use App\Models\LegacyEnrollment;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_matricula;
+
     public $ref_cod_aluno;
+
     public $etapas_educacenso;
 
     public function Inicializar()
@@ -74,8 +77,8 @@ return new class extends clsCadastro {
                 ->where(column: [
                     'ref_cod_matricula' => $this->cod_matricula,
                     'ref_cod_turma' => $codTurma,
-                    'sequencial' => $sequencial
-                    ]
+                    'sequencial' => $sequencial,
+                ]
                 )->firstOrFail();
 
             $enrollment->etapa_educacenso = $etapaEducacenso;
@@ -108,7 +111,6 @@ return new class extends clsCadastro {
      *
      * @param $array array The array to filter
      * @param $callback Callback The filter callback, that will get the key as first argument.
-     *
      * @return array The remaining key => value combinations from $array.
      */
     public function array_filter_key(array $array, $callback)

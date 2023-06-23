@@ -2,17 +2,28 @@
 
 use App\Models\LegacyRegimeType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_tipo_regime;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $ref_cod_instituicao;
@@ -32,20 +43,20 @@ return new class extends clsListagem {
             case 1:
                 $this->addCabecalhos([
                     'Nome Tipo',
-                    'Instituição'
+                    'Instituição',
                 ]);
                 break;
 
             default:
                 $this->addCabecalhos([
-                    'Nome Tipo'
+                    'Nome Tipo',
                 ]);
                 break;
         }
 
         // Filtros de Foreign Keys
         $get_escola = false;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, false);
@@ -77,11 +88,11 @@ return new class extends clsListagem {
                 if ($nivel_usuario == 1) {
                     $this->addLinhas([
                         "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
-                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['ref_cod_instituicao']}</a>"
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['ref_cod_instituicao']}</a>",
                     ]);
                 } else {
                     $this->addLinhas([
-                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>"
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
                     ]);
                 }
             }

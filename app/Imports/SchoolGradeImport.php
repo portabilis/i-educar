@@ -27,8 +27,6 @@ class SchoolGradeImport implements ToModel, WithProgressBar, WithHeadingRow
     }
 
     /**
-     * @param array $row
-     *
      * @return Model
      */
     public function model(array $row)

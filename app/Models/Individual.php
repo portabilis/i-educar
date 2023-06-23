@@ -86,49 +86,31 @@ class Individual extends Model
         );
     }
 
-    /**
-     * @return HasOne
-     */
     public function student(): HasOne
     {
         return $this->hasOne(Student::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(Person::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function mother(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'mother_individual_id', 'id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function father(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'father_individual_id', 'id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function guardian(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'guardian_individual_id', 'id');
     }
 
-    /**
-     * @return HasOne
-     */
     public function place(): HasOne
     {
         $hasOne = $this->hasOne(Place::class, 'person_id');
@@ -138,17 +120,11 @@ class Individual extends Model
         return $hasOne;
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function birthplace(): BelongsTo
     {
         return $this->belongsTo(City::class, 'idmun_nascimento');
     }
 
-    /**
-     * @return HasOne
-     */
     public function phone(): HasOne
     {
         $hasOne = $this->hasOne(Phone::class, 'person_id');
@@ -158,73 +134,46 @@ class Individual extends Model
         return $hasOne;
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function religion(): BelongsTo
     {
         return $this->belongsTo(Religion::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'updated_by', 'id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'created_by', 'id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function deletedBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'deleted_by', 'id');
     }
 
-    /**
-     * @return MorphOne
-     */
     public function unification(): MorphOne
     {
         return $this->morphOne(LogUnification::class, 'main', 'type', 'main_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id', 'cod_usuario');
     }
 
-    /**
-     * @return HasOne
-     */
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class, 'cod_servidor', 'id');

@@ -6,10 +6,15 @@ use Illuminate\Support\Facades\DB;
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
+
     protected $_titulo = 'Cadastro de regra de avaliação';
+
     protected $_processoAp = 947;
+
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+
     protected $_saveOption = true;
+
     protected $_deleteOption = false;
 
     protected $_formMap = [
@@ -23,40 +28,40 @@ class EditController extends Core_Controller_Page_EditController
         ],
         'tipoNota' => [
             'label' => 'Sistema de nota',
-            'help' => ''
+            'help' => '',
         ],
         'tipoProgressao' => [
             'label' => 'Progressão',
-            'help' => 'Selecione o método de progressão para a regra.'
+            'help' => 'Selecione o método de progressão para a regra.',
         ],
         'tabelaArredondamento' => [
             'label' => 'Tabela de arredondamento de nota',
-            'help' => ''
+            'help' => '',
         ],
         'tabelaArredondamentoNumerico' => [
             'label' => 'Tabela de arredondamento de nota numérica',
-            'help' => ''
+            'help' => '',
         ],
         'tabelaArredondamentoConceitual' => [
             'label' => 'Tabela de arredondamento de nota conceitual',
-            'help' => ''
+            'help' => '',
         ],
         'media' => [
             'label' => 'Média final para promoção',
             'help' => 'Informe a média necessária para promoção<br />
                 do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                 Se o tipo de progressão for <b>"Progressiva"</b>, esse<br />
-                valor não será considerado.'
+                valor não será considerado.',
         ],
         'mediaRecuperacao' => [
             'label' => 'Média exame final para promoção',
             'help' => 'Informe a média necessária para promoção<br />
                 do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
-                Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
+                Desconsidere esse campo caso selecione o tipo de nota "conceitual"',
         ],
         'tipoCalculoRecuperacaoParalela' => [
             'label' => 'Cálculo da média',
-            'help' => 'Determina o cálculo que será utilizado para definir a média da etapa.'
+            'help' => 'Determina o cálculo que será utilizado para definir a média da etapa.',
         ],
         'formulaMedia' => [
             'label' => 'Fórmula de cálculo da média',
@@ -71,14 +76,14 @@ class EditController extends Core_Controller_Page_EditController
             'help' => 'A porcentagem de presença necessária para o aluno ser aprovado.<br />
                 Esse valor é desconsiderado caso o campo "Progressão" esteja como<br />
                 "Não progressiva automática - Somente média".<br />
-                Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>'
+                Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>',
         ],
         'desconsiderarLancamentoFrequencia' => [
             'label' => 'Desconsiderar lançamento de frequência para aprovação/reprovação',
             'help' => '
                 Não irá obrigar o lançamento de frequência em todas as etapas para permitir a aprovação/reprovação do(a)
                 aluno(a).
-            '
+            ',
         ],
         'parecerDescritivo' => [
             'label' => 'Parecer descritivo',
@@ -86,93 +91,93 @@ class EditController extends Core_Controller_Page_EditController
         ],
         'tipoPresenca' => [
             'label' => 'Apuração de presença',
-            'help' => ''
+            'help' => '',
         ],
         'tipoRecuperacaoParalela' => [
             'label' => 'Permitir recuperação paralela',
-            'help' => ''
+            'help' => '',
         ],
         'mediaRecuperacaoParalela' => [
             'label' => 'Média da recuperação paralela',
-            'help' => ''
+            'help' => '',
         ],
         'regraDiferenciada' => [
             'label' => 'Regra inclusiva',
-            'help' => 'Regra de avaliação inclusiva para alunos com deficiência'
+            'help' => 'Regra de avaliação inclusiva para alunos com deficiência',
         ],
         'notaMaximaGeral' => [
             'label' => 'Nota máxima geral',
-            'help' => 'Informe o valor máximo para notas no geral'
+            'help' => 'Informe o valor máximo para notas no geral',
         ],
         'notaMinimaGeral' => [
             'label' => 'Nota mínima geral',
-            'help' => 'Informe o valor mínimo para notas no geral'
+            'help' => 'Informe o valor mínimo para notas no geral',
         ],
         'faltaMaximaGeral' => [
             'label' => 'Falta máxima geral',
-            'help' => 'Informe o valor máximo para faltas no geral'
+            'help' => 'Informe o valor máximo para faltas no geral',
         ],
         'faltaMinimaGeral' => [
             'label' => 'Falta mínima geral',
-            'help' => 'Informe o valor mínimo para faltas no geral'
+            'help' => 'Informe o valor mínimo para faltas no geral',
         ],
         'notaMaximaExameFinal' => [
             'label' => 'Nota máxima exame final',
-            'help' => 'Informe o valor máximo para nota do exame final'
+            'help' => 'Informe o valor máximo para nota do exame final',
         ],
         'qtdCasasDecimais' => [
             'label' => 'Quantidade máxima de casas decimais',
-            'help' => 'Informe o número máximo de casas decimais'
+            'help' => 'Informe o número máximo de casas decimais',
         ],
         'qtdDisciplinasDependencia' => [
             'label' => 'Quantidade de disciplinas dependência',
-            'help' => 'Preencha a quantidade de disciplinas permitidas para aprovação do aluno com dependência. Preencha com 0 caso não exista.'
+            'help' => 'Preencha a quantidade de disciplinas permitidas para aprovação do aluno com dependência. Preencha com 0 caso não exista.',
         ],
         'qtdMatriculasDependencia' => [
             'label' => 'Quantidade de matriculas de dependência',
-            'help' => 'Preencha a quantidade de matrículas de dependência permitidas por aluno. Preencha com 0 caso não exista.'
+            'help' => 'Preencha a quantidade de matrículas de dependência permitidas por aluno. Preencha com 0 caso não exista.',
         ],
         'disciplinasAglutinadas' => [
             'label' => 'Disciplinas aglutinadas',
-            'help' => 'Disciplinas aglutinadas terão as médias somadas para calcular a situação. Formato: Código separado por vírgula (Ex: 1,2)'
+            'help' => 'Disciplinas aglutinadas terão as médias somadas para calcular a situação. Formato: Código separado por vírgula (Ex: 1,2)',
         ],
         'recuperacaoDescricao' => [
             'label' => 'Descrição do exame:',
-            'help' => 'Exemplo: Recuperação semestral I'
+            'help' => 'Exemplo: Recuperação semestral I',
         ],
         'recuperacaoEtapasRecuperadas' => [
             'label' => '<span style="padding-left: 10px"></span>Etapas:',
-            'help' => 'Separe as etapas com ponto e vírgula. Exemplo: 1;2.'
+            'help' => 'Separe as etapas com ponto e vírgula. Exemplo: 1;2.',
         ],
         'recuperacaoSubstituiMenorNota' => [
             'label' => '<span style="padding-left: 10px"></span>Substituir menor nota:',
-            'help' => 'Caso marcado irá substituir menor nota.'
+            'help' => 'Caso marcado irá substituir menor nota.',
         ],
         'recuperacaoMedia' => [
             'label' => '<span style="padding-left: 10px"></span>Média:',
-            'help' => 'Abaixo de qual média habilitar campo.'
+            'help' => 'Abaixo de qual média habilitar campo.',
         ],
         'recuperacaoNotaMaxima' => [
             'label' => '<span style="padding-left: 10px"></span>Nota máx:',
-            'help' => 'Nota máxima permitida para lançamento.'
+            'help' => 'Nota máxima permitida para lançamento.',
         ],
         'recuperacaoExcluir' => [
-            'label' => '<span style="padding-left: 10px"></span>Excluir:'
+            'label' => '<span style="padding-left: 10px"></span>Excluir:',
         ],
         'notaGeralPorEtapa' => [
-            'label' => 'Utilizar uma nota geral por etapa'
+            'label' => 'Utilizar uma nota geral por etapa',
         ],
         'definirComponentePorEtapa' => [
-            'label' => 'Permitir definir componentes em etapas específicas'
+            'label' => 'Permitir definir componentes em etapas específicas',
         ],
         'reprovacaoAutomatica' => [
             'label' => 'Reprovação automática',
-            'help' => 'Marcando esse campo o sistema não apresentará campo de nota de exame para os alunos que não poderão alcançar a média necessária'
+            'help' => 'Marcando esse campo o sistema não apresentará campo de nota de exame para os alunos que não poderão alcançar a média necessária',
         ],
         'aprovaMediaDisciplina' => [
             'label' => 'Aprovar alunos pela média das disciplinas',
-            'help' => 'Alunos reprovados podem ser aprovados se a média das médias das disciplinas for superior a nota de aprovação de exame final'
-        ]
+            'help' => 'Alunos reprovados podem ser aprovados se a média das médias das disciplinas for superior a nota de aprovação de exame final',
+        ],
     ];
 
     private $_tipoNotaJs =
@@ -250,7 +255,6 @@ class EditController extends Core_Controller_Page_EditController
     /**
      * Setter.
      *
-     * @param array $recuperacoes
      *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
@@ -277,7 +281,6 @@ class EditController extends Core_Controller_Page_EditController
      * Getter
      *
      * @param int $id
-     *
      * @return RegraAvaliacao_Model_RegraRecuperacao
      */
     protected function _getRecuperacao($id)
@@ -413,7 +416,7 @@ class EditController extends Core_Controller_Page_EditController
 
         if (empty($tabelaArredondamento)) {
             $tabelaArredondamento = [
-                0 => 'O tipo de nota não possui tabela de arredondamento.'
+                0 => 'O tipo de nota não possui tabela de arredondamento.',
             ];
         }
 
@@ -715,7 +718,7 @@ class EditController extends Core_Controller_Page_EditController
         $regras = $this->getDataMapper()->findAll(
             ['id', 'nome'],
             [],
-            ['id'=> 'asc'],
+            ['id' => 'asc'],
             false
         );
 
@@ -909,7 +912,7 @@ class EditController extends Core_Controller_Page_EditController
     {
         $data = [];
 
-        if ($_POST['tipoNota']==3) {
+        if ($_POST['tipoNota'] == 3) {
             $_POST['tabelaArredondamento'] = $_POST['tabelaArredondamentoNumero'];
         } else {
             $_POST['tabelaArredondamentoConceitual'] = null;
@@ -984,7 +987,7 @@ class EditController extends Core_Controller_Page_EditController
                 'etapasRecuperadas' => $recuperacoes['etapas_recuperadas'][$i],
                 'substituiMenorNota' => $recuperacoes['substitui_menor_nota'][$i],
                 'media' => $recuperacoes['media'][$i],
-                'notaMaxima' => $recuperacoes['nota_maxima'][$i]
+                'notaMaxima' => $recuperacoes['nota_maxima'][$i],
             ];
 
             // Se a instância já existir, use-a para garantir UPDATE

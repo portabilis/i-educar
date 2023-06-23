@@ -6,16 +6,27 @@ use iEducar\Legacy\Model;
 class clsPmieducarDispensaDisciplina extends Model
 {
     public $ref_cod_matricula;
+
     public $ref_cod_serie;
+
     public $ref_cod_escola;
+
     public $ref_cod_disciplina;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_dispensa;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $observacao;
+
     public $cod_dispensa;
 
     public function __construct(
@@ -83,7 +94,7 @@ class clsPmieducarDispensaDisciplina extends Model
             $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_cod_disciplina,
-                'anoEscolar' => $ref_cod_serie
+                'anoEscolar' => $ref_cod_serie,
             ]);
 
             if (1 == count($componenteAnos)) {

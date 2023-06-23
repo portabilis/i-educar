@@ -43,9 +43,6 @@ class LegacyRegistrationTest extends EloquentTestCase
         'dependencies' => LegacyDisciplineDependence::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyRegistration::class;
@@ -61,7 +58,7 @@ class LegacyRegistrationTest extends EloquentTestCase
         $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO, $this->model->isTransferred);
         $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::ABANDONO, $this->model->isAbandoned);
         $this->assertEquals($this->model->ativo === 0, $this->model->isCanceled);
-        $this->assertEquals((new RegistrationStatus())->getDescriptiveValues()[(int)$this->model->aprovado], $this->model->statusDescription);
+        $this->assertEquals((new RegistrationStatus())->getDescriptiveValues()[(int) $this->model->aprovado], $this->model->statusDescription);
     }
 
     public function testScopeActive(): void
@@ -76,7 +73,7 @@ class LegacyRegistrationTest extends EloquentTestCase
     {
         LegacyEvaluationRuleGradeYearFactory::new()->create([
             'serie_id' => $this->model->ref_ref_cod_serie,
-            'ano_letivo' => $this->model->ano
+            'ano_letivo' => $this->model->ano,
         ]);
 
         $evaluationRuleGradeYear = $this->model->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
@@ -99,24 +96,24 @@ class LegacyRegistrationTest extends EloquentTestCase
         ]);
 
         $individual1 = LegacyIndividualFactory::new()->create([
-            'sexo' => 'M'
+            'sexo' => 'M',
         ]);
         $student1 = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual1
+            'ref_idpes' => $individual1,
         ]);
 
         LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student1
+            'ref_cod_aluno' => $student1,
         ]);
 
         $individual2 = LegacyIndividualFactory::new()->create([
-            'sexo' => 'F'
+            'sexo' => 'F',
         ]);
         $student2 = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual2
+            'ref_idpes' => $individual2,
         ]);
         LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student2
+            'ref_cod_aluno' => $student2,
         ]);
 
         $found = $this->instanceNewEloquentModel()->male()->get();
@@ -130,24 +127,24 @@ class LegacyRegistrationTest extends EloquentTestCase
         ]);
 
         $individual1 = LegacyIndividualFactory::new()->create([
-            'sexo' => 'M'
+            'sexo' => 'M',
         ]);
         $student1 = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual1
+            'ref_idpes' => $individual1,
         ]);
 
         LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student1
+            'ref_cod_aluno' => $student1,
         ]);
 
         $individual2 = LegacyIndividualFactory::new()->create([
-            'sexo' => 'F'
+            'sexo' => 'F',
         ]);
         $student2 = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual2
+            'ref_idpes' => $individual2,
         ]);
         LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student2
+            'ref_cod_aluno' => $student2,
         ]);
 
         $found = $this->instanceNewEloquentModel()->female()->get();
@@ -157,7 +154,7 @@ class LegacyRegistrationTest extends EloquentTestCase
     public function testLastYear(): void
     {
         LegacyRegistrationFactory::new()->create([
-            'ano' => date('Y') - 1
+            'ano' => date('Y') - 1,
         ]);
 
         $found = $this->instanceNewEloquentModel()->lastYear()->get();

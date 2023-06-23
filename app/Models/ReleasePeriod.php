@@ -28,25 +28,16 @@ class ReleasePeriod extends Model
         );
     }
 
-    /**
-     * @return HasMany
-     */
     public function periodDates(): HasMany
     {
         return $this->hasMany(ReleasePeriodDate::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function stageType(): BelongsTo
     {
         return $this->belongsTo(LegacyStageType::class, 'stage_type_id');
     }
 
-    /**
-     * @return array
-     */
     public function getDatesArray(): array
     {
         $dates = $this->periodDates;

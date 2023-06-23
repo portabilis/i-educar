@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAjaxDeficiencias exten
         $defaultOptions = [
             'objectName' => 'deficiencias',
             'apiController' => 'Deficiencia',
-            'apiResource' => 'deficiencia-search'
+            'apiResource' => 'deficiencia-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

@@ -12,7 +12,9 @@ class LegacyAbsenceDelay extends LegacyModel
     use HasLegacyUserAction;
 
     public const CREATED_AT = 'data_cadastro';
+
     public const UPDATED_AT = null;
+
     public const DELETED_AT = 'data_exclusao';
 
     protected $table = 'pmieducar.falta_atraso';
@@ -28,7 +30,7 @@ class LegacyAbsenceDelay extends LegacyModel
         'qtd_horas',
         'qtd_min',
         'justificada',
-        'ref_cod_servidor_funcao'
+        'ref_cod_servidor_funcao',
     ];
 
     public function school(): BelongsTo

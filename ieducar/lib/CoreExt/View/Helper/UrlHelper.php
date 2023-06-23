@@ -7,12 +7,19 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      * url().
      */
     const URL_SCHEME = 1;
+
     const URL_HOST = 4;
+
     const URL_PORT = 16;
+
     const URL_USER = 32;
+
     const URL_PASS = 64;
+
     const URL_PATH = 128;
+
     const URL_QUERY = 128;
+
     const URL_FRAGMENT = 256;
 
     /**
@@ -26,7 +33,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
         'pass' => self::URL_PASS,
         'path' => self::URL_PATH,
         'query' => self::URL_QUERY,
-        'fragment' => self::URL_FRAGMENT
+        'fragment' => self::URL_FRAGMENT,
     ];
 
     /**
@@ -109,7 +116,6 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      *
      * @param string $path    O caminho relativo ou absoluto da URL
      * @param array  $options Opções para geração da URL
-     *
      * @return string
      */
     public static function url($path, array $options = [])
@@ -123,7 +129,6 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      * Retorna uma URL formatada. Veja a documentação de url().
      *
      * @param string $path
-     *
      * @return string
      */
     protected function _url($path, array $options = [])
@@ -135,7 +140,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
             'pass' => '',
             'path' => '',
             'query' => '',
-            'fragment' => ''
+            'fragment' => '',
         ];
 
         $parsedUrl = parse_url($path);
@@ -178,7 +183,6 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      * @param string $text    O texto a ser apresentado como link HTML
      * @param string $path    O caminho relativo ou absoluto da URL do link
      * @param array  $options Opções para gerar a URL do link
-     *
      * @return string
      */
     public static function l($text, $path, array $options = [])
@@ -194,7 +198,6 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      * @param string $text    O texto a ser apresentado como link HTML
      * @param string $path    O caminho relativo ou absoluto da URL do link
      * @param array  $options Opções para gerar a URL do link
-     *
      * @return string
      */
     protected function _link($text, $path, array $options = [])

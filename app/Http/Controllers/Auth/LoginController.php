@@ -23,6 +23,7 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     protected int $maxAttempts = 2;
+
     protected int $decayMinutes = 1;
 
     /**
@@ -35,7 +36,6 @@ class LoginController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param Request $request
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class LoginController extends Controller
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function username()
     {
@@ -59,11 +59,10 @@ class LoginController extends Controller
     /**
      * Validate the user login request.
      *
-     * @param Request $request
-     *
-     * @throws \Illuminate\Validation\ValidationException
      *
      * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function validateLogin(Request $request)
     {

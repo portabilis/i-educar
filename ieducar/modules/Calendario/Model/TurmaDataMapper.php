@@ -13,7 +13,7 @@ class Calendario_Model_TurmaDataMapper extends CoreExt_DataMapper
         'ano' => 'ano',
         'mes' => 'mes',
         'dia' => 'dia',
-        'turma' => 'turma_id'
+        'turma' => 'turma_id',
     ];
 
     protected $_primaryKey = [
@@ -21,6 +21,6 @@ class Calendario_Model_TurmaDataMapper extends CoreExt_DataMapper
         'ano' => 'ano',
         'mes' => 'mes',
         'dia' => 'dia',
-        'turma' => 'turma_id'
+        'turma' => 'turma_id',
     ];
 }

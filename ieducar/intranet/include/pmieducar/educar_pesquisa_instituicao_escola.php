@@ -1,7 +1,7 @@
 <?php
 
 ?>
-<?php      /*
+<?php /*
             caso o campo seja de busca criar uma variavel
               ***  $obrigatorio = false;  *** antes de dar o include do arquivo
 
@@ -14,93 +14,93 @@
 
         */
 
-        //** 4 - Escola 2 - institucional 1 - poli-institucional
-        $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+//** 4 - Escola 2 - institucional 1 - poli-institucional
+$obj_permissao = new clsPermissoes();
+$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
-        $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-        $obj_usuario->setCamposLista('ref_cod_instituicao,ref_cod_escola');
-        $det_obj_usuario = $obj_usuario->detalhe();
+$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
+$obj_usuario->setCamposLista('ref_cod_instituicao,ref_cod_escola');
+$det_obj_usuario = $obj_usuario->detalhe();
 
-        $instituicao_usuario = $det_obj_usuario['ref_cod_instituicao'];
+$instituicao_usuario = $det_obj_usuario['ref_cod_instituicao'];
 
-        if ($nivel_usuario == 1) {
-            $opcoes_instituicao = [ '' => 'Selecione' ];
+if ($nivel_usuario == 1) {
+    $opcoes_instituicao = ['' => 'Selecione'];
 
-            $objTemp = new clsPmieducarInstituicao();
-            $objTemp->setCamposLista('cod_instituicao,nm_instituicao');
+    $objTemp = new clsPmieducarInstituicao();
+    $objTemp->setCamposLista('cod_instituicao,nm_instituicao');
 
-            $lista_instituicao23 = $objTemp->lista();
-            if (is_array($lista_instituicao23) && count($lista_instituicao23)) {
-                foreach ($lista_instituicao23 as $registro) {
-                    $opcoes_instituicao["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
+    $lista_instituicao23 = $objTemp->lista();
+    if (is_array($lista_instituicao23) && count($lista_instituicao23)) {
+        foreach ($lista_instituicao23 as $registro) {
+            $opcoes_instituicao["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
+        }
+    }
+
+    /*      if(isset($_GET["ref_cod_instituicao"]) &&  !empty($_GET["ref_cod_instituicao"]) && is_array($opcoes_instituicao) && array_key_exists($_GET["ref_cod_instituicao"],$opcoes_instituicao) )
+            {
+                $this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
+            }
+            else
+            {
+                $this->ref_cod_instituicao = null;
+            }*/
+
+    //**** javascript  Array dinamico das instituicoes - escolas
+    $obj_instituicao = new clsPmieducarInstituicao();
+    $lista_instituicao23 = $obj_instituicao->lista();
+
+    $instituicoes = '';
+    if ($lista_instituicao23) {
+        foreach ($lista_instituicao23 as $instituicao) {
+            $obj_escola = new clsPmieducarEscola();
+            $lista_escola23 = $obj_escola->lista(null, null, null, $instituicao['cod_instituicao'], null, null, null, null, null, null, 1);
+
+            $escolas = " instituicao['_{$instituicao['cod_instituicao']}'] = new Array();\n";
+
+            if ($lista_escola23) {
+                foreach ($lista_escola23 as $escola) {
+                    $escolas .= " instituicao['_{$instituicao['cod_instituicao']}'][instituicao['_{$instituicao['cod_instituicao']}'].length] = new Array({$escola['cod_escola']},'{$escola['nome']}');\n";
                 }
             }
-
-            /*      if(isset($_GET["ref_cod_instituicao"]) &&  !empty($_GET["ref_cod_instituicao"]) && is_array($opcoes_instituicao) && array_key_exists($_GET["ref_cod_instituicao"],$opcoes_instituicao) )
-                    {
-                        $this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
-                    }
-                    else
-                    {
-                        $this->ref_cod_instituicao = null;
-                    }*/
-
-            //**** javascript  Array dinamico das instituicoes - escolas
-            $obj_instituicao = new clsPmieducarInstituicao();
-            $lista_instituicao23 = $obj_instituicao->lista();
-
-            $instituicoes = '';
-            if ($lista_instituicao23) {
-                foreach ($lista_instituicao23 as $instituicao) {
-                    $obj_escola = new clsPmieducarEscola();
-                    $lista_escola23 = $obj_escola->lista(null, null, null, $instituicao['cod_instituicao'], null, null, null, null, null, null, 1);
-
-                    $escolas = " instituicao['_{$instituicao['cod_instituicao']}'] = new Array();\n";
-
-                    if ($lista_escola23) {
-                        foreach ($lista_escola23 as $escola) {
-                            $escolas .= " instituicao['_{$instituicao['cod_instituicao']}'][instituicao['_{$instituicao['cod_instituicao']}'].length] = new Array({$escola['cod_escola']},'{$escola['nome']}');\n";
-                        }
-                    }
-                    $instituicoes .="{$escolas}";
-                }
-
-                echo $script = "<script> var numero_intituicoes = {$obj_instituicao->_total} \n var instituicao = new Array(); \n {$instituicoes}</script>\n";
-            }
-
-            echo "<!-- {$this->ref_cod_instituicao} -->";
-            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes_instituicao, $this->ref_cod_instituicao, 'EscolaInstituicao();', null, null, null, null, $obrigatorio);
+            $instituicoes .= "{$escolas}";
         }
 
-        if ($nivel_usuario == 1 || $nivel_usuario == 2) {
-            $selecione = $nivel_usuario == 2 ? 'Selecione uma escola' : 'Selecione uma escola';
-            $opcoes = [ '' => $selecione ];
-            $objTemp = new clsPmieducarEscola();
-            if ((!empty($this->ref_cod_instituicao) && $nivel_usuario == 1) || $nivel_usuario == 2) {
-                if ($nivel_usuario == 2) {
-                    $this->ref_cod_instituicao = $instituicao_usuario;
-                }
+        echo $script = "<script> var numero_intituicoes = {$obj_instituicao->_total} \n var instituicao = new Array(); \n {$instituicoes}</script>\n";
+    }
 
-                $lista_escola23 = $objTemp->lista(null, null, null, $this->ref_cod_instituicao, null, null, nul, null, null, null, 1);
+    echo "<!-- {$this->ref_cod_instituicao} -->";
+    $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes_instituicao, $this->ref_cod_instituicao, 'EscolaInstituicao();', null, null, null, null, $obrigatorio);
+}
 
-                if (is_array($lista_escola23) && count($lista_escola23)) {
-                    foreach ($lista_escola23 as $registro) {
-                        $opcoes["{$registro['cod_escola']}"] = "{$registro['nome']}";
-                    }
-                }
-            }
-
-            $aux = $obrigatorio;
-            if (isset($escola_obrigatorio)) {
-                if ($escola_obrigatorio) {
-                    $aux = true;
-                } else {
-                    $aux = false;
-                }
-            }
-            $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola, null, null, null, null, null, $aux);
+if ($nivel_usuario == 1 || $nivel_usuario == 2) {
+    $selecione = $nivel_usuario == 2 ? 'Selecione uma escola' : 'Selecione uma escola';
+    $opcoes = ['' => $selecione];
+    $objTemp = new clsPmieducarEscola();
+    if ((!empty($this->ref_cod_instituicao) && $nivel_usuario == 1) || $nivel_usuario == 2) {
+        if ($nivel_usuario == 2) {
+            $this->ref_cod_instituicao = $instituicao_usuario;
         }
+
+        $lista_escola23 = $objTemp->lista(null, null, null, $this->ref_cod_instituicao, null, null, nul, null, null, null, 1);
+
+        if (is_array($lista_escola23) && count($lista_escola23)) {
+            foreach ($lista_escola23 as $registro) {
+                $opcoes["{$registro['cod_escola']}"] = "{$registro['nome']}";
+            }
+        }
+    }
+
+    $aux = $obrigatorio;
+    if (isset($escola_obrigatorio)) {
+        if ($escola_obrigatorio) {
+            $aux = true;
+        } else {
+            $aux = false;
+        }
+    }
+    $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola, null, null, null, null, null, $aux);
+}
 
 if ($nivel_usuario == 1) {
     ?>

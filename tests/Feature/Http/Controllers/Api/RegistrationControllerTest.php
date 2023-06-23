@@ -14,7 +14,9 @@ use Tests\ResourceTestCase;
 class RegistrationControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/registration';
+
     protected string $model = LegacyRegistration::class;
+
     protected string $factory = LegacyRegistrationFactory::class;
 
     #[

@@ -8,8 +8,6 @@ use App\Models\LegacyRegistration;
 class RegistrationEvaluationRuleService
 {
     /**
-     * @param LegacyRegistration $registration
-     *
      * @return LegacyEvaluationRule
      */
     public function getEvaluationRule(LegacyRegistration $registration)

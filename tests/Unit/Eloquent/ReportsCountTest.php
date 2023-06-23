@@ -14,6 +14,7 @@ class ReportsCountTest extends EloquentTestCase
     {
         return ReportsCount::class;
     }
+
     /** @test  */
     public function validIncrementCount()
     {
@@ -59,17 +60,17 @@ class ReportsCountTest extends EloquentTestCase
                 'template' => 'relatorio_html',
                 'success' => true,
                 'date' => now(),
-                'count' => 3
+                'count' => 3,
             ]
         )->assertDatabaseHas(
             ReportsCount::class,
             [
-            'render' => 'html',
-            'template' => 'relatorio_html',
-            'success' => false,
-            'date' => now(),
-            'count' => 2
-        ]
+                'render' => 'html',
+                'template' => 'relatorio_html',
+                'success' => false,
+                'date' => now(),
+                'count' => 2,
+            ]
         );
     }
 }

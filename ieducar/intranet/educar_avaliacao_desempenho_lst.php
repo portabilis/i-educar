@@ -1,19 +1,33 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $sequencial;
+
     public $ref_cod_servidor;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $titulo_avaliacao;
+
     public $ref_ref_cod_instituicao;
 
     public function Gerar()
@@ -21,14 +35,14 @@ return new class extends clsListagem {
         $this->titulo = 'Avaliação Desempenho - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->ref_ref_cod_instituicao=($_GET['ref_cod_instituicao'] == '') ? $_GET['ref_ref_cod_instituicao'] : $_GET['ref_cod_instituicao'];
+        $this->ref_ref_cod_instituicao = ($_GET['ref_cod_instituicao'] == '') ? $_GET['ref_ref_cod_instituicao'] : $_GET['ref_cod_instituicao'];
 
         $lista_busca = [
             'Avaliação',
-            'Servidor'
+            'Servidor',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -44,7 +58,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_avaliacao_desempenho = new clsPmieducarAvaliacaoDesempenho();
         $obj_avaliacao_desempenho->setOrderby(strNomeCampo: 'titulo_avaliacao ASC');
@@ -72,7 +86,7 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_avaliacao_desempenho_det.php?sequencial={$registro['sequencial']}&ref_cod_servidor={$registro['ref_cod_servidor']}&ref_ref_cod_instituicao={$registro['ref_ref_cod_instituicao']}\">{$registro['titulo_avaliacao']}</a>",
-                    "<a href=\"educar_avaliacao_desempenho_det.php?sequencial={$registro['sequencial']}&ref_cod_servidor={$registro['ref_cod_servidor']}&ref_ref_cod_instituicao={$registro['ref_ref_cod_instituicao']}\">{$nm_servidor}</a>"
+                    "<a href=\"educar_avaliacao_desempenho_det.php?sequencial={$registro['sequencial']}&ref_cod_servidor={$registro['ref_cod_servidor']}&ref_ref_cod_instituicao={$registro['ref_ref_cod_instituicao']}\">{$nm_servidor}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {
@@ -88,7 +102,7 @@ return new class extends clsListagem {
             $this->array_botao_url[] = "educar_avaliacao_desempenho_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
             $this->array_botao[] = [
                 'name' => 'Novo',
-                'css-extra' => 'btn-green'
+                'css-extra' => 'btn-green',
             ];
         }
 

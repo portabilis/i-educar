@@ -10,20 +10,22 @@ class Setting extends Model
     use DateSerializer;
 
     public const TYPE_STRING = 'string';
+
     public const TYPE_FLOAT = 'float';
+
     public const TYPE_INTEGER = 'integer';
+
     public const TYPE_BOOLEAN = 'boolean';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'key', 'value', 'type', 'description', 'setting_category_id', 'hint', 'maxlength'
+        'key', 'value', 'type', 'description', 'setting_category_id', 'hint', 'maxlength',
     ];
 
     /**
      * @param mixed $value
-     *
      * @return mixed
      */
     public function getValueAttribute($value)

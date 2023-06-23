@@ -10,6 +10,6 @@ abstract class ResourceRequest extends FormRequest
 {
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json(['data'=>[]]));
+        throw new HttpResponseException(response()->json(['data' => []]));
     }
 }

@@ -20,8 +20,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
 
     /**
      * CopyAbsenceService constructor.
-     *
-     * @param RegistrationEvaluationRuleService $service
      */
     public function __construct(RegistrationEvaluationRuleService $service)
     {
@@ -31,8 +29,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
     /**
      * Copia notas descritivas de uma matrícula pra outra
      *
-     * @param LegacyRegistration $newRegistration
-     * @param LegacyRegistration $oldRegistration
      *
      * @throws MissingDescriptiveOpinionType
      */
@@ -60,8 +56,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
     /**
      * Verifica se os tipos de pareceres descritivos das duas regras são iguais
      *
-     * @param LegacyEvaluationRule $newEvaluationRule
-     * @param LegacyEvaluationRule $oldEvaluationRule
      *
      * @return bool
      */
@@ -75,8 +69,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
     /**
      * Cria o registro em parecer_aluno pra nova matrícula
      *
-     * @param LegacyRegistration   $newRegistration
-     * @param LegacyEvaluationRule $newEvaluationRule
      *
      * @return LegacyStudentDescriptiveOpinion
      */
@@ -95,9 +87,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
     /**
      * Copia os pareceres para a matrícula nova
      *
-     * @param LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion
-     * @param LegacyEvaluationRule            $newEvaluationRule
-     * @param LegacyRegistration              $oldRegistration
      *
      * @throws MissingDescriptiveOpinionType
      */
@@ -129,9 +118,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
 
     /**
      * Copia parecer por componente
-     *
-     * @param LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion
-     * @param LegacyRegistration              $oldRegistration
      */
     private function copyDisciplineDescriptiveOpinion(
         LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion,
@@ -153,9 +139,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
 
     /**
      * Copia parecer geral
-     *
-     * @param LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion
-     * @param LegacyRegistration              $oldRegistration
      */
     private function copyGeneralDescriptiveOpinion(
         LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion,

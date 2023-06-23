@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $cod_usuario;
 
     public function Gerar()
@@ -16,7 +17,7 @@ return new class extends clsDetalhe {
         $db->Consulta(consulta: "SELECT nm_vinculo, abreviatura FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = '$cod_func'");
 
         if ($db->ProximoRegistro()) {
-            list($nm_vinculo, $abreviatura) = $db->Tupla();
+            [$nm_vinculo, $abreviatura] = $db->Tupla();
             $this->addDetalhe(detalhe: ['Nome', $nm_vinculo]);
             $this->addDetalhe(detalhe: ['Abreviatura', $abreviatura]);
         }

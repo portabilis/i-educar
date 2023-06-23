@@ -37,22 +37,18 @@ class LegacyCourse extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacyCourseBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
-     *
-     * @var array
      */
     public array $legacy = [
         'id' => 'cod_curso',
         'name' => 'nm_curso',
         'is_standard_calendar' => 'padrao_ano_escolar',
         'steps' => 'qtd_etapas',
-        'description' => 'descricao'
+        'description' => 'descricao',
     ];
 
     /**
@@ -73,7 +69,7 @@ class LegacyCourse extends LegacyModel
         'ativo',
         'modalidade_curso',
         'padrao_ano_escolar',
-        'multi_seriado'
+        'multi_seriado',
     ];
 
     /**
@@ -148,8 +144,6 @@ class LegacyCourse extends LegacyModel
 
     /**
      * Relaciona com  as escolas
-     *
-     * @return BelongsToMany
      */
     public function schools(): BelongsToMany
     {

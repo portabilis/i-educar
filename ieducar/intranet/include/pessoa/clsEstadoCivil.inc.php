@@ -3,8 +3,11 @@
 class clsEstadoCivil
 {
     public $ideciv;
+
     public $descricao;
+
     public $tabela;
+
     public $schema;
 
     /**

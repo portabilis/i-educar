@@ -5,6 +5,7 @@ namespace App\Models;
 class LegacyAccess extends LegacyModel
 {
     public const CREATED_AT = 'data_hora';
+
     public const UPDATED_AT = null;
 
     /**

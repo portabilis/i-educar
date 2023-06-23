@@ -11,9 +11,7 @@ class ProcessPolicy
     use HandlesAuthorization;
 
     /**
-     * @param User $user
      * @param int  $process
-     *
      * @return bool
      */
     public function view(User $user, $process = 0)
@@ -38,9 +36,7 @@ class ProcessPolicy
     }
 
     /**
-     * @param User $user
      * @param int  $process
-     *
      * @return bool
      */
     public function modify(User $user, $process)
@@ -56,9 +52,7 @@ class ProcessPolicy
     }
 
     /**
-     * @param User $user
      * @param int  $process
-     *
      * @return bool
      */
     public function remove(User $user, $process)

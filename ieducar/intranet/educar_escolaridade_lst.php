@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referência a usuário da sessão
      *
@@ -30,6 +31,7 @@ return new class extends clsListagem {
     public $offset = 0;
 
     public $idesco;
+
     public $descricao;
 
     public function Gerar()
@@ -42,8 +44,8 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-      'Descrição'
-    ]);
+            'Descrição',
+        ]);
 
         // Outros Filtros
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, false);
@@ -51,7 +53,7 @@ return new class extends clsListagem {
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->limite-$this->limite : 0;
+      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $obj_escolaridade = new clsCadastroEscolaridade();
         $obj_escolaridade->setOrderby('descricao ASC');
@@ -67,8 +69,8 @@ return new class extends clsListagem {
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $this->addLinhas([
-          "<a href=\"educar_escolaridade_det.php?idesco={$registro['idesco']}\">{$registro['descricao']}</a>"
-        ]);
+                    "<a href=\"educar_escolaridade_det.php?idesco={$registro['idesco']}\">{$registro['descricao']}</a>",
+                ]);
             }
         }
 
@@ -80,8 +82,8 @@ return new class extends clsListagem {
         }
 
         $this->breadcrumb('Escolaridade do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         $this->largura = '100%';
     }

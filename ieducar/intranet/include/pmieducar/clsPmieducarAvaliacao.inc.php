@@ -5,17 +5,29 @@ use iEducar\Legacy\Model;
 class clsPmieducarAvaliacao extends Model
 {
     public $cod_avaliacao;
+
     public $disc_ref_ref_cod_serie;
+
     public $disc_ref_ref_cod_escola;
+
     public $disc_ref_ref_cod_disciplina;
+
     public $disc_ref_ref_cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $titulo;
+
     public $descricao;
+
     public $aplicada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function __construct($cod_avaliacao = null, $disc_ref_ref_cod_serie = null, $disc_ref_ref_cod_escola = null, $disc_ref_ref_cod_disciplina = null, $disc_ref_ref_cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $titulo = null, $descricao = null, $aplicada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)

@@ -12,7 +12,7 @@ class ViewController extends Core_Controller_Page_ViewController
         'Nome' => 'nome',
         'Abreviatura' => 'abreviatura',
         'Base curricular' => 'tipo_base',
-        'Área conhecimento' => 'area_conhecimento'
+        'Área conhecimento' => 'area_conhecimento',
     ];
 
     /**
