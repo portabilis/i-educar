@@ -92,7 +92,7 @@ class Registro002019ImportTest extends TestCase
         $schoolInep = SchoolInep::where('cod_escola_inep', $model->codigoInep)->first();
         /** @var LegacySchool $school */
         $school = $schoolInep->school;
-        $phones = $school->person->phone;
+        $phones = $school->person->phones;
 
         $this->assertCount(1, $phones);
         $this->assertEquals((int) $model->telefone, (int) $phones->first()->fone);

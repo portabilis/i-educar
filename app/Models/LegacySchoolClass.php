@@ -167,6 +167,13 @@ class LegacySchoolClass extends Model
         );
     }
 
+    protected function startTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->hora_inicial ? Carbon::createFromFormat('H:i:s', $this->hora_inicial) : null
+        );
+    }
+
     protected function schoolId(): Attribute
     {
         return Attribute::make(

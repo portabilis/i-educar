@@ -119,7 +119,8 @@ class PromocaoApiController extends ApiCoreController
             $data = [
                 'matricula' => $params['matricula'],
                 'usuario' => $params['user_id'],
-                'etapa' => $params['etapa']
+                'etapa' => $params['etapa'],
+                'updateScore' => $params['updateScore'],
             ];
             $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($data);
             return $this->_boletimServices[$matriculaId];
@@ -469,7 +470,7 @@ class PromocaoApiController extends ApiCoreController
         return LegacyAcademicYearStage::query()->where($where)->count();
     }
 
-    public function processEnrollmentsPromotion(int $userId, int $enrollmentsId): void
+    public function processEnrollmentsPromotion(int $userId, int $enrollmentsId, bool $updateScore = false): void
     {
         $registration = LegacyRegistration::query()->find($enrollmentsId);
 
@@ -483,7 +484,8 @@ class PromocaoApiController extends ApiCoreController
         $params = [
             'matricula' => $enrollmentsId,
             'user_id' => $userId,
-            'etapa' => $maiorEtapaUtilizada
+            'etapa' => $maiorEtapaUtilizada,
+            'updateScore' => $updateScore,
         ];
 
         $this->boletimService(

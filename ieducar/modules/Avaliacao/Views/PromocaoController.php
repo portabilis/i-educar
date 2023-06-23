@@ -26,6 +26,13 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
         $this->inputsHelper()->dynamic('matricula', ['id' => 'matricula', 'required' => false]);
         $this->inputsHelper()->dynamic('situacaoMatricula', ['id' => 'situacaoMatricula', 'value' => 10, 'required' => false]);
         $this->campoLista('regras_avaliacao_id', 'Regra de avaliação (padrão)', $regras, $this->regras_avaliacao_id, '',false,'','', false,false);
+        $this->campoCheck(
+            nome: 'atualizar_notas',
+            campo: 'Atualizar notas',
+            valor: 1,
+            desc: 'Atualizar notas dos alunos de acordo com a regra de avaliação selecionada',
+            dica: 'Atualizar notas dos alunos de acordo com a regra de avaliação selecionada'
+        );
 
         $this->loadResourceAssets($this->getDispatcher());
 

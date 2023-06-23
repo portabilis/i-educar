@@ -97,6 +97,11 @@ trait Avaliacao_Service_Boletim_Acessores
     protected $_currentComponenteCurricular;
 
     /**
+     * @var bool
+     */
+    protected $_updateScore = false;
+
+    /**
      * Componentes que o aluno cursa, indexado pelo id de
      * ComponenteCurricular_Model_Componente.
      *
@@ -197,6 +202,11 @@ trait Avaliacao_Service_Boletim_Acessores
         if (isset($options['componenteCurricularId'])) {
             $this->setComponenteCurricularId($options['componenteCurricularId']);
             unset($options['componenteCurricularId']);
+        }
+
+        if(isset($options['updateScore'])){
+            $this->setUpdateScore($options['updateScore']);
+            unset($options['updateScore']);
         }
 
         $defaultOptions = array_keys($this->getOptions());
@@ -620,4 +630,22 @@ trait Avaliacao_Service_Boletim_Acessores
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isUpdateScore(): bool
+    {
+        return $this->_updateScore;
+    }
+
+    /**
+     * @param bool $updateScore
+     */
+    public function setUpdateScore(bool $updateScore): void
+    {
+        $this->_updateScore = $updateScore;
+    }
+
+
 }
