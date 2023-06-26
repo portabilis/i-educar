@@ -202,7 +202,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->checkbox(attrName: 'permite_lancar_faltas_componente', inputOptions: $options);
         $this->inputsHelper()->checkbox(attrName: 'selecionar_todos', inputOptions: ['label' => 'Selecionar/remover todos']);
-        $this->inputsHelper()->multipleSearchComponenteCurricular(attrName: null, inputOptions: ['label' => 'Componentes lecionados', 'required' => true], helperOptions: ['searchForArea' => true, 'allDisciplinesMulti' => true]);
+        $this->inputsHelper()->multipleSearchComponenteCurricular(attrName: null, inputOptions: ['label' => 'Componentes lecionados', 'required' => false], helperOptions: ['searchForArea' => true, 'allDisciplinesMulti' => true]);
 
         $scripts = [
             '/vendor/legacy/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
