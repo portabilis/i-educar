@@ -240,7 +240,7 @@ class SelectOptions
 
     public static function formats()
     {
-        return self::getDefaultOption() + [
+        return [
             'csv' => 'CSV',
             'pdf' => 'PDF'
         ];
