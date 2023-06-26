@@ -88,7 +88,8 @@ class LegacyIndividual extends Model
         'nome_social',
         'pais_residencia',
         'localizacao_diferenciada',
-        'ideciv'
+        'ideciv',
+        'observacao'
     ];
 
     /**
