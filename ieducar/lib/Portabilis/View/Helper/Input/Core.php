@@ -72,7 +72,7 @@ class Portabilis_View_Helper_Input_Core
 
         $dependencies = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);

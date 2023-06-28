@@ -2,18 +2,30 @@
 
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_servidor;
+
     public $ref_cod_funcao;
+
     public $ref_cod_instituicao;
+
     public $professor;
+
     public $ref_cod_escola;
+
     public $nome_servidor;
+
     public $ref_cod_servidor;
+
     public $identificador;
 
     public function Gerar()
@@ -59,7 +71,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: [
             'Nome do Servidor',
             'Matrícula',
-            'Instituição'
+            'Instituição',
         ]);
         $this->campoTexto(nome: 'nome_servidor', campo: 'Nome Servidor', valor: $this->nome_servidor, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoOculto(nome: 'tipo', valor: $_GET['tipo']);
@@ -101,7 +113,7 @@ return new class extends clsListagem {
                 $this->addLinhas(linha: [
                     "<a href=\"javascript:void(0);\" $script>{$registro['nome']}</a>",
                     "<a href=\"javascript:void(0);\" $script>{$registro['matricula']}</a>",
-                    "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>"
+                    "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>",
                 ]);
             }
         }

@@ -18,7 +18,7 @@ class RegistryOriginTest extends EnumTestCase
             1 => 'Migração',
             2 => 'Cadastro',
             3 => 'Unificação',
-            4 => 'Outro'
+            4 => 'Outro',
         ];
     }
 }

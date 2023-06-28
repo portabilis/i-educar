@@ -117,7 +117,7 @@ class EmployeeTest extends EloquentTestCase
     {
         EmployeeAllocationFactory::new()->create([
             'ref_cod_servidor' => $this->model,
-            'ref_cod_escola' => LegacySchoolFactory::new()->create()
+            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
         ]);
 
         $this->assertCount(1, $this->model->schools);
@@ -133,7 +133,7 @@ class EmployeeTest extends EloquentTestCase
         $employee = EmployeeFactory::new()->hasAttached(LegacyDisciplineFactory::new(), [
             'ref_ref_cod_instituicao' => $this->model->institution_id,
             'ref_cod_curso' => $course->id,
-            'ref_cod_funcao' => $employeeRole->id
+            'ref_cod_funcao' => $employeeRole->id,
         ], 'disciplines')->create();
 
         $this->assertCount(1, $employee->disciplines);
@@ -157,7 +157,7 @@ class EmployeeTest extends EloquentTestCase
             'id' => 'cod_servidor',
             'workload' => 'carga_horaria',
             'created_at' => 'data_cadastro',
-            'institution_id' => 'ref_cod_instituicao'
+            'institution_id' => 'ref_cod_instituicao',
         ];
     }
 }

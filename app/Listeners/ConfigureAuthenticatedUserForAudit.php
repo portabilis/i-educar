@@ -17,10 +17,6 @@ class ConfigureAuthenticatedUserForAudit
      */
     private $request;
 
-    /**
-     * @param Connection $connection
-     * @param Request    $request
-     */
     public function __construct(Connection $connection, Request $request)
     {
         $this->connection = $connection;
@@ -32,7 +28,6 @@ class ConfigureAuthenticatedUserForAudit
      *
      * @param int    $id
      * @param string $name
-     *
      * @return void
      */
     private function setContext($id, $name)
@@ -55,7 +50,6 @@ class ConfigureAuthenticatedUserForAudit
      * Handle the event.
      *
      * @param object $event
-     *
      * @return void
      */
     public function handle($event)

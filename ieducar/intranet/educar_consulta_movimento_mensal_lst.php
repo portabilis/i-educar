@@ -2,7 +2,8 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalQueryFactory;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public function Gerar()
     {
         $params = [];
@@ -24,7 +25,7 @@ return new class extends clsListagem {
             'instituicao',
             'escola',
             'data_inicial',
-            'data_final'
+            'data_final',
         ];
 
         foreach ($required as $req) {
@@ -64,7 +65,7 @@ return new class extends clsListagem {
         $turma = 'Todas';
 
         if (!empty($params['escola'])) {
-            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery(sql: "
+            $dados = (array) Portabilis_Utils_Database::fetchPreparedQuery(sql: "
                 select
                     juridica.fantasia
                 from
@@ -80,7 +81,7 @@ return new class extends clsListagem {
         }
 
         if (!empty($params['curso'])) {
-            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery(
+            $dados = (array) Portabilis_Utils_Database::fetchPreparedQuery(
                 sql: "select nm_curso from pmieducar.curso where cod_curso = {$params['curso']};"
             );
 
@@ -88,7 +89,7 @@ return new class extends clsListagem {
         }
 
         if (!empty($params['serie'])) {
-            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery(
+            $dados = (array) Portabilis_Utils_Database::fetchPreparedQuery(
                 sql: "select nm_serie from pmieducar.serie where cod_serie = {$params['serie']};"
             );
 
@@ -96,7 +97,7 @@ return new class extends clsListagem {
         }
 
         if (!empty($params['turma'])) {
-            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery(
+            $dados = (array) Portabilis_Utils_Database::fetchPreparedQuery(
                 sql: "select nm_turma from pmieducar.turma where cod_turma = {$params['turma']};"
             );
 
@@ -110,7 +111,7 @@ return new class extends clsListagem {
             'Série',
             'Turma',
             'Data inicial',
-            'Data final'
+            'Data final',
         ]);
 
         $this->addLinhas(linha: [
@@ -120,7 +121,7 @@ return new class extends clsListagem {
             $serie,
             $turma,
             filter_var(value: $this->getQueryString(name: 'data_inicial'), filter: FILTER_SANITIZE_STRING),
-            filter_var(value: $this->getQueryString(name: 'data_final'), filter: FILTER_SANITIZE_STRING)
+            filter_var(value: $this->getQueryString(name: 'data_final'), filter: FILTER_SANITIZE_STRING),
         ]);
 
         $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoMensal" data-params=\'%s\' data-tipo="%s">%d</a>';

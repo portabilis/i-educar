@@ -13,13 +13,11 @@ class Authorize extends AuthorizeMiddleware
 {
     /**
      * @param Request $request
-     * @param Closure $next
      * @param string  $ability
      * @param mixed   ...$models
+     * @return Response
      *
      * @throws AuthorizationException
-     *
-     * @return Response
      */
     public function handle($request, Closure $next, $ability, ...$models)
     {

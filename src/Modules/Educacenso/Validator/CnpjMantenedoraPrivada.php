@@ -17,9 +17,6 @@ class CnpjMantenedoraPrivada implements EducacensoValidator
         $this->escola = $escola;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if ($this->escola->cnpjMantenedoraPrincipal) {

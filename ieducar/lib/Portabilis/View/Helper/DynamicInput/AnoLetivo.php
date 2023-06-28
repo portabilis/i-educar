@@ -18,7 +18,7 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
             }
         }
 
-        return (empty($situacaoIn) ? '' : 'and andamento in (' . implode(',', $situacaoIn) . ')');
+        return empty($situacaoIn) ? '' : 'and andamento in (' . implode(',', $situacaoIn) . ')';
     }
 
     protected function inputOptions($options)

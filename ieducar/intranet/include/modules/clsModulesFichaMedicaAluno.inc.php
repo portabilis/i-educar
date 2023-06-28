@@ -5,48 +5,91 @@ use iEducar\Legacy\Model;
 class clsModulesFichaMedicaAluno extends Model
 {
     public $ref_cod_aluno;
+
     public $altura;
+
     public $peso;
+
     public $grupo_sanguineo;
+
     public $fator_rh;
+
     public $alergia_medicamento;
+
     public $desc_alergia_medicamento;
+
     public $alergia_alimento;
+
     public $desc_alergia_alimento;
+
     public $doenca_congenita;
+
     public $desc_doenca_congenita;
+
     public $fumante;
+
     public $doenca_caxumba;
+
     public $doenca_sarampo;
+
     public $doenca_rubeola;
+
     public $doenca_catapora;
+
     public $doenca_escarlatina;
+
     public $doenca_coqueluche;
+
     public $doenca_outras;
+
     public $epiletico;
+
     public $epiletico_tratamento;
+
     public $hemofilico;
+
     public $hipertenso;
+
     public $asmatico;
+
     public $diabetico;
+
     public $insulina;
+
     public $tratamento_medico;
+
     public $desc_tratamento_medico;
+
     public $medicacao_especifica;
+
     public $desc_medicacao_especifica;
+
     public $acomp_medico_psicologico;
+
     public $desc_acomp_medico_psicologico;
+
     public $restricao_atividade_fisica;
+
     public $desc_restricao_atividade_fisica;
+
     public $fratura_trauma;
+
     public $desc_fratura_trauma;
+
     public $plano_saude;
+
     public $desc_plano_saude;
+
     public $responsavel;
+
     public $responsavel_parentesco;
+
     public $responsavel_parentesco_telefone;
+
     public $responsavel_parentesco_celular;
+
     public $aceita_hospital_proximo;
+
     public $desc_aceita_hospital_proximo;
 
     /**

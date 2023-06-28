@@ -36,6 +36,6 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
     ];
 
     protected $_primaryKey = [
-        'ref_cod_pessoa_fj' => 'ref_cod_pessoa_fj'
+        'ref_cod_pessoa_fj' => 'ref_cod_pessoa_fj',
     ];
 }

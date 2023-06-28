@@ -3,21 +3,36 @@
 use App\Models\LegacyAbsenceDelay;
 use App\Models\LegacySchool;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $cod_falta_atraso;
+
     public $ref_cod_escola;
+
     public $ref_ref_cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_servidor;
+
     public $tipo;
+
     public $data_falta_atraso;
+
     public $qtd_horas;
+
     public $qtd_min;
+
     public $justificada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -96,7 +111,7 @@ return new class extends clsDetalhe {
             if ($tabela) {
                 $this->addDetalhe([
                     'Faltas/Atrasos',
-                    $tabela
+                    $tabela,
                 ]);
             }
         }

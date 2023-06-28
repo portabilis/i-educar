@@ -29,7 +29,7 @@ class LegacyDisciplineScore extends Model
         'etapa',
         'nota_recuperacao',
         'nota_original',
-        'nota_recuperacao_especifica'
+        'nota_recuperacao_especifica',
     ];
 
     /**

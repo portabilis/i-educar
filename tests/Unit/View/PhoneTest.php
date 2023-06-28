@@ -26,7 +26,7 @@ class PhoneTest extends ViewTestCase
         $number = $this->model->number;
 
         $number = preg_replace('/(\d{4,5})(\d{4})/', '$1-$2', $number);
-        $expect =  "({$areaCode}) {$number}";
+        $expect = "({$areaCode}) {$number}";
 
         $this->assertEquals($expect, $this->model->formattedNumber);
     }

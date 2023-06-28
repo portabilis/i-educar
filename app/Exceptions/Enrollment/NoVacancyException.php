@@ -9,8 +9,6 @@ class NoVacancyException extends RuntimeException
 {
     /**
      * Não há vagas na turma.
-     *
-     * @param LegacySchoolClass $schoolClass
      */
     public function __construct(LegacySchoolClass $schoolClass)
     {

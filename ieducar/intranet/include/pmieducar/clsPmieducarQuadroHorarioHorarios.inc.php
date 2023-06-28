@@ -5,19 +5,33 @@ use iEducar\Legacy\Model;
 class clsPmieducarQuadroHorarioHorarios extends Model
 {
     public $ref_cod_quadro_horario;
+
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_disciplina;
+
     public $sequencial;
+
     public $ref_cod_instituicao_substituto;
+
     public $ref_cod_instituicao_servidor;
+
     public $ref_servidor_substituto;
+
     public $ref_servidor;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $dia_semana;
 
     public function __construct(
@@ -62,7 +76,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_ref_cod_disciplina,
-                'anoEscolar' => $ref_ref_cod_serie
+                'anoEscolar' => $ref_ref_cod_serie,
             ]);
 
             if (1 == count($componenteAnos)) {
@@ -558,7 +572,6 @@ class clsPmieducarQuadroHorarioHorarios extends Model
      * sendo de responsabilidade do código cliente
      *
      * @param int $int_ref_cod_servidor_substituto Código do servidor que substituirá o atual
-     *
      * @return bool TRUE em caso de sucesso, FALSE caso contrário
      */
     public function substituir_servidor($int_ref_cod_servidor_substituto)

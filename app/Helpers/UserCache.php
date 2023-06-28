@@ -14,7 +14,7 @@ class UserCache
             return User::query()->with([
                 'person',
                 'type',
-                'employee'
+                'employee',
             ])->find($id);
         });
     }

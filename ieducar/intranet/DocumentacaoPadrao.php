@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -45,7 +46,7 @@ return new class extends clsCadastro {
             $lst_instituicao = $obj_instituicao->lista($this->ref_cod_instituicao);
 
             if (is_array($lst_instituicao)) {
-                $det_instituicao      = array_shift($lst_instituicao);
+                $det_instituicao = array_shift($lst_instituicao);
                 $this->nm_instituicao = $det_instituicao['nm_instituicao'];
                 $this->campoRotulo('nm_instituicao', 'Institução', $this->nm_instituicao);
             }

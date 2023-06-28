@@ -19,7 +19,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchIes extends Portabilis_V
             'objectName' => 'ies',
             'apiController' => 'Ies',
             'apiResource' => 'ies-search',
-            'showIdOnValue' => false
+            'showIdOnValue' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

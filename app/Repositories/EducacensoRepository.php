@@ -10,7 +10,6 @@ class EducacensoRepository
     /**
      * @param int $year
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord20($year, $school)
@@ -22,7 +21,6 @@ class EducacensoRepository
 
     /**
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord40($school)
@@ -34,7 +32,6 @@ class EducacensoRepository
     /**
      * @param int $year
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord50($year, $school)
@@ -47,7 +44,6 @@ class EducacensoRepository
     /**
      * @param int $year
      * @param int $school
-     *
      * @return Builder
      */
     public function getBuilderForRecord60($year, $school)
@@ -58,9 +54,7 @@ class EducacensoRepository
     }
 
     /**
-     * @param       $sql
      * @param array $params
-     *
      * @return array
      */
     protected function fetchPreparedQuery($sql, $params = [])
@@ -69,9 +63,6 @@ class EducacensoRepository
     }
 
     /**
-     * @param $school
-     * @param $year
-     *
      * @return array
      */
     public function getDataForRecord00($school, $year)
@@ -219,8 +210,6 @@ SQL;
     }
 
     /**
-     * @param $school
-     *
      * @return array
      */
     public function getDataForRecord10($school)
@@ -340,13 +329,11 @@ SQL;
 SQL;
 
         return $this->fetchPreparedQuery($sql, [
-            'school' => $school
+            'school' => $school,
         ]);
     }
 
     /**
-     * @param $school
-     *
      * @return array
      */
     public function getDataForRecord40($school)
@@ -357,9 +344,6 @@ SQL;
     }
 
     /**
-     * @param $school
-     * @param $year
-     *
      * @return array
      */
     public function getDataForRecord20($school, $year)
@@ -370,9 +354,6 @@ SQL;
     }
 
     /**
-     * @param $classroomId
-     * @param $disciplineIds
-     *
      * @return array
      */
     public function getDisciplinesWithoutTeacher($classroomId, $disciplineIds)
@@ -417,7 +398,7 @@ SQL;
             return [];
         }
 
-        $stringPersonId = join(',', $arrayPersonId);
+        $stringPersonId = implode(',', $arrayPersonId);
         $sql = <<<SQL
             SELECT
                 '30' AS registro,
@@ -511,7 +492,7 @@ SQL;
             return [];
         }
 
-        $stringPersonId = join(',', $arrayEmployeeId);
+        $stringPersonId = implode(',', $arrayEmployeeId);
         $sql = <<<SQL
             SELECT DISTINCT
                 servidor.ref_cod_instituicao AS "codigoInstituicao",
@@ -580,7 +561,7 @@ SQL;
             return [];
         }
 
-        $stringStudentId = join(',', $arrayStudentId);
+        $stringStudentId = implode(',', $arrayStudentId);
         $sql = <<<SQL
             SELECT DISTINCT
                 aluno.ref_idpes AS "codigoPessoa",

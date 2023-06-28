@@ -16,7 +16,7 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
         $anuais = [
             RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
         ];
 
         if (in_array($parecerDescritivo, $anuais, true)) {
@@ -68,9 +68,6 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testAdicionaParecerNoBoletim()
-     *
-     * @param Avaliacao_Model_ParecerDescritivoAbstract $parecer
-     *
      */
     abstract protected function _testAdicionaParecerNoBoletimVerificaValidadores(Avaliacao_Model_ParecerDescritivoAbstract $parecer);
 

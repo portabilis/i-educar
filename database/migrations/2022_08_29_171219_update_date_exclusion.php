@@ -3,10 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
-        $serie = <<<SQL
+        $serie = <<<'SQL'
         update pmieducar.serie
         set data_exclusao = updated_at
         WHERE ativo = 0
@@ -15,7 +16,7 @@ return new class () extends Migration {
 
         DB::unprepared($serie);
 
-        $curso = <<<SQL
+        $curso = <<<'SQL'
         update pmieducar.curso
         set data_exclusao = updated_at
         WHERE ativo = 0

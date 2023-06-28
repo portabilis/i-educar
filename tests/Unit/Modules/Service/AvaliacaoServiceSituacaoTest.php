@@ -24,7 +24,7 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
             ->setExcludedMethods(
                 [
                     'getSituacaoAluno',
-                    'getSituacaoNotaFalta'
+                    'getSituacaoNotaFalta',
                 ]
             )
             ->getCleanMock('Avaliacao_Service_Boletim');
@@ -56,13 +56,13 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
             2 => App_Model_MatriculaSituacao::APROVADO_APOS_EXAME,
             3 => App_Model_MatriculaSituacao::EM_ANDAMENTO,
             4 => App_Model_MatriculaSituacao::EM_EXAME,
-            5 => App_Model_MatriculaSituacao::REPROVADO
+            5 => App_Model_MatriculaSituacao::REPROVADO,
         ];
 
         $faltaSituacoes = [
             1 => App_Model_MatriculaSituacao::EM_ANDAMENTO,
             2 => App_Model_MatriculaSituacao::APROVADO,
-            3 => App_Model_MatriculaSituacao::REPROVADO
+            3 => App_Model_MatriculaSituacao::REPROVADO,
         ];
 
         // Possibilidades do retorno do objeto
@@ -70,28 +70,28 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
             1 => [  //Aprova Andame Retido Recupe
                 1 => [false, true, false, false],
                 2 => [true, false, false, false],
-                3 => [true, false, true, false]
+                3 => [true, false, true, false],
             ],
             2 => [
                 1 => [false, true, false, true],
                 2 => [true, false, false, true],
-                3 => [true, false, true, true]
+                3 => [true, false, true, true],
             ],
             3 => [
                 1 => [false, true, false, false],
                 2 => [false, true, false, false],
-                3 => [false, false, true, false]
+                3 => [false, false, true, false],
             ],
             4 => [
                 1 => [false, true, false, true],
                 2 => [false, true, false, true],
-                3 => [false, true, true, true]
+                3 => [false, true, true, true],
             ],
             5 => [
                 1 => [false, true, false, false],
                 2 => [false, false, false, false],
-                3 => [false, false, true, false]
-            ]
+                3 => [false, false, true, false],
+            ],
         ];
 
         $expectedSituation = [
@@ -143,7 +143,7 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
                 $this->assertEquals($expected[$i][$ii][3], $situacao->recuperacao, "Recuperação, caso $i - $ii");
                 $this->assertEquals($expectedSituation[$currentSituation], $situacao->situacao, "Situação, caso $i - $ii");
 
-                ++$currentSituation;
+                $currentSituation++;
             }
         }
     }

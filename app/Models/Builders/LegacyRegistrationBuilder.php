@@ -36,7 +36,7 @@ class LegacyRegistrationBuilder extends LegacyBuilder
             RegistrationStatus::REPROVED,
             RegistrationStatus::APPROVED_WITH_DEPENDENCY,
             RegistrationStatus::APPROVED_BY_BOARD,
-            RegistrationStatus::REPROVED_BY_ABSENCE
+            RegistrationStatus::REPROVED_BY_ABSENCE,
         ]);
     }
 
@@ -47,7 +47,7 @@ class LegacyRegistrationBuilder extends LegacyBuilder
             RegistrationStatus::REPROVED,
             RegistrationStatus::APPROVED_WITH_DEPENDENCY,
             RegistrationStatus::APPROVED_BY_BOARD,
-            RegistrationStatus::REPROVED_BY_ABSENCE
+            RegistrationStatus::REPROVED_BY_ABSENCE,
         ]);
     }
 
@@ -77,10 +77,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Filtra por Escola
-     *
-     * @param int $school
-     *
-     * @return LegacyRegistrationBuilder
      */
     public function whereSchool(int $school): self
     {
@@ -89,10 +85,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Filtra por Turma
-     *
-     * @param int $schoolClass
-     *
-     * @return LegacyRegistrationBuilder
      */
     public function whereSchoolClass(int $schoolClass): self
     {
@@ -101,8 +93,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Filtra por ativo
-     *
-     * @return LegacyRegistrationBuilder
      */
     public function active(): self
     {
@@ -112,7 +102,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     /**
      * Filtra por ano
      *
-     * @param int $year
      *
      * @return $this
      */
@@ -123,10 +112,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Ordena por nome
-     *
-     * @param string $direction
-     *
-     * @return LegacyRegistrationBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
@@ -135,8 +120,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Realiza a junçao com organização
-     *
-     * @return LegacyRegistrationBuilder
      */
     public function joinPerson(): self
     {

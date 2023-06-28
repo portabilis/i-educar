@@ -23,7 +23,7 @@ class AvailableTimeServiceTest extends TestCase
     private $service;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function setUp(): void
     {
@@ -34,7 +34,7 @@ class AvailableTimeServiceTest extends TestCase
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function tearDown(): void
     {
@@ -176,11 +176,11 @@ class AvailableTimeServiceTest extends TestCase
         ]);
 
         $registration = LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student
+            'ref_cod_aluno' => $student,
         ]);
 
         $otherRegistration = LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student
+            'ref_cod_aluno' => $student,
         ]);
 
         LegacyEnrollmentFactory::new()->active()->create([

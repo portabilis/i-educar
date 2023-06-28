@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Storage;
 class FileController
 {
     public $file;
+
     public $errorMessage;
+
     public $maxSize;
+
     public $suportedExtensions;
 
     public function __construct(

@@ -46,7 +46,7 @@ class CityController extends ResourceController
         $accessLevel = $request->user()->getLevel();
 
         return [
-            new CityRestrictOperationRule($accessLevel)
+            new CityRestrictOperationRule($accessLevel),
         ];
     }
 
@@ -57,7 +57,7 @@ class CityController extends ResourceController
         return [
             new CityRestrictOperationRule($accessLevel),
             new AddressingCityDistrictRule(),
-            new AddressingCityPlaceRule()
+            new AddressingCityPlaceRule(),
         ];
     }
 }

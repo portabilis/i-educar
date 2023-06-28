@@ -36,21 +36,21 @@ class DisciplineControllerTest extends TestCase
         $grade = LegacyGradeFactory::new()->create();
         LegacySchoolGradeFactory::new()->create([
             'ref_cod_escola' => $school,
-            'ref_cod_serie' => $grade
+            'ref_cod_serie' => $grade,
         ]);
         $schoolClass = LegacySchoolClassFactory::new()->create([
             'ref_ref_cod_serie' => $grade,
-            'ref_ref_cod_escola' => $school
+            'ref_ref_cod_escola' => $school,
         ]);
         LegacySchoolGradeDisciplineFactory::new()->create([
             'ref_ref_cod_serie' => $grade,
             'ref_ref_cod_escola' => $school,
-            'ref_cod_disciplina' => $this->discipline
+            'ref_cod_disciplina' => $this->discipline,
         ]);
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $school,
             'turma_id' => $schoolClass,
-            'serie_id' => $grade
+            'serie_id' => $grade,
         ]);
         LegacyDisciplineAcademicYearFactory::new()->create([
             'ano_escolar_id' => $grade,
@@ -61,7 +61,7 @@ class DisciplineControllerTest extends TestCase
             'componente_curricular_id' => $this->discipline,
             'ano_escolar_id' => $grade,
             'escola_id' => $school,
-            'turma_id' => $schoolClass
+            'turma_id' => $schoolClass,
         ]);
     }
 
@@ -86,17 +86,17 @@ class DisciplineControllerTest extends TestCase
                     'tipo_base',
                     'etapas_especificas',
                     'etapas_utilizadas',
-                    'carga_horaria'
-                ]
-            ]
+                    'carga_horaria',
+                ],
+            ],
         ]);
         $response->assertJson([
             'data' => [
                 [
                     'id' => $this->discipline->id,
-                    'name' => $this->discipline->name
-                ]
-            ]
+                    'name' => $this->discipline->name,
+                ],
+            ],
         ]);
     }
 }

@@ -2,30 +2,54 @@
 
 use Illuminate\Support\Facades\Cache;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_instituicao;
+
     public $permite_relacionamento_posvendas;
+
     public $url_novo_educacao;
+
     public $token_novo_educacao;
+
     public $mostrar_codigo_inep_aluno;
+
     public $justificativa_falta_documentacao_obrigatorio;
+
     public $tamanho_min_rede_estadual;
+
     public $modelo_boletim_professor;
+
     public $url_cadastro_usuario;
+
     public $active_on_ieducar;
+
     public $ieducar_image;
+
     public $ieducar_entity_name;
+
     public $ieducar_login_footer;
+
     public $ieducar_external_footer;
+
     public $ieducar_internal_footer;
+
     public $facebook_url;
+
     public $twitter_url;
+
     public $linkedin_url;
+
     public $ieducar_suspension_message;
+
     public $bloquear_cadastro_aluno;
+
     public $situacoes_especificas_atestados;
+
     public $emitir_ato_autorizativo;
+
     public $emitir_ato_criacao_credenciamento;
 
     public function Inicializar()
@@ -86,27 +110,27 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->checkbox(attrName: 'permite_relacionamento_posvendas', inputOptions: [
             'label' => 'Permite relacionamento direto no pós-venda?',
-            'value' => $this->permite_relacionamento_posvendas ? 'on' : ''
+            'value' => $this->permite_relacionamento_posvendas ? 'on' : '',
         ]);
 
         $this->inputsHelper()->checkbox(attrName: 'bloquear_cadastro_aluno', inputOptions: [
             'label' => 'Bloquear o cadastro de novos alunos',
-            'value' => $this->bloquear_cadastro_aluno ? 'on' : ''
+            'value' => $this->bloquear_cadastro_aluno ? 'on' : '',
         ]);
 
         $this->inputsHelper()->checkbox(attrName: 'situacoes_especificas_atestados', inputOptions: [
             'label' => 'Exibir apenas matrículas em situações específicas para os atestados',
-            'value' => $this->situacoes_especificas_atestados ? 'on' : ''
+            'value' => $this->situacoes_especificas_atestados ? 'on' : '',
         ]);
 
         $this->inputsHelper()->checkbox(attrName: 'emitir_ato_autorizativo', inputOptions: [
             'label' => 'Emite ato autorizativo nos cabeçalhos de histórico escolar (modelos padrão)',
-            'value' => $this->emitir_ato_autorizativo ? 'on' : ''
+            'value' => $this->emitir_ato_autorizativo ? 'on' : '',
         ]);
 
         $this->inputsHelper()->checkbox(attrName: 'emitir_ato_criacao_credenciamento', inputOptions: [
             'label' => 'Emite lei de criação e credenciamento nos cabeçalhos de histórico escolar (modelos padrão)',
-            'value' => $this->emitir_ato_criacao_credenciamento ? 'on' : ''
+            'value' => $this->emitir_ato_criacao_credenciamento ? 'on' : '',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'url_novo_educacao', inputOptions: [
@@ -115,7 +139,7 @@ return new class extends clsCadastro {
             'max_length' => 100,
             'required' => false,
             'placeholder' => 'Ex: http://cliente.provedor.com.br/api/v1/',
-            'value' => $this->url_novo_educacao
+            'value' => $this->url_novo_educacao,
         ]);
 
         $this->inputsHelper()->text(attrNames: 'token_novo_educacao', inputOptions: [
@@ -123,7 +147,7 @@ return new class extends clsCadastro {
             'size' => 100,
             'max_length' => 100,
             'required' => false,
-            'value' => $this->token_novo_educacao
+            'value' => $this->token_novo_educacao,
         ]);
 
         $options = [
@@ -146,7 +170,7 @@ return new class extends clsCadastro {
             'max_length' => 3,
             'required' => false,
             'placeholder' => '',
-            'value' => $this->tamanho_min_rede_estadual
+            'value' => $this->tamanho_min_rede_estadual,
         ]);
 
         $options = [
@@ -156,7 +180,7 @@ return new class extends clsCadastro {
                 2 => _cl(key: 'report.boletim_professor.modelo_recuperacao_por_etapa'),
                 3 => _cl(key: 'report.boletim_professor.modelo_recuperacao_paralela'),
             ],
-            'value' => $this->modelo_boletim_professor
+            'value' => $this->modelo_boletim_professor,
         ];
         $this->inputsHelper()->select(attrName: 'modelo_boletim_professor', inputOptions: $options);
 
@@ -167,7 +191,7 @@ return new class extends clsCadastro {
             'max_length' => 255,
             'required' => false,
             'placeholder' => 'Ex: http://login.ieducar.com.br/cliente',
-            'value' => $this->url_cadastro_usuario
+            'value' => $this->url_cadastro_usuario,
         ]);
 
         $this->inputsHelper()->booleanSelect(attrName: 'active_on_ieducar', inputOptions: [
@@ -181,7 +205,7 @@ return new class extends clsCadastro {
             'size' => 100,
             'max_length' => 255,
             'required' => false,
-            'value' => $this->ieducar_suspension_message
+            'value' => $this->ieducar_suspension_message,
         ]);
 
         $this->inputsHelper()->text(attrNames: 'ieducar_image', inputOptions: [
@@ -189,7 +213,7 @@ return new class extends clsCadastro {
             'size' => 100,
             'max_length' => 255,
             'required' => false,
-            'value' => $this->ieducar_image
+            'value' => $this->ieducar_image,
         ]);
 
         $this->inputsHelper()->text(attrNames: 'ieducar_entity_name', inputOptions: [
@@ -197,7 +221,7 @@ return new class extends clsCadastro {
             'size' => 100,
             'max_length' => 255,
             'required' => false,
-            'value' => $this->ieducar_entity_name
+            'value' => $this->ieducar_entity_name,
         ]);
 
         $this->inputsHelper()->textArea(attrName: 'ieducar_login_footer', inputOptions: [
@@ -205,7 +229,7 @@ return new class extends clsCadastro {
             'size' => 100,
             'rows' => 3,
             'required' => false,
-            'value' => $this->ieducar_login_footer
+            'value' => $this->ieducar_login_footer,
         ]);
 
         $this->inputsHelper()->textArea(attrName: 'ieducar_external_footer', inputOptions: [
@@ -213,7 +237,7 @@ return new class extends clsCadastro {
             'size' => 100,
             'rows' => 3,
             'required' => false,
-            'value' => $this->ieducar_external_footer
+            'value' => $this->ieducar_external_footer,
         ]);
 
         $this->inputsHelper()->textArea(attrName: 'ieducar_internal_footer', inputOptions: [
@@ -221,7 +245,7 @@ return new class extends clsCadastro {
             'size' => 100,
             'rows' => 3,
             'required' => false,
-            'value' => $this->ieducar_internal_footer
+            'value' => $this->ieducar_internal_footer,
         ]);
 
         $this->inputsHelper()->text(attrNames: 'facebook_url', inputOptions: [
@@ -230,7 +254,7 @@ return new class extends clsCadastro {
             'max_length' => 255,
             'required' => false,
             'placeholder' => 'Ex: http://www.facebook.com/nome',
-            'value' => $this->facebook_url
+            'value' => $this->facebook_url,
         ]);
 
         $this->inputsHelper()->text(attrNames: 'twitter_url', inputOptions: [
@@ -239,7 +263,7 @@ return new class extends clsCadastro {
             'max_length' => 255,
             'required' => false,
             'placeholder' => 'Ex: http://twitter.com/nome',
-            'value' => $this->twitter_url
+            'value' => $this->twitter_url,
         ]);
 
         $this->inputsHelper()->text(attrNames: 'linkedin_url', inputOptions: [
@@ -248,7 +272,7 @@ return new class extends clsCadastro {
             'max_length' => 255,
             'required' => false,
             'placeholder' => 'Ex: https://www.linkedin.com/company/nome/',
-            'value' => $this->linkedin_url
+            'value' => $this->linkedin_url,
         ]);
     }
 

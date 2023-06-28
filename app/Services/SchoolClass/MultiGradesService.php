@@ -23,7 +23,7 @@ class MultiGradesService
 
         $changeToMultiGrades = [
             $schoolClass,
-            $schoolClassGrades
+            $schoolClassGrades,
         ];
 
         validator([
@@ -43,7 +43,7 @@ class MultiGradesService
                 new ExistsEnrollmentsInSchoolClassGrades(),
             ],
             'change_to_multi_grades' => [
-                new IncompatibleChangeToMultiGrades()
+                new IncompatibleChangeToMultiGrades(),
             ],
         ], [
             'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas.',

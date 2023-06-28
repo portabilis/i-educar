@@ -11,7 +11,6 @@ class StageScoreCalculationService
      *
      * @param float      $score
      * @param float|null $remedial
-     *
      * @return float
      */
     public function calculateAverageBetweenScoreAndRemedial($score, $remedial = null)
@@ -32,7 +31,6 @@ class StageScoreCalculationService
      *
      * @param float      $score
      * @param float|null $remedial
-     *
      * @return float
      */
     public function calculateSumScore($score, $remedial = null)
@@ -51,7 +49,6 @@ class StageScoreCalculationService
      *
      * @param float      $score
      * @param float|null $remedial
-     *
      * @return float
      */
     public function calculateRemedial($score, $remedial = null)

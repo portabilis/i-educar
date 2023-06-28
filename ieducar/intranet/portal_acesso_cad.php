@@ -1,24 +1,32 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_acesso;
+
     public $data_hora;
+
     public $ip_externo;
+
     public $ip_interno;
+
     public $cod_pessoa;
+
     public $obs;
+
     public $sucesso;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_acesso=$_GET['cod_acesso'];
+        $this->cod_acesso = $_GET['cod_acesso'];
 
         if (is_numeric($this->cod_acesso)) {
             $obj = new clsPortalAcesso($this->cod_acesso);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

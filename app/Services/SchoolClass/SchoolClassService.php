@@ -26,7 +26,6 @@ class SchoolClassService
      * @param int      $school       ID da escola
      * @param int      $academicYear Ano letivo
      * @param int|null $idToIgnore   ID da turma que deve ser ignorado (opcional)
-     *
      * @return bool
      *
      * @see CheckSchoolClassExistsByName
@@ -35,7 +34,7 @@ class SchoolClassService
     public function isAvailableName($name, $course, $level, $school, $academicYear, $idToIgnore = null)
     {
         $query = LegacySchoolClass::query()
-            ->where('nm_turma', (string)$name)
+            ->where('nm_turma', (string) $name)
             ->where('ref_ref_cod_serie', $level)
             ->where('ref_cod_curso', $course)
             ->where('ref_ref_cod_escola', $school)
@@ -59,8 +58,6 @@ class SchoolClassService
      * @param int $levelId
      * @param int $academicYear
      *
-     * @return bool
-     *
      * @see CheckAlternativeReportCardExists
      * @deprecated
      */
@@ -82,7 +79,6 @@ class SchoolClassService
      * Retorna o array com os calendários letivos das turmas informadas
      * Data inicial da primeira etapa e data final da última etapa
      *
-     * @param array $schoolClassId
      *
      * @return array|null
      */
@@ -91,7 +87,7 @@ class SchoolClassService
         return LegacySchoolClassStage::query()
             ->select([
                 DB::raw('(SELECT min(data_inicio) FROM turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as start_date'),
-                DB::raw('(SELECT max(data_fim) FROM turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as end_date')
+                DB::raw('(SELECT max(data_fim) FROM turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as end_date'),
             ])
             ->distinct()
             ->whereIn('ref_cod_turma', $schoolClassId)
@@ -99,8 +95,6 @@ class SchoolClassService
     }
 
     /**
-     * @param LegacySchoolClass $schoolClass
-     *
      * @return LegacySchoolClass
      *
      * @throws ValidationException
@@ -120,8 +114,8 @@ class SchoolClassService
             ['schoolClass' => $schoolClass],
             [
                 'schoolClass' => [
-                    new CanDeleteTurma()
-                ]
+                    new CanDeleteTurma(),
+                ],
             ]
         )->validate();
 
@@ -132,8 +126,6 @@ class SchoolClassService
     }
 
     /**
-     * @param LegacySchoolClass $schoolClass
-     *
      * @throws ValidationException
      */
     private function validate(LegacySchoolClass $schoolClass)
@@ -146,8 +138,8 @@ class SchoolClassService
                     new CanAlterSchoolClassGrade(),
                     new CheckMandatoryCensoFields(),
                     new CheckSchoolClassExistsByName(),
-                    new CheckAlternativeReportCardExists()
-                ]
+                    new CheckAlternativeReportCardExists(),
+                ],
             ]
         )->validate();
     }

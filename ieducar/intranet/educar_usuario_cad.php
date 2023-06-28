@@ -10,16 +10,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $ref_pessoa;
+
     public $nome;
+
     public $matricula;
+
     public $_senha;
+
     public $ativo;
+
     public $ref_cod_funcionario_vinculo;
+
     public $matricula_interna;
+
     public $data_expiracao;
+
     public $escola;
+
     public $force_reset_password;
 
     public function Inicializar()
@@ -174,7 +184,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $tamanho = sizeof($opcoes_);
+        $tamanho = count($opcoes_);
 
         echo "<script>\nvar cod_tipo_usuario = new Array({$tamanho});\n";
 
@@ -193,7 +203,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic(['instituicao']);
         $this->inputsHelper()->multipleSearchEscola(attrName: null, inputOptions: [
             'label' => 'Escola(s)',
-            'required' => false
+            'required' => false,
         ]);
 
         $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/Usuario.js'];
@@ -226,6 +236,7 @@ return new class extends clsCadastro {
             $this->validatesPassword($this->_senha);
         } catch (ValidationException $ex) {
             $this->mensagem = $ex->validator->errors()->first();
+
             return false;
         }
 
@@ -284,8 +295,9 @@ return new class extends clsCadastro {
             $changeUserPasswordService = app(ChangeUserPasswordService::class);
             try {
                 $changeUserPasswordService->execute(legacyEmployee: $legacyEmployee, password: $this->_senha);
-            } catch (ValidationException $ex){
+            } catch (ValidationException $ex) {
                 $this->mensagem = $ex->validator->errors()->first();
+
                 return false;
             }
         }
@@ -382,9 +394,7 @@ return new class extends clsCadastro {
      * Caso algum usuário com nível diferente de admin tentar alterar dados do usuário admin,
      * esse método retornará false
      *
-     * @param User    $currentUser
-     * @param integer $changedUserId
-     *
+     * @param int $changedUserId
      * @return bool
      */
     private function canChange(User $currentUser, $changedUserId)
@@ -420,6 +430,7 @@ return new class extends clsCadastro {
     public function hasChangeStatusUser(): bool
     {
         $legacyEmployer = LegacyEmployee::find($this->ref_pessoa);
+
         return $legacyEmployer->ativo != $this->ativo;
     }
 

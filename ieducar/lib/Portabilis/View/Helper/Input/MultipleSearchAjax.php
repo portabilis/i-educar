@@ -9,7 +9,7 @@ class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_He
             'apiModule' => 'Api',
             'apiController' => ucwords($objectName),
             'apiResource' => $objectName . '-search',
-            'searchPath' => ''
+            'searchPath' => '',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

@@ -2,22 +2,25 @@
 
 use App\Models\LegacyDeficiency;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_deficiencia;
+
     public $nm_deficiencia;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_deficiencia=$_GET['cod_deficiencia'];
+        $this->cod_deficiencia = $_GET['cod_deficiencia'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_deficiencia_lst.php');
 
         if (is_numeric($this->cod_deficiencia)) {
-            $registro  = LegacyDeficiency::find($this->cod_deficiencia)?->getAttributes();
+            $registro = LegacyDeficiency::find($this->cod_deficiencia)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -47,7 +50,7 @@ return new class extends clsCadastro {
         $cadastrou = false;
         if (is_string($this->nm_deficiencia)) {
             LegacyDeficiency::create([
-                'nm_deficiencia' => $this->nm_deficiencia
+                'nm_deficiencia' => $this->nm_deficiencia,
             ]);
             $cadastrou = true;
         }
@@ -58,7 +61,7 @@ return new class extends clsCadastro {
                         parent.document.getElementById('ref_cod_deficiencia').value = '$cadastrou';
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-            die();
+            exit();
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';

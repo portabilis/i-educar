@@ -21,7 +21,7 @@ class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_C
             'input_hint' => '',
             'disabled' => false,
             'required' => true,
-            'multiple' => false
+            'multiple' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

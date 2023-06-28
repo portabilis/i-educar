@@ -33,7 +33,6 @@ class NotificationEvent implements ShouldBroadcast
     /**
      * Create a new event instance.
      *
-     * @param Notification $notification
      * @param string       $tenant
      * @param string       $url
      */

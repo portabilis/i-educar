@@ -5,22 +5,22 @@ namespace iEducar\Modules\ValueObjects;
 class SchoolManagerValueObject
 {
     /**
-     * @var integer
+     * @var int
      */
     public $employeeId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $schoolId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $roleId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $accessCriteriaId;
 
@@ -30,17 +30,17 @@ class SchoolManagerValueObject
     public $accessCriteriaDescription;
 
     /**
-     * @var integer
+     * @var int
      */
     public $linkTypeId;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $isChief;
 
     /**
-     * @var integer
+     * @var int
      */
     public $inepId;
 }

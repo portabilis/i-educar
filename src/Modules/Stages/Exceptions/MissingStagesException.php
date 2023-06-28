@@ -8,7 +8,9 @@ use iEducar\Support\Exceptions\Exception;
 class MissingStagesException extends Exception
 {
     public const DEFAULT_ERROR = Error::MISSING_STAGE_DEFAULT_ERROR;
+
     public const TEACHER_ERROR = Error::MISSING_STAGE_TEACHER_ERROR;
+
     public const COORDINATOR_ERROR = Error::MISSING_STAGE_COORDINATOR_ERROR;
 
     /**
@@ -54,14 +56,13 @@ class MissingStagesException extends Exception
      * Return message to be used in exception.
      *
      * @param array $missingStages
-     *
      * @return string
      */
     protected function getExceptionMessage($missingStages)
     {
         $message = 'Nota somente pode ser lançada após lançar notas nas etapas: %s %s.';
 
-        return sprintf($message, join($this->stageName . ', ', $missingStages), $this->stageName);
+        return sprintf($message, implode($this->stageName . ', ', $missingStages), $this->stageName);
     }
 
     /**
@@ -82,7 +83,7 @@ class MissingStagesException extends Exception
     public function getExtraInfo()
     {
         return [
-            'missing_stages' => $this->getFormatedMissingStages()
+            'missing_stages' => $this->getFormatedMissingStages(),
         ];
     }
 }

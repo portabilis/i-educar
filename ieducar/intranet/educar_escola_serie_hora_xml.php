@@ -17,12 +17,12 @@ if (is_numeric($_GET['esc']) && is_numeric($_GET['ser'])) {
     );
 
     while ($db->ProximoRegistro()) {
-        list(
+        [
             $hora_inicial,
             $hora_final,
             $hora_inicio_intervalo,
             $hora_fim_intervalo
-        ) = $db->Tupla();
+        ] = $db->Tupla();
 
         echo "  <item>{$hora_inicial}</item>\n";
         echo "  <item>{$hora_final}</item>\n";

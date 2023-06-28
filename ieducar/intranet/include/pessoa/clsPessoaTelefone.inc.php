@@ -3,13 +3,21 @@
 class clsPessoaTelefone
 {
     public $idpes;
+
     public $ddd;
+
     public $fone;
+
     public $tipo;
+
     public $idpes_cad;
+
     public $idpes_rev;
+
     public $banco = 'gestao_homolog';
+
     public $schema_cadastro = 'cadastro';
+
     public $tabela_telefone = 'fone_pessoa';
 
     public function __construct($int_idpes = false, $int_tipo = false, $str_fone = false, $str_ddd = false, $idpes_cad = false, $idpes_rev = false)

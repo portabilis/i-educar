@@ -11,27 +11,27 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 5,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 5,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 6,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 6,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 6,
-                'etapa' => 'Rc'
+                'etapa' => 'Rc',
             ]),
         ];
 
@@ -40,7 +40,7 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
             'componenteCurricular' => 1,
             'media' => 5.7,
             'mediaArredondada' => 5,
-            'etapa' => 'Rc'
+            'etapa' => 'Rc',
         ]);
 
         $media->markOld();
@@ -132,7 +132,7 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 5,
-            ])
+            ]),
         ];
 
         $notasPersistidas = [
@@ -142,7 +142,7 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
                 'componenteCurricular' => 1,
                 'nota' => 6,
                 'notaArredondada' => 6,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'id' => 2,
@@ -150,7 +150,7 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
                 'componenteCurricular' => 1,
                 'nota' => 6,
                 'notaArredondada' => 6,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'id' => 3,
@@ -158,7 +158,7 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
                 'componenteCurricular' => 1,
                 'nota' => 6,
                 'notaArredondada' => 6,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'id' => 4,
@@ -166,8 +166,8 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
                 'componenteCurricular' => 1,
                 'nota' => 6,
                 'notaArredondada' => 6,
-                'etapa' => 4
-            ])
+                'etapa' => 4,
+            ]),
         ];
 
         // Configura mock para Avaliacao_Model_NotaComponenteDataMapper

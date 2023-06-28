@@ -11,8 +11,11 @@ use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 class SchoolManagers implements EducacensoValidator
 {
     private $message;
+
     private $administrativeDependency;
+
     private $valid = true;
+
     private $operatingSituation;
 
     /**
@@ -22,8 +25,8 @@ class SchoolManagers implements EducacensoValidator
 
     /**
      * @param SchoolManagerValueObject[] $valueObject
-     * @param integer                    $administrativeDependency
-     * @param integer                    $operatingSituation
+     * @param int                    $administrativeDependency
+     * @param int                    $operatingSituation
      */
     public function __construct($valueObject, $administrativeDependency, $operatingSituation)
     {
@@ -32,9 +35,6 @@ class SchoolManagers implements EducacensoValidator
         $this->operatingSituation = $operatingSituation;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         $individualArray = $this->getIndividualArray();
@@ -67,7 +67,6 @@ class SchoolManagers implements EducacensoValidator
 
     /**
      * @param array $array
-     *
      * @return bool
      */
     private function containsEmptyOrIsNull($array)

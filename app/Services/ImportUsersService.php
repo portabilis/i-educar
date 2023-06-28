@@ -31,13 +31,13 @@ class ImportUsersService implements ToCollection
      * @var bool
      */
     private $forceResetPassword;
+
     /**
      * @var bool
      */
     private $multiTenant;
 
     /**
-     * @param Output $output
      * @param bool   $multiTenant
      * @param bool   $forceResetPassword
      */
@@ -49,7 +49,7 @@ class ImportUsersService implements ToCollection
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function collection(Collection $rows)
     {
@@ -81,8 +81,6 @@ class ImportUsersService implements ToCollection
      * @param string $password
      * @param string $email
      * @param bool   $forceResetPassword
-     *
-     * @return
      */
     public function createUser($name, $user, $password, $email, $forceResetPassword)
     {
@@ -101,13 +99,7 @@ class ImportUsersService implements ToCollection
     }
 
     /**
-     * @param string      $name
-     * @param string      $user
-     * @param string      $password
-     * @param string      $email
-     * @param bool        $forceResetPassword
      * @param string|null $connection
-     *
      * @return LegacyUser|null
      */
     private function createUserByConnection(string $name, string $user, string $password, string $email, bool $forceResetPassword, $connection = null)
@@ -168,7 +160,6 @@ class ImportUsersService implements ToCollection
      * @param string $email
      * @param string $username
      * @param string $password
-     * @param        $name
      */
     public function sendPasswordEmail($email, $username, $password, $name)
     {

@@ -2,23 +2,31 @@
 
 use App\Models\LegacyRegimeType;
 
-return new class extends clsCadastro {
-
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_tipo_regime;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_tipo_regime=$_GET['cod_tipo_regime'];
+        $this->cod_tipo_regime = $_GET['cod_tipo_regime'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(568, $this->pessoa_logada, 3, 'educar_tipo_regime_lst.php');
@@ -47,7 +55,7 @@ return new class extends clsCadastro {
         if ($_GET['precisa_lista']) {
             $get_escola = false;
             $obrigatorio = true;
-            include('include/pmieducar/educar_campo_lista.php');
+            include 'include/pmieducar/educar_campo_lista.php';
         } else {
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
@@ -71,7 +79,7 @@ return new class extends clsCadastro {
                         parent.document.getElementById('ref_cod_tipo_regime').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-            die();
+            exit();
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -89,7 +97,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        if (! $_GET['precisa_lista']) {
+        if (!$_GET['precisa_lista']) {
             return file_get_contents(__DIR__ . '/scripts/extra/educar-habilitacao-cad-pop.js');
         }
 

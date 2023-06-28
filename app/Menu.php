@@ -110,15 +110,15 @@ class Menu extends Model
                                                     $query->whereNull('process');
                                                     $query->orWhereIn('id', $ids);
                                                     $query->orderBy('order');
-                                                }
+                                                },
                                             ]);
-                                        }
+                                        },
                                     ]);
-                                }
+                                },
                             ]);
-                        }
+                        },
                     ]);
-                }
+                },
             ])
             ->whereNull('parent_id')
             ->orderBy('order')
@@ -200,7 +200,6 @@ class Menu extends Model
     /**
      * @param string            $path
      * @param LaravelCollection $process
-     *
      * @return mixed
      */
     public function processes($path, $process, $userLevel)
@@ -297,8 +296,6 @@ class Menu extends Model
 
     /**
      * Tipos de Usuário
-     *
-     * @return BelongsToMany
      */
     public function userTypes(): BelongsToMany
     {
@@ -316,7 +313,6 @@ class Menu extends Model
     /**
      * Retorna os menus disponíveis para um determinado usuário.
      *
-     * @param User $user
      *
      * @return Collection
      */
@@ -343,9 +339,7 @@ class Menu extends Model
      * Retorna os menus disponíveis para o usuário baseado em seu nível de
      * permissão.
      *
-     * @param User   $user
      * @param string $search
-     *
      * @return LaravelCollection
      */
     public static function findByUser(User $user, $search)

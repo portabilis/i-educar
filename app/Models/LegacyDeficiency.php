@@ -34,8 +34,8 @@ class LegacyDeficiency extends LegacyModel
     public array $legacy = [
         'id' => 'cod_deficiencia',
         'name' => 'nm_deficiencia',
-        'educacenso' =>'deficiencia_educacenso',
+        'educacenso' => 'deficiencia_educacenso',
         'disregards_different_rule' => 'desconsidera_regra_diferenciada',
-        'require_medical_report' => 'exigir_laudo_medico'
+        'require_medical_report' => 'exigir_laudo_medico',
     ];
 }

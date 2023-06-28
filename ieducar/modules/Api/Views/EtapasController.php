@@ -145,11 +145,11 @@ class EtapasController extends ApiCoreController
 
         $etapas = $this->fetchPreparedQuery($sql, $params);
         $etapas = Portabilis_Array_Utils::filterSet($etapas, [
-            'turma_id', 'disciplina_id', 'etapas_especificas', 'etapas_utilizadas', 'updated_at', 'deleted_at'
+            'turma_id', 'disciplina_id', 'etapas_especificas', 'etapas_utilizadas', 'updated_at', 'deleted_at',
         ]);
 
         return [
-            'etapas' => $etapas
+            'etapas' => $etapas,
         ];
     }
 

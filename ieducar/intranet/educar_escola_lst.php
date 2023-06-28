@@ -1,17 +1,29 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $limite;
+
     public $offset;
+
     public $cod_escola;
+
     public $ref_usuario_cad;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $ref_idpes;
+
     public $sigla;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_escola;
 
     public function Gerar()
@@ -44,7 +56,7 @@ return new class extends clsListagem {
             if ($this->ref_cod_instituicao) {
                 $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
             } else {
-                die('Erro: Usuário não é do nivel poli-institucional e não possui uma instituição');
+                exit('Erro: Usuário não é do nivel poli-institucional e não possui uma instituição');
             }
         }
 

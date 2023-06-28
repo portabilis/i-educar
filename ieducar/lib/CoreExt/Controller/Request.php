@@ -3,7 +3,7 @@
 class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
 {
     protected $_options = [
-        'baseurl' => null
+        'baseurl' => null,
     ];
 
     protected $_data = [];
@@ -52,7 +52,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
      * Verifica se uma opção está setada.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _hasOption($key)
@@ -65,8 +64,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
      * setada.
      *
      * @param string $key
-     *
-     * @return mixed|NULL
+     * @return mixed|null
      */
     protected function _getOption($key)
     {
@@ -77,7 +75,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
      * Implementação do método mágico __get().
      *
      * @param string $key
-     *
      * @return mixed
      */
     public function __get($key)
@@ -89,7 +86,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
      * Getter para as variáveis de requisição.
      *
      * @param string $key
-     *
      * @return mixed
      */
     public function get($key)
@@ -123,7 +119,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
      * @link http://php.net/manual/en/language.oop5.overloading.php
      *
      * @param string $key
-     *
      * @return bool
      */
     public function __isset($key)
@@ -137,7 +132,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
      * Setter para a opção de configuração baseurl.
      *
      * @param string $url
-     *
      * @return CoreExt_Controller_Request_Interface Provê interface fluída
      */
     public function setBaseurl($url)

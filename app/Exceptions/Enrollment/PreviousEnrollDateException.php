@@ -10,9 +10,6 @@ class PreviousEnrollDateException extends RuntimeException
 {
     /**
      * A data de enturmação é anterior a data de saída da última enturmação.
-     *
-     * @param DateTime         $date
-     * @param LegacyEnrollment $lastEnrollment
      */
     public function __construct(DateTime $date, LegacyEnrollment $lastEnrollment)
     {

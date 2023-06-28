@@ -34,7 +34,7 @@ class LegacyDocument extends Model
         'rg',
         'certidao_nascimento',
         'operacao',
-        'origem_gravacao'
+        'origem_gravacao',
     ];
 
     /**

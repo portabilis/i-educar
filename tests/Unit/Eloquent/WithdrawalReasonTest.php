@@ -14,12 +14,9 @@ class WithdrawalReasonTest extends EloquentTestCase
         'institution' => LegacyInstitution::class,
         'employeeWithdrawals' => EmployeeWithdrawal::class,
         'createdByUser' => LegacyUser::class,
-        'deletedByUser' => LegacyUser::class
+        'deletedByUser' => LegacyUser::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return WithdrawalReason::class;
@@ -35,7 +32,7 @@ class WithdrawalReasonTest extends EloquentTestCase
             'deleted_by' => 'ref_usuario_exc',
             'created_by' => 'ref_usuario_cad',
             'institution_id' => 'ref_cod_instituicao',
-            'active' => 'ativo'
+            'active' => 'ativo',
         ];
     }
 }

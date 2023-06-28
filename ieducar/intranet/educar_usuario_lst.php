@@ -3,7 +3,8 @@
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public function Gerar()
     {
         $this->titulo = 'Usuários';
@@ -58,14 +59,14 @@ return new class extends clsListagem {
         $selectOptions = [
             0 => 'Selecione',
             1 => 'Inativo',
-            2 => 'Ativo'
+            2 => 'Ativo',
         ];
 
         $options = [
             'required' => false,
             'label' => 'Status',
             'value' => $this->int_ativo,
-            'resources' => $selectOptions
+            'resources' => $selectOptions,
         ];
 
         $this->inputsHelper()->select(attrName: 'int_ativo', inputOptions: $options);

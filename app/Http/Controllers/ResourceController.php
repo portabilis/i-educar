@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 abstract class ResourceController extends Controller
 {
     protected int $process = 0;
+
     protected bool $skipAuthorization = false;
 
     protected function skipAuthorization(): void
@@ -197,7 +198,7 @@ abstract class ResourceController extends Controller
 
     protected function validation(Model $model, array $rules)
     {
-        $validator =  Validator::make(
+        $validator = Validator::make(
             Arr::wrap($model),
             [$rules]
         );

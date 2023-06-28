@@ -16,7 +16,7 @@ class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input
             'label_hint' => '',
             'inline' => false,
             'script' => 'fixupCheckboxValue(this)',
-            'disabled' => false
+            'disabled' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

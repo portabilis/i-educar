@@ -47,7 +47,7 @@ abstract class TestCase extends BaseTestCase
     protected function getAuthorizationHeader()
     {
         return [
-            'Authorization' => 'Bearer ' . env('API_ACCESS_KEY')
+            'Authorization' => 'Bearer ' . env('API_ACCESS_KEY'),
         ];
     }
 

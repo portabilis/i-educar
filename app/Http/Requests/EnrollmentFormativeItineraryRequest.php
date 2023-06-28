@@ -25,7 +25,7 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'itinerary_composition.*' => ['required', 'integer', Rule::in($itineraryCompositions)],
             'itinerary_course' => ['nullable', 'in:1,2'],
             'concomitant_itinerary' => ['nullable', 'boolean'],
-            'technical_course' => ['nullable', 'integer', 'required_if:itinerary_course,1']
+            'technical_course' => ['nullable', 'integer', 'required_if:itinerary_course,1'],
         ];
     }
 

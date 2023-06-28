@@ -14,11 +14,11 @@ class FormulaMedia_Model_FormulaDataMapper extends CoreExt_DataMapper
         'nome' => 'nome',
         'formulaMedia' => 'formula_media',
         'tipoFormula' => 'tipo_formula',
-        'substituiMenorNotaRc' => 'substitui_menor_nota_rc'
+        'substituiMenorNotaRc' => 'substitui_menor_nota_rc',
     ];
 
     protected $_primaryKey = [
         'id' => 'id',
-        'instituicao' => 'instituicao_id'
+        'instituicao' => 'instituicao_id',
     ];
 }

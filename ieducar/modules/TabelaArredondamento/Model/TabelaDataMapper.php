@@ -3,7 +3,9 @@
 class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'TabelaArredondamento_Model_Tabela';
+
     protected $_tableName = 'tabela_arredondamento';
+
     protected $_tableSchema = 'modules';
 
     protected $_attributeMap = [
@@ -16,7 +18,7 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
 
     protected $_primaryKey = [
         'id' => 'id',
-        'instituicao' => 'instituicao_id'
+        'instituicao' => 'instituicao_id',
     ];
 
     /**
@@ -27,7 +29,6 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
     /**
      * Setter.
      *
-     * @param TabelaArredondamento_Model_TabelaValorDataMapper $mapper
      *
      * @return CoreExt_DataMapper Provê interface fluída
      */
@@ -59,7 +60,6 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
      * referências a instância TabelaArredondamento_Model_Tabela passada como
      * parâmetro.
      *
-     * @param TabelaArredondamento_Model_Tabela $instance
      *
      * @return array Um array de instâncias TabelaArredondamento_Model_TabelaValor
      */

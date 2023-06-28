@@ -28,7 +28,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->setExcludedMethods(
                 [
                     'promover',
-                    '_updateMatricula'
+                    '_updateMatricula',
                 ]
             )
             ->getCleanMock('Avaliacao_Service_Boletim');
@@ -42,7 +42,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->willReturnMap(
                 [
                     ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO],
-                    ['matricula', 1]
+                    ['matricula', 1],
                 ]
             );
 
@@ -81,7 +81,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->method('getOption')
             ->willReturnMap(
                 [
-                    ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO]
+                    ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO],
                 ]
             );
 
@@ -123,7 +123,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->willReturnMap(
                 [
                     ['matricula', $codMatricula],
-                    ['usuario', $codUsuario]
+                    ['usuario', $codUsuario],
                 ]
             );
 
@@ -163,7 +163,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->method('getOption')
             ->willReturnMap([
                 ['matricula', $codMatricula],
-                ['usuario', $codUsuario]
+                ['usuario', $codUsuario],
             ]);
 
         $service
@@ -205,7 +205,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->willReturnMap(
                 [
                     ['matricula', $codMatricula],
-                    ['usuario', $codUsuario]
+                    ['usuario', $codUsuario],
                 ]
             );
 
@@ -246,7 +246,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->willReturnMap(
                 [
                     ['matricula', $codMatricula],
-                    ['usuario', $codUsuario]
+                    ['usuario', $codUsuario],
                 ]
             );
 
@@ -287,7 +287,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->willReturnMap(
                 [
                     ['matricula', $codMatricula],
-                    ['usuario', $codUsuario]
+                    ['usuario', $codUsuario],
                 ]
             );
 
@@ -370,7 +370,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ->willReturnMap(
                 [
                     ['matricula', $codMatricula],
-                    ['usuario', $codUsuario]
+                    ['usuario', $codUsuario],
                 ]
             );
 

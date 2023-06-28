@@ -2,16 +2,26 @@
 
 use App\Models\LegacyEducationType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_tipo_ensino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $atividade_complementar;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -24,7 +34,7 @@ return new class extends clsCadastro {
         $obj_permissao->permissao_cadastra(558, $this->pessoa_logada, 7, 'educar_tipo_ensino_lst.php');
         //**
 
-        $this->cod_tipo_ensino=$_GET['cod_tipo_ensino'];
+        $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
         if (is_numeric($this->cod_tipo_ensino)) {
             $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
@@ -69,7 +79,7 @@ return new class extends clsCadastro {
 
         $get_escola = false;
         $obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         $this->campoTexto('nm_tipo', 'Tipo de Ensino', $this->nm_tipo, 30, 255, true);
         $this->campoCheck('atividade_complementar', 'Atividade complementar', $this->atividade_complementar);
@@ -91,6 +101,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -111,6 +122,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -126,6 +138,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

@@ -13,13 +13,14 @@ class LegacyIndividualEndpointTestDelete extends TestCase
 {
     use DatabaseTransactions;
     use LoginFirstUser;
+
     public function testDeleteEndpoint(): void
     {
         $individual = LegacyIndividualFactory::new()->create();
 
         $request = [
             'tipoacao' => 'Excluir',
-            'cod_pessoa_fj' => (string)$individual->getKey(),
+            'cod_pessoa_fj' => (string) $individual->getKey(),
         ];
 
         $data = [];
@@ -39,7 +40,7 @@ class LegacyIndividualEndpointTestDelete extends TestCase
 
         $request = [
             'tipoacao' => 'Excluir',
-            'cod_pessoa_fj' => (string)$student->ref_idpes,
+            'cod_pessoa_fj' => (string) $student->ref_idpes,
         ];
 
         $data = [];
@@ -61,7 +62,7 @@ class LegacyIndividualEndpointTestDelete extends TestCase
 
         $request = [
             'tipoacao' => 'Excluir',
-            'cod_pessoa_fj' => (string)$student->individual->idpes_mae,
+            'cod_pessoa_fj' => (string) $student->individual->idpes_mae,
         ];
 
         $data = [];
@@ -79,7 +80,7 @@ class LegacyIndividualEndpointTestDelete extends TestCase
 
         $request = [
             'tipoacao' => 'Excluir',
-            'cod_pessoa_fj' => (string)$employee->ref_cod_pessoa_fj,
+            'cod_pessoa_fj' => (string) $employee->ref_cod_pessoa_fj,
         ];
 
         $data = [];

@@ -27,7 +27,7 @@ class IndividualFactory extends Factory
                 'created_at' => $model->data_cad,
                 'mother_individual_id' => 'idpes_mae',
                 'father_individual_id' => 'idpes_pai',
-                'guardian_individual_id' => 'idpes_responsavel'
+                'guardian_individual_id' => 'idpes_responsavel',
             ];
         });
     }

@@ -16,12 +16,9 @@ class EmployeeWithdrawalTest extends EloquentTestCase
         'reason' => WithdrawalReason::class,
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
-        'files' => [File::class, ['type' => 1]]
+        'files' => [File::class, ['type' => 1]],
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return EmployeeWithdrawal::class;

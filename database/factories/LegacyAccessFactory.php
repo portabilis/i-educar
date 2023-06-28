@@ -16,8 +16,6 @@ class LegacyAccessFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -28,7 +26,7 @@ class LegacyAccessFactory extends Factory
             'internal_ip' => $this->faker->ipv4,
             'external_ip' => $this->faker->ipv4,
             'obs' => $this->faker->paragraph,
-            'success' => $this->faker->boolean
+            'success' => $this->faker->boolean,
         ];
     }
 }

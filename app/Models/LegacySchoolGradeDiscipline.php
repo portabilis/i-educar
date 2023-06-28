@@ -23,8 +23,6 @@ class LegacySchoolGradeDiscipline extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacySchoolGradeDisciplineBuilder::class;
 
@@ -35,7 +33,7 @@ class LegacySchoolGradeDiscipline extends Model
      */
     public array $legacy = [
         'id' => 'ref_cod_disciplina',
-        'workload' => 'carga_horaria'
+        'workload' => 'carga_horaria',
     ];
 
     protected $primaryKey = 'ref_cod_disciplina';
@@ -74,9 +72,6 @@ class LegacySchoolGradeDiscipline extends Model
         );
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');

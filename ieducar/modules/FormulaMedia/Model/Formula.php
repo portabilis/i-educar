@@ -26,7 +26,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
         '/', '*', 'x', '+',
         '(', ')',
         '?', ':',
-        '>', '<'
+        '>', '<',
     ];
 
     /**
@@ -40,7 +40,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
         'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10',
         'RSP1', 'RSP2', 'RSP3', 'RSP4', 'RSP5', 'RSP6', 'RSP7', 'RSP8', 'RSP9', 'RSP10',
         'RSPS1', 'RSPS2', 'RSPS3', 'RSPS4', 'RSPS5', 'RSPS6', 'RSPS7', 'RSPS8', 'RSPS9', 'RSPS10',
-        'RSPM1', 'RSPM2', 'RSPM3', 'RSPM4', 'RSPM5', 'RSPM6', 'RSPM7', 'RSPM8', 'RSPM9', 'RSPM10'
+        'RSPM1', 'RSPM2', 'RSPM3', 'RSPM4', 'RSPM5', 'RSPM6', 'RSPM7', 'RSPM8', 'RSPM9', 'RSPM10',
     ];
 
     /**
@@ -49,7 +49,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
      * @var array
      */
     protected $_tokenEtapas = [
-        'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10'
+        'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10',
     ];
 
     /**
@@ -74,15 +74,14 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
         'tipoFormula' => [
             'value' => FormulaMedia_Model_TipoFormula::MEDIA_FINAL,
             'class' => 'FormulaMedia_Model_TipoFormula',
-            'file' => 'FormulaMedia/Model/TipoFormula.php'
-        ]
+            'file' => 'FormulaMedia/Model/TipoFormula.php',
+        ],
     ];
 
     /**
      * Verifica se um token pode receber um valor numérico.
      *
      * @param string $token
-     *
      * @return bool
      */
     private function isEtapaToken($token)
@@ -92,7 +91,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
 
     /**
      * @param array $values
-     *
      * @return array
      */
     private function substituiMenorNotaPorRecuperacao($values)
@@ -119,7 +117,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
      * Executa o código da fórmula usando eval.
      *
      * @param string $code
-     *
      * @return float|null
      */
     protected function _exec($code)
@@ -145,7 +142,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
      * Verifica se um token pode receber um valor numérico.
      *
      * @param string $token
-     *
      * @return bool
      */
     public function isNumericToken($token)
@@ -174,7 +170,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
      *
      * @param string $formula
      * @param array  $values
-     *
      * @return string
      */
     public function replaceTokens($formula, $values = [])
@@ -204,7 +199,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
      * Troca os tokens de alias pelos usados durante a execução da fórmula.
      *
      * @param string $formula
-     *
      * @return string
      */
     public function replaceAliasTokens($formula)
@@ -213,9 +207,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     }
 
     /**
-     *
-     * @param array $values
-     *
      * @return float|null
      */
     public function execFormulaMedia(array $values = [])
@@ -247,11 +238,11 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
             'instituicao' => new CoreExt_Validate_Choice(['choices' => $instituicoes]),
             'nome' => new CoreExt_Validate_String(['min' => 5, 'max' => 50]),
             'formulaMedia' => new FormulaMedia_Validate_Formula($formulaValidatorOptions),
-            'tipoFormula' => new CoreExt_Validate_Choice(['choices' => $tipoFormula->getKeys()])
+            'tipoFormula' => new CoreExt_Validate_Choice(['choices' => $tipoFormula->getKeys()]),
         ];
     }
 
-    private function fixedUndefinedParams($replaced) :?string
+    private function fixedUndefinedParams($replaced): ?string
     {
         if (null === $replaced) {
             return null;

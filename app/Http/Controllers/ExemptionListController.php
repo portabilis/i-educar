@@ -10,8 +10,6 @@ use Illuminate\View\View;
 class ExemptionListController extends Controller
 {
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)
@@ -32,14 +30,14 @@ class ExemptionListController extends Controller
             'yearEq' => $request->get('ano'),
             'grade' => $request->get('ref_cod_serie'),
             'course' => $request->get('ref_cod_curso'),
-            'discipline' => $request->get('ref_cod_componente_curricular')
+            'discipline' => $request->get('ref_cod_componente_curricular'),
         ])->with([
             'type:cod_tipo_dispensa,nm_tipo',
             'registration:cod_matricula,ano,ref_cod_aluno',
             'registration.student:cod_aluno,ref_idpes',
             'registration.student.person:idpes,nome',
             'discipline:id,nome',
-            'createdBy:cod_usuario'
+            'createdBy:cod_usuario',
         ])->withoutTrashed()
             ->orderByCreatedAt()
             ->paginate(20)

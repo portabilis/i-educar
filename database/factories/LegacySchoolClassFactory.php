@@ -39,7 +39,7 @@ class LegacySchoolClassFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
-                'multiseriada' => true
+                'multiseriada' => true,
             ]);
         });
     }
@@ -103,13 +103,13 @@ class LegacySchoolClassFactory extends Factory
                 'multiseriada' => true,
             ]);
 
-            # TODO works only 1 year
+            // TODO works only 1 year
             $schoolCourse = LegacySchoolCourse::query()
                 ->where('ref_cod_escola', $schoolClass->ref_ref_cod_escola)
                 ->where('ref_cod_curso', $schoolClass->ref_cod_curso)
                 ->first();
 
-            # TODO
+            // TODO
             $schoolGrade = LegacySchoolGradeFactory::new()->useSchoolCourse($schoolCourse)->create();
 
             LegacySchoolClassGradeFactory::new()->create([

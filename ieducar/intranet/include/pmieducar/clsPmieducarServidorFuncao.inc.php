@@ -5,9 +5,13 @@ use iEducar\Legacy\Model;
 class clsPmieducarServidorFuncao extends Model
 {
     public $cod_servidor_funcao;
+
     public $ref_ref_cod_instituicao;
+
     public $ref_cod_servidor;
+
     public $ref_cod_funcao;
+
     public $matricula;
 
     public function __construct($ref_ref_cod_instituicao = null, $ref_cod_servidor = null, $ref_cod_funcao = null, $matricula = null, $cod_servidor_funcao = null)
@@ -115,8 +119,8 @@ class clsPmieducarServidorFuncao extends Model
         $sql = sprintf(
             'UPDATE %s SET %s WHERE %s;',
             $this->_tabela,
-            join(', ', $set),
-            join(' AND ', $where)
+            implode(', ', $set),
+            implode(' AND ', $where)
         );
 
         $db->Consulta($sql);

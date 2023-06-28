@@ -8,10 +8,6 @@ class EmployeeBuilder extends LegacyBuilder
 {
     /**
      * Filtra por Instituição
-     *
-     * @param int $institution
-     *
-     * @return EmployeeBuilder
      */
     public function whereInstitution(int $institution): self
     {
@@ -21,7 +17,6 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por servidor
      *
-     * @param int $id
      *
      * @return $this
      */
@@ -33,7 +28,6 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por escola
      *
-     * @param int $schoolingDegree
      *
      * @return $this
      */
@@ -45,7 +39,6 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por Carga Horária
      *
-     * @param int $workload
      *
      * @return $this
      */
@@ -57,7 +50,6 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por Nome
      *
-     * @param string $name
      *
      * @return $this
      */
@@ -71,7 +63,6 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por escola
      *
-     * @param int $school
      *
      * @return $this
      */
@@ -112,7 +103,6 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por função
      *
-     * @param string $role
      *
      * @return $this
      */

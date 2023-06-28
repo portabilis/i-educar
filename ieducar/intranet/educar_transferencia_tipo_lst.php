@@ -2,19 +2,32 @@
 
 use App\Models\LegacyTransferType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_transferencia_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $desc_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -22,11 +35,11 @@ return new class extends clsListagem {
         $this->titulo = 'Motivo Transferência - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
-            'Transferência'
+            'Transferência',
         ];
 
         $obj_permissao = new clsPermissoes();
@@ -38,7 +51,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: $lista_busca);
 
         // Filtros de Foreign Keys
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto(nome: 'nm_tipo', campo: 'Transferência', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255);
@@ -71,7 +84,7 @@ return new class extends clsListagem {
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro['cod_transferencia_tipo']}\">{$registro['nm_tipo']}</a>"
+                    "<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro['cod_transferencia_tipo']}\">{$registro['nm_tipo']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

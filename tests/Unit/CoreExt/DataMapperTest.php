@@ -39,7 +39,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
         $expected = [
             new CoreExt_EntityStub($options1),
-            new CoreExt_EntityStub($options2)
+            new CoreExt_EntityStub($options2),
         ];
 
         // Marca como se tivesse sido carregado, para garantir a comparação
@@ -70,7 +70,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
         $expected = [
             new CoreExt_EntityStub($options1),
-            new CoreExt_EntityStub($options2)
+            new CoreExt_EntityStub($options2),
         ];
 
         // Marca como se tivesse sido carregado, para garantir a comparação
@@ -122,7 +122,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
         $expectedOptions = [
             'id' => 1,
             'nome' => 'Henry Nobel',
-            'estadoCivil' => 'solteiro'
+            'estadoCivil' => 'solteiro',
         ];
 
         $expected = new CoreExt_EntityStub($expectedOptions);
@@ -147,7 +147,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
         $expectedOptions = [
             'pessoa' => 1,
             'curso' => 1,
-            'confirmado' => true
+            'confirmado' => true,
         ];
 
         $expected = new CoreExt_EntityCompoundStub($expectedOptions);
@@ -172,7 +172,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
         $expectedOptions = [
             'pessoa' => 1,
             'curso' => 1,
-            'confirmado' => true
+            'confirmado' => true,
         ];
 
         $expected = new CoreExt_EntityCompoundStub($expectedOptions);
@@ -199,7 +199,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
             'nome' => 'Antunes Jr.',
             'sexo' => 1,
             'tipoSanguineo' => 4,
-            'peso' => 12.300
+            'peso' => 12.300,
         ];
 
         $expected = new CoreExt_ChildEntityStub($expectedOptions);

@@ -17,23 +17,12 @@ class ResourceCourseTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @var LegacyInstitution
-     */
     private LegacyInstitution $institution;
-    /**
-     * @var LegacySchool
-     */
+
     private LegacySchool $school;
 
-    /**
-     * @var string
-     */
     private string $route = 'api.resource.course';
 
-    /**
-     * @var LegacyCourse
-     */
     private LegacyCourse $course;
 
     protected function setUp(): void
@@ -43,7 +32,7 @@ class ResourceCourseTest extends TestCase
         $this->institution = LegacyInstitutionFactory::new()->create();
 
         $schools = LegacySchoolFactory::new()->count(2)->create([
-            'ref_cod_instituicao' => $this->institution->id
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
         $this->school = $schools->first();
 
@@ -53,7 +42,7 @@ class ResourceCourseTest extends TestCase
             $courses->each(function ($course) use ($school) {
                 LegacySchoolCourseFactory::new()->create([
                     'ref_cod_curso' => $course->id,
-                    'ref_cod_escola' => $school->id
+                    'ref_cod_escola' => $school->id,
                 ]);
             });
         });
@@ -65,24 +54,24 @@ class ResourceCourseTest extends TestCase
 
     public function test_exact_json_match()
     {
-        $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school,'course'=>$this->course]));
+        $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school, 'course' => $this->course]));
 
         $response->assertOk();
         $response->assertJsonStructure([
             'data' => [
                 '*' => [
-                        'id',
-                        'name',
-                        'is_standard_calendar',
-                        'steps'
-                ]
-            ]
+                    'id',
+                    'name',
+                    'is_standard_calendar',
+                    'steps',
+                ],
+            ],
         ]);
 
         $courses = LegacyCourse::getResource([
             'institution' => $this->institution->id,
             'school' => $this->school->id,
-            'course' => $this->course->id
+            'course' => $this->course->id,
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($courses) {

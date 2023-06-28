@@ -14,7 +14,9 @@ use Tests\ResourceTestCase;
 class InstitutionControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/institution';
+
     protected string $model = LegacyInstitution::class;
+
     protected string $factory = LegacyInstitutionFactory::class;
 
     #[

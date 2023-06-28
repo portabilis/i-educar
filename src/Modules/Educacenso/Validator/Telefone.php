@@ -16,9 +16,6 @@ class Telefone implements EducacensoValidator
         $this->valor = $valor;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         $retorno = true;

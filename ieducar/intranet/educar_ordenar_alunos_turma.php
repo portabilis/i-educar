@@ -2,15 +2,17 @@
 
 use App\Models\LegacySchoolClass;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_turma;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_turma=$_GET['cod_turma'];
+        $this->cod_turma = $_GET['cod_turma'];
 
         if (is_numeric(value: $this->cod_turma)) {
 
@@ -18,7 +20,7 @@ return new class extends clsCadastro {
 
             if ($schoolclass) {
                 $this->addHtml(view(
-                    'sequence.schoolclass',['schoolclass' => $schoolclass]
+                    'sequence.schoolclass', ['schoolclass' => $schoolclass]
                 )->render());
 
                 $this->campoQuebra();
@@ -41,8 +43,8 @@ return new class extends clsCadastro {
         $this->url_cancelar = "educar_turma_det.php?cod_turma={$this->cod_turma}";
 
         $this->breadcrumb(currentPage: 'Sequência manual dos alunos na turma', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = 'Cancelar';
 

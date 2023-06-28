@@ -16,8 +16,8 @@ class DiarioRecuperaDeficienciasTest extends TestCase
         LegacyDeficiencyFactory::new()->create();
 
         $data = [
-            'oper'=> 'get',
-            'resource' => 'deficiencias'
+            'oper' => 'get',
+            'resource' => 'deficiencias',
         ];
 
         $response = $this->getResource('/module/Api/Deficiencia', $data);
@@ -32,11 +32,11 @@ class DiarioRecuperaDeficienciasTest extends TestCase
                         'updated_at',
                         'deleted_at',
                         'alunos',
-                    ]
+                    ],
                 ],
                 'msgs',
                 'oper',
-                'resource'
+                'resource',
             ]
         );
     }

@@ -5,25 +5,45 @@ use iEducar\Legacy\Model;
 class clsPmieducarServidorAlocacao extends Model
 {
     public $cod_servidor_alocacao;
+
     public $ref_ref_cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_escola;
+
     public $ref_cod_servidor;
+
     public $ref_cod_servidor_funcao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $carga_horaria;
+
     public $periodo;
+
     public $ref_cod_funcionario_vinculo;
+
     public $ano;
+
     public $codUsuario;
+
     public $dataAdmissao;
+
     public $dataSaida;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $hora_atividade;
+
     public $horas_excedentes;
 
     /**
@@ -660,7 +680,6 @@ class clsPmieducarServidorAlocacao extends Model
      * do servidor a ser substituido.
      *
      * @param int $int_ref_cod_servidor_substituto Código do servidor que substituirá o atual
-     *
      * @return bool TRUE em caso de sucesso, FALSE caso contrário
      *
      * @throws Exception

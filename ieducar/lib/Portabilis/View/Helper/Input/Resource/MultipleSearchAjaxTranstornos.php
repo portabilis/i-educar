@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAjaxTranstornos extend
         $defaultOptions = [
             'objectName' => 'transtornos',
             'apiController' => 'Transtorno',
-            'apiResource' => 'transtorno-search'
+            'apiResource' => 'transtorno-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

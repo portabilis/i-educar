@@ -3,17 +3,17 @@
 class Avaliacao_Model_FaltaAluno extends CoreExt_Entity
 {
     protected $_data = [
-    'matricula' => null,
-    'tipoFalta' => null
-  ];
+        'matricula' => null,
+        'tipoFalta' => null,
+    ];
 
     protected $_references = [
-    'tipoFalta' => [
-      'value' => null,
-      'class' => 'RegraAvaliacao_Model_TipoPresenca',
-      'file'  => 'RegraAvaliacao/Model/TipoPresenca.php'
-    ]
-  ];
+        'tipoFalta' => [
+            'value' => null,
+            'class' => 'RegraAvaliacao_Model_TipoPresenca',
+            'file' => 'RegraAvaliacao/Model/TipoPresenca.php',
+        ],
+    ];
 
     /**
      * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
@@ -23,8 +23,8 @@ class Avaliacao_Model_FaltaAluno extends CoreExt_Entity
         $presenca = RegraAvaliacao_Model_TipoPresenca::getInstance();
 
         return [
-      'matricula' => new CoreExt_Validate_Numeric(['min' => 0]),
-      'tipoFalta' => new CoreExt_Validate_Choice(['choices' => $presenca->getKeys()]),
-    ];
+            'matricula' => new CoreExt_Validate_Numeric(['min' => 0]),
+            'tipoFalta' => new CoreExt_Validate_Choice(['choices' => $presenca->getKeys()]),
+        ];
     }
 }

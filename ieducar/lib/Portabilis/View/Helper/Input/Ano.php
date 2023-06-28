@@ -33,7 +33,7 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
             'script' => false,
             'callback' => false,
             'inline' => false,
-            'disabled' => false
+            'disabled' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

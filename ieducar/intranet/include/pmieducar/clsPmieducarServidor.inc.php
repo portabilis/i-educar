@@ -5,18 +5,31 @@ use iEducar\Legacy\Model;
 class clsPmieducarServidor extends Model
 {
     public $cod_servidor;
+
     public $ref_idesco = false;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
+
     public $pos_graduacao;
+
     public $curso_formacao_continuada;
+
     public $complementacao_pedagogica;
+
     public $multi_seriado;
+
     public $tipo_ensino_medio_cursado;
+
     public $_campos_lista2;
+
     public $_todos_campos2;
 
     public function __construct(
@@ -268,7 +281,6 @@ class clsPmieducarServidor extends Model
      * @param int        $int_ref_cod_disciplina      Código da disciplina que o professor deve ser habilitado (subquery).
      *                                                Somente verifica quando o curso passado por $int_ref_cod_curso não
      *                                                possui sistema de falta globalizada
-     *
      * @return array|bool Array com os resultados da query SELECT ou FALSE caso
      *                    nenhum registro tenha sido encontrado
      */
@@ -710,7 +722,7 @@ class clsPmieducarServidor extends Model
              */
             if (!$int_ref_cod_disciplina && !$int_ref_cod_curso) {
                 $disciplinas = DB::table('pmieducar.servidor_disciplina')->when(is_numeric($str_not_in_servidor), static fn ($q) => $q->where('ref_cod_servidor', $str_not_in_servidor))->get()->toArray();
-                if (! empty($disciplinas)) {
+                if (!empty($disciplinas)) {
                     $codDisciplinas = array_column($disciplinas, 'ref_cod_disciplina');
                     $codDisciplinas = implode(',', $codDisciplinas);
                     $servidorDisciplinas = "
@@ -870,7 +882,6 @@ class clsPmieducarServidor extends Model
      *               um papel de professor
      *
      * @since   Método disponível desde a versão 1.0.2
-     *
      */
     public function getServidorFuncoes()
     {
@@ -901,12 +912,10 @@ class clsPmieducarServidor extends Model
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
      *                            informado, usa o código disponível no objeto atual
-     *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
      *
      * @since   Método disponível desde a versão 1.0.2
-     *
      */
     public function getServidorDisciplinasQuadroHorarioHorarios(
         $codServidor = null,
@@ -941,11 +950,9 @@ class clsPmieducarServidor extends Model
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
      *                            informado, usa o código disponível no objeto atual
-     *
      * @return array|bool (codServidor => (int), codInstituicao => (int))
      *
      * @since   Método disponível desde a versão 1.2.0
-     *
      */
     public function _getCodServidorInstituicao($codServidor = null, $codInstituicao = null)
     {
@@ -959,7 +966,7 @@ class clsPmieducarServidor extends Model
 
         return [
             'codServidor' => $codServidor,
-            'codInstituicao' => $codInstituicao
+            'codInstituicao' => $codInstituicao,
         ];
     }
 
@@ -970,12 +977,10 @@ class clsPmieducarServidor extends Model
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
      *                            informado, usa o código disponível no objeto atual
-     *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
      *
      * @since   Método disponível desde a versão 1.0.2
-     *
      */
     public function getServidorDisciplinas(
         $codServidor = null,
@@ -1016,13 +1021,11 @@ class clsPmieducarServidor extends Model
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
      *                            informado, usa o código disponível no objeto atual
-     *
      * @return array|bool Array associativo com os índices nm_escola, nm_curso,
      *                    nm_serie, nm_turma, nome (componente curricular), dia_semana,
      *                    qhh.hora_inicial e hora_final.
      *
      * @since   Método disponível desde a versão 1.0.2
-     *
      */
     public function getHorariosServidor($codServidor = null, $codInstituicao = null)
     {
@@ -1087,7 +1090,6 @@ class clsPmieducarServidor extends Model
      * @return bool TRUE caso o servidor desempenhe a função de professor
      *
      * @since   Método disponível desde a versão 1.0.2
-     *
      */
     public function isProfessor()
     {

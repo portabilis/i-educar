@@ -12,7 +12,7 @@ class LegacyComplementSchoolTest extends EloquentTestCase
     public $relations = [
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
-        'school' => LegacySchool::class
+        'school' => LegacySchool::class,
     ];
 
     /**

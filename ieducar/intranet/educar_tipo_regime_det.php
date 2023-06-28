@@ -2,7 +2,8 @@
 
 use App\Models\LegacyRegimeType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -11,11 +12,17 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_tipo_regime;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $ref_cod_instituicao;

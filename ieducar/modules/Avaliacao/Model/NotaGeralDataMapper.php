@@ -3,7 +3,9 @@
 class Avaliacao_Model_NotaGeralDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_NotaGeral';
+
     protected $_tableName = 'nota_geral';
+
     protected $_tableSchema = 'modules';
 
     protected $_attributeMap = [
@@ -11,7 +13,7 @@ class Avaliacao_Model_NotaGeralDataMapper extends CoreExt_DataMapper
         'notaAluno' => 'nota_aluno_id',
         'nota' => 'nota',
         'notaArredondada' => 'nota_arredondada',
-        'etapa' => 'etapa'
+        'etapa' => 'etapa',
     ];
 
     protected $_primaryKey = [

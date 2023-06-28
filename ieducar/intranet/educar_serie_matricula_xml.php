@@ -4,15 +4,13 @@ header('Content-type: text/xml');
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-print '<?xml version="1.0" encoding=""?>' . "\n";
-print '<query xmlns="sugestoes">' . "\n";
+echo '<?xml version="1.0" encoding=""?>' . "\n";
+echo '<query xmlns="sugestoes">' . "\n";
 
 $pessoa_logada = \Illuminate\Support\Facades\Auth::id();
 
 /**
- * @param array  $data
  * @param string $index
- *
  * @return array $data[$index] => key($data)
  */
 function _createArrayFromIndex(array $data, $index)
@@ -28,9 +26,7 @@ function _createArrayFromIndex(array $data, $index)
 }
 
 /**
- * @param clsBanco $db
  * @param string   $sql
- *
  * @return array (codSerie => nome)
  */
 function _getAnoEscolar(clsBanco $db, $sql)
@@ -40,7 +36,7 @@ function _getAnoEscolar(clsBanco $db, $sql)
     $resultado = [];
     if ($db->numLinhas()) {
         while ($db->ProximoRegistro()) {
-            list($cod, $nome) = $db->Tupla();
+            [$cod, $nome] = $db->Tupla();
             $resultado[$cod] = $nome;
         }
     }
@@ -51,9 +47,7 @@ function _getAnoEscolar(clsBanco $db, $sql)
 /**
  * Retorna o ano escolar/série de uma escola.
  *
- * @param clsBanco $db
  * @param int      $codSerie Código do ano escolar/série.
- *
  * @return array (codSerie => nome)
  */
 function _mesmoAnoEscolar(clsBanco $db, $codEscola, $codSerie)
@@ -83,10 +77,8 @@ function _mesmoAnoEscolar(clsBanco $db, $codEscola, $codSerie)
 /**
  * Retorna os anos escolares/séries da sequência de série de uma escola.
  *
- * @param clsBanco $db
  * @param int      $codEscola Código da escola.
  * @param int      $codSerie  Código do ano escolar/série.
- *
  * @return array (codSerie => nome)
  */
 function _anoEscolarSequencia(clsBanco $db, $codEscola, $codSerie)
@@ -118,10 +110,8 @@ function _anoEscolarSequencia(clsBanco $db, $codEscola, $codSerie)
 /**
  * Retorna os anos escolares/série do curso de uma escola.
  *
- * @param clsBanco $db
  * @param int      $codEscola Código da escola.
  * @param int      $codCurso  Código do curso.
- *
  * @return array (codSerie => nome)
  */
 function _anoEscolarEscolaCurso(clsBanco $db, $codEscola, $codCurso)
@@ -215,7 +205,7 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
     }
 
     $codEscola = $_GET['esc'];
-    $codCurso  = $_GET['cur'];
+    $codCurso = $_GET['cur'];
 
     if (count($matriculas)) {
         $cursos = _createArrayFromIndex($matriculas, 'cod_curso');
@@ -257,7 +247,7 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
 }
 
 foreach ($resultado as $cod => $nome) {
-    print sprintf('<serie cod_serie="%d">%s</serie>' . "\n", $cod, $nome);
+    echo sprintf('<serie cod_serie="%d">%s</serie>' . "\n", $cod, $nome);
 }
 
-print '</query>';
+echo '</query>';

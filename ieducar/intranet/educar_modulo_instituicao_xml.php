@@ -1,8 +1,8 @@
 <?php
 
-   header(header: 'Content-type: text/xml');
+header(header: 'Content-type: text/xml');
 
-   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 if (is_numeric(value: $_GET['inst'])) {
@@ -18,7 +18,7 @@ if (is_numeric(value: $_GET['inst'])) {
     $db->Consulta(consulta: $consulta);
 
     while ($db->ProximoRegistro()) {
-        list($cod_modulo, $nm_tipo) = $db->Tupla();
+        [$cod_modulo, $nm_tipo] = $db->Tupla();
         echo "  <item>{$cod_modulo}</item>\n";
         echo "  <item>{$nm_tipo}</item>\n";
     }

@@ -23,7 +23,9 @@ use Tests\ResourceTestCase;
 class StateControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/state';
+
     protected string $model = State::class;
+
     protected string $factory = StateFactory::class;
 
     #[

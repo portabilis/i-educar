@@ -2,7 +2,8 @@
 
 use App\Models\Religion;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -32,11 +33,17 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_religiao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_religiao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -44,11 +51,11 @@ return new class extends clsListagem {
         $this->titulo = 'Religiao - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos(coluna: [
-            'Nome Religião'
+            'Nome Religião',
         ]);
 
         // Filtros de Foreign Keys
@@ -59,7 +66,7 @@ return new class extends clsListagem {
         // Paginador
         $this->limite = 20;
 
-        $query = Religion::query()->orderBy(column: "name");
+        $query = Religion::query()->orderBy(column: 'name');
 
         if (is_string(value: $this->nm_religiao)) {
             $query->where(column: 'name', operator: 'ilike', value: '%' . $this->nm_religiao . '%');
@@ -74,7 +81,7 @@ return new class extends clsListagem {
         if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 $this->addLinhas(linha: [
-                    "<a href=\"educar_religiao_det.php?cod_religiao={$registro['id']}\">{$registro['name']}</a>"
+                    "<a href=\"educar_religiao_det.php?cod_religiao={$registro['id']}\">{$registro['name']}</a>",
                 ]);
             }
         }

@@ -22,7 +22,7 @@ class MenuFactory extends Factory
             'description' => $this->faker->name(),
             'link' => $this->faker->filePath(),
             'icon' => $this->faker->imageUrl(),
-            'order'=> $this->faker->randomDigitNotZero(),
+            'order' => $this->faker->randomDigitNotZero(),
             'type' => $this->faker->randomDigitNotZero(),
             'parent_old' => null,
             'old' => null,

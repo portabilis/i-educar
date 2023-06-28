@@ -17,11 +17,11 @@ class Discipline extends LegacyModel
     protected string $builder = DisciplineBuilder::class;
 
     protected $casts = [
-      'tipos_base' => LegacyArray::class
+        'tipos_base' => LegacyArray::class,
     ];
 
     public array $legacy = [
-        'name' => 'nome'
+        'name' => 'nome',
     ];
 
     protected function workload(): Attribute

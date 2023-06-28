@@ -14,6 +14,7 @@ class LegacyUnificationStudentJsonInvalidTest extends TestCase
     use LoginFirstUser;
 
     private LegacyStudent $studentOne;
+
     private LegacyStudent $studentTwo;
 
     protected function setUp(): void
