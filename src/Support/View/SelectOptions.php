@@ -4,6 +4,7 @@ namespace iEducar\Support\View;
 
 use App\Models\DeficiencyType;
 use App\Models\EmployeeGraduationDiscipline;
+use App\Models\LocalizationZone;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
@@ -223,5 +224,17 @@ class SelectOptions
         unset($options[ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT]);
 
         return $options;
+    }
+
+    public static function zonasLocalizacao()
+    {
+        $zones = new LocalizationZone();
+
+        return self::getDefaultOption() + $zones->getDescriptiveValues();
+    }
+
+    public static function localizacaoDiferencia()
+    {
+        return self::getDefaultOption() + LocalizacaoDiferenciadaEscola::getDescriptiveValues();
     }
 }
