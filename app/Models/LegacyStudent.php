@@ -62,6 +62,13 @@ class LegacyStudent extends LegacyModel
         );
     }
 
+    protected function birthdate(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->individual->data_nasc,
+        );
+    }
+
     protected function socialName(): Attribute
     {
         return Attribute::make(
@@ -103,6 +110,11 @@ class LegacyStudent extends LegacyModel
         return Attribute::make(
             get: fn () => $this->tipo_responsavel
         );
+    }
+
+    public function hasReport(): bool
+    {
+        return $this->url_laudo_medico !== null && $this->url_laudo_medico !== '[]';
     }
 
     public function getGuardianName(): ?string
