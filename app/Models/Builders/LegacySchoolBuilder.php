@@ -42,6 +42,30 @@ class LegacySchoolBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Escola
+     */
+    public function whereSchool(int $school): self
+    {
+        return $this->whereKey($school);
+    }
+
+    /**
+     * Filtra por zona de localização
+     */
+    public function whereLocalizationZone(int $localizationZone): self
+    {
+        return $this->where('zona_localizacao', $localizationZone);
+    }
+
+    /**
+     * Filtra por localizacao diferenciada
+     */
+    public function whereDifferentiatedLocalizationArea(int $differentiatedLocalizationArea): self
+    {
+        return $this->where('localizacao_diferenciada', $differentiatedLocalizationArea);
+    }
+
+    /**
      * Realiza a junçao com organização
      */
     public function joinOrganization(): self
