@@ -10,7 +10,6 @@ class SchoolGradeDisciplineService
     /**
      * @param int $school
      * @param int $grade
-     *
      * @return LegacySchoolGradeDiscipline[]|Collection
      */
     public function getDisciplines($school, $grade)
@@ -25,7 +24,6 @@ class SchoolGradeDisciplineService
     /**
      * @param int $school
      * @param int $grade
-     *
      * @return LegacySchoolGradeDiscipline[]|Collection
      */
     public function getAllDisciplines($school, $grade)
@@ -40,7 +38,6 @@ class SchoolGradeDisciplineService
      * @param int $school
      * @param int $grade
      * @param int $year
-     *
      * @return LegacySchoolGradeDiscipline[]|Collection
      */
     public function getDisciplinesForYear($school, $grade, $year)

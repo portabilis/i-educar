@@ -7,7 +7,7 @@ class Calendario_Model_Turma extends CoreExt_Entity
         'ano' => null,
         'mes' => null,
         'dia' => null,
-        'turma' => null
+        'turma' => null,
     ];
 
     public function getDefaultValidatorCollection()
@@ -17,7 +17,7 @@ class Calendario_Model_Turma extends CoreExt_Entity
             'ano' => new CoreExt_Validate_Numeric(['min' => 0]),
             'mes' => new CoreExt_Validate_Numeric(['min' => 0]),
             'dia' => new CoreExt_Validate_Numeric(['min' => 0]),
-            'turma' => new CoreExt_Validate_Numeric(['min' => 0])
+            'turma' => new CoreExt_Validate_Numeric(['min' => 0]),
         ];
     }
 

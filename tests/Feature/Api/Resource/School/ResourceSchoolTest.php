@@ -14,18 +14,10 @@ class ResourceSchoolTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @var LegacyInstitution
-     */
     private LegacyInstitution $institution;
-    /**
-     * @var LegacySchool
-     */
+
     private LegacySchool $school;
 
-    /**
-     * @var string
-     */
     private string $route = 'api.resource.school';
 
     protected function setUp(): void
@@ -37,7 +29,7 @@ class ResourceSchoolTest extends TestCase
 
         //escolas
         $schools = LegacySchoolFactory::new()->count(2)->create([
-            'ref_cod_instituicao' => $this->institution->id
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
 
         //escola
@@ -53,13 +45,13 @@ class ResourceSchoolTest extends TestCase
             'data' => [
                 '*' => [
                     'id',
-                    'name'
-                ]
-            ]
+                    'name',
+                ],
+            ],
         ]);
 
         $schools = LegacySchool::getResource([
-            'institution' => $this->institution->id
+            'institution' => $this->institution->id,
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($schools) {

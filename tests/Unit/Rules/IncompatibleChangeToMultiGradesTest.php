@@ -54,12 +54,12 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         // Listagem de séries que não contém a série original
         $series = [
             ['serie_id' => 2],
-            ['serie_id' => 3]
+            ['serie_id' => 3],
         ];
 
         $values = [
             $legacySchoolClass,
-            $series
+            $series,
         ];
 
         $message = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
@@ -102,12 +102,12 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         // Listagem de series contém a serie original
         $series = [
             ['serie_id' => 1],
-            ['serie_id' => 2]
+            ['serie_id' => 2],
         ];
 
         $values = [
             $legacySchoolClass,
-            $series
+            $series,
         ];
 
         $message = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
@@ -147,12 +147,12 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         // Listagem de series contém a serie original
         $series = [
             ['serie_id' => 1],
-            ['serie_id' => 2]
+            ['serie_id' => 2],
         ];
 
         $values = [
             $legacySchoolClass,
-            $series
+            $series,
         ];
 
         $message = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
@@ -179,7 +179,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
                     ->andReturn(0);
 
                 // Serie original
-                $mock ->shouldReceive('getLegacyColumn', 'getAttribute')
+                $mock->shouldReceive('getLegacyColumn', 'getAttribute')
                     ->withArgs(['originalGrade'])
                     ->andReturn(1);
 
@@ -194,7 +194,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
 
         $values = [
             $legacySchoolClass,
-            $series
+            $series,
         ];
 
         $message = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
@@ -234,12 +234,12 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         // Listagem de series contém a serie original
         $series = [
             ['serie_id' => 1],
-            ['serie_id' => 2]
+            ['serie_id' => 2],
         ];
 
         $values = [
             $legacySchoolClass,
-            $series
+            $series,
         ];
 
         $message = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';

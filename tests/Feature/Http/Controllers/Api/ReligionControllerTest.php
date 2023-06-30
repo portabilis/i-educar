@@ -9,7 +9,9 @@ use Tests\ResourceTestCase;
 class ReligionControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/religion';
+
     protected string $model = Religion::class;
+
     protected string $factory = ReligionFactory::class;
 
     public function testIndex(): void

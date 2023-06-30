@@ -5,6 +5,7 @@ use Tests\TestCase;
 class Core_ViewTest extends TestCase
 {
     protected $_pageController = null;
+
     protected $_view = null;
 
     public function __construct($name = null, array $data = [], $dataName = '')

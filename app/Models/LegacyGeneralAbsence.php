@@ -26,9 +26,6 @@ class LegacyGeneralAbsence extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @return BelongsTo
-     */
     public function studentAbsence(): BelongsTo
     {
         return $this->belongsTo(LegacyStudentAbsence::class, 'falta_aluno_id');

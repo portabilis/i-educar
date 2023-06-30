@@ -11,9 +11,6 @@ class ManagerRole extends Model
 
     protected $fillable = ['name'];
 
-    /**
-     * @return HasMany
-     */
     public function schoolManagers(): HasMany
     {
         return $this->hasMany(SchoolManager::class, 'role_id');

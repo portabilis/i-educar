@@ -29,7 +29,6 @@ class Breadcrumb
      *
      * @param string $currentPage
      * @param array  $pages
-     *
      * @return $this
      */
     public function current($currentPage, $pages = [])
@@ -48,7 +47,6 @@ class Breadcrumb
      *
      * @param string $label
      * @param string $link
-     *
      * @return $this
      */
     public function push($label, $link)
@@ -101,9 +99,6 @@ class Breadcrumb
         return $this->legacy;
     }
 
-    /**
-     * @param string $legacy
-     */
     public function setLegacy(string $legacy)
     {
         $this->legacy = $legacy;
@@ -114,9 +109,6 @@ class Breadcrumb
         $this->beta = true;
     }
 
-    /**
-     * @return bool
-     */
     public function isBeta(): bool
     {
         return $this->beta;

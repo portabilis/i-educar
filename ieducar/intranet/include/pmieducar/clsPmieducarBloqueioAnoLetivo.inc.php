@@ -5,8 +5,11 @@ use iEducar\Legacy\Model;
 class clsPmieducarBloqueioAnoLetivo extends Model
 {
     public $ref_cod_instituicao;
+
     public $ref_ano;
+
     public $data_inicio;
+
     public $data_fim;
 
     public function __construct($ref_cod_instituicao = null, $ref_ano = null, $data_inicio = null, $data_fim = null)

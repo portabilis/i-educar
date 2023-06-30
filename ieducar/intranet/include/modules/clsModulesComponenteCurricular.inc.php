@@ -5,12 +5,19 @@ use iEducar\Legacy\Model;
 class clsModulesComponenteCurricular extends Model
 {
     public $id;
+
     public $instituicao_id;
+
     public $area_conhecimento_id;
+
     public $nome;
+
     public $abreviatura;
+
     public $tipo_base;
+
     public $codigo_educacenso;
+
     public $ordenamento;
 
     public function __construct()

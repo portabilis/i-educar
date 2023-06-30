@@ -11,14 +11,14 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
     protected function _getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
     {
         return new Avaliacao_Model_ParecerDescritivoGeral([
-            'parecer' => 'Ok.'
+            'parecer' => 'Ok.',
         ]);
     }
 
     protected function _getTestAdicionaParecerNoBoletim()
     {
         return new Avaliacao_Model_ParecerDescritivoGeral([
-            'parecer' => 'N/D.'
+            'parecer' => 'N/D.',
         ]);
     }
 
@@ -27,8 +27,8 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
-            ])
+                'etapa' => 'An',
+            ]),
         ];
     }
 
@@ -37,8 +37,8 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
-            ])
+                'etapa' => 'An',
+            ]),
         ];
     }
 
@@ -48,8 +48,8 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
-            ])
+                'etapa' => 'An',
+            ]),
         ];
     }
 
@@ -57,8 +57,8 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
     {
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
-                'parecer' => 'N/D.'
-            ])
+                'parecer' => 'N/D.',
+            ]),
         ];
     }
 
@@ -68,8 +68,8 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 1,
                 'parecer' => 'N/D.',
-                'etapa' => 'An'
-            ])
+                'etapa' => 'An',
+            ]),
         ];
     }
 

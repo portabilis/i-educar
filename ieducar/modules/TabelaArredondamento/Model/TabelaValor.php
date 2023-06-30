@@ -10,26 +10,26 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
         'valorMinimo' => null,
         'valorMaximo' => null,
         'acao' => null,
-        'casaDecimalExata' => null
+        'casaDecimalExata' => null,
     ];
 
     protected $_dataTypes = [
         'valorMinimo' => 'numeric',
-        'valorMaximo' => 'numeric'
+        'valorMaximo' => 'numeric',
     ];
 
     protected $_references = [
         'tabelaArredondamento' => [
             'value' => null,
             'class' => 'TabelaArredondamento_Model_TabelaDataMapper',
-            'file' => 'TabelaArredondamento/Model/TabelaDataMapper.php'
+            'file' => 'TabelaArredondamento/Model/TabelaDataMapper.php',
         ],
         'acao' => [
             'value' => 0,
             'class' => 'TabelaArredondamento_Model_TipoArredondamentoMedia',
             'file' => 'TabelaArredondamento/Model/TipoArredondamentoMedia.php',
-            'null' => true
-        ]
+            'null' => true,
+        ],
     ];
 
     /**

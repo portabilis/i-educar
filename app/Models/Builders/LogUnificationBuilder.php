@@ -10,7 +10,6 @@ class LogUnificationBuilder extends LegacyBuilder
     /**
      * Filtra por nome do curso
      *
-     * @param string $name
      *
      * @return $this
      */

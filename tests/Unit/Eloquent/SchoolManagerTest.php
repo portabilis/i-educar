@@ -21,12 +21,9 @@ class SchoolManagerTest extends EloquentTestCase
         'employee' => Employee::class,
         'role' => ManagerRole::class,
         'accessCriteria' => ManagerAccessCriteria::class,
-        'linkType' => ManagerLinkType::class
+        'linkType' => ManagerLinkType::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return SchoolManager::class;

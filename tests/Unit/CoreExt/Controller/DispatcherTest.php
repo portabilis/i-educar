@@ -11,16 +11,16 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
         3 => ['uri' => 'http://www.example.com/index.php/controller/action'],
         4 => [
             'uri' => 'http://www.example.com/module/controller/action',
-            'baseurl' => 'http://www.example.com/module'
+            'baseurl' => 'http://www.example.com/module',
         ],
         5 => [
             'uri' => 'http://www.example.com/module/index.php/controller/action',
-            'baseurl' => 'http://www.example.com/module'
+            'baseurl' => 'http://www.example.com/module',
         ],
         6 => [
             'uri' => 'http://www.example.com/module/controller',
-            'baseurl' => 'http://www.example.com/module'
-        ]
+            'baseurl' => 'http://www.example.com/module',
+        ],
     ];
 
     /**

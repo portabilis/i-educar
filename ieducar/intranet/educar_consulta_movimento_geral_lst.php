@@ -2,7 +2,8 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralQueryFactory;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public function Gerar()
     {
         $params = [];
@@ -16,7 +17,7 @@ return new class extends clsListagem {
         $required = [
             'ano',
             'data_inicial',
-            'data_final'
+            'data_final',
         ];
 
         foreach ($required as $req) {
@@ -43,9 +44,9 @@ return new class extends clsListagem {
         if (empty($params['curso'])) {
             $cursos[] = 'Todos';
         } else {
-            $cursoIds = join(separator: ', ', array: $params['curso']);
+            $cursoIds = implode(separator: ', ', array: $params['curso']);
 
-            $dadosCursos = (array)Portabilis_Utils_Database::fetchPreparedQuery(
+            $dadosCursos = (array) Portabilis_Utils_Database::fetchPreparedQuery(
                 "select nm_curso from pmieducar.curso where cod_curso in ({$cursoIds});"
             );
 
@@ -58,17 +59,17 @@ return new class extends clsListagem {
             'Ano',
             'Cursos',
             'Data inicial',
-            'Data final'
+            'Data final',
         ]);
 
         $this->addLinhas([
             filter_var(value: $params['ano'], filter: FILTER_SANITIZE_STRING),
-            join(separator: '<br>', array: $cursos),
+            implode(separator: '<br>', array: $cursos),
             filter_var(value: $this->getQueryString('data_inicial'), filter: FILTER_SANITIZE_STRING),
-            filter_var(value: $this->getQueryString('data_final'), filter: FILTER_SANITIZE_STRING)
+            filter_var(value: $this->getQueryString('data_final'), filter: FILTER_SANITIZE_STRING),
         ]);
 
-        $params['curso'] = empty($params['curso']) ? '' : join(separator: ',', array: $params['curso']);
+        $params['curso'] = empty($params['curso']) ? '' : implode(separator: ',', array: $params['curso']);
         $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoGeral" data-params=\'%s\' data-tipo="%s">%d</a>';
 
         foreach ($data as $key => $value) {

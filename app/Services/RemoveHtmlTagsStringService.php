@@ -12,7 +12,7 @@ class RemoveHtmlTagsStringService
         '/(?<=;|"|\s)font-family:[^;\']*(;)?/mi',
         '/font-family:[^;\']*(;)?/mi',
         '/(<font[^>]*>)|(<\/font>)/',
-        '/<span.*?<\/span>/mi'
+        '/<span.*?<\/span>/mi',
     ];
 
     public function execute(string $text = ''): string

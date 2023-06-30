@@ -681,10 +681,9 @@ class Registro10 extends Registro10Fields
      */
     public function EquipamentosPreenchidosIncorretamente()
     {
-        return (
+        return
             in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos) &&
-            count($this->equipamentos) > 1
-        );
+            count($this->equipamentos) > 1;
     }
 
     /**
@@ -713,11 +712,10 @@ class Registro10 extends Registro10Fields
 
     public function quantidadeComputadoresAlunosNaoPreenchida()
     {
-        return (
+        return
             $this->quantidadeComputadoresAlunosMesa == null &&
             $this->quantidadeComputadoresAlunosPortateis == null &&
-            $this->quantidadeComputadoresAlunosTablets == null
-        );
+            $this->quantidadeComputadoresAlunosTablets == null;
     }
 
     /**
@@ -1024,10 +1022,9 @@ class Registro10 extends Registro10Fields
      */
     public function instrumentosPedagogicosPreenchidosIncorretamente()
     {
-        return (
+        return
             in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentosPedagogicos) &&
-            count($this->instrumentosPedagogicos) > 1
-        );
+            count($this->instrumentosPedagogicos) > 1;
     }
 
     /**

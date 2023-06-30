@@ -15,7 +15,6 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @param array $columns
-     *
      * @return TeacherEloquentBuilder
      */
     public function person($columns)
@@ -59,7 +58,6 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @param array $columns
-     *
      * @return TeacherEloquentBuilder
      */
     public function place($columns)

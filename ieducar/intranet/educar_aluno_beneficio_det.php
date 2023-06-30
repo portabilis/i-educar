@@ -2,37 +2,46 @@
 
 use App\Models\LegacyBenefit;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $cod_aluno_beneficio;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_beneficio;
+
     public $desc_beneficio;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
     {
         $this->titulo = 'Aluno Beneficio - Detalhe';
 
-        $this->cod_aluno_beneficio=$_GET['cod_aluno_beneficio'];
+        $this->cod_aluno_beneficio = $_GET['cod_aluno_beneficio'];
 
         $registro = LegacyBenefit::find($this->cod_aluno_beneficio)?->getAttributes();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect(url: 'educar_aluno_beneficio_lst.php');
         }
 
         if ($registro['cod_aluno_beneficio']) {
-            $this->addDetalhe(detalhe: [ 'Código Benefício', "{$registro['cod_aluno_beneficio']}"]);
+            $this->addDetalhe(detalhe: ['Código Benefício', "{$registro['cod_aluno_beneficio']}"]);
         }
         if ($registro['nm_beneficio']) {
-            $this->addDetalhe(detalhe: [ 'Benefício', "{$registro['nm_beneficio']}"]);
+            $this->addDetalhe(detalhe: ['Benefício', "{$registro['nm_beneficio']}"]);
         }
         if ($registro['desc_beneficio']) {
-            $this->addDetalhe(detalhe: [ 'Descrição', nl2br(string: "{$registro['desc_beneficio']}")]);
+            $this->addDetalhe(detalhe: ['Descrição', nl2br(string: "{$registro['desc_beneficio']}")]);
         }
 
         $obj_permissao = new clsPermissoes();

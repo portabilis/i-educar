@@ -94,8 +94,6 @@ class Registro00Import extends Registro00Import2019
     }
 
     /**
-     * @param $arrayColumns
-     *
      * @return Registro00|RegistroEducacenso
      */
     public static function getModel($arrayColumns)

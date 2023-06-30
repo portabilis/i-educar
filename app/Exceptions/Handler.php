@@ -18,7 +18,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         App_Model_Exception::class,
-        DisciplinesWithoutInformedHoursException::class
+        DisciplinesWithoutInformedHoursException::class,
     ];
 
     /**

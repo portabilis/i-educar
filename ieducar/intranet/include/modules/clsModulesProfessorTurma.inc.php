@@ -101,8 +101,6 @@ class clsModulesProfessorTurma extends Model
             $this->permite_lancar_faltas_componente = '0';
         }
 
-
-
         if (isset($outras_unidades_curriculares_obrigatorias) && ($outras_unidades_curriculares_obrigatorias) == 1) {
             $this->outras_unidades_curriculares_obrigatorias = 1;
         } elseif (isset($outras_unidades_curriculares_obrigatorias) && ($outras_unidades_curriculares_obrigatorias) == 0) {
@@ -325,7 +323,6 @@ class clsModulesProfessorTurma extends Model
      * @param null $ref_cod_turma
      * @param null $funcao_exercida
      * @param null $tipo_vinculo
-     *
      * @return array|bool
      *
      * @throws Exception

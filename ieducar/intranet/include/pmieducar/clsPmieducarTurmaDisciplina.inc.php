@@ -5,8 +5,11 @@ use iEducar\Legacy\Model;
 class clsPmieducarTurmaDisciplina extends Model
 {
     public $ref_cod_turma;
+
     public $ref_cod_disciplina;
+
     public $ref_cod_escola;
+
     public $ref_cod_serie;
 
     public function __construct($ref_cod_turma = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null)
@@ -227,7 +230,7 @@ class clsPmieducarTurmaDisciplina extends Model
             $disciplina_in = '';
             $conc = '';
             foreach ($disciplinas as $disciplina) {
-                for ($i = 0; $i < sizeof($disciplina); $i++) {
+                for ($i = 0; $i < count($disciplina); $i++) {
                     $disciplina_in .= "{$conc}{$disciplina[$i]}";
                     $conc = ',';
                 }

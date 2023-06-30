@@ -11,7 +11,9 @@ use Illuminate\Contracts\Hashing\Hasher;
 class ChangeUserPasswordService
 {
     private $validateUserPasswordService;
+
     private $hash;
+
     private $carbon;
 
     public function __construct(ValidateUserPasswordService $validateUserPasswordService, Hasher $hash, Carbon $carbon)

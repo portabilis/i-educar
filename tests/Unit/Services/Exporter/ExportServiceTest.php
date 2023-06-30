@@ -47,22 +47,22 @@ class ExportServiceTest extends TestCase
         }
         $institution = LegacyInstitutionFactory::new()->create();
         $school = LegacySchoolFactory::new()->create([
-            'ref_cod_instituicao' => $institution->id
+            'ref_cod_instituicao' => $institution->id,
         ]);
         $person = LegacyPersonFactory::new()->create();
         LegacyIndividualFactory::new()->create([
             'idpes' => $person->idpes,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
         $student = LegacyStudentFactory::new()->create([
             'ref_idpes' => $person->idpes,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
         $course = LegacyCourseFactory::new()->create([
-            'ref_cod_instituicao' => $institution->id
+            'ref_cod_instituicao' => $institution->id,
         ]);
         $grade = LegacyGradeFactory::new()->create([
-            'ref_cod_curso' => $course->id
+            'ref_cod_curso' => $course->id,
         ]);
         LegacySchoolCourseFactory::new()->create([
             'ref_cod_escola' => $school->id,
@@ -70,14 +70,14 @@ class ExportServiceTest extends TestCase
         ]);
         LegacySchoolGradeFactory::new()->create([
             'ref_cod_escola' => $school->id,
-            'ref_cod_serie' => $grade->id
+            'ref_cod_serie' => $grade->id,
         ]);
         $registration = LegacyRegistrationFactory::new()->create([
             'ref_cod_aluno' => $student->cod_aluno,
             'ref_ref_cod_serie' => $grade->id,
             'ref_cod_curso' => $course->id,
             'ref_ref_cod_escola' => $school->id,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
         LegacyEvaluationRuleGradeYearFactory::new()->create([
             'serie_id' => $grade->id,
@@ -87,11 +87,11 @@ class ExportServiceTest extends TestCase
             'ref_ref_cod_serie' => $grade->id,
             'ref_cod_curso' => $course->id,
             'ref_ref_cod_escola' => $school->id,
-            'ref_cod_instituicao' => $institution->id
+            'ref_cod_instituicao' => $institution->id,
         ]);
         LegacyEnrollmentFactory::new()->active()->create([
             'ref_cod_matricula' => $registration->id,
-            'ref_cod_turma' => $schoolClass->id
+            'ref_cod_turma' => $schoolClass->id,
         ]);
     }
 

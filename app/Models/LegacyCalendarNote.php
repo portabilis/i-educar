@@ -15,7 +15,9 @@ class LegacyCalendarNote extends LegacyModel
     use HasLegacyDates;
 
     public $table = 'pmieducar.calendario_anotacao';
+
     public $primaryKey = 'cod_calendario_anotacao';
+
     public $fillable = [
         'ref_usuario_exc',
         'ref_usuario_cad',

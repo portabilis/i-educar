@@ -13,7 +13,6 @@ class CyclicRegimeService
      * Retorna todas as matriculas de um ciclo a partir de uma matricula
      *
      * @param int $registration
-     *
      * @return LegacyRegistration[]
      */
     public function getAllRegistrationsOfCycle($registration)
@@ -46,7 +45,6 @@ class CyclicRegimeService
 
     /**
      * @param LegacyRegistration $registration
-     *
      * @return LegacyGrade[]
      */
     public function getAllGradesOfCycleByRegistration($registration)

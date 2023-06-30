@@ -3,18 +3,30 @@
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyStageType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_modulo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $num_etapas;
+
     public $num_meses;
+
     public $num_semanas;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -67,7 +79,7 @@ return new class extends clsCadastro {
 
         // Filtros de Foreign Keys
         $obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -104,7 +116,6 @@ return new class extends clsCadastro {
 
         !empty($this->num_meses) ? $obj->num_meses = $this->num_meses : $obj->num_meses = null;
         !empty($this->num_semanas) ? $obj->num_semanas = $this->num_semanas : $obj->num_semanas = null;
-
 
         $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
         $obj->ativo = 1;
@@ -152,6 +163,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -177,6 +189,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

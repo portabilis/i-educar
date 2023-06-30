@@ -15,12 +15,12 @@ class AddExportNotificationType extends Migration
     {
         DB::table('public.notification_type')->insert([
             'id' => NotificationType::EXPORT_STUDENT,
-            'name' => 'Exportação de dados de alunos'
+            'name' => 'Exportação de dados de alunos',
         ]);
 
         DB::table('public.notification_type')->insert([
             'id' => NotificationType::EXPORT_TEACHER,
-            'name' => 'Exportação de dados de professores'
+            'name' => 'Exportação de dados de professores',
         ]);
     }
 

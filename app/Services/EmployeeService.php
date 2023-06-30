@@ -19,10 +19,10 @@ class EmployeeService
                 EXTRACT(HOUR FROM (SUM(hora_final - hora_inicial))) AS hora,
                 EXTRACT(MINUTE FROM (SUM(hora_final - hora_inicial))) AS min
             ')->whereSchool($cod_escola)
-                ->whereEmployee($cod_servidor)
-                ->whereInstitution($cod_instituicao)
-                ->where('dia_semana', $dia_semana)
-                ->first()->toArray();
+            ->whereEmployee($cod_servidor)
+            ->whereInstitution($cod_instituicao)
+            ->where('dia_semana', $dia_semana)
+            ->first()->toArray();
     }
 
     public function getHoursCompensate(
@@ -59,7 +59,7 @@ class EmployeeService
 
         return [
             'hora' => $horas_total,
-            'min' => $minutos_total
+            'min' => $minutos_total,
         ];
     }
 }

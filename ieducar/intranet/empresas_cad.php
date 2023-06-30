@@ -9,35 +9,51 @@ return new class extends clsCadastro
 
     // Dados do Juridico
     public $cod_pessoa_fj;
+
     public $razao_social;
+
     public $cnpj;
+
     public $fantasia;
+
     public $capital_social;
+
     public $insc_est;
 
     // Dados da Pessoa
     public $email;
+
     public $tipo_pessoa;
+
     public $idpes_cad;
+
     public $url;
 
     //Telefones
     public $ddd_telefone_1;
+
     public $telefone_1;
+
     public $ddd_telefone_2;
+
     public $telefone_2;
+
     public $ddd_telefone_mov;
+
     public $telefone_mov;
+
     public $ddd_telefone_fax;
+
     public $telefone_fax;
 
     // Variaveis de Controle
     public $busca_empresa;
+
     public $retorno;
 
     public function Inicializar()
     {
-        $this->cod_pessoa_fj = is_numeric(value: $_GET['idpes']) ? (int)$_GET['idpes'] : null;
+        $this->cod_pessoa_fj = is_numeric(value: $_GET['idpes']) ? (int) $_GET['idpes'] : null;
         $this->idpes_cad = $this->pessoa_logada;
 
         $this->retorno = 'Novo';
@@ -118,6 +134,7 @@ return new class extends clsCadastro
     {
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
+
             return false;
         }
 
@@ -126,6 +143,7 @@ return new class extends clsCadastro
         $contemPessoaJuridica = (new clsJuridica(idpes: false, cnpj: $this->cnpj))->detalhe();
         if ($this->cnpj !== null && $contemPessoaJuridica) {
             $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
+
             return false;
         }
 
@@ -135,7 +153,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        if (! $this->validaDadosTelefones()) {
+        if (!$this->validaDadosTelefones()) {
             $this->busca_empresa = true;
 
             return false;
@@ -164,7 +182,6 @@ return new class extends clsCadastro
             insc_estadual: $this->insc_est,
             capital_social: $this->capital_social
         ))->cadastra();
-
 
         if ($this->telefone_1) {
             $this->cadastraTelefone(codPessoaJuridica: $this->cod_pessoa_fj, tipo: 1, telefone: $this->telefone_1, dddTelefone: $this->ddd_telefone_1);
@@ -221,6 +238,7 @@ return new class extends clsCadastro
             return true;
         }
         $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+
         return preg_match(pattern: $pattern, subject: $this->complement);
     }
 
@@ -228,6 +246,7 @@ return new class extends clsCadastro
     {
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
+
             return false;
         }
 
@@ -364,7 +383,7 @@ return new class extends clsCadastro
             'value' => $this->{"ddd_telefone_{$type}"},
             'max_length' => 3,
             'size' => 3,
-            'inline' => true
+            'inline' => true,
         ];
 
         $this->inputsHelper()->integer(attrName: "ddd_telefone_{$type}", inputOptions: $options);
@@ -376,7 +395,7 @@ return new class extends clsCadastro
             'label' => '',
             'placeholder' => $typeLabel,
             'value' => $this->{"telefone_{$type}"},
-            'max_length' => 11
+            'max_length' => 11,
         ];
 
         $this->inputsHelper()->integer(attrName: "telefone_{$type}", inputOptions: $options);

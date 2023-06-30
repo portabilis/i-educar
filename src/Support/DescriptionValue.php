@@ -6,7 +6,6 @@ trait DescriptionValue
 {
     /**
      * @param int $value
-     *
      * @return string
      */
     public static function getDescription($value)

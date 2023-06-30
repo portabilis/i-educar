@@ -40,31 +40,31 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
                 'nome' => 'E',
                 'descricao' => 'Insuficiente',
                 'valor_minimo' => 0,
-                'valor_maximo' => 1.9
+                'valor_maximo' => 1.9,
             ],
             [
                 'nome' => 'D',
                 'descricao' => 'Irregular',
                 'valor_minimo' => 2,
-                'valor_maximo' => 3.9
+                'valor_maximo' => 3.9,
             ],
             [
                 'nome' => 'C',
                 'descricao' => 'Bom',
                 'valor_minimo' => 4,
-                'valor_maximo' => 5.9
+                'valor_maximo' => 5.9,
             ],
             [
                 'nome' => 'B',
                 'descricao' => 'Muito Bom',
                 'valor_minimo' => 6,
-                'valor_maximo' => 7.9
+                'valor_maximo' => 7.9,
             ],
             [
                 'nome' => 'A',
                 'descricao' => 'Excelente',
                 'valor_minimo' => 8,
-                'valor_maximo' => 10
+                'valor_maximo' => 10,
             ],
         ];
 

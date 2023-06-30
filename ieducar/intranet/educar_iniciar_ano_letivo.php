@@ -2,10 +2,14 @@
 
 use App\Models\LegacySchoolAcademicYear;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_escola;
+
     public $tipo_acao;
+
     public $ano;
 
     public function Inicializar()
@@ -44,12 +48,11 @@ return new class extends clsCadastro {
         /**
          * verifica se ano letivo da escola nao possui nenhuma matricula
          */
-
         if ($this->tipo_acao == 'iniciar' && $det_ano['andamento'] == 0) {
             $this->iniciarAnoLetivo();
         } elseif ($this->tipo_acao == 'reabrir') {
             $this->iniciarAnoLetivo();
-        } elseif ($this->tipo_acao == 'finalizar'  && $det_ano['andamento'] == 1) {
+        } elseif ($this->tipo_acao == 'finalizar' && $det_ano['andamento'] == 1) {
             $this->finalizarAnoLetivo();
         } else {
             $this->simpleRedirect("educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo'");
@@ -61,13 +64,12 @@ return new class extends clsCadastro {
         /**
          *  INICIALIZA ano letivo
          */
-
         $obj_ano_letivo = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->active()->first();
 
         if ($obj_ano_letivo) {
             $obj_ano_letivo->update([
                 'ref_usuario_exc' => $this->pessoa_logada,
-                'andamento' => 1
+                'andamento' => 1,
             ]);
 
             echo "<script>
@@ -87,7 +89,6 @@ return new class extends clsCadastro {
         /**
          * VERIFICA se nï¿½o existem matriculas em andamento
          */
-
         $obj_matriculas = new clsPmieducarMatricula();
         $existe_matricula_andamento_com_curso = $obj_matriculas->lista(int_cod_matricula: null, int_ref_cod_reserva_vaga: null, int_ref_ref_cod_escola: $this->ref_cod_escola, int_ref_ref_cod_serie: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, ref_cod_aluno: null, int_aprovado: 3, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1, int_ano: $this->ano, int_ref_cod_curso2: null, int_ref_cod_instituicao: null, int_ultima_matricula: 1, int_modulo: null, int_padrao_ano_escolar: null, int_analfabeto: null, int_formando: null, str_descricao_reclassificacao: null, int_matricula_reclassificacao: null, boo_com_deficiencia: null, int_ref_cod_curso: null, bool_curso_sem_avaliacao: false);
 
@@ -101,13 +102,12 @@ return new class extends clsCadastro {
         /**
          *  FINALIZA ano letivo
          */
-
         $obj_ano_letivo = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->active()->first();
 
         if ($obj_ano_letivo) {
             $obj_ano_letivo->update([
                 'ref_usuario_exc' => $this->pessoa_logada,
-                'andamento' => 2
+                'andamento' => 2,
             ]);
 
             echo "<script>

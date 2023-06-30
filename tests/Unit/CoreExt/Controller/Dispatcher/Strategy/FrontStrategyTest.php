@@ -4,6 +4,7 @@
 class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends PHPUnit\Framework\TestCase
 {
     protected $_frontController = null;
+
     protected $_pageStrategy = null;
 
     /**

@@ -13,12 +13,9 @@ class EmployeeGraduationTest extends EloquentTestCase
     public $relations = [
         'employee' => Employee::class,
         'educacensoDegree' => EducacensoDegree::class,
-        'educacensoInstitution' => EducacensoInstitution::class
+        'educacensoInstitution' => EducacensoInstitution::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return EmployeeGraduation::class;

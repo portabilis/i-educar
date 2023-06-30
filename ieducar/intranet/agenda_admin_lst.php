@@ -1,14 +1,16 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $cd_agenda;
+
     public $nm_agenda;
 
     public function Gerar()
     {
         $this->titulo = 'Agendas Admin';
 
-        $this->addCabecalhos(coluna: [ 'Agenda' ]);
+        $this->addCabecalhos(coluna: ['Agenda']);
 
         $this->campoTexto(nome: 'pesquisa', campo: 'Agenda', valor: '', tamanhovisivel: 50, tamanhomaximo: 255);
 
@@ -25,15 +27,15 @@ return new class extends clsListagem {
 
         // Paginador
         $limite = 15;
-        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
         $sql = "SELECT cod_agenda, nm_agenda, ref_ref_cod_pessoa_own FROM portal.agenda {$where} ORDER BY nm_agenda ASC LIMIT $limite OFFSET $iniciolimit";
 
         $db2 = new clsBanco();
         $db2->Consulta(consulta: $sql);
         while ($db2->ProximoRegistro()) {
-            list($cod_agenda, $nm_agenda, $cod_pessoa_own) = $db2->Tupla();
-            $this->addLinhas(linha: [ "<a href='agenda_admin_det.php?cod_agenda={$cod_agenda}'><img src='imagens/noticia.jpg' border=0>$nm_agenda</a>"]);
+            [$cod_agenda, $nm_agenda, $cod_pessoa_own] = $db2->Tupla();
+            $this->addLinhas(linha: ["<a href='agenda_admin_det.php?cod_agenda={$cod_agenda}'><img src='imagens/noticia.jpg' border=0>$nm_agenda</a>"]);
         }
 
         // Paginador

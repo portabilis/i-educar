@@ -1,13 +1,21 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $cod_usuario;
+
     public $ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $ref_funcionario_cad;
+
     public $ref_cod_tipo_usuario;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -68,15 +76,15 @@ return new class extends clsDetalhe {
         $registro['ref_cod_escola'] = $nomesEscola;
 
         if ($registro['ref_cod_tipo_usuario']) {
-            $this->addDetalhe(detalhe: [ 'Tipo Usuário', "{$registro['ref_cod_tipo_usuario']}"]);
+            $this->addDetalhe(detalhe: ['Tipo Usuário', "{$registro['ref_cod_tipo_usuario']}"]);
         }
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(detalhe: [ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
 
         if ($registro['ref_cod_escola']) {
-            $this->addDetalhe(detalhe: [ 'Escolas', $registro['ref_cod_escola']]);
+            $this->addDetalhe(detalhe: ['Escolas', $registro['ref_cod_escola']]);
         }
 
         $objPermissao = new clsPermissoes();

@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchServidor extends Portabi
         $defaultOptions = [
             'objectName' => 'servidor',
             'apiController' => 'Servidor',
-            'apiResource' => 'servidor-search'
+            'apiResource' => 'servidor-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

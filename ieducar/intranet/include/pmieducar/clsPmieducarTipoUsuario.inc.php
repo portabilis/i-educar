@@ -5,13 +5,21 @@ use iEducar\Legacy\Model;
 class clsPmieducarTipoUsuario extends Model
 {
     public $cod_tipo_usuario;
+
     public $ref_funcionario_cad;
+
     public $ref_funcionario_exc;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $nivel;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function __construct(

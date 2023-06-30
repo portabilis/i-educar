@@ -19,34 +19,34 @@ class StageController extends ResourceController
                 'data' => LegacyAcademicYearStage::query()
                     ->filter([
                         'school' => $request->get('school'),
-                        'year_eq' => $request->get('year')
+                        'year_eq' => $request->get('year'),
                     ])
                     ->with(['stageType:cod_modulo,nm_tipo'])
                     ->whereHas('stageType', static fn ($q) => $q->active())
                     ->orderBySequencial()
                     ->get([
                         'sequencial',
-                        'ref_cod_modulo'
+                        'ref_cod_modulo',
                     ])->mapWithKeys(static function ($academicYearStage) {
                         return [$academicYearStage->sequencial => $academicYearStage->sequencial . 'º ' . mb_strtoupper($academicYearStage->stageType->nm_tipo)];
-                    })
+                    }),
             ];
         }
 
         return [
             'data' => LegacySchoolClassStage::query()
                 ->filter([
-                    'school-class' => $request->get('school-class')
+                    'school-class' => $request->get('school-class'),
                 ])
                 ->with(['stageType:cod_modulo,nm_tipo'])
                 ->whereHas('stageType', static fn ($q) => $q->active())
                 ->orderBySequencial()
                 ->get([
                     'sequencial',
-                    'ref_cod_modulo'
+                    'ref_cod_modulo',
                 ])->mapWithKeys(static function ($schoolClassStage) {
                     return [$schoolClassStage->sequencial => $schoolClassStage->sequencial . 'º ' . mb_strtoupper($schoolClassStage->stageType->nm_tipo)];
-                })
+                }),
         ];
     }
 }

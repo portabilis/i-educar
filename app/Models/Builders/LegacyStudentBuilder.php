@@ -19,7 +19,7 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereBirthdate($birthdate)
     {
-        return  $this->whereHas(
+        return $this->whereHas(
             'individual',
             function ($query) use ($birthdate) {
                 [$day, $month, $year] = explode('/', $birthdate);
@@ -34,7 +34,7 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereCpf($cpf)
     {
-        return  $this->whereHas(
+        return $this->whereHas(
             'individual',
             function ($query) use ($cpf) {
                 $query->when($cpf, fn ($q) => $q->where('cpf', $cpf));
@@ -164,7 +164,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                         ->with('responsible:nome,idpes', 'responsible.individual:cpf,idpes');
                 },
                 'person:idpes,nome',
-                'inep:cod_aluno,cod_aluno_inep'
+                'inep:cod_aluno,cod_aluno_inep',
             ]
         )
             ->filter(
@@ -185,7 +185,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                         'course' => $studentFilter->course,
                         'school' => $studentFilter->school,
                         'year' => $studentFilter->year,
-                    ]
+                    ],
                 ]
             )
             ->active();

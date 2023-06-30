@@ -5,7 +5,9 @@ use iEducar\Legacy\Model;
 class clsModulesNotaExame extends Model
 {
     public $ref_cod_matricula;
+
     public $ref_cod_componente_curricular;
+
     public $nota_exame;
 
     public function __construct($ref_cod_matricula = null, $ref_cod_componente_curricular = null, $nota_exame = null)

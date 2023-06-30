@@ -5,7 +5,9 @@ namespace iEducar\Modules\Educacenso\Model;
 class SituacaoFuncionamento
 {
     public const EM_ATIVIDADE = 1;
+
     public const PARALISADA = 2;
+
     public const EXTINTA = 3;
 
     /**
@@ -16,7 +18,7 @@ class SituacaoFuncionamento
         return [
             self::EM_ATIVIDADE => 'Em atividade',
             self::PARALISADA => 'Paralisada',
-            self::EXTINTA => 'Extinta'
+            self::EXTINTA => 'Extinta',
         ];
     }
 }

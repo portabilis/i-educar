@@ -1,16 +1,27 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_agenda;
+
     public $ref_ref_cod_pessoa_exc;
+
     public $ref_ref_cod_pessoa_cad;
+
     public $nm_agenda;
+
     public $publica;
+
     public $envia_alerta;
+
     public $data_cad;
+
     public $data_edicao;
+
     public $ref_ref_cod_pessoa_own;
+
     public $dono;
+
     public $editar;
 
     public function Inicializar()
@@ -23,7 +34,7 @@ return new class extends clsCadastro {
             $db = new clsBanco();
             $db->Consulta(consulta: "SELECT cod_agenda, ref_ref_cod_pessoa_exc, ref_ref_cod_pessoa_cad,  nm_agenda, publica, envia_alerta, data_cad, data_edicao, ref_ref_cod_pessoa_own FROM portal.agenda WHERE cod_agenda='{$this->cod_agenda}'");
             if ($db->ProximoRegistro()) {
-                list($this->cod_agenda, $this->ref_ref_cod_pessoa_exc, $this->ref_ref_cod_pessoa_cad, $this->nm_agenda, $this->publica, $this->envia_alerta, $this->data_cad, $this->data_edicao, $this->ref_ref_cod_pessoa_own) = $db->Tupla();
+                [$this->cod_agenda, $this->ref_ref_cod_pessoa_exc, $this->ref_ref_cod_pessoa_cad, $this->nm_agenda, $this->publica, $this->envia_alerta, $this->data_cad, $this->data_edicao, $this->ref_ref_cod_pessoa_own] = $db->Tupla();
                 $this->fexcluir = true;
                 $retorno = 'Editar';
                 $this->editar = true;
@@ -34,9 +45,9 @@ return new class extends clsCadastro {
             }
             if (isset($_POST['novo_editor']) && is_numeric(value: $_POST['novo_editor'])) {
                 $db->Consulta(consulta: "SELECT 1 FROM portal.agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$_POST['novo_editor']}' AND ref_cod_agenda = '{$this->cod_agenda}'");
-                if (! $db->ProximoRegistro()) {
+                if (!$db->ProximoRegistro()) {
                     $db->Consulta(consulta: "SELECT 1 FROM agenda WHERE ref_ref_cod_pessoa_own = '{$_POST['novo_editor']}' AND cod_agenda = '{$this->cod_agenda}'");
-                    if (! $db->ProximoRegistro()) {
+                    if (!$db->ProximoRegistro()) {
                         $db->Consulta(consulta: "INSERT INTO agenda_responsavel ( ref_ref_cod_pessoa_fj, ref_cod_agenda ) VALUES ( '{$_POST['novo_editor']}', '{$this->cod_agenda}' )");
                     } else {
                         $this->mensagem = 'O dono da agenda já é considerado um editor da mesma.';
@@ -71,24 +82,24 @@ return new class extends clsCadastro {
 
         $this->campoTexto(nome: 'nm_agenda', campo: 'Nome da Agenda', valor: $this->nm_agenda, tamanhovisivel: 50, tamanhomaximo: 50);
 
-        $this->campoLista(nome: 'publica', campo: 'Pública', valor: [ 'Não', 'Sim' ], default: $this->publica);
+        $this->campoLista(nome: 'publica', campo: 'Pública', valor: ['Não', 'Sim'], default: $this->publica);
 
-        $this->campoLista(nome: 'envia_alerta', campo: 'Envia Alerta', valor: [ 'Não', 'Sim' ], default: $this->envia_alerta);
+        $this->campoLista(nome: 'envia_alerta', campo: 'Envia Alerta', valor: ['Não', 'Sim'], default: $this->envia_alerta);
 
         $i = 0;
         if ($this->ref_ref_cod_pessoa_own) {
-            list($nome) = $objPessoa->queryRapida($this->ref_ref_cod_pessoa_own, 'nome');
+            [$nome] = $objPessoa->queryRapida($this->ref_ref_cod_pessoa_own, 'nome');
             $this->campoTextoInv(nome: "editor{$i}", campo: 'Editores', valor: $nome, tamanhovisivel: 50, tamanhomaximo: 255);
         }
 
-        $lista = [ 'Pesquise a pessoa clicando no botao ao lado' ];
+        $lista = ['Pesquise a pessoa clicando no botao ao lado'];
 
         if ($this->cod_agenda) {
             $db->Consulta(consulta: "SELECT ref_ref_cod_pessoa_fj FROM portal.agenda_responsavel WHERE ref_cod_agenda = '{$this->cod_agenda}'");
             while ($db->ProximoRegistro()) {
                 $i++;
-                list($idpes) = $db->Tupla();
-                list($nome) = $objPessoa->queryRapida($idpes, 'nome');
+                [$idpes] = $db->Tupla();
+                [$nome] = $objPessoa->queryRapida($idpes, 'nome');
                 $this->campoTextoInv(nome: "editor{$i}", campo: 'Editores', valor: $nome, tamanhovisivel: 50, tamanhomaximo: 255, obrigatorio: false, expressao: false, duplo: false, descricao: false, descricao2: "<a href=\"agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_rem=$idpes\">remover</a>");
             }
             //$this->campoListaPesq( "novo_editor", "Novo Editor", $lista, 0, "pesquisa_funcionario.php", false, false, false, "&nbsp; &nbsp; &nbsp; <a href=\"javascript:var idpes = document.getElementById('novo_editor').value; if( idpes != 0 ) { document.location.href='agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_add=' + idpes; } else { alert( 'Selecione a pessoa clicando na imagem da Lupa' ); }\">Adicionar</a>" );

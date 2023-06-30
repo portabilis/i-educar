@@ -3,7 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         DB::unprepared('DROP TRIGGER IF EXISTS pmieducarmatricula_excessao_audit ON pmieducar.matricula_excessao;');

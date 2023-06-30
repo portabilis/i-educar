@@ -32,7 +32,7 @@ trait LegacySoftDeletes
             $this->casts[$this->getDeletedAtColumn()] = 'integer';
         }
         $this->legacy = array_unique(array_merge($this->legacy, [
-            'active' => 'ativo'
+            'active' => 'ativo',
         ]));
     }
 
@@ -108,10 +108,10 @@ trait LegacySoftDeletes
 
         $this->{$this->getDeletedAtColumn()} = 0;
 
-        if ($this->timestamps && ! is_null($this->getUpdatedAtColumn())) {
+        if ($this->timestamps && !is_null($this->getUpdatedAtColumn())) {
             $this->{$this->getUpdatedAtColumn()} = $time;
 
-            $columns[ $this->getUpdatedAtColumn() ] = $this->fromDateTime($time);
+            $columns[$this->getUpdatedAtColumn()] = $this->fromDateTime($time);
         }
 
         $query->update($columns);

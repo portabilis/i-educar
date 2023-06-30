@@ -15,14 +15,8 @@ class ResourceEvaluationRuleTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @var LegacyInstitution
-     */
     private LegacyInstitution $institution;
 
-    /**
-     * @var string
-     */
     private string $route = 'api.resource.evaluation-rule';
 
     protected function setUp(): void
@@ -32,12 +26,12 @@ class ResourceEvaluationRuleTest extends TestCase
         $this->institution = LegacyInstitutionFactory::new()->unique()->make();
 
         $average_formula = LegacyAverageFormulaFactory::new()->create([
-            'instituicao_id' => $this->institution->id
+            'instituicao_id' => $this->institution->id,
         ]);
 
         LegacyEvaluationRuleFactory::new()->count(2)->create([
             'formula_media_id' => $average_formula->id,
-            'instituicao_id' => $this->institution->id
+            'instituicao_id' => $this->institution->id,
         ]);
     }
 
@@ -50,13 +44,13 @@ class ResourceEvaluationRuleTest extends TestCase
             'data' => [
                 '*' => [
                     'id',
-                    'name'
-                ]
-            ]
+                    'name',
+                ],
+            ],
         ]);
 
         $evaluation_rules = LegacyEvaluationRule::getResource([
-            'institution' =>$this->institution->id
+            'institution' => $this->institution->id,
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($evaluation_rules) {

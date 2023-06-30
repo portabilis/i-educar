@@ -3,7 +3,8 @@
 use App\Support\Database\AuditTrigger;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     use AuditTrigger;
 
     public function getSkippedTables()
@@ -28,7 +29,7 @@ return new class () extends Migration {
             'pmieducar.matricula_turma_excluidos',
             'public.migrations',
             'migrations',
-            'reports_counts'
+            'reports_counts',
         ]);
     }
 

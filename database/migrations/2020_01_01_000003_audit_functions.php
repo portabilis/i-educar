@@ -9,7 +9,6 @@ class AuditFunctions extends Migration
      * Return SQL to drop a function.
      *
      * @param string $function
-     *
      * @return string
      */
     private function getSqlForDropFunction($function)
@@ -24,10 +23,10 @@ class AuditFunctions extends Migration
      */
     private function getSqlForAuditContextFunction()
     {
-        return <<<SQL
+        return <<<'SQL'
 create function audit_context()
 returns json as
-\$function$
+$function$
 begin
 	begin
 		return current_setting('audit.context');
@@ -35,7 +34,7 @@ begin
 		return json_build_object('user_id', 0, 'user_name', session_user);
 	end;
 end;
-\$function$
+$function$
 language plpgsql;
 SQL;
     }
@@ -47,10 +46,10 @@ SQL;
      */
     private function getSqlForAuditEnabledFunction()
     {
-        return <<<SQL
+        return <<<'SQL'
 create function audit_enabled()
 returns boolean as
-\$function$
+$function$
 begin
 	begin
 		return current_setting('audit.enabled');
@@ -58,7 +57,7 @@ begin
 		return true;
 	end;
 end;
-\$function$
+$function$
 language plpgsql;
 SQL;
     }
@@ -70,10 +69,10 @@ SQL;
      */
     private function getSqlForAuditFunction()
     {
-        return <<<SQL
+        return <<<'SQL'
 create function public.audit()
 returns trigger as
-\$function$
+$function$
 begin
 	if (audit_enabled() = false) then
 		return null;
@@ -102,7 +101,7 @@ begin
 
 	return null;
 end;
-\$function$
+$function$
 language plpgsql;
 SQL;
     }

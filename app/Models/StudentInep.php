@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * StudentInep
  *
  * @property LegacyStudent $student
- *
  */
 class StudentInep extends LegacyModel
 {
@@ -21,19 +20,16 @@ class StudentInep extends LegacyModel
         'cod_aluno',
         'cod_aluno_inep',
         'nome_inep',
-        'fonte'
+        'fonte',
     ];
 
     public array $legacy = [
         'student_id' => 'cod_aluno',
         'number' => 'cod_aluno_inep',
         'name' => 'nome_inep',
-        'font' => 'fonte'
+        'font' => 'fonte',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'cod_aluno');

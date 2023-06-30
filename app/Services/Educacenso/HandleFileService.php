@@ -28,10 +28,6 @@ class HandleFileService
      */
     private $jobs;
 
-    /**
-     * @param ImportService $yearImportService
-     * @param User          $user
-     */
     public function __construct(ImportService $yearImportService, User $user)
     {
         $this->yearImportService = $yearImportService;
@@ -40,8 +36,6 @@ class HandleFileService
 
     /**
      * Processa o arquivo de importação do censo
-     *
-     * @param UploadedFile $file
      */
     public function handleFile(UploadedFile $file)
     {
@@ -60,7 +54,6 @@ class HandleFileService
     /**
      * Cria o processo de importação de uma escola
      *
-     * @param $school
      * @param $year
      */
     public function createImportProcess($school)

@@ -5,9 +5,13 @@ namespace iEducar\Modules\Educacenso\Model;
 class Banheiros
 {
     public const BANHEIRO = 1;
+
     public const BANHEIRO_FUNCIONARIOS = 2;
+
     public const BANHEIRO_CHUVEIRO = 3;
+
     public const BANHEIRO_EDUCACAO_INFANTIL = 4;
+
     public const BANHEIRO_ACESSIVEL = 5;
 
     public static function getDescriptiveValues()

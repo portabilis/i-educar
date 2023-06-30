@@ -29,7 +29,7 @@ class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_He
             'label_hint' => '',
             'inline' => false,
             'callback' => false,
-            'disabled' => false
+            'disabled' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

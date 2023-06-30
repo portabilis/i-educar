@@ -20,7 +20,6 @@ class AuthenticatedUser
     /**
      * Handle the event.
      *
-     * @param Authenticated $event
      *
      * @throws ValidationException
      */
@@ -30,7 +29,7 @@ class AuthenticatedUser
             Auth::logout();
 
             throw ValidationException::withMessages([
-                $event->user->login => __('auth.inactive')
+                $event->user->login => __('auth.inactive'),
             ]);
         }
 
@@ -40,7 +39,7 @@ class AuthenticatedUser
             Auth::logout();
 
             throw ValidationException::withMessages([
-                $event->user->login => __('auth.expired')
+                $event->user->login => __('auth.expired'),
             ]);
         }
     }

@@ -14,7 +14,7 @@ class PeriodServiceTest extends TestCase
     private $service;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function setUp(): void
     {

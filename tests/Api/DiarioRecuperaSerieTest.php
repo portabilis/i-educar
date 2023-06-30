@@ -22,7 +22,7 @@ class DiarioRecuperaSerieTest extends TestCase
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         LegacySchoolGradeFactory::new()->create([
@@ -33,7 +33,7 @@ class DiarioRecuperaSerieTest extends TestCase
         $data = [
             'oper' => 'get',
             'resource' => 'series',
-            'instituicao_id' => $course->ref_cod_instituicao
+            'instituicao_id' => $course->ref_cod_instituicao,
         ];
 
         $response = $this->getResource('/module/Api/Serie', $data);
@@ -48,20 +48,20 @@ class DiarioRecuperaSerieTest extends TestCase
                             'nome' => mb_strtoupper($level->name),
                             'idade_padrao' => $level->idade_ideal,
                             'curso_id' => $level->course_id,
-                            'deleted_at' => null
-                        ]
+                            'deleted_at' => null,
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'series',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             )->assertJsonStructure(
                 [
                     'series' => [
                         [
                             'updated_at',
-                        ]
+                        ],
                     ],
                 ]
             );

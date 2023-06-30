@@ -1,24 +1,39 @@
 <?php
 
 use App\Models\LegacyCalendarDayReason;
-use App\Models\LegacyInstitution;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_calendario_dia_motivo;
+
     public $ref_cod_escola;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $sigla;
+
     public $descricao;
+
     public $tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_motivo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -26,14 +41,14 @@ return new class extends clsListagem {
         $this->titulo = 'Calendário Dia Motivo - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
             'Motivo',
             'Tipo',
             'Escola',
-            'Instituição'
+            'Instituição',
         ];
 
         $obj_permissao = new clsPermissoes();
@@ -73,7 +88,7 @@ return new class extends clsListagem {
                 "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->name}</a>",
                 "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->type}</a>",
                 "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->school_name}</a>",
-                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->institution_name}</a>"
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->institution_name}</a>",
             ];
             $this->addLinhas($lista_busca);
         }

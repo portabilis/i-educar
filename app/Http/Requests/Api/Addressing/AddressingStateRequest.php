@@ -13,7 +13,7 @@ class AddressingStateRequest extends FormRequest
             'name' => ['required', 'max:255', Rule::unique('states')->ignore($this->route('state'))],
             'abbreviation' => ['required', 'min:2', 'max:3', Rule::unique('states')->ignore($this->route('state'))],
             'country_id' => ['required', Rule::exists('countries', 'id')],
-            'ibge_code' => ['nullable', 'integer', Rule::unique('states')->ignore($this->route('state'))]
+            'ibge_code' => ['nullable', 'integer', Rule::unique('states')->ignore($this->route('state'))],
         ];
     }
 
@@ -23,7 +23,7 @@ class AddressingStateRequest extends FormRequest
             'name' => 'Nome',
             'abbreviation' => 'Abreviatura',
             'country_id' => 'País',
-            'ibge_code' => 'Código Ibge'
+            'ibge_code' => 'Código Ibge',
         ];
     }
 }

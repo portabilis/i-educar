@@ -8,7 +8,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Porta
             'objectName' => 'logradouro',
             'apiController' => 'Logradouro',
             'apiResource' => 'logradouro-search',
-            'showIdOnValue' => false
+            'showIdOnValue' => false,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

@@ -104,7 +104,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $valor,
             $tamanho,
             $descricao,
-            'tr_invisivel' => $tr_invisivel
+            'tr_invisivel' => $tr_invisivel,
         ];
 
         $this->form_enctype = ' enctype=\'multipart/form-data\'';
@@ -128,7 +128,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             (8 + @strlen($hifen)),
             'nnnnn-nnn',
             $descricao,
-            ($disable) ? 'disabled' : ''
+            ($disable) ? 'disabled' : '',
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -145,7 +145,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $label,
             $filtro = '',
             $opcoes,
-            $selecionados
+            $selecionados,
         ];
 
         $this->campos[$nome] = $opcoesCampo;
@@ -169,7 +169,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $desc,
             $script,
             $dica,
-            ($disable) ? 'disabled' : ''
+            ($disable) ? 'disabled' : '',
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -188,7 +188,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $valor,
             20,
             18,
-            'nn.nnn.nnn/nnnn-nn'
+            'nn.nnn.nnn/nnnn-nn',
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -215,7 +215,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             18,
             'nn.nnn.nnn/nnnn-nn',
             $arquivo_pesquisa,
-            $parametros_serializados
+            $parametros_serializados,
         ];
     }
 
@@ -231,7 +231,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             'nnn.nnn.nnn-nn',
             $descricao,
             $disabled,
-            $onChange
+            $onChange,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -252,7 +252,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             13,
             'nnn.nnn.nnn-n ou nnn.nnn.nnn',
             $descricao,
-            $disabled
+            $disabled,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -278,7 +278,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             20,
             18,
             'nnn.nnn.nnn-nn ou nn.nnn.nnn/nnnn-nn',
-            $invisivel ? 'disabled' : '', $descricao
+            $invisivel ? 'disabled' : '', $descricao,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -369,7 +369,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             'hh:mm',
             $descricao,
             $acao,
-            $desabilitado ? 'disabled="disabled"' : ''
+            $desabilitado ? 'disabled="disabled"' : '',
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -390,7 +390,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             5,
             'hh:mm',
             $descricao,
-            $acao
+            $acao,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -429,7 +429,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $descricao,
             $complemento,
             $desabilitado ? 'disabled=\'disabled\'' : '',
-            $multiple
+            $multiple,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -491,7 +491,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled,
             $div,
             $serializedcampos,
-            $obrigatorio
+            $obrigatorio,
         ];
     }
 
@@ -521,7 +521,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $duplo,
             $evento,
             $script,
-            $disabled
+            $disabled,
         ];
     }
 
@@ -550,7 +550,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $descricao2,
             $script,
             $evento,
-            $disabled
+            $disabled,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -587,7 +587,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $evento,
             $disabled,
             $show_sub,
-            $descricao2
+            $descricao2,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -603,7 +603,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             'oculto',
             $nome,
             '',
-            $valor
+            $valor,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -622,7 +622,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $valor,
             $default,
             $acao,
-            $descricao
+            $descricao,
         ];
     }
 
@@ -634,7 +634,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             '',
             $valor,
             6 => $descricao,
-            'separador' => $campo == '' ? '' : $separador
+            'separador' => $campo == '' ? '' : $separador,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -653,7 +653,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $valor,
             10,
             100,
-            $descricao
+            $descricao,
         ];
     }
 
@@ -683,7 +683,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $descricao2,
             $script,
             $evento,
-            $disabled
+            $disabled,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -715,7 +715,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $tamanhomaximo,
             $descricao,
             $descricao2,
-            $script
+            $script,
         ];
     }
 
@@ -749,7 +749,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $serializedcampos,
             $disabled,
             $script,
-            $evento
+            $evento,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -786,7 +786,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $descricao2,
             $script,
             $evento,
-            $name
+            $name,
         ];
     }
 
@@ -806,7 +806,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             '',
             '',
             '',
-            ''
+            '',
         ];
 
         $this->num_espaco++;
@@ -1172,9 +1172,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                     $lista = array_shift($array_valores_lista);
                                 }
 
-                                $lista = is_array($lista) && sizeof($lista) ? $lista : $campo_[3];
-
-
+                                $lista = is_array($lista) && count($lista) ? $lista : $campo_[3];
 
                                 $retorno .= $this->getCampoLista("{$nome}[{$key2}]", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]);
                                 break;
@@ -1220,7 +1218,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     if (is_array($campos_oculto)) {
                         foreach ($campos_oculto as $key_oculto => $campo_oculto) {
-                            $key_oculto = $key_oculto + sizeof($cabecalho);
+                            $key_oculto = $key_oculto + count($cabecalho);
 
                             $campo_oculto[3] = $campo_oculto[3] ?
                                 $campo_oculto[3] : $valor[$key_oculto];
@@ -1250,6 +1248,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $retorno .= '</td></tr>';
 
                 $retorno .= "<script  type='text/javascript'>$javascript</script>";
+
                 continue;
             }
 
@@ -1271,9 +1270,11 @@ class clsCampos extends Core_Controller_Page_Abstract
             } elseif // Separador: insere uma linha preta
             ($componente[0] == 'linha_preta') {
                 $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};' colspan='2' height='{$componente['altura']}'></td></tr>";
+
                 continue;
             } elseif ($componente[0] == 'espaco') {
                 $retorno .= '<tr><td colspan=\'2\'><hr></td></tr>';
+
                 continue;
             } elseif ($componente[0] != 'oculto') {
                 $tipo = $componente[0];
@@ -1372,7 +1373,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'hora':
-                        $componente[3] = (strlen($componente[3]) < 6  || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
+                        $componente[3] = (strlen($componente[3]) < 6 || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
                         $segundos = ($componente[5] != 5) ? 'true' : 'false';
                         $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
                         break;
@@ -1618,7 +1619,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $retorno .= ">$texto</option>";
                         }
 
-
                         $retorno .= '</select>';
                         $foiDuplo = true;
                         break;
@@ -1640,7 +1640,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'radio':
                         $primeiro = true;
-
 
                         $retorno .= "<span onclick=\"{$componente[5]}\" >";
 
@@ -1675,7 +1674,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $tmpRetorno[] = $tmpInput;
                         }
 
-                        $retorno .= join('<br>', $tmpRetorno);
+                        $retorno .= implode('<br>', $tmpRetorno);
                         break;
                 } // endswitch
 

@@ -6,10 +6,6 @@ class LegacyAcademicYearStageBuilder extends LegacyBuilder
 {
     /**
      * Filtra por anos maiores e iguais
-     *
-     * @param int $year
-     *
-     * @return LegacyAcademicYearStageBuilder
      */
     public function whereYearGte(int $year): self
     {
@@ -18,10 +14,6 @@ class LegacyAcademicYearStageBuilder extends LegacyBuilder
 
     /**
      * Filtra por ano
-     *
-     * @param int $year
-     *
-     * @return LegacyAcademicYearStageBuilder
      */
     public function whereYearEq(int $year): self
     {
@@ -30,10 +22,6 @@ class LegacyAcademicYearStageBuilder extends LegacyBuilder
 
     /**
      * Filtra por escola
-     *
-     * @param int $school
-     *
-     * @return LegacyAcademicYearStageBuilder
      */
     public function whereSchool(int $school): self
     {
@@ -42,8 +30,6 @@ class LegacyAcademicYearStageBuilder extends LegacyBuilder
 
     /**
      * Ordena por Sequencial
-     *
-     * @return LegacyAcademicYearStageBuilder
      */
     public function orderBySequencial(): self
     {

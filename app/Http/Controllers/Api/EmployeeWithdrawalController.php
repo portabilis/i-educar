@@ -20,7 +20,7 @@ class EmployeeWithdrawalController extends Controller
             return response()->json(
                 [
                     'error' => false,
-                    'message' => 'Erro ao atualizar o afastamento do servidor'
+                    'message' => 'Erro ao atualizar o afastamento do servidor',
                 ]
             );
         }

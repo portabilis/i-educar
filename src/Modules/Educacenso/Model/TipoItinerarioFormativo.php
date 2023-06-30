@@ -5,10 +5,15 @@ namespace iEducar\Modules\Educacenso\Model;
 class TipoItinerarioFormativo
 {
     public const LINGUANGENS = 1;
+
     public const MATEMATICA = 2;
+
     public const CIENCIAS_NATUREZA = 3;
+
     public const CIENCIAS_HUMANAS = 4;
+
     public const FORMACAO_TECNICA = 5;
+
     public const ITINERARIO_INTEGRADO = 6;
 
     public static function getDescriptiveValues()

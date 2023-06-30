@@ -18,7 +18,7 @@ class IncompatibleChangeToMultiGrades implements Rule
         $legacySchoolClass = $value[0];
 
         $changeToMulti = (int) $legacySchoolClass->multiseriada === 1 && $legacySchoolClass->originalMultiGradesInfo === 0;
-        $notFindOriginalGrade = ! in_array($legacySchoolClass->originalGrade, $grades);
+        $notFindOriginalGrade = !in_array($legacySchoolClass->originalGrade, $grades);
         $containsActiveEnrollments = $legacySchoolClass->getTotalEnrolled() > 0;
 
         if ($changeToMulti && $notFindOriginalGrade && $containsActiveEnrollments) {

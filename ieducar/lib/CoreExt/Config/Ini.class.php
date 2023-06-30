@@ -48,7 +48,6 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * Verifica se possui a seção desejada.
      *
      * @param string $section
-     *
      * @return bool
      */
     public function hasEnviromentSection($section)
@@ -76,10 +75,9 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * @link    http://php.net/parse_ini_file  Documentação da função parse_ini_file
      *
      * @param string $filename
+     * @return array
      *
      * @throws Exception
-     *
-     * @return array
      */
     private function loadFile($filename)
     {
@@ -165,7 +163,6 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * </code>
      *
      * @param array $data Array contendo as diretivas de uma seção do arquivo ini
-     *
      * @return array
      */
     private function processSection(array $data)
@@ -205,7 +202,6 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * @param mixed $value  O valor da diretiva parseada por parse_ini_file
      * @param array $keys   O array contendo as chaves das diretivas (0 => app, 1 => database, 2 => dbname)
      * @param array $config O array contêiner com as chaves em suas respectivas dimensões
-     *
      * @return array
      */
     private function processDirectives($value, $keys, $config = [])
@@ -232,7 +228,6 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * @param array  $array
      * @param string $key
      * @param mixed  $value
-     *
      * @return mixed
      */
     private function dotCompact($array, $key, $value)
@@ -254,7 +249,6 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * Retorna uma array com as configurações que existiam no arquivo .ini.
      *
      * @param string $tenant
-     *
      * @return array
      */
     public function getSettings($tenant)
@@ -264,7 +258,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
         });
 
         if (empty($item)) {
-            $item = collect($this->iniArr)->first(function ($item, $key) use ($tenant) {
+            $item = collect($this->iniArr)->first(function ($item, $key) {
                 return $key === 'production';
             });
         }

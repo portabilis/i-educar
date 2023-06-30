@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class LegacyCalendarDayReasonTest extends EloquentTestCase
 {
     public $relationships = [
-        'school' => LegacySchool::class
+        'school' => LegacySchool::class,
     ];
 
     protected function getEloquentModelName()

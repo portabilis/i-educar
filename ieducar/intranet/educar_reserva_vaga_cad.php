@@ -1,23 +1,35 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_escola;
+
     public $ref_cod_serie;
+
     public $ref_cod_aluno;
+
     public $nm_aluno;
+
     public $nm_aluno_;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $passo;
+
     public $nm_aluno_ext;
+
     public $cpf_responsavel;
+
     public $tipo_aluno;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
-        $this->ref_cod_serie  = $_GET['ref_cod_serie'];
+        $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
         $obj_permissoes = new clsPermissoes();
@@ -31,8 +43,8 @@ return new class extends clsCadastro {
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb(currentPage: $nomeMenu . ' reserva de vaga', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
 
         return $retorno;
     }
@@ -53,7 +65,7 @@ return new class extends clsCadastro {
             alert(\'Aluno já possui reserva de vaga!\\nNão é possivel realizar a reserva.\');
             window.location = \'educar_reserva_vaga_lst.php\';
           </script>';
-                die();
+                exit();
             }
 
             echo '

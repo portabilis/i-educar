@@ -5,10 +5,15 @@ use iEducar\Legacy\Model;
 class clsPmieducarTurmaModulo extends Model
 {
     public $ref_cod_turma;
+
     public $ref_cod_modulo;
+
     public $sequencial;
+
     public $data_inicio;
+
     public $data_fim;
+
     public $dias_letivos;
 
     public function __construct($ref_cod_turma = null, $ref_cod_modulo = null, $sequencial = null, $data_inicio = null, $data_fim = null, $dias_letivos = null)

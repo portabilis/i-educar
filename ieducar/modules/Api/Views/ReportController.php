@@ -4,26 +4,23 @@ use iEducar\Reports\Contracts\TeacherReportCard;
 
 class ReportController extends ApiCoreController
 {
-
     // validations
     protected function canGetBoletim()
     {
-        return (
+        return
             $this->validatesId('escola') &&
-            $this->validatesId('matricula')
-        );
+            $this->validatesId('matricula');
     }
 
     protected function canGetBoletimProfessor()
     {
-        return (
+        return
             $this->validatesId('instituicao') &&
             $this->validatesPresenceOf('ano') &&
             $this->validatesId('escola') &&
             $this->validatesId('serie') &&
             $this->validatesId('turma') &&
-            $this->validatesPresenceOf('componente_curricular_id')
-        );
+            $this->validatesPresenceOf('componente_curricular_id');
     }
 
     // load
@@ -60,7 +57,7 @@ class ReportController extends ApiCoreController
             'escola_id',
             'curso_id',
             'serie_id',
-            'turma_id'
+            'turma_id',
         ];
 
         return Portabilis_Array_Utils::filter($dadosMatricula, $attrs);
@@ -77,7 +74,7 @@ class ReportController extends ApiCoreController
             return [
                 'matricula_id' => $this->getRequest()->matricula_id,
                 'encoding' => 'base64',
-                'encoded' => base64_encode($encoded)
+                'encoded' => base64_encode($encoded),
             ];
         }
     }
@@ -88,22 +85,22 @@ class ReportController extends ApiCoreController
             return '';
         }
 
-        $boletimReport =  new BoletimReport();
+        $boletimReport = new BoletimReport();
 
-        $boletimReport->addArg('matricula', (int)$dadosMatricula['id']);
-        $boletimReport->addArg('ano', (int)$dadosMatricula['ano']);
-        $boletimReport->addArg('instituicao', (int)$dadosMatricula['instituicao_id']);
-        $boletimReport->addArg('escola', (int)$dadosMatricula['escola_id']);
-        $boletimReport->addArg('curso', (int)$dadosMatricula['curso_id']);
-        $boletimReport->addArg('serie', (int)$dadosMatricula['serie_id']);
-        $boletimReport->addArg('turma', (int)$dadosMatricula['turma_id']);
+        $boletimReport->addArg('matricula', (int) $dadosMatricula['id']);
+        $boletimReport->addArg('ano', (int) $dadosMatricula['ano']);
+        $boletimReport->addArg('instituicao', (int) $dadosMatricula['instituicao_id']);
+        $boletimReport->addArg('escola', (int) $dadosMatricula['escola_id']);
+        $boletimReport->addArg('curso', (int) $dadosMatricula['curso_id']);
+        $boletimReport->addArg('serie', (int) $dadosMatricula['serie_id']);
+        $boletimReport->addArg('turma', (int) $dadosMatricula['turma_id']);
         $boletimReport->addArg('situacao_matricula', 10);
         $boletimReport->addArg('areas_conhecimento', $dadosMatricula['areas_conhecimento'] ?? '0');
-        $boletimReport->addArg('situacao', (int)$dadosMatricula['situacao'] ?? 0);
+        $boletimReport->addArg('situacao', (int) $dadosMatricula['situacao'] ?? 0);
         $boletimReport->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
 
         if ($this->getRequest()->etapa) {
-            $boletimReport->addArg('etapa', (int)$this->getRequest()->etapa);
+            $boletimReport->addArg('etapa', (int) $this->getRequest()->etapa);
         }
 
         $encoding = 'base64';
@@ -117,14 +114,14 @@ class ReportController extends ApiCoreController
         if ($this->canGetBoletimProfessor()) {
             $boletimProfessorReport = app(TeacherReportCard::class);
 
-            $boletimProfessorReport->addArg('ano', (int)$this->getRequest()->ano);
-            $boletimProfessorReport->addArg('instituicao', (int)$this->getRequest()->instituicao_id);
-            $boletimProfessorReport->addArg('escola', (int)$this->getRequest()->escola_id);
-            $boletimProfessorReport->addArg('curso', (int)$this->getRequest()->curso_id);
-            $boletimProfessorReport->addArg('serie', (int)$this->getRequest()->serie_id);
-            $boletimProfessorReport->addArg('turma', (int)$this->getRequest()->turma_id);
+            $boletimProfessorReport->addArg('ano', (int) $this->getRequest()->ano);
+            $boletimProfessorReport->addArg('instituicao', (int) $this->getRequest()->instituicao_id);
+            $boletimProfessorReport->addArg('escola', (int) $this->getRequest()->escola_id);
+            $boletimProfessorReport->addArg('curso', (int) $this->getRequest()->curso_id);
+            $boletimProfessorReport->addArg('serie', (int) $this->getRequest()->serie_id);
+            $boletimProfessorReport->addArg('turma', (int) $this->getRequest()->turma_id);
             $boletimProfessorReport->addArg('professor', $this->getRequest()->professor);
-            $boletimProfessorReport->addArg('disciplina', (int)$this->getRequest()->componente_curricular_id);
+            $boletimProfessorReport->addArg('disciplina', (int) $this->getRequest()->componente_curricular_id);
             $boletimProfessorReport->addArg('orientacao', 2);
             $boletimProfessorReport->addArg('situacao', (int) $this->getRequest()->situacao ?? 0);
 
@@ -141,15 +138,15 @@ class ReportController extends ApiCoreController
 
             $dumpsOptions = [
                 'options' => [
-                    'encoding' => $encoding
-                ]
+                    'encoding' => $encoding,
+                ],
             ];
 
             $encoded = $boletimProfessorReport->dumps($dumpsOptions);
 
             return [
                 'encoding' => $encoding,
-                'encoded' => base64_encode($encoded)
+                'encoded' => base64_encode($encoded),
             ];
         }
     }

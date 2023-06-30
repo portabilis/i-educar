@@ -15,7 +15,7 @@ class LegacyCourseTest extends EloquentTestCase
         'grades' => LegacyGrade::class,
         'educationType' => LegacyEducationType::class,
         'educationLevel' => LegacyEducationLevel::class,
-        'institution' => LegacyInstitution::class
+        'institution' => LegacyInstitution::class,
     ];
 
     /**

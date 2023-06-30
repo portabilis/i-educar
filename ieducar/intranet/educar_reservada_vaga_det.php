@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Referência a usuário da sessão
      *
@@ -17,13 +18,21 @@ return new class extends clsDetalhe {
 
     // Atributos de mapeamento da tabela pmieducar.reserva_vaga
     public $cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     /**
@@ -78,8 +87,8 @@ return new class extends clsDetalhe {
 
         // Atribui códigos a variáveis de instância
         $this->ref_cod_escola = $registro['ref_ref_cod_escola'];
-        $this->ref_cod_curso  = $registro['ref_cod_curso'];
-        $this->ref_cod_serie  = $registro['ref_ref_cod_serie'];
+        $this->ref_cod_curso = $registro['ref_cod_curso'];
+        $this->ref_cod_serie = $registro['ref_ref_cod_serie'];
         $this->ref_cod_instituicao = $registro['ref_cod_instituicao'];
 
         // Desativa o pedido de reserva de vaga
@@ -153,7 +162,7 @@ return new class extends clsDetalhe {
         $obj_permissao = new clsPermissoes();
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 639, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao = ['Emissão de Documento de Reserva de Vaga', 'Desativar Reserva'];
-            $this->array_botao_url_script = ["showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatório de Solicitação de transferência\")","go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")"];
+            $this->array_botao_url_script = ["showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatório de Solicitação de transferência\")", "go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")"];
         }
 
         $this->url_cancelar = 'educar_reservada_vaga_lst.php?ref_cod_escola=' .
@@ -161,8 +170,8 @@ return new class extends clsDetalhe {
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Detalhe da vaga reservada', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     /**

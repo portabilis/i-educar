@@ -29,7 +29,7 @@ if (is_numeric(value: $_GET['ins'])) {
     );
 
     while ($db->ProximoRegistro()) {
-        list($cod, $nome) = $db->Tupla();
+        [$cod, $nome] = $db->Tupla();
         echo "  <usuario cod_usuario=\"{$cod}\">{$nome}</usuario>\n";
     }
 
@@ -54,7 +54,7 @@ if (is_numeric(value: $_GET['ins'])) {
     );
 
     while ($db->ProximoRegistro()) {
-        list($cod, $nome) = $db->Tupla();
+        [$cod, $nome] = $db->Tupla();
         echo "  <usuario cod_usuario=\"{$cod}\">{$nome}</usuario>\n";
     }
 } elseif (is_numeric(value: $_GET['esc'])) {
@@ -83,7 +83,7 @@ if (is_numeric(value: $_GET['ins'])) {
     );
 
     while ($db->ProximoRegistro()) {
-        list($cod, $nome) = $db->Tupla();
+        [$cod, $nome] = $db->Tupla();
         echo "  <usuario cod_usuario=\"{$cod}\">{$nome}</usuario>\n";
     }
 
@@ -110,7 +110,7 @@ if (is_numeric(value: $_GET['ins'])) {
     );
 
     while ($db->ProximoRegistro()) {
-        list($cod, $nome) = $db->Tupla();
+        [$cod, $nome] = $db->Tupla();
         echo "  <usuario cod_usuario=\"{$cod}\">{$nome}</usuario>\n";
     }
 }

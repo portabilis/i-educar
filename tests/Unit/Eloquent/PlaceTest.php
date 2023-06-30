@@ -11,12 +11,9 @@ class PlaceTest extends EloquentTestCase
 {
     protected $relations = [
         'city' => City::class,
-        'personHasPlace' => PersonHasPlace::class
+        'personHasPlace' => PersonHasPlace::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return Place::class;

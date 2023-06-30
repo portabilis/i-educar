@@ -14,7 +14,7 @@ class App_Model_Educacenso
 
     public static function etapasDaTurma($etapaEnsino)
     {
-        return match ((string)$etapaEnsino) {
+        return match ((string) $etapaEnsino) {
             '3' => [1, 2],
             '22', '23' => [14, 15, 16, 17, 18, 19, 20, 21, 41],
             '56' => [1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 41],

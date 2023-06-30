@@ -9,7 +9,6 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
 {
     /**
      * Bootstrap the application services.
-     *
      */
     public function boot()
     {
@@ -28,7 +27,6 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
 
     /**
      * Register the application services.
-     *
      */
     public function register()
     {

@@ -19,7 +19,7 @@ class StudentTest extends ViewTestCase
         'registrations' => Registration::class,
         'createdBy' => Individual::class,
         'deletedBy' => Individual::class,
-        'unification' => LogUnification::class
+        'unification' => LogUnification::class,
     ];
 
     protected function getViewModelName(): string

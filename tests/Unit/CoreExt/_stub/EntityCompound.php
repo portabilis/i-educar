@@ -5,11 +5,11 @@ class CoreExt_EntityCompoundStub extends CoreExt_Entity
     protected $_data = [
         'pessoa' => null,
         'curso' => null,
-        'confirmado' => null
+        'confirmado' => null,
     ];
 
     protected $_dataTypes = [
-        'confirmado' => 'bool'
+        'confirmado' => 'bool',
     ];
 
     public function __construct($options = [])

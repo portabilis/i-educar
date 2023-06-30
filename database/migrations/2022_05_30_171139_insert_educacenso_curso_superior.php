@@ -3,7 +3,8 @@
 use App\Models\EducacensoDegree;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -22,7 +23,7 @@ return new class () extends Migration {
                     'nome' => $data[1],
                     'grau_academico' => $data[2],
                     'classe_id' => $data[3],
-                    'user_id' => 1
+                    'user_id' => 1,
                 ]
             );
         }

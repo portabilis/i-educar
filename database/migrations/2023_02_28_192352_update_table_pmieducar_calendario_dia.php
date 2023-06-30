@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         DB::unprepared('ALTER TABLE IF EXISTS modules.calendario_turma DROP CONSTRAINT IF EXISTS calendario_turma_calendario_dia_fk;');
@@ -32,7 +33,7 @@ return new class () extends Migration {
             $table->unique([
                 'ref_cod_calendario_ano_letivo',
                 'mes',
-                'dia'
+                'dia',
             ]);
         });
 

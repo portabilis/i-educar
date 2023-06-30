@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -11,16 +12,20 @@ return new class extends clsCadastro {
     public $ref_cod_matricula;
 
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $formando;
 
     public function Inicializar()
     {
-        foreach ($_GET as $key =>$value) {
+        foreach ($_GET as $key => $value) {
             $this->$key = $value;
         }
 
@@ -29,11 +34,11 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->formando)) {
             $obj = new clsPmieducarMatricula(cod_matricula: $this->ref_cod_matricula, ref_cod_reserva_vaga: null, ref_ref_cod_escola: null, ref_ref_cod_serie: null, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ref_cod_aluno: null, aprovado: null, data_cadastro: null, data_exclusao: null, ativo: null, ano: null, ultima_matricula: null, modulo: null, formando: $this->formando);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
             if ($registro) {
                 if (!$obj->edita()) {
                     echo 'erro ao cadastrar';
-                    die;
+                    exit;
                 }
                 $des = '';
                 if (!$this->formando) {
@@ -48,7 +53,7 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        die;
+        exit;
     }
 
     public function Novo()

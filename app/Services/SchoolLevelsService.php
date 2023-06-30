@@ -9,7 +9,6 @@ class SchoolLevelsService
     /**
      * Retorna as regras de avaliação da série
      *
-     * @param $levelId
      *
      * @return EvaluationRule[]
      */
@@ -27,8 +26,6 @@ class SchoolLevelsService
     /**
      * Verifica se a regra de avaliação da série permite definir componentes por etapa
      *
-     * @param $levelId
-     * @param $academicYear
      *
      * @return bool
      */

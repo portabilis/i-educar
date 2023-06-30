@@ -7,7 +7,9 @@ use App\Contracts\AssetServiceContract;
 class AssetService implements AssetServiceContract
 {
     protected ?string $version;
+
     protected ?bool $secure;
+
     protected bool $automaticVersioning;
 
     public function __construct(?string $version, ?bool $secure = null, bool $automaticVersioning = false)
@@ -41,15 +43,10 @@ class AssetService implements AssetServiceContract
         return asset($this->appendVersionToPath($path), $secure);
     }
 
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
     protected function appendVersionToPath(string $path): string
     {
         $dataUrl = explode('.', $path);
-        if ($dataUrl !== false && ! in_array(last($dataUrl), ['css','js'], true)) {
+        if ($dataUrl !== false && !in_array(last($dataUrl), ['css', 'js'], true)) {
             return $path;
         }
 
@@ -74,7 +71,7 @@ class AssetService implements AssetServiceContract
     protected function getFileVersion(string $path, array $pathUrl): string
     {
         if (preg_match('#^(//|http)#i', $path)) {
-            return ($this->version ?: '');
+            return $this->version ?: '';
         }
 
         //Apenas no caso de estar faltando / no início do caminho
@@ -95,11 +92,6 @@ class AssetService implements AssetServiceContract
         return env('APP_ENV') === 'local' ? bin2hex(random_bytes(5)) : '';
     }
 
-    /**
-     * @param string $path
-     *
-     * @return null|string
-     */
     public function findRealPath(string $path): ?string
     {
         $relPath = public_path($path);

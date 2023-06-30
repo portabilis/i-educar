@@ -12,19 +12,32 @@ use App\Services\iDiarioService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_instituicao;
+
     public $ref_ano;
+
     public $ref_ref_cod_escola;
+
     public $sequencial;
+
     public $ref_cod_modulo;
+
     public $data_inicio;
+
     public $data_fim;
+
     public $ano_letivo_modulo;
+
     public $modulos = [];
+
     public $etapas = [];
+
     public $copiar_alocacoes_e_vinculos_professores;
+
     public $copiar_alocacoes_demais_servidores;
 
     public function Inicializar()
@@ -48,7 +61,7 @@ return new class extends clsCadastro {
             $schoolAcademicYear = LegacySchoolAcademicYear::query()->where(
                 column: [
                     'ref_cod_escola' => $this->ref_ref_cod_escola,
-                    'ano' => $this->ref_ano
+                    'ano' => $this->ref_ano,
                 ]
             )->first();
 
@@ -133,7 +146,7 @@ return new class extends clsCadastro {
                     </tr>";
             }
 
-            $tabela .='</table>';
+            $tabela .= '</table>';
             $tabela .= "<tr><td colspan='2'><b> Adicione as etapas abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
             $tabela .= '</table>';
         }
@@ -171,7 +184,7 @@ return new class extends clsCadastro {
             nome: 'ref_cod_modulo',
             campo: 'Etapa',
             valor: $opcoesCampoModulo,
-            default: \Request::get('ref_cod_modulo',$this->ref_cod_modulo),
+            default: \Request::get('ref_cod_modulo', $this->ref_cod_modulo),
             acao: null,
             duplo: null,
             descricao: null,
@@ -188,7 +201,6 @@ return new class extends clsCadastro {
 
         if (is_numeric(value: $this->ref_ano) && is_numeric(value: $this->ref_ref_cod_escola) && !$_POST) {
             $qtd_registros = 0;
-
 
             if (Request::has('data_inicio')) {
                 foreach (Request::get('data_inicio') as $key => $campo) {
@@ -266,7 +278,7 @@ return new class extends clsCadastro {
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
-            '/intranet/scripts/etapas.js'
+            '/intranet/scripts/etapas.js',
         ]);
 
         $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
@@ -292,6 +304,7 @@ return new class extends clsCadastro {
             $_POST = [];
             $this->Inicializar();
             $this->mensagem = $e->getMessage();
+
             return false;
         }
 
@@ -339,7 +352,7 @@ return new class extends clsCadastro {
                         'ref_cod_modulo' => $this->ref_cod_modulo,
                         'data_inicio' => $this->data_inicio[$key],
                         'data_fim' => $this->data_fim[$key],
-                        'dias_letivos' => $this->dias_letivos[$key]
+                        'dias_letivos' => $this->dias_letivos[$key],
                     ];
                     if ($this->validaAnoLetivoModulo($data)) {
                         $cadastrou1 = $schoolAcademicYear->academicYearStages()->create($data);
@@ -384,6 +397,7 @@ return new class extends clsCadastro {
             $_POST = [];
             $this->Inicializar();
             $this->mensagem = $e->getMessage();
+
             return false;
         }
 
@@ -406,7 +420,7 @@ return new class extends clsCadastro {
             }
 
             if ($excluiu) {
-                $schoolAcademicYear =  LegacySchoolAcademicYear::query()->where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->first();
+                $schoolAcademicYear = LegacySchoolAcademicYear::query()->where('ref_cod_escola', $this->ref_ref_cod_escola)->where('ano', $this->ref_ano)->first();
 
                 foreach ($this->data_inicio as $key => $campo) {
                     $this->data_inicio[$key] = dataToBanco(data_original: $this->data_inicio[$key]);
@@ -425,7 +439,7 @@ return new class extends clsCadastro {
                         'ref_cod_modulo' => $this->ref_cod_modulo,
                         'data_inicio' => $this->data_inicio[$key],
                         'data_fim' => $this->data_fim[$key],
-                        'dias_letivos' => $this->dias_letivos[$key]
+                        'dias_letivos' => $this->dias_letivos[$key],
                     ];
 
                     if ($this->validaAnoLetivoModulo($data)) {
@@ -477,12 +491,12 @@ return new class extends clsCadastro {
         LegacySchoolAcademicYear::query()->where(
             column: [
                 'ref_cod_escola' => $this->ref_ref_cod_escola,
-                'ano' => $this->ref_ano
+                'ano' => $this->ref_ano,
             ]
         )->update([
             'ref_usuario_cad' => $this->pessoa_logada,
             'andamento' => 2,
-            'ativo' => 0
+            'ativo' => 0,
         ]);
 
         $excluiu1 = LegacyAcademicYearStage::query()->where('ref_ref_cod_escola', $this->ref_ref_cod_escola)->where('ref_ano', $this->ref_ano)->delete() >= 0;
@@ -503,8 +517,7 @@ return new class extends clsCadastro {
         $lastSchoolAcademicYear = LegacySchoolAcademicYear::query()
             ->whereSchool(school: $escolaId)
             ->active()
-            ->max(column: 'ano')
-        ;
+            ->max(column: 'ano');
 
         $turmasEscola = (new clsPmieducarTurma())->lista(
             int_ref_ref_cod_escola: $escolaId,
@@ -535,7 +548,7 @@ return new class extends clsCadastro {
             $turmaOrigem['ref_ref_cod_escola'],
             $turmaOrigem['nm_turma'],
             $turmaOrigem['ref_ref_cod_serie'],
-            $anoDestino
+            $anoDestino,
         ];
 
         $existe = Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $params);
@@ -579,7 +592,7 @@ return new class extends clsCadastro {
                 'cod_curso_profissional',
                 'tipo_mediacao_didatico_pedagogico',
                 'nao_informar_educacenso',
-                'local_funcionamento_diferenciado'
+                'local_funcionamento_diferenciado',
             ];
 
             $turmaDestino = new clsPmieducarTurma();
@@ -624,7 +637,7 @@ return new class extends clsCadastro {
                 column: [
                     'ano' => $destinationYear,
                     'turma_id' => $destinationSchoolClassId,
-                    'servidor_id' => $schoolClassTeacher->servidor_id
+                    'servidor_id' => $schoolClassTeacher->servidor_id,
                 ]
             )->exists();
 
@@ -648,14 +661,13 @@ return new class extends clsCadastro {
     ) {
         $schoolClassTeacherDisciplines = LegacySchoolClassTeacherDiscipline::query()
             ->where(column: 'professor_turma_id', operator: $schoolClassTeacher->getKey())
-            ->get()
-        ;
+            ->get();
 
         /** @var LegacySchoolClassTeacherDiscipline $schoolClassTeacherDiscipline */
         foreach ($schoolClassTeacherDisciplines as $schoolClassTeacherDiscipline) {
             $exist = LegacySchoolClassTeacherDiscipline::query()->where(column: [
-                'professor_turma_id'=> $newSchoolClassTeacher->getKey(),
-                'componente_curricular_id' => $schoolClassTeacherDiscipline->componente_curricular_id
+                'professor_turma_id' => $newSchoolClassTeacher->getKey(),
+                'componente_curricular_id' => $schoolClassTeacherDiscipline->componente_curricular_id,
             ])->exists();
 
             if ($exist === true) {
@@ -674,17 +686,16 @@ return new class extends clsCadastro {
         $lastSchoolAcademicYear = LegacySchoolAcademicYear::query()
             ->whereSchool(school: $refCodEscola)
             ->active()
-            ->max(column: 'ano')
-        ;
+            ->max(column: 'ano');
 
         $employeeAllocations = EmployeeAllocation::query()
-            ->whereHas(relation: 'employee', callback: fn($q) => ($q->professor($onlyTeacher)) )
+            ->whereHas(relation: 'employee', callback: fn ($q) => ($q->professor($onlyTeacher)))
             ->where(
                 column: [
                     'ano' => $lastSchoolAcademicYear,
-                    'ref_cod_escola' => $refCodEscola
-            ]
-        )->get();
+                    'ref_cod_escola' => $refCodEscola,
+                ]
+            )->get();
 
         /** @var EmployeeAllocation $employeeAllocation */
         foreach ($employeeAllocations as $employeeAllocation) {
@@ -694,7 +705,7 @@ return new class extends clsCadastro {
                     'ano' => $anoDestino,
                     'ref_cod_escola' => $refCodEscola,
                     'ref_cod_servidor' => $employeeAllocation->ref_cod_servidor,
-                    'ref_cod_servidor_funcao' => $employeeAllocation->ref_cod_servidor_funcao
+                    'ref_cod_servidor_funcao' => $employeeAllocation->ref_cod_servidor_funcao,
                 ]
             )->exists();
 
@@ -715,8 +726,7 @@ return new class extends clsCadastro {
         $turmasSeries = LegacySchoolClassGrade::query()
             ->where(column: 'escola_id', operator: $turmaOrigem['ref_ref_cod_escola'])
             ->where(column: 'turma_id', operator: $turmaOrigem['cod_turma'])
-            ->get()
-        ;
+            ->get();
 
         foreach ($turmasSeries as $turmaSerie) {
             $newTurmaSerie = new LegacySchoolClassGrade();
@@ -744,7 +754,7 @@ return new class extends clsCadastro {
                 'turma' => $turmaDestinoId,
                 // está sendo mantido o mesmo ano_escolar_id, uma vez que não foi
                 // foi encontrado de onde o valor deste campo é obtido.
-                'anoEscolar' => $componenteTurmaOrigem->get('anoEscolar')
+                'anoEscolar' => $componenteTurmaOrigem->get('anoEscolar'),
             ];
 
             $componenteTurmaDestino = $dataMapper->createNewEntityInstance(data: $data);
@@ -797,7 +807,7 @@ return new class extends clsCadastro {
         foreach ($this->modulos as $modulo) {
             $retorno[$modulo['cod_modulo']] = [
                 'label' => $modulo['nm_tipo'],
-                'etapas' => (int)$modulo['num_etapas']
+                'etapas' => (int) $modulo['num_etapas'],
             ];
         }
 
@@ -807,18 +817,18 @@ return new class extends clsCadastro {
     protected function validaDates(): void
     {
         foreach ($this->data_inicio as $key => $campo) {
-            $data_inicio = Carbon::createFromFormat('d/m/Y',$this->data_inicio[$key]);
-            $data_fim = Carbon::createFromFormat('d/m/Y',$this->data_fim[$key]);
+            $data_inicio = Carbon::createFromFormat('d/m/Y', $this->data_inicio[$key]);
+            $data_fim = Carbon::createFromFormat('d/m/Y', $this->data_fim[$key]);
 
             $etapaAntigo = Portabilis_Utils_Database::selectRow(
                 sql: 'SELECT data_inicio,data_fim FROM pmieducar.ano_letivo_modulo WHERE ref_ano <> $1 AND ref_ref_cod_escola = $2 AND
                                                                    ($3::date BETWEEN data_inicio AND data_fim::date OR $4::date BETWEEN data_inicio AND data_fim OR
                                                                    ($3::date <= data_inicio AND $4::date >= data_fim)) limit 1',
-                paramsOrOptions: [$this->ref_ano,$this->ref_ref_cod_escola,$data_inicio,$data_fim]
+                paramsOrOptions: [$this->ref_ano, $this->ref_ref_cod_escola, $data_inicio, $data_fim]
             );
 
             if (!empty($etapaAntigo) && isset($etapaAntigo['data_inicio'],$etapaAntigo['data_fim'])) {
-                throw new RuntimeException(message: "A data informada não pode fazer parte do período configurado para outros anos letivos.");
+                throw new RuntimeException(message: 'A data informada não pode fazer parte do período configurado para outros anos letivos.');
             }
         }
     }

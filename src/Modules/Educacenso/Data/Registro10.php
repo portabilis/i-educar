@@ -16,8 +16,6 @@ class Registro10 extends AbstractRegistro
     protected $model;
 
     /**
-     * @param $escola
-     *
      * @return Registro10Model
      */
     public function getData($escola)
@@ -34,8 +32,8 @@ class Registro10 extends AbstractRegistro
 
         $exportData = [
             '10',  // 1	Tipo de registro
-            $data->codigoInep,// 2	Código de escola - Inep
-            $data->predioEscolar() ? 1 : 0,// 3	Prédio escolar
+            $data->codigoInep, // 2	Código de escola - Inep
+            $data->predioEscolar() ? 1 : 0, // 3	Prédio escolar
             $data->salasOutraEscola() ? 1 : 0, // 4	Sala(s) em outra escola
             $data->galpao() ? 1 : 0, // 5	Galpão/ rancho/ paiol/ barracão
             $data->unidadeAtendimentoSocioeducativa() ? 1 : 0, // 6	Unidade de atendimento Socioeducativa

@@ -37,7 +37,7 @@ class LegacyTransferTypeTest extends TestCase
             'ref_usuario_cad' => $user->getKey(),
             'nm_tipo' => $type->nm_tipo,
             'desc_tipo' => $type->desc_tipo,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 
@@ -71,7 +71,7 @@ class LegacyTransferTypeTest extends TestCase
             'ref_cod_instituicao' => $editType->ref_cod_instituicao,
             'nm_tipo' => $editType->nm_tipo,
             'desc_tipo' => $editType->desc_tipo,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 }

@@ -5,19 +5,33 @@ use iEducar\Legacy\Model;
 class clsPmieducarEscolaSerie extends Model
 {
     public $ref_cod_escola;
+
     public $ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
+
     public $bloquear_enturmacao_sem_vagas;
+
     public $bloquear_cadastro_turma_para_serie_com_vagas;
+
     public $codUsuario;
+
     public $anos_letivos;
 
     public function __construct($ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null, $anos_letivos = [])

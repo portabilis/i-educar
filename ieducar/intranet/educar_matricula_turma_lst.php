@@ -1,23 +1,41 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_cod_matricula;
+
     public $ref_cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_serie;
+
     public $ref_cod_escola;
+
     public $ref_cod_turma_origem;
+
     public $ref_cod_curso;
+
     public $ref_cod_instituicao;
+
     public $ano_letivo;
+
     public $sequencial;
 
     public function Gerar()
@@ -41,7 +59,7 @@ return new class extends clsListagem {
 
         $this->addCabecalhos(coluna: [
             'Turma',
-            'Enturmado'
+            'Enturmado',
         ]);
 
         // Busca dados da matricula

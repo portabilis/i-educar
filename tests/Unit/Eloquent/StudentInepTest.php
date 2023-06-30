@@ -12,9 +12,6 @@ class StudentInepTest extends EloquentTestCase
         'student' => LegacyStudent::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return StudentInep::class;
@@ -26,7 +23,7 @@ class StudentInepTest extends EloquentTestCase
             'student_id' => 'cod_aluno',
             'number' => 'cod_aluno_inep',
             'name' => 'nome_inep',
-            'font' => 'fonte'
+            'font' => 'fonte',
         ];
     }
 }

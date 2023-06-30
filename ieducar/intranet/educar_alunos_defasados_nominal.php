@@ -1,27 +1,46 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ano;
+
     public $mes;
+
     public $nm_escola;
+
     public $nm_instituicao;
+
     public $ref_cod_curso;
+
     public $sequencial;
+
     public $pdf;
+
     public $pagina_atual = 1;
+
     public $total_paginas = 1;
+
     public $page_y = 125;
+
     public $cursos = [];
+
     public $array_disciplinas = [];
+
     public $get_link;
+
     public $ref_cod_modulo;
+
     /**
      * @var string[]
      */
     public $total_dias_uteis;
+
     public $meses_do_ano = [
         '1' => 'JANEIRO',
         '2' => 'FEVEREIRO',
@@ -34,9 +53,8 @@ return new class extends clsCadastro {
         '9' => 'SETEMBRO',
         '10' => 'OUTUBRO',
         '11' => 'NOVEMBRO',
-        '12' => 'DEZEMBRO'
+        '12' => 'DEZEMBRO',
     ];
-
 
     public function Inicializar()
     {
@@ -74,10 +92,10 @@ return new class extends clsCadastro {
 
         $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
         $this->campoRotulo(nome: 'cursos_', campo: 'Cursos', valor: '<div id=\'cursos\'>Selecione uma escola</div>');
 
-        if ($nivel_usuario <=3) {
+        if ($nivel_usuario <= 3) {
             echo '<script>
                     window.onload = function(){document.getElementById(\'ref_cod_escola\').onchange = changeCurso};
                   </script>';

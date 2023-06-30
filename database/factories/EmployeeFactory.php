@@ -16,8 +16,6 @@ class EmployeeFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -26,7 +24,7 @@ class EmployeeFactory extends Factory
             'institution_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'workload' => 40,
             'ref_idesco' => fn () => LegacySchoolingDegreeFactory::new()->unique()->make(),
-            'curso_formacao_continuada' => '{1}'
+            'curso_formacao_continuada' => '{1}',
         ];
     }
 
