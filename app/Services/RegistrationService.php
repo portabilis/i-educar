@@ -20,17 +20,12 @@ class RegistrationService
      */
     private $user;
 
-    /**
-     * @param User $user
-     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
     /**
-     * @param array $ids
-     *
      * @return Collection
      */
     public function findAll(array $ids)
@@ -42,7 +37,6 @@ class RegistrationService
 
     /**
      * @param LegacySchoolClass $schoolClass
-     *
      * @return Collection
      */
     public function getRegistrationsNotEnrolled($schoolClass)
@@ -82,7 +76,6 @@ class RegistrationService
     /**
      * Atualiza a situação de uma matrícula
      *
-     * @param LegacyRegistration $registration
      * @param array              $data
      */
     public function updateStatus(LegacyRegistration $registration, $data)
@@ -97,7 +90,6 @@ class RegistrationService
 
     /**
      * @param array              $data
-     * @param LegacyRegistration $registration
      */
     private function checkUpdatedStatusAction($data, LegacyRegistration $registration)
     {
@@ -158,8 +150,6 @@ class RegistrationService
     }
 
     /**
-     * @param LegacyRegistration $registration
-     *
      * @return LegacyEnrollment
      */
     private function getActiveEnrollments(LegacyRegistration $registration)
@@ -169,7 +159,7 @@ class RegistrationService
 
     /**
      * @param string             $date
-     * @param integer            $type
+     * @param int            $type
      * @param string             $comments
      * @param LegacyRegistration $registration
      */
@@ -188,9 +178,6 @@ class RegistrationService
 
     /**
      * Atualiza a data de entrada de uma matrícula
-     *
-     * @param LegacyRegistration $registration
-     * @param DateTime           $date
      */
     public function updateRegistrationDate(LegacyRegistration $registration, DateTime $date)
     {
@@ -204,10 +191,6 @@ class RegistrationService
 
     /**
      * Atualiza a date de enturmação de todas as enturmações de uma matrícula
-     *
-     * @param LegacyRegistration $registration
-     * @param DateTime           $date
-     * @param bool               $ignoreRelocation
      */
     public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, bool $ignoreRelocation)
     {
@@ -278,8 +261,6 @@ class RegistrationService
     /**
      * Atualiza a data de saida de uma matrícula
      *
-     * @param LegacyRegistration $registration
-     * @param DateTime           $date
      *
      * @return LegacyRegistration
      */

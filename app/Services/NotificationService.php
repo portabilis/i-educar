@@ -48,11 +48,6 @@ class NotificationService
 
     /**
      * Envia uma notificação para todos os usuários do nível informado por parâmetro
-     *
-     * @param $level
-     * @param $text
-     * @param $link
-     * @param $type
      */
     public function createByUserLevel($level, $text, $link, $type)
     {

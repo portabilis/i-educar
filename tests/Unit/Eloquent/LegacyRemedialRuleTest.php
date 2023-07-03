@@ -9,12 +9,9 @@ use Tests\EloquentTestCase;
 class LegacyRemedialRuleTest extends EloquentTestCase
 {
     protected $relations = [
-        'evaluationRule' => LegacyEvaluationRule::class
+        'evaluationRule' => LegacyEvaluationRule::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyRemedialRule::class;

@@ -16,8 +16,6 @@ class EmployeeGraduationFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -26,7 +24,7 @@ class EmployeeGraduationFactory extends Factory
             'course_id' => EducacensoDegreeFactory::new()->create(),
             'completion_year' => now()->year,
             'college_id' => EducacensoInstitutionFactory::new()->create(),
-            'discipline_id' => EmployeeGraduationDisciplineFactory::new()->create()
+            'discipline_id' => EmployeeGraduationDisciplineFactory::new()->create(),
         ];
     }
 }

@@ -12,7 +12,6 @@ class LegacyModuleRewriteController extends Controller
      * @param string $module
      * @param string $path
      * @param string $resource
-     *
      * @return Response
      */
     public function rewrite($module, $path, $resource)
@@ -23,7 +22,7 @@ class LegacyModuleRewriteController extends Controller
         $contentType = mime_content_type($filename);
 
         return new Response($contentFile, Response::HTTP_OK, [
-            'Content-Type' => $contentType
+            'Content-Type' => $contentType,
         ]);
     }
 }

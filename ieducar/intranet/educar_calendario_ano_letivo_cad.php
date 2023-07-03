@@ -1,38 +1,50 @@
 <?php
 
-use App\Models\LegacyCalendarYear;
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCalendarYear;
 use App\Models\LegacySchoolAcademicYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_calendario_ano_letivo;
+
     public $ref_cod_escola;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ano;
+
     public $data_cadastra;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $inicio_ano_letivo;
+
     public $termino_ano_letivo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_calendario_ano_letivo=$_GET['cod_calendario_ano_letivo'];
-        $this->ref_cod_escola=$_GET['ref_cod_escola'];
-        $this->ref_cod_instituicao=$_GET['ref_cod_instituicao'];
+        $this->cod_calendario_ano_letivo = $_GET['cod_calendario_ano_letivo'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
         if (is_numeric(value: $this->cod_calendario_ano_letivo)) {
-            $registro  = LegacyCalendarYear::find($this->cod_calendario_ano_letivo)?->getAttributes();
+            $registro = LegacyCalendarYear::find($this->cod_calendario_ano_letivo)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -69,14 +81,14 @@ return new class () extends clsCadastro {
         $this->campoOculto(nome: 'cod_calendario_ano_letivo', valor: $this->cod_calendario_ano_letivo);
 
         if ($_GET) {
-            $this->ref_cod_escola=$_GET['ref_cod_escola'];
-            $this->ref_cod_instituicao=$_GET['ref_cod_instituicao'];
+            $this->ref_cod_escola = $_GET['ref_cod_escola'];
+            $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
         }
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola']);
 
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_calendario_ano_letivo_det.php?cod_calendario_ano_letivo={$registro['cod_calendario_ano_letivo']}" : 'educar_calendario_ano_letivo_lst.php';
 
-        $ano_array = [ '' => 'Selecione um ano' ];
+        $ano_array = ['' => 'Selecione um ano'];
         if ($this->ref_cod_escola) {
             $lista_ano = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->notInProgress()->active()->get(['ano']);
 
@@ -86,7 +98,7 @@ return new class () extends clsCadastro {
                 }
             }
         } else {
-            $ano_array = [ '' => 'Selecione uma escola' ];
+            $ano_array = ['' => 'Selecione uma escola'];
         }
 
         $this->campoLista(nome: 'ano', campo: 'Ano', valor: $ano_array, default: $this->ano, acao: '', duplo: false);
@@ -125,6 +137,7 @@ return new class () extends clsCadastro {
                 }
 
                 $this->mensagem = 'Edição não realizada.<br>';
+
                 return false;
             } else {
                 $obj_calend_ano_letivo = new LegacyCalendarYear();
@@ -141,6 +154,7 @@ return new class () extends clsCadastro {
                 }
 
                 $this->mensagem = 'Cadastro não realizado.<br>';
+
                 return false;
             }
         }

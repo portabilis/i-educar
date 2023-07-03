@@ -20,7 +20,7 @@ class BatchEnrollmentRequest extends FormRequest
             ],
             'registrations' => [
                 'required',
-            ]
+            ],
         ];
 
         if ($this->schoolClass->denyEnrollmentsWhenNoVacancy()) {

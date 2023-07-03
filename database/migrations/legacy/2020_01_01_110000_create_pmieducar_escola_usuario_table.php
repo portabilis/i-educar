@@ -13,7 +13,7 @@ class CreatePmieducarEscolaUsuarioTable extends Migration
      */
     public function up()
     {
-        # FIXME
+        // FIXME
 
         DB::unprepared(
             '

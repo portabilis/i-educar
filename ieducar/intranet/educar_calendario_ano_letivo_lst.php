@@ -7,22 +7,38 @@ use App\Models\LegacyCalendarDayReason;
 use App\Models\LegacyCalendarYear;
 use Illuminate\Support\Facades\Session;
 
-return new class () extends clsListagem {
+return new class() extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_calendario_ano_letivo;
+
     public $ref_cod_escola;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastra;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $inicio_ano_letivo;
+
     public $termino_ano_letivo;
+
     public $ref_cod_instituicao;
+
     public $ano;
+
     public $mes;
 
     public function renderHTML()
@@ -149,7 +165,7 @@ return new class () extends clsListagem {
                     'ref_cod_instituicao' => $this->ref_cod_instituicao,
                     'ref_cod_escola' => $this->ref_cod_escola,
                     'ano' => $this->ano,
-                    'mes' => $this->mes
+                    'mes' => $this->mes,
                 ]);
 
                 // Nome da escola
@@ -176,7 +192,7 @@ return new class () extends clsListagem {
 
                 $obj_calendario->setCorDiaSemana(arr_dia_semana: [
                     0,
-                    6
+                    6,
                 ], str_cor: 'ROSA');
 
                 $lista_dia = LegacyCalendarDay::query()
@@ -221,7 +237,7 @@ return new class () extends clsListagem {
                                 'calendarioAnoLetivo' => $registro['cod_calendario_ano_letivo'],
                                 'mes' => $dia['mes'],
                                 'dia' => $dia['dia'],
-                                'ano' => $this->ano
+                                'ano' => $this->ano,
                             ];
 
                             $calendarioTurmas = $calendarioTurmaMapper->findAll(where: $args);
@@ -281,17 +297,17 @@ return new class () extends clsListagem {
                     }
                 }
 
-                if ($this->mes <= (int)$inicio_ano[1] && $this->ano == (int)$inicio_ano[2]) {
-                    if ($this->mes == (int)$inicio_ano[1]) {
+                if ($this->mes <= (int) $inicio_ano[1] && $this->ano == (int) $inicio_ano[2]) {
+                    if ($this->mes == (int) $inicio_ano[1]) {
                         $obj_calendario->adicionarLegenda(str_legenda: 'Início Ano Letivo', str_cor: 'AMARELO');
                         $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Início Ano Letivo', dias: [$inicio_ano[0]]);
                     }
 
-                    $dia_inicio = (int)$inicio_ano[0];
+                    $dia_inicio = (int) $inicio_ano[0];
                     $dias = [];
 
-                    if ($this->mes < (int)$inicio_ano[1]) {
-                        $NumeroDiasMes = (int)date(format: 't', timestamp: $this->mes);
+                    if ($this->mes < (int) $inicio_ano[1]) {
+                        $NumeroDiasMes = (int) date(format: 't', timestamp: $this->mes);
 
                         for ($d = 1; $d <= $NumeroDiasMes; $d++) {
                             $dias[] = $d;
@@ -311,12 +327,12 @@ return new class () extends clsListagem {
                             $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
                         }
                     }
-                } elseif ($this->mes >= (int)$fim_ano[1] && $this->ano == (int)$fim_ano[2]) {
-                    $dia_inicio = (int)$fim_ano[0];
+                } elseif ($this->mes >= (int) $fim_ano[1] && $this->ano == (int) $fim_ano[2]) {
+                    $dia_inicio = (int) $fim_ano[0];
                     $dias = [];
 
-                    if ($this->mes > (int)$fim_ano[1]) {
-                        $NumeroDiasMes = (int)date(format: 't', timestamp: $this->mes);
+                    if ($this->mes > (int) $fim_ano[1]) {
+                        $NumeroDiasMes = (int) date(format: 't', timestamp: $this->mes);
 
                         for ($d = 1; $d <= $NumeroDiasMes; $d++) {
                             $dias[] = $d;
@@ -326,7 +342,7 @@ return new class () extends clsListagem {
 
                         $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
                     } else {
-                        $NumeroDiasMes = (int)date(format: 't', timestamp: $this->mes);
+                        $NumeroDiasMes = (int) date(format: 't', timestamp: $this->mes);
 
                         for ($d = $fim_ano[0]; $d <= $NumeroDiasMes; $d++) {
                             $dias[] = $d;
@@ -340,7 +356,7 @@ return new class () extends clsListagem {
                         }
                     }
 
-                    if ($this->mes == (int)$fim_ano[1]) {
+                    if ($this->mes == (int) $fim_ano[1]) {
                         $obj_calendario->adicionarLegenda(str_legenda: 'Término Ano Letivo', str_cor: 'AMARELO');
                         $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Término Ano Letivo', dias: [$fim_ano[0]]);
                     }
@@ -350,7 +366,7 @@ return new class () extends clsListagem {
 
                 $obj_calendario->setCorDiaSemana(arr_dia_semana: [
                     0,
-                    6
+                    6,
                 ], str_cor: 'ROSA');
 
                 $lista_anotacoes = LegacyCalendarDayNote::query()
@@ -360,7 +376,7 @@ return new class () extends clsListagem {
 
                 $dia_anotacao = [];
                 foreach ($lista_anotacoes as $anotacao) {
-                    if ($this->mes == (int)$anotacao['ref_mes']) {
+                    if ($this->mes == (int) $anotacao['ref_mes']) {
                         $dia_anotacao[$anotacao['ref_dia']] = $anotacao['ref_dia'];
                     }
                 }
@@ -437,7 +453,7 @@ return new class () extends clsListagem {
         $retorno .= '</tbody> </table>';
 
         $scripts = [
-            '/intranet/scripts/calendario.js'
+            '/intranet/scripts/calendario.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);

@@ -15,9 +15,6 @@ class EmployeePosgraduateTest extends EloquentTestCase
         'employee' => Employee::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return EmployeePosgraduate::class;

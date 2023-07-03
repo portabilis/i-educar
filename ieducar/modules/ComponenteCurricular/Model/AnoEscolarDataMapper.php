@@ -13,7 +13,7 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
         'anoEscolar' => 'ano_escolar_id',
         'cargaHoraria' => 'carga_horaria',
         'tipo_nota' => 'tipo_nota',
-        'anosLetivos' => 'anos_letivos'
+        'anosLetivos' => 'anos_letivos',
     ];
 
     protected $_primaryKey = [
@@ -29,7 +29,6 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
     /**
      * Setter.
      *
-     * @param ComponenteCurricular_Model_ComponenteDataMapper $mapper
      *
      * @return CoreExt_DataMapper Provê interface fluída
      */
@@ -58,7 +57,6 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
      * Finder para componentes por curso.
      *
      * @param int $cursoId
-     *
      * @return array
      *
      * @throws Exception
@@ -100,7 +98,6 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
      * Finder para componentes por série (ano escolar).
      *
      * @param int $serieId
-     *
      * @return array
      *
      * @throws Exception

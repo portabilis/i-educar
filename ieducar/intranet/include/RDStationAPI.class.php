@@ -18,16 +18,19 @@ http://ajuda.rdstation.com.br/hc/pt-br/articles/200310699-Alterar-estado-do-Lead
 Integrar formulÃ¡rio no site ou sistema prÃ³prio para CriaÃ§Ã£o de Lead (API)
 http://ajuda.rdstation.com.br/hc/pt-br/articles/200310589-Integrar-formulário-no-site-ou-sistema-pr&oacute;prio-para-Criação-de-Lead-API-
 **/
-
 class RDStationAPI
 {
     public $token;
+
     public $privateToken;
+
     public $baseURL = 'https://www.rdstation.com.br/api/';
+
     public $apiVersion = '1.3';
+
     public $defaultIdentifier = 'Usuário no produto i-Educar';
 
-    public function __construct($privateToken=null, $token=null)
+    public function __construct($privateToken = null, $token = null)
     {
         if (empty($privateToken)) {
             throw new Exception('Inform RDStationAPI.privateToken as the first argument.');
@@ -39,17 +42,17 @@ class RDStationAPI
 
     /**
     $type:  (String) generic, leads, conversions
-    **/
-    protected function getURL($type='generic')
+     **/
+    protected function getURL($type = 'generic')
     {
         //(POST) https://www.rdstation.com.br/api/1.2/services/PRIVATE_TOKEN/generic //USED TO CHANGE A LEAD STATUS
         //(PUT) https://www.rdstation.com.br/api/1.2/leads/:lead_email //USED TO UPDATE A LEAD
         //(POST) https://www.rdstation.com.br/api/1.2/conversions //USED TO SEND A NEW LEAD
         switch ($type) {
-      case 'generic':     return $this->baseURL.$this->apiVersion.'/services/'.$this->privateToken.'/generic';
-      case 'leads':       return $this->baseURL.$this->apiVersion.'/leads/';
-      case 'conversions': return $this->baseURL.$this->apiVersion.'/conversions';
-    }
+            case 'generic':     return $this->baseURL.$this->apiVersion.'/services/'.$this->privateToken.'/generic';
+            case 'leads':       return $this->baseURL.$this->apiVersion.'/leads/';
+            case 'conversions': return $this->baseURL.$this->apiVersion.'/conversions';
+        }
     }
 
     protected function validateToken()
@@ -63,8 +66,8 @@ class RDStationAPI
     $method:  (String) POST, PUT
     $url:     (String) RD Station endpoint returned by $this->getURL()
     $data:    (Array)
-    **/
-    protected function request($method, $url, $data=[])
+     **/
+    protected function request($method, $url, $data = [])
     {
         $data['token_rdstation'] = $this->token;
         $JSONData = json_encode($data);
@@ -72,7 +75,7 @@ class RDStationAPI
 
         $fp = fsockopen(
             $URLParts['host'],
-            isset($URLParts['port'])?$URLParts['port']:80,
+            isset($URLParts['port']) ? $URLParts['port'] : 80,
             $errno,
             $errstr,
             30
@@ -88,7 +91,7 @@ class RDStationAPI
         $written = fwrite($fp, $out);
         fclose($fp);
 
-        return ($written==false)?false:true;
+        return ($written == false) ? false : true;
     }
 
     /**
@@ -108,8 +111,8 @@ class RDStationAPI
         "created_at" => "",
         "tags" => "cofounder, hotlead"
       );
-    **/
-    public function sendNewLead($email, $data=[])
+     **/
+    public function sendNewLead($email, $data = [])
     {
         $this->validateToken();
         if (empty($email)) {
@@ -132,8 +135,8 @@ class RDStationAPI
 
     /**
     Helper function to update lead properties
-    **/
-    public function updateLead($email, $data=[])
+     **/
+    public function updateLead($email, $data = [])
     {
         return $this->sendNewLead($email, $data);
     }
@@ -142,8 +145,8 @@ class RDStationAPI
     $email: (String) Lead email
     $newStage: (Integer) 0 - Lead, 1 - Qualified Lead, 2 - Customer
     $opportunity: (Integer) true or false
-    **/
-    public function updateLeadStage($email, $newStage=0)
+     **/
+    public function updateLeadStage($email, $newStage = 0)
     {
         if (empty($email)) {
             throw new Exception('Inform lead email as the first argument.');
@@ -152,11 +155,11 @@ class RDStationAPI
         $url = $this->getURL('leads').$email;
 
         $data = [
-      'auth_token' => $this->privateToken,
-      'lead' => [
-        'lifecycle_stage' => $newStage
-      ]
-    ];
+            'auth_token' => $this->privateToken,
+            'lead' => [
+                'lifecycle_stage' => $newStage,
+            ],
+        ];
 
         return $this->request('PUT', $url, $data);
     }
@@ -166,25 +169,25 @@ class RDStationAPI
     $status: (String) won / lost
     $value: (Integer/Decimal) Purchase value
     $lostReason: (String)
-    **/
-    public function updateLeadStatus($emailOrLeadId, $status, $value=null, $lostReason=null)
+     **/
+    public function updateLeadStatus($emailOrLeadId, $status, $value = null, $lostReason = null)
     {
         if (empty($emailOrLeadId)) {
             throw new Exception('Inform lead email or unique custom ID as the first argument.');
         }
         if (empty($status)) {
             throw new Exception('Inform lead status as the second argument.');
-        } elseif ($status!='won'&&$status!='lost') {
+        } elseif ($status != 'won' && $status != 'lost') {
             throw new Exception('Lead status (second argument) should be \'won\' or \'lost\'.');
         }
 
         $data = [
-      'status' => $status,
-      'value' => $value,
-      'lost_reason' => $lostReason,
-    ];
+            'status' => $status,
+            'value' => $value,
+            'lost_reason' => $lostReason,
+        ];
 
-        if (is_integer($emailOrLeadId)) {
+        if (is_int($emailOrLeadId)) {
             $data['lead_id'] = $emailOrLeadId;
         } else {
             $data['email'] = $emailOrLeadId;

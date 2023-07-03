@@ -20,8 +20,6 @@ class TransferEvent
 
     /**
      * Create a new event instance.
-     *
-     * @param $transfer
      */
     public function __construct($transfer)
     {

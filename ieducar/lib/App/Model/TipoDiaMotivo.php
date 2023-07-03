@@ -3,7 +3,9 @@
 class App_Model_TipoDiaMotivo extends CoreExt_Enum
 {
     const DIA_LETIVO = 'l';
+
     const DIA_NAO_LETIVO = 'n';
+
     const DIA_EXTRA_LETIVO = 'e';
 
     protected $_data = [

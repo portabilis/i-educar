@@ -2,7 +2,8 @@
 
 use App\Models\LegacyProject;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -32,7 +33,9 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_projeto;
+
     public $nome;
+
     public $observacao;
 
     public function Gerar()
@@ -40,19 +43,19 @@ return new class extends clsListagem {
         $this->titulo = 'Projetos - Listagem';
 
         foreach ($_GET as $var => $val) {
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos(coluna: [
             'Nome do projeto',
-            'Observação'
+            'Observação',
         ]);
 
         $this->campoTexto(nome: 'nome', campo: 'Nome do projeto', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $query = LegacyProject::query()
             ->orderBy(column: 'nome', direction: 'ASC');
@@ -71,7 +74,7 @@ return new class extends clsListagem {
             foreach ($lista as $registro) {
                 $this->addLinhas(linha: [
                     "<a href=\"educar_projeto_det.php?cod_projeto={$registro['cod_projeto']}\">{$registro['nome']}</a>",
-                    "<a href=\"educar_projeto_det.php?cod_projeto={$registro['cod_projeto']}\">{$registro['observacao']}</a>"
+                    "<a href=\"educar_projeto_det.php?cod_projeto={$registro['cod_projeto']}\">{$registro['observacao']}</a>",
                 ]);
             }
         }

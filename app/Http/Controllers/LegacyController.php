@@ -19,37 +19,21 @@ class LegacyController extends Controller
      */
     private $request;
 
-    /**
-     * @var array
-     */
     private static array $resolvers = [];
 
     /**
      * LegacyController constructor.
-     *
-     * @param Request $request
      */
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
-    /**
-     * @param Closure $resolver
-     *
-     * @return void
-     */
     public static function resolver(Closure $resolver): void
     {
         static::$resolvers[] = $resolver;
     }
 
-    /**
-     * @param string $uri
-     * @param string $path
-     *
-     * @return string
-     */
     public static function resolve(string $uri, string $path): string
     {
         foreach (static::$resolvers as $resolver) {
@@ -94,11 +78,10 @@ class LegacyController extends Controller
      * error code 404 Not Found.
      *
      * @param string $filename
+     * @return void
      *
      * @throws NotFoundHttpException
      * @throws Exception
-     *
-     * @return void
      */
     private function loadLegacyFile($filename)
     {
@@ -115,10 +98,9 @@ class LegacyController extends Controller
      * Load a file or abort the application.
      *
      * @param string $filename
+     * @return void
      *
      * @throws Exception
-     *
-     * @return void
      */
     private function loadFileOrAbort($filename)
     {
@@ -166,11 +148,6 @@ class LegacyController extends Controller
         throw $exception;
     }
 
-    /**
-     * @param object $viewToRender
-     *
-     * @return clsBase
-     */
     private function processProperty(object $viewToRender): clsBase
     {
         $class = new clsBase();
@@ -245,11 +222,10 @@ class LegacyController extends Controller
      * to run legacy code.
      *
      * @param string $filename
+     * @return Response
      *
      * @throws HttpResponseException
      * @throws Exception
-     *
-     * @return Response
      */
     private function requireFileFromLegacy($filename)
     {
@@ -290,11 +266,10 @@ class LegacyController extends Controller
      * Load intranet route file and generate a response.
      *
      * @param string $uri
+     * @return Response
      *
      * @throws HttpResponseException
      * @throws Exception
-     *
-     * @return Response
      */
     public function intranet($uri)
     {
@@ -304,10 +279,10 @@ class LegacyController extends Controller
     /**
      * Load module route file and generate a response.
      *
+     * @return Response
+     *
      * @throws HttpResponseException
      * @throws Exception
-     *
-     * @return Response
      */
     public function module()
     {
@@ -318,11 +293,10 @@ class LegacyController extends Controller
      * Load modules route file and generate a response.
      *
      * @param string $uri
+     * @return Response
      *
      * @throws HttpResponseException
      * @throws Exception
-     *
-     * @return Response
      */
     public function modules($uri)
     {
@@ -332,10 +306,10 @@ class LegacyController extends Controller
     /**
      * Load module route file and generate a response for API.
      *
+     * @return Response
+     *
      * @throws HttpResponseException
      * @throws Exception
-     *
-     * @return Response
      */
     public function api()
     {

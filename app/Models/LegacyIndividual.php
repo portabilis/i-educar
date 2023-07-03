@@ -88,7 +88,8 @@ class LegacyIndividual extends Model
         'nome_social',
         'pais_residencia',
         'localizacao_diferenciada',
-        'ideciv'
+        'ideciv',
+        'observacao',
     ];
 
     /**
@@ -175,7 +176,7 @@ class LegacyIndividual extends Model
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function boot()
     {
@@ -189,17 +190,12 @@ class LegacyIndividual extends Model
         });
     }
 
-    /**
-     * @param string|int $cpf
-     *
-     * @return Model|null
-     */
     public static function findByCpf(string|int $cpf): ?Model
     {
         $cpf = preg_replace('/\D/', '', $cpf);
 
         if ($cpf === null) {
-            return  null;
+            return null;
         }
 
         return static::query()->where('cpf', (int) $cpf)->first();

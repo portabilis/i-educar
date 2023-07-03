@@ -13,7 +13,7 @@ class ResourceSchoolClassRequest extends ResourceRequest
             'school' => ['nullable', 'integer', 'min:1'],
             'grade' => ['nullable', 'integer', 'min:1'],
             'course' => ['nullable', 'integer', 'min:1'],
-            'in_progress_year' => ['nullable', 'integer', 'digits:4']
+            'in_progress_year' => ['nullable', 'integer', 'digits:4'],
         ];
     }
 
@@ -24,7 +24,7 @@ class ResourceSchoolClassRequest extends ResourceRequest
             'school' => 'Escola',
             'grade' => 'Serie',
             'course' => 'Curso',
-            'in_progress_year' => 'Ano'
+            'in_progress_year' => 'Ano',
         ];
     }
 }

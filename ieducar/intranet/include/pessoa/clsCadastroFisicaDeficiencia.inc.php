@@ -5,6 +5,7 @@ use iEducar\Legacy\Model;
 class clsCadastroFisicaDeficiencia extends Model
 {
     public $ref_idpes;
+
     public $ref_cod_deficiencia;
 
     /**

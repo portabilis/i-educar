@@ -2,15 +2,24 @@
 
 use App\Models\LegacyEducationType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_tipo_ensino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -20,10 +29,10 @@ return new class extends clsCadastro {
         //** Verificacao de permissao para exclusao
         $obj_permissao = new clsPermissoes();
 
-        $obj_permissao->permissao_cadastra(558, $this->pessoa_logada,   7, 'educar_tipo_ensino_lst.php');
+        $obj_permissao->permissao_cadastra(558, $this->pessoa_logada, 7, 'educar_tipo_ensino_lst.php');
         //**
 
-        $this->cod_tipo_ensino=$_GET['cod_tipo_ensino'];
+        $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
         if (is_numeric($this->cod_tipo_ensino)) {
             $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
@@ -57,7 +66,7 @@ return new class extends clsCadastro {
         if ($_GET['precisa_lista']) {
             $get_escola = false;
             $obrigatorio = true;
-            include('include/pmieducar/educar_campo_lista.php');
+            include 'include/pmieducar/educar_campo_lista.php';
         } else {
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
@@ -81,10 +90,11 @@ return new class extends clsCadastro {
                         parent.document.getElementById('ref_cod_tipo_ensino').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-            die();
+            exit();
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -98,7 +108,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        if (! $_GET['precisa_lista']) {
+        if (!$_GET['precisa_lista']) {
             return file_get_contents(__DIR__ . '/scripts/extra/educar-habilitacao-cad-pop.js');
         }
 

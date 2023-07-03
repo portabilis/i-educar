@@ -19,7 +19,7 @@ class DiarioRecuperaAreasConhecimentoTest extends TestCase
         $data = [
             'oper' => 'get',
             'resource' => 'areas-de-conhecimento',
-            'instituicao_id' => $knowledgeArea->instituicao_id
+            'instituicao_id' => $knowledgeArea->instituicao_id,
         ];
         $response = $this->getResource('/module/Api/AreaConhecimento', $data);
 
@@ -35,12 +35,12 @@ class DiarioRecuperaAreasConhecimentoTest extends TestCase
                             'nome_agrupador' => $knowledgeArea->nome,
                             'updated_at' => $knowledgeArea->updated_at->format('Y-m-d H:i:s'),
                             'deleted_at' => null,
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'areas-de-conhecimento',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

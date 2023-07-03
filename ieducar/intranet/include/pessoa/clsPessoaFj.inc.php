@@ -6,46 +6,87 @@ use iEducar\Legacy\Model;
 class clsPessoaFj extends Model
 {
     public $idpes;
+
     public $nome;
+
     public $idpes_cad;
+
     public $data_cad;
+
     public $url;
+
     public $tipo;
+
     public $idpes_rev;
+
     public $data_rev;
+
     public $situacao;
+
     public $origem_gravacao;
+
     public $email;
+
     public $data_nasc;
+
     public $bairro;
+
     public $idbai;
+
     public $logradouro;
+
     public $idlog;
+
     public $idtlog;
+
     public $cidade;
+
     public $idmun;
+
     public $sigla_uf;
+
     public $pais;
+
     public $complemento;
+
     public $reside_desde;
+
     public $letra;
+
     public $numero;
+
     public $cep;
+
     public $bloco;
+
     public $apartamento;
+
     public $andar;
+
     public $ddd_1;
+
     public $fone_1;
+
     public $ddd_2;
+
     public $fone_2;
+
     public $ddd_fax;
+
     public $fone_fax;
+
     public $ddd_mov;
+
     public $fone_mov;
+
     public $rg;
+
     public $cpf;
+
     public $banco = 'gestao_homolog';
+
     public $schema_cadastro = 'cadastro';
+
     public $tabela_pessoa = 'pessoa';
 
     public function __construct($int_idpes = false)
@@ -130,7 +171,7 @@ class clsPessoaFj extends Model
             $db2->Consulta($sql);
 
             while ($db2->ProximoRegistro()) {
-                list($id_pes) = $db2->Tupla();
+                [$id_pes] = $db2->Tupla();
                 $array_idpes[] = $id_pes;
             }
 

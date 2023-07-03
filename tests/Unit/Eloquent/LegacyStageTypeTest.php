@@ -16,12 +16,9 @@ class LegacyStageTypeTest extends EloquentTestCase
         'institution' => LegacyInstitution::class,
         'academicYearStages' => LegacyAcademicYearStage::class,
         'schoolClassStage' => LegacySchoolClassStage::class,
-        'createdByUser' => LegacyUser::class
+        'createdByUser' => LegacyUser::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyStageType::class;

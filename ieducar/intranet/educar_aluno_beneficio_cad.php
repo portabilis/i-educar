@@ -3,27 +3,36 @@
 use App\Models\LegacyBenefit;
 use App\Models\LegacyStudentBenefit;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
      * @var int
      */
     public $pessoa_logada;
+
     public $cod_aluno_beneficio;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_beneficio;
+
     public $desc_beneficio;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_aluno_beneficio=$_GET['cod_aluno_beneficio'];
+        $this->cod_aluno_beneficio = $_GET['cod_aluno_beneficio'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_aluno_beneficio_lst.php');
@@ -78,6 +87,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -95,6 +105,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -106,6 +117,7 @@ return new class extends clsCadastro {
 
         if ($count > 0) {
             $this->mensagem = 'Você não pode excluir esse benefício, pois ele possui vínculo com aluno(s).<br>';
+
             return false;
         }
 
@@ -118,6 +130,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

@@ -7,7 +7,6 @@ class Portabilis_Date_Utils
      * yyyy-mm-dd.
      *
      * @param string $date
-     *
      * @return string
      */
     public static function brToPgSQL($date)
@@ -16,7 +15,7 @@ class Portabilis_Date_Utils
             return $date;
         }
 
-        list($dia, $mes, $ano) = explode('/', $date);
+        [$dia, $mes, $ano] = explode('/', $date);
 
         return "$ano-$mes-$dia";
     }
@@ -26,7 +25,6 @@ class Portabilis_Date_Utils
      * yyyy-mm-dd.
      *
      * @param string $date
-     *
      * @return string
      */
     public static function brToPgSQL_ddmm($date)
@@ -35,7 +33,7 @@ class Portabilis_Date_Utils
             return $date;
         }
 
-        list($dia, $mes) = explode('/', $date);
+        [$dia, $mes] = explode('/', $date);
 
         $ano = '1900';
 
@@ -47,7 +45,6 @@ class Portabilis_Date_Utils
      * no formato br dd/mm/yyyy hh:mm:ss.
      *
      * @param string $timestamp
-     *
      * @return null|string
      */
     public static function pgSQLToBr($timestamp)
@@ -70,7 +67,7 @@ class Portabilis_Date_Utils
 
         $d = DateTime::createFromFormat($pgFormat, $timestamp);
 
-        return ($d ? $d->format($brFormat) : null);
+        return $d ? $d->format($brFormat) : null;
     }
 
     /**
@@ -78,7 +75,6 @@ class Portabilis_Date_Utils
      * no formato br dd/mm.
      *
      * @param string $timestamp
-     *
      * @return null|string
      */
     public static function pgSQLToBr_ddmm($timestamp)
@@ -88,7 +84,7 @@ class Portabilis_Date_Utils
 
         $d = DateTime::createFromFormat($pgFormat, $timestamp);
 
-        return ($d ? $d->format($brFormat) : null);
+        return $d ? $d->format($brFormat) : null;
     }
 
     public static function validaData($date)
@@ -117,7 +113,6 @@ class Portabilis_Date_Utils
      * considerando o ano bissexto.
      *
      * @param string $data
-     *
      * @return bool
      */
     public static function checkDateBissexto($data)
@@ -127,11 +122,11 @@ class Portabilis_Date_Utils
         $month = (int) $data['month'];
         $year = (int) $data['year'];
 
-        return ($day == 29 && !checkdate($month, $day, $year));
+        return $day == 29 && !checkdate($month, $day, $year);
     }
 
     public static function isDateValid($date, $format = 'Y-m-d')
     {
-        return (boolean) DateTime::createFromFormat($format, $date);
+        return (bool) DateTime::createFromFormat($format, $date);
     }
 }

@@ -56,7 +56,6 @@ class Portabilis_String_Utils
      *
      * @param string $str
      * @param array  $options
-     *
      * @return string
      */
     public static function toUtf8($str, $options = [])

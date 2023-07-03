@@ -3,22 +3,22 @@
 class Avaliacao_Model_NotaGeral extends Avaliacao_Model_Etapa
 {
     protected $_data = [
-    'notaAluno'               => null,
-    'nota'                    => null,
-    'notaArredondada'         => null
-  ];
+        'notaAluno' => null,
+        'nota' => null,
+        'notaArredondada' => null,
+    ];
 
     protected $_dataTypes = [
-    'nota' => 'numeric'
-  ];
+        'nota' => 'numeric',
+    ];
 
     protected $_references = [
-    'notaAluno' => [
-      'value' => null,
-      'class' => 'Avaliacao_Model_NotaAluno',
-      'file'  => 'Avaliacao/Model/NotaAluno.php'
-    ]
-  ];
+        'notaAluno' => [
+            'value' => null,
+            'class' => 'Avaliacao_Model_NotaAluno',
+            'file' => 'Avaliacao/Model/NotaAluno.php',
+        ],
+    ];
 
     /**
      * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
@@ -29,8 +29,8 @@ class Avaliacao_Model_NotaGeral extends Avaliacao_Model_Etapa
         $etapas = range(0, 10, 1) + ['Rc'];
 
         return [
-      'nota' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 10]),
-      'notaArredondada'  => new CoreExt_Validate_String(['max' => 5])
-    ];
+            'nota' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 10]),
+            'notaArredondada' => new CoreExt_Validate_String(['max' => 5]),
+        ];
     }
 }

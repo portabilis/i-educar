@@ -3,7 +3,8 @@
 use App\Models\EducacensoDegree;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         $file = file(database_path('csv/censo/2023/update_or_create_cursos_superiores_2023.csv'));

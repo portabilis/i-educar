@@ -8,46 +8,85 @@ use Illuminate\Support\Facades\View;
 class clsCadastro extends clsCampos
 {
     public $target = '_self';
+
     public $largura;
+
     public $tipoacao;
+
     public $campos = [];
+
     public $erros;
+
     private $_mensagem;
+
     public $nome_pai;
+
     public $chave;
+
     public $item_campo_pai;
+
     public $fexcluir;
+
     public $excluir_Img;
+
     public $script_excluir = 'excluir();';
+
     public $nome_excluirImg;
+
     public $url_cancelar;
+
     public $nome_url_cancelar;
+
     public $url_sucesso;
+
     public $nome_url_sucesso;
+
     public $action;
+
     public $script_sucesso;
+
     public $script_cancelar;
+
     public $script;
+
     public $submete = false;
+
     public $acao_executa_submit = true;
+
     public $executa_submete = false;
+
     public $bot_alt = false;
+
     public $nome_url_alt;
+
     public $url_alt;
+
     public $help_images = false;
+
     public $array_botao;
+
     public $array_botao_url;
+
     public $array_botao_id;
+
     public $array_botao_url_script;
+
     public $controle;
+
     public $acao_enviar = 'acao()';
+
     public $botao_enviar = true;
+
     public $sucesso;
+
     public $onSubmit = 'acao()';
+
     public $form_enctype;
+
     public $acao_executa_submit_ajax = false;
 
     public const NOVO = 'N';
+
     public const EDITAR = 'E';
 
     public function __construct()
@@ -287,7 +326,6 @@ class clsCadastro extends clsCampos
             /**
              * Campo tabela
              */
-
             if (preg_match('/^(tab_add_[0-9])/', $nome) === 1) {
                 $nome_campos = $componente['cabecalho'];
                 $componente = array_shift($componente);
@@ -369,6 +407,7 @@ class clsCadastro extends clsCampos
                 }
 
                 $retorno .= "\n}\n";
+
                 continue;
             }
 
@@ -548,7 +587,7 @@ class clsCadastro extends clsCampos
             }
         }
 
-        return ($args);
+        return $args;
     }
 
     public function isOnNow()
@@ -559,7 +598,7 @@ class clsCadastro extends clsCampos
             $args[$ind] = $arg == 'on' ? 1 : 0;
         }
 
-        return ($args);
+        return $args;
     }
 
     /**
@@ -567,7 +606,7 @@ class clsCadastro extends clsCampos
      * integraï¿½ï¿½o CoreExt_Controller_Page_Interface com CoreExt_DataMapper e
      * CoreExt_Entity.
      *
-     * @return string|NULL
+     * @return string|null
      */
     protected function _getControllerErrors()
     {

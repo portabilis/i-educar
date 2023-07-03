@@ -176,7 +176,6 @@ abstract class CoreExt_DataMapper
      * Caso nenhum array seja passado, é usado o array de atributos da classe
      * CoreExt_Entity ao qual o data mapper mapeia.
      *
-     * @param array $data
      *
      * @return array
      */
@@ -209,8 +208,7 @@ abstract class CoreExt_DataMapper
      * Caso contrário, retorna o próprio identificador do atributo.
      *
      * @param string $key
-     *
-     * @return string|NULL NULL para coluna não persistível
+     * @return string|null NULL para coluna não persistível
      */
     protected function _getTableColumn($key)
     {
@@ -233,7 +231,7 @@ abstract class CoreExt_DataMapper
      */
     protected function _getTableColumns(array $data = [])
     {
-        return join(', ', $this->_getTableColumnsArray($data));
+        return implode(', ', $this->_getTableColumnsArray($data));
     }
 
     /**
@@ -254,8 +252,9 @@ abstract class CoreExt_DataMapper
         if (0 < count($whereArg)) {
             foreach ($whereArg as $key => $value) {
                 // Caso $key seja um inteiro ela não representa uma coluna, e apenas nos importamos com o where
-                if (is_integer($key)) {
+                if (is_int($key)) {
                     $where[] = sprintf('%s', $value);
+
                     continue;
                 }
 
@@ -309,7 +308,6 @@ abstract class CoreExt_DataMapper
      * @link   http://php.net/manual/en/function.intval.php
      *
      * @param array|long $pkey
-     *
      * @return string
      */
     protected function _getFindStatment($pkey)
@@ -319,7 +317,7 @@ abstract class CoreExt_DataMapper
         if (!is_array($pkey)) {
             $keys = array_keys($this->_primaryKey);
             $pkey = [
-                array_shift($keys) => $pkey
+                array_shift($keys) => $pkey,
             ];
         }
 
@@ -346,7 +344,6 @@ abstract class CoreExt_DataMapper
      * INSERT INTO [schema.]table (column) VALUES ('value');
      * </code>
      *
-     * @param CoreExt_Entity $instance
      *
      * @return string
      */
@@ -372,7 +369,7 @@ abstract class CoreExt_DataMapper
             $valuesStmt[] = sprintf('\'%s\'', pg_escape_string($value));
         }
 
-        $valuesStmt = join(', ', $valuesStmt);
+        $valuesStmt = implode(', ', $valuesStmt);
 
         return sprintf($sql, $this->_getTableName(), $columns, $valuesStmt);
     }
@@ -387,7 +384,6 @@ abstract class CoreExt_DataMapper
      * UPDATE [schema.]table SET column='value' WHERE id = 'idValue';
      * </code>
      *
-     * @param CoreExt_Entity $instance
      *
      * @return string
      */
@@ -448,7 +444,6 @@ abstract class CoreExt_DataMapper
      * </code>
      *
      * @param mixed $instance
-     *
      * @return string
      */
     protected function _getDeleteStatment($pkToDelete)
@@ -471,7 +466,6 @@ abstract class CoreExt_DataMapper
      *
      * @param array $columns             Atributos a serem carregados. O atributo id é sempre carregado.
      * @param bool  $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
-     *
      * @return array
      *
      * @throws Exception
@@ -505,8 +499,8 @@ abstract class CoreExt_DataMapper
      * @param array $where               Condicoes preparadas ex: array('arg1 = $1', 'arg2 = $2');
      * @param array $params              Valor das condiçoes ($1, $2 ...) ex: array('1', '3');
      * @param bool  $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
-     *
      * @return array
+     *
      * @throws Exception
      */
     public function findAllUsingPreparedQuery(array $columns = [], array $where = [], array $params = [], array $orderBy = [], $addColumnIdIfNotSet = true)
@@ -537,7 +531,6 @@ abstract class CoreExt_DataMapper
      * Retorna um registro que tenha como identificador (chave única ou composta)
      * o valor dado por $pkey.
      *
-     * @param $pkey
      *
      * @return CoreExt_Entity
      *
@@ -559,7 +552,6 @@ abstract class CoreExt_DataMapper
      * o valor dado por $pkey.
      *
      * @param int|array $pkey
-     *
      * @return bool
      *
      * @throws Exception
@@ -579,6 +571,7 @@ abstract class CoreExt_DataMapper
      *
      *
      * @return bool
+     *
      * @throws CoreExt_DataMapper_Exception|Exception
      */
     public function save(CoreExt_Entity $instance)
@@ -634,7 +627,6 @@ abstract class CoreExt_DataMapper
      * </code>
      *
      * @param mixed $instance
-     *
      * @return bool
      *
      * @throws Exception
@@ -651,7 +643,6 @@ abstract class CoreExt_DataMapper
      *
      * @return array
      */
-
     public function buildKeyToFind($instance)
     {
         $pkInstance = [];
@@ -731,7 +722,6 @@ abstract class CoreExt_DataMapper
      * CoreExt_Entity.
      *
      * @param array          $data
-     *
      * @return CoreExt_Entity A instância com os atributos mapeados
      */
     protected function _mapData($data, CoreExt_Entity $instance)

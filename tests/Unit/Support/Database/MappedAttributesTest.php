@@ -14,11 +14,12 @@ class MappedAttributesTest extends TestCase
     private $abstract;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {
-        $this->abstract = new class () extends Model {
+        $this->abstract = new class() extends Model
+        {
             use MappedAttributes;
 
             protected $fillable = [

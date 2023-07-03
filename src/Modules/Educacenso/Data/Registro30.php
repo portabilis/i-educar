@@ -28,8 +28,6 @@ class Registro30 extends AbstractRegistro
     protected $modelArray;
 
     /**
-     * @param $schoolId
-     *
      * @return Registro30Model[]
      */
     public function getData($schoolId)
@@ -102,11 +100,9 @@ class Registro30 extends AbstractRegistro
     }
 
     /**
-     * @param $escolaId
+     * @return Registro30Model[]
      *
      * @throws \Exception
-     *
-     * @return Registro30Model[]
      */
     public function getExportFormatData($escolaId)
     {

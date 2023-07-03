@@ -33,14 +33,13 @@ Route::group(
     [
         'middleware' => 'auth:sanctum',
     ],
-    static fn () =>
-    Route::apiResources([
+    static fn () => Route::apiResources([
         'country' => CountryController::class,
         'state' => StateController::class,
         'district' => DistrictController::class,
         'city' => CityController::class,
         'religion' => ReligionController::class,
-        'person/deficiency' => LegacyDeficiencyController::class
+        'person/deficiency' => LegacyDeficiencyController::class,
     ])
 );
 
@@ -60,7 +59,7 @@ Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getS
 
 Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
 
-Route::group(['middleware' => 'auth:sanctum','namespace' => 'Api'], static function () {
+Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'Api'], static function () {
     Route::resource('institution', InstitutionController::class)->only(['index']);
     Route::resource('school', SchoolController::class)->only(['index']);
     Route::resource('course', CourseController::class)->only(['index']);
@@ -72,7 +71,7 @@ Route::group(['middleware' => 'auth:sanctum','namespace' => 'Api'], static funct
     Route::resource('stage', StageController::class)->only(['index']);
 });
 
-Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Api\Resource'], static function () {
+Route::group(['prefix' => 'resource', 'as' => 'api.resource.', 'namespace' => 'Api\Resource'], static function () {
     Route::get('course', 'Course\ResourceCourseController@index')->name('course');
     Route::get('grade', 'Grade\ResourceGradeController@index')->name('grade');
     Route::get('school-academic-year', 'SchoolAcademicYear\ResourceSchoolAcademicYearController@index')->name('school-academic-year');

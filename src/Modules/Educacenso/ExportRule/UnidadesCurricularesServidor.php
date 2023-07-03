@@ -11,8 +11,6 @@ class UnidadesCurricularesServidor implements EducacensoExportRule
 {
     /**
      * @param Registro50 $registro50
-     *
-     * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro50): RegistroEducacenso
     {
@@ -27,7 +25,7 @@ class UnidadesCurricularesServidor implements EducacensoExportRule
     {
         $funcoesValidas = [
             FuncaoExercida::DOCENTE,
-            FuncaoExercida::DOCENTE_TITULAR_EAD
+            FuncaoExercida::DOCENTE_TITULAR_EAD,
         ];
 
         return

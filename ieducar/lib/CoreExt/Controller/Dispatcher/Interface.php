@@ -20,14 +20,14 @@ interface CoreExt_Controller_Dispatcher_Interface
     /**
      * Retorna uma string correspondendo a parte de controller de uma URL.
      *
-     * @return string|NULL
+     * @return string|null
      */
     public function getControllerName();
 
     /**
      * Retorna uma string correspondendo a parte de action de uma URL.
      *
-     * @return string|NULL
+     * @return string|null
      */
     public function getActionName();
 }

@@ -12,29 +12,22 @@ class LegacyBuilder extends Builder
 {
     /**
      * Colunas adicionadas no recurso, mas não na query
-     *
-     * @var array
      */
     private array $additional = [];
 
     /**
      * Colunas em query, mas não no recurso
-     *
-     * @var array
      */
     private array $except = [];
 
     /**
      * Filtros
-     *
-     * @var array
      */
     private array $filters = [];
 
     /**
      * Filtra por parametros
      *
-     * @param array $data
      *
      * @return $this
      */
@@ -48,11 +41,6 @@ class LegacyBuilder extends Builder
 
     /**
      * Retorna um recurso collection
-     *
-     * @param array $columns
-     * @param array $additional
-     *
-     * @return Collection
      */
     public function resource(array $columns = ['*'], array $additional = []): Collection
     {
@@ -68,11 +56,6 @@ class LegacyBuilder extends Builder
 
     /**
      * Transforma o recurso com os novos parametros
-     *
-     * @param Collection $resource
-     * @param array      $columnsNotExcept
-     *
-     * @return Collection
      */
     private function mapResource(Collection $resource, array $columnsNotExcept): Collection
     {
@@ -103,10 +86,6 @@ class LegacyBuilder extends Builder
 
     /**
      * Colunas adicionais que não estão na query, mas é adicionado no recurso
-     *
-     * @param array $additional
-     *
-     * @return LegacyBuilder
      */
     private function setAdditional(array $additional): LegacyBuilder
     {
@@ -117,10 +96,6 @@ class LegacyBuilder extends Builder
 
     /**
      * Colunas a serem adicionadas na query, mas não retorna no recurso
-     *
-     * @param array $except
-     *
-     * @return LegacyBuilder
      */
     public function setExcept(array $except): LegacyBuilder
     {
@@ -131,8 +106,6 @@ class LegacyBuilder extends Builder
 
     /**
      * Executa os filtros
-     *
-     * @return void
      */
     private function executeFilters(): void
     {
@@ -179,10 +152,6 @@ class LegacyBuilder extends Builder
 
     /**
      * Insere os filtros personalizados ou do request
-     *
-     * @param array $filters
-     *
-     * @return void
      */
     private function setFilters(array $filters): void
     {
@@ -205,10 +174,6 @@ class LegacyBuilder extends Builder
 
     /**
      * Transforma o nome do parametro para o nome de filtro
-     *
-     * @param $name
-     *
-     * @return string
      */
     private function getFilterName($name): string
     {
@@ -218,7 +183,6 @@ class LegacyBuilder extends Builder
     /**
      * Filtro Padrão a todos os Builders
      *
-     * @param int|null $limit
      *
      * @return $this
      */
@@ -230,7 +194,6 @@ class LegacyBuilder extends Builder
     /**
      * Filtra por nome e id do país
      *
-     * @param string $search
      *
      * @return $this
      */
@@ -288,10 +251,7 @@ class LegacyBuilder extends Builder
     /**
      * Obtem o valor de um filtro
      *
-     * @param string          $name
      * @param int|string|null $default
-     *
-     * @return mixed
      */
     public function getFilter(string $name, mixed $default = null): mixed
     {

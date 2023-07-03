@@ -214,7 +214,7 @@ class Portabilis_Business_Professor
                 ORDER BY t.nm_turma ASC
             ';
         } else {
-            # Feito gambiarra para que quando professor tenha alocação liste todas turmas do turno integral
+            // Feito gambiarra para que quando professor tenha alocação liste todas turmas do turno integral
             $sql = '
                 SELECT
                     t.cod_turma AS id,

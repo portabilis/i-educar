@@ -13,7 +13,6 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * Retorna o valor para um dado índice de CoreExt_Enum.
      *
      * @param string|int $key
-     *
      * @return mixed
      */
     #[\ReturnTypeWillChange]
@@ -37,7 +36,6 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * Retorna o valor da índice para um determinado valor.
      *
      * @param mixed $value
-     *
      * @return int|string
      */
     #[\ReturnTypeWillChange]
@@ -85,7 +83,6 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * @link  http://br2.php.net/manual/en/arrayaccess.offsetunset.php
      *
      * @throws CoreExt_Exception
-     *
      */
     #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
@@ -117,7 +114,6 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * @link   http://br2.php.net/manual/en/arrayaccess.offsetget.php
      *
      * @param string|int $offset
-     *
      * @return mixed
      */
     #[\ReturnTypeWillChange]

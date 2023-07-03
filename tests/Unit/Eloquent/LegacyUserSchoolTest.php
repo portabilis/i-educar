@@ -11,7 +11,7 @@ class LegacyUserSchoolTest extends EloquentTestCase
 {
     protected $relations = [
         'school' => LegacySchool::class,
-        'user' => LegacyUser::class
+        'user' => LegacyUser::class,
     ];
 
     public function getEloquentModelName(): string

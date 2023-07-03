@@ -11,7 +11,7 @@ class LegacyRoundingTableTest extends EloquentTestCase
 {
     protected $relations = [
         'roundingValues' => LegacyValueRoundingTable::class,
-        'evaluationRules' => LegacyEvaluationRule::class
+        'evaluationRules' => LegacyEvaluationRule::class,
     ];
 
     public function getEloquentModelName(): string

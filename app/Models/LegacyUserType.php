@@ -24,12 +24,17 @@ class LegacyUserType extends LegacyModel
     use HasLegacyDates;
 
     public const LEVEL_ADMIN = 1;
+
     public const LEVEL_INSTITUTIONAL = 2;
+
     public const LEVEL_SCHOOLING = 4;
+
     public const LEVEL_LIBRARY = 8;
 
     public const CAN_VIEW = 1;
+
     public const CAN_MODIFY = 2;
+
     public const CAN_REMOVE = 3;
 
     /**
@@ -54,17 +59,11 @@ class LegacyUserType extends LegacyModel
         'ref_funcionario_cad',
     ];
 
-    /**
-     * @return HasMany
-     */
     public function users(): HasMany
     {
         return $this->hasMany(LegacyUser::class, 'ref_cod_tipo_usuario');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function menus(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -79,7 +78,6 @@ class LegacyUserType extends LegacyModel
 
     /**
      * Retorna os processos e níveis de permissão em uma coleção chave => valor.
-     *
      */
     public function getProcesses(): SupportCollection
     {
@@ -148,7 +146,7 @@ class LegacyUserType extends LegacyModel
     protected function active(): Attribute
     {
         return Attribute::make(
-            get: fn () => (bool)$this->ativo
+            get: fn () => (bool) $this->ativo
         );
     }
 }

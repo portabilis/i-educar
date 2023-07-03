@@ -6,7 +6,6 @@ interface Core_Controller_Page_Interface extends CoreExt_Controller_Page_Interfa
      * Setter.
      *
      * @param CoreExt_DataMapper|string $dataMapper
-     *
      * @return Core_Controller_Page_Interface Provê interface fluída
      */
     public function setDataMapper($dataMapper);
@@ -22,7 +21,6 @@ interface Core_Controller_Page_Interface extends CoreExt_Controller_Page_Interfa
      * Setter.
      *
      * @param string $titulo
-     *
      * @return Core_Controller_Page_Interface Provê interface fluída
      */
     public function setBaseTitulo($titulo);
@@ -38,7 +36,6 @@ interface Core_Controller_Page_Interface extends CoreExt_Controller_Page_Interfa
      * Setter.
      *
      * @param int $processoAp
-     *
      * @return Core_Controller_Page_Interface Provê interface fluída
      */
     public function setBaseProcessoAp($processoAp);

@@ -5,19 +5,33 @@ use iEducar\Legacy\Model;
 class clsPmieducarCandidatoReservaVaga extends Model
 {
     public $cod_candidato_reserva_vaga;
+
     public $ano_letivo;
+
     public $data_solicitacao;
+
     public $ref_cod_aluno;
+
     public $ref_cod_serie;
+
     public $ref_cod_turno;
+
     public $ref_cod_pessoa_cad;
+
     public $data_cad;
+
     public $ref_cod_matricula;
+
     public $situacao;
+
     public $quantidade_membros;
+
     public $codUsuario;
+
     public $membros_trabalham;
+
     public $mae_fez_pre_natal;
+
     public $hora_solicitacao;
 
     public function __construct(
@@ -473,7 +487,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
      * @param null $ref_cod_serie
      * @param null $ref_cod_aluno
      * @param null $ref_cod_escola
-     *
      * @return bool
      *
      * @throws Exception
@@ -582,10 +595,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
     }
 
     /**
-     * @param $ref_cod_escola
-     * @param $ref_cod_matricula
-     * @param $ref_cod_aluno
-     *
      * @return bool|mixed
      *
      * @throws Exception
@@ -615,7 +624,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
     /**
      * @param null $motivo
-     *
      * @return bool|mixed
      *
      * @throws Exception
@@ -642,9 +650,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
     }
 
     /**
-     * @param $situacao
      * @param null $motivo
-     *
      * @return bool
      *
      * @throws Exception

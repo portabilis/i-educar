@@ -22,7 +22,6 @@ class DistrictRestrictOperationRule implements Rule
      *
      * @param string   $attribute
      * @param District $value
-     *
      * @return bool
      */
     public function passes($attribute, $value)

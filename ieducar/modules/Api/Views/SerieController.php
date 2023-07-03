@@ -96,7 +96,7 @@ class SerieController extends ApiCoreController
 
             $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-            return ['series' => $series ];
+            return ['series' => $series];
         }
     }
 
@@ -121,13 +121,13 @@ class SerieController extends ApiCoreController
         }
 
         $attrs = [
-          'cod_serie' => 'id',
-          'nm_serie' => 'nome'
+            'cod_serie' => 'id',
+            'nm_serie' => 'nome',
         ];
 
         $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-        return ['series' => $series ];
+        return ['series' => $series];
     }
 
     protected function getSeriesPorEscola()
@@ -182,12 +182,12 @@ class SerieController extends ApiCoreController
 
         $attrs = [
             'cod_serie' => 'id',
-            'nm_serie' => 'nome'
+            'nm_serie' => 'nome',
         ];
 
         $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-        return ['series' => $series ];
+        return ['series' => $series];
     }
 
     protected function getSeriesPorCurso()
@@ -210,12 +210,12 @@ class SerieController extends ApiCoreController
 
         $attrs = [
             'cod_serie' => 'id',
-            'nm_serie' => 'nome'
+            'nm_serie' => 'nome',
         ];
 
         $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-        return ['series' => $series ];
+        return ['series' => $series];
     }
 
     protected function getSeriesCursoGrouped()
@@ -234,7 +234,7 @@ class SerieController extends ApiCoreController
             $seriePorCurso[$serie['cod_curso']]['series'][$serie['id']] = $serie['nome'];
         }
 
-        return ['options' => $seriePorCurso ];
+        return ['options' => $seriePorCurso];
     }
 
     protected function canGetBloqueioFaixaEtaria()

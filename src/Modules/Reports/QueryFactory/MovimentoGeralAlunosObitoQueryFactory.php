@@ -10,12 +10,12 @@ class MovimentoGeralAlunosObitoQueryFactory extends QueryFactory
         'seleciona_curso',
         'curso',
         'data_inicial',
-        'data_final'
+        'data_final',
     ];
 
     protected $defaults = [
         'seleciona_curso' => 0,
-        'curso' => 0
+        'curso' => 0,
     ];
 
     protected $query = <<<'SQL'

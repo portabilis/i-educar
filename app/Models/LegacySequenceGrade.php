@@ -25,7 +25,7 @@ class LegacySequenceGrade extends LegacyModel
         'ref_usuario_cad',
         'ref_usuario_exc',
         'data_exclusao',
-        'ativo'
+        'ativo',
     ];
 
     public function gradeOrigin(): BelongsTo

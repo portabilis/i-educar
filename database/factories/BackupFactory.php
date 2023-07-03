@@ -16,13 +16,11 @@ class BackupFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'caminho' => $this->faker->url
+            'caminho' => $this->faker->url,
         ];
     }
 }

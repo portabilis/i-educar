@@ -3,8 +3,8 @@
 class ConfiguracaoMovimentoGeral extends CoreExt_Entity
 {
     protected $_data = [
-        'serie'     => null,
-        'coluna'    => null
+        'serie' => null,
+        'coluna' => null,
     ];
 
     public function getDefaultValidatorCollection()

@@ -1,40 +1,64 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_servidor_alocacao;
+
     public $ref_ref_cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_escola;
+
     public $ref_cod_servidor;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $carga_horaria_alocada;
+
     public $carga_horaria_disponivel;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $hora_atividade;
+
     public $horas_excedentes;
+
     public $periodo;
+
     public $ref_cod_funcionario_vinculo;
+
     public $ano;
+
     public $data_admissao;
+
     public $data_saida;
-    public $alocacao_array          = [];
+
+    public $alocacao_array = [];
+
     public $alocacao_excluida_array = [];
 
     public static $escolasPeriodos = [];
+
     public static $periodos = [];
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $ref_cod_servidor        = $_GET['ref_cod_servidor'];
+        $ref_cod_servidor = $_GET['ref_cod_servidor'];
         $ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-        $cod_servidor_alocacao   = $_GET['cod_servidor_alocacao'];
+        $cod_servidor_alocacao = $_GET['cod_servidor_alocacao'];
 
         if (is_numeric($cod_servidor_alocacao)) {
             $this->cod_servidor_alocacao = $cod_servidor_alocacao;
@@ -42,24 +66,24 @@ return new class extends clsCadastro {
             $servidorAlocacao = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao);
             $servidorAlocacao = $servidorAlocacao->detalhe();
 
-            $this->ref_ref_cod_instituicao     = $servidorAlocacao['ref_ref_cod_instituicao'];
-            $this->ref_cod_servidor            = $servidorAlocacao['ref_cod_servidor'];
-            $this->ref_cod_escola              = $servidorAlocacao['ref_cod_escola'];
-            $this->periodo                     = $servidorAlocacao['periodo'];
-            $this->carga_horaria_alocada       = $servidorAlocacao['carga_horaria'];
-            $this->cod_servidor_funcao         = $servidorAlocacao['ref_cod_servidor_funcao'];
+            $this->ref_ref_cod_instituicao = $servidorAlocacao['ref_ref_cod_instituicao'];
+            $this->ref_cod_servidor = $servidorAlocacao['ref_cod_servidor'];
+            $this->ref_cod_escola = $servidorAlocacao['ref_cod_escola'];
+            $this->periodo = $servidorAlocacao['periodo'];
+            $this->carga_horaria_alocada = $servidorAlocacao['carga_horaria'];
+            $this->cod_servidor_funcao = $servidorAlocacao['ref_cod_servidor_funcao'];
             $this->ref_cod_funcionario_vinculo = $servidorAlocacao['ref_cod_funcionario_vinculo'];
-            $this->ativo                       = $servidorAlocacao['ativo'];
-            $this->ano                         = $servidorAlocacao['ano'];
-            $this->data_admissao               = $servidorAlocacao['data_admissao'];
-            $this->data_saida                  = $servidorAlocacao['data_saida'];
-            $this->hora_inicial                = $servidorAlocacao['hora_inicial'];
-            $this->hora_final                  = $servidorAlocacao['hora_final'];
-            $this->hora_atividade              = $servidorAlocacao['hora_atividade'];
-            $this->horas_excedentes            = $servidorAlocacao['horas_excedentes'];
+            $this->ativo = $servidorAlocacao['ativo'];
+            $this->ano = $servidorAlocacao['ano'];
+            $this->data_admissao = $servidorAlocacao['data_admissao'];
+            $this->data_saida = $servidorAlocacao['data_saida'];
+            $this->hora_inicial = $servidorAlocacao['hora_inicial'];
+            $this->hora_final = $servidorAlocacao['hora_final'];
+            $this->hora_atividade = $servidorAlocacao['hora_atividade'];
+            $this->horas_excedentes = $servidorAlocacao['horas_excedentes'];
         } elseif (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
             $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-            $this->ref_cod_servidor        = $ref_cod_servidor;
+            $this->ref_cod_servidor = $ref_cod_servidor;
             $this->ref_cod_instituicao = $ref_ref_cod_instituicao;
         } else {
             $this->simpleRedirect('educar_servidor_lst.php');
@@ -162,9 +186,9 @@ return new class extends clsCadastro {
 
         // Períodos
         $periodo = [
-            1  => 'Matutino',
-            2  => 'Vespertino',
-            3  => 'Noturno'
+            1 => 'Matutino',
+            2 => 'Vespertino',
+            3 => 'Noturno',
         ];
 
         self::$periodos = $periodo;
@@ -338,9 +362,9 @@ return new class extends clsCadastro {
 
     public function hhmmToMinutes($hhmm)
     {
-        list($hora, $minuto) = explode(':', $hhmm);
+        [$hora, $minuto] = explode(':', $hhmm);
 
-        return (((int)$hora * 60) + $minuto);
+        return ((int) $hora * 60) + $minuto;
     }
 
     public function arrayHhmmToMinutes($array)

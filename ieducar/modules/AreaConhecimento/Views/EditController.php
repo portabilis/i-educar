@@ -17,27 +17,27 @@ class EditController extends Core_Controller_Page_EditController
     protected $_formMap = [
         'instituicao' => [
             'label' => 'Instituição',
-            'help' => ''
+            'help' => '',
         ],
         'nome' => [
             'label' => 'Nome',
             'help' => 'O nome da área de conhecimento. Exemplo: "<em>Ciências da natureza</em>".',
-            'entity' => 'nome'
+            'entity' => 'nome',
         ],
         'secao' => [
             'label' => 'Seção',
             'help' => 'A seção que abrange a área de conhecimento. Exemplo: "<em>Lógico Matemático</em>".',
-            'entity' => 'secao'
+            'entity' => 'secao',
         ],
         'ordenamento_ac' => [
             'label' => 'Ordem de apresentação',
             'help' => 'Ordem respeitada no lançamento de notas/faltas.',
-            'entity' => 'ordenamento_ac'
+            'entity' => 'ordenamento_ac',
         ],
         'agrupar_descritores' => [
             'label' => 'Esta área funciona como agrupador de descritores?',
             'help' => '',
-            'entity' => 'agrupar_descritores'
+            'entity' => 'agrupar_descritores',
         ],
     ];
 
@@ -99,7 +99,7 @@ class EditController extends Core_Controller_Page_EditController
         $this->campoTexto(
             'ordenamento_ac',
             $this->_getLabel('ordenamento_ac'),
-            $this->getEntity()->ordenamento_ac==99999 ? null : $this->getEntity()->ordenamento_ac,
+            $this->getEntity()->ordenamento_ac == 99999 ? null : $this->getEntity()->ordenamento_ac,
             10,
             50,
             false,
@@ -129,6 +129,7 @@ class EditController extends Core_Controller_Page_EditController
                 if ($key == 'ordenamento_ac') {
                     if ((trim($val) == '') || (is_null($val))) {
                         $data[$key] = 99999;
+
                         continue;
                     }
                 }

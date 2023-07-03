@@ -14,7 +14,9 @@ class LegacyMenuUserType extends Model
     protected $table = 'pmieducar.menu_tipo_usuario';
 
     public $timestamps = false;
+
     public $primaryKey = 'ref_cod_tipo_usuario';
+
     public $incrementing = false;
 
     protected $fillable = [

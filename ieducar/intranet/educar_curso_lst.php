@@ -3,30 +3,52 @@
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
 
     public $cod_curso;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_regime;
+
     public $ref_cod_nivel_ensino;
+
     public $ref_cod_tipo_ensino;
+
     public $nm_curso;
+
     public $sgl_curso;
+
     public $qtd_etapas;
+
     public $carga_horaria;
+
     public $ato_poder_publico;
+
     public $habilitacao;
+
     public $objetivo_curso;
+
     public $publico_alvo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_usuario_exc;
+
     public $ref_cod_instituicao;
+
     public $padrao_ano_escolar;
 
     public function Gerar()
@@ -41,7 +63,7 @@ return new class extends clsListagem {
         $lista_busca = [
             'Curso',
             'Nível Ensino',
-            'Tipo Ensino'
+            'Tipo Ensino',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -52,7 +74,7 @@ return new class extends clsListagem {
 
         $this->addCabecalhos($lista_busca);
 
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto(nome: 'nm_curso', campo: 'Curso', valor: $this->nm_curso, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
@@ -190,7 +212,7 @@ return new class extends clsListagem {
                 $lista_busca = [
                     "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$nomeCurso}</a>",
                     "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_nivel_ensino']}</a>",
-                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_tipo_ensino']}</a>"
+                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_tipo_ensino']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

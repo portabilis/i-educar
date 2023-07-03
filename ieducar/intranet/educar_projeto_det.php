@@ -2,7 +2,8 @@
 
 use App\Models\LegacyProject;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -11,29 +12,31 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_projeto;
+
     public $nome;
+
     public $observacao;
 
     public function Gerar()
     {
         $this->titulo = 'Projeto - Detalhe';
 
-        $this->cod_projeto=$_GET['cod_projeto'];
+        $this->cod_projeto = $_GET['cod_projeto'];
 
         $registro = LegacyProject::find(id: $this->cod_projeto)?->getAttributes();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect(url: 'educar_projeto_lst.php');
         }
 
         if ($registro['cod_projeto']) {
-            $this->addDetalhe(detalhe: [ 'Código projeto', "{$registro['cod_projeto']}"]);
+            $this->addDetalhe(detalhe: ['Código projeto', "{$registro['cod_projeto']}"]);
         }
         if ($registro['nome']) {
-            $this->addDetalhe(detalhe: [ 'Nome do projeto', "{$registro['nome']}"]);
+            $this->addDetalhe(detalhe: ['Nome do projeto', "{$registro['nome']}"]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe(detalhe: [ 'Observação', nl2br(string: "{$registro['observacao']}")]);
+            $this->addDetalhe(detalhe: ['Observação', nl2br(string: "{$registro['observacao']}")]);
         }
 
         //** Verificacao de permissao para cadastro

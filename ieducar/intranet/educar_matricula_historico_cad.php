@@ -2,10 +2,14 @@
 
 use App\Process;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $ref_cod_matricula;
+
     public $ref_cod_turma;
+
     public $sequencial;
+
     public $matricula_situacao;
 
     public function Inicializar()
@@ -56,7 +60,7 @@ return new class extends clsCadastro {
         $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do Aluno', valor: $enturmacao['nome']);
         $this->campoRotulo(nome: 'sequencial', campo: 'Sequencial', valor: $enturmacao['sequencial']);
 
-        $situacao = match ((int)$matricula['aprovado']) {
+        $situacao = match ((int) $matricula['aprovado']) {
             1 => 'Aprovado',
             2 => 'Reprovado',
             3 => 'Cursando',
@@ -94,7 +98,7 @@ return new class extends clsCadastro {
             'value' => $this->buscaSituacao(enturmacao: $enturmacao),
             'resources' => $situacoesMatricula,
             'inline' => true,
-            'required' => false
+            'required' => false,
         ];
 
         $this->inputsHelper()->select(attrName: 'matricula_situacao', inputOptions: $options);

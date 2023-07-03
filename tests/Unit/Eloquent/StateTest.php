@@ -27,9 +27,6 @@ class StateTest extends EloquentTestCase
         'cities' => City::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return State::class;

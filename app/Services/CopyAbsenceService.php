@@ -21,8 +21,6 @@ class CopyAbsenceService implements CopyRegistrationData
 
     /**
      * CopyAbsenceService constructor.
-     *
-     * @param RegistrationEvaluationRuleService $service
      */
     public function __construct(RegistrationEvaluationRuleService $service)
     {
@@ -32,8 +30,6 @@ class CopyAbsenceService implements CopyRegistrationData
     /**
      * Copia faltas de uma matrícula pra outra
      *
-     * @param LegacyRegistration $newRegistration
-     * @param LegacyRegistration $oldRegistration
      *
      * @throws MissingAbsenceType|MissingEvaluationRuleForCurrentYear
      */
@@ -61,7 +57,6 @@ class CopyAbsenceService implements CopyRegistrationData
      *
      * @param LegacyEvaluationRule $newEvaluationRule
      * @param LegacyEvaluationRule $oldEvaluationRule
-     *
      * @return bool
      */
     private function compatibleAbsenceType($newEvaluationRule, $oldEvaluationRule)
@@ -74,7 +69,6 @@ class CopyAbsenceService implements CopyRegistrationData
      *
      * @param LegacyRegistration   $newRegistration
      * @param LegacyEvaluationRule $newEvaluationRule
-     *
      * @return LegacyStudentAbsence
      */
     private function createStudentAbsence($newRegistration, $newEvaluationRule)
@@ -90,9 +84,6 @@ class CopyAbsenceService implements CopyRegistrationData
     /**
      * Copia as faltas para a matrícula nova
      *
-     * @param LegacyStudentAbsence $studentAbsence
-     * @param LegacyRegistration   $oldRegistration
-     * @param LegacyEvaluationRule $newEvaluationRule
      *
      * @throws MissingAbsenceType
      */
@@ -119,8 +110,6 @@ class CopyAbsenceService implements CopyRegistrationData
     /**
      * Copia falta por componente
      *
-     * @param LegacyStudentAbsence $studentAbsence
-     * @param LegacyRegistration   $oldRegistration
      *
      * @return void
      */
@@ -144,9 +133,6 @@ class CopyAbsenceService implements CopyRegistrationData
 
     /**
      * Copia falta geral
-     *
-     * @param LegacyStudentAbsence $studentAbsence
-     * @param LegacyRegistration   $oldRegistration
      */
     private function copyGeneralAbsence(
         LegacyStudentAbsence $studentAbsence,

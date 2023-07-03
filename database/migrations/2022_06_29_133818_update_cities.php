@@ -4,7 +4,8 @@ use App\Models\City;
 use App\Models\State;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         //Comparação realizada com o seeder original

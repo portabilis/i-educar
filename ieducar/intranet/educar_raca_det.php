@@ -2,7 +2,8 @@
 
 use App\Models\LegacyRace;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -11,28 +12,35 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_raca;
+
     public $idpes_exc;
+
     public $idpes_cad;
+
     public $nm_raca;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $pessoa_logada;
 
     public function Gerar()
     {
         $this->titulo = 'Raça - Detalhe';
 
-        $this->cod_raca=$_GET['cod_raca'];
+        $this->cod_raca = $_GET['cod_raca'];
 
         $race = LegacyRace::query()->find(id: $this->cod_raca);
 
-        if (! $race) {
+        if (!$race) {
             $this->simpleRedirect(url: 'educar_raca_lst.php');
         }
 
         if ($race->nm_raca) {
-            $this->addDetalhe(detalhe: [ 'Raça', $race->nm_raca]);
+            $this->addDetalhe(detalhe: ['Raça', $race->nm_raca]);
         }
 
         $obj_permissao = new clsPermissoes();

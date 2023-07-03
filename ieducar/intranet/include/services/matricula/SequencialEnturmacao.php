@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\DB;
 class SequencialEnturmacao
 {
     public $refCodMatricula;
+
     public $refCodTurma;
+
     public $dataEnturmacao;
 
     /**
@@ -193,7 +195,7 @@ class SequencialEnturmacao
                  END)";
 
         return DB::selectOne($sql)->sequencial;
-        ;
+
     }
 
     private function sequencialAlunoDependenciaPorData()
@@ -274,7 +276,7 @@ class SequencialEnturmacao
                 AND sequencial_fechamento >= ?
             ',
             [
-                $this->refCodTurma, $sequencial
+                $this->refCodTurma, $sequencial,
             ]
         );
     }
@@ -289,7 +291,7 @@ class SequencialEnturmacao
                 AND sequencial_fechamento > ?
             ',
             [
-                $this->refCodTurma, $sequencial
+                $this->refCodTurma, $sequencial,
             ]
         );
     }
@@ -371,7 +373,7 @@ class SequencialEnturmacao
                                                           ))
             ',
             [
-                $this->refCodMatricula, $this->refCodTurma
+                $this->refCodMatricula, $this->refCodTurma,
             ]
         );
 

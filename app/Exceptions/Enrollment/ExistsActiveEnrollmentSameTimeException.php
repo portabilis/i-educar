@@ -9,8 +9,6 @@ class ExistsActiveEnrollmentSameTimeException extends RuntimeException
 {
     /**
      * Existe outra enturmação ativa para a turma.
-     *
-     * @param LegacyRegistration $registration
      */
     public function __construct(LegacyRegistration $registration)
     {

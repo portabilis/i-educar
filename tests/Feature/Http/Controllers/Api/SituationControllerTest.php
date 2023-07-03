@@ -42,8 +42,8 @@ class SituationControllerTest extends TestCase
                 12 => 'Aprovado com dependência',
                 13 => 'Aprovado pelo conselho',
                 14 => 'Reprovado por faltas',
-                15 => 'Falecido'
-            ]
+                15 => 'Falecido',
+            ],
         ];
         $response->assertOk();
         $response->assertJson($expected);

@@ -3,7 +3,9 @@
 class TabelaArredondamento_Model_TabelaValorDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'TabelaArredondamento_Model_TabelaValor';
+
     protected $_tableName = 'tabela_arredondamento_valor';
+
     protected $_tableSchema = 'modules';
 
     protected $_attributeMap = [
@@ -11,6 +13,6 @@ class TabelaArredondamento_Model_TabelaValorDataMapper extends CoreExt_DataMappe
         'valorMinimo' => 'valor_minimo',
         'valorMaximo' => 'valor_maximo',
         'acao' => 'acao',
-        'casaDecimalExata' => 'casa_decimal_exata'
+        'casaDecimalExata' => 'casa_decimal_exata',
     ];
 }

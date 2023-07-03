@@ -24,13 +24,14 @@ class Registro00 extends AbstractRegistro
     protected $model;
 
     public $codigoInep;
+
     public $nomeEscola;
+
     public $situacaoFuncionamento;
 
     /**
      * @param $escola
      * @param $ano
-     *
      * @return Registro00Model
      */
     public function getData($school, $year)
@@ -46,11 +47,6 @@ class Registro00 extends AbstractRegistro
         return $models[0];
     }
 
-    /**
-     * @param $escola
-     * @param $year
-     *
-     */
     public function getExportFormatData($escola, $year)
     {
         $data = $this->getData($escola, $year);
@@ -61,7 +57,6 @@ class Registro00 extends AbstractRegistro
 
     /**
      * @param $Registro00Model
-     *
      * @return array
      */
     public function getRecordExportData($record)
@@ -157,9 +152,6 @@ class Registro00 extends AbstractRegistro
         return $data;
     }
 
-    /**
-     * @param $data
-     */
     protected function hydrateModel($data)
     {
         $model = clone $this->model;

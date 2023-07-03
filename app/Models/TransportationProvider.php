@@ -7,7 +7,9 @@ use App\Contracts\Enum;
 class TransportationProvider implements Enum
 {
     public const NONE = 0;
+
     public const STATE = 1;
+
     public const CITY = 2;
 
     public function getDescriptiveValues(): array
@@ -30,7 +32,7 @@ class TransportationProvider implements Enum
 
     public function getValueDescription($value)
     {
-        return match ((int)$value) {
+        return match ((int) $value) {
             self::CITY => 'municipal',
             self::STATE => 'estadual',
             default => 'nenhum',

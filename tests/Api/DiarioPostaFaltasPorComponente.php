@@ -33,7 +33,7 @@ class DiarioPostaFaltasPorComponente extends TestCase
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -102,9 +102,9 @@ class DiarioPostaFaltasPorComponente extends TestCase
                         $discipline->getKey() => [
                             'valor' => 2,
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->getResource('/module/Api/Diario', $data);
@@ -117,10 +117,10 @@ class DiarioPostaFaltasPorComponente extends TestCase
                     'msgs' => [
                         0 => [
                             'msg' => 'Faltas postadas com sucesso!',
-                            'type' => 'success'
-                        ]
+                            'type' => 'success',
+                        ],
                     ],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
 

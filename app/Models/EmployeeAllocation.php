@@ -33,7 +33,7 @@ class EmployeeAllocation extends LegacyModel
         'ref_cod_funcionario_vinculo',
         'hora_atividade',
         'horas_excedentes',
-        'data_saida'
+        'data_saida',
     ];
 
     protected function periodName(): Attribute
@@ -60,6 +60,7 @@ class EmployeeAllocation extends LegacyModel
     {
         return $this->belongsTo(LegacyEmployeeRole::class, 'ref_cod_servidor_funcao', 'cod_servidor_funcao');
     }
+
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'ref_cod_servidor', 'cod_servidor');

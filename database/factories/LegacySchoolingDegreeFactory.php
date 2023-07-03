@@ -27,7 +27,7 @@ class LegacySchoolingDegreeFactory extends Factory
             }
 
             return [
-                'id' => $schooling->getKey()
+                'id' => $schooling->getKey(),
             ];
         });
     }

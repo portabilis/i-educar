@@ -5,33 +5,61 @@ use iEducar\Legacy\Model;
 class clsModulesMoradiaAluno extends Model
 {
     public $ref_cod_aluno;
+
     public $moradia;
+
     public $material;
+
     public $casa_outra;
+
     public $moradia_situacao;
+
     public $quartos;
+
     public $sala;
+
     public $copa;
+
     public $banheiro;
+
     public $garagem;
+
     public $empregada_domestica;
+
     public $automovel;
+
     public $motocicleta;
+
     public $geladeira;
+
     public $fogao;
+
     public $maquina_lavar;
+
     public $microondas;
+
     public $video_dvd;
+
     public $televisao;
+
     public $telefone;
+
     public $recursos_tecnologicos;
+
     public $quant_pessoas;
+
     public $renda;
+
     public $agua_encanada;
+
     public $poco;
+
     public $energia;
+
     public $esgoto;
+
     public $fossa;
+
     public $lixo;
 
     public function __construct(

@@ -3,39 +3,70 @@
 class relatorios
 {
     public $titulo_relatorio;
+
     public $pdf;
-    public $altura=0;
+
+    public $altura = 0;
+
     public $texto;
-    public $num_linhas=0;
+
+    public $num_linhas = 0;
+
     public $espacoEntreLinhas;
-    public $numeroPagina=0;
+
+    public $numeroPagina = 0;
+
     public $capa;
+
     public $rodape;
+
     public $lastMod;
+
     public $margem_esquerda = 50;
+
     public $margem_direita = 50;
+
     public $margem_topo = 50;
+
     public $margem_fundo = 50;
+
     public $txt_padding_left = 5;
+
     public $largura;
+
     public $alturaUltimaLinha = 13;
+
     public $cabecalho;
+
     public $altura_titulo;
+
     public $tamanho_titulo;
+
     public $cor_fundo_titulo;
+
     public $cor_texto_titulo;
+
     public $cor_fundo_cabecalho;
+
     public $cor_fundo_rodape;
+
     public $tfont = 10;
+
     public $fonte_titulo;
+
     public $caixa;
+
     public $valor_titulo;
+
     public $linha_transparente = false;
+
     public $exibe_borda = true;
+
     public $exibe_titulo_relatorio = true;
+
     public $exibe_produzido_por = true;
 
-    public function __construct($nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha='A4', $cabecalho="Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC", $cod_fundo_titulo = '#000000', $cor_texto_titulo = '#FFFFFF', $cor_fundo_cabecalho = '#D3D3D3', $cor_fundo_rodape = '#D3D3D3', $depurar = false)
+    public function __construct($nome, $espacoEntreLinhas = 80, $capa = false, $rodape = false, $tipoFolha = 'A4', $cabecalho = "Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC", $cod_fundo_titulo = '#000000', $cor_texto_titulo = '#FFFFFF', $cor_fundo_cabecalho = '#D3D3D3', $cor_fundo_rodape = '#D3D3D3', $depurar = false)
     {
         $this->fonte_titulo = 'arial';
         $this->cor_fundo_titulo = $cod_fundo_titulo;
@@ -48,10 +79,10 @@ class relatorios
         $this->espacoEntreLinhas = $espacoEntreLinhas;
         $this->cabecalho = $cabecalho ? $cabecalho : "Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC";
         $this->largura = $this->pdf->largura;
-        if ($capa && ! ($capa[0] == '' && $capa[1] = '')) {
+        if ($capa && !($capa[0] == '' && $capa[1] = '')) {
             $this->pdf->OpenPage();
             $linha = 0.0001;
-            $cores = [ '#000000', '#111111', '#222222', '#333333', '#444444', '#555555', '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB', '#CCCCCC', '#DDDDDD', '#FFFFFF' ];
+            $cores = ['#000000', '#111111', '#222222', '#333333', '#444444', '#555555', '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB', '#CCCCCC', '#DDDDDD', '#FFFFFF'];
             $x = 100;
             $y = 150;
             $xMod = 7;
@@ -73,7 +104,7 @@ class relatorios
         }
     }
 
-    public function setMargem($esquerda=50, $direita=50, $topo=50, $fundo=50)
+    public function setMargem($esquerda = 50, $direita = 50, $topo = 50, $fundo = 50)
     {
         $this->margem_direita = $direita;
         $this->margem_esquerda = $esquerda;
@@ -183,7 +214,7 @@ class relatorios
 
         if ($this->exibe_titulo_relatorio) {
             // desenha a caixa para o titulo do relatorio
-            $this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura-129, $this->largura - $this->margem_esquerda - $this->margem_direita + 2, $this->altura_titulo, 1, $this->cor_fundo_titulo, $this->cor_fundo_titulo);
+            $this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura - 129, $this->largura - $this->margem_esquerda - $this->margem_direita + 2, $this->altura_titulo, 1, $this->cor_fundo_titulo, $this->cor_fundo_titulo);
             // escreve o titulo do relatorio
             $this->pdf->Write($this->titulo_relatorio, $this->margem_esquerda + $this->txt_padding_left, 130, 500, $this->tamanho_titulo, $fonte, '10', $this->cor_texto_titulo, 'left');
         }
@@ -212,10 +243,10 @@ class relatorios
     }
 
     // funcao para ser chamada a cada nova linha
-    public function novalinha($texto, $deslocamento=0, $altura=13, $titulo=false, $fonte='arial', $divisoes=false, $fundo_titulo = '#000000', $fundo_texo = '#d3d3d3', $cor_texto_titulo = '#FFFFFF', $bool_traco = false, $titulo_permanente = false, $bool_transparente = null, $tamanho_font = null, $alinhamento = 'left')
+    public function novalinha($texto, $deslocamento = 0, $altura = 13, $titulo = false, $fonte = 'arial', $divisoes = false, $fundo_titulo = '#000000', $fundo_texo = '#d3d3d3', $cor_texto_titulo = '#FFFFFF', $bool_traco = false, $titulo_permanente = false, $bool_transparente = null, $tamanho_font = null, $alinhamento = 'left')
     {
         $this->tfont = $tamanho_font;
-        if (! $divisoes) {
+        if (!$divisoes) {
             $divisoes = $this->espacoEntreLinhas;
         }
         $cor = '#000000';
@@ -228,11 +259,11 @@ class relatorios
             $cor = $cor_texto_titulo;
         }
         if ($titulo && $titulo_permanente) {
-            $this->valor_titulo = [$texto,$deslocamento,$altura, $titulo, $fonte, $divisoes, $fundo_titulo, $fundo_texo, $cor_texto_titulo, $bool_traco];
+            $this->valor_titulo = [$texto, $deslocamento, $altura, $titulo, $fonte, $divisoes, $fundo_titulo, $fundo_texo, $cor_texto_titulo, $bool_traco];
         }
 
         //Verifica se é o fim da página
-        if ($this->altura +$altura > ($this->pdf->altura * 0.85)) {
+        if ($this->altura + $altura > ($this->pdf->altura * 0.85)) {
             $this->fillText();
             if ($this->altura == 0) {
                 $this->novaPagina();
@@ -246,14 +277,14 @@ class relatorios
             $this->alturaUltimaLinha = $altura;
         }
 
-        $transparente = (! is_null($bool_transparente)) ? $bool_transparente: $this->linha_transparente;
+        $transparente = (!is_null($bool_transparente)) ? $bool_transparente : $this->linha_transparente;
 
-        $this->texto[] = ['texto'=>$texto, 'altura'=>$this->altura, 'fonte'=>$fonte, 'desloc'=>$deslocamento, 'alturaLinha'=>$altura, 'fundo'=>$fundo, 'cor'=>$cor, 'titulo'=>$titulo, 'divisoes'=>$divisoes, 'alturaultimalinha'=>$this->alturaUltimaLinha, 'traco'=>$bool_traco, 'tfont'=>$this->tfont, 'transparente'=>$transparente, 'alinhamento'=>$alinhamento ];
+        $this->texto[] = ['texto' => $texto, 'altura' => $this->altura, 'fonte' => $fonte, 'desloc' => $deslocamento, 'alturaLinha' => $altura, 'fundo' => $fundo, 'cor' => $cor, 'titulo' => $titulo, 'divisoes' => $divisoes, 'alturaultimalinha' => $this->alturaUltimaLinha, 'traco' => $bool_traco, 'tfont' => $this->tfont, 'transparente' => $transparente, 'alinhamento' => $alinhamento];
     }
 
-    public function novalinha2($texto, $deslocamento=0, $altura=13, $titulo=false, $fonte='arial', $divisoes=false, $fundo_titulo = '#000000', $fundo_texo = '#d3d3d3', $cor_texto_titulo = '#FFFFFF', $bool_traco = false, $tfont = '10', $bool_transparente = null)
+    public function novalinha2($texto, $deslocamento = 0, $altura = 13, $titulo = false, $fonte = 'arial', $divisoes = false, $fundo_titulo = '#000000', $fundo_texo = '#d3d3d3', $cor_texto_titulo = '#FFFFFF', $bool_traco = false, $tfont = '10', $bool_transparente = null)
     {
-        if (! $divisoes) {
+        if (!$divisoes) {
             $divisoes = $this->espacoEntreLinhas;
         }
         $cor = '#000000';
@@ -267,7 +298,7 @@ class relatorios
         }
 
         //Verifica se é o fim da página
-        if ($this->altura +$altura > ($this->pdf->altura * 0.85)) {
+        if ($this->altura + $altura > ($this->pdf->altura * 0.85)) {
             $this->fillText();
             if ($this->altura == 0) {
                 $this->novaPagina();
@@ -281,10 +312,10 @@ class relatorios
             $this->alturaUltimaLinha = $altura;
         }
 
-        $transparente = (! is_null($bool_transparente)) ? $bool_transparente: $this->linha_transparente;
+        $transparente = (!is_null($bool_transparente)) ? $bool_transparente : $this->linha_transparente;
 
         $this->tfont = $tfont;
-        $this->texto[] = ['texto'=>$texto, 'altura'=>$this->altura, 'fonte'=>$fonte, 'desloc'=>$deslocamento, 'alturaLinha'=>$altura, 'fundo'=>$fundo, 'cor'=>$cor, 'titulo'=>$titulo, 'divisoes'=>$divisoes, 'alturaultimalinha'=>$this->alturaUltimaLinha, 'traco'=>$bool_traco, 'tfont'=>$this->tfont, 'transparente'=>$transparente];
+        $this->texto[] = ['texto' => $texto, 'altura' => $this->altura, 'fonte' => $fonte, 'desloc' => $deslocamento, 'alturaLinha' => $altura, 'fundo' => $fundo, 'cor' => $cor, 'titulo' => $titulo, 'divisoes' => $divisoes, 'alturaultimalinha' => $this->alturaUltimaLinha, 'traco' => $bool_traco, 'tfont' => $this->tfont, 'transparente' => $transparente];
     }
 
     public function setLinhaTransparente($boolTransparente)
@@ -295,7 +326,7 @@ class relatorios
     public function fillText()
     {
         if ($this->exibe_borda) {
-            $this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura  - $this->altura -3, $this->largura - $this->margem_direita - $this->margem_esquerda + 2, $this->altura-135, 1);
+            $this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura - $this->altura - 3, $this->largura - $this->margem_direita - $this->margem_esquerda + 2, $this->altura - 135, 1);
         }
 
         // passa todas as linhas
@@ -303,37 +334,37 @@ class relatorios
             if (!$linha['titulo']) {
                 $this->num_linhas++;
             }
-            $mod = ($linha['alturaLinha'] - $linha['alturaultimalinha'] > 0) ? ($linha['alturaLinha'] - $linha['alturaultimalinha']): 0;
+            $mod = ($linha['alturaLinha'] - $linha['alturaultimalinha'] > 0) ? ($linha['alturaLinha'] - $linha['alturaultimalinha']) : 0;
             $mod += ($linha['alturaLinha'] > $this->lastMod) ? $this->lastMod : 0;
             // se for titulo ou linha impar desenha uma caixa no fundo
 
-            if (($this->num_linhas % 2 || $linha['titulo']) && ! $linha['transparente']) {
+            if (($this->num_linhas % 2 || $linha['titulo']) && !$linha['transparente']) {
                 if (!$linha['traco']) {
-                    $this->pdf->Shape('ret', $this->margem_esquerda+0.5, $this->pdf->altura - $linha['altura'] - $mod, $this->largura - $this->margem_direita - $this->margem_esquerda-2, $linha['alturaLinha'], 1, $linha['fundo'], $linha['fundo']);
+                    $this->pdf->Shape('ret', $this->margem_esquerda + 0.5, $this->pdf->altura - $linha['altura'] - $mod, $this->largura - $this->margem_direita - $this->margem_esquerda - 2, $linha['alturaLinha'], 1, $linha['fundo'], $linha['fundo']);
                 }
             }
             $i = 0;
             $col = 0;
             if ($linha['traco']) {
-                $posx = $this->margem_esquerda + $this->txt_padding_left + $i ;
-                $this->pdf->line($posx-5, $this->pdf->altura - $linha['altura']+$mod +3, $this->largura - $this->margem_direita - $posx+ 55, $this->pdf->altura - $linha['altura'] + $mod+3, 1.5);
+                $posx = $this->margem_esquerda + $this->txt_padding_left + $i;
+                $this->pdf->line($posx - 5, $this->pdf->altura - $linha['altura'] + $mod + 3, $this->largura - $this->margem_direita - $posx + 55, $this->pdf->altura - $linha['altura'] + $mod + 3, 1.5);
             } else {
                 // passa as colunas escrevendo elas
                 foreach ($linha['texto'] as $texto) {
-                    if ($linha['tfont']=='') {
-                        $linha['tfont']= 10;
+                    if ($linha['tfont'] == '') {
+                        $linha['tfont'] = 10;
                     }//$this->tfont;
                     $posx = $this->margem_esquerda + $this->txt_padding_left + $i + $linha['desloc'];
-                    $this->pdf->Write($texto, $posx, $linha['altura']+$mod, $this->largura - $this->margem_direita - $posx, $linha['alturaLinha'], $linha['fonte'], $linha['tfont'], $linha['cor'], $linha['alinhamento']);
-                    $colSum = (is_array($linha['divisoes']))? $linha['divisoes'][$col]: $linha['divisoes'];
+                    $this->pdf->Write($texto, $posx, $linha['altura'] + $mod, $this->largura - $this->margem_direita - $posx, $linha['alturaLinha'], $linha['fonte'], $linha['tfont'], $linha['cor'], $linha['alinhamento']);
+                    $colSum = (is_array($linha['divisoes'])) ? $linha['divisoes'][$col] : $linha['divisoes'];
                     $i += $colSum;
                     $col++;
                 }
             }
 
-            $this->lastMod = $mod ;
+            $this->lastMod = $mod;
         }
-        $this->texto ='';
+        $this->texto = '';
         $this->altura = 0;
         $this->fechaPagina();
     }

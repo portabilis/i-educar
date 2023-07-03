@@ -18,7 +18,9 @@ class DatabaseToCsvExporter implements ShouldQueue
     use SerializesModels;
 
     public $tries = 5;
+
     public $timeout = 1800;
+
     public $retryAfter = 5;
 
     /**
@@ -28,8 +30,6 @@ class DatabaseToCsvExporter implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     * @param Export $export
      */
     public function __construct(Export $export)
     {
@@ -52,7 +52,7 @@ class DatabaseToCsvExporter implements ShouldQueue
     {
         return [
             $this->export->getConnectionName(),
-            'csv-export'
+            'csv-export',
         ];
     }
 }

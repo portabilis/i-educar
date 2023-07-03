@@ -2,7 +2,8 @@
 
 use App\Models\LegacyStageType;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
@@ -18,16 +19,27 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_modulo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $num_etapas;
+
     public $num_meses;
+
     public $num_semanas;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -54,7 +66,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: $lista_busca);
 
         // Filtros de Foreign Keys
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto(nome: 'nm_tipo', campo: 'Etapa', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255);

@@ -3,8 +3,11 @@
 class App_Model_LocalFuncionamentoDiferenciado extends CoreExt_Enum
 {
     const NAO_ESTA = 0;
+
     const SALA_ANEXA = 1;
+
     const UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO = 2;
+
     const UNIDADE_PRISIONAL = 3;
 
     protected $_data = [

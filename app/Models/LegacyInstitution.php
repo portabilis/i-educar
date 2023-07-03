@@ -36,8 +36,6 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacyInstitutionBuilder::class;
 
@@ -73,9 +71,6 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         'name' => 'nm_instituicao',
     ];
 
-    /**
-     * @return HasOne
-     */
     public function generalConfiguration(): HasOne
     {
         return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
@@ -118,8 +113,6 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 
     /**
      * Indica se os campos do Censo são obrigatórios.
-     *
-     * @return bool
      */
     public function isMandatoryCensoFields(): bool
     {
@@ -155,7 +148,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     {
         return Attribute::make(
             get: function () {
-                return $this->telefone ? '(' . $this->ddd_telefone . ') ' . $this->telefone : '(##) ####-####' ;
+                return $this->telefone ? '(' . $this->ddd_telefone . ') ' . $this->telefone : '(##) ####-####';
             }
         );
     }
@@ -164,14 +157,11 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     {
         return Attribute::make(
             get: function () {
-                return '(##) #####-####' ;
+                return '(##) #####-####';
             }
         );
     }
 
-    /**
-     * @return HasMany
-     */
     public function schools(): HasMany
     {
         return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
@@ -179,8 +169,6 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 
     /**
      * Regras de avaliação
-     *
-     * @return HasMany
      */
     public function evaluationRules(): HasMany
     {

@@ -30,10 +30,12 @@ class Registro00Import implements RegistroImportInterface
      * @var Registro00
      */
     private $model;
+
     /**
      * @var User
      */
     private $user;
+
     /**
      * @var int
      */
@@ -50,10 +52,7 @@ class Registro00Import implements RegistroImportInterface
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
-     * @param RegistroEducacenso $model
      * @param int                $year
-     * @param                    $user
-     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -156,7 +155,7 @@ class Registro00Import implements RegistroImportInterface
         $place = Place::firstOrCreate([
             'city_id' => $city->getKey(),
             'address' => $this->model->logradouro,
-            'number' => (int)(is_numeric($this->model->numero) ? $this->model->numero : null),
+            'number' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
             'complement' => $this->model->complemento,
             'neighborhood' => $this->model->bairro,
             'postal_code' => $this->model->cep,

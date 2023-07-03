@@ -5,11 +5,17 @@ use iEducar\Legacy\Model;
 class clsModulesComponenteCurricularAnoEscolar extends Model
 {
     public $componente_curricular_id;
+
     public $ano_escolar_id;
+
     public $carga_horaria;
+
     public $hora_falta;
+
     public $tipo_nota;
+
     public $componentes;
+
     public $updateInfo;
 
     public function __construct(
@@ -33,7 +39,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             'hora_falta',
         ];
 
-        $this->_campos_lista = join(', ', $campos) . ' ';
+        $this->_campos_lista = implode(', ', $campos) . ' ';
         $this->_todos_campos = $this->_campos_lista;
 
         if (is_numeric($componente_curricular_id)) {
@@ -84,9 +90,9 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
         if ($this->updateInfo['insert']) {
             foreach ($this->updateInfo['insert'] as $componenteInsert) {
                 $this->cadastraComponente(
-                    (int)$componenteInsert['id'],
-                    (float)$componenteInsert['carga_horaria'],
-                    (int)$componenteInsert['tipo_nota'],
+                    (int) $componenteInsert['id'],
+                    (float) $componenteInsert['carga_horaria'],
+                    (int) $componenteInsert['tipo_nota'],
                     $componenteInsert['anos_letivos'],
                     $componenteInsert['hora_falta'] ? (float) $componenteInsert['hora_falta'] : null,
                 );
@@ -152,7 +158,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
     {
         $retorno = [
             'inseridos' => [],
-            'removidos' => []
+            'removidos' => [],
         ];
 
         $sql = <<<SQL

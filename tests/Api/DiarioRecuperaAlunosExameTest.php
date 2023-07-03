@@ -47,12 +47,12 @@ class DiarioRecuperaAlunosExameTest extends TestCase
                         0 => [
                             'id' => $scoreExam->registration->ref_cod_aluno,
                             'nota_exame' => number_format($scoreExam->nota_exame, 3, '.'),
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'alunos-exame-turma',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

@@ -143,7 +143,7 @@ class LegacySchoolFactory extends Factory
                         ->create();
 
                     $student = LegacyStudentFactory::new()->create([
-                        'ref_idpes' => $individual
+                        'ref_idpes' => $individual,
                     ]);
 
                     LegacyRegistrationFactory::new()

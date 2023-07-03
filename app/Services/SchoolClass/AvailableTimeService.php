@@ -14,7 +14,7 @@ class AvailableTimeService
     private $enrollmentDate;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $onlySchoolClassesInformedOnCensus = false;
 
@@ -24,7 +24,6 @@ class AvailableTimeService
      *
      * @param int $studentId     ID do aluno
      * @param int $schoolClassId ID da turma
-     *
      * @return bool
      */
     public function isAvailable(int $studentId, int $schoolClassId)
@@ -69,7 +68,6 @@ class AvailableTimeService
      * Define a data limite das enturmações que serão consideradas como
      * conflitantes.
      *
-     * @param DateTime $date
      *
      * @return $this
      */
@@ -95,8 +93,6 @@ class AvailableTimeService
     /**
      * Retorna se os horários das turmas são conflitantes.
      *
-     * @param LegacySchoolClass $schoolClass
-     * @param LegacySchoolClass $otherSchoolClass
      *
      * @return bool
      */
@@ -157,8 +153,6 @@ class AvailableTimeService
     /**
      * Retorna true caso uma das turmas for Escolarização e a outra Atendimento educacional especializado - AEE
      *
-     * @param LegacySchoolClass $schoolClass
-     * @param LegacySchoolClass $otherSchoolClass
      *
      * @return bool
      */
@@ -180,8 +174,6 @@ class AvailableTimeService
     /**
      * Recebe duas turmas e retorna a que tem o tipo de atendimento igual a Atendimento educacional especializado - AEE
      *
-     * @param LegacySchoolClass $schoolClass
-     * @param LegacySchoolClass $otherSchoolClass
      *
      * @return LegacySchoolClass
      */

@@ -11,7 +11,6 @@ trait PrimaryKey
     /**
      * Create a new column ID with primary key
      *
-     * @param $tableName
      *
      * @return void
      */
@@ -34,17 +33,13 @@ trait PrimaryKey
         });
     }
 
-    /**
-     * @param $tableName
-     * @param $keyColumns
-     */
     public function removePrimaryKey($tableName, $keyColumns)
     {
-        Schema::table($tableName, function (Blueprint $table) use ($tableName, $keyColumns) {
+        Schema::table($tableName, function (Blueprint $table) {
             $table->dropColumn('id');
         });
 
-        Schema::table($tableName, function (Blueprint $table) use ($tableName, $keyColumns) {
+        Schema::table($tableName, function (Blueprint $table) use ($keyColumns) {
             if ($keyColumns) {
                 $table->dropUnique($keyColumns);
 
@@ -54,8 +49,6 @@ trait PrimaryKey
     }
 
     /**
-     * @param $table
-     *
      * @return mixed
      */
     private function getPrimaryKeyInfo($table)
@@ -81,8 +74,6 @@ SQL;
     }
 
     /**
-     * @param $table
-     *
      * @return mixed
      */
     public function getTableName($table)
@@ -90,21 +81,13 @@ SQL;
         return explode('.', $table)[1];
     }
 
-    /**
-     * @param $tableName
-     * @param $foreignKey
-     */
     public function dropForeignKey($tableName, $foreignKey)
     {
-        Schema::table($tableName, function (Blueprint $table) use ($tableName, $foreignKey) {
+        Schema::table($tableName, function (Blueprint $table) use ($foreignKey) {
             $table->dropForeign($foreignKey);
         });
     }
 
-    /**
-     * @param $tableName
-     * @param $columnsForeignKey
-     */
     public function createUniqueIndex($tableName, $columnsForeignKey)
     {
         Schema::table($tableName, function (Blueprint $table) use ($columnsForeignKey) {
@@ -114,11 +97,6 @@ SQL;
 
     /**
      * @param $schema
-     * @param $table
-     * @param $columnsForeignKey
-     * @param $foreignKey
-     *
-     * @return void
      */
     public function createConstraint($table, $columnsForeignKey, $foreignKey): void
     {

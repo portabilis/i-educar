@@ -3,18 +3,30 @@
 use App\Models\LegacyRegistration;
 use App\Services\SchoolClass\AvailableTimeService;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_matricula;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_turma_origem;
+
     public $ref_cod_turma_destino;
+
     public $ref_cod_curso;
+
     public $data_enturmacao;
+
     public $sequencial;
 
     public function Inicializar()
@@ -184,7 +196,6 @@ return new class extends clsCadastro {
      * Retorna a data base de remanejamento para a instituição.
      *
      * @param int $instituicao
-     *
      * @return string|null
      */
     public function getDataBaseRemanejamento($instituicao)
@@ -278,7 +289,7 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        die;
+        exit;
     }
 
     public function Novo()

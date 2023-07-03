@@ -20,8 +20,6 @@ class LogUnification extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LogUnificationBuilder::class;
 
@@ -89,9 +87,9 @@ class LogUnification extends Model
     }
 
     /**
-     * @throws Exception
-     *
      * @return string
+     *
+     * @throws Exception
      */
     public function getMainName()
     {
@@ -99,9 +97,9 @@ class LogUnification extends Model
     }
 
     /**
-     * @throws Exception
-     *
      * @return array
+     *
+     * @throws Exception
      */
     public function getDuplicatesName()
     {
@@ -109,9 +107,9 @@ class LogUnification extends Model
     }
 
     /**
-     * @throws Exception
-     *
      * @return LogUnificationTypeInterface
+     *
+     * @throws Exception
      */
     public function getAdapter()
     {

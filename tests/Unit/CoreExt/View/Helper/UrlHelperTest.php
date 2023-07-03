@@ -46,7 +46,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
                 'index.php',
                 [
                     'query' => ['param1' => 'value1'],
-                    'fragment' => 'fragment'
+                    'fragment' => 'fragment',
                 ]
             )
         );
@@ -63,7 +63,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
                 [
                     'query' => ['param1' => 'value1'],
                     'fragment' => 'fragment',
-                    'absolute' => true
+                    'absolute' => true,
                 ]
             )
         );
@@ -94,7 +94,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
                 [
                     'absolute' => true,
                     'components' => CoreExt_View_Helper_UrlHelper::URL_SCHEME +
-                        CoreExt_View_Helper_UrlHelper::URL_HOST
+                        CoreExt_View_Helper_UrlHelper::URL_HOST,
                 ]
             )
         );
@@ -109,7 +109,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
                 'http://www.example.com/controller',
                 [
                     'absolute' => true,
-                    'components' => CoreExt_View_Helper_UrlHelper::URL_PATH
+                    'components' => CoreExt_View_Helper_UrlHelper::URL_PATH,
                 ]
             )
         );

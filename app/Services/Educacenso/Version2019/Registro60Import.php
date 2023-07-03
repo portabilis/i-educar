@@ -49,10 +49,7 @@ class Registro60Import implements RegistroImportInterface
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
-     * @param RegistroEducacenso $model
      * @param int                $year
-     * @param                    $user
-     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -99,8 +96,6 @@ class Registro60Import implements RegistroImportInterface
     }
 
     /**
-     * @param $arrayColumns
-     *
      * @return Registro50|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
@@ -112,9 +107,6 @@ class Registro60Import implements RegistroImportInterface
     }
 
     /**
-     * @param LegacySchoolClass $schoolClass
-     * @param LegacyStudent     $student
-     *
      * @return LegacyRegistration
      */
     private function getOrCreateRegistration(LegacySchoolClass $schoolClass, LegacyStudent $student)
@@ -139,9 +131,6 @@ class Registro60Import implements RegistroImportInterface
     }
 
     /**
-     * @param LegacySchoolClass  $schoolClass
-     * @param LegacyRegistration $registration
-     *
      * @return LegacyEnrollment
      */
     private function getOrCreateEnrollment(LegacySchoolClass $schoolClass, LegacyRegistration $registration)
@@ -224,8 +213,6 @@ class Registro60Import implements RegistroImportInterface
     }
 
     /**
-     * @param $array
-     *
      * @return string
      */
     private function getPostgresIntegerArray($array)
@@ -233,9 +220,6 @@ class Registro60Import implements RegistroImportInterface
         return '{' . implode(',', $array) . '}';
     }
 
-    /**
-     * @param LegacyStudent $student
-     */
     private function storeStudentData(LegacyStudent $student)
     {
         $student->recebe_escolarizacao_em_outro_espaco = $this->model->recebeEscolarizacaoOutroEspacao;

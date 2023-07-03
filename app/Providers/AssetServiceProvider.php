@@ -11,7 +11,7 @@ class AssetServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../config/assets.php' => config_path('assets.php')
+            __DIR__ . '/../../config/assets.php' => config_path('assets.php'),
         ], 'config');
 
         $this->app->singleton(AssetServiceContract::class, function () {
@@ -20,7 +20,7 @@ class AssetServiceProvider extends ServiceProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function register()
     {

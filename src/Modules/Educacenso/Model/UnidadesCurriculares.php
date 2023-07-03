@@ -5,12 +5,19 @@ namespace iEducar\Modules\Educacenso\Model;
 final class UnidadesCurriculares
 {
     public const ELETIVAS = 1;
+
     public const LIBRAS = 2;
+
     public const LINGUA_INDIGENA = 3;
+
     public const LINGUA_LITERATURA_ESTRANGEIRA_ESPANHOL = 4;
+
     public const LINGUA_LITERATURA_ESTRANGEIRA_FRANCES = 5;
+
     public const LINGUA_LITERATURA_ESTRANGEIRA_OUTRA = 6;
+
     public const PROJETO_DE_VIDA = 7;
+
     public const TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS = 8;
 
     public static function getDescriptiveValues()

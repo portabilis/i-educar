@@ -6,16 +6,26 @@ use App\Models\LegacyUserType;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $cod_servidor;
+
     public $ref_idesco;
+
     public $ref_cod_funcao;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
+
     public $alocacao_array = [];
 
     /**
@@ -132,7 +142,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(
             [
                 'Multisseriado',
-                dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'
+                dbBool($registro['multi_seriado']) ? 'Sim' : 'Não',
             ]
         );
 
@@ -163,7 +173,7 @@ return new class extends clsDetalhe {
             4 => 'Quarta',
             5 => 'Quinta',
             6 => 'Sexta',
-            7 => 'Sábado'
+            7 => 'Sábado',
         ];
 
         if ($this->alocacao_array) {
@@ -257,7 +267,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([
                 'Horários de aula',
                 '<a href=\'javascript:trocaDisplay("horarios");\' >Mostrar detalhes</a>' .
-                '<div id=\'horarios\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>'
+                '<div id=\'horarios\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>',
             ]);
         }
 
@@ -307,7 +317,7 @@ return new class extends clsDetalhe {
 
         $withdrawals = EmployeeWithdrawal::query()->where(['ref_cod_servidor' => $this->cod_servidor, 'data_exclusao' => null])->get();
 
-        $nivel_acesso  = (new clsPermissoes())->nivel_acesso($this->pessoa_logada);
+        $nivel_acesso = (new clsPermissoes())->nivel_acesso($this->pessoa_logada);
 
         $isAllowedRemove = in_array($nivel_acesso, [LegacyUserType::LEVEL_ADMIN, LegacyUserType::LEVEL_INSTITUTIONAL], true);
 
@@ -317,7 +327,7 @@ return new class extends clsDetalhe {
                 [
                     'withdrawals' => $withdrawals,
                     'isAllowedRemove' => $isAllowedRemove,
-                    'isAllowedModify' => $isAllowedModify
+                    'isAllowedModify' => $isAllowedModify,
                 ]
             )->render());
         }
@@ -331,8 +341,6 @@ return new class extends clsDetalhe {
     }
 
     /**
-     * @param $cod_servidor
-     *
      * @return mixed
      */
     private function getEmployeeFunctions($cod_servidor)
@@ -361,8 +369,8 @@ return new class extends clsDetalhe {
     public function makeExtra()
     {
         return str_replace(
-            ['#cod_servidor','#ref_cod_instituicao'],
-            [$_GET['cod_servidor'],$_GET['ref_cod_instituicao']],
+            ['#cod_servidor', '#ref_cod_instituicao'],
+            [$_GET['cod_servidor'], $_GET['ref_cod_instituicao']],
             file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-det.js')
         );
     }

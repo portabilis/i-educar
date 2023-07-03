@@ -5,6 +5,7 @@ use iEducar\Legacy\Model;
 class clsPmieducarDispensaDisciplinaEtapa extends Model
 {
     public $ref_cod_dispensa;
+
     public $etapa;
 
     public function __construct(

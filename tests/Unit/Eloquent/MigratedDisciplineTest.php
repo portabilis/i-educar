@@ -14,12 +14,9 @@ class MigratedDisciplineTest extends EloquentTestCase
         'oldDiscipline' => LegacyDiscipline::class,
         'newDiscipline' => LegacyDiscipline::class,
         'grade' => LegacyGrade::class,
-        'createdBy' => LegacyUser::class
+        'createdBy' => LegacyUser::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return MigratedDiscipline::class;

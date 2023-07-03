@@ -26,7 +26,7 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
         'cargaHoraria' => 'carga_horaria',
         'docenteVinculado' => 'docente_vinculado',
         'etapasEspecificas' => 'etapas_especificas',
-        'etapasUtilizadas' => 'etapas_utilizadas'
+        'etapasUtilizadas' => 'etapas_utilizadas',
     ];
 
     protected $_primaryKey = [
@@ -69,7 +69,7 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
     {
         $update = $insert = $delete = [];
 
-        $componentesTurma = $this->findAll([], ['turma'  => $turma]);
+        $componentesTurma = $this->findAll([], ['turma' => $turma]);
 
         $objects = [];
 
@@ -86,6 +86,7 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
                 $insert[$id]->docenteVinculado = $componente['docenteVinculado'];
                 $insert[$id]->etapasEspecificas = $componente['etapasEspecificas'];
                 $insert[$id]->etapasUtilizadas = $componente['etapasUtilizadas'];
+
                 continue;
             }
 
@@ -97,7 +98,7 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
                 'cargaHoraria' => $componente['cargaHoraria'],
                 'docenteVinculado' => $componente['docenteVinculado'],
                 'etapasEspecificas' => $componente['etapasEspecificas'],
-                'etapasUtilizadas' => $componente['etapasUtilizadas']
+                'etapasUtilizadas' => $componente['etapasUtilizadas'],
             ]);
         }
 
@@ -108,6 +109,7 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
             if ($iDiarioService && $iDiarioService->getClassroomsActivityByDiscipline([$turma], $id)) {
                 $discipline = LegacyDiscipline::find($id);
                 $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta turma no iDiário.', $discipline->nome);
+
                 continue;
             }
 

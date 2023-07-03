@@ -54,7 +54,7 @@ class LegacyDisciplineExemptionTest extends EloquentTestCase
             'deleted_at' => 'data_exclusao',
             'active' => 'ativo',
             'deleted_by' => 'ref_usuario_exc',
-            'created_by' => 'ref_usuario_cad'
+            'created_by' => 'ref_usuario_cad',
         ];
     }
 }

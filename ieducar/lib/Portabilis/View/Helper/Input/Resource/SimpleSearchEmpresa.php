@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchEmpresa extends Portabil
         $defaultOptions = [
             'objectName' => 'empresa',
             'apiController' => 'Empresa',
-            'apiResource' => 'empresa-search'
+            'apiResource' => 'empresa-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

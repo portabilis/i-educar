@@ -2,21 +2,36 @@
 
 use App\Models\Employee;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $limite;
+
     public $offset;
+
     public $cod_servidor;
+
     public $ref_idesco;
+
     public $ref_cod_funcao;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nome;
+
     public $matricula_servidor;
+
     public $ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $servidor_sem_alocacao;
+
     public $ano_letivo;
 
     public function Gerar()
@@ -31,7 +46,7 @@ return new class extends clsListagem {
             'Nome do Servidor',
             'Matrícula',
             'CPF',
-            'Instituição'
+            'Instituição',
         ]);
 
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'anoLetivo'], helperOptions: ['options' => ['required' => false]]);
@@ -55,18 +70,17 @@ return new class extends clsListagem {
             'name' => $this->nome,
             'role' => $this->matricula_servidor,
             'schooling_degree' => $this->ref_idesco,
-            'allocation' => [request()->has('servidor_sem_alocacao'),$this->ref_cod_escola,$this->ano_letivo],
+            'allocation' => [request()->has('servidor_sem_alocacao'), $this->ref_cod_escola, $this->ano_letivo],
             'employee' => $this->cod_servidor,
         ])->with([
             'institution:cod_instituicao,nm_instituicao',
             'individual:idpes,cpf',
-            'employeeRoles:ref_cod_servidor,matricula'
+            'employeeRoles:ref_cod_servidor,matricula',
         ])->active()->orderBy('pessoa.nome')->paginate($this->limite, [
             'pessoa.nome as name',
             'ref_cod_instituicao',
             'cod_servidor',
         ], 'pagina_');
-
 
         // UrlHelper
         $url = CoreExt_View_Helper_UrlHelper::getInstance();
@@ -79,12 +93,12 @@ return new class extends clsListagem {
                     'query' => [
                         'cod_servidor' => $registro->id,
                         'ref_cod_instituicao' => $registro->institution->id,
-                    ]
+                    ],
                 ];
 
                 $this->addLinhas(linha: [
                     $url->l(text: $registro->name, path: $path, options: $options),
-                    $url->l(text: $registro->employeeRoles->unique('matricula')->implode('matricula',', '), path: $path, options: $options),
+                    $url->l(text: $registro->employeeRoles->unique('matricula')->implode('matricula', ', '), path: $path, options: $options),
                     $url->l(text: $registro->individual->cpf, path: $path, options: $options),
                     $url->l(text: $registro->institution->name, path: $path, options: $options),
                 ]);

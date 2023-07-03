@@ -2,22 +2,31 @@
 
 use App\Models\LegacySchoolAcademicYear;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_escola;
+
     public $ano;
+
     public $ref_usuario_cad;
+
     public $ref_usuario_exc;
+
     public $andamento;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ano            = $_GET['ano'];
+        $this->ano = $_GET['ano'];
         $this->ref_cod_escola = $_GET['cod_escola'];
 
         $obj_permissoes = new clsPermissoes();
@@ -28,12 +37,12 @@ return new class () extends clsCadastro {
             str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
-        $this->nome_url_sucesso  = 'Continuar';
-        $this->url_cancelar      = 'educar_escola_det.php?cod_escola=' . $this->ref_cod_escola;
+        $this->nome_url_sucesso = 'Continuar';
+        $this->url_cancelar = 'educar_escola_det.php?cod_escola=' . $this->ref_cod_escola;
 
         $this->breadcrumb(currentPage: 'Definição do ano letivo', breadcrumbs: [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -60,7 +69,7 @@ return new class () extends clsCadastro {
         for ($i = 0; $i < $lim; $i++) {
             $ano = $ano_atual + $i;
 
-            if (! $ano_array->contains($ano)) {
+            if (!$ano_array->contains($ano)) {
                 $opcoes[$ano] = $ano;
             } else {
                 $lim++;

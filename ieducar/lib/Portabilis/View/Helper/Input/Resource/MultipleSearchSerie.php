@@ -12,7 +12,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchSerie extends Portabil
         $defaultOptions = [
             'objectName' => 'multiple_search_serie',
             'apiController' => 'Serie',
-            'apiResource' => 'series-curso-grouped'
+            'apiResource' => 'series-curso-grouped',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

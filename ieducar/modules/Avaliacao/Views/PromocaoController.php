@@ -5,9 +5,13 @@
 class PromocaoController extends Portabilis_Controller_Page_ListController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-    protected $_titulo     = 'Lançamento por turma';
+
+    protected $_titulo = 'Lançamento por turma';
+
     protected $_processoAp = 644;
-    protected $_formMap    = [];
+
+    protected $_formMap = [];
+
     private $regras_avaliacao_id;
 
     public function Gerar()
@@ -25,7 +29,7 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
         $this->inputsHelper()->dynamic('turma', ['id' => 'turma', 'required' => false]);
         $this->inputsHelper()->dynamic('matricula', ['id' => 'matricula', 'required' => false]);
         $this->inputsHelper()->dynamic('situacaoMatricula', ['id' => 'situacaoMatricula', 'value' => 10, 'required' => false]);
-        $this->campoLista('regras_avaliacao_id', 'Regra de avaliação (padrão)', $regras, $this->regras_avaliacao_id, '',false,'','', false,false);
+        $this->campoLista('regras_avaliacao_id', 'Regra de avaliação (padrão)', $regras, $this->regras_avaliacao_id, '', false, '', '', false, false);
         $this->campoCheck(
             nome: 'atualizar_notas',
             campo: 'Atualizar notas',
@@ -37,7 +41,7 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
         $this->loadResourceAssets($this->getDispatcher());
 
         $this->breadcrumb('Atualização de matrículas', [
-        url('intranet/educar_configuracoes_index.php') => 'Configurações',
-    ]);
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
     }
 }

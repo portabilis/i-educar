@@ -3,8 +3,11 @@
 class clsEscolaridade
 {
     public $idesco;
+
     public $descricao;
+
     public $tabela;
+
     public $schema;
 
     public function __construct($idesco = false, $descricao = false)

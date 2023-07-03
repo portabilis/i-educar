@@ -2,23 +2,33 @@
 
 use App\Models\LegacyTransferType;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_transferencia_tipo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $desc_tipo;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->cod_transferencia_tipo=$_GET['cod_transferencia_tipo'];
+        $this->cod_transferencia_tipo = $_GET['cod_transferencia_tipo'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 575, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_transferencia_tipo_lst.php');
@@ -53,7 +63,7 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'cod_transferencia_tipo', valor: $this->cod_transferencia_tipo);
 
         $obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // text
         $this->campoTexto(nome: 'nm_tipo', campo: 'Motivo Transferência', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -70,7 +80,7 @@ return new class extends clsCadastro {
 
         if ($object->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect( url: 'educar_transferencia_tipo_lst.php');
+            $this->simpleRedirect(url: 'educar_transferencia_tipo_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -93,6 +103,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -108,6 +119,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

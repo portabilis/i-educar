@@ -5,13 +5,21 @@ use iEducar\Legacy\Model;
 class clsPmieducarUsuario extends Model
 {
     public $cod_usuario;
+
     public $ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $ref_funcionario_cad;
+
     public $ref_funcionario_exc;
+
     public $ref_cod_tipo_usuario;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function __construct($cod_usuario = null, $ref_cod_escola = null, $ref_cod_instituicao = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_tipo_usuario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)

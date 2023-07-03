@@ -35,19 +35,12 @@ class EnrollmentService
      */
     private $user;
 
-    /**
-     * @param User $user
-     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
     /**
-     * @param LegacyRegistration $registration
-     * @param LegacySchoolClass  $schoolClass
-     * @param DateTime           $date
-     *
      * @return null
      */
     private function getSequenceSchoolClass(
@@ -74,10 +67,9 @@ class EnrollmentService
      * Retorna a enturmação.
      *
      * @param int $enrollment ID da enturmação
+     * @return LegacyEnrollment $enrollment
      *
      * @throws ModelNotFoundException
-     *
-     * @return LegacyEnrollment $enrollment
      */
     public function find($enrollment)
     {
@@ -92,7 +84,6 @@ class EnrollmentService
      *
      * @param LegacySchoolClass  $schoolClass
      * @param LegacyRegistration $registration
-     *
      * @return bool
      */
     public function isEnrolled($schoolClass, $registration)
@@ -108,7 +99,6 @@ class EnrollmentService
      *
      * @param LegacySchoolClass  $schoolClass
      * @param LegacyRegistration $registration
-     *
      * @return Collection
      */
     public function anotherClassroomEnrollments($schoolClass, $registration)
@@ -120,8 +110,6 @@ class EnrollmentService
     }
 
     /**
-     * @param array $ids
-     *
      * @return Collection
      */
     public function findAll(array $ids)
@@ -136,12 +124,11 @@ class EnrollmentService
      *
      * @param LegacyEnrollment $enrollment ID da enturmação
      * @param DateTime         $date       Data do cancelamento
+     * @return bool
      *
      * @throws PreviousCancellationDateException
      * @throws ModelNotFoundException
      * @throws Throwable
-     *
-     * @return bool
      */
     public function cancelEnrollment(LegacyEnrollment $enrollment, DateTime $date)
     {
@@ -192,16 +179,12 @@ class EnrollmentService
     }
 
     /**
-     * @param LegacyRegistration $registration
-     * @param LegacySchoolClass  $schoolClass
-     * @param DateTime           $date
+     * @return LegacyEnrollment
      *
      * @throws NoVacancyException
      * @throws ExistsActiveEnrollmentException
      * @throws PreviousEnrollDateException
      * @throws Throwable
-     *
-     * @return LegacyEnrollment
      */
     public function enroll(
         LegacyRegistration $registration,
@@ -258,7 +241,7 @@ class EnrollmentService
             'ref_usuario_cad' => $this->user->getKey(),
             'data_cadastro' => Carbon::now(),
             'data_enturmacao' => $date,
-            'remanejado_mesma_turma' => $isRelocatedSameClassGroup
+            'remanejado_mesma_turma' => $isRelocatedSameClassGroup,
         ]);
 
         return $enrollment;
@@ -267,7 +250,6 @@ class EnrollmentService
     /**
      * Atualiza o campo transferido na enturmação para TRUE
      *
-     * @param LegacyEnrollment $enrollment
      *
      * @throws Throwable
      */
@@ -280,7 +262,6 @@ class EnrollmentService
     /**
      * Atualiza o campo remanejado na enturmação para TRUE
      *
-     * @param LegacyEnrollment $enrollment
      *
      * @throws Throwable
      */
@@ -299,7 +280,6 @@ class EnrollmentService
     /**
      * Atualiza o campo reclassificado na enturmação para TRUE
      *
-     * @param LegacyEnrollment $enrollment
      *
      * @throws Throwable
      */
@@ -312,7 +292,6 @@ class EnrollmentService
     /**
      * Atualiza o campo abandono na enturmação para TRUE
      *
-     * @param LegacyEnrollment $enrollment
      *
      * @throws Throwable
      */
@@ -325,7 +304,6 @@ class EnrollmentService
     /**
      * Atualiza o campo falecido na enturmação para TRUE
      *
-     * @param LegacyEnrollment $enrollment
      *
      * @throws Throwable
      */
@@ -339,7 +317,6 @@ class EnrollmentService
      * Verifica se a matrícula tem enturmação anterior, com data de saída posterior a data base,
      * ou data base vazia
      *
-     * @param LegacyRegistration $registration
      *
      * @return LegacyEnrollment|void
      */
@@ -361,7 +338,6 @@ class EnrollmentService
     /**
      * Reordena os sequenciais das enturmações de uma matrícula.
      *
-     * @param LegacyRegistration $registration
      *
      * @return bool
      */
@@ -382,7 +358,6 @@ class EnrollmentService
      * e atualiza todos os sequenciais da turma de origem a partir do sequencial do aluno
      * remanejado devem ser atualizados subtraindo 1
      *
-     * @param LegacyEnrollment $enrollment
      * @param DateTime         $date
      */
     public function reorderSchoolClass(LegacyEnrollment $enrollment)
@@ -395,7 +370,7 @@ class EnrollmentService
         $schoolClass->enrollments()
             ->whereValid()
             ->orderBy('sequencial_fechamento')
-            ->get(['id','sequencial_fechamento', 'updated_at'])
+            ->get(['id', 'sequencial_fechamento', 'updated_at'])
             ->each(static function (LegacyEnrollment $enrollment, $index) {
                 $enrollment->sequencial_fechamento = $index + 1;
                 $enrollment->save();
@@ -408,8 +383,6 @@ class EnrollmentService
     /**
      * Compara data de saída da enturmação com data base para definir a
      * reordenação, ou não, dos sequenciais
-     *
-     * @param LegacyEnrollment $enrollment
      */
     public function reorderSchoolClassAccordingToRelocationDate(LegacyEnrollment $enrollment)
     {
@@ -426,7 +399,6 @@ class EnrollmentService
      *
      * @param LegacyEnrollment $enrollment
      * @param DateTime         $date
-     *
      * @return bool
      */
     private function withoutRelocationDateOrDateIsAfter($enrollment, $date)
@@ -437,9 +409,6 @@ class EnrollmentService
     }
 
     /**
-     * @param LegacyEnrollment $enrollment
-     * @param DateTime         $exitDate
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function updateExitDate(LegacyEnrollment $enrollment, DateTime $exitDate)
@@ -447,14 +416,13 @@ class EnrollmentService
         $studentId = $enrollment->getStudentId();
         validator(
             [
-                'data' =>
-                    [
-                        'student_id' => $studentId,
-                        'exit_date' => $exitDate
-                    ]
+                'data' => [
+                    'student_id' => $studentId,
+                    'exit_date' => $exitDate,
+                ],
             ],
             [
-                'data' => [new CanChangeExitDate()]
+                'data' => [new CanChangeExitDate()],
             ]
         )->validate();
 

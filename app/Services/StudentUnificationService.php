@@ -22,8 +22,6 @@ class StudentUnificationService
     }
 
     /**
-     * @param LogUnification $unification
-     *
      * @throws \Exception
      */
     public function undo(LogUnification $unification)
@@ -39,9 +37,6 @@ class StudentUnificationService
         $unification->save();
     }
 
-    /**
-     * @param LogUnification $unification
-     */
     public function canUndo(LogUnification $unification)
     {
         if (!$unification->active) {
@@ -77,9 +72,6 @@ class StudentUnificationService
      *
      * Usuários de nível escolar podem desfazer unificações que foram efetuadas por
      * usuários da mesma unidade que ele
-     *
-     * @param User $user
-     * @param User $unificationOwner
      */
     private function checkPermissionSchoolingLevel(User $user, User $unificationOwner)
     {
@@ -96,9 +88,6 @@ class StudentUnificationService
      *
      * Usuários institucionais somente podem desfazer unificações e usuários do mesmo
      * nível ou nível escolar
-     *
-     * @param User $user
-     * @param      $unificationOwner
      */
     private function checkPermissionInstitutionalLevel(User $user, $unificationOwner)
     {

@@ -5,10 +5,15 @@ namespace iEducar\Modules\Educacenso\Model;
 class OrgaosColegiados
 {
     public const OUTROS = 1;
+
     public const ASSOCIACAO_PAIS = 2;
+
     public const ASSOCIACAO_PAIS_E_MESTRES = 3;
+
     public const CONSELHO_ESCOLAR = 4;
+
     public const GREMIO_ESTUDANTIL = 5;
+
     public const NENHUM = 6;
 
     public static function getDescriptiveValues()

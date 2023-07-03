@@ -13,7 +13,7 @@ class ResourceDisciplineController extends Controller
     public function index(ResourceDisciplineRequest $request): JsonResource
     {
         //altera o model se school e grade
-        if ($request->has(['school','grade'])) {
+        if ($request->has(['school', 'grade'])) {
             $resource = LegacySchoolGradeDiscipline::query()->getResource($request->all());
         } else {
             $resource = LegacyDisciplineAcademicYear::query()->getResource($request->all());

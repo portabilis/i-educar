@@ -8,8 +8,6 @@ use App\Models\LogUnification;
 class PersonLogUnification implements LogUnificationTypeInterface
 {
     /**
-     * @param LogUnification $logUnification
-     *
      * @return string
      */
     public function getMainPersonName(LogUnification $logUnification)
@@ -22,8 +20,6 @@ class PersonLogUnification implements LogUnificationTypeInterface
     }
 
     /**
-     * @param LogUnification $logUnification
-     *
      * @return array
      */
     public function getDuplicatedPeopleName(LogUnification $logUnification)

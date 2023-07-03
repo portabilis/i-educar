@@ -30,17 +30,11 @@ class LegacyRemedialRule extends Model
         'nota_maxima',
     ];
 
-    /**
-     * @return array
-     */
     public function getStages(): array
     {
         return explode(';', $this->etapas_recuperadas);
     }
 
-    /**
-     * @return int
-     */
     public function getLastStage(): int
     {
         return max($this->getStages());

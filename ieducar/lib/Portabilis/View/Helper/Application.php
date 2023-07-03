@@ -5,6 +5,7 @@ use App\Facades\Asset;
 class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
 {
     protected static $javascriptsLoaded = [];
+
     protected static $stylesheetsLoaded = [];
 
     /**
@@ -33,7 +34,6 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
      *
      * @param object       $viewInstance Istancia da view a ser carregado os scripts.
      * @param array|string $files        Lista de scripts a serem carregados.
-     *
      * @return null
      */
     public static function loadJavascript($viewInstance, $files, $appendAssetsVersionParam = true)
@@ -62,10 +62,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
      * $applicationHelper->stylesheet($viewInstance, array('/vendor/legacy/ModuleName/Assets/Stylesheets/StyleName.css', '...'));
      * </code>
      *
-     * @param $viewInstance
      * @param array|string $files                    Lista de estilos a serem carregados.
      * @param bool         $appendAssetsVersionParam
-     *
      * @return null
      */
     public static function loadStylesheet($viewInstance, $files, $appendAssetsVersionParam = true)

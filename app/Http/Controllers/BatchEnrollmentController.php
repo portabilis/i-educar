@@ -20,11 +20,8 @@ class BatchEnrollmentController extends Controller
     /**
      * Renderiza a view da desenturmação em lote.
      *
-     * @param LegacySchoolClass $schoolClass
-     * @param Collection        $enrollments
      * @param MessageBag        $fails
      * @param MessageBag        $success
-     *
      * @return View
      */
     public function viewCancelEnrollments(
@@ -52,11 +49,8 @@ class BatchEnrollmentController extends Controller
     /**
      * Renderiza a view da enturmação em lote.
      *
-     * @param LegacySchoolClass $schoolClass
-     * @param Collection        $registrations
      * @param MessageBag        $fails
      * @param MessageBag        $success
-     *
      * @return View
      */
     public function viewEnroll(
@@ -84,7 +78,6 @@ class BatchEnrollmentController extends Controller
     /**
      * Lista as enturmações da turma e possibilita a desenturmação em lote.
      *
-     * @param LegacySchoolClass $schoolClass
      *
      * @return View
      */
@@ -97,9 +90,6 @@ class BatchEnrollmentController extends Controller
     /**
      * Desenturma as enturmações enviadas e renderiza a view.
      *
-     * @param CancelBatchEnrollmentRequest $request
-     * @param LegacySchoolClass            $schoolClass
-     * @param EnrollmentService            $enrollmentService
      *
      * @return View
      */
@@ -129,9 +119,6 @@ class BatchEnrollmentController extends Controller
     }
 
     /**
-     * @param LegacySchoolClass   $schoolClass
-     * @param RegistrationService $registrationService
-     *
      * @return View
      */
     public function indexEnroll(
@@ -148,11 +135,6 @@ class BatchEnrollmentController extends Controller
     }
 
     /**
-     * @param BatchEnrollmentRequest $request
-     * @param LegacySchoolClass      $schoolClass
-     * @param EnrollmentService      $enrollmentService
-     * @param RegistrationService    $registrationService
-     *
      * @return View
      */
     public function enroll(
@@ -191,8 +173,6 @@ class BatchEnrollmentController extends Controller
     /**
      * @param MessageBag $fail
      * @param MessageBag $success
-     * @param string     $type
-     *
      * @return void
      */
     protected function setMessages(

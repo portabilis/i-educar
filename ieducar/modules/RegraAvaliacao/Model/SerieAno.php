@@ -8,6 +8,7 @@ class RegraAvaliacao_Model_SerieAno extends CoreExt_Entity
         'anoLetivo' => null,
         'serie' => null,
     ];
+
     public function getDefaultValidatorCollection()
     {
         return [];

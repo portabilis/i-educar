@@ -9,12 +9,9 @@ use Tests\EloquentTestCase;
 class LegacyRaceTest extends EloquentTestCase
 {
     protected $relations = [
-        'individual' => LegacyIndividual::class
+        'individual' => LegacyIndividual::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyRace::class;

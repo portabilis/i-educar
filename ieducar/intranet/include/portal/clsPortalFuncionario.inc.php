@@ -5,30 +5,55 @@ use iEducar\Legacy\Model;
 class clsPortalFuncionario extends Model
 {
     public $ref_cod_pessoa_fj;
+
     public $matricula;
+
     public $senha;
+
     public $ativo;
+
     public $ref_sec;
+
     public $sequencial;
+
     public $opcao_menu;
+
     public $ref_cod_administracao_secretaria;
+
     public $ref_ref_cod_administracao_secretaria;
+
     public $ref_cod_departamento;
+
     public $ref_ref_ref_cod_administracao_secretaria;
+
     public $ref_ref_cod_departamento;
+
     public $ref_cod_setor;
+
     public $ref_cod_funcionario_vinculo;
+
     public $tempo_expira_senha;
+
     public $data_expiracao = false;
+
     public $data_troca_senha;
+
     public $data_reativa_conta;
+
     public $ref_ref_cod_pessoa_fj;
+
     public $ref_cod_setor_new;
+
     public $matricula_new;
+
     public $matricula_interna;
+
     public $tipo_menu;
+
     public $receber_novidades;
+
     public $atualizou_cadastro;
+
     public $forceResetPassword = false;
 
     public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null, $forceResetPassword = null)
@@ -261,7 +286,7 @@ class clsPortalFuncionario extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            return true;//$db->InsertId( "{$this->_tabela}_ref_cod_pessoa_fj_seq");
+            return true; //$db->InsertId( "{$this->_tabela}_ref_cod_pessoa_fj_seq");
         }
 
         return false;

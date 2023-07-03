@@ -5,7 +5,7 @@ class AreaConhecimentoController extends ApiCoreController
     protected function getAreasConhecimento()
     {
         $instituicaoId = $this->getRequest()->instituicao_id;
-        $sql    = 'SELECT ac.id AS id,
+        $sql = 'SELECT ac.id AS id,
                        ac.nome AS nome
                   FROM modules.area_conhecimento ac
                  WHERE instituicao_id = $1

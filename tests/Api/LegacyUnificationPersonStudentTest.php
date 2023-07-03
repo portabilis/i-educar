@@ -16,7 +16,9 @@ class LegacyUnificationPersonStudentTest extends TestCase
     use LoginFirstUser;
 
     private LegacyIndividual $individual;
+
     private LegacyStudent $student;
+
     private LegacyStudent $studentTwo;
 
     protected function setUp(): void

@@ -1,13 +1,21 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_bloqueio;
+
     public $ano;
+
     public $ref_cod_escola;
+
     public $etapa;
+
     public $data_inicio;
+
     public $data_fim;
+
     public $modoEdicao;
 
     public function Inicializar()
@@ -27,7 +35,7 @@ return new class extends clsCadastro {
         if (is_numeric(value: $this->cod_bloqueio)) {
             $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(cod_bloqueio: $this->cod_bloqueio);
 
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -54,8 +62,8 @@ return new class extends clsCadastro {
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb(currentPage: $nomeMenu . ' bloqueio de lançamento de notas e faltas por etapa', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->modoEdicao = ($retorno == 'Editar');
 
@@ -74,12 +82,12 @@ return new class extends clsCadastro {
             $objEscola = $objEscola->detalhe();
 
             $options = [
-                'required'    => false,
-                'label'       => 'Escola',
+                'required' => false,
+                'label' => 'Escola',
                 'placeholder' => '',
-                'value'       => $objEscola['nome'],
-                'size'        => 35,
-                'disabled'    => true
+                'value' => $objEscola['nome'],
+                'size' => 35,
+                'disabled' => true,
             ];
 
             $this->inputsHelper()->text(attrNames: 'escola', inputOptions: $options);
@@ -91,7 +99,7 @@ return new class extends clsCadastro {
             1 => '1ª Etapa',
             2 => '2ª Etapa',
             3 => '3ª Etapa',
-            4 => '4ª Etapa'
+            4 => '4ª Etapa',
         ];
 
         $options = ['label' => 'Etapa', 'resources' => $selectOptions, 'value' => $this->etapa];

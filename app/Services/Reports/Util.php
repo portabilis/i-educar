@@ -23,7 +23,7 @@ class Util
     public static function formatWorkload(float|null $workload): string
     {
         if ($workload) {
-            $hour = (int)$workload;
+            $hour = (int) $workload;
             $workload -= $hour;
             $minutes = round($workload * 60);
             if ($minutes < 10) {
@@ -56,8 +56,8 @@ class Util
             return [
                 [
                     'step' => 'An',
-                    'name' => 'ANUAL'
-                ]
+                    'name' => 'ANUAL',
+                ],
             ];
         }
 

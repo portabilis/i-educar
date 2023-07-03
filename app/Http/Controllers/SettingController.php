@@ -11,8 +11,6 @@ use Illuminate\View\View;
 class SettingController extends Controller
 {
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)
