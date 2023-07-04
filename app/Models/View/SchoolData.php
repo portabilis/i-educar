@@ -2,6 +2,7 @@
 
 namespace App\Models\View;
 
+use App\Services\Reports\Util;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,9 +41,10 @@ class SchoolData extends Model
     {
         return Attribute::make(
             get: fn () => implode(', ', [
-                $this->logradouro,
-                $this->bairro,
-            ])
+                    $this->logradouro,
+                    $this->numero,
+                    $this->bairro,
+                ]) . ' - ' . $this->municipio . ' - ' . $this->uf_municipio . ' - CEP: ' . Util::formatPostcode($this->cep)
         );
     }
 }

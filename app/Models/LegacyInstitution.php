@@ -140,7 +140,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
                 $this->logradouro,
                 $this->numero,
                 $this->bairro,
-            ]) . ' - ' . $this->cidade . ' - ' . $this->ref_sigla_uf . ' - CEP:' . Util::formatPostcode($this->cep)
+            ]) . ' - ' . $this->cidade . ' - ' . $this->ref_sigla_uf . ' - CEP: ' . Util::formatPostcode($this->cep)
         );
     }
 
