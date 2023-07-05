@@ -45,7 +45,7 @@ class LegacyAccessBuilder extends LegacyBuilder
      * @param string $start
      * @return $this
      */
-    public function whereStart(string $start): self
+    public function whereStartAfter(string $start): self
     {
         return $this->whereDate('data_hora','>=', $start);
     }
