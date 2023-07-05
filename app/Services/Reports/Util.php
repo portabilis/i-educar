@@ -94,7 +94,7 @@ class Util
     public static function formatPostcode(string|null $postcode): string|null
     {
         if ($postcode && strlen($postcode) === 8) {
-            return self::mask('64000800', '#####-###');
+            return self::mask($postcode, '#####-###');
         }
 
         return $postcode;
