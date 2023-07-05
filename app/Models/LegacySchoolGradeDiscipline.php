@@ -76,4 +76,14 @@ class LegacySchoolGradeDiscipline extends Model
     {
         return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
     }
+
+    public function grade(): BelongsTo
+    {
+        return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_escola');
+    }
 }
