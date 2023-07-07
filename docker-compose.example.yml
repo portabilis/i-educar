@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  nginx:
+    ports:
+      - "80:80"
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
