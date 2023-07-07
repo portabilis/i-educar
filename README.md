@@ -1,5 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
-[![Build Status](https://github.com/portabilis/i-educar/workflows/tests/badge.svg)](https://github.com/portabilis/i-educar/actions)
+[![Build Status](https://github.com/portabilis/i-educar/actions/workflows/tests.yml/badge.svg)](https://github.com/portabilis/i-educar/actions)
 
 # i-Educar
 
@@ -16,7 +16,7 @@ país por meio da educação. Junte-se a nós!**
 4. [Instalação](#instalação)
 5. [FAQ](#perguntas-frequentes-faq)
 
-## Sobre i-Educar
+## Sobre o i-Educar
 
 O i-Educar é um software livre de gestão escolar totalmente on-line que permite
 secretários escolares, professores, coordenadores e gestores da área possam
@@ -71,11 +71,6 @@ ajudar a alcançar nossos objetivos.
 Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
 
-#### Docker
-
-- [Docker](https://docs.docker.com/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-
 #### Servidor
 
 - [PHP](http://php.net/)
@@ -85,13 +80,18 @@ facilitar o desenvolvimento.
 - [Redis](https://redis.io/)
 - [Git](https://git-scm.com/downloads)
 
+#### Docker
+
+- [Docker](https://docs.docker.com/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
 ### Instalação utilizando Docker
 
 > ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
 desenvolvimento. Não é recomendado para ambientes de produção!
 
 Para instalar o projeto execute **todos os passos** abaixo, caso você deseje
-atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade).
+atualizar sua instalação do i-Educar, siga os passos do [guia de atualização](UPGRADE.md).
 
 Clone o repositório:
 
@@ -99,8 +99,13 @@ Clone o repositório:
 git clone git@github.com:portabilis/i-educar.git && cd i-educar
 ```
 
-Faça o build das imagens Docker utilizadas no projeto (pode levar alguns
-minutos) e inicie os containers da aplicação:
+Copie o arquivo `docker-compose.example.yml` e faça as configurações para o seu ambiente:
+
+```bash 
+cp docker-compose.example.yml docker-compose.override.yml
+``` 
+
+Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
 
 ```bash
 docker-compose up -d --build
@@ -112,33 +117,21 @@ Execute o comando para fazer uma nova instalação:
 docker-compose exec php composer new-install
 ```
 
-#### Primeiro acesso
-
-Acesse http://localhost para fazer seu primeiro acesso.
-
-O usuário padrão é: `admin` / A senha padrão é: `123456789`
-
-Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha
-padrão**.
-
 #### Personalizando a instalação
 
-Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua
-instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos
-volumes extras para a aplicação.
+No arquivo `docker-compose.override.yml` você pode personalizar sua instalação do i-Educar, mudando as portas dos 
+serviços ou o mapeamento dos volumes da aplicação.
 
 #### Xdebug
 
-A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o
-intuito de facilitar o processo de debug durante o desenvolvimento. Para
-configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
-`docker-compose.override.yml` conforme orientações da sua IDE de
-desenvolvimento.
+A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o intuito de facilitar o processo de debug 
+durante o desenvolvimento. Para configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
+`docker-compose.override.yml` conforme orientações da sua IDE de desenvolvimento.
 
-#### Executando testes unitários
+#### Testes automatizados
 
-Para rodar os testes, é necessário ter o i-Educar rodando e com uma base limpa,
-apenas a estrutura inicial e as migrations, crie o arquivo de configuração:
+Para executar os testes automatizados, é necessário ter o i-Educar rodando com uma base limpa, apenas a estrutura
+inicial e suas migrations, crie o arquivo de configuração:
 
 ```bash
 cp .env.example .env.testing
@@ -149,6 +142,14 @@ Execute o comando:
 ```bash
 docker-compose exec php vendor/bin/phpunit
 ```
+
+### Primeiro acesso
+
+Acesse http://localhost para fazer o seu primeiro acesso.
+
+O usuário padrão é: `admin` / A senha padrão é: `123456789`.
+
+Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha padrão**.
 
 ### Pacotes (módulos)
 
