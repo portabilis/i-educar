@@ -8,13 +8,11 @@ _“Lançando o maior software livre educacional do Brasil!”._
 **Nós somos a Comunidade i-Educar e acreditamos que podemos transformar o nosso
 país por meio da educação. Junte-se a nós!**
 
-## Conteúdo
-
-1. [Sobre o i-Educar](#sobre-o-i-educar)
-2. [Comunicação](#comunicação)
-3. [Como contribuir](#como-contribuir)
-4. [Instalação](#instalação)
-5. [FAQ](#perguntas-frequentes-faq)
+- [Sobre o i-Educar](#sobre-o-i-educar)
+- [Comunicação](#comunicação)
+- [Como contribuir](#como-contribuir)
+- [Instalação](#instalação)
+- [FAQ](#perguntas-frequentes-faq)
 
 ## Sobre o i-Educar
 
@@ -60,16 +58,15 @@ ajudar a alcançar nossos objetivos.
 
 ## Instalação
 
-- [Nova instalação](#nova-instalação)
+- [Dependências](#dependências)
+- [Instalação utilizando Docker](#instalação-utilizando-docker)
 - [Primeiro acesso](#primeiro-acesso)
-- [Personalizando a instalação](#personalizando-a-instalação)
-- [Pacotes (módulos)](#instalação-do-pacote-de-relatórios)
+- [Pacotes (módulos)](#pacotes-módulos)
 - [Upgrade](#upgrade)
 
-### Dependência
+### Dependências
 
-Para executar o projeto é necessário a utilização de alguns softwares para
-facilitar o desenvolvimento.
+Para executar o projeto é necessário a utilização de alguns softwares.
 
 #### Servidor
 
