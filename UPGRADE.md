@@ -1,4 +1,4 @@
-# Upgrade para 2.8 da 2.7
+# Guia de atualização para a versão 2.8
 
 Este guia tem o intuido de auxiliar o processo de atualização do i-Educar da versão 
 [2.8](https://github.com/portabilis/i-educar/tree/2.8) a partir da versão 
@@ -10,17 +10,19 @@ Este guia tem o intuido de auxiliar o processo de atualização do i-Educar da v
 
 Os requisitos que foram testados para utilizar a versão [2.8](https://github.com/portabilis/i-educar/tree/2.8) são:
 
-| Software             | Versão | Comando                    | Descrição                   |
-|----------------------|--------|----------------------------|-----------------------------|
-| Laravel              | `10`   | `php artisan --version`    | Framework                   |
-| PHP                  | `8.2`  | `php --version`            | Linguagem de programação    |
-| Composer             | `2.5`  | `composer --version`       | Gerenciador de dependências |
-| Nginx                | `1.25` | `nginx -v`                 | Servidor web                |
-| Postgres             | `15`   | `psql --version`           | Banco de dados              |
-| Redis                | `7`    | `redis-cli --version`      | Banco de dados              |
-| Git                  | `2.40` | `git --version`            | Controle de versão          |
-| Docker `dev`         | `24`   | `docker --version`         | Containerização             |
-| Docker Compose `dev` | `2.19` | `docker-compose --version` | Orquestração de containers  |
+| Software                                                 | Versão | Comando                    | Descrição                   |
+|----------------------------------------------------------|--------|----------------------------|-----------------------------|
+| [Laravel](https://laravel.com/)                          | `10`   | `php artisan --version`    | Framework                   |
+| [PHP](http://php.net/)                                   | `8.2`  | `php --version`            | Linguagem de programação    |
+| [Composer](https://getcomposer.org/)                     | `2.5`  | `composer --version`       | Gerenciador de dependências |
+| [Nginx](https://www.nginx.com/)                          | `1.25` | `nginx -v`                 | Servidor web                |
+| [Postgres](https://www.postgresql.org/)                  | `15`   | `psql --version`           | Banco de dados              |
+| [Redis](https://redis.io/)                               | `7`    | `redis-cli --version`      | Banco de dados              |
+| [Git](https://git-scm.com/)                              | `2.40` | `git --version`            | Controle de versão          |
+| [Docker](https://www.docker.com/) `dev`                  | `24`   | `docker --version`         | Containerização             |
+| [Docker Compose](https://docs.docker.com/compose/) `dev` | `2.19` | `docker-compose --version` | Orquestração de containers  |
+
+`dev`: requisito para ambiente de desenvolvimento.
 
 ## Upgrade via linha de comando
 
@@ -62,3 +64,45 @@ composer plug-and-play:update
 
 Sua instalação estará atualizada e você poderá realizar seu
 [primeiro acesso](https://github.com/portabilis/i-educar#primeiro-acesso) na nova versão do i-Educar.
+
+### Configurar ambiente com Docker
+
+Na versão [2.8](https://github.com/portabilis/i-educar/tree/2.8) o arquivo `docker-compose.yml` não expõem nenhuma porta
+dos containers para evitar conflitos. Para isso, utilize o arquivo `docker-compose.override.yml` e configure quais 
+portas deseja que os serviços sejam executados.
+
+```bash 
+cp docker-compose.yml docker-compose.override.yml
+``` 
+
+#### Arquivo de exemplo de configuração do `docker-compose.override.yml`
+
+O exemplo abaixo possui configurações básicas que podem ser customizadas e que não irão interferir no código fonte 
+original do projeto permitindo assim um maior controle do seu ambiente.
+
+```yml 
+version: '3.8'
+
+services:
+
+  php:
+    container_name: ieducar-php
+    volumes:
+      - ~/.ssh:/root/.ssh:ro # permite conexões usando suas chaves SSH
+
+  nginx:
+    container_name: ieducar-nginx
+    ports:
+      - "80:80"   # permite acessar o i-Educar em http://localhost, ou
+      - "8000:80" # permite acessar o i-Educar em http://localhost:8080
+
+  postgres:
+    container_name: ieducar-postgres
+    ports:
+      - "5432:5432" # permite conectar software gerenciador de banco de dados
+
+  redis:
+    container_name: ieducar-redis
+    ports:
+      - "6379:6379" # permite conectar software gerenciador de banco de dados
+```
