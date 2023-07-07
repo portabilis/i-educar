@@ -2,16 +2,6 @@ version: '3.8'
 
 services:
 
-  nginx:
-    container_name: ieducar-nginx
-    image: nginx:alpine
-    links:
-      - php
-    working_dir: /var/www/ieducar
-    volumes:
-      - ./:/var/www/ieducar
-      - ./docker/nginx:/etc/nginx/conf.d/
-
   php:
     container_name: ieducar-php
     build: docker/php
@@ -23,6 +13,16 @@ services:
     working_dir: /var/www/ieducar
     volumes:
       - ./:/var/www/ieducar
+
+  nginx:
+    container_name: ieducar-nginx
+    image: nginx:alpine
+    links:
+      - php
+    working_dir: /var/www/ieducar
+    volumes:
+      - ./:/var/www/ieducar
+      - ./docker/nginx:/etc/nginx/conf.d/
 
   postgres:
     container_name: ieducar-postgres
