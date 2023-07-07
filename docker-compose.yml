@@ -4,7 +4,7 @@ services:
 
   nginx:
     container_name: ieducar-nginx
-    build: docker/nginx
+    image: nginx:alpine
     links:
       - php
     ports:
