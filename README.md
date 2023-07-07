@@ -47,7 +47,7 @@ colaboradores do projeto.
 | [Telegram](https://t.me/ieducar )                                            | - Comunicar novidades sobre o projeto<br> - Movimentar a comunidade<br>  - Falar tópicos que **não** demandem discussões profundas                                                                                 |
 
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
-comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
+comunidade i-Educar e não terá suporte da Portábilis - mantenedora do projeto.
 
 ## Como contribuir
 
