@@ -12,6 +12,7 @@ services:
     working_dir: /var/www/ieducar
     volumes:
       - ./:/var/www/ieducar
+      - ./docker/nginx:/etc/nginx/conf.d/
 
   php:
     container_name: ieducar-php
