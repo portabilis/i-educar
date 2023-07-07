@@ -96,7 +96,7 @@ atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade).
 Clone o repositório:
 
 ```bash
-git clone https://github.com/portabilis/i-educar.git && cd i-educar
+git clone git@github.com:portabilis/i-educar.git && cd i-educar
 ```
 
 Faça o build das imagens Docker utilizadas no projeto (pode levar alguns
@@ -114,14 +114,7 @@ docker-compose exec php composer new-install
 
 #### Primeiro acesso
 
-Após finalizada a instalação, descubra em qual endereço o i-Educar está
-rodando, basta executar o comando:
-
-```bash
-docker-compose port nginx 80
-```
-
-Acesse o endereço que será exibido após rodar o comando acima.
+Acesse http://localhost para fazer seu primeiro acesso.
 
 O usuário padrão é: `admin` / A senha padrão é: `123456789`
 
