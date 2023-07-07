@@ -12,11 +12,14 @@ use Illuminate\Support\Facades\View;
 
 class clsBase
 {
-
     public $clsForm = [];
+
     public $processoAp;
+
     public $renderMenu = true;
+
     public $renderMenuSuspenso = true;
+
     public $_instituicao;
 
     public function __construct()
@@ -125,15 +128,15 @@ class clsBase
 
         if ($topmenu) {
             View::share([
-                'mainmenu'=> $topmenu->root()->getKey(),
+                'mainmenu' => $topmenu->root()->getKey(),
                 'currentMenu' => $topmenu,
-                'menuPaths' => $ancestors
+                'menuPaths' => $ancestors,
             ]);
         }
 
         View::share([
             'menu' => $menu,
-            'root' => $topmenu?->root()->getKey()
+            'root' => $topmenu?->root()->getKey(),
         ]);
         View::share('title', $this->getPageTitle());
 

@@ -2,7 +2,6 @@
 
 class PaisController extends ApiCoreController
 {
-
     // search options
     protected function searchOptions()
     {

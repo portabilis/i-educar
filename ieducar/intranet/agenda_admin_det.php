@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public function Gerar()
     {
         $this->titulo = 'Agendas';
@@ -15,20 +16,20 @@ return new class extends clsDetalhe {
         }
 
         if ($cod_agenda && $db->ProximoRegistro()) {
-            list($cod_agenda, $nm_agenda, $publica, $envia_alerta, $pessoa_cad, $data_cad, $pessoa_own) = $db->Tupla();
+            [$cod_agenda, $nm_agenda, $publica, $envia_alerta, $pessoa_cad, $data_cad, $pessoa_own] = $db->Tupla();
 
             $objPessoa = new clsPessoaFisica();
-            list($nome) = $objPessoa->queryRapida($pessoa_cad, 'nome');
+            [$nome] = $objPessoa->queryRapida($pessoa_cad, 'nome');
 
             $objPessoa_ = new clsPessoaFisica();
-            list($nm_pessoa_own) = $objPessoa_->queryRapida($pessoa_own, 'nome');
+            [$nm_pessoa_own] = $objPessoa_->queryRapida($pessoa_own, 'nome');
 
             $this->addDetalhe(detalhe: ['Código da Agenda', $cod_agenda]);
             $this->addDetalhe(detalhe: ['Agenda', $nm_agenda]);
-            $this->addDetalhe(detalhe: ['Pública', ($publica==0) ? $publica='Não' : $pubica = 'Sim' ]);
-            $this->addDetalhe(detalhe: ['Envia Alerta', ($envia_alerta==0) ? $envia_alerta='Não' : $envia_alerta= 'Sim' ]);
+            $this->addDetalhe(detalhe: ['Pública', ($publica == 0) ? $publica = 'Não' : $pubica = 'Sim']);
+            $this->addDetalhe(detalhe: ['Envia Alerta', ($envia_alerta == 0) ? $envia_alerta = 'Não' : $envia_alerta = 'Sim']);
             $this->addDetalhe(detalhe: ['Quem Cadastrou', $nome]);
-            $this->addDetalhe(detalhe: ['Data do Cadastro', date(format: 'd/m/Y H:m:s', timestamp: strtotime(datetime: substr(string: $data_cad, offset: 0, length: 19))) ]);
+            $this->addDetalhe(detalhe: ['Data do Cadastro', date(format: 'd/m/Y H:m:s', timestamp: strtotime(datetime: substr(string: $data_cad, offset: 0, length: 19)))]);
             $this->addDetalhe(detalhe: ['Dono da Agenda', $nm_pessoa_own]);
 
             $editores = '';
@@ -39,12 +40,12 @@ return new class extends clsDetalhe {
             $edit_array = [];
             $db2->Consulta(consulta: "SELECT ref_ref_cod_pessoa_fj FROM portal.agenda_responsavel WHERE ref_cod_agenda = '{$cod_agenda}'");
             while ($db2->ProximoRegistro()) {
-                list($nome) = $objPessoa->queryRapida($db2->Campo(Nome: 'ref_ref_cod_pessoa_fj'), 'nome');
+                [$nome] = $objPessoa->queryRapida($db2->Campo(Nome: 'ref_ref_cod_pessoa_fj'), 'nome');
                 $edit_array[] = $nome;
             }
 
-            if (! count(value: $edit_array)) {
-                if (! $nm_pessoa_own) {
+            if (!count(value: $edit_array)) {
+                if (!$nm_pessoa_own) {
                     $editores .= 'Nenhum editor cadastrado';
                 }
             } else {
@@ -52,9 +53,9 @@ return new class extends clsDetalhe {
                 reset(array: $edit_array);
                 $editores .= implode(separator: '<br>', array: $edit_array);
             }
-            $this->addDetalhe(detalhe: ['Editores autorizados', $editores ]);
+            $this->addDetalhe(detalhe: ['Editores autorizados', $editores]);
         } else {
-            $this->addDetalhe(detalhe: [ 'Erro', 'Codigo de agenda inválido' ]);
+            $this->addDetalhe(detalhe: ['Erro', 'Codigo de agenda inválido']);
         }
 
         $obj_permissao = new clsPermissoes();

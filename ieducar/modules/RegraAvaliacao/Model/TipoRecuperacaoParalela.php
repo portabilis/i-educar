@@ -5,7 +5,9 @@ use App\Models\LegacyEvaluationRule;
 class RegraAvaliacao_Model_TipoRecuperacaoParalela extends CoreExt_Enum
 {
     const NAO_USAR = LegacyEvaluationRule::PARALLEL_REMEDIAL_NONE;
+
     const USAR_POR_ETAPA = LegacyEvaluationRule::PARALLEL_REMEDIAL_PER_STAGE;
+
     const USAR_POR_ETAPAS_ESPECIFICAS = LegacyEvaluationRule::PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE;
 
     protected $_data = [

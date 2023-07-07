@@ -6,19 +6,19 @@ class ComponenteCurricular_Model_AnoEscolar extends CoreExt_Entity
         'componenteCurricular' => null,
         'anoEscolar' => null,
         'cargaHoraria' => null,
-        'anosLetivos' => null
+        'anosLetivos' => null,
     ];
 
     protected $_dataTypes = [
-        'cargaHoraria' => 'numeric'
+        'cargaHoraria' => 'numeric',
     ];
 
     protected $_references = [
         'componenteCurricular' => [
             'value' => null,
             'class' => 'ComponenteCurricular_Model_ComponenteDataMapper',
-            'file' => 'ComponenteCurricular/Model/ComponenteDataMapper.php'
-        ]
+            'file' => 'ComponenteCurricular/Model/ComponenteDataMapper.php',
+        ],
     ];
 
     /**

@@ -5,15 +5,25 @@ namespace iEducar\Modules\Educacenso\Model;
 class TipoAtendimentoAluno
 {
     public const DESENVOLVIMENTO_FUNCOES_COGNITIVAS = 1;
+
     public const DESENVOLVIMENTO_VIDA_AUTONOMA = 2;
+
     public const ENRIQUECIMENTO_CURRICULAR = 3;
+
     public const ENSINO_INFORMATICA_ACESSIVEL = 4;
+
     public const ENSINO_LIBRAS = 5;
+
     public const ENSINO_LINGUA_PORTUGUESA = 6;
+
     public const ENSINO_SOROBAN = 7;
+
     public const ENSINO_BRAILE = 8;
+
     public const ENSINO_ORIENTACAO_MOBILIDADE = 9;
+
     public const ENSINO_CAA = 10;
+
     public const ENSINO_RECURSOS_OPTICOS_E_NAO_OPTICOS = 11;
 
     /**

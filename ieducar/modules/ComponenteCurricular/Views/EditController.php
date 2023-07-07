@@ -26,32 +26,32 @@ class EditController extends Core_Controller_Page_EditController
         'abreviatura' => [
             'label' => 'Nome abreviado',
             'help' => 'Nome abreviado do componente.',
-            'entity' => 'abreviatura'
+            'entity' => 'abreviatura',
         ],
         'tipo_base' => [
             'label' => 'Base curricular',
             'help' => '',
-            'entity' => 'tipo_base'
+            'entity' => 'tipo_base',
         ],
         'area_conhecimento' => [
             'label' => 'Área conhecimento',
             'help' => '',
-            'entity' => 'area_conhecimento'
+            'entity' => 'area_conhecimento',
         ],
         'codigo_educacenso' => [
             'label' => 'Disciplina Educacenso',
             'help' => '',
-            'entity' => 'codigo_educacenso'
+            'entity' => 'codigo_educacenso',
         ],
         'ordenamento' => [
             'label' => 'Ordem de apresentação',
             'help' => 'Ordem respeitada no lançamento de notas/faltas.',
-            'entity' => 'ordenamento'
+            'entity' => 'ordenamento',
         ],
         'desconsidera_para_progressao' => [
             'label' => 'Desconsiderar o componente na aprovação/reprovação dos alunos?',
             'help' => '',
-            'entity' => 'desconsidera_para_progressao'
+            'entity' => 'desconsidera_para_progressao',
         ],
     ];
 
@@ -150,10 +150,10 @@ class EditController extends Core_Controller_Page_EditController
         );
 
         // Ordenamento
-        $this-> campoNumero(
+        $this->campoNumero(
             'ordenamento',
             $this->_getLabel('ordenamento'),
-            $this->getEntity()->ordenamento==99999 ? null : $this->getEntity()->ordenamento,
+            $this->getEntity()->ordenamento == 99999 ? null : $this->getEntity()->ordenamento,
             15,
             15,
             false,
@@ -197,6 +197,7 @@ class EditController extends Core_Controller_Page_EditController
                 if ($key == 'ordenamento') {
                     if ((trim($val) == '') || (is_null($val))) {
                         $data[$key] = 99999;
+
                         continue;
                     }
                 }

@@ -13,7 +13,6 @@ class CanAlterSchoolClassGrade implements Rule
      *
      * @param string $attribute
      * @param mixed  $value
-     *
      * @return bool
      */
     public function passes($attribute, $value)
@@ -28,8 +27,7 @@ class CanAlterSchoolClassGrade implements Rule
          * Para turmas multisseriadas essa validação
          * é realizada em outro lugar
          */
-
-        if ((bool)$value->multiseriada) {
+        if ((bool) $value->multiseriada) {
             return true;
         }
 
@@ -37,7 +35,7 @@ class CanAlterSchoolClassGrade implements Rule
         $oldSchoolClassGrade = $oldSchoolClass->ref_ref_cod_serie;
         $newSchoolClassGrade = $value->ref_ref_cod_serie;
 
-        if ((int)$oldSchoolClassGrade === (int)$newSchoolClassGrade) {
+        if ((int) $oldSchoolClassGrade === (int) $newSchoolClassGrade) {
             return true;
         }
 

@@ -6,7 +6,6 @@ interface CoreExt_Validate_Interface extends CoreExt_Configurable
      * Verifica se um dado valor é válido de acordo com a lógica implementada
      * pela subclasse.
      *
-     * @param $value
      *
      * @return bool
      */

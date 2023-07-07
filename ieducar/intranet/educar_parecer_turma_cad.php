@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -9,18 +10,24 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_turma;
+
     public $parecer_1_etapa;
+
     public $parecer_2_etapa;
+
     public $parecer_3_etapa;
+
     public $parecer_4_etapa;
+
     public $etapas;
+
     public $ano;
 
     public function Inicializar()
     {
-        $this->cod_turma=$_GET['cod_turma'];
+        $this->cod_turma = $_GET['cod_turma'];
 
-        $obj      = new clsPmieducarTurma(cod_turma: $this->cod_turma);
+        $obj = new clsPmieducarTurma(cod_turma: $this->cod_turma);
         $registro = $obj->detalhe();
 
         foreach ($registro as $campo => $val) {
@@ -40,25 +47,25 @@ return new class extends clsCadastro {
 
         $cursoId = $this->ref_cod_curso;
 
-        $sql             = 'select padrao_ano_escolar from pmieducar.curso where cod_curso = $1 and ativo = 1';
+        $sql = 'select padrao_ano_escolar from pmieducar.curso where cod_curso = $1 and ativo = 1';
         $padraoAnoLetivo = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: ['params' => $cursoId,
-                                                                                 'return_only' => 'first-field']);
+            'return_only' => 'first-field']);
 
         if ($padraoAnoLetivo == 1) {
             $escolaId = $this->ref_ref_cod_escola;
-            $ano      = $this->ano;
+            $ano = $this->ano;
 
             $sql = 'select padrao.sequencial as etapa, modulo.nm_tipo as nome from pmieducar.ano_letivo_modulo
               as padrao, pmieducar.modulo where padrao.ref_ano = $1 and padrao.ref_ref_cod_escola = $2
               and padrao.ref_cod_modulo = modulo.cod_modulo and modulo.ativo = 1 order by padrao.sequencial';
 
-            $this->etapas = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: [ 'params' => [$ano, $escolaId]]);
+            $this->etapas = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: ['params' => [$ano, $escolaId]]);
         } else {
             $sql = 'select turma.sequencial as etapa, modulo.nm_tipo as nome from pmieducar.turma_modulo as turma,
               pmieducar.modulo where turma.ref_cod_turma = $1 and turma.ref_cod_modulo = modulo.cod_modulo
               and modulo.ativo = 1 order by turma.sequencial';
 
-            $this->etapas = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: [ 'params' => $this->cod_turma]);
+            $this->etapas = Portabilis_Utils_Database::fetchPreparedQuery(sql: $sql, options: ['params' => $this->cod_turma]);
         }
 
         return 'Editar';

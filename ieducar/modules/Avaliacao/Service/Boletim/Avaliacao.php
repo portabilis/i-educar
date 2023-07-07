@@ -104,8 +104,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $notasComponentes
-     *
      * @return $this
      */
     public function setNotasComponentes(array $notasComponentes)
@@ -124,8 +122,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $notasGerais
-     *
      * @return $this
      */
     public function setNotasGerais(array $notasGerais)
@@ -148,7 +144,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     /**
      * Retorna as instâncias de Avaliacao_Model_NotaComponenteMedia do aluno.
      *
-     * @param array $mediasComponentes
      *
      * @return $this
      */
@@ -173,7 +168,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
      * Retorna a instância de Avaliacao_Model_MediaGeral do aluno.
      *
      * @param array $mediaGeral
-     *
      * @return $this
      */
     public function setMediaGeral($mediaGeral)
@@ -209,8 +203,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $faltasComponentes
-     *
      * @return $this
      */
     public function setFaltasComponentes(array $faltasComponentes)
@@ -231,8 +223,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $faltasGerais
-     *
      * @return $this
      */
     public function setFaltasGerais(array $faltasGerais)
@@ -287,8 +277,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $pareceresComponentes
-     *
      * @return $this
      */
     public function setPareceresComponentes(array $pareceresComponentes)
@@ -310,8 +298,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $pareceresGerais
-     *
      * @return $this
      */
     public function setPareceresGerais(array $pareceresGerais)
@@ -332,8 +318,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $faltasGeraisCiclo
-     *
      * @return $this
      */
     public function setFaltasGeraisCiclo(array $faltasGeraisCiclo)
@@ -354,8 +338,6 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * @param array $faltasComponentesCiclo
-     *
      * @return $this
      */
     public function setFaltasComponentesCiclo(array $faltasComponentesCiclo)

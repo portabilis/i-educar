@@ -2,19 +2,32 @@
 
 use App\Models\LegacyRole;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $cod_funcao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_funcao;
+
     public $abreviatura;
+
     public $professor;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $ref_cod_instituicao;
@@ -30,7 +43,7 @@ return new class extends clsListagem {
         $lista_busca = [
             'Nome Funcão',
             'Abreviatura',
-            'Professor'
+            'Professor',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -42,7 +55,7 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         // Filtros de Foreign Keys
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto(nome: 'nm_funcao', campo: 'Nome Função', valor: $this->nm_funcao, tamanhovisivel: 30, tamanhomaximo: 255);
@@ -50,7 +63,7 @@ return new class extends clsListagem {
         $opcoes = [
             '' => 'Selecione',
             'N' => 'Não',
-            'S' => 'Sim'
+            'S' => 'Sim',
         ];
 
         $this->campoLista(nome: 'professor', campo: 'Professor', valor: $opcoes, default: $this->professor, obrigatorio: false);
@@ -99,7 +112,7 @@ return new class extends clsListagem {
                 $lista_busca = [
                     "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$registro['nm_funcao']}</a>",
                     "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$registro['abreviatura']}</a>",
-                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$registro['professor']}</a>"
+                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$registro['professor']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

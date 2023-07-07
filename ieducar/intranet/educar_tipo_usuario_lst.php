@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -30,13 +31,21 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_tipo_usuario;
+
     public $ref_funcionario_cad;
+
     public $ref_funcionario_exc;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $nivel;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -97,7 +106,7 @@ return new class extends clsListagem {
                     "<a href=\"{$url}\">{$registro['cod_tipo_usuario']}</a>",
                     "<a href=\"{$url}\">{$registro['nm_tipo']}</a>",
                     "<a href=\"{$url}\">{$registro['descricao']}</a>",
-                    "<a href=\"{$url}\">{$array_nivel[$registro['nivel']]}</a>"
+                    "<a href=\"{$url}\">{$array_nivel[$registro['nivel']]}</a>",
                 ]);
             }
         }

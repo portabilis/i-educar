@@ -38,7 +38,6 @@ trait AuditTrigger
      * Return create audit trigger SQL to the table.
      *
      * @param string $table
-     *
      * @return string
      */
     public function getSqlForCreateAuditTrigger($table)
@@ -56,7 +55,6 @@ SQL;
      * Return drop audit trigger SQL to the table.
      *
      * @param string $table
-     *
      * @return string
      */
     public function getSqlForDropAuditTrigger($table)
@@ -72,7 +70,6 @@ SQL;
      * Create audit trigger for table.
      *
      * @param string $table
-     *
      * @return void
      */
     public function createAuditTrigger($table)
@@ -86,7 +83,6 @@ SQL;
      * Drop audit trigger from table.
      *
      * @param string $table
-     *
      * @return void
      */
     public function dropAuditTrigger($table)

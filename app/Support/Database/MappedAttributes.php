@@ -14,7 +14,6 @@ trait MappedAttributes
 
     /**
      * @param string $key
-     *
      * @return string
      */
     public function getMappedAttribute($key)
@@ -28,7 +27,6 @@ trait MappedAttributes
 
     /**
      * @param string $key
-     *
      * @return string
      */
     public function getTranslateMappedAttribute($key)
@@ -44,7 +42,6 @@ trait MappedAttributes
      * Get an attribute from the model.
      *
      * @param string $key
-     *
      * @return mixed
      */
     public function getAttribute($key)
@@ -59,7 +56,6 @@ trait MappedAttributes
      *
      * @param string $key
      * @param mixed  $value
-     *
      * @return mixed
      */
     public function setAttribute($key, $value)

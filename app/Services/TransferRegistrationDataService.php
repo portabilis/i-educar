@@ -24,11 +24,6 @@ class TransferRegistrationDataService
      */
     private $copyDescriptiveOpinionService;
 
-    /**
-     * @param CopyAbsenceService            $copyAbsenceService
-     * @param CopyScoreService              $copyScoreService
-     * @param CopyDescriptiveOpinionService $copyDescriptiveOpinionService
-     */
     public function __construct(
         CopyAbsenceService $copyAbsenceService,
         CopyScoreService $copyScoreService,
@@ -40,8 +35,6 @@ class TransferRegistrationDataService
     }
 
     /**
-     * @param LegacyRegistration $registration
-     *
      * @throws StagesAreNotSame
      * @throws MissingDescriptiveOpinionType
      */
@@ -63,24 +56,19 @@ class TransferRegistrationDataService
     }
 
     /**
-     * @param LegacyRegistration $newRegistration
-     * @param LegacyRegistration $oldRegistration
-     *
      * @return bool
      */
     public function hasSameStages(
         LegacyRegistration $newRegistration,
         LegacyRegistration $oldRegistration
     ) {
-        $newRegistrationNumbersOfStages = count($newRegistration?->lastEnrollment?->schoolClass?->stages ?? []);
-        $oldRegistrationNumbersOfStages = count($oldRegistration?->lastEnrollment?->schoolClass?->stages ?? []);
+        $newRegistrationNumbersOfStages = count($newRegistration?->lastEnrollment?->schoolClass?->getStages($newRegistration?->course?->is_standard_calendar) ?? []);
+        $oldRegistrationNumbersOfStages = count($oldRegistration?->lastEnrollment?->schoolClass?->getStages($oldRegistration?->course?->is_standard_calendar) ?? []);
 
         return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;
     }
 
     /**
-     * @param LegacyRegistration $registration
-     *
      * @return LegacyTransferRequest
      */
     public function getTransfer(LegacyRegistration $registration)

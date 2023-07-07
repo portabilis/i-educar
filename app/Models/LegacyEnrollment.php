@@ -29,6 +29,7 @@ class LegacyEnrollment extends LegacyModel
     use DateSerializer;
 
     public const CREATED_AT = 'data_cadastro';
+
     public const UPDATED_AT = 'updated_at';
 
     /**
@@ -60,7 +61,7 @@ class LegacyEnrollment extends LegacyModel
         'curso_itinerario',
         'itinerario_concomitante',
         'etapa_educacenso',
-        'cod_curso_profissional'
+        'cod_curso_profissional',
     ];
 
     protected $casts = [
@@ -137,9 +138,6 @@ class LegacyEnrollment extends LegacyModel
         return $this->belongsTo(LegacyPeriod::class, 'turno_id')->withDefault();
     }
 
-    /**
-     * @return HasOne
-     */
     public function registrationScore(): HasOne
     {
         return $this->hasOne(LegacyRegistrationScore::class, 'matricula_id', 'ref_cod_matricula');

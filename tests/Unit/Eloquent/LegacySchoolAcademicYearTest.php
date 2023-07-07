@@ -9,12 +9,9 @@ use Tests\EloquentTestCase;
 class LegacySchoolAcademicYearTest extends EloquentTestCase
 {
     protected $relations = [
-        'school' => LegacySchool::class
+        'school' => LegacySchool::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchoolAcademicYear::class;

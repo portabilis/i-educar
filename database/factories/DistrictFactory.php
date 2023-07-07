@@ -16,15 +16,13 @@ class DistrictFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
             'city_id' => CityFactory::new()->create(),
             'name' => $this->faker->dayOfWeek() . ' District',
-            'ibge_code' => (int)$this->faker->unique()->numerify('########'),
+            'ibge_code' => (int) $this->faker->unique()->numerify('########'),
         ];
     }
 }

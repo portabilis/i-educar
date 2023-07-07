@@ -34,8 +34,6 @@ class LegacySchool extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacySchoolBuilder::class;
 
@@ -47,7 +45,7 @@ class LegacySchool extends LegacyModel
     public array $legacy = [
         'id' => 'cod_escola',
         'person_id' => 'ref_idpes',
-        'name' => 'fantasia'
+        'name' => 'fantasia',
     ];
 
     /**
@@ -109,8 +107,6 @@ class LegacySchool extends LegacyModel
 
     /**
      * Relacionamento com a instituição.
-     *
-     * @return BelongsTo
      */
     public function institution(): BelongsTo
     {
@@ -119,25 +115,17 @@ class LegacySchool extends LegacyModel
 
     /**
      * Anos letivos
-     *
-     * @return HasMany
      */
     public function academicYears(): HasMany
     {
         return $this->hasMany(LegacySchoolAcademicYear::class, 'ref_cod_escola');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -148,25 +136,16 @@ class LegacySchool extends LegacyModel
         )->withPivot('ativo', 'anos_letivos');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function organization(): BelongsTo
     {
         return $this->belongsTo(LegacyOrganization::class, 'ref_idpes');
     }
 
-    /**
-     * @return HasOne
-     */
     public function inep(): HasOne
     {
         return $this->hasOne(SchoolInep::class, 'cod_escola', 'cod_escola');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function grades(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -177,17 +156,11 @@ class LegacySchool extends LegacyModel
         )->withPivot('ativo', 'anos_letivos', 'bloquear_enturmacao_sem_vagas');
     }
 
-    /**
-     * @return HasMany
-     */
     public function schoolClasses(): HasMany
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_escola');
     }
 
-    /**
-     * @return HasMany
-     */
     public function schoolUsers(): HasMany
     {
         return $this->hasMany(LegacyUserSchool::class, 'ref_cod_escola', 'cod_escola');
@@ -198,9 +171,6 @@ class LegacySchool extends LegacyModel
         return $this->belongsTo(SchoolData::class, 'cod_escola');
     }
 
-    /**
-     * @return HasMany
-     */
     public function schoolManagers(): HasMany
     {
         return $this->hasMany(SchoolManager::class, 'school_id');

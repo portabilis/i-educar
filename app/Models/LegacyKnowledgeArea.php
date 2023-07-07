@@ -14,6 +14,7 @@ class LegacyKnowledgeArea extends Model
     protected $table = 'modules.area_conhecimento';
 
     public const CREATED_AT = null;
+
     public const UPDATED_AT = 'updated_at';
 
     /**

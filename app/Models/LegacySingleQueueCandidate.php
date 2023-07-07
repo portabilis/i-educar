@@ -54,7 +54,7 @@ class LegacySingleQueueCandidate extends LegacyModel
     public $timestamps = false;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function boot()
     {

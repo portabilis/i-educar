@@ -13,7 +13,7 @@ class ChangeDescriptionHintDefaultPasswordExpirationPeriodSettings extends Migra
             'description' => 'Quantidade de dias para expirar automaticamente as senhas dos usuários ativos',
             'hint' => 'A contagem será efetuada em dias corridos. Se o valor preenchido for zero (0), não ocorrerá automatização',
             'value' => 0,
-            'type' => 'integer'
+            'type' => 'integer',
         ]);
 
         Setting::query()->updateOrInsert([
@@ -37,7 +37,7 @@ class ChangeDescriptionHintDefaultPasswordExpirationPeriodSettings extends Migra
             'description' => 'Dias para expiração de senha',
             'hint' => '',
             'value' => 180,
-            'type' => 'string'
+            'type' => 'string',
         ]);
 
         Setting::query()->updateOrCreate([

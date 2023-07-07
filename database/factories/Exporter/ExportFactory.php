@@ -18,7 +18,7 @@ class ExportFactory extends Factory
             'user_id' => fn () => LegacyUserFactory::new()->current(),
             'model' => Enrollment::class,
             'fields' => ['registration_id'],
-            'hash' =>  md5(time()),
+            'hash' => md5(time()),
             'filename' => str_replace(' ', '_', 'matriculas' . '_'. \Carbon\Carbon::now()->toDateTimeString() .  '.csv'),
             'url' => null,
             'created_at' => Carbon::now(),

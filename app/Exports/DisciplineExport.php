@@ -18,9 +18,6 @@ class DisciplineExport implements FromCollection, WithHeadingRow, WithHeadings, 
      */
     private $collection;
 
-    /**
-     * @param Collection $collection
-     */
     public function __construct(Collection $collection)
     {
         $this->collection = $collection;
@@ -36,17 +33,12 @@ class DisciplineExport implements FromCollection, WithHeadingRow, WithHeadings, 
 
     /**
      * @param array $row
-     *
-     * @return array
      */
     public function map($row): array
     {
         return $row;
     }
 
-    /**
-     * @return array
-     */
     public function headings(): array
     {
         return array_keys($this->collection->first());

@@ -22,7 +22,7 @@ class LegacyRegistrationScore extends Model
      * @var array
      */
     protected $fillable = [
-        'matricula_id'
+        'matricula_id',
     ];
 
     /**
@@ -30,9 +30,6 @@ class LegacyRegistrationScore extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @return BelongsTo
-     */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'matricula_id');

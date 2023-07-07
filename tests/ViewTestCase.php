@@ -20,6 +20,7 @@ abstract class ViewTestCase extends TestCase
     protected $relations = [];
 
     protected Factory $factory;
+
     protected Model $model;
 
     public function setUp(): void
@@ -31,8 +32,6 @@ abstract class ViewTestCase extends TestCase
 
     /**
      * Return the Eloquent model name to be used in tests.
-     *
-     * @return string
      */
     abstract protected function getViewModelName(): string;
 
@@ -45,8 +44,6 @@ abstract class ViewTestCase extends TestCase
 
     /**
      * Instance a new Eloquent model.
-     *
-     * @return Model
      */
     protected function instanceNewViewModel(): Model
     {
@@ -57,9 +54,6 @@ abstract class ViewTestCase extends TestCase
 
     /**
      * Make a new Eloquent model.
-     *
-     * @return Model
-     *
      */
     protected function makeNewModel(): Model
     {
@@ -70,13 +64,6 @@ abstract class ViewTestCase extends TestCase
         return $this->factory->make();
     }
 
-    /**
-     * @param Model  $model
-     * @param string $relation
-     * @param string $class
-     *
-     * @return void
-     */
     private function makeRelation(Model $model, string $relation, string $class): void
     {
         $type = $this->instanceNewViewModel()->{$relation}();
@@ -94,15 +81,13 @@ abstract class ViewTestCase extends TestCase
             $morphType = $type->getMorphType();
             $instance->create([
                 $morphType => $morphClass,
-                $morphId => $model->getKey()
+                $morphId => $model->getKey(),
             ]);
         }
     }
 
     /**
      * Find a Eloquent model.
-     *
-     * @return void
      */
     public function testFindUsingEloquent(): void
     {
@@ -118,8 +103,6 @@ abstract class ViewTestCase extends TestCase
 
     /**
      * Relations.
-     *
-     * @return void
      */
     public function testRelationships(): void
     {

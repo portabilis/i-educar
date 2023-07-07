@@ -9,7 +9,6 @@ class App_Model_Matricula
      * @param int  $matricula
      * @param int  $usuario
      * @param bool $aprovado
-     *
      * @return bool
      */
     public static function atualizaMatricula($matricula, $usuario, $aprovado = true)

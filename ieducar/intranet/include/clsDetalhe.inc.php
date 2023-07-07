@@ -6,15 +6,25 @@ use Illuminate\Support\Facades\View;
 class clsDetalhe extends Core_Controller_Page_Abstract
 {
     public $titulo;
+
     public $largura;
+
     public $detalhe = [];
+
     public $url_novo;
+
     public $caption_novo = 'Novo';
+
     public $url_editar;
+
     public $url_cancelar;
+
     public $nome_url_cancelar = 'Voltar';
+
     public $array_botao;
+
     public $array_botao_url;
+
     public $array_botao_url_script;
 
     public function addDetalhe($detalhe)

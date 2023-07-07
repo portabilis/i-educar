@@ -1,17 +1,29 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_cod_matricula;
+
     public $ref_cod_serie;
+
     public $ref_cod_escola;
+
     public $ref_cod_disciplina;
+
     public $observacao;
+
     public $ref_sequencial;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_turma;
 
     public function Gerar()
@@ -59,7 +71,7 @@ return new class extends clsListagem {
         $this->campoOculto(nome: 'ref_cod_turma', valor: $this->ref_cod_turma);
 
         $this->addCabecalhos([
-            'Disciplina'
+            'Disciplina',
         ]);
 
         $this->campoOculto(nome: 'ref_cod_matricula', valor: $this->ref_cod_matricula);
@@ -115,11 +127,11 @@ return new class extends clsListagem {
                     'ref_cod_matricula' => $registro['ref_cod_matricula'],
                     'ref_cod_serie' => $registro['ref_cod_serie'],
                     'ref_cod_escola' => $registro['ref_cod_escola'],
-                    'ref_cod_disciplina' => $registro['ref_cod_disciplina']
+                    'ref_cod_disciplina' => $registro['ref_cod_disciplina'],
                 ]];
 
                 $this->addLinhas([
-                    $urlHelper->l(text: $componente->nome, path: $url, options: $options)
+                    $urlHelper->l(text: $componente->nome, path: $url, options: $options),
                 ]);
             }
         }
@@ -138,7 +150,7 @@ return new class extends clsListagem {
             $this->array_botao_url[] = 'educar_disciplina_dependencia_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;
             $this->array_botao[] = [
                 'name' => 'Novo',
-                'css-extra' => 'btn-green'
+                'css-extra' => 'btn-green',
             ];
         }
 

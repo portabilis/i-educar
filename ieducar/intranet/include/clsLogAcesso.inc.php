@@ -3,12 +3,19 @@
 class clsLogAcesso
 {
     public $cod_acesso;
+
     public $ip_externo;
+
     public $ip_interno;
+
     public $data_hora;
+
     public $cod_pessoa;
+
     public $obs;
+
     public $sucesso;
+
     public $tabela;
 
     /**
@@ -16,7 +23,7 @@ class clsLogAcesso
      *
      * @return Object:clsLogAcesso
      */
-    public function __construct($cod_acesso=false, $ip_externo=false, $ip_interno=false, $cod_pessoa=false, $obs=false, $sucesso=null)
+    public function __construct($cod_acesso = false, $ip_externo = false, $ip_interno = false, $cod_pessoa = false, $obs = false, $sucesso = null)
     {
         $this->cod_acesso = $cod_acesso;
         $this->ip_externo = $ip_externo;
@@ -43,7 +50,7 @@ class clsLogAcesso
                 $campos .= ', obs';
                 $valores .= ", '{$this->obs}'";
             }
-            if (! is_null($this->sucesso)) {
+            if (!is_null($this->sucesso)) {
                 $campos .= ', sucesso';
                 if ($this->sucesso) {
                     $valores .= ', \'t\'';
@@ -66,7 +73,7 @@ class clsLogAcesso
      *
      * @return array|false
      */
-    public function lista($int_cod_pessoa=false, $str_ip_interno=false, $str_ip_externo=false, $date_inicio=false, $date_fim=false, $str_obs=false, $str_order_by='data_hora DESC', $int_limit_ini=0, $int_limit_qtd=20, $sucesso=null)
+    public function lista($int_cod_pessoa = false, $str_ip_interno = false, $str_ip_externo = false, $date_inicio = false, $date_fim = false, $str_obs = false, $str_order_by = 'data_hora DESC', $int_limit_ini = 0, $int_limit_qtd = 20, $sucesso = null)
     {
         // verificacoes de filtros a serem usados
         $whereAnd = 'WHERE ';
@@ -106,7 +113,7 @@ class clsLogAcesso
             $where .= "{$whereAnd}data_cadastro >= '$date_inicio'";
             $whereAnd = ' AND ';
         }
-        if (! is_null($sucesso)) {
+        if (!is_null($sucesso)) {
             if ($sucesso) {
                 $where .= "{$whereAnd}sucesso = 't'";
             } else {

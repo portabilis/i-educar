@@ -2,9 +2,12 @@
 
 use App\Models\LegacyEnrollment;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_matricula;
+
     public $ref_cod_aluno;
+
     public $turno;
 
     public function Formular()
@@ -53,12 +56,12 @@ return new class extends clsCadastro {
         $turnos = [
             0 => 'Selecione',
             clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
-            clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino'
+            clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
         ];
 
         foreach ($enturmacoes as $enturmacao) {
-            $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
-            $turma         = $turma->detalhe();
+            $turma = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+            $turma = $turma->detalhe();
             if ($turma['turma_turno_id'] != clsPmieducarTurma::TURNO_INTEGRAL) {
                 continue;
             }
@@ -81,7 +84,6 @@ return new class extends clsCadastro {
             $codTurma = $codTurmaESequencial[0];
             $sequencial = $codTurmaESequencial[1];
 
-
             if (LegacyEnrollment::where(column: 'ref_cod_matricula', operator: $this->cod_matricula)->where(column: 'ref_cod_turma', operator: $codTurma)->value('turno_id') != (int) $turno) {
                 $is_change = true;
 
@@ -91,7 +93,6 @@ return new class extends clsCadastro {
                 $obj->edita();
             }
         }
-
 
         session()->flash(key: 'success', value: $is_change ? 'Turno alterado com sucesso!' : 'Não houve alteração no valor do campo Turno.');
 

@@ -15,7 +15,6 @@ class ExportService
     private string $fileType = Excel::CSV;
 
     /**
-     * @param Export      $export
      * @param string|null $disk
      */
     public function __construct(
@@ -26,8 +25,6 @@ class ExportService
 
     /**
      * @param null $disk
-     *
-     * @return void
      */
     public function execute(): void
     {
@@ -36,7 +33,7 @@ class ExportService
         $exporter = new ExporterSqlExport($this->export->getExportQuery()->toSql());
         $success = $exporter->store($this->getFilename(), $this->disk, $this->fileType);
         if ($success) {
-            $url =  $this->getUrl();
+            $url = $this->getUrl();
             $this->export->update(['url' => $url]);
             (new NotificationService())->createByUser(
                 $this->export->user_id,
@@ -64,9 +61,6 @@ class ExportService
         return "Foram exportados {$count} registros. Clique aqui para fazer download do arquivo {$this->export->filename}.";
     }
 
-    /**
-     * @return string
-     */
     private function getUrl(): string
     {
         return Storage::disk($this->disk)->url($this->getFilename());

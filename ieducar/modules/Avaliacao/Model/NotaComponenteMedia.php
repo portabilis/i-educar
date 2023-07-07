@@ -21,13 +21,13 @@ class Avaliacao_Model_NotaComponenteMedia extends CoreExt_Entity
         'notaAluno' => [
             'value' => null,
             'class' => 'Avaliacao_Model_NotaAlunoDataMapper',
-            'file'  => 'Avaliacao/Model/NotaAlunoDataMapper.php'
+            'file' => 'Avaliacao/Model/NotaAlunoDataMapper.php',
         ],
         'componenteCurricular' => [
             'value' => null,
             'class' => 'ComponenteCurricular_Model_ComponenteDataMapper',
-            'file'  => 'ComponenteCurricular/Model/ComponenteDataMapper.php'
-        ]
+            'file' => 'ComponenteCurricular/Model/ComponenteDataMapper.php',
+        ],
     ];
 
     public function __construct($options = [])
@@ -41,7 +41,7 @@ class Avaliacao_Model_NotaComponenteMedia extends CoreExt_Entity
         return [
             'media' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 10]),
             'mediaArredondada' => new CoreExt_Validate_String(['max' => 5]),
-            'etapa' => new CoreExt_Validate_String(['max' => 2])
+            'etapa' => new CoreExt_Validate_String(['max' => 2]),
         ];
     }
 }

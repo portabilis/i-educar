@@ -16,8 +16,6 @@ class FileFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -25,7 +23,7 @@ class FileFactory extends Factory
             'url' => $this->faker->url,
             'size' => $this->faker->numberBetween(1000, 10000),
             'original_name' => $this->faker->name(),
-            'extension' => $this->faker->fileExtension
+            'extension' => $this->faker->fileExtension,
         ];
     }
 }

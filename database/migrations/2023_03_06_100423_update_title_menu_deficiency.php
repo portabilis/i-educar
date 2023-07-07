@@ -3,12 +3,13 @@
 use App\Menu;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         Menu::where('process', '631')->update([
             'title' => 'Tipos de deficiência e transtornos',
-            'description' => 'Tipos de deficiência e transtornos da pessoa'
+            'description' => 'Tipos de deficiência e transtornos da pessoa',
         ]);
     }
 
@@ -16,7 +17,7 @@ return new class () extends Migration {
     {
         Menu::where('process', '631')->update([
             'title' => 'Tipos de deficiência',
-            'description' => 'Tipos de deficiência da pessoa'
+            'description' => 'Tipos de deficiência da pessoa',
         ]);
     }
 };

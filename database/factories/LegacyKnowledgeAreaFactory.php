@@ -113,7 +113,7 @@ class LegacyKnowledgeAreaFactory extends Factory
             }
 
             return [
-                'id' => $knowledgeArea->getKey()
+                'id' => $knowledgeArea->getKey(),
             ];
         });
     }

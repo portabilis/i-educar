@@ -7,20 +7,25 @@ use iEducar\Modules\Educacenso\Model\Deficiencias;
 class DeficiencyValidator implements EducacensoValidator
 {
     private $message;
+
     private $values;
+
     private const CEGUEIRA_FORBIDDEN_DEFICIENCIES = [
         Deficiencias::BAIXA_VISAO,
         Deficiencias::SURDEZ,
         Deficiencias::SURDOCEGUEIRA,
         Deficiencias::VISAO_MONOCULAR,
     ];
+
     private const BAIXA_VISAO_FORBIDDEN_DEFICIENCIES = [
         Deficiencias::SURDOCEGUEIRA,
     ];
+
     private const SURDEZ_FORBIDDEN_DEFICIENCIES = [
         Deficiencias::DEFICIENCIA_AUDITIVA,
         Deficiencias::SURDOCEGUEIRA,
     ];
+
     private const DEFICIENCIA_AUDITIVA_FORBIDDEN_DEFICIENCIES = [
         Deficiencias::SURDOCEGUEIRA,
     ];
@@ -35,9 +40,6 @@ class DeficiencyValidator implements EducacensoValidator
         $this->values = $values;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if (count($this->values) <= 1) {
@@ -64,7 +66,7 @@ class DeficiencyValidator implements EducacensoValidator
             [
                 Deficiencias::VISAO_MONOCULAR,
                 self::VISAO_MONOCULAR_FORBIDDEN_DEFICIENCIES,
-            ]
+            ],
         ];
 
         foreach ($validations as $validation) {

@@ -27,17 +27,11 @@ class LegacyStudentAbsence extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @return BelongsTo
-     */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'matricula_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function absences(): HasMany
     {
         if ($this->isByDiscipline()) {
@@ -47,33 +41,21 @@ class LegacyStudentAbsence extends Model
         return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function absencesByDiscipline(): HasMany
     {
         return $this->hasMany(LegacyDisciplineAbsence::class, 'falta_aluno_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function generalAbsences(): HasMany
     {
         return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id', 'id');
     }
 
-    /**
-     * @return bool
-     */
     public function isByDiscipline(): bool
     {
         return $this->tipo_falta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
     }
 
-    /**
-     * @return bool
-     */
     public function isGeneral(): bool
     {
         return $this->tipo_falta == RegraAvaliacao_Model_TipoPresenca::GERAL;

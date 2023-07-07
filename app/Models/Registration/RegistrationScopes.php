@@ -26,7 +26,6 @@ trait RegistrationScopes
 
     /**
      * @param int $school
-     *
      * @return $this
      */
     public function school($school)
@@ -36,7 +35,6 @@ trait RegistrationScopes
 
     /**
      * @param int $year
-     *
      * @return $this
      */
     public function year($year)
@@ -46,7 +44,6 @@ trait RegistrationScopes
 
     /**
      * @param int $status
-     *
      * @return $this
      */
     public function status($status)

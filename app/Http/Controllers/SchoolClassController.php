@@ -53,7 +53,7 @@ class SchoolClassController extends Controller
             $schoolClass->originalMultiGradesInfo = $originalMultiGradesInfo;
             $schoolClass->originalGrade = $originalGrade;
 
-            if (! empty($request->get('multiseriada'))) {
+            if (!empty($request->get('multiseriada'))) {
                 $multSerieIds = $request->get('mult_serie_id');
                 $multSerieId = is_array($multSerieIds) ? $multSerieIds : [];
                 $multBoletimId = $request->get('mult_boletim_id');
@@ -140,8 +140,6 @@ class SchoolClassController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return LegacySchoolClass
      */
     private function prepareSchoolClassDataToStore(Request $request)
@@ -263,7 +261,7 @@ class SchoolClassController extends Controller
                     'cargaHoraria' => $carga,
                     'docenteVinculado' => $docente_,
                     'etapasEspecificas' => $hasEspecifica,
-                    'etapasUtilizadas' => $etapaUtilizada
+                    'etapasUtilizadas' => $etapaUtilizada,
                 ];
             }
 

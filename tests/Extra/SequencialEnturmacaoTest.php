@@ -49,13 +49,13 @@ class SequencialEnturmacaoTest extends TestCase
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass->cod_turma,
             'ref_cod_matricula' => $registration1->cod_matricula,
-            'sequencial_fechamento' => 1
+            'sequencial_fechamento' => 1,
         ]);
 
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass->cod_turma,
             'ref_cod_matricula' => $registration2->cod_matricula,
-            'sequencial_fechamento' => 2
+            'sequencial_fechamento' => 2,
         ]);
 
         //Garante que o aluno será o último

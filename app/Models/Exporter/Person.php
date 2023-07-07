@@ -21,7 +21,6 @@ class Person extends Model
 
     /**
      * @param Builder $query
-     *
      * @return PersonEloquentBuilder
      */
     public function newEloquentBuilder($query)
@@ -137,7 +136,6 @@ class Person extends Model
 
     /**
      * @param string $column
-     *
      * @return string
      */
     public function alias($column)

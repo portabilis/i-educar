@@ -6,7 +6,6 @@ trait HasIbgeCode
 {
     /**
      * @param int $ibgeCode
-     *
      * @return $this
      */
     public static function findByIbgeCode($ibgeCode)

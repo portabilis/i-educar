@@ -47,7 +47,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
             'input_hint' => $inputHint,
             'callback' => '',
             'event' => 'onKeyUp',
-            'disabled' => true
+            'disabled' => true,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
@@ -75,8 +75,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
                         var escolaId = document.getElementById("ref_cod_escola").value;
                         pesquisa_valores_popless("/intranet/educar_pesquisa_aluno.php?ref_cod_escola="+escolaId);
                     }
-                }'
-            ;
+                }';
         } else {
             $js = '
                 function pesquisaAluno() {

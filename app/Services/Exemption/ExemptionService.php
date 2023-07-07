@@ -169,7 +169,7 @@ class ExemptionService
         $notaComponenteCurricular = $notaComponenteCurricularMapper->findAll([], [
             'nota_aluno_id' => $notaAluno,
             'componente_curricular_id' => $disciplinaId,
-            'etapa' => $etapa
+            'etapa' => $etapa,
         ]);
         if (empty($notaComponenteCurricular)) {
             return false;
@@ -196,7 +196,7 @@ class ExemptionService
         $faltaComponenteCurricular = $faltaComponenteCurricularMapper->findAll([], [
             'falta_aluno_id' => $faltaAluno,
             'componente_curricular_id' => $disciplinaId,
-            'etapa' => $etapa
+            'etapa' => $etapa,
         ]);
         if (empty($faltaComponenteCurricular)) {
             return false;

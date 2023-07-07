@@ -15,7 +15,9 @@ class LegacyBuilderTest extends TestCase
     use DatabaseTransactions;
 
     private LegacyBuilder $builder;
+
     private LegacySchool $school;
+
     private LegacySchool $schoolNotInstitution;
 
     public function setUp(): void
@@ -30,7 +32,7 @@ class LegacyBuilderTest extends TestCase
 
         //escola 2 para ser adicionado nos filtros
         $this->school = LegacySchoolFactory::new()->create([
-            'ref_cod_instituicao' => $institution->id
+            'ref_cod_instituicao' => $institution->id,
         ]);
 
         //builder para teste
@@ -39,7 +41,7 @@ class LegacyBuilderTest extends TestCase
 
     public function testBuilderReturnWithAliasXExpectResource(): void
     {
-        $filtered = $this->builder->filter(['institution' => $this->school->ref_cod_instituicao])->setExcept(['ref_idpes'])->resource(['id','id as value'], ['name','name as label']);
+        $filtered = $this->builder->filter(['institution' => $this->school->ref_cod_instituicao])->setExcept(['ref_idpes'])->resource(['id', 'id as value'], ['name', 'name as label']);
 
         $expect = new Collection([
             [
@@ -47,7 +49,7 @@ class LegacyBuilderTest extends TestCase
                 'value' => $this->school->id, //teste query com alias
                 'name' => $this->school->name, //teste adicional sem alias
                 'label' => $this->school->name, //teste adicional com alias
-            ]
+            ],
         ]);
 
         $this->assertJsonStringEqualsJsonString($expect->toJson(), $filtered->toJson());

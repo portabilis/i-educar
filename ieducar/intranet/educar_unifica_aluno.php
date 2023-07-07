@@ -5,10 +5,14 @@ use App\Services\ValidationDataService;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $tabela_alunos = [];
+
     public $aluno_duplicado;
+
     public $alunos;
 
     public function Inicializar()
@@ -50,11 +54,11 @@ return new class extends clsCadastro {
     private function validaDadosDaUnificacaoAluno($alunos): bool
     {
         foreach ($alunos as $item) {
-            if (! isset($item['codAluno'])) {
+            if (!isset($item['codAluno'])) {
                 return false;
             }
 
-            if (! isset($item['aluno_principal'])) {
+            if (!isset($item['aluno_principal'])) {
                 return false;
             }
         }
@@ -70,31 +74,37 @@ return new class extends clsCadastro {
             $alunos = json_decode(json: $this->alunos, associative: true, flags: JSON_THROW_ON_ERROR);
         } catch (TypeError $exception) {
             $this->mensagem = 'Informações inválidas para unificação';
+
             return false;
         } catch (Exception $exception) {
             $this->mensagem = 'Informações inválidas para unificação';
+
             return false;
         }
 
-        if (! $this->validaDadosDaUnificacaoAluno(alunos: $alunos)) {
+        if (!$this->validaDadosDaUnificacaoAluno(alunos: $alunos)) {
             $this->mensagem = 'Dados enviados inválidos, recarregue a tela e tente novamente!';
+
             return false;
         }
 
         $validationData = new ValidationDataService();
 
-        if (! $validationData->verifyQuantityByKey(data: $alunos, key: 'aluno_principal', quantity: 0)) {
+        if (!$validationData->verifyQuantityByKey(data: $alunos, key: 'aluno_principal', quantity: 0)) {
             $this->mensagem = 'Aluno principal não informado';
+
             return false;
         }
 
         if ($validationData->verifyQuantityByKey(data: $alunos, key: 'aluno_principal', quantity: 1)) {
             $this->mensagem = 'Não pode haver mais de uma aluno principal';
+
             return false;
         }
 
-        if (! $validationData->verifyDataContainsDuplicatesByKey(data: $alunos, key: 'codAluno')) {
+        if (!$validationData->verifyDataContainsDuplicatesByKey(data: $alunos, key: 'codAluno')) {
             $this->mensagem = 'Erro ao tentar unificar Alunos, foi inserido cadastro duplicados';
+
             return false;
         }
 

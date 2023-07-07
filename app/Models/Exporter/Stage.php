@@ -21,7 +21,6 @@ class Stage extends Model
 
     /**
      * @param Builder $query
-     *
      * @return EnrollmentEloquentBuilder
      */
     public function newEloquentBuilder($query)
@@ -43,7 +42,7 @@ class Stage extends Model
                 'stage_start_date' => 'Data início',
                 'stage_end_date' => 'Data fim',
                 'stage_type' => 'Padrão/Turma',
-                'posted_data' => 'Possui lançamentos'
+                'posted_data' => 'Possui lançamentos',
             ],
         ];
     }
@@ -63,7 +62,6 @@ class Stage extends Model
 
     /**
      * @param string $column
-     *
      * @return string
      */
     public function alias($column)

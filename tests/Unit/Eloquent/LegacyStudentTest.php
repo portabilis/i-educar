@@ -22,12 +22,9 @@ class LegacyStudentTest extends EloquentTestCase
         'person' => LegacyPerson::class,
         'registrations' => LegacyRegistration::class,
         'inep' => StudentInep::class,
-        'benefits' => LegacyBenefit::class
+        'benefits' => LegacyBenefit::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacyStudent::class;
@@ -87,7 +84,7 @@ class LegacyStudentTest extends EloquentTestCase
 
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'M']);
         LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual
+            'ref_idpes' => $individual,
         ]);
         $found = $this->instanceNewEloquentModel()->male()->get();
         $this->assertCount(1, $found);
@@ -101,11 +98,11 @@ class LegacyStudentTest extends EloquentTestCase
 
         $individual = LegacyIndividualFactory::new()->create(['sexo' => 'F']);
         $student2 = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual
+            'ref_idpes' => $individual,
         ]);
         $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [
             $student2->cod_aluno,
-            $this->model->cod_aluno
+            $this->model->cod_aluno,
         ])->get();
         $this->assertCount(1, $found);
     }

@@ -2,8 +2,10 @@
 
 ini_set(option: 'max_execution_time', value: 0);
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $arquivo;
 
     public function Inicializar()
@@ -48,7 +50,7 @@ return new class extends clsCadastro {
             inputOptions: [
                 'label' => 'Data de entrada das matrículas',
                 'required' => true,
-                'placeholder' => 'dd/mm/yyyy'
+                'placeholder' => 'dd/mm/yyyy',
             ]
         );
 
@@ -59,9 +61,13 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: '/vendor/legacy/Educacenso/Assets/Javascripts/Importacao.js');
     }
 
-    public function Novo(){}
+    public function Novo()
+    {
+    }
 
-    public function Editar(){}
+    public function Editar()
+    {
+    }
 
     public function Formular()
     {

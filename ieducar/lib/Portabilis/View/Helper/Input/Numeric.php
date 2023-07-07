@@ -47,7 +47,7 @@ class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_
             'script' => false,
             'event' => 'onKeyUp',
             'inline' => false,
-            'disabled' => false
+            'disabled' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

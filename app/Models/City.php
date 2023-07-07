@@ -59,7 +59,6 @@ class City extends Model
 
     /**
      * @param string $name
-     *
      * @return Builder
      */
     public static function queryFindByName($name)
@@ -73,7 +72,6 @@ class City extends Model
 
     /**
      * @param int $id
-     *
      * @return string
      */
     public static function getNameById($id)

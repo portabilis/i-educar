@@ -2,7 +2,8 @@
 
 use App\Models\UniformDistribution;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -11,6 +12,7 @@ return new class () extends clsCadastro {
     public $pessoa_logada;
 
     public UniformDistribution $uniformDistribution;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -20,8 +22,8 @@ return new class () extends clsCadastro {
 
         if (is_numeric(request('ref_cod_aluno')) && is_numeric(request('cod_distribuicao_uniforme'))) {
             $exists = UniformDistribution::query()
-                        ->where('id', request('cod_distribuicao_uniforme'))
-                        ->exists();
+                ->where('id', request('cod_distribuicao_uniforme'))
+                ->exists();
             if ($exists) {
                 $this->uniformDistribution = UniformDistribution::find(request('cod_distribuicao_uniforme'));
 
@@ -76,7 +78,7 @@ return new class () extends clsCadastro {
             'resources' => [
                 '' => 'Tipo',
                 'Solicitado' => 'Solicitado',
-                'Entregue' => 'Entregue'
+                'Entregue' => 'Entregue',
             ],
             'required' => true,
         ];
@@ -95,7 +97,7 @@ return new class () extends clsCadastro {
         $this->campoQuebra();
 
         $this->inputsHelper()->checkbox(attrName: 'complete_kit', inputOptions: [
-            'label' => 'Kit completo', 'value' => request(key: 'complete_kit', default: $this->uniformDistribution->complete_kit)
+            'label' => 'Kit completo', 'value' => request(key: 'complete_kit', default: $this->uniformDistribution->complete_kit),
         ]);
 
         $this->inputsHelper()->integer(attrName: 'coat_pants_qty', inputOptions: [
@@ -104,15 +106,15 @@ return new class () extends clsCadastro {
             'value' => request(key: 'coat_pants_qty', default: $this->uniformDistribution->coat_pants_qty),
             'max_length' => 2,
             'size' => 15,
-            'inline'  => true,
-            'placeholder' => 'Quantidade'
+            'inline' => true,
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'coat_pants_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'coat_pants_tm', default: $this->uniformDistribution->coat_pants_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -123,15 +125,15 @@ return new class () extends clsCadastro {
             'value' => request(key: 'coat_jacket_qty', default: $this->uniformDistribution->coat_jacket_qty),
             'max_length' => 2,
             'size' => 15,
-            'inline'  => true,
-            'placeholder' => 'Quantidade'
+            'inline' => true,
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'coat_jacket_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'coat_jacket_tm', default: $this->uniformDistribution->coat_jacket_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -143,14 +145,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'shirt_short_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'shirt_short_tm', default: $this->uniformDistribution->shirt_short_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -162,14 +164,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'shirt_long_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'shirt_long_tm', default: $this->uniformDistribution->shirt_long_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -181,14 +183,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'kids_shirt_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'kids_shirt_tm', default: $this->uniformDistribution->kids_shirt_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -200,14 +202,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'pants_jeans_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'pants_jeans_tm', default: $this->uniformDistribution->pants_jeans_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -219,14 +221,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'socks_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'socks_tm', default: $this->uniformDistribution->socks_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -238,14 +240,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'skirt_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'skirt_tm', default: $this->uniformDistribution->skirt_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -257,14 +259,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'shorts_tactel_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'shorts_tactel_tm', default: $this->uniformDistribution->shorts_tactel_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);
@@ -276,7 +278,7 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'shorts_coton_tm', inputOptions: [
@@ -295,14 +297,14 @@ return new class () extends clsCadastro {
             'max_length' => 2,
             'size' => 15,
             'inline' => true,
-            'placeholder' => 'Quantidade'
+            'placeholder' => 'Quantidade',
         ]);
 
         $this->inputsHelper()->text(attrNames: 'sneakers_tm', inputOptions: [
             'required' => false,
             'label' => '',
             'value' => request(key: 'sneakers_tm', default: $this->uniformDistribution->sneakers_tm),
-            'max_length'  => 10,
+            'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
         ]);

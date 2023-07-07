@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class LegacyOrganizationTest extends EloquentTestCase
 {
     protected $relations = [
-        'person' => LegacyPerson::class
+        'person' => LegacyPerson::class,
     ];
 
     protected function getEloquentModelName(): string

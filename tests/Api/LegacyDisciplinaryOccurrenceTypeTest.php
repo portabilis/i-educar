@@ -39,7 +39,7 @@ class LegacyDisciplinaryOccurrenceTypeTest extends TestCase
             'nm_tipo' => $type->nm_tipo,
             'descricao' => $type->descricao,
             'max_ocorrencias' => $type->max_ocorrencias,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 
@@ -75,7 +75,7 @@ class LegacyDisciplinaryOccurrenceTypeTest extends TestCase
             'nm_tipo' => $editType->nm_tipo,
             'descricao' => $editType->descricao,
             'max_ocorrencias' => $editType->max_ocorrencias,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 }

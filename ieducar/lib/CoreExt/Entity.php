@@ -127,7 +127,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * o indice do array $options passado como argumento.
      *
      * @param array $options
-     *
      * @return CoreExt_Entity Provê interface fluída
      */
     public function setOptions($options = [])
@@ -149,8 +148,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $key
      * @param mixed  $val
-     *
-     * @return bool|NULL TRUE caso seja uma referência válida ou NULL para o fluxo
+     * @return bool|null TRUE caso seja uma referência válida ou NULL para o fluxo
      *                   normal do método
      */
     public function __set($key, $val)
@@ -183,7 +181,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             // consideração as referências, salvando-as ou atualizando-as.
             elseif ($val instanceof CoreExt_Entity && isset($val->id)) {
                 $this->_references[$key]['value'] = $this->_getValue($key, $val->id);
-            // Não retorna, queremos aproveitar a instância para não mais carregá-la
+                // Não retorna, queremos aproveitar a instância para não mais carregá-la
                 // em __get().
             }
 
@@ -221,7 +219,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * @link   http://php.net/manual/en/language.oop5.overloading.php
      *
      * @param string $key
-     *
      * @return mixed
      */
     public function __get($key)
@@ -244,7 +241,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * o valor da referência.
      *
      * @param string $key
-     *
      * @return mixed
      */
     public function get($key)
@@ -262,7 +258,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * @link   http://php.net/manual/en/language.oop5.overloading.php
      *
      * @param string $key
-     *
      * @return bool
      */
     public function __isset($key)
@@ -301,7 +296,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * especificado para tal.
      *
      * @param string $key
-     *
      * @return CoreExt_Entity
      *
      * @throws Exception
@@ -345,7 +339,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Verifica se existe uma referência para uma certa chave $key.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _hasReference($key)
@@ -359,7 +352,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $key  O nome do atributo que mapeia para a referência
      * @param array  $data O array com a especificação da referência
-     *
      * @return CoreExt_Entity Provê interface fluída
      *
      * @throws CoreExt_Exception_InvalidArgumentException
@@ -405,7 +397,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $key
      * @param int    $value
-     *
      * @return CoreExt_Entity Provê interface fluída
      */
     public function setReferenceValue($key, $value)
@@ -421,7 +412,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string                                 $key
      * @param CoreExt_DataMapper|CoreExt_Enum|string $class
-     *
      * @return CoreExt_Entity Provê interface fluída
      *
      * @throws CoreExt_Exception_InvalidArgumentException
@@ -445,7 +435,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $key
      * @param int    $value
-     *
      * @return CoreExt_Entity Provê interface fluída
      */
     public function setReferenceFile($key, $file)
@@ -459,7 +448,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Getter.
      *
      * @param string $key
-     *
      * @return mixed
      */
     protected function _getReferenceValue($key)
@@ -471,7 +459,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Getter.
      *
      * @param string $key
-     *
      * @return string|null
      */
     protected function _getReferenceClass($key)
@@ -483,7 +470,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Verifica se a classe da referência é uma instância de CoreExt_DataMapper.
      *
      * @param string $key
-     *
      * @return bool
      */
     public function _isReferenceDataMapper($key)
@@ -502,7 +488,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Verifica se a classe da referência é uma instância de CoreExt_Enum.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _isReferenceEnum($key)
@@ -522,8 +507,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * @param string|null $subClass
      * @param string|null $subClassFile
      * @param string $parentClass
-     *
-     * @return bool
      */
     private function _isReferenceOf($subClass, $subClassFile, $parentClass): bool
     {
@@ -539,7 +522,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
                 $required[] = $subClassFile;
             }
 
-            return (is_subclass_of($subClass, $parentClass));
+            return is_subclass_of($subClass, $parentClass);
         }
 
         return false;
@@ -561,7 +544,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     /**
      * Getter.
      *
-     * @return CoreExt_DataMapper|NULL
+     * @return CoreExt_DataMapper|null
      */
     public function getDataMapper()
     {
@@ -595,7 +578,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * @param string $file     O nome do arquivo onde se encontra a classe
      * @param bool   $sticky   Se a instância da classe de ser "grundenda",
      *                         não podendo ser posteriormente substituída por uma chamada subsequente
-     *
      * @return mixed
      *
      * @throws CoreExt_Exception_InvalidArgumentException
@@ -612,7 +594,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             self::$_classStorage[$search] = [
                 'class' => $class,
                 'instance' => null,
-                'sticky' => false
+                'sticky' => false,
             ];
             self::_setStorageClassInstance($class, $instance, $sticky);
         }
@@ -626,7 +608,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $class
      * @param mixed  $instance
-     *
      * @return mixed
      *
      * @throws CoreExt_Exception_InvalidArgumentException
@@ -660,8 +641,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Getter.
      *
      * @param string $class
-     *
-     * @return mixed|NULL
+     * @return mixed|null
      */
     public static function getClassFromStorage($class)
     {
@@ -676,7 +656,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Verifica se uma classe existe no repositório de classes estático.
      *
      * @param string $class
-     *
      * @return bool
      */
     public static function hasClassInStorage($class)
@@ -699,7 +678,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $key Propriedade a ser validade. Caso seja string vazia,
      *                    executa todos os validadores da instância
-     *
      * @return bool
      *
      * @see     CoreExt_Validate_Validatable#isValid($key)
@@ -760,7 +738,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Setter.
      *
      * @param bool $new
-     *
      * @return CoreExt_Entity Provê interface fluída
      */
     public function setNew($new)
@@ -789,7 +766,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Utiliza o valor sanitizado pelo validador como valor de atributo.
      *
      * @param string $key
-     *
      * @return bool
      */
     protected function _isValidProperty($key)
@@ -860,11 +836,9 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * @see CoreExt_Entity_Validatable::setValidatorCollection()
      *
      * @param $overwrite TRUE para que as novas instâncias sobrescrevam as já existentes
-     *
      * @return CoreExt_Entity
      *
      * @throws Exception
-     *
      */
     public function setValidatorCollection(array $validators, $overwrite = false)
     {
@@ -915,7 +889,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *                                   validação caso de $key ser igual a $value
      * @param array  $notEqualsParams    Array de opções para o a classe de
      *                                   validação caso de $key ser diferente de $value
-     *
      * @return CoreExt_Validate_Abstract
      *
      * @throws CoreExt_Exception_InvalidArgumentException
@@ -948,8 +921,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Configura uma mensagem de erro.
      *
      * @param string      $key
-     * @param string|NULL $message
-     *
+     * @param string|null $message
      * @return CoreExt_Entity Provê interface fluída
      */
     protected function _setError($key, $message = null)
@@ -963,7 +935,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Retorna uma mensagem de erro de validaçao para determinada propriedade.
      *
      * @param string $key
-     *
      * @return mixed
      */
     public function getError($key)
@@ -985,7 +956,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Verifica se uma propriedade tem um erro de validação.
      *
      * @param string $key
-     *
      * @return bool
      */
     public function hasError($key)
@@ -1045,7 +1015,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $key O nome da propriedade
      * @param mixed  $val O valor original da propriedade
-     *
      * @return mixed O valor convertido da propriedade
      */
     protected function _getValue($key, $val)
@@ -1114,7 +1083,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @param string $atr1
      * @param string $atr2
-     *
      * @return array
      */
     public function filterAttr($atr1, $atr2 = '')
@@ -1139,7 +1107,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * @param CoreExt_Entity|array $instance
      * @param string               $atr1
      * @param string               $atr2
-     *
      * @return array
      *
      * @see    CoreExt_Entity#filterAttr($atr1, $atr2)
@@ -1192,6 +1159,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         foreach ($this->_data as $key => $value) {
             if ($this->_hasReference($key)) {
                 $data[$key] = $this->_references[$key]['value'];
+
                 continue;
             }
             $data[$key] = $value;

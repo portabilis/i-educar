@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public function Gerar()
     {
         $this->titulo = 'Detalhe da empresa';
@@ -10,7 +11,6 @@ return new class extends clsDetalhe {
         $objPessoaJuridica = new clsPessoaJuridica();
         [$cod_pessoa_fj, $nm_pessoa, $id_federal, $endereco, $cep, $nm_bairro, $cidade, $ddd_telefone_1, $telefone_1, $ddd_telefone_2, $telefone_2, $ddd_telefone_mov, $telefone_mov, $ddd_telefone_fax, $telefone_fax, $http, $email, $ins_est, $tipo_pessoa, $razao_social, $capital_social, $ins_mun, $idtlog] = $objPessoaJuridica->queryRapida($cod_empresa, 'idpes', 'fantasia', 'cnpj', 'logradouro', 'cep', 'bairro', 'cidade', 'ddd_1', 'fone_1', 'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'url', 'email', 'insc_estadual', 'tipo', 'nome', 'insc_municipal', 'idtlog');
         $endereco = "$idtlog $endereco";
-
 
         $this->addDetalhe(detalhe: ['Razão Social', $razao_social]);
         $this->addDetalhe(detalhe: ['Nome Fantasia', $nm_pessoa]);
@@ -22,13 +22,13 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(detalhe: ['Telefone 1', $this->preparaTelefone(ddd: $ddd_telefone_1, telefone: $telefone_1)]);
         $this->addDetalhe(detalhe: ['Telefone 2', $this->preparaTelefone(ddd: $ddd_telefone_2, telefone: $telefone_2)]);
-        $this->addDetalhe(detalhe: ['Celular', $this->preparaTelefone( ddd: $ddd_telefone_mov, telefone: $telefone_mov)]);
+        $this->addDetalhe(detalhe: ['Celular', $this->preparaTelefone(ddd: $ddd_telefone_mov, telefone: $telefone_mov)]);
         $this->addDetalhe(detalhe: ['Fax', $this->preparaTelefone(ddd: $ddd_telefone_fax, telefone: $telefone_fax)]);
 
         $this->addDetalhe(detalhe: ['Site', $http]);
         $this->addDetalhe(detalhe: ['E-mail', $email]);
 
-        if (! $ins_est) {
+        if (!$ins_est) {
             $ins_est = 'isento';
         }
         $this->addDetalhe(detalhe: ['Inscrição Estadual', $ins_est]);
@@ -52,7 +52,7 @@ return new class extends clsDetalhe {
 
     private function preparaTelefone($ddd, $telefone)
     {
-        return !empty($telefone) ?  "({$ddd}) {$telefone}" : "";
+        return !empty($telefone) ? "({$ddd}) {$telefone}" : '';
     }
 
     public function Formular()

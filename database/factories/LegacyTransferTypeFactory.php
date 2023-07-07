@@ -24,7 +24,7 @@ class LegacyTransferTypeFactory extends Factory
             'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
             'nm_tipo' => $this->faker->firstName(),
             'desc_tipo' => $this->faker->paragraph(),
-            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current()
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
         ];
     }
 }

@@ -3,15 +3,24 @@
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassTeacher;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_turma;
+
     public $retorno;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_serie;
+
     public $ano;
+
     public $nome_url_sucesso = 'Copiar Vínculos';
 
     public function Inicializar()
@@ -53,7 +62,7 @@ return new class () extends clsCadastro {
             'curso',
             'serie',
         ], inputOptions: [
-            'disabled' => true
+            'disabled' => true,
         ]);
 
         $opcoes = LegacySchoolClass::query()
@@ -77,10 +86,10 @@ return new class () extends clsCadastro {
         $this->inputsHelper()->dynamic(
             helperNames: 'turma',
             inputOptions: [
-            'label' => 'Turma destino',
-            'disabled' => true,
-            'value' => $this->cod_turma,
-        ]
+                'label' => 'Turma destino',
+                'disabled' => true,
+                'value' => $this->cod_turma,
+            ]
         );
     }
 
@@ -104,7 +113,7 @@ return new class () extends clsCadastro {
                 $vinculo->replicate()
                     ->fill([
                         'ano' => $schoolClassDestiny->ano,
-                        'turma_id' => $schoolClassDestiny->getKey()
+                        'turma_id' => $schoolClassDestiny->getKey(),
                     ])
                     ->save();
             });

@@ -12,9 +12,6 @@ class ManagerLinkTypeTest extends EloquentTestCase
         'schoolManagers' => SchoolManager::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return ManagerLinkType::class;

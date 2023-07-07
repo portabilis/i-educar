@@ -51,29 +51,29 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
                 'componenteCurricular' => 1,
                 'media' => 5,
                 'mediaArredondada' => 5,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 2,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 3,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 4,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
-            ])
+                'etapa' => 4,
+            ]),
         ];
 
         // Configura mock para notas
@@ -114,29 +114,29 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
                 'componenteCurricular' => 1,
                 'media' => 5,
                 'mediaArredondada' => 5,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 2,
                 'media' => 5.75,
                 'mediaArredondada' => 5,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 3,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 4,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
-            ])
+                'etapa' => 4,
+            ]),
         ];
 
         // Configura mock para notas
@@ -177,29 +177,29 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
                 'componenteCurricular' => 1,
                 'media' => 5,
                 'mediaArredondada' => 5,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 2,
                 'media' => 6.5,
                 'mediaArredondada' => 6,
-                'etapa' => 'Rc'
+                'etapa' => 'Rc',
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 3,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 4,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
-            ])
+                'etapa' => 4,
+            ]),
         ];
 
         // Configura mock para notas
@@ -240,29 +240,29 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
                 'componenteCurricular' => 1,
                 'media' => 5,
                 'mediaArredondada' => 5,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 2,
                 'media' => 6.5,
                 'mediaArredondada' => 6,
-                'etapa' => 'Rc'
+                'etapa' => 'Rc',
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 3,
                 'media' => 5,
                 'mediaArredondada' => 5,
-                'etapa' => 'Rc'
+                'etapa' => 'Rc',
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 4,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
-            ])
+                'etapa' => 4,
+            ]),
         ];
 
         // Configura mock para notas
@@ -309,29 +309,29 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
                 'componenteCurricular' => 1,
                 'media' => 5,
                 'mediaArredondada' => 5,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 2,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 3,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
             new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $notaAluno->id,
                 'componenteCurricular' => 4,
                 'media' => 6,
                 'mediaArredondada' => 6,
-                'etapa' => 4
-            ])
+                'etapa' => 4,
+            ]),
         ];
 
         // Configura mock para notas

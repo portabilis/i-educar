@@ -65,7 +65,7 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function register()
     {

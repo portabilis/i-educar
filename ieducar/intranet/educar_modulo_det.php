@@ -2,16 +2,26 @@
 
 use App\Models\LegacyStageType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $cod_modulo;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_tipo;
+
     public $descricao;
+
     public $num_etapas;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -35,7 +45,7 @@ return new class extends clsDetalhe {
                 $this->addDetalhe(
                     detalhe: [
                         'Instituição',
-                        "{$registro['ref_cod_instituicao']}"
+                        "{$registro['ref_cod_instituicao']}",
                     ]
                 );
             }
@@ -43,7 +53,7 @@ return new class extends clsDetalhe {
         if ($registro['nm_tipo']) {
             $this->addDetalhe(
                 detalhe: ['Etapa',
-                    "{$registro['nm_tipo']}"
+                    "{$registro['nm_tipo']}",
                 ]
             );
         }
@@ -51,21 +61,21 @@ return new class extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Descrição',
-                    "{$registro['descricao']}"
+                    "{$registro['descricao']}",
                 ]
             );
         }
         $this->addDetalhe(
             detalhe: [
                 'Número de etapas',
-                "{$registro['num_etapas']}"
+                "{$registro['num_etapas']}",
             ]
         );
         if ($registro['num_meses']) {
             $this->addDetalhe(
                 detalhe: [
                     'Número de meses',
-                    "{$registro['num_meses']}"
+                    "{$registro['num_meses']}",
                 ]
             );
         }
@@ -73,7 +83,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(
                 detalhe: [
                     'Número de semanas',
-                    "{$registro['num_semanas']}"
+                    "{$registro['num_semanas']}",
                 ]
             );
         }

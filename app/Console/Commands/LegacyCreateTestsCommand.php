@@ -22,17 +22,12 @@ class LegacyCreateTestsCommand extends Command
 
     /**
      * Create the test file.
-     *
-     * @param string $class
-     * @param string $route
-     *
-     * @return boolean
      */
     private function createTestFile(string $class, string $route): bool
     {
         $replaces = [
             'BaseTestName' => $class,
-            'ProjectRoute' => $route
+            'ProjectRoute' => $route,
         ];
 
         $stub = file_get_contents(
@@ -86,8 +81,6 @@ class LegacyCreateTestsCommand extends Command
 
     /**
      * Busca todas os arquivos da pasta intranet para gerar os testes de rota
-     *
-     * @return array
      */
     private function getAllViews(): array
     {
@@ -98,8 +91,6 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @param array $files
-     *
      * @return array
      */
     private function filterOnlineHttpView(array $files)
@@ -117,7 +108,6 @@ class LegacyCreateTestsCommand extends Command
     /**
      * Pega o nome do arquivo/rota
      *
-     * @param array $data
      *
      * @return array
      */
@@ -135,7 +125,6 @@ class LegacyCreateTestsCommand extends Command
     /**
      * Faz a montagem da informações para processamento
      *
-     * @param array $allViews
      *
      * @return array
      */
@@ -159,8 +148,6 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @param $view
-     *
      * @return string|string[]
      */
     private function processClassName($view)
@@ -172,10 +159,6 @@ class LegacyCreateTestsCommand extends Command
 
     /**
      * Remove rota/arquivo da lista rotas que vão ser geradas
-     *
-     * @param array $allViews
-     *
-     * @return array
      */
     private function excludeRouters(array $allViews): array
     {
@@ -192,7 +175,6 @@ class LegacyCreateTestsCommand extends Command
     /**
      * Valida se esta na lista de exclusão
      *
-     * @param string $className
      *
      * @return bool
      */
@@ -227,7 +209,7 @@ class LegacyCreateTestsCommand extends Command
             'educar_busca_ativa_cad.php',
             'migra_alunos.php',
             'index.php',
-            'copia_vinculos_servidores_cad.php'
+            'copia_vinculos_servidores_cad.php',
         ];
     }
 
@@ -373,7 +355,7 @@ class LegacyCreateTestsCommand extends Command
             'TransporteRotaDet',
             'TransporteVeiculoDet',
             'EducarBuscaAtivaLstTest',
-            'EducarBuscaAtivaCadTest'
+            'EducarBuscaAtivaCadTest',
         ];
     }
 }

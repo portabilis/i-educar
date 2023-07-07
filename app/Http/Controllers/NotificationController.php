@@ -13,9 +13,6 @@ use Illuminate\View\View;
 class NotificationController extends Controller
 {
     /**
-     * @param Request $request
-     * @param User    $user
-     *
      * @return View
      */
     public function index(Request $request, User $user)

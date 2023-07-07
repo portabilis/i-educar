@@ -37,7 +37,6 @@ class clsBanco extends clsBancoSQL_
      * Apenas o tipo booleano é convertido.
      *
      * @param array $data Array associativo com os valores a serem convertidos.
-     *
      * @return array
      */
     public function formatValues(array $data)
@@ -47,6 +46,7 @@ class clsBanco extends clsBancoSQL_
         foreach ($data as $key => $val) {
             if (is_bool($val)) {
                 $db[$key] = $this->_formatBool($val);
+
                 continue;
             }
 
@@ -64,12 +64,11 @@ class clsBanco extends clsBancoSQL_
      * @link   http://www.php.net/manual/en/function.pg-query-params.php#78072
      *
      * @param mixed $val
-     *
      * @return string "t" para TRUE e "f" para false
      */
     protected function _formatBool($val)
     {
-        return ($val == true ? 't' : 'f');
+        return $val == true ? 't' : 'f';
     }
 
     public function escapeString($string)

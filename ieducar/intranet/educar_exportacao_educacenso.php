@@ -2,12 +2,18 @@
 
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ano;
+
     public $ref_cod_instituicao;
+
     public $escola_em_andamento;
+
     public $segunda_fase = false;
+
     public $nome_url_sucesso = 'Analisar';
 
     public function Inicializar()
@@ -28,8 +34,8 @@ return new class extends clsCadastro {
         $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
 
         $this->breadcrumb(currentPage: $nomeTela, breadcrumbs: [
-        url('intranet/educar_educacenso_index.php') => 'Educacenso',
-    ]);
+            url('intranet/educar_educacenso_index.php') => 'Educacenso',
+        ]);
 
         $exportacao = $_POST['exportacao'];
 
@@ -44,10 +50,10 @@ return new class extends clsCadastro {
             header('Content-Length: ' . strlen($converted_to_iso88591));
             header('Content-Disposition: attachment; filename=' . $nomeArquivo);
             echo $converted_to_iso88591;
-            die();
+            exit();
         }
 
-        $this->acao_enviar      = 'acaoExportar();';
+        $this->acao_enviar = 'acaoExportar();';
 
         return 'Nova exportação';
     }
@@ -65,7 +71,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto(nome: 'enable_export', valor: (int) config('legacy.educacenso.enable_export'));
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
-        $this->inputsHelper()->hidden(attrName: 'escola_em_andamento', inputOptions: [ 'value' => $this->escola_em_andamento ]);
+        $this->inputsHelper()->hidden(attrName: 'escola_em_andamento', inputOptions: ['value' => $this->escola_em_andamento]);
 
         if (!empty($this->ref_cod_escola)) {
             Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: '/vendor/legacy/Educacenso/Assets/Javascripts/Educacenso.js');

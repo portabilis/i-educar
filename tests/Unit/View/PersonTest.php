@@ -15,7 +15,7 @@ class PersonTest extends ViewTestCase
         'individual' => Individual::class,
         'createdBy' => Individual::class,
         'updatedBy' => Individual::class,
-        'place' => Place::class
+        'place' => Place::class,
     ];
 
     protected function getViewModelName(): string

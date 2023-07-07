@@ -1,11 +1,17 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
+
     public $ref_cod_aluno;
+
     public $ano;
 
     public function Gerar()
@@ -24,7 +30,7 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Ano',
-            'Extra-curricular'
+            'Extra-curricular',
         ];
 
         $obj_permissao = new clsPermissoes();
@@ -37,12 +43,12 @@ return new class extends clsListagem {
 
         $get_escola = true;
 
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoNumero(nome: 'ano', campo: 'Ano', valor: $this->ano, tamanhovisivel: 4, tamanhomaximo: 4);
 
-        $opcoes = [ '' => 'Selecione', 2 => 'Não', 1 => 'Sim' ];
+        $opcoes = ['' => 'Selecione', 2 => 'Não', 1 => 'Sim'];
         $this->campoLista(nome: 'extra_curricular', campo: 'Extra-curricular', valor: $opcoes, default: $this->extra_curricular, obrigatorio: false);
 
         if ($this->extra_curricular == 2) {
@@ -50,7 +56,7 @@ return new class extends clsListagem {
         }
 
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_historico_escolar = new clsPmieducarHistoricoEscolar();
         $obj_historico_escolar->setOrderby('ano, sequencial ASC');
@@ -82,7 +88,7 @@ return new class extends clsListagem {
                 $lista_busca = [
                     "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}\">{$registro['ano']}</a>",
 
-                    "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}\">{$registro['extra_curricular']}</a>"
+                    "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}\">{$registro['extra_curricular']}</a>",
                 ];
 
                 $lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}\">{$registro['escola']}</a>";

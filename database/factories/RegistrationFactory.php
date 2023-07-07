@@ -21,7 +21,7 @@ class RegistrationFactory extends Factory
 
         return $this->state(function (array $attributes) use ($model) {
             return [
-                'id' =>  $model->cod_matricula,
+                'id' => $model->cod_matricula,
                 'student_id' => $model->ref_cod_aluno,
                 'level_id' => $model->ref_ref_cod_serie,
                 'course_id' => $model->ref_cod_curso,
@@ -29,7 +29,7 @@ class RegistrationFactory extends Factory
                 'created_at' => $model->data_cadastro,
                 'year' => $model->ano,
                 'created_by' => $model->ref_usuario_cad,
-                'status' => $model->aprovado
+                'status' => $model->aprovado,
             ];
         });
     }

@@ -2,7 +2,6 @@
 
 class CartorioInepController extends ApiCoreController
 {
-
     // search options
     protected function searchOptions()
     {
@@ -10,7 +9,7 @@ class CartorioInepController extends ApiCoreController
 
         return [
             'sqlParams' => [$siglaUfCartorio],
-            'selectFields' => ['id_cartorio']
+            'selectFields' => ['id_cartorio'],
         ];
     }
 

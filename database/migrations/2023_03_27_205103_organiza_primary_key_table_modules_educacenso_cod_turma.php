@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         DB::unprepared('ALTER TABLE IF EXISTS modules.educacenso_cod_turma DROP CONSTRAINT IF EXISTS educacenso_cod_turma_pk;');
@@ -14,7 +15,7 @@ return new class () extends Migration {
             $table->increments('id');
             $table->unique([
                 'cod_turma',
-                'cod_turma_inep'
+                'cod_turma_inep',
             ]);
         });
     }

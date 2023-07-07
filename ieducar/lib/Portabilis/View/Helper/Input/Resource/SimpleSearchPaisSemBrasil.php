@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPaisSemBrasil extends Po
         if ($id) {
             $sql = 'select nome from public.pais where idpais = $1';
             $options = ['params' => $id, 'return_only' => 'first-field'];
-            
+
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
         }
     }
@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPaisSemBrasil extends Po
         $defaultOptions = [
             'objectName' => 'pais',
             'apiController' => 'PaisSemBrasil',
-            'apiResource' => 'pais-sem-brasil-search'
+            'apiResource' => 'pais-sem-brasil-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

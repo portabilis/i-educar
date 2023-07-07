@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMatricula extends Portab
         $defaultOptions = [
             'objectName' => 'matricula',
             'apiController' => 'Matricula',
-            'apiResource' => 'matricula-search'
+            'apiResource' => 'matricula-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

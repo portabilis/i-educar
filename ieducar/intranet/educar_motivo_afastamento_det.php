@@ -4,7 +4,8 @@ use App\Models\WithdrawalReason;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -13,13 +14,21 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_motivo_afastamento;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_motivo;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     //var $ref_cod_escola;
     public $ref_cod_instituicao;
 
@@ -27,11 +36,11 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Motivo Afastamento - Detalhe';
 
-        $this->cod_motivo_afastamento=$_GET['cod_motivo_afastamento'];
+        $this->cod_motivo_afastamento = $_GET['cod_motivo_afastamento'];
 
         $registro = WithdrawalReason::find($this->cod_motivo_afastamento)?->getAttributes();
 
-        if (! $registro) {
+        if (!$registro) {
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_motivo_afastamento_lst.php')
             );
@@ -44,14 +53,14 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($det_ref_cod_instituicao['nm_instituicao']) {
-                $this->addDetalhe(detalhe: [ 'Instituição', "{$det_ref_cod_instituicao['nm_instituicao']}"]);
+                $this->addDetalhe(detalhe: ['Instituição', "{$det_ref_cod_instituicao['nm_instituicao']}"]);
             }
         }
         if ($registro['nm_motivo']) {
-            $this->addDetalhe(detalhe: [ 'Motivo de Afastamento', "{$registro['nm_motivo']}"]);
+            $this->addDetalhe(detalhe: ['Motivo de Afastamento', "{$registro['nm_motivo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(detalhe: [ 'Descrição', "{$registro['descricao']}"]);
+            $this->addDetalhe(detalhe: ['Descrição', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();

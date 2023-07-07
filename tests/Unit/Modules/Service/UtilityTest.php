@@ -16,7 +16,7 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
         $service = $this->_getServiceInstance();
 
         $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 5.85
+            'nota' => 5.85,
         ]);
         $this->assertEquals(5.8, $service->arredondaNota($nota));
     }
@@ -29,7 +29,7 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
             'nome' => null,
             'descricao' => null,
             'valorMinimo' => -1,
-            'valorMaximo' => 0
+            'valorMaximo' => 0,
         ];
 
         $tabelaValores = [];
@@ -65,7 +65,7 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 
         $tabela = new TabelaArredondamento_Model_Tabela([
             'nome' => 'Conceituais',
-            'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL
+            'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL,
         ]);
         $tabela->setDataMapper($tabelaDataMapper);
 
@@ -74,21 +74,21 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
         $this->_setRegraOption('tipoNota', RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL);
         $service = $this->_getServiceInstance();
         $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 5.49
+            'nota' => 5.49,
         ]);
         $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
         $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
         $this->assertEquals('I', $service->arredondaNota($nota));
 
         $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 6.50
+            'nota' => 6.50,
         ]);
         $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
         $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
         $this->assertEquals('S', $service->arredondaNota($nota));
 
         $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 9.15
+            'nota' => 9.15,
         ]);
         $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
         $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
@@ -106,22 +106,22 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 4,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 4,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 4,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => 1,
                 'nota' => 4,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
 

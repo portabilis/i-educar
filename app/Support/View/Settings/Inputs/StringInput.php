@@ -13,7 +13,7 @@ class StringInput implements InputInterface
             'value' => $value,
             'enabled' => $enabled,
             'hint' => $hint,
-            'maxlength' => $maxlength
+            'maxlength' => $maxlength,
         ]);
     }
 }

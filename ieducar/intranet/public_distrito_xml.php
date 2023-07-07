@@ -17,7 +17,7 @@ if (is_numeric(value: $_GET['idmun'])) {
     );
 
     while ($db->ProximoRegistro()) {
-        list($cod, $nome) = $db->Tupla();
+        [$cod, $nome] = $db->Tupla();
         echo " <distrito iddis=\"{$cod}\">{$nome}</distrito>\n";
     }
 }

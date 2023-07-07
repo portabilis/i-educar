@@ -21,7 +21,9 @@ use Tests\ResourceTestCase;
 class CountryControllerTest extends ResourceTestCase
 {
     protected string $uri = '/api/country';
+
     protected string $model = Country::class;
+
     protected string $factory = CountryFactory::class;
 
     #[

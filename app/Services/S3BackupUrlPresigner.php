@@ -27,7 +27,7 @@ class S3BackupUrlPresigner
             'version' => 'latest',
             'region' => $this->getRegionFromUrl($url),
             'http' => [
-                'connect_timeout' => 5
+                'connect_timeout' => 5,
             ],
         ];
 

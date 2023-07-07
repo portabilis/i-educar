@@ -12,9 +12,6 @@ class LegacySchoolHistoryDisciplineTest extends EloquentTestCase
         'student' => LegacyStudent::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return LegacySchoolHistoryDiscipline::class;

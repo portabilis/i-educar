@@ -10,13 +10,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
         'seleciona_curso',
         'curso',
         'data_inicial',
-        'data_final'
+        'data_final',
     ];
 
     protected $defaults = [
         'instituicao' => 1,
         'seleciona_curso' => 0,
-        'curso' => 0
+        'curso' => 0,
     ];
 
     protected $query = <<<'SQL'

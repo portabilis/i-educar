@@ -9,10 +9,10 @@ class ResourceCourseRequest extends ResourceRequest
     public function rules(): array
     {
         return [
-            'institution' => ['required_without_all:school,course','nullable','integer','min:1'],
-            'school' => ['nullable','integer','min:1'],
-            'standard_calendar' => ['nullable','boolean'],
-            'course' => ['nullable','integer','min:1']
+            'institution' => ['required_without_all:school,course', 'nullable', 'integer', 'min:1'],
+            'school' => ['nullable', 'integer', 'min:1'],
+            'standard_calendar' => ['nullable', 'boolean'],
+            'course' => ['nullable', 'integer', 'min:1'],
         ];
     }
 
@@ -22,7 +22,7 @@ class ResourceCourseRequest extends ResourceRequest
             'institution' => 'Instituição',
             'school' => 'Escola',
             'standard_calendar' => 'Sem Padrão Escolar',
-            'course' => 'Curso'
+            'course' => 'Curso',
         ];
     }
 }

@@ -10,20 +10,20 @@ class ComponenteCurricular_Model_Turma extends CoreExt_Entity
         'cargaHoraria' => null,
         'docenteVinculado' => null,
         'etapasEspecificas' => null,
-        'etapasUtilizadas' => null
+        'etapasUtilizadas' => null,
     ];
 
     protected $_dataTypes = [
         'cargaHoraria' => 'numeric',
-        'docenteVinculado' => 'numeric'
+        'docenteVinculado' => 'numeric',
     ];
 
     protected $_references = [
         'componenteCurricular' => [
             'value' => null,
             'class' => 'ComponenteCurricular_Model_ComponenteDataMapper',
-            'file' => 'ComponenteCurricular/Model/ComponenteDataMapper.php'
-        ]
+            'file' => 'ComponenteCurricular/Model/ComponenteDataMapper.php',
+        ],
     ];
 
     /**
@@ -44,7 +44,7 @@ class ComponenteCurricular_Model_Turma extends CoreExt_Entity
     {
         return [
             'cargaHoraria' => new CoreExt_Validate_Numeric(['required' => false]),
-            'docenteVinculado' => new CoreExt_Validate_Numeric(['required' => false])
+            'docenteVinculado' => new CoreExt_Validate_Numeric(['required' => false]),
         ];
     }
 }

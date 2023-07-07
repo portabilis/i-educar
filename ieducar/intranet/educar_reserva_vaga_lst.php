@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referência a usuário da sessão
      *
@@ -30,14 +31,23 @@ return new class extends clsListagem {
     public $offset = 0;
 
     public $ref_cod_escola;
+
     public $ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_ref_cod_serie;
+
     public $ref_cod_curso;
+
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -49,9 +59,9 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-      'Série',
-      'Curso'
-    ];
+            'Série',
+            'Curso',
+        ];
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
@@ -64,7 +74,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(coluna: $lista_busca);
 
         $get_escola = true;
-        $get_curso  = true;
+        $get_curso = true;
         $get_escola_curso_serie = true;
         include 'include/pmieducar/educar_campo_lista.php';
 
@@ -107,9 +117,9 @@ return new class extends clsListagem {
                 $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
                 $lista_busca = [
-          "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_serie}</a>",
-          "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_curso']}</a>"
-        ];
+                    "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_serie}</a>",
+                    "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_curso']}</a>",
+                ];
 
                 if ($nivel_usuario == 1) {
                     $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_escola}</a>";
@@ -125,8 +135,8 @@ return new class extends clsListagem {
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Listagem de reservas de vaga', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()

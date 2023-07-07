@@ -9,7 +9,7 @@ class CoreExt_EntityStub extends CoreExt_Entity
     ];
 
     protected $_dataTypes = [
-        'doador' => 'bool'
+        'doador' => 'bool',
     ];
 
     public function getDefaultValidatorCollection()

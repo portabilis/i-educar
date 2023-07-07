@@ -6,53 +6,99 @@ use Illuminate\Support\Facades\Cache;
 class clsPmieducarTurma extends Model
 {
     const TURNO_MATUTINO = 1;
+
     const TURNO_VESPERTINO = 2;
+
     const TURNO_NOTURNO = 3;
+
     const TURNO_INTEGRAL = 4;
 
     public $cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $ref_cod_infra_predio_comodo;
+
     public $nm_turma;
+
     public $sgl_turma;
+
     public $max_aluno;
+
     public $multiseriada;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_turma_tipo;
+
     public $hora_inicial = false;
+
     public $hora_final = false;
+
     public $hora_inicio_intervalo = false;
+
     public $hora_fim_intervalo = false;
+
     public $ano;
+
     public $ref_cod_regente;
+
     public $ref_cod_instituicao_regente;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_ref_cod_serie_mult;
+
     public $ref_ref_cod_escola_mult;
+
     public $visivel;
+
     public $data_fechamento;
+
     public $tipo_atendimento = false;
+
     public $cod_curso_profissional;
+
     public $etapa_educacenso;
+
     public $ref_cod_disciplina_dispensada;
+
     public $parecer_1_etapa;
+
     public $parecer_2_etapa;
+
     public $parecer_3_etapa;
+
     public $parecer_4_etapa;
+
     public $nao_informar_educacenso;
+
     public $tipo_mediacao_didatico_pedagogico = false;
+
     public $dias_semana;
+
     public $atividades_complementares;
+
     public $atividades_aee;
+
     public $local_funcionamento_diferenciado;
+
     public $listarNaoInformarEducacenso = true;
+
     public $codUsuario;
+
     public $tipo_boletim_diferenciado = false;
 
     public function __construct($cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $data_fechamento = null, $ref_cod_disciplina_dispensada = null)

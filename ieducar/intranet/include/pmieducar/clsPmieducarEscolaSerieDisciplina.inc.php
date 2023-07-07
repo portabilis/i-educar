@@ -5,13 +5,21 @@ use iEducar\Legacy\Model;
 class clsPmieducarEscolaSerieDisciplina extends Model
 {
     public $ref_ref_cod_serie;
+
     public $ref_ref_cod_escola;
+
     public $ref_cod_disciplina;
+
     public $ativo;
+
     public $carga_horaria;
+
     public $etapas_especificas;
+
     public $etapas_utilizadas;
+
     public $anos_letivos;
+
     public $hora_falta;
 
     public function __construct(
@@ -381,7 +389,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
             $conc = '';
 
             foreach ($disciplinas as $disciplina) {
-                for ($i = 0; $i < sizeof($disciplina); $i++) {
+                for ($i = 0; $i < count($disciplina); $i++) {
                     $disciplina_in .= "{$conc}{$disciplina[$i]}";
                     $conc = ',';
                 }
@@ -405,7 +413,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
     public function excluirNaoSelecionados(array $listaComponentesSelecionados)
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
-            $componentesSelecionados = join(',', $listaComponentesSelecionados);
+            $componentesSelecionados = implode(',', $listaComponentesSelecionados);
 
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' and ref_cod_disciplina not in ({$componentesSelecionados})");
@@ -419,7 +427,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
     public function existeDependencia(array $listaComponentesSelecionados, bool $exclusao = false)
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
-            $componentesSelecionados = join(',', $listaComponentesSelecionados);
+            $componentesSelecionados = implode(',', $listaComponentesSelecionados);
 
             $condicao = 'NOT IN';
             if ($exclusao) {

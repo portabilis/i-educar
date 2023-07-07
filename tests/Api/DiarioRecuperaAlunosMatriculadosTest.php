@@ -20,7 +20,7 @@ class DiarioRecuperaAlunosMatriculadosTest extends TestCase
         $registration = LegacyRegistrationFactory::new()->create([
             'ref_ref_cod_escola' => $school,
             'dependencia' => 't',
-            'aprovado' => 12
+            'aprovado' => 12,
         ]);
 
         $enrollment = LegacyEnrollmentFactory::new()->create([
@@ -33,7 +33,7 @@ class DiarioRecuperaAlunosMatriculadosTest extends TestCase
             'instituicao_id' => $school->institution->id,
             'escola_id' => $school->getKey(),
             'ano' => $enrollment->data_enturmacao->year,
-            'data' => $enrollment->data_enturmacao->format('Y-m-d')
+            'data' => $enrollment->data_enturmacao->format('Y-m-d'),
         ];
         $response = $this->getResource('/module/Api/Aluno', $data);
 
@@ -43,12 +43,12 @@ class DiarioRecuperaAlunosMatriculadosTest extends TestCase
                     'alunos' => [
                         0 => [
                             'aluno_id' => $registration->ref_cod_aluno,
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'alunos-matriculados',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

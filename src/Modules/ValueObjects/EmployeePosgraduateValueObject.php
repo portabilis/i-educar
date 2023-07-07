@@ -5,27 +5,27 @@ namespace iEducar\Modules\ValueObjects;
 class EmployeePosgraduateValueObject
 {
     /**
-     * @var integer
+     * @var int
      */
     public $employeeId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $entityId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $typeId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $areaId;
 
     /**
-     * @var integer
+     * @var int
      */
     public $completionYear;
 }
