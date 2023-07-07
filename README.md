@@ -1,5 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
-[![Build Status](https://github.com/portabilis/i-educar/workflows/tests/badge.svg)](https://github.com/portabilis/i-educar/actions)
+[![Build Status](https://github.com/portabilis/i-educar/actions/workflows/tests.yml/badge.svg)](https://github.com/portabilis/i-educar/actions)
 
 # i-Educar
 
@@ -16,7 +16,7 @@ país por meio da educação. Junte-se a nós!**
 4. [Instalação](#instalação)
 5. [FAQ](#perguntas-frequentes-faq)
 
-## Sobre i-Educar
+## Sobre o i-Educar
 
 O i-Educar é um software livre de gestão escolar totalmente on-line que permite
 secretários escolares, professores, coordenadores e gestores da área possam
@@ -42,11 +42,11 @@ Além disso, gostamos de meios de comunicação assíncrona, onde não há neces
 respostas em tempo real. Isso facilita a produtividade individual dos
 colaboradores do projeto.
 
-| Canal de comunicação | Objetivos |
-|----------------------|-----------|
-| [Fórum](https://forum.ieducar.org) | - Tirar dúvidas <br>- Discussões de como instalar a plataforma<br> - Discussões de como usar funcionalidades<br> - Suporte entre membros de comunidade<br> - FAQ da comunidade (sobre o produto e funcionalidades) |
-| [Issues do Github](https://github.com/portabilis/i-educar/issues/new/choose) | - Sugestão de novas funcionalidades<br> - Reportar bugs<br> - Discussões técnicas |
-| [Telegram](https://t.me/ieducar ) | - Comunicar novidades sobre o projeto<br> - Movimentar a comunidade<br>  - Falar tópicos que **não** demandem discussões profundas |
+| Canal de comunicação                                                         | Objetivos                                                                                                                                                                                                          |
+|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Fórum](https://forum.ieducar.org)                                           | - Tirar dúvidas <br>- Discussões de como instalar a plataforma<br> - Discussões de como usar funcionalidades<br> - Suporte entre membros de comunidade<br> - FAQ da comunidade (sobre o produto e funcionalidades) |
+| [Issues do Github](https://github.com/portabilis/i-educar/issues/new/choose) | - Sugestão de novas funcionalidades<br> - Reportar bugs<br> - Discussões técnicas                                                                                                                                  |
+| [Telegram](https://t.me/ieducar )                                            | - Comunicar novidades sobre o projeto<br> - Movimentar a comunidade<br>  - Falar tópicos que **não** demandem discussões profundas                                                                                 |
 
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
 comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
@@ -63,7 +63,7 @@ ajudar a alcançar nossos objetivos.
 - [Nova instalação](#nova-instalação)
 - [Primeiro acesso](#primeiro-acesso)
 - [Personalizando a instalação](#personalizando-a-instalação)
-- [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
+- [Pacotes (módulos)](#instalação-do-pacote-de-relatórios)
 - [Upgrade](#upgrade)
 
 ### Dependência
@@ -71,19 +71,19 @@ ajudar a alcançar nossos objetivos.
 Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
 
+#### Servidor
+
+- [PHP](http://php.net/)
+- [Composer](https://getcomposer.org/)
+- [Nginx](https://www.nginx.com/)
+- [Postgres](https://www.postgresql.org/)
+- [Redis](https://redis.io/)
+- [Git](https://git-scm.com/downloads)
+
 #### Docker
 
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-- [Git](https://git-scm.com/downloads)
-
-#### Servidor
-
-- [PHP](http://php.net/) versão 8.1
-- [Composer](https://getcomposer.org/)
-- [Postgres](https://www.postgresql.org/)
-- [Nginx](https://www.nginx.com/)
-- [Redis](https://redis.io/)
 
 ### Instalação utilizando Docker
 
@@ -91,16 +91,21 @@ facilitar o desenvolvimento.
 desenvolvimento. Não é recomendado para ambientes de produção!
 
 Para instalar o projeto execute **todos os passos** abaixo, caso você deseje
-atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade).
+atualizar sua instalação do i-Educar, siga os passos do [guia de atualização](UPGRADE.md).
 
 Clone o repositório:
 
 ```bash
-git clone https://github.com/portabilis/i-educar.git && cd i-educar
+git clone git@github.com:portabilis/i-educar.git && cd i-educar
 ```
 
-Faça o build das imagens Docker utilizadas no projeto (pode levar alguns
-minutos) e inicie os containers da aplicação:
+Copie o arquivo `docker-compose.example.yml` e faça as configurações para o seu ambiente:
+
+```bash 
+cp docker-compose.example.yml docker-compose.override.yml
+``` 
+
+Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
 
 ```bash
 docker-compose up -d --build
@@ -112,40 +117,21 @@ Execute o comando para fazer uma nova instalação:
 docker-compose exec php composer new-install
 ```
 
-#### Primeiro acesso
-
-Após finalizada a instalação, descubra em qual endereço o i-Educar está
-rodando, basta executar o comando:
-
-```bash
-docker-compose port nginx 80
-```
-
-Acesse o endereço que será exibido após rodar o comando acima.
-
-O usuário padrão é: `admin` / A senha padrão é: `123456789`
-
-Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha
-padrão**.
-
 #### Personalizando a instalação
 
-Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua
-instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos
-volumes extras para a aplicação.
+No arquivo `docker-compose.override.yml` você pode personalizar sua instalação do i-Educar, mudando as portas dos 
+serviços ou o mapeamento dos volumes da aplicação.
 
 #### Xdebug
 
-A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o
-intuito de facilitar o processo de debug durante o desenvolvimento. Para
-configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
-`docker-compose.override.yml` conforme orientações da sua IDE de
-desenvolvimento.
+A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o intuito de facilitar o processo de debug 
+durante o desenvolvimento. Para configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
+`docker-compose.override.yml` conforme orientações da sua IDE de desenvolvimento.
 
-#### Executando testes unitários
+#### Testes automatizados
 
-Para rodar os testes, é necessário ter o i-Educar rodando e com uma base limpa,
-apenas a estrutura inicial e as migrations, crie o arquivo de configuração:
+Para executar os testes automatizados, é necessário ter o i-Educar rodando com uma base limpa, apenas a estrutura
+inicial e suas migrations, crie o arquivo de configuração:
 
 ```bash
 cp .env.example .env.testing
@@ -157,23 +143,26 @@ Execute o comando:
 docker-compose exec php vendor/bin/phpunit
 ```
 
-### Instalação do pacote de relatórios
+### Primeiro acesso
 
-O i-Educar possui um pacote de mais de 40 relatórios.
+Acesse http://localhost para fazer o seu primeiro acesso.
 
-Para instalar o pacote de relatórios visite o repositório do projeto
-[https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
-e siga as instruções de instalação.
+O usuário padrão é: `admin` / A senha padrão é: `123456789`.
+
+Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha padrão**.
+
+### Pacotes (módulos)
+
+O i-Educar possui um conjunto de pacotes (módulos) que o extendem e o tornam um software mais robusto. Para instalar um 
+pacote, siga as instruções de instalação encontradas no repositório do projeto.
+
+- [Módulo de Relatórios](https://github.com/portabilis/i-educar-reports-package/)
+- [Módulo de Biblioteca](https://github.com/portabilis/i-educar-library-package/)
+- [Módulo de Transporte](https://github.com/portabilis/i-educar-transport-package/)
 
 ### Upgrade
 
-- [Upgrade para 2.7 da 2.6](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.7-da-2.6).
-- [Upgrade para 2.6 da 2.5](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.6-da-2.5).
-- [Upgrade para 2.5 da 2.4](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.5-da-2.4).
-- [Upgrade para 2.4 da 2.3](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.4-da-2.3).
-- [Upgrade para 2.3 da 2.2](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.3-da-2.2).
-- [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
-- [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).
+Para realizar o _upgrade_ da versão do i-Educar, considere seguir os passos do [guia de atualização](UPGRADE.md).
 
 ## Perguntas frequentes (FAQ)
 
@@ -181,4 +170,4 @@ Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](https:
 
 ---
 
-Powered by [Portabilis Tecnologia](http://www.portabilis.com.br/).
+Powered by [Portábilis](https://portabilis.com.br/).

@@ -1,17 +1,6 @@
-version: '3'
+version: '3.8'
 
 services:
-
-  nginx:
-    container_name: ieducar-nginx
-    build: docker/nginx
-    links:
-      - php
-    ports:
-      - 80
-    working_dir: /var/www/ieducar
-    volumes:
-      - ./:/var/www/ieducar
 
   php:
     container_name: ieducar-php
@@ -25,21 +14,30 @@ services:
     volumes:
       - ./:/var/www/ieducar
 
+  nginx:
+    container_name: ieducar-nginx
+    image: nginx:alpine
+    links:
+      - php
+    working_dir: /var/www/ieducar
+    volumes:
+      - ./:/var/www/ieducar
+      - ./docker/nginx:/etc/nginx/conf.d/
+
   postgres:
     container_name: ieducar-postgres
-    image: postgres:14-alpine
+    image: postgres:alpine
     environment:
       POSTGRES_DB: ieducar
       POSTGRES_USER: ieducar
       POSTGRES_PASSWORD: ieducar
-    ports:
-      - 5432
     volumes:
-      - ./database/data:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
 
   redis:
     container_name: ieducar-redis
     image: redis:alpine
     restart: always
-    ports:
-      - 6379
+
+volumes:
+    postgres:
