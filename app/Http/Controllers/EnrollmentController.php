@@ -17,9 +17,6 @@ class EnrollmentController extends Controller
     /**
      * Renderiza a view da enturmação.
      *
-     * @param LegacyRegistration $registration
-     * @param LegacySchoolClass  $schoolClass
-     * @param EnrollmentService  $enrollmentService
      *
      * @return View
      */
@@ -47,11 +44,6 @@ class EnrollmentController extends Controller
     }
 
     /**
-     * @param EnrollmentService  $enrollmentService
-     * @param EnrollmentRequest  $request
-     * @param LegacyRegistration $registration
-     * @param LegacySchoolClass  $schoolClass
-     *
      * @return RedirectResponse
      */
     public function enroll(

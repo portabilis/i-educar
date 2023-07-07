@@ -2,7 +2,6 @@
 
 class CoreExt_Config implements Countable, Iterator
 {
-
     /**
      * Array de sobre sobrecarga
      *
@@ -67,7 +66,6 @@ class CoreExt_Config implements Countable, Iterator
      *
      * @param mixed $value1 Valor retornado pelo array de configuração sobrecarregado
      * @param mixed $value2 Valor padrão caso não exista uma configuração sobrecarregada
-     *
      * @return mixed
      *
      * @throws Exception
@@ -90,7 +88,6 @@ class CoreExt_Config implements Countable, Iterator
      *
      * @param $key   Índice (nome) da variável criada por sobrecarga
      * @param $value Valor padrão caso o índice não exista
-     *
      * @return mixed O valor armazenado em
      */
     private function getFrom($key, $value = null)
@@ -105,7 +102,6 @@ class CoreExt_Config implements Countable, Iterator
     /**
      * Implementação do método mágico __get().
      *
-     * @param $key
      *
      * @return unknown_type
      */
@@ -143,7 +139,7 @@ class CoreExt_Config implements Countable, Iterator
     public function next()
     {
         next($this->config);
-        ++$this->_index;
+        $this->_index++;
     }
 
     /**
@@ -193,7 +189,6 @@ class CoreExt_Config implements Countable, Iterator
      *
      * @param array $arr1
      * @param array $arr2
-     *
      * @return array
      */
     protected function &arrayMergeRecursiveDistinct(&$arr1, &$arr2)
@@ -220,9 +215,6 @@ class CoreExt_Config implements Countable, Iterator
      * os blocos try/catch para lançar exceções.
      *
      * @see  http://php.net/set_error_handler
-     *
-     * @param  $errno
-     * @param  $errstr
      */
     protected function configErrorHandler($errno, $errstr)
     {

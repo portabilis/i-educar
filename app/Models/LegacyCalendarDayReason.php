@@ -16,7 +16,9 @@ class LegacyCalendarDayReason extends LegacyModel
     use HasLegacyDates;
 
     public $table = 'pmieducar.calendario_dia_motivo';
+
     public $primaryKey = 'cod_calendario_dia_motivo';
+
     public $fillable = [
         'ref_cod_escola',
         'sigla',

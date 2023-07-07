@@ -5,7 +5,8 @@ use App\Models\LegacyRace;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public function Gerar()
     {
         $this->titulo = 'Detalhe da Pessoa';
@@ -46,7 +47,7 @@ return new class extends clsDetalhe {
 
         $objFoto = new clsCadastroFisicaFoto(idpes: $cod_pessoa);
         $caminhoFoto = $objFoto->detalhe();
-        if ($caminhoFoto!=false) {
+        if ($caminhoFoto != false) {
             $this->addDetalhe(detalhe: ['Nome', $detalhe['nome'].'
                 <p><img height="117" src="' . (new UrlPresigner())->getPresignedUrl(url: $caminhoFoto['caminho']) . '"/></p>']);
         } else {
@@ -99,7 +100,7 @@ return new class extends clsDetalhe {
         $zona = App_Model_ZonaLocalizacao::getInstance();
         if ($detalhe['zona_localizacao']) {
             $this->addDetalhe(detalhe: [
-                'Zona Localização', $zona->getValue(key: $detalhe['zona_localizacao'])
+                'Zona Localização', $zona->getValue(key: $detalhe['zona_localizacao']),
             ]);
         }
 

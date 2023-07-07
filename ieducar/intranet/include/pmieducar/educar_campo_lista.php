@@ -41,7 +41,7 @@ $nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 
 //Se administrador
 if ($nivel_usuario == 1 || $cad_usuario) {
-    $opcoes = ['' => $get_select_name_full ? 'Selecione uma instituição': 'Selecione'];
+    $opcoes = ['' => $get_select_name_full ? 'Selecione uma instituição' : 'Selecione'];
     $obj_instituicao = new clsPmieducarInstituicao();
     $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
     $obj_instituicao->setOrderby('nm_instituicao ASC');
@@ -114,7 +114,7 @@ if ($get_curso) {
             ->get([
                 'cod_curso',
                 'nm_curso',
-                'descricao'
+                'descricao',
             ]);
 
         foreach ($lst_escola_curso as $escola_curso) {
@@ -123,9 +123,9 @@ if ($get_curso) {
     } elseif ($this->ref_cod_instituicao) {
         $opcoes_curso = ['' => $get_select_name_full ? 'Selecione um curso' : 'Selecione'];
 
-        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->when($sem_padrao,function ($q) {
+        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->when($sem_padrao, function ($q) {
             $q->whereStandardCalendar(0);
-        })->whereInstitution($this->ref_cod_instituicao)->orderBy('nm_curso')->get(['cod_curso','nm_curso','descricao']);
+        })->whereInstitution($this->ref_cod_instituicao)->orderBy('nm_curso')->get(['cod_curso', 'nm_curso', 'descricao']);
 
         foreach ($lst_escola_curso as $escola_curso) {
             $opcoes_curso["{$escola_curso->id}"] = $escola_curso->name;
@@ -300,13 +300,13 @@ function getEscola() {
 }
 <?php
 if ($get_escola && $get_biblioteca) {
-        ?>
+    ?>
 function getDuploEscolaBiblioteca() {
     getEscola();
     getBiblioteca(1);
 }
 <?php
-    }
+}
 }
 if ($get_curso && $sem_padrao && !$get_matricula) {
     ?>
@@ -343,7 +343,7 @@ function atualizaLstCurso(cursos) {
 }
 <?php
 } elseif ($get_curso && !$get_matricula) {
-        ?>
+    ?>
 function getCurso() {
     const campoCurso = document.getElementById('ref_cod_curso');
     const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -374,7 +374,7 @@ function atualizaLstCurso(cursos) {
     }
 }
 <?php
-    }
+}
 if ($get_escola && $get_curso && $get_matricula) {
     ?>
 function getMatricula() {
@@ -438,7 +438,7 @@ function atualizaLstEscolaCurso(cursos) {
 }
 if ($get_escola_curso_serie && $get_matricula && $_GET['ref_cod_aluno']) {
     // tah matriculando o aluno, seleciona as series que ele pode se matricular?
-?>
+    ?>
 function getEscolaCursoSerie() {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
     var campoEscola = document.getElementById('ref_cod_escola').value;
@@ -518,7 +518,7 @@ function atualizaLstEscolaCursoSerie(series) {
 }
 if ($get_serie && $get_escola_serie) {
     // lista todas as series que nao estao associadas a essa escola
-?>
+    ?>
 function getSerie() {
     var campoCurso = document.getElementById('ref_cod_curso').value;
     if (document.getElementById('ref_cod_escola')) {

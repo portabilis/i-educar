@@ -431,7 +431,7 @@ class Registro20 implements RegistroEducacenso
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function presencial()
     {
@@ -439,7 +439,7 @@ class Registro20 implements RegistroEducacenso
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function educacaoDistancia()
     {
@@ -496,7 +496,7 @@ class Registro20 implements RegistroEducacenso
     {
         return in_array($this->estruturaCurricular, [
             EstruturaCurricular::FORMACAO_GERAL_BASICA,
-            EstruturaCurricular::NAO_SE_APLICA
+            EstruturaCurricular::NAO_SE_APLICA,
         ]);
     }
 }

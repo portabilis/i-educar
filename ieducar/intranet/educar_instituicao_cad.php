@@ -3,58 +3,110 @@
 use App\Menu;
 use App\Models\State;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_instituicao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_idtlog;
+
     public $ref_sigla_uf;
+
     public $cep;
+
     public $cidade;
+
     public $bairro;
+
     public $logradouro;
+
     public $numero;
+
     public $complemento;
+
     public $nm_responsavel;
+
     public $ddd_telefone;
+
     public $telefone;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $nm_instituicao;
+
     public $data_base_transferencia;
+
     public $data_base_remanejamento;
+
     public $exigir_vinculo_turma_professor;
+
     public $exigir_dados_socioeconomicos;
+
     public $controlar_espaco_utilizacao_aluno;
+
     public $percentagem_maxima_ocupacao_salas;
+
     public $quantidade_alunos_metro_quadrado;
+
     public $gerar_historico_transferencia;
+
     public $controlar_posicao_historicos;
+
     public $matricula_apenas_bairro_escola;
+
     public $restringir_historico_escolar;
+
     public $restringir_multiplas_enturmacoes;
+
     public $permissao_filtro_abandono_transferencia;
+
     public $multiplas_reserva_vaga;
+
     public $permitir_carga_horaria;
+
     public $reserva_integral_somente_com_renda;
+
     public $data_base_matricula;
+
     public $data_expiracao_reserva_vaga;
+
     public $data_fechamento;
+
     public $componente_curricular_turma;
+
     public $reprova_dependencia_ano_concluinte;
+
     public $bloqueia_matricula_serie_nao_seguinte;
+
     public $data_educacenso;
+
     public $altera_atestado_para_declaracao;
+
     public $obrigar_campos_censo;
+
     public $obrigar_documento_pessoa;
+
     public $obrigar_cpf;
+
     public $orgao_regional;
+
     public $exigir_lancamentos_anteriores;
+
     public $exibir_apenas_professores_alocados;
+
     public $bloquear_vinculo_professor_sem_alocacao_escola;
+
     public $permitir_matricula_fora_periodo_letivo;
+
     public $ordenar_alunos_sequencial_enturmacao;
+
     public $obrigar_telefone_pessoa;
 
     public function Inicializar()
@@ -140,7 +192,7 @@ return new class extends clsCadastro {
             'label' => 'Coordenador(a) de transporte',
             'size' => 50,
             'value' => $this->coordenador_transporte,
-            'required' => false
+            'required' => false,
         ];
 
         $this->inputsHelper()->simpleSearchPessoa(attrName: 'coordenador_transporte', inputOptions: $options);
@@ -161,7 +213,7 @@ return new class extends clsCadastro {
             $opcoes = [null => 'Informe uma UF'];
         }
 
-        $options = ['label' => 'Código do órgão regional de ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Código do órgão regional de ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'orgao_regional', inputOptions: $options);
 
         $this->campoRotulo(nome: 'gerais', campo: '<b>Gerais</b>');
@@ -178,7 +230,7 @@ return new class extends clsCadastro {
                 'required' => false,
                 'hint' => $dataBaseDeslocamento,
                 'placeholder' => 'dd/mm/yyyy',
-                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia)
+                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia),
             ]
         );
         $dataBaseRemanejamento = 'A ordenação/apresentação de alunos remanejados nas turmas, nos relatórios (ex.: Relação de alunos por turma), será baseada neste campo quando preenchido.';
@@ -189,7 +241,7 @@ return new class extends clsCadastro {
                 'required' => false,
                 'hint' => $dataBaseRemanejamento,
                 'placeholder' => 'dd/mm/yyyy',
-                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento)
+                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento),
             ]
         );
         $dataBase = 'Caso o campo seja preenchido, o sistema irá controlar distorção de idade/série e limitar inscrições por idade no Pré-matrícula com base na data informada.';
@@ -202,7 +254,7 @@ return new class extends clsCadastro {
                 'placeholder' => 'dd/mm',
                 'required' => false,
                 'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula),
-                'hint' => $dataBase
+                'hint' => $dataBase,
             ]
         );
         $dataExpiracaoReservaVaga = 'Caso o campo seja preenchido, o sistema irá indeferir automaticamente as reservas em situação de espera após a data informada.';
@@ -213,7 +265,7 @@ return new class extends clsCadastro {
                 'required' => false,
                 'hint' => $dataExpiracaoReservaVaga,
                 'placeholder' => 'dd/mm/yyyy',
-                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga)
+                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga),
             ]
         );
         $dataFechamento = 'Caso o campo seja preenchido, o sistema irá bloquear a matrícula de novos alunos nas turmas após a data informada.';
@@ -226,7 +278,7 @@ return new class extends clsCadastro {
                 'placeholder' => 'dd/mm',
                 'required' => false,
                 'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento),
-                'hint' => $dataFechamento
+                'hint' => $dataFechamento,
             ]
         );
         $dataEducacenso = 'Este campo deve ser preenchido com a data máxima das matrículas que devem ser enviadas para o Censo.';
@@ -237,7 +289,7 @@ return new class extends clsCadastro {
                 'required' => false,
                 'hint' => $dataEducacenso,
                 'placeholder' => 'dd/mm/yyyy',
-                'value' => $this->data_educacenso
+                'value' => $this->data_educacenso,
             ]
         );
 

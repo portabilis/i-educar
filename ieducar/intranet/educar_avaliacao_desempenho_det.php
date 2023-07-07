@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
@@ -9,28 +10,37 @@ return new class extends clsDetalhe {
     public $titulo;
 
     public $sequencial;
+
     public $ref_cod_servidor;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $titulo_avaliacao;
+
     public $ref_ref_cod_instituicao;
 
     public function Gerar()
     {
         $this->titulo = 'Avaliação Desempenho - Detalhe';
 
-        $this->ref_cod_servidor=$_GET['ref_cod_servidor'];
-        $this->ref_ref_cod_instituicao=$_GET['ref_ref_cod_instituicao'];
-        $this->sequencial=$_GET['sequencial'];
+        $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
+        $this->ref_ref_cod_instituicao = $_GET['ref_ref_cod_instituicao'];
+        $this->sequencial = $_GET['sequencial'];
 
         $tmp_obj = new clsPmieducarAvaliacaoDesempenho(sequencial: $this->sequencial, ref_cod_servidor: $this->ref_cod_servidor, ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao);
         $registro = $tmp_obj->detalhe();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect(url: 'educar_avaliacao_desempenho_lst.php');
         }
 
@@ -46,17 +56,17 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($nm_instituicao) {
-                $this->addDetalhe(detalhe: [ 'Instituição', "{$nm_instituicao}"]);
+                $this->addDetalhe(detalhe: ['Instituição', "{$nm_instituicao}"]);
             }
         }
         if ($registro['ref_cod_servidor']) {
-            $this->addDetalhe(detalhe: [ 'Servidor', "{$nm_servidor}"]);
+            $this->addDetalhe(detalhe: ['Servidor', "{$nm_servidor}"]);
         }
         if ($registro['titulo_avaliacao']) {
-            $this->addDetalhe(detalhe: [ 'Avaliação', "{$registro['titulo_avaliacao']}"]);
+            $this->addDetalhe(detalhe: ['Avaliação', "{$registro['titulo_avaliacao']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(detalhe: [ 'Descrição', "{$registro['descricao']}"]);
+            $this->addDetalhe(detalhe: ['Descrição', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();

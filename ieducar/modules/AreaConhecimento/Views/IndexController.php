@@ -11,7 +11,7 @@ class IndexController extends Core_Controller_Page_ListController
     protected $_tableMap = [
         'Nome' => 'nome',
         'Seção' => 'secao',
-        'Agrupa descritores' => 'agrupar_descritores'
+        'Agrupa descritores' => 'agrupar_descritores',
     ];
 
     protected function _preRender()

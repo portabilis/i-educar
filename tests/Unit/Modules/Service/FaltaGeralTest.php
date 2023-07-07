@@ -11,14 +11,14 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
     protected function _getFaltaTestInstanciaDeFaltaERegistradaApenasUmaVezNoBoletim()
     {
         return new Avaliacao_Model_FaltaGeral([
-            'quantidade' => 10
+            'quantidade' => 10,
         ]);
     }
 
     protected function _getFaltaTestAdicionaFaltaNoBoletim()
     {
         return new Avaliacao_Model_FaltaComponente([
-            'quantidade' => 10
+            'quantidade' => 10,
         ]);
     }
 
@@ -55,19 +55,19 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
         $faltas = [
             new Avaliacao_Model_FaltaGeral([
                 'quantidade' => 7,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'quantidade' => 11,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'quantidade' => 8,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'quantidade' => 8,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
 
@@ -119,12 +119,12 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
         $faltas = [
             new Avaliacao_Model_FaltaGeral([
                 'quantidade' => 7,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'quantidade' => 9,
-                'etapa' => 3
-            ])
+                'etapa' => 3,
+            ]),
         ];
 
         $faltasPersistidas = [
@@ -132,14 +132,14 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
                 'id' => 1,
                 'faltaAluno' => $faltaAluno->id,
                 'quantidade' => 8,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'id' => 2,
                 'faltaAluno' => $faltaAluno->id,
                 'quantidade' => 11,
-                'etapa' => 2
-            ])
+                'etapa' => 2,
+            ]),
         ];
 
         // Configura mock para Avaliacao_Model_FaltaGeralDataMapper
@@ -176,12 +176,12 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
         $faltas = [
             new Avaliacao_Model_FaltaGeral([
                 'quantidade' => 7,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             // Etapa omitida, será atribuída a etapa '3'
             new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 9
-            ])
+                'quantidade' => 9,
+            ]),
         ];
 
         $faltasPersistidas = [
@@ -189,14 +189,14 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
                 'id' => 1,
                 'faltaAluno' => $faltaAluno->id,
                 'quantidade' => 8,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_FaltaGeral([
                 'id' => 2,
                 'faltaAluno' => $faltaAluno->id,
                 'quantidade' => 11,
-                'etapa' => 2
-            ])
+                'etapa' => 2,
+            ]),
         ];
 
         // Configura mock para Avaliacao_Model_FaltaGeralDataMapper

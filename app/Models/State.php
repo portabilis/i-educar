@@ -34,35 +34,21 @@ class State extends Model
      */
     protected $builder = StateBuilder::class;
 
-    /**
-     * @return BelongsTo
-     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function cities(): HasMany
     {
         return $this->hasMany(City::class);
     }
 
-    /**
-     * @param string $abbreviation
-     *
-     * @return State|null
-     */
     public static function findByAbbreviation(string $abbreviation): self|null
     {
         return static::query()->where('abbreviation', $abbreviation)->first();
     }
 
-    /**
-     * @return Collection
-     */
     public static function getListKeyAbbreviation(): Collection
     {
         return static::query()->orderBy('name')->pluck('name', 'abbreviation');
@@ -70,13 +56,11 @@ class State extends Model
 
     /**
      * @param string $abbreviation
-     *
-     * @return string
      */
     public static function getNameByAbbreviation(string|null $abbreviation): string
     {
         if ($abbreviation === null) {
-            return  '';
+            return '';
         }
 
         $state = static::findByAbbreviation($abbreviation);

@@ -37,7 +37,7 @@ class LegacyEducationTypeTest extends TestCase
             'ref_usuario_cad' => $user->getKey(),
             'nm_tipo' => $type->nm_tipo,
             'atividade_complementar' => $type->atividade_complementar,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 
@@ -71,7 +71,7 @@ class LegacyEducationTypeTest extends TestCase
             'ref_cod_instituicao' => $editType->ref_cod_instituicao,
             'nm_tipo' => $editType->nm_tipo,
             'atividade_complementar' => $editType->atividade_complementar,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 }

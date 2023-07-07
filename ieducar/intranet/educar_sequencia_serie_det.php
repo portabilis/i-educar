@@ -2,15 +2,24 @@
 
 use App\Models\LegacySequenceGrade;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $ref_serie_origem;
+
     public $ref_serie_destino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $id;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public function Gerar()
@@ -25,31 +34,31 @@ return new class extends clsDetalhe {
                 'gradeDestiny:cod_serie,nm_serie,ref_cod_curso',
                 'gradeOrigin.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
                 'gradeDestiny.course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
-                'gradeOrigin.course.institution:cod_instituicao,nm_instituicao'
+                'gradeOrigin.course.institution:cod_instituicao,nm_instituicao',
             ])
             ->find($this->id);
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect('educar_sequencia_serie_lst.php');
         }
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro->gradeOrigin->course->institution) {
-                $this->addDetalhe([ 'Instituição', "{$registro->gradeOrigin->course->institution->name}"]);
+                $this->addDetalhe(['Instituição', "{$registro->gradeOrigin->course->institution->name}"]);
             }
         }
         if ($registro->gradeOrigin->course) {
-            $this->addDetalhe([ 'Curso Origem', "{$registro->gradeOrigin->course->name}"]);
+            $this->addDetalhe(['Curso Origem', "{$registro->gradeOrigin->course->name}"]);
         }
         if ($registro->gradeOrigin) {
-            $this->addDetalhe([ 'Série Origem', "{$registro->gradeOrigin->name}"]);
+            $this->addDetalhe(['Série Origem', "{$registro->gradeOrigin->name}"]);
         }
         if ($registro->gradeDestiny->course) {
-            $this->addDetalhe([ 'Curso Destino', "{$registro->gradeDestiny->course->name}"]);
+            $this->addDetalhe(['Curso Destino', "{$registro->gradeDestiny->course->name}"]);
         }
         if ($registro->gradeDestiny) {
-            $this->addDetalhe([ 'Série Destino', "{$registro->gradeDestiny->name}"]);
+            $this->addDetalhe(['Série Destino', "{$registro->gradeDestiny->name}"]);
         }
 
         $obj_permissoes = new clsPermissoes();

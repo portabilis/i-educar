@@ -17,7 +17,6 @@ abstract class BaseModifier
     /**
      * @param string $templateName
      * @param array  $args
-     *
      * @return void
      */
     public function __construct($templateName, $args)
@@ -28,7 +27,6 @@ abstract class BaseModifier
 
     /**
      * @param array $data
-     *
      * @return array
      */
     abstract public function modify($data);

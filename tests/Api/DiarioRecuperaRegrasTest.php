@@ -42,12 +42,12 @@ class DiarioRecuperaRegrasTest extends TestCase
                             'updated_at' => $evaluationRule->updated_at->format('Y-m-d H:i:s'),
                             'regra_diferenciada_id' => $evaluationRule->regra_diferenciada_id,
                             'tipo_calculo_recuperacao_paralela' => $evaluationRule->tipo_calculo_recuperacao_paralela,
-                        ]
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'regras',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

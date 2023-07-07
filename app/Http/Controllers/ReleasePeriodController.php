@@ -27,8 +27,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
     }
 
     /**
-     * @param Request $request
-     *
      * @return View
      */
     public function index(Request $request)
@@ -55,8 +53,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
     }
 
     /**
-     * @param ReleasePeriod $releasePeriod
-     *
      * @return View
      */
     public function form(ReleasePeriod $releasePeriod)
@@ -84,9 +80,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
         );
     }
 
-    /**
-     * @param ReleasePeriodRequest $request
-     */
     public function create(ReleasePeriodRequest $request)
     {
         DB::beginTransaction();
@@ -117,8 +110,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
     }
 
     /**
-     * @param ReleasePeriod $releasePeriod
-     *
      * @return View
      */
     public function show(ReleasePeriod $releasePeriod)
@@ -138,9 +129,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
     }
 
     /**
-     * @param ReleasePeriod        $releasePeriod
-     * @param ReleasePeriodRequest $request
-     *
      * @return RedirectResponse
      */
     public function update(ReleasePeriod $releasePeriod, ReleasePeriodRequest $request)
@@ -176,7 +164,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param ReleasePeriod $releasePeriod
-     *
      * @return RedirectResponse
      */
     public function delete(Request $request)
@@ -207,8 +194,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * Popula os campos
-     *
-     * @param ReleasePeriod $releasePeriod
      */
     private function fillData(ReleasePeriod $releasePeriod)
     {
@@ -227,10 +212,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
         ]);
     }
 
-    /**
-     * @param ReleasePeriod $releasePeriod
-     * @param               $schools
-     */
     private function createReleasePeriodSchools(ReleasePeriod $releasePeriod, $schools)
     {
         foreach ($schools as $school) {
@@ -238,11 +219,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
         }
     }
 
-    /**
-     * @param ReleasePeriod $releasePeriod
-     * @param               $startDateArray
-     * @param               $endDateArray
-     */
     private function createReleasePeriodDates(ReleasePeriod $releasePeriod, $startDateArray, $endDateArray)
     {
         foreach ($startDateArray as $key => $startDate) {
@@ -256,8 +232,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
     }
 
     /**
-     * @param $request
-     *
      * @return LengthAwarePaginator
      */
     private function applyFilters($request)

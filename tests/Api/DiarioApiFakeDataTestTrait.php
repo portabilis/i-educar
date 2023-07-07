@@ -28,7 +28,6 @@ trait DiarioApiFakeDataTestTrait
      * Cria dados base para testes das regras de avaliação
      *
      * @param LegacyEvaluationRule $evaluationRule
-     *
      * @return LegacyEnrollment
      */
     public function getCommonFakeData($evaluationRule)
@@ -37,7 +36,7 @@ trait DiarioApiFakeDataTestTrait
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -83,7 +82,6 @@ trait DiarioApiFakeDataTestTrait
      * Adiciona uma etapa ao ano letivo (pmieducar.ano_letivo_modulo)
      *
      * @param LegacySchool $school
-     * @param              $number
      * @param null         $year
      */
     public function addAcademicYearStage($school, $number, $year = null)
@@ -145,7 +143,7 @@ trait DiarioApiFakeDataTestTrait
 
     /**
      * @param LegacySchoolClass $schoolClass
-     * @param integer           $disciplines
+     * @param int           $disciplines
      */
     public function createDisciplines($schoolClass, $disciplines)
     {
@@ -156,7 +154,7 @@ trait DiarioApiFakeDataTestTrait
             $discipline = LegacyDisciplineFactory::new()->create();
             $schoolClass->disciplines()->attach($discipline->id, [
                 'ano_escolar_id' => $grade->cod_serie,
-                'escola_id' => $school->id
+                'escola_id' => $school->id,
             ]);
 
             LegacyDisciplineAcademicYearFactory::new()->create([
@@ -169,7 +167,7 @@ trait DiarioApiFakeDataTestTrait
             LegacySchoolGradeDisciplineFactory::new()->create([
                 'ref_ref_cod_escola' => $school->id,
                 'ref_ref_cod_serie' => $grade->cod_serie,
-                'ref_cod_disciplina' => $discipline->id
+                'ref_cod_disciplina' => $discipline->id,
             ]);
         }
     }

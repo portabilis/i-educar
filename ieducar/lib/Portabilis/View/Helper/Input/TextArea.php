@@ -24,7 +24,7 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
             'inline' => false,
             'script' => false,
             'event' => 'onClick',
-            'disabled' => false
+            'disabled' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);

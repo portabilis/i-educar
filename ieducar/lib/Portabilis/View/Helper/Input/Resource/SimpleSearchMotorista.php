@@ -18,7 +18,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMotorista extends Portab
         $defaultOptions = [
             'objectName' => 'motorista',
             'apiController' => 'Motorista',
-            'apiResource' => 'motorista-search'
+            'apiResource' => 'motorista-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

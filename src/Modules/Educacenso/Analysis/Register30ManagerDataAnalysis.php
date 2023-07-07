@@ -32,7 +32,7 @@ class Register30ManagerDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) {$data->nomePessoa} se trata de um(a) gestor com nacionalidade {$data->nomeNacionalidade}, portanto é necessário informar o CPF.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: CPF)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
+                'fail' => true,
             ];
         }
 
@@ -41,7 +41,7 @@ class Register30ManagerDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se e-mail do(a) gestor(a) escolar {$data->nomePessoa} foi informado.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: E-mail)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$data->codigoEscola}",
-                'fail' => true
+                'fail' => true,
             ];
         }
     }

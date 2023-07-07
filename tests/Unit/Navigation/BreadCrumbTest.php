@@ -41,7 +41,7 @@ class BreadCrumbTest extends TestCase
             'Página teste',
             [
                 'arquivo1.php' => 'Arquivo 1',
-                'arquivo2.php' => 'Arquivo 2'
+                'arquivo2.php' => 'Arquivo 2',
             ]
         );
 

@@ -2,17 +2,28 @@
 
 use App\Models\LegacyRole;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $cod_funcao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_funcao;
+
     public $abreviatura;
+
     public $professor;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -61,7 +72,7 @@ return new class extends clsCadastro {
         $this->campoOculto(nome: 'cod_funcao', valor: $this->cod_funcao);
 
         $obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // text
         $this->campoTexto(nome: 'nm_funcao', campo: 'Funcão', valor: $this->nm_funcao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -69,7 +80,7 @@ return new class extends clsCadastro {
         $opcoes = [
             '' => 'Selecione',
             'S' => 'Sim',
-            'N' => 'Não'
+            'N' => 'Não',
         ];
 
         $this->campoLista(nome: 'professor', campo: 'Professor', valor: $opcoes, default: $this->professor);
@@ -99,6 +110,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -126,6 +138,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -142,6 +155,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

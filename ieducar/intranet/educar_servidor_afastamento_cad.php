@@ -7,32 +7,49 @@ use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Carbon;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $pessoa_logada;
+
     public $id;
+
     public $ref_cod_servidor;
+
     public $sequencial;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_motivo_afastamento;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $data_retorno;
+
     public $data_saida;
+
     public $ativo;
+
     public $status;
+
     public $alocacao_array;
+
     public $parametros;
+
     public $dias_da_semana = [
         '' => 'Selecione',
-        1  => 'Domingo',
-        2  => 'Segunda',
-        3  => 'Terça',
-        4  => 'Quarta',
-        5  => 'Quinta',
-        6  => 'Sexta',
-        7  => 'Sábado'
+        1 => 'Domingo',
+        2 => 'Segunda',
+        3 => 'Terça',
+        4 => 'Quarta',
+        5 => 'Quinta',
+        6 => 'Sexta',
+        7 => 'Sábado',
     ];
 
     /**
@@ -78,7 +95,7 @@ return new class () extends clsCadastro {
                 }
 
                 if ($this->data_saida) {
-                    $this->data_saida   = dataFromPgToBr($this->data_saida);
+                    $this->data_saida = dataFromPgToBr($this->data_saida);
                 }
 
                 $retorno = 'Editar';
@@ -204,21 +221,21 @@ return new class () extends clsCadastro {
                     // Passa todos os valores obtidos no registro para atributos do objeto
                     foreach ($lista as $val) {
                         $temp = [];
-                        $temp['hora_inicial']       = $val['hora_inicial'];
-                        $temp['hora_final']         = $val['hora_final'];
-                        $temp['dia_semana']         = $val['dia_semana'];
-                        $temp['ref_cod_escola']     = $val['ref_cod_escola'];
+                        $temp['hora_inicial'] = $val['hora_inicial'];
+                        $temp['hora_final'] = $val['hora_final'];
+                        $temp['dia_semana'] = $val['dia_semana'];
+                        $temp['ref_cod_escola'] = $val['ref_cod_escola'];
                         $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
                         $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
                         $objTemp = new clsPmieducarSerie($val['ref_cod_serie']);
                         $detalheTemp = $objTemp->detalhe();
-                        $temp['ref_cod_curso']      = $detalheTemp['ref_cod_curso'];
-                        $this->alocacao_array[]     = $temp;
+                        $temp['ref_cod_curso'] = $detalheTemp['ref_cod_curso'];
+                        $this->alocacao_array[] = $temp;
                     }
 
                     if ($this->alocacao_array) {
                         $tamanho = count($this->alocacao_array);
-                        $script  = "<script>\nvar num_alocacao = {$tamanho};\n";
+                        $script = "<script>\nvar num_alocacao = {$tamanho};\n";
                         $script .= "var array_servidores = Array();\n";
 
                         foreach ($this->alocacao_array as $key => $alocacao) {
@@ -227,10 +244,10 @@ return new class () extends clsCadastro {
                             $hora_ini = explode(':', $alocacao['hora_inicial']);
                             $hora_fim = explode(':', $alocacao['hora_final']);
 
-                            $horas_utilizadas   = ($hora_fim[0] - $hora_ini[0]);
+                            $horas_utilizadas = ($hora_fim[0] - $hora_ini[0]);
                             $minutos_utilizados = ($hora_fim[1] - $hora_ini[1]);
 
-                            $horas   = sprintf('%02d', (int) $horas_utilizadas);
+                            $horas = sprintf('%02d', (int) $horas_utilizadas);
                             $minutos = sprintf('%02d', (int) $minutos_utilizados);
 
                             $str_horas_utilizadas = "{$horas}:{$minutos}";
@@ -238,9 +255,9 @@ return new class () extends clsCadastro {
                             $script .= "array_servidores[{$key}][0] = '{$str_horas_utilizadas}';\n";
                             $script .= "array_servidores[{$key}][1] = '';\n\n";
 
-                            $obj_escola    = new clsPmieducarEscola($alocacao['ref_cod_escola']);
-                            $det_escola    = $obj_escola->detalhe();
-                            $det_escola    = $det_escola['nome'];
+                            $obj_escola = new clsPmieducarEscola($alocacao['ref_cod_escola']);
+                            $det_escola = $obj_escola->detalhe();
+                            $det_escola = $det_escola['nome'];
                             $nm_dia_semana = $this->dias_da_semana[$alocacao['dia_semana']];
 
                             $obj_subst = new clsPessoa_($alocacao['ref_cod_substituto']);
@@ -338,7 +355,7 @@ return new class () extends clsCadastro {
                         $script .= "\n</script>";
 
                         // Print do Javascript
-                        print $script;
+                        echo $script;
                     }
                 }
             }
@@ -530,9 +547,9 @@ return new class () extends clsCadastro {
                 foreach ($_POST['ref_cod_servidor_substituto'] as $key => $valor) {
                     $ref_cod_servidor_substituto = $valor;
                     $ref_cod_escola = $_POST["ref_cod_escola_{$key}"];
-                    $dia_semana     = $_POST["dia_semana_{$key}"];
-                    $hora_inicial   = urldecode($_POST["hora_inicial_{$key}"]);
-                    $hora_final     = urldecode($_POST["hora_final_{$key}"]);
+                    $dia_semana = $_POST["dia_semana_{$key}"];
+                    $hora_inicial = urldecode($_POST["hora_inicial_{$key}"]);
+                    $hora_final = urldecode($_POST["hora_final_{$key}"]);
 
                     if (is_numeric($ref_cod_servidor_substituto) && is_numeric($ref_cod_escola) &&
                         is_numeric($dia_semana) && is_string($hora_inicial) &&

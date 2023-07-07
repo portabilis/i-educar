@@ -20,7 +20,9 @@ class LegacySchoolAcademicYear extends LegacyModel
     use LegacyAttribute;
 
     public const NOT_INITIALIZED = 0;
+
     public const IN_PROGRESS = 1;
+
     public const FINALIZED = 2;
 
     /**
@@ -30,8 +32,6 @@ class LegacySchoolAcademicYear extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = LegacySchoolAcademicYearBuilder::class;
 
@@ -48,7 +48,7 @@ class LegacySchoolAcademicYear extends LegacyModel
         'ativo',
         'turmas_por_ano',
         'copia_dados_professor',
-        'copia_dados_demais_servidores'
+        'copia_dados_demais_servidores',
     ];
 
     protected function year(): Attribute

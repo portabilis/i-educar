@@ -8,7 +8,6 @@ trait DropPrimaryKey
 {
     /**
      * @param string $table
-     *
      * @return string
      */
     protected function searchPrimaryKeysFor($table)
@@ -35,7 +34,6 @@ SQL;
      * @param string $schema
      * @param string $table
      * @param string $name
-     *
      * @return void
      */
     protected function dropPrimaryKeyIn($schema, $table, $name)

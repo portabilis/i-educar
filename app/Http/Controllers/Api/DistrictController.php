@@ -43,7 +43,7 @@ class DistrictController extends ResourceController
         $accessLevel = $request->user()->getLevel();
 
         return [
-            new DistrictRestrictOperationRule($accessLevel)
+            new DistrictRestrictOperationRule($accessLevel),
         ];
     }
 }

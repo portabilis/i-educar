@@ -37,7 +37,7 @@ class LegacySchoolClassTypeTest extends TestCase
             'ref_usuario_cad' => $user->getKey(),
             'nm_tipo' => $type->nm_tipo,
             'sgl_tipo' => $type->sgl_tipo,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 
@@ -71,7 +71,7 @@ class LegacySchoolClassTypeTest extends TestCase
             'ref_usuario_cad' => $user->getKey(),
             'nm_tipo' => $editType->nm_tipo,
             'sgl_tipo' => $editType->sgl_tipo,
-            'ativo' => 1
+            'ativo' => 1,
         ]);
     }
 }

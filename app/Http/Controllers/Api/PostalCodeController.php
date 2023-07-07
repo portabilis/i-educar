@@ -21,9 +21,7 @@ class PostalCodeController extends Controller
     }
 
     /**
-     * @param Client $http
      * @param int    $postalCode
-     *
      * @return JsonResponse
      */
     public function search(Client $http, $postalCode)

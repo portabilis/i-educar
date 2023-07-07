@@ -30,8 +30,6 @@ class Employee extends LegacyModel
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected string $builder = EmployeeBuilder::class;
 
@@ -42,7 +40,7 @@ class Employee extends LegacyModel
 
     public array $legacy = [
         'id' => 'cod_servidor',
-        'workload' => 'carga_horaria'
+        'workload' => 'carga_horaria',
     ];
 
     /**
@@ -62,8 +60,6 @@ class Employee extends LegacyModel
 
     /**
      * Servidor alocação
-     *
-     * @return HasMany
      */
     public function employeeAllocations(): HasMany
     {
@@ -72,8 +68,6 @@ class Employee extends LegacyModel
 
     /**
      * Servidor função
-     *
-     * @return HasMany
      */
     public function employeeRoles(): HasMany
     {
@@ -82,17 +76,12 @@ class Employee extends LegacyModel
 
     /**
      * Pessoa física
-     *
-     * @return BelongsTo
      */
     public function individual(): BelongsTo
     {
         return $this->belongsTo(LegacyIndividual::class, 'cod_servidor');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function schools(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -104,17 +93,11 @@ class Employee extends LegacyModel
             ->where('servidor_alocacao.ativo', 1);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'cod_servidor');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function schoolingDegree(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolingDegree::class, 'ref_idesco');
@@ -125,9 +108,6 @@ class Employee extends LegacyModel
         return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function disciplines(): BelongsToMany
     {
         return $this->belongsToMany(

@@ -32,7 +32,7 @@ class PersonTest extends ViewTestCase
             'gender',
             'rg',
             'rg_issue_date',
-            'rg_state_abbreviation'
+            'rg_state_abbreviation',
         ])->first();
         $expected = [
             'ID da mãe',
@@ -49,7 +49,7 @@ class PersonTest extends ViewTestCase
             'Gênero da mãe',
             'RG da mãe',
             'RG (Data Emissão) da mãe',
-            'RG (Estado) da mãe'
+            'RG (Estado) da mãe',
         ];
         $this->assertInstanceOf(Person::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
@@ -72,7 +72,7 @@ class PersonTest extends ViewTestCase
             'gender',
             'rg',
             'rg_issue_date',
-            'rg_state_abbreviation'
+            'rg_state_abbreviation',
         ])->first();
         $expected = [
             'ID do pai',
@@ -89,7 +89,7 @@ class PersonTest extends ViewTestCase
             'Gênero do pai',
             'RG do pai',
             'RG (Data Emissão) do pai',
-            'RG (Estado) do pai'
+            'RG (Estado) do pai',
         ];
         $this->assertInstanceOf(Person::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
@@ -112,7 +112,7 @@ class PersonTest extends ViewTestCase
             'gender',
             'rg',
             'rg_issue_date',
-            'rg_state_abbreviation'
+            'rg_state_abbreviation',
         ])->first();
         $expected = [
             'ID do responsável',
@@ -129,7 +129,7 @@ class PersonTest extends ViewTestCase
             'Gênero do responsável',
             'RG do responsável',
             'RG (Data Emissão) do responsável',
-            'RG (Estado) do responsável'
+            'RG (Estado) do responsável',
         ];
         $this->assertInstanceOf(Person::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
@@ -247,7 +247,7 @@ class PersonTest extends ViewTestCase
         $found = Person::query()->disabilities()->first();
         $this->assertInstanceOf(Person::class, $found);
         $expected = [
-            'Deficiências'
+            'Deficiências',
         ];
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
@@ -257,7 +257,7 @@ class PersonTest extends ViewTestCase
         $found = Person::query()->phones()->first();
         $this->assertInstanceOf(Person::class, $found);
         $expected = [
-            'Telefones'
+            'Telefones',
         ];
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
@@ -275,7 +275,7 @@ class PersonTest extends ViewTestCase
             'city',
             'state_abbreviation',
             'state',
-            'country'
+            'country',
         ])->first();
         $this->assertInstanceOf(Person::class, $found);
         $expected = [
@@ -289,7 +289,7 @@ class PersonTest extends ViewTestCase
             'Cidade',
             'Sigla do Estado',
             'Estado',
-            'País'
+            'País',
         ];
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }

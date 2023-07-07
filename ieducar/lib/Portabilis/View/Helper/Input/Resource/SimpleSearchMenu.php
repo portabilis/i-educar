@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMenu extends Portabilis_
         $defaultOptions = [
             'objectName' => 'menu',
             'apiController' => 'Menu',
-            'apiResource' => 'menu-search'
+            'apiResource' => 'menu-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

@@ -2,17 +2,28 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $ref_cod_escola;
+
     public $ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $hora_inicio_intervalo;
+
     public $hora_fim_intervalo;
 
     public function Gerar()

@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -9,26 +10,39 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_matricula;
+
     public $ref_cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $aprovado;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ano;
 
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_cod_escola;
 
     public function Inicializar()
     {
-        $this->cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
+        $this->cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
@@ -48,7 +62,7 @@ return new class extends clsCadastro {
                 </script>";
         }
 
-        die();
+        exit();
     }
 
     public function Gerar()

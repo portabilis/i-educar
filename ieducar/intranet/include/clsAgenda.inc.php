@@ -3,21 +3,34 @@
 class clsAgenda
 {
     public $cod_pessoa_dono;
+
     public $agenda;
+
     public $editor;
+
     public $compromissos;
+
     public $versoes;
+
     public $tabela;
+
     public $publica;
+
     public $envia_alerta;
+
     public $nome_agenda;
+
     public $err_msg;
+
     public $time_atual;
+
     public $time_amanha;
+
     public $time_ontem;
+
     public $time_real_atual;
 
-    public function __construct($int_cod_editor = 0, $int_cod_pessoa_dono=false, $int_cod_agenda=false, $time = false)
+    public function __construct($int_cod_editor = 0, $int_cod_pessoa_dono = false, $int_cod_agenda = false, $time = false)
     {
         $db = new clsBanco();
         $this->cod_pessoa_dono = $int_cod_pessoa_dono;
@@ -36,19 +49,19 @@ class clsAgenda
             $this->time_real_atual = time();
         }
 
-        if (! $this->agenda && $this->cod_pessoa_dono) {
+        if (!$this->agenda && $this->cod_pessoa_dono) {
             $db->Consulta("SELECT cod_agenda, publica, envia_alerta, nm_agenda FROM portal.agenda WHERE ref_ref_cod_pessoa_own = '{$this->cod_pessoa_dono}'");
             if ($db->ProximoRegistro()) {
-                list($this->agenda, $this->publica, $this->envia_alerta, $this->nome_agenda) = $db->Tupla();
+                [$this->agenda, $this->publica, $this->envia_alerta, $this->nome_agenda] = $db->Tupla();
             } else {
                 // essa pessoa nao possui uma agenda, vamos criar uma pra ela
                 $this->cadastraAgenda();
             }
         } else {
-            if (! $this->cod_pessoa_dono && $this->agenda) {
+            if (!$this->cod_pessoa_dono && $this->agenda) {
                 $db->Consulta("SELECT ref_ref_cod_pessoa_own, publica, envia_alerta, nm_agenda FROM portal.agenda WHERE cod_agenda = '{$this->agenda}'");
                 if ($db->ProximoRegistro()) {
-                    list($this->cod_pessoa_dono, $this->publica, $this->envia_alerta, $this->nome_agenda) = $db->Tupla();
+                    [$this->cod_pessoa_dono, $this->publica, $this->envia_alerta, $this->nome_agenda] = $db->Tupla();
                 }
             }
         }
@@ -66,7 +79,7 @@ class clsAgenda
         $nomeArr = explode(' ', $nome);
         $nome = $nomeArr[0];
         if (count($nomeArr) > 1) {
-            $nome .= ' ' . $nomeArr[ count($nomeArr) - 1 ];
+            $nome .= ' ' . $nomeArr[count($nomeArr) - 1];
         }
         $nome = str_replace("'", "''", $nome);
         $db->Consulta("INSERT INTO portal.agenda ( ref_ref_cod_pessoa_cad, ref_ref_cod_pessoa_own, nm_agenda, data_cad ) VALUES ( $this->cod_pessoa_dono, $this->cod_pessoa_dono, quote_literal('{$nome}') , NOW() )");
@@ -97,7 +110,7 @@ class clsAgenda
         while ($db->ProximoRegistro()) {
             $temp_arr_compromisso = [];
             //list( $cod_agenda_compromisso, $versao, $data_inicio, $data_fim, $titulo, $descricao, $importante, $publico) = $db->Tupla();
-            list($temp_arr_compromisso['data_inicio'], $temp_arr_compromisso['cod_agenda_compromisso'], $temp_arr_compromisso['versao'], $temp_arr_compromisso['data_fim'], $temp_arr_compromisso['titulo'], $temp_arr_compromisso['descricao'], $temp_arr_compromisso['importante'], $temp_arr_compromisso['publico']) = $db->Tupla();
+            [$temp_arr_compromisso['data_inicio'], $temp_arr_compromisso['cod_agenda_compromisso'], $temp_arr_compromisso['versao'], $temp_arr_compromisso['data_fim'], $temp_arr_compromisso['titulo'], $temp_arr_compromisso['descricao'], $temp_arr_compromisso['importante'], $temp_arr_compromisso['publico']] = $db->Tupla();
 
             $temp_arr_compromisso2['data_inicio'] = $temp_arr_compromisso['data_inicio'];
             $temp_arr_compromisso2['versao'] = $temp_arr_compromisso['versao'];
@@ -152,14 +165,14 @@ class clsAgenda
             $db->Consulta("SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET['versoes']}' ORDER BY versao DESC");
             while ($db->ProximoRegistro()) {
                 unset($versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim);
-                list($versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim) = $db->Tupla();
+                [$versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim] = $db->Tupla();
 
-                $this->versoes[] = [ 'versao' => $versao, 'ref_ref_cod_pessoa_cad' => $ref_ref_cod_pessoa_cad, 'ativo' => $ativo, 'data_inicio' => $data_inicio, 'titulo' => $titulo, 'descricao' => $descricao, 'importante' => $importante, 'publico' => $publico, 'data_cadastro' => $data_cadastro, 'data_fim' => $data_fim ];
+                $this->versoes[] = ['versao' => $versao, 'ref_ref_cod_pessoa_cad' => $ref_ref_cod_pessoa_cad, 'ativo' => $ativo, 'data_inicio' => $data_inicio, 'titulo' => $titulo, 'descricao' => $descricao, 'importante' => $importante, 'publico' => $publico, 'data_cadastro' => $data_cadastro, 'data_fim' => $data_fim];
             }
         }
     }
 
-    public function cadastraCompromisso($cod_compromisso, $titulo, $descricao, $data, $hora_inicio, $hora_fim=false, $publico = false, $importante=false, $repetir_dias=false, $repetir_qtd=false, $tipo_compromisso = false)
+    public function cadastraCompromisso($cod_compromisso, $titulo, $descricao, $data, $hora_inicio, $hora_fim = false, $publico = false, $importante = false, $repetir_dias = false, $repetir_qtd = false, $tipo_compromisso = false)
     {
         $db = new clsBanco();
         $campos = '';
@@ -179,8 +192,8 @@ class clsAgenda
                         $campos .= ', importante';
                         $valores .= ', \'1\'';
                     }
-                    $edit_titulo = ($titulo) ? "'{$titulo}'": 'NULL';
-                    $edit_descricao = ($descricao) ? "'{$descricao}'": 'NULL';
+                    $edit_titulo = ($titulo) ? "'{$titulo}'" : 'NULL';
+                    $edit_descricao = ($descricao) ? "'{$descricao}'" : 'NULL';
 
                     if (is_numeric($repetir_dias) && is_numeric($repetir_qtd) && $repetir_dias && $repetir_qtd) {
                         for ($i = 0; $i < $repetir_qtd; $i++) {
@@ -189,7 +202,7 @@ class clsAgenda
                                 $campoDataFim = '';
                                 $valorDataFim = '';
                                 if (preg_match('/[0-9]{2}:[0-9]{2}/', $hora_fim)) {
-                                    $campoDataFim .= ', data_fim' ;
+                                    $campoDataFim .= ', data_fim';
                                     $valorDataFim .= ", '{$data_cad} {$hora_fim}'";
                                 }
                             }
@@ -202,7 +215,7 @@ class clsAgenda
                         $data_cad = date('Y-m-d', $timeNovo);
                         if ($hora_fim) {
                             if (preg_match('/[0-9]{2}:[0-9]{2}/', $hora_fim)) {
-                                $campos .= ', data_fim' ;
+                                $campos .= ', data_fim';
                                 $valores .= ", '{$data_cad} {$hora_fim}'";
                             }
                         }
@@ -249,7 +262,7 @@ class clsAgenda
                     if (preg_match('/[0-9]{2}:[0-9]{2}/', $hora_inicio)) {
                         if ($hora_fim) {
                             if (preg_match('/[0-9]{2}:[0-9]{2}/', $hora_fim)) {
-                                $campos .= ', data_fim' ;
+                                $campos .= ', data_fim';
                                 $valores .= ", '{$edit_data} {$hora_fim}'";
                             }
                         }
@@ -292,7 +305,7 @@ class clsAgenda
                 // pega os dados da nota
                 $db->Consulta("SELECT data_inicio, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versaoAtual}'");
                 $db->ProximoRegistro();
-                list($data, $titulo, $descricao, $importante, $publico) = $db->Tupla();
+                [$data, $titulo, $descricao, $importante, $publico] = $db->Tupla();
 
                 $data_inicio = date('d/m/Y', strtotime($data));
                 $hora_inicio = date('H:i', strtotime($data));
@@ -406,14 +419,14 @@ class clsAgenda
             $objEncaminha = new clsEncaminha();
             $listaEncaminha = $objEncaminha->lista(false, false, false, false, false, $this->cod_pessoa_dono, false, false, false, false, false, false, date('Y-m-d', $this->time_atual), date('Y-m-d', $this->time_atual).' 23:59:59', false, false);
             if ($listaEncaminha) {
-                foreach ($listaEncaminha   as $encaminha) {
+                foreach ($listaEncaminha as $encaminha) {
                     if ($encaminha['ref_cod_juris_processo'] && $encaminha['ref_versao_processo']) {
                         $objProcesso = new clsProcesso($encaminha['ref_cod_juris_processo'], $encaminha['ref_versao_processo']);
                         $detalheProcesso = $objProcesso->detalhe();
                         if ($detalheProcesso['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
-                            $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];
+                            $temp_arr_compromisso2['data_fim'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['cod_agenda_compromisso'] = 0;
                             $temp_arr_compromisso2['titulo'] = 'Pasta Encaminhada';
                             $temp_arr_compromisso2['descricao'] = "Nova Pasta foi Encaminhado nº {$encaminha['ref_cod_juris_processo']}";
@@ -430,7 +443,7 @@ class clsAgenda
                         if ($detalheTramite['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
-                            $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];
+                            $temp_arr_compromisso2['data_fim'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['cod_agenda_compromisso'] = 0;
                             $temp_arr_compromisso2['titulo'] = 'Processo Encaminhado';
                             $temp_arr_compromisso2['descricao'] = "Novo Processo foi Encaminhado nº {$encaminha['ref_cod_juris_tramite']}";
@@ -463,14 +476,14 @@ class clsAgenda
                 foreach ($lista_avisos as $aviso) {
                     $obj = new clsTipoCompromisso($aviso['ref_cod_juris_tipo_compromisso']);
                     $detalhe = $obj->detalhe();
-                    $data_aviso = date('d/m/Y', strtotime($aviso['data_aviso']) - $detalhe['avisa_intranet']*86400);
+                    $data_aviso = date('d/m/Y', strtotime($aviso['data_aviso']) - $detalhe['avisa_intranet'] * 86400);
                     if (date('d/m/Y', $this->time_atual) >= $data_aviso && date('d/m/Y', $this->time_atual) < date('d/m/Y', strtotime($aviso['data_aviso']))) {
                         $db->Consulta("SELECT data_inicio, data_fim, descricao FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$aviso['ref_cod_agenda_compromisso']}' AND ativo = 1 ORDER BY data_inicio ASC");
                         if ($db->ProximoRegistro()) {
                             $tupla = $db->Tupla();
                             $temp_arr_compromisso2['data_inicio'] = '';
                             $temp_arr_compromisso2['versao'] = '1';
-                            $temp_arr_compromisso2['data_fim'] ='';
+                            $temp_arr_compromisso2['data_fim'] = '';
                             $temp_arr_compromisso2['cod_agenda_compromisso'] = 0;
                             $temp_arr_compromisso2['titulo'] = 'Lembrete de Compromisso';
                             $data_comp_ini = date('d/m/Y', strtotime($tupla['data_inicio']));
@@ -493,6 +506,7 @@ class clsAgenda
             }
         }
     }
+
     public function add_compromisso_externo_3()
     {
         $db = new clsBanco();
@@ -500,7 +514,7 @@ class clsAgenda
         // seleciona os dados
         //$db->Consulta();
         while ($db->ProximoRegistro()) {
-            list($temp_arr_compromisso['data_inicio'], $temp_arr_compromisso['cod_agenda_compromisso'], $temp_arr_compromisso['versao'], $temp_arr_compromisso['data_fim'], $temp_arr_compromisso['titulo'], $temp_arr_compromisso['descricao'], $temp_arr_compromisso['importante'], $temp_arr_compromisso['publico']) = $db->Tupla();
+            [$temp_arr_compromisso['data_inicio'], $temp_arr_compromisso['cod_agenda_compromisso'], $temp_arr_compromisso['versao'], $temp_arr_compromisso['data_fim'], $temp_arr_compromisso['titulo'], $temp_arr_compromisso['descricao'], $temp_arr_compromisso['importante'], $temp_arr_compromisso['publico']] = $db->Tupla();
             // usa os dados recebidos para montar um segundo array temporario
             // adicionando os itens na ordem certa (data_inicio primeiro) para que ele faca a ordenacao por data de inicio
 

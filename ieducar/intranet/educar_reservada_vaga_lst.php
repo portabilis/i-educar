@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     /**
      * Referência a usuário da sessão
      *
@@ -31,13 +32,21 @@ return new class extends clsListagem {
 
     // Atributos de mapeamento da tabela pmieducar.reserva_vaga
     public $cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     /**
@@ -46,8 +55,11 @@ return new class extends clsListagem {
      * @var mixed
      */
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_instituicao;
+
     public $nm_aluno;
 
     /**
@@ -65,11 +77,10 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-      'Aluno',
-      'Série',
-      'Curso'
-    ];
-
+            'Aluno',
+            'Série',
+            'Curso',
+        ];
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
@@ -84,7 +95,7 @@ return new class extends clsListagem {
 
         // Lista de opçõees para o formulário de pesquisa rápida
         $get_escola = true;
-        $get_curso  = true;
+        $get_curso = true;
         $get_escola_curso_serie = true;
         include 'include/pmieducar/educar_campo_lista.php';
 
@@ -146,7 +157,7 @@ return new class extends clsListagem {
                 // Recupera nome da série da reserva de vaga
                 $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
                 $det_serie = $obj_serie->detalhe();
-                $nm_serie  = $det_serie['nm_serie'];
+                $nm_serie = $det_serie['nm_serie'];
 
                 // Recupera o nome do curso da reserva de vaga
                 $obj_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
@@ -184,10 +195,10 @@ return new class extends clsListagem {
 
                 // Array de dados formatados para apresentação
                 $lista_busca = [
-          "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro['cod_reserva_vaga']}\">{$registro['ref_cod_aluno']}</a>",
-          "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro['cod_reserva_vaga']}\">{$nm_serie}</a>",
-          "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro['cod_reserva_vaga']}\">{$registro['ref_cod_curso']}</a>"
-        ];
+                    "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro['cod_reserva_vaga']}\">{$registro['ref_cod_aluno']}</a>",
+                    "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro['cod_reserva_vaga']}\">{$nm_serie}</a>",
+                    "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro['cod_reserva_vaga']}\">{$registro['ref_cod_curso']}</a>",
+                ];
 
                 // Verifica por permissões
                 if ($nivel_usuario == 1) {
@@ -212,8 +223,8 @@ return new class extends clsListagem {
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Listagem de vagas reservadas', breadcrumbs: [
-        url(path: 'intranet/educar_index.php') => 'Escola',
-    ]);
+            url(path: 'intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function makeExtra()

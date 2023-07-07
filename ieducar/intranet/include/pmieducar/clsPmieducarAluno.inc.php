@@ -1,40 +1,69 @@
 <?php
 
 use iEducar\Legacy\Model;
-use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 class clsPmieducarAluno extends Model
 {
     public $cod_aluno;
+
     public $ref_cod_religiao;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_idpes;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $analfabeto;
+
     public $emancipado;
+
     public $nm_pai;
+
     public $nm_mae;
+
     public $tipo_responsavel = '';
+
     public $recursos_prova_inep = false;
+
     public $recebe_escolarizacao_em_outro_espaco;
+
     public $justificativa_falta_documentacao = false;
+
     public $url_laudo_medico;
+
     public $url_documento;
+
     public $codigo_sistema;
+
     public $veiculo_transporte_escolar = false;
+
     public $autorizado_um;
+
     public $parentesco_um;
+
     public $autorizado_dois;
+
     public $parentesco_dois;
+
     public $autorizado_tres;
+
     public $parentesco_tres;
+
     public $autorizado_quatro;
+
     public $parentesco_quatro;
+
     public $autorizado_cinco;
+
     public $parentesco_cinco;
+
     public $tipo_transporte;
 
     /**

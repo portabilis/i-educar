@@ -11,12 +11,9 @@ class ReleasePeriodTest extends EloquentTestCase
 {
     protected $relations = [
         'periodDates' => ReleasePeriodDate::class,
-        'stageType' => LegacyStageType::class
+        'stageType' => LegacyStageType::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return ReleasePeriod::class;

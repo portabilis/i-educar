@@ -69,6 +69,7 @@ class LegacyIndividualFactory extends Factory
             ];
         });
     }
+
     public function guardian(): self
     {
         return $this->state(function () {

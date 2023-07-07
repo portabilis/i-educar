@@ -8,8 +8,6 @@ use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 class SchoolManagerService
 {
     /**
-     * @param $schoolId
-     *
      * @return SchoolManager[]
      */
     public function getSchoolManagers($schoolId)
@@ -17,9 +15,6 @@ class SchoolManagerService
         return SchoolManager::ofSchool($schoolId)->get();
     }
 
-    /**
-     * @param $schoolId
-     */
     public function deleteAllManagers($schoolId)
     {
         $managers = SchoolManager::ofSchool($schoolId)->get();
@@ -28,9 +23,6 @@ class SchoolManagerService
         }
     }
 
-    /**
-     * @param SchoolManagerValueObject $valueObject
-     */
     public function storeManager(SchoolManagerValueObject $valueObject)
     {
         $schoolManager = new SchoolManager();

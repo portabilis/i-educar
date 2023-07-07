@@ -35,8 +35,6 @@ trait Avaliacao_Service_Boletim_FaltaAluno
     }
 
     /**
-     * @param Avaliacao_Model_FaltaAluno $falta
-     *
      * @return $this
      */
     protected function _setFaltaAluno(Avaliacao_Model_FaltaAluno $falta)

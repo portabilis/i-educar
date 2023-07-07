@@ -12,7 +12,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCursoAluno extends Por
         $defaultOptions = [
             'objectName' => 'cursoaluno',
             'apiController' => 'CursoAluno',
-            'apiResource' => 'cursoaluno-search'
+            'apiResource' => 'cursoaluno-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

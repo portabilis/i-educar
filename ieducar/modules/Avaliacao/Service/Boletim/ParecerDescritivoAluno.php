@@ -35,8 +35,6 @@ trait Avaliacao_Service_Boletim_ParecerDescritivoAluno
     }
 
     /**
-     * @param Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno
-     *
      * @return $this
      */
     protected function _setParecerDescritivoAluno(Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno)

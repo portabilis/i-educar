@@ -2,15 +2,24 @@
 
 use App\Models\LegacySchoolClass;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
+
     public $observacao;
+
     public $ref_cod_matricula;
+
     public $ref_cod_turma;
+
     public $ref_cod_serie;
+
     public $ref_cod_disciplina;
+
     public $ref_sequencial;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
 
     public function Inicializar()

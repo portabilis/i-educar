@@ -32,8 +32,8 @@ class PromotionService
                     'escola' => $this->enrollment->schoolClass->school_id,
                     'curso' => $this->enrollment->schoolClass->ref_cod_curso,
                     'serie' => $this->enrollment->schoolClass->ref_ref_cod_serie,
-                    'turma' => $this->enrollment->ref_cod_turma
-                ]
+                    'turma' => $this->enrollment->ref_cod_turma,
+                ],
             ]
         );
 

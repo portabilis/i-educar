@@ -38,7 +38,7 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
-            'dias_letivos' => '200'
+            'dias_letivos' => '200',
         ]);
 
         $year = LegacySchoolAcademicYearFactory::new()->create([
@@ -68,7 +68,7 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -102,7 +102,7 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
 
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_matricula' => $registration,
-            'ref_cod_turma' => $schoolClass
+            'ref_cod_turma' => $schoolClass,
         ]);
 
         LegacySchoolGradeDisciplineFactory::new()->create([
@@ -120,11 +120,11 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
                 $schoolClass->getKey() => [
                     $student->getKey() => [
                         $discipline->getKey() => [
-                            'valor' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                        ]
-                    ]
-                ]
-            ]
+                            'valor' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->getResource('/module/Api/Diario', $data);
@@ -132,15 +132,15 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
         $response->assertSuccessful()
             ->assertJson(
                 [
-                    'oper'=> 'post',
-                    'resource'=> 'pareceres-por-etapa-e-componente',
-                    'msgs'=> [
+                    'oper' => 'post',
+                    'resource' => 'pareceres-por-etapa-e-componente',
+                    'msgs' => [
                         [
-                            'msg'=> 'Pareceres postados com sucesso!',
-                            'type'=> 'success'
-                        ]
+                            'msg' => 'Pareceres postados com sucesso!',
+                            'type' => 'success',
+                        ],
                     ],
-                    'any_error_msg'=> false
+                    'any_error_msg' => false,
                 ]
             );
     }

@@ -4,18 +4,30 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $agenda;
+
     public $editor;
+
     public $compromissos;
+
     public $time_atual;
+
     public $data_atual;
+
     public $data_atual_db;
+
     public $time_real_atual;
+
     public $publica = 0;
+
     public $time_amanha;
+
     public $time_ontem;
+
     public $erro_msg;
+
     public $scriptNome;
 
     public function RenderHTML()
@@ -38,7 +50,7 @@ return new class extends clsCadastro {
         }
 
         // Checa se a pessoa possui permissao (daqui por diante comeca a visualizar, editar, excluir, etc.)
-        if (! $objAgenda->permissao_agenda()) {
+        if (!$objAgenda->permissao_agenda()) {
             throw new HttpResponseException(
                 response: new RedirectResponse(url: $this->scriptNome)
             );
@@ -100,10 +112,10 @@ return new class extends clsCadastro {
         $this->breadcrumb(currentPage: 'Agenda');
 
         if ($this->locale) {
-            $conteudo .=  '
+            $conteudo .= '
         <table class=\'tablelistagem\' width=\'100%\' border=\'0\'  cellpadding=\'0\' cellspacing=\'0\'>';
 
-            $conteudo .=  "<tr height='10px'>
+            $conteudo .= "<tr height='10px'>
                       <td class='fundoLocalizacao' colspan='5'>{$this->locale}</td>
                     </tr>";
 
@@ -114,10 +126,10 @@ return new class extends clsCadastro {
         <div id="DOM_expansivel" class="DOM_expansivel"></div>
         <table border="0" cellpadding="0" cellspacing="3" width="100%">';
 
-        $mesesArr = [ '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
-        $diasArr = [ 'Domingo', 'Segunda Feira', 'Terça Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sábado' ];
+        $mesesArr = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        $diasArr = ['Domingo', 'Segunda Feira', 'Terça Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sábado'];
 
-        $this->arr_data_atual = [ date(format: 'd', timestamp: $this->time_atual), date(format: 'n', timestamp: $this->time_atual), date(format: 'Y', timestamp: $this->time_atual), date(format: 'w', timestamp: $this->time_atual) ];
+        $this->arr_data_atual = [date(format: 'd', timestamp: $this->time_atual), date(format: 'n', timestamp: $this->time_atual), date(format: 'Y', timestamp: $this->time_atual), date(format: 'w', timestamp: $this->time_atual)];
 
         $nm_agenda = $objAgenda->getNome();
         $this->publica = $objAgenda->getPublica();
@@ -192,7 +204,7 @@ return new class extends clsCadastro {
         /*
         *   COMPROMISSOS
         */
-        if (! isset($_GET['versoes'])) {
+        if (!isset($_GET['versoes'])) {
             $this->compromissos = $objAgenda->listaCompromissosDia(data: $this->data_atual);
 
             if ($this->compromissos) {
@@ -296,7 +308,7 @@ return new class extends clsCadastro {
                         $class_desc = '';
                     }
 
-                    $classe = ($classe == 'claro') ? 'escuro': 'claro';
+                    $classe = ($classe == 'claro') ? 'escuro' : 'claro';
 
                     if ($cod_agenda_compromisso) {
                         $img_padrao = "<a class=\"small\" href=\"javascript: text2form( {$cod_agenda_compromisso} );\">
@@ -330,7 +342,7 @@ return new class extends clsCadastro {
                 }
             }
 
-            $classe = ($classe == 'claro') ? 'escuro': 'claro';
+            $classe = ($classe == 'claro') ? 'escuro' : 'claro';
 
             $conteudo .= "<tr><td colspan=\"3\" class=\"{$classe}\" align=\"center\" height=\"60\"><br><input type=\"button\" name=\"agenda_novo\" class=\"agenda_rap_botao btn-green\" id=\"agenda_novo\" value=\"Novo Compromisso\" onclick=\"novoForm();\"></td></tr>";
         } else {
@@ -343,12 +355,12 @@ return new class extends clsCadastro {
                 $db->Consulta(consulta: "SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET['versoes']}' ORDER BY versao DESC");
                 while ($db->ProximoRegistro()) {
                     unset($versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim);
-                    list($versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim) = $db->Tupla();
+                    [$versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim] = $db->Tupla();
 
                     $nome = $db2->CampoUnico(consulta: "SELECT nome FROM cadastro.pessoa WHERE idpes = '{$ref_ref_cod_pessoa_cad}'");
-                    $ativo = ($ativo)? '<b>Ativo</b>': 'Inativo';
-                    $importante = ($importante)? 'Sim': 'Não';
-                    $publico = ($publico)? 'Sim': 'Não';
+                    $ativo = ($ativo) ? '<b>Ativo</b>' : 'Inativo';
+                    $importante = ($importante) ? 'Sim' : 'Não';
+                    $publico = ($publico) ? 'Sim' : 'Não';
                     if ($data_fim) {
                         $data_fim = date(format: 'd/m/Y H:i', timestamp: strtotime(datetime: $data_fim));
                     } else {
@@ -393,12 +405,12 @@ return new class extends clsCadastro {
 
         $db->Consulta(consulta: "SELECT data_inicio, titulo, descricao FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND importante = 1 AND data_inicio > NOW() ORDER BY data_inicio ASC LIMIT 5 OFFSET 0");
         while ($db->ProximoRegistro()) {
-            list($aviso_inicio, $aviso_titulo, $aviso_descricao) = $db->Tupla();
+            [$aviso_inicio, $aviso_titulo, $aviso_descricao] = $db->Tupla();
             $avis_desc_arr = explode(separator: ' ', string: $aviso_descricao);
             if (count(value: $avis_desc_arr) > 25) {
                 $aviso_descricao = implode(separator: ' ', array: array_slice(array: $avis_desc_arr, offset: 0, length: 25)) . '...';
             }
-            if (! $aviso_titulo) {
+            if (!$aviso_titulo) {
                 $aviso_titulo = implode(separator: ' ', array: array_slice(array: $avis_desc_arr, offset: 0, length: 7)) . '...';
             }
             $aviso_time = strtotime(datetime: $aviso_inicio);
@@ -423,7 +435,7 @@ return new class extends clsCadastro {
         $i = 0;
         $db->Consulta(consulta: "SELECT cod_agenda_compromisso, versao, data_inicio, data_fim, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NULL AND data_inicio >= '{$this->data_atual_db}' AND data_inicio <= '{$this->data_atual_db} 23:59:59' ORDER BY data_inicio ASC");
         while ($db->ProximoRegistro()) {
-            list($cod_agenda_compromisso, $versao, $data_inicio, $data_fim, $titulo, $descricao, $importante, $publico) = $db->Tupla();
+            [$cod_agenda_compromisso, $versao, $data_inicio, $data_fim, $titulo, $descricao, $importante, $publico] = $db->Tupla();
             $conteudo .= "<tr><td><input class=\"notas\" type=\"text\" name=\"nota_{$i}\" id=\"nota_{$i}\" value=\"{$titulo}\"></td><td><a href=\"javascript: salvaNota( {$cod_agenda_compromisso} );\"><img src=\"imagens/nvp_agenda_compromisso.gif\" border=\"0\" alt=\"Salvar\" title=\"Salvar como Compromisso\"></a></td></tr>";
             $i++;
         }

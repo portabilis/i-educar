@@ -29,11 +29,11 @@ class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Help
             'label_hint' => '',
             'inline' => false,
             'callback' => false,
-            'disabled' => false
+            'disabled' => false,
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-       $this->viewInstance->campoData(...array_values( $inputOptions));
+        $this->viewInstance->campoData(...array_values($inputOptions));
     }
 }

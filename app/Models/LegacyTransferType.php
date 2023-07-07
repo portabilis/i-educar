@@ -45,9 +45,6 @@ class LegacyTransferType extends LegacyModel
         );
     }
 
-    /**
-     * @return HasMany
-     */
     public function transferRequests(): HasMany
     {
         return $this->hasMany(LegacyTransferRequest::class, 'ref_cod_transferencia_tipo');

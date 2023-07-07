@@ -2,7 +2,6 @@
 
 class Portabilis_Currency_Utils
 {
-
     /**
      * Converte um valor numérico de moeda brasileira (ex: 2,32) para
      * estrangeira (2.32).

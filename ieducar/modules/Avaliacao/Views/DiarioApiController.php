@@ -19,7 +19,9 @@ use Illuminate\Support\Str;
 class DiarioApiController extends ApiCoreController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
+
     protected $_processoAp = 642;
+
     protected $_currentMatriculaId;
 
     private RemoveHtmlTagsStringService $removeHtmlTagsService;
@@ -35,7 +37,7 @@ class DiarioApiController extends ApiCoreController
         $escola = App_Model_IedFinder::getEscola($this->getRequest()->escola_id);
         $ano = LegacySchoolAcademicYear::query()->whereSchool($this->getRequest()->escola_id)->whereYearEq($this->getRequest()->ano)->first([
             'ativo',
-            'andamento'
+            'andamento',
         ]);
 
         $anoLetivoEncerrado = $ano &&
@@ -233,7 +235,7 @@ class DiarioApiController extends ApiCoreController
 
             if (!empty($etapasComNota)) {
                 $msg = 'Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: ' .
-                join(', ', $etapasComNota) . '.';
+                implode(', ', $etapasComNota) . '.';
                 $this->messenger->append($msg, 'error');
             }
         }
@@ -260,7 +262,7 @@ class DiarioApiController extends ApiCoreController
             }
 
             if (!empty($etapasComFalta)) {
-                $this->messenger->append('Falta somente pode ser removida, após remover as faltas lançadas nas etapas posteriores: ' . join(', ', $etapasComFalta) . '.', 'error');
+                $this->messenger->append('Falta somente pode ser removida, após remover as faltas lançadas nas etapas posteriores: ' . implode(', ', $etapasComFalta) . '.', 'error');
             }
         }
 
@@ -539,11 +541,11 @@ class DiarioApiController extends ApiCoreController
 
             $nota = new Avaliacao_Model_NotaComponente(
                 [
-                'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                'etapa' => $etapa,
-                'nota' => $notaNova,
-                'notaRecuperacaoParalela' => $notaRecuperacaoParalela,
-                'notaOriginal' => $notaOriginal]
+                    'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+                    'etapa' => $etapa,
+                    'nota' => $notaNova,
+                    'notaRecuperacaoParalela' => $notaRecuperacaoParalela,
+                    'notaOriginal' => $notaOriginal]
             );
 
             $this->serviceBoletim()->addNota($nota);
@@ -842,12 +844,12 @@ class DiarioApiController extends ApiCoreController
                                         $query->with([
                                             'person' => function ($query) {
                                                 $query->withCount('considerableDeficiencies');
-                                            }
+                                            },
                                         ]);
-                                    }
+                                    },
                                 ]);
                                 $query->with('dependencies');
-                            }
+                            },
                         ]);
 
                         // Pega a última enturmação na turma
@@ -1016,7 +1018,6 @@ class DiarioApiController extends ApiCoreController
 
     /**
      * @param bool $reload
-     *
      * @return Avaliacao_Service_Boletim
      *
      * @throws CoreExt_Exception
@@ -1295,14 +1296,14 @@ class DiarioApiController extends ApiCoreController
     {
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
-        return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+        return $obj->existe() ? $obj->edita() : $obj->cadastra();
     }
 
     protected function deleteNotaExame($matriculaId, $componenteCurricularId)
     {
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
 
-        return ($obj->excluir());
+        return $obj->excluir();
     }
 
     /**
@@ -1656,7 +1657,6 @@ class DiarioApiController extends ApiCoreController
      * faltas e notas sobre a regra de avaliação.
      *
      * @param LegacyEvaluationRule $evaluationRule
-     *
      * @return array
      */
     protected function getEvaluationRule($evaluationRule)
@@ -1783,7 +1783,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function usaAuditoriaNotas()
     {
-        return (config('legacy.app.auditoria.notas') == '1');
+        return config('legacy.app.auditoria.notas') == '1';
     }
 
     public function canChange()
@@ -1797,7 +1797,7 @@ class DiarioApiController extends ApiCoreController
 
     public function postSituacao()
     {
-        if (! $this->canPostSituacaoAndNota()) {
+        if (!$this->canPostSituacaoAndNota()) {
             $this->messenger->append('Usuário não possui permissão para alterar a situação da matrícula.', 'error');
         }
 
@@ -1818,7 +1818,7 @@ class DiarioApiController extends ApiCoreController
 
     public function changeRegistrationLockStatus()
     {
-        if (! $this->canPostSituacaoAndNota()) {
+        if (!$this->canPostSituacaoAndNota()) {
             $this->messenger->append('Usuário não possui permissão para alterar a situação do bloqueio de status da matrícula.', 'error');
 
             return;

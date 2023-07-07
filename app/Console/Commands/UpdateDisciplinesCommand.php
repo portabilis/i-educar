@@ -28,7 +28,6 @@ class UpdateDisciplinesCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param Filesystem $filesystem
      *
      * @return mixed
      */

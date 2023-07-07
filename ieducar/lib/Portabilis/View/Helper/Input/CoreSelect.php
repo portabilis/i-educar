@@ -15,7 +15,7 @@ class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Inp
             'objectName' => '',
             'attrName' => $this->inputName(),
             'resources' => [],
-            'options' => []
+            'options' => [],
         ];
 
         $defaultOptions = $this->mergeOptions($this->defaultOptions(), $defaultOptions);
@@ -27,7 +27,7 @@ class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Inp
         $defaultInputOptions = [
             'label' => Portabilis_String_Utils::humanize($this->inputName()),
             'value' => $this->inputValue($this->options['id']),
-            'resources' => $this->inputOptions($this->options)
+            'resources' => $this->inputOptions($this->options),
         ];
 
         $inputOptions = $this->mergeOptions($this->options['options'], $defaultInputOptions);

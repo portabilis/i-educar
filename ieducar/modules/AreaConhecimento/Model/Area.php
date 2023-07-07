@@ -18,7 +18,7 @@ class AreaConhecimento_Model_Area extends CoreExt_Entity implements \Stringable
             'instituicao' => new CoreExt_Validate_Choice(['choices' => $instituicoes]),
             'nome' => new CoreExt_Validate_String(['min' => 5, 'max' => 60]),
             'secao' => new CoreExt_Validate_String(['min' => 0, 'max' => 50]),
-            'ordenamento_ac' => new CoreExt_Validate_Choice(['min' => 0, 'max' => 50])
+            'ordenamento_ac' => new CoreExt_Validate_Choice(['min' => 0, 'max' => 50]),
         ];
     }
 

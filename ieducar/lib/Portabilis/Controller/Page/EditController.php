@@ -126,7 +126,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         $scripts = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
             '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
-            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
         ];
 
         if (!$this->backwardCompatibility) {

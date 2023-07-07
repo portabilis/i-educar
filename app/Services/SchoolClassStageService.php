@@ -31,14 +31,14 @@ class SchoolClassStageService
         validator(
             ['params' => [
                 'schoolClass' => $schoolClass,
-                'startDates' => $startDates
-                ]
+                'startDates' => $startDates,
+            ],
             ],
             [
                 'params' => [
                     new CheckGradesAndAbsencesInStageExists(),
                     new CheckGradesAndAbsencesInStageIDiarioExists(),
-                ]
+                ],
             ]
         )->validate();
     }

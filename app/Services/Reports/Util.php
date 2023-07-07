@@ -9,7 +9,7 @@ class Util
     public static function formatWorkload(float|null $workload): string
     {
         if ($workload) {
-            $hour = (int)$workload;
+            $hour = (int) $workload;
             $workload -= $hour;
             $minutes = round($workload * 60);
             if ($minutes < 10) {
@@ -42,8 +42,8 @@ class Util
             return [
                 [
                     'step' => 'An',
-                    'name' => 'ANUAL'
-                ]
+                    'name' => 'ANUAL',
+                ],
             ];
         }
 
@@ -70,5 +70,33 @@ class Util
             ],
             default => [],
         })->toArray();
+    }
+
+    public static function mask(string|int $val, string $mask): string
+    {
+        $maskared = '';
+        $k = 0;
+        for ($i = 0; $i <= strlen($mask) - 1; ++$i) {
+            if ($mask[$i] == '#') {
+                if (isset($val[$k])) {
+                    $maskared .= $val[$k++];
+                }
+            } else {
+                if (isset($mask[$i])) {
+                    $maskared .= $mask[$i];
+                }
+            }
+        }
+
+        return $maskared;
+    }
+
+    public static function formatPostcode(string|null $postcode): string|null
+    {
+        if ($postcode && strlen($postcode) === 8) {
+            return self::mask($postcode, '#####-###');
+        }
+
+        return $postcode;
     }
 }

@@ -1,22 +1,37 @@
 <?php
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     public $pessoa_logada;
+
     public $titulo;
+
     public $limite;
+
     public $offset;
 
     public $cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_curso;
+
     public $nm_serie;
+
     public $etapa_curso;
+
     public $concluinte;
+
     public $carga_horaria;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $intervalo;
 
     public $ref_cod_instituicao;
@@ -31,8 +46,8 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-          'Série',
-          'Curso'
+            'Série',
+            'Curso',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -45,14 +60,14 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         $get_curso = true;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
         $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = $_GET["pagina_{$this->nome}"] ? $_GET["pagina_{$this->nome}"] * $this->limite-$this->limite : 0;
+        $this->offset = $_GET["pagina_{$this->nome}"] ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_serie = new clsPmieducarSerie();
         $obj_serie->setOrderby('nm_serie ASC');
@@ -93,7 +108,7 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$nomeSerie}</a>",
-                    "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>"
+                    "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {

@@ -5,42 +5,70 @@ use iEducar\Legacy\Model;
 class clsPmieducarMatricula extends Model
 {
     public const MODELO_SEMIPRESENCIAL = 0;
+
     public const MODELO_EAD = 1;
+
     public const MODELO_OFF_LINE = 2;
+
     public const MODELO_PRESENCIAL = 3;
 
     public const MODELOS_DE_ENSINO = [
-          self::MODELO_PRESENCIAL => 'Presencial' ,
-          self::MODELO_SEMIPRESENCIAL => 'Semipresencial' ,
-          self::MODELO_EAD => 'EAD' ,
-          self::MODELO_OFF_LINE => 'Off-line' ,
+        self::MODELO_PRESENCIAL => 'Presencial',
+        self::MODELO_SEMIPRESENCIAL => 'Semipresencial',
+        self::MODELO_EAD => 'EAD',
+        self::MODELO_OFF_LINE => 'Off-line',
     ];
 
     public $cod_matricula;
+
     public $ref_cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $ref_cod_abandono;
+
     public $aprovado;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ano;
+
     public $ultima_matricula;
+
     public $modulo;
+
     public $descricao_reclassificacao;
+
     public $matricula_reclassificacao;
+
     public $formando;
+
     public $ref_cod_curso;
+
     public $semestre;
+
     public $data_matricula;
+
     public $data_cancel;
+
     public $observacoes;
+
     public $turno_pre_matricula;
+
     public $dependencia;
+
     public $modalidade_ensino;
 
     /**
@@ -1219,10 +1247,9 @@ class clsPmieducarMatricula extends Model
     /**
      * Seta a matricula para abandono e seta a observação passada por parâmetro
      *
-     * @return boolean
+     * @return bool
      *
      * @author lucassch
-     *
      */
     public function cadastraObs($obs, $tipoAbandono)
     {
@@ -1340,7 +1367,7 @@ class clsPmieducarMatricula extends Model
                 'params' => [$anoLetivo, $aluno],
                 'show_errors' => !$showErrors,
                 'return_only' => 'first-line',
-                'messenger' => ''
+                'messenger' => '',
             ];
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -1348,6 +1375,7 @@ class clsPmieducarMatricula extends Model
 
         return false;
     }
+
     public function pegaDataDeTransferencia($cod_aluno, $ano)
     {
         $query = "

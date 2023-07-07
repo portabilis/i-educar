@@ -45,8 +45,6 @@ class EducacensoImportJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param EducacensoImportModel $educacensoImport
-     * @param                       $importArray
      * @param string                $databaseConnection
      * @param DateTime              $registrationDate
      */
@@ -61,9 +59,9 @@ class EducacensoImportJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @throws Throwable
-     *
      * @return void
+     *
+     * @throws Throwable
      */
     public function handle()
     {
@@ -91,7 +89,7 @@ class EducacensoImportJob implements ShouldQueue
     {
         return [
             $this->databaseConnection,
-            'educacenso-import'
+            'educacenso-import',
         ];
     }
 }

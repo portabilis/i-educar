@@ -12,7 +12,7 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
     {
         return new Avaliacao_Model_FaltaComponente([
             'componenteCurricular' => 1,
-            'quantidade' => 5
+            'quantidade' => 5,
         ]);
     }
 
@@ -23,7 +23,7 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
 
         return new Avaliacao_Model_FaltaComponente([
             'componenteCurricular' => 1,
-            'quantidade' => 10
+            'quantidade' => 10,
         ]);
     }
 
@@ -73,22 +73,22 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'quantidade' => 7,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'quantidade' => 9,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'quantidade' => 8,
-                'etapa' => 3
+                'etapa' => 3,
             ]),
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'quantidade' => 8,
-                'etapa' => 4
+                'etapa' => 4,
             ]),
         ];
 
@@ -142,13 +142,13 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'quantidade' => 7,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'quantidade' => 9,
-                'etapa' => 3
-            ])
+                'etapa' => 3,
+            ]),
         ];
 
         $faltasPersistidas = [
@@ -157,15 +157,15 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
                 'faltaAluno' => $faltaAluno->id,
                 'componenteCurricular' => 1,
                 'quantidade' => 8,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_FaltaComponente([
                 'id' => 2,
                 'faltaAluno' => $faltaAluno->id,
                 'componenteCurricular' => 1,
                 'quantidade' => 11,
-                'etapa' => 2
-            ])
+                'etapa' => 2,
+            ]),
         ];
 
         // Configura mock para Avaliacao_Model_FaltaComponenteDataMapper
@@ -203,13 +203,13 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'quantidade' => 7,
-                'etapa' => 2
+                'etapa' => 2,
             ]),
             // Etapa omitida, será atribuída a etapa '3'
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
-                'quantidade' => 9
-            ])
+                'quantidade' => 9,
+            ]),
         ];
 
         $faltasPersistidas = [
@@ -218,15 +218,15 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
                 'id' => 1,
                 'faltaAluno' => $faltaAluno->id,
                 'quantidade' => 8,
-                'etapa' => 1
+                'etapa' => 1,
             ]),
             new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => 1,
                 'id' => 2,
                 'faltaAluno' => $faltaAluno->id,
                 'quantidade' => 11,
-                'etapa' => 2
-            ])
+                'etapa' => 2,
+            ]),
         ];
 
         // Configura mock para Avaliacao_Model_FaltaComponenteDataMapper

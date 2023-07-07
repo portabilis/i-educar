@@ -42,7 +42,7 @@ class LegacyStudentMedicalRecordFactory extends Factory
             'desc_medicacao_especifica' => $this->faker->words(7, true),
             'acomp_medico_psicologico' => $this->faker->randomElement(['S', 'N']),
             'desc_acomp_medico_psicologico' => $this->faker->words(7, true),
-            'restricao_atividade_fisica'  => $this->faker->randomElement(['S', 'N']),
+            'restricao_atividade_fisica' => $this->faker->randomElement(['S', 'N']),
             'desc_restricao_atividade_fisica' => $this->faker->words(7, true),
             'fratura_trauma' => $this->faker->randomElement(['S', 'N']),
             'desc_fratura_trauma' => $this->faker->words(7, true),

@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPais extends Portabilis_
         $defaultOptions = [
             'objectName' => 'pais',
             'apiController' => 'Pais',
-            'apiResource' => 'pais-search'
+            'apiResource' => 'pais-search',
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);

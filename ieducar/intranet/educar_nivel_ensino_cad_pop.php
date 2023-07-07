@@ -2,7 +2,8 @@
 
 use App\Models\LegacyEducationLevel;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -11,13 +12,21 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_nivel_ensino;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_nivel;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -54,7 +63,7 @@ return new class extends clsCadastro {
         // foreign keys
         if ($_GET['precisa_lista']) {
             $obrigatorio = true;
-            include('include/pmieducar/educar_campo_lista.php');
+            include 'include/pmieducar/educar_campo_lista.php';
         } else {
             $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
         }
@@ -80,10 +89,11 @@ return new class extends clsCadastro {
                         parent.document.getElementById('ref_cod_nivel_ensino').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-            die();
+            exit();
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 

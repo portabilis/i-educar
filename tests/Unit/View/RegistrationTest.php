@@ -13,7 +13,7 @@ use Tests\ViewTestCase;
 class RegistrationTest extends ViewTestCase
 {
     protected $relations = [
-        'student' => Student::class
+        'student' => Student::class,
     ];
 
     protected function getViewModelName(): string
@@ -23,7 +23,7 @@ class RegistrationTest extends ViewTestCase
 
     public function testStatusDescription(): void
     {
-        $expected = (new RegistrationStatus())->getDescriptiveValues()[(int)$this->model->status];
+        $expected = (new RegistrationStatus())->getDescriptiveValues()[(int) $this->model->status];
         $this->assertEquals($expected, $this->model->status_description);
     }
 
@@ -61,7 +61,7 @@ class RegistrationTest extends ViewTestCase
 
     public function testYear(): void
     {
-        $registration = LegacyRegistrationFactory::new()->create(['ano'=>$this->model->year-1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $this->model->year - 1]);
         $collection = $this->instanceNewViewModel()->year($this->model->year)->get();
 
         $this->assertCount(1, $collection);
@@ -69,7 +69,7 @@ class RegistrationTest extends ViewTestCase
 
     public function testInProgress(): void
     {
-        $registration = LegacyRegistrationFactory::new()->create(['aprovado'=> 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['aprovado' => 1]);
         $collection = $this->instanceNewViewModel()->inProgress()->get();
 
         $this->assertCount(1, $collection);

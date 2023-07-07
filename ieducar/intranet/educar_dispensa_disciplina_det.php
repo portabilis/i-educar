@@ -2,20 +2,34 @@
 
 use App\Models\LegacyExemptionType;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
+
     public $ref_cod_matricula;
+
     public $ref_cod_turma;
+
     public $ref_cod_serie;
+
     public $ref_cod_escola;
+
     public $ref_cod_disciplina;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_tipo_dispensa;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $observacao;
+
     public $ref_sequencial;
 
     public function Gerar()
@@ -23,10 +37,10 @@ return new class extends clsDetalhe {
         $this->titulo = 'Dispensa Componente Curricular - Detalhe';
 
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
-        $this->ref_cod_matricula  = $_GET['ref_cod_matricula'];
-        $this->ref_cod_serie      = $_GET['ref_cod_serie'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
-        $this->ref_cod_escola     = $_GET['ref_cod_escola'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
         $tmp_obj = new clsPmieducarDispensaDisciplina(
             ref_cod_matricula: $this->ref_cod_matricula,
@@ -107,7 +121,7 @@ return new class extends clsDetalhe {
         $obj_permissoes = new clsPermissoes();
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $detalhe_aluno['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
-            $this->url_novo   = sprintf(
+            $this->url_novo = sprintf(
                 'educar_dispensa_disciplina_cad.php?ref_cod_matricula=%d',
                 $this->ref_cod_matricula
             );
@@ -119,7 +133,7 @@ return new class extends clsDetalhe {
         }
 
         $this->url_cancelar = 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
-        $this->largura      = '100%';
+        $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Dispensa de componentes curriculares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',

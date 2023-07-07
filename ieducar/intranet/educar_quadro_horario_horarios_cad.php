@@ -2,54 +2,81 @@
 
 use App\Models\LegacyCalendarDay;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_curso_;
+
     public $ref_ref_cod_serie;
+
     public $ref_cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_disciplina;
+
     public $dia_semana;
+
     public $quadro_horario;
+
     public $ref_cod_quadro_horario;
+
     public $hora_inicial;
+
     public $hora_final;
+
     public $ref_cod_instituicao_servidor;
+
     public $ref_cod_servidor;
+
     public $incluir_horario;
+
     public $excluir_horario;
+
     public $lst_matriculas;
+
     public $identificador;
+
     public $ano_alocacao;
 
     public $min_mat = 0;
+
     public $min_ves = 0;
+
     public $min_not = 0;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_turma          = $_GET['ref_cod_turma'];
-        $this->ref_ref_cod_serie      = $_GET['ref_cod_serie'];
-        $this->ref_cod_curso          = $_GET['ref_cod_curso'];
-        $this->ref_cod_escola         = $_GET['ref_cod_escola'];
-        $this->ref_cod_instituicao    = $_GET['ref_cod_instituicao'];
-        $this->ref_cod_disciplina     = $_GET['ref_cod_disciplina'];
-        $this->ref_ref_cod_serie_     = $_GET['ref_ref_cod_serie_'];
+        $this->ref_cod_turma = $_GET['ref_cod_turma'];
+        $this->ref_ref_cod_serie = $_GET['ref_cod_serie'];
+        $this->ref_cod_curso = $_GET['ref_cod_curso'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
+        $this->ref_ref_cod_serie_ = $_GET['ref_ref_cod_serie_'];
         $this->ref_cod_quadro_horario = $_GET['ref_cod_quadro_horario'];
-        $this->dia_semana             = $_GET['dia_semana'];
-        $this->identificador          = $_GET['identificador'];
-        $this->ano_alocacao           = $_GET['ano'];
+        $this->dia_semana = $_GET['dia_semana'];
+        $this->identificador = $_GET['identificador'];
+        $this->ano_alocacao = $_GET['ano'];
 
         $obj_permissoes = new clsPermissoes();
 
@@ -82,19 +109,19 @@ return new class extends clsCadastro {
             if ($lista) {
                 $qtd_horario = 1;
                 foreach ($lista as $campo) {
-                    $this->quadro_horario[$qtd_horario]['ref_cod_quadro_horario_']       = $campo['ref_cod_quadro_horario'];
-                    $this->quadro_horario[$qtd_horario]['ref_ref_cod_serie_']            = $campo['ref_cod_serie'];
-                    $this->quadro_horario[$qtd_horario]['ref_ref_cod_escola_']           = $campo['ref_cod_escola'];
-                    $this->quadro_horario[$qtd_horario]['ref_ref_cod_disciplina_']       = $campo['ref_cod_disciplina'];
-                    $this->quadro_horario[$qtd_horario]['sequencial_']                   = $campo['sequencial'];
+                    $this->quadro_horario[$qtd_horario]['ref_cod_quadro_horario_'] = $campo['ref_cod_quadro_horario'];
+                    $this->quadro_horario[$qtd_horario]['ref_ref_cod_serie_'] = $campo['ref_cod_serie'];
+                    $this->quadro_horario[$qtd_horario]['ref_ref_cod_escola_'] = $campo['ref_cod_escola'];
+                    $this->quadro_horario[$qtd_horario]['ref_ref_cod_disciplina_'] = $campo['ref_cod_disciplina'];
+                    $this->quadro_horario[$qtd_horario]['sequencial_'] = $campo['sequencial'];
                     $this->quadro_horario[$qtd_horario]['ref_cod_instituicao_servidor_'] = $campo['ref_cod_instituicao_servidor'];
-                    $this->quadro_horario[$qtd_horario]['ref_servidor_']                 = $campo['ref_servidor'];
-                    $this->quadro_horario[$qtd_horario]['ref_servidor_substituto_']      = $campo['ref_servidor_substituto'];
-                    $this->quadro_horario[$qtd_horario]['hora_inicial_']                 = substr(string: $campo['hora_inicial'], offset: 0, length: 5);
-                    $this->quadro_horario[$qtd_horario]['hora_final_']                   = substr(string: $campo['hora_final'], offset: 0, length: 5);
-                    $this->quadro_horario[$qtd_horario]['ativo_']                        = $campo['ativo'];
-                    $this->quadro_horario[$qtd_horario]['dia_semana_']                   = $campo['dia_semana'];
-                    $this->quadro_horario[$qtd_horario]['qtd_horario_']                  = $qtd_horario;
+                    $this->quadro_horario[$qtd_horario]['ref_servidor_'] = $campo['ref_servidor'];
+                    $this->quadro_horario[$qtd_horario]['ref_servidor_substituto_'] = $campo['ref_servidor_substituto'];
+                    $this->quadro_horario[$qtd_horario]['hora_inicial_'] = substr(string: $campo['hora_inicial'], offset: 0, length: 5);
+                    $this->quadro_horario[$qtd_horario]['hora_final_'] = substr(string: $campo['hora_final'], offset: 0, length: 5);
+                    $this->quadro_horario[$qtd_horario]['ativo_'] = $campo['ativo'];
+                    $this->quadro_horario[$qtd_horario]['dia_semana_'] = $campo['dia_semana'];
+                    $this->quadro_horario[$qtd_horario]['qtd_horario_'] = $qtd_horario;
                     $qtd_horario++;
 
                     /**
@@ -207,13 +234,13 @@ return new class extends clsCadastro {
 
         $opcoesDias = [
             '' => 'Selecione um dia da semana',
-            1  => 'Domingo',
-            2  => 'Segunda-Feira',
-            3  => 'Terça-Feira',
-            4  => 'Quarta-Feira',
-            5  => 'Quinta-Feira',
-            6  => 'Sexta-Feira',
-            7  => 'Sábado'
+            1 => 'Domingo',
+            2 => 'Segunda-Feira',
+            3 => 'Terça-Feira',
+            4 => 'Quarta-Feira',
+            5 => 'Quinta-Feira',
+            6 => 'Sexta-Feira',
+            7 => 'Sábado',
         ];
 
         $this->campoOculto(nome: 'dia_semana', valor: $this->dia_semana);
@@ -262,18 +289,18 @@ return new class extends clsCadastro {
                 is_numeric(value: $_POST['dia_semana'])
                 && is_numeric(value: $_POST['ref_cod_disciplina'])
             ) {
-                $this->quadro_horario[$qtd_horario]['ref_cod_quadro_horario_']       = $this->ref_cod_quadro_horario;
-                $this->quadro_horario[$qtd_horario]['ref_ref_cod_serie_']            = $this->ref_ref_cod_serie;
-                $this->quadro_horario[$qtd_horario]['ref_ref_cod_escola_']           = $this->ref_cod_escola;
-                $this->quadro_horario[$qtd_horario]['ref_ref_cod_disciplina_']       = $_POST['ref_cod_disciplina'];
+                $this->quadro_horario[$qtd_horario]['ref_cod_quadro_horario_'] = $this->ref_cod_quadro_horario;
+                $this->quadro_horario[$qtd_horario]['ref_ref_cod_serie_'] = $this->ref_ref_cod_serie;
+                $this->quadro_horario[$qtd_horario]['ref_ref_cod_escola_'] = $this->ref_cod_escola;
+                $this->quadro_horario[$qtd_horario]['ref_ref_cod_disciplina_'] = $_POST['ref_cod_disciplina'];
                 $this->quadro_horario[$qtd_horario]['ref_cod_instituicao_servidor_'] = $this->ref_cod_instituicao;
-                $this->quadro_horario[$qtd_horario]['ref_servidor_']                 = $_POST['ref_cod_servidor'];
-                $this->quadro_horario[$qtd_horario]['ref_servidor_substituto_']      = $_POST['ref_servidor_substituto'];
-                $this->quadro_horario[$qtd_horario]['hora_inicial_']                 = $_POST['hora_inicial'];
-                $this->quadro_horario[$qtd_horario]['hora_final_']                   = $_POST['hora_final'];
-                $this->quadro_horario[$qtd_horario]['ativo_']                        = 1;
-                $this->quadro_horario[$qtd_horario]['dia_semana_']                   = $_POST['dia_semana'];
-                $this->quadro_horario[$qtd_horario]['qtd_horario_']                  = $qtd_horario;
+                $this->quadro_horario[$qtd_horario]['ref_servidor_'] = $_POST['ref_cod_servidor'];
+                $this->quadro_horario[$qtd_horario]['ref_servidor_substituto_'] = $_POST['ref_servidor_substituto'];
+                $this->quadro_horario[$qtd_horario]['hora_inicial_'] = $_POST['hora_inicial'];
+                $this->quadro_horario[$qtd_horario]['hora_final_'] = $_POST['hora_final'];
+                $this->quadro_horario[$qtd_horario]['ativo_'] = 1;
+                $this->quadro_horario[$qtd_horario]['dia_semana_'] = $_POST['dia_semana'];
+                $this->quadro_horario[$qtd_horario]['qtd_horario_'] = $qtd_horario;
 
                 /**
                  * salva os dados em uma tabela temporaria
@@ -472,19 +499,19 @@ return new class extends clsCadastro {
                 }
 
                 if ($campo['ativo_'] != 2) {
-                    $horarios_incluidos[$qtd_horario]['ref_cod_quadro_horario_']       = $campo['ref_cod_quadro_horario_'];
-                    $horarios_incluidos[$qtd_horario]['ref_ref_cod_serie_']            = $campo['ref_ref_cod_serie_'];
-                    $horarios_incluidos[$qtd_horario]['ref_ref_cod_escola_']           = $campo['ref_ref_cod_escola_'];
-                    $horarios_incluidos[$qtd_horario]['ref_ref_cod_disciplina_']       = $campo['ref_ref_cod_disciplina_'];
-                    $horarios_incluidos[$qtd_horario]['sequencial_']                   = $campo['sequencial_'];
+                    $horarios_incluidos[$qtd_horario]['ref_cod_quadro_horario_'] = $campo['ref_cod_quadro_horario_'];
+                    $horarios_incluidos[$qtd_horario]['ref_ref_cod_serie_'] = $campo['ref_ref_cod_serie_'];
+                    $horarios_incluidos[$qtd_horario]['ref_ref_cod_escola_'] = $campo['ref_ref_cod_escola_'];
+                    $horarios_incluidos[$qtd_horario]['ref_ref_cod_disciplina_'] = $campo['ref_ref_cod_disciplina_'];
+                    $horarios_incluidos[$qtd_horario]['sequencial_'] = $campo['sequencial_'];
                     $horarios_incluidos[$qtd_horario]['ref_cod_instituicao_servidor_'] = $campo['ref_cod_instituicao_servidor_'];
-                    $horarios_incluidos[$qtd_horario]['ref_servidor_']                 = $campo['ref_servidor_'];
-                    $horarios_incluidos[$qtd_horario]['ref_servidor_substituto_']      = $campo['ref_servidor_substituto_'];
-                    $horarios_incluidos[$qtd_horario]['hora_inicial_']                 = $campo['hora_inicial_'];
-                    $horarios_incluidos[$qtd_horario]['hora_final_']                   = $campo['hora_final_'];
-                    $horarios_incluidos[$qtd_horario]['ativo_']                        = $campo['ativo_'];
-                    $horarios_incluidos[$qtd_horario]['dia_semana_']                   = $campo['dia_semana_'];
-                    $horarios_incluidos[$qtd_horario]['qtd_horario_']                  = $qtd_horario;
+                    $horarios_incluidos[$qtd_horario]['ref_servidor_'] = $campo['ref_servidor_'];
+                    $horarios_incluidos[$qtd_horario]['ref_servidor_substituto_'] = $campo['ref_servidor_substituto_'];
+                    $horarios_incluidos[$qtd_horario]['hora_inicial_'] = $campo['hora_inicial_'];
+                    $horarios_incluidos[$qtd_horario]['hora_final_'] = $campo['hora_final_'];
+                    $horarios_incluidos[$qtd_horario]['ativo_'] = $campo['ativo_'];
+                    $horarios_incluidos[$qtd_horario]['dia_semana_'] = $campo['dia_semana_'];
+                    $horarios_incluidos[$qtd_horario]['qtd_horario_'] = $qtd_horario;
                     $qtd_horario++;
                 }
             }
@@ -520,17 +547,17 @@ return new class extends clsCadastro {
         $verifica = true;
         $parametros = '';
         if ($this->ref_cod_disciplina == 'todas_disciplinas') {
-            $this->ref_cod_turma          = $_GET['ref_cod_turma'];
-            $this->ref_ref_cod_serie      = $_GET['ref_cod_serie'];
-            $this->ref_cod_curso          = $_GET['ref_cod_curso'];
-            $this->ref_cod_escola         = $_GET['ref_cod_escola'];
-            $this->ref_cod_instituicao    = $_GET['ref_cod_instituicao'];
+            $this->ref_cod_turma = $_GET['ref_cod_turma'];
+            $this->ref_ref_cod_serie = $_GET['ref_cod_serie'];
+            $this->ref_cod_curso = $_GET['ref_cod_curso'];
+            $this->ref_cod_escola = $_GET['ref_cod_escola'];
+            $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
             $this->ref_cod_quadro_horario = $_GET['ref_cod_quadro_horario'];
-            $this->dia_semana             = $_GET['dia_semana'];
-            $this->identificador          = $_GET['identificador'];
-            $this->ref_servidor           = $_POST['ref_cod_servidor'];
-            $this->hora_inicial           = $_POST['hora_inicial'];
-            $this->hora_final             = $_POST['hora_final'];
+            $this->dia_semana = $_GET['dia_semana'];
+            $this->identificador = $_GET['identificador'];
+            $this->ref_servidor = $_POST['ref_cod_servidor'];
+            $this->hora_inicial = $_POST['hora_inicial'];
+            $this->hora_final = $_POST['hora_final'];
 
             $componentesTurma = [];
             try {
@@ -635,17 +662,17 @@ return new class extends clsCadastro {
         $parametros = '';
 
         if ($this->ref_cod_disciplina == 'todas_disciplinas') {
-            $this->ref_cod_turma          = $_GET['ref_cod_turma'];
-            $this->ref_ref_cod_serie      = $_GET['ref_cod_serie'];
-            $this->ref_cod_curso          = $_GET['ref_cod_curso'];
-            $this->ref_cod_escola         = $_GET['ref_cod_escola'];
-            $this->ref_cod_instituicao    = $_GET['ref_cod_instituicao'];
+            $this->ref_cod_turma = $_GET['ref_cod_turma'];
+            $this->ref_ref_cod_serie = $_GET['ref_cod_serie'];
+            $this->ref_cod_curso = $_GET['ref_cod_curso'];
+            $this->ref_cod_escola = $_GET['ref_cod_escola'];
+            $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
             $this->ref_cod_quadro_horario = $_GET['ref_cod_quadro_horario'];
-            $this->dia_semana             = $_GET['dia_semana'];
-            $this->identificador          = $_GET['identificador'];
-            $this->ref_servidor           = $_POST['ref_cod_servidor'];
-            $this->hora_inicial           = $_POST['hora_inicial'];
-            $this->hora_final             = $_POST['hora_final'];
+            $this->dia_semana = $_GET['dia_semana'];
+            $this->identificador = $_GET['identificador'];
+            $this->ref_servidor = $_POST['ref_cod_servidor'];
+            $this->hora_inicial = $_POST['hora_inicial'];
+            $this->hora_final = $_POST['hora_final'];
 
             $componentesTurma = [];
             try {
@@ -688,7 +715,7 @@ return new class extends clsCadastro {
             }
         } elseif (is_array(value: $this->quadro_horario)) {
             foreach ($this->quadro_horario as $registro) {
-                $parametros  = "?ref_cod_instituicao={$registro['ref_cod_instituicao_servidor_']}&ref_cod_escola={$registro['ref_ref_cod_escola_']}&ref_cod_curso={$this->ref_cod_curso_}&ref_cod_serie={$registro['ref_ref_cod_serie_']}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
+                $parametros = "?ref_cod_instituicao={$registro['ref_cod_instituicao_servidor_']}&ref_cod_escola={$registro['ref_ref_cod_escola_']}&ref_cod_curso={$this->ref_cod_curso_}&ref_cod_serie={$registro['ref_ref_cod_serie_']}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
                 $obj_horario = new clsPmieducarQuadroHorarioHorarios(
                     ref_cod_quadro_horario: $registro['ref_cod_quadro_horario_'],
                     ref_ref_cod_serie: $registro['ref_ref_cod_serie_'],
@@ -785,6 +812,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

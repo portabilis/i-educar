@@ -6,20 +6,34 @@ use App\Models\LegacyCalendarYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class () extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $pessoa_logada;
+
     public $ref_cod_calendario_ano_letivo;
+
     public $mes;
+
     public $dia;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_calendario_dia_motivo;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ano;
+
     public $ref_cod_escola;
+
     public $_calendarioTurmaDataMapper;
 
     public function _getCalendarioTurmaDataMapper()
@@ -34,24 +48,22 @@ return new class () extends clsCadastro {
     /**
      * Verifica se existe uma instância de Calendario_Model_Turma.
      *
-     * @access protected
      *
      * @param int $codCalendarioAnoLetivo Código da chave primária pmieducar.calendario_ano_letivo
      * @param int $mes
      * @param int $dia
      * @param int $ano
      * @param int $codTurma               Código da chave primária de pmieducar.turma
-     *
      * @return bool
      */
     public function _hasEntry($codCalendarioAnoLetivo, $mes, $dia, $ano, $codTurma)
     {
         $args = [
             'calendarioAnoLetivo' => $codCalendarioAnoLetivo,
-            'mes'                 => $mes,
-            'dia'                 => $dia,
-            'ano'                 => $ano,
-            'turma'               => $codTurma
+            'mes' => $mes,
+            'dia' => $dia,
+            'ano' => $ano,
+            'turma' => $codTurma,
         ];
 
         try {
@@ -68,22 +80,20 @@ return new class () extends clsCadastro {
      * Retorna um array de instâncias de Calendario_Model_Turma para um dado
      * calendário de ano letivo de escola em mês, dia e ano específicos.
      *
-     * @access protected
      *
      * @param int $codCalendarioAnoLetivo Código de pmieducar.calendario_ano_letivo
      * @param int $mes
      * @param int $dia
      * @param int $ano
-     *
      * @return array (cod_turma => Calendario_Model_Turma)
      */
     public function _getEntries($codCalendarioAnoLetivo, $mes, $dia, $ano)
     {
         $where = [
             'calendarioAnoLetivo' => $codCalendarioAnoLetivo,
-            'mes'                 => $mes,
-            'dia'                 => $dia,
-            'ano'                 => $ano
+            'mes' => $mes,
+            'dia' => $dia,
+            'ano' => $ano,
         ];
 
         $turmas = $this->_getCalendarioTurmaDataMapper()->findAll(where: $where);
@@ -234,10 +244,10 @@ return new class () extends clsCadastro {
         foreach ($this->turmas as $codTurma => $turma) {
             $calendarioTurma = new Calendario_Model_Turma(options: [
                 'calendarioAnoLetivo' => $this->ref_cod_calendario_ano_letivo,
-                'ano'                 => $this->ano,
-                'mes'                 => $this->mes,
-                'dia'                 => $this->dia,
-                'turma'               => $codTurma
+                'ano' => $this->ano,
+                'mes' => $this->mes,
+                'dia' => $this->dia,
+                'turma' => $codTurma,
             ]);
             $this->_getCalendarioTurmaDataMapper()->save(instance: $calendarioTurma);
         }
@@ -291,10 +301,10 @@ return new class () extends clsCadastro {
             foreach ($this->turmas as $codTurma => $turma) {
                 $calendarioTurma = new Calendario_Model_Turma(options: [
                     'calendarioAnoLetivo' => $this->ref_cod_calendario_ano_letivo,
-                    'ano'                 => $this->ano,
-                    'mes'                 => $this->mes,
-                    'dia'                 => $this->dia,
-                    'turma'               => $codTurma
+                    'ano' => $this->ano,
+                    'mes' => $this->mes,
+                    'dia' => $this->dia,
+                    'turma' => $codTurma,
                 ]);
                 $insert[$codTurma] = $calendarioTurma;
             }

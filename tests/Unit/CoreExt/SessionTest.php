@@ -86,7 +86,7 @@ class CoreExt_SessionTest extends TestCase
     public function testIterator()
     {
         $expected = [
-            '_1' => 'bar1', '_2' => 'bar2', '_3' => 'bar3'
+            '_1' => 'bar1', '_2' => 'bar2', '_3' => 'bar3',
         ];
 
         $this->_session['_1'] = 'bar1';

@@ -11,7 +11,7 @@ class LegacyPeriodTest extends EloquentTestCase
 {
     protected $relations = [
         'schoolClass' => LegacySchoolClass::class,
-        'schoolClassTeacher' => LegacySchoolClassTeacher::class
+        'schoolClassTeacher' => LegacySchoolClassTeacher::class,
     ];
 
     protected function getEloquentModelName(): string

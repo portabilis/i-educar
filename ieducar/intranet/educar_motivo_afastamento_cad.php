@@ -2,7 +2,8 @@
 
 use App\Models\WithdrawalReason;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -11,13 +12,21 @@ return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_motivo_afastamento;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $nm_motivo;
+
     public $descricao;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -70,7 +79,7 @@ return new class extends clsCadastro {
         // foreign keys
         $obrigatorio = true;
         $get_escola = false;
-        include('include/pmieducar/educar_campo_lista.php');
+        include 'include/pmieducar/educar_campo_lista.php';
 
         // text
         $this->campoTexto(nome: 'nm_motivo', campo: 'Motivo de Afastamento', valor: $this->nm_motivo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -94,6 +103,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
+
         return false;
     }
 
@@ -119,6 +129,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -135,6 +146,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
         return false;
     }
 

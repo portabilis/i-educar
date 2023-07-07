@@ -6,11 +6,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up(): void
     {
@@ -20,8 +19,7 @@ return new class () extends Migration {
 
         Schema::table(
             'modules.professor_turma',
-            static fn (Blueprint $table) =>
-            $table
+            static fn (Blueprint $table) => $table
                 ->addColumn('int_array', 'unidades_curriculares')
                 ->nullable()
         );
@@ -29,15 +27,12 @@ return new class () extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
         Schema::table(
             'modules.professor_turma',
-            static fn (Blueprint $table) =>
-            $table
+            static fn (Blueprint $table) => $table
                 ->dropColumn('unidades_curriculares')
         );
     }

@@ -12,9 +12,6 @@ class SchoolInepTest extends EloquentTestCase
         'school' => LegacySchool::class,
     ];
 
-    /**
-     * @return string
-     */
     protected function getEloquentModelName(): string
     {
         return SchoolInep::class;

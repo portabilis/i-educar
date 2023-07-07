@@ -15,7 +15,7 @@ class InsertNotificationTypeTransferencia extends Migration
     {
         DB::table('public.notification_type')->insert([
             'id' => NotificationType::TRANSFER,
-            'name' => 'Transferência'
+            'name' => 'Transferência',
         ]);
     }
 

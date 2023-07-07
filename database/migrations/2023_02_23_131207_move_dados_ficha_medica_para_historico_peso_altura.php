@@ -4,7 +4,8 @@ use App\Models\LegacyStudentHistoricalHeightWeight;
 use App\Models\LegacyStudentMedicalRecord;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         $records = LegacyStudentMedicalRecord::query()

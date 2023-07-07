@@ -11,14 +11,13 @@ class ReleasePeriodService
     /**
      * Verifica se podem ser postadas notas e faltas
      *
-     * @param integer $schoolId
-     * @param integer $classRoomId
-     * @param integer $stage
-     * @param integer $year
+     * @param int $schoolId
+     * @param int $classRoomId
+     * @param int $stage
+     * @param int $year
+     * @return bool
      *
      * @throws Exception
-     *
-     * @return bool
      */
     public function canPostNow($schoolId, $classRoomId, $stage, $year)
     {

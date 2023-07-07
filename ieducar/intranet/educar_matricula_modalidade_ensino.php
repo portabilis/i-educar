@@ -1,9 +1,13 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_matricula;
+
     public $ref_cod_aluno;
+
     public $matricula;
+
     public $modalidade_ensino;
 
     public function Formular()

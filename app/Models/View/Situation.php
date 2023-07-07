@@ -19,7 +19,7 @@ class Situation extends Model
         $query->whereIn('cod_situacao', [
             App_Model_MatriculaSituacao::APROVADO,
             App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA,
-            App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO
+            App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO,
         ]);
     }
 

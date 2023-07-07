@@ -9,6 +9,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      * @var RegraAvaliacao_Model_Regra
      */
     protected $_regra;
+
     protected $_codigoDisciplinasAglutinadas;
 
     public function codigoDisciplinasAglutinadas()
@@ -44,8 +45,6 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
-     * @param RegraAvaliacao_Model_Regra $regra
-     *
      * @return $this
      */
     protected function _setRegra(RegraAvaliacao_Model_Regra $regra)
@@ -235,7 +234,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function hasRegraAvaliacaoFormulaRecuperacao()
     {
-        return ! is_null($this->getRegraAvaliacao()->get('formulaRecuperacao'));
+        return !is_null($this->getRegraAvaliacao()->get('formulaRecuperacao'));
     }
 
     /**

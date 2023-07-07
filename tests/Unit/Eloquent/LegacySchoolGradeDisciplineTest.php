@@ -22,7 +22,7 @@ class LegacySchoolGradeDisciplineTest extends EloquentTestCase
     {
         return [
             'id' => 'ref_cod_disciplina',
-            'workload' => 'carga_horaria'
+            'workload' => 'carga_horaria',
         ];
     }
 

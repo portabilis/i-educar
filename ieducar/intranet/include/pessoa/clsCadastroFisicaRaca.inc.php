@@ -5,14 +5,14 @@ use iEducar\Legacy\Model;
 class clsCadastroFisicaRaca extends Model
 {
     public $ref_idpes;
+
     public $ref_cod_raca;
 
     /**
      * Construtor (PHP 4)
      *
-     * @param integer ref_idpes
-     * @param integer ref_cod_raca
-     *
+     * @param int ref_idpes
+     * @param int ref_cod_raca
      * @return object
      */
     public function __construct($ref_idpes = null, $ref_cod_raca = null)

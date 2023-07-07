@@ -77,6 +77,6 @@ class Kernel extends HttpKernel
         'ieducar.xssbypass' => \App\Http\Middleware\XssByPass::class,
         'ieducar.suspended' => \App\Http\Middleware\Suspended::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'ieducar.checkresetpassword' => \App\Http\Middleware\CheckResetPassword::class
+        'ieducar.checkresetpassword' => \App\Http\Middleware\CheckResetPassword::class,
     ];
 }

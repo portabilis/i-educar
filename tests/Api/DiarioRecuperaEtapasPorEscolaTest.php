@@ -36,7 +36,7 @@ class DiarioRecuperaEtapasPorEscolaTest extends TestCase
             'oper' => 'get',
             'resource' => 'etapas-por-escola',
             'ano' => now()->year,
-            'instituicao_id' => $school->ref_cod_instituicao
+            'instituicao_id' => $school->ref_cod_instituicao,
         ];
 
         $response = $this->getResource('/module/Api/Escola', $data);
@@ -55,15 +55,15 @@ class DiarioRecuperaEtapasPorEscolaTest extends TestCase
                                     'data_inicio' => $academicYearStage->data_inicio->format('Y-m-d'),
                                     'data_fim' => $academicYearStage->data_fim->format('Y-m-d'),
                                     'dias_letivos' => $academicYearStage->dias_letivos,
-                                ]
+                                ],
                             ],
-                            'etapas_de_turmas' => []
-                        ]
+                            'etapas_de_turmas' => [],
+                        ],
                     ],
                     'oper' => 'get',
                     'resource' => 'etapas-por-escola',
                     'msgs' => [],
-                    'any_error_msg' => false
+                    'any_error_msg' => false,
                 ]
             );
     }

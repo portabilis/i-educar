@@ -11,10 +11,8 @@ use Illuminate\View\View;
 class EducacensoController extends Controller
 {
     /**
-     * @param LegacyInstitution $institution
      * @param array             $records
      * @param null              $paginate
-     *
      * @return View
      */
     private function view(LegacyInstitution $institution, $records = [], $paginate = null)
@@ -36,10 +34,6 @@ class EducacensoController extends Controller
     }
 
     /**
-     * @param Request              $request
-     * @param EducacensoRepository $repository
-     * @param LegacyInstitution    $institution
-     *
      * @return View
      */
     public function consult(
