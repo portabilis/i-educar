@@ -1,10 +1,11 @@
 # Guia de instalação
 
-Você pode instalar o i-Educar diretamente no seu servidor web ou utilizar Docker.
+Você pode instalar o i-Educar diretamente no seu servidor web ou utilizar Docker, caso você deseje atualizar sua 
+instalação siga os passos do [guia de atualização](UPGRADE.md).
 
 - [Dependências](#dependências)
-- [Instalação em servidor web](#instalação-em-servidor-web)
 - [Instalação utilizando Docker](#instalação-utilizando-docker)
+- [Instalação em servidor web](#instalação-em-servidor-web)
 - [Primeiro acesso](#primeiro-acesso)
 
 ## Dependências
@@ -25,11 +26,68 @@ Para executar o projeto é necessário a utilização de alguns softwares.
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
+## Instalação utilizando Docker
+
+Para instalar o projeto execute **todos os passos** abaixo:
+
+> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
+desenvolvimento. Não é recomendado para ambientes de produção!
+
+Clone o repositório:
+
+```bash
+git clone git@github.com:portabilis/i-educar.git && cd i-educar
+```
+
+Copie o arquivo `docker-compose.example.yml` e faça as configurações para o seu ambiente:
+
+```bash 
+cp docker-compose.example.yml docker-compose.override.yml
+``` 
+
+Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
+
+```bash
+docker-compose up -d --build
+```
+
+Execute o comando para fazer uma nova instalação:
+
+```bash
+docker-compose exec php composer new-install
+```
+
+### Personalizando a instalação
+
+No arquivo `docker-compose.override.yml` você pode personalizar sua instalação do i-Educar, mudando as portas dos
+serviços ou o mapeamento dos volumes da aplicação.
+
+### Xdebug
+
+A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o intuito de facilitar o processo de debug
+durante o desenvolvimento. Para configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
+`docker-compose.override.yml` conforme orientações da sua IDE de desenvolvimento.
+
+### Testes automatizados
+
+Para executar os testes automatizados, é necessário ter o i-Educar rodando com uma base limpa, apenas a estrutura
+inicial e suas migrations, crie o arquivo de configuração:
+
+```bash
+cp .env.example .env.testing
+```
+
+Execute o comando:
+
+```bash
+docker-compose exec php vendor/bin/phpunit
+```
+
 ## Instalação em servidor web
 
 Para instalar o projeto execute **todos os passos** abaixo conectado em seu servidor web:
 
-> Este passo a passo é para um servidor Ubuntu 22.04 LTS
+> Este passo a passo serve para um servidor Ubuntu 22.04 LTS e não tem configurações mínimas de segurança
 
 Gere uma chave SSH no seu servidor, copie e adicione ao seu GitHub https://github.com/settings/keys.  
 
@@ -111,66 +169,6 @@ comando abaixo:
 
 ```bash 
 php artisan db:seed --class=DemoSeeder
-```
-
-
-
-## Instalação utilizando Docker
-
-> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
-desenvolvimento. Não é recomendado para ambientes de produção!
-
-Para instalar o projeto execute **todos os passos** abaixo, caso você deseje
-atualizar sua instalação do i-Educar, siga os passos do [guia de atualização](UPGRADE.md).
-
-Clone o repositório:
-
-```bash
-git clone git@github.com:portabilis/i-educar.git && cd i-educar
-```
-
-Copie o arquivo `docker-compose.example.yml` e faça as configurações para o seu ambiente:
-
-```bash 
-cp docker-compose.example.yml docker-compose.override.yml
-``` 
-
-Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
-
-```bash
-docker-compose up -d --build
-```
-
-Execute o comando para fazer uma nova instalação:
-
-```bash
-docker-compose exec php composer new-install
-```
-
-### Personalizando a instalação
-
-No arquivo `docker-compose.override.yml` você pode personalizar sua instalação do i-Educar, mudando as portas dos
-serviços ou o mapeamento dos volumes da aplicação.
-
-### Xdebug
-
-A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o intuito de facilitar o processo de debug
-durante o desenvolvimento. Para configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
-`docker-compose.override.yml` conforme orientações da sua IDE de desenvolvimento.
-
-### Testes automatizados
-
-Para executar os testes automatizados, é necessário ter o i-Educar rodando com uma base limpa, apenas a estrutura
-inicial e suas migrations, crie o arquivo de configuração:
-
-```bash
-cp .env.example .env.testing
-```
-
-Execute o comando:
-
-```bash
-docker-compose exec php vendor/bin/phpunit
 ```
 
 ## Primeiro acesso
