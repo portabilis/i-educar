@@ -1,7 +1,7 @@
+# i-Educar
+
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
 [![Build Status](https://github.com/portabilis/i-educar/actions/workflows/tests.yml/badge.svg)](https://github.com/portabilis/i-educar/actions)
-
-# i-Educar
 
 _“Lançando o maior software livre educacional do Brasil!”._
 
