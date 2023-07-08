@@ -1,6 +1,6 @@
 # Guia de instalação
 
-Você pode instalar o i-Educar diretamente no seu servidor web ou utilizar Docker, caso você deseje atualizar sua 
+Você pode instalar o i-Educar utilizando Docker ou diretamente no seu servidor web, caso você deseje atualizar sua 
 instalação siga os passos do [guia de atualização](UPGRADE.md).
 
 - [Dependências](#dependências)
@@ -117,7 +117,7 @@ systemctl start postgresql.service
 sudo -i -u postgres
 ```
 
-Crie o usuário do banco de dados, será solicitado uma senha, utilize `ieducar`:
+Crie o usuário do banco de dados, quando solicitado uma senha, utilize `ieducar`:
 
 ```bash
 createuser ieducar --superuser --createdb --pwprompt
@@ -173,7 +173,7 @@ php artisan db:seed --class=DemoSeeder
 
 ## Primeiro acesso
 
-Acesse http://localhost para fazer o seu primeiro acesso.
+Acesse http://localhost ou o IP do seu servidor para fazer o seu primeiro acesso.
 
 O usuário padrão é: `admin` / A senha padrão é: `123456789`.
 

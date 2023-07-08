@@ -1,6 +1,6 @@
-# Guia de atualização para a versão 2.8
+# Guia de atualização
 
-Este guia tem o intuido de auxiliar o processo de atualização do i-Educar da versão 
+Este guia tem o intuido de auxiliar no processo de atualização do i-Educar para a versão 
 [2.8](https://github.com/portabilis/i-educar/tree/2.8) a partir da versão 
 [2.7](https://github.com/portabilis/i-educar/tree/2.7).
 
@@ -10,17 +10,18 @@ Este guia tem o intuido de auxiliar o processo de atualização do i-Educar da v
 
 Os requisitos que foram testados para utilizar a versão [2.8](https://github.com/portabilis/i-educar/tree/2.8) são:
 
-| Software                                                 | Versão | Comando                    | Descrição                   |
-|----------------------------------------------------------|--------|----------------------------|-----------------------------|
-| [Laravel](https://laravel.com/)                          | `10`   | `php artisan --version`    | Framework                   |
-| [PHP](http://php.net/)                                   | `8.2`  | `php --version`            | Linguagem de programação    |
-| [Composer](https://getcomposer.org/)                     | `2.5`  | `composer --version`       | Gerenciador de dependências |
-| [Nginx](https://www.nginx.com/)                          | `1.25` | `nginx -v`                 | Servidor web                |
-| [Postgres](https://www.postgresql.org/)                  | `15`   | `psql --version`           | Banco de dados              |
-| [Redis](https://redis.io/)                               | `7`    | `redis-cli --version`      | Banco de dados              |
-| [Git](https://git-scm.com/)                              | `2.40` | `git --version`            | Controle de versão          |
-| [Docker](https://www.docker.com/) `dev`                  | `24`   | `docker --version`         | Containerização             |
-| [Docker Compose](https://docs.docker.com/compose/) `dev` | `2.19` | `docker-compose --version` | Orquestração de containers  |
+| Software                                                 | Versão    | Comando                    | Descrição                   |
+|----------------------------------------------------------|-----------|----------------------------|-----------------------------|
+| [Laravel](https://laravel.com/)                          | `10`      | `php artisan --version`    | Framework                   |
+| [PHP](http://php.net/)                                   | `8.2`     | `php --version`            | Linguagem de programação    |
+| [Composer](https://getcomposer.org/)                     | `2.5`     | `composer --version`       | Gerenciador de dependências |
+| [Nginx](https://www.nginx.com/)                          | `1.25`    | `nginx -v`                 | Servidor web                |
+| [Postgres](https://www.postgresql.org/)                  | `15`      | `psql --version`           | Banco de dados              |
+| [Redis](https://redis.io/)                               | `7`       | `redis-cli --version`      | Banco de dados              |
+| [Git](https://git-scm.com/)                              | `2.40`    | `git --version`            | Controle de versão          |
+| [Ubuntu](https://ubuntu.com/)                            | `22.04`   | `lsb_release -a`           | Sistema operacional         |
+| [Docker](https://www.docker.com/) `dev`                  | `24`      | `docker --version`         | Containerização             |
+| [Docker Compose](https://docs.docker.com/compose/) `dev` | `2.19`    | `docker-compose --version` | Orquestração de containers  |
 
 `dev`: requisito para ambiente de desenvolvimento.
 
