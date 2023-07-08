@@ -13,6 +13,8 @@ país por meio da educação. Junte-se a nós!**
 - [Como contribuir](#como-contribuir)
 - [Instalação](#instalação)
 - [FAQ](#perguntas-frequentes-faq)
+- [Pacotes (módulos)](#pacotes-módulos)
+- [Upgrade](#upgrade)
 
 ## Sobre o i-Educar
 
@@ -58,108 +60,20 @@ ajudar a alcançar nossos objetivos.
 
 ## Instalação
 
-- [Dependências](#dependências)
-- [Instalação utilizando Docker](#instalação-utilizando-docker)
-- [Primeiro acesso](#primeiro-acesso)
-- [Pacotes (módulos)](#pacotes-módulos)
-- [Upgrade](#upgrade)
+Consulte o passo a passo no [guia de instalação](INSTALL.md).
 
-### Dependências
+## Pacotes (módulos)
 
-Para executar o projeto é necessário a utilização de alguns softwares.
-
-#### Servidor
-
-- [PHP](http://php.net/)
-- [Composer](https://getcomposer.org/)
-- [Nginx](https://www.nginx.com/)
-- [Postgres](https://www.postgresql.org/)
-- [Redis](https://redis.io/)
-- [Git](https://git-scm.com/downloads)
-
-#### Docker
-
-- [Docker](https://docs.docker.com/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-
-### Instalação utilizando Docker
-
-> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
-desenvolvimento. Não é recomendado para ambientes de produção!
-
-Para instalar o projeto execute **todos os passos** abaixo, caso você deseje
-atualizar sua instalação do i-Educar, siga os passos do [guia de atualização](UPGRADE.md).
-
-Clone o repositório:
-
-```bash
-git clone git@github.com:portabilis/i-educar.git && cd i-educar
-```
-
-Copie o arquivo `docker-compose.example.yml` e faça as configurações para o seu ambiente:
-
-```bash 
-cp docker-compose.example.yml docker-compose.override.yml
-``` 
-
-Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
-
-```bash
-docker-compose up -d --build
-```
-
-Execute o comando para fazer uma nova instalação:
-
-```bash
-docker-compose exec php composer new-install
-```
-
-#### Personalizando a instalação
-
-No arquivo `docker-compose.override.yml` você pode personalizar sua instalação do i-Educar, mudando as portas dos 
-serviços ou o mapeamento dos volumes da aplicação.
-
-#### Xdebug
-
-A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o intuito de facilitar o processo de debug 
-durante o desenvolvimento. Para configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
-`docker-compose.override.yml` conforme orientações da sua IDE de desenvolvimento.
-
-#### Testes automatizados
-
-Para executar os testes automatizados, é necessário ter o i-Educar rodando com uma base limpa, apenas a estrutura
-inicial e suas migrations, crie o arquivo de configuração:
-
-```bash
-cp .env.example .env.testing
-```
-
-Execute o comando:
-
-```bash
-docker-compose exec php vendor/bin/phpunit
-```
-
-### Primeiro acesso
-
-Acesse http://localhost para fazer o seu primeiro acesso.
-
-O usuário padrão é: `admin` / A senha padrão é: `123456789`.
-
-Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha padrão**.
-
-### Pacotes (módulos)
-
-O i-Educar possui um conjunto de pacotes (módulos) que o extendem e o tornam um software mais robusto. Para instalar um 
+O i-Educar possui um conjunto de pacotes (módulos) que o extendem e o tornam um software mais robusto. Para instalar um
 pacote, siga as instruções de instalação encontradas no repositório do projeto.
 
 - [Módulo de Relatórios](https://github.com/portabilis/i-educar-reports-package/)
 - [Módulo de Biblioteca](https://github.com/portabilis/i-educar-library-package/)
 - [Módulo de Transporte](https://github.com/portabilis/i-educar-transport-package/)
 
-### Upgrade
+## Upgrade
 
-Para realizar o _upgrade_ da versão do i-Educar, considere seguir os passos do [guia de atualização](UPGRADE.md).
+Para realizar o _upgrade_ da versão do i-Educar, considere seguir os passos no [guia de atualização](UPGRADE.md).
 
 ## Perguntas frequentes (FAQ)
 

@@ -9,6 +9,9 @@ services:
       - postgres
       - redis
     environment:
+      CACHE_DRIVER: redis
+      REDIS_HOST: redis
+      DB_HOST: postgres
       PGPASSWORD: ieducar
     working_dir: /var/www/ieducar
     volumes:
