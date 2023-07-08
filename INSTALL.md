@@ -49,17 +49,20 @@ apt update
 Instale as dependências:
 
 ```bash
-apt install -y nginx openjdk-8-jdk postgresql postgresql-contrib openssl unzip php8.2-common php8.2-cli php8.2-fpm php8.2-bcmath php8.2-curl php8.2-mbstring php8.2-pgsql php8.2-xml php8.2-zip php8.2-gd
+apt install -y nginx redis postgresql postgresql-contrib openjdk-8-jdk openssl unzip php8.2-common php8.2-cli php8.2-fpm php8.2-bcmath php8.2-curl php8.2-mbstring php8.2-pgsql php8.2-xml php8.2-zip php8.2-gd
 ```
 
-Configure o banco de dados, será solicitado uma senha, utilize `ieducar`:
+Inicie o serviço de banco de dados:
 
 ```bash
 systemctl start postgresql.service
 sudo -i -u postgres
+```
+
+Crie o usuário do banco de dados, será solicitado uma senha, utilize `ieducar`:
+
+```bash
 createuser ieducar --superuser --createdb --pwprompt
-# Enter password for new role:
-# Enter it again:
 ```
 
 Crie o banco de dados e volte ao usuário `root`:
@@ -94,12 +97,7 @@ cp /var/www/ieducar/docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 cp /var/www/ieducar/docker/nginx/upstream.conf /etc/nginx/conf.d/upstream.conf
 sed -i 's/php:9000/unix:\/run\/php\/php-fpm.sock/g' /etc/nginx/conf.d/upstream.conf
 rm /etc/nginx/sites-enabled/default
-
-nginx -t
 nginx -s reload
-
-# nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-# nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
 Faça a instalação do i-Educar:
