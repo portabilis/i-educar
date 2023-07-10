@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -68,5 +69,12 @@ class LegacyCity extends Model
     public function districts()
     {
         return $this->hasMany(LegacyDistrict::class, 'idmun', 'idmun');
+    }
+
+    protected function nameWithState(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->nome . '-' . $this->sigla_uf
+        );
     }
 }
