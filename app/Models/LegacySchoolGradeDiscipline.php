@@ -84,6 +84,6 @@ class LegacySchoolGradeDiscipline extends Model
 
     public function school(): BelongsTo
     {
-        return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_escola');
+        return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');
     }
 }
