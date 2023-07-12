@@ -4,6 +4,7 @@
     var $escolaField = getElementFor('escola');
     var $serieField = getElementFor('serie');
     var $anoField = getElementFor('ano');
+    var $cursoField = getElementFor('curso');
     var $componenteCurricularField = getElementFor('componente_curricular');
 
     var handleGetComponentesCurriculares = function (response) {
@@ -47,6 +48,35 @@
 
     // bind onchange event
     $serieField.change(updateComponentesCurriculares);
+
+    var updateComponentesCurricularesPorEscola = function () {
+      resetSelect($componenteCurricularField);
+
+      if ($escolaField.val()) {
+        $componenteCurricularField.children().first().html('Aguarde carregando...');
+
+        var data = {
+          escola: $escolaField.attr('value'),
+          ano: $anoField.attr('value')
+        };
+
+        var urlForGetComponentesCurricularesPorEscola = getResourceUrlBuilder.buildUrl(
+          '/module/DynamicInput/componenteCurricular', 'componentesCurricularesEscola', data
+        );
+
+        var options = {
+          url: urlForGetComponentesCurricularesPorEscola,
+          dataType: 'json',
+          success: handleGetComponentesCurriculares
+        };
+
+        getResources(options);
+      }
+
+      $componenteCurricularField.change();
+    };
+
+    $cursoField.change(updateComponentesCurricularesPorEscola);
 
   }); // ready
 })(jQuery);
