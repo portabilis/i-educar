@@ -5,8 +5,15 @@
     "license": "GPL-2.0-or-later",
     "version": "2.8.0",
     "keywords": [
-        "Portabilis",
+        "Portábilis",
         "i-Educar"
+    ],
+    "authors": [
+        {
+            "name": "Portábilis",
+            "email": "contato@portabilis.com.br",
+            "homepage": "https://portabilis.com.br"
+        }
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
