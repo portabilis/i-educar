@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 class LegacyStudent extends LegacyModel
 {
@@ -103,6 +104,14 @@ class LegacyStudent extends LegacyModel
         return Attribute::make(
             get: fn () => $this->tipo_responsavel
         );
+    }
+
+    public function getGuardions(): Collection
+    {
+        return collect([
+            $this->individual->mother,
+            $this->individual->father
+        ])->filter(fn ($person) => !empty($person) && $person->name !== 'NÃO REGISTRADO');
     }
 
     public function getGuardianName(): ?string
