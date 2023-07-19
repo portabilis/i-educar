@@ -581,9 +581,9 @@ class clsPmieducarServidor extends Model
                         $filtros .= "
       {$whereAnd} (s.cod_servidor NOT IN (SELECT a.ref_cod_servidor
               FROM pmieducar.servidor_alocacao a
-              WHERE $where
-              AND a.ano = $ano_alocacao
-              AND (a.data_saida > now() or a.data_saida is null)
+              WHERE $where".
+            ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
+            ." AND (a.data_saida > now() or a.data_saida is null)
               AND a.periodo = 1) OR s.multi_seriado )";
                     }
                 }
@@ -594,9 +594,9 @@ class clsPmieducarServidor extends Model
               (SELECT a.ref_cod_servidor
                 FROM pmieducar.servidor_alocacao a
                 WHERE $where
-                AND a.periodo = 2
-                AND a.ano = $ano_alocacao
-                AND (a.data_saida > now() or a.data_saida is null)
+                AND a.periodo = 2".
+                ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
+                ." AND (a.data_saida > now() or a.data_saida is null)
                 AND a.carga_horaria >= COALESCE(
                   (SELECT SUM( qhh.hora_final - qhh.hora_inicial )
                   FROM pmieducar.quadro_horario_horarios qhh
@@ -610,9 +610,9 @@ class clsPmieducarServidor extends Model
                   AND qhh.hora_inicial >= '12:00'
                   AND qhh.hora_inicial <= '18:00'
                   AND qhh.dia_semana <> '$int_dia_semana'
-                  AND qhh.ref_servidor = a.ref_cod_servidor
-                  AND quadro_horario.ano = $ano_alocacao
-                  AND qhh.sequencial = (
+                  AND qhh.ref_servidor = a.ref_cod_servidor".
+                 ($ano_alocacao ? " AND quadro_horario.ano = {$ano_alocacao}" : '')
+                 ." AND qhh.sequencial = (
                     SELECT s_qhh.sequencial
                     FROM pmieducar.quadro_horario_horarios s_qhh
                     WHERE s_qhh.dia_semana = qhh.dia_semana
@@ -633,17 +633,17 @@ class clsPmieducarServidor extends Model
                     AND qhha.ref_cod_escola = '$int_ref_cod_escola'
                     AND qhha.ref_servidor = a.ref_cod_servidor
                     AND qhha.hora_inicial >= '12:00'
-                    AND qhha.hora_inicial <= '18:00'
-                    AND quadro_horario.ano = $ano_alocacao
-                    AND identificador = '$int_identificador'
+                    AND qhha.hora_inicial <= '18:00'".
+                 ($ano_alocacao ? " AND quadro_horario.ano = {$ano_alocacao}" : '')
+                 ." AND identificador = '$int_identificador'
                     GROUP BY qhha.ref_servidor),'00:00') ) OR s.multi_seriado ) ";
                     } else {
                         $filtros .= "
       {$whereAnd} (s.cod_servidor NOT IN ( SELECT a.ref_cod_servidor
               FROM pmieducar.servidor_alocacao a
-              WHERE $where
-              AND a.ano = $ano_alocacao
-              AND (a.data_saida > now() or a.data_saida is null)
+              WHERE $where ".
+                ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
+                ." AND (a.data_saida > now() or a.data_saida is null)
               AND a.periodo = 2 ) OR s.multi_seriado) ";
                     }
                 }
@@ -689,9 +689,9 @@ class clsPmieducarServidor extends Model
       {$whereAnd} (s.cod_servidor NOT IN (
             SELECT a.ref_cod_servidor
               FROM pmieducar.servidor_alocacao a
-              WHERE $where
-              AND a.ano = $ano_alocacao
-              AND (a.data_saida > now() or a.data_saida is null)
+              WHERE $where ".
+                ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
+                ." AND (a.data_saida > now() or a.data_saida is null)
               AND a.periodo = 3 ) OR s.multi_seriado) ";
                     }
                 }
