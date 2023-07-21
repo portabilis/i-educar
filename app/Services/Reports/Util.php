@@ -6,8 +6,12 @@ use Illuminate\Support\Collection;
 
 class Util
 {
-    public static function sumTimes(array|Collection $times): string
+    public static function sumTimes(array|Collection|null $times): string
     {
+        if (empty($times)) {
+            return '00:00';
+        }
+
         $minutes = 0;
         foreach ($times as $time) {
             list($hour, $minute) = explode(':', $time);
