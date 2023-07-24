@@ -51,7 +51,7 @@ class Util
 
     public static function float(mixed $value): float
     {
-        return str_replace(',', '.', $value);
+        return (float)str_replace(',', '.', $value);
     }
 
     public static function moduleName(Collection|null $modules = null): array
