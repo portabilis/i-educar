@@ -121,6 +121,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
                 'view' => 'reports::' . $templateName,
                 'parameters' => $data['main'],
                 'orientation' => $data['orientation'] ?? null,
+                'driver' => $data['driver'] ?? null,
             ];
 
             return app(ReportRenderContract::class)->render($payload);
