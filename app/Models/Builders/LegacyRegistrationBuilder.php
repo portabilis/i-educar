@@ -109,6 +109,22 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Tipos de Deficiência
+     */
+    public function whereDeficiencyTypes(string $deficiencyTypes): self
+    {
+        return $this->whereHas('student.person', fn ($q) => $q->whereDeficiencyTypes($deficiencyTypes));
+    }
+
+    /**
+     * Filtra por Situacao
+     */
+    public function whereSituation(int $situation): self
+    {
+        return $this->whereHas('situations', fn ($q) => $q->situation($situation));
+    }
+
+    /**
      * Filtra por Turma
      */
     public function whereSchoolClass(int $schoolClass): self

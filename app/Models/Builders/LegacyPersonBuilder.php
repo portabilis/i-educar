@@ -28,4 +28,9 @@ class LegacyPersonBuilder extends LegacyBuilder
             }
         );
     }
+
+    public function whereDeficiencyTypes(string $deficiencyTypes): self
+    {
+        return $this->whereHas('deficiencies', fn ($q) => $q->whereIn('deficiency_type_id', explode(',', $deficiencyTypes)));
+    }
 }
