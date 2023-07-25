@@ -6,6 +6,7 @@ use App\Models\Builders\EmployeeAllocationBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmployeeAllocation extends LegacyModel
 {
@@ -40,15 +41,14 @@ class EmployeeAllocation extends LegacyModel
     {
         return Attribute::make(
             get: function () {
-                return match ($this->periodo) {
-                    1 => 'Matutino',
-                    2 => 'Vespertino',
-                    3 => 'Noturno',
-                    4 => 'Integral',
-                    default => null
-                };
+                return $this->period->nome;
             },
         );
+    }
+
+    public function period(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'periodo');
     }
 
     public function school()
