@@ -399,7 +399,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->certidaoNascimento,
                 $pessoa->paisResidencia,
                 $pessoa->cep,
-                $pessoa->municipioResidencia,
+                $pessoa->cep ? $pessoa->municipioResidencia : '',
                 $pessoa->localizacaoResidencia,
                 $pessoa->localizacaoDiferenciada,
                 $pessoa->escolaridade,

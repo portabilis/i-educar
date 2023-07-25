@@ -80,8 +80,9 @@ class LegacyRegistrationBuilder extends LegacyBuilder
      */
     public function whereInstitution(int $institution): self
     {
-        return $this->whereHas('school', fn ($q) => $q->whereInstitution($institution));
+        return $this->whereHas('school', static fn ($q) => $q->whereInstitution($institution));
     }
+
 
     /**
      * Filtra por Escola
@@ -128,7 +129,15 @@ class LegacyRegistrationBuilder extends LegacyBuilder
      */
     public function whereSchoolClass(int $schoolClass): self
     {
-        return $this->whereHas('enrollments', static fn ($q) => $q->where('ref_cod_turma', $schoolClass));
+        return $this->whereHas('enrollments', static fn ($q) => $q->whereValid()->where('ref_cod_turma', $schoolClass));
+    }
+
+    /**
+     * Filtra por Matricula
+     */
+    public function whereRegistration(int $registration): self
+    {
+        return $this->whereKey($registration);
     }
 
     /**

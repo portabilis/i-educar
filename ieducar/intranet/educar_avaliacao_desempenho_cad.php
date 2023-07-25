@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\PerformanceEvaluation;
+
 return new class extends clsCadastro
 {
     /**
@@ -29,23 +31,27 @@ return new class extends clsCadastro
 
     public $ref_ref_cod_instituicao;
 
+    public $id;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
 
         $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_ref_cod_instituicao = $_GET['ref_ref_cod_instituicao'];
-        $this->sequencial = $_GET['sequencial'];
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
-        if (is_numeric($this->sequencial) && is_numeric($this->ref_cod_servidor)) {
-            $obj = new clsPmieducarAvaliacaoDesempenho(sequencial: $this->sequencial, ref_cod_servidor: $this->ref_cod_servidor, ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao);
-            $registro = $obj->detalhe();
-            if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                }
+        if (request()->has('id')) {
+            $avaliacao = PerformanceEvaluation::find(request()->integer('id'));
+            if ($avaliacao) {
+                $this->ref_cod_servidor = $avaliacao->employee_id;
+                $this->ref_ref_cod_instituicao = $avaliacao->institution_id;
+                $this->sequencial = $avaliacao->sequential;
+                $this->descricao = $avaliacao->description;
+                $this->titulo_avaliacao = $avaliacao->title;
+                $this->ref_usuario_exc = $avaliacao->user_excluded_id;
+                $this->ref_usuario_cad = $avaliacao->user_created_id;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
@@ -95,9 +101,14 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
-        $obj = new clsPmieducarAvaliacaoDesempenho(sequencial: null, ref_cod_servidor: $this->ref_cod_servidor, ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, descricao: $this->descricao, data_cadastro: null, data_exclusao: null, ativo: 1, titulo_avaliacao: $this->titulo_avaliacao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $performance = new PerformanceEvaluation();
+        $performance->employee_id = $this->ref_cod_servidor;
+        $performance->institution_id = $this->ref_ref_cod_instituicao;
+        $performance->title = $this->titulo_avaliacao;
+        $performance->description = $this->descricao;
+        $performance->created_by = $this->pessoa_logada;
+
+        if ($performance->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }
@@ -109,14 +120,15 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
+        $avaliacao = PerformanceEvaluation::find(request('id'));
+        if ($avaliacao) {
+            $avaliacao->title = $this->titulo_avaliacao;
+            $avaliacao->description = $this->descricao;
 
-        $obj = new clsPmieducarAvaliacaoDesempenho(sequencial: $this->sequencial, ref_cod_servidor: $this->ref_cod_servidor, ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, descricao: $this->descricao, data_cadastro: null, data_exclusao: null, ativo: 1, titulo_avaliacao: $this->titulo_avaliacao);
-        $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
+            if ($avaliacao->save()) {
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+                $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
+            }
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -129,9 +141,8 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
-        $obj = new clsPmieducarAvaliacaoDesempenho(sequencial: $this->sequencial, ref_cod_servidor: $this->ref_cod_servidor, ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, descricao: null, data_cadastro: null, data_exclusao: null, ativo: 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $avaliacao = PerformanceEvaluation::find(request('id'));
+        if ($avaliacao->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }

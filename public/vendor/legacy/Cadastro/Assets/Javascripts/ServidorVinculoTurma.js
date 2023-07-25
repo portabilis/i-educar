@@ -143,6 +143,20 @@ $j(document).ready(function() {
     }
   };
 
+document.getElementById("funcao_exercida").addEventListener("change", (event) => {
+
+    let value = event.target.value;
+
+    if (value == '1' || value == '5') {
+        $j('#componentecurricular').makeRequired();
+        console.log('aqui');
+    } else {
+        $j('#componentecurricular').makeUnrequired();
+
+        console.log('else');
+    }
+});
+
   function verificaUnidadesCurricularesObrigatorias() {
       if ($j('#apresentar_outras_unidades_curriculares_obrigatorias').val() != 0 &&
           $j('#apresentar_outras_unidades_curriculares_obrigatorias').val() != '' &&

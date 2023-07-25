@@ -5,8 +5,15 @@
     "license": "GPL-2.0-or-later",
     "version": "2.8.0",
     "keywords": [
-        "Portabilis",
+        "Portábilis",
         "i-Educar"
+    ],
+    "authors": [
+        {
+            "name": "Portábilis",
+            "email": "contato@portabilis.com.br",
+            "homepage": "https://portabilis.com.br"
+        }
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
@@ -21,7 +28,6 @@
         "dex/composer-plug-and-play": "^0.18",
         "dex/frontier": "^0.7.0",
         "doctrine/dbal": "^3.3",
-        "egulias/email-validator": "^3",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^3.12",
