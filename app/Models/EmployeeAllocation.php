@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Builders\EmployeeAllocationBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmployeeAllocation extends LegacyModel
 {
@@ -34,6 +36,20 @@ class EmployeeAllocation extends LegacyModel
         'horas_excedentes',
         'data_saida',
     ];
+
+    protected function periodName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->period->nome;
+            },
+        );
+    }
+
+    public function period(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'periodo');
+    }
 
     public function school()
     {

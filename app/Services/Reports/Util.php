@@ -6,6 +6,24 @@ use Illuminate\Support\Collection;
 
 class Util
 {
+    public static function sumTimes(array|Collection|null $times): string
+    {
+        if (empty($times)) {
+            return '00:00';
+        }
+
+        $minutes = 0;
+        foreach ($times as $time) {
+            list($hour, $minute) = explode(':', $time);
+            $minutes += $hour * 60;
+            $minutes += $minute;
+        }
+        $hours = floor($minutes / 60);
+        $minutes -= $hours * 60;
+
+        return sprintf('%02d:%02d', $hours, $minutes);
+    }
+
     public static function formatWorkload(float|null $workload): string
     {
         if ($workload) {
@@ -33,7 +51,7 @@ class Util
 
     public static function float(mixed $value): float
     {
-        return str_replace(',', '.', $value);
+        return (float)str_replace(',', '.', $value);
     }
 
     public static function moduleName(Collection|null $modules = null): array
