@@ -64,6 +64,14 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Turno
+     */
+    public function wherePeriod(int $period): self
+    {
+        return $this->where('turma_turno_id', $period);
+    }
+
+    /**
      * Filtra por acesso escola
      *
      *
