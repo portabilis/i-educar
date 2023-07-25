@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolClassBuilder;
+use App\Models\Enums\DayOfWeek;
 use App\Models\View\Discipline;
 use App\Traits\LegacyAttribute;
 use Carbon\Carbon;
@@ -211,16 +212,7 @@ class LegacySchoolClass extends Model
                 }
 
                 $daysOfWeek = array_map(function ($day) {
-                    return match ($day) {
-                        '1' => 'Dom',
-                        '2' => 'Seg',
-                        '3' => 'Ter',
-                        '4' => 'Qua',
-                        '5' => 'Qui',
-                        '6' => 'Sex',
-                        '7' => 'Sab',
-                        default => null
-                    };
+                    return DayOfWeek::tryFrom((int)$day)?->shortName();
                 }, $this->dias_semana);
 
                 return implode(', ', $daysOfWeek);

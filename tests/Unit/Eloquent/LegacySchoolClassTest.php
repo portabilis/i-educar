@@ -125,9 +125,11 @@ class LegacySchoolClassTest extends EloquentTestCase
 
         $expected = $this->model->stages()->orderBy('sequencial')->value('data_inicio');
         $this->assertEquals($expected, $this->model->beginAcademicYearAttribute);
-
         $expected = $this->model->stages()->orderByDesc('sequencial')->value('data_fim');
         $this->assertEquals($expected, $this->model->endAcademicYearAttribute);
+        $this->assertEquals('Seg à Sex', $this->model->daysOfWeekName);
+        $this->model->dias_semana = [1,3,5];
+        $this->assertEquals('Dom, Ter, Qui', $this->model->daysOfWeekName);
     }
 
     /** @test */
