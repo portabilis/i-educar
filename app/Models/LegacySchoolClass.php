@@ -530,9 +530,12 @@ class LegacySchoolClass extends Model
      *
      * @return LegacyEvaluationRule
      */
-    public function getEvaluationRule()
+    public function getEvaluationRule($gradeId = null)
     {
-        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+        //a turma pode ser multisseriada e prover de várias séries
+        //portando é necessária repassar em vez de pegar a série principal da turma
+        $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYear::query()
+            ->where('serie_id', $gradeId ?? $this->ref_ref_cod_serie)
             ->where('ano_letivo', $this->ano)
             ->firstOrFail();
         if ($this->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {
