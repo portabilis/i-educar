@@ -205,14 +205,14 @@ class LegacySchoolClass extends Model
     {
         return Attribute::make(
             get: function () {
-                $diff = array_diff([2,3,4,5,6], $this->dias_semana);
+                $diff = array_diff([2, 3, 4, 5, 6], $this->dias_semana);
 
                 if (count($diff) === 0) {
                     return 'Seg à Sex';
                 }
 
                 $daysOfWeek = array_map(function ($day) {
-                    return DayOfWeek::tryFrom((int)$day)?->shortName();
+                    return DayOfWeek::tryFrom((int) $day)?->shortName();
                 }, $this->dias_semana);
 
                 return implode(', ', $daysOfWeek);
@@ -316,17 +316,12 @@ class LegacySchoolClass extends Model
 
     /**
      * Relacionamento com professor.
-     *
-     * @return HasMany
      */
     public function schoolClassTeachers(): HasMany
     {
         return $this->hasMany(LegacySchoolClassTeacher::class, 'turma_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function stages(): HasMany
     {
         if ($this->course?->is_standard_calendar) {

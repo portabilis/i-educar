@@ -83,7 +83,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
         return $this->whereHas('school', static fn ($q) => $q->whereInstitution($institution));
     }
 
-
     /**
      * Filtra por Escola
      */
