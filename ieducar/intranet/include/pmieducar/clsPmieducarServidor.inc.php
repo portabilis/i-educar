@@ -546,7 +546,7 @@ class clsPmieducarServidor extends Model
           WHERE $where
           AND a.periodo = 1
           AND a.periodo = 1".
-        ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
+        ($ano_alocacao ? " AND a.ano = {$ano_alocacao} " : ' ')
         ."AND (a.data_saida > now() or a.data_saida is null)
           AND (a.data_saida > now() or a.data_saida is null)
           AND a.carga_horaria >= COALESCE(
