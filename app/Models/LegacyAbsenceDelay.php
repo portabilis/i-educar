@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyAbsenceDelayBuilder;
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
+use App\Models\Enums\AbsenceDelayType;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAbsenceDelay extends LegacyModel
@@ -21,6 +24,8 @@ class LegacyAbsenceDelay extends LegacyModel
 
     protected $primaryKey = 'cod_falta_atraso';
 
+    protected string $builder = LegacyAbsenceDelayBuilder::class;
+
     protected $fillable = [
         'ref_cod_escola',
         'ref_ref_cod_instituicao',
@@ -32,6 +37,26 @@ class LegacyAbsenceDelay extends LegacyModel
         'justificada',
         'ref_cod_servidor_funcao',
     ];
+
+    protected $casts = [
+        'data_falta_atraso' => 'date'
+    ];
+
+    protected function typeName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => AbsenceDelayType::tryFrom($this->tipo)?->name(),
+        );
+    }
+
+    protected function justifyName(): Attribute
+    {
+        return Attribute::make(
+            //no banco é salvo 0 como "Sim"
+            get: fn () => $this->justificada === 0 ? 'Sim' : "Não",
+        );
+    }
+
 
     public function school(): BelongsTo
     {
