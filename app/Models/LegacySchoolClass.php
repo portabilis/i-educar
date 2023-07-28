@@ -205,15 +205,16 @@ class LegacySchoolClass extends Model
     {
         return Attribute::make(
             get: function () {
-                $diff = array_diff([2, 3, 4, 5, 6], $this->dias_semana);
+                $diasSemana =  $this->dias_semana ?? [];
+                $diff = array_diff([2,3,4,5,6], $diasSemana);
 
                 if (count($diff) === 0) {
                     return 'Seg à Sex';
                 }
 
                 $daysOfWeek = array_map(function ($day) {
-                    return DayOfWeek::tryFrom((int) $day)?->shortName();
-                }, $this->dias_semana);
+                    return DayOfWeek::tryFrom((int)$day)?->shortName();
+                }, $diasSemana);
 
                 return implode(', ', $daysOfWeek);
             },
@@ -525,9 +526,12 @@ class LegacySchoolClass extends Model
      *
      * @return LegacyEvaluationRule
      */
-    public function getEvaluationRule()
+    public function getEvaluationRule($gradeId = null)
     {
-        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+        //a turma pode ser multisseriada e prover de várias séries
+        //portando é necessária repassar em vez de pegar a série principal da turma
+        $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYear::query()
+            ->where('serie_id', $gradeId ?? $this->ref_ref_cod_serie)
             ->where('ano_letivo', $this->ano)
             ->firstOrFail();
         if ($this->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {
