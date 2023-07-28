@@ -205,15 +205,15 @@ class LegacySchoolClass extends Model
     {
         return Attribute::make(
             get: function () {
-                $diasSemana =  $this->dias_semana ?? [];
-                $diff = array_diff([2,3,4,5,6], $diasSemana);
+                $diasSemana = $this->dias_semana ?? [];
+                $diff = array_diff([2, 3, 4, 5, 6], $diasSemana);
 
                 if (count($diff) === 0) {
                     return 'Seg à Sex';
                 }
 
                 $daysOfWeek = array_map(function ($day) {
-                    return DayOfWeek::tryFrom((int)$day)?->shortName();
+                    return DayOfWeek::tryFrom((int) $day)?->shortName();
                 }, $diasSemana);
 
                 return implode(', ', $daysOfWeek);
