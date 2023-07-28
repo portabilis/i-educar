@@ -2,6 +2,8 @@
 
 namespace Tests\Api;
 
+use App\Models\LegacyDisciplineDescriptiveOpinion;
+use App\Models\LegacyGeneralDescriptiveOpinion;
 use Database\Factories\LegacyAcademicYearStageFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
@@ -120,7 +122,7 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
                 $schoolClass->getKey() => [
                     $student->getKey() => [
                         $discipline->getKey() => [
-                            'valor' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                            'valor' => $parecer = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                         ],
                     ],
                 ],
@@ -128,20 +130,63 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
         ];
 
         $response = $this->getResource('/module/Api/Diario', $data);
+        $response->assertSuccessful();
+        $response->assertJson(
+            [
+                'oper' => 'post',
+                'resource' => 'pareceres-anual-por-componente',
+                'msgs' => [
+                    [
+                        'msg' => 'Pareceres postados com sucesso!',
+                        'type' => 'success',
+                    ],
+                ],
+                'any_error_msg' => false,
+            ]
+        );
 
+        $disciplineDescriptiveOpinion = LegacyDisciplineDescriptiveOpinion::first();
+
+        $this->assertDatabaseHas($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
+            'matricula_id' => $registration->getKey(),
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+        ]);
+        $this->assertDatabaseHas($disciplineDescriptiveOpinion->getTable(), [
+            'parecer_aluno_id' => $disciplineDescriptiveOpinion->studentDescriptiveOpinion->getKey(),
+            'componente_curricular_id' => $discipline->getKey(),
+            'parecer' => $parecer,
+            'etapa' => 'An',
+        ]);
+        $this->assertDatabaseCount($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
+        $this->assertDatabaseCount($disciplineDescriptiveOpinion->getTable(), 1);
+        $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
+
+
+        //alterando a regra de avaliação da série
+        $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+        ]);
+        $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
+        $response = $this->getResource('/module/Api/Diario', $data);
         $response->assertSuccessful()
             ->assertJson(
                 [
+                    'error' => [
+                        'code' => 0,
+                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres anual por componente."
+                    ],
                     'oper' => 'post',
                     'resource' => 'pareceres-anual-por-componente',
                     'msgs' => [
                         [
-                            'msg' => 'Pareceres postados com sucesso!',
-                            'type' => 'success',
-                        ],
+                            'msg' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres anual por componente.",
+                            'type' => 'error',
+                        ]
                     ],
-                    'any_error_msg' => false,
+                    'any_error_msg' => true,
                 ]
             );
+        $this->assertDatabaseCount($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
+        $this->assertDatabaseCount($disciplineDescriptiveOpinion->getTable(), 1);
     }
 }
