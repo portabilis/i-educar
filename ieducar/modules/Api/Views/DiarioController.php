@@ -1,9 +1,13 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolClass;
+use App\Models\View\Discipline;
 use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
+use Illuminate\Support\Collection;
 
 class DiarioController extends ApiCoreController
 {
@@ -19,27 +23,6 @@ class DiarioController extends ApiCoreController
         return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
     }
 
-    protected function getComponentesPorTurma($turmaId, $matriculaId = null)
-    {
-        $objTurma = new clsPmieducarTurma($turmaId);
-        $detTurma = $objTurma->detalhe();
-        $escolaId = $detTurma['ref_ref_cod_escola'];
-        $serieId = $detTurma['ref_ref_cod_serie'];
-        $ano = $detTurma['ano'];
-
-        //obtem a série da matrícula
-        if ($matriculaId && $detTurma['multiseriada'] == 1) {
-            $serieId = $this->getSeriePorMatricula($matriculaId) ?: $serieId;
-        }
-
-        return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId, null, null, null, null, null, $ano);
-    }
-
-    private function getSeriePorMatricula($matriculaId)
-    {
-        return \App\Models\LegacyRegistration::where('cod_matricula', $matriculaId)->value('ref_ref_cod_serie');
-    }
-
     protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
     {
         $componentes = $this->getComponentesPorMatricula($matriculaId);
@@ -53,26 +36,15 @@ class DiarioController extends ApiCoreController
         return $valid;
     }
 
-    protected function validateComponenteTurma($turmaId, $componenteCurricularId, $matriculaId = null)
+    protected function validateComponenteTurma($componenteCurricularId, Collection $componentesTurma, LegacyRegistration $registration): bool
     {
-        $componentesTurma = $this->getComponentesPorTurma($turmaId, $matriculaId);
-        if ($componentesTurma instanceof CoreExt_Entity) {
-            $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
-        } else {
-            foreach ($componentesTurma as $componente) {
-                $arr[] = $componente->id;
-                $key = key($arr);
-                $componentes[$key] = $arr;
-            }
-            $componentesTurma = $componentes[0];
-        }
+        $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId){
+            return $collection->where('cod_serie', $serieId);
+        })->contains($componenteCurricularId);
 
-        $valid = false;
-        if (is_array($componentesTurma)) {
-            $valid = in_array($componenteCurricularId, $componentesTurma);
-        }
-
-        if (!$valid) {
+        $turmaId = $componentesTurma->value('cod_turma');
+        //pula a mensagem se for area do conhecimento e um componente a turma
+        if (!$valid && !$componentesTurma->contains($componenteCurricularId)) {
             $this->messenger->append("Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.", 'error');
             $this->appendResponse('error', [
                 'code' => Error::DISCIPLINE_NOT_EXISTS_FOR_SCHOOL_CLASS,
@@ -103,6 +75,26 @@ class DiarioController extends ApiCoreController
         } catch (CoreExt_Service_Exception) {
             //...
         }
+    }
+
+    protected function findMatricula($turmaId, $alunoId)
+    {
+        return LegacyRegistration::query()
+            ->active()
+            ->whereHas('enrollments', function ($q) {
+                $q->active();
+                $q->orWhere('transferido', true);
+            })
+            ->whereSchoolClass($turmaId)
+            ->whereStudent($alunoId)
+            ->whereIn('aprovado', [1,2,3,4,13,12,14])
+            ->orderBy('aprovado')
+            ->first([
+                'cod_matricula',
+                'ref_ref_cod_serie',
+                'ref_ref_cod_escola',
+                'ano'
+            ]);
     }
 
     protected function findMatriculaByTurmaAndAluno($turmaId, $alunoId)
@@ -211,15 +203,17 @@ class DiarioController extends ApiCoreController
         $notas = $this->getRequest()->notas;
 
         foreach ($notas as $turmaId => $notaTurma) {
-            foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
-                $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+            $componentesTurma = $this->getComponentesTurma($turmaId);
 
-                if (empty($matriculaId)) {
+            foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
+                $matricula = $this->findMatricula($turmaId, $alunoId);
+
+                if (empty($matricula)) {
                     continue;
                 }
 
                 foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                    if (!$this->validateComponenteTurma($turmaId, $componenteCurricularId, $matriculaId)) {
+                    if (!$this->validateComponenteTurma($componenteCurricularId, $componentesTurma, $matricula)) {
                         continue;
                     }
 
@@ -231,7 +225,7 @@ class DiarioController extends ApiCoreController
 
                     $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
                     $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-                    $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
+                    $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matricula->cod_matricula);
                     $notaOriginal = $this->truncate($notaOriginal, 4);
 
                     $valorNota = $serviceBoletim->calculateStageScore($etapa, $notaOriginal, $notaRecuperacao);
@@ -309,15 +303,17 @@ class DiarioController extends ApiCoreController
             $notas = $this->getRequest()->notas;
 
             foreach ($notas as $turmaId => $notaTurma) {
-                foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                $componentesTurma = $this->getComponentesTurma($turmaId);
 
-                    if (empty($matriculaId)) {
+                foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
+                    $matricula = $this->findMatricula($turmaId, $alunoId);
+
+                    if (! $matricula) {
                         continue;
                     }
 
                     foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId, $matriculaId)) {
+                        if ($this->validateComponenteTurma($componenteCurricularId, $componentesTurma, $matricula)) {
                             $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
 
                             if (is_null($notaOriginal)) {
@@ -337,7 +333,7 @@ class DiarioController extends ApiCoreController
                             $regra = $serviceBoletim->getRegra();
 
                             $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-                            $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
+                            $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matricula->cod_matricula);
 
                             $valorNota = $serviceBoletim->calculateStageScore($etapa, $notaOriginal, $notaRecuperacao);
                             $notaMaximaPermitida = $regra->getNotaMaximaRecuperacao($etapa);
@@ -389,6 +385,25 @@ class DiarioController extends ApiCoreController
         };
     }
 
+    protected function getComponentesTurma(int $turmaId): Collection
+    {
+        $disciplinaDispensada = LegacySchoolClass::query()->whereKey($turmaId)->value('ref_cod_disciplina_dispensada');
+
+        return Discipline::query()
+            ->where('cod_turma', $turmaId)
+            ->when($disciplinaDispensada, function ($q, $disciplinaDispensada) {
+                $q->where('id', '<>', $disciplinaDispensada);
+            })
+            ->with('knowledgeArea:id,agrupar_descritores')
+            ->orderBy('ordenamento')
+            ->get([
+                'id',
+                'cod_turma',
+                'cod_serie',
+                'area_conhecimento_id'
+            ]);
+    }
+
     protected function postFaltasPorComponente()
     {
         if ($this->canPostFaltasPorComponente()) {
@@ -396,14 +411,16 @@ class DiarioController extends ApiCoreController
             $faltas = $this->getRequest()->faltas;
 
             foreach ($faltas as $turmaId => $faltaTurma) {
-                foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                $componentesTurma = $this->getComponentesTurma($turmaId);
 
-                    if (empty($matriculaId)) {
+                foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
+                    $matricula = $this->findMatricula($turmaId, $alunoId);
+
+                    if (! $matricula) {
                         continue;
                     }
 
-                    if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+                    if ($matricula->getEvaluationRule()?->tipo_presenca != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
                         $this->messenger->append("A regra da turma $turmaId não permite lançamento de faltas por componente.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::SCHOOL_CLASS_DOESNT_ALOW_FREQUENCY_BY_DISCIPLINE,
@@ -414,21 +431,20 @@ class DiarioController extends ApiCoreController
                     }
 
                     foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
-                        if ($matriculaId) {
-                            if ($this->validateMatricula($matriculaId)) {
-                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId, $matriculaId)) {
-                                    $valor = $faltaTurmaAlunoDisciplina['valor'];
+                        if ($primeiroComponente = $this->getComponenteArea($componentesTurma, $matricula->ref_ref_cod_serie, $faltaTurmaAlunoDisciplina['area_do_conhecimento'])) {
+                            $componenteCurricularId = $primeiroComponente;
+                        }
 
-                                    $falta = new Avaliacao_Model_FaltaComponente([
-                                        'componenteCurricular' => $componenteCurricularId,
-                                        'quantidade' => $valor,
-                                        'etapa' => $etapa,
-                                    ]);
+                        if ($this->validateComponenteTurma($componenteCurricularId, $componentesTurma, $matricula)) {
+                            $valor = $faltaTurmaAlunoDisciplina['valor'];
+                            $falta = new Avaliacao_Model_FaltaComponente([
+                                'componenteCurricular' => $componenteCurricularId,
+                                'quantidade' => $valor,
+                                'etapa' => $etapa,
+                            ]);
 
-                                    $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                                    $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
-                                }
-                            }
+                            $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+                            $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
                         }
                     }
                 }
@@ -436,6 +452,20 @@ class DiarioController extends ApiCoreController
 
             $this->messenger->append('Faltas postadas com sucesso!', 'success');
         }
+    }
+
+    private function getComponenteArea(Collection $componentesTurma, int $serieId, int|null $areaConhecimento): int|null
+    {
+        if (!$areaConhecimento) {
+            return null;
+        }
+
+        return $componentesTurma
+            ->when($serieId, function (Collection $collection, int $serieId) {
+                return $collection->where('cod_serie', $serieId);
+            })
+            ->where('knowledgeArea.agrupar_descritores', true)
+            ->value('id');
     }
 
     /**
@@ -451,13 +481,13 @@ class DiarioController extends ApiCoreController
             foreach ($faltas as $turmaId => $faltaTurma) {
                 foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
                     $faltas = $faltaTurmaAluno['valor'];
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    $matricula = $this->findMatricula($turmaId, $alunoId);
 
-                    if (empty($matriculaId)) {
+                    if (empty($matricula)) {
                         continue;
                     }
 
-                    if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
+                    if ($matricula->getEvaluationRule()?->tipo_presenca != RegraAvaliacao_Model_TipoPresenca::GERAL) {
                         throw new EvaluationRuleNotAllowGeneralAbsence($turmaId);
                     }
 
@@ -482,16 +512,18 @@ class DiarioController extends ApiCoreController
             $etapa = $this->getRequest()->etapa;
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
-                foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                $componentesTurma = $this->getComponentesTurma($turmaId);
 
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+                foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+                    $matricula = $this->findMatricula($turmaId, $alunoId);
+
+                    if (!empty($matricula)) {
+                        if ($matricula->getEvaluationRule()?->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa e componente.");
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId, $matriculaId)) {
+                            if ($this->validateComponenteTurma($componenteCurricularId, $componentesTurma, $matricula)) {
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
@@ -518,15 +550,15 @@ class DiarioController extends ApiCoreController
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    $matricula = $this->findMatricula($turmaId, $alunoId);
 
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+                    if (!empty($matricula)) {
+                        if ($matricula->getEvaluationRule()->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres anual por componente.");
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-                            if ($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)) {
+                            if ($this->validateComponenteCurricular($matricula->cod_matricula, $componenteCurricularId)) {
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
@@ -553,10 +585,10 @@ class DiarioController extends ApiCoreController
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    $matricula = $this->findMatricula($turmaId, $alunoId);
 
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
+                    if (!empty($matricula)) {
+                        if ($matricula->getEvaluationRule()?->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa geral.");
                         }
 
@@ -583,10 +615,10 @@ class DiarioController extends ApiCoreController
             foreach ($pareceres as $turmaId => $parecerTurma) {
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
                     $parecer = $this->removeHtmlTags($parecerTurmaAluno['valor']);
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    $matricula = $this->findMatricula($turmaId, $alunoId);
 
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
+                    if (!empty($matricula)) {
+                        if ($matricula->getEvaluationRule()?->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres anual geral.");
                         }
 
@@ -625,22 +657,6 @@ class DiarioController extends ApiCoreController
             $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
             $obj->excluir();
         }
-    }
-
-    protected function validateMatricula($matriculaId)
-    {
-        $ativo = false;
-
-        if (!empty($matriculaId)) {
-            $sql = 'SELECT m.ativo as ativo
-                FROM pmieducar.matricula m
-               WHERE m.cod_matricula = $1
-               LIMIT 1';
-
-            $ativo = $this->fetchPreparedQuery($sql, [$matriculaId], true, 'first-field');
-        }
-
-        return $ativo;
     }
 
     private function truncate($val, $f = '0')
