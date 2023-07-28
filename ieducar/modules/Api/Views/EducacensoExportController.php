@@ -537,6 +537,7 @@ class EducacensoExportController extends ApiCoreController
     {
         return '99|';
     }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'educacenso-export')) {
