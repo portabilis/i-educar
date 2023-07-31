@@ -123,6 +123,17 @@ class DiarioPostaFaltasPorComponente extends TestCase
             'turma_id' => $schoolClass,
         ]);
 
+        $discipline4 = LegacyDisciplineFactory::new()->create([
+            'knowledge_area_id' => $areaConhecimento2,
+            'ordenamento' => 3
+        ]);
+
+        LegacyDisciplineSchoolClassFactory::new()->create([
+            'componente_curricular_id' => $discipline4,
+            'escola_id' => $school,
+            'turma_id' => $schoolClass,
+        ]);
+
         LegacyDisciplineAcademicYearFactory::new()->create([
             'componente_curricular_id' => $discipline1,
             'ano_escolar_id' => $grade1,
@@ -138,6 +149,13 @@ class DiarioPostaFaltasPorComponente extends TestCase
 
         LegacyDisciplineAcademicYearFactory::new()->create([
             'componente_curricular_id' => $discipline3,
+            'ano_escolar_id' => $grade2,
+            'anos_letivos' => $schoolGrade2->anos_letivos,
+            'hora_falta' => null,
+        ]);
+
+        LegacyDisciplineAcademicYearFactory::new()->create([
+            'componente_curricular_id' => $discipline4,
             'ano_escolar_id' => $grade2,
             'anos_letivos' => $schoolGrade2->anos_letivos,
             'hora_falta' => null,
@@ -199,10 +217,17 @@ class DiarioPostaFaltasPorComponente extends TestCase
             'ref_cod_disciplina' => $discipline3,
             'etapas_especificas' => 1,
         ]);
+        LegacySchoolGradeDisciplineFactory::new()->create([
+            'ref_ref_cod_escola' => $school,
+            'ref_ref_cod_serie' => $grade2,
+            'ref_cod_disciplina' => $discipline4,
+            'etapas_especificas' => 1,
+        ]);
+
 
         //componente errado que existe na turma, porém não pertence à série da matrícula
         //mensagem de erro ignorada
-        $data = $this->getData($schoolClass,$student2, $discipline1);
+        $data = $this->getData($schoolClass, $student2, $discipline1);
         $response = $this->getResource('/module/Api/Diario', $data);
         $response->assertSuccessful()
             ->assertJson(
@@ -222,9 +247,9 @@ class DiarioPostaFaltasPorComponente extends TestCase
         $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 0);
 
         //componente errado que não existe na turma
-        $discipline4 = LegacyDisciplineFactory::new()->create();
-        $data = $this->getData($schoolClass, $student2, $discipline4);
-        $this->invalidResponse($data, $discipline4, $schoolClass);
+        $discipline5 = LegacyDisciplineFactory::new()->create();
+        $data = $this->getData($schoolClass, $student2, $discipline5);
+        $this->invalidResponse($data, $discipline5, $schoolClass);
 
         //agrupadores
         $data = [
@@ -242,32 +267,42 @@ class DiarioPostaFaltasPorComponente extends TestCase
                 ],
             ],
         ];
-        //a disciplina 3 é a primeira do agrupamento
-        $studentAbsence = $this->validResponse($data,$registration2, $discipline3);
+        //a disciplina 3 é a primeira do agrupamento precisa ter nota
+        $studentAbsence = $this->validResponse($data, $registration2, $discipline3);
 
-        //a disciplina 1 e 2 não podem ter dados
+        //a disciplina 2 não é a primeira e precisa ter nota zerada
+        $this->assertDatabaseHas((new LegacyDisciplineAbsence())->getTable(), [
+            'componente_curricular_id' => $discipline2->getKey(),
+            'falta_aluno_id' => $studentAbsence->getKey(),
+            'quantidade' => 0
+        ]);
+
+        //a disciplina 4 precisa ter nota zerada
+        $this->assertDatabaseHas((new LegacyDisciplineAbsence())->getTable(), [
+            'componente_curricular_id' => $discipline4->getKey(),
+            'falta_aluno_id' => $studentAbsence->getKey(),
+            'quantidade' => 0
+        ]);
+
+        //a disciplina 1 não pode ter dados
         $this->assertDatabaseMissing((new LegacyDisciplineAbsence())->getTable(), [
             'componente_curricular_id' => $discipline1->getKey(),
-            'falta_aluno_id' => $studentAbsence->getKey()
+            'falta_aluno_id' => $studentAbsence->getKey(),
         ]);
-        $this->assertDatabaseMissing((new LegacyDisciplineAbsence())->getTable(), [
-            'componente_curricular_id' => $discipline2->getKey(),
-            'falta_aluno_id' => $studentAbsence->getKey()
-        ]);
-        $this->assertDatabaseCount((new LegacyStudentAbsence)->getTable(), 1);
-        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 1);
 
+        $this->assertDatabaseCount((new LegacyStudentAbsence)->getTable(), 1);
+        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 3);
         //componente da primeira série multisseriada
-        $data = $this->getData($schoolClass,$student1, $discipline1);
-        $this->validResponse($data, $registration1,  $discipline1);
+        $data = $this->getData($schoolClass, $student1, $discipline1);
+        $this->validResponse($data, $registration1, $discipline1);
         $this->assertDatabaseCount((new LegacyStudentAbsence)->getTable(), 2);
-        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 2);
+        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 4);
 
         //componente de outra série multisseriada
-        $data = $this->getData($schoolClass,$student2, $discipline2);
+        $data = $this->getData($schoolClass, $student2, $discipline2);
         $this->validResponse($data, $registration2, $discipline2);
         $this->assertDatabaseCount((new LegacyStudentAbsence)->getTable(), 2);
-        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 3);
+        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 4);
         $this->assertDatabaseEmpty((new LegacyGeneralAbsence())->getTable());
         //alterando a regra de avaliação da série
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
@@ -296,7 +331,7 @@ class DiarioPostaFaltasPorComponente extends TestCase
                 ]
             );
         $this->assertDatabaseCount((new LegacyStudentAbsence)->getTable(), 2);
-        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 3);
+        $this->assertDatabaseCount((new LegacyDisciplineAbsence())->getTable(), 4);
     }
 
     private function getData(LegacySchoolClass $schoolClass, LegacyStudent $student, LegacyDiscipline $discipline): array
