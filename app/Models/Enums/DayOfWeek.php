@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Enums;
+
 enum DayOfWeek: int
 {
     case SUNDAY = 1;
