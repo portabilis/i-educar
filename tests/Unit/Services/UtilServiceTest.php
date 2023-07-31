@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class UtilServiceTest extends TestCase
 {
-
     public function testSumTimesCollection()
     {
         $collect = collect(['22:30']);
@@ -15,7 +14,7 @@ class UtilServiceTest extends TestCase
         $collect = collect([
             '22:30',
             '22:35',
-            '00:01'
+            '00:01',
         ]);
         $this->assertEquals('45:06', Util::sumTimes($collect));
     }
@@ -24,7 +23,7 @@ class UtilServiceTest extends TestCase
     {
         $collect = collect([
             '22:30',
-            '22:29'
+            '22:29',
         ]);
         $this->assertEquals('44:59', Util::sumTimes($collect->toArray()));
     }

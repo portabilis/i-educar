@@ -242,7 +242,7 @@ class SelectOptions
     {
         return [
             'csv' => 'CSV',
-            'pdf' => 'PDF'
+            'pdf' => 'PDF',
         ];
     }
 }

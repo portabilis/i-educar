@@ -14,7 +14,7 @@ class Util
 
         $minutes = 0;
         foreach ($times as $time) {
-            list($hour, $minute) = explode(':', $time);
+            [$hour, $minute] = explode(':', $time);
             $minutes += $hour * 60;
             $minutes += $minute;
         }
@@ -51,7 +51,7 @@ class Util
 
     public static function float(mixed $value): float
     {
-        return (float)str_replace(',', '.', $value);
+        return (float) str_replace(',', '.', $value);
     }
 
     public static function moduleName(Collection|null $modules = null): array
@@ -94,7 +94,7 @@ class Util
     {
         $maskared = '';
         $k = 0;
-        for ($i = 0; $i <= strlen($mask) - 1; ++$i) {
+        for ($i = 0; $i <= strlen($mask) - 1; $i++) {
             if ($mask[$i] == '#') {
                 if (isset($val[$k])) {
                     $maskared .= $val[$k++];
