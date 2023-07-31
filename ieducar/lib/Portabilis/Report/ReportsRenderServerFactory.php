@@ -156,7 +156,9 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
         $response = $client->request('POST', $this->url, $payload);
 
-        ReportIssued::dispatch($report->useJson() ? 'json' : 'jasper', $templateName, $response->getStatusCode() === 200);
+        $success = $response->getStatusCode() === 200;
+        $render = $report->useJson() ? 'json' : 'jasper';
+        $error = '';
 
         $json = json_decode($response->getBody()->getContents(), true);
 
@@ -164,18 +166,32 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             $this->log($payload, $response->getBody()->getContents());
         }
 
+        // Ao retornar um PDF em base64 um evento será disparado para garantir
+        // que o conteúdo possa ser modificado caso haja a necessidade, desta
+        // forma é possível extender o comportamento do renderizador de relatórios.
+
+        $event = new ReportIssued($render, $templateName, $success);
+
         if (is_null($json)) {
             $this->log($payload, $response->getBody()->getContents());
 
-            throw new Exception('Não foi possível analisar a resposta do serviço.');
-        }
-
-        if ($json['success'] == false) {
+            $error = 'Não foi possível analisar a resposta do serviço.';
+        } else if ($json['success'] == false) {
             $this->log($payload, $response->getBody()->getContents());
 
-            throw new Exception($json['error'] ?? $json['message']);
+            $error = $json['error'] ?? $json['message'];
         }
 
-        return base64_decode($json['data']['file']);
+        if (isset($json['data']['file'])) {
+            $event->replace($json['data']['file']);
+        }
+
+        event($event);
+
+        if ($error) {
+            throw new Exception($error);
+        }
+
+        return base64_decode($event->content());
     }
 }
