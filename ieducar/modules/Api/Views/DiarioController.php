@@ -430,11 +430,9 @@ class DiarioController extends ApiCoreController
                         return false;
                     }
 
-                    foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
-                        if ($primeiroComponente = $this->getComponenteArea($componentesTurma, $matricula->ref_ref_cod_serie, $faltaTurmaAlunoDisciplina['area_do_conhecimento'])) {
-                            $componenteCurricularId = $primeiroComponente;
-                        }
+                    $faltaTurmaAluno = $this->mergeComponenteArea($faltaTurmaAluno, $componentesTurma, $matricula->ref_ref_cod_serie);
 
+                    foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
                         if ($this->validateComponenteTurma($componenteCurricularId, $componentesTurma, $matricula)) {
                             $valor = $faltaTurmaAlunoDisciplina['valor'];
                             $falta = new Avaliacao_Model_FaltaComponente([
@@ -454,18 +452,33 @@ class DiarioController extends ApiCoreController
         }
     }
 
-    private function getComponenteArea(Collection $componentesTurma, int $serieId, int|null $areaConhecimento): int|null
+    private function mergeComponenteArea(array $faltaTurmaAluno, Collection $componentesTurma, int|null $serieId): array
     {
-        if (!$areaConhecimento) {
-            return null;
+        $novoFaltaTurmaAluno = [];
+
+        foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
+            $areaDoConhecimento = $faltaTurmaAlunoDisciplina['area_do_conhecimento'] ?? null;
+            if ($areaDoConhecimento) {
+                $componentesArea = $componentesTurma->when($serieId, function (Collection $collection, int $serieId) {
+                    return $collection->where('cod_serie', $serieId);
+                })->where('knowledgeArea.id', $areaDoConhecimento)
+                  ->where('knowledgeArea.agrupar_descritores', true);
+
+                $componenteAreaPrimeiro = $componentesArea->shift();
+                //coloca a falta no primeiro componente do agrupamento
+                $novoFaltaTurmaAluno[$componenteAreaPrimeiro->id] = $faltaTurmaAlunoDisciplina;
+                //coloca zero no restante dos componentes do agrupamento
+                foreach ($componentesArea as $componenteArea) {
+                    $novoFaltaTurmaAluno[$componenteArea->id] = [
+                        'valor' => 0
+                    ];
+                }
+            } else {
+                $novoFaltaTurmaAluno[$componenteCurricularId] = $faltaTurmaAlunoDisciplina;
+            }
         }
 
-        return $componentesTurma
-            ->when($serieId, function (Collection $collection, int $serieId) {
-                return $collection->where('cod_serie', $serieId);
-            })
-            ->where('knowledgeArea.agrupar_descritores', true)
-            ->value('id');
+        return $novoFaltaTurmaAluno;
     }
 
     /**
