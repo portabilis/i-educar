@@ -420,7 +420,7 @@ class DiarioController extends ApiCoreController
                         continue;
                     }
 
-                    if ($matricula->getEvaluationRule()?->tipo_presenca != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+                    if ($this->getRegra($matricula->cod_matricula)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
                         $this->messenger->append("A regra da turma $turmaId não permite lançamento de faltas por componente.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::SCHOOL_CLASS_DOESNT_ALOW_FREQUENCY_BY_DISCIPLINE,
@@ -500,7 +500,7 @@ class DiarioController extends ApiCoreController
                         continue;
                     }
 
-                    if ($matricula->getEvaluationRule()?->tipo_presenca != RegraAvaliacao_Model_TipoPresenca::GERAL) {
+                    if ($this->getRegra($matricula->cod_matricula)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
                         throw new EvaluationRuleNotAllowGeneralAbsence($turmaId);
                     }
 
@@ -531,7 +531,7 @@ class DiarioController extends ApiCoreController
                     $matricula = $this->findMatricula($turmaId, $alunoId);
 
                     if (!empty($matricula)) {
-                        if ($matricula->getEvaluationRule()?->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+                        if ($this->getRegra($matricula->cod_matricula)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa e componente.");
                         }
 
@@ -566,7 +566,7 @@ class DiarioController extends ApiCoreController
                     $matricula = $this->findMatricula($turmaId, $alunoId);
 
                     if (!empty($matricula)) {
-                        if ($matricula->getEvaluationRule()->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+                        if ($this->getRegra($matricula->cod_matricula)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres anual por componente.");
                         }
 
@@ -601,7 +601,7 @@ class DiarioController extends ApiCoreController
                     $matricula = $this->findMatricula($turmaId, $alunoId);
 
                     if (!empty($matricula)) {
-                        if ($matricula->getEvaluationRule()?->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
+                        if ($this->getRegra($matricula->cod_matricula)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa geral.");
                         }
 
@@ -631,7 +631,7 @@ class DiarioController extends ApiCoreController
                     $matricula = $this->findMatricula($turmaId, $alunoId);
 
                     if (!empty($matricula)) {
-                        if ($matricula->getEvaluationRule()?->parecer_descritivo != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
+                        if ($this->getRegra($matricula->cod_matricula)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
                             throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres anual geral.");
                         }
 
