@@ -397,7 +397,7 @@ class DiarioController extends ApiCoreController
                 $q->where('id', '<>', $disciplinaDispensada);
             })
             ->with('knowledgeArea:id,agrupar_descritores')
-            ->orderBy('ordenamento')
+            ->orderBy('nome')
             ->get([
                 'id',
                 'cod_turma',

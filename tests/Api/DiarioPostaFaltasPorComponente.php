@@ -103,7 +103,8 @@ class DiarioPostaFaltasPorComponente extends TestCase
         ]);
         $discipline2 = LegacyDisciplineFactory::new()->create([
             'knowledge_area_id' => $areaConhecimento2,
-            'ordenamento' => 2
+            'ordenamento' => 2,
+            'name' => 'B-Disciplina2'
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -114,7 +115,8 @@ class DiarioPostaFaltasPorComponente extends TestCase
 
         $discipline3 = LegacyDisciplineFactory::new()->create([
             'knowledge_area_id' => $areaConhecimento2,
-            'ordenamento' => 1
+            'ordenamento' => 1,
+            'name' => 'A-Disciplina3'
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -125,7 +127,8 @@ class DiarioPostaFaltasPorComponente extends TestCase
 
         $discipline4 = LegacyDisciplineFactory::new()->create([
             'knowledge_area_id' => $areaConhecimento2,
-            'ordenamento' => 3
+            'ordenamento' => 3,
+            'name' => 'C-Disciplina4'
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
