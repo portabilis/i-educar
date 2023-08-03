@@ -225,6 +225,8 @@ a:hover {
   color: #98b0c3;
   font-size: 20px;
   padding-right: 10px;
+  width: 32px;
+  text-align: center;
 }
 
 .ui-menu-item {
