@@ -112,7 +112,7 @@ class DiarioController extends ApiCoreController
                   )
               AND mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
-             /* AND m.aprovado IN (1,2,3,4,13,12,14)*/
+              AND m.aprovado IN (1,2,3,4,13,12,14)
             ORDER BY m.aprovado
               LIMIT 1';
 
@@ -417,10 +417,6 @@ class DiarioController extends ApiCoreController
 
                 foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
                     $matricula = $this->findMatricula($turmaId, $alunoId);
-                    $matricula2 = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-                    var_export($matricula);
-                    die();
 
                     if (! $matricula) {
                         continue;
@@ -470,14 +466,16 @@ class DiarioController extends ApiCoreController
                 })->where('knowledgeArea.id', $areaDoConhecimento)
                   ->where('knowledgeArea.agrupar_descritores', true);
 
-                $componenteAreaPrimeiro = $componentesArea->shift();
-                //coloca a falta no primeiro componente do agrupamento
-                $novoFaltaTurmaAluno[$componenteAreaPrimeiro->id] = $faltaTurmaAlunoDisciplina;
-                //coloca zero no restante dos componentes do agrupamento
-                foreach ($componentesArea as $componenteArea) {
-                    $novoFaltaTurmaAluno[$componenteArea->id] = [
-                        'valor' => 0
-                    ];
+                if ($componentesArea->isNotEmpty()) {
+                    $componenteAreaPrimeiro = $componentesArea->shift();
+                    //coloca a falta no primeiro componente do agrupamento
+                    $novoFaltaTurmaAluno[$componenteAreaPrimeiro->id] = $faltaTurmaAlunoDisciplina;
+                    //coloca zero no restante dos componentes do agrupamento
+                    foreach ($componentesArea as $componenteArea) {
+                        $novoFaltaTurmaAluno[$componenteArea->id] = [
+                            'valor' => 0
+                        ];
+                    }
                 }
             } else {
                 $novoFaltaTurmaAluno[$componenteCurricularId] = $faltaTurmaAlunoDisciplina;
