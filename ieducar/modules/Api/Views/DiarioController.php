@@ -81,11 +81,13 @@ class DiarioController extends ApiCoreController
     {
         return LegacyRegistration::query()
             ->active()
-            ->whereHas('enrollments', function ($q) {
-                $q->active();
-                $q->orWhere('transferido', true);
+            ->whereHas('enrollments', function ($q) use ($turmaId) {
+                $q->where('ref_cod_turma', $turmaId);
+                $q->where(function ($q) {
+                    $q->where('ativo', 1);
+                    $q->orWhere('transferido', true);
+                });
             })
-            ->whereSchoolClass($turmaId)
             ->whereStudent($alunoId)
             ->whereIn('aprovado', [1,2,3,4,13,12,14])
             ->orderBy('aprovado')
@@ -110,7 +112,7 @@ class DiarioController extends ApiCoreController
                   )
               AND mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
-              AND m.aprovado IN (1,2,3,4,13,12,14)
+             /* AND m.aprovado IN (1,2,3,4,13,12,14)*/
             ORDER BY m.aprovado
               LIMIT 1';
 
@@ -415,6 +417,10 @@ class DiarioController extends ApiCoreController
 
                 foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
                     $matricula = $this->findMatricula($turmaId, $alunoId);
+                    $matricula2 = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
+                    var_export($matricula);
+                    die();
 
                     if (! $matricula) {
                         continue;
