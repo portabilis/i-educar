@@ -58,6 +58,14 @@ class Employee extends LegacyModel
         );
     }
 
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->person->nome
+        );
+    }
+
+
     /**
      * Servidor alocação
      */
