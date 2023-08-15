@@ -65,7 +65,6 @@ class Employee extends LegacyModel
         );
     }
 
-
     /**
      * Servidor alocação
      */

@@ -39,7 +39,7 @@ class LegacyAbsenceDelay extends LegacyModel
     ];
 
     protected $casts = [
-        'data_falta_atraso' => 'date'
+        'data_falta_atraso' => 'date',
     ];
 
     protected function typeName(): Attribute
@@ -53,10 +53,9 @@ class LegacyAbsenceDelay extends LegacyModel
     {
         return Attribute::make(
             //no banco é salvo 0 como "Sim"
-            get: fn () => $this->justificada === 0 ? 'Sim' : "Não",
+            get: fn () => $this->justificada === 0 ? 'Sim' : 'Não',
         );
     }
-
 
     public function school(): BelongsTo
     {

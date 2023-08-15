@@ -175,7 +175,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         return $this->hasMany(LegacyEvaluationRule::class, 'instituicao_id');
     }
 
-    public function getRelocationDate(): string|null
+    public function getRelocationDate(): ?string
     {
         return $this->relocationDate?->format('Y-m-d');
     }

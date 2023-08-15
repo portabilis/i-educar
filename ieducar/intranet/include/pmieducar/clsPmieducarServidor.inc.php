@@ -583,8 +583,8 @@ class clsPmieducarServidor extends Model
               FROM pmieducar.servidor_alocacao a
               WHERE $where".
             ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
-            ." AND (a.data_saida > now() or a.data_saida is null)
-              AND a.periodo = 1) OR s.multi_seriado )";
+            .' AND (a.data_saida > now() or a.data_saida is null)
+              AND a.periodo = 1) OR s.multi_seriado )';
                     }
                 }
                 if ($vespertino) {
@@ -643,8 +643,8 @@ class clsPmieducarServidor extends Model
               FROM pmieducar.servidor_alocacao a
               WHERE $where ".
                 ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
-                ." AND (a.data_saida > now() or a.data_saida is null)
-              AND a.periodo = 2 ) OR s.multi_seriado) ";
+                .' AND (a.data_saida > now() or a.data_saida is null)
+              AND a.periodo = 2 ) OR s.multi_seriado) ';
                     }
                 }
                 if ($noturno) {
@@ -691,8 +691,8 @@ class clsPmieducarServidor extends Model
               FROM pmieducar.servidor_alocacao a
               WHERE $where ".
                 ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
-                ." AND (a.data_saida > now() or a.data_saida is null)
-              AND a.periodo = 3 ) OR s.multi_seriado) ";
+                .' AND (a.data_saida > now() or a.data_saida is null)
+              AND a.periodo = 3 ) OR s.multi_seriado) ';
                     }
                 }
                 if (!(is_string($str_horario) && $str_horario == 'S')) {

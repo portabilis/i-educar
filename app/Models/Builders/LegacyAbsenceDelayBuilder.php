@@ -28,7 +28,6 @@ class LegacyAbsenceDelayBuilder extends LegacyBuilder
         return $this->where('ref_cod_servidor', $employee);
     }
 
-
     /**
      * Filtra por Servidor
      */
@@ -44,7 +43,7 @@ class LegacyAbsenceDelayBuilder extends LegacyBuilder
     {
         return $this->whereBetween('data_falta_atraso', [
             $start,
-            $end
+            $end,
         ]);
     }
 }
