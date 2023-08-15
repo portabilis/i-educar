@@ -138,7 +138,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         return Attribute::make(
             get: fn () => implode(', ', [
                 $this->logradouro,
-                $this->numero,
+                $this->numero ? 'Nº.: ' . $this->numero : 'S/N',
                 $this->bairro,
             ]) . ' - ' . $this->cidade . ' - ' . $this->ref_sigla_uf . ' - CEP: ' . Util::formatPostcode($this->cep)
         );

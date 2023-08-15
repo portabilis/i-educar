@@ -42,7 +42,7 @@ class SchoolData extends Model
         return Attribute::make(
             get: fn () => implode(', ', [
                     $this->logradouro,
-                    $this->numero,
+                    $this->numero ? 'Nº.: ' . $this->numero : 'S/N',
                     $this->bairro,
                 ]) . ' - ' . $this->municipio . ' - ' . $this->uf_municipio . ' - CEP: ' . Util::formatPostcode($this->cep)
         );
