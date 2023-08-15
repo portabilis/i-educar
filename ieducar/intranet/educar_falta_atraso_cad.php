@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
 use App\Services\EmployeeService;
 use Illuminate\Support\Facades\DB;
@@ -100,11 +101,7 @@ return new class extends clsCadastro
 
         // Text
         // @todo CoreExt_Enum
-        $opcoes = [
-            '' => 'Selecione',
-            1 => 'Atraso',
-            2 => 'Falta',
-        ];
+        $opcoes = AbsenceDelayType::getDescriptiveValues()->prepend('Selecione', '');
 
         $this->campoLista(nome: 'tipo', campo: 'Tipo', valor: $opcoes, default: $this->tipo);
 

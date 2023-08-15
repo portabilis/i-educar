@@ -122,7 +122,7 @@ class LegacyStudent extends LegacyModel
     {
         return collect([
             $this->individual->mother,
-            $this->individual->father
+            $this->individual->father,
         ])->filter(fn ($person) => !empty($person) && $person->name !== 'NÃO REGISTRADO');
     }
 

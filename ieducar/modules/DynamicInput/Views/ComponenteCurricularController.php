@@ -242,11 +242,12 @@ class ComponenteCurricularController extends ApiCoreController
             $nome = $componenteCurricular->knowledgeArea?->nome;
             $sessao = $componenteCurricular->knowledgeArea?->sessao;
             $areaConhecimento = (($sessao != '') ? $sessao . ' - ' : '') . $nome;
+
             return [
                 '__' . $componenteCurricular['id'] => [
                     'value' => mb_strtoupper($componenteCurricular['nome'], 'UTF-8'),
                     'group' => mb_strtoupper($areaConhecimento, 'UTF-8'),
-                ]
+                ],
             ];
         });
 
@@ -267,11 +268,12 @@ class ComponenteCurricularController extends ApiCoreController
             $nome = $componenteCurricular->knowledgeArea?->nome;
             $sessao = $componenteCurricular->knowledgeArea?->sessao;
             $areaConhecimento = (($sessao != '') ? $sessao . ' - ' : '') . $nome;
+
             return [
                 '__' . $componenteCurricular['id'] => [
                     'value' => mb_strtoupper($componenteCurricular['nome'], 'UTF-8'),
                     'group' => mb_strtoupper($areaConhecimento, 'UTF-8'),
-                ]
+                ],
             ];
         });
 
