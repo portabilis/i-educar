@@ -14,7 +14,7 @@ trait HasLegacyDates
     /**
      * Get the name of the "created at" column.
      */
-    public function getCreatedAtColumn(): string|null
+    public function getCreatedAtColumn(): ?string
     {
         return 'data_cadastro';
     }
@@ -22,7 +22,7 @@ trait HasLegacyDates
     /**
      * Get the name of the "updated at" column.
      */
-    public function getUpdatedAtColumn(): string|null
+    public function getUpdatedAtColumn(): ?string
     {
         return null;
     }

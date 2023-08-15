@@ -101,7 +101,7 @@ return new class extends clsCadastro
 
         // Text
         // @todo CoreExt_Enum
-        $opcoes = AbsenceDelayType::getDescriptiveValues()->prepend('Selecione','');
+        $opcoes = AbsenceDelayType::getDescriptiveValues()->prepend('Selecione', '');
 
         $this->campoLista(nome: 'tipo', campo: 'Tipo', valor: $opcoes, default: $this->tipo);
 
