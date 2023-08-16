@@ -137,12 +137,14 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
             $event = new ReportIssued('html', $templateName, $success);
 
-            if ($error) {
-                throw $error;
-            }
-
             if ($success) {
                 $event->replace(base64_encode($content));
+            }
+
+            event($event);
+
+            if ($error) {
+                throw $error;
             }
 
             return base64_decode($event->content());
