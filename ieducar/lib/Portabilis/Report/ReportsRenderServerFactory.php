@@ -124,7 +124,28 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
                 'driver' => $data['driver'] ?? null,
             ];
 
-            return app(ReportRenderContract::class)->render($payload);
+            $success = true;
+            $content = null;
+            $error = null;
+
+            try {
+                $content = app(ReportRenderContract::class)->render($payload);
+            } catch (Throwable $throwable) {
+                $success = false;
+                $error = $throwable;
+            }
+
+            $event = new ReportIssued('html', $templateName, $success);
+
+            if ($error) {
+                throw $error;
+            }
+
+            if ($success) {
+                $event->replace(base64_encode($content));
+            }
+
+            return base64_decode($event->content());
         } elseif ($report->useJson()) {
             $params['datasource'] = 'json';
             $this->url = str_replace('/deprecated', '', $this->url);
