@@ -13,11 +13,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+use Ankurk91\Eloquent\BelongsToOne;
 
 class LegacyStudent extends LegacyModel
 {
     use LegacyAttribute;
     use HasLegacyDates;
+    use BelongsToOne;
 
     public const CREATED_AT = 'data_cadastro';
 
@@ -87,6 +89,30 @@ class LegacyStudent extends LegacyModel
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
+    }
+
+    public function deficiencies(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            LegacyDeficiency::class,
+            'cadastro.fisica_deficiencia',
+            'ref_idpes',
+            'ref_cod_deficiencia',
+            'ref_idpes',
+            'cod_deficiencia'
+        );
+    }
+
+    public function deficiency()
+    {
+        return $this->belongsToOne(
+            LegacyDeficiency::class,
+            'cadastro.fisica_deficiencia',
+            'ref_idpes',
+            'ref_cod_deficiencia',
+            'ref_idpes',
+            'cod_deficiencia'
+        );
     }
 
     public function registrations(): HasMany
