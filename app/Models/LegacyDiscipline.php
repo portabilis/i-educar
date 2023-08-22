@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyDiscipline extends LegacyModel
 {
@@ -48,6 +49,11 @@ class LegacyDiscipline extends LegacyModel
         return Attribute::make(
             get: fn () => $this->instituicao_id,
         );
+    }
+
+    public function schoolGradeDisciplines(): HasMany
+    {
+        return $this->hasMany(LegacySchoolGradeDiscipline::class, 'ref_cod_disciplina');
     }
 
     protected function knowledgeAreaId(): Attribute

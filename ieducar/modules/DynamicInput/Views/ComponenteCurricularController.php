@@ -17,6 +17,11 @@ class ComponenteCurricularController extends ApiCoreController
             $this->validatesPresenceOf('serie');
     }
 
+    protected function canGetComponentesCurricularesEscola()
+    {
+        return $this->validatesPresenceOf('escola');
+    }
+
     private function agrupaComponentesCurriculares($componentesCurriculares)
     {
         $options = [];
@@ -232,9 +237,45 @@ class ComponenteCurricularController extends ApiCoreController
         $serie = $this->getRequest()->serie;
         $ano = $this->getRequest()->ano ?: 0;
 
-        $componentesCurriculares = (new SchoolGradeDisciplineService)->getDisciplinesForYear($escola, $serie, $ano);
+        $componentesCurriculares = (new SchoolGradeDisciplineService)->getDisciplinesForYear($escola, $ano, $serie);
+        $options = $componentesCurriculares->mapWithKeys(function ($componenteCurricular) {
+            $nome = $componenteCurricular->knowledgeArea?->nome;
+            $sessao = $componenteCurricular->knowledgeArea?->sessao;
+            $areaConhecimento = (($sessao != '') ? $sessao . ' - ' : '') . $nome;
 
-        $options = $this->agrupaComponentesCurriculares($componentesCurriculares->toArray());
+            return [
+                '__' . $componenteCurricular['id'] => [
+                    'value' => mb_strtoupper($componenteCurricular['nome'], 'UTF-8'),
+                    'group' => mb_strtoupper($areaConhecimento, 'UTF-8'),
+                ],
+            ];
+        });
+
+        return ['options' => $options];
+    }
+
+    protected function getComponentesCurricularesEscola()
+    {
+        if (!$this->canGetComponentesCurricularesEscola()) {
+            return;
+        }
+
+        $escola = $this->getRequest()->escola;
+        $ano = $this->getRequest()->ano ?: 0;
+
+        $componentesCurriculares = (new SchoolGradeDisciplineService)->getDisciplinesForYear($escola, $ano);
+        $options = $componentesCurriculares->mapWithKeys(function ($componenteCurricular) {
+            $nome = $componenteCurricular->knowledgeArea?->nome;
+            $sessao = $componenteCurricular->knowledgeArea?->sessao;
+            $areaConhecimento = (($sessao != '') ? $sessao . ' - ' : '') . $nome;
+
+            return [
+                '__' . $componenteCurricular['id'] => [
+                    'value' => mb_strtoupper($componenteCurricular['nome'], 'UTF-8'),
+                    'group' => mb_strtoupper($areaConhecimento, 'UTF-8'),
+                ],
+            ];
+        });
 
         return ['options' => $options];
     }
@@ -247,6 +288,8 @@ class ComponenteCurricularController extends ApiCoreController
             $this->appendResponse($this->getComponentesCurricularesForDiario());
         } elseif ($this->isRequestFor('get', 'componentesCurricularesEscolaSerie')) {
             $this->appendResponse($this->getComponentesCurricularesEscolaSerie());
+        } elseif ($this->isRequestFor('get', 'componentesCurricularesEscola')) {
+            $this->appendResponse($this->getComponentesCurricularesEscola());
         } else {
             $this->notImplementedOperationError();
         }

@@ -136,6 +136,19 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
+    public function whereWithReport(): self
+    {
+        return $this->whereNotNull('url_laudo_medico')->whereRaw('url_laudo_medico::text <> ?', '[]');
+    }
+
+    public function whereWithoutReport(): self
+    {
+        return $this->where(function ($q) {
+            $q->whereNull('url_laudo_medico');
+            $q->orWhereRaw('url_laudo_medico::text = ?', '[]');
+        });
+    }
+
     public function whereRegistration($year, $course, $grade, $school)
     {
         return $this->where(function ($query) use ($year, $course, $grade, $school) {

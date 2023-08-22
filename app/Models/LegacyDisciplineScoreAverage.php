@@ -44,7 +44,7 @@ class LegacyDisciplineScoreAverage extends Model
         return $this->belongsTo(LegacyRegistrationScore::class, 'nota_aluno_id');
     }
 
-    public function average(int $decimalPlaces): string|null
+    public function average(int $decimalPlaces): ?string
     {
         $score = $this->media_arredondada;
         if (!is_numeric($score) || empty($score)) {

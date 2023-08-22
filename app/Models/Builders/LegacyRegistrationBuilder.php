@@ -76,6 +76,14 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Instituição
+     */
+    public function whereInstitution(int $institution): self
+    {
+        return $this->whereHas('school', static fn ($q) => $q->whereInstitution($institution));
+    }
+
+    /**
      * Filtra por Escola
      */
     public function whereSchool(int $school): self
@@ -84,11 +92,51 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Curso
+     */
+    public function whereCourse(int $course): self
+    {
+        return $this->where('ref_cod_curso', $course);
+    }
+
+    /**
+     * Filtra por Série
+     */
+    public function whereGrade(int $grade): self
+    {
+        return $this->where('ref_ref_cod_serie', $grade);
+    }
+
+    /**
+     * Filtra por Tipos de Deficiência
+     */
+    public function whereDeficiencyTypes(string $deficiencyTypes): self
+    {
+        return $this->whereHas('student.person', fn ($q) => $q->whereDeficiencyTypes($deficiencyTypes));
+    }
+
+    /**
+     * Filtra por Situacao
+     */
+    public function whereSituation(int $situation): self
+    {
+        return $this->whereHas('situations', fn ($q) => $q->situation($situation));
+    }
+
+    /**
      * Filtra por Turma
      */
     public function whereSchoolClass(int $schoolClass): self
     {
-        return $this->whereHas('enrollments', static fn ($q) => $q->where('ref_cod_turma', $schoolClass));
+        return $this->whereHas('enrollments', static fn ($q) => $q->whereValid()->where('ref_cod_turma', $schoolClass));
+    }
+
+    /**
+     * Filtra por Matricula
+     */
+    public function whereRegistration(int $registration): self
+    {
+        return $this->whereKey($registration);
     }
 
     /**

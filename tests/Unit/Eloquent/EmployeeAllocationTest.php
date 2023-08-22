@@ -3,6 +3,7 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\EmployeeAllocation;
+use App\Models\LegacyPeriod;
 use App\Models\LegacySchool;
 use App\Models\LegacyUser;
 use Tests\EloquentTestCase;
@@ -13,6 +14,7 @@ class EmployeeAllocationTest extends EloquentTestCase
         'school' => LegacySchool::class,
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
+        'period' => LegacyPeriod::class,
     ];
 
     /**
@@ -21,5 +23,11 @@ class EmployeeAllocationTest extends EloquentTestCase
     protected function getEloquentModelName()
     {
         return EmployeeAllocation::class;
+    }
+
+    /** @test */
+    public function attributes()
+    {
+        $this->assertEquals($this->model->period->nome, $this->model->periodName);
     }
 }
