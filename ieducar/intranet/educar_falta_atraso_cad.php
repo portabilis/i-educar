@@ -232,8 +232,6 @@ return new class extends clsCadastro
             return false;
         }
 
-        dd('eu');
-
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
         if ($this->tipo == 1) {
             $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
