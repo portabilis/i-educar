@@ -14,6 +14,7 @@ class ReportIssuedListener
             'template' => $event->template,
             'success' => $event->success,
             'date' => now(),
+            'authenticated' => $event->authenticate,
         ]);
     }
 }
