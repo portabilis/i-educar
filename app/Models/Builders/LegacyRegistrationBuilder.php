@@ -176,4 +176,47 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
         return $this;
     }
+
+    public function allActive(): self
+    {
+        $this->active();
+        $this->whereHas('student', fn ($q) => $q->active());
+        $this->whereHas('school', fn ($q) => $q->active());
+        $this->whereHas('course', fn ($q) => $q->active());
+        $this->whereHas('grade', fn ($q) => $q->active());
+        $this->whereHas('schoolClass', fn ($q) => $q->active());
+
+        return $this;
+    }
+
+    /**
+     * Filtra por data inicial
+     *
+     * @return $this
+     */
+    public function whereStartAfter(string $start): self
+    {
+        return $this->whereDate('data_matricula', '>=', $start);
+    }
+
+    /**
+     * Filtra por data final
+     *
+     * @return $this
+     */
+    public function whereEndBefore(string $end): self
+    {
+        return $this->whereDate('data_matricula', '<=', $end);
+    }
+
+    public function whereDependency(int $dependency): self
+    {
+        if ($dependency === 1) {
+            return $this->where('dependencia', true);
+        }
+        if ($dependency === 2) {
+            return $this->where('dependencia', false);
+        }
+        return $this;
+    }
 }
