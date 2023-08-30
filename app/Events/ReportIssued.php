@@ -10,6 +10,7 @@ class ReportIssued
         public string $render,
         public string $template,
         public bool $success,
+        public bool $authenticate = false,
     ) {
     }
 

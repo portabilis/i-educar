@@ -135,7 +135,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
                 $error = $throwable;
             }
 
-            $event = new ReportIssued('html', $templateName, $success);
+            $event = new ReportIssued('html', $templateName, $success, $report->authenticate());
 
             if ($success) {
                 $event->replace(base64_encode($content));
@@ -199,7 +199,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             $this->log($payload, $response->getBody()->getContents());
 
             $error = 'Não foi possível analisar a resposta do serviço.';
-        } else if ($json['success'] == false) {
+        } elseif ($json['success'] == false) {
             $this->log($payload, $response->getBody()->getContents());
 
             $error = $json['error'] ?? $json['message'];
