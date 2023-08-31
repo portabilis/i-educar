@@ -42,6 +42,13 @@ class LegacyIndividualFactory extends Factory
         ]);
     }
 
+    public function withName(string $name): static
+    {
+        return $this->afterCreating(function (LegacyIndividual $individual) use ($name) {
+            $individual->person->nome = $name;
+        });
+    }
+
     public function withDocument(?string $rg = null, ?string $birthCertificate = null): static
     {
         return $this->afterCreating(function (LegacyIndividual $individual) use ($rg, $birthCertificate) {
