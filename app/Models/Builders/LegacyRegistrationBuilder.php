@@ -219,4 +219,20 @@ class LegacyRegistrationBuilder extends LegacyBuilder
         }
         return $this;
     }
+
+    /**
+     * Filtra por zona de localização
+     */
+    public function whereLocalizationZone(int $localizationZone): self
+    {
+        return $this->whereHas('school', fn ($q) => $q->whereLocalizationZone($localizationZone));
+    }
+
+    /**
+     * Filtra por localizacao diferenciada
+     */
+    public function whereDifferentiatedLocalizationArea(int $differentiatedLocalizationArea): self
+    {
+        return $this->whereHas('school', fn ($q) => $q->whereDifferentiatedLocalizationArea($differentiatedLocalizationArea));
+    }
 }
