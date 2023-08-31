@@ -358,7 +358,7 @@ return new class extends clsCadastro
             }
         }
 
-        $this->saveAddress(person: $this->cod_pessoa_fj);
+        $this->saveAddress(person: $this->cod_pessoa_fj, optionalFields: true);
         $this->mensagem = 'Edição efetuada com sucesso.';
         $this->simpleRedirect(url: 'empresas_lst.php');
     }

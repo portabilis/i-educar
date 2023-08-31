@@ -12,7 +12,7 @@ class AssetService implements AssetServiceContract
 
     protected bool $automaticVersioning;
 
-    public function __construct(?string $version, ?bool $secure = null, bool $automaticVersioning = false)
+    public function __construct(?string $version, bool $secure = null, bool $automaticVersioning = false)
     {
         $this->version = $version;
         $this->secure = $secure;

@@ -17,7 +17,7 @@ class SchoolGradeDisciplineService
     {
         return LegacySchoolGradeDiscipline::query()
             ->with('discipline')
-            ->whereSchool( $school)
+            ->whereSchool($school)
             ->whereGrade($grade)
             ->get()
             ->pluck('discipline');
@@ -50,7 +50,7 @@ class SchoolGradeDisciplineService
                 $q->filter([
                     'school' => $school,
                     'yearEq' => $year,
-                    'grade' => $grade
+                    'grade' => $grade,
                 ]);
                 $q->whereHas('school', fn ($q) => $q->active());
                 $q->when($grade, fn ($q) => $q->whereHas('grade', fn ($q) => $q->active()));

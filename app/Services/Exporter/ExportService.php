@@ -19,7 +19,7 @@ class ExportService
      */
     public function __construct(
         private Export $export,
-        private string|null $disk = null
+        private ?string $disk = null
     ) {
     }
 
