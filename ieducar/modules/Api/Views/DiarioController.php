@@ -8,6 +8,7 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbse
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class DiarioController extends ApiCoreController
 {
@@ -38,23 +39,26 @@ class DiarioController extends ApiCoreController
 
     protected function validateComponenteTurma($componenteCurricularId, Collection $componentesTurma, LegacyRegistration $registration): bool
     {
-        $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId){
-            return $collection->where('cod_serie', $serieId);
-        })->contains($componenteCurricularId);
-
         $turmaId = $componentesTurma->value('cod_turma');
-        //pula a mensagem se for area do conhecimento e um componente a turma
-        if (!$valid && !$componentesTurma->contains($componenteCurricularId)) {
-            $this->messenger->append("Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.", 'error');
-            $this->appendResponse('error', [
-                'code' => Error::DISCIPLINE_NOT_EXISTS_FOR_SCHOOL_CLASS,
-                'message' => "Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.",
-            ]);
 
-            return false;
-        }
+        return Cache::remember('valid_component_' . $componenteCurricularId . '_schoolclass_' . $turmaId . '_grade_' . $registration->ref_ref_cod_serie, now()->addMinute(), function () use ($componenteCurricularId, $componentesTurma, $turmaId, $registration) {
+            $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId){
+                return $collection->where('cod_serie', $serieId);
+            })->contains($componenteCurricularId);
 
-        return $valid;
+            //pula a mensagem se for area do conhecimento e um componente a turma
+            if (!$valid && !$componentesTurma->contains($componenteCurricularId)) {
+                $this->messenger->append("Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.", 'error');
+                $this->appendResponse('error', [
+                    'code' => Error::DISCIPLINE_NOT_EXISTS_FOR_SCHOOL_CLASS,
+                    'message' => "Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.",
+                ]);
+
+                return false;
+            }
+
+            return $valid;
+        });
     }
 
     protected function trySaveServiceBoletim($turmaId, $alunoId)
@@ -79,46 +83,26 @@ class DiarioController extends ApiCoreController
 
     protected function findMatricula($turmaId, $alunoId)
     {
-        return LegacyRegistration::query()
-            ->active()
-            ->whereHas('enrollments', function ($q) use ($turmaId) {
-                $q->where('ref_cod_turma', $turmaId);
-                $q->where(function ($q) {
-                    $q->where('ativo', 1);
-                    $q->orWhere('transferido', true);
-                });
-            })
-            ->whereStudent($alunoId)
-            ->whereIn('aprovado', [1,2,3,4,13,12,14])
-            ->orderBy('aprovado')
-            ->first([
-                'cod_matricula',
-                'ref_ref_cod_serie',
-                'ref_ref_cod_escola',
-                'ano'
-            ]);
-    }
-
-    protected function findMatriculaByTurmaAndAluno($turmaId, $alunoId)
-    {
-        $resultado = [];
-
-        $sql = 'SELECT m.cod_matricula AS id
-              FROM pmieducar.matricula m
-              INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
-              WHERE m.ativo = 1
-              AND (mt.ativo = 1
-                   OR mt.transferido
-                  )
-              AND mt.ref_cod_turma = $1
-              AND m.ref_cod_aluno = $2
-              AND m.aprovado IN (1,2,3,4,13,12,14)
-            ORDER BY m.aprovado
-              LIMIT 1';
-
-        $matriculaId = $this->fetchPreparedQuery($sql, [$turmaId, $alunoId], true, 'first-field');
-
-        return $matriculaId;
+        return Cache::remember('matricula_id_' . $turmaId . '_' . $alunoId, now()->addMinute(), function () use ($turmaId, $alunoId) {
+            return LegacyRegistration::query()
+                ->active()
+                ->whereHas('enrollments', function ($q) use ($turmaId) {
+                    $q->where('ref_cod_turma', $turmaId);
+                    $q->where(function ($q) {
+                        $q->where('ativo', 1);
+                        $q->orWhere('transferido', true);
+                    });
+                })
+                ->whereStudent($alunoId)
+                ->whereIn('aprovado', [1,2,3,4,13,12,14])
+                ->orderBy('aprovado')
+                ->first([
+                    'cod_matricula',
+                    'ref_ref_cod_serie',
+                    'ref_ref_cod_escola',
+                    'ano'
+                ]);
+        });
     }
 
     /**
@@ -130,25 +114,25 @@ class DiarioController extends ApiCoreController
      */
     protected function serviceBoletim($turmaId, $alunoId)
     {
-        $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+        $matricula = $this->findMatricula($turmaId, $alunoId);
 
-        if ($matriculaId) {
+        if ($matricula) {
             if (!isset($this->_boletimServiceInstances)) {
                 $this->_boletimServiceInstances = [];
             }
 
             // set service
-            if (!isset($this->_boletimServiceInstances[$matriculaId])) {
-                $params = ['matricula' => $matriculaId];
-                $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+            if (!isset($this->_boletimServiceInstances[$matricula->cod_matricula])) {
+                $params = ['matricula' => $matricula->cod_matricula];
+                $this->_boletimServiceInstances[$matricula->cod_matricula] = new Avaliacao_Service_Boletim($params);
             }
 
             // validates service
-            if (is_null($this->_boletimServiceInstances[$matriculaId])) {
-                throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matrícula {$matriculaId}.");
+            if (is_null($this->_boletimServiceInstances[$matricula->cod_matricula])) {
+                throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matrícula {$matricula->cod_matricula}.");
             }
 
-            return $this->_boletimServiceInstances[$matriculaId];
+            return $this->_boletimServiceInstances[$matricula->cod_matricula];
         } else {
             return false;
         }
@@ -656,7 +640,7 @@ class DiarioController extends ApiCoreController
     protected function atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId)
     {
         $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
-        $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+        $matricula = $this->findMatricula($turmaId, $alunoId);
 
         $situacaoComponente = $this->serviceBoletim($turmaId, $alunoId)
             ->getSituacaoComponentesCurriculares()
@@ -668,10 +652,10 @@ class DiarioController extends ApiCoreController
             $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
 
         if (!empty($notaExame) && $situacaoEmExame) {
-            $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId, $notaExame);
             $obj->existe() ? $obj->edita() : $obj->cadastra();
         } else {
-            $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
+            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId);
             $obj->excluir();
         }
     }

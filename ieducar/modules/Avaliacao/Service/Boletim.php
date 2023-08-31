@@ -15,6 +15,7 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
+use Illuminate\Support\Facades\Cache;
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
@@ -3353,9 +3354,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     public function getEvaluationRule()
     {
-        return LegacyEvaluationRule::findOrFail(
-            $this->getRegra()->get('id')
-        );
+        $id = $this->getRegra()->get('id');
+
+        return Cache::remember('evaluation_rule_' . $id, now()->addMinute(), function () use ($id) {
+            return LegacyEvaluationRule::findOrFail(
+                $id
+            );
+        });
     }
 
     /**
@@ -3486,27 +3491,29 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $grade = $registration['ref_ref_cod_serie'];
         $school = $registration['ref_ref_cod_escola'];
 
-        $legacySchoolGradeDiscipline = LegacySchoolGradeDiscipline::query()
-            ->whereYearEq($year)
-            ->whereGrade($grade)
-            ->whereSchool($school)
-            ->whereDiscipline($disciplineId)
-            ->value('hora_falta');
+        return Cache::remember('hour_absence_' . $year . '_' . $grade . '_' . $school . '_' . $disciplineId, now()->addMinute(), function () use ($year, $grade, $school, $disciplineId) {
+            $legacySchoolGradeDiscipline = LegacySchoolGradeDiscipline::query()
+                ->whereYearEq($year)
+                ->whereGrade($grade)
+                ->whereSchool($school)
+                ->whereDiscipline($disciplineId)
+                ->value('hora_falta');
 
-        if ($legacySchoolGradeDiscipline) {
-            return (float) $legacySchoolGradeDiscipline;
-        }
+            if ($legacySchoolGradeDiscipline) {
+                return (float) $legacySchoolGradeDiscipline;
+            }
 
-        $legacyDisciplineAcademicYear = LegacyDisciplineAcademicYear::query()
-            ->whereGrade($grade)
-            ->whereDiscipline($disciplineId)
-            ->whereYearEq($year)
-            ->value('hora_falta');
+            $legacyDisciplineAcademicYear = LegacyDisciplineAcademicYear::query()
+                ->whereGrade($grade)
+                ->whereDiscipline($disciplineId)
+                ->whereYearEq($year)
+                ->value('hora_falta');
 
-        if ($legacyDisciplineAcademicYear) {
-            return (float) $legacyDisciplineAcademicYear;
-        }
+            if ($legacyDisciplineAcademicYear) {
+                return (float) $legacyDisciplineAcademicYear;
+            }
 
-        return $this->getOption('cursoHoraFalta');
+            return $this->getOption('cursoHoraFalta');
+        });
     }
 }
