@@ -177,7 +177,7 @@ class LegacyRegistrationBuilder extends LegacyBuilder
         return $this;
     }
 
-    public function allActive(): self
+    public function allRelationsActive(): self
     {
         $this->active();
         $this->whereHas('student', fn ($q) => $q->active());
