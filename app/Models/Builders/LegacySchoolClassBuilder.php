@@ -179,4 +179,15 @@ class LegacySchoolClassBuilder extends LegacyBuilder
 
         return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)', preg_replace("/\([^)]+\)/", '', $name));
     }
+
+    /**
+     * Filtra dia da semana
+     *
+     *
+     * @return $this
+     */
+    public function whereDayWeek(string $dayWeek): self
+    {
+        return $this->whereRaw("dias_semana && ('{{$dayWeek}}')");
+    }
 }
