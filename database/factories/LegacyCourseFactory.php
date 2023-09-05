@@ -29,6 +29,7 @@ class LegacyCourseFactory extends Factory
             'hora_falta' => 0.75,
             'ativo' => 1,
             'modalidade_curso' => ModalidadeCurso::ENSINO_REGULAR,
+            'data_cadastro' => now(),
         ];
     }
 
