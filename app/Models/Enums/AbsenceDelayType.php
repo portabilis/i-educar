@@ -19,6 +19,6 @@ enum AbsenceDelayType: int
 
     public static function getDescriptiveValues(): Collection
     {
-        return collect(self::cases())->map(fn ($item) => $item->name());
+        return collect(self::cases())->mapWithKeys(fn (AbsenceDelayType $type) => [$type->value => $type->name()]);
     }
 }
