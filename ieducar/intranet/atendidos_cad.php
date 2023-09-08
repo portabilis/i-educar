@@ -97,6 +97,8 @@ return new class extends clsCadastro
 
     public $caminho_lst;
 
+    public $observacao;
+
     public function Inicializar()
     {
         $obj_permissoes = new clsPermissoes();
@@ -117,7 +119,8 @@ return new class extends clsCadastro
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia
+                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia,
+                $this->observacao
             ] =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -156,7 +159,8 @@ return new class extends clsCadastro
                 'zona_localizacao_censo',
                 'localizacao_diferenciada',
                 'nome_social',
-                'pais_residencia'
+                'pais_residencia',
+                'observacao'
             );
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
@@ -216,7 +220,8 @@ return new class extends clsCadastro
             'tipo',
             'sexo',
             'ativo',
-            'data_exclusao'
+            'data_exclusao',
+            'observacao'
         );
 
         if (isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1 && $this->retorno == 'Editar') {
@@ -240,6 +245,7 @@ return new class extends clsCadastro
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
 
         $this->campoOculto(nome: 'cod_pessoa_fj', valor: $this->cod_pessoa_fj);
+        $this->campoOculto(nome: 'observacao', valor: $this->observacao);
         $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
         $this->campoTexto(nome: 'nome_social', campo: 'Nome social e/ou afetivo', valor: $this->nome_social, tamanhovisivel: '50', tamanhomaximo: '255');
 
@@ -1340,9 +1346,7 @@ return new class extends clsCadastro
         $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
         $fisica->telefone_empresa = $this->telefone_empresa;
         $fisica->pessoa_contato = $db->escapeString(string: $this->pessoa_contato);
-        $this->renda_mensal = str_replace(search: '.', replace: '', subject: $this->renda_mensal);
-        $this->renda_mensal = str_replace(search: ',', replace: '.', subject: $this->renda_mensal);
-        $fisica->renda_mensal = $this->renda_mensal;
+        $fisica->renda_mensal = str_replace(search: ',', replace: '.', subject: str_replace(search: '.', replace: '', subject: $this->renda_mensal));
         $fisica->data_admissao = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL(date: $this->data_admissao) : null;
         $fisica->falecido = $this->falecido;
         $fisica->ref_cod_religiao = $this->religiao_id;
@@ -1350,6 +1354,7 @@ return new class extends clsCadastro
         $fisica->localizacao_diferenciada = $this->localizacao_diferenciada ?: 'null';
         $fisica->nome_social = $this->nome_social;
         $fisica->pais_residencia = $this->pais_residencia;
+        $fisica->observacao = str_replace(search: '+', replace: ' ', subject: $this->observacao);
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 
