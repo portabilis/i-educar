@@ -245,7 +245,6 @@ return new class extends clsCadastro
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
 
         $this->campoOculto(nome: 'cod_pessoa_fj', valor: $this->cod_pessoa_fj);
-        $this->campoOculto(nome: 'observacao', valor: $this->observacao);
         $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
         $this->campoTexto(nome: 'nome_social', campo: 'Nome social e/ou afetivo', valor: $this->nome_social, tamanhovisivel: '50', tamanhomaximo: '255');
 
@@ -777,6 +776,7 @@ return new class extends clsCadastro
         $this->campoTexto(nome: 'empresa', campo: 'Empresa', valor: $this->empresa, tamanhovisivel: '50', tamanhomaximo: '255');
         $this->inputTelefone(type: 'empresa', typeLabel: 'Telefone da empresa');
         $this->campoTexto(nome: 'pessoa_contato', campo: 'Pessoa de contato na empresa', valor: $this->pessoa_contato, tamanhovisivel: '50', tamanhomaximo: '255');
+        $this->campoTexto(nome: 'observacao', campo: 'Observação', valor: $this->observacao, tamanhovisivel: '50', tamanhomaximo: '255');
 
         $fileService = new FileService(urlPresigner: new UrlPresigner);
         $files = $this->cod_pessoa_fj && is_numeric($this->cod_pessoa_fj) ? $fileService->getFiles(relation: LegacyIndividual::find($this->cod_pessoa_fj)) : [];
