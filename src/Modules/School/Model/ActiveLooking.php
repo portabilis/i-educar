@@ -25,4 +25,14 @@ class ActiveLooking
             self::ACTIVE_LOOKING_WITHOUT_ABSENCE_RESULT => 'Retorno sem ausência justificada',
         ];
     }
+
+    public static function getShortDescriptiveValues(): array
+    {
+        return [
+            self::ACTIVE_LOOKING_IN_PROGRESS_RESULT => 'Em andamento',
+            self::ACTIVE_LOOKING_ABANDONMENT_RESULT => 'Abandono',
+            self::ACTIVE_LOOKING_WITH_ABSENCE_RESULT => 'Retorno c/ AJ',
+            self::ACTIVE_LOOKING_WITHOUT_ABSENCE_RESULT => 'Retorno s/ AJ',
+        ];
+    }
 }

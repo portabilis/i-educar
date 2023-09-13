@@ -73,6 +73,7 @@ class LegacyRegistration extends LegacyModel
     protected $casts = [
         'data_matricula' => 'date',
         'data_cancel' => 'date',
+        'data_exclusao' => 'date',
     ];
 
     public array $legacy = [
@@ -164,8 +165,7 @@ class LegacyRegistration extends LegacyModel
             'pmieducar.matricula_turma',
             'ref_cod_matricula',
             'ref_cod_turma',
-        )->wherePivot('ativo', 1)
-            ->where('pmieducar.turma.ativo', 1);
+        )->where('pmieducar.turma.ativo', 1);
     }
 
     public function situations(): HasMany

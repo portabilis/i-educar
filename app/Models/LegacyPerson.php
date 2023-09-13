@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Str;
 
 /**
@@ -127,6 +128,18 @@ class LegacyPerson extends LegacyModel
             'idpes',
             'cod_deficiencia'
         );
+    }
+
+    public function place(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Place::class,
+            PersonHasPlace::class,
+            'person_id',
+            'id',
+            'idpes',
+            'place_id'
+        )->orderBy('type');
     }
 
     public function employee(): HasOne

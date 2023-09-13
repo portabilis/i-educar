@@ -14,7 +14,7 @@ class EmployeeAllocationTest extends EloquentTestCase
         'school' => LegacySchool::class,
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
-        'period' => LegacyPeriod::class
+        'period' => LegacyPeriod::class,
     ];
 
     /**
@@ -28,6 +28,6 @@ class EmployeeAllocationTest extends EloquentTestCase
     /** @test */
     public function attributes()
     {
-        $this->assertEquals($this->model->period->nome,$this->model->periodName);
+        $this->assertEquals($this->model->period->nome, $this->model->periodName);
     }
 }
