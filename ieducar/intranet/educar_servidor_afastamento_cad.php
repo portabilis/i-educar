@@ -171,7 +171,7 @@ return new class() extends clsCadastro
 
         // Se edição, mostra campo para entrar com data de retornoc
         if ($this->retornar_servidor == EmployeeReturn::SIM || $this->data_retorno) {
-            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
+            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, true);
         }
 
         $obj_servidor = new clsPmieducarServidor(
