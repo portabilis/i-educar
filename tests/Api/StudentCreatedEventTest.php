@@ -22,7 +22,6 @@ class StudentCreatedEventTest extends TestCase
         $studentPerson  = LegacyIndividualFactory::new()->create();
         $guardianPerson  = LegacyIndividualFactory::new()->create();
 
-
         $data = [
             'oper' => 'post',
             'resource' => 'aluno',
