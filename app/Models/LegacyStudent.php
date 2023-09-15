@@ -23,6 +23,12 @@ class LegacyStudent extends LegacyModel
 
     public const CREATED_AT = 'data_cadastro';
 
+    public $dispatchesEvents = [
+        'created' => \App\Events\StudentCreated::class,
+        'updated' => \App\Events\StudentCreated::class,
+        'deleted' => \App\Events\StudentCreated::class,
+    ];
+
     public string $builder = LegacyStudentBuilder::class;
 
     /**

@@ -1,5 +1,8 @@
 <?php
 
+use App\Events\StudentCreated;
+use App\Events\StudentUpdated;
+use App\Models\LegacyStudent;
 use iEducar\Legacy\Model;
 
 class clsPmieducarAluno extends Model
@@ -374,7 +377,13 @@ class clsPmieducarAluno extends Model
 
             $db->Consulta("INSERT INTO pmieducar.aluno ($campos) VALUES ($valores)");
 
-            return $db->InsertId('pmieducar.aluno_cod_aluno_seq');
+            $studentId = $db->InsertId('pmieducar.aluno_cod_aluno_seq');
+
+            $legacyStudent = LegacyStudent::query()->find($studentId);
+
+            event(new StudentCreated($legacyStudent));
+
+            return $studentId;
         }
 
         return false;
@@ -595,6 +604,10 @@ class clsPmieducarAluno extends Model
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'");
+
+                $legacyStudent = LegacyStudent::query()->find($this->cod_aluno);
+
+                event(new StudentUpdated($legacyStudent));
 
                 return true;
             }
