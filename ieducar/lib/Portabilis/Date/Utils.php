@@ -90,9 +90,9 @@ class Portabilis_Date_Utils
     public static function validaData($date)
     {
         $validator = Validator::make([
-            'date' => $date
+            'date' => $date,
         ], [
-            'date' => 'required|date_format:d/m/Y'
+            'date' => 'required|date_format:d/m/Y',
         ]);
 
         if ($validator->fails()) {

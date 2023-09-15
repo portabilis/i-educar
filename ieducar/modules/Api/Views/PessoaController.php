@@ -136,7 +136,8 @@ class PessoaController extends ApiCoreController
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
              fisica.pais_residencia,
-             fisica.sus
+             fisica.sus,
+             fisica.observacao
             from cadastro.fisica
             where idpes = $2';
 
@@ -192,6 +193,7 @@ class PessoaController extends ApiCoreController
             'nome_social',
             'pais_residencia',
             'sus',
+            'observacao',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -219,6 +221,7 @@ class PessoaController extends ApiCoreController
         $details['ddd_fone_mov'] = $this->toUtf8($details['ddd_fone_mov']);
         $details['fone_mov'] = $this->toUtf8($details['fone_mov']);
         $details['falecido'] = $this->toUtf8($details['falecido']);
+        $details['observacao'] = $this->toUtf8($details['observacao']);
 
         $details['pais_origem_nome'] = $this->toUtf8($details['pais_origem_nome']);
 
@@ -585,6 +588,7 @@ class PessoaController extends ApiCoreController
         $individual->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo ?: $individual->zona_localizacao_censo;
         $individual->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada ?: $individual->localizacao_diferenciada;
         $individual->nome_social = $this->getRequest()->nome_social ?? $this->getRequest()->nome_social;
+        $individual->observacao = $this->getRequest()->observacao_aluno ?? $this->getRequest()->observacao_aluno;
 
         $individual->saveOrFail();
 
