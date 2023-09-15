@@ -1816,6 +1816,7 @@ class AlunoController extends ApiCoreController
         $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
         $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep ?: 'NULL';
         $fisica->observacao = $this->getRequest()->observacao_aluno ?: 'NULL';
+        $fisica->renda_mensal = $this->getRequest()->renda_mensal ?: 'NULL';
         $fisica = $fisica->edita();
     }
 
