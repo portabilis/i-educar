@@ -19,6 +19,7 @@ class LegacyMaritalStatusFactory extends Factory
     public function current(): LegacyMaritalStatus
     {
         $data = [
+            'ideciv' => 1,
             'descricao' => 'Solteiro(a)',
         ];
 
