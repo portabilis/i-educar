@@ -19,7 +19,7 @@ class LegacyMaritalStatusFactory extends Factory
     public function current(): LegacyMaritalStatus
     {
         $data = [
-            'descricao' => 'Solteiro',
+            'descricao' => 'Solteiro(a)',
         ];
 
         return LegacyMaritalStatus::query()->where($data)->first() ?? $this->create($data);
