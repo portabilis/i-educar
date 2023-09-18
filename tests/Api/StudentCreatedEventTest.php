@@ -38,6 +38,8 @@ class StudentCreatedEventTest extends TestCase
 
         $response = $this->getResource('/module/Api/Aluno', $data);
 
+        $response->assertStatus(200);
+
         $studentId = $response->json('id');
 
         Event::assertDispatched(StudentCreated::class, function ($e) use ($studentId) {
@@ -70,6 +72,8 @@ class StudentCreatedEventTest extends TestCase
         ];
 
         $response = $this->getResource('/module/Api/Aluno', $data);
+
+        $response->assertStatus(200);
 
         $studentId = $response->json('id');
 
