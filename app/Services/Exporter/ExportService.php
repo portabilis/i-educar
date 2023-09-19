@@ -14,12 +14,9 @@ class ExportService
 {
     private string $fileType = Excel::CSV;
 
-    /**
-     * @param string|null $disk
-     */
     public function __construct(
         private Export $export,
-        private string|null $disk = null
+        private ?string $disk = null
     ) {
     }
 

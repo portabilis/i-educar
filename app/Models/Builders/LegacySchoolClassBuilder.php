@@ -64,6 +64,14 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Turno
+     */
+    public function wherePeriod(int $period): self
+    {
+        return $this->where('turma_turno_id', $period);
+    }
+
+    /**
      * Filtra por acesso escola
      *
      *
@@ -170,5 +178,16 @@ class LegacySchoolClassBuilder extends LegacyBuilder
         $name = str_replace(['(', ')', '[', ']'], '', $name);
 
         return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)', preg_replace("/\([^)]+\)/", '', $name));
+    }
+
+    /**
+     * Filtra dia da semana
+     *
+     *
+     * @return $this
+     */
+    public function whereDayWeek(string $dayWeek): self
+    {
+        return $this->whereRaw("dias_semana && ('{{$dayWeek}}')");
     }
 }

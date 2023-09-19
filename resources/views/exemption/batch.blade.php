@@ -43,7 +43,6 @@
             <tr id="tr_nm_curso">
                 <td class="formlttd" valign="top">
                     <span class="form">Curso</span>
-                    <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
                     <span class="form">

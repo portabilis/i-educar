@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Models\View\HistoricGradeYear;
 use App\Traits\HasLegacyDates;
@@ -12,11 +13,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 class LegacyStudent extends LegacyModel
 {
     use LegacyAttribute;
     use HasLegacyDates;
+    use BelongsToOne;
 
     public const CREATED_AT = 'data_cadastro';
 
@@ -62,6 +65,13 @@ class LegacyStudent extends LegacyModel
         );
     }
 
+    protected function birthdate(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->individual->data_nasc,
+        );
+    }
+
     protected function socialName(): Attribute
     {
         return Attribute::make(
@@ -79,6 +89,30 @@ class LegacyStudent extends LegacyModel
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
+    }
+
+    public function deficiencies(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            LegacyDeficiency::class,
+            'cadastro.fisica_deficiencia',
+            'ref_idpes',
+            'ref_cod_deficiencia',
+            'ref_idpes',
+            'cod_deficiencia'
+        );
+    }
+
+    public function deficiency()
+    {
+        return $this->belongsToOne(
+            LegacyDeficiency::class,
+            'cadastro.fisica_deficiencia',
+            'ref_idpes',
+            'ref_cod_deficiencia',
+            'ref_idpes',
+            'cod_deficiencia'
+        );
     }
 
     public function registrations(): HasMany
@@ -103,6 +137,19 @@ class LegacyStudent extends LegacyModel
         return Attribute::make(
             get: fn () => $this->tipo_responsavel
         );
+    }
+
+    public function hasReport(): bool
+    {
+        return $this->url_laudo_medico !== null && $this->url_laudo_medico !== '[]';
+    }
+
+    public function getGuardions(): Collection
+    {
+        return collect([
+            $this->individual->mother,
+            $this->individual->father,
+        ])->filter(fn ($person) => !empty($person) && $person->name !== 'NÃO REGISTRADO');
     }
 
     public function getGuardianName(): ?string

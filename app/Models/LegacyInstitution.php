@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyInstitutionBuilder;
 use App\Services\RelocationDate\RelocationDateProvider;
+use App\Services\Reports\Util;
 use App\Traits\HasLegacyDates;
 use DateTime;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -138,9 +138,9 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         return Attribute::make(
             get: fn () => implode(', ', [
                 $this->logradouro,
-                $this->numero,
+                $this->numero ? 'Nº.: ' . $this->numero : 'S/N',
                 $this->bairro,
-            ]) . ' - ' . $this->cidade . ' - ' . $this->ref_sigla_uf . ' - CEP:' . $this->cep
+            ]) . ' - ' . $this->cidade . ' - ' . $this->ref_sigla_uf . ' - CEP: ' . Util::formatPostcode($this->cep)
         );
     }
 
@@ -175,7 +175,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         return $this->hasMany(LegacyEvaluationRule::class, 'instituicao_id');
     }
 
-    public function getRelocationDate(): string|null
+    public function getRelocationDate(): ?string
     {
         return $this->relocationDate?->format('Y-m-d');
     }

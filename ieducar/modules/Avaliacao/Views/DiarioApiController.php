@@ -891,7 +891,8 @@ class DiarioApiController extends ApiCoreController
             // suas tabelas de arredondamento (numérica e conceitual), valores
             // de arredondamento para as duas tabelas e regras de recuperação.
 
-            $evaluationRule = $schoolClass->getEvaluationRule();
+            //no multisseriado deve-se escolher/obter a série filtrada na tela, pois a turma possui mais de uma regra de avaliação em cada série
+            $evaluationRule = $schoolClass->getEvaluationRule($this->getRequest()->ref_cod_serie);
 
             $evaluationRule->load('roundingTable.roundingValues');
             $evaluationRule->load('conceptualRoundingTable.roundingValues');

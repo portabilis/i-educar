@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolClassBuilder;
+use App\Models\Enums\DayOfWeek;
 use App\Models\View\Discipline;
 use App\Traits\LegacyAttribute;
 use Carbon\Carbon;
@@ -200,6 +201,26 @@ class LegacySchoolClass extends Model
         );
     }
 
+    protected function daysOfWeekName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $diasSemana = $this->dias_semana ?? [];
+                $diff = array_diff([2, 3, 4, 5, 6], $diasSemana);
+
+                if (count($diff) === 0) {
+                    return 'Seg à Sex';
+                }
+
+                $daysOfWeek = array_map(function ($day) {
+                    return DayOfWeek::tryFrom((int) $day)?->shortName();
+                }, $diasSemana);
+
+                return implode(', ', $daysOfWeek);
+            },
+        );
+    }
+
     protected function exemptedDisciplineId(): Attribute
     {
         return Attribute::make(
@@ -294,14 +315,38 @@ class LegacySchoolClass extends Model
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_turma', 'cod_turma');
     }
 
+    /**
+     * Relacionamento com professor.
+     */
+    public function schoolClassTeachers(): HasMany
+    {
+        return $this->hasMany(LegacySchoolClassTeacher::class, 'turma_id');
+    }
+
     public function stages(): HasMany
     {
         if ($this->course?->is_standard_calendar) {
-            return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
-                ->where('ref_ano', $this->year);
+            return $this->academicYearStages();
         }
 
-        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
+        return $this->schoolClassStages();
+    }
+
+    public function academicYearStages(): HasMany
+    {
+        return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
+            ->where('ref_ano', $this->year);
+    }
+
+    public function getStages(bool $standardCalendar): Collection
+    {
+        if ($standardCalendar) {
+            $stages = $this->academicYearStages;
+        } else {
+            $stages = $this->schoolClassStages;
+        }
+
+        return $stages ?? collect();
     }
 
     public function schoolClassStages(): HasMany
@@ -481,9 +526,12 @@ class LegacySchoolClass extends Model
      *
      * @return LegacyEvaluationRule
      */
-    public function getEvaluationRule()
+    public function getEvaluationRule($gradeId = null)
     {
-        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+        //a turma pode ser multisseriada e prover de várias séries
+        //portando é necessária repassar em vez de pegar a série principal da turma
+        $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYear::query()
+            ->where('serie_id', $gradeId ?? $this->ref_ref_cod_serie)
             ->where('ano_letivo', $this->ano)
             ->firstOrFail();
         if ($this->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {

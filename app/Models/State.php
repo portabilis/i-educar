@@ -44,7 +44,7 @@ class State extends Model
         return $this->hasMany(City::class);
     }
 
-    public static function findByAbbreviation(string $abbreviation): self|null
+    public static function findByAbbreviation(string $abbreviation): ?self
     {
         return static::query()->where('abbreviation', $abbreviation)->first();
     }
@@ -57,7 +57,7 @@ class State extends Model
     /**
      * @param string $abbreviation
      */
-    public static function getNameByAbbreviation(string|null $abbreviation): string
+    public static function getNameByAbbreviation(?string $abbreviation): string
     {
         if ($abbreviation === null) {
             return '';
