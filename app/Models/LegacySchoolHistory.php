@@ -55,7 +55,13 @@ class LegacySchoolHistory extends LegacyModel
         'posicao',
     ];
 
-    protected $appends = ['grade'];
+    protected $hidden = [
+        'grade'
+    ];
+
+    protected $appends = [
+        'grade'
+    ];
 
     public function student(): BelongsTo
     {
@@ -83,14 +89,14 @@ class LegacySchoolHistory extends LegacyModel
     protected function workload(): Attribute
     {
         return Attribute::make(
-            get: fn () => Util::format($this->carga_horaria, 1)
+            get: fn () => $this->carga_horaria ? Util::format($this->carga_horaria, 1) : null
         );
     }
 
     protected function frequency(): Attribute
     {
         return Attribute::make(
-            get: fn () => Util::format($this->frequencia, 1)
+            get: fn () => $this->frequencia ? Util::format($this->frequencia, 1) : null
         );
     }
 
