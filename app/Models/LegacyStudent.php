@@ -234,6 +234,44 @@ class LegacyStudent extends LegacyModel
         return $this->belongsToMany(LegacyBenefit::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_id', 'aluno_beneficio_id');
     }
 
+    public function schoolHistories(): HasMany
+    {
+        return $this->hasMany(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')->active();
+    }
+
+    public function schoolHistoryDisciplines(): HasMany
+    {
+        return $this->hasMany(LegacySchoolHistoryDiscipline::class, 'ref_ref_cod_aluno', 'cod_aluno');
+    }
+
+    public function schoolHistory(): HasOne
+    {
+        return $this->hasOne(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')
+            ->active()
+            ->whereNotDependency()
+            ->whereExtraCurricular(false)
+            ->onlyGradeNumeric()
+            ->validStatus()
+            ->where('ano', '>', 0)
+            ->whereRaw('substring(historico_escolar.nm_serie::text, 1, 1) > ?', 0)
+            ->orderBy('nm_serie', 'desc');
+    }
+
+    public function schoolHistoryEja(): HasOne
+    {
+        return $this->hasOne(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')
+            ->active()
+            ->whereDependency(false)
+            ->whereExtraCurricular(false)
+            ->onlyGradeNumeric()
+            ->whereCourseEja()
+            ->validStatusEja()
+            ->where('ano', '>', 0)
+            ->orderBy('ano', 'desc')
+            ->orderByRaw('(CASE WHEN aprovado = 3 THEN 1 WHEN aprovado IN (2, 14) THEN 2 WHEN aprovado = 1 THEN 3 END)')
+            ->orderByRaw('substring(nm_curso, 1, 1)');
+    }
+
     public function historicGradeYear(): HasMany
     {
         return $this->hasMany(HistoricGradeYear::class, 'cod_aluno', 'cod_aluno');
