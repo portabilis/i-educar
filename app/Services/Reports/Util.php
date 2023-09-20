@@ -44,8 +44,12 @@ class Util
         return '00:00';
     }
 
-    public static function format(mixed $value, int|null $decimalPlaces = null): string
+    public static function format(mixed $value, int|null $decimalPlaces = null): string|null
     {
+        if ($value === null) {
+            return null;
+        }
+
         return number_format($value, $decimalPlaces ?? 1, ',', '.');
     }
 
