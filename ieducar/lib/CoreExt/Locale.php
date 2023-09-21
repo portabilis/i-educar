@@ -91,7 +91,7 @@ class CoreExt_Locale extends CoreExt_Singleton
             $culture . '.ISO8859-1', $culture . '.iso8859-1', $culture . 'ISO_8859_1',
             $culture . '.iso_8859_1', $culture . '.ISO8859_1', $culture . '.iso8859_1']);
 
-        if (false == $actualCulture) {
+        if ($actualCulture == false) {
             $actualCulture = [];
             $actualCulture['LC_ALL'] = $this->_setlocale(LC_ALL, ['C']);
             $actualCulture['LC_NUMERIC'] = $this->_setlocale(LC_NUMERIC, [$culture.'.UTF-8',
@@ -132,7 +132,7 @@ class CoreExt_Locale extends CoreExt_Singleton
     public function getCultureInfo($index = null)
     {
         $info = localeconv();
-        if (null != $index && isset($info[$index])) {
+        if ($index != null && isset($info[$index])) {
             $info = $info[$index];
         }
 

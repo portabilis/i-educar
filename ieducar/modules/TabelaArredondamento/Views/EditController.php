@@ -120,7 +120,7 @@ class EditController extends Core_Controller_Page_EditController
      */
     protected function _preConstruct()
     {
-        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+        if (isset($this->getRequest()->id) && $this->getRequest()->id > 0) {
             $this->setEntity(
                 $this->getDataMapper()->find($this->getRequest()->id)
             );
@@ -222,9 +222,9 @@ class EditController extends Core_Controller_Page_EditController
             // Quebra
             $this->campoQuebra();
 
-            if (RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL == $this->getEntity()->get('tipoNota')) {
+            if ($this->getEntity()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL) {
                 $this->carregaCamposNotasConceituais();
-            } elseif (RegraAvaliacao_Model_Nota_TipoValor::NUMERICA == $this->getEntity()->get('tipoNota')) {
+            } elseif ($this->getEntity()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
                 $this->carregaCamposNotasNumericas();
             }
 
@@ -467,7 +467,7 @@ class EditController extends Core_Controller_Page_EditController
     protected function _save()
     {
         // Verifica pela existência do field identity
-        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+        if (isset($this->getRequest()->id) && $this->getRequest()->id > 0) {
             $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
             $entity = $this->getEntity();
         }

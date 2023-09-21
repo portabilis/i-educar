@@ -68,7 +68,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
         ];
 
         // Configura botões padrão
-        if (0 < $this->getRequest()->id) {
+        if ($this->getRequest()->id > 0) {
             $this->setOptions([
                 'url_cancelar' => [
                     'path' => 'view',
@@ -310,7 +310,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
         if ($this->_save()) {
             $params = '';
 
-            if (0 < count($this->getOption('new_success_params')) &&
+            if (count($this->getOption('new_success_params')) > 0 &&
                 is_array($this->getOption('new_success_params'))) {
                 $params = '?' . http_build_query($this->getOption('new_success_params'));
             }
@@ -335,7 +335,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
     public function Editar()
     {
         if ($this->_save()) {
-            if (0 < count($this->getOption('edit_success_params')) &&
+            if (count($this->getOption('edit_success_params')) > 0 &&
                 is_array($this->getOption('edit_success_params'))) {
                 $params = http_build_query($this->getOption('edit_success_params'));
             } else {
@@ -400,7 +400,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
         }
 
         // Verifica pela existência do field identity
-        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+        if (isset($this->getRequest()->id) && $this->getRequest()->id > 0) {
             $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
         }
 

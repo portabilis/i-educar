@@ -335,13 +335,13 @@ return new class() extends clsCadastro
                         }
                     }
 
-                    if (is_null($this->escola_serie_disciplina_carga[$registro->id]) || 0 == $this->escola_serie_disciplina_carga[$registro->id]) {
+                    if (is_null($this->escola_serie_disciplina_carga[$registro->id]) || $this->escola_serie_disciplina_carga[$registro->id] == 0) {
                         $usarComponente = true;
                     } else {
                         $cargaHoraria = $this->escola_serie_disciplina_carga[$registro->id];
                     }
 
-                    if (is_null($this->escola_serie_disciplina_hora_falta[$registro->id]) || 0 == $this->escola_serie_disciplina_hora_falta[$registro->id]) {
+                    if (is_null($this->escola_serie_disciplina_hora_falta[$registro->id]) || $this->escola_serie_disciplina_hora_falta[$registro->id] == 0) {
                         $usarHoraFaltaComponente = true;
                     } else {
                         $horaFalta = $this->escola_serie_disciplina_hora_falta[$registro->id];

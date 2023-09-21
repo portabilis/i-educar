@@ -189,7 +189,7 @@ return new class() extends clsCadastro
 
         if ($det_servidor) {
             // Se for professor
-            if (true == $obj_servidor->isProfessor()) {
+            if ($obj_servidor->isProfessor() == true) {
                 $obj = new clsPmieducarQuadroHorarioHorarios();
 
                 // Pega a lista de aulas alocadas para este servidor

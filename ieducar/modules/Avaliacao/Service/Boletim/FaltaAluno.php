@@ -25,7 +25,7 @@ trait Avaliacao_Service_Boletim_FaltaAluno
             ['matricula' => $this->getOption('matricula')]
         );
 
-        if (0 == count($faltaAluno)) {
+        if (count($faltaAluno) == 0) {
             return null;
         }
 
