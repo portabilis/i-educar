@@ -37,6 +37,14 @@ class LegacySchoolClassBuilder extends LegacyBuilder
         return $this->where('ativo', 1);
     }
 
+    /**
+     * Filtra por visível
+     */
+    public function visible(): self
+    {
+        return $this->where('visivel', true);
+    }
+
     public function whereActive(int $active): self
     {
         return $this->where('ativo', $active);
