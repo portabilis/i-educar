@@ -30,7 +30,7 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
 
     public function score(int $decimalPlaces = 2): string|null
     {
-        if (!is_numeric($this->nota) || empty($this->nota)) {
+        if (!is_numeric($this->nota)) {
             return $this->nota;
         }
 
