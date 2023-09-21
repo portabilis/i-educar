@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employee extends LegacyModel
 {
-    use LegacyAttribute;
-    use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyDates;
+    use LegacyAttribute;
 
     /**
      * @var string

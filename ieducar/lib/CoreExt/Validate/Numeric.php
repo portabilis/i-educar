@@ -23,7 +23,7 @@ class CoreExt_Validate_Numeric extends CoreExt_Validate_Abstract
      */
     protected function _validate($value)
     {
-        if (false === $this->getOption('required') && is_null($value)) {
+        if ($this->getOption('required') === false && is_null($value)) {
             return true;
         }
 

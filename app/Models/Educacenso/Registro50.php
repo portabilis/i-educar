@@ -5,7 +5,7 @@ namespace App\Models\Educacenso;
 use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 
-class Registro50 implements RegistroEducacenso, ItemOfRegistro30
+class Registro50 implements ItemOfRegistro30, RegistroEducacenso
 {
     /**
      * @var string

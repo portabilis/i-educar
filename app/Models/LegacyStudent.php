@@ -17,9 +17,9 @@ use Illuminate\Support\Collection;
 
 class LegacyStudent extends LegacyModel
 {
-    use LegacyAttribute;
-    use HasLegacyDates;
     use BelongsToOne;
+    use HasLegacyDates;
+    use LegacyAttribute;
 
     public const CREATED_AT = 'data_cadastro';
 

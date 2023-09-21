@@ -13,7 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class BatchDisableUsersWithDaysGoneSinceLastAccess implements ShouldQueue, ShouldBeUniqueUntilProcessing
+class BatchDisableUsersWithDaysGoneSinceLastAccess implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

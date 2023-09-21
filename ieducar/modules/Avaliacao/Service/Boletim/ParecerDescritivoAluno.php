@@ -25,7 +25,7 @@ trait Avaliacao_Service_Boletim_ParecerDescritivoAluno
             ['matricula' => $this->getOption('matricula')]
         );
 
-        if (0 == count($parecerDescritivoAluno)) {
+        if (count($parecerDescritivoAluno) == 0) {
             return null;
         }
 

@@ -11,9 +11,9 @@ use Tests\TestCase;
 
 class ContinuingProgressionWithConceptualScoreTest extends TestCase
 {
+    use DatabaseTransactions;
     use DiarioApiFakeDataTestTrait;
     use DiarioApiRequestTestTrait;
-    use DatabaseTransactions;
 
     /**
      * @var LegacyEnrollment

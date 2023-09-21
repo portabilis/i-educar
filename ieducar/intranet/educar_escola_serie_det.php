@@ -115,7 +115,7 @@ return new class extends clsDetalhe
         $disciplines = $service->getAllDisciplines(school: $this->ref_cod_escola, grade: $this->ref_cod_serie)
             ->pluck(value: 'carga_horaria', key: 'ref_cod_disciplina');
 
-        if (0 < count($componentes)) {
+        if (count($componentes) > 0) {
             $tabela = '
 <table>
   <tr align="center">

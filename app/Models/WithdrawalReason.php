@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WithdrawalReason extends LegacyModel
 {
+    use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;
-    use HasInstitution;
     use LegacySoftDeletes;
 
     protected $table = 'pmieducar.motivo_afastamento';

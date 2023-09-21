@@ -752,7 +752,7 @@ class clsCalendario
     {
         $ret = '';
 
-        if (is_array($formValues) && 0 < count($formValues)) {
+        if (is_array($formValues) && count($formValues) > 0) {
             foreach ($formValues as $name => $value) {
                 if (in_array($name, $invalidNames)) {
                     continue;

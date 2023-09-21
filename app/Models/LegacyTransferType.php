@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LegacyTransferType extends LegacyModel
 {
     use Ativo;
-    use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyDates;
     use HasLegacyUserAction;
 
     /**
