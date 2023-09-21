@@ -55,14 +55,6 @@ class LegacySchoolHistory extends LegacyModel
         'posicao',
     ];
 
-    protected $hidden = [
-        'grade'
-    ];
-
-    protected $appends = [
-        'grade'
-    ];
-
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
@@ -71,7 +63,7 @@ class LegacySchoolHistory extends LegacyModel
 
     public function disciplines(): BelongsTo
     {
-        return $this->belongsTo(LegacySchoolHistoryDiscipline::class, 'ref_cod_aluno')->wheeColu;
+        return $this->belongsTo(LegacySchoolHistoryDiscipline::class, 'ref_cod_aluno');
     }
 
     public function school(): void
