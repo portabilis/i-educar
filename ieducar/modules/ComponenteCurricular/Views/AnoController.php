@@ -238,7 +238,7 @@ class AnoController extends Core_Controller_Page_EditController
         // Registros a inserir
         foreach ($insert as $key => $entity) {
             // Se o registro já existe, passa para o próximo
-            if (false !== array_search($key, $intersect)) {
+            if (array_search($key, $intersect) !== false) {
                 $entity->markOld();
             }
 

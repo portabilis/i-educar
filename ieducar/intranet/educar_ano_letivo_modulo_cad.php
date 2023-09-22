@@ -4,6 +4,7 @@ use App\Models\EmployeeAllocation;
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassTeacherDiscipline;
@@ -541,72 +542,36 @@ return new class extends clsCadastro
 
     public function copiarTurma($turmaOrigem, $anoOrigem, $anoDestino, $copiaDadosProfessor)
     {
-        $sql = 'select 1 from turma where ativo = 1 and visivel = true
-            and ref_ref_cod_escola = $1 and nm_turma = $2 and ref_ref_cod_serie = $3 and ano = $4 limit 1';
+        $naoExiste = LegacySchoolClass::query()
+            ->whereSchool($turmaOrigem['ref_ref_cod_escola'])
+            ->where('nm_turma', $turmaOrigem['nm_turma'])
+            ->where('ref_ref_cod_serie', $turmaOrigem['ref_ref_cod_serie'])
+            ->whereYearEq($anoDestino)
+            ->active()
+            ->visible()
+            ->doesntExist();
 
-        $params = [
-            $turmaOrigem['ref_ref_cod_escola'],
-            $turmaOrigem['nm_turma'],
-            $turmaOrigem['ref_ref_cod_serie'],
-            $anoDestino,
-        ];
-
-        $existe = Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $params);
-
-        if ($existe != 1) {
-            $fields = [
-                'ref_usuario_exc',
-                'ref_usuario_cad',
-                'ref_ref_cod_serie',
-                'ref_ref_cod_escola',
-                'ref_cod_infra_predio_comodo',
-                'nm_turma',
-                'sgl_turma',
-                'max_aluno',
-                'multiseriada',
-                'data_cadastro',
-                'data_exclusao',
-                'ativo',
-                'ref_cod_turma_tipo',
-                'hora_inicial',
-                'hora_final',
-                'hora_inicio_intervalo',
-                'hora_fim_intervalo',
-                'ref_cod_regente',
-                'ref_cod_instituicao_regente',
-                'ref_cod_instituicao',
-                'ref_cod_curso',
-                'ref_ref_cod_serie_mult',
-                'ref_ref_cod_escola_mult',
-                'visivel',
-                'turma_turno_id',
-                'tipo_boletim',
-                'tipo_boletim_diferenciado',
-                'ano',
-                'dias_semana',
-                'atividades_complementares',
-                'atividades_aee',
-                'turma_unificada',
-                'tipo_atendimento',
-                'etapa_educacenso',
-                'cod_curso_profissional',
-                'tipo_mediacao_didatico_pedagogico',
-                'nao_informar_educacenso',
-                'local_funcionamento_diferenciado',
-            ];
-
-            $turmaDestino = new clsPmieducarTurma();
-
-            foreach ($fields as $fieldName) {
-                $turmaDestino->$fieldName = $turmaOrigem[$fieldName];
+        if ($naoExiste) {
+            $turma = LegacySchoolClass::query()->find($turmaOrigem['cod_turma']);
+            if (!$turma) {
+                return;
             }
 
-            $turmaDestino->ano = $anoDestino;
-            $turmaDestino->ref_usuario_cad = $this->pessoa_logada;
-            $turmaDestino->ref_usuario_exc = $this->pessoa_logada;
-            $turmaDestino->visivel = dbBool(val: $turmaOrigem['visivel']);
-            $turmaDestinoId = $turmaDestino->cadastra();
-
+            $turmaDestino = $turma->replicate([
+                'data_cadastro',
+                'updated_at',
+                'data_exclusao',
+                'parecer_1_etapa',
+                'parecer_2_etapa',
+                'parecer_3_etapa',
+                'parecer_4_etapa'
+            ])->fill([
+                'ano' => $anoDestino,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ref_usuario_exc' => $this->pessoa_logada
+            ]);
+            $turmaDestino->save();
+            $turmaDestinoId = $turmaDestino->getKey();
             $this->copiarComponenteCurricularTurma(turmaOrigemId: $turmaOrigem['cod_turma'], turmaDestinoId: $turmaDestinoId);
             $this->copiarModulosTurma(turmaOrigemId: $turmaOrigem['cod_turma'], turmaDestinoId: $turmaDestinoId, anoOrigem: $anoOrigem, anoDestino: $anoDestino);
 

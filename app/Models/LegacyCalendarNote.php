@@ -10,9 +10,9 @@ use App\Traits\HasLegacyUserAction;
 class LegacyCalendarNote extends LegacyModel
 {
     use Ativo;
-    use LegacySoftDeletes;
-    use HasLegacyUserAction;
     use HasLegacyDates;
+    use HasLegacyUserAction;
+    use LegacySoftDeletes;
 
     public $table = 'pmieducar.calendario_anotacao';
 

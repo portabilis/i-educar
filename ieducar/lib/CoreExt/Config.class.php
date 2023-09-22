@@ -72,11 +72,11 @@ class CoreExt_Config implements Countable, Iterator
      */
     public function get($value1, $value2 = null)
     {
-        if (null != $value1) {
+        if ($value1 != null) {
             return $value1;
         }
 
-        if (null == $value2) {
+        if ($value2 == null) {
             throw new Exception('O segundo parâmetro deve conter algum valor não nulo.');
         }
 

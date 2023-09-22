@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyTransferRequest extends LegacyModel
 {
-    use LegacySoftDeletes;
-    use HasLegacyUserAction;
     use HasLegacyDates;
+    use HasLegacyUserAction;
+    use LegacySoftDeletes;
 
     /**
      * @var string
