@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyActiveLooking;
+use Carbon\Carbon;
 use iEducar\Modules\School\Model\ActiveLooking;
 
 return new class extends clsCadastro
@@ -100,6 +101,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        dd($this->data_cancel);
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
@@ -162,7 +164,7 @@ return new class extends clsCadastro
                     ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT)
                     ->update([
                         'resultado_busca_ativa' => ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT,
-                        'data_fim' => $this->data_cancel
+                        'data_fim' => Carbon::createFromFormat('d/m/Y', $this->data_cancel)
                     ]);
 
                 $this->mensagem .= 'Abandono realizado com sucesso.<br>';
