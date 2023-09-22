@@ -101,7 +101,6 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        dd($this->data_cancel);
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
