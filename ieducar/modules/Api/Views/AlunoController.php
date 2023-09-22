@@ -1507,22 +1507,31 @@ class AlunoController extends ApiCoreController
 
                 if (is_numeric($projetoId) && is_numeric($turnoId) && !empty($dataInclusao)) {
                     if ($this->validaTurnoProjeto($alunoId, $turnoId)) {
-                        $count = LegacyStudentProject::query()->where('ref_cod_aluno', $alunoId)
+                        $exists = LegacyStudentProject::query()->where('ref_cod_aluno', $alunoId)
+                            ->whereNull('data_desligamento')
                             ->where('ref_cod_projeto', $projetoId)
-                            ->count();
-                        if ($count > 0) {
+                            ->exists();
+                        if ($exists) {
                             $this->messenger->append('O aluno não pode ser cadastrado no mesmo projeto mais de uma vez.');
                         } else {
-                            $alunoProjeto = new LegacyStudentProject();
-                            $alunoProjeto->ref_cod_aluno = $alunoId;
-                            $alunoProjeto->data_inclusao = $dataInclusao;
-                            if ($dataDesligamento && $dataDesligamento != '') {
-                                $alunoProjeto->data_desligamento = $dataDesligamento;
-                            }
-                            $alunoProjeto->ref_cod_projeto = $projetoId;
-                            $alunoProjeto->turno = $turnoId;
+                            $exists = LegacyStudentProject::query()->where('ref_cod_aluno', $alunoId)
+                                ->where('data_desligamento', '>=', $dataInclusao)
+                                ->where('ref_cod_projeto', $projetoId)
+                                ->exists();
+                            if ($exists) {
+                                $this->messenger->append('A data de inclusão deve ser superior ao desligamento anterior do mesmo curso.');
+                            } else {
+                                $alunoProjeto = new LegacyStudentProject();
+                                $alunoProjeto->ref_cod_aluno = $alunoId;
+                                $alunoProjeto->data_inclusao = $dataInclusao;
+                                if ($dataDesligamento && $dataDesligamento != '') {
+                                    $alunoProjeto->data_desligamento = $dataDesligamento;
+                                }
+                                $alunoProjeto->ref_cod_projeto = $projetoId;
+                                $alunoProjeto->turno = $turnoId;
 
-                            $alunoProjeto->save();
+                                $alunoProjeto->save();
+                            }
                         }
                     } else {
                         $this->messenger->append('O aluno não pode ser cadastrado em projetos no mesmo turno em que estuda, por favor, verifique.');
