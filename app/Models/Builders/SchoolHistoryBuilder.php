@@ -12,8 +12,12 @@ class SchoolHistoryBuilder extends LegacyBuilder
         return $this->where('historico_escolar.ativo', 1);
     }
 
-    public function whereNotDependency(): self
+    public function whereDependency(bool $dependency): self
     {
+        if ($dependency) {
+            return $this->where('dependencia', true);
+        }
+
         return $this->where(function ($query) {
             $query->whereNull('dependencia');
             $query->orWhere('dependencia', false);
