@@ -135,6 +135,10 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
                 $error = $throwable;
             }
 
+            if (is_array($data['main']) && array_key_exists('blade', $data['main'])) {
+                $templateName = str_replace('reports::', '', $data['main']['blade']);
+            }
+
             $event = new ReportIssued('html', $templateName, $success, $report->authenticate());
 
             if ($success) {
