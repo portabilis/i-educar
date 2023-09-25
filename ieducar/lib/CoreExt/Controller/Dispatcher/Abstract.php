@@ -1,6 +1,6 @@
 <?php
 
-abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Interface, CoreExt_Configurable
+abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Configurable, CoreExt_Controller_Dispatcher_Interface
 {
     /**
      * Instância de CoreExt_Controller_Request_Interface
@@ -27,7 +27,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
         $defaultOptions = array_keys($this->getOptions());
         $passedOptions = array_keys($options);
 
-        if (0 < count(array_diff($passedOptions, $defaultOptions))) {
+        if (count(array_diff($passedOptions, $defaultOptions)) > 0) {
             throw new InvalidArgumentException(
                 sprintf('A classe %s não suporta as opções: %s.', get_class($this), implode(', ', $passedOptions))
             );
@@ -131,7 +131,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
             $path = array_combine(range(0, $items - 1), $path);
 
             // Caso o primeiro elemento seja o nome do script, remove-o
-            if (strtolower($script) === strtolower($path[0]) || '' === $path[0]) {
+            if (strtolower($script) === strtolower($path[0]) || $path[0] === '') {
                 array_shift($path);
             }
         } else {

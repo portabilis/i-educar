@@ -71,7 +71,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     public function round($value, $tipoNota, $limitDecimalRound = 1)
     {
         // carrega tabela de arredondamento, caso ainda não tenha sido carregada.
-        if (0 == count($this->_tabelaValores)) {
+        if (count($this->_tabelaValores) == 0) {
             $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
         }
 
@@ -194,7 +194,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
         $scale = pow(10, $this->_precision);
         $return = null;
 
-        if (0 == count($this->_tabelaValores)) {
+        if (count($this->_tabelaValores) == 0) {
             $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
         }
 
@@ -257,7 +257,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
      */
     public function findTabelaValor()
     {
-        if (0 == count($this->_tabelaValores)) {
+        if (count($this->_tabelaValores) == 0) {
             $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
         }
 

@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Country extends Model
 {
-    use LegacyAttribute;
     use DateSerializer;
     use HasIbgeCode;
+    use LegacyAttribute;
 
     public const BRASIL = 45;
 

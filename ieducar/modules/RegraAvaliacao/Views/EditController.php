@@ -925,7 +925,7 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         // Verifica pela existência do field identity
-        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id && !$this->getRequest()->copy) {
+        if (isset($this->getRequest()->id) && $this->getRequest()->id > 0 && !$this->getRequest()->copy) {
             $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
             $entity = $this->getEntity();
         }

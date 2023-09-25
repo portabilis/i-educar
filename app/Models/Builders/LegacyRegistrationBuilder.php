@@ -176,4 +176,12 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
         return $this;
     }
+
+    /**
+     * Não considera alunos reclassificados
+     */
+    public function notReclassified(): self
+    {
+        return $this->where('aprovado', '<>', RegistrationStatus::RECLASSIFIED);
+    }
 }
