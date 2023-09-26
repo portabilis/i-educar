@@ -173,6 +173,16 @@ abstract class Portabilis_Report_ReportCore
     }
 
     /**
+     * Indica se o relatório deverá passar pelo processo de autenticação.
+     *
+     * @return bool
+     */
+    public function authenticate()
+    {
+        return false;
+    }
+
+    /**
      * Retorna a query onde será encontrado os dados para o relatório
      * principal.
      *
