@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Models\View\HistoricGradeYear;
 use App\Traits\HasLegacyDates;
@@ -13,13 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
-use Ankurk91\Eloquent\BelongsToOne;
 
 class LegacyStudent extends LegacyModel
 {
-    use LegacyAttribute;
-    use HasLegacyDates;
     use BelongsToOne;
+    use HasLegacyDates;
+    use LegacyAttribute;
 
     public const CREATED_AT = 'data_cadastro';
 

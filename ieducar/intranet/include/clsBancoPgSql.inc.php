@@ -127,7 +127,7 @@ abstract class clsBancoSQL_
         // Verifica se o parâmetro é do tipo array, para evitar problemas enquanto
         // o ticket 58 não é resolvido.
         if (is_array($options)) {
-            if (0 < count($options)) {
+            if (count($options) > 0) {
                 // Verifica por fetchMode
                 if (isset($options['fetchMode'])) {
                     $this->setFetchMode($options['fetchMode']);

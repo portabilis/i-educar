@@ -75,7 +75,7 @@ class ServidorController extends ApiCoreController
 
     protected function getServidores()
     {
-        if (false == $this->canGetServidores()) {
+        if ($this->canGetServidores() == false) {
             return;
         }
 

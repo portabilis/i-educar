@@ -5,6 +5,7 @@ use App\Models\LegacyRegistration;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
 use Carbon\Carbon;
+use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -563,6 +564,15 @@ class MatriculaController extends ApiCoreController
 
             $promocaoApi->setRequest($fakeRequest);
             $promocaoApi->Gerar();
+
+            //Desfaz a busca ativa como abandono
+            LegacyActiveLooking::query()
+                ->where('ref_cod_matricula', $matriculaId)
+                ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT)
+                ->update([
+                    'resultado_busca_ativa' => ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT,
+                    'data_fim' => null
+                ]);
 
             $this->messenger->append('Abandono desfeito.', 'success');
         }

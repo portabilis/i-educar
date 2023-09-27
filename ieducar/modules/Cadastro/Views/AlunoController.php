@@ -40,6 +40,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     public $observacao;
 
+    public $renda_mensal;
+
     protected $_formMap = [
         'pessoa' => [
             'label' => 'Pessoa',
@@ -321,6 +323,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         if (is_numeric($this->cod_pessoa_fj)) {
             $personObject = new clsFisica($this->cod_pessoa_fj);
             $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
+            $this->renda_mensal = (empty($personObject->detalhe()['renda_mensal']) == false) ? $personObject->detalhe()['renda_mensal'] : '';
             $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
             if (is_array($detalheFoto) && count($detalheFoto)) {
@@ -328,6 +331,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             }
         } else {
             $this->observacao = '';
+            $this->renda_mensal = '';
             $foto = false;
         }
 
@@ -448,6 +452,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         }
 
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
+        $this->campoOculto('renda_mensal', (int) $this->renda_mensal);
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
         $options = [

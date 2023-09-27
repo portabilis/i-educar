@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class BaseTestName extends TestCase
 {
-    use LoginFirstUser, DatabaseTransactions, WithoutMiddleware;
+    use DatabaseTransactions, LoginFirstUser, WithoutMiddleware;
 
     public const ROUTE = 'ProjectRoute';
 

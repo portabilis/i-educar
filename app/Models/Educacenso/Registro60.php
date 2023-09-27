@@ -8,7 +8,7 @@ use iEducar\Modules\Educacenso\Model\PoderPublicoTransporte;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 
-class Registro60 implements RegistroEducacenso, ItemOfRegistro30
+class Registro60 implements ItemOfRegistro30, RegistroEducacenso
 {
     public $registro;
 

@@ -37,6 +37,14 @@ class LegacySchoolClassBuilder extends LegacyBuilder
         return $this->where('turma.ativo', 1);
     }
 
+    /**
+     * Filtra por visível
+     */
+    public function visible(): self
+    {
+        return $this->where('visivel', true);
+    }
+
     public function whereActive(int $active): self
     {
         return $this->where('ativo', $active);
@@ -178,5 +186,16 @@ class LegacySchoolClassBuilder extends LegacyBuilder
         $name = str_replace(['(', ')', '[', ']'], '', $name);
 
         return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)', preg_replace("/\([^)]+\)/", '', $name));
+    }
+
+    /**
+     * Filtra dia da semana
+     *
+     *
+     * @return $this
+     */
+    public function whereDayWeek(string $dayWeek): self
+    {
+        return $this->whereRaw("dias_semana && ('{{$dayWeek}}')");
     }
 }

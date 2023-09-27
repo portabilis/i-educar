@@ -210,7 +210,7 @@ trait Avaliacao_Service_Boletim_Acessores
         $defaultOptions = array_keys($this->getOptions());
         $passedOptions = array_keys($options);
 
-        if (0 < count(array_diff($passedOptions, $defaultOptions))) {
+        if (count(array_diff($passedOptions, $defaultOptions)) > 0) {
             throw new InvalidArgumentException(
                 sprintf('A classe %s não suporta as opções: %s.', get_class($this), implode(', ', $passedOptions))
             );
