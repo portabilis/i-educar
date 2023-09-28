@@ -2,6 +2,7 @@
 
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\RegistrationStatus;
 use App\Models\View\Discipline;
 use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
@@ -89,7 +90,15 @@ class DiarioController extends ApiCoreController
                 });
             })
             ->whereStudent($alunoId)
-            ->whereIn('aprovado', [1,2,3,4,13,12,14])
+            ->whereIn('aprovado', [
+                RegistrationStatus::APPROVED,
+                RegistrationStatus::REPROVED,
+                RegistrationStatus::ONGOING,
+                RegistrationStatus::TRANSFERRED,
+                RegistrationStatus::APPROVED_BY_BOARD,
+                RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+                RegistrationStatus::REPROVED_BY_ABSENCE
+            ])
             ->orderBy('aprovado')
             ->first([
                 'cod_matricula',
