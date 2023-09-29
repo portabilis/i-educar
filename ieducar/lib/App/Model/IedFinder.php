@@ -1034,7 +1034,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         $discipline = Cache::store('array')->remember("disciplinaDispensadaDaTurma:{$codTurma}", now()->addMinute(), function () use ($codTurma) {
-            $discipline = LegacySchoolClass::query()->find($codTurma)->ref_cod_disciplina_dispensada ?? null;
+            $discipline = LegacySchoolClass::query()->whereKey($codTurma)->value('ref_cod_disciplina_dispensada');
 
             // Caso não exista a disciplina, armazena a string 'null'
             return $discipline ?: 'null';

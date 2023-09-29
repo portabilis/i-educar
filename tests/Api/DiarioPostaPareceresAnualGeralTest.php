@@ -2,6 +2,8 @@
 
 namespace Tests\Api;
 
+use App\Models\LegacyDisciplineDescriptiveOpinion;
+use App\Models\LegacyGeneralDescriptiveOpinion;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
@@ -16,6 +18,7 @@ use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use RegraAvaliacao_Model_TipoParecerDescritivo;
 use Tests\TestCase;
 
 class DiarioPostaPareceresAnualGeralTest extends TestCase
@@ -46,7 +49,7 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => 6,
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -78,7 +81,7 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
             'ref_cod_matricula' => $registration,
         ]);
 
-        $schoolGradeDiscipline = LegacySchoolGradeDisciplineFactory::new()->create([
+        LegacySchoolGradeDisciplineFactory::new()->create([
             'ref_ref_cod_escola' => $schoolGrade->ref_cod_escola,
             'ref_ref_cod_serie' => $schoolGrade->ref_cod_serie,
             'ref_cod_disciplina' => $discipline,
@@ -91,7 +94,7 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
             'pareceres' => [
                 $enrollment->ref_cod_turma => [
                     $registration->ref_cod_aluno => [
-                        'valor' => 'Desenvolve atividades com autonomia e responsabilidade, demonstrando interesse e iniciativa.',
+                        'valor' => $parecer = 'Desenvolve atividades com autonomia e responsabilidade, demonstrando interesse e iniciativa.',
                     ],
                 ],
             ],
@@ -113,5 +116,50 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
                     'any_error_msg' => false,
                 ]
             );
+
+        $generalDescriptiveOpinion = LegacyGeneralDescriptiveOpinion::first();
+
+        $this->assertDatabaseHas($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
+            'matricula_id' => $registration->getKey(),
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL
+        ]);
+
+        $this->assertDatabaseHas($generalDescriptiveOpinion->getTable(), [
+            'parecer_aluno_id' => $generalDescriptiveOpinion->studentDescriptiveOpinion->getKey(),
+            'parecer' => $parecer,
+            'etapa' => 'An',
+        ]);
+
+        $this->assertDatabaseCount($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
+        $this->assertDatabaseCount($generalDescriptiveOpinion->getTable(), 1);
+        $this->assertDatabaseCount(LegacyDisciplineDescriptiveOpinion::class, 0);
+
+
+        //alterando a regra de avaliação da série
+        $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
+            'parecer_descritivo' =>  RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+        ]);
+        $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
+        $response = $this->getResource('/module/Api/Diario', $data);
+        $response->assertSuccessful()
+            ->assertJson(
+                [
+                    'error' => [
+                        'code' => 0,
+                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres anual geral."
+                    ],
+                    'oper' => 'post',
+                    'resource' => 'pareceres-anual-geral',
+                    'msgs' => [
+                        [
+                            'msg' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres anual geral.",
+                            'type' => 'error',
+                        ]
+                    ],
+                    'any_error_msg' => true,
+                ]
+            );
+        $this->assertDatabaseCount($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
+        $this->assertDatabaseCount($generalDescriptiveOpinion->getTable(), 1);
     }
 }
