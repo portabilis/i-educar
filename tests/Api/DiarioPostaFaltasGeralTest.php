@@ -157,7 +157,7 @@ class DiarioPostaFaltasGeralTest extends TestCase
                 [
                     'error' => [
                         'code' => 1008,
-                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de faltas geral."
+                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de faltas geral.",
                     ],
                     'oper' => 'post',
                     'resource' => 'faltas-geral',
@@ -165,7 +165,7 @@ class DiarioPostaFaltasGeralTest extends TestCase
                         [
                             'msg' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de faltas geral.",
                             'type' => 'error',
-                        ]
+                        ],
                     ],
                     'any_error_msg' => true,
                 ]

@@ -571,7 +571,7 @@ class MatriculaController extends ApiCoreController
                 ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT)
                 ->update([
                     'resultado_busca_ativa' => ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT,
-                    'data_fim' => null
+                    'data_fim' => null,
                 ]);
 
             $this->messenger->append('Abandono desfeito.', 'success');

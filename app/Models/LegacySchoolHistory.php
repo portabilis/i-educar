@@ -60,7 +60,6 @@ class LegacySchoolHistory extends LegacyModel
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
     }
 
-
     public function disciplines(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolHistoryDiscipline::class, 'ref_cod_aluno');
@@ -101,14 +100,14 @@ class LegacySchoolHistory extends LegacyModel
                     return null;
                 }
 
-                return (int)$gradeName;
+                return (int) $gradeName;
             }
         );
     }
 
     public function schoolHistoryGradeCourse(): BelongsTo
     {
-        return $this->belongsTo(LegacySchoolHistoryGradeCourse::class,  'historico_grade_curso_id');
+        return $this->belongsTo(LegacySchoolHistoryGradeCourse::class, 'historico_grade_curso_id');
     }
 
     public function courseIsEja(): bool
@@ -130,7 +129,7 @@ class LegacySchoolHistory extends LegacyModel
     {
         return in_array($this->aprovado_eja, [
             SchoolHistoryStatus::REPROVED,
-            SchoolHistoryStatus::REPROVED_BY_ABSENCE
+            SchoolHistoryStatus::REPROVED_BY_ABSENCE,
         ], true);
     }
 
@@ -148,7 +147,7 @@ class LegacySchoolHistory extends LegacyModel
     {
         return in_array($this->aprovado, [
             SchoolHistoryStatus::REPROVED,
-            SchoolHistoryStatus::REPROVED_BY_ABSENCE
+            SchoolHistoryStatus::REPROVED_BY_ABSENCE,
         ], true);
     }
 }

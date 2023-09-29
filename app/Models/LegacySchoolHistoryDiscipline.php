@@ -29,7 +29,7 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
         return $this->belongsTo(LegacyStudent::class, 'ref_ref_cod_aluno');
     }
 
-    public function score(int $decimalPlaces = 2): string|null
+    public function score(int $decimalPlaces = 2): ?string
     {
         if (!is_numeric($this->nota)) {
             return $this->nota;

@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Models\Builders;
+
 use App\Models\SchoolHistoryStatus;
 use App\Services\SchoolHistory\Objects\SchoolHistory;
 
 class SchoolHistoryBuilder extends LegacyBuilder
 {
-
     public function active(): self
     {
         return $this->where('historico_escolar.ativo', 1);
@@ -60,7 +60,7 @@ class SchoolHistoryBuilder extends LegacyBuilder
             SchoolHistoryStatus::APPROVED,
             SchoolHistoryStatus::REPROVED,
             SchoolHistoryStatus::ONGOING,
-            SchoolHistoryStatus::REPROVED_BY_ABSENCE
+            SchoolHistoryStatus::REPROVED_BY_ABSENCE,
         ]);
     }
 

@@ -39,7 +39,7 @@ class DiarioController extends ApiCoreController
 
     protected function validateComponenteTurma($componenteCurricularId, Collection $componentesTurma, LegacyRegistration $registration): bool
     {
-        $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId){
+        $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId) {
             return $collection->where('cod_serie', $serieId);
         })->contains($componenteCurricularId);
 
@@ -97,14 +97,14 @@ class DiarioController extends ApiCoreController
                 RegistrationStatus::TRANSFERRED,
                 RegistrationStatus::APPROVED_BY_BOARD,
                 RegistrationStatus::APPROVED_WITH_DEPENDENCY,
-                RegistrationStatus::REPROVED_BY_ABSENCE
+                RegistrationStatus::REPROVED_BY_ABSENCE,
             ])
             ->orderBy('aprovado')
             ->first([
                 'cod_matricula',
                 'ref_ref_cod_serie',
                 'ref_ref_cod_escola',
-                'ano'
+                'ano',
             ]);
     }
 
@@ -319,7 +319,7 @@ class DiarioController extends ApiCoreController
                 foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
                     $matricula = $this->findMatricula($turmaId, $alunoId);
 
-                    if (! $matricula) {
+                    if (!$matricula) {
                         continue;
                     }
 
@@ -411,7 +411,7 @@ class DiarioController extends ApiCoreController
                 'id',
                 'cod_turma',
                 'cod_serie',
-                'area_conhecimento_id'
+                'area_conhecimento_id',
             ]);
     }
 
@@ -427,7 +427,7 @@ class DiarioController extends ApiCoreController
                 foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
                     $matricula = $this->findMatricula($turmaId, $alunoId);
 
-                    if (! $matricula) {
+                    if (!$matricula) {
                         continue;
                     }
 
@@ -463,7 +463,7 @@ class DiarioController extends ApiCoreController
         }
     }
 
-    private function mergeComponenteArea(array $faltaTurmaAluno, Collection $componentesTurma, int|null $serieId): array
+    private function mergeComponenteArea(array $faltaTurmaAluno, Collection $componentesTurma, ?int $serieId): array
     {
         $novoFaltaTurmaAluno = [];
 
@@ -473,7 +473,7 @@ class DiarioController extends ApiCoreController
                 $componentesArea = $componentesTurma->when($serieId, function (Collection $collection, int $serieId) {
                     return $collection->where('cod_serie', $serieId);
                 })->where('knowledgeArea.id', $areaDoConhecimento)
-                  ->where('knowledgeArea.agrupar_descritores', true);
+                    ->where('knowledgeArea.agrupar_descritores', true);
 
                 if ($componentesArea->isNotEmpty()) {
                     $componenteAreaPrimeiro = $componentesArea->shift();
@@ -482,7 +482,7 @@ class DiarioController extends ApiCoreController
                     //coloca zero no restante dos componentes do agrupamento
                     foreach ($componentesArea as $componenteArea) {
                         $novoFaltaTurmaAluno[$componenteArea->id] = [
-                            'valor' => 0
+                            'valor' => 0,
                         ];
                     }
                 }
