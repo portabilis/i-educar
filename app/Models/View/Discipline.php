@@ -4,8 +4,10 @@ namespace App\Models\View;
 
 use App\Casts\LegacyArray;
 use App\Models\Builders\DisciplineBuilder;
+use App\Models\LegacyKnowledgeArea;
 use App\Models\LegacyModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
 class Discipline extends LegacyModel
@@ -44,5 +46,10 @@ class Discipline extends LegacyModel
             ->where('cod_turma', $schoolClass)
             ->where('cod_serie', $grade)
             ->get();
+    }
+
+    public function knowledgeArea(): BelongsTo
+    {
+        return $this->belongsTo(LegacyKnowledgeArea::class, 'area_conhecimento_id');
     }
 }

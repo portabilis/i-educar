@@ -2,20 +2,25 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
-
 class ReportIssued
 {
-    use Dispatchable;
-    use InteractsWithSockets;
-    use SerializesModels;
+    private string $content;
 
     public function __construct(
         public string $render,
         public string $template,
-        public bool $success
+        public bool $success,
+        public bool $authenticate = false,
     ) {
+    }
+
+    public function replace(string $content): void
+    {
+        $this->content = $content;
+    }
+
+    public function content(): string
+    {
+        return $this->content;
     }
 }

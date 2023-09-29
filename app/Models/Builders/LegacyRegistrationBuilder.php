@@ -108,6 +108,14 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Aluno
+     */
+    public function whereStudent(int $student): self
+    {
+        return $this->where('ref_cod_aluno', $student);
+    }
+
+    /**
      * Filtra por Tipos de Deficiência
      */
     public function whereDeficiencyTypes(string $deficiencyTypes): self

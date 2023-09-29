@@ -2,8 +2,8 @@
 
 namespace Tests\Api;
 
-use App\Models\LegacyDisciplineDescriptiveOpinion;
-use App\Models\LegacyGeneralDescriptiveOpinion;
+use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyGeneralScore;
 use Database\Factories\LegacyAcademicYearStageFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
@@ -22,15 +22,15 @@ use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStageTypeFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use RegraAvaliacao_Model_TipoParecerDescritivo;
+use RegraAvaliacao_Model_TipoRecuperacaoParalela;
 use Tests\TestCase;
 
-class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
+class DiarioGravaRecuperacoesTest extends TestCase
 {
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testDiarioGranaPareceresAnualPorComponente()
+    public function testGravaNota()
     {
         $school = LegacySchoolFactory::new()->create();
 
@@ -70,7 +70,8 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+            'parecer_descritivo' => 3,
+            'tipo_recuperacao_paralela' => RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -116,13 +117,14 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
 
         $data = [
             'oper' => 'post',
-            'resource' => 'pareceres-anual-por-componente',
+            'resource' => 'notas',
             'etapa' => 1,
-            'pareceres' => [
+            'notas' => [
                 $schoolClass->getKey() => [
                     $student->getKey() => [
                         $discipline->getKey() => [
-                            'valor' => $parecer = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                            'nota' => 6,
+                            'recuperacao' => 2,
                         ],
                     ],
                 ],
@@ -130,63 +132,89 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
         ];
 
         $response = $this->getResource('/module/Api/Diario', $data);
-        $response->assertSuccessful();
-        $response->assertJson(
-            [
-                'oper' => 'post',
-                'resource' => 'pareceres-anual-por-componente',
-                'msgs' => [
-                    [
-                        'msg' => 'Pareceres postados com sucesso!',
-                        'type' => 'success',
-                    ],
-                ],
-                'any_error_msg' => false,
-            ]
-        );
 
-        $disciplineDescriptiveOpinion = LegacyDisciplineDescriptiveOpinion::first();
-
-        $this->assertDatabaseHas($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
-            'matricula_id' => $registration->getKey(),
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
-        ]);
-        $this->assertDatabaseHas($disciplineDescriptiveOpinion->getTable(), [
-            'parecer_aluno_id' => $disciplineDescriptiveOpinion->studentDescriptiveOpinion->getKey(),
-            'componente_curricular_id' => $discipline->getKey(),
-            'parecer' => $parecer,
-            'etapa' => 'An',
-        ]);
-        $this->assertDatabaseCount($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
-        $this->assertDatabaseCount($disciplineDescriptiveOpinion->getTable(), 1);
-        $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
-
-
-        //alterando a regra de avaliação da série
-        $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-        ]);
-        $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
-        $response = $this->getResource('/module/Api/Diario', $data);
         $response->assertSuccessful()
             ->assertJson(
                 [
-                    'error' => [
-                        'code' => 0,
-                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres anual por componente."
-                    ],
                     'oper' => 'post',
-                    'resource' => 'pareceres-anual-por-componente',
+                    'resource' => 'notas',
                     'msgs' => [
                         [
-                            'msg' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres anual por componente.",
-                            'type' => 'error',
-                        ]
+                            'msg' => 'Notas postadas com sucesso!',
+                            'type' => 'success',
+                        ],
                     ],
-                    'any_error_msg' => true,
+                    'any_error_msg' => false,
                 ]
             );
-        $this->assertDatabaseCount($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
-        $this->assertDatabaseCount($disciplineDescriptiveOpinion->getTable(), 1);
+        $disciplineScore = LegacyDisciplineScore::first();
+
+        $this->assertDatabaseHas($disciplineScore->registrationScore->getTable(), [
+            'matricula_id' => $registration->getKey()
+        ]);
+
+        $this->assertDatabaseHas($disciplineScore->getTable(), [
+            'nota_aluno_id' => $disciplineScore->registrationScore->getKey(),
+            'componente_curricular_id' => $discipline->getKey(),
+            'nota' => 6,
+            'nota_arredondada' => 6.0,
+            'etapa' => 1,
+            'nota_recuperacao' => 2,
+            'nota_original' => 6,
+            'nota_recuperacao_especifica' => null
+        ]);
+
+        $data = [
+            'oper' => 'post',
+            'resource' => 'recuperacoes',
+            'etapa' => 1,
+            'notas' => [
+                $schoolClass->getKey() => [
+                    $student->getKey() => [
+                        $discipline->getKey() => [
+                            'nota' => 6,
+                            'recuperacao' => 7,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $this->getResource('/module/Api/Diario', $data);
+
+        $response->assertSuccessful()
+            ->assertJson(
+                [
+                    'oper' => 'post',
+                    'resource' => 'recuperacoes',
+                    'msgs' => [
+                        [
+                            'msg' => 'Recuperacoes postadas com sucesso!',
+                            'type' => 'success',
+                        ],
+                    ],
+                    'any_error_msg' => false,
+                ]
+            );
+        $disciplineScore = LegacyDisciplineScore::first();
+
+        $this->assertDatabaseHas($disciplineScore->registrationScore->getTable(), [
+            'matricula_id' => $registration->getKey()
+        ]);
+
+        $this->assertDatabaseHas($disciplineScore->getTable(), [
+            'nota_aluno_id' => $disciplineScore->registrationScore->getKey(),
+            'componente_curricular_id' => $discipline->getKey(),
+            'nota' => 7,
+            'nota_arredondada' => 7.0,
+            'etapa' => 1,
+            'nota_recuperacao' => 7,
+            'nota_original' => 6,
+            'nota_recuperacao_especifica' => null
+        ]);
+
+        $this->assertDatabaseCount($disciplineScore->registrationScore->getTable(), 1);
+        $this->assertDatabaseCount($disciplineScore->getTable(), 1);
+        $this->assertDatabaseCount(LegacyGeneralScore::class,0);
     }
 }
