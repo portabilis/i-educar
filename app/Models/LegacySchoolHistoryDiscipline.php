@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Reports\Util;
+use ComponenteCurricular_Model_TipoBase;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistoryDiscipline extends LegacyModel
@@ -35,5 +36,10 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
         }
 
         return Util::format($this->nota, $decimalPlaces);
+    }
+
+    public function isDiversified(): bool
+    {
+        return $this->tipo_base === ComponenteCurricular_Model_TipoBase::DIVERSIFICADA;
     }
 }
