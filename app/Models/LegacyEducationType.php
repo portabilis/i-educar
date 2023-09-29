@@ -23,6 +23,15 @@ class LegacyEducationType extends LegacyModel
     protected $primaryKey = 'cod_tipo_ensino';
 
     /**
+     * Atributos legados para serem usados nas queries
+     */
+    public array $legacy = [
+        'id' => 'cod_tipo_ensino',
+        'name' => 'nm_tipo',
+        'complementary_activity' => 'atividade_complementar'
+    ];
+
+    /**
      * @var array
      */
     protected $fillable = [
