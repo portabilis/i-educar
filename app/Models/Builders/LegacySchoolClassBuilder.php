@@ -34,7 +34,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      */
     public function active(): self
     {
-        return $this->where('ativo', 1);
+        return $this->where('turma.ativo', 1);
     }
 
     /**
