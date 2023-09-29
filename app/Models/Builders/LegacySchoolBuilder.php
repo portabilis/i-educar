@@ -12,6 +12,7 @@ class LegacySchoolBuilder extends LegacyBuilder
     public function getResource(array $filters = []): Collection
     {
         $this->active()->orderByName()->filter($filters);
+
         //ref_idpes é usado na query, mas nao aparece no recurso.
         //name não é usado na query, mas é aparece no recurso com adicional
         return $this->setExcept(['ref_idpes'])->resource(['id'], ['name']);

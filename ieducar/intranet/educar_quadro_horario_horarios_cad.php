@@ -213,7 +213,7 @@ return new class extends clsCadastro
         } catch (Exception) {
         }
 
-        if (0 == count(value: $componentesTurma)) {
+        if (count(value: $componentesTurma) == 0) {
             $opcoes_disc = ['NULL' => 'A série dessa escola não possui componentes cadastrados'];
         } else {
             $opcoes_disc['todas_disciplinas'] = 'Todas as disciplinas';

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Models\View\HistoricGradeYear;
 use App\Traits\HasLegacyDates;
@@ -13,13 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
-use Ankurk91\Eloquent\BelongsToOne;
 
 class LegacyStudent extends LegacyModel
 {
-    use LegacyAttribute;
-    use HasLegacyDates;
     use BelongsToOne;
+    use HasLegacyDates;
+    use LegacyAttribute;
 
     public const CREATED_AT = 'data_cadastro';
 
@@ -232,6 +232,16 @@ class LegacyStudent extends LegacyModel
     public function benefits(): BelongsToMany
     {
         return $this->belongsToMany(LegacyBenefit::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_id', 'aluno_beneficio_id');
+    }
+
+    public function schoolHistories(): HasMany
+    {
+        return $this->hasMany(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')->active();
+    }
+
+    public function schoolHistoryDisciplines(): HasMany
+    {
+        return $this->hasMany(LegacySchoolHistoryDiscipline::class, 'ref_ref_cod_aluno', 'cod_aluno');
     }
 
     public function historicGradeYear(): HasMany

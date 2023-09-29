@@ -14,6 +14,7 @@ class ReportsCount extends Model
         'success',
         'date',
         'count',
+        'authenticated',
     ];
 
     protected static function booted(): void

@@ -10,8 +10,8 @@ use App\Traits\HasLegacyUserAction;
 class LegacyDisciplinaryOccurrenceType extends LegacyModel
 {
     use Ativo;
-    use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyDates;
     use HasLegacyUserAction;
 
     /**

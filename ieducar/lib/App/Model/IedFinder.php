@@ -54,7 +54,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escola->cod_escola = $id;
         $escola = $escola->detalhe();
 
-        if (false === $escola) {
+        if ($escola === false) {
             throw new App_Model_Exception(
                 sprintf('Escola com o código "%d" não existe.', $id)
             );
@@ -184,7 +184,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $instituicao->cod_instituicao = $codInstituicao;
         $instituicao = $instituicao->detalhe();
 
-        if (false === $instituicao) {
+        if ($instituicao === false) {
             throw new App_Model_Exception(
                 sprintf('Série com o código "%d" não existe.', $codInstituicao)
             );
@@ -214,7 +214,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $serie->cod_serie = $codSerie;
         $serie = $serie->detalhe();
 
-        if (false === $serie) {
+        if ($serie === false) {
             throw new App_Model_Exception(
                 sprintf('Série com o código "%d" não existe.', $codSerie)
             );
@@ -292,7 +292,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $turma->cod_turma = $codTurma;
         $turma = $turma->detalhe();
 
-        if (false === $turma) {
+        if ($turma === false) {
             throw new App_Model_Exception(
                 sprintf('Turma com o código "%d" não existe.', $codTurma)
             );
@@ -497,7 +497,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
             $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
 
-            if (false === $disciplinas) {
+            if ($disciplinas === false) {
                 return [];
             }
 
@@ -566,7 +566,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $disciplinaDispensada = self::disciplinaDispensadaDaTurma($turma);
 
         // Não existem componentes específicos para a turma
-        if (0 == count($componentesTurma)) {
+        if (count($componentesTurma) == 0) {
             $componentesTurma = self::getEscolaSerieDisciplina(
                 $serieId,
                 $escola,
@@ -892,8 +892,6 @@ class App_Model_IedFinder extends CoreExt_Entity
      * de cursar.
      *
      * @param int                                             $codMatricula
-     * @param ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper
-     * @param ComponenteCurricular_Model_TurmaDataMapper      $turmaMapper
      * @param int|null                                        $componenteCurricularId
      * @param int|null                                        $etapa
      * @param int|null                                        $turma
@@ -1013,7 +1011,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
             $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
 
-            if (false === $dispensas) {
+            if ($dispensas === false) {
                 return [];
             }
 
@@ -1104,7 +1102,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
             $disciplinas = $disciplinas->lista($codMatricula, $codSerie, $codEscola);
 
-            if (false === $disciplinas) {
+            if ($disciplinas === false) {
                 return [];
             }
 
@@ -1186,7 +1184,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $biblioteca->cod_biblioteca = $id;
         $biblioteca = $biblioteca->detalhe();
 
-        if (false === $biblioteca) {
+        if ($biblioteca === false) {
             throw new App_Model_Exception(
                 sprintf('Seu usuário não está vinculado a nenhuma biblioteca.', $id)
             );
@@ -1314,7 +1312,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $obra->cod_acervo = $id;
         $obra = $obra->detalhe();
 
-        if (false === $obra) {
+        if ($obra === false) {
             throw new App_Model_Exception(
                 sprintf('Obra com o código "%d" não existe.', $id)
             );
@@ -1342,7 +1340,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
         $aluno = $aluno->lista($id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $escolaId);
 
-        if (false === $aluno) {
+        if ($aluno === false) {
             throw new App_Model_Exception(
                 sprintf('Aluno com o código "%d" não existe.', $id)
             );

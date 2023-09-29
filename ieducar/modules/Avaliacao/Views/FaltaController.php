@@ -143,7 +143,7 @@ class FaltaController extends Core_Controller_Page_EditController
      */
     protected function _save()
     {
-        $quantidade = 0 < $this->getRequest()->falta ?
+        $quantidade = $this->getRequest()->falta > 0 ?
       (int) $this->getRequest()->falta : 0;
 
         if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {

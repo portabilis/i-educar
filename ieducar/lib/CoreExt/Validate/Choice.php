@@ -31,7 +31,7 @@ class CoreExt_Validate_Choice extends CoreExt_Validate_Abstract
             $value = $this->_getStringArray($value);
             $choices = $this->_getStringArray($this->getOption('choices'));
 
-            if ($this->_hasOption('multiple') && false == $this->getOption('multiple')) {
+            if ($this->_hasOption('multiple') && $this->getOption('multiple') == false) {
                 if (in_array($value, $choices, true)) {
                     return true;
                 }

@@ -33,8 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyRegistration extends LegacyModel
 {
-    use HasLegacyDates;
     use BelongsToOne;
+    use HasLegacyDates;
 
     /**
      * @var string

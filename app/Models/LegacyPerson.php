@@ -86,7 +86,7 @@ class LegacyPerson extends LegacyModel
     protected function socialName(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->individual->social_name ?? null
+            get: fn () => empty($this->individual->social_name) ? null : $this->individual->social_name
         );
     }
 

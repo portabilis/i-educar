@@ -89,23 +89,17 @@ class Portabilis_Date_Utils
 
     public static function validaData($date)
     {
-        $dateCheck = (bool) strtotime($date);
+        $validator = Validator::make([
+            'date' => $date,
+        ], [
+            'date' => 'required|date_format:d/m/Y',
+        ]);
 
-        if ($dateCheck) {
-            $date_arr = explode('/', $date);
-
-            if (count($date_arr) == 3) {
-                if (checkdate($date_arr[1], $date_arr[0], $date_arr[2])) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
+        if ($validator->fails()) {
             return false;
         }
+
+        return true;
     }
 
     /**

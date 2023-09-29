@@ -134,8 +134,8 @@ class AvailableTimeService
         // Valida se o início e fim do ano letivo da turma de destino não está
         // entre o período de início e fim da turma da outra enturmação.
 
-        $doesNotStartBetween = false === $schoolClass->begin_academic_year->between($otherSchoolClass->begin_academic_year, $otherSchoolClass->end_academic_year);
-        $doesNotEndBetween = false === $schoolClass->end_academic_year->between($otherSchoolClass->begin_academic_year, $otherSchoolClass->end_academic_year);
+        $doesNotStartBetween = $schoolClass->begin_academic_year->between($otherSchoolClass->begin_academic_year, $otherSchoolClass->end_academic_year) === false;
+        $doesNotEndBetween = $schoolClass->end_academic_year->between($otherSchoolClass->begin_academic_year, $otherSchoolClass->end_academic_year) === false;
 
         if ($doesNotStartBetween && $doesNotEndBetween) {
             return false;

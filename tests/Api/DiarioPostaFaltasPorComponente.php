@@ -52,7 +52,6 @@ class DiarioPostaFaltasPorComponente extends TestCase
             'dias_letivos' => '200',
         ]);
 
-
         $schoolGrade1 = LegacySchoolGradeFactory::new()->create([
             'ref_cod_serie' => $grade1,
             'ref_cod_escola' => $school,
@@ -71,13 +70,13 @@ class DiarioPostaFaltasPorComponente extends TestCase
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $school,
             'serie_id' => $grade1,
-            'turma_id' => $schoolClass
+            'turma_id' => $schoolClass,
         ]);
 
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $school,
             'serie_id' => $grade2,
-            'turma_id' => $schoolClass
+            'turma_id' => $schoolClass,
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
@@ -86,10 +85,10 @@ class DiarioPostaFaltasPorComponente extends TestCase
         ]);
 
         $areaConhecimento1 = LegacyKnowledgeAreaFactory::new()->create([
-            'agrupar_descritores' => true
+            'agrupar_descritores' => true,
         ]);
         $discipline1 = LegacyDisciplineFactory::new()->create([
-            'knowledge_area_id' => $areaConhecimento1
+            'knowledge_area_id' => $areaConhecimento1,
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -99,12 +98,12 @@ class DiarioPostaFaltasPorComponente extends TestCase
         ]);
 
         $areaConhecimento2 = LegacyKnowledgeAreaFactory::new()->create([
-            'agrupar_descritores' => true
+            'agrupar_descritores' => true,
         ]);
         $discipline2 = LegacyDisciplineFactory::new()->create([
             'knowledge_area_id' => $areaConhecimento2,
             'ordenamento' => 2,
-            'name' => 'B-Disciplina2'
+            'name' => 'B-Disciplina2',
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -116,7 +115,7 @@ class DiarioPostaFaltasPorComponente extends TestCase
         $discipline3 = LegacyDisciplineFactory::new()->create([
             'knowledge_area_id' => $areaConhecimento2,
             'ordenamento' => 1,
-            'name' => 'A-Disciplina3'
+            'name' => 'A-Disciplina3',
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -128,7 +127,7 @@ class DiarioPostaFaltasPorComponente extends TestCase
         $discipline4 = LegacyDisciplineFactory::new()->create([
             'knowledge_area_id' => $areaConhecimento2,
             'ordenamento' => 3,
-            'name' => 'C-Disciplina4'
+            'name' => 'C-Disciplina4',
         ]);
 
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -227,7 +226,6 @@ class DiarioPostaFaltasPorComponente extends TestCase
             'etapas_especificas' => 1,
         ]);
 
-
         //componente errado que existe na turma, porém não pertence à série da matrícula
         //mensagem de erro ignorada
         $data = $this->getData($schoolClass, $student2, $discipline1);
@@ -264,7 +262,7 @@ class DiarioPostaFaltasPorComponente extends TestCase
                     $student2->getKey() => [
                         'grouper:2' => [
                             'valor' => 2,
-                            'area_do_conhecimento' => $areaConhecimento2->getKey()
+                            'area_do_conhecimento' => $areaConhecimento2->getKey(),
                         ],
                     ],
                 ],
@@ -277,14 +275,14 @@ class DiarioPostaFaltasPorComponente extends TestCase
         $this->assertDatabaseHas((new LegacyDisciplineAbsence())->getTable(), [
             'componente_curricular_id' => $discipline2->getKey(),
             'falta_aluno_id' => $studentAbsence->getKey(),
-            'quantidade' => 0
+            'quantidade' => 0,
         ]);
 
         //a disciplina 4 precisa ter nota zerada
         $this->assertDatabaseHas((new LegacyDisciplineAbsence())->getTable(), [
             'componente_curricular_id' => $discipline4->getKey(),
             'falta_aluno_id' => $studentAbsence->getKey(),
-            'quantidade' => 0
+            'quantidade' => 0,
         ]);
 
         //a disciplina 1 não pode ter dados
@@ -320,7 +318,7 @@ class DiarioPostaFaltasPorComponente extends TestCase
                 [
                     'error' => [
                         'code' => 1011,
-                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de faltas por componente."
+                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de faltas por componente.",
                     ],
                     'oper' => 'post',
                     'resource' => 'faltas-por-componente',
@@ -328,7 +326,7 @@ class DiarioPostaFaltasPorComponente extends TestCase
                         [
                             'msg' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de faltas por componente.",
                             'type' => 'error',
-                        ]
+                        ],
                     ],
                     'any_error_msg' => true,
                 ]
@@ -392,12 +390,13 @@ class DiarioPostaFaltasPorComponente extends TestCase
     private function invalidResponse(array $data, LegacyDiscipline $discipline, LegacySchoolClass $schoolClass): TestResponse
     {
         $response = $this->getResource('/module/Api/Diario', $data);
+
         return $response->assertSuccessful()
             ->assertJson(
                 [
                     'error' => [
                         'code' => 1010,
-                        'message' => "Componente curricular de código {$discipline->getKey()} não existe para a turma {$schoolClass->getKey()}."
+                        'message' => "Componente curricular de código {$discipline->getKey()} não existe para a turma {$schoolClass->getKey()}.",
                     ],
                     'oper' => 'post',
                     'resource' => 'faltas-por-componente',

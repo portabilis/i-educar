@@ -121,7 +121,7 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
 
         $this->assertDatabaseHas($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
             'matricula_id' => $registration->getKey(),
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
         ]);
 
         $this->assertDatabaseHas($generalDescriptiveOpinion->getTable(), [
@@ -134,10 +134,9 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
         $this->assertDatabaseCount($generalDescriptiveOpinion->getTable(), 1);
         $this->assertDatabaseCount(LegacyDisciplineDescriptiveOpinion::class, 0);
 
-
         //alterando a regra de avaliação da série
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' =>  RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
         ]);
         $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
         $response = $this->getResource('/module/Api/Diario', $data);
@@ -146,7 +145,7 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
                 [
                     'error' => [
                         'code' => 0,
-                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres anual geral."
+                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres anual geral.",
                     ],
                     'oper' => 'post',
                     'resource' => 'pareceres-anual-geral',
@@ -154,7 +153,7 @@ class DiarioPostaPareceresAnualGeralTest extends TestCase
                         [
                             'msg' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres anual geral.",
                             'type' => 'error',
-                        ]
+                        ],
                     ],
                     'any_error_msg' => true,
                 ]

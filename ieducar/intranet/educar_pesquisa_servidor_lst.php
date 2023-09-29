@@ -215,7 +215,7 @@ return new class extends clsListagem
         // comparaÃ§Ã£o com a de outros professores (somente quando a busca Ã© para
         // substituiÃ§Ã£o de servidores)
         $disciplinas = [];
-        if ('true' == $this->professor) {
+        if ($this->professor == 'true') {
             $disciplinas = $obj_servidor->getServidorDisciplinasQuadroHorarioHorarios(
                 codServidor: $this->ref_cod_servidor,
                 codInstituicao: $this->ref_cod_instituicao
