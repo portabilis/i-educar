@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Reports\Util;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistoryDiscipline extends LegacyModel
@@ -25,5 +26,14 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_ref_cod_aluno');
+    }
+
+    public function score(int $decimalPlaces = 2): string|null
+    {
+        if (!is_numeric($this->nota)) {
+            return $this->nota;
+        }
+
+        return Util::format($this->nota, $decimalPlaces);
     }
 }
