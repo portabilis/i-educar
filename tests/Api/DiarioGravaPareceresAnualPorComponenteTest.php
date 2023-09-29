@@ -149,7 +149,7 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
 
         $this->assertDatabaseHas($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
             'matricula_id' => $registration->getKey(),
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
         ]);
         $this->assertDatabaseHas($disciplineDescriptiveOpinion->getTable(), [
             'parecer_aluno_id' => $disciplineDescriptiveOpinion->studentDescriptiveOpinion->getKey(),
@@ -160,7 +160,6 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
         $this->assertDatabaseCount($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
         $this->assertDatabaseCount($disciplineDescriptiveOpinion->getTable(), 1);
         $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
-
 
         //alterando a regra de avaliação da série
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
@@ -173,7 +172,7 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
                 [
                     'error' => [
                         'code' => 0,
-                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres anual por componente."
+                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres anual por componente.",
                     ],
                     'oper' => 'post',
                     'resource' => 'pareceres-anual-por-componente',
@@ -181,7 +180,7 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
                         [
                             'msg' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres anual por componente.",
                             'type' => 'error',
-                        ]
+                        ],
                     ],
                     'any_error_msg' => true,
                 ]

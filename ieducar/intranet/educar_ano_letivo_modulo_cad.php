@@ -564,11 +564,11 @@ return new class extends clsCadastro
                 'parecer_1_etapa',
                 'parecer_2_etapa',
                 'parecer_3_etapa',
-                'parecer_4_etapa'
+                'parecer_4_etapa',
             ])->fill([
                 'ano' => $anoDestino,
                 'ref_usuario_cad' => $this->pessoa_logada,
-                'ref_usuario_exc' => $this->pessoa_logada
+                'ref_usuario_exc' => $this->pessoa_logada,
             ]);
             $turmaDestino->save();
             $turmaDestinoId = $turmaDestino->getKey();

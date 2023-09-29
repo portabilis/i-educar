@@ -163,7 +163,7 @@ return new class extends clsCadastro
                     ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT)
                     ->update([
                         'resultado_busca_ativa' => ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT,
-                        'data_fim' => Carbon::createFromFormat('d/m/Y', $this->data_cancel)
+                        'data_fim' => Carbon::createFromFormat('d/m/Y', $this->data_cancel),
                     ]);
 
                 $this->mensagem .= 'Abandono realizado com sucesso.<br>';

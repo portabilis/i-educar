@@ -122,9 +122,8 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
 
         $this->assertDatabaseHas($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
             'matricula_id' => $registration->getKey(),
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
         ]);
-
 
         $this->assertDatabaseHas($generalDescriptiveOpinion->getTable(), [
             'parecer_aluno_id' => $generalDescriptiveOpinion->studentDescriptiveOpinion->getKey(),
@@ -145,7 +144,7 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
                 [
                     'error' => [
                         'code' => 0,
-                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres por etapa geral."
+                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres por etapa geral.",
                     ],
                     'oper' => 'post',
                     'resource' => 'pareceres-por-etapa-geral',
@@ -153,7 +152,7 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
                         [
                             'msg' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres por etapa geral.",
                             'type' => 'error',
-                        ]
+                        ],
                     ],
                     'any_error_msg' => true,
                 ]

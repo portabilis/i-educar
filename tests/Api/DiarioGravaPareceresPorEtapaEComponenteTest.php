@@ -148,7 +148,7 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
 
         $this->assertDatabaseHas($disciplineDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
             'matricula_id' => $registration->getKey(),
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
         ]);
 
         $this->assertDatabaseHas($disciplineDescriptiveOpinion->getTable(), [
@@ -161,7 +161,6 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
         $this->assertDatabaseCount($disciplineDescriptiveOpinion->getTable(), 1);
         $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
 
-
         //alterando a regra de avaliação da série
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
             'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
@@ -173,7 +172,7 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
                 [
                     'error' => [
                         'code' => 0,
-                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres por etapa e componente."
+                        'message' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres por etapa e componente.",
                     ],
                     'oper' => 'post',
                     'resource' => 'pareceres-por-etapa-e-componente',
@@ -181,7 +180,7 @@ class DiarioGravaPareceresPorEtapaEComponenteTest extends TestCase
                         [
                             'msg' => "A regra da turma {$schoolClass->getKey()} não permite lançamento de pareceres por etapa e componente.",
                             'type' => 'error',
-                        ]
+                        ],
                     ],
                     'any_error_msg' => true,
                 ]

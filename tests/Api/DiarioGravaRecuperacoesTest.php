@@ -71,7 +71,7 @@ class DiarioGravaRecuperacoesTest extends TestCase
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
             'parecer_descritivo' => 3,
-            'tipo_recuperacao_paralela' => RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA
+            'tipo_recuperacao_paralela' => RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -150,7 +150,7 @@ class DiarioGravaRecuperacoesTest extends TestCase
         $disciplineScore = LegacyDisciplineScore::first();
 
         $this->assertDatabaseHas($disciplineScore->registrationScore->getTable(), [
-            'matricula_id' => $registration->getKey()
+            'matricula_id' => $registration->getKey(),
         ]);
 
         $this->assertDatabaseHas($disciplineScore->getTable(), [
@@ -161,7 +161,7 @@ class DiarioGravaRecuperacoesTest extends TestCase
             'etapa' => 1,
             'nota_recuperacao' => 2,
             'nota_original' => 6,
-            'nota_recuperacao_especifica' => null
+            'nota_recuperacao_especifica' => null,
         ]);
 
         $data = [
@@ -199,7 +199,7 @@ class DiarioGravaRecuperacoesTest extends TestCase
         $disciplineScore = LegacyDisciplineScore::first();
 
         $this->assertDatabaseHas($disciplineScore->registrationScore->getTable(), [
-            'matricula_id' => $registration->getKey()
+            'matricula_id' => $registration->getKey(),
         ]);
 
         $this->assertDatabaseHas($disciplineScore->getTable(), [
@@ -210,11 +210,11 @@ class DiarioGravaRecuperacoesTest extends TestCase
             'etapa' => 1,
             'nota_recuperacao' => 7,
             'nota_original' => 6,
-            'nota_recuperacao_especifica' => null
+            'nota_recuperacao_especifica' => null,
         ]);
 
         $this->assertDatabaseCount($disciplineScore->registrationScore->getTable(), 1);
         $this->assertDatabaseCount($disciplineScore->getTable(), 1);
-        $this->assertDatabaseCount(LegacyGeneralScore::class,0);
+        $this->assertDatabaseCount(LegacyGeneralScore::class, 0);
     }
 }

@@ -1,19 +1,23 @@
 <?php
 
 namespace App\Models\Builders;
+
 use App\Models\SchoolHistoryStatus;
 use App\Services\SchoolHistory\Objects\SchoolHistory;
 
 class SchoolHistoryBuilder extends LegacyBuilder
 {
-
     public function active(): self
     {
         return $this->where('historico_escolar.ativo', 1);
     }
 
-    public function whereNotDependency(): self
+    public function whereDependency(bool $dependency): self
     {
+        if ($dependency) {
+            return $this->where('dependencia', true);
+        }
+
         return $this->where(function ($query) {
             $query->whereNull('dependencia');
             $query->orWhere('dependencia', false);
@@ -56,7 +60,7 @@ class SchoolHistoryBuilder extends LegacyBuilder
             SchoolHistoryStatus::APPROVED,
             SchoolHistoryStatus::REPROVED,
             SchoolHistoryStatus::ONGOING,
-            SchoolHistoryStatus::REPROVED_BY_ABSENCE
+            SchoolHistoryStatus::REPROVED_BY_ABSENCE,
         ]);
     }
 
