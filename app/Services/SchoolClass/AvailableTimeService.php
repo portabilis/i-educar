@@ -102,15 +102,9 @@ class AvailableTimeService
         //
         // - Uma turma seja de Escolarização e a outra seja de Atendimento
         //   educacional especializado - AEE.
-        // - O horário de funcionamento da turma de escolarização seja igual ou
-        //   superior a 7 horas diárias.
 
-        if ($this->hasEscolarizacaoAndAee($schoolClass, $otherSchoolClass)) {
-            $schoolClassEscolarizacao = $this->getSchoolClassEscolarizacao($schoolClass, $otherSchoolClass);
-
-            if ($schoolClassEscolarizacao->getClassTime() >= 7) {
-                return false;
-            }
+        if ($this->hasEscolarizacaoAndAee($schoolClass, $otherSchoolClass) && $this->getSchoolClassEscolarizacao($schoolClass, $otherSchoolClass)) {
+            return false;
         }
 
         if ($otherSchoolClass->tipo_mediacao_didatico_pedagogico != 1) {
