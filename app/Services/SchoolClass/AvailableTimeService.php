@@ -103,7 +103,7 @@ class AvailableTimeService
         // - Uma turma seja de Escolarização e a outra seja de Atendimento
         //   educacional especializado - AEE.
 
-        if ($this->hasEscolarizacaoAndAee($schoolClass, $otherSchoolClass) && $this->getSchoolClassEscolarizacao($schoolClass, $otherSchoolClass)) {
+        if ($this->hasEscolarizacaoAndAee($schoolClass, $otherSchoolClass)) {
             return false;
         }
 
@@ -163,21 +163,6 @@ class AvailableTimeService
         }
 
         return false;
-    }
-
-    /**
-     * Recebe duas turmas e retorna a que tem o tipo de atendimento igual a Atendimento educacional especializado - AEE
-     *
-     *
-     * @return LegacySchoolClass
-     */
-    private function getSchoolClassEscolarizacao(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass)
-    {
-        if ($schoolClass->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO) {
-            return $schoolClass;
-        }
-
-        return $otherSchoolClass;
     }
 
     public function hasDates(LegacySchoolClass $schoolClass)
