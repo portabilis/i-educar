@@ -74,6 +74,7 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $query = LegacyAbsenceDelay::query()
+            ->with(['employeeRole'])
             ->orderBy('tipo', 'ASC');
 
         if ($this->ref_cod_instituicao) {
@@ -148,10 +149,11 @@ return new class extends clsListagem
 
             $dt = new DateTime($registro['data_falta_atraso']);
             $data = $dt->format('d/m/Y');
+
             $this->addLinhas([
                 $urlHelper->l(text: $registro['nm_escola'], path: $url, options: $options),
                 $urlHelper->l(text: $det_ins['nm_instituicao'], path: $url, options: $options),
-                $urlHelper->l(text: $registro['matricula'], path: $url, options: $options),
+                $urlHelper->l(text: $registro->employeeRole?->matricula, path: $url, options: $options),
                 $urlHelper->l(text: $tipo, path: $url, options: $options),
                 $urlHelper->l(text: $data, path: $url, options: $options),
                 $urlHelper->l(text: $horas_aux, path: $url, options: $options),
