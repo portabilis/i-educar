@@ -228,6 +228,18 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
 
     if (turno_id === 4) { // 4 - Integral
       turnoField.closest('tr').show();
+
+      getApiResource("/api/period", function (turnos) {
+        const campoturno = document.getElementById('turma_turno_id');
+        campoturno.options[0].text = 'Carregando';
+        setAttributes(campoturno, 'Selecione', false);
+
+        $j.each(turnos, function (id, name) {
+          campoturno.options[campoturno.options.length] = new Option(name, id, false, false);
+        });
+
+      }, {schoolclass: turmaField.val()});
+
     } else {
       turnoField.closest('tr').hide();
       turnoField.val('');
