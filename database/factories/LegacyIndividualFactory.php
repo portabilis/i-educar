@@ -31,8 +31,7 @@ class LegacyIndividualFactory extends Factory
             'pais_residencia' => PaisResidencia::BRASIL,
             'idmun_nascimento' => City::query()->inRandomOrder()->first(),
             'idpes_pai' => null,
-            'idpes_mae' => null,
-            'nome_social' => $this->faker->firstName()
+            'idpes_mae' => null
         ];
     }
 
