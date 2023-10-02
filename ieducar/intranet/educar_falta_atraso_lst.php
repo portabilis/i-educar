@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
 use App\Services\EmployeeService;
 
@@ -134,7 +135,7 @@ return new class extends clsListagem
                 $minutos_aux = '(' . ($minutos_aux * -1) . ')';
             }
 
-            $tipo = $registro['tipo'] == 1 ? 'Atraso' : 'Falta';
+            $tipo = $registro['tipo'] == AbsenceDelayType::DELAY->value ? 'Atraso' : 'Falta';
 
             $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
             $url = 'educar_falta_atraso_det.php';
@@ -156,8 +157,8 @@ return new class extends clsListagem
                 $urlHelper->l(text: $registro->employeeRole?->matricula, path: $url, options: $options),
                 $urlHelper->l(text: $tipo, path: $url, options: $options),
                 $urlHelper->l(text: $data, path: $url, options: $options),
-                $urlHelper->l(text: $horas_aux, path: $url, options: $options),
-                $urlHelper->l(text: $minutos_aux, path: $url, options: $options),
+                $urlHelper->l(text: $registro['tipo'] == AbsenceDelayType::DELAY->value ? $horas_aux : '-', path: $url, options: $options),
+                $urlHelper->l(text: $registro['tipo'] == AbsenceDelayType::DELAY->value ? $minutos_aux : '-', path: $url, options: $options),
             ]);
         }
 
