@@ -146,7 +146,6 @@ return new class extends clsListagem
                 ],
             ];
 
-            dd($registro);
             $dt = new DateTime($registro['data_falta_atraso']);
             $data = $dt->format('d/m/Y');
             $this->addLinhas([
