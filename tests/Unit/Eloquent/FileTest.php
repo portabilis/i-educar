@@ -8,10 +8,6 @@ use Tests\EloquentTestCase;
 
 class FileTest extends EloquentTestCase
 {
-    protected $relations = [
-        'relations' => FileRelation::class,
-    ];
-
     /**
      * @return string
      */
