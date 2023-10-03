@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 trait HasFiles
 {
     /**
@@ -9,6 +8,6 @@ trait HasFiles
      */
     public function files()
     {
-        return $this->morphToMany(File::class, 'relation','files_relations');
+        return $this->morphToMany(File::class, 'relation', 'files_relations');
     }
 }
