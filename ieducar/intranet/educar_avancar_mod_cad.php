@@ -277,7 +277,7 @@ return new class extends clsCadastro
         $qtdMatriculasAprovadasReprovadas = 0;
 
         foreach ($matriculas as $m) {
-            if (in_array(needle: $m['aprovado'], haystack: [1, 2, 12, 13])) {
+            if (in_array(needle: $m['aprovado'], haystack: [1, 2, 3, 12, 13])) {
                 $qtdMatriculasAprovadasReprovadas++;
             }
         }
