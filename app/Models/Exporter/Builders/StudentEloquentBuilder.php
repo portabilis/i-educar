@@ -173,6 +173,17 @@ class StudentEloquentBuilder extends Builder
         });
     }
 
+    public function projects()
+    {
+        $this->addSelect(
+            $this->joinColumns('projects', ['projects'])
+        );
+
+        return $this->leftJoin('exporter_projects as projects', function (JoinClause $join) {
+            $join->on('exporter_student_grouped_registration.student_id', '=', 'projects.student_id');
+        });
+    }
+
     public function disabilities()
     {
         $this->addSelect(
