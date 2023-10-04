@@ -733,7 +733,7 @@ return new class extends clsCadastro
             'label' => 'Religião',
         ]);
 
-        $this->viewAddress(optionalFields: true);
+        $this->viewAddress(optionalFields: true, complementMaxLength: 100);
 
         $this->inputsHelper()->select(attrName: 'pais_residencia', inputOptions: [
             'label' => 'País de residência',
