@@ -103,13 +103,6 @@ class StudentEloquentBuilder extends Builder
 
         //fisica
         if ($only = $this->model->getLegacyExportedColumns('mother.individual', $columns)) {
-            //dd($only);
-
-            if (array_key_exists('cpf',$only )) {
-                //$this->addSelect(DB::raw("LPAD(NULLIF(mf.cpf, 0)::text, 11, '0')::text as CPF da mãe"));
-               // unset($only['cpf']);
-            }
-
             $this->addSelect($only);
             $this->leftJoin('cadastro.fisica as mf', 'exporter_student_grouped_registration.mother_id', 'mf.idpes');
         }
