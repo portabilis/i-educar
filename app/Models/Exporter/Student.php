@@ -78,6 +78,7 @@ class Student extends Model
                 'birthplace' => 'Naturalidade',
                 'phones.phones' => 'Telefones',
                 'benefits.benefits' => 'Benefícios',
+                'projects.projects' => 'Projetos',
                 'disabilities.disabilities' => 'Deficiências',
                 'modalidade_ensino' => 'Modalidade de ensino cursada',
                 'technological_resources' => 'Recursos tecnológicos',
