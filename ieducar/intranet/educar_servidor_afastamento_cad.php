@@ -488,7 +488,7 @@ return new class() extends clsCadastro
                     $file->originalName,
                     $file->extension,
                     EmployeeWithdrawal::class,
-                    $cadastrou
+                    $withdrawal->getKey()
                 );
             }
         }

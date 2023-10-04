@@ -20,7 +20,7 @@ class FileRelationFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => 'App\Models\LegacyIndividual',
+            'relation_type' => 'App\Models\LegacyIndividual',
             'relation_id' => fn () => LegacyIndividualFactory::new()->create(),
             'file_id' => FileFactory::new()->create(),
         ];
