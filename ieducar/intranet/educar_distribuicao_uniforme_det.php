@@ -100,11 +100,11 @@ return new class extends clsDetalhe
                 $uniformDistribution->skirt_qty ?: '0',
             ]);
             $this->addDetalhe(detalhe: [
-                'Bermudas tactel (masculino)',
+                'Bermuda masculina (tecidos diversos)',
                 $uniformDistribution->shorts_tactel_qty ?: '0',
             ]);
             $this->addDetalhe(detalhe: [
-                'Bermudas coton (feminino)',
+                'Bermuda feminina (tecidos diversos)',
                 $uniformDistribution->shorts_coton_qty ?: '0',
             ]);
             $this->addDetalhe(detalhe: [
