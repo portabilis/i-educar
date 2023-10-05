@@ -2,7 +2,7 @@ create view public.exporter_person
 AS SELECT p.idpes AS id,
           p.nome AS name,
           f.nome_social AS social_name,
-          f.cpf,
+          trim(to_char(f.cpf, '000"."000"."000"-"00')) AS cpf,
           d.rg,
           d.data_exp_rg AS rg_issue_date,
           d.sigla_uf_exp_rg AS rg_state_abbreviation,
@@ -23,15 +23,15 @@ AS SELECT p.idpes AS id,
               when 2 then 'Naturalizado brasileiro'::varchar
               when 3 then 'Estrangeira'::varchar
               else 'Não informado'::varchar
-              end as nationality,
+          end as nationality,
           COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace,
           re.name AS religion
    FROM cadastro.pessoa p
-            JOIN cadastro.fisica f ON f.idpes = p.idpes
-            LEFT JOIN cadastro.fisica_raca fr ON fr.ref_idpes = f.idpes
-            LEFT JOIN cadastro.raca r ON r.cod_raca = fr.ref_cod_raca
-            LEFT JOIN cadastro.documento d ON d.idpes = p.idpes
-            LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
-            LEFT JOIN public.states st on ci.state_id = st.id
-            LEFT JOIN pmieducar.religions re on re.id = f.ref_cod_religiao
-   WHERE true AND f.ativo = 1;
+     JOIN cadastro.fisica f ON f.idpes = p.idpes
+     LEFT JOIN cadastro.fisica_raca fr ON fr.ref_idpes = f.idpes
+     LEFT JOIN cadastro.raca r ON r.cod_raca = fr.ref_cod_raca
+     LEFT JOIN cadastro.documento d ON d.idpes = p.idpes
+     LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
+     LEFT JOIN public.states st on ci.state_id = st.id
+     LEFT JOIN pmieducar.religions re on re.id = f.ref_cod_religiao
+  WHERE true AND f.ativo = 1;
