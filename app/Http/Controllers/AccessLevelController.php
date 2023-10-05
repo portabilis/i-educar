@@ -38,6 +38,7 @@ class AccessLevelController extends Controller
             'descricao' => $request->input('description'),
             'ref_funcionario_cad' => $request->user()->getKey(),
             'data_cadastro' => now(),
+            'updated_at' => now(),
         ]);
 
         $processes = collect($request->input('processes'))->mapWithKeys(function ($level, $process) {
