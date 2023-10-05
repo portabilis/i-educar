@@ -48,4 +48,12 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
             $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
         });
     }
+
+    /**
+     * Filtra por Turma
+     */
+    public function whereSchoolClass(int $schoolClass): self
+    {
+        return $this->where('ref_cod_turma', $schoolClass);
+    }
 }
