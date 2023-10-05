@@ -374,7 +374,7 @@ class StudentTest extends ViewTestCase
             ],
             'mother.individual' => [
                 'social_name' => 'mf.nome_social as Nome social e/ou afetivo da mãe',
-                'cpf' => DB::raw('LPAD(NULLIF(mf.cpf, 0)::text, 11, \'0\')::text as "CPF da mãe"'),
+                'cpf' => DB::raw('trim(to_char(mf.cpf, \'000"."000"."000"-"00\')) as "CPF da mãe"'),
                 'date_of_birth' => 'mf.data_nasc as Data de nascimento da mãe',
                 'sus' => 'mf.sus as Número SUS da mãe',
                 'nis' => 'mf.nis_pis_pasep as NIS (PIS/PASEP) da mãe',
@@ -395,7 +395,7 @@ class StudentTest extends ViewTestCase
             ],
             'father.individual' => [
                 'social_name' => 'ff.nome_social as Nome social e/ou afetivo do pai',
-                'cpf' => DB::raw('LPAD(NULLIF(ff.cpf, 0)::text, 11, \'0\')::text as "CPF da pai"'),
+                'cpf' => DB::raw('trim(to_char(ff.cpf, \'000"."000"."000"-"00\')) as "CPF da pai"'),
                 'date_of_birth' => 'ff.data_nasc as Data de nascimento do pai',
                 'sus' => 'ff.sus as Número SUS do pai',
                 'nis' => 'ff.nis_pis_pasep as NIS (PIS/PASEP) do pai',
@@ -416,7 +416,7 @@ class StudentTest extends ViewTestCase
             ],
             'guardian.individual' => [
                 'social_name' => 'gf.nome_social as Nome social e/ou afetivo do responsável',
-                'cpf' => DB::raw('LPAD(NULLIF(gf.cpf, 0)::text, 11, \'0\')::text as "CPF da responsável"'),
+                'cpf' => DB::raw('trim(to_char(gf.cpf, \'000"."000"."000"-"00\')) as "CPF da responsável"'),
                 'date_of_birth' => 'gf.data_nasc as Data de nascimento do responsável',
                 'sus' => 'gf.sus as Número SUS do responsável',
                 'nis' => 'gf.nis_pis_pasep as NIS (PIS/PASEP) do responsável',
