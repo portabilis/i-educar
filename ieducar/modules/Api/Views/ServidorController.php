@@ -164,6 +164,7 @@ class ServidorController extends ApiCoreController
                                  greatest(pt.updated_at, ccae.updated_at) as updated_at,
                                  CASE
                                      WHEN s.ativo = 0 THEN coalesce(s.data_exclusao::timestamp(0),s.updated_at::timestamp(0))
+                                     WHEN t.ativo = 0 THEN t.updated_at::timestamp(0)
                                      ELSE NULL
                                  END AS deleted_at
                              from modules.professor_turma pt
