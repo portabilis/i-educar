@@ -52,6 +52,12 @@ return new class extends clsCadastro
 
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
+        if ($anoLetivos->isEmpty()) {
+            Session::now('notice', "O ano letivo {$anoLetivo} não encontra-se aberto.");
+
+            return false;
+        }
+
         if ($anoLetivos->count() > 1) {
             Session::now('notice', 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.');
 
