@@ -2,7 +2,7 @@
 
 $sentinelHosts = array_map(function ($host) {
     return 'tcp://' . $host . ':' . env('SENTINEL_PORT');
-}, explode(',', env('SENTINEL_HOSTS')));
+}, explode(',', env('SENTINEL_HOSTS', '')));
 
 return [
 
