@@ -224,6 +224,7 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
   }
 
   function toggleTurno (turno_id) {
+    turno_edicao = turnoField.val();
     turno_id = parseInt(turno_id, 10);
 
     if (turno_id === 4) { // 4 - Integral
@@ -235,7 +236,11 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
         setAttributes(campoturno, 'Selecione', false);
 
         $j.each(turnos, function (id, name) {
-          campoturno.options[campoturno.options.length] = new Option(name, id, false, false);
+          if (id === turno_edicao) {
+            campoturno.options[campoturno.options.length] = new Option(name, id, false, true);
+          } else {
+            campoturno.options[campoturno.options.length] = new Option(name, id, false, false);
+          }
         });
 
       }, {schoolclass: turmaField.val()});

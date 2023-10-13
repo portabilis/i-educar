@@ -19,7 +19,7 @@ class PeriodController extends ResourceController
                 'ref_cod_curso'
             ]);
             if (!$schoolClass || $schoolClass->course->modalidade_curso !== ModalidadeCurso::EJA) {
-                $periods->except(Period::NIGTH);
+                $periods->forget(Period::NIGTH);
             }
         }
 
