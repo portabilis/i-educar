@@ -17,9 +17,9 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     /**
      * Filtra por ativo por situação
      */
-    public function activeBySituation(int $situation): self
+    public function activeBySituation(int|null $situation): self
     {
-        if (!in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
+        if ($situation && !in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
             $this->active();
         }
 
