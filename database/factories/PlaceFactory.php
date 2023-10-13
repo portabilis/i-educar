@@ -22,7 +22,7 @@ class PlaceFactory extends Factory
         return [
             'city_id' => CityFactory::new()->create(),
             'address' => $this->faker->streetName,
-            'number' => $this->faker->numberBetween(1, 9999),
+            'number' => (string)$this->faker->numberBetween(1, 9999),
             'complement' => $this->faker->boolean ? 'Apto' : null,
             'neighborhood' => $this->faker->month . ' Neighborhood',
             'postal_code' => $this->faker->numerify('########'),
