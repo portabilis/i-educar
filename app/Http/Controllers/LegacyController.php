@@ -87,7 +87,7 @@ class LegacyController extends Controller
     {
         $legacyFile = static::resolve($filename, $this->getLegacyPath() . '/' . $filename);
 
-        if (false === file_exists($legacyFile)) {
+        if (file_exists($legacyFile) === false) {
             throw new NotFoundHttpException('Legacy file not found.');
         }
 

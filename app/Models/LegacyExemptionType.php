@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LegacyExemptionType extends LegacyModel
 {
     use Ativo;
-    use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyDates;
 
     /**
      * @var string

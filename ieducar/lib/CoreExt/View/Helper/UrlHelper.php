@@ -147,7 +147,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
         $url = array_merge($url, $parsedUrl);
 
         // Adiciona "://" caso o scheme seja parseado (caso das URLs absolutas implícitas)
-        if ('' != $url['scheme']) {
+        if ($url['scheme'] != '') {
             $url['scheme'] = $url['scheme'] . '://';
         }
 

@@ -33,8 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyRegistration extends LegacyModel
 {
-    use HasLegacyDates;
     use BelongsToOne;
+    use HasLegacyDates;
 
     /**
      * @var string
@@ -73,6 +73,7 @@ class LegacyRegistration extends LegacyModel
     protected $casts = [
         'data_matricula' => 'date',
         'data_cancel' => 'date',
+        'data_exclusao' => 'date',
     ];
 
     public array $legacy = [
@@ -164,8 +165,7 @@ class LegacyRegistration extends LegacyModel
             'pmieducar.matricula_turma',
             'ref_cod_matricula',
             'ref_cod_turma',
-        )->wherePivot('ativo', 1)
-            ->where('pmieducar.turma.ativo', 1);
+        )->where('pmieducar.turma.ativo', 1);
     }
 
     public function situations(): HasMany
@@ -287,7 +287,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function getEvaluationRule()
     {
-        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+        $evaluationRuleGradeYear = $this->evaluationRuleGradeYear()
             ->where('ano_letivo', $this->ano)
             ->firstOrFail();
 
@@ -296,6 +296,11 @@ class LegacyRegistration extends LegacyModel
         }
 
         return $evaluationRuleGradeYear->evaluationRule;
+    }
+
+    public function evaluationRuleGradeYear(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEvaluationRuleGradeYear::class, 'ref_ref_cod_serie', 'serie_id');
     }
 
     protected function statusDescription(): Attribute

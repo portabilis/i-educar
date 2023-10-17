@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employee extends LegacyModel
 {
-    use LegacyAttribute;
-    use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyDates;
+    use LegacyAttribute;
 
     /**
      * @var string
@@ -55,6 +55,13 @@ class Employee extends LegacyModel
     {
         return Attribute::make(
             get: fn () => $this->cod_servidor,
+        );
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->person->nome
         );
     }
 

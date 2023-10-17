@@ -37,7 +37,7 @@ abstract class CoreExt_Session_Storage_Abstract implements CoreExt_Session_Stora
     {
         $this->_init($options);
 
-        if (true == $this->getOption('session_auto_shutdown')) {
+        if ($this->getOption('session_auto_shutdown') == true) {
             register_shutdown_function([$this, 'shutdown']);
         }
     }

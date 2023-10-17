@@ -62,8 +62,6 @@ class Model
 
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
      */
     public function setCamposLista($str_campos)
     {
@@ -72,8 +70,6 @@ class Model
 
     /**
      * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
      */
     public function resetCamposLista()
     {
@@ -82,8 +78,6 @@ class Model
 
     /**
      * Define limites de retorno para o metodo lista
-     *
-     * @return null
      */
     public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {

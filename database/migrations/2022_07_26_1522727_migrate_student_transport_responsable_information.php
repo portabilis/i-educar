@@ -10,7 +10,7 @@ return new class() extends Migration
 
     public function up(): void
     {
-        if (false === Schema::hasTable('modules.transporte_aluno')) {
+        if (Schema::hasTable('modules.transporte_aluno') === false) {
             return;
         }
 

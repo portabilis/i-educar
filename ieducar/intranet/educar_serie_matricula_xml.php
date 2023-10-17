@@ -216,24 +216,24 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
             $matricula = $matriculas[$cursos[$codCurso]];
 
             // Matrícula reprovada, retorna o mesmo ano escolar da matrícula para a escola selecionada.
-            if (App_Model_MatriculaSituacao::REPROVADO == $matricula['aprovado']) {
+            if ($matricula['aprovado'] == App_Model_MatriculaSituacao::REPROVADO) {
                 $resultado = _mesmoAnoEscolar($db, $codEscola, $matricula['cod_serie']);
             }
 
             // Matrícula aprovada, retorna os anos escolares da sequência de série para a escola selecionada.
-            elseif (App_Model_MatriculaSituacao::APROVADO == $matricula['aprovado']) {
+            elseif ($matricula['aprovado'] == App_Model_MatriculaSituacao::APROVADO) {
                 $resultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
             }
 
             // Matrícula em andamento
-            elseif (App_Model_MatriculaSituacao::TRANSFERIDO == $matricula['aprovado']) {
+            elseif ($matricula['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO) {
                 // Transferência interna, retorna o mesmo ano escolar da matrícula para a escola selecionada.
-                if (1 == $matricula['transferencia_int']) {
+                if ($matricula['transferencia_int'] == 1) {
                     $resultado = _mesmoAnoEscolar($db, $codEscola, $matricula['cod_serie']);
                 }
 
                 // Transferência externa, retorna os anos escolares da sequência de série para a escola selecionada.
-                elseif (1 == $matricula['transferencia_ext']) {
+                elseif ($matricula['transferencia_ext'] == 1) {
                     $resultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
                 }
             }

@@ -28,8 +28,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new TenantsJob(CheckInstitutionConfigurationsJob::class))->cron('0 8 1 1 *');
 
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
-
         $schedule->command('notifications:delete')->saturdays()->dailyAt('04:00');
     }
 

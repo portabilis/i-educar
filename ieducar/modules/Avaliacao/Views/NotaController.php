@@ -171,7 +171,7 @@ class NotaController extends Core_Controller_Page_EditController
         $this->_service->addNota($nota);
 
         if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-            $quantidade = 0 < $this->getRequest()->falta ? (int) $this->getRequest()->falta : 0;
+            $quantidade = $this->getRequest()->falta > 0 ? (int) $this->getRequest()->falta : 0;
             $falta = new Avaliacao_Model_FaltaComponente([
                 'componenteCurricular' => $this->getRequest()->componenteCurricular,
                 'quantidade' => $quantidade,

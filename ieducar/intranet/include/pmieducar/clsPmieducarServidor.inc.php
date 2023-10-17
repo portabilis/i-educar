@@ -386,7 +386,7 @@ class clsPmieducarServidor extends Model
         // não seja necessário alocar o docente em dois períodos diferentes apenas
         // porque o horário final de uma aula extrapola o limite de horário do
         // período.
-        if (is_array($array_horario) && 3 >= count($array_horario)) {
+        if (is_array($array_horario) && count($array_horario) <= 3) {
             $horarioInicial = explode(':', $array_horario[1]);
             $horarioFinal = explode(':', $array_horario[2]);
             $horarioInicial = $horarioInicial[0] * 60 + $horarioInicial[1];
@@ -533,7 +533,7 @@ class clsPmieducarServidor extends Model
                 $minutos = sprintf('%02d', (int) abs($hora_fim[1]) - abs($hora_ini[1]));
                 // Remove qualquer AND que esteja no início da cláusula SQL
                 $wherePieces = explode(' ', trim($where));
-                if ('AND' == $wherePieces[0]) {
+                if ($wherePieces[0] == 'AND') {
                     array_shift($wherePieces);
                     $where = implode(' ', $wherePieces);
                 }
@@ -583,8 +583,8 @@ class clsPmieducarServidor extends Model
               FROM pmieducar.servidor_alocacao a
               WHERE $where".
             ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
-            ." AND (a.data_saida > now() or a.data_saida is null)
-              AND a.periodo = 1) OR s.multi_seriado )";
+            .' AND (a.data_saida > now() or a.data_saida is null)
+              AND a.periodo = 1) OR s.multi_seriado )';
                     }
                 }
                 if ($vespertino) {
@@ -643,8 +643,8 @@ class clsPmieducarServidor extends Model
               FROM pmieducar.servidor_alocacao a
               WHERE $where ".
                 ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
-                ." AND (a.data_saida > now() or a.data_saida is null)
-              AND a.periodo = 2 ) OR s.multi_seriado) ";
+                .' AND (a.data_saida > now() or a.data_saida is null)
+              AND a.periodo = 2 ) OR s.multi_seriado) ';
                     }
                 }
                 if ($noturno) {
@@ -691,8 +691,8 @@ class clsPmieducarServidor extends Model
               FROM pmieducar.servidor_alocacao a
               WHERE $where ".
                 ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
-                ." AND (a.data_saida > now() or a.data_saida is null)
-              AND a.periodo = 3 ) OR s.multi_seriado) ";
+                .' AND (a.data_saida > now() or a.data_saida is null)
+              AND a.periodo = 3 ) OR s.multi_seriado) ';
                     }
                 }
                 if (!(is_string($str_horario) && $str_horario == 'S')) {
@@ -1095,7 +1095,7 @@ class clsPmieducarServidor extends Model
     {
         $funcoes = $this->getServidorFuncoes();
         foreach ($funcoes as $funcao) {
-            if (1 == $funcao['professor']) {
+            if ($funcao['professor'] == 1) {
                 return true;
             }
         }

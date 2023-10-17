@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class LegacyCalendarDayReason extends LegacyModel
 {
     use Ativo;
-    use LegacySoftDeletes;
-    use HasLegacyUserAction;
     use HasLegacyDates;
+    use HasLegacyUserAction;
+    use LegacySoftDeletes;
 
     public $table = 'pmieducar.calendario_dia_motivo';
 

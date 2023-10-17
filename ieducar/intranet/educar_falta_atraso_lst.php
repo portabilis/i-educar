@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
 use App\Services\EmployeeService;
 
@@ -74,6 +75,7 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $query = LegacyAbsenceDelay::query()
+            ->with(['employeeRole'])
             ->orderBy('tipo', 'ASC');
 
         if ($this->ref_cod_instituicao) {
@@ -133,7 +135,7 @@ return new class extends clsListagem
                 $minutos_aux = '(' . ($minutos_aux * -1) . ')';
             }
 
-            $tipo = $registro['tipo'] == 1 ? 'Atraso' : 'Falta';
+            $tipo = $registro['tipo'] == AbsenceDelayType::DELAY->value ? 'Atraso' : 'Falta';
 
             $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
             $url = 'educar_falta_atraso_det.php';
@@ -148,14 +150,15 @@ return new class extends clsListagem
 
             $dt = new DateTime($registro['data_falta_atraso']);
             $data = $dt->format('d/m/Y');
+
             $this->addLinhas([
                 $urlHelper->l(text: $registro['nm_escola'], path: $url, options: $options),
                 $urlHelper->l(text: $det_ins['nm_instituicao'], path: $url, options: $options),
-                $urlHelper->l(text: $registro['matricula'], path: $url, options: $options),
+                $urlHelper->l(text: $registro->employeeRole?->matricula, path: $url, options: $options),
                 $urlHelper->l(text: $tipo, path: $url, options: $options),
                 $urlHelper->l(text: $data, path: $url, options: $options),
-                $urlHelper->l(text: $horas_aux, path: $url, options: $options),
-                $urlHelper->l(text: $minutos_aux, path: $url, options: $options),
+                $urlHelper->l(text: $registro['tipo'] == AbsenceDelayType::DELAY->value ? $horas_aux : '-', path: $url, options: $options),
+                $urlHelper->l(text: $registro['tipo'] == AbsenceDelayType::DELAY->value ? $minutos_aux : '-', path: $url, options: $options),
             ]);
         }
 

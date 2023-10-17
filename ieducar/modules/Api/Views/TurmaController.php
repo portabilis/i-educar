@@ -182,7 +182,6 @@ class TurmaController extends ApiCoreController
         }
 
         $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
-        $tipos = Portabilis_Array_Utils::insertIn(null, 'indefinido', $tipos);
 
         if ($tipoDiferenciado && $tipoDiferenciado != $tipo) {
             $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);

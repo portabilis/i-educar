@@ -22,18 +22,14 @@ class SchoolData extends Model
     protected function phone(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                return $this->telefone ? '(' . $this->telefone_ddd . ') ' . $this->telefone : '(##) ####-####';
-            }
+            get: fn () => $this->telefone ? '(' . $this->telefone_ddd . ') ' . $this->telefone : '(##) ####-####'
         );
     }
 
     protected function cellphone(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                return $this->celular ? '(' . $this->celular_ddd . ') ' . $this->celular : '(##) #####-####';
-            }
+            get: fn () => $this->celular ? '(' . $this->celular_ddd . ') ' . $this->celular : '(##) #####-####'
         );
     }
 
@@ -42,9 +38,16 @@ class SchoolData extends Model
         return Attribute::make(
             get: fn () => implode(', ', [
                 $this->logradouro,
-                $this->numero,
+                $this->numero ? 'Nº.: ' . $this->numero : 'S/N',
                 $this->bairro,
             ]) . ' - ' . $this->municipio . ' - ' . $this->uf_municipio . ' - CEP: ' . Util::formatPostcode($this->cep)
+        );
+    }
+
+    protected function postpone(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Util::formatPostcode($this->cep)
         );
     }
 }

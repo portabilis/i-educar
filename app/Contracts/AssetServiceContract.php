@@ -7,7 +7,7 @@ interface AssetServiceContract
     /**
      * AssetServiceContract constructor.
      */
-    public function __construct(string $version, ?bool $secure = null, bool $automatic_versioning = false);
+    public function __construct(string $version, bool $secure = null, bool $automatic_versioning = false);
 
     /**
      * Get assets version number.

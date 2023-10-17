@@ -4,6 +4,8 @@ return [
 
     'frontier' => [
 
+        'type' => env('FRONTIER_TYPE', 'view'),
+
         'endpoint' => env('FRONTIER_ENDPOINT', 'frontier'),
 
         'view' => env('FRONTIER_VIEW', 'frontier::index'),
@@ -12,8 +14,6 @@ return [
         'views' => [
             'frontier' => env('FRONTIER_VIEWS_PATH') ? base_path(env('FRONTIER_VIEWS_PATH')) : __DIR__ . '/../resources/html',
         ],
-
-        'type' => env('FRONTIER_TYPE', 'view'),
 
         // https://laravel.com/docs/packages#publishing-views
         // https://laravel.com/docs/packages#publishing-file-groups
@@ -31,10 +31,18 @@ return [
             'ieducar.checkresetpassword',
         ],
 
-        'replaces' => [
-            env('FRONTIER_FIND') => env('FRONTIER_REPLACE_WITH'),
-        ],
+        'replaces' => array_combine(
+            array_filter(explode(',', env('FRONTIER_FIND', ''))),
+            array_filter(explode(',', env('FRONTIER_REPLACE_WITH', ''))),
+        ),
 
+        'proxy' => array_filter(explode(',', env('FRONTIER_PROXY', ''))),
+
+        'cache' => env('FRONTIER_CACHE', true),
+
+        'headers' => [
+            'Accept' => 'text/html',
+        ],
     ],
 
 ];

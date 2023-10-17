@@ -9,8 +9,8 @@ use App\Traits\HasLegacyDates;
 class LegacyAbandonmentType extends LegacyModel
 {
     use Ativo;
-    use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';
 

@@ -12,6 +12,7 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
     public function getResource(array $filters = []): Collection
     {
         $this->distinctDiscipline()->with('discipline:id,nome')->filter($filters);
+
         //não não aparece na query, mas é adicionado no recurso
         return $this->resource(['id', 'workload'], ['name']);
     }

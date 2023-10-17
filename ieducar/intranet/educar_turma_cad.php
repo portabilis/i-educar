@@ -765,7 +765,7 @@ return new class extends clsCadastro
                     }
                     $cargaComponente = $registro->cargaHoraria;
 
-                    if (1 == $componentes[$registro->id]->docenteVinculado) {
+                    if ($componentes[$registro->id]->docenteVinculado == 1) {
                         $docenteVinculado = true;
                     }
 

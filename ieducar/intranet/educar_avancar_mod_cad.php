@@ -35,16 +35,28 @@ return new class extends clsCadastro
         $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
-            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomatica.js',
             '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js',
         ]);
     }
 
     public function Novo()
     {
-        $anoLetivos = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->inProgress()->active()->get(['id']);
+        $anoLetivo = request('ano_letivo');
+
+        $anoLetivos = LegacySchoolAcademicYear::query()
+            ->whereSchool($this->ref_cod_escola)
+            ->whereYearEq($anoLetivo)
+            ->inProgress()
+            ->active()
+            ->get(['id']);
 
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
+
+        if ($anoLetivos->isEmpty()) {
+            Session::now('notice', "O ano letivo {$anoLetivo} não encontra-se aberto.");
+
+            return false;
+        }
 
         if ($anoLetivos->count() > 1) {
             Session::now('notice', 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.');
@@ -79,7 +91,7 @@ return new class extends clsCadastro
             cursoId: $this->ref_cod_curso,
             serieId: $this->ref_cod_serie,
             turmaId: $this->ref_cod_turma,
-            ano: $_POST['ano']
+            ano: request('ano')
         );
     }
 
@@ -109,7 +121,7 @@ return new class extends clsCadastro
                         "
                     );
 
-                    if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13) {
+                    if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13 || $situacao == 3) {
                         $result = $this->rematricularAlunoAprovado(escolaId: $escolaId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
                     } elseif ($result && $situacao == 2 || $situacao == 14) {
                         $result = $this->rematricularAlunoReprovado(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
@@ -214,7 +226,7 @@ return new class extends clsCadastro
                     AND aluno.cod_aluno = ref_cod_aluno
                 ) as nome
             FROM pmieducar.matricula m, pmieducar.matricula_turma
-            WHERE aprovado in (1, 2, 12, 13, 14)
+            WHERE aprovado in (1, 2, 3, 12, 13, 14)
             AND m.ativo = 1
             AND ref_ref_cod_escola = $escolaId
             AND ref_ref_cod_serie = $serieId
@@ -271,7 +283,7 @@ return new class extends clsCadastro
         $qtdMatriculasAprovadasReprovadas = 0;
 
         foreach ($matriculas as $m) {
-            if (in_array(needle: $m['aprovado'], haystack: [1, 2, 12, 13])) {
+            if (in_array(needle: $m['aprovado'], haystack: [1, 2, 3, 12, 13])) {
                 $qtdMatriculasAprovadasReprovadas++;
             }
         }

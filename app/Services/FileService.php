@@ -45,7 +45,7 @@ class FileService
             ]);
 
             FileRelation::create([
-                'type' => $typeFileRelation,
+                'relation_type' => $typeFileRelation,
                 'relation_id' => $relationId,
                 'file_id' => $file->id,
             ]);

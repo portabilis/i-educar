@@ -13,9 +13,9 @@ use Tests\TestCase;
 
 class ExemptionTest extends TestCase
 {
+    use DatabaseTransactions;
     use DiarioApiFakeDataTestTrait;
     use DiarioApiRequestTestTrait;
-    use DatabaseTransactions;
 
     /** @var LegacyEnrollment */
     private $enrollment;

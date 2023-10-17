@@ -24,7 +24,7 @@ class Util
         return sprintf('%02d:%02d', $hours, $minutes);
     }
 
-    public static function formatWorkload(float|null $workload): string
+    public static function formatWorkload(?float $workload): string
     {
         if ($workload) {
             $hour = (int) $workload;
@@ -44,9 +44,9 @@ class Util
         return '00:00';
     }
 
-    public static function format(mixed $value, int $decimalPlaces = 1): string
+    public static function format(mixed $value, int $decimalPlaces = null): string
     {
-        return number_format($value, $decimalPlaces, ',', '.');
+        return number_format($value, $decimalPlaces ?? 1, ',', '.');
     }
 
     public static function float(mixed $value): float
@@ -54,7 +54,7 @@ class Util
         return (float) str_replace(',', '.', $value);
     }
 
-    public static function moduleName(Collection|null $modules = null): array
+    public static function moduleName(Collection $modules = null): array
     {
         if ($modules === null) {
             return [
@@ -109,7 +109,7 @@ class Util
         return $maskared;
     }
 
-    public static function formatPostcode(string|null $postcode): string|null
+    public static function formatPostcode(?string $postcode): ?string
     {
         if ($postcode && strlen($postcode) === 8) {
             return self::mask($postcode, '#####-###');

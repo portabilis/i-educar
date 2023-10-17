@@ -40,9 +40,6 @@ class EnrollmentService
         $this->user = $user;
     }
 
-    /**
-     * @return null
-     */
     private function getSequenceSchoolClass(
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass,

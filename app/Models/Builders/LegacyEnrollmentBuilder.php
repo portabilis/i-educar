@@ -17,9 +17,9 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     /**
      * Filtra por ativo por situação
      */
-    public function activeBySituation(int $situation): self
+    public function activeBySituation(int|null $situation): self
     {
-        if (!in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
+        if ($situation && !in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
             $this->active();
         }
 
@@ -47,5 +47,13 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
             $q->orWhere('abandono', true);
             $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
         });
+    }
+
+    /**
+     * Filtra por Turma
+     */
+    public function whereSchoolClass(int $schoolClass): self
+    {
+        return $this->where('ref_cod_turma', $schoolClass);
     }
 }

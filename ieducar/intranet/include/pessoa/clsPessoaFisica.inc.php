@@ -66,6 +66,8 @@ class clsPessoaFisica extends clsPessoaFj
 
     public $pais_residencia;
 
+    public $observacao;
+
     public $banco = 'pmi';
 
     public $schema_cadastro = 'cadastro';
@@ -249,6 +251,7 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->localizacao_diferenciada = $detalhe_fisica['localizacao_diferenciada'];
                 $this->nome_social = $detalhe_fisica['nome_social'];
                 $this->pais_residencia = $detalhe_fisica['pais_residencia'];
+                $this->observacao = $detalhe_fisica['observacao'];
 
                 $tupla['idpes'] = $this->idpes;
                 $tupla[] = &$tupla['idpes'];
@@ -340,6 +343,9 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['pais_residencia'] = $this->pais_residencia;
                 $tupla[] = &$tupla['pais_residencia'];
 
+                $tupla['observacao'] = $this->observacao;
+                $tupla[] = &$tupla['observacao'];
+
                 return $tupla;
             }
         } elseif ($this->cpf) {
@@ -392,6 +398,7 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->localizacao_diferenciada = $detalhe_fisica['localizacao_diferenciada'];
                     $this->nome_social = $detalhe_fisica['nome_social'];
                     $this->pais_residencia = $detalhe_fisica['pais_residencia'];
+                    $this->observacao = $detalhe_fisica['observacao'];
 
                     $tupla['idpes'] = $this->idpes;
                     $tupla[] = &$tupla['idpes'];
@@ -476,6 +483,9 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['pais_residencia'] = $this->pais_residencia;
                     $tupla[] = &$tupla['pais_residencia'];
+
+                    $tupla['observacao'] = $this->observacao;
+                    $tupla[] = &$tupla['observacao'];
 
                     return $tupla;
                 }

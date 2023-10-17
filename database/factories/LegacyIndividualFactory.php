@@ -31,7 +31,7 @@ class LegacyIndividualFactory extends Factory
             'pais_residencia' => PaisResidencia::BRASIL,
             'idmun_nascimento' => City::query()->inRandomOrder()->first(),
             'idpes_pai' => null,
-            'idpes_mae' => null,
+            'idpes_mae' => null
         ];
     }
 
@@ -40,6 +40,24 @@ class LegacyIndividualFactory extends Factory
         return LegacyIndividual::query()->first() ?? $this->create([
             'idpes' => fn () => LegacyPersonFactory::new()->current(),
         ]);
+    }
+
+    public function withName(string $name): static
+    {
+        return $this->afterCreating(function (LegacyIndividual $individual) use ($name) {
+            $individual->person->nome = $name;
+        });
+    }
+
+    public function withDocument(string $rg = null, string $birthCertificate = null): static
+    {
+        return $this->afterCreating(function (LegacyIndividual $individual) use ($rg, $birthCertificate) {
+            LegacyDocumentFactory::new()->create([
+                'idpes' => $individual->getKey(),
+                'rg' => $rg,
+                'certidao_nascimento' => $birthCertificate,
+            ]);
+        });
     }
 
     public function withAge(int $age): static

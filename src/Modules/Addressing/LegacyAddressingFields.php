@@ -77,7 +77,7 @@ trait LegacyAddressingFields
         ]);
     }
 
-    protected function viewAddress($optionalFields = false)
+    protected function viewAddress($optionalFields = false, $complementMaxLength = 20)
     {
         $enderecamentoObrigatorio = false;
 
@@ -121,7 +121,7 @@ trait LegacyAddressingFields
             'disabled' => $disabled,
             'placeholder' => 'Complemento',
             'value' => $this->complement,
-            'max_length' => 20,
+            'max_length' => $complementMaxLength,
         ]);
 
         $this->inputsHelper()->text('neighborhood', [
