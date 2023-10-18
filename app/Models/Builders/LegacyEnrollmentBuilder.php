@@ -56,4 +56,16 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     {
         return $this->where('ref_cod_turma', $schoolClass);
     }
+
+    public function addJoinViewSituacaoRelatorios(int $situation): self
+    {
+        return $this->join('relatorio.view_situacao_relatorios', function($join) use ($situation) {
+            $join->on('view_situacao_relatorios.cod_matricula', 'ref_cod_matricula');
+            $join->on('view_situacao_relatorios.cod_turma', 'ref_cod_turma');
+            $join->on('view_situacao_relatorios.sequencial', 'matricula_turma.sequencial');
+            $join->where('view_situacao_relatorios.cod_situacao', $situation);
+        })->addSelect([
+            'view_situacao_relatorios.texto_situacao'
+        ]);
+    }
 }
