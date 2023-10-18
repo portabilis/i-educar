@@ -167,9 +167,4 @@ class LegacyEnrollment extends LegacyModel
     {
         return $this->registration->student->cod_aluno;
     }
-
-    public function situations(): HasMany
-    {
-        return $this->hasMany(SituationReport::class, 'cod_matricula', 'ref_cod_matricula');
-    }
 }
