@@ -17,9 +17,9 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     /**
      * Filtra por ativo por situação
      */
-    public function activeBySituation(int $situation): self
+    public function activeBySituation(int|null $situation): self
     {
-        if (!in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
+        if ($situation && !in_array($situation, RegistrationStatus::getStatusInactive(), true)) {
             $this->active();
         }
 
@@ -47,5 +47,25 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
             $q->orWhere('abandono', true);
             $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
         });
+    }
+
+    /**
+     * Filtra por Turma
+     */
+    public function whereSchoolClass(int $schoolClass): self
+    {
+        return $this->where('ref_cod_turma', $schoolClass);
+    }
+
+    public function addJoinViewSituacaoRelatorios(int $situation): self
+    {
+        return $this->join('relatorio.view_situacao_relatorios', function($join) use ($situation) {
+            $join->on('view_situacao_relatorios.cod_matricula', 'ref_cod_matricula');
+            $join->on('view_situacao_relatorios.cod_turma', 'ref_cod_turma');
+            $join->on('view_situacao_relatorios.sequencial', 'matricula_turma.sequencial');
+            $join->where('view_situacao_relatorios.cod_situacao', $situation);
+        })->addSelect([
+            'view_situacao_relatorios.texto_situacao'
+        ]);
     }
 }

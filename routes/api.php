@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\EmployeeWithdrawalController;
 use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\InstitutionController;
 use App\Http\Controllers\Api\People\LegacyDeficiencyController;
+use App\Http\Controllers\Api\PeriodController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\ReligionController;
 use App\Http\Controllers\Api\SchoolClassController;
@@ -67,6 +68,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'Api'], static func
     Route::resource('school-class', SchoolClassController::class)->only(['index']);
     Route::resource('registration', RegistrationController::class)->only(['index']);
     Route::resource('situation', SituationController::class)->only(['index']);
+    Route::resource('period', PeriodController::class)->only(['index']);
     Route::resource('discipline', DisciplineController::class)->only(['index']);
     Route::resource('stage', StageController::class)->only(['index']);
 });

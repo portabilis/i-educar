@@ -230,7 +230,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
 
         $formulaValidatorOptions = [];
 
-        if (FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO == $this->get('tipoFormula')) {
+        if ($this->get('tipoFormula') == FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO) {
             $formulaValidatorOptions = ['excludeToken' => null];
         }
 
@@ -244,7 +244,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
 
     private function fixedUndefinedParams($replaced): ?string
     {
-        if (null === $replaced) {
+        if ($replaced === null) {
             return null;
         }
 

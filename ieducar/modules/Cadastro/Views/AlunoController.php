@@ -1158,7 +1158,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $enderecamentoObrigatorio = false;
         $desativarCamposDefinidosViaCep = true;
 
-        $this->viewAddress(true);
+        $this->viewAddress(optionalFields: true, complementMaxLength: 100);
 
         $zonas = App_Model_ZonaLocalizacao::getInstance();
         $zonas = $zonas->getEnums();

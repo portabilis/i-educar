@@ -17,9 +17,9 @@ use Illuminate\Support\Collection;
 
 class LegacyStudent extends LegacyModel
 {
-    use LegacyAttribute;
-    use HasLegacyDates;
     use BelongsToOne;
+    use HasLegacyDates;
+    use LegacyAttribute;
 
     public const CREATED_AT = 'data_cadastro';
 
@@ -232,6 +232,16 @@ class LegacyStudent extends LegacyModel
     public function benefits(): BelongsToMany
     {
         return $this->belongsToMany(LegacyBenefit::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_id', 'aluno_beneficio_id');
+    }
+
+    public function schoolHistories(): HasMany
+    {
+        return $this->hasMany(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')->active();
+    }
+
+    public function schoolHistoryDisciplines(): HasMany
+    {
+        return $this->hasMany(LegacySchoolHistoryDiscipline::class, 'ref_ref_cod_aluno', 'cod_aluno');
     }
 
     public function historicGradeYear(): HasMany

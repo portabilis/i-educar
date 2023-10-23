@@ -56,7 +56,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
             }
         }
 
-        if (0 < count($missingTokens)) {
+        if (count($missingTokens) > 0) {
             throw new Exception('As variáveis ou símbolos não são permitidos: ' . implode(', ', $missingTokens));
         }
 
@@ -90,7 +90,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
 
         if ($this->_hasOption('excludeToken') &&
         is_array($this->getOption('excludeToken')) &&
-        0 < count($this->getOption('excludeToken'))
+        count($this->getOption('excludeToken')) > 0
         ) {
             $excludeToken = $this->getOption('excludeToken');
             foreach ($tokens as $token) {

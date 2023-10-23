@@ -12,7 +12,6 @@ class EducacensoController extends Controller
 {
     /**
      * @param array             $records
-     * @param null              $paginate
      * @return View
      */
     private function view(LegacyInstitution $institution, $records = [], $paginate = null)

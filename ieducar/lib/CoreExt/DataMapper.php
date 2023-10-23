@@ -183,7 +183,7 @@ abstract class CoreExt_DataMapper
     {
         $columns = [];
 
-        if (0 == count($data)) {
+        if (count($data) == 0) {
             $tempEntity = new $this->_entityClass();
             $data = $tempEntity->toDataArray();
         }
@@ -249,7 +249,7 @@ abstract class CoreExt_DataMapper
         $where = [];
         $order = [];
 
-        if (0 < count($whereArg)) {
+        if (count($whereArg) > 0) {
             foreach ($whereArg as $key => $value) {
                 // Caso $key seja um inteiro ela não representa uma coluna, e apenas nos importamos com o where
                 if (is_int($key)) {
@@ -278,7 +278,7 @@ abstract class CoreExt_DataMapper
             $where[] = '1 = 1';
         }
 
-        if (0 < count($orderBy)) {
+        if (count($orderBy) > 0) {
             foreach ($orderBy as $key => $value) {
                 $order[] = sprintf('%s %s', $this->_getTableColumn($key), $value);
             }
@@ -409,7 +409,7 @@ abstract class CoreExt_DataMapper
             $columnName = $this->_getTableColumn($key);
             $replaceString = '%s = \'%s\'';
 
-            if (is_null($value) || (0 == $value && $instance->_isReferenceDataMapper($key))) {
+            if (is_null($value) || ($value == 0 && $instance->_isReferenceDataMapper($key))) {
                 $value = 'NULL';
                 $replaceString = '%s = %s';
             }
@@ -473,7 +473,7 @@ abstract class CoreExt_DataMapper
     public function findAll(array $columns = [], array $where = [], array $orderBy = [], $addColumnIdIfNotSet = true)
     {
         // Inverte chave valor, permitindo array simples como array('nome')
-        if (0 < count($columns)) {
+        if (count($columns) > 0) {
             $columns = array_flip($columns);
 
             if (!isset($columns['id']) && $addColumnIdIfNotSet) {
@@ -508,7 +508,7 @@ abstract class CoreExt_DataMapper
         $list = [];
 
         // Inverte chave valor, permitindo array simples como array('nome')
-        if (0 < count($columns)) {
+        if (count($columns) > 0) {
             $columns = array_flip($columns);
 
             if (!isset($columns['id']) && $addColumnIdIfNotSet) {
@@ -540,7 +540,7 @@ abstract class CoreExt_DataMapper
     {
         $this->_getDbAdapter()->Consulta($this->_getFindStatment($pkey));
 
-        if (false === $this->_getDbAdapter()->ProximoRegistro()) {
+        if ($this->_getDbAdapter()->ProximoRegistro() === false) {
             throw new Exception('Nenhum registro encontrado com a(s) chaves(s) informada(s).');
         }
 
@@ -559,7 +559,7 @@ abstract class CoreExt_DataMapper
     public function exists($pkey)
     {
         $this->_getDbAdapter()->Consulta($this->_getFindStatment($pkey));
-        if (false === $this->_getDbAdapter()->ProximoRegistro()) {
+        if ($this->_getDbAdapter()->ProximoRegistro() === false) {
             return false;
         }
 

@@ -25,7 +25,7 @@ trait Avaliacao_Service_Boletim_NotaAluno
             ['matricula' => $this->getOption('matricula')]
         );
 
-        if (0 == count($notaAluno)) {
+        if (count($notaAluno) == 0) {
             return null;
         }
 

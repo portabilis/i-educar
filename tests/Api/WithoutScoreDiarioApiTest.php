@@ -11,8 +11,8 @@ use Tests\TestCase;
 class WithoutScoreDiarioApiTest extends TestCase
 {
     use DatabaseTransactions;
-    use DiarioApiRequestTestTrait;
     use DiarioApiFakeDataTestTrait;
+    use DiarioApiRequestTestTrait;
 
     /**
      * @var LegacyEvaluationRule

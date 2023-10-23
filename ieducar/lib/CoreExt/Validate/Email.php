@@ -18,7 +18,7 @@ class CoreExt_Validate_Email extends CoreExt_Validate_Abstract
      */
     protected function _validate($value)
     {
-        if (false === filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
             throw new Exception($this->_getErrorMessage('invalid'));
         }
 

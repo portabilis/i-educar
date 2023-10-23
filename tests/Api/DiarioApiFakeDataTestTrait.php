@@ -82,7 +82,6 @@ trait DiarioApiFakeDataTestTrait
      * Adiciona uma etapa ao ano letivo (pmieducar.ano_letivo_modulo)
      *
      * @param LegacySchool $school
-     * @param null         $year
      */
     public function addAcademicYearStage($school, $number, $year = null)
     {

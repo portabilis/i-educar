@@ -28,7 +28,9 @@ class Situation extends Model
         if ($situation === 16) {
             $query->whereExists(
                 LegacyDisciplineScoreAverage::selectRaw(1)
-                    ->whereColumn('nota_aluno_id', 'nota_aluno.id')
+                    ->whereHas('registrationScore', function ($q) {
+                        $q->whereColumn('matricula_id', 'cod_matricula');
+                    })
                     ->where('situacao', App_Model_MatriculaSituacao::APROVADO_APOS_EXAME)
             );
             $query->approved();

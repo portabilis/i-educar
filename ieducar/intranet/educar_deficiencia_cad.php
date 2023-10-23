@@ -139,9 +139,9 @@ return new class extends clsCadastro
 
         if ($obj->individuals()->exists()) {
             $this->mensagem = 'Exclusão não realizada, pois existem pessoas físicas com a deficiência.<br>';
+
             return false;
         }
-
 
         $excluiu = $obj->delete();
         if ($excluiu) {

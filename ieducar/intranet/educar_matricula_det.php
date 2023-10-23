@@ -187,6 +187,7 @@ return new class extends clsDetalhe
                 $nomesTurnos[] = match ((int) $enturmacao['turno_id']) {
                     clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
                     clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                    clsPmieducarTurma::TURNO_NOTURNO => 'Noturno',
                     default => null
                 };
             }

@@ -13,3 +13,4 @@
   }
   }
 
+  obj_tipo.dispatchEvent(new Event('change'));

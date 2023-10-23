@@ -86,6 +86,13 @@ class Individual extends Model
         );
     }
 
+    protected function cpf(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => int2CPF($value),
+        );
+    }
+
     public function student(): HasOne
     {
         return $this->hasOne(Student::class);
