@@ -13,6 +13,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        $this->createView('addresses');
+        $this->createView('addresses', '2020-01-01');
     }
 };
