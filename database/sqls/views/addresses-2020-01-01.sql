@@ -19,9 +19,9 @@ select
 	s.ibge_code as state_ibge_code,
 	cn.ibge_code as country_ibge_code
 from places p
-left join cities c
+inner join cities c
 on c.id = p.city_id
-left join states s
+inner join states s
 on s.id = c.state_id
-left join countries cn
+inner join countries cn
 on cn.id = s.country_id;
