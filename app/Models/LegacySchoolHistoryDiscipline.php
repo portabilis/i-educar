@@ -31,11 +31,17 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
 
     public function score(int $decimalPlaces = 2): ?string
     {
-        if (!is_numeric($this->nota)) {
-            return $this->nota !== '' ? $this->nota : null;
+        if ($this->nota === null || $this->nota === '') {
+            return null;
         }
 
-        return Util::format($this->nota, $decimalPlaces);
+        $score = str_replace(',', '.', $this->nota);
+
+        if (!is_numeric($score)) {
+            return $score;
+        }
+
+        return Util::format($score, $decimalPlaces);
     }
 
     public function isDiversified(): bool
