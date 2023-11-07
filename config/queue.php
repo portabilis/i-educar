@@ -70,15 +70,6 @@ return [
             'block_for' => null,
             'after_commit' => false,
         ],
-
-        'sentinel' => [
-            'driver' => 'redis',
-            'connection' => 'sentinel_queue',
-            'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => 90,
-            'block_for' => null,
-            'after_commit' => false,
-        ],
     ],
 
     /*
