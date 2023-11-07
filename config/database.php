@@ -163,17 +163,6 @@ return [
                 ],
             ],
         ]),
-
-        'sentinel_queue' => array_merge($sentinelHosts, [
-            'options' => [
-                'replication' => 'sentinel',
-                'service' => 'mymaster',
-                'parameters' => [
-                    'database' => 2,
-                ],
-            ],
-        ]),
-
     ],
 
 ];
