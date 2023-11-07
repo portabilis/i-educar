@@ -32,7 +32,7 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
     public function score(int $decimalPlaces = 2): ?string
     {
         if (!is_numeric($this->nota)) {
-            return $this->nota;
+            return $this->nota !== '' ? $this->nota : null;
         }
 
         return Util::format($this->nota, $decimalPlaces);
