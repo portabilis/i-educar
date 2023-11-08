@@ -306,6 +306,11 @@ class LegacySchoolClass extends Model
         return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');
     }
 
+    public function regentPerson(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_cod_regente');
+    }
+
     /**
      * Relacionamento com as enturmações.
      */
