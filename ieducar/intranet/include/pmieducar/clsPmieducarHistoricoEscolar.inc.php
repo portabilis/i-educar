@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolHistoryDiscipline;
 use App\Services\GlobalAverageService;
 use iEducar\Legacy\Model;
 
@@ -872,12 +873,16 @@ class clsPmieducarHistoricoEscolar extends Model
             $service = new GlobalAverageService();
             $average = $service->getGlobalAverage($registration);
             $mediaGeral = $this->arredondaNota($registration->cod_matricula, $average, 2);
-            $mediaGeral = number_format($mediaGeral, 1, '.', ',');
+            $mediaGeral = is_numeric($mediaGeral) ? number_format($mediaGeral, 1, '.', ',') : $mediaGeral;
 
-            $sql = "INSERT INTO pmieducar.historico_disciplinas (sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota) values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral' , {$mediaGeral});";
-
-            $db = new clsBanco();
-            $db->Consulta($sql);
+            LegacySchoolHistoryDiscipline::updateOrCreate([
+                'sequencial' => $sequencial,
+                'ref_ref_cod_aluno' => $this->ref_cod_aluno,
+                'ref_sequencial' => $this->sequencial,
+            ], [
+                'nm_disciplina' => 'Média Geral',
+                'nota' => $mediaGeral
+            ]);
 
             return true;
         } else {
