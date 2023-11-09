@@ -45,6 +45,7 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
             $q->orWhere('remanejado', true);
             $q->orWhere('reclassificado', true);
             $q->orWhere('abandono', true);
+            $q->orWhere('falecido', true);
             $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
         });
     }
