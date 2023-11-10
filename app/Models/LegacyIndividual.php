@@ -211,7 +211,7 @@ class LegacyIndividual extends Model
     protected function genderName(): Attribute
     {
         return Attribute::make(
-            get: fn () =>  $this->sexo ? $this->sexo === 'M' ? 'Masculino' : 'Feminino' : null
+            get: fn () => $this->sexo ? $this->sexo === 'M' ? 'Masculino' : 'Feminino' : null
         );
     }
 

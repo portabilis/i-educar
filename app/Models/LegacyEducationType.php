@@ -28,7 +28,7 @@ class LegacyEducationType extends LegacyModel
     public array $legacy = [
         'id' => 'cod_tipo_ensino',
         'name' => 'nm_tipo',
-        'complementary_activity' => 'atividade_complementar'
+        'complementary_activity' => 'atividade_complementar',
     ];
 
     /**

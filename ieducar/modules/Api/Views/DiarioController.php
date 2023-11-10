@@ -43,7 +43,7 @@ class DiarioController extends ApiCoreController
         $turmaId = $componentesTurma->value('cod_turma');
 
         return Cache::remember('valid_component_' . $componenteCurricularId . '_schoolclass_' . $turmaId . '_grade_' . $registration->ref_ref_cod_serie, now()->addMinute(), function () use ($componenteCurricularId, $componentesTurma, $turmaId, $registration) {
-            $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId){
+            $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId) {
                 return $collection->where('cod_serie', $serieId);
             })->contains($componenteCurricularId);
 
@@ -109,7 +109,7 @@ class DiarioController extends ApiCoreController
                     'cod_matricula',
                     'ref_ref_cod_serie',
                     'ref_ref_cod_escola',
-                    'ano'
+                    'ano',
                 ]);
         });
     }
