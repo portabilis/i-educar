@@ -69,4 +69,15 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
             'view_situacao_relatorios.texto_situacao'
         ]);
     }
+
+    public function wherePeriod(int $period): self
+    {
+        return $this->where(function ($q) use ($period) {
+            $q->where('turno_id', $period);
+            $q->orWhere(function ($q) use ($period) {
+                $q->whereNull('turno_id');
+                $q->whereHas('schoolClass', fn ($q) => $q->where('turma_turno_id', $period));
+            });
+        });
+    }
 }
