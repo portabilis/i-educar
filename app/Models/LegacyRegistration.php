@@ -232,6 +232,11 @@ class LegacyRegistration extends LegacyModel
         return $this->hasMany(LegacyDisciplineExemption::class, 'ref_cod_matricula', 'cod_matricula');
     }
 
+    public function activeLookings(): HasMany
+    {
+        return $this->hasMany(LegacyActiveLooking::class, 'ref_cod_matricula', 'cod_matricula');
+    }
+
     /**
      * @param Builder $query
      * @return Builder
