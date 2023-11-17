@@ -3,6 +3,8 @@
 use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
 use App\Services\EmployeeService;
+use App\Services\FileService;
+use App\Services\UrlPresigner;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
@@ -92,6 +94,8 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
+        $this->form_enctype = ' enctype=\'multipart/form-data\'';
+
         // Primary keys
         $this->campoOculto(nome: 'cod_falta_atraso', valor: $this->cod_falta_atraso);
         $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
@@ -122,6 +126,9 @@ return new class extends clsCadastro
 
         // Data
         $this->campoData(nome: 'data_falta_atraso', campo: 'Dia', valor: $this->data_falta_atraso, obrigatorio: true);
+
+        $fileService = new FileService(new UrlPresigner());
+        $this->addHtml(view('uploads.upload')->render());
     }
 
     private function getFuncoesServidor($codServidor)
@@ -199,6 +206,21 @@ return new class extends clsCadastro
         }
 
         if ($obj->save()) {
+            if ($this->file_url) {
+                $fileService = new FileService(new UrlPresigner());
+                $newFiles = json_decode($this->file_url);
+                foreach ($newFiles as $file) {
+                    $fileService->saveFile(
+                        $file->url,
+                        $file->size,
+                        $file->originalName,
+                        $file->extension,
+                        LegacyAbsenceDelay::class,
+                        $obj->getKey()
+                    );
+                }
+            }
+
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -270,6 +292,29 @@ return new class extends clsCadastro
             $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
         }
         if ($obj->save()) {
+
+            $fileService = new FileService(new UrlPresigner());
+
+            if ($this->file_url) {
+                $newFiles = json_decode($this->file_url);
+                foreach ($newFiles as $file) {
+                    $fileService->saveFile(
+                        $file->url,
+                        $file->size,
+                        $file->originalName,
+                        $file->extension,
+                        LegacyAbsenceDelay::class,
+                        $obj->getKey()
+                    );
+                }
+            }
+
+            if ($this->file_url_deleted) {
+                $deletedFiles = explode(',', $this->file_url_deleted);
+                $fileService->deleteFiles($deletedFiles);
+            }
+
+
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect(sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
