@@ -143,6 +143,11 @@ class LegacySchoolHistory extends LegacyModel
         return $this->aprovado === SchoolHistoryStatus::ONGOING;
     }
 
+    public function isTransferred(): bool
+    {
+        return $this->aprovado === SchoolHistoryStatus::TRANSFERRED;
+    }
+
     public function isReproved(): bool
     {
         return in_array($this->aprovado, [
