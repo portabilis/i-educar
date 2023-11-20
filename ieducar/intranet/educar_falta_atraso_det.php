@@ -87,9 +87,7 @@ return new class extends clsDetalhe
 
             $url = null;
             if ($fileRelation) {
-                $url = (new UrlPresigner())->getPresignedUrl(
-                    $fileRelation->file->url
-                );
+                $url = route('files.show', $fileRelation->file_id);
             }
 
                 $corpo .= sprintf(
