@@ -11,14 +11,15 @@ obj_tipo.onchange = function () {
   }
 }
 
+setVisibility('tr_file', false);
 justificada.onchange = function () {
-  if (document.getElementById('justificada').value == 0) {
+  if (document.getElementById('justificada').value != '' && document.getElementById('justificada').value == 0) {
     setVisibility('tr_file', true);
-  } else if (document.getElementById('justificada').value == 1) {
+  } else if (document.getElementById('justificada').value != '' &&  document.getElementById('justificada').value == 1) {
     setVisibility('tr_file', false);
   }
 }
 
 obj_tipo.dispatchEvent(new Event('change'));
 justificada.dispatchEvent(new Event('change'));
-setVisibility('tr_file', false);
+
