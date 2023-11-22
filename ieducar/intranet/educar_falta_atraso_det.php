@@ -80,14 +80,17 @@ return new class extends clsDetalhe
             $obj_ins = new clsPmieducarInstituicao($registro['ref_ref_cod_instituicao']);
             $det_ins = $obj_ins->detalhe();
 
-            $fileRelation = \App\Models\FileRelation::query()
-                ->where('relation_type', LegacyAbsenceDelay::class)
-                ->where('relation_id', $this->cod_falta_atraso)
-                ->first();
+            $files = LegacyAbsenceDelay::find($this->cod_falta_atraso)?->files;
 
-            $url = null;
-            if ($fileRelation) {
-                $url = route('files.show', $fileRelation->file_id);
+            $html = '';
+            if ($files) {
+                foreach ($files as $file) {
+                    $html .= sprintf(
+                        '<a href="%s" target="_blank">%s</a><br>',
+                        (new UrlPresigner())->getPresignedUrl($file->url),
+                        $file->original_name
+                    );
+                }
             }
 
                 $corpo .= sprintf(
@@ -117,7 +120,7 @@ return new class extends clsDetalhe
                     $color,
                     $registro['matricula'],
                     $color,
-                    $url ? '<a href="'.$url.'" target="_blank">VISUALIZAR</a>' : ''
+                    $html
                 );
 
             $tabela .= $corpo;

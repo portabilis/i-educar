@@ -127,8 +127,16 @@ return new class extends clsCadastro
         // Data
         $this->campoData(nome: 'data_falta_atraso', campo: 'Dia', valor: $this->data_falta_atraso, obrigatorio: true);
 
+
+        if ($this->cod_falta_atraso == '') {
+            $this->cod_falta_atraso = null;
+        }
+
         $fileService = new FileService(new UrlPresigner());
-        $this->addHtml(view('uploads.upload')->render());
+        $files = $fileService->getFiles(LegacyAbsenceDelay::find($this->cod_falta_atraso));
+
+        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+
     }
 
     private function getFuncoesServidor($codServidor)
