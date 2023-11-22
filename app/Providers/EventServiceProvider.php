@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\RegistrationEvent;
+use App\Events\RegistrationCopyEvent;
 use App\Events\ReportIssued;
 use App\Events\TransferEvent;
 use App\Events\UserDeleted;
@@ -10,6 +11,7 @@ use App\Events\UserUpdated;
 use App\Listeners\AcceptTransferRequestListener;
 use App\Listeners\AuthenticatedUser;
 use App\Listeners\ConfigureAuthenticatedUserForAudit;
+use App\Listeners\RegistrationCopyListener;
 use App\Listeners\CopyTransferDataListener;
 use App\Listeners\ForgetCachedUserListener;
 use App\Listeners\LoginLegacySession;
@@ -53,6 +55,9 @@ class EventServiceProvider extends ServiceProvider
         RegistrationEvent::class => [
             CopyTransferDataListener::class,
             AcceptTransferRequestListener::class,
+        ],
+        RegistrationCopyEvent::class => [
+            RegistrationCopyListener::class
         ],
         TransferEvent::class => [
             TransferNotificationListener::class,
