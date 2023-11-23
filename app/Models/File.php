@@ -17,9 +17,4 @@ class File extends Model
         'original_name',
         'extension',
     ];
-
-    public function relations()
-    {
-        return $this->hasMany(FileRelation::class);
-    }
 }

@@ -254,7 +254,7 @@ return new class() extends clsCadastro
 
         $this->inputsHelper()->integer(attrName: 'shorts_tactel_qty', inputOptions: [
             'required' => false,
-            'label' => 'Bermudas tactels (masculino)',
+            'label' => 'Bermuda masculina (tecidos diversos)',
             'value' => request(key: 'shorts_tactel_qty', default: $this->uniformDistribution->shorts_tactel_qty),
             'max_length' => 2,
             'size' => 15,
@@ -273,7 +273,7 @@ return new class() extends clsCadastro
 
         $this->inputsHelper()->integer(attrName: 'shorts_coton_qty', inputOptions: [
             'required' => false,
-            'label' => 'Bermudas coton (feminino)',
+            'label' => 'Bermuda feminina (tecidos diversos)',
             'value' => request(key: 'shorts_coton_qty', default: $this->uniformDistribution->shorts_coton_qty),
             'max_length' => 2,
             'size' => 15,

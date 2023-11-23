@@ -1892,6 +1892,7 @@ function canShowParentsFields() {
     $j("body").append(`
           <div id="dialog-form-pessoa-aluno">
             <form>
+            <input type="hidden" name="observacao" id="observacao"/>
               <h2></h2>
               <table>
                 <tr>
@@ -2008,6 +2009,7 @@ function canShowParentsFields() {
     ).show();
 
     var name = $j("#nome-pessoa-aluno"),
+      observacao = $j("#observacao"),
       nome_social = $j("#nome-social-pessoa-aluno"),
       sexo = $j("#sexo-pessoa-aluno"),
       estadocivil = $j("#estado-civil-pessoa-aluno"),
@@ -2026,6 +2028,7 @@ function canShowParentsFields() {
       andar = $j("#andar"),
       allFields = $j([])
         .add(name)
+        .add(observacao)
         .add(nome_social)
         .add(sexo)
         .add(estadocivil)
@@ -2541,7 +2544,10 @@ function canShowParentsFields() {
         "/intranet/atendidos_cad.php?cod_pessoa_fj=" + person_details.id
       );
 
+      console.log(person_details);
+
       name.val(person_details.nome);
+      observacao.val(person_details.observacao);
       nome_social.val(person_details.nome_social);
       datanasc.val(person_details.data_nascimento);
       estadocivil.val(person_details.estadocivil);
@@ -2960,6 +2966,7 @@ function canShowParentsFields() {
       localizacao_diferenciada: localizacao_diferenciada,
       nome_social: nome_social,
       pais_residencia: pais_residencia,
+      observacao_aluno: $j("#observacao").val(),
     };
 
     var options = {

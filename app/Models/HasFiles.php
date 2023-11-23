@@ -9,6 +9,6 @@ trait HasFiles
      */
     public function files()
     {
-        return $this->belongsToMany(File::class, 'files_relations', 'relation_id', 'file_id');
+        return $this->morphToMany(File::class, 'relation', 'files_relations');
     }
 }

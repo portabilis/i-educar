@@ -199,7 +199,7 @@ return new class extends clsCadastro
                     int_carga_horaria: $alocacao['carga_horaria']
                 );
 
-                if (false !== $return) {
+                if ($return !== false) {
                     $substituiu = $obj->substituir_servidor(int_ref_cod_servidor_substituto: $substituto);
                     if (!$substituiu) {
                         $this->mensagem = 'Substituicao não realizado.<br>';
@@ -210,7 +210,7 @@ return new class extends clsCadastro
             }
 
             // Substituição do servidor no quadro de horários (caso seja professor)
-            if ('true' == $professor) {
+            if ($professor == 'true') {
                 $quadroHorarios = new clsPmieducarQuadroHorarioHorarios(
                     ref_cod_instituicao_servidor: $this->ref_ref_cod_instituicao,
                     ref_servidor: $this->ref_cod_servidor,

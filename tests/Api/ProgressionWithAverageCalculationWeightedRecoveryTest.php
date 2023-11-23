@@ -9,9 +9,9 @@ use Tests\TestCase;
 
 class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
 {
+    use DatabaseTransactions;
     use DiarioApiFakeDataTestTrait;
     use DiarioApiRequestTestTrait;
-    use DatabaseTransactions;
 
     /**
      * @var LegacyEnrollment

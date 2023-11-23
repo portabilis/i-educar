@@ -9,8 +9,8 @@ use App\Traits\HasLegacyDates;
 class LegacyEducationLevel extends LegacyModel
 {
     use Ativo;
-    use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyDates;
 
     /**
      * @var string

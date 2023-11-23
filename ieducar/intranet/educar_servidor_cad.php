@@ -149,7 +149,7 @@ return new class() extends clsCadastro
 
                         $this->ref_cod_funcao[] = [$funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula'], $funcao['cod_servidor_funcao']];
 
-                        if (false == $this->docente && (bool) $det_funcao['professor']) {
+                        if ($this->docente == false && (bool) $det_funcao['professor']) {
                             $this->docente = true;
                         }
                     }

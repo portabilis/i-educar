@@ -24,7 +24,7 @@ class EnrollmentEloquentBuilder extends Builder
             ],
             'mother.individual' => [
                 'social_name' => 'mf.nome_social as Nome social e/ou afetivo da mãe',
-                'cpf' => 'mf.cpf as CPF da mãe',
+                'cpf' => DB::raw('trim(to_char(mf.cpf, \'000"."000"."000"-"00\')) as "CPF da mãe"'),
                 'date_of_birth' => 'mf.data_nasc as Data de nascimento da mãe',
                 'sus' => 'mf.sus as Número SUS da mãe',
                 'nis' => 'mf.nis_pis_pasep as NIS (PIS/PASEP) da mãe',
@@ -45,7 +45,7 @@ class EnrollmentEloquentBuilder extends Builder
             ],
             'father.individual' => [
                 'social_name' => 'ff.nome_social as Nome social e/ou afetivo do pai',
-                'cpf' => 'ff.cpf as CPF do pai',
+                'cpf' => DB::raw('trim(to_char(ff.cpf, \'000"."000"."000"-"00\')) as "CPF do pai"'),
                 'date_of_birth' => 'ff.data_nasc as Data de nascimento do pai',
                 'sus' => 'ff.sus as Número SUS do pai',
                 'nis' => 'ff.nis_pis_pasep as NIS (PIS/PASEP) do pai',
@@ -66,7 +66,7 @@ class EnrollmentEloquentBuilder extends Builder
             ],
             'guardian.individual' => [
                 'social_name' => 'gf.nome_social as Nome social e/ou afetivo do responsável',
-                'cpf' => 'gf.cpf as CPF do responsável',
+                'cpf' => DB::raw('trim(to_char(gf.cpf, \'000"."000"."000"-"00\')) as "CPF do responsável"'),
                 'date_of_birth' => 'gf.data_nasc as Data de nascimento do responsável',
                 'sus' => 'gf.sus as Número SUS do responsável',
                 'nis' => 'gf.nis_pis_pasep as NIS (PIS/PASEP) do responsável',

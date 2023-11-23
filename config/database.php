@@ -1,5 +1,9 @@
 <?php
 
+$sentinelHosts = array_map(function ($host) {
+    return 'tcp://' . $host . ':' . env('SENTINEL_PORT');
+}, explode(',', env('SENTINEL_HOSTS', '')));
+
 return [
 
     /*
@@ -140,6 +144,25 @@ return [
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
 
+        'sentinel_cache' => array_merge($sentinelHosts, [
+            'options' => [
+                'replication' => 'sentinel',
+                'service' => 'mymaster',
+                'parameters' => [
+                    'database' => 0,
+                ],
+            ],
+        ]),
+
+        'sentinel_session' => array_merge($sentinelHosts, [
+            'options' => [
+                'replication' => 'sentinel',
+                'service' => 'mymaster',
+                'parameters' => [
+                    'database' => 1,
+                ],
+            ],
+        ]),
     ],
 
 ];

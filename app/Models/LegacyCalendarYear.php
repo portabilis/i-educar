@@ -9,8 +9,8 @@ use App\Traits\HasLegacyUserAction;
 class LegacyCalendarYear extends LegacyModel
 {
     use Ativo;
-    use LegacySoftDeletes;
     use HasLegacyUserAction;
+    use LegacySoftDeletes;
 
     public $table = 'pmieducar.calendario_ano_letivo';
 

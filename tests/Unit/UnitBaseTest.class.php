@@ -57,7 +57,7 @@ abstract class UnitBaseTest extends TestCase
     protected function _cleanMockMethodList(array $methods)
     {
         foreach ($methods as $key => $method) {
-            if (false !== array_search($method, $this->getExcludedMethods())) {
+            if (array_search($method, $this->getExcludedMethods()) !== false) {
                 unset($methods[$key]);
             }
         }
@@ -89,7 +89,7 @@ abstract class UnitBaseTest extends TestCase
         $callOriginalClone = false,
         $callOriginalAutoload = false
     ) {
-        if (0 == count($mockMethods)) {
+        if (count($mockMethods) == 0) {
             $reflectiveClass = new ReflectionClass($className);
             $methods = $reflectiveClass->getMethods();
             $mockMethods = [];
@@ -138,7 +138,7 @@ abstract class UnitBaseTest extends TestCase
      */
     public function outputBuffer($enable = true)
     {
-        if (true == $enable) {
+        if ($enable == true) {
             ob_start();
 
             return true;

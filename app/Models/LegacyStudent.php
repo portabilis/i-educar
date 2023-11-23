@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
-use App\Models\View\HistoricGradeYear;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,13 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
-use Ankurk91\Eloquent\BelongsToOne;
 
 class LegacyStudent extends LegacyModel
 {
-    use LegacyAttribute;
-    use HasLegacyDates;
     use BelongsToOne;
+    use HasLegacyDates;
+    use LegacyAttribute;
 
     public const CREATED_AT = 'data_cadastro';
 
@@ -234,118 +233,18 @@ class LegacyStudent extends LegacyModel
         return $this->belongsToMany(LegacyBenefit::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_id', 'aluno_beneficio_id');
     }
 
-    public function historicGradeYear(): HasMany
+    public function schoolHistories(): HasMany
     {
-        return $this->hasMany(HistoricGradeYear::class, 'cod_aluno', 'cod_aluno');
+        return $this->hasMany(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')->active();
     }
 
-    public function historicGradeYearNotDiversified(): HasMany
+    public function schoolHistoryDisciplines(): HasMany
     {
-        return $this->historicGradeYear()->whereRaw('(select max(unnest) from unnest(tipos_base)) != 2');
-    }
-
-    public function historicGradeYearDiversified(): HasMany
-    {
-        return $this->historicGradeYear()->whereRaw('(select max(unnest) from unnest(tipos_base)) = 2');
+        return $this->hasMany(LegacySchoolHistoryDiscipline::class, 'ref_ref_cod_aluno', 'cod_aluno');
     }
 
     public function registration_transfer(): HasOne
     {
         return $this->hasOne(LegacyRegistration::class, 'ref_cod_aluno')->transfer();
-    }
-
-    public function workload1(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria1');
-                if ($maxWorkload !== null) {
-                    return $maxWorkload;
-                }
-
-                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd1');
-                if ($sumWorkload > 0) {
-                    return $sumWorkload;
-                }
-
-                return '-';
-            }
-        );
-    }
-
-    public function workload2(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria2');
-                if ($maxWorkload !== null) {
-                    return $maxWorkload;
-                }
-
-                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd2');
-                if ($sumWorkload > 0) {
-                    return $sumWorkload;
-                }
-
-                return '-';
-            }
-        );
-    }
-
-    public function workload3(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria3');
-                if ($maxWorkload !== null) {
-                    return $maxWorkload;
-                }
-
-                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd3');
-                if ($sumWorkload > 0) {
-                    return $sumWorkload;
-                }
-
-                return '-';
-            }
-        );
-    }
-
-    public function workload4(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria4');
-                if ($maxWorkload !== null) {
-                    return $maxWorkload;
-                }
-
-                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd4');
-                if ($sumWorkload > 0) {
-                    return $sumWorkload;
-                }
-
-                return '-';
-            }
-        );
-    }
-
-    public function workload5(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $maxWorkload = $this->historicGradeYearNotDiversified->max('carga_horaria5');
-                if ($maxWorkload !== null) {
-                    return $maxWorkload;
-                }
-
-                $sumWorkload = $this->historicGradeYearNotDiversified->sum('chd5');
-                if ($sumWorkload > 0) {
-                    return $sumWorkload;
-                }
-
-                return '-';
-            }
-        );
     }
 }

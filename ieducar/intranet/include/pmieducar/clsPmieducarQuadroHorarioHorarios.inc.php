@@ -79,7 +79,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
                 'anoEscolar' => $ref_ref_cod_serie,
             ]);
 
-            if (1 == count($componenteAnos)) {
+            if (count($componenteAnos) == 1) {
                 $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
                 $this->ref_ref_cod_serie = $ref_ref_cod_serie;
                 $this->ref_ref_cod_escola = $ref_ref_cod_escola;

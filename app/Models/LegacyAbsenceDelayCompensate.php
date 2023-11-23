@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAbsenceDelayCompensate extends LegacyModel
 {
-    use LegacySoftDeletes;
     use HasLegacyUserAction;
+    use LegacySoftDeletes;
 
     public const CREATED_AT = 'data_cadastro';
 

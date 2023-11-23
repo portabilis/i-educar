@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 
-class DisciplineAcademicImport implements ToModel, WithProgressBar, WithHeadingRow
+class DisciplineAcademicImport implements ToModel, WithHeadingRow, WithProgressBar
 {
     use Importable;
 

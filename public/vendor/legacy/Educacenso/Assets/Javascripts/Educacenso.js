@@ -64,7 +64,6 @@ $j(document).ready(function(){
 
     var paginaResposta = "";
     var falhaAnalise;
-    var fase2;
 
     $j("body").append(modalLoad);
     $j("body").append(modalExport);
@@ -72,7 +71,6 @@ $j(document).ready(function(){
     var iniciaAnalise = function() {
 
     	var escola = $j("#ref_cod_escola").val();
-      fase2 = ($j("#fase2").val() == "true");
 
     	if (!escola){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
@@ -81,34 +79,25 @@ $j(document).ready(function(){
 
       resetParameters();
 
-      if (fase2) {
-        $j("#modal_load").modal({
-          escapeClose: false,
-          clickClose: false,
-          showClose: false
-        });
-        analyseRecords(recordsSecondStep);
-      } else {
-        $j("#modal_load").modal({
-          escapeClose: false,
-          clickClose: false,
-          showClose: false
-        });
+      $j("#modal_load").modal({
+        escapeClose: false,
+        clickClose: false,
+        showClose: false
+      });
 
-        $j.getJSON(
-          getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `valida-instituicao`, {
-            instituicao: $j("#ref_cod_instituicao").val()
-          })
-        ).done((data) => {
-          if (data['valid']) {
-            analyseRecords($j('#escola_em_andamento').val() == '1' ? recordsFirstStep : recordsFirstStepNotActive);
-          } else {
-            makeInvalidInstitutionWarning();
-            falhaAnalise = true;
-            finishAnalysis();
-          }
-        });
-      }
+      $j.getJSON(
+        getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `valida-instituicao`, {
+          instituicao: $j("#ref_cod_instituicao").val()
+        })
+      ).done((data) => {
+        if (data['valid']) {
+          analyseRecords($j('#escola_em_andamento').val() == '1' ? recordsFirstStep : recordsFirstStepNotActive);
+        } else {
+          makeInvalidInstitutionWarning();
+          falhaAnalise = true;
+          finishAnalysis();
+        }
+      });
     }
 
     let analyseRecords = (records) => {
@@ -167,8 +156,6 @@ $j(document).ready(function(){
 
       if (falhaAnalise) {
         document.write(paginaResposta);
-      } else if (fase2) {
-        educacensoExportFase2();
       } else {
         educacensoExport();
       }
@@ -225,21 +212,6 @@ $j(document).ready(function(){
         };
         getResources(options);
     };
-
-    var educacensoExportFase2 = function(){
-        var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export-fase2', {
-          escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val()
-        });
-
-        var options = {
-          url : urlForEducacensoExport,
-          dataType : 'json',
-          success  : handleEducacensoExport
-        };
-        getResources(options);
-    };
-
     var handleEducacensoExport = function(response) {
       if (response.error) {
         console.log(response.mensagem);

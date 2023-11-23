@@ -4,12 +4,10 @@ namespace App\Models;
 
 use App\Casts\LegacyArray;
 use App\Models\Builders\LegacyEnrollmentBuilder;
-use App\Models\View\SituationReport;
 use App\Support\Database\DateSerializer;
 use DateTime;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -166,10 +164,5 @@ class LegacyEnrollment extends LegacyModel
     public function getStudentId()
     {
         return $this->registration->student->cod_aluno;
-    }
-
-    public function situations(): HasMany
-    {
-        return $this->hasMany(SituationReport::class, 'cod_matricula', 'ref_cod_matricula');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\Reports\Util;
+use ComponenteCurricular_Model_TipoBase;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistoryDiscipline extends LegacyModel
@@ -25,5 +27,25 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_ref_cod_aluno');
+    }
+
+    public function score(int $decimalPlaces = 2): ?string
+    {
+        if ($this->nota === null || $this->nota === '') {
+            return null;
+        }
+
+        $score = str_replace(',', '.', $this->nota);
+
+        if (!is_numeric($score)) {
+            return $score;
+        }
+
+        return Util::format($score, $decimalPlaces);
+    }
+
+    public function isDiversified(): bool
+    {
+        return $this->tipo_base === ComponenteCurricular_Model_TipoBase::DIVERSIFICADA;
     }
 }

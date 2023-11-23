@@ -226,7 +226,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
             );
         }
 
-        if (0 == strlen(trim($html))) {
+        if (strlen(trim($html)) == 0) {
             return '';
         }
 
@@ -241,7 +241,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
      */
     protected function _attributes(array $attributes = [])
     {
-        if (0 == count($attributes)) {
+        if (count($attributes) == 0) {
             return '';
         }
 
