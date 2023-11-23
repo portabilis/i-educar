@@ -13,7 +13,7 @@ class FileRelation extends Model
     protected $table = 'public.files_relations';
 
     protected $fillable = [
-        'type',
+        'relation_type',
         'relation_id',
         'file_id',
     ];

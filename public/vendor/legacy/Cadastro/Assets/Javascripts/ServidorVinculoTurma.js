@@ -224,10 +224,27 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
   }
 
   function toggleTurno (turno_id) {
+    turno_edicao = turnoField.val();
     turno_id = parseInt(turno_id, 10);
 
     if (turno_id === 4) { // 4 - Integral
       turnoField.closest('tr').show();
+
+      getApiResource("/api/period", function (turnos) {
+        const campoturno = document.getElementById('turma_turno_id');
+        campoturno.options[0].text = 'Carregando';
+        setAttributes(campoturno, 'Selecione', false);
+
+        $j.each(turnos, function (id, name) {
+          if (id === turno_edicao) {
+            campoturno.options[campoturno.options.length] = new Option(name, id, false, true);
+          } else {
+            campoturno.options[campoturno.options.length] = new Option(name, id, false, false);
+          }
+        });
+
+      }, {schoolclass: turmaField.val()});
+
     } else {
       turnoField.closest('tr').hide();
       turnoField.val('');

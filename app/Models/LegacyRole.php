@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyRole extends LegacyModel
 {
-    use LegacySoftDeletes;
+    use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;
-    use HasInstitution;
+    use LegacySoftDeletes;
 
     protected $table = 'pmieducar.funcao';
 

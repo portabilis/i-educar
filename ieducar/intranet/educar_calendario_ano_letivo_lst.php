@@ -247,7 +247,7 @@ return new class() extends clsListagem
                                 $nomeTurmas[] = $turmas[$calendarioTurma->turma];
                             }
 
-                            if (0 == count(value: $nomeTurmas)) {
+                            if (count(value: $nomeTurmas) == 0) {
                                 $calendarioTurmas = '';
                             } else {
                                 $calendarioTurmas = 'Turmas: <ul><li>' . implode(separator: '</li><li>', array: $nomeTurmas) . '</li></ul>';

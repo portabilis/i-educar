@@ -18,9 +18,7 @@ return new class extends clsCadastro
 
     public function Inicializar()
     {
-        $this->segunda_fase = ($_REQUEST['fase2'] == 1);
-
-        $codigoMenu = ($this->segunda_fase ? 9998845 : 846);
+        $codigoMenu = 846;
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -31,7 +29,7 @@ return new class extends clsCadastro
         );
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-        $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
+        $nomeTela = '1ª fase - Matrícula inicial';
 
         $this->breadcrumb(currentPage: $nomeTela, breadcrumbs: [
             url('intranet/educar_educacenso_index.php') => 'Educacenso',
@@ -60,15 +58,6 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $fase2 = $_REQUEST['fase2'];
-
-        $dicaCampoData = 'dd/mm/aaaa';
-
-        if ($fase2 == 1) {
-            $dicaCampoData = 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).';
-            $this->campoOculto(nome: 'fase2', valor: 'true');
-        }
-
         $this->campoOculto(nome: 'enable_export', valor: (int) config('legacy.educacenso.enable_export'));
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
         $this->inputsHelper()->hidden(attrName: 'escola_em_andamento', inputOptions: ['value' => $this->escola_em_andamento]);
@@ -91,6 +80,6 @@ return new class extends clsCadastro
     public function Formular()
     {
         $this->title = 'Exportação Educacenso';
-        $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
+        $this->processoAp = 846;
     }
 };

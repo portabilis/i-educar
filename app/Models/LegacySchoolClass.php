@@ -74,6 +74,7 @@ class LegacySchoolClass extends Model
      * @var array
      */
     protected $fillable = [
+        'ref_usuario_exc',
         'ref_usuario_cad',
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
@@ -81,8 +82,6 @@ class LegacySchoolClass extends Model
         'sgl_turma',
         'max_aluno',
         'multiseriada',
-        'data_cadastro',
-        'data_exclusao',
         'ativo',
         'ref_cod_turma_tipo',
         'hora_inicial',
@@ -305,6 +304,11 @@ class LegacySchoolClass extends Model
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');
+    }
+
+    public function regentPerson(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_cod_regente');
     }
 
     /**

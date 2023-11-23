@@ -182,9 +182,9 @@ return new class extends clsCadastro
             $dataSaidaMatricula
             && ($enturmacao->data_exclusao > $dataSaidaMatricula)
             && (
-                App_Model_MatriculaSituacao::TRANSFERIDO == $matricula['aprovado']
-                || App_Model_MatriculaSituacao::ABANDONO == $matricula['aprovado']
-                || App_Model_MatriculaSituacao::RECLASSIFICADO == $matricula['aprovado']
+                $matricula['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO
+                || $matricula['aprovado'] == App_Model_MatriculaSituacao::ABANDONO
+                || $matricula['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO
             ) && ($this->sequencial == $seqUltimaEnturmacao)
         ) {
             $this->mensagem = 'Edição não realizada. A data de saída não pode ser posterior a data de saída da matricula.';

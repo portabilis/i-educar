@@ -2,6 +2,8 @@
 
 namespace Tests\Api;
 
+use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyGeneralScore;
 use Database\Factories\LegacyAcademicYearStageFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
@@ -20,6 +22,7 @@ use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStageTypeFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use RegraAvaliacao_Model_TipoRecuperacaoParalela;
 use Tests\TestCase;
 
 class DiarioGravaNotaTest extends TestCase
@@ -67,7 +70,8 @@ class DiarioGravaNotaTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => 3,
+            'parecer_descritivo' => \RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+            'tipo_recuperacao_paralela' => RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -143,5 +147,73 @@ class DiarioGravaNotaTest extends TestCase
                     'any_error_msg' => false,
                 ]
             );
+        $disciplineScore = LegacyDisciplineScore::first();
+
+        $this->assertDatabaseHas($disciplineScore->registrationScore->getTable(), [
+            'matricula_id' => $registration->getKey(),
+        ]);
+
+        $this->assertDatabaseHas($disciplineScore->getTable(), [
+            'nota_aluno_id' => $disciplineScore->registrationScore->getKey(),
+            'componente_curricular_id' => $discipline->getKey(),
+            'nota' => 6,
+            'nota_arredondada' => 6.0,
+            'etapa' => 1,
+            'nota_recuperacao' => 2,
+            'nota_original' => 6,
+            'nota_recuperacao_especifica' => null,
+        ]);
+
+        $data = [
+            'oper' => 'post',
+            'resource' => 'notas',
+            'etapa' => 1,
+            'notas' => [
+                $schoolClass->getKey() => [
+                    $student->getKey() => [
+                        $discipline->getKey() => [
+                            'nota' => 6,
+                            'recuperacao' => 7,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $this->getResource('/module/Api/Diario', $data);
+        $response->assertSuccessful();
+        $response->assertJson(
+            [
+                'oper' => 'post',
+                'resource' => 'notas',
+                'msgs' => [
+                    [
+                        'msg' => 'Notas postadas com sucesso!',
+                        'type' => 'success',
+                    ],
+                ],
+                'any_error_msg' => false,
+            ]
+        );
+        $disciplineScore = LegacyDisciplineScore::first();
+
+        $this->assertDatabaseHas($disciplineScore->registrationScore->getTable(), [
+            'matricula_id' => $registration->getKey(),
+        ]);
+
+        $this->assertDatabaseHas($disciplineScore->getTable(), [
+            'nota_aluno_id' => $disciplineScore->registrationScore->getKey(),
+            'componente_curricular_id' => $discipline->getKey(),
+            'nota' => 7,
+            'nota_arredondada' => 7.0,
+            'etapa' => 1,
+            'nota_recuperacao' => 7,
+            'nota_original' => 6,
+            'nota_recuperacao_especifica' => null,
+        ]);
+
+        $this->assertDatabaseCount($disciplineScore->registrationScore->getTable(), 1);
+        $this->assertDatabaseCount($disciplineScore->getTable(), 1);
+        $this->assertDatabaseCount(LegacyGeneralScore::class, 0);
     }
 }

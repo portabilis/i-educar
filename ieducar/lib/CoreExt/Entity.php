@@ -159,8 +159,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             // Se for uma referência a CoreExt_DataMapper, 0 será equivalente a NULL.
             // Aqui, nem instância tem, nem lazy load acontecerá.
             if (
-                is_null($val) || (false === $this->_new && 'NULL' === $val)
-                || ($this->_isReferenceDataMapper($key) && (is_numeric($val) && 0 === $val))
+                is_null($val) || ($this->_new === false && $val === 'NULL')
+                || ($this->_isReferenceDataMapper($key) && (is_numeric($val) && $val === 0))
             ) {
                 $this->_references[$key]['value'] = null;
 
@@ -205,7 +205,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         }
 
         // Se for string vazia, o valor é NULL
-        if ('' == trim($val) && $val !== false) {
+        if (trim($val) == '' && $val !== false) {
             $this->_data[$key] = null;
         } // Chama _getValue(), para fazer conversões que forem necessárias
         else {
@@ -223,7 +223,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      */
     public function __get($key)
     {
-        if ('id' === $key) {
+        if ($key === 'id') {
             return floatval($this->_data[$key]) > 0
                 ? floatval($this->_data[$key])
                 : null;
@@ -369,7 +369,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         $options = array_keys($layout);
         $passedOptions = array_keys($data);
 
-        if (0 < count($diff = array_diff($passedOptions, $options))) {
+        if (count($diff = array_diff($passedOptions, $options)) > 0) {
             throw new CoreExt_Exception_InvalidArgumentException('' . implode(', ', $diff));
         }
 
@@ -585,7 +585,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     public static function addClassToStorage($class, $instance = null, $file = null, $sticky = false)
     {
         $search = strtolower($class);
-        if (true === array_key_exists($search, self::$_classStorage)) {
+        if (array_key_exists($search, self::$_classStorage) === true) {
             self::_setStorageClassInstance($search, $instance, $sticky);
         } else {
             if (!is_null($file) && !class_exists($class)) {
@@ -621,11 +621,11 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
                 );
             }
 
-            if (false == self::$_classStorage[strtolower($class)]['sticky']) {
+            if (self::$_classStorage[strtolower($class)]['sticky'] == false) {
                 self::$_classStorage[strtolower($class)]['instance'] = $instance;
                 self::$_classStorage[strtolower($class)]['sticky'] = $sticky;
             } // Se for sticky, só sobrescreve por outro
-            elseif (true == self::$_classStorage[strtolower($class)]['sticky'] && true == $sticky) {
+            elseif (self::$_classStorage[strtolower($class)]['sticky'] == true && $sticky == true) {
                 self::$_classStorage[strtolower($class)]['instance'] = $instance;
                 self::$_classStorage[strtolower($class)]['sticky'] = $sticky;
             }
@@ -690,9 +690,9 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         $key = trim($key);
         $return = null;
 
-        if ('' != $key && !is_null($this->getValidator($key))) {
+        if ($key != '' && !is_null($this->getValidator($key))) {
             $return = $this->_isValidProperty($key);
-        } elseif ('' === $key) {
+        } elseif ($key === '') {
             $return = $this->_isValidEntity();
         }
 
@@ -795,7 +795,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         // Como eu quero todos os erros de validação, apenas marco $return como
         // FALSE e deixo o iterador exaurir.
         foreach ($this->getValidatorCollection() as $key => $validator) {
-            if (false === $this->_isValidProperty($key)) {
+            if ($this->_isValidProperty($key) === false) {
                 $return = false;
             }
         }
@@ -1089,7 +1089,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     {
         $data = [];
 
-        if ('' == $atr2) {
+        if ($atr2 == '') {
             $atr2 = $atr1;
         }
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Api;
 
+use App\Models\LegacyDisciplineAbsence;
 use App\Models\LegacyGeneralAbsence;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
@@ -17,6 +18,8 @@ use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use RegraAvaliacao_Model_TipoParecerDescritivo;
+use RegraAvaliacao_Model_TipoPresenca;
 use Tests\TestCase;
 
 class DiarioPostaFaltasGeralTest extends TestCase
@@ -47,8 +50,8 @@ class DiarioPostaFaltasGeralTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => 6,
-            'tipo_presenca' => 1,
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+            'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::GERAL,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -121,12 +124,53 @@ class DiarioPostaFaltasGeralTest extends TestCase
 
         $this->assertDatabaseHas($absence->studentAbsence->getTable(), [
             'matricula_id' => $registration->getKey(),
-            'tipo_falta' => 1,
+            'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,
         ])->assertDatabaseHas($absence->getTable(), [
             'falta_aluno_id' => $absence->studentAbsence->getKey(),
             'quantidade' => 2,
             'etapa' => 1,
         ])->assertDatabaseCount($absence->studentAbsence->getTable(), 1)
             ->assertDatabaseCount($absence->getTable(), 1);
+        $this->assertDatabaseCount(LegacyDisciplineAbsence::class, 0);
+
+        //alterando a regra de avaliação da série
+        $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
+            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+            'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+        ]);
+        $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
+        $data = [
+            'oper' => 'post',
+            'resource' => 'faltas-geral',
+            'etapa' => 1,
+            'faltas' => [
+                $enrollment->ref_cod_turma => [
+                    $registration->ref_cod_aluno => [
+                        'valor' => 2,
+                    ],
+                ],
+            ],
+        ];
+        $response = $this->getResource('/module/Api/Diario', $data);
+        $response->assertSuccessful()
+            ->assertJson(
+                [
+                    'error' => [
+                        'code' => 1008,
+                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de faltas geral.",
+                    ],
+                    'oper' => 'post',
+                    'resource' => 'faltas-geral',
+                    'msgs' => [
+                        [
+                            'msg' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de faltas geral.",
+                            'type' => 'error',
+                        ],
+                    ],
+                    'any_error_msg' => true,
+                ]
+            );
+        $this->assertDatabaseCount($absence->studentAbsence->getTable(), 1);
+        $this->assertDatabaseCount($absence->getTable(), 1);
     }
 }

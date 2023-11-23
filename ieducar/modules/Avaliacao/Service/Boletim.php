@@ -15,6 +15,7 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
+use Illuminate\Support\Facades\Cache;
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
@@ -320,7 +321,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $this->setNotasComponentes($notasComponentes);
         $this->setNotasGerais($notasGerais);
 
-        if (false == $loadMedias) {
+        if ($loadMedias == false) {
             return $this;
         }
 
@@ -1029,7 +1030,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         if (!$calcularSituacaoAluno) {
             // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
             // curriculares da matrícula, ainda está em andamento
-            if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
+            if ((count($mediasComponentes) == 0 || count($mediasComponentes) != count($componentes))
                 && $this->getRegraAvaliacaoDefinirComponentePorEtapa() != '1') {
                 $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
             }
@@ -1037,7 +1038,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }
 
-        if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
+        if ((count($mediasComponentes) == 0 || count($mediasComponenentesTotal) < $totalComponentes)
             && $this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
             $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }
@@ -1243,7 +1244,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $faltas = $this->getFaltasGeraisCiclo();
             }
 
-            if (0 == count($faltas)) {
+            if (count($faltas) == 0) {
                 $total = 0;
                 $etapa = 0;
             } else {
@@ -1361,7 +1362,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 unset($componentesTotal[$d]);
             }
 
-            if (0 == count($faltasComponentes) ||
+            if (count($faltasComponentes) == 0 ||
                 count($faltasComponentesTotal) != count($componentesTotal)) {
                 $etapa = 1;
             } else {
@@ -1712,7 +1713,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     {
         $faltasGerais = $this->getFaltasGerais();
 
-        if (0 == count($faltasGerais)) {
+        if (count($faltasGerais) == 0) {
             return false;
         }
 
@@ -1849,7 +1850,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     protected function _hasParecerGeral()
     {
-        if (0 == count($this->getPareceresGerais())) {
+        if (count($this->getPareceresGerais()) == 0) {
             return false;
         }
 
@@ -2129,7 +2130,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         // Se for falta e do tipo geral, verifica qual foi a última etapa
         if ($instance instanceof Avaliacao_Model_FaltaGeral) {
-            if (0 < count($this->getFaltasGerais())) {
+            if (count($this->getFaltasGerais()) > 0) {
                 $etapas = CoreExt_Entity::entityFilterAttr($this->getFaltasGerais(), 'id', 'etapa');
                 $proximaEtapa = max($etapas) + 1;
             }
@@ -2226,7 +2227,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     }
                 }
 
-                if (0 < count($attrValues)) {
+                if (count($attrValues) > 0) {
                     $etapas = CoreExt_Entity::entityFilterAttr(
                         $attrValues,
                         'id',
@@ -3353,9 +3354,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     public function getEvaluationRule()
     {
-        return LegacyEvaluationRule::findOrFail(
-            $this->getRegra()->get('id')
-        );
+        $id = $this->getRegra()->get('id');
+
+        return Cache::remember('evaluation_rule_' . $id, now()->addMinute(), function () use ($id) {
+            return LegacyEvaluationRule::findOrFail(
+                $id
+            );
+        });
     }
 
     /**
@@ -3486,27 +3491,29 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $grade = $registration['ref_ref_cod_serie'];
         $school = $registration['ref_ref_cod_escola'];
 
-        $legacySchoolGradeDiscipline = LegacySchoolGradeDiscipline::query()
-            ->whereYearEq($year)
-            ->whereGrade($grade)
-            ->whereSchool($school)
-            ->whereDiscipline($disciplineId)
-            ->value('hora_falta');
+        return Cache::remember('hour_absence_' . $year . '_' . $grade . '_' . $school . '_' . $disciplineId, now()->addMinute(), function () use ($year, $grade, $school, $disciplineId) {
+            $legacySchoolGradeDiscipline = LegacySchoolGradeDiscipline::query()
+                ->whereYearEq($year)
+                ->whereGrade($grade)
+                ->whereSchool($school)
+                ->whereDiscipline($disciplineId)
+                ->value('hora_falta');
 
-        if ($legacySchoolGradeDiscipline) {
-            return (float) $legacySchoolGradeDiscipline;
-        }
+            if ($legacySchoolGradeDiscipline) {
+                return (float) $legacySchoolGradeDiscipline;
+            }
 
-        $legacyDisciplineAcademicYear = LegacyDisciplineAcademicYear::query()
-            ->whereGrade($grade)
-            ->whereDiscipline($disciplineId)
-            ->whereYearEq($year)
-            ->value('hora_falta');
+            $legacyDisciplineAcademicYear = LegacyDisciplineAcademicYear::query()
+                ->whereGrade($grade)
+                ->whereDiscipline($disciplineId)
+                ->whereYearEq($year)
+                ->value('hora_falta');
 
-        if ($legacyDisciplineAcademicYear) {
-            return (float) $legacyDisciplineAcademicYear;
-        }
+            if ($legacyDisciplineAcademicYear) {
+                return (float) $legacyDisciplineAcademicYear;
+            }
 
-        return $this->getOption('cursoHoraFalta');
+            return $this->getOption('cursoHoraFalta');
+        });
     }
 }

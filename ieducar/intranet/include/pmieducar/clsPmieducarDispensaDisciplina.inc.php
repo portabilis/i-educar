@@ -97,7 +97,7 @@ class clsPmieducarDispensaDisciplina extends Model
                 'anoEscolar' => $ref_cod_serie,
             ]);
 
-            if (1 == count($componenteAnos)) {
+            if (count($componenteAnos) == 1) {
                 $this->ref_cod_disciplina = $ref_cod_disciplina;
                 $this->ref_cod_serie = $ref_cod_serie;
                 $this->ref_cod_escola = $ref_cod_escola;

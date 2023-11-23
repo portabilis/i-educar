@@ -171,7 +171,7 @@ return new class() extends clsCadastro
 
         // Se edição, mostra campo para entrar com data de retornoc
         if ($this->retornar_servidor == EmployeeReturn::SIM || $this->data_retorno) {
-            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
+            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, true);
         }
 
         $obj_servidor = new clsPmieducarServidor(
@@ -189,7 +189,7 @@ return new class() extends clsCadastro
 
         if ($det_servidor) {
             // Se for professor
-            if (true == $obj_servidor->isProfessor()) {
+            if ($obj_servidor->isProfessor() == true) {
                 $obj = new clsPmieducarQuadroHorarioHorarios();
 
                 // Pega a lista de aulas alocadas para este servidor
@@ -488,7 +488,7 @@ return new class() extends clsCadastro
                     $file->originalName,
                     $file->extension,
                     EmployeeWithdrawal::class,
-                    $cadastrou
+                    $withdrawal->getKey()
                 );
             }
         }

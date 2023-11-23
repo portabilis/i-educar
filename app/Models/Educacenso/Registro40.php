@@ -4,7 +4,7 @@ namespace App\Models\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 
-class Registro40 implements RegistroEducacenso, ItemOfRegistro30
+class Registro40 implements ItemOfRegistro30, RegistroEducacenso
 {
     public $registro;
 

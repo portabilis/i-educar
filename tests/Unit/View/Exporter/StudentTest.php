@@ -3,6 +3,7 @@
 namespace Tests\Unit\View\Exporter;
 
 use App\Models\Exporter\Student;
+use Illuminate\Support\Facades\DB;
 use Tests\ViewTestCase;
 
 class StudentTest extends ViewTestCase
@@ -260,6 +261,7 @@ class StudentTest extends ViewTestCase
                 'birthplace' => 'Naturalidade',
                 'phones.phones' => 'Telefones',
                 'benefits.benefits' => 'Benefícios',
+                'projects.projects' => 'Projetos',
                 'disabilities.disabilities' => 'Deficiências',
                 'modalidade_ensino' => 'Modalidade de ensino cursada',
                 'technological_resources' => 'Recursos tecnológicos',
@@ -344,10 +346,10 @@ class StudentTest extends ViewTestCase
                 'uniform_distributions.shirt_long_tm' => 'Camiseta Longa (Tamanho)',
                 'uniform_distributions.socks_qty' => 'Meias (Quantidade)',
                 'uniform_distributions.socks_tm' => 'Meias (Tamanho)',
-                'uniform_distributions.shorts_tactel_qty' => 'Bermudas Tactel (Quantidade)',
-                'uniform_distributions.shorts_tactel_tm' => 'Bermudas Tactel (Tamanho)',
-                'uniform_distributions.shorts_coton_qty' => 'Bermudas Coton (Quantidade)',
-                'uniform_distributions.shorts_coton_tm' => 'Bermudas Coton (Tamanho)',
+                'uniform_distributions.shorts_tactel_qty' => 'Bermuda masculina (tecidos diversos) (Quantidade)',
+                'uniform_distributions.shorts_tactel_tm' => 'Bermuda masculina (tecidos diversos) (Tamanho)',
+                'uniform_distributions.shorts_coton_qty' => 'Bermuda feminina (tecidos diversos) (Quantidade)',
+                'uniform_distributions.shorts_coton_tm' => 'Bermuda feminina (tecidos diversos) (Tamanho)',
                 'uniform_distributions.sneakers_qty' => 'Tênis (Quantidade)',
                 'uniform_distributions.sneakers_tm' => 'Tênis (Tamanho)',
                 'uniform_distributions.kids_shirt_qty' => 'Camiseta Infantil (Quantidade)',
@@ -372,7 +374,7 @@ class StudentTest extends ViewTestCase
             ],
             'mother.individual' => [
                 'social_name' => 'mf.nome_social as Nome social e/ou afetivo da mãe',
-                'cpf' => 'mf.cpf as CPF da mãe',
+                'cpf' => DB::raw('trim(to_char(mf.cpf, \'000"."000"."000"-"00\')) as "CPF da mãe"'),
                 'date_of_birth' => 'mf.data_nasc as Data de nascimento da mãe',
                 'sus' => 'mf.sus as Número SUS da mãe',
                 'nis' => 'mf.nis_pis_pasep as NIS (PIS/PASEP) da mãe',
@@ -393,7 +395,7 @@ class StudentTest extends ViewTestCase
             ],
             'father.individual' => [
                 'social_name' => 'ff.nome_social as Nome social e/ou afetivo do pai',
-                'cpf' => 'ff.cpf as CPF do pai',
+                'cpf' => DB::raw('trim(to_char(ff.cpf, \'000"."000"."000"-"00\')) as "CPF do pai"'),
                 'date_of_birth' => 'ff.data_nasc as Data de nascimento do pai',
                 'sus' => 'ff.sus as Número SUS do pai',
                 'nis' => 'ff.nis_pis_pasep as NIS (PIS/PASEP) do pai',
@@ -414,7 +416,7 @@ class StudentTest extends ViewTestCase
             ],
             'guardian.individual' => [
                 'social_name' => 'gf.nome_social as Nome social e/ou afetivo do responsável',
-                'cpf' => 'gf.cpf as CPF do responsável',
+                'cpf' => DB::raw('trim(to_char(gf.cpf, \'000"."000"."000"-"00\')) as "CPF do responsável"'),
                 'date_of_birth' => 'gf.data_nasc as Data de nascimento do responsável',
                 'sus' => 'gf.sus as Número SUS do responsável',
                 'nis' => 'gf.nis_pis_pasep as NIS (PIS/PASEP) do responsável',

@@ -38,4 +38,17 @@ class LegacyDeficiency extends LegacyModel
         'disregards_different_rule' => 'desconsidera_regra_diferenciada',
         'require_medical_report' => 'exigir_laudo_medico',
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function individuals()
+    {
+        return $this->belongsToMany(
+            LegacyIndividual::class,
+            'cadastro.fisica_deficiencia',
+            'ref_cod_deficiencia',
+            'ref_idpes'
+        );
+    }
 }

@@ -98,7 +98,7 @@ class clsPmieducarSerie extends Model
                     ['id' => $regra_avaliacao_id, 'instituicao' => $curso['ref_cod_instituicao']]
                 );
 
-                if (1 == count($regras)) {
+                if (count($regras) == 1) {
                     $regra = $regras[0];
                 }
             } else {
@@ -120,7 +120,7 @@ class clsPmieducarSerie extends Model
                     ['id' => $regra_avaliacao_diferenciada_id, 'instituicao' => $curso['ref_cod_instituicao']]
                 );
 
-                if (1 == count($regras)) {
+                if (count($regras) == 1) {
                     $regra = $regras[0];
                 }
             } else {
