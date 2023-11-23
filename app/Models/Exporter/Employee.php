@@ -86,7 +86,7 @@ class Employee extends Model
                 'place.state_abbreviation' => 'Sigla do Estado',
                 'place.state' => 'Estado',
                 'place.country' => 'País',
-            ]
+            ],
         ];
     }
 

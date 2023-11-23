@@ -85,7 +85,7 @@ class EmployeeTest extends ViewTestCase
                 'place.state_abbreviation' => 'Sigla do Estado',
                 'place.state' => 'Estado',
                 'place.country' => 'País',
-            ]
+            ],
         ];
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
     }

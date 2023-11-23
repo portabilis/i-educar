@@ -222,7 +222,7 @@ class ExportController extends Controller
             $data['filters'][] = [
                 'column' => 'exporter_employee.year_id',
                 'operator' => '@>',
-                'value' => (int)$year,
+                'value' => (int) $year,
             ];
         }
 
