@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\Transfer\MissingDescriptiveOpinionType;
 use App\Exceptions\Transfer\StagesAreNotSame;
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyRegistration;
 
 class RegistrationDataService
@@ -40,11 +41,8 @@ class RegistrationDataService
      * @throws StagesAreNotSame
      * @throws MissingDescriptiveOpinionType
      */
-    public function copy(LegacyRegistration $newRegistration, LegacyRegistration|null $oldRegistration)
+    public function copy(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
-        if (!$oldRegistration) {
-            return;
-        }
         if (!$this->hasSameStages($newRegistration, $oldRegistration)) {
             throw new StagesAreNotSame();
         }
@@ -61,7 +59,11 @@ class RegistrationDataService
         LegacyRegistration $oldRegistration
     ): bool
     {
-        $newRegistrationNumbersOfStages = count($newRegistration?->lastEnrollment?->schoolClass?->getStages($newRegistration?->course?->is_standard_calendar) ?? []);
+        $newRegistrationNumbersOfStages = LegacyAcademicYearStage::query()
+            ->whereSchool($newRegistration->ref_ref_cod_escola)
+            ->whereYearEq($newRegistration->ano)
+            ->count();
+
         $oldRegistrationNumbersOfStages = count($oldRegistration?->lastEnrollment?->schoolClass?->getStages($oldRegistration?->course?->is_standard_calendar) ?? []);
 
         return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;

@@ -18,7 +18,7 @@ class RegistrationCopyEvent
      *
      * @return void
      */
-    public function __construct(public LegacyRegistration $newRegistration, public LegacyRegistration|null $oldRegistration)
+    public function __construct(public LegacyRegistration $newRegistration, public LegacyRegistration $oldRegistration)
     {
     }
 }

@@ -165,6 +165,9 @@ return new class extends clsCadastro
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
+        DB::beginTransaction();
+
+
 
         $obj_matricula = new clsPmieducarMatricula(
             $this->cod_matricula,
@@ -251,10 +254,12 @@ return new class extends clsCadastro
         $newRegistration = LegacyRegistration::find(id: $obj_matricula->cod_matricula);
         $mensagem = '';
         try {
-            RegistrationCopyEvent::dispatch($oldRegistration, $newRegistration);
+            RegistrationCopyEvent::dispatch($newRegistration, $oldRegistration);
         } catch (Exception $exception) {
             $mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
         }
+
+        DB::commit();
 
         echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: {$cadastrou}. {$mensagem}');
         window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
