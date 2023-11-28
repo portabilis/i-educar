@@ -27,11 +27,10 @@ class RegistrationDataService
     private $copyDescriptiveOpinionService;
 
     public function __construct(
-        CopyAbsenceService            $copyAbsenceService,
-        CopyScoreService              $copyScoreService,
+        CopyAbsenceService $copyAbsenceService,
+        CopyScoreService $copyScoreService,
         CopyDescriptiveOpinionService $copyDescriptiveOpinionService
-    )
-    {
+    ) {
         $this->copyAbsenceService = $copyAbsenceService;
         $this->copyScoreService = $copyScoreService;
         $this->copyDescriptiveOpinionService = $copyDescriptiveOpinionService;
@@ -51,14 +50,10 @@ class RegistrationDataService
         $this->copyScoreService->copy($newRegistration, $oldRegistration);
     }
 
-    /**
-     * @return bool
-     */
     public function hasSameStages(
         LegacyRegistration $newRegistration,
         LegacyRegistration $oldRegistration
-    ): bool
-    {
+    ): bool {
         $newRegistrationNumbersOfStages = LegacyAcademicYearStage::query()
             ->whereSchool($newRegistration->ref_ref_cod_escola)
             ->whereYearEq($newRegistration->ano)

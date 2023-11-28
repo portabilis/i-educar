@@ -167,8 +167,6 @@ return new class extends clsCadastro
         }
         DB::beginTransaction();
 
-
-
         $obj_matricula = new clsPmieducarMatricula(
             $this->cod_matricula,
             null,
