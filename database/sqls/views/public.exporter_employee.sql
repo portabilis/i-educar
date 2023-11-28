@@ -113,9 +113,7 @@ FROM public.exporter_person p
                     )
                     AS continuing_education_course
          FROM pmieducar.servidor as scfc
-         WHERE servidor.curso_formacao_continuada IS NOT NULL
-           AND curso_formacao_continuada != '{}'
-           AND scfc.cod_servidor = servidor.cod_servidor
+         WHERE scfc.cod_servidor = servidor.cod_servidor
          ) form,
      LATERAL (
          SELECT STRING_AGG(('[' || CONCAT_WS(', ', educacenso_curso_superior.nome, completion_year, educacenso_ies.nome,
