@@ -881,7 +881,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 'ref_sequencial' => $this->sequencial,
             ], [
                 'nm_disciplina' => 'Média Geral',
-                'nota' => $mediaGeral
+                'nota' => $mediaGeral,
             ]);
 
             return true;
