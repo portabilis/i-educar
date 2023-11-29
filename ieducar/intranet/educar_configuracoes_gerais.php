@@ -179,6 +179,7 @@ return new class extends clsCadastro
                 1 => _cl(key: 'report.boletim_professor.modelo_padrao'),
                 2 => _cl(key: 'report.boletim_professor.modelo_recuperacao_por_etapa'),
                 3 => _cl(key: 'report.boletim_professor.modelo_recuperacao_paralela'),
+                4 => _cl('report.boletim_professor.modelo_html'),
             ],
             'value' => $this->modelo_boletim_professor,
         ];
