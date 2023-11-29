@@ -46,6 +46,7 @@ class Export extends Model
             3 => new Teacher(),
             4 => new SocialAssistance(),
             5 => new Stage(),
+            6 => new Employee(),
         ];
     }
 

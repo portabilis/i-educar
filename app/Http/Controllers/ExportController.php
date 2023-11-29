@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\DatabaseToCsvExporter;
+use App\Models\Exporter\Employee;
 use App\Models\Exporter\Enrollment;
 use App\Models\Exporter\Export;
 use App\Models\Exporter\SocialAssistance;
@@ -117,6 +118,10 @@ class ExportController extends Controller
             $data = $this->filterStages($request, $data);
         }
 
+        if ($model === Employee::class) {
+            $data = $this->filterEmployees($request, $data);
+        }
+
         return $data;
     }
 
@@ -199,6 +204,39 @@ class ExportController extends Controller
                 'column' => 'exporter_teacher.school_id',
                 'operator' => 'in',
                 'value' => $request->user()->schools->pluck('cod_escola')->all(),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array   $data
+     * @return array
+     */
+    public function filterEmployees(Request $request, $data)
+    {
+        $data['filename'] = 'servidores.csv';
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => 'exporter_employee.year_id',
+                'operator' => '@>',
+                'value' => (int) $year,
+            ];
+        }
+
+        if ($request->input('ref_cod_escola')) {
+            $data['filters'][] = [
+                'column' => 'exporter_employee.school_id',
+                'operator' => '@>',
+                'value' => $request->input('ref_cod_escola'),
+            ];
+        } elseif ($request->user()->isSchooling()) {
+            $data['filters'][] = [
+                'column' => 'exporter_employee.school_id',
+                'operator' => '@>',
+                'value' => $request->user()->schools->pluck('cod_escola'),
             ];
         }
 
