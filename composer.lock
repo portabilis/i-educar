@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5035fe78375d52b99fd98fb3d326f2e",
+    "content-hash": "d647b0a3d2a523ec203370c96670b710",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -491,22 +491,22 @@
         },
         {
             "name": "dex/composer-plug-and-play",
-            "version": "0.18.0",
+            "version": "0.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/composer-plug-and-play.git",
-                "reference": "ac1ded9a14b1aed6eb4c2a9c8d1b9f7c660e334a"
+                "reference": "7975e571a949c21009a10f63e4ee569039b06e52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/ac1ded9a14b1aed6eb4c2a9c8d1b9f7c660e334a",
-                "reference": "ac1ded9a14b1aed6eb4c2a9c8d1b9f7c660e334a",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/7975e571a949c21009a10f63e4ee569039b06e52",
+                "reference": "7975e571a949c21009a10f63e4ee569039b06e52",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.3",
                 "ext-json": "*",
-                "php": "^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
                 "composer/composer": "^2.3.0",
@@ -536,9 +536,9 @@
             "description": "Plug and play packages for Composer",
             "support": {
                 "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
-                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.18.0"
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.19.0"
             },
-            "time": "2023-03-28T20:22:01+00:00"
+            "time": "2023-08-22T18:34:24+00:00"
         },
         {
             "name": "dex/frontier",
@@ -11095,5 +11095,5 @@
         "ext-pgsql": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
