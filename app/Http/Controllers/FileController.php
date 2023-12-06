@@ -10,7 +10,6 @@ use Throwable;
 
 class FileController extends Controller
 {
-
     public function show(File $file)
     {
         $url = (new UrlPresigner())->getPresignedUrl(
