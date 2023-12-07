@@ -14,6 +14,10 @@
         <label for="password">Senha:</label>
         <input type="password" name="password" id="password">
 
+        <input style="float:left;" onchange="return showPassword();" type="checkbox" name="show" id="show">
+        <label style="cursor: pointer" for="show">Exibir senha?</label>
+        <br/>
+
         <button id="form-login-submit" type="submit" class="submit">Entrar</button>
 
         <div class="remember">
@@ -21,6 +25,17 @@
         </div>
 
     </form>
+
+    <script>
+        function showPassword(input) {
+            var input = document.getElementById("password");
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
+            }
+        }
+    </script>
 
     @if (config('legacy.app.recaptcha_v3.public_key') && config('legacy.app.recaptcha_v3.private_key'))
         <script src="https://www.google.com/recaptcha/api.js?render={{config('legacy.app.recaptcha_v3.public_key')}}"></script>
