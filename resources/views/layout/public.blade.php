@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('intranet/styles/login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('intranet/styles/font-awesome.css') }}">
 
     <!-- Google Tag Manager -->
     <script>

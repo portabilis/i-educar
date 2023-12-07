@@ -13,10 +13,7 @@
 
         <label for="password">Senha:</label>
         <input type="password" name="password" id="password">
-
-        <input style="float:left;" onchange="return showPassword();" type="checkbox" name="show" id="show">
-        <label style="cursor: pointer" for="show">Exibir senha?</label>
-        <br/>
+        <i class="fa fa-eye-slash" id="eye" style="cursor: pointer; position: absolute; margin-top: -37px; margin-left: 335px; color: #188ad1" onclick="return showPassword();" aria-hidden="true"></i>
 
         <button id="form-login-submit" type="submit" class="submit">Entrar</button>
 
@@ -29,10 +26,16 @@
     <script>
         function showPassword(input) {
             var input = document.getElementById("password");
+            var eye = document.getElementById("eye");
+
             if (input.type === "password") {
                 input.type = "text";
+                eye.classList.remove("fa-eye-slash");
+                eye.classList.add("fa-eye");
             } else {
                 input.type = "password";
+                eye.classList.remove("fa-eye");
+                eye.classList.add("fa-eye-slash");
             }
         }
     </script>
