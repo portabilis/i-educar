@@ -208,6 +208,20 @@ class LegacyIndividual extends Model
         );
     }
 
+    protected function genderName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->sexo ? $this->sexo === 'M' ? 'Masculino' : 'Feminino' : null
+        );
+    }
+
+    protected function nationalityName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => (new Nationality())->getDescriptiveValues()[$this->nacionalidade]
+        );
+    }
+
     protected function socialName(): Attribute
     {
         return Attribute::make(

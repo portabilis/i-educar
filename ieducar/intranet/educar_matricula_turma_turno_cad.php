@@ -51,13 +51,13 @@ return new class extends clsCadastro
         $enturmacoes = LegacyEnrollment::active()
             ->with([
                 'schoolClass:cod_turma,ref_cod_curso,nm_turma,turma_turno_id',
-                'schoolClass.course:cod_curso,modalidade_curso'
+                'schoolClass.course:cod_curso,modalidade_curso',
             ])
             ->where('ref_cod_matricula', $this->cod_matricula)
             ->get([
                 'ref_cod_turma',
                 'sequencial',
-                'turno_id'
+                'turno_id',
             ]);
 
         $turnos = [

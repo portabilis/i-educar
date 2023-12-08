@@ -233,6 +233,7 @@ class LegacyRegistrationBuilder extends LegacyBuilder
         if ($dependency === 2) {
             return $this->where('dependencia', false);
         }
+
         return $this;
     }
 
