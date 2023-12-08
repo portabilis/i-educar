@@ -127,7 +127,6 @@ return new class extends clsCadastro
         // Data
         $this->campoData(nome: 'data_falta_atraso', campo: 'Dia', valor: $this->data_falta_atraso, obrigatorio: true);
 
-
         if ($this->cod_falta_atraso == '') {
             $this->cod_falta_atraso = null;
         }
@@ -321,7 +320,6 @@ return new class extends clsCadastro
                 $deletedFiles = explode(',', $this->file_url_deleted);
                 $fileService->deleteFiles($deletedFiles);
             }
-
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect(sprintf(
