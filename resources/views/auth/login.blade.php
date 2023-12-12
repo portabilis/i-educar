@@ -24,7 +24,7 @@
     </form>
 
     <script>
-        function showPassword(input) {
+        function showPassword() {
             var input = document.getElementById("password");
             var eye = document.getElementById("eye");
 
