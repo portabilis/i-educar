@@ -23,7 +23,7 @@ a:hover {
 }
 
 .ieducar-sidebar {
-  width: 232px;
+  width: 256px;
   background: #e9f0f8;
   padding-bottom: 15px;
 }
@@ -188,7 +188,7 @@ a:hover {
 }
 
 .ieducar-sidebar-menu {
-  width: 232px;
+  width: 256px;
   padding: 0;
   margin: 0;
 }
@@ -225,6 +225,8 @@ a:hover {
   color: #98b0c3;
   font-size: 20px;
   padding-right: 10px;
+  width: 32px;
+  text-align: center;
 }
 
 .ui-menu-item {

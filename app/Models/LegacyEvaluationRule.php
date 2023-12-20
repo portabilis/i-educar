@@ -137,7 +137,7 @@ class LegacyEvaluationRule extends Model
 
     public function hasOpinion(): bool
     {
-        return in_array($this->registration->grade->evaluationRule?->parecer_descritivo, [0, 1], true);
+        return $this->parecer_descritivo !== 0;
     }
 
     public function isGeneralScore(): bool

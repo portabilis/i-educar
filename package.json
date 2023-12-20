@@ -12,7 +12,7 @@
     "devDependencies": {
         "@babel/core": "^7.17.8",
         "@babel/preset-env": "^7.16.11",
-        "axios": "^0.21.2",
+        "axios": "^1.6.0",
         "bootstrap": "^4.4.1",
         "cross-env": "^5.1",
         "jquery": "^3.5.0",
@@ -33,7 +33,7 @@
         "babel": "^6.23.0",
         "laravel-echo": "^1.10.0",
         "laravel-echo-server": "^1.6.2",
-        "postcss": "^8.4.12",
+        "postcss": "^8.4.31",
         "pusher-js": "^5.1.1",
         "socket.io-client": "^2.3.0",
         "webpack": "^5.76.0"
