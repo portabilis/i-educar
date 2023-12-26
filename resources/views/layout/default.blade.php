@@ -249,10 +249,6 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
 <script>
     getNotifications();
-
-    if (window.useEcho) {
-        startListenChannel('ieducar-{{\DB::getDefaultConnection()}}-notification-{{md5($loggedUser->personId)}}');
-    }
 </script>
 
 @include('layout.vue')
