@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAbsenceDelay;
 use App\Models\LegacySchool;
+use App\Services\UrlPresigner;
 
 return new class extends clsDetalhe
 {
@@ -62,6 +63,7 @@ return new class extends clsDetalhe
                      <td bgcolor="#ccdce6"><b>Escola</b></td>
                      <td bgcolor="#ccdce6"><b>Instituição</b></td>
                      <td bgcolor="#ccdce6"><b>Matrícula</b></td>
+                     <td bgcolor="#ccdce6"><b>Anexo</b></td>
                  </tr>';
 
             $cont = 0;
@@ -78,8 +80,21 @@ return new class extends clsDetalhe
             $obj_ins = new clsPmieducarInstituicao($registro['ref_ref_cod_instituicao']);
             $det_ins = $obj_ins->detalhe();
 
-            $corpo .= sprintf(
-                '
+            $files = LegacyAbsenceDelay::find($this->cod_falta_atraso)?->files;
+
+            $html = '';
+            if ($files) {
+                foreach ($files as $file) {
+                    $html .= sprintf(
+                        '<a href="%s" target="_blank">%s</a><br>',
+                        (new UrlPresigner())->getPresignedUrl($file->url),
+                        $file->original_name
+                    );
+                }
+            }
+
+                $corpo .= sprintf(
+                    '
           <tr>
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
@@ -88,22 +103,25 @@ return new class extends clsDetalhe
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
+            <td %s align="left">%s</td>
           </tr>',
-                $color,
-                dataFromPgToBr($registro['data_falta_atraso']),
-                $color,
-                $registro['tipo'] == 1 ? 'Atraso' : 'Falta',
-                $color,
-                $registro['qtd_horas'],
-                $color,
-                $registro['qtd_min'],
-                $color,
-                $school->person->name ?? null,
-                $color,
-                $det_ins['nm_instituicao'],
-                $color,
-                $registro['matricula']
-            );
+                    $color,
+                    dataFromPgToBr($registro['data_falta_atraso']),
+                    $color,
+                    $registro['tipo'] == 1 ? 'Atraso' : 'Falta',
+                    $color,
+                    $registro['qtd_horas'],
+                    $color,
+                    $registro['qtd_min'],
+                    $color,
+                    $school->person->name ?? null,
+                    $color,
+                    $det_ins['nm_instituicao'],
+                    $color,
+                    $registro['matricula'],
+                    $color,
+                    $html
+                );
 
             $tabela .= $corpo;
             $tabela .= '</table>';
