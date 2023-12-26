@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\RegistrationCopyEvent;
 use App\Models\LegacyCourse;
 use App\Models\LegacyRegistration;
 use App\Process;
@@ -131,7 +132,8 @@ return new class extends clsCadastro
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data da reclassificação', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->campoMemo('descricao_reclassificacao', 'Descrição', $this->descricao_reclassificacao, 100, 10, true);
 
-        $this->acao_enviar = 'if(confirm("Deseja reclassificar está matrícula?"))acao();';
+        $this->acao_enviar = 'confirm();';
+        $this->acao_executa_submit = false;
     }
 
     public function Novo()
@@ -163,6 +165,7 @@ return new class extends clsCadastro
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
+        DB::beginTransaction();
 
         $obj_matricula = new clsPmieducarMatricula(
             $this->cod_matricula,
@@ -245,7 +248,18 @@ return new class extends clsCadastro
                 ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
         }
 
-        echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
+        $oldRegistration = LegacyRegistration::find(id: $this->cod_matricula);
+        $newRegistration = LegacyRegistration::find(id: $obj_matricula->cod_matricula);
+        $mensagem = '';
+        try {
+            RegistrationCopyEvent::dispatch($newRegistration, $oldRegistration);
+        } catch (Exception $exception) {
+            $mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
+        }
+
+        DB::commit();
+
+        echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: {$cadastrou}. {$mensagem}');
         window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
         </script>";
         exit('Reclassificação realizada com sucesso!');

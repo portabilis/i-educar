@@ -108,6 +108,13 @@ function prepareUpload(event) {
 
 function uploadFiles(files) {
     if (files && files.length > 0) {
+        const fileSize = files[0].size;
+        if (fileSize > 2 * 1024 * 1024) {
+            $j('#file').val("").addClass('error');
+            messageUtils.error('Não são permitidos arquivos com mais de 2MB.');
+            return;
+        }
+
         $j('#file').attr('disabled', 'disabled');
         $j('#btn_enviar').attr('disabled', 'disabled').val('Aguarde...');
         $loadingFile.show();
