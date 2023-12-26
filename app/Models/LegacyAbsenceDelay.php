@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAbsenceDelay extends LegacyModel
 {
+    use HasFiles;
     use HasLegacyUserAction;
     use LegacySoftDeletes;
 
