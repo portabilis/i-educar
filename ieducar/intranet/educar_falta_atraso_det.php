@@ -93,8 +93,8 @@ return new class extends clsDetalhe
                 }
             }
 
-                $corpo .= sprintf(
-                    '
+            $corpo .= sprintf(
+                '
           <tr>
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
@@ -105,23 +105,23 @@ return new class extends clsDetalhe
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
           </tr>',
-                    $color,
-                    dataFromPgToBr($registro['data_falta_atraso']),
-                    $color,
-                    $registro['tipo'] == 1 ? 'Atraso' : 'Falta',
-                    $color,
-                    $registro['qtd_horas'],
-                    $color,
-                    $registro['qtd_min'],
-                    $color,
-                    $school->person->name ?? null,
-                    $color,
-                    $det_ins['nm_instituicao'],
-                    $color,
-                    $registro['matricula'],
-                    $color,
-                    $html
-                );
+                $color,
+                dataFromPgToBr($registro['data_falta_atraso']),
+                $color,
+                $registro['tipo'] == 1 ? 'Atraso' : 'Falta',
+                $color,
+                $registro['qtd_horas'],
+                $color,
+                $registro['qtd_min'],
+                $color,
+                $school->person->name ?? null,
+                $color,
+                $det_ins['nm_instituicao'],
+                $color,
+                $registro['matricula'],
+                $color,
+                $html
+            );
 
             $tabela .= $corpo;
             $tabela .= '</table>';

@@ -251,7 +251,7 @@ class TurmaController extends ApiCoreController
                     AND rasa.serie_id = s.cod_serie
                     AND rasa.ano_letivo = $2
                 LEFT JOIN modules.regra_avaliacao ra
-                    ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
+                    ON ra.id = (case when e.utiliza_regra_diferenciada and rasa.regra_avaliacao_diferenciada_id is not null then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
                 WHERE t.ref_cod_instituicao = $1
                     AND t.ano = $2
                     AND t.ref_ref_cod_escola IN ({$escola})
