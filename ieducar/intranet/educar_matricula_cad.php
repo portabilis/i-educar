@@ -63,8 +63,6 @@ return new class extends clsCadastro
 
     public $ref_cod_candidato_reserva_vaga;
 
-    public $ref_cod_candidato_fila_unica;
-
     public $ref_cod_turma_copiar_enturmacoes;
 
     private $availableTimeService;
@@ -83,7 +81,6 @@ return new class extends clsCadastro
         $this->cod_matricula = $this->getQueryString(name: 'cod_matricula');
         $this->ref_cod_aluno = $this->getQueryString(name: 'ref_cod_aluno');
         $this->ref_cod_candidato_reserva_vaga = $this->getQueryString(name: 'ref_cod_candidato_reserva_vaga');
-        $this->ref_cod_candidato_fila_unica = $this->getQueryString(name: 'cod_candidato_fila_unica');
         $this->ano = $this->getQueryString(name: 'ano');
 
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
@@ -130,7 +127,6 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'cod_matricula', valor: $this->cod_matricula);
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
         $this->campoOculto(nome: 'ref_cod_candidato_reserva_vaga', valor: $this->ref_cod_candidato_reserva_vaga);
-        $this->campoOculto(nome: 'ref_cod_candidato_fila_unica', valor: $this->ref_cod_candidato_fila_unica);
 
         if ($this->ref_cod_aluno) {
             $obj_aluno = new clsPmieducarAluno();
