@@ -15,6 +15,7 @@ SELECT p.id,
        p.monthly_income,
        p.gender,
        p.race,
+       p.religion,
        p.mother_id,
        p.father_id,
        p.guardian_id,
@@ -46,7 +47,8 @@ SELECT p.id,
         WHEN 1 THEN 'EAD'::varchar
         WHEN 2 THEN 'Off-line'::varchar
         ELSE 'Presencial'::varchar
-END AS modalidade_ensino
+END AS modalidade_ensino,
+me.cod_aluno_inep AS inep_id
 FROM exporter_person p
     JOIN pmieducar.aluno a ON p.id = a.ref_idpes::numeric
     JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
@@ -61,5 +63,6 @@ FROM exporter_person p
     LEFT JOIN pmieducar.turma_turno tt ON tt.id = t.turma_turno_id
     LEFT JOIN pmieducar.turma_turno tm ON tm.id = mt.turno_id
     LEFT JOIN modules.moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
+    LEFT JOIN modules.educacenso_cod_aluno me ON me.cod_aluno = a.cod_aluno
 WHERE true AND a.ativo = 1 AND m.ativo = 1
 ORDER BY a.ref_idpes;
