@@ -827,11 +827,6 @@ return new class extends clsCadastro
                     $obj_crv->vinculaMatricula(ref_cod_escola: $this->ref_cod_escola, ref_cod_matricula: $this->cod_matricula, ref_cod_aluno: $this->ref_cod_aluno);
                 }
 
-                if ($this->ref_cod_candidato_fila_unica) {
-                    $obj_cfu = new clsPmieducarCandidatoFilaUnica(cod_candidato_fila_unica: $this->ref_cod_candidato_fila_unica);
-                    $obj_cfu->vinculaMatricula(ref_cod_matricula: $this->cod_matricula);
-                }
-
                 $this->enturmacaoMatricula(matriculaId: $this->cod_matricula, turmaDestinoId: $this->ref_cod_turma);
 
                 $ultimaMatriculaSerieAno = LegacyRegistration::query()
