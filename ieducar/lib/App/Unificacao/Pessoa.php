@@ -223,10 +223,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
                 'tabela' => 'pmieducar.responsaveis_aluno',
                 'coluna' => 'ref_idpes',
             ];
-            $this->chavesManterTodosVinculos[] = [
-                'tabela' => 'pmieducar.candidato_fila_unica',
-                'coluna' => 'ref_cod_pessoa_exc',
-            ];
         }
     }
 
