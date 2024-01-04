@@ -33,9 +33,6 @@ Route::redirect('intranet/public_distrito_cad.php', '/web/enderecamento/distrito
 
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
-Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet')
-    ->defaults('uri', 'filaunica/educar_consulta.php');
-
 Route::any('intranet/suspenso.php', 'LegacyController@intranet')
     ->defaults('uri', 'suspenso.php');
 
