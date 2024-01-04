@@ -26,10 +26,6 @@ class Process
 
     public const ENROLLMENT_HISTORY = 1001;
 
-    public const ATTENDED_CANDIDATE = 1002;
-
-    public const BACK_TO_QUEUE = 1003;
-
     public const RECLASSIFY_REGISTRATION = 1004;
 
     public const MENU_SCHOOL_TOOLS_EXPORTS = 1020;
