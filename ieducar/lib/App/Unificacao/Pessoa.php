@@ -214,18 +214,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ],
     ];
 
-    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, $unificationId)
-    {
-        parent::__construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, $db, $unificationId);
-
-        if (is_dir(base_path('ieducar/intranet/filaunica'))) {
-            $this->chavesManterTodosVinculos[] = [
-                'tabela' => 'pmieducar.responsaveis_aluno',
-                'coluna' => 'ref_idpes',
-            ];
-        }
-    }
-
     public function unifica()
     {
         $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->unificationId);
