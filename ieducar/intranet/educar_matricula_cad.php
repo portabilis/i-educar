@@ -172,9 +172,6 @@ return new class extends clsCadastro
             }
         }
 
-        $script = ['/vendor/legacy/Cadastro/Assets/Javascripts/Matricula.js'];
-        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
-
         $this->acao_enviar = 'formUtils.submit()';
     }
 
