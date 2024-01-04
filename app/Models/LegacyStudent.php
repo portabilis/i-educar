@@ -119,18 +119,6 @@ class LegacyStudent extends LegacyModel
         return $this->hasMany(LegacyRegistration::class, 'ref_cod_aluno');
     }
 
-    public function guardians(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            LegacyPerson::class,
-            'pmieducar.responsaveis_aluno',
-            'ref_cod_aluno',
-            'ref_idpes',
-            'cod_aluno',
-            'idpes'
-        );
-    }
-
     protected function guardianType(): Attribute
     {
         return Attribute::make(
