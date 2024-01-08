@@ -65,6 +65,15 @@
                     @include('form.select-school-class')
                 </td>
             </tr>
+
+            <tr id="tr_nm_turma">
+                <td class="formlttd" valign="top">
+                    <span class="form">Matrícula</span>
+                </td>
+                <td class="formlttd" valign="top">
+                    @include('form.select-registration')
+                </td>
+            </tr>
             </tbody>
         </table>
 
@@ -93,6 +102,8 @@
             src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
+    <script type="text/javascript"
+            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Matricula.js") }}"></script>
     <script type='text/javascript'
             src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js') }}'></script>
 @endprepend
