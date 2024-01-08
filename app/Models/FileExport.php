@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Enums\FileExportStatus;
 use App\Services\UrlPresigner;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
