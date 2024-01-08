@@ -2,9 +2,7 @@
 
 namespace Tests\Unit\Services;
 
-use App\Jobs\DatabaseToCsvExporter;
 use App\Jobs\FileExporterJob;
-use App\Services\Exporter\ExportService;
 use App\Services\FileExportService;
 use Carbon\Carbon;
 use Database\Factories\FileExportFactory;
@@ -38,7 +36,6 @@ class FileExportServiceTest extends TestCase
     {
         parent::setUp();
         $this->export = FileExportFactory::new()->create();
-
         $count = DB::table('relatorio.situacao_matricula')->count();
         if ($count === 0) {
             $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder();
@@ -53,9 +50,17 @@ class FileExportServiceTest extends TestCase
             'idpes' => $person->idpes,
             'ativo' => 1,
         ]);
+        Storage::fake('local');
+        Storage::disk('local')->put('student.jpg', 'content');
         $student = LegacyStudentFactory::new()->create([
             'ref_idpes' => $person->idpes,
             'ativo' => 1,
+            'url_documento' => json_encode([
+                [
+                    'data' => now()->format('d/m/Y'),
+                    'url' => url(Storage::disk('local')->url('student.jpg'))
+                ]
+            ])
         ]);
         $course = LegacyCourseFactory::new()->create([
             'ref_cod_instituicao' => $institution->id,
@@ -92,8 +97,7 @@ class FileExportServiceTest extends TestCase
             'ref_cod_matricula' => $registration->id,
             'ref_cod_turma' => $schoolClass->id,
         ]);
-
-        $this->args =  [
+        $this->args = [
             'year' => now()->year,
             'school' => $school->getKey(),
             'course' => $course->getKey(),
@@ -109,5 +113,12 @@ class FileExportServiceTest extends TestCase
         Queue::assertNotPushed(FileExporterJob::class);
         FileExporterJob::dispatch($this->export, $this->args);
         Queue::assertPushed(FileExporterJob::class, 1);
+
+        $zipPath = "{$this->export->getConnectionName()}/zip/{$this->export->hash}/Alunos_" . Carbon::now()->format('Y-m-d_H:i') . '.zip';
+        Storage::disk('local')->assertMissing($zipPath);
+        $service = new FileExportService($this->export, $this->args, 'local');
+        $service->setIssueStudentRecordReport(false);
+        $service->execute();
+        Storage::disk('local')->assertExists($zipPath);
     }
 }
