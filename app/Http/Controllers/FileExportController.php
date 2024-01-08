@@ -6,6 +6,7 @@ use App\Http\Requests\StudentFileExportRequest;
 use App\Jobs\StudentFileExporterJob;
 use App\Models\FileExport;
 use App\Process;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class FileExportController extends Controller
@@ -30,7 +31,7 @@ class FileExportController extends Controller
     {
         $studentFileExport = FileExport::create([
             'user_id' => $request->user()->getKey(),
-            'filename' => 'Alunos'
+            'filename' => 'Alunos_' . Carbon::now()->format('Y-m-d_H:i')
         ]);
         StudentFileExporterJob::dispatch(
             studentFileExport: $studentFileExport,

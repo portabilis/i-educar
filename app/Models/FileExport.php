@@ -35,13 +35,6 @@ class FileExport extends Model
         );
     }
 
-    protected function filename(): Attribute
-    {
-        return Attribute::make(
-            set: fn ($value) => str_replace(' ', '_', $value . '_' . Carbon::now()->format('Y-m-d H:i'))
-        );
-    }
-
     protected function sizeFormat(): Attribute
     {
         return Attribute::make(
