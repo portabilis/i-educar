@@ -28,10 +28,10 @@ class FileExport extends Model
         });
     }
 
-    protected function url(): Attribute
+    protected function presignedUrl(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (new UrlPresigner)->getPresignedUrl($value)
+            get: fn () => (new UrlPresigner)->getPresignedUrl($this->url)
         );
     }
 

@@ -22,7 +22,7 @@
                     @if($export->statusIsError())
                         O arquivo não pode ser exportado
                     @elseif($export->statusIsSuccess())
-                        <a href="{{ $export->url }}" style="font-size: 14px"><i class="fa fa-download"></i> <strong>Fazer download</strong> ({{ $export->sizeFormat }})</a>
+                        <a href="{{ $export->presignedUrl }}" style="font-size: 14px"><i class="fa fa-download"></i> <strong>Fazer download</strong> ({{ $export->sizeFormat }})</a>
                     @else
                         Aguardando a exportação do arquivo ser finalizada
                     @endif
