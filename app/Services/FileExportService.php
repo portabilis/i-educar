@@ -100,15 +100,15 @@ class FileExportService
     {
         $this->deleteMainFolder(); //limpa a pasta principal em caso de falhas anteriores
         $this->students = $this->getStudents();
-        foreach ($this->students as $resource) {
-            $studentPath = $this->folderStudentsPath . $this->getResourcePath($resource);
+        foreach ($this->students as $student) {
+            $studentPath = $this->folderStudentsPath . $this->getStudentPath($student);
             $createStudentRecordReport = $this->createStudentRecordReport(
                 studentPath: $studentPath,
-                registration: $resource['registration']
+                registration: $student['registration']
             );
             $createStudentFiles = $this->createStudentFiles(
                 studentPath: $studentPath,
-                files: $resource['files']
+                files: $student['files']
             );
             //conta somente os alunos que tem arquivo
             if ($createStudentRecordReport || $createStudentFiles) {
@@ -148,7 +148,8 @@ class FileExportService
                         'yearEq' => $this->getarg('year'),
                         'school' => $this->getarg('school'),
                         'course' => $this->getarg('course'),
-                        'grade' => $this->getarg('grade')
+                        'grade' => $this->getarg('grade'),
+                        'registration' => $this->getarg('registration'),
                     ]);
                     $q->active();
                     $q->whereHas('lastEnrollment', function ($q) {
@@ -162,7 +163,8 @@ class FileExportService
                     'yearEq' => $this->getarg('year'),
                     'school' => $this->getarg('school'),
                     'course' => $this->getarg('course'),
-                    'grade' => $this->getarg('grade')
+                    'grade' => $this->getarg('grade'),
+                    'registration' => $this->getarg('registration'),
                 ]);
                 $q->active();
                 $q->whereHas('lastEnrollment', function ($q) {
@@ -221,10 +223,10 @@ class FileExportService
         return $path_parts['extension'];
     }
 
-    private function getResourcePath(array $resource): string
+    private function getStudentPath(array $student): string
     {
         //remove caracteres especiais e transforma em maiúsculo
-        return preg_replace('/[^\w\s]/u', '', mb_strtoupper($resource['name'])) . " - {$resource['id']}" . '/';
+        return preg_replace('/[^\w\s]/u', '', mb_strtoupper($student['name'])) . " ({$student['id']})" . '/';
     }
 
     private function createStudentRecordReport(string $studentPath, LegacyRegistration $registration): bool
@@ -293,6 +295,10 @@ class FileExportService
 
     private function compressStudentsFolder(): void
     {
+        //se nao tiver documentos, deve-se colocar algum conteúdo para poder criar o zip
+        if ($this->student_folders_count === 0) {
+            $this->getStorageTemp()->put($this->folderStudentsPath . 'nenhum_documento_exportado.txt', '');
+        }
         $zip = new ZipArchive;
         $zipFileFullPath = $this->getStorageTemp()->path($this->zipFilePath);
         if ($zip->open($zipFileFullPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
@@ -318,7 +324,7 @@ class FileExportService
         $data = explode('/', $fullPath);
         $ultimaPasta = $data[count($data) - 2];
 
-        return $ultimaPasta . '/' . $nomeArquivo;
+        return $this->getArg('registration') ? $nomeArquivo : $ultimaPasta . '/' . $nomeArquivo;
     }
 
     public function deleteStudentsFolder(): void

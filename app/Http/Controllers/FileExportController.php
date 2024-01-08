@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FileExportRequest;
 use App\Jobs\FileExporterJob;
 use App\Models\FileExport;
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use App\Process;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class FileExportController extends Controller
@@ -31,7 +33,11 @@ class FileExportController extends Controller
     {
         $fileExport = FileExport::create([
             'user_id' => $request->user()->getKey(),
-            'filename' => 'Alunos_' . Carbon::now()->format('Y-m-d_H:i')
+            'filename' => $this->buildFileName(
+                schoolId: $request->get('ref_cod_escola'),
+                schoolClassId: $request->get('ref_cod_turma'),
+                registrationId: $request->get('matricula')
+            )
         ]);
 
         FileExporterJob::dispatch(
@@ -41,7 +47,8 @@ class FileExportController extends Controller
                 'school' => $request->get('ref_cod_escola'),
                 'course' => $request->get('ref_cod_curso'),
                 'grade' => $request->get('ref_cod_serie'),
-                'schoolClass' => $request->get('ref_cod_turma')
+                'schoolClass' => $request->get('ref_cod_turma'),
+                'registration' => $request->get('matricula'),
             ]
         );
 
@@ -57,5 +64,42 @@ class FileExportController extends Controller
         ]);
 
         return view('file_export.create');
+    }
+
+    private function removeSpecialCharacters($string): string
+    {
+        return preg_replace('/[^\w\s]/u', '', $string);
+    }
+
+    private function buildFileName(int $schoolId, int $schoolClassId, int|null $registrationId): string
+    {
+        if ($registrationId) {
+            $registration = LegacyRegistration::query()->find($registrationId, [
+                'cod_matricula',
+                'ref_cod_aluno'
+            ]);
+
+            return mb_strtoupper($this->removeSpecialCharacters($registration->name)) . " ({$registration->ref_cod_aluno})";
+        }
+
+        $school = LegacySchool::query()->with([
+            'person:idpes,nome',
+            'organization:idpes,fantasia'
+        ])->find($schoolId, [
+            'cod_escola',
+            'ref_idpes'
+        ]);
+
+        $schoolClass = LegacySchoolClass::query()
+            ->whereKey($schoolClassId)
+            ->first([
+                'nm_turma',
+                'ano'
+            ]);
+
+        $schoolName = mb_strtoupper($this->removeSpecialCharacters($school->name));
+        $schoolClassName = mb_strtoupper($this->removeSpecialCharacters($schoolClass->nm_turma)) . ' (' . $schoolClass->ano . ')';
+
+        return $schoolName . ' - ' . $schoolClassName;
     }
 }
