@@ -22,6 +22,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pgsql": "*",
+        "ext-zip": "*",
         "ankurk91/laravel-eloquent-relationships": "^1.3",
         "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
