@@ -244,6 +244,7 @@ class FileExportService
         $studentRecord->addArg('turma', $registration->lastEnrollment->ref_cod_turma);
         $studentRecord->addArg('situacao', 9);
         $studentRecord->addArg('matricula', $registration->cod_matricula);
+        $studentRecord->addArg('database', $this->fileExport->getConnectionName());
         $studentRecord->addArg('termo_declaracao', config('legacy.report.ficha_do_aluno.termo_declaracao'));
         $studentRecord->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
         $studentRecord->addArg('data_emissao', 0);
