@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\FileExport;
-use App\Services\StudentFileExportService;
+use App\Services\FileExportService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Throwable;
 
-class StudentFileExporterJob implements ShouldQueue
+class FileExporterJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -24,28 +24,28 @@ class StudentFileExporterJob implements ShouldQueue
 
     public $retryAfter = 5;
 
-    private StudentFileExportService $studentFileExportService;
+    private FileExportService $fileExportService;
 
-    public function __construct(private FileExport $studentFileExport, private array $args)
+    public function __construct(private FileExport $fileExport, private array $args)
     {
-        $this->studentFileExportService = new StudentFileExportService($this->studentFileExport, $this->args);
+        $this->fileExportService = new FileExportService($this->fileExport, $this->args);
     }
 
     public function handle()
     {
-        $this->studentFileExportService->execute();
+        $this->fileExportService->execute();
     }
 
     public function failed(Throwable $exception)
     {
-        $this->studentFileExportService->failed();
+        $this->fileExportService->failed();
     }
 
     public function tags(): array
     {
         return [
-            $this->studentFileExport->getConnectionName(),
-            'student-file-export',
+            $this->fileExport->getConnectionName(),
+            'file-export',
         ];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StudentFileExportRequest;
-use App\Jobs\StudentFileExporterJob;
+use App\Http\Requests\FileExportRequest;
+use App\Jobs\FileExporterJob;
 use App\Models\FileExport;
 use App\Process;
 use Carbon\Carbon;
@@ -27,14 +27,15 @@ class FileExportController extends Controller
         ]);
     }
 
-    public function store(StudentFileExportRequest $request)
+    public function store(FileExportRequest $request)
     {
-        $studentFileExport = FileExport::create([
+        $fileExport = FileExport::create([
             'user_id' => $request->user()->getKey(),
             'filename' => 'Alunos_' . Carbon::now()->format('Y-m-d_H:i')
         ]);
-        StudentFileExporterJob::dispatch(
-            studentFileExport: $studentFileExport,
+
+        FileExporterJob::dispatch(
+            fileExport: $fileExport,
             args: [
                 'year' => $request->get('ano'),
                 'school' => $request->get('ref_cod_escola'),

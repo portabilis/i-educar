@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
-class StudentFileExportService
+class FileExportService
 {
 
     private string $mainPath;
@@ -30,14 +30,15 @@ class StudentFileExportService
     private string $tempDisk = 'local';
     private string $compressType = 'zip';
     private int $student_folders_count = 0;
+    private bool $issueStudentRecordReport = true;
 
     public function __construct(
-        private FileExport  $studentFileExport,
+        private FileExport  $fileExport,
         private array       $args,
         private string|null $disk = null
     )
     {
-        $this->connection = $studentFileExport->getConnectionName();
+        $this->connection = $fileExport->getConnectionName();
         DB::setDefaultConnection($this->connection);
         //temp
         $this->mainPath = $this->getMainPath();
@@ -52,12 +53,12 @@ class StudentFileExportService
 
     private function getMainPath(): string
     {
-        return "{$this->connection}/{$this->compressType}_temp/{$this->studentFileExport->hash}/";
+        return "{$this->connection}/{$this->compressType}_temp/{$this->fileExport->hash}/";
     }
 
     private function getFolderStudentsName(): string
     {
-        return $this->studentFileExport->filename;
+        return $this->fileExport->filename;
     }
 
     private function getFolderStudentsPath(): string
@@ -72,10 +73,10 @@ class StudentFileExportService
 
     private function getDestinyMainPath(): string
     {
-        return "{$this->connection}/{$this->compressType}/{$this->studentFileExport->hash}/";
+        return "{$this->connection}/{$this->compressType}/{$this->fileExport->hash}/";
     }
 
-    private function getDestinyZipFilePath(): string
+    public function getDestinyZipFilePath(): string
     {
         return $this->destinyMainPath . $this->folderStudentsName . '.' . $this->compressType;
     }
@@ -228,7 +229,7 @@ class StudentFileExportService
 
     private function createStudentRecordReport(string $studentPath, LegacyRegistration $registration): bool
     {
-        if (!app()->bound(StudentRecordReport::class)) {
+        if (!$this->issueStudentRecordReport || !app()->bound(StudentRecordReport::class)) {
             return false;
         }
         $studentRecord = app(StudentRecordReport::class);
@@ -344,7 +345,7 @@ class StudentFileExportService
 
     private function updateExporter(): void
     {
-        $this->studentFileExport->update([
+        $this->fileExport->update([
             'url' => $this->getDestinyStorage()->url($this->destinyZipFilePath),
             'status_id' => FileExportStatus::SUCCESS,
             'size' => $this->getDestinyStorage()->size($this->destinyZipFilePath)
@@ -354,7 +355,7 @@ class StudentFileExportService
     private function notifyUser(): void
     {
         (new NotificationService())->createByUser(
-            userId: $this->studentFileExport->user_id,
+            userId: $this->fileExport->user_id,
             text: $this->getMessage(),
             link: $this->getDestinyStorage()->url($this->destinyZipFilePath),
             type: NotificationType::OTHER
@@ -363,14 +364,25 @@ class StudentFileExportService
 
     private function getMessage(): string
     {
-        return "Foram exportados os documentos de {$this->student_folders_count} alunos. Clique aqui para fazer download do arquivo {$this->studentFileExport->filename}.";
+        return "Foram exportados os documentos de {$this->student_folders_count} alunos. Clique aqui para fazer download do arquivo {$this->fileExport->filename}.";
     }
 
     public function failed(): void
     {
         $this->deleteMainFolder();
-        $this->studentFileExport->update([
+        $this->fileExport->update([
             'status_id' => FileExportStatus::ERROR
         ]);
+    }
+
+    /**
+     * @param bool $issueStudentRecordReport
+     * @return FileExportService
+     */
+    public function setIssueStudentRecordReport(bool $issueStudentRecordReport): FileExportService
+    {
+        $this->issueStudentRecordReport = $issueStudentRecordReport;
+
+        return $this;
     }
 }
