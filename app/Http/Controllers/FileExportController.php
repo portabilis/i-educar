@@ -32,7 +32,7 @@ class FileExportController extends Controller
             'user_id' => $request->user()->getKey(),
             'filename' => 'Alunos'
         ]);
-        StudentFileExporterJob::dispatchSync(
+        StudentFileExporterJob::dispatch(
             studentFileExport: $studentFileExport,
             args: [
                 'year' => $request->get('ano'),
