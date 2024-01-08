@@ -42,10 +42,10 @@ class FileExport extends Model
         );
     }
 
-    protected function size(): Attribute
+    protected function sizeFormat(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
+            get: function () {
                 $units = [
                     'B',
                     'KB',
@@ -53,7 +53,7 @@ class FileExport extends Model
                     'GB',
                     'TB'
                 ];
-                $bytes = max($value, 0);
+                $bytes = max($this->size, 0);
                 $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
                 $pow = min($pow, count($units) - 1);
 
