@@ -1,7 +1,7 @@
 
 $j(document).ready(function(){
 
-  $j('#ano').closest('tr').hide();
+  $j('#ano').closest('tr').show();
 
   var $escolaField = getElementFor('escola');
 
