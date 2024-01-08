@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <h2>Exportações de arquivos dos alunos</h2>
+    <h2>Exportações de documentos dos alunos</h2>
     <table class="table-default">
         <thead>
         <tr>
