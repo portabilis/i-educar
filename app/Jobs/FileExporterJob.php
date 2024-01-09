@@ -24,21 +24,18 @@ class FileExporterJob implements ShouldQueue
 
     public $retryAfter = 5;
 
-    private FileExportService $fileExportService;
-
     public function __construct(private FileExport $fileExport, private array $args)
     {
-        $this->fileExportService = new FileExportService($this->fileExport, $this->args);
     }
 
     public function handle()
     {
-        $this->fileExportService->execute();
+        (new FileExportService($this->fileExport, $this->args))->execute();
     }
 
     public function failed(Throwable $exception)
     {
-        $this->fileExportService->failed();
+        (new FileExportService($this->fileExport, $this->args))->failed();
     }
 
     public function tags(): array
