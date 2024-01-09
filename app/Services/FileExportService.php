@@ -7,13 +7,11 @@ use App\Models\FileExport;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use App\Models\NotificationType;
-use App\Setting;
 use Exception;
 use iEducar\Reports\Contracts\StudentRecordReport;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
@@ -40,8 +38,6 @@ class FileExportService
     )
     {
         $this->connection = $fileExport->getConnectionName();
-        DB::setDefaultConnection($this->connection);
-        $this->setReportConfigs();
         //temp
         $this->mainPath = $this->getMainPath();
         $this->folderStudentsName = $this->getFolderStudentsName();
@@ -93,23 +89,6 @@ class FileExportService
         $this->copyToFinallyDisk();
         $this->updateExporter();
         $this->notifyUser();
-    }
-
-    private function setReportConfigs(): void
-    {
-        if (!$this->issueStudentRecordReport) {
-            return;
-        }
-
-        if ($value = Setting::where('key', $key = 'legacy.report.logo_file_name')->value('value')) {
-            config()->set($key, $value);
-        }
-        if ($value = Setting::where('key', $key = 'legacy.report.ficha_do_aluno.termo_declaracao')->value('value')) {
-            config()->set($key, $value);
-        }
-        if ($value = Setting::where('key', $key = 'legacy.report.source_path')->value('value')) {
-            config()->set($key, $value);
-        }
     }
 
     /**
@@ -263,7 +242,7 @@ class FileExportService
         $studentRecord->addArg('turma', $registration->lastEnrollment->ref_cod_turma);
         $studentRecord->addArg('situacao', 9);
         $studentRecord->addArg('matricula', $registration->cod_matricula);
-        $studentRecord->addArg('database', $this->fileExport->getConnectionName());
+        $studentRecord->addArg('database', $this->connection);
         $studentRecord->addArg('termo_declaracao', config('legacy.report.ficha_do_aluno.termo_declaracao'));
         $studentRecord->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
         $studentRecord->addArg('data_emissao', 0);
