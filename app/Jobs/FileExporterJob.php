@@ -30,16 +30,6 @@ class FileExporterJob implements ShouldQueue
     public function __construct(private FileExport $fileExport, private array $args)
     {
         DB::setDefaultConnection($fileExport->getConnectionName());
-
-        if ($value = Setting::where('key', $key = 'legacy.report.logo_file_name')->value('value')) {
-            config()->set($key, $value);
-        }
-        if ($value = Setting::where('key', $key = 'legacy.report.ficha_do_aluno.termo_declaracao')->value('value')) {
-            config()->set($key, $value);
-        }
-        if ($value = Setting::where('key', $key = 'legacy.report.source_path')->value('value')) {
-            config()->set($key, $value);
-        }
     }
 
     public function handle()
