@@ -33,14 +33,25 @@ class FileExporterJob implements ShouldQueue
 
     public function handle()
     {
-        DB::setDefaultConnection($this->fileExport->getConnectionName());
+        $this->setConnection();
+        $this->setConfigs();
         (new FileExportService($this->fileExport, $this->args))->execute();
     }
 
     public function failed(Throwable $exception)
     {
-        DB::setDefaultConnection($this->fileExport->getConnectionName());
+        $this->setConnection();
         (new FileExportService($this->fileExport, $this->args))->failed();
+    }
+
+    private function setConnection(): void
+    {
+        DB::setDefaultConnection($this->fileExport->getConnectionName());
+    }
+
+    private function setConfigs(): void
+    {
+        Config::set(Setting::all()->pluck('value', 'key')->toArray());
     }
 
     public function tags(): array

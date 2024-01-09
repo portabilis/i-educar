@@ -40,15 +40,6 @@ class FileExportService
     {
         $this->connection = $fileExport->getConnectionName();
 
-        if ($value = Setting::where('key', $key = 'legacy.report.logo_file_name')->value('value')) {
-            config()->set($key, $value);
-        }
-        if ($value = Setting::where('key', $key = 'legacy.report.ficha_do_aluno.termo_declaracao')->value('value')) {
-            config()->set($key, $value);
-        }
-        if ($value = Setting::where('key', $key = 'legacy.report.source_path')->value('value')) {
-            config()->set($key, $value);
-        }
         //temp
         $this->mainPath = $this->getMainPath();
         $this->folderStudentsName = $this->getFolderStudentsName();
