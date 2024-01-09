@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\Models\Enums\FileExportStatus;
+use App\Models\FileExport;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use App\Models\NotificationType;
-use App\Models\FileExport;
+use App\Setting;
 use Exception;
 use iEducar\Reports\Contracts\StudentRecordReport;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -40,6 +41,7 @@ class FileExportService
     {
         $this->connection = $fileExport->getConnectionName();
         DB::setDefaultConnection($this->connection);
+        $this->setReportConfigs();
         //temp
         $this->mainPath = $this->getMainPath();
         $this->folderStudentsName = $this->getFolderStudentsName();
@@ -91,6 +93,23 @@ class FileExportService
         $this->copyToFinallyDisk();
         $this->updateExporter();
         $this->notifyUser();
+    }
+
+    private function setReportConfigs(): void
+    {
+        if (!$this->issueStudentRecordReport) {
+            return;
+        }
+
+        if ($value = Setting::where('key', $key = 'legacy.report.logo_file_name')->value('value')) {
+            config()->set($key, $value);
+        }
+        if ($value = Setting::where('key', $key = 'legacy.report.ficha_do_aluno.termo_declaracao')->value('value')) {
+            config()->set($key, $value);
+        }
+        if ($value = Setting::where('key', $key = 'legacy.report.source_path')->value('value')) {
+            config()->set($key, $value);
+        }
     }
 
     /**
