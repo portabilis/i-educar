@@ -56,7 +56,7 @@ class FileExport extends Model
 
     public function statusIsError(): bool
     {
-        return $this->status_id === FileExportStatus::ERROR->value || ($this->statusIsWaiting() && $this->created_at < now()->subMinutes(30));
+        return $this->status_id === FileExportStatus::ERROR->value || ($this->statusIsWaiting() && $this->created_at < now()->subMinutes(5));
     }
 
     public function statusIsWaiting(): bool
