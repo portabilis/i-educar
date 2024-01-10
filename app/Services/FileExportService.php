@@ -7,7 +7,6 @@ use App\Models\FileExport;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use App\Models\NotificationType;
-use App\Setting;
 use Exception;
 use iEducar\Reports\Contracts\StudentRecordReport;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -174,6 +173,7 @@ class FileExportService
             })
             ->get()
             ->map(function (LegacyStudent $student) {
+                //documentos
                 $files = collect(json_decode($student->url_documento, false))
                     ->map(function ($file, $index) {
                         $number = sprintf("%02d", $index + 1);
@@ -183,6 +183,7 @@ class FileExportService
                             'url' => $file->url,
                         ];
                     });
+                //laudos
                 $files = $files->merge(collect(json_decode($student->url_laudo_medico, false))
                     ->map(function ($file, $index) {
                         $number = sprintf("%02d", $index + 1);
@@ -192,6 +193,7 @@ class FileExportService
                             'url' => $file->url,
                         ];
                     }));
+                //foto
                 if ($student->picture) {
                     $files->push([
                         'filename' => 'Foto.' . $this->getExtension($student->picture->caminho),
@@ -235,19 +237,22 @@ class FileExportService
             return false;
         }
         $studentRecord = app(StudentRecordReport::class);
-        $studentRecord->addArg('ano', $registration->ano);
-        $studentRecord->addArg('instituicao', $registration->school->ref_cod_instituicao);
-        $studentRecord->addArg('escola', $registration->ref_ref_cod_escola);
-        $studentRecord->addArg('modelo', 1);
-        $studentRecord->addArg('curso', $registration->ref_cod_curso);
-        $studentRecord->addArg('serie', $registration->ref_ref_cod_serie);
-        $studentRecord->addArg('turma', $registration->lastEnrollment->ref_cod_turma);
-        $studentRecord->addArg('situacao', 9);
-        $studentRecord->addArg('matricula', $registration->cod_matricula);
-        $studentRecord->addArg('database', $this->connection);
-        $studentRecord->addArg('termo_declaracao', config('legacy.report.ficha_do_aluno.termo_declaracao'));
-        $studentRecord->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
-        $studentRecord->addArg('data_emissao', 0);
+        $studentRecord->args = [
+            'ano' => $registration->ano,
+            'instituicao' => $registration->school->ref_cod_instituicao,
+            'escola' => $registration->ref_ref_cod_escola,
+            'modelo' => 1,
+            'curso' => $registration->ref_cod_curso,
+            'serie' => $registration->ref_ref_cod_serie,
+            'turma' => $registration->lastEnrollment->ref_cod_turma,
+            'situacao' => 9,
+            'matricula' => $registration->getKey(),
+            'database' => $this->connection,
+            'termo_declaracao' => config('legacy.report.ficha_do_aluno.termo_declaracao'),
+            'SUBREPORT_DIR' => config('legacy.report.source_path'),
+            'data_emissao' => 0
+        ];
+
         //precisa ignorar os erros devido o legado
         $encoded = @$studentRecord->dumps([
             'options' => [
@@ -286,9 +291,9 @@ class FileExportService
         // Remove a barra inicial, se houver
         $path = ltrim($path, '/');
         // Encontrar a posição de "storage/" e pegar a parte após isso
-        $posicaoStorage = strpos($path, 'storage/');
-        if ($posicaoStorage !== false) {
-            $path = substr($path, $posicaoStorage + strlen('storage/'));
+        $positionStorage = strpos($path, 'storage/');
+        if ($positionStorage !== false) {
+            $path = substr($path, $positionStorage + strlen('storage/'));
         }
 
         return $path;
@@ -382,11 +387,7 @@ class FileExportService
         ]);
     }
 
-    /**
-     * @param bool $issueStudentRecordReport
-     * @return FileExportService
-     */
-    public function setIssueStudentRecordReport(bool $issueStudentRecordReport): FileExportService
+    public function setIssueStudentRecordReport(bool $issueStudentRecordReport): self
     {
         $this->issueStudentRecordReport = $issueStudentRecordReport;
 
