@@ -300,6 +300,7 @@ class EnrollmentTest extends ViewTestCase
                 'mother.organization' => 'Empresa da mãe',
                 'mother.monthly_income' => 'Renda Mensal da mãe',
                 'mother.gender' => 'Gênero da mãe',
+                'mother.phone' => 'Telefones da mãe',
             ],
             'Pai' => [
                 'father.id' => 'ID do pai',
@@ -317,6 +318,7 @@ class EnrollmentTest extends ViewTestCase
                 'father.organization' => 'Empresa do pai',
                 'father.monthly_income' => 'Renda Mensal do pai',
                 'father.gender' => 'Gênero do pai',
+                'father.phone' => 'Telefones do pai',
             ],
             'Responsável' => [
                 'guardian.id' => 'ID do responsável',
@@ -334,6 +336,7 @@ class EnrollmentTest extends ViewTestCase
                 'guardian.organization' => 'Empresa do responsável',
                 'guardian.monthly_income' => 'Renda Mensal do responsável',
                 'guardian.gender' => 'Gênero do responsável',
+                'guardian.phone' => 'Telefones do responsável',
             ],
         ];
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
