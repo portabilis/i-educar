@@ -86,9 +86,6 @@ class StudentEloquentBuilder extends Builder
             'guardian.phone' => [
                 'phone' => 'gep.phones as Telefones do responsável',
             ],
-            'guardian.phone' => [
-                'phone_num' => 'gd.rg as RG do responsável',
-            ],
             'place' => [
                 'address' => 'p.address as Logradouro',
                 'number' => 'p.number as Número',
