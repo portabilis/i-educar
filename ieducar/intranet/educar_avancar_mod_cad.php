@@ -42,6 +42,7 @@ return new class extends clsCadastro
     public function Novo()
     {
         $anoLetivo = request('ano_letivo');
+        $ano = request('ano');
 
         $anoLetivos = LegacySchoolAcademicYear::query()
             ->whereSchool($this->ref_cod_escola)
@@ -49,6 +50,18 @@ return new class extends clsCadastro
             ->inProgress()
             ->active()
             ->get(['id']);
+
+        if ($anoLetivo < $ano) {
+            Session::now('notice', "O ano de destino ({$anoLetivo}) deve ser maior ou igual que o atual ({$ano}).");
+
+            return false;
+        }
+
+        if ($anoLetivos->isEmpty()) {
+            Session::now('notice', "Nenhum aluno letivo aberto para {$anoLetivo}.");
+
+            return false;
+        }
 
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
