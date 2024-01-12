@@ -50,6 +50,12 @@ return new class extends clsCadastro
             ->active()
             ->get(['id']);
 
+        if ($anoLetivos->isEmpty()) {
+            Session::now('notice', "Nenhum aluno letivo aberto para {$anoLetivo}.");
+
+            return false;
+        }
+
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
         if ($anoLetivos->count() > 1) {
