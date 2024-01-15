@@ -175,6 +175,12 @@ return new class extends clsCadastro
             return true;
         }
 
+        if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_TRANSFER_RESULT) {
+            $this->simpleRedirect(url: 'educar_transferencia_solicitacao_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
+
+            return true;
+        }
+
         $this->simpleRedirect(url: 'educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
         return true;
