@@ -107,7 +107,7 @@ return new class extends clsCadastro
         $dataFim = $this->data_fim ? (new DateTime(datetime: $this->data_fim))->format(format: 'd/m/Y') : null;
 
         $this->inputsHelper()->date(attrName: 'data_fim', inputOptions: [
-            'label' => 'Data de retorno/abandono',
+            'label' => 'Data de encerramento',
             'placeholder' => 'dd/mm/yyyy',
             'required' => false,
             'value' => $dataFim,
