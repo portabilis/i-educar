@@ -14,6 +14,8 @@ class Process
 
     public const SCHEDULE = 59;
 
+    public const REGISTRATION_ACTIONS = 60;
+
     public const MENU_ADDRESSING = 68;
 
     public const MENU_TRANSPORT = 69;
