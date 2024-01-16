@@ -61,11 +61,11 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enrollment-history');
 
     Route::get('registration/{registration}/formative-itinerary', 'EnrollmentFormativeItineraryController@index')
-        ->name('registration.formative-itinerary.index');
+        ->name('registration.formative-itinerary.index')->middleware('can:view:690');
     Route::get('registration/{registration}/formative-itinerary/{enrollment}/edit', 'EnrollmentFormativeItineraryController@edit')
-        ->name('registration.formative-itinerary.edit');
+        ->name('registration.formative-itinerary.edit')->middleware('can:modify:690');
     Route::put('registration/{registration}/formative-itinerary/{enrollment}', 'EnrollmentFormativeItineraryController@update')
-        ->name('registration.formative-itinerary.update');
+        ->name('registration.formative-itinerary.update')->middleware('can:modify:690');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');

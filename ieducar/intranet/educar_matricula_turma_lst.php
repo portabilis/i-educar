@@ -38,6 +38,19 @@ return new class extends clsListagem
 
     public $sequencial;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $user = Auth::user();
+        $allow = Gate::allows('view', 683);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
+    }
+
     public function Gerar()
     {
         $this->titulo = 'Selecione uma turma para enturmar ou remover a enturmação';
