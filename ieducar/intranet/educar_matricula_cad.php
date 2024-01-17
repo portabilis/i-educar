@@ -77,6 +77,20 @@ return new class extends clsCadastro
 
     private $anoUltimaMatricula;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $user = Auth::user();
+        $allow = Gate::allows('view', 680);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
+    }
+
     public function Inicializar()
     {
         $this->ref_cod_turma_copiar_enturmacoes = $this->getQueryString(name: 'ref_cod_turma_copiar_enturmacoes');
