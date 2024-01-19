@@ -13,7 +13,7 @@
 
         <label for="password">Senha:</label>
         <input type="password" name="password" id="password">
-        <i class="fa fa-eye-slash" id="eye" style="cursor: pointer; position: absolute; margin-top: -37px; margin-left: 335px; color: #188ad1" onclick="return showPassword();" aria-hidden="true"></i>
+        <i class="fa fa-eye-slash" id="eye" onclick="return showPassword();" aria-hidden="true"></i>
 
         <button id="form-login-submit" type="submit" class="submit">Entrar</button>
 
@@ -39,6 +39,22 @@
             }
         }
     </script>
+
+    <style>
+        #eye {
+            cursor: pointer;
+            position: absolute;
+            margin-top: -37px;
+            margin-left: 335px;
+            color: #188ad1;
+        }
+        @-moz-document url-prefix() {
+            #eye {
+                margin-top: 17px !important;
+                margin-left: -25px !important;
+            }
+        }
+    </style>
 
     @if (config('legacy.app.recaptcha_v3.public_key') && config('legacy.app.recaptcha_v3.private_key'))
         <script src="https://www.google.com/recaptcha/api.js?render={{config('legacy.app.recaptcha_v3.public_key')}}"></script>
