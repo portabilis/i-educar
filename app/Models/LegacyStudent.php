@@ -85,6 +85,11 @@ class LegacyStudent extends LegacyModel
         );
     }
 
+    public function picture(): HasOne
+    {
+        return $this->hasOne(LegacyIndividualPicture::class, 'idpes', 'ref_idpes');
+    }
+
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
