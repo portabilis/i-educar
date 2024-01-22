@@ -218,17 +218,6 @@ class Registro20 extends AbstractRegistro
         return collect([$record])->toArray();
     }
 
-    private function studentPeriodExists($year, ) {
-        return LegacyEnrollment::query()
-            ->active()
-            ->whereHas('registration', function ($q) use ($year) {
-                $q->active();
-                $q->whereYearEq($year);
-            })
-            ->where('turno_id', clsPmieducarTurma::TURNO_MATUTINO)
-            ->exists();
-    }
-
     private function processData($data)
     {
         $data->localFuncionamento = Portabilis_Utils_Database::pgArrayToArray($data->localFuncionamento);
