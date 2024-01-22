@@ -198,9 +198,12 @@ class Registro20 extends AbstractRegistro
                         1 => 2,
                         2 => 3,
                         3 => 4
-                    };
-                })
-                ->map(function ($periodId) use ($record, $periodsNames) {
+                    };                });
+
+            $hasPeriods = $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
+
+            if ($hasPeriods) {
+                return $studentPeriods->map(function ($periodId) use ($record, $periodsNames) {
                     $newRecord = clone $record;
                     $periodName = $periodsNames[$periodId];
                     if (stripos($record->nomeTurma, $periodName) === false) {
@@ -208,11 +211,7 @@ class Registro20 extends AbstractRegistro
                     }
 
                     return $newRecord;
-                });
-
-            $record->nomeTurma .= ' - ' . $periodsNames[Period::FULLTIME];
-            if ($studentPeriods->isNotEmpty()) {
-                return $studentPeriods->toArray();
+                })->toArray();
             }
         }
 
