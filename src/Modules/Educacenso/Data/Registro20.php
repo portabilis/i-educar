@@ -2,7 +2,10 @@
 
 namespace iEducar\Modules\Educacenso\Data;
 
+use App\Models\LegacyEnrollment;
+use clsPmieducarTurma;
 use iEducar\Modules\Educacenso\Formatters;
+use iEducar\Modules\SchoolClass\Period;
 use Portabilis_Utils_Database;
 
 class Registro20 extends AbstractRegistro
@@ -25,7 +28,10 @@ class Registro20 extends AbstractRegistro
         $models = [];
         foreach ($data as $record) {
             $record = $this->processData($record);
-            $models[] = $this->hydrateModel($record);
+            $recordCopies = $this->copyByPeriod($record);
+            foreach ($recordCopies as $recordCopy) {
+                $models[] = $this->hydrateModel($recordCopy);
+            }
         }
 
         return $models;
@@ -170,6 +176,58 @@ class Registro20 extends AbstractRegistro
         }
 
         return $model;
+    }
+
+    private function copyByPeriod($record)
+    {
+        if ($record->turmaTurnoId === Period::FULLTIME) {
+            $periodsNames = (new Period)->getDescriptiveValues();
+            $studentPeriods = LegacyEnrollment::query()
+                ->active()
+                ->whereHas('registration', function ($q) use ($record) {
+                    $q->active();
+                    $q->whereYearEq($record->anoTurma);
+                })
+                ->whereSchoolClass($record->codTurma)
+                ->pluck('turno_id')
+                ->map(fn ($periodId) => $periodId ?? Period::FULLTIME)
+                ->unique()
+                ->sortBy(function ($periodId) {
+                    return match ($periodId) {
+                        4 => 1,
+                        1 => 2,
+                        2 => 3,
+                        3 => 4
+                    };
+                })
+                ->map(function ($periodId) use ($record, $periodsNames) {
+                    $newRecord = clone $record;
+                    $periodName = $periodsNames[$periodId];
+                    if (stripos($record->nomeTurma, $periodName) === false) {
+                        $newRecord->nomeTurma .= ' - ' . $periodName;
+                    }
+
+                    return $newRecord;
+                });
+
+            $record->nomeTurma .= ' - ' . $periodsNames[Period::FULLTIME];
+            if ($studentPeriods->isNotEmpty()) {
+                return $studentPeriods->toArray();
+            }
+        }
+
+        return collect([$record])->toArray();
+    }
+
+    private function studentPeriodExists($year, ) {
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereHas('registration', function ($q) use ($year) {
+                $q->active();
+                $q->whereYearEq($year);
+            })
+            ->where('turno_id', clsPmieducarTurma::TURNO_MATUTINO)
+            ->exists();
     }
 
     private function processData($data)
