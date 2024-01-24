@@ -49,22 +49,3 @@
     <link type='text/css' rel='stylesheet'
           href='{{ Asset::get("/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css") }}'>
 @endprepend
-
-@prepend('scripts')
-    <script type="text/javascript"
-            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Curso.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/vendor/legacy/DynamicInput/Assets/Javascripts/Matricula.js") }}"></script>
-    <script type='text/javascript'
-            src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js') }}'></script>
-@endprepend
