@@ -13,7 +13,8 @@ use App\Models\NotificationType;
 use App\Models\SchoolClassInep;
 use App\Models\StudentInep;
 use App\Services\NotificationService;
-use Illuminate\Support\Collection;
+use Generator;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class EducacensoImportInepService
@@ -24,12 +25,33 @@ class EducacensoImportInepService
     {
     }
 
-    public static function getDataBySchool(UploadedFile $file): Collection
+    public static function getDataBySchool(UploadedFile $file): Generator
     {
-        return collect((new SplitFileService($file))->getSplitedSchools());
+        $lines = self::readFile($file);
+        $school = [];
+        foreach ($lines as $key => $line) {
+            if (Str::startsWith($line, '00|')) {
+                if (count($school)) {
+                    yield $school;
+                }
+                $school = [];
+            }
+            $school[] = $line;
+        }
+        if (count($school)) {
+            yield $school;
+        }
     }
 
-    public function execute()
+    private static function readFile($file): Generator
+    {
+        $handle = fopen($file, 'r');
+        while (($line = fgets($handle)) !== false) {
+            yield $line;
+        }
+    }
+
+    public function execute(): void
     {
         $schoolData = explode('|', $this->data[0]);
         $this->schoolName = $schoolData[5];
