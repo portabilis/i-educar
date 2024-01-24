@@ -46,6 +46,4 @@
 
 @prepend('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}"/>
-    <link type='text/css' rel='stylesheet'
-          href='{{ Asset::get("/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css") }}'>
 @endprepend
