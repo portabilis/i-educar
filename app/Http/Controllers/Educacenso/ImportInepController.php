@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Educacenso;
 
-use App\Exceptions\Educacenso\ImportException;
-use App\Exceptions\Educacenso\InvalidFileDate;
-use App\Exceptions\Educacenso\InvalidFileYear;
+use App\Exceptions\Educacenso\ImportInepException;
 use App\Exceptions\Educacenso\InvalidSchoolInep;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EducacensoImportInepRequest;
@@ -72,7 +70,7 @@ class ImportInepController extends Controller
             }
         } catch (Exception $exception) {
             return redirect(route('educacenso.import.inep.create'))
-                ->with('error', $exception instanceof ImportException ? $exception->getMessage() : 'Não foi possível realizar a importação!');
+                ->with('error', $exception instanceof ImportInepException ? $exception->getMessage() : 'Não foi possível realizar a importação!');
         }
 
         return redirect()->route('educacenso.import.inep.index')->with('success', "Iniciado o processamento dos INEPs de {$schoolCount} escolas.");
@@ -82,7 +80,7 @@ class ImportInepController extends Controller
     {
         $doesntExist = SchoolInep::query()->where('cod_escola_inep', $inep)->doesntExist();
         if ($doesntExist) {
-            throw new InvalidSchoolInep($inep, $schoolName);
+            throw new ImportInepException("Não foi possível encontrar a escola {$schoolName} com o INEP {$inep}");
         }
     }
 
@@ -95,11 +93,11 @@ class ImportInepController extends Controller
             ]
         ]);
         if ($validator->fails()) {
-            throw new InvalidFileDate();
+            throw new ImportInepException('Ocorreu um erro na validação do ano do arquivo importado!');
         }
         $fileYear = Carbon::createFromFormat('d/m/Y', $fileDate)->year;
         if ($year !== $fileYear) {
-            throw new InvalidFileYear($fileYear, $year);
+            throw new ImportInepException("O ano selecionado foi {$year} mas o arquivo é referente ao ano {$fileYear}");
         }
     }
 
