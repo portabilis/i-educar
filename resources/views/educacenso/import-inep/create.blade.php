@@ -28,7 +28,6 @@
                 </td>
                 <td class="formmdtd" valign="top" style="padding-top: 20px;padding-bottom: 20px">
                    <span class="form">
-                      {{-- <input class="inputfile inputfile-buttom" name="arquivos[]" id="arquivos" type="file" size="40" accept=".txt" multiple required>--}}
                        <input data-multiple-caption="{count} arquivos" class="inputfile inputfile-buttom" name="arquivos[]" id="arquivos" type="file" accept=".txt" multiple required>
                        <label for="arquivos"><span></span> <strong>Escolha um arquivo</strong></label>&nbsp;<br>
                        <span style="font-style: italic; font-size: 10px;">* Somente arquivos com formato txt serão aceitos</span>
