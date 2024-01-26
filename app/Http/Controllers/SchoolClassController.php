@@ -40,7 +40,7 @@ class SchoolClassController extends Controller
         $codigoInepEducacenso = $request->get('codigo_inep_educacenso');
         $codigoInepEducacensoMatutino = $request->get('codigo_inep_educacenso_matutino');
         $codigoInepEducacensoVespertino = $request->get('codigo_inep_educacenso_vespertino');
-        \Log::error($codigoInepEducacensoMatutino);;
+
         $codTurmaRequest = $request->get('cod_turma');
         $originalMultiGradesInfo = $this->findOriginalMultiGradesInfo($codTurmaRequest);
         $originalGrade = $this->findOriginalGrade($codTurmaRequest);
