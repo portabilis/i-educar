@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\SchoolClassInep;
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -1167,15 +1168,13 @@ class clsPmieducarTurma extends Model
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
     }
 
-    public function getInep()
+    public function getInep($turnoId = null)
     {
         if ($this->cod_turma) {
-            $sql = 'SELECT cod_turma_inep
-                  FROM modules.educacenso_cod_turma
-                 WHERE cod_turma = $1';
-            $params = ['params' => $this->cod_turma, 'return_only' => 'first-field'];
-
-            return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+            return SchoolClassInep::query()
+                ->where('cod_turma', $this->cod_turma)
+                ->when($turnoId, fn ($q) => $q->where('turno_id', $turnoId))
+                ->value('cod_turma_inep');
         }
     }
 }
