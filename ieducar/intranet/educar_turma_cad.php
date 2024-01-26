@@ -7,6 +7,7 @@ use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
+use iEducar\Modules\SchoolClass\Period;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro
@@ -193,12 +194,12 @@ return new class extends clsCadastro
                 $this->codigo_inep_educacenso = $inep;
             }
 
-            $inepMatutino = $obj_turma->getInep(turnoId: 1);
+            $inepMatutino = $obj_turma->getInep(turnoId: Period::MORNING);
             if ($inepMatutino) {
                 $this->codigo_inep_educacenso_matutino = $inepMatutino;
             }
 
-            $inepVespertino = $obj_turma->getInep(turnoId: 2);
+            $inepVespertino = $obj_turma->getInep(turnoId: Period::AFTERNOON);
             if ($inepVespertino) {
                 $this->codigo_inep_educacenso_vespertino = $inepVespertino;
             }
