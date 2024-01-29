@@ -20,6 +20,7 @@ class SchoolClassInep extends Model
         'fonte',
         'created_at',
         'updated_at',
+        'turno_id'
     ];
 
     protected function number(): Attribute
