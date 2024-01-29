@@ -83,9 +83,6 @@ class Registro50Import implements RegistroImportInterface
         return $registro;
     }
 
-    /**
-     * @return LegacySchoolClass
-     */
     protected function getSchoolClass(): ?LegacySchoolClass
     {
         if (empty($this->model->inepTurma)) {

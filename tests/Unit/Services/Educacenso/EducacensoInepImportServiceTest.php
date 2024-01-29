@@ -30,11 +30,17 @@ class EducacensoInepImportServiceTest extends TestCase
     use DatabaseTransactions;
 
     private EducacensoInepImport $import;
+
     private Generator $schoolsData;
+
     private LegacySchoolClass $schoolClass;
+
     private Employee $employee1;
+
     private Employee $employee2;
+
     private Employee $employee3;
+
     private LegacyStudent $student;
 
     public function setUp(): void
@@ -83,31 +89,31 @@ class EducacensoInepImportServiceTest extends TestCase
     public function testInepImportService(): void
     {
         $this->assertDatabaseMissing(SchoolClassInep::class, [
-            'cod_turma' => $this->schoolClass->getKey()
+            'cod_turma' => $this->schoolClass->getKey(),
         ]);
         $this->assertDatabaseMissing(EmployeeInep::class, [
-            'cod_servidor' => $this->employee1->getKey()
+            'cod_servidor' => $this->employee1->getKey(),
         ]);
         $this->assertDatabaseMissing(EmployeeInep::class, [
-            'cod_servidor' => $this->employee2->getKey()
+            'cod_servidor' => $this->employee2->getKey(),
         ]);
         $this->assertDatabaseMissing(EmployeeInep::class, [
-            'cod_servidor' => $this->employee3->getKey()
+            'cod_servidor' => $this->employee3->getKey(),
         ]);
         $this->assertDatabaseMissing(StudentInep::class, [
-            'cod_aluno' => $this->student->getKey()
+            'cod_aluno' => $this->student->getKey(),
         ]);
         //turma não cadastrada
         $this->assertDatabaseMissing(SchoolClassInep::class, [
-            'cod_turma' => 2
+            'cod_turma' => 2,
         ]);
         //servidor não cadastrado
         $this->assertDatabaseMissing(EmployeeInep::class, [
-            'cod_servidor' => 4
+            'cod_servidor' => 4,
         ]);
         //aluno não cadastrado
         $this->assertDatabaseMissing(StudentInep::class, [
-            'cod_aluno' => 2
+            'cod_aluno' => 2,
         ]);
         Queue::fake();
         Queue::assertNothingPushed();
@@ -120,35 +126,35 @@ class EducacensoInepImportServiceTest extends TestCase
         Queue::assertPushed(EducacensoInepImportJob::class, 2);
         $this->assertDatabaseHas(SchoolClassInep::class, [
             'cod_turma' => $this->schoolClass->getKey(),
-            'cod_turma_inep' => 1
+            'cod_turma_inep' => 1,
         ]);
         $this->assertDatabaseHas(EmployeeInep::class, [
             'cod_servidor' => $this->employee1->getKey(),
-            'cod_docente_inep' => 3
+            'cod_docente_inep' => 3,
         ]);
         $this->assertDatabaseHas(EmployeeInep::class, [
             'cod_servidor' => $this->employee2->getKey(),
-            'cod_docente_inep' => 4
+            'cod_docente_inep' => 4,
         ]);
         $this->assertDatabaseHas(EmployeeInep::class, [
             'cod_servidor' => $this->employee3->getKey(),
-            'cod_docente_inep' => 5
+            'cod_docente_inep' => 5,
         ]);
         $this->assertDatabaseHas(StudentInep::class, [
             'cod_aluno' => $this->student->getKey(),
-            'cod_aluno_inep' => 7
+            'cod_aluno_inep' => 7,
         ]);
         //turma não cadastrada
         $this->assertDatabaseMissing(SchoolClassInep::class, [
-            'cod_turma' => 2
+            'cod_turma' => 2,
         ]);
         //servidor não cadastrado
         $this->assertDatabaseMissing(EmployeeInep::class, [
-            'cod_servidor' => 4
+            'cod_servidor' => 4,
         ]);
         //aluno não cadastrado
         $this->assertDatabaseMissing(StudentInep::class, [
-            'cod_aluno' => 2
+            'cod_aluno' => 2,
         ]);
     }
 }

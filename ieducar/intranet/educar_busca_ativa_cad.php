@@ -233,7 +233,6 @@ return new class extends clsCadastro
         $activeLookingService = new ActiveLookingService();
         $legacyActiveLooking = $this->buildObjectBeforeStore();
 
-
         try {
             DB::beginTransaction();
             $files = $legacyActiveLooking->files->pluck('id');

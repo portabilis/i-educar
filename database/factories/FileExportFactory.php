@@ -24,7 +24,7 @@ class FileExportFactory extends Factory
             'user_id' => fn () => LegacyUserFactory::new()->current(),
             'url' => $this->faker->url() . '/image.jpg',
             'filename' => 'Alunos_' . Carbon::now()->format('Y-m-d_H:i'),
-            'size' => $this->faker->randomNumber(5)
+            'size' => $this->faker->randomNumber(5),
         ];
     }
 }

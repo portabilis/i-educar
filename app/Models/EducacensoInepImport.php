@@ -12,7 +12,7 @@ class EducacensoInepImport extends Model
         'year',
         'school_name',
         'user_id',
-        'status_id'
+        'status_id',
     ];
 
     protected static function boot()

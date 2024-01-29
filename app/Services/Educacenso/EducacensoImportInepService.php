@@ -2,7 +2,6 @@
 
 namespace App\Services\Educacenso;
 
-use App\Imports\EducacensoImport;
 use App\Models\EducacensoInepImport;
 use App\Models\Employee;
 use App\Models\EmployeeInep;
@@ -125,7 +124,7 @@ class EducacensoImportInepService
     public function failed(): void
     {
         $this->educacensoInepImport->update([
-            'status_id' => EducacensoImportStatus::ERROR
+            'status_id' => EducacensoImportStatus::ERROR,
         ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Enums;
+
 enum EducacensoImportStatus: int
 {
     case WAITING = 1;

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Educacenso;
 
 use App\Exceptions\Educacenso\ImportInepException;
-use App\Exceptions\Educacenso\InvalidSchoolInep;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EducacensoImportInepRequest;
 use App\Jobs\EducacensoInepImportJob;
@@ -18,7 +17,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ImportInepController extends Controller
 {
-
     public function index()
     {
         $this->breadcrumb('Importação INEPs', [
@@ -30,7 +28,7 @@ class ImportInepController extends Controller
             ->paginate();
 
         return view('educacenso.import-inep.index', [
-            'imports' => $imports
+            'imports' => $imports,
         ]);
     }
 
@@ -54,13 +52,13 @@ class ImportInepController extends Controller
                     $educacensoInepImport = EducacensoInepImport::create([
                         'year' => $year,
                         'user_id' => $request->user()->getKey(),
-                        'school_name' => $schoolName
+                        'school_name' => $schoolName,
                     ]);
                     array_walk_recursive($schoolData, static fn (&$item) => $item = mb_convert_encoding($item, 'HTML-ENTITIES', 'UTF-8'));
                     $schoolCount++;
                     $jobs[] = [
                         $educacensoInepImport,
-                        $schoolData
+                        $schoolData,
                     ];
                 }
             }
@@ -89,8 +87,8 @@ class ImportInepController extends Controller
         $validator = Validator::make(['year' => $fileDate], [
             'year' => [
                 'required',
-                'date_format:d/m/Y'
-            ]
+                'date_format:d/m/Y',
+            ],
         ]);
         if ($validator->fails()) {
             throw new ImportInepException('Ocorreu um erro na validação do ano do arquivo importado!');

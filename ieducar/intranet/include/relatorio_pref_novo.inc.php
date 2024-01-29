@@ -154,7 +154,7 @@ class relatoriosPref
             } else {
                 $this->qtd_pagina = 0;
             }
-            //  }
+        //  }
         } elseif ($lembretes == false) {
             // altera a altura atual (de acordo com a altura passa)
             $this->altura += $altura + $extra_hor_spaco_antes;
