@@ -816,23 +816,21 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int $codEscola
      * @return array
-     *
      */
     public static function getMatriculas($codTurma = null)
     {
         return LegacyRegistration::query()
             ->with([
                 'student:cod_aluno,ref_idpes',
-                'student.person:idpes,nome'
+                'student.person:idpes,nome',
             ])
             ->active()
             ->whereSchoolClass($codTurma)
             ->get([
                 'cod_matricula',
-                'ref_cod_aluno'
+                'ref_cod_aluno',
             ])->pluck('name', 'cod_matricula');
     }
-
 
     /**
      * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados

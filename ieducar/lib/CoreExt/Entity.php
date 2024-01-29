@@ -181,8 +181,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             // consideração as referências, salvando-as ou atualizando-as.
             elseif ($val instanceof CoreExt_Entity && isset($val->id)) {
                 $this->_references[$key]['value'] = $this->_getValue($key, $val->id);
-                // Não retorna, queremos aproveitar a instância para não mais carregá-la
-                // em __get().
+            // Não retorna, queremos aproveitar a instância para não mais carregá-la
+            // em __get().
             }
 
             // Aqui, identificamos que o atributo não se encaixa em nenhum dos itens

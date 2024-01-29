@@ -54,9 +54,6 @@ class State extends Model
         return static::query()->orderBy('name')->pluck('name', 'abbreviation');
     }
 
-    /**
-     * @param string $abbreviation
-     */
     public static function getNameByAbbreviation(?string $abbreviation): string
     {
         if ($abbreviation === null) {
