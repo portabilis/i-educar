@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\EducacensoImportRegistrationDate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EducacensoImportInepRequest extends FormRequest
@@ -35,7 +34,7 @@ class EducacensoImportInepRequest extends FormRequest
     public function messages()
     {
         return [
-            'ano.required' => 'Você precisa informar o ano'
+            'ano.required' => 'Você precisa informar o ano',
         ];
     }
 }

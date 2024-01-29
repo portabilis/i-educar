@@ -22,7 +22,7 @@ class EducacensoInepImportFactory extends Factory
         return [
             'year' => now()->year,
             'school_name' => $this->faker->name,
-            'user_id' => fn () => LegacyUserFactory::new()->current()
+            'user_id' => fn () => LegacyUserFactory::new()->current(),
         ];
     }
 }

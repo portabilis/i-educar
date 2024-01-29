@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Enums;
+
 enum FileExportStatus: int
 {
     case WAITING = 1;

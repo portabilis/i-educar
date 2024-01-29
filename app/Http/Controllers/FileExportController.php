@@ -37,7 +37,7 @@ class FileExportController extends Controller
                 schoolId: $request->get('ref_cod_escola'),
                 schoolClassId: $request->get('ref_cod_turma'),
                 registrationId: $request->get('matricula')
-            )
+            ),
         ]);
 
         FileExporterJob::dispatch(
@@ -71,12 +71,12 @@ class FileExportController extends Controller
         return preg_replace('/[^\w\s]/u', '', $string);
     }
 
-    private function buildFileName(int $schoolId, int $schoolClassId, int|null $registrationId): string
+    private function buildFileName(int $schoolId, int $schoolClassId, ?int $registrationId): string
     {
         if ($registrationId) {
             $registration = LegacyRegistration::query()->find($registrationId, [
                 'cod_matricula',
-                'ref_cod_aluno'
+                'ref_cod_aluno',
             ]);
 
             return mb_strtoupper($this->removeSpecialCharacters($registration->name)) . " ({$registration->ref_cod_aluno})";
@@ -84,17 +84,17 @@ class FileExportController extends Controller
 
         $school = LegacySchool::query()->with([
             'person:idpes,nome',
-            'organization:idpes,fantasia'
+            'organization:idpes,fantasia',
         ])->find($schoolId, [
             'cod_escola',
-            'ref_idpes'
+            'ref_idpes',
         ]);
 
         $schoolClass = LegacySchoolClass::query()
             ->whereKey($schoolClassId)
             ->first([
                 'nm_turma',
-                'ano'
+                'ano',
             ]);
 
         $schoolName = mb_strtoupper($this->removeSpecialCharacters($school->name));

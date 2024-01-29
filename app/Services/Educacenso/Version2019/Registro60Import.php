@@ -75,9 +75,6 @@ class Registro60Import implements RegistroImportInterface
         $this->getOrCreateEnrollment($schoolClass, $registration);
     }
 
-    /**
-     * @return LegacySchoolClass
-     */
     protected function getSchoolClass(): ?LegacySchoolClass
     {
         if (empty($this->model->inepTurma)) {

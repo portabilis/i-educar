@@ -58,9 +58,9 @@ class FileExportServiceTest extends TestCase
             'url_documento' => json_encode([
                 [
                     'data' => now()->format('d/m/Y'),
-                    'url' => url(Storage::disk('local')->url('student.jpg'))
-                ]
-            ])
+                    'url' => url(Storage::disk('local')->url('student.jpg')),
+                ],
+            ]),
         ]);
         $course = LegacyCourseFactory::new()->create([
             'ref_cod_instituicao' => $institution->id,
@@ -102,7 +102,7 @@ class FileExportServiceTest extends TestCase
             'school' => $school->getKey(),
             'course' => $course->getKey(),
             'grade' => $grade->getKey(),
-            'schoolClass' => $schoolClass->getKey()
+            'schoolClass' => $schoolClass->getKey(),
         ];
     }
 
