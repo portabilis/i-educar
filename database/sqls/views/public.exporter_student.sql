@@ -1,4 +1,4 @@
-create or replace view public.exporter_student as
+create view public.exporter_student as
 SELECT p.id,
        p.name,
        p.social_name,
