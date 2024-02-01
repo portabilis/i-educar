@@ -7,7 +7,6 @@ use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
-use iEducar\Modules\SchoolClass\Period;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro
@@ -83,10 +82,6 @@ return new class extends clsCadastro
     public $ref_cod_disciplina_dispensada;
 
     public $codigo_inep_educacenso;
-
-    public $codigo_inep_educacenso_matutino;
-
-    public $codigo_inep_educacenso_vespertino;
 
     public $estrutura_curricular;
 
@@ -192,16 +187,6 @@ return new class extends clsCadastro
 
             if ($inep) {
                 $this->codigo_inep_educacenso = $inep;
-            }
-
-            $inepMatutino = $obj_turma->getInep(turnoId: Period::MORNING);
-            if ($inepMatutino) {
-                $this->codigo_inep_educacenso_matutino = $inepMatutino;
-            }
-
-            $inepVespertino = $obj_turma->getInep(turnoId: Period::AFTERNOON);
-            if ($inepVespertino) {
-                $this->codigo_inep_educacenso_vespertino = $inepVespertino;
             }
 
             if ($registro) {
@@ -544,22 +529,6 @@ return new class extends clsCadastro
             'required' => false,
             'max_length' => 14,
             'value' => $this->codigo_inep_educacenso]);
-
-        $this->inputsHelper()->integer(attrName: 'codigo_inep_educacenso_matutino',
-            inputOptions:['label' => 'Código INEP do turno matutino <i title="Obrigatório para o Censo Escolar quando a turma for integral e houver matrículas no turno matutino" class="fa fa-info-circle"></i>',
-            'label_hint' => 'Somente números',
-            'placeholder' => 'INEP',
-            'required' => false,
-            'max_length' => 14,
-            'value' => $this->codigo_inep_educacenso_matutino]);
-
-        $this->inputsHelper()->integer(attrName: 'codigo_inep_educacenso_vespertino',
-            inputOptions:['label' => 'Código INEP do turno vespertino <i title="Obrigatório para o Censo Escolar quando a turma for integral e houver matrículas no turno vespertino" class="fa fa-info-circle"></i>',
-            'label_hint' => 'Somente números',
-            'placeholder' => 'INEP',
-            'required' => false,
-            'max_length' => 14,
-            'value' => $this->codigo_inep_educacenso_vespertino]);
 
         $resources = [null => 'Selecione',
             0 => 'Escolarização',

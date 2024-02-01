@@ -9,22 +9,18 @@ class SchoolClassInepService
     /**
      * @return SchoolClassInep
      */
-    public function store($codTurma, $codigoInepEducacenso, $turnoId = null)
+    public function store($codTurma, $codigoInepEducacenso)
     {
         return SchoolClassInep::updateOrCreate([
             'cod_turma' => $codTurma,
-            'turno_id' => $turnoId
         ], [
             'cod_turma_inep' => $codigoInepEducacenso,
         ]);
     }
 
-    public function delete($codTurma, $turnoId = null)
+    public function delete($codTurma)
     {
-        $schoolClassInep = SchoolClassInep::query()
-            ->where('turno_id', $turnoId)
-            ->find($codTurma);
-
+        $schoolClassInep = SchoolClassInep::find($codTurma);
         if ($schoolClassInep instanceof SchoolClassInep) {
             $schoolClassInep->delete();
         }
