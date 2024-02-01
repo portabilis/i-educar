@@ -2,9 +2,7 @@
 
 namespace iEducar\Modules\Educacenso\Data;
 
-use App\Models\LegacyEnrollment;
 use iEducar\Modules\Educacenso\Formatters;
-use iEducar\Modules\SchoolClass\Period;
 use Portabilis_Utils_Database;
 
 class Registro20 extends AbstractRegistro
@@ -27,10 +25,7 @@ class Registro20 extends AbstractRegistro
         $models = [];
         foreach ($data as $record) {
             $record = $this->processData($record);
-            $recordCopies = $this->copyByPeriod($record);
-            foreach ($recordCopies as $recordCopy) {
-                $models[] = $this->hydrateModel($recordCopy);
-            }
+            $models[] = $this->hydrateModel($record);
         }
 
         return $models;
@@ -175,47 +170,6 @@ class Registro20 extends AbstractRegistro
         }
 
         return $model;
-    }
-
-    private function copyByPeriod($record)
-    {
-        if ($record->turmaTurnoId !== Period::FULLTIME) {
-            return [$record];
-        }
-
-        $periodsNames = (new Period)->getDescriptiveValues();
-        $studentPeriods = LegacyEnrollment::query()
-            ->active()
-            ->whereHas('registration', function ($q) use ($record) {
-                $q->active();
-                $q->whereYearEq($record->anoTurma);
-            })
-            ->whereSchoolClass($record->codTurma)
-            ->pluck('turno_id')
-            ->map(fn ($periodId) => $periodId ?? Period::FULLTIME)
-            ->unique()
-            ->sortBy(function ($periodId) {
-                return match ($periodId) {
-                    4 => 1,
-                    1 => 2,
-                    2 => 3,
-                    3 => 4
-                };
-            });
-        $hasPeriods = $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
-        if ($hasPeriods) {
-            return $studentPeriods->map(function ($periodId) use ($record, $periodsNames) {
-                $newRecord = clone $record;
-                $periodName = $periodsNames[$periodId];
-                if (stripos($record->nomeTurma, $periodName) === false) {
-                    $newRecord->nomeTurma .= ' - ' . $periodName;
-                }
-
-                return $newRecord;
-            })->toArray();
-        }
-
-        return [$record];
     }
 
     private function processData($data)

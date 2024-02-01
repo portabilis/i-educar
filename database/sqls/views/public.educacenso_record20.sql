@@ -18,9 +18,7 @@ SELECT
     turma.estrutura_curricular AS "estruturaCurricular",
     turma.formas_organizacao_turma AS "formasOrganizacaoTurma",
     turma.unidade_curricular AS "unidadesCurriculares",
-    turma.classe_com_lingua_brasileira_sinais AS "classeComLinguaBrasileiraSinais",
-    turma.outras_unidades_curriculares_obrigatorias AS "outrasUnidadesCurricularesObrigatorias",
-    turma.turma_turno_id AS "turmaTurnoId",
+
     (
       SELECT
         array_agg(unidade_curricular) AS unidades_curriculares
