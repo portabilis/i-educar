@@ -1,4 +1,4 @@
-create view public.exporter_student as
+create or replace view public.exporter_student as
 SELECT p.id,
        p.name,
        p.social_name,
@@ -23,8 +23,8 @@ SELECT p.id,
        t.nm_turma AS school_class,
        s.nm_serie AS grade,
        c.nm_curso AS course,
-       m.data_matricula AS registration_date,
-       COALESCE(m.data_cancel, mt.data_exclusao) AS registration_out,
+       m.data_matricula::date AS registration_date,
+       COALESCE(m.data_cancel::date, mt.data_exclusao::date) AS registration_out,
        m.data_saida_escola::date AS registration_school_out,
        m.ano AS year,
     vs.cod_situacao AS status,
@@ -48,7 +48,7 @@ SELECT p.id,
         WHEN 1 THEN 'EAD'::varchar
         WHEN 2 THEN 'Off-line'::varchar
         ELSE 'Presencial'::varchar
-END AS modalidade_ensino,
+    END AS modalidade_ensino,
     me.cod_aluno_inep AS inep_id
 FROM exporter_person p
  JOIN pmieducar.aluno a ON p.id = a.ref_idpes::numeric
