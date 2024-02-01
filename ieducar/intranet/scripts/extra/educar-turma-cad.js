@@ -413,13 +413,3 @@ function doAjax() {
       buttonUtils.reset('btn_enviar', 'Salvar');
     });
 }
-
-$j('#turma_turno_id').change(function () {
-  if (this.value === '4') {
-    $j('#tr_codigo_inep_educacenso').find('td:first-child > span').html('Código INEP do turno integral <i title="Obrigatório para o Censo Escolar quando a turma for integral e houver matrículas no turno integral" class="fa fa-info-circle"></i>');
-    $j('#tr_codigo_inep_educacenso_matutino, #tr_codigo_inep_educacenso_vespertino').find('td').show();
-  } else {
-    $j('#tr_codigo_inep_educacenso').find('td:first-child > span').html('Código INEP');
-    $j('#tr_codigo_inep_educacenso_matutino, #tr_codigo_inep_educacenso_vespertino').find('td').hide();
-  }
-}).trigger('change');
