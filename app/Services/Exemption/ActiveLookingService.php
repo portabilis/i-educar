@@ -20,6 +20,8 @@ class ActiveLookingService
         )->validate();
 
         $activeLooking->save();
+
+        return $activeLooking;
     }
 
     public function delete(LegacyActiveLooking $activeLooking)

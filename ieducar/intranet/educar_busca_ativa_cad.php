@@ -4,6 +4,8 @@ use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
 use App\Process;
 use App\Services\Exemption\ActiveLookingService;
+use App\Services\FileService;
+use App\Services\UrlPresigner;
 use iEducar\Modules\School\Model\ActiveLooking;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Carbon;
@@ -92,6 +94,8 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
+        $this->form_enctype = ' enctype=\'multipart/form-data\'';
+
         // primary keys
         $this->campoOculto(nome: 'ref_cod_matricula', valor: $this->ref_cod_matricula);
 
@@ -107,7 +111,7 @@ return new class extends clsCadastro
         $dataFim = $this->data_fim ? (new DateTime(datetime: $this->data_fim))->format(format: 'd/m/Y') : null;
 
         $this->inputsHelper()->date(attrName: 'data_fim', inputOptions: [
-            'label' => 'Data de retorno/abandono',
+            'label' => 'Data de encerramento',
             'placeholder' => 'dd/mm/yyyy',
             'required' => false,
             'value' => $dataFim,
@@ -134,6 +138,15 @@ return new class extends clsCadastro
         ];
         $this->inputsHelper()->textArea(attrName: 'observacoes', inputOptions: $textAreaSettings);
 
+        if (empty($this->id)) {
+            $this->id = null;
+        }
+
+        $fileService = new FileService(new UrlPresigner());
+        $files = $fileService->getFiles(LegacyActiveLooking::find($this->id));
+
+        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+
         $this->url_cancelar = 'educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -154,7 +167,28 @@ return new class extends clsCadastro
 
         try {
             DB::beginTransaction();
-            $activeLookingService->store(activeLooking: $legacyActiveLooking, registration: $legacyRegistration);
+            $activeLooking = $activeLookingService->store(activeLooking: $legacyActiveLooking, registration: $legacyRegistration);
+
+            $fileService = new FileService(new UrlPresigner());
+            if ($this->file_url) {
+                $newFiles = json_decode($this->file_url);
+                foreach ($newFiles as $file) {
+                    $fileService->saveFile(
+                        $file->url,
+                        $file->size,
+                        $file->originalName,
+                        $file->extension,
+                        LegacyActiveLooking::class,
+                        $activeLooking->getKey()
+                    );
+                }
+            }
+
+            if ($this->file_url_deleted) {
+                $deletedFiles = explode(',', $this->file_url_deleted);
+                $fileService->deleteFiles($deletedFiles);
+            }
+
             DB::commit();
         } catch (ValidationException $e) {
             $this->mensagem = $e->validator->errors()->first();
@@ -171,6 +205,12 @@ return new class extends clsCadastro
 
         if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT) {
             $this->simpleRedirect(url: 'educar_abandono_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
+
+            return true;
+        }
+
+        if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_TRANSFER_RESULT) {
+            $this->simpleRedirect(url: 'educar_transferencia_solicitacao_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
 
             return true;
         }
@@ -195,7 +235,14 @@ return new class extends clsCadastro
 
         try {
             DB::beginTransaction();
+            $files = $legacyActiveLooking->files->pluck('id');
+
             $activeLookingService->delete(activeLooking: $legacyActiveLooking);
+            if ($files->isNotEmpty()) {
+                $fileService = new FileService(new UrlPresigner());
+                $fileService->deleteFiles($files);
+            }
+
             DB::commit();
         } catch (Exception) {
             DB::rollBack();

@@ -3,6 +3,7 @@
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
@@ -808,6 +809,27 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $matricula;
+    }
+
+    /**
+     * Retorna um array populado com as matrículas de uma turma.
+     *
+     * @param int $codEscola
+     * @return array
+     */
+    public static function getMatriculas($codTurma = null)
+    {
+        return LegacyRegistration::query()
+            ->with([
+                'student:cod_aluno,ref_idpes',
+                'student.person:idpes,nome',
+            ])
+            ->active()
+            ->whereSchoolClass($codTurma)
+            ->get([
+                'cod_matricula',
+                'ref_cod_aluno',
+            ])->pluck('name', 'cod_matricula');
     }
 
     /**

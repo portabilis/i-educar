@@ -226,6 +226,7 @@ class EnrollmentTest extends ViewTestCase
                 'school_class_id' => 'ID Turma',
                 'grade_id' => 'ID Série',
                 'course_id' => 'ID Curso',
+                'inep_id' => 'Código INEP (Aluno)',
             ],
             'Aluno' => [
                 'name' => 'Nome',
@@ -254,6 +255,7 @@ class EnrollmentTest extends ViewTestCase
                 'course' => 'Curso',
                 'registration_date' => 'Data da Matrícula',
                 'registration_out' => 'Data de saída da matrícula',
+                'registration_school_out' => 'Data de saída da Escola',
                 'year' => 'Ano',
                 'status_text' => 'Situação da Matrícula',
                 'period' => 'Turno',

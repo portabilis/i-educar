@@ -20,8 +20,6 @@ class BatchEnrollmentController extends Controller
     /**
      * Renderiza a view da desenturmação em lote.
      *
-     * @param MessageBag        $fails
-     * @param MessageBag        $success
      * @return View
      */
     public function viewCancelEnrollments(
@@ -49,8 +47,6 @@ class BatchEnrollmentController extends Controller
     /**
      * Renderiza a view da enturmação em lote.
      *
-     * @param MessageBag        $fails
-     * @param MessageBag        $success
      * @return View
      */
     public function viewEnroll(
@@ -171,8 +167,6 @@ class BatchEnrollmentController extends Controller
     }
 
     /**
-     * @param MessageBag $fail
-     * @param MessageBag $success
      * @return void
      */
     protected function setMessages(

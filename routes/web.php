@@ -119,6 +119,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
+
+        Route::get('importacao/inep/create', 'ImportInepController@create')->name('educacenso.import.inep.create')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
+        Route::post('importacao/inep', 'ImportInepController@store')->name('educacenso.import.inep.store')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
+        Route::get('importacao/inep', 'ImportInepController@index')->name('educacenso.import.inep.index')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
     });
 
     Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');
@@ -141,6 +145,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/exportacoes', 'ExportController@index')->middleware('can:view:' . Process::DATA_EXPORT)->name('export.index');
     Route::get('/exportacoes/novo', [ExportController::class, 'form'])->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
+
+    Route::get('/arquivo/exportacoes', 'FileExportController@index')->middleware('can:view:' . Process::DOCUMENT_EXPORT)->name('file.export.index');
+    Route::get('/arquivo/exportacoes/novo', 'FileExportController@create')->middleware('can:modify:' . Process::DOCUMENT_EXPORT)->name('file.export.create');
+    Route::post('/arquivo/exportacoes/novo', 'FileExportController@store')->middleware('can:modify:' . Process::DOCUMENT_EXPORT)->name('file.export.store');
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.update-date');
