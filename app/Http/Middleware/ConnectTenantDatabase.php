@@ -28,6 +28,8 @@ class ConnectTenantDatabase
 
         if (isset($connections[$tenant])) {
             DB::setDefaultConnection($tenant);
+        } else {
+            abort(404);
         }
 
         return $next($request);
