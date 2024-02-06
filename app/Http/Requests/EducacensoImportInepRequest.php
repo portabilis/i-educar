@@ -19,7 +19,7 @@ class EducacensoImportInepRequest extends FormRequest
                 'date_format:Y',
             ],
             'arquivos' => ['required',  'array', 'max:500'],
-            'arquivos.*' => ['required', 'file', 'max:5000', 'mimes:txt'],
+            'arquivos.*' => ['required', 'file', 'max:20000', 'mimes:txt'],
         ];
     }
 
