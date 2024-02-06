@@ -38,10 +38,21 @@
         </table>
 
         <div style="text-align: center">
-            <button class="btn-green" type="submit">Importar Ineps</button>
+            <button id="importButton" class="btn-green" type="submit">Importar Ineps</button>
         </div>
     </form>
 @endsection
+
+@prepend('scripts')
+    <script>
+        $j(document).ready(function () {
+            $j('#importButton').click(function (e) {
+                $j(this).prop('disabled', true);
+            });
+        });
+    </script>
+@endprepend
+
 
 @prepend('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}"/>
