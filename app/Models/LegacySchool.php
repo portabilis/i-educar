@@ -89,6 +89,9 @@ class LegacySchool extends LegacyModel
         'cargo_gestor',
         'nao_ha_funcionarios_para_funcoes',
         'formas_contratacao_parceria_escola_secretaria_municipal',
+        'formas_contratacao_parceria_escola_secretaria_estadual',
+        'poder_publico_parceria_convenio',
+        'qtd_tradutor_interprete_libras_outro_ambiente',
     ];
 
     protected function id(): Attribute
