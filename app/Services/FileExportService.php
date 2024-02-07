@@ -254,7 +254,7 @@ class FileExportService
             'curso' => $registration->ref_cod_curso,
             'serie' => $registration->ref_ref_cod_serie,
             'turma' => $registration->lastEnrollment->ref_cod_turma,
-            'situacao' => 9,
+            'situacao' => 10,
             'matricula' => $registration->getKey(),
             'database' => $this->connection,
             'termo_declaracao' => config('legacy.report.ficha_do_aluno.termo_declaracao'),
