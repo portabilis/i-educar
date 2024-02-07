@@ -59,6 +59,7 @@
         "nunomaduro/collision": "^7.0",
         "pestphp/pest": "^2.33",
         "spatie/laravel-ignition": "^2.0",
+        "symfony/yaml": "^6.2",
         "uderline/openapi-php-attributes": "^1.5"
     },
     "autoload": {
