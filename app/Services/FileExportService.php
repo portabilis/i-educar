@@ -8,6 +8,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use App\Models\NotificationType;
 use Exception;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use iEducar\Reports\Contracts\StudentRecordReport;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -254,7 +255,7 @@ class FileExportService
             'curso' => $registration->ref_cod_curso,
             'serie' => $registration->ref_ref_cod_serie,
             'turma' => $registration->lastEnrollment->ref_cod_turma,
-            'situacao' => 10,
+            'situacao' => EnrollmentStatusFilter::ALL,
             'matricula' => $registration->getKey(),
             'database' => $this->connection,
             'termo_declaracao' => config('legacy.report.ficha_do_aluno.termo_declaracao'),
