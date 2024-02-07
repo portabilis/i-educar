@@ -301,6 +301,7 @@ class EnrollmentTest extends ViewTestCase
                 'mother.organization' => 'Empresa da mãe',
                 'mother.monthly_income' => 'Renda Mensal da mãe',
                 'mother.gender' => 'Gênero da mãe',
+                'mother.phone' => 'Telefones da mãe',
             ],
             'Pai' => [
                 'father.id' => 'ID do pai',
@@ -318,6 +319,7 @@ class EnrollmentTest extends ViewTestCase
                 'father.organization' => 'Empresa do pai',
                 'father.monthly_income' => 'Renda Mensal do pai',
                 'father.gender' => 'Gênero do pai',
+                'father.phone' => 'Telefones do pai',
             ],
             'Responsável' => [
                 'guardian.id' => 'ID do responsável',
@@ -335,6 +337,7 @@ class EnrollmentTest extends ViewTestCase
                 'guardian.organization' => 'Empresa do responsável',
                 'guardian.monthly_income' => 'Renda Mensal do responsável',
                 'guardian.gender' => 'Gênero do responsável',
+                'guardian.phone' => 'Telefones do responsável',
             ],
         ];
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
@@ -364,6 +367,9 @@ class EnrollmentTest extends ViewTestCase
                 'rg_issue_date' => 'md.data_exp_rg as RG (Data Emissão) da mãe',
                 'rg_state_abbreviation' => 'md.sigla_uf_exp_rg as RG (Estado) da mãe',
             ],
+            'mother.phone' => [
+                'phone' => 'mep.phones as Telefones da mãe',
+            ],
             'father.person' => [
                 'id' => 'f.idpes as ID do pai',
                 'name' => 'f.nome as Nome do pai',
@@ -385,6 +391,9 @@ class EnrollmentTest extends ViewTestCase
                 'rg_issue_date' => 'fd.data_exp_rg as RG (Data Emissão) do pai',
                 'rg_state_abbreviation' => 'fd.sigla_uf_exp_rg as RG (Estado) do pai',
             ],
+            'father.phone' => [
+                'phone' => 'fep.phones as Telefones do pai',
+            ],
             'guardian.person' => [
                 'id' => 'g.idpes as ID do responsável',
                 'name' => 'g.nome as Nome do responsável',
@@ -405,6 +414,9 @@ class EnrollmentTest extends ViewTestCase
                 'rg' => 'gd.rg as RG do responsável',
                 'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
                 'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável',
+            ],
+            'guardian.phone' => [
+                'phone' => 'gep.phones as Telefones do responsável',
             ],
             'place' => [
                 'address' => 'p.address as Logradouro',

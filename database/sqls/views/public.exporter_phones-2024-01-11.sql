@@ -1,4 +1,4 @@
-create view public.exporter_phones as
+create or replace view public.exporter_phones as
 select
 	p.idpes as person_id,
 	string_agg(concat('(', fp.ddd, ') ', fp.fone), ', ') as phones
