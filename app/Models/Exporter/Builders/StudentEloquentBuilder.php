@@ -125,7 +125,7 @@ class StudentEloquentBuilder extends Builder
         //telefone
         if ($only = $this->model->getLegacyExportedColumns('mother.phone', $columns)) {
             $this->addSelect($only);
-            $this->leftJoin('exporter_phones as mep', 'exporter_student.mother_id', 'mep.person_id');
+            $this->leftJoin('exporter_phones as mep', 'exporter_student_grouped_registration.mother_id', 'mep.person_id');
         }
 
         return $this;
@@ -154,7 +154,7 @@ class StudentEloquentBuilder extends Builder
         //telefone
         if ($only = $this->model->getLegacyExportedColumns('father.phone', $columns)) {
             $this->addSelect($only);
-            $this->leftJoin('exporter_phones as fep', 'exporter_student.father_id', 'fep.person_id');
+            $this->leftJoin('exporter_phones as fep', 'exporter_student_grouped_registration.father_id', 'fep.person_id');
         }
 
 
@@ -184,7 +184,7 @@ class StudentEloquentBuilder extends Builder
         //telefone
         if ($only = $this->model->getLegacyExportedColumns('guardian.phone', $columns)) {
             $this->addSelect($only);
-            $this->leftJoin('exporter_phones as gep', 'exporter_student.guardian_id', 'gep.person_id');
+            $this->leftJoin('exporter_phones as gep', 'exporter_student_grouped_registration.guardian_id', 'gep.person_id');
         }
 
         return $this;
