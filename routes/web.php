@@ -119,8 +119,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
-        Route::post('importacao', 'ImportController@import')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_HISTORY);
-        Route::get('importacao/historico', 'ImportController@index')->middleware('can:view:' . Process::EDUCACENSO_IMPORT_HISTORY)->name('educacenso.history');
 
         Route::get('importacao/inep/create', 'ImportInepController@create')->name('educacenso.import.inep.create')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
         Route::post('importacao/inep', 'ImportInepController@store')->name('educacenso.import.inep.store')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
