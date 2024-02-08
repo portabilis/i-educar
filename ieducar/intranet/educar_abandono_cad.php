@@ -50,6 +50,19 @@ return new class extends clsCadastro
 
     public $nm_aluno;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $user = Auth::user();
+        $allow = Gate::allows('view', 685);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
+    }
+
     public function Inicializar()
     {
         $retorno = 'Novo';

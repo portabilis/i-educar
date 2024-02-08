@@ -603,12 +603,15 @@ return new class extends clsDetalhe
 
             $this->url_editar = '/module/Cadastro/aluno?id=' . $registro['cod_aluno'];
 
-            $this->array_botao = ['Nova matrícula', 'Atualizar histórico', 'Distribuição de uniforme'];
-            $this->array_botao_url_script = [
-                sprintf('go("educar_matricula_cad.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
-                sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
-                sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
-            ];
+            if ($this->permissaoNovaMatricula()) {
+                $this->array_botao[] = 'Nova matrícula';
+                $this->array_botao_url_script[] = sprintf('go("educar_matricula_cad.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+            }
+
+            $this->array_botao[] = 'Atualizar histórico';
+            $this->array_botao_url_script[] = sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+            $this->array_botao[] = 'Distribuição de uniforme';
+            $this->array_botao_url_script[] = sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
 
             if ($titulo = config(key: 'legacy.app.alunos.sistema_externo.titulo')) {
                 $link = config(key: 'legacy.app.alunos.sistema_externo.link');
@@ -948,6 +951,17 @@ return new class extends clsDetalhe
         $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Aluno.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
+    }
+
+    private function permissaoNovaMatricula()
+    {
+        $user = Auth::user();
+        $allow = Gate::allows(ability: 'view', arguments: 680);
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
     }
 
     private function urlPresigner()

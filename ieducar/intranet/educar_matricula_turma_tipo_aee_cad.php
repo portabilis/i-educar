@@ -11,6 +11,19 @@ return new class extends clsCadastro
 
     public $tipo_atendimento;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $user = Auth::user();
+        $allow = Gate::allows('view', 688);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
+    }
+
     public function Inicializar()
     {
         $this->cod_matricula = $this->getQueryString(name: 'ref_cod_matricula');
