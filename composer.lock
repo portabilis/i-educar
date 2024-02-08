@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1771e9d19b7e3809ebcb3cb7140d9220",
+    "content-hash": "c3bb6bb422eec27df647185e803e61bb",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -7805,20 +7805,20 @@
         },
         {
             "name": "symfony/string",
-            "version": "v7.0.3",
+            "version": "v6.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "524aac4a280b90a4420d8d6a040718d0586505ac"
+                "reference": "7a14736fb179876575464e4658fce0c304e8c15b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/524aac4a280b90a4420d8d6a040718d0586505ac",
-                "reference": "524aac4a280b90a4420d8d6a040718d0586505ac",
+                "url": "https://api.github.com/repos/symfony/string/zipball/7a14736fb179876575464e4658fce0c304e8c15b",
+                "reference": "7a14736fb179876575464e4658fce0c304e8c15b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.2",
+                "php": ">=8.1",
                 "symfony/polyfill-ctype": "~1.8",
                 "symfony/polyfill-intl-grapheme": "~1.0",
                 "symfony/polyfill-intl-normalizer": "~1.0",
@@ -7828,11 +7828,11 @@
                 "symfony/translation-contracts": "<2.5"
             },
             "require-dev": {
-                "symfony/error-handler": "^6.4|^7.0",
-                "symfony/http-client": "^6.4|^7.0",
-                "symfony/intl": "^6.4|^7.0",
+                "symfony/error-handler": "^5.4|^6.0|^7.0",
+                "symfony/http-client": "^5.4|^6.0|^7.0",
+                "symfony/intl": "^6.2|^7.0",
                 "symfony/translation-contracts": "^2.5|^3.0",
-                "symfony/var-exporter": "^6.4|^7.0"
+                "symfony/var-exporter": "^5.4|^6.0|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -7871,7 +7871,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v7.0.3"
+                "source": "https://github.com/symfony/string/tree/v6.4.3"
             },
             "funding": [
                 {
@@ -7887,7 +7887,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-29T15:41:16+00:00"
+            "time": "2024-01-25T09:26:29+00:00"
         },
         {
             "name": "symfony/translation",
@@ -11732,22 +11732,23 @@
         },
         {
             "name": "uderline/openapi-php-attributes",
-            "version": "1.6.3",
+            "version": "1.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/uderline/openapi-php-attributes.git",
-                "reference": "049dd30d8f9c430d6e84d1953a84946a13a9a35a"
+                "reference": "7b4125b37c24f7aa7cd78a9d15ee88c328cf08cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/uderline/openapi-php-attributes/zipball/049dd30d8f9c430d6e84d1953a84946a13a9a35a",
-                "reference": "049dd30d8f9c430d6e84d1953a84946a13a9a35a",
+                "url": "https://api.github.com/repos/uderline/openapi-php-attributes/zipball/7b4125b37c24f7aa7cd78a9d15ee88c328cf08cd",
+                "reference": "7b4125b37c24f7aa7cd78a9d15ee88c328cf08cd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0",
+                "php": ">=8.1",
                 "symfony/finder": "^6.0",
-                "symfony/http-foundation": "^6.0"
+                "symfony/http-foundation": "^6.0",
+                "symfony/string": "^6.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
@@ -11787,9 +11788,9 @@
             ],
             "support": {
                 "issues": "https://github.com/uderline/openapi-php-attributes/issues",
-                "source": "https://github.com/uderline/openapi-php-attributes/tree/1.6.3"
+                "source": "https://github.com/uderline/openapi-php-attributes/tree/1.8.4"
             },
-            "time": "2022-12-21T16:14:24+00:00"
+            "time": "2023-06-20T18:32:02+00:00"
         }
     ],
     "aliases": [],
@@ -11806,5 +11807,5 @@
         "ext-zip": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
