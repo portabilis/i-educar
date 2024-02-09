@@ -4,6 +4,7 @@ use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeePosgraduate;
 use App\Models\LegacyAbsenceDelay;
+use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
@@ -562,6 +563,11 @@ JS;
 
     public function Editar()
     {
+
+        if (! $this->validaExclusaoFuncoes()) {
+            $this->mensagem = 'Edição não realizada. As funções a serem removidas possuem registros de falta/atrasos!';
+            return false;
+        }
         $timesep = explode(':', $this->carga_horaria);
         $hour = $timesep[0] + ((int) ($timesep[1] / 60));
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
@@ -768,6 +774,24 @@ JS;
         $obj->complementacao_pedagogica = $this->complementacao_pedagogica;
 
         return $obj;
+    }
+
+    public function validaExclusaoFuncoes()
+    {
+        $listaFuncoes = collect($this->ref_cod_funcao)->map(function ($funcao, $k) {
+            return $this->cod_servidor_funcao[$k];
+        });
+
+        $funcoesRemovidas = LegacyEmployeeRole::query()
+            ->where('ref_cod_servidor', $this->cod_servidor)
+            ->whereNotIn('cod_servidor_funcao', $listaFuncoes)
+            ->pluck('cod_servidor_funcao')
+            ->toArray();
+
+        return LegacyAbsenceDelay::query()
+            ->whereEmployee($this->cod_servidor)
+            ->whereIn('ref_cod_servidor_funcao', $funcoesRemovidas)
+            ->doesntExist();
     }
 
     public function cadastraFuncoes()
