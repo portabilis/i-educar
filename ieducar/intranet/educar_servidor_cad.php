@@ -779,7 +779,9 @@ JS;
     public function validaExclusaoFuncoes()
     {
         $listaFuncoes = collect($this->ref_cod_funcao)->map(function ($funcao, $k) {
-            return $this->cod_servidor_funcao[$k];
+            return $this->cod_servidor_funcao[$k] ?: null;
+        })->filter(function ($item) {
+            return !is_null($item);
         });
 
         $funcoesRemovidas = LegacyEmployeeRole::query()
