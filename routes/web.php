@@ -119,10 +119,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
-
-        Route::get('importacao/inep/create', 'ImportInepController@create')->name('educacenso.import.inep.create')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
-        Route::post('importacao/inep', 'ImportInepController@store')->name('educacenso.import.inep.store')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
-        Route::get('importacao/inep', 'ImportInepController@index')->name('educacenso.import.inep.index')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_INEP);
     });
 
     Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');
