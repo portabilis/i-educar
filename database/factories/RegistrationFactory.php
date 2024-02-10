@@ -14,7 +14,7 @@ class RegistrationFactory extends Factory
         return [];
     }
 
-    public function forView(int $id = null): self
+    public function forView(?int $id = null): self
     {
         $attributes = $id ? ['ref_cod_aluno' => $id] : [];
         $model = LegacyRegistrationFactory::new($attributes)->create();

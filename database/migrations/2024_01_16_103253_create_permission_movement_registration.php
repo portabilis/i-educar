@@ -6,8 +6,8 @@ use App\Models\LegacyUserType;
 use App\Process;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
-
+return new class extends Migration
+{
     private function attachMenu($userTypes, $menu)
     {
         $userTypes->each(static function (LegacyUserType $userType) use ($menu) {
@@ -38,7 +38,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Nova matrícula',
             'type' => 2,
-            'order' => 1
+            'order' => 1,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -50,7 +50,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Cancelar matrícula',
             'type' => 2,
-            'order' => 2
+            'order' => 2,
         ]);
 
         $menu = Menu::query()->updateOrCreate([
@@ -60,7 +60,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Ocorrências disciplinares',
             'type' => 2,
-            'order' => 10
+            'order' => 10,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -72,7 +72,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Dispensa de componente curriculares',
             'type' => 2,
-            'order' => 11
+            'order' => 11,
         ]);
 
         //Permissão movida apenas
@@ -83,7 +83,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Busca ativa',
             'type' => 2,
-            'order' => 12
+            'order' => 12,
         ]);
 
         $menu = Menu::query()->updateOrCreate([
@@ -93,18 +93,18 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Disciplinas de dependência',
             'type' => 2,
-            'order' => 13
+            'order' => 13,
         ]);
         $this->attachMenu($userTypes, $menu);
 
-        $menu =  Menu::query()->updateOrCreate([
+        $menu = Menu::query()->updateOrCreate([
             'process' => 683,
         ], [
             'parent_id' => $mainMenu->getKey(),
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Enturmar',
             'type' => 2,
-            'order' => 14
+            'order' => 14,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -115,7 +115,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Modalidade de ensino',
             'type' => 2,
-            'order' => 15
+            'order' => 15,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -126,7 +126,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Abandono',
             'type' => 2,
-            'order' => 16
+            'order' => 16,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -137,7 +137,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Falecido',
             'type' => 2,
-            'order' => 17
+            'order' => 17,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -149,7 +149,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Reclassificar',
             'type' => 2,
-            'order' => 18
+            'order' => 18,
         ]);
 
         $menu = Menu::query()->updateOrCreate([
@@ -159,7 +159,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Etapa do aluno',
             'type' => 2,
-            'order' => 19
+            'order' => 19,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -170,7 +170,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Tipo do AEE do aluno',
             'type' => 2,
-            'order' => 20
+            'order' => 20,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -181,7 +181,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Turno',
             'type' => 2,
-            'order' => 21
+            'order' => 21,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -192,7 +192,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Itinerário formativo',
             'type' => 2,
-            'order' => 22
+            'order' => 22,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -203,7 +203,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Solicitar transferência',
             'type' => 2,
-            'order' => 23
+            'order' => 23,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -214,7 +214,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Formando',
             'type' => 2,
-            'order' => 24
+            'order' => 24,
         ]);
         $this->attachMenu($userTypes, $menu);
 
@@ -225,7 +225,7 @@ return new class extends Migration {
             'parent_old' => $mainMenu->getKey(),
             'title' => 'Saída da escola',
             'type' => 2,
-            'order' => 25
+            'order' => 25,
         ]);
         $this->attachMenu($userTypes, $menu);
     }
@@ -241,7 +241,7 @@ return new class extends Migration {
             'parent_old' => Process::MENU_SCHOOL,
             'title' => 'Cancelar matrícula',
             'type' => 2,
-            'order' => 9999
+            'order' => 9999,
         ]);
 
         Menu::query()->updateOrCreate([
@@ -252,7 +252,7 @@ return new class extends Migration {
             'parent_old' => Process::MENU_SCHOOL,
             'title' => 'Dispensar componente curricular na matrícula',
             'type' => 2,
-            'order' => 9999
+            'order' => 9999,
         ]);
 
         Menu::query()->updateOrCreate([
@@ -263,7 +263,7 @@ return new class extends Migration {
             'parent_old' => null,
             'title' => 'Busca ativa',
             'type' => 1,
-            'order' => 99
+            'order' => 99,
         ]);
 
         Menu::query()->updateOrCreate([
@@ -274,9 +274,8 @@ return new class extends Migration {
             'parent_old' => null,
             'title' => 'Reclassificar matrícula',
             'type' => 1,
-            'order' => 99
+            'order' => 99,
         ]);
-
 
         $menus = Menu::query()
             ->whereIn('process', [
@@ -294,7 +293,7 @@ return new class extends Migration {
                 690,
                 691,
                 692,
-                693
+                693,
             ])->get();
 
         foreach ($menus as $menu) {

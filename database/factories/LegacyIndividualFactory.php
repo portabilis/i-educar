@@ -49,7 +49,7 @@ class LegacyIndividualFactory extends Factory
         });
     }
 
-    public function withDocument(string $rg = null, string $birthCertificate = null): static
+    public function withDocument(?string $rg = null, ?string $birthCertificate = null): static
     {
         return $this->afterCreating(function (LegacyIndividual $individual) use ($rg, $birthCertificate) {
             LegacyDocumentFactory::new()->create([

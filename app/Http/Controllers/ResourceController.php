@@ -148,7 +148,7 @@ abstract class ResourceController extends Controller
         return $this->newResource($model);
     }
 
-    public function get(Model|int $model, Request $request, string $class = null): JsonResource
+    public function get(Model|int $model, Request $request, ?string $class = null): JsonResource
     {
         $this->can('view');
 
