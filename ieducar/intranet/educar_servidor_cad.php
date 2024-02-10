@@ -564,8 +564,9 @@ JS;
     public function Editar()
     {
 
-        if (! $this->validaExclusaoFuncoes()) {
+        if (!$this->validaExclusaoFuncoes()) {
             $this->mensagem = 'Edição não realizada. As funções a serem removidas possuem registros de falta/atrasos!';
+
             return false;
         }
         $timesep = explode(':', $this->carga_horaria);

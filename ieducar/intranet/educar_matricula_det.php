@@ -307,7 +307,6 @@ return new class extends clsDetalhe
                     $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
-
                 // Apenas libera a dispensa de disciplina quando o aluno estiver enturmado
                 if ($this->permissaoDispensaComponenteCurriculares() && $registro['ref_ref_cod_serie'] && $existeTurma) {
                     $this->array_botao[] = 'Dispensa de componentes curriculares';
@@ -562,12 +561,10 @@ return new class extends clsDetalhe
         return $this->getPermissaoVisualizar(692);
     }
 
-
     public function permissaoSaidaEscola()
     {
         return $this->getPermissaoVisualizar(693);
     }
-
 
     public function canCancelTransferencia($matriculaId)
     {
