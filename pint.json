@@ -3,7 +3,7 @@
     "rules": {
         "concat_space": false,
         "not_operator_with_successor_space": false,
-        "Laravel/laravel_phpdoc_alignment": false
+        "phpdoc_align": false
     },
     "exclude": [
         "packages",

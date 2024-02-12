@@ -52,7 +52,6 @@ return new class extends clsCadastro
 
     public $descricao_reclassificacao;
 
-
     public function __construct()
     {
         parent::__construct();

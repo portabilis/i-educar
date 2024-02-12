@@ -4,7 +4,8 @@ use App\Menu;
 use App\Process;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -17,7 +18,7 @@ return new class extends Migration {
             ->update([
                 'title' => 'Exportador de Documentos',
                 'parent_id' => Menu::query()->where('old', Process::MENU_SCHOOL_TOOLS)->valueOrFail('id'),
-                'parent_old' => Process::MENU_SCHOOL_TOOLS
+                'parent_old' => Process::MENU_SCHOOL_TOOLS,
             ]);
     }
 
@@ -33,7 +34,7 @@ return new class extends Migration {
             ->update([
                 'title' => 'Exportações de documentos',
                 'parent_id' => Menu::query()->where('old', Process::CONFIGURATIONS_TOOLS)->valueOrFail('id'),
-                'parent_old' => Process::CONFIGURATIONS_TOOLS
+                'parent_old' => Process::CONFIGURATIONS_TOOLS,
             ]);
     }
 };

@@ -157,7 +157,6 @@ class StudentEloquentBuilder extends Builder
             $this->leftJoin('exporter_phones as fep', 'exporter_student_grouped_registration.father_id', 'fep.person_id');
         }
 
-
         return $this;
     }
 

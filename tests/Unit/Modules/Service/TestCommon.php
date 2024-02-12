@@ -990,7 +990,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         return $this->_componenteTurmaDataMapperMock;
     }
 
-    protected function _setNotaAlunoDataMapperMock(Avaliacao_Model_NotaAlunoDataMapper $mapper = null)
+    protected function _setNotaAlunoDataMapperMock(?Avaliacao_Model_NotaAlunoDataMapper $mapper = null)
     {
         $this->_notaAlunoDataMapperMock = $mapper;
 
@@ -1060,7 +1060,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         return $this->_notaComponenteMediaDataMapperMock;
     }
 
-    protected function _setFaltaAlunoDataMapperMock(Avaliacao_Model_FaltaAlunoDataMapper $mapper = null)
+    protected function _setFaltaAlunoDataMapperMock(?Avaliacao_Model_FaltaAlunoDataMapper $mapper = null)
     {
         $this->_faltaAlunoDataMapperMock = $mapper;
 

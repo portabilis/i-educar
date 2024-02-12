@@ -197,7 +197,7 @@ class EnrollmentEloquentBuilder extends Builder
         //telefone
         if ($only = $this->model->getLegacyExportedColumns('guardian.phone', $columns)) {
             $this->addSelect($only);
-             $this->leftJoin('exporter_phones as gep', 'exporter_student.guardian_id', 'gep.person_id');
+            $this->leftJoin('exporter_phones as gep', 'exporter_student.guardian_id', 'gep.person_id');
         }
 
         return $this;

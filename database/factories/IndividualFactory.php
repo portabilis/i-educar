@@ -15,7 +15,7 @@ class IndividualFactory extends Factory
         ];
     }
 
-    public function forView(int $id = null): self
+    public function forView(?int $id = null): self
     {
         $attributes = $id ? ['idpes' => $id] : [];
         $model = LegacyIndividualFactory::new($attributes)->create();
