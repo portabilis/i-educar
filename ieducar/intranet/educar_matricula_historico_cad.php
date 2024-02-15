@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\EnrollmentInep;
+use App\Models\LegacyEnrollment;
 use App\Process;
 
 return new class extends clsCadastro
@@ -83,6 +85,19 @@ return new class extends clsCadastro
         $this->campoRotulo(nome: 'situacao', campo: 'Situação', valor: $situacao);
         $this->inputsHelper()->date(attrName: 'data_enturmacao', inputOptions: ['label' => 'Data enturmação', 'value' => dataToBrasil(data_original: $enturmacao['data_enturmacao']), 'placeholder' => '']);
         $this->inputsHelper()->date(attrName: 'data_exclusao', inputOptions: ['label' => 'Data de saída', 'value' => dataToBrasil(data_original: $enturmacao['data_exclusao']), 'placeholder' => '', 'required' => $required]);
+
+        $enrollment = LegacyEnrollment::query()
+            ->where('ref_cod_matricula', $this->ref_cod_matricula)
+            ->where('ref_cod_turma', $this->ref_cod_turma)
+            ->where('sequencial', $this->sequencial)
+            ->first();
+        $this->campoOculto(nome: 'matricula_turma_id', valor: $enrollment->getKey());
+        $this->inputsHelper()->integer(attrName: 'codigo_inep_educacenso', inputOptions: ['label' => 'Matrícula INEP',
+            'label_hint' => 'Somente números',
+            'placeholder' => 'INEP',
+            'required' => false,
+            'max_length' => 12,
+            'value' => $enrollment->inep?->matricula_inep]);
 
         $situacoesMatricula = [
             '' => 'Selecione',
@@ -195,6 +210,20 @@ return new class extends clsCadastro
         $editou = $enturmacao->edita();
 
         if ($editou) {
+            if (is_numeric($this->codigo_inep_educacenso)) {
+                EnrollmentInep::query()
+                    ->where('matricula_turma_id', $this->matricula_turma_id)
+                    ->update([
+                        'matricula_inep' => $this->codigo_inep_educacenso,
+                    ]);
+            } else {
+                EnrollmentInep::query()
+                    ->where('matricula_turma_id', $this->matricula_turma_id)
+                    ->update([
+                        'matricula_inep' => null,
+                    ]);
+            }
+
             if (is_null(value: $dataSaidaMatricula) || empty($dataSaidaMatricula)) {
                 $dataSaidaMatricula = $enturmacao->data_exclusao;
 
