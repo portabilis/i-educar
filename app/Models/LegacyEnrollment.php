@@ -165,4 +165,9 @@ class LegacyEnrollment extends LegacyModel
     {
         return $this->registration->student->cod_aluno;
     }
+
+    public function inep()
+    {
+        return $this->hasOne(EnrollmentInep::class, 'matricula_turma_id');
+    }
 }
