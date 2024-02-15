@@ -187,14 +187,14 @@ class RegraController extends ApiCoreController
                   ra.tipo_calculo_recuperacao_paralela,
                   ra.nota_maxima_geral,
                   ra.nota_maxima_exame_final AS nota_maxima_exame,
-                  COALESCE(ra.regra_diferenciada_id, 0) AS regra_diferenciada_id,
+                  ra.regra_diferenciada_id,
                   ra.updated_at
               FROM modules.regra_avaliacao ra
               WHERE true
                   AND ra.instituicao_id = $1 '. $where . '
               ORDER BY
                 ra.updated_at,
-                COALESCE(ra.regra_diferenciada_id,0),
+                ra.regra_diferenciada_id,
                 ra.id';
 
             $_regras = $this->fetchPreparedQuery($sql, $params);
