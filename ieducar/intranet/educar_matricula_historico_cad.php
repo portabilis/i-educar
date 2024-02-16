@@ -97,7 +97,8 @@ return new class extends clsCadastro
             'placeholder' => 'INEP',
             'required' => false,
             'max_length' => 12,
-            'value' => $enrollment->inep?->matricula_inep]);
+            'value' => $enrollment->inep?->matricula_inep
+        ]);
 
         $situacoesMatricula = [
             '' => 'Selecione',
