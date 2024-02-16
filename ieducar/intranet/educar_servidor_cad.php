@@ -563,9 +563,8 @@ JS;
 
     public function Editar()
     {
-
         if (!$this->validaExclusaoFuncoes()) {
-            $this->mensagem = 'Edição não realizada. As funções a serem removidas possuem registros de falta/atrasos!';
+            $this->mensagem = 'Edição não realizada. O servidor possui funções vinculadas a falta/atraso!';
 
             return false;
         }
@@ -714,6 +713,13 @@ JS;
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
+
+        if (!$this->validaExclusaoFuncoes()) {
+            $this->mensagem = 'Exclusão não realizada. O servidor possui funções vinculadas a falta/atrasos!';
+
+            return false;
+        }
+
         $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
             null,
             null,
@@ -787,7 +793,7 @@ JS;
 
         $funcoesRemovidas = LegacyEmployeeRole::query()
             ->where('ref_cod_servidor', $this->cod_servidor)
-            ->whereNotIn('cod_servidor_funcao', $listaFuncoes)
+            ->when($this->tipoacao === 'Editar', fn ($q) => $q->whereNotIn('cod_servidor_funcao', $listaFuncoes))
             ->pluck('cod_servidor_funcao')
             ->toArray();
 
