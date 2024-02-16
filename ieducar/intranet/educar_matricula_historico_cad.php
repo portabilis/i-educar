@@ -212,15 +212,17 @@ return new class extends clsCadastro
         if ($editou) {
             if (is_numeric($this->codigo_inep_educacenso)) {
                 EnrollmentInep::query()
-                    ->where('matricula_turma_id', $this->matricula_turma_id)
-                    ->update([
-                        'matricula_inep' => $this->codigo_inep_educacenso,
+                    ->updateOrCreate([
+                        'matricula_turma_id' => $this->matricula_turma_id
+                    ], [
+                        'matricula_inep' => $this->codigo_inep_educacenso
                     ]);
             } else {
                 EnrollmentInep::query()
-                    ->where('matricula_turma_id', $this->matricula_turma_id)
-                    ->update([
-                        'matricula_inep' => null,
+                    ->updateOrCreate([
+                        'matricula_turma_id' => $this->matricula_turma_id
+                    ], [
+                        'matricula_inep' => null
                     ]);
             }
 
