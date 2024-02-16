@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     public function up(): void
     {
-        Schema::create('modules.educacenso_cod_matricula', function (Blueprint $table): void {
+        Schema::create('modules.educacenso_matricula', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('matricula_turma_id')->references('id')->on('pmieducar.matricula_turma');
             $table->bigInteger('matricula_inep')->nullable();
