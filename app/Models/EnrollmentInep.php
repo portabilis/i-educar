@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EnrollmentInep extends Model
 {
-    protected $table = 'modules.educacenso_cod_matricula';
+    protected $table = 'modules.educacenso_matricula';
 
     protected $fillable = [
         'matricula_turma_id',
