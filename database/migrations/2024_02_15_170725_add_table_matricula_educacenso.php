@@ -17,6 +17,6 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('modules.educacenso_cod_matricula');
+        Schema::dropIfExists('modules.educacenso_matricula');
     }
 };
