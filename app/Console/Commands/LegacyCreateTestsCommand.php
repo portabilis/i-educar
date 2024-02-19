@@ -210,6 +210,7 @@ class LegacyCreateTestsCommand extends Command
             'migra_alunos.php',
             'index.php',
             'copia_vinculos_servidores_cad.php',
+            'educar_configuracoes_gerais.php',
         ];
     }
 
