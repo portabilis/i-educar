@@ -44,6 +44,21 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
         return Util::format($score, $decimalPlaces);
     }
 
+    public function scoreNotRounding(int $decimalPlaces = 2): ?string
+    {
+        if ($this->nota === null || $this->nota === '') {
+            return null;
+        }
+
+        $score = str_replace(',', '.', $this->nota);
+
+        if (!is_numeric($score)) {
+            return $score;
+        }
+
+        return substr($score, 0, strpos($score, '.') + $decimalPlaces + 1);
+    }
+
     public function isDiversified(): bool
     {
         return $this->tipo_base === ComponenteCurricular_Model_TipoBase::DIVERSIFICADA;
