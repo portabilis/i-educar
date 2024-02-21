@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\EnrollmentInep;
-use App\Models\LegacyEnrollment;
 use App\Process;
 
 return new class extends clsCadastro
