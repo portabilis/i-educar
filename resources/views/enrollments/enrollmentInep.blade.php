@@ -92,7 +92,7 @@
                 Salvar
             </button>
             <input type="button" class="botaolistagem"
-                   onclick="javascript:goOrClose('{{ route('enrollments.enrollment-history', $enrollment->getKey()) }}');"
+                   onclick="javascript:goOrClose('{{ route('enrollments.enrollment-history', $enrollment->registration->getKey()) }}');"
                    value="Cancelar" autocomplete="off">
         </div>
     </form>
