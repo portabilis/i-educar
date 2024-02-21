@@ -115,6 +115,7 @@ return new class extends clsCadastro
 
         if (is_null($this->ref_cod_escola)) {
             $this->mensagem = 'O campo escola deve ser preenchido.';
+
             return false;
         }
 

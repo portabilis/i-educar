@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\EnrollmentInepController;
+use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;

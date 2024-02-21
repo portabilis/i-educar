@@ -97,7 +97,7 @@ return new class extends clsCadastro
             'placeholder' => 'INEP',
             'required' => false,
             'max_length' => 12,
-            'value' => $enrollment->inep?->matricula_inep
+            'value' => $enrollment->inep?->matricula_inep,
         ]);
 
         $situacoesMatricula = [
@@ -214,16 +214,16 @@ return new class extends clsCadastro
             if (is_numeric($this->codigo_inep_educacenso)) {
                 EnrollmentInep::query()
                     ->updateOrCreate([
-                        'matricula_turma_id' => $this->matricula_turma_id
+                        'matricula_turma_id' => $this->matricula_turma_id,
                     ], [
-                        'matricula_inep' => $this->codigo_inep_educacenso
+                        'matricula_inep' => $this->codigo_inep_educacenso,
                     ]);
             } else {
                 EnrollmentInep::query()
                     ->updateOrCreate([
-                        'matricula_turma_id' => $this->matricula_turma_id
+                        'matricula_turma_id' => $this->matricula_turma_id,
                     ], [
-                        'matricula_inep' => null
+                        'matricula_inep' => null,
                     ]);
             }
 
