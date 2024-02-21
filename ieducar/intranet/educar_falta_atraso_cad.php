@@ -165,9 +165,9 @@ return new class extends clsCadastro
         );
 
         if (Validator::make([
-            'data' => $this->data_falta_atraso
+            'data' => $this->data_falta_atraso,
         ], [
-            'data' => ['date_format:d/m/Y']
+            'data' => ['date_format:d/m/Y'],
         ])->fails()) {
             $this->mensagem = 'O dia informado é inválido.<br>';
 

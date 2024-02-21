@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EnrollmentInepController;
 use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
@@ -59,6 +60,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
+    Route::get('/enrollment-inep/{enrollment}', [EnrollmentInepController::class, 'edit'])
+        ->name('enrollments.enrollment-inep.edit');
+    Route::post('/enrollment-inep/{enrollment}', [EnrollmentInepController::class, 'update'])
+        ->name('enrollments.enrollment-inep.update');
 
     Route::get('registration/{registration}/formative-itinerary', 'EnrollmentFormativeItineraryController@index')
         ->name('registration.formative-itinerary.index')->middleware('can:view:690');

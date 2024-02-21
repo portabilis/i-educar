@@ -713,7 +713,6 @@ JS;
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
-
         if (!$this->validaExclusaoFuncoes()) {
             $this->mensagem = 'Exclusão não realizada. O servidor possui funções vinculadas a falta/atrasos!';
 
