@@ -82,6 +82,22 @@
                         </span>
                     </td>
                 </tr>
+                <tr>
+                    <td class="formmdtd" valign="top">
+                        <span class="form">
+                            Desconsiderar matrícula
+                        </span>
+                        <br>
+                        <sub style="vertical-align:top;">
+                            Marque essa opção apenas se o aluno não possuir um número INEP e não deve ser informado na 2ª etapa do Censo Escolar.
+                        </sub>
+                    </td>
+                    <td class="formmdtd" valign="top"><span class="form">
+                        <input value="1" {{ $enrollment->desconsiderar_educacenso ? 'checked="checked"' : '' }} type="checkbox" name="desconsiderar_educacenso" id="desconsiderar_educacenso">
+                            Marque para desconsiderar a matrícula
+                        </span>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
