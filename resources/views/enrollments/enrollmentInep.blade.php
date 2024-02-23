@@ -74,7 +74,7 @@
                                    name="matricula_inep"
                                    id="matricula_inep"
                                    maxlength="12"
-                                   minlength="12"
+                                   minlength="1"
                                    inputmode="numeric"
                                    value="{{ $enrollment->inep->matricula_inep ?? null }}"
                                    placeholder="Código INEP"
