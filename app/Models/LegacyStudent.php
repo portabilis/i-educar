@@ -40,6 +40,7 @@ class LegacyStudent extends LegacyModel
     protected $fillable = [
         'ref_idpes',
         'tipo_responsavel',
+        'codigo_sistema',
     ];
 
     public array $legacy = [

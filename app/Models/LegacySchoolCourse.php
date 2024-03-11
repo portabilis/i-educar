@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\LegacyArray;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -10,6 +11,10 @@ class LegacySchoolCourse extends LegacyModel
     use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';
+
+    protected $casts = [
+        'anos_letivos' => LegacyArray::class,
+    ];
 
     /**
      * @var string
