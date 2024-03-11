@@ -11,10 +11,6 @@ class LegacySchoolGrade extends LegacyModel
 {
     use HasLegacyDates;
 
-    protected $casts = [
-        'anos_letivos' => LegacyArray::class,
-    ];
-
     /**
      * @var string
      */

@@ -12,10 +12,6 @@ class LegacySchoolCourse extends LegacyModel
 
     public const CREATED_AT = 'data_cadastro';
 
-    protected $casts = [
-        'anos_letivos' => LegacyArray::class,
-    ];
-
     /**
      * @var string
      */
