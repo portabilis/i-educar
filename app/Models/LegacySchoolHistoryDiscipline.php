@@ -22,7 +22,7 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
         'carga_horaria_disciplina',
         'dependencia',
         'tipo_base',
-        'ordenamento'
+        'ordenamento',
     ];
 
     public function student(): BelongsTo

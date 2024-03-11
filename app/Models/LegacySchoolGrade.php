@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\LegacyArray;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
