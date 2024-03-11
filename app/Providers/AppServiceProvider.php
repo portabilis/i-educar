@@ -86,38 +86,6 @@ class AppServiceProvider extends ServiceProvider
         QueryBuilder::macro('whereUnaccent', function ($column, $value) {
             $this->whereRaw('unaccent(' . $column . ') ilike unaccent(\'%\' || ? || \'%\')', [$value]);
         });
-
-        Builder::macro('search', function ($columns, $value, $type = 'both') {
-            if (is_string($columns)) {
-                $columns = [$columns];
-            }
-
-            $operator = $this->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
-
-            $search = "%{$value}%";
-
-            if ($type == 'left') {
-                $search = "%{$value}";
-            }
-
-            if ($type == 'right') {
-                $search = "{$value}%";
-            }
-
-            return $this->where(function ($builder) use ($columns, $operator, $search) {
-                foreach ($columns as $column) {
-                    if (Str::contains($column, '.')) {
-                        [$relation, $column] = explode('.', $column);
-
-                        $builder->orWhereHas($relation, function ($builder) use ($column, $operator, $search) {
-                            $builder->where($column, $operator, $search);
-                        });
-                    } else {
-                        $builder->orWhere($column, $operator, $search);
-                    }
-                }
-            });
-        });
     }
 
     /**
