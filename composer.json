@@ -44,7 +44,7 @@
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
-        "psr/simple-cache": "^3.0",
+        "psr/simple-cache": "^2.0",
         "staudenmeir/laravel-adjacency-list": "^1.0",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0"
