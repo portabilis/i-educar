@@ -266,6 +266,7 @@ class StudentTest extends ViewTestCase
                 'modalidade_ensino' => 'Modalidade de ensino cursada',
                 'technological_resources' => 'Recursos tecnológicos',
                 'transport.tipo_transporte' => 'Transporte escolar público',
+                'transport_route' => 'Rota',
                 'transport.veiculo_transporte_escolar' => 'Veículo utilizado',
             ],
             'Endereço' => [
