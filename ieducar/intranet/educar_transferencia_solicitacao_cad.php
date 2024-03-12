@@ -1,11 +1,13 @@
 <?php
 
 use App\Events\TransferEvent;
+use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
 use App\Models\LegacyTransferType;
 use App\Models\LegacyUser;
 use App\Services\PromotionService;
+use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
@@ -63,6 +65,15 @@ return new class extends clsCadastro
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js',
         ]);
+
+        $user = Auth::user();
+        $allow = Gate::allows('view', 691);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
     }
 
     public function Inicializar()
@@ -274,6 +285,14 @@ return new class extends clsCadastro
                     DB::rollback();
                 }
             }
+            //Marca a busca ativa como transferência
+            LegacyActiveLooking::query()
+                ->where('ref_cod_matricula', $this->ref_cod_matricula)
+                ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT)
+                ->update([
+                    'resultado_busca_ativa' => ActiveLooking::ACTIVE_LOOKING_TRANSFER_RESULT,
+                    'data_fim' => $this->data_cancel,
+                ]);
 
             DB::commit();
 
@@ -298,10 +317,25 @@ return new class extends clsCadastro
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
         $lst_transferencia = $obj_transferencia->lista(int_ref_cod_matricula_saida: $this->ref_cod_matricula, int_ativo: 1, int_ref_cod_aluno: $this->ref_cod_aluno);
         if (is_array(value: $lst_transferencia)) {
-            $det_transferencia = array_shift(array: $lst_transferencia);
-            $this->cod_transferencia_solicitacao = $det_transferencia['cod_transferencia_solicitacao'];
-            $obj = new clsPmieducarTransferenciaSolicitacao(cod_transferencia_solicitacao: $this->cod_transferencia_solicitacao, ref_cod_transferencia_tipo: null, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ref_cod_matricula_entrada: null, ref_cod_matricula_saida: null, observacao: null, data_cadastro: null, data_exclusao: null, ativo: 0);
-            $excluiu = $obj->excluir();
+            try {
+                DB::beginTransaction();
+                $det_transferencia = array_shift(array: $lst_transferencia);
+                $this->cod_transferencia_solicitacao = $det_transferencia['cod_transferencia_solicitacao'];
+                $obj = new clsPmieducarTransferenciaSolicitacao(cod_transferencia_solicitacao: $this->cod_transferencia_solicitacao, ref_cod_transferencia_tipo: null, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ref_cod_matricula_entrada: null, ref_cod_matricula_saida: null, observacao: null, data_cadastro: null, data_exclusao: null, ativo: 0);
+                $excluiu = $obj->excluir();
+                //Desfaz a busca ativa com transferencia
+                LegacyActiveLooking::query()
+                    ->where('ref_cod_matricula', $this->ref_cod_matricula)
+                    ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_TRANSFER_RESULT)
+                    ->update([
+                        'resultado_busca_ativa' => ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT,
+                        'data_fim' => null,
+                    ]);
+                DB::commit();
+            } catch (Exception) {
+                DB::rollBack();
+            }
+
             if ($excluiu) {
                 $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect(url: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");

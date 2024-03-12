@@ -62,7 +62,7 @@ class LegacyCourseBuilder extends LegacyBuilder
     /**
      * Filtra por Escola
      */
-    public function whereSchool(int $school, int $year = null): self
+    public function whereSchool(int $school, ?int $year = null): self
     {
         return $this->whereHas('schools', function ($q) use ($school, $year) {
             $q->where('cod_escola', $school);

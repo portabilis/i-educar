@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Reports\Contracts\TeacherReportCard;
 use Illuminate\Support\Facades\Cache;
 
 return new class extends clsCadastro
@@ -173,16 +174,13 @@ return new class extends clsCadastro
             'value' => $this->tamanho_min_rede_estadual,
         ]);
 
+        $teacherReporcCard = app(TeacherReportCard::class);
         $options = [
             'label' => 'Modelo do boletim do professor',
-            'resources' => [
-                1 => _cl(key: 'report.boletim_professor.modelo_padrao'),
-                2 => _cl(key: 'report.boletim_professor.modelo_recuperacao_por_etapa'),
-                3 => _cl(key: 'report.boletim_professor.modelo_recuperacao_paralela'),
-                4 => _cl(key: 'report.boletim_professor.modelo_html'),
-            ],
+            'resources' => $teacherReporcCard->getOptions(),
             'value' => $this->modelo_boletim_professor,
         ];
+
         $this->inputsHelper()->select(attrName: 'modelo_boletim_professor', inputOptions: $options);
 
         $this->inputsHelper()->text(attrNames: 'url_cadastro_usuario', inputOptions: [

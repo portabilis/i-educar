@@ -152,8 +152,6 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
@@ -165,6 +163,18 @@ return new class extends clsCadastro
                 $this->ref_cod_instituicao
             )
         );
+
+        if (Validator::make([
+            'data' => $this->data_falta_atraso,
+        ], [
+            'data' => ['date_format:d/m/Y'],
+        ])->fails()) {
+            $this->mensagem = 'O dia informado é inválido.<br>';
+
+            return false;
+        }
+
+        $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
 
         if ($this->tipo == 1 && ($this->qtd_horas == '' || $this->qtd_min == '')) {
             $this->mensagem = 'Preencha os campos de quantidade de horas e minutos.<br>';

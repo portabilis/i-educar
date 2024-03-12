@@ -147,6 +147,11 @@ class Registro10Fields implements RegistroEducacenso
     /**
      * @var string
      */
+    public $dependenciaSalaEstudioGravacaoEdicao;
+
+    /**
+     * @var string
+     */
     public $dependenciaLaboratorioInformatica;
 
     /**
@@ -800,6 +805,8 @@ class Registro10Fields implements RegistroEducacenso
     public $instrumentosPedagogicosEducacaoProfissional;
 
     public $instrumentosPedagogicosPraticaDesportiva;
+
+    public $instrumentosPedagogicosEducacaoBilingueSurdos;
 
     public $instrumentosPedagogicosEducacaoIndigena;
 

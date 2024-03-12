@@ -10,6 +10,19 @@ return new class extends clsCadastro
 
     public $modalidade_ensino;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $user = Auth::user();
+        $allow = Gate::allows('view', 684);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
+    }
+
     public function Formular()
     {
         $this->title = 'Modalidade de ensino';

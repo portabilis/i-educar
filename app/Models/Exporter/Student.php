@@ -114,6 +114,7 @@ class Student extends Model
                 'mother.organization' => 'Empresa da mãe',
                 'mother.monthly_income' => 'Renda Mensal da mãe',
                 'mother.gender' => 'Gênero da mãe',
+                'mother.phone' => 'Telefones da mãe',
             ],
             'Pai' => [
                 'father.id' => 'ID do pai',
@@ -131,6 +132,7 @@ class Student extends Model
                 'father.organization' => 'Empresa do pai',
                 'father.monthly_income' => 'Renda Mensal do pai',
                 'father.gender' => 'Gênero do pai',
+                'father.phone' => 'Telefones do pai',
             ],
             'Responsável' => [
                 'guardian.id' => 'ID do responsável',
@@ -148,6 +150,7 @@ class Student extends Model
                 'guardian.organization' => 'Empresa do responsável',
                 'guardian.monthly_income' => 'Renda Mensal do responsável',
                 'guardian.gender' => 'Gênero do responsável',
+                'guardian.phone' => 'Telefones do responsável',
             ],
             'Uniforme' => [
                 'uniform_distributions.type' => 'Tipo',

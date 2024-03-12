@@ -14,6 +14,8 @@ class Process
 
     public const SCHEDULE = 59;
 
+    public const REGISTRATION_ACTIONS = 60;
+
     public const MENU_ADDRESSING = 68;
 
     public const MENU_TRANSPORT = 69;
@@ -40,6 +42,8 @@ class Process
 
     public const BATCH_EXEMPTION = 1025;
 
+    public const DOCUMENT_EXPORT = 1026;
+
     public const UNDO_STUDENT_UNIFICATION = 2001;
 
     public const EXEMPTION_LIST = 2002;
@@ -51,6 +55,8 @@ class Process
     public const UPDATE_REGISTRATION_STATUS = 2005;
 
     public const NOTIFY_TRANSFER = 2006;
+
+    public const EDUCACENSO_IMPORT_INEP = 2007;
 
     public const SETTINGS = 3000;
 

@@ -61,6 +61,19 @@ return new class extends clsListagem
 
     public $ref_cod_turma;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $user = Auth::user();
+        $allow = Gate::allows('view', 681);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
+    }
+
     public function Gerar()
     {
         $this->titulo = 'Matricula Ocorrência Disciplinar - Listagem';

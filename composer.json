@@ -22,10 +22,11 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pgsql": "*",
+        "ext-zip": "*",
         "ankurk91/laravel-eloquent-relationships": "^1.3",
         "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
-        "dex/composer-plug-and-play": "^0.18",
+        "dex/composer-plug-and-play": "^0.20",
         "dex/frontier": "^0.7.0",
         "doctrine/dbal": "^3.3",
         "google/recaptcha": "^1.2",
@@ -50,18 +51,16 @@
         "symfony/mailgun-mailer": "^6.0"
     },
     "require-dev": {
-        "beyondcode/laravel-dump-server": "^1.7",
-        "brianium/paratest": "^7.0",
         "fakerphp/faker": "^1.15",
-        "filp/whoops": "^2.14",
         "laravel/pint": "^1.10",
-        "laravel/sail": "^1.0",
+        "laravel/sail": "^1.18",
         "laravel/telescope": "^4.7",
-        "mockery/mockery": "^1.4.3",
+        "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "10.2.1",
+        "pestphp/pest": "^2.33",
         "spatie/laravel-ignition": "^2.0",
-        "uderline/openapi-php-attributes": "^1.5"
+        "symfony/yaml": "^6.2",
+        "uderline/openapi-php-attributes": "^1.8"
     },
     "autoload": {
         "classmap": [

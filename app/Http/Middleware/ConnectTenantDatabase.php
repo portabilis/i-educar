@@ -28,6 +28,8 @@ class ConnectTenantDatabase
 
         if (isset($connections[$tenant])) {
             DB::setDefaultConnection($tenant);
+        } elseif ($tenant !== config('app.default_host')) {
+            abort(404);
         }
 
         return $next($request);

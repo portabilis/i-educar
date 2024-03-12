@@ -40,6 +40,7 @@ class LegacyStudent extends LegacyModel
     protected $fillable = [
         'ref_idpes',
         'tipo_responsavel',
+        'codigo_sistema',
     ];
 
     public array $legacy = [
@@ -83,6 +84,11 @@ class LegacyStudent extends LegacyModel
         return Attribute::make(
             get: fn () => $this->person->real_name
         );
+    }
+
+    public function picture(): HasOne
+    {
+        return $this->hasOne(LegacyIndividualPicture::class, 'idpes', 'ref_idpes');
     }
 
     public function person(): BelongsTo

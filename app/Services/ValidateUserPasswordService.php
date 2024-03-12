@@ -17,7 +17,7 @@ class ValidateUserPasswordService
         $this->hash = $hash;
     }
 
-    public function execute(string $newPassword, string $oldPassword = null)
+    public function execute(string $newPassword, ?string $oldPassword = null)
     {
         try {
             $this->validate($newPassword, $oldPassword);
