@@ -30,7 +30,7 @@
         "dex/frontier": "^0.7.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
-        "honeybadger-io/honeybadger-laravel": "^3.12",
+        "honeybadger-io/honeybadger-laravel": "^3.18",
         "intervention/image": "^2.6",
         "laravel/framework": "^11.0",
         "laravel/horizon": "^5.15",
@@ -44,7 +44,7 @@
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
-        "psr/simple-cache": "^2.0",
+        "psr/simple-cache": "^3.0",
         "staudenmeir/laravel-adjacency-list": "^1.0",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0"
