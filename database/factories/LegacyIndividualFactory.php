@@ -46,6 +46,7 @@ class LegacyIndividualFactory extends Factory
     {
         return $this->afterCreating(function (LegacyIndividual $individual) use ($name) {
             $individual->person->nome = $name;
+            $individual->person->save();
         });
     }
 
