@@ -640,6 +640,7 @@ class AlunoController extends ApiCoreController
         $aluno->url_laudo_medico = $this->getRequest()->url_laudo_medico;
 
         $aluno->tipo_transporte = (new TransportationProvider())->from($this->getRequest()->tipo_transporte);
+        $aluno->rota_transporte = $this->getRequest()->rota_transporte;
 
         if (is_null($id)) {
             $id = $aluno->cadastra();
@@ -1152,6 +1153,7 @@ class AlunoController extends ApiCoreController
                 'parentesco_cinco',
                 'emancipado',
                 'tipo_transporte',
+                'rota_transporte'
             ];
 
             $aluno = Portabilis_Array_Utils::filter($alunoDetalhe, $attrs);

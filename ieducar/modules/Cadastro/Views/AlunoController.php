@@ -40,6 +40,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     public $observacao;
 
+    public $rota_transporte;
+
     public $renda_mensal;
 
     protected $_formMap = [
@@ -268,6 +270,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'observacao_aluno' => [
             'label' => 'Observações do aluno',
+            'help' => '',
+        ],
+
+        'rota_transporte' => [
+            'label' => 'Rota',
             'help' => '',
         ],
     ];
@@ -772,6 +779,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             ],
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+        $options = ['label' => $this->_getLabel('rota_transporte'), 'required' => false, 'size' => 50, 'max_length' => 200, 'value' => $this->rota_transporte];
+        $this->inputsHelper()->textArea('rota_transporte', $options);
+
 
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
