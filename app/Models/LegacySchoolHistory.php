@@ -130,19 +130,6 @@ class LegacySchoolHistory extends LegacyModel
         return $this->historico_grade_curso_id === self::GRADE_ANO;
     }
 
-    public function ejaIsReproved(): bool
-    {
-        return in_array($this->aprovado_eja, [
-            SchoolHistoryStatus::REPROVED,
-            SchoolHistoryStatus::REPROVED_BY_ABSENCE,
-        ], true);
-    }
-
-    public function ejaIsOnGoing(): bool
-    {
-        return $this->aprovado_eja === SchoolHistoryStatus::ONGOING;
-    }
-
     public function isOnGoing(): bool
     {
         return $this->aprovado === SchoolHistoryStatus::ONGOING;
