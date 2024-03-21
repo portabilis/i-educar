@@ -14,6 +14,8 @@ class Process
 
     public const SCHEDULE = 59;
 
+    public const REGISTRATION_ACTIONS = 60;
+
     public const MENU_ADDRESSING = 68;
 
     public const MENU_TRANSPORT = 69;
@@ -25,10 +27,6 @@ class Process
     public const REGISTRATIONS = 578;
 
     public const ENROLLMENT_HISTORY = 1001;
-
-    public const ATTENDED_CANDIDATE = 1002;
-
-    public const BACK_TO_QUEUE = 1003;
 
     public const RECLASSIFY_REGISTRATION = 1004;
 
@@ -57,6 +55,8 @@ class Process
     public const UPDATE_REGISTRATION_STATUS = 2005;
 
     public const NOTIFY_TRANSFER = 2006;
+
+    public const EDUCACENSO_IMPORT_INEP = 2007;
 
     public const SETTINGS = 3000;
 

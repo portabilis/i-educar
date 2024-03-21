@@ -639,7 +639,7 @@ return new class extends clsCadastro
 
         $options = ['label' => 'Não informar esta turma no Censo escolar',
             'value' => $this->nao_informar_educacenso,
-            'label_hint' => 'Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'];
+            'label_hint' => 'Caso marcado, esta turma e suas matrículas, não serão informadas no arquivo da 1° e 2° etapa do Censo escolar'];
         $this->inputsHelper()->checkbox(attrName: 'nao_informar_educacenso', inputOptions: $options);
 
         $scripts = [

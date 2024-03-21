@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EnrollmentInepController;
 use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
@@ -33,9 +34,6 @@ Route::redirect('intranet/public_distrito_cad.php', '/web/enderecamento/distrito
 
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
-Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet')
-    ->defaults('uri', 'filaunica/educar_consulta.php');
-
 Route::any('intranet/suspenso.php', 'LegacyController@intranet')
     ->defaults('uri', 'suspenso.php');
 
@@ -59,13 +57,17 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
+    Route::get('/enrollment-inep/{enrollment}', [EnrollmentInepController::class, 'edit'])
+        ->name('enrollments.enrollment-inep.edit');
+    Route::post('/enrollment-inep/{enrollment}', [EnrollmentInepController::class, 'update'])
+        ->name('enrollments.enrollment-inep.update');
 
     Route::get('registration/{registration}/formative-itinerary', 'EnrollmentFormativeItineraryController@index')
-        ->name('registration.formative-itinerary.index');
+        ->name('registration.formative-itinerary.index')->middleware('can:view:690');
     Route::get('registration/{registration}/formative-itinerary/{enrollment}/edit', 'EnrollmentFormativeItineraryController@edit')
-        ->name('registration.formative-itinerary.edit');
+        ->name('registration.formative-itinerary.edit')->middleware('can:modify:690');
     Route::put('registration/{registration}/formative-itinerary/{enrollment}', 'EnrollmentFormativeItineraryController@update')
-        ->name('registration.formative-itinerary.update');
+        ->name('registration.formative-itinerary.update')->middleware('can:modify:690');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');
@@ -119,8 +121,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
-        Route::post('importacao', 'ImportController@import')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_HISTORY);
-        Route::get('importacao/historico', 'ImportController@index')->middleware('can:view:' . Process::EDUCACENSO_IMPORT_HISTORY)->name('educacenso.history');
     });
 
     Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');

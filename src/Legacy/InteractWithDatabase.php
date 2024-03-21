@@ -62,7 +62,7 @@ trait InteractWithDatabase
      *
      * @throws Exception
      */
-    public function paginate($limit, $offset, Closure $modifier = null)
+    public function paginate($limit, $offset, ?Closure $modifier = null)
     {
         $query = $this->newQuery();
 

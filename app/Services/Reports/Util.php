@@ -44,7 +44,7 @@ class Util
         return '00:00';
     }
 
-    public static function format(mixed $value, int $decimalPlaces = null): string
+    public static function format(mixed $value, ?int $decimalPlaces = null): string
     {
         return number_format($value, $decimalPlaces ?? 1, ',', '.');
     }
@@ -54,7 +54,7 @@ class Util
         return (float) str_replace(',', '.', $value);
     }
 
-    public static function moduleName(Collection $modules = null): array
+    public static function moduleName(?Collection $modules = null): array
     {
         if ($modules === null) {
             return [

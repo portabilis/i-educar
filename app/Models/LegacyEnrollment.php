@@ -60,6 +60,7 @@ class LegacyEnrollment extends LegacyModel
         'itinerario_concomitante',
         'etapa_educacenso',
         'cod_curso_profissional',
+        'desconsiderar_educacenso',
     ];
 
     protected $casts = [
@@ -67,6 +68,7 @@ class LegacyEnrollment extends LegacyModel
         'composicao_itinerario' => LegacyArray::class,
         'data_enturmacao' => 'date',
         'data_exclusao' => 'date',
+        'desconsiderar_educacenso' => 'boolean',
     ];
 
     protected function date(): Attribute
@@ -164,5 +166,10 @@ class LegacyEnrollment extends LegacyModel
     public function getStudentId()
     {
         return $this->registration->student->cod_aluno;
+    }
+
+    public function inep()
+    {
+        return $this->hasOne(EnrollmentInep::class, 'matricula_turma_id');
     }
 }

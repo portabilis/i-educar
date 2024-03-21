@@ -297,81 +297,93 @@ return new class extends clsDetalhe
             ) {
 
                 // Verificar se tem permissao para executar cancelamento de matricula
-                if ($this->permissao_cancelar()) {
+                if ($this->permissaoCancelar()) {
                     $this->array_botao[] = 'Cancelar matrícula';
                     $this->array_botao_url_script[] = "showConfirmationMessage(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
                 }
 
-                $this->array_botao[] = 'Ocorrências disciplinares';
-                $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
+                if ($this->permissaoOcorrenciaDisciplinar()) {
+                    $this->array_botao[] = 'Ocorrências disciplinares';
+                    $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
+                }
 
                 // Apenas libera a dispensa de disciplina quando o aluno estiver enturmado
-                if ($this->permissao_visualizar_componente() && $registro['ref_ref_cod_serie'] && $existeTurma) {
+                if ($this->permissaoDispensaComponenteCurriculares() && $registro['ref_ref_cod_serie'] && $existeTurma) {
                     $this->array_botao[] = 'Dispensa de componentes curriculares';
                     $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
-                if ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO && $this->permissao_busca_ativa()) {
+                if ($this->permissaoBuscaAtiva() && $registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
                     $this->array_botao[] = 'Busca ativa';
                     $this->array_botao_url_script[] = "go(\"educar_busca_ativa_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
                 $dependencia = $registro['dependencia'];
 
-                if ($registro['ref_ref_cod_serie'] && $existeTurma && $dependencia) {
+                if ($this->permissaoDisciplinasDependência() && $registro['ref_ref_cod_serie'] && $existeTurma && $dependencia) {
                     $this->array_botao[] = 'Disciplinas de dependência';
                     $this->array_botao_url_script[] = "go(\"educar_disciplina_dependencia_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
-                $this->array_botao[] = _cl(key: 'matricula.detalhe.enturmar');
-                $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}\")";
+                if ($this->permissaoEnturmar()) {
+                    $this->array_botao[] = _cl(key: 'matricula.detalhe.enturmar');
+                    $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}\")";
+                }
 
-                $this->array_botao[] = 'Modalidade de ensino';
-                $this->array_botao_url_script[] = "go(\"educar_matricula_modalidade_ensino.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+                if ($this->permissaoModalidadeEnsino()) {
+                    $this->array_botao[] = 'Modalidade de ensino';
+                    $this->array_botao_url_script[] = "go(\"educar_matricula_modalidade_ensino.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+                }
 
-                $this->array_botao[] = 'Abandono';
-                $this->array_botao_url_script[] = "go(\"educar_abandono_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
+                if ($this->permissaoAbandono()) {
+                    $this->array_botao[] = 'Abandono';
+                    $this->array_botao_url_script[] = "go(\"educar_abandono_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
+                }
 
-                $this->array_botao[] = 'Falecido';
-                $this->array_botao_url_script[] = "go(\"educar_falecido_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
+                if ($this->permissaoFalecido()) {
+                    $this->array_botao[] = 'Falecido';
+                    $this->array_botao_url_script[] = "go(\"educar_falecido_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
+                }
 
-                if ($registro['ref_ref_cod_serie'] && $this->permissaoReclassificar()) {
+                if ($this->permissaoReclassificar() && $registro['ref_ref_cod_serie']) {
                     $this->array_botao[] = 'Reclassificar';
                     $this->array_botao_url_script[] = "go(\"educar_matricula_reclassificar_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
                 }
             }
 
-            if ($existeTurmaMulti) {
+            if ($this->permissaoEtapaAluno() && $existeTurmaMulti) {
                 $this->array_botao[] = 'Etapa do aluno';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
-            if ($existeAtendimentoEspecializado) {
+            if ($this->permissaoTipoAEEAluno() && $existeAtendimentoEspecializado) {
                 $this->array_botao[] = 'Tipo do AEE do aluno';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_tipo_aee_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
-            if ($existeTurmaTurnoIntegral) {
+            if ($this->permissaoTurno() && $existeTurmaTurnoIntegral) {
                 $this->array_botao[] = 'Turno';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
-            if ($existeTurmaItineraria) {
+            if ($this->permissaoItinerarioFormativo() && $existeTurmaItineraria) {
                 $this->array_botao[] = 'Itinerário formativo';
                 $link = route(name: 'registration.formative-itinerary.index', parameters: $registro['cod_matricula']);
                 $this->array_botao_url_script[] = "go(\"{$link}\")";
             }
 
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
-                if (is_array(value: $lst_transferencia) && isset($data_transferencia)) {
-                    $this->array_botao[] = 'Cancelar solicitação transferência';
-                    $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
-                } elseif ($registro['ref_ref_cod_serie'] && $registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
-                    $this->array_botao[] = _cl(key: 'matricula.detalhe.solicitar_transferencia');
-                    $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
+                if ($this->permissaoSolicitarTransferencia()) {
+                    if (is_array(value: $lst_transferencia) && isset($data_transferencia)) {
+                        $this->array_botao[] = 'Cancelar solicitação transferência';
+                        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
+                    } elseif ($registro['ref_ref_cod_serie'] && $registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+                        $this->array_botao[] = _cl(key: 'matricula.detalhe.solicitar_transferencia');
+                        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
+                    }
                 }
 
-                if ($registro['aprovado'] == 3 &&
+                if ($this->permissaoFormando() && $registro['aprovado'] == 3 &&
                     (!is_array(value: $lst_transferencia) && !isset($data_transferencia))
                 ) {
                     if ($registro['formando'] == 0) {
@@ -387,24 +399,27 @@ return new class extends clsDetalhe
             $ultimaMatricula = $obj_matricula->getEndMatricula(codAluno: $registro['ref_cod_aluno']);
             $permiteCancelarTransferencia = new clsPermissoes();
             $permiteCancelarTransferencia = $permiteCancelarTransferencia->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
-            if ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia(matriculaId: $registro['cod_matricula'])) {
-                $this->array_botao[] = 'Cancelar transferência';
 
-                // TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
-                $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
-            } elseif ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
-                $this->array_botao[] = 'Cancelar transferência';
+            if ($this->permissaoSolicitarTransferencia()) {
+                if ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia(matriculaId: $registro['cod_matricula'])) {
+                    $this->array_botao[] = 'Cancelar transferência';
 
-                // TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
-                $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
+                    // TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
+                    $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
+                } elseif ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
+                    $this->array_botao[] = 'Cancelar transferência';
+
+                    // TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
+                    $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
+                }
             }
 
-            if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
+            if ($this->permissaoAbandono() && $registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO && $this->permissaoAbandono()) {
                 $this->array_botao[] = 'Desfazer abandono';
                 $this->array_botao_url_script[] = "deleteAbandono({$registro['cod_matricula']})";
             }
 
-            if (!$existeSaidaEscola &&
+            if ($this->permissaoSaidaEscola() && !$existeSaidaEscola &&
                 $verificaMatriculaUltimoAno &&
                 ($registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO ||
                     $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO ||
@@ -415,12 +430,12 @@ return new class extends clsDetalhe
                 $this->array_botao_url_script[] = "go(\"educar_saida_escola_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&escola={$registro['ref_ref_cod_escola']}\");";
             }
 
-            if ($existeSaidaEscola && $verificaMatriculaUltimoAno) {
+            if ($this->permissaoSaidaEscola() && $existeSaidaEscola && $verificaMatriculaUltimoAno) {
                 $this->array_botao[] = 'Cancelar saída da escola';
                 $this->array_botao_url_script[] = "desfazerSaidaEscola({$registro['cod_matricula']})";
             }
 
-            if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO) {
+            if ($this->permissaoReclassificar() && $registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO && $this->permissaoReclassificar()) {
                 $this->array_botao[] = 'Desfazer reclassificação';
                 $this->array_botao_url_script[] = "deleteReclassificacao({$registro['cod_matricula']})";
             }
@@ -454,43 +469,101 @@ return new class extends clsDetalhe
         return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-matricula.js');
     }
 
+    private function getPermissaoVisualizar($process)
+    {
+        $user = Auth::user();
+        $allow = Gate::allows(ability: 'view', arguments: $process);
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
+    }
+
     // Verificar se pode cancelar matricula
-    public function permissao_cancelar()
+    public function permissaoCancelar()
     {
-        $acesso = new clsPermissoes();
-
-        return $acesso->permissao_excluir(int_processo_ap: 627, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true);
+        return $this->getPermissaoVisualizar(627);
     }
 
-    public function permissao_visualizar_componente()
+    public function permissaoOcorrenciaDisciplinar()
     {
-        $user = Auth::user();
-        $allow = Gate::allows(ability: 'view', arguments: 628);
-
-        if ($user->isLibrary()) {
-            return false;
-        }
-
-        return $allow;
+        return $this->getPermissaoVisualizar(681);
     }
 
-    public function permissao_busca_ativa()
+    public function permissaoDispensaComponenteCurriculares()
     {
-        $user = Auth::user();
-        $allow = Gate::allows(ability: 'view', arguments: Process::ACTIVE_LOOKING);
+        return $this->getPermissaoVisualizar(628);
+    }
 
-        if ($user->isLibrary()) {
-            return false;
-        }
+    public function permissaoBuscaAtiva()
+    {
+        return $this->getPermissaoVisualizar(Process::ACTIVE_LOOKING);
+    }
 
-        return $allow;
+    public function permissaoDisciplinasDependência()
+    {
+        return $this->getPermissaoVisualizar(682);
+    }
+
+    public function permissaoEnturmar()
+    {
+        return $this->getPermissaoVisualizar(683);
+    }
+
+    public function permissaoModalidadeEnsino()
+    {
+        return $this->getPermissaoVisualizar(684);
+    }
+
+    public function permissaoAbandono()
+    {
+        return $this->getPermissaoVisualizar(685);
+    }
+
+    public function permissaoFalecido()
+    {
+        return $this->getPermissaoVisualizar(686);
     }
 
     public function permissaoReclassificar()
     {
-        $acesso = new clsPermissoes();
+        return $this->getPermissaoVisualizar(Process::RECLASSIFY_REGISTRATION);
+    }
 
-        return $acesso->permissao_cadastra(int_processo_ap: Process::RECLASSIFY_REGISTRATION, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true);
+    public function permissaoEtapaAluno()
+    {
+        return $this->getPermissaoVisualizar(687);
+    }
+
+    public function permissaoTipoAEEAluno()
+    {
+        return $this->getPermissaoVisualizar(688);
+    }
+
+    public function permissaoTurno()
+    {
+        return $this->getPermissaoVisualizar(689);
+    }
+
+    public function permissaoItinerarioFormativo()
+    {
+        return $this->getPermissaoVisualizar(690);
+    }
+
+    public function permissaoSolicitarTransferencia()
+    {
+        return $this->getPermissaoVisualizar(691);
+    }
+
+    public function permissaoFormando()
+    {
+        return $this->getPermissaoVisualizar(692);
+    }
+
+    public function permissaoSaidaEscola()
+    {
+        return $this->getPermissaoVisualizar(693);
     }
 
     public function canCancelTransferencia($matriculaId)

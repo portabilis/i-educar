@@ -2,8 +2,8 @@
 
 namespace App\Models\Builders;
 
+use App\Models\LegacySchoolHistory;
 use App\Models\SchoolHistoryStatus;
-use App\Services\SchoolHistory\Objects\SchoolHistory;
 
 class SchoolHistoryBuilder extends LegacyBuilder
 {
@@ -36,7 +36,7 @@ class SchoolHistoryBuilder extends LegacyBuilder
 
     public function whereCourseEja(): self
     {
-        return $this->where('historico_grade_curso_id', SchoolHistory::GRADE_EJA);
+        return $this->where('historico_grade_curso_id', LegacySchoolHistory::GRADE_EJA);
     }
 
     public function whereStartAfter(int $start): self

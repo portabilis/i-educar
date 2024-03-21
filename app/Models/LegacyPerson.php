@@ -35,6 +35,7 @@ class LegacyPerson extends LegacyModel
      * @var array
      */
     protected $fillable = [
+        'idpes',
         'nome',
         'data_cad',
         'tipo',

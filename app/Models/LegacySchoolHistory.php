@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Builders\SchoolHistoryBuilder;
 use App\Services\Reports\Util;
-use App\Services\SchoolHistory\Objects\SchoolHistory;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
@@ -16,6 +15,12 @@ class LegacySchoolHistory extends LegacyModel
     use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;
+
+    public const GRADE_SERIE = 1;
+
+    public const GRADE_ANO = 2;
+
+    public const GRADE_EJA = 3;
 
     /**
      * @var string
@@ -112,30 +117,17 @@ class LegacySchoolHistory extends LegacyModel
 
     public function courseIsEja(): bool
     {
-        return $this->historico_grade_curso_id === SchoolHistory::GRADE_EJA;
+        return $this->historico_grade_curso_id === self::GRADE_EJA;
     }
 
     public function courseIsSerie(): bool
     {
-        return $this->historico_grade_curso_id === SchoolHistory::GRADE_SERIE;
+        return $this->historico_grade_curso_id === self::GRADE_SERIE;
     }
 
     public function courseIsAno(): bool
     {
-        return $this->historico_grade_curso_id === SchoolHistory::GRADE_ANO;
-    }
-
-    public function ejaIsReproved(): bool
-    {
-        return in_array($this->aprovado_eja, [
-            SchoolHistoryStatus::REPROVED,
-            SchoolHistoryStatus::REPROVED_BY_ABSENCE,
-        ], true);
-    }
-
-    public function ejaIsOnGoing(): bool
-    {
-        return $this->aprovado_eja === SchoolHistoryStatus::ONGOING;
+        return $this->historico_grade_curso_id === self::GRADE_ANO;
     }
 
     public function isOnGoing(): bool

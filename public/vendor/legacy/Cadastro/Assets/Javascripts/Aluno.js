@@ -320,6 +320,7 @@ let camposTransporte = function() {
   $j("#veiculo_transporte_escolar").makeUnrequired();
   if (tipoTransporte.val() == "nenhum") {
     document.getElementById("veiculo_transporte_escolar").disabled = true;
+    $j('#tr_rota_transporte').hide();
   } else if (
     tipoTransporte.val() == "municipal" ||
     (tipoTransporte.val() == "estadual" && tipoTransporte.val() != "nenhum")
@@ -328,8 +329,10 @@ let camposTransporte = function() {
       $j("#veiculo_transporte_escolar").makeRequired();
     }
     document.getElementById("veiculo_transporte_escolar").disabled = false;
+    $j('#tr_rota_transporte').show();
   } else {
     document.getElementById("veiculo_transporte_escolar").disabled = true;
+    $j('#tr_rota_transporte').hide();
   }
   $j("#veiculo_transporte_escolar").trigger("chosen:updated");
 }
@@ -629,6 +632,7 @@ resourceOptions.handleGet = function (dataResponse) {
   tipo_resp = dataResponse.tipo_responsavel;
   $j("#religiao_id").val(dataResponse.religiao_id);
   $j("#tipo_transporte").val(dataResponse.tipo_transporte);
+  $j("#rota_transporte").val(dataResponse.rota_transporte);
   $j("#alfabetizado").attr("checked", dataResponse.alfabetizado);
   document.getElementById("emancipado").checked = dataResponse.emancipado;
   $j("#autorizado_um").val(dataResponse.autorizado_um);

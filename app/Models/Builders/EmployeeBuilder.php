@@ -79,7 +79,7 @@ class EmployeeBuilder extends LegacyBuilder
      *
      * @return $this
      */
-    public function whereAllocation(bool $withNotAllocation, int $school = null, int $year = null): self
+    public function whereAllocation(bool $withNotAllocation, ?int $school = null, ?int $year = null): self
     {
         $this->where(function (Builder $q) use ($school, $year, $withNotAllocation) {
             $q->whereHas('employeeAllocations', function (Builder $q) use ($school, $year) {

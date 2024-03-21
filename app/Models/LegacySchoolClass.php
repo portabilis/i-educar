@@ -254,7 +254,13 @@ class LegacySchoolClass extends Model
     protected function beginAcademicYear(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->stages()->orderBy('sequencial')->value('data_inicio'),
+            get: function () {
+                if (!$this->course?->is_standard_calendar && ($schoolClassStages = $this->schoolClassStages()->orderBy('sequencial')->value('data_inicio'))) {
+                    return $schoolClassStages;
+                }
+
+                return $this->academicYearStages()->orderBy('sequencial')->value('data_inicio');
+            },
         );
     }
 
@@ -268,7 +274,13 @@ class LegacySchoolClass extends Model
     protected function endAcademicYear(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->stages()->orderByDesc('sequencial')->value('data_fim'),
+            get: function () {
+                if (!$this->course?->is_standard_calendar && ($schoolClassStages = $this->schoolClassStages()->orderByDesc('sequencial')->value('data_fim'))) {
+                    return $schoolClassStages;
+                }
+
+                return $this->academicYearStages()->orderByDesc('sequencial')->value('data_fim');
+            },
         );
     }
 

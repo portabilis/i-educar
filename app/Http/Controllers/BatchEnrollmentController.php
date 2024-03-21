@@ -20,15 +20,13 @@ class BatchEnrollmentController extends Controller
     /**
      * Renderiza a view da desenturmação em lote.
      *
-     * @param MessageBag        $fails
-     * @param MessageBag        $success
      * @return View
      */
     public function viewCancelEnrollments(
         LegacySchoolClass $schoolClass,
         Collection $enrollments,
-        MessageBag $fails = null,
-        MessageBag $success = null
+        ?MessageBag $fails = null,
+        ?MessageBag $success = null
     ) {
         $this->breadcrumb('Desenturmar em lote', [
             url('intranet/educar_index.php') => 'Escola',
@@ -49,15 +47,13 @@ class BatchEnrollmentController extends Controller
     /**
      * Renderiza a view da enturmação em lote.
      *
-     * @param MessageBag        $fails
-     * @param MessageBag        $success
      * @return View
      */
     public function viewEnroll(
         LegacySchoolClass $schoolClass,
         Collection $registrations,
-        MessageBag $fails = null,
-        MessageBag $success = null
+        ?MessageBag $fails = null,
+        ?MessageBag $success = null
     ) {
         $this->breadcrumb('Enturmar em lote', [
             url('intranet/educar_index.php') => 'Escola',
@@ -171,8 +167,6 @@ class BatchEnrollmentController extends Controller
     }
 
     /**
-     * @param MessageBag $fail
-     * @param MessageBag $success
      * @return void
      */
     protected function setMessages(

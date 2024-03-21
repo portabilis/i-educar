@@ -113,6 +113,12 @@ return new class extends clsCadastro
             str_pagina_redirecionar: "educar_falta_atraso_det.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}"
         );
 
+        if (is_null($this->ref_cod_escola)) {
+            $this->mensagem = 'O campo escola deve ser preenchido.';
+
+            return false;
+        }
+
         // Transforma a data para o formato aceito pelo banco
         $this->data_inicio = dataToBanco($this->data_inicio);
         $this->data_fim = dataToBanco($this->data_fim);

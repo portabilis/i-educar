@@ -66,7 +66,7 @@ abstract class CoreExt_DataMapper
     /**
      * Construtor.
      */
-    public function __construct(clsBanco $db = null)
+    public function __construct(?clsBanco $db = null)
     {
         if (!is_null($db)) {
             $this->_setDbAdapter($db);
@@ -78,7 +78,7 @@ abstract class CoreExt_DataMapper
      * nas instâncias concretas de CoreExt_DataMapper quando nenhuma instância de
      * clsBanco é passada ao construtor.
      */
-    public static function setDefaultDbAdapter(clsBanco $db = null)
+    public static function setDefaultDbAdapter(?clsBanco $db = null)
     {
         self::$_defaultDbAdapter = $db;
     }

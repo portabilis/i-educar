@@ -15,7 +15,7 @@ class PhoneFactory extends Factory
         ];
     }
 
-    public function forView(int $id = null): self
+    public function forView(?int $id = null): self
     {
         $attributes = $id ? ['idpes' => $id] : [];
         $model = LegacyPhoneFactory::new($attributes)->create();

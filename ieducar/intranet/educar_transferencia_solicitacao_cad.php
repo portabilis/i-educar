@@ -65,6 +65,15 @@ return new class extends clsCadastro
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js',
         ]);
+
+        $user = Auth::user();
+        $allow = Gate::allows('view', 691);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
     }
 
     public function Inicializar()
