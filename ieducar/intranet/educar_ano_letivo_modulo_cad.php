@@ -244,7 +244,7 @@ return new class extends clsCadastro
                 nome: 'informativo1-alocacoes-vinculos',
                 campo: '
                     Ao definir um novo ano letivo, o i-Educar copia automaticamente as turmas do ano anterior. <br>
-                    Gostaria de compiar também as alocações e vínculos?
+                    Gostaria de copiar também as alocações e vínculos?
                 ',
                 separador: null
             );

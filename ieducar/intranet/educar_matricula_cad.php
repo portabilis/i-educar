@@ -63,8 +63,6 @@ return new class extends clsCadastro
 
     public $ref_cod_candidato_reserva_vaga;
 
-    public $ref_cod_candidato_fila_unica;
-
     public $ref_cod_turma_copiar_enturmacoes;
 
     private $availableTimeService;
@@ -77,13 +75,26 @@ return new class extends clsCadastro
 
     private $anoUltimaMatricula;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $user = Auth::user();
+        $allow = Gate::allows('view', 680);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+
+            return false;
+        }
+    }
+
     public function Inicializar()
     {
         $this->ref_cod_turma_copiar_enturmacoes = $this->getQueryString(name: 'ref_cod_turma_copiar_enturmacoes');
         $this->cod_matricula = $this->getQueryString(name: 'cod_matricula');
         $this->ref_cod_aluno = $this->getQueryString(name: 'ref_cod_aluno');
         $this->ref_cod_candidato_reserva_vaga = $this->getQueryString(name: 'ref_cod_candidato_reserva_vaga');
-        $this->ref_cod_candidato_fila_unica = $this->getQueryString(name: 'cod_candidato_fila_unica');
         $this->ano = $this->getQueryString(name: 'ano');
 
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
@@ -130,7 +141,6 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'cod_matricula', valor: $this->cod_matricula);
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
         $this->campoOculto(nome: 'ref_cod_candidato_reserva_vaga', valor: $this->ref_cod_candidato_reserva_vaga);
-        $this->campoOculto(nome: 'ref_cod_candidato_fila_unica', valor: $this->ref_cod_candidato_fila_unica);
 
         if ($this->ref_cod_aluno) {
             $obj_aluno = new clsPmieducarAluno();
@@ -175,9 +185,6 @@ return new class extends clsCadastro
                 $this->campoOculto(nome: 'is_padrao', valor: $det_curso['padrao_ano_escolar']);
             }
         }
-
-        $script = ['/vendor/legacy/Cadastro/Assets/Javascripts/Matricula.js'];
-        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
 
         $this->acao_enviar = 'formUtils.submit()';
     }
@@ -825,11 +832,6 @@ return new class extends clsCadastro
                 if ($countEscolasIguais > 0) {
                     $obj_crv = new clsPmieducarCandidatoReservaVaga(cod_candidato_reserva_vaga: $this->ref_cod_candidato_reserva_vaga);
                     $obj_crv->vinculaMatricula(ref_cod_escola: $this->ref_cod_escola, ref_cod_matricula: $this->cod_matricula, ref_cod_aluno: $this->ref_cod_aluno);
-                }
-
-                if ($this->ref_cod_candidato_fila_unica) {
-                    $obj_cfu = new clsPmieducarCandidatoFilaUnica(cod_candidato_fila_unica: $this->ref_cod_candidato_fila_unica);
-                    $obj_cfu->vinculaMatricula(ref_cod_matricula: $this->cod_matricula);
                 }
 
                 $this->enturmacaoMatricula(matriculaId: $this->cod_matricula, turmaDestinoId: $this->ref_cod_turma);

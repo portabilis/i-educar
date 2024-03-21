@@ -36,8 +36,6 @@ return new class extends clsListagem
 
             return false;
         }
-
-        return true;
     }
 
     public function Gerar()

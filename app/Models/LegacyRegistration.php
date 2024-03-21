@@ -68,6 +68,7 @@ class LegacyRegistration extends LegacyModel
         'data_matricula',
         'ultima_matricula',
         'bloquear_troca_de_situacao',
+        'observacao',
     ];
 
     protected $casts = [

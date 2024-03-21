@@ -9,7 +9,6 @@ use Tests\EloquentTestCase;
 
 class FileExportTest extends EloquentTestCase
 {
-
     public function testPresignedUrl(): void
     {
         $this->assertEquals((new UrlPresigner)->getPresignedUrl($this->model->url), $this->model->presignedUrl);
@@ -27,7 +26,7 @@ class FileExportTest extends EloquentTestCase
             'KB',
             'MB',
             'GB',
-            'TB'
+            'TB',
         ];
         $bytes = max($this->model->size, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));

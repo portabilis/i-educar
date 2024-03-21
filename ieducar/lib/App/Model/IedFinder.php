@@ -473,7 +473,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     public static function getEscolaSerieDisciplina(
         $serieId,
         $escolaId,
-        ComponenteCurricular_Model_ComponenteDataMapper $mapper = null,
+        ?ComponenteCurricular_Model_ComponenteDataMapper $mapper = null,
         $disciplinaId = null,
         $etapa = null,
         $trazerDetalhes = true,
@@ -541,8 +541,8 @@ class App_Model_IedFinder extends CoreExt_Entity
         $serieId,
         $escola,
         $turma,
-        ComponenteCurricular_Model_TurmaDataMapper $mapper = null,
-        ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = null,
+        ?ComponenteCurricular_Model_TurmaDataMapper $mapper = null,
+        ?ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = null,
         $componenteCurricularId = null,
         $etapa = null,
         $trazerDetalhes = true,
@@ -647,7 +647,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     protected static function _hydrateComponentes(
         array $componentes,
         $anoEscolar,
-        ComponenteCurricular_Model_ComponenteDataMapper $mapper = null
+        ?ComponenteCurricular_Model_ComponenteDataMapper $mapper = null
     ) {
         $ids = array_map(function ($componente) {
             return intval($componente->id);
@@ -816,23 +816,21 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @param int $codEscola
      * @return array
-     *
      */
     public static function getMatriculas($codTurma = null)
     {
         return LegacyRegistration::query()
             ->with([
                 'student:cod_aluno,ref_idpes',
-                'student.person:idpes,nome'
+                'student.person:idpes,nome',
             ])
             ->active()
             ->whereSchoolClass($codTurma)
             ->get([
                 'cod_matricula',
-                'ref_cod_aluno'
+                'ref_cod_aluno',
             ])->pluck('name', 'cod_matricula');
     }
-
 
     /**
      * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados
@@ -846,7 +844,7 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getRegraAvaliacaoPorMatricula(
         $codMatricula,
-        RegraAvaliacao_Model_RegraDataMapper $mapper = null,
+        ?RegraAvaliacao_Model_RegraDataMapper $mapper = null,
         $matricula = null
     ) {
         if (empty($matricula)) {
@@ -889,7 +887,7 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getRegraAvaliacaoPorTurma(
         $turmaId,
-        RegraAvaliacao_Model_RegraDataMapper $mapper = null
+        ?RegraAvaliacao_Model_RegraDataMapper $mapper = null
     ) {
         $turma = self::getTurma($turmaId);
         $serie = self::getSerie($turma['ref_ref_cod_serie']);
@@ -927,8 +925,8 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getComponentesPorMatricula(
         $codMatricula,
-        ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = null,
-        ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = null,
+        ?ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = null,
+        ?ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = null,
         $componenteCurricularId = null,
         $etapa = null,
         $turma = null,

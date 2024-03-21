@@ -38,6 +38,9 @@ class EnrollmentEloquentBuilder extends Builder
                 'rg_issue_date' => 'md.data_exp_rg as RG (Data Emissão) da mãe',
                 'rg_state_abbreviation' => 'md.sigla_uf_exp_rg as RG (Estado) da mãe',
             ],
+            'mother.phone' => [
+                'phone' => 'mep.phones as Telefones da mãe',
+            ],
             'father.person' => [
                 'id' => 'f.idpes as ID do pai',
                 'name' => 'f.nome as Nome do pai',
@@ -59,6 +62,9 @@ class EnrollmentEloquentBuilder extends Builder
                 'rg_issue_date' => 'fd.data_exp_rg as RG (Data Emissão) do pai',
                 'rg_state_abbreviation' => 'fd.sigla_uf_exp_rg as RG (Estado) do pai',
             ],
+            'father.phone' => [
+                'phone' => 'fep.phones as Telefones do pai',
+            ],
             'guardian.person' => [
                 'id' => 'g.idpes as ID do responsável',
                 'name' => 'g.nome as Nome do responsável',
@@ -79,6 +85,9 @@ class EnrollmentEloquentBuilder extends Builder
                 'rg' => 'gd.rg as RG do responsável',
                 'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
                 'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável',
+            ],
+            'guardian.phone' => [
+                'phone' => 'gep.phones as Telefones do responsável',
             ],
             'place' => [
                 'address' => 'p.address as Logradouro',
@@ -119,6 +128,12 @@ class EnrollmentEloquentBuilder extends Builder
             $this->leftJoin('cadastro.documento as md', 'exporter_student.mother_id', 'md.idpes');
         }
 
+        //telefone
+        if ($only = $this->model->getLegacyExportedColumns('mother.phone', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('exporter_phones as mep', 'exporter_student.mother_id', 'mep.person_id');
+        }
+
         return $this;
     }
 
@@ -146,6 +161,12 @@ class EnrollmentEloquentBuilder extends Builder
             $this->leftJoin('cadastro.documento as fd', 'exporter_student.father_id', 'fd.idpes');
         }
 
+        //telefone
+        if ($only = $this->model->getLegacyExportedColumns('father.phone', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('exporter_phones as fep', 'exporter_student.father_id', 'fep.person_id');
+        }
+
         return $this;
     }
 
@@ -171,6 +192,12 @@ class EnrollmentEloquentBuilder extends Builder
         if ($only = $this->model->getLegacyExportedColumns('guardian.document', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.documento as gd', 'exporter_student.guardian_id', 'gd.idpes');
+        }
+
+        //telefone
+        if ($only = $this->model->getLegacyExportedColumns('guardian.phone', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('exporter_phones as gep', 'exporter_student.guardian_id', 'gep.person_id');
         }
 
         return $this;

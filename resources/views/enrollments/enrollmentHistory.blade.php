@@ -43,7 +43,7 @@
         <table class="tablelistagem" width="100%">
             <tbody>
                 <tr>
-                    <td class="titulo-tabela-listagem" colspan="13">Lista de enturmações da matrícula</td>
+                    <td class="titulo-tabela-listagem" colspan="14">Lista de enturmações da matrícula</td>
                 </tr>
                 <tr>
                     <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Sequencial</td>
@@ -59,6 +59,9 @@
                     <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Falecido</td>
                     <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário criou</td>
                     <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário editou</td>
+                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">
+                        Editar
+                    </td>
                 </tr>
                 @foreach($registration->enrollments->sortBy('sequencial') as $enrollment)
                 <tr>
@@ -99,15 +102,20 @@
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->updatedBy->person->name ?? null }}</a>
                     </td>
+                    <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
+                        <a href="{{ route('enrollments.enrollment-inep.edit', $enrollment->getKey()) }}">
+                            INEP da Matrícula
+                        </a>
+                    </td>
                 </tr>
                 @endforeach
                 <tr>
-                    <td class="formdktd" valign="top" align="left" colspan="13">
+                    <td class="formdktd" valign="top" align="left" colspan="14">
                         <small>A coluna "Turno do aluno" permanecerá em branco quando o turno do aluno for o mesmo da turma.</small>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="13" align="center">
+                    <td colspan="14" align="center">
                         <input type="button" class="btn-green botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $registration->id }}')" value=" Voltar ">
                     </td>
                 </tr>

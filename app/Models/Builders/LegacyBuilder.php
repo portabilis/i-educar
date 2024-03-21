@@ -186,7 +186,7 @@ class LegacyBuilder extends Builder
      *
      * @return $this
      */
-    public function whereLimit(int $limit = null): self
+    public function whereLimit(?int $limit = null): self
     {
         return $this->when($limit, fn ($q) => $q->limit($limit));
     }

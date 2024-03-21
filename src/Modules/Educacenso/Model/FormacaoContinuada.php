@@ -38,6 +38,10 @@ class FormacaoContinuada
 
     public const GESTAO_ESCOLAR = 17;
 
+    public const EDUCACAO_BILINGUE_SURDOS = 18;
+
+    public const EDUCACAO_TIC = 19;
+
     public static function getDescriptiveValues()
     {
         return [
@@ -46,6 +50,8 @@ class FormacaoContinuada
             self::ANOS_INICIAIS => 'Anos iniciais do ensino fundamental',
             self::ANOS_FINAIS => 'Anos finais do ensino fundamental',
             self::ENSINO_MEDIO => 'Ensino médio',
+            self::EDUCACAO_BILINGUE_SURDOS => 'Educação bilíngue para surdos',
+            self::EDUCACAO_TIC => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
             self::EJA => 'Educação de jovens e adultos',
             self::EDUCACAO_ESPECIAL => 'Educação especial',
             self::EDUCACAO_INDIGENA => 'Educação indígena',

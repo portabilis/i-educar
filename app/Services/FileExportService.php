@@ -8,6 +8,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use App\Models\NotificationType;
 use Exception;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use iEducar\Reports\Contracts\StudentRecordReport;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -17,26 +18,35 @@ use ZipArchive;
 
 class FileExportService
 {
-
     private string $mainPath;
+
     private string $destinyMainPath;
+
     private string $destinyZipFilePath;
+
     private string $folderStudentsPath;
+
     private string $folderStudentsName;
+
     private string $connection;
+
     private string $zipFilePath;
+
     private Collection $students;
+
     private string $tempDisk = 'local';
+
     private string $compressType = 'zip';
+
     private int $student_folders_count = 0;
+
     private bool $issueStudentRecordReport = true;
 
     public function __construct(
-        private FileExport  $fileExport,
-        private array       $args,
-        private string|null $disk = null
-    )
-    {
+        private FileExport $fileExport,
+        private array $args,
+        private ?string $disk = null
+    ) {
         $this->connection = $fileExport->getConnectionName();
 
         //temp
@@ -135,7 +145,7 @@ class FileExportService
                 'cod_aluno',
                 'ref_idpes',
                 'url_documento',
-                'url_laudo_medico'
+                'url_laudo_medico',
             ])
             ->active()
             ->with([
@@ -155,7 +165,7 @@ class FileExportService
                         $q->whereValid();
                         $q->whereSchoolClass($this->getarg('schoolClass'));
                     });
-                }
+                },
             ])
             ->whereHas('registrations', function ($q) {
                 $q->filter([
@@ -176,7 +186,7 @@ class FileExportService
                 //documentos
                 $files = collect(json_decode($student->url_documento, false))
                     ->map(function ($file, $index) {
-                        $number = sprintf("%02d", $index + 1);
+                        $number = sprintf('%02d', $index + 1);
 
                         return [
                             'filename' => "Documento-{$number}" . '.' . $this->getExtension($file->url),
@@ -186,7 +196,7 @@ class FileExportService
                 //laudos
                 $files = $files->merge(collect(json_decode($student->url_laudo_medico, false))
                     ->map(function ($file, $index) {
-                        $number = sprintf("%02d", $index + 1);
+                        $number = sprintf('%02d', $index + 1);
 
                         return [
                             'filename' => "Laudo-{$number}" . '.' . $this->getExtension($file->url),
@@ -205,7 +215,7 @@ class FileExportService
                     'id' => $student->getKey(),
                     'name' => $student->person->name,
                     'registration' => $student->registrations->first(),
-                    'files' => $files->filter(fn ($file) => !empty($file['url']))
+                    'files' => $files->filter(fn ($file) => !empty($file['url'])),
                 ];
             });
     }
@@ -215,7 +225,7 @@ class FileExportService
         return Arr::get($this->args, $key, $default);
     }
 
-    private function getExtension(string|null $url)
+    private function getExtension(?string $url)
     {
         if (empty($url)) {
             return null;
@@ -245,12 +255,12 @@ class FileExportService
             'curso' => $registration->ref_cod_curso,
             'serie' => $registration->ref_ref_cod_serie,
             'turma' => $registration->lastEnrollment->ref_cod_turma,
-            'situacao' => 9,
+            'situacao' => EnrollmentStatusFilter::ALL,
             'matricula' => $registration->getKey(),
             'database' => $this->connection,
             'termo_declaracao' => config('legacy.report.ficha_do_aluno.termo_declaracao'),
             'SUBREPORT_DIR' => config('legacy.report.source_path'),
-            'data_emissao' => 0
+            'data_emissao' => 0,
         ];
 
         //precisa ignorar os erros devido o legado
@@ -360,7 +370,7 @@ class FileExportService
         $this->fileExport->update([
             'url' => $this->getDestinyStorage()->url($this->destinyZipFilePath),
             'status_id' => FileExportStatus::SUCCESS,
-            'size' => $this->getDestinyStorage()->size($this->destinyZipFilePath)
+            'size' => $this->getDestinyStorage()->size($this->destinyZipFilePath),
         ]);
     }
 
@@ -383,7 +393,7 @@ class FileExportService
     {
         $this->deleteMainFolder();
         $this->fileExport->update([
-            'status_id' => FileExportStatus::ERROR
+            'status_id' => FileExportStatus::ERROR,
         ]);
     }
 

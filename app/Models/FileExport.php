@@ -15,7 +15,7 @@ class FileExport extends Model
         'hash',
         'filename',
         'status_id',
-        'size'
+        'size',
     ];
 
     protected static function boot()
@@ -43,7 +43,7 @@ class FileExport extends Model
                     'KB',
                     'MB',
                     'GB',
-                    'TB'
+                    'TB',
                 ];
                 $bytes = max($this->size, 0);
                 $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
