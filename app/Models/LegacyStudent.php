@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Ankurk91\Eloquent\BelongsToOne;
+use Ankurk91\Eloquent\HasBelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
 
 class LegacyStudent extends LegacyModel
 {
-    use BelongsToOne;
+    use HasBelongsToOne;
     use HasLegacyDates;
     use LegacyAttribute;
 
