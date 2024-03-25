@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\ConnectTenantDatabase;
 use App\Models\LegacyInstitution;
 use App\Providers\Postgres\DatabaseServiceProvider;
 use App\Services\CacheManager;
@@ -60,6 +61,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        ConnectTenantDatabase::setTenantResolver(fn () => config('database.default'));
+        
         if ($this->app->runningInConsole()) {
             $this->loadLegacyMigrations();
         }
