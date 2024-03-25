@@ -12,7 +12,6 @@
     "21" : "21 - Ensino Fundamental de 9 anos - 8º Ano",
     "22" : "22 - Ensino Fundamental de 9 anos - Multi",
     "23" : "23 - Ensino Fundamental de 9 anos - Correção de Fluxo",
-    "24" : "24 - Ensino Fundamental de 8 e 9 anos - Multi 8 e 9 anos",
     "25" : "25 - Ensino Médio - 1ª Série",
     "26" : "26 - Ensino Médio - 2ª Série",
     "27" : "27 - Ensino Médio - 3ª Série",
@@ -30,14 +29,14 @@
     "39" : "39 - Curso Técnico - Concomitante",
     "40" : "40 - Curso Técnico - Subsequente",
     "41" : "41 - Ensino Fundamental de 9 anos - 9º Ano",
+    "56" : "56 - Educação Infantil e Ensino Fundamental de 9 anos - Multietapa",
+    "64" : "64 - Curso Técnico Misto",
+    "67" : "67 - Curso FIC integrado na modalidade EJA - Nível Médio",
+    "68" : "68 - Curso FIC Concomitante",
     "69" : "69 - EJA - Ensino Fundamental - Anos iniciais",
     "70" : "70 - EJA - Ensino Fundamental - Anos finais",
     "71" : "71 - EJA - Ensino Médio",
     "72" : "72 - EJA - Ensino Fundamental - Anos iniciais e Anos finais",
-    "56" : "56 - Educação Infantil e Ensino Fundamental de 9 anos - Multietapa",
     "73" : "73 - Curso FIC integrado na modalidade EJA - Nível Fundamental (EJA integrada à Educação Profissional de Nível Fundamental)",
-    "74" : "74 - Curso Técnico Integrado na Modalidade EJA (EJA integrada à Educação Profissional de Nível Médio)",
-    "64" : "64 - Curso Técnico Misto",
-    "67" : "67 - Curso FIC integrado na modalidade EJA - Nível Médio",
-    "68" : "68 - Curso FIC Concomitante"
+    "74" : "74 - Curso Técnico Integrado na Modalidade EJA (EJA integrada à Educação Profissional de Nível Médio)"
 }
