@@ -9,6 +9,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySequenceGrade;
 use App\Models\LegacyStudent;
+use App\Models\RegistrationStatus;
 use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -412,40 +413,31 @@ return new class extends clsCadastro
         }
 
         if ($anoLetivoEmAndamentoEscola) {
-            $db = new clsBanco();
+            $matriculas = LegacyRegistration::query()
+                ->filter([
+                    'yearEq' => $this->ano,
+                    'school' => $this->ref_cod_escola,
+                    'course' => $this->ref_cod_curso,
+                    'student' => $this->ref_cod_aluno
+                ])
+                ->active()
+                ->with('grade:cod_serie,nm_serie')
+                ->where('aprovado', RegistrationStatus::ONGOING)
+                ->where('dependencia', false)
+                ->get(['ref_ref_cod_serie', 'ref_cod_curso']);
 
-            $db->Consulta(consulta: "SELECT ref_ref_cod_serie, ref_cod_curso
-                             FROM pmieducar.matricula
-                            WHERE ano = $this->ano
-                              AND ativo = 1
-                              AND ref_ref_cod_escola = $this->ref_cod_escola
-                              AND ref_cod_curso = $this->ref_cod_curso
-                              AND ref_cod_aluno = $this->ref_cod_aluno
-                              AND aprovado = 3
-                              AND dependencia = FALSE");
-
-            $db->ProximoRegistro();
-            $m = $db->Tupla();
-
-            if (is_array(value: $m) && count(value: $m) && !$dependencia) {
+            if ($matriculas->isNotEmpty() && !$dependencia) {
                 $curso = $this->getCurso(id: $this->ref_cod_curso);
 
                 $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
                 $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
-                if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
+                if ($matriculas->firstWhere('ref_ref_cod_serie', $this->ref_cod_serie) && !$cursoDeAtividadeComplementar) {
                     $this->mensagem = 'Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />';
 
                     return false;
                 } elseif ($curso['multi_seriado'] != 1) {
-                    $serie = new clsPmieducarSerie(cod_serie: $m['ref_ref_cod_serie'], ref_usuario_exc: null, ref_usuario_cad: null, ref_cod_curso: $m['ref_cod_curso']);
-                    $serie = $serie->detalhe();
-
-                    if (is_array(value: $serie) && count(value: $serie)) {
-                        $nomeSerie = $serie['nm_serie'];
-                    } else {
-                        $nomeSerie = '';
-                    }
+                    $nomeSerie = $matriculas->pluck('grade.nm_serie')->unique()->implode(', ');
 
                     $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multisseriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
