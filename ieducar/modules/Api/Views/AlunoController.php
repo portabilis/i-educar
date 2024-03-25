@@ -1153,7 +1153,7 @@ class AlunoController extends ApiCoreController
                 'parentesco_cinco',
                 'emancipado',
                 'tipo_transporte',
-                'rota_transporte'
+                'rota_transporte',
             ];
 
             $aluno = Portabilis_Array_Utils::filter($alunoDetalhe, $attrs);

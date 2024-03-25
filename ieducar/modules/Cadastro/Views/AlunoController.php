@@ -783,7 +783,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = ['label' => $this->_getLabel('rota_transporte'), 'required' => false, 'size' => 50, 'max_length' => 200, 'value' => $this->rota_transporte];
         $this->inputsHelper()->textArea('rota_transporte', $options);
 
-
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
         $helperOptions = ['objectName' => 'beneficios'];
