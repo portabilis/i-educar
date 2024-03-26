@@ -27,11 +27,16 @@ trait AuditTrigger
      */
     public function getAuditedTables()
     {
-        $tables = DB::connection()->getDoctrineSchemaManager()->listTableNames();
+        $tables = DB::SELECT('SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = \'BASE TABLE\' AND table_schema IN (\'cadastro\', \'modules\', \'pmieducar\', \'portal\', \'public\', \'relatorio\');');
 
-        return collect($tables)->sort()->reject(function ($table) {
-            return in_array($table, $this->getSkippedTables());
-        })->values()->toArray();
+        $return = [];
+        foreach ($tables as $table) {
+            if (!in_array($table->table_name, $this->getSkippedTables())) {
+                $return[] = $table->table_schema . '.' . $table->table_name;
+            }
+        }
+
+        return $return;
     }
 
     /**
