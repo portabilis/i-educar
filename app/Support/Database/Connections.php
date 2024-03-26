@@ -8,6 +8,6 @@ trait Connections
     {
         $connections = config('database.connections');
 
-        return array_diff(array_keys($connections), ['sqlite', 'mysql', 'pgsql', 'sqlsrv', 'bussolastaging']);
+        return array_diff(array_keys($connections), ['sqlite', 'mysql', 'pgsql', 'sqlsrv', 'bussolastaging', 'mariadb']);
     }
 }
