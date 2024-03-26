@@ -127,11 +127,10 @@ class LegacyUserProvider implements UserProvider
         $user->employee->save();
     }
 
-
     public function rehashPasswordIfRequired(
         Authenticatable $user,
-        array           $credentials,
-        bool            $force = false
+        array $credentials,
+        bool $force = false
     ) {
         if ($force) {
             $this->rehashPassword($user, $credentials['password']);
