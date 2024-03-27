@@ -7,7 +7,7 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        $file = file(database_path('csv/censo/2023/update_or_create_cursos_superiores_2023.csv'));
+        $file = file(database_path('csv/censo/2024/update_or_create_cursos_superiores_2024.csv'));
 
         foreach ($file as $line) {
             $data = str_getcsv(
