@@ -418,7 +418,7 @@ return new class extends clsCadastro
                     'yearEq' => $this->ano,
                     'school' => $this->ref_cod_escola,
                     'course' => $this->ref_cod_curso,
-                    'student' => $this->ref_cod_aluno
+                    'student' => $this->ref_cod_aluno,
                 ])
                 ->active()
                 ->with('grade:cod_serie,nm_serie')
