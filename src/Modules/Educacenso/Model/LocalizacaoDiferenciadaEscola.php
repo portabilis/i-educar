@@ -19,9 +19,9 @@ class LocalizacaoDiferenciadaEscola
         return [
             self::AREA_ASSENTAMENTO => 'Área de assentamento',
             self::TERRA_INDIGENA => 'Terra indígena',
-            self::COMUNIDADES_REMANESCENTES_QUILOMBOS => 'Área onde se localiza comunidades remanescentes de quilombos',
-            self::NAO_SE_APLICA => 'A escola não está em área de localização diferenciada',
-            self::COMUNIDADES_TRADICIONAIS => 'Área onde se localiza povos e comunidades tradicionais',
+            self::COMUNIDADES_REMANESCENTES_QUILOMBOS => 'Comunidade quilombola',
+            self::COMUNIDADES_TRADICIONAIS => 'Área onde se localizam povos e comunidades tradicionais',
+            self::NAO_SE_APLICA => 'Não está em área de localização diferenciada',
         ];
     }
 }
