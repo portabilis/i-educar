@@ -60,8 +60,6 @@ return new class extends clsCadastro
                 $this->data_expiracao = Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao);
             }
 
-            $this->status = $this->ativo;
-
             $obj = new clsPmieducarUsuario($this->ref_pessoa);
 
             $registro = $obj->detalhe();
