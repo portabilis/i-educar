@@ -440,7 +440,8 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
     '<li><div id="tab4" class="escolaTab"> <span class="tabText">Dependências</span></div></li>' +
     '<li><div id="tab5" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li>' +
     '<li><div id="tab6" class="escolaTab"> <span class="tabText">Recursos</span></div></li>' +
-    '<li><div id="tab7" class="escolaTab"><span class="tabText">Dados do ensino</span></div>'+
+    '<li><div id="tab7" class="escolaTab"><span class="tabText">Dados do ensino</span></div></li>' +
+    '<li><div id="tab8" class="escolaTab"><span class="tabText">Espaços Escolares</span></div></li>' +
     '</ul></div>');
   $j('td .formdktd b').remove();
   $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
@@ -448,6 +449,7 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
   $j('#local_funcionamento').closest('tr').attr('id','tlocal_funcionamento');
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
+  $j('#espacos').closest('tr').attr('id','tespacos');
 
   // Pega o número dessa linha
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-2;
@@ -455,6 +457,7 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
   linha_inicial_equipamento = $j('#tr_equipamentos').index()-2;
   linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-3;
   linha_inicial_dados = $j('#tatendimento_aee').index()-2;
+  linha_inicial_espacos = $j('#tespacos').index()-2;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
   $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
@@ -587,7 +590,7 @@ $j(document).ready(function() {
       $j('#tab7').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro > tbody > tr').each(function(index, row) {
         if (row.id !== 'stop') {
-          if (index >= linha_inicial_dados) {
+          if (index >= linha_inicial_dados && index < linha_inicial_espacos){
             row.show();
           } else if (index > 0){
             row.hide();
@@ -607,6 +610,23 @@ $j(document).ready(function() {
         obrigraInstrumentosPedagogicos();
       });
 
+  // Dados espaço escolares
+  $j('#tab8').click(
+    function() {
+      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
+      $j('#tab8').toggleClass('escolaTab escolaTab-active')
+      $j('.tablecadastro > tbody > tr').each(function(index, row) {
+        if (row.id !== 'stop') {
+          if (index >= linha_inicial_espacos) {
+            row.show();
+          } else if (index > 0){
+            row.hide();
+          }
+        } else {
+          return false;
+        }
+      });
+    });
 
   function  obrigraInstrumentosPedagogicos() {
     $j('#instrumentos_pedagogicos').makeUnrequired();
