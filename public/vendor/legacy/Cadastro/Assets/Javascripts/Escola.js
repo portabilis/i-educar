@@ -62,8 +62,42 @@ const PODER_PUBLICO_PARCERIA_CONVENIO = {
   NAO_POSSUI_PARCERIA_OU_CONVENIO: 3
 };
 
+function validaEspacoEscolares() {
+  const espacos = $j('tr.tr_espacos');
+  let validacaoPassa = true;
+
+  espacos.each(function () {
+    const nomeInput = $j(this).find('input[name^="espaco_escolar_nome"]');
+    const tamanhoInput = $j(this).find('input[name^="espaco_escolar_tamanho"]');
+    nomeInput.removeClass('error');
+    tamanhoInput.removeClass('error');
+
+    const nome = nomeInput.val().trim();
+    const tamanho = tamanhoInput.val().trim();
+
+    if (nome !== '' || tamanho !== '') {
+      if (nome === '') {
+        messageUtils.error('O campo: <b>Espaço Escolar</b> deve ser preenchido', nomeInput);
+        nomeInput.addClass('error');
+        validacaoPassa = false;
+      }
+      if (tamanho === '') {
+        messageUtils.error('O campo: <b>Tamanho do espaço</b> deve ser preenchido', tamanhoInput);
+        tamanhoInput.addClass('error');
+        validacaoPassa = false;
+      } else if(isNaN(tamanho)) {
+        messageUtils.error('O campo: <b>Tamanho do espaço</b> deve conter um valor númerico', tamanhoInput);
+        tamanhoInput.addClass('error');
+        validacaoPassa = false;
+      }
+    }
+  });
+
+  return validacaoPassa;
+}
+
 var submitForm = function() {
-  var canSubmit = validationUtils.validatesFields(true);
+  var canSubmit = validationUtils.validatesFields(true) && validaEspacoEscolares();
 
   // O campo escolaInepId somente é atualizado ao cadastrar escola,  uma vez que este
   // é atualizado via ajax, e durante o (novo) cadastro a escola ainda não possui id.

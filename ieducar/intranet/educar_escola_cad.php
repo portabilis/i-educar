@@ -371,6 +371,7 @@ return new class extends clsCadastro
 
         $this->sem_cnpj = false;
         $this->pesquisaPessoaJuridica = true;
+        $this->espaco_escolares = [];
 
         if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
             $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
@@ -1611,10 +1612,15 @@ return new class extends clsCadastro
             ];
             $this->inputsHelper()->simpleSearchIes(attrName: null, inputOptions: $options, helperOptions: $helperOptions);
 
-            $this->campoTabelaInicio('espacos', 'Espacos Escolares', ['Espaço Escolar', 'Tamanho do espaço<br><font size=-1; color=gray>Em metros quadrados</font>'], $this->espaco_escolares);
-            $this->campoTexto('espaco_escolar_nome', 'Espaço Escolar', $this->espaco_escolar_nome);
-            $this->campoNumero('espaco_escolar_tamanho', 'Tamanho do espaço', $this->espaco_escolar_tamanho, 4, 6, true);
-            $this->campoOculto('espaco_escolar_id',  $this->espaco_escolar_id);
+            $this->campoTabelaInicio('espacos', 'Espacos Escolares', [
+                'Espaço Escolar',
+                'Tamanho do espaço<br><font size=-1; color=gray>Em metros quadrados</font>'
+            ], $this->espaco_escolares);
+            $this->campoTexto(nome: 'espaco_escolar_nome', campo: 'Espaço Escolar', valor: $this->espaco_escolar_nome);
+            $this->campoNumero(nome: 'espaco_escolar_tamanho', campo: 'Tamanho do espaço', valor: $this->espaco_escolar_tamanho, tamanhovisivel: 4, tamanhomaximo: 6);
+            if (!$_POST) {
+                $this->campoOculto(nome: 'espaco_escolar_id', valor: $this->espaco_escolar_id);
+            }
             $this->campoTabelaFim();
 
             $this->breadcrumb(currentPage: 'Escola', breadcrumbs: ['educar_index.php' => 'Escola']);
@@ -1707,7 +1713,7 @@ return new class extends clsCadastro
 
         $this->atualizaNomePessoaJuridica($this->ref_idpes);
 
-        $this->atualizaEspacoEscolares();
+        $this->atualizaEspacoEscolares($cod_escola);
 
         DB::commit();
 
@@ -2021,7 +2027,7 @@ return new class extends clsCadastro
 
         $this->atualizaNomePessoaJuridica($this->ref_idpes);
 
-        $this->atualizaEspacoEscolares();
+        $this->atualizaEspacoEscolares($this->cod_escola);
 
         DB::commit();
 
@@ -2923,34 +2929,36 @@ return new class extends clsCadastro
         }
     }
 
-    private function atualizaEspacoEscolares()
+    private function atualizaEspacoEscolares($cod_escola)
     {
-        if (!empty($this->cod_escola)) {
+        $espacoEscolares = $this->espaco_escolar_nome ? array_filter($this->espaco_escolar_nome) : null;
+
+        if (!empty($cod_escola)) {
             SchoolSpace::query()
-                ->when($this->espaco_escolar_id, fn ($q, $values) => $q->whereNotIn('id', array_filter($values)))
-                ->where('school_id', $this->cod_escola)
+                ->when($this->espaco_escolar_id, fn ($q, $values) => $q->whereNotIn('id',array_filter($values)))
+                ->where('school_id', $cod_escola)
                 ->delete();
         }
 
-        if (empty($this->espaco_escolar_id)) {
+        if (empty($espacoEscolares)) {
             return;
         }
 
-        foreach ($this->espaco_escolar_id as $key => $value) {
+        foreach ($espacoEscolares as $key => $value) {
             $id = $this->espaco_escolar_id[$key];
             if (!empty($id)) {
                 SchoolSpace::query()
                     ->whereKey($id)
-                    ->where('school_id', $this->cod_escola)
+                    ->where('school_id', $cod_escola)
                     ->update([
                         'name' => $this->espaco_escolar_nome[$key],
-                        'size' => $this->espaco_escolar_tamanho[$key]
+                        'size' => $this->espaco_escolar_tamanho[$key],
                     ]);
             } else {
                 SchoolSpace::create([
                     'name' => $this->espaco_escolar_nome[$key],
                     'size' => $this->espaco_escolar_tamanho[$key],
-                    'school_id' => $this->cod_escola
+                    'school_id' => $cod_escola,
                 ]);
             }
         }
