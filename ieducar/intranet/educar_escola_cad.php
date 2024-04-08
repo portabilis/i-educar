@@ -1612,7 +1612,7 @@ return new class extends clsCadastro
             ];
             $this->inputsHelper()->simpleSearchIes(attrName: null, inputOptions: $options, helperOptions: $helperOptions);
 
-            $this->campoTabelaInicio('espacos', 'Espacos Escolares', [
+            $this->campoTabelaInicio('espacos', 'Espaços Escolares', [
                 'Espaço Escolar',
                 'Tamanho do espaço<br><font size=-1; color=gray>Em metros quadrados</font>'
             ], $this->espaco_escolares);
