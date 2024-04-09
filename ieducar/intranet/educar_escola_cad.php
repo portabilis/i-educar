@@ -4,6 +4,7 @@ use App\Models\City;
 use App\Models\EmployeeInep;
 use App\Models\LegacyPerson;
 use App\Models\SchoolManager;
+use App\Models\SchoolSpace;
 use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
 use App\Services\SchoolManagerService;
@@ -332,6 +333,14 @@ return new class extends clsCadastro
 
     public $formas_contratacao_parceria_escola_secretaria_municipal;
 
+    public $espaco_escolares;
+
+    public $espaco_escolar_id;
+
+    public $espaco_escolar_nome;
+
+    public $espaco_escolar_tamanho;
+
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
         'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
@@ -362,6 +371,7 @@ return new class extends clsCadastro
 
         $this->sem_cnpj = false;
         $this->pesquisaPessoaJuridica = true;
+        $this->espaco_escolares = [];
 
         if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
             $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
@@ -405,6 +415,17 @@ return new class extends clsCadastro
 
             $this->loadAddress($this->ref_idpes);
             $this->carregaDadosContato($this->ref_idpes);
+
+            $espacoEscolares = SchoolSpace::query()
+                ->where('school_id', $this->cod_escola)
+                ->orderBy('created_at')
+                ->get();
+
+            foreach ($espacoEscolares as $key => $espacoEscolar) {
+                $this->espaco_escolares[$key][] = $espacoEscolar->name;
+                $this->espaco_escolares[$key][] = $espacoEscolar->size;
+                $this->espaco_escolares[$key][] = $espacoEscolar->getKey();
+            }
 
             $retorno = 'Editar';
         }
@@ -1597,6 +1618,17 @@ return new class extends clsCadastro
             ];
             $this->inputsHelper()->simpleSearchIes(attrName: null, inputOptions: $options, helperOptions: $helperOptions);
 
+            $this->campoTabelaInicio('espacos', 'Espaços Escolares', [
+                'Espaço Escolar',
+                'Tamanho do espaço<br><font size=-1; color=gray>Em metros quadrados</font>'
+            ], $this->espaco_escolares);
+            $this->campoTexto(nome: 'espaco_escolar_nome', campo: 'Espaço Escolar', valor: $this->espaco_escolar_nome);
+            $this->campoNumero(nome: 'espaco_escolar_tamanho', campo: 'Tamanho do espaço', valor: $this->espaco_escolar_tamanho, tamanhovisivel: 4, tamanhomaximo: 6);
+            if (!$_POST) {
+                $this->campoOculto(nome: 'espaco_escolar_id', valor: $this->espaco_escolar_id);
+            }
+            $this->campoTabelaFim();
+
             $this->breadcrumb(currentPage: 'Escola', breadcrumbs: ['educar_index.php' => 'Escola']);
             $this->url_cancelar = (!empty($this->cod_escola)) ? "educar_escola_det.php?cod_escola={$this->cod_escola}" : 'educar_escola_lst.php';
             $this->nome_url_cancelar = 'Cancelar';
@@ -1667,6 +1699,8 @@ return new class extends clsCadastro
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
+        DB::beginTransaction();
+
         $cod_escola = $this->cadastraEscola((int) $this->pessoaj_id_oculto);
 
         if ($cod_escola === false) {
@@ -1684,6 +1718,10 @@ return new class extends clsCadastro
         $this->saveInep($cod_escola);
 
         $this->atualizaNomePessoaJuridica($this->ref_idpes);
+
+        $this->atualizaEspacoEscolares($cod_escola);
+
+        DB::commit();
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
 
@@ -1967,6 +2005,8 @@ return new class extends clsCadastro
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
+        DB::beginTransaction();
+
         $obj = new clsPmieducarEscola(cod_escola: $this->cod_escola, ref_usuario_cad: null, ref_usuario_exc: $this->pessoa_logada, ref_cod_instituicao: $this->ref_cod_instituicao, zona_localizacao: $this->zona_localizacao, ref_idpes: $this->ref_idpes, sigla: $this->sigla, data_cadastro: null, data_exclusao: null, ativo: 1, bloquear_lancamento_diario_anos_letivos_encerrados: $this->bloquear_lancamento_diario_anos_letivos_encerrados, utiliza_regra_diferenciada: $this->utiliza_regra_diferenciada);
 
         $escola = $this->constroiObjetoEscola(pessoaj_id_oculto: $this->ref_idpes, escola: $obj);
@@ -1992,6 +2032,10 @@ return new class extends clsCadastro
         $this->saveInep($this->cod_escola);
 
         $this->atualizaNomePessoaJuridica($this->ref_idpes);
+
+        $this->atualizaEspacoEscolares($this->cod_escola);
+
+        DB::commit();
 
         $this->mensagem = 'Edição efetuada com sucesso.<br>';
 
@@ -2888,6 +2932,41 @@ return new class extends clsCadastro
             ];
 
             DB::table('modules.educacenso_cod_escola')->insert($data);
+        }
+    }
+
+    private function atualizaEspacoEscolares($cod_escola)
+    {
+        $espacoEscolares = $this->espaco_escolar_nome ? array_filter($this->espaco_escolar_nome) : null;
+
+        if (!empty($cod_escola)) {
+            SchoolSpace::query()
+                ->when($this->espaco_escolar_id, fn ($q, $values) => $q->whereNotIn('id',array_filter($values)))
+                ->where('school_id', $cod_escola)
+                ->delete();
+        }
+
+        if (empty($espacoEscolares)) {
+            return;
+        }
+
+        foreach ($espacoEscolares as $key => $value) {
+            $id = $this->espaco_escolar_id[$key];
+            if (!empty($id)) {
+                SchoolSpace::query()
+                    ->whereKey($id)
+                    ->where('school_id', $cod_escola)
+                    ->update([
+                        'name' => $this->espaco_escolar_nome[$key],
+                        'size' => $this->espaco_escolar_tamanho[$key],
+                    ]);
+            } else {
+                SchoolSpace::create([
+                    'name' => $this->espaco_escolar_nome[$key],
+                    'size' => $this->espaco_escolar_tamanho[$key],
+                    'school_id' => $cod_escola,
+                ]);
+            }
         }
     }
 
