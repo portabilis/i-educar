@@ -340,7 +340,7 @@ return new class extends clsCadastro
         'qtd_tecnicos' => 'Técnicos(as), monitores(as), supervisores(as) ou auxiliares de laboratório(s), de apoio a tecnologias educacionais ou em multimeios/multimídias eletrônico-digitais',
         'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
         'qtd_segurancas' => 'Seguranças, guarda ou segurança patrimonial',
-        'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), horticultor(a), jardineiro(a)',
+        'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), jardineiro(a)',
         'qtd_nutricionistas' => 'Nutricionista',
         'qtd_profissionais_preparacao' => 'Profissionais de preparação e segurança alimentar, cozinheiro(a), merendeira e auxiliar de cozinha',
         'qtd_bombeiro' => 'Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), Enfermeiro(a), Técnico(a) de enfermagem e socorrista',
@@ -1125,12 +1125,18 @@ return new class extends clsCadastro
             $options = ['label' => 'Abastecimento de água',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
-                'options' => ['values' => $this->abastecimento_agua,
-                    'all_values' => [1 => 'Rede pública',
+                'options' => [
+                    'values' => $this->abastecimento_agua,
+                    'all_values' => [
+                        1 => 'Rede pública',
                         2 => 'Poço artesiano',
                         3 => 'Cacimba/cisterna/poço',
                         4 => 'Fonte/rio/igarapé/riacho/córrego',
-                        5 => 'Não há abastecimento de água']]];
+                        5 => 'Não há abastecimento de água',
+                        6 => 'Carro-pipa',
+                    ]
+                ]
+            ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
             $helperOptions = ['objectName' => 'abastecimento_energia'];
@@ -1528,7 +1534,7 @@ return new class extends clsCadastro
                 3 => 'Indígena'];
 
             $options = [
-                'label' => 'Educação escolar indígena',
+                'label' => 'Escola indígena',
                 'value' => $this->educacao_indigena,
                 'required' => false,
                 'prompt' => 'Selecione',
