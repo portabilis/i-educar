@@ -9,8 +9,8 @@ use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
 use App\Services\SchoolManagerService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
-use iEducar\Modules\Educacenso\Model\AcoesAmbientais;
 use iEducar\Modules\Educacenso\Model\AbastecimentoAgua;
+use iEducar\Modules\Educacenso\Model\AcoesAmbientais;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -1170,8 +1170,8 @@ return new class extends clsCadastro
                         4 => 'Fonte/rio/igarapé/riacho/córrego',
                         5 => 'Não há abastecimento de água',
                         6 => 'Carro-pipa',
-                    ]
-                ]
+                    ],
+                ],
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
@@ -1656,7 +1656,7 @@ return new class extends clsCadastro
 
             $this->campoTabelaInicio('espacos', 'Espaços Escolares', [
                 'Espaço Escolar',
-                'Tamanho do espaço<br><font size=-1; color=gray>Em metros quadrados</font>'
+                'Tamanho do espaço<br><font size=-1; color=gray>Em metros quadrados</font>',
             ], $this->espaco_escolares);
             $this->campoTexto(nome: 'espaco_escolar_nome', campo: 'Espaço Escolar', valor: $this->espaco_escolar_nome);
             $this->campoNumero(nome: 'espaco_escolar_tamanho', campo: 'Tamanho do espaço', valor: $this->espaco_escolar_tamanho, tamanhovisivel: 4, tamanhomaximo: 6);
@@ -2986,7 +2986,7 @@ return new class extends clsCadastro
 
         if (!empty($cod_escola)) {
             SchoolSpace::query()
-                ->when($this->espaco_escolar_id, fn ($q, $values) => $q->whereNotIn('id',array_filter($values)))
+                ->when($this->espaco_escolar_id, fn ($q, $values) => $q->whereNotIn('id', array_filter($values)))
                 ->where('school_id', $cod_escola)
                 ->delete();
         }
