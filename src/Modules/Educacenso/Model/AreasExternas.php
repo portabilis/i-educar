@@ -22,6 +22,8 @@ class AreasExternas
 
     public const VIVEIRO = 9;
 
+    public const HORTA = 10;
+
     public static function getDescriptiveValues()
     {
         return [
@@ -31,9 +33,10 @@ class AreasExternas
             self::PATIO_DESCOBERTO => 'Pátio descoberto',
             self::PARQUE_INFANTIL => 'Parque infantil',
             self::PISCINA => 'Piscina',
-            self::AREA_VERDE => 'Área verde',
+            self::AREA_VERDE => 'Área de vegetação ou gramado',
             self::TERREIRAO => 'Terreirão (área para prática desportiva e recreação sem cobertura, sem piso e sem edificações)',
             self::VIVEIRO => 'Viveiro/criação de animais',
+            self::HORTA => 'Área de horta, plantio e/ou produção agrícola',
         ];
     }
 }

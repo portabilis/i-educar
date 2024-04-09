@@ -32,6 +32,12 @@ class InstrumentosPedagogicos
 
     public const MATERIAIS_EDUCACAO_SURDOS = 14;
 
+    public const MATERIAIS_AREA_HORTA = 15;
+
+    public const MATERIAL_EDUCACAO_QUILOMBOLA = 16;
+
+    public const MATERIAL_EDUCACAO_ESPECIAL = 17;
+
     public static function getDescriptiveValues()
     {
         return [
@@ -48,6 +54,9 @@ class InstrumentosPedagogicos
             self::MATERIAIS_EDUCACAO_INDIGENA => 'Materiais pedagógicos para a educação escolar indígena',
             self::MATERIAIS_RELACOES_ETNICOS_RACIAIS => 'Materiais pedagógicos para a educação das Relações Étnicos Raciais',
             self::MATERIAIS_EDUCACAO_CAMPO => 'Materiais pedagógicos para a educação do campo',
+            self::MATERIAIS_AREA_HORTA => 'Equipamentos e instrumentos para atividades em área de horta, plantio e/ou produção agrícola',
+            self::MATERIAL_EDUCACAO_QUILOMBOLA => 'Materiais pedagógicos para a educação escolar quilombola',
+            self::MATERIAL_EDUCACAO_ESPECIAL => 'Materiais pedagógicos para a educação especial',
             self::NENHUM_DOS_INSTRUMENTOS_LISTADOS => 'Nenhum dos instrumentos listados',
         ];
     }

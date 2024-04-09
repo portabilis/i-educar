@@ -10,7 +10,7 @@ class SchoolSpace extends Model
     protected $fillable = [
         'name',
         'size',
-        'school_id'
+        'school_id',
     ];
 
     public function school(): BelongsTo
