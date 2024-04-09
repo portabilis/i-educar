@@ -124,6 +124,10 @@ class clsPmieducarEscola extends Model
 
     public $reserva_vagas_cotas = false;
 
+    public $acao_area_ambiental = false;
+
+    public $acoes_area_ambiental = false;
+
     public $projeto_politico_pedagogico = false;
 
     public $localizacao_diferenciada;
@@ -216,6 +220,8 @@ class clsPmieducarEscola extends Model
 
     public $qtd_auxiliar_administrativo;
 
+    public $qtd_agronomos_horticultores;
+
     public $qtd_apoio_pedagogico;
 
     public $qtd_coordenador_turno;
@@ -243,6 +249,8 @@ class clsPmieducarEscola extends Model
     public $qtd_orientador_comunitario;
 
     public $qtd_tradutor_interprete_libras_outro_ambiente;
+
+    public $qtd_revisor_braile;
 
     public $nao_ha_funcionarios_para_funcoes;
 
@@ -310,7 +318,7 @@ class clsPmieducarEscola extends Model
             e.alimentacao_escolar_alunos, e.compartilha_espacos_atividades_integracao, e.usa_espacos_equipamentos_atividades_regulares,
             e.salas_gerais, e.salas_funcionais, e.banheiros, e.laboratorios, e.salas_atividades, e.dormitorios, e.areas_externas, e.recursos_acessibilidade, e.possui_dependencias, e.numero_salas_utilizadas_dentro_predio,
             e.numero_salas_utilizadas_fora_predio, e.numero_salas_climatizadas, e.numero_salas_acessibilidade,
-            e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.projeto_politico_pedagogico, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada,
+            e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.acao_area_ambiental, e.acoes_area_ambiental, e.projeto_politico_pedagogico, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada,
             e.codigo_lingua_indigena, e.atividade_complementar, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4,
             e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som,
             e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
@@ -325,6 +333,7 @@ class clsPmieducarEscola extends Model
             e.qtd_bibliotecarios,
             e.qtd_segurancas,
             e.qtd_auxiliar_servicos_gerais,
+            e.qtd_agronomos_horticultores,
             e.qtd_nutricionistas,
             e.qtd_profissionais_preparacao,
             e.qtd_bombeiro,
@@ -333,6 +342,7 @@ class clsPmieducarEscola extends Model
             e.qtd_vice_diretor,
             e.qtd_orientador_comunitario,
             e.qtd_tradutor_interprete_libras_outro_ambiente,
+            e.qtd_revisor_braile,
             e.nao_ha_funcionarios_para_funcoes,
             e.iddis,
             e.poder_publico_parceria_convenio,
@@ -794,6 +804,18 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->acao_area_ambiental)) {
+                $campos .= "{$gruda}acao_area_ambiental";
+                $valores .= "{$gruda}'{$this->acao_area_ambiental}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->acoes_area_ambiental)) {
+                $campos .= "{$gruda}acoes_area_ambiental";
+                $valores .= "{$gruda}'{{$this->acoes_area_ambiental}}'";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->projeto_politico_pedagogico)) {
                 $campos .= "{$gruda}projeto_politico_pedagogico";
                 $valores .= "{$gruda}'{$this->projeto_politico_pedagogico}'";
@@ -1034,6 +1056,12 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->qtd_agronomos_horticultores)) {
+                $campos .= "{$gruda}qtd_agronomos_horticultores";
+                $valores .= "{$gruda}$this->qtd_agronomos_horticultores";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->qtd_apoio_pedagogico)) {
                 $campos .= "{$gruda}qtd_apoio_pedagogico";
                 $valores .= "{$gruda}$this->qtd_apoio_pedagogico";
@@ -1115,6 +1143,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->qtd_tradutor_interprete_libras_outro_ambiente)) {
                 $campos .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente";
                 $valores .= "{$gruda}$this->qtd_tradutor_interprete_libras_outro_ambiente";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->qtd_revisor_braile)) {
+                $campos .= "{$gruda}qtd_revisor_braile";
+                $valores .= "{$gruda}$this->qtd_revisor_braile";
                 $gruda = ', ';
             }
 
@@ -1748,6 +1782,22 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->acao_area_ambiental)) {
+                $set .= "{$gruda}acao_area_ambiental = '{$this->acao_area_ambiental}'";
+                $gruda = ', ';
+            } elseif ($this->acao_area_ambiental !== false) {
+                $set .= "{$gruda}acao_area_ambiental = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->acoes_area_ambiental)) {
+                $set .= "{$gruda}acoes_area_ambiental = '{{$this->acoes_area_ambiental}}'";
+                $gruda = ', ';
+            } elseif ($this->acoes_area_ambiental !== false) {
+                $set .= "{$gruda}acoes_area_ambiental = NULL";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->projeto_politico_pedagogico)) {
                 $set .= "{$gruda}projeto_politico_pedagogico = '{$this->projeto_politico_pedagogico}'";
                 $gruda = ', ';
@@ -2072,6 +2122,14 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}qtd_auxiliar_servicos_gerais = NULL ";
             }
 
+            if (is_numeric($this->qtd_agronomos_horticultores) && $this->qtd_agronomos_horticultores > 0) {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_agronomos_horticultores = '{$this->qtd_agronomos_horticultores}'";
+            } elseif (is_null($this->qtd_agronomos_horticultores) || $this->qtd_agronomos_horticultores == '') {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_agronomos_horticultores = NULL ";
+            }
+
             if (is_numeric($this->qtd_nutricionistas) && $this->qtd_nutricionistas > 0) {
                 $gruda = ', ';
                 $set .= "{$gruda}qtd_nutricionistas = '{$this->qtd_nutricionistas}'";
@@ -2134,6 +2192,14 @@ class clsPmieducarEscola extends Model
             } elseif (is_null($this->qtd_tradutor_interprete_libras_outro_ambiente) || $this->qtd_tradutor_interprete_libras_outro_ambiente == '') {
                 $gruda = ', ';
                 $set .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente = NULL ";
+            }
+
+            if (is_numeric($this->qtd_revisor_braile) && $this->qtd_revisor_braile > 0) {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_revisor_braile = '{$this->qtd_revisor_braile}'";
+            } elseif (is_null($this->qtd_revisor_braile) || $this->qtd_revisor_braile == '') {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_revisor_braile = NULL ";
             }
 
             if (is_int($this->iddis) && $this->iddis > 0) {

@@ -607,6 +607,7 @@ $j(document).ready(function() {
         habilitaCampoEducacaoIndigena();
         habilitaCampoLinguaMinistrada();
         habilitaReservaVagasCotas();
+        habilitaAcoesAmbientais();
         obrigraInstrumentosPedagogicos();
       });
 
@@ -1075,4 +1076,20 @@ function habilitaReservaVagasCotas() {
 
 $j('#exame_selecao_ingresso').on('change', function() {
     habilitaReservaVagasCotas()
+});
+
+function habilitaAcoesAmbientais() {
+  var acaoAmbiental = $j('#acao_area_ambiental').val() == 1;
+  if(acaoAmbiental && obrigarCamposCenso){
+    makeRequired('acoes_area_ambiental');
+  }else{
+    makeUnrequired('acoes_area_ambiental');
+  }
+
+  $j('#acoes_area_ambiental').prop('disabled', !acaoAmbiental);
+  $j("#acoes_area_ambiental").trigger("chosen:updated");
+}
+
+$j('#acao_area_ambiental').on('change', function() {
+  habilitaAcoesAmbientais()
 });
