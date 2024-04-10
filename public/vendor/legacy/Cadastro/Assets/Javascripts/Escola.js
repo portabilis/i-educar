@@ -213,6 +213,7 @@ function habilitaRecuros() {
     $j('#qtd_bibliotecarios'),
     $j('#qtd_segurancas'),
     $j('#qtd_auxiliar_servicos_gerais'),
+    $j('#qtd_agronomos_horticultores'),
     $j('#qtd_nutricionistas'),
     $j('#qtd_profissionais_preparacao'),
     $j('#qtd_bombeiro'),
@@ -221,6 +222,7 @@ function habilitaRecuros() {
     $j('#qtd_vice_diretor'),
     $j('#qtd_orientador_comunitario'),
     $j('#qtd_tradutor_interprete_libras_outro_ambiente'),
+    $j('#qtd_revisor_braile'),
   ];
 
   const isChecked = $j('#nao_ha_funcionarios_para_funcoes').is(':checked');
