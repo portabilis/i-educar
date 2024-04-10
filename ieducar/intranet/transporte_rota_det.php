@@ -30,6 +30,7 @@ return new class extends clsDetalhe {
         if (trim($registro['km_pav'])!='') {
             $this->addDetalhe(['Percurso pavimentado', $registro['km_pav'].' km']);
         }
+        $this->addDetalhe( array("Monitor", $registro['nome_monitor'].'<br/> <a target=\'_blank\' style=\' text-decoration: underline;\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Visualizar pessoa</a>') );
         if (trim($registro['km_npav'])!='') {
             $this->addDetalhe(['Percurso não pavimentado', $registro['km_npav'].' km']);
         }

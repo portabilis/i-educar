@@ -13,14 +13,14 @@ class clsModulesRotaTransporteEscolar extends Model
     public $km_npav;
     public $ref_cod_empresa_transporte_escolar;
     public $tercerizado;
+    public $ref_idpes;
 
-    public function __construct($cod_rota_transporte_escolar = null, $ref_idpes_destino = null, $descricao = null, $ano = null, $tipo_rota = null, $km_pav = null, $km_npav = null, $ref_cod_empresa_transporte_escolar = null, $tercerizado = null)
-    {
+    public function __construct($cod_rota_transporte_escolar = null, $ref_idpes_destino = null, $descricao = null, $ano = null, $tipo_rota = null, $km_pav = null, $km_npav = null, $ref_cod_empresa_transporte_escolar = null, $tercerizado = null, $ref_idpes = null)    {
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}rota_transporte_escolar";
 
-        $this->_campos_lista = $this->_todos_campos = ' cod_rota_transporte_escolar, ref_idpes_destino, descricao, ano, tipo_rota, km_pav, km_npav, ref_cod_empresa_transporte_escolar, tercerizado';
+        $this->_campos_lista = $this->_todos_campos = ' cod_rota_transporte_escolar, ref_idpes_destino, descricao, ano, tipo_rota, km_pav, km_npav, ref_cod_empresa_transporte_escolar, tercerizado, ref_idpes';
 
         if (is_numeric($cod_rota_transporte_escolar)) {
             $this->cod_rota_transporte_escolar = $cod_rota_transporte_escolar;
@@ -56,6 +56,10 @@ class clsModulesRotaTransporteEscolar extends Model
 
         if (is_string($tercerizado)) {
             $this->tercerizado = $tercerizado;
+        }
+
+        if (is_numeric($ref_idpes)) {
+            $this->ref_idpes = $ref_idpes;
         }
     }
 
@@ -124,6 +128,13 @@ class clsModulesRotaTransporteEscolar extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->ref_idpes)) {
+                $campos .= "{$gruda}ref_idpes";
+                $valores .= "{$gruda}'{$this->ref_idpes}'";
+                $gruda = ', ';
+            }
+
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             $this->cod_rota_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
@@ -191,6 +202,12 @@ class clsModulesRotaTransporteEscolar extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->ref_idpes)) {
+                $campos .= "{$gruda}ref_idpes";
+                $valores .= "{$gruda}'{$this->ref_idpes}'";
+                $gruda = ', ';
+            }
+
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
@@ -215,7 +232,8 @@ class clsModulesRotaTransporteEscolar extends Model
         $ano = null,
         $ref_cod_empresa_transporte_escolar = null,
         $nome_empresa = null,
-        $tercerizado = null
+        $tercerizado = null,
+        $nome_monitor = null
     ) {
         $db = new clsBanco();
 
@@ -226,7 +244,14 @@ class clsModulesRotaTransporteEscolar extends Model
             cadastro.pessoa
           WHERE
             idpes = ref_idpes_destino
-         ) AS nome_destino , (
+         ) AS nome_destino , 
+         (SELECT
+            nome
+          FROM
+            cadastro.pessoa
+          WHERE
+            idpes = ref_idpes) as nome_monitor,
+         (
           SELECT
             nome
           FROM
@@ -297,6 +322,20 @@ class clsModulesRotaTransporteEscolar extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_string($nome_monitor)) {
+            $filtros .= " 
+            {$whereAnd} exists (
+                SELECT
+                  nome
+                FROM
+                  cadastro.pessoa
+                WHERE
+                  idpes = ref_idpes and nome LIKE (('%{$nome_monitor}%'))
+              )";
+        
+            $whereAnd = ' AND ';
+        }
+
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 
@@ -341,7 +380,12 @@ class clsModulesRotaTransporteEscolar extends Model
                 cadastro.pessoa
               WHERE
                 idpes = ref_idpes_destino
-             ) AS nome_destino , (
+             ) AS nome_destino , 
+             (SELECT 
+             nome 
+             from cadastro.pessoa 
+             where idpes = ref_idpes) as nome_monitor,
+             (
               SELECT
                 nome
               FROM

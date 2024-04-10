@@ -40,6 +40,7 @@ class RotaController extends ApiCoreController
         $rota->km_npav = $this->getRequest()->km_npav;
         $rota->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id;
         $rota->tercerizado = ($this->getRequest()->tercerizado == 'on' ? 'S' : 'N');
+        $rota->ref_idpes = $this->getRequest()->pessoa_id;
 
         return (is_null($id) ? $rota->cadastra() : $rota->edita());
     }
@@ -76,7 +77,8 @@ class RotaController extends ApiCoreController
             'km_pav' => 'km_pav',
             'km_npav' => 'km_npav',
             'ref_cod_empresa_transporte_escolar' => 'ref_cod_empresa_transporte_escolar',
-            'tercerizado' => 'tercerizado'
+            'tercerizado' => 'tercerizado',
+            'ref_idpes' => 'pessoa'
         ];
 
         $rota = Portabilis_Array_Utils::filter($rota, $attrs);

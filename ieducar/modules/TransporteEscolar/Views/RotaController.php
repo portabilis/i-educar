@@ -31,6 +31,10 @@ class RotaController extends Portabilis_Controller_Page_EditController
             'label' => 'Tipo da rota',
             'help' => '',
         ],
+        'pessoa' => [
+            'label' => 'Monitor',
+            'help' => '',
+        ],
         'km_pav' => [
             'label' => 'Km pavimentados',
             'help' => '',
@@ -128,6 +132,10 @@ class RotaController extends Portabilis_Controller_Page_EditController
         ];
 
         $this->inputsHelper()->select('tipo_rota', $options);
+
+        //monitor
+        $options = ['label' => $this->_getLabel('pessoa'), 'size' => 50, 'required' => false];
+        $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
         // km pavimentados
         $options = [

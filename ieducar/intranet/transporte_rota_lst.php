@@ -38,6 +38,8 @@ return new class extends clsListagem {
     public $ref_cod_empresa_transporte_escolar;
     public $tercerizado;
     public $nome_destino;
+    public $nome_monitor;
+
 
     public function Gerar()
     {
@@ -52,6 +54,7 @@ return new class extends clsListagem {
             'Código da rota',
             'Descrição',
             'Destino',
+            "Monitor",
             'Empresa',
             'Terceirizado'
         ]);
@@ -74,6 +77,8 @@ return new class extends clsListagem {
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 50, 30);
         $this->campoNumero('ano', 'Ano', $this->cnh, 4, 5);
         $this->campoTexto('nome_destino', 'Destino', $this->nome_destino, 50, 30);
+        $this->campoTexto( "nome_monitor", "Monitor", $this->nome_monitor, 29, 30, false );
+
 
         // Paginador
         $this->limite = 20;
@@ -89,7 +94,10 @@ return new class extends clsListagem {
             null,
             $this->nome_destino,
             $this->ano,
-            $this->ref_cod_empresa_transporte_escolar
+            $this->ref_cod_empresa_transporte_escolar,
+            null,
+            null,
+            $this->nome_monitor,
         );
 
         $total = $obj_rota->_total;
@@ -102,6 +110,7 @@ return new class extends clsListagem {
                     "<a href=\"transporte_rota_det.php?cod_rota={$registro['cod_rota_transporte_escolar']}\">{$registro['cod_rota_transporte_escolar']}</a>",
                     "<a href=\"transporte_rota_det.php?cod_rota={$registro['cod_rota_transporte_escolar']}\">{$registro['descricao']}</a>",
                     "<a href=\"transporte_rota_det.php?cod_rota={$registro['cod_rota_transporte_escolar']}\">{$registro['nome_destino']}</a>",
+                    "<a href=\"transporte_rota_det.php?cod_rota={$registro["cod_rota_transporte_escolar"]}\">{$registro["nome_monitor"]}</a>",
                     "<a href=\"transporte_rota_det.php?cod_rota={$registro['cod_rota_transporte_escolar']}\">{$registro['nome_empresa']}</a>",
                     "<a href=\"transporte_rota_det.php?cod_rota={$registro['cod_rota_transporte_escolar']}\">".($registro['tercerizado'] == 'S'? 'Sim' : 'Não').'</a>'
                 ]);
