@@ -17,6 +17,7 @@ class TransporteEscolarPublico implements EducacensoExportRule
     {
         $arrayTipoMediacao = [
             TipoMediacaoDidaticoPedagogico::PRESENCIAL,
+            TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
         ];
 
         if ($registro60->tipoAtendimentoTurma != TipoAtendimentoTurma::ESCOLARIZACAO ||

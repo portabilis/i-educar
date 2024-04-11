@@ -283,7 +283,7 @@ class Registro20 implements RegistroEducacenso
 
                 break;
             case ModalidadeCurso::EDUCACAO_ESPECIAL:
-                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}";
+                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]}";
 
                 break;
             case ModalidadeCurso::EJA:
@@ -291,7 +291,7 @@ class Registro20 implements RegistroEducacenso
 
                 break;
             case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
-                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+                return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}, {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
         }
