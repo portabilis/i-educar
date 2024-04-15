@@ -40,7 +40,7 @@ let verificaEtapaEducacenso = ()=>{
 }
 
 let verificaOutrasUnidadesCurricularesObrigatorias = ()=> {
-  $j("#outras_unidades_curriculares_obrigatorias").prop('disabled', ! $j('#estrutura_curricular').val().includes("2"));
+  $j("#outras_unidades_curriculares_obrigatorias").prop('disabled', !$j('#estrutura_curricular').val() || ! $j('#estrutura_curricular').val().includes("2"));
 }
 
 let verificaFormaOrganizacaoTurma = ()=> {
