@@ -75,7 +75,7 @@ let verificaUnidadeCurricular = ()=> {
 
 let verificaLocalFuncionamentoDiferenciado = () => {
   $j('#local_funcionamento_diferenciado').makeUnrequired();
-  let habilitaCampo = [1].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
+  let habilitaCampo = [1,2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
   $j('#local_funcionamento_diferenciado').prop('disabled', !habilitaCampo);
 
   if (habilitaCampo) {
