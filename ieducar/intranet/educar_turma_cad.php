@@ -634,7 +634,7 @@ return new class extends clsCadastro
             2 => 'Não',
         ];
 
-        $options = ['label' => 'Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita como segunda língua (bilingue para surdos)', 'resources' => $resources, 'value' => $this->classe_com_lingua_brasileira_sinais, 'required' => $obrigarCamposCenso, 'size' => 70];
+        $options = ['label' => 'Classe bilíngue de surdos tendo a Libras (Língua Brasileira de Sinais) como língua de instrução, ensino, comunicação e interação e a língua portuguesa escrita como segunda língua', 'resources' => $resources, 'value' => $this->classe_com_lingua_brasileira_sinais, 'required' => $obrigarCamposCenso, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'classe_com_lingua_brasileira_sinais', inputOptions: $options);
 
         $options = ['label' => 'Não informar esta turma no Censo escolar',
