@@ -7,6 +7,7 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -216,6 +217,14 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
+        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
+            isset($params->etapa_educacenso) &&
+            !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
+
+            return false;
+        }
+
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
             isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 64, 70, 71, 73, 74, 67, 68], true)) {
@@ -335,6 +344,16 @@ class CheckMandatoryCensoFields implements Rule
 
         if (is_array($estruturaCurricular) && count($estruturaCurricular) > 1 && in_array(3, $estruturaCurricular, true)) {
             $this->message = 'Não é possível informar mais de uma opção no campo: <b>Estrutura curricular</b>, quando a opção: <b>Não se aplica</b> estiver selecionada';
+
+            return false;
+        }
+
+        if (
+            is_array($estruturaCurricular) &&
+            !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $estruturaCurricular, true) &&
+            $params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL
+        ) {
+            $this->message = 'Quando o campo: <b>Tipo de mediação didático-pedagógica</b> é: <b>Semipresencial</b>, o campo: <b>Estrutura curricular</b> deve ter a opção <b>Formação geral básica</b> informada.';
 
             return false;
         }
