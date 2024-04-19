@@ -27,7 +27,7 @@ trait AuditTrigger
      */
     public function getAuditedTables()
     {
-        $tables = DB::SELECT('SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = \'BASE TABLE\' AND table_schema IN (\'cadastro\', \'modules\', \'pmieducar\', \'portal\', \'public\', \'relatorio\');');
+        $tables = DB::select('SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = \'BASE TABLE\' AND table_schema IN (\'cadastro\', \'modules\', \'pmieducar\', \'portal\', \'public\', \'relatorio\');');
 
         $return = [];
         foreach ($tables as $table) {
