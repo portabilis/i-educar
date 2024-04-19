@@ -61,9 +61,9 @@ return [
 
     'middleware' => [
         'verify_csrf_token' => App\Http\Middleware\SkipMiddleware::class,
-        'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
-        'encrypt_cookies' => Illuminate\Cookie\Middleware\EncryptCookies::class,
-        'validate_csrf_token' => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+        'authenticate_session' => App\Http\Middleware\SkipMiddleware::class,
+        'encrypt_cookies' => App\Http\Middleware\SkipMiddleware::class,
+        'validate_csrf_token' => App\Http\Middleware\SkipMiddleware::class,
     ],
 
 ];
