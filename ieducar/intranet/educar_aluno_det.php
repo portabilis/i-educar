@@ -590,6 +590,8 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Responsável transporte', $tipoTransporte]);
         }
 
+        $this->addDetalhe(detalhe: ['Utiliza transporte rural', $registro['utiliza_transporte_rural'] ? 'Sim' : 'Não']);
+
         if ($registro['nis_pis_pasep']) {
             $this->addDetalhe(detalhe: ['NIS', $registro['nis_pis_pasep']]);
         }
