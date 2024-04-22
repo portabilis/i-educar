@@ -235,7 +235,7 @@ class clsPmieducarAluno extends Model
 
             if ($this->utiliza_transporte_rural) {
                 $campos .= "{$gruda}utiliza_transporte_rural";
-                $valores .= "{$gruda}'true";
+                $valores .= "{$gruda}true";
                 $gruda = ', ';
             } else {
                 $campos .= "{$gruda}utiliza_transporte_rural";
