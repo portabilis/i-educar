@@ -239,7 +239,7 @@ class clsPmieducarAluno extends Model
                 $gruda = ', ';
             } else {
                 $campos .= "{$gruda}utiliza_transporte_rural";
-                $valores .= "{$gruda}'false";
+                $valores .= "{$gruda}false";
                 $gruda = ', ';
             }
 
