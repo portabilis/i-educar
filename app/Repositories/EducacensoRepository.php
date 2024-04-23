@@ -225,6 +225,7 @@ SQL;
                 (ARRAY[2] <@ escola.abastecimento_agua)::int AS "aguaPocoArtesiano",
                 (ARRAY[3] <@ escola.abastecimento_agua)::int AS "aguaCacimbaCisternaPoco",
                 (ARRAY[4] <@ escola.abastecimento_agua)::int AS "aguaFonteRio",
+                (ARRAY[6] <@ escola.abastecimento_agua)::int AS "aguaCarroPipa",
                 (ARRAY[5] <@ escola.abastecimento_agua)::int AS "aguaInexistente",
                 (ARRAY[1] <@ escola.abastecimento_energia)::int AS "energiaRedePublica",
                 (ARRAY[2] <@ escola.abastecimento_energia)::int AS "energiaGerador",
@@ -295,6 +296,7 @@ SQL;
                 escola.equipamentos as "equipamentos",
                 escola.rede_local as "redeLocal",
                 escola.qtd_secretario_escolar as "qtdSecretarioEscolar",
+                escola.qtd_agronomos_horticultores as "qtdAgronomosHorticultores",
                 escola.qtd_auxiliar_administrativo as "qtdAuxiliarAdministrativo",
                 escola.qtd_apoio_pedagogico as "qtdApoioPedagogico",
                 escola.qtd_coordenador_turno as "qtdCoordenadorTurno",
@@ -319,7 +321,15 @@ SQL;
                 escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico",
                 escola.qtd_vice_diretor AS "qtdViceDiretor",
                 escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario",
-                escola.qtd_tradutor_interprete_libras_outro_ambiente AS "qtdTradutorInterpreteLibrasOutroAmbiente"
+                escola.qtd_tradutor_interprete_libras_outro_ambiente AS "qtdTradutorInterpreteLibrasOutroAmbiente",
+                escola.qtd_revisor_braile AS "qtdRevisorBraile",
+                escola.acao_area_ambiental AS "acaoAreaAmbiental",
+                (ARRAY[1] <@ escola.acoes_area_ambiental::integer[])::int AS "acaoAmbientalNenhuma",
+                (ARRAY[2] <@ escola.acoes_area_ambiental::integer[])::int AS "acaoConteudoComponente",
+                (ARRAY[3] <@ escola.acoes_area_ambiental::integer[])::int AS "acaoConteudoCurricular",
+                (ARRAY[4] <@ escola.acoes_area_ambiental::integer[])::int AS "acaoEixoCurriculo",
+                (ARRAY[5] <@ escola.acoes_area_ambiental::integer[])::int AS "acaoEventos",
+                (ARRAY[6] <@ escola.acoes_area_ambiental::integer[])::int AS "acaoProjetoInterdisciplinares"
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
             INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
