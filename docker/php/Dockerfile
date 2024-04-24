@@ -45,7 +45,18 @@ RUN docker-php-ext-install  \
     pdo \
     pdo_pgsql \
     pgsql \
-    zip
+    zip \
+    ftp
+
+RUN docker-php-ext-enable  \
+     bcmath \
+     gd \
+     pcntl \
+     pdo \
+     pdo_pgsql \
+     pgsql \
+     zip \
+     ftp
 
 # https://github.com/docker-library/php/issues/436#issuecomment-303171390
 RUN apk del .phpize_deps
