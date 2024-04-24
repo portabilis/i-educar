@@ -184,6 +184,7 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
     {
         $tiposMediacaoPresencial = [
             TipoMediacaoDidaticoPedagogico::PRESENCIAL,
+            TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
         ];
 
         return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO

@@ -769,6 +769,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('tipo_transporte', $options);
 
+        $options = [
+            'label' => 'Utiliza transporte rural',
+            'resources' => [
+                null => 'Selecione',
+                true => 'Sim',
+                false => 'Não',
+            ],
+            'required' => false,
+        ];
+
+        $this->inputsHelper()->select('utiliza_transporte_rural', $options);
+
         $veiculos = VeiculoTransporteEscolar::getDescriptiveValues();
         $helperOptions = ['objectName' => 'veiculo_transporte_escolar'];
         $options = [
@@ -782,7 +794,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = ['label' => $this->_getLabel('rota_transporte'), 'required' => false, 'size' => 50, 'max_length' => 200, 'value' => $this->rota_transporte];
         $this->inputsHelper()->textArea('rota_transporte', $options);
-
 
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 

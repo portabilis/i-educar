@@ -132,7 +132,7 @@ class Registro20 extends AbstractRegistro
             $canExportComponente ? $this->getCensoValueForDiscipline(32, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 73 32. Estágio Curricular Supervisionado
             $canExportComponente ? $this->getCensoValueForDiscipline(33, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 74 33. Projeto de vida
             $canExportComponente ? $this->getCensoValueForDiscipline(99, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 75 99. Outras áreas do conhecimento
-            $record->classeComLinguaBrasileiraSinais == 1 ? 1 : 0, // 76 Classe com ensino desenvolvido com a Língua Brasileira de Sinais – Libras como primeira língua e a língua portuguesa de forma escrita
+            $record->classeComLinguaBrasileiraSinais == 1 ? 1 : 0, // 76 Classe bilíngue de surdos tendo a Libras (Língua Brasileira de Sinais) como língua de instrução, ensino, comunicação e interação e a língua portuguesa escrita como segunda língua
         ];
     }
 

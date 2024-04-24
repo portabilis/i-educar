@@ -213,6 +213,7 @@ function habilitaRecuros() {
     $j('#qtd_bibliotecarios'),
     $j('#qtd_segurancas'),
     $j('#qtd_auxiliar_servicos_gerais'),
+    $j('#qtd_agronomos_horticultores'),
     $j('#qtd_nutricionistas'),
     $j('#qtd_profissionais_preparacao'),
     $j('#qtd_bombeiro'),
@@ -221,6 +222,7 @@ function habilitaRecuros() {
     $j('#qtd_vice_diretor'),
     $j('#qtd_orientador_comunitario'),
     $j('#qtd_tradutor_interprete_libras_outro_ambiente'),
+    $j('#qtd_revisor_braile'),
   ];
 
   const isChecked = $j('#nao_ha_funcionarios_para_funcoes').is(':checked');
@@ -474,7 +476,7 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
     '<li><div id="tab4" class="escolaTab"> <span class="tabText">Dependências</span></div></li>' +
     '<li><div id="tab5" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li>' +
     '<li><div id="tab6" class="escolaTab"> <span class="tabText">Recursos</span></div></li>' +
-    '<li><div id="tab7" class="escolaTab"><span class="tabText">Dados do ensino</span></div>'+
+    '<li><div id="tab7" class="escolaTab"><span class="tabText">Dados do ensino</span></div></li>' +
     '<li><div id="tab8" class="escolaTab"><span class="tabText">Espaços Escolares</span></div></li>' +
     '</ul></div>');
   $j('td .formdktd b').remove();
@@ -641,8 +643,10 @@ $j(document).ready(function() {
         habilitaCampoEducacaoIndigena();
         habilitaCampoLinguaMinistrada();
         habilitaReservaVagasCotas();
+        habilitaAcoesAmbientais();
         obrigraInstrumentosPedagogicos();
       });
+
   // Dados espaço escolares
   $j('#tab8').click(
     function() {
@@ -1108,4 +1112,20 @@ function habilitaReservaVagasCotas() {
 
 $j('#exame_selecao_ingresso').on('change', function() {
     habilitaReservaVagasCotas()
+});
+
+function habilitaAcoesAmbientais() {
+  var acaoAmbiental = $j('#acao_area_ambiental').val() == 1;
+  if(acaoAmbiental && obrigarCamposCenso){
+    makeRequired('acoes_area_ambiental');
+  }else{
+    makeUnrequired('acoes_area_ambiental');
+  }
+
+  $j('#acoes_area_ambiental').prop('disabled', !acaoAmbiental);
+  $j("#acoes_area_ambiental").trigger("chosen:updated");
+}
+
+$j('#acao_area_ambiental').on('change', function() {
+  habilitaAcoesAmbientais()
 });

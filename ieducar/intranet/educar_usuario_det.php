@@ -49,11 +49,11 @@ return new class extends clsDetalhe
         $this->addDetalhe(detalhe: ['Sexo', $sexo]);
         $this->addDetalhe(detalhe: ['Matrícula', $det_funcionario['matricula']]);
 
-        $ativo_f = ($det_funcionario['ativo'] == '1') ? 'Ativo' : 'Inativo';
-        $this->addDetalhe(detalhe: ['Status', $ativo_f]);
-
         $tmp_obj = new clsPmieducarUsuario(cod_usuario: $this->cod_usuario);
         $registro = $tmp_obj->detalhe();
+
+        $ativo_f = ($registro['ativo'] == '1') ? 'Ativo' : 'Inativo';
+        $this->addDetalhe(detalhe: ['Status', $ativo_f]);
 
         $obj_ref_cod_tipo_usuario = new clsPmieducarTipoUsuario(cod_tipo_usuario: $registro['ref_cod_tipo_usuario']);
         $det_ref_cod_tipo_usuario = $obj_ref_cod_tipo_usuario->detalhe();

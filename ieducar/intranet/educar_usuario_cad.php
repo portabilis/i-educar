@@ -60,8 +60,6 @@ return new class extends clsCadastro
                 $this->data_expiracao = Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao);
             }
 
-            $this->status = $this->ativo;
-
             $obj = new clsPmieducarUsuario($this->ref_pessoa);
 
             $registro = $obj->detalhe();
@@ -145,7 +143,7 @@ return new class extends clsCadastro
         $opcoes = [0 => 'Inativo', 1 => 'Ativo'];
 
         if (!$this->ref_cod_pessoa_fj == '') {
-            $this->campoLista(nome: 'ativo', campo: 'Status', valor: $opcoes, default: $this->status);
+            $this->campoLista(nome: 'ativo', campo: 'Status', valor: $opcoes, default: $this->ativo);
         } else {
             $this->campoLista(nome: 'ativo', campo: 'Status', valor: $opcoes, default: 1);
         }
@@ -308,9 +306,29 @@ return new class extends clsCadastro
 
         if ($obj_funcionario->edita()) {
             if ($this->ref_cod_instituicao) {
-                $obj = new clsPmieducarUsuario(cod_usuario: $this->ref_pessoa, ref_cod_escola: null, ref_cod_instituicao: $this->ref_cod_instituicao, ref_funcionario_cad: $this->pessoa_logada, ref_funcionario_exc: $this->pessoa_logada, ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario, data_cadastro: null, data_exclusao: null, ativo: 1);
+                $obj = new clsPmieducarUsuario(
+                    cod_usuario: $this->ref_pessoa,
+                    ref_cod_escola: null,
+                    ref_cod_instituicao: $this->ref_cod_instituicao,
+                    ref_funcionario_cad: $this->pessoa_logada,
+                    ref_funcionario_exc: $this->pessoa_logada,
+                    ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario,
+                    data_cadastro: null,
+                    data_exclusao: null,
+                    ativo: $this->ativo
+                );
             } else {
-                $obj = new clsPmieducarUsuario(cod_usuario: $this->ref_pessoa, ref_cod_escola: null, ref_cod_instituicao: null, ref_funcionario_cad: $this->pessoa_logada, ref_funcionario_exc: $this->pessoa_logada, ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario, data_cadastro: null, data_exclusao: null, ativo: 1);
+                $obj = new clsPmieducarUsuario(
+                    cod_usuario: $this->ref_pessoa,
+                    ref_cod_escola: null,
+                    ref_cod_instituicao: null,
+                    ref_funcionario_cad: $this->pessoa_logada,
+                    ref_funcionario_exc: $this->pessoa_logada,
+                    ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario,
+                    data_cadastro: null,
+                    data_exclusao: null,
+                    ativo: $this->ativo
+                );
             }
 
             if ($obj->existe()) {

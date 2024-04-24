@@ -646,6 +646,7 @@ class AlunoController extends ApiCoreController
 
         $aluno->tipo_transporte = (new TransportationProvider())->from($this->getRequest()->tipo_transporte);
         $aluno->rota_transporte = $this->getRequest()->rota_transporte;
+        $aluno->utiliza_transporte_rural = (bool) $this->getRequest()->utiliza_transporte_rural;
 
         if (is_null($id)) {
             $id = $aluno->cadastra();
@@ -1158,7 +1159,8 @@ class AlunoController extends ApiCoreController
                 'parentesco_cinco',
                 'emancipado',
                 'tipo_transporte',
-                'rota_transporte'
+                'rota_transporte',
+                'utiliza_transporte_rural',
             ];
 
             $aluno = Portabilis_Array_Utils::filter($alunoDetalhe, $attrs);
@@ -1168,6 +1170,7 @@ class AlunoController extends ApiCoreController
             $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
             $aluno['aluno_inep_id'] = $this->loadAlunoInepId($id);
             $aluno['ativo'] = $aluno['ativo'] == 1;
+            $aluno['utiliza_transporte_rural'] = $aluno['utiliza_transporte_rural'] === true ? 1 : 0;
 
             $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
             $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;

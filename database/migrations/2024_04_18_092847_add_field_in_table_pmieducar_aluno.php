@@ -9,14 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pmieducar.aluno', function (Blueprint $table) {
-            $table->text('rota_transporte')->nullable();
+            $table->boolean('utiliza_transporte_rural')->default(false);
         });
     }
 
     public function down(): void
     {
         Schema::table('pmieducar.aluno', function (Blueprint $table) {
-            $table->dropColumn('rota_transporte');
+            $table->dropColumn('utiliza_transporte_rural');
         });
     }
 };
