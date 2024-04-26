@@ -3,7 +3,9 @@
 class App_Model_TipoMediacaoDidaticoPedagogico extends CoreExt_Enum
 {
     const PRESENCIAL = 1;
+
     const SEMIPRESENCIAL = 2;
+
     const EDUCACAO_A_DISTANCIA = 3;
 
     protected $_data = [
