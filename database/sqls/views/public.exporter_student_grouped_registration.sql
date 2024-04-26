@@ -53,7 +53,8 @@ SELECT p.id,
        me.cod_aluno_inep AS inep_id,
        ap.altura as height,
        ap.peso as weight,
-       a.rota_transporte as transport_route
+       a.rota_transporte as transport_route,
+       a.codigo_sistema
 FROM exporter_person p
          JOIN pmieducar.aluno a ON p.id = a.ref_idpes::numeric
          JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
