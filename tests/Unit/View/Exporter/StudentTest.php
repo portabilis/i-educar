@@ -247,6 +247,7 @@ class StudentTest extends ViewTestCase
                 'religion' => 'Religião',
                 'height' => 'Altura',
                 'weight' => 'Peso',
+                'uses_rural_transport' => 'Utiliza Transporte Rural',
             ],
             'Escola' => [
                 'school' => 'Escola',

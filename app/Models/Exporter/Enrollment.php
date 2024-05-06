@@ -63,6 +63,7 @@ class Enrollment extends Model
                 'gender' => 'Gênero',
                 'race' => 'Raça',
                 'religion' => 'Religião',
+                'uses_rural_transport' => 'Utiliza Transporte Rural',
             ],
             'Escola' => [
                 'school' => 'Escola',
