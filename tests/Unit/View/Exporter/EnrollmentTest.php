@@ -247,6 +247,7 @@ class EnrollmentTest extends ViewTestCase
                 'gender' => 'Gênero',
                 'race' => 'Raça',
                 'religion' => 'Religião',
+                'uses_rural_transport' => 'Utiliza Transporte Rural',
             ],
             'Escola' => [
                 'school' => 'Escola',
