@@ -159,4 +159,19 @@ class LegacyEvaluationRule extends Model
             get: fn () => $this->nome,
         );
     }
+
+    public function gradeYears()
+    {
+        return $this->hasMany(LegacyEvaluationRuleGradeYear::class, 'regra_avaliacao_id');
+    }
+
+    public function averageFormula()
+    {
+        return $this->belongsTo(LegacyAverageFormula::class, 'formula_media_id');
+    }
+
+    public function recoveryFormula()
+    {
+        return $this->belongsTo(LegacyAverageFormula::class, 'formula_recuperacao_id');
+    }
 }
