@@ -119,6 +119,15 @@ class Registro10 extends Registro10Fields
             $this->energiaInexistente;
     }
 
+    public function existeAcaoAmbiental()
+    {
+        return $this->acaoConteudoComponente ||
+            $this->acaoConteudoCurricular ||
+            $this->acaoEixoCurriculo ||
+            $this->acaoEventos ||
+            $this->acaoProjetoInterdisciplinares;
+    }
+
     /**
      * @return bool
      */
