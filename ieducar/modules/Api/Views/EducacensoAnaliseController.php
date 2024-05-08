@@ -494,7 +494,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola->existeAcaoAmbiental()) {
+        if ($escola->existeAcaoAmbiental()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a escola desenvolve ações na área de educação ambiental;",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: A escola desenvolve ações na área de educação ambiental)',
