@@ -60,4 +60,9 @@ class LegacySchoolClassTeacher extends Model
     {
         return $this->belongsTo(Employee::class, 'servidor_id');
     }
+
+    public function disciplines()
+    {
+        return $this->belongsToMany(LegacyDiscipline::class, 'modules.professor_turma_disciplina', 'professor_turma_id', 'componente_curricular_id');
+    }
 }
