@@ -43,6 +43,7 @@ class Enrollment extends Model
                 'grade_id' => 'ID Série',
                 'course_id' => 'ID Curso',
                 'inep_id' => 'Código INEP (Aluno)',
+                'codigo_sistema' => 'Código Sistema',
             ],
             'Aluno' => [
                 'name' => 'Nome',
@@ -62,6 +63,7 @@ class Enrollment extends Model
                 'gender' => 'Gênero',
                 'race' => 'Raça',
                 'religion' => 'Religião',
+                'uses_rural_transport' => 'Utiliza Transporte Rural',
             ],
             'Escola' => [
                 'school' => 'Escola',

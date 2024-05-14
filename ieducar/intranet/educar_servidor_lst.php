@@ -80,7 +80,7 @@ return new class extends clsListagem
             'pessoa.nome as name',
             'ref_cod_instituicao',
             'cod_servidor',
-        ], 'pagina_');
+        ], 'pagina_formulario');
 
         // UrlHelper
         $url = CoreExt_View_Helper_UrlHelper::getInstance();
@@ -105,7 +105,12 @@ return new class extends clsListagem
             }
         }
 
-        $this->addPaginador2(strUrl: 'educar_servidor_lst.php', intTotalRegistros: $lista->total(), mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
+        $this->addPaginador2(
+            strUrl: 'educar_servidor_lst.php',
+            intTotalRegistros: $lista->total(),
+            mixVariaveisMantidas: $_GET,
+            intResultadosPorPagina: $this->limite
+        );
         $obj_permissoes = new clsPermissoes();
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {

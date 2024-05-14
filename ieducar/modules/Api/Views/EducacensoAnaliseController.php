@@ -494,6 +494,24 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if ($escola->existeAcaoAmbiental()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a escola desenvolve ações na área de educação ambiental;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: A escola desenvolve ações na área de educação ambiental)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if ($escola->acaoAmbientalNenhumaEOutrosCamposPreenchidos()) {
+            $mensagem[] = [
+                'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que as ações ambientais foram preenchidas incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Informe de qual(quais) forma(s) a educação ambiental é desenvolvida na escola)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
         if (!$escola->existeAbastecimentoEnergia()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se uma das fontes de energia elétrica foi informada.",
@@ -961,7 +979,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação didático pedagógico da turma {$nomeTurma} é semipresencial, portanto a turma deve ter estrutura curricular de formação geral básica.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Estrutura curricular)',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                    'fail' => true
+                    'fail' => true,
                 ];
             }
 
