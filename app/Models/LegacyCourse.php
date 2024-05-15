@@ -147,7 +147,7 @@ class LegacyCourse extends LegacyModel
      */
     public function schools(): BelongsToMany
     {
-        return $this->belongsToMany(LegacySchool::class, 'escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
+        return $this->belongsToMany(LegacySchool::class, 'pmieducar.escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
 
     public function educationType(): BelongsTo
