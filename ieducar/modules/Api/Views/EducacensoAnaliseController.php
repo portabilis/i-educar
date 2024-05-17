@@ -494,9 +494,21 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->existeAcaoAmbiental()) {
+        if (is_null($escola->acaoAreaAmbiental)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a escola desenvolve ações na área de educação ambiental;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: A escola desenvolve ações na área de educação ambiental)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if (
+            ($escola->acaoAreaAmbiental == 0 && $escola->existeAcaoAmbiental()) ||
+            ($escola->acaoAreaAmbiental == 1 && !$escola->existeAcaoAmbiental())
+        ) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verifique se a escola desenvolve ações na área de educação ambiental;",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: A escola desenvolve ações na área de educação ambiental)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
