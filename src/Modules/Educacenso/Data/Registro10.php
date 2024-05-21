@@ -211,12 +211,12 @@ class Registro10 extends AbstractRegistro
             $data->orgaosColegiadosNenhum() ?: 0, // 178 Não há órgãos colegiados em funcionamento
             $data->projetoPoliticoPedagogico ?: 0, // 179 O projeto político pedagógico ou a proposta pedagógica da escola (conforme art. 12 da LDB) foi atualizada nos últimos 12 meses até a data de referência
             $data->acaoAreaAmbiental ?: 0, // 180 A escola desenvolve ações na área de educação ambiental?
-            $data->acaoConteudoComponente,// 181 Como conteúdo dos componentes/campos de experiências presentes no currículo
-            $data->acaoConteudoCurricular,// 182 Como um componente curricular especial, específico, flexível ou eletivo
-            $data->acaoEixoCurriculo,// 183 Como um eixo estruturante do currículo
-            $data->acaoEventos,// 184 Em eventos
-            $data->acaoProjetoInterdisciplinares,//185 Em projetos transversais ou interdisciplinares
-            $data->acaoAmbientalNenhuma,// 186 Nenhuma das opções listadas
+            $data->acaoConteudoComponente, // 181 Como conteúdo dos componentes/campos de experiências presentes no currículo
+            $data->acaoConteudoCurricular, // 182 Como um componente curricular especial, específico, flexível ou eletivo
+            $data->acaoEixoCurriculo, // 183 Como um eixo estruturante do currículo
+            $data->acaoEventos, // 184 Em eventos
+            $data->acaoProjetoInterdisciplinares, //185 Em projetos transversais ou interdisciplinares
+            $data->acaoAmbientalNenhuma, // 186 Nenhuma das opções listadas
         ];
 
         return $exportData;
