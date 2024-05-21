@@ -2,7 +2,6 @@
 
 namespace App\Models\Educacenso;
 
-use iEducar\Modules\Educacenso\Model\AcoesAmbientais;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
