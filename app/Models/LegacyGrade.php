@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Ankurk91\Eloquent\BelongsToOne;
+use Ankurk91\Eloquent\HasBelongsToOne;
 use App\Models\Builders\LegacyGradeBuilder;
 use App\Models\View\Discipline;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacyGrade extends LegacyModel
 {
-    use BelongsToOne;
+    use HasBelongsToOne;
 
     public const CREATED_AT = 'data_cadastro';
 

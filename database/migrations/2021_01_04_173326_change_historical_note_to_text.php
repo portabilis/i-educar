@@ -14,7 +14,7 @@ class ChangeHistoricalNoteToText extends Migration
     public function up()
     {
         Schema::table('pmieducar.serie', function (Blueprint $table) {
-            $table->text('observacao_historico')->change();
+            $table->text('observacao_historico')->nullable()->change();
         });
     }
 
