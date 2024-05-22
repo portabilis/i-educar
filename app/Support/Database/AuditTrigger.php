@@ -31,9 +31,11 @@ trait AuditTrigger
 
         $return = [];
         foreach ($tables as $table) {
-            if (!in_array($table->table_name, $this->getSkippedTables())) {
-                $return[] = $table->table_schema . '.' . $table->table_name;
+            if (in_array($table->table_name, $this->getSkippedTables())) {
+                continue;
             }
+            
+            $return[] = $table->table_schema . '.' . $table->table_name;
         }
 
         return $return;
