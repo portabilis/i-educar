@@ -6,7 +6,9 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
+use App\Services\SchoolClass\SchoolClassService;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
+use iEducar\Modules\SchoolClass\Period;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro
@@ -142,6 +144,32 @@ return new class extends clsCadastro
 
     public $classe_com_lingua_brasileira_sinais;
 
+    public $horario_funcionamento_turno_matutino;
+
+    public $codigo_inep_matutino;
+
+    public $hora_inicial_matutino;
+
+    public $hora_inicio_intervalo_matutino;
+
+    public $hora_fim_intervalo_matutino;
+
+    public $hora_final_matutino;
+
+    public $horario_funcionamento_turma_vespertino;
+
+    public $codigo_inep_vespertino;
+
+    public $hora_inicial_vespertino;
+
+    public $hora_inicio_intervalo_vespertino;
+
+    public $hora_fim_intervalo_vespertino;
+
+    public $hora_final_vespertino;
+
+    private $hasStudentsPartials;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -187,6 +215,14 @@ return new class extends clsCadastro
 
             if ($inep) {
                 $this->codigo_inep_educacenso = $inep;
+            }
+
+            $service = new SchoolClassService();
+            $this->hasStudentsPartials = $service->hasStudentsPartials($this->cod_turma);
+
+            if ($this->hasStudentsPartials) {
+                $this->codigo_inep_matutino = $obj_turma->getInepTurno(Period::MORNING);
+                $this->codigo_inep_vespertino = $obj_turma->getInepTurno(Period::AFTERNOON);
             }
 
             if ($registro) {
@@ -641,6 +677,94 @@ return new class extends clsCadastro
             'value' => $this->nao_informar_educacenso,
             'label_hint' => 'Caso marcado, esta turma e suas matrículas, não serão informadas no arquivo da 1° e 2° etapa do Censo escolar'];
         $this->inputsHelper()->checkbox(attrName: 'nao_informar_educacenso', inputOptions: $options);
+
+        $this->campoOculto(
+            nome: 'turno_parcial',
+            valor: $this->hasStudentsPartials ? 'S' : 'N'
+        );
+
+        $this->campoRotulo(
+            nome: 'horario_funcionamento_turno_matutino',
+            campo: '<b>Horário de funcionamento da turma - PERÍODO MATUTINO</b>'
+        );
+
+        $this->inputsHelper()->integer(
+            attrName: 'codigo_inep_matutino',
+            inputOptions: [
+                'label' => 'Código INEP - Turno Matutino',
+                'label_hint' => 'Somente números',
+                'placeholder' => 'INEP',
+                'required' => false,
+                'max_length' => 14,
+                'value' => $this->codigo_inep_matutino,
+            ]
+        );
+
+        $this->campoHora(
+            nome: 'hora_inicial_matutino',
+            campo: 'Hora inicial do turno MATUTINO',
+            valor: $this->hora_inicial_matutino,
+        );
+
+        $this->campoHora(
+            nome: 'hora_inicio_intervalo_matutino',
+            campo: 'Hora inicial do intervalo do turno MATUTINO',
+            valor: $this->hora_inicio_intervalo_matutino,
+        );
+
+        $this->campoHora(
+            nome: 'hora_fim_intervalo_matutino',
+            campo: 'Hora final do intervalo do turno MATUTINO',
+            valor: $this->hora_fim_intervalo_matutino,
+        );
+
+        $this->campoHora(
+            nome: 'hora_final_matutino',
+            campo: 'Hora Final do turno MATUTINO',
+            valor: $this->hora_final_matutino,
+        );
+
+        $this->campoQuebra2();
+        $this->campoRotulo(
+            nome: 'horario_funcionamento_turma_vespertino',
+            campo: '<b>Horário de funcionamento da turma - PERÍODO VESPERTINO</b>'
+        );
+
+        $this->inputsHelper()->integer(
+            attrName: 'codigo_inep_vespertino',
+            inputOptions: [
+                'label' => 'Código INEP - Turno Vespertino',
+                'label_hint' => 'Somente números',
+                'placeholder' => 'INEP',
+                'required' => false,
+                'max_length' => 14,
+                'value' => $this->codigo_inep_vespertino,
+            ]
+        );
+
+        $this->campoHora(
+            nome: 'hora_inicial_vespertino',
+            campo: 'Hora inicial do turno VESPERTINO',
+            valor: $this->hora_inicial_vespertino,
+        );
+
+        $this->campoHora(
+            nome: 'hora_inicio_intervalo_vespertino',
+            campo: 'Hora inicial do intervalo do turno VESPERTINO',
+            valor: $this->hora_inicio_intervalo_vespertino,
+        );
+
+        $this->campoHora(
+            nome: 'hora_fim_intervalo_vespertino',
+            campo: 'Hora final do intervalo do turno VESPERTINO',
+            valor: $this->hora_fim_intervalo_vespertino,
+        );
+
+        $this->campoHora(
+            nome: 'hora_final_vespertino',
+            campo: 'Hora Final do turno VESPERTINO',
+            valor: $this->hora_final_vespertino,
+        );
 
         $scripts = [
             '/vendor/legacy/Cadastro/Assets/Javascripts/Turma.js',
