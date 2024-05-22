@@ -3,7 +3,10 @@
 namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro50 as Registro50Model;
+use App\Models\LegacySchoolClass;
+use App\Services\SchoolClass\SchoolClassService;
 use iEducar\Modules\Educacenso\Formatters;
+use iEducar\Modules\SchoolClass\Period;
 use Portabilis_Utils_Database;
 
 class Registro50 extends AbstractRegistro
@@ -28,14 +31,17 @@ class Registro50 extends AbstractRegistro
         $return = $this->repository->getDataForRecord50($ano, $escola);
 
         foreach ($return as $data) {
-            $this->hydrateModel($data);
+            $recordCopies = $this->copyByPeriod($data);
+            foreach ($recordCopies as $recordCopy) {
+                $this->hydrateModel($recordCopy);
 
-            $this->model->componentes = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->componentes));
-            $this->model->unidadesCurriculares = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->unidadesCurriculares));
-            $this->model->estruturaCurricular = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->estruturaCurricular));
+                $this->model->componentes = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->componentes));
+                $this->model->unidadesCurriculares = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->unidadesCurriculares));
+                $this->model->estruturaCurricular = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->estruturaCurricular));
 
-            $this->modelArray[] = $this->model;
-            $this->model = new Registro50Model();
+                $this->modelArray[] = $this->model;
+                $this->model = new Registro50Model();
+            }
         }
 
         return $this->modelArray;
@@ -46,5 +52,32 @@ class Registro50 extends AbstractRegistro
         $modelArray = $this->getData($ano, $escola);
 
         return $modelArray;
+    }
+
+    private function copyByPeriod($record)
+    {
+        $turmaTurnoId = LegacySchoolClass::query()
+            ->whereKey($record->codigoTurma)
+            ->value('turma_turno_id');
+
+        if ($turmaTurnoId !== Period::FULLTIME) {
+            return [$record];
+        }
+
+        $service = new SchoolClassService();
+
+        $studentPeriods = $service->getStudentsPeriods($record->codigoTurma);
+        $hasPeriods = $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
+
+        if ($hasPeriods) {
+            return $studentPeriods->map(function ($periodId) use ($record) {
+                $newRecord = clone $record;
+                $newRecord->codigoTurma .= '-' . $periodId;
+
+                return $newRecord;
+            })->toArray();
+        }
+
+        return [$record];
     }
 }
