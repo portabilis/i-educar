@@ -68,41 +68,41 @@ SELECT
     turma.turma_turno_id AS "turmaTurnoId",
     COALESCE(matricula_turma.turno_id, turma.turma_turno_id) AS "turnoId"
 FROM pmieducar.aluno
-         JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
-         JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
-         JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-         JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-         JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
-         JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
-         JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
-         JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
-         LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
-         LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
-         LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
+JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
+JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
+JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
+JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
+JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
+JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
+JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
+LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
+LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
+LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
 WHERE true
   AND matricula.ativo = 1
   AND turma.ativo = 1
   AND COALESCE(turma.nao_informar_educacenso, 0) = 0
   AND (
         (
-                    matricula_turma.data_enturmacao < instituicao.data_educacenso
+                matricula_turma.data_enturmacao < instituicao.data_educacenso
                 AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
             )
         OR (
-                    matricula_turma.data_enturmacao = instituicao.data_educacenso AND
-                    (
-                        NOT EXISTS(
-                            SELECT
-                                1
-                            FROM pmieducar.matricula_turma smt
-                                     JOIN pmieducar.matricula sm
-                                          ON sm.cod_matricula = smt.ref_cod_matricula
-                            WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
-                              AND sm.ativo = 1
-                              AND sm.ano = matricula.ano
-                              AND smt.data_enturmacao < matricula_turma.data_enturmacao
-                              AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
-                            )
+                matricula_turma.data_enturmacao = instituicao.data_educacenso AND
+                (
+                    NOT EXISTS(
+                        SELECT
+                            1
+                        FROM pmieducar.matricula_turma smt
+                        JOIN pmieducar.matricula sm
+                             ON sm.cod_matricula = smt.ref_cod_matricula
+                        WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
+                          AND sm.ativo = 1
+                          AND sm.ano = matricula.ano
+                          AND smt.data_enturmacao < matricula_turma.data_enturmacao
+                          AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
                         )
+                    )
             )
     )
