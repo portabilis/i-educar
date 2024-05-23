@@ -3,7 +3,6 @@
 namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro50 as Registro50Model;
-use App\Models\LegacySchoolClass;
 use App\Services\SchoolClass\SchoolClassService;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\SchoolClass\Period;
@@ -56,18 +55,14 @@ class Registro50 extends AbstractRegistro
 
     private function copyByPeriod($record)
     {
-        $turmaTurnoId = LegacySchoolClass::query()
-            ->whereKey($record->codigoTurma)
-            ->value('turma_turno_id');
-
-        if ($turmaTurnoId !== Period::FULLTIME) {
+        if ($record->turmaTurnoId !== Period::FULLTIME) {
             return [$record];
         }
 
         $service = new SchoolClassService();
 
         $studentPeriods = $service->getStudentsPeriods($record->codigoTurma);
-        $hasPeriods = $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
+        $hasPeriods = $service->hasStudentsPartials($record->codigoTurma);
 
         if ($hasPeriods) {
             return $studentPeriods->map(function ($periodId) use ($record) {
