@@ -16,7 +16,6 @@ class SchoolClassInepService
             'turma_turno_id' => $turnoId,
         ], [
             'cod_turma_inep' => $codigoInepEducacenso,
-            'turma_turno_id' => $turnoId,
         ]);
     }
 
