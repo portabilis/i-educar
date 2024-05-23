@@ -207,19 +207,18 @@ class Registro20 extends AbstractRegistro
             return $studentPeriods->map(function ($periodId) use ($record, $periodsNames) {
                 $newRecord = clone $record;
                 $periodName = $periodsNames[$periodId];
-                if (stripos($record->nomeTurma, $periodName) === false) {
-                    $newRecord->codTurma .= '-' . $periodId;
-                    $newRecord->nomeTurma .= ' - ' . $periodName;
 
-                    if ($periodId === Period::MORNING) {
-                        $newRecord->horaInicial = $record->horaInicialMatutino;
-                        $newRecord->horaFinal = $record->horaFinalMatutino;
-                        $newRecord->turmaTurnoId = Period::MORNING;
-                    } elseif ($periodId === Period::AFTERNOON) {
-                        $newRecord->horaInicial = $record->horaInicialVespertino;
-                        $newRecord->horaFinal = $record->horaFinalVespertino;
-                        $newRecord->turmaTurnoId = Period::AFTERNOON;
-                    }
+                $newRecord->codTurma .= '-' . $periodId;
+                $newRecord->nomeTurma .= ' - ' . $periodName;
+
+                if ($periodId === Period::MORNING) {
+                    $newRecord->horaInicial = $record->horaInicialMatutino;
+                    $newRecord->horaFinal = $record->horaFinalMatutino;
+                    $newRecord->turmaTurnoId = Period::MORNING;
+                } elseif ($periodId === Period::AFTERNOON) {
+                    $newRecord->horaInicial = $record->horaInicialVespertino;
+                    $newRecord->horaFinal = $record->horaFinalVespertino;
+                    $newRecord->turmaTurnoId = Period::AFTERNOON;
                 }
 
                 return $newRecord;
