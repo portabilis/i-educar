@@ -61,7 +61,9 @@ return [
 
     'middleware' => [
         'verify_csrf_token' => App\Http\Middleware\SkipMiddleware::class,
+        'authenticate_session' => App\Http\Middleware\SkipMiddleware::class,
         'encrypt_cookies' => App\Http\Middleware\SkipMiddleware::class,
+        'validate_csrf_token' => App\Http\Middleware\SkipMiddleware::class,
     ],
 
 ];

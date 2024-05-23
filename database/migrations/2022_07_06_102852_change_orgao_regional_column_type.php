@@ -14,7 +14,7 @@ return new class() extends Migration
     public function up()
     {
         Schema::table('pmieducar.instituicao', function (Blueprint $table) {
-            $table->string('orgao_regional', 5)->change();
+            $table->string('orgao_regional', 5)->nullable()->change();
         });
     }
 
