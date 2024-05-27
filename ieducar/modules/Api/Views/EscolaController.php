@@ -665,7 +665,13 @@ class EscolaController extends ApiCoreController
                         'serie_id', serie_id,
                         'disciplinas_anos_letivos', disciplinas_anos_letivos
                     )
-                ) AS series_disciplinas_anos_letivos
+                ) AS series_disciplinas_anos_letivos,
+                json_agg(
+                    json_build_object(
+                        'serie_id', serie_id,
+                        'disciplinas_etapas_utilizadas', disciplinas_etapas_utilizadas
+                        )
+                ) AS series_disciplinas_etapas_utilizadas
             FROM (
                 SELECT
                     ref_ref_cod_escola AS escola_id,
@@ -674,7 +680,12 @@ class EscolaController extends ApiCoreController
                         json_build_object(
                             ref_cod_disciplina, anos_letivos
                         )
-                    ) AS disciplinas_anos_letivos
+                    ) AS disciplinas_anos_letivos,
+                    json_agg(
+                        json_build_object(
+                            ref_cod_disciplina,  etapas_utilizadas
+                            )
+                    ) AS disciplinas_etapas_utilizadas
                 FROM pmieducar.escola_serie_disciplina
                 $whereModified
                 GROUP BY
@@ -686,11 +697,12 @@ class EscolaController extends ApiCoreController
         ";
 
         $escolas = $this->fetchPreparedQuery($sql);
-        $attrs = ['escola_id', 'series_disciplinas_anos_letivos'];
+        $attrs = ['escola_id', 'series_disciplinas_anos_letivos', 'series_disciplinas_etapas_utilizadas'];
         $escolas = Portabilis_Array_Utils::filterSet($escolas, $attrs);
 
         foreach ($escolas as $key => $escola) {
             $escolas[$key]['series_disciplinas_anos_letivos'] = json_decode($escola['series_disciplinas_anos_letivos']);
+            $escolas[$key]['series_disciplinas_etapas_utilizadas'] = json_decode($escola['series_disciplinas_etapas_utilizadas']);
         }
 
         return ['escolas' => $escolas];
