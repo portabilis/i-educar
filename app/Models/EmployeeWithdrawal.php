@@ -7,6 +7,7 @@ use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeWithdrawal extends LegacyModel
 {
@@ -25,7 +26,6 @@ class EmployeeWithdrawal extends LegacyModel
         'ref_cod_motivo_afastamento',
         'data_retorno',
         'data_saida',
-        'sequencial',
     ];
 
     protected $casts = [
@@ -48,7 +48,7 @@ class EmployeeWithdrawal extends LegacyModel
         parent::boot();
 
         static::creating(function ($employeeWithdrawal) {
-            $employeeWithdrawal->sequencial = $employeeWithdrawal->employee->withdrawals()->withTrashed()->count() + 1;
+            $employeeWithdrawal->sequencial = DB::table('servidor_afastamento')->where('ref_cod_servidor', $employeeWithdrawal->ref_cod_servidor)->where('ref_ref_cod_instituicao', $employeeWithdrawal->ref_ref_cod_instituicao)->max('sequencial') + 1;
         });
     }
 }
