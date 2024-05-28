@@ -1,6 +1,13 @@
 //abas
+let html = '<div id="tabControl"><ul>'
+html += '<li><div id="tab1" class="turmaTab"> <span class="tabText">Dados gerais</span></div></li>';
+html += '<li><div id="tab2" class="turmaTab"> <span class="tabText">Dados adicionais</span></div></li>';
+if ($j('#turno_parcial').val() === 'S') {
+  html += '<li><div id="tab3" class="turmaTab"> <span class="tabText">Dados dos Turnos Parciais</span></div></li>';
+}
+html += '</ul></div>';
 
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="turmaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="turmaTab"> <span class="tabText">Dados adicionais</span></div></li></ul></div>');
+$j('td .formdktd').append(html);
 $j('td .formdktd b').remove();
 $j('.tablecadastro td .formdktd div').remove();
 $j('#tab1').addClass('turmaTab-active').removeClass('turmaTab');
@@ -14,6 +21,7 @@ $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 
 // Pega o número dessa linha
 linha_inicial_tipo = $j('#tr_codigo_inep_educacenso').index()-3;
+linha_inicial_turno_parcial = $j('#tr_horario_funcionamento_turno_matutino').index()-3;
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
@@ -36,6 +44,40 @@ let verificaEtapaEducacenso = ()=>{
     $j('#estrutura_curricular').val().include('3')) &&
     obrigarCamposCenso) {
       $j('#etapa_educacenso').makeRequired();
+  }
+}
+
+let verificaHorariosTurnoParcial = ()=>{
+  if (!obrigarCamposCenso) {
+    return true;
+  }
+  $j('#hora_inicial_matutino').makeUnrequired();
+  $j('#hora_inicio_intervalo_matutino').makeUnrequired();
+  $j('#hora_fim_intervalo_matutino').makeUnrequired();
+  $j('#hora_final_matutino').makeUnrequired();
+  $j('#hora_inicial_vespertino').makeUnrequired();
+  $j('#hora_inicio_intervalo_vespertino').makeUnrequired();
+  $j('#hora_fim_intervalo_vespertino').makeUnrequired();
+  $j('#hora_final_vespertino').makeUnrequired();
+
+  if ($j('#tipo_mediacao_didatico_pedagogico').val() == 1) {
+    $j('#hora_inicial_matutino').prop('disabled', false).makeRequired();
+    $j('#hora_inicio_intervalo_matutino').prop('disabled', false).makeRequired();
+    $j('#hora_fim_intervalo_matutino').prop('disabled', false).makeRequired();
+    $j('#hora_final_matutino').prop('disabled', false).makeRequired();
+    $j('#hora_inicial_vespertino').prop('disabled', false).makeRequired();
+    $j('#hora_inicio_intervalo_vespertino').prop('disabled', false).makeRequired();
+    $j('#hora_fim_intervalo_vespertino').prop('disabled', false).makeRequired();
+    $j('#hora_final_vespertino').prop('disabled', false).makeRequired();
+  } else {
+    $j('#hora_inicial_matutino').prop('disabled', true).val("");
+    $j('#hora_inicio_intervalo_matutino').prop('disabled', true).val("");
+    $j('#hora_fim_intervalo_matutino').prop('disabled', true).val("");
+    $j('#hora_final_matutino').prop('disabled', true).val("");
+    $j('#hora_inicial_vespertino').prop('disabled', true).val("");
+    $j('#hora_inicio_intervalo_vespertino').prop('disabled', true).val("");
+    $j('#hora_fim_intervalo_vespertino').prop('disabled', true).val("");
+    $j('#hora_final_vespertino').prop('disabled', true).val("");
   }
 }
 
@@ -269,6 +311,9 @@ $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
     $j('#hora_fim_intervalo').prop('disabled', true).val("");
     $j('#dias_semana').prop('disabled', true).val([]).trigger("chosen:updated");
   }
+  if ($j('#turno_parcial').val() === 'S') {
+    verificaHorariosTurnoParcial();
+  }
 }).trigger('change');
 
 function buscaEtapasDaEscola() {
@@ -405,7 +450,7 @@ $j(document).ready(function() {
       $j('#tab2').toggleClass('turmaTab turmaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (row.id!='stop'){
-          if (index>=linha_inicial_tipo){
+          if (index>=linha_inicial_tipo && index < linha_inicial_turno_parcial){
             if ((index - linha_inicial_tipo) % 2 == 0){
               $j('#'+row.id).find('td').removeClass('formlttd');
               $j('#'+row.id).find('td').addClass('formmdtd');
@@ -431,6 +476,33 @@ $j(document).ready(function() {
       verificaUnidadeCurricular();
       habilitaUnidadeCurricular();
       verificaOutrasUnidadesCurricularesObrigatorias();
+    });
+
+  // Turmas Parciais
+  $j('#tab3').click(
+    function(){
+      $j('.turmaTab-active').toggleClass('turmaTab-active turmaTab');
+      $j('#tab3').toggleClass('turmaTab turmaTab-active')
+      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+        if (row.id!='stop'){
+          if (index>=linha_inicial_turno_parcial){
+            if ((index - linha_inicial_turno_parcial) % 2 == 0){
+              $j('#'+row.id).find('td').removeClass('formlttd');
+              $j('#'+row.id).find('td').addClass('formmdtd');
+            }else{
+              $j('#'+row.id).find('td').removeClass('formmdtd');
+              $j('#'+row.id).find('td').addClass('formlttd');
+
+            }
+
+            row.show();
+          }else if (index>0){
+            row.hide();
+          }
+        }else
+          return false;
+      });
+      verificaHorariosTurnoParcial();
     });
 
   // fix checkboxs

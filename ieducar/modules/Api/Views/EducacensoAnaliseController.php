@@ -12,6 +12,7 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
 use App\Repositories\EducacensoRepository;
 use App\Services\SchoolClass\AvailableTimeService;
+use App\Services\SchoolClass\SchoolClassService;
 use iEducar\Modules\Educacenso\Analysis\Register30CommonDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30ManagerDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30StudentDataAnalysis;
@@ -45,6 +46,7 @@ use iEducar\Modules\Educacenso\Validator\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Modules\SchoolClass\Period;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use Illuminate\Support\Facades\DB;
 
@@ -826,6 +828,10 @@ class EducacensoAnaliseController extends ApiCoreController
         $chavesTurmas = [];
 
         foreach ($turmas as $turma) {
+            if (str_contains($turma->codTurma, '-')) {
+                $turma->codTurma = explode('-', $turma->codTurma)[0];
+            }
+
             $nomeEscola = mb_strtoupper($turma->nomeEscola);
             $nomeTurma = mb_strtoupper($turma->nomeTurma);
             $atividadeComplementar = ($turma->tipoAtendimento == 4); //Código 4 fixo no cadastro de turma
@@ -929,12 +935,40 @@ class EducacensoAnaliseController extends ApiCoreController
             }
 
             if ((empty($turma->horaInicial) || empty($turma->horaFinal)) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial, portanto é necessário informar os horários de funcionamento.",
-                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Horário de funcionamento da turma)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                    'fail' => true,
-                ];
+                $service = new SchoolClassService();
+                $hasStudentsPartials = $service->hasStudentsPartials($turma->codTurma);
+
+                if ($hasStudentsPartials) {
+                    if ($turma->turmaTurnoId === Period::MORNING) {
+                        $mensagem[] = [
+                            'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial e com matrículas apenas no turno MATUTINO, portanto é necessário informar os horários de funcionamento.",
+                            'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados dos Turnos Parciais > Seção: Horário de funcionamento da turma - PERÍODO MATUTINO)',
+                            'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                            'fail' => true,
+                        ];
+                    } elseif ($turma->turmaTurnoId === Period::AFTERNOON) {
+                        $mensagem[] = [
+                            'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial e com matrículas apenas no turno VESPERTINO, portanto é necessário informar os horários de funcionamento.",
+                            'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados dos Turnos Parciais > Seção: Horário de funcionamento da turma - PERÍODO VESPERTINO)',
+                            'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                            'fail' => true,
+                        ];
+                    } else {
+                        $mensagem[] = [
+                            'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial e com turno INTEGRAL, portanto é necessário informar os horários de funcionamento.",
+                            'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Horário de funcionamento da turma)',
+                            'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                            'fail' => true,
+                        ];
+                    }
+                } else {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial, portanto é necessário informar os horários de funcionamento.",
+                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Horário de funcionamento da turma)',
+                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                        'fail' => true,
+                    ];
+                }
             } elseif (!empty($turma->horaInicial) && !empty($turma->horaFinal) && !$turma->horarioFuncionamentoValido()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verifique se o horário da turma {$nomeTurma} foi preenchido com um valor válido.",
@@ -1642,6 +1676,9 @@ class EducacensoAnaliseController extends ApiCoreController
         $alunos = collect($alunos);
 
         foreach ($alunos as $aluno) {
+            if (str_contains($aluno->codigoTurma, '-')) {
+                $aluno->codigoTurma = explode('-', $aluno->codigoTurma)[0];
+            }
             $nomeEscola = mb_strtoupper($aluno->nomeEscola);
             $nomeAluno = mb_strtoupper($aluno->nomeAluno);
             $nomeTurma = mb_strtoupper($aluno->nomeTurma);

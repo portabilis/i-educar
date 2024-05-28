@@ -17,6 +17,7 @@ class SchoolClassInep extends Model
         'cod_turma',
         'cod_turma_inep',
         'nome_inep',
+        'turma_turno_id',
         'fonte',
         'created_at',
         'updated_at',

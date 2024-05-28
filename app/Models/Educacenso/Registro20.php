@@ -216,6 +216,8 @@ class Registro20 implements RegistroEducacenso
 
     public $outrasUnidadesCurricularesObrigatorias;
 
+    public $turmaTurnoId;
+
     /**
      * @return bool
      */
@@ -424,7 +426,12 @@ class Registro20 implements RegistroEducacenso
     public function componentes()
     {
         if (!isset($this->componentes)) {
-            $this->componentes = LegacySchoolClass::find($this->codTurma)->getDisciplines();
+            $idTurma = $this->codTurma;
+            if (str_contains($idTurma, '-')) {
+                $idTurma = explode('-', $idTurma)[0];
+            }
+
+            $this->componentes = LegacySchoolClass::find($idTurma)->getDisciplines();
         }
 
         return $this->componentes;

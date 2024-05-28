@@ -136,6 +136,14 @@ class LegacySchoolClass extends Model
         'unidade_curricular',
         'outras_unidades_curriculares_obrigatorias',
         'classe_com_lingua_brasileira_sinais',
+        'hora_inicial_matutino',
+        'hora_inicio_intervalo_matutino',
+        'hora_fim_intervalo_matutino',
+        'hora_final_matutino',
+        'hora_inicial_vespertino',
+        'hora_inicio_intervalo_vespertino',
+        'hora_fim_intervalo_vespertino',
+        'hora_final_vespertino',
     ];
 
     protected function id(): Attribute
