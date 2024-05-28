@@ -134,7 +134,6 @@ Configure o Composer:
 
 ```bash 
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === 'e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 php composer-setup.php --install-dir=/usr/bin --filename=composer
 php -r "unlink('composer-setup.php');"
 export COMPOSER_ALLOW_SUPERUSER=1
@@ -157,6 +156,8 @@ sed -i 's/php:9000/unix:\/run\/php\/php-fpm.sock/g' /etc/nginx/conf.d/upstream.c
 rm /etc/nginx/sites-enabled/default
 nginx -s reload
 ```
+
+Configure a variável de ambiente `APP_DEFAULT_HOST` do arquivo `.env` com o IP ou domínio do seu servidor.
 
 Faça a instalação do i-Educar:
 

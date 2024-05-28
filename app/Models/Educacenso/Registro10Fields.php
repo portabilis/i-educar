@@ -52,6 +52,11 @@ class Registro10Fields implements RegistroEducacenso
     /**
      * @var string
      */
+    public $aguaCarroPipa;
+
+    /**
+     * @var string
+     */
     public $aguaInexistente;
 
     /**
@@ -562,6 +567,11 @@ class Registro10Fields implements RegistroEducacenso
     /**
      * @var int
      */
+    public $qtdAgronomosHorticultores;
+
+    /**
+     * @var int
+     */
     public $qtdApoioPedagogico;
 
     /**
@@ -628,6 +638,11 @@ class Registro10Fields implements RegistroEducacenso
      * @var int
      */
     public $qtdTradutorInterpreteLibrasOutroAmbiente;
+
+    /**
+     * @var int
+     */
+    public $qtdRevisorBraile;
 
     /**
      * @var array
@@ -848,5 +863,19 @@ class Registro10Fields implements RegistroEducacenso
 
     public $orgaoColegiadoOutros;
 
+    public $acaoAreaAmbiental;
+
     public $orgaoColegiadoNaoExiste;
+
+    public $acaoAmbientalNenhuma;
+
+    public $acaoConteudoComponente;
+
+    public $acaoConteudoCurricular;
+
+    public $acaoEixoCurriculo;
+
+    public $acaoEventos;
+
+    public $acaoProjetoInterdisciplinares;
 }

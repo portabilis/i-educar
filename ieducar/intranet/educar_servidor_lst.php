@@ -65,7 +65,7 @@ return new class extends clsListagem
             $this->ref_idesco = $_GET['idesco'];
         }
 
-        $lista = Employee::join(table: 'pessoa', first: 'cod_servidor', operator: 'idpes')->filter([
+        $lista = Employee::join(table: 'cadastro.pessoa', first: 'cod_servidor', operator: 'idpes')->filter([
             'institution' => $this->ref_cod_instituicao,
             'name' => $this->nome,
             'role' => $this->matricula_servidor,

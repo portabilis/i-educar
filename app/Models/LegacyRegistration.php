@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Ankurk91\Eloquent\BelongsToOne;
+use Ankurk91\Eloquent\HasBelongsToOne;
 use App\Models\Builders\LegacyRegistrationBuilder;
 use App\Models\View\Situation;
 use App\Traits\HasLegacyDates;
@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyRegistration extends LegacyModel
 {
-    use BelongsToOne;
+    use HasBelongsToOne;
     use HasLegacyDates;
 
     /**

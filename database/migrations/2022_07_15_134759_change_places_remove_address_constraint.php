@@ -8,21 +8,17 @@ return new class() extends Migration
 {
     public function up()
     {
-        Schema::table('public.places', function (Blueprint $table) {
-            $table->integer('city_id')->nullable()->change();
-            $table->string('address')->nullable()->change();
-            $table->string('neighborhood')->nullable()->change();
-            $table->string('postal_code')->nullable()->change();
-        });
+        DB::statement('ALTER TABLE public.places ALTER COLUMN city_id DROP NOT NULL;');
+        DB::statement('ALTER TABLE public.places ALTER COLUMN address DROP NOT NULL;');
+        DB::statement('ALTER TABLE public.places ALTER COLUMN neighborhood DROP NOT NULL;');
+        DB::statement('ALTER TABLE public.places ALTER COLUMN postal_code DROP NOT NULL;');
     }
 
     public function down()
     {
-        Schema::table('public.places', function (Blueprint $table) {
-            $table->integer('city_id')->change();
-            $table->string('address')->change();
-            $table->string('neighborhood')->change();
-            $table->string('postal_code')->change();
-        });
+        DB::statement('ALTER TABLE IF EXISTS public.places ALTER COLUMN city_id SET NOT NULL;');
+        DB::statement('ALTER TABLE IF EXISTS public.places ALTER COLUMN address SET NOT NULL;');
+        DB::statement('ALTER TABLE IF EXISTS public.places ALTER COLUMN neighborhood SET NOT NULL;');
+        DB::statement('ALTER TABLE IF EXISTS public.places ALTER COLUMN postal_code SET NOT NULL;');
     }
 };
