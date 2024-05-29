@@ -206,7 +206,7 @@ class StudentEloquentBuilder extends Builder
             $this->joinColumns('projects', ['projects'])
         );
 
-        return $this->join('exporter_projects as projects', function (JoinClause $join) {
+        return $this->leftJoin('exporter_projects as projects', function (JoinClause $join) {
             $join->on('exporter_student_grouped_registration.student_id', '=', 'projects.student_id');
         });
     }
