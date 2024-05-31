@@ -2,7 +2,9 @@
 
 namespace iEducar\Modules\Educacenso\Data;
 
+use App\Services\SchoolClass\SchoolClassService;
 use iEducar\Modules\Educacenso\Formatters;
+use iEducar\Modules\SchoolClass\Period;
 use Portabilis_Utils_Database;
 
 class Registro20 extends AbstractRegistro
@@ -25,7 +27,10 @@ class Registro20 extends AbstractRegistro
         $models = [];
         foreach ($data as $record) {
             $record = $this->processData($record);
-            $models[] = $this->hydrateModel($record);
+            $recordCopies = $this->copyByPeriod($record);
+            foreach ($recordCopies as $recordCopy) {
+                $models[] = $this->hydrateModel($recordCopy);
+            }
         }
 
         return $models;
@@ -183,5 +188,43 @@ class Registro20 extends AbstractRegistro
         $data->disciplinasEducacensoComDocentes = Portabilis_Utils_Database::pgArrayToArray($data->disciplinasEducacensoComDocentes);
 
         return $data;
+    }
+
+    private function copyByPeriod($record)
+    {
+        if ($record->turmaTurnoId !== Period::FULLTIME) {
+            return [$record];
+        }
+
+        $service = new SchoolClassService();
+
+        $periodsNames = (new Period)->getDescriptiveValues();
+        $studentPeriods = $service->getStudentsPeriods($record->codTurma);
+
+        $hasPeriods = $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
+
+        if ($hasPeriods) {
+            return $studentPeriods->map(function ($periodId) use ($record, $periodsNames) {
+                $newRecord = clone $record;
+                $periodName = $periodsNames[$periodId];
+
+                $newRecord->codTurma .= '-' . $periodId;
+                $newRecord->nomeTurma .= ' - ' . $periodName;
+
+                if ($periodId === Period::MORNING) {
+                    $newRecord->horaInicial = $record->horaInicialMatutino;
+                    $newRecord->horaFinal = $record->horaFinalMatutino;
+                    $newRecord->turmaTurnoId = Period::MORNING;
+                } elseif ($periodId === Period::AFTERNOON) {
+                    $newRecord->horaInicial = $record->horaInicialVespertino;
+                    $newRecord->horaFinal = $record->horaFinalVespertino;
+                    $newRecord->turmaTurnoId = Period::AFTERNOON;
+                }
+
+                return $newRecord;
+            })->toArray();
+        }
+
+        return [$record];
     }
 }

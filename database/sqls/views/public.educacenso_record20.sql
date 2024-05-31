@@ -18,7 +18,13 @@ SELECT
     turma.estrutura_curricular AS "estruturaCurricular",
     turma.formas_organizacao_turma AS "formasOrganizacaoTurma",
     turma.unidade_curricular AS "unidadesCurriculares",
-
+    turma.classe_com_lingua_brasileira_sinais AS "classeComLinguaBrasileiraSinais",
+    turma.outras_unidades_curriculares_obrigatorias AS "outrasUnidadesCurricularesObrigatorias",
+    turma.turma_turno_id AS "turmaTurnoId",
+    turma.hora_inicial_matutino AS "horaInicialMatutino",
+    turma.hora_final_matutino AS "horaFinalMatutino",
+    turma.hora_inicial_vespertino AS "horaInicialVespertino",
+    turma.hora_final_vespertino AS "horaFinalVespertino",
     (
       SELECT
         array_agg(unidade_curricular) AS unidades_curriculares
