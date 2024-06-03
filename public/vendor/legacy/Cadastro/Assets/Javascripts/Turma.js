@@ -352,7 +352,6 @@ $j('[name="ref_cod_serie"], #multiseriada').change(function () {
       if (only) {
 
         $j('select[name="etapa_educacenso"] option').each(function () {
-          console.log(only, $j(this).val());
           if ($j(this).val() != only && $j(this).val() !== '' && ($j('select[name="etapa_educacenso"]').val() === '' || $j('select[name="etapa_educacenso"]').val() == only)) {
             $j(this).hide();
           }
