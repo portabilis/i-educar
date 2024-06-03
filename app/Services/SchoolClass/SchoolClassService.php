@@ -12,7 +12,9 @@ use App\Rules\CanDeleteTurma;
 use App\Rules\CheckAlternativeReportCardExists;
 use App\Rules\CheckMandatoryCensoFields;
 use App\Rules\CheckSchoolClassExistsByName;
+use Carbon\Carbon;
 use iEducar\Modules\SchoolClass\Period;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -148,9 +150,11 @@ class SchoolClassService
 
     public function hasStudentsPartials(int $schoolClassId)
     {
-        $studentPeriods = $this->getStudentsPeriods($schoolClassId);
+        return Cache::remember('hasStudentsPartials_' . $schoolClassId, Carbon::now()->addMinutes(5), function () use ($schoolClassId) {
+            $studentPeriods = $this->getStudentsPeriods($schoolClassId);
 
-        return $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
+            return $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
+        });
     }
 
     /**
