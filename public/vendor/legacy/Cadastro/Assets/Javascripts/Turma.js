@@ -334,6 +334,34 @@ function buscaEtapasDaEscola() {
   getResources(options);
 }
 
+$j('[name="ref_cod_serie"], #multiseriada').change(function () {
+  $j('select[name="etapa_educacenso"] option').show();
+  if ($j('#ref_cod_serie').val() === '' || $j('#multiseriada').val() == 1) {
+    return;
+  }
+
+  var urlApi = getResourceUrlBuilder.buildUrl('/module/Api/Serie', 'etapa-educacenso', {
+    serie_id : $j('#ref_cod_serie').val()
+  });
+
+  getResources({
+    url: urlApi,
+    dataType: 'json',
+    success: function (dataResponse) {
+      const only = dataResponse.etapa_educacenso;
+      if (only) {
+
+        $j('select[name="etapa_educacenso"] option').each(function () {
+          if ($j(this).val() != only && $j(this).val() !== '' && ($j('select[name="etapa_educacenso"]').val() === '' || $j('select[name="etapa_educacenso"]').val() == only)) {
+            $j(this).hide();
+          }
+        });
+      }
+    }
+  });
+}).trigger('change');
+
+
 function preencheEtapasNaTurma(etapas) {
   $j.each( etapas, function( key, etapa ) {
     $j('input[name^="data_inicio[' + key + '"]').val(formatDate(etapa.data_inicio));

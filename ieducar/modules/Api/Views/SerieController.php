@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyGrade;
+
 class SerieController extends ApiCoreController
 {
     protected function canGetSeries()
@@ -218,6 +220,11 @@ class SerieController extends ApiCoreController
         return ['series' => $series];
     }
 
+    protected function getEtapaEducacenso()
+    {
+        return ['etapa_educacenso' => LegacyGrade::whereKey($this->getRequest()->serie_id)->value('etapa_educacenso')];
+    }
+
     protected function getSeriesCursoGrouped()
     {
         $sql = 'SELECT c.cod_curso AS cod_curso, c.nm_curso AS nm_curso, s.cod_serie AS id, s.nm_serie AS nome
@@ -285,6 +292,8 @@ class SerieController extends ApiCoreController
             $this->appendResponse($this->getBloqueioFaixaEtaria());
         } elseif ($this->isRequestFor('get', 'series-curso-grouped')) {
             $this->appendResponse($this->getSeriesCursoGrouped());
+        } elseif ($this->isRequestFor('get', 'etapa-educacenso')) {
+            $this->appendResponse($this->getEtapaEducacenso());
         } else {
             $this->notImplementedOperationError();
         }

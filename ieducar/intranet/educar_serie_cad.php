@@ -68,6 +68,8 @@ return new class extends clsCadastro
 
     public $descricao;
 
+    public $etapa_educacenso;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -173,8 +175,24 @@ return new class extends clsCadastro
         include 'include/pmieducar/educar_campo_lista.php';
 
         $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, true);
-        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false, false, '', 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
+        $this->campoMonetario('carga_horaria', 'Carga Horária', $this->carga_horaria, 7, 7, true);
+        $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 10, 10, true);
+        $this->campoNumero('idade_ideal', 'Idade padrão', $this->idade_ideal, 2, 2, false);
+        $this->campoNumero(
+            'idade_inicial',
+            'Faixa etária',
+            $this->idade_inicial,
+            2,
+            2,
+            false,
+            '',
+            '',
+            false,
+            false,
+            true
+        );
 
+        $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
         $opcoes = ['' => 'Selecione'];
 
         if ($this->ref_cod_curso) {
@@ -194,8 +212,10 @@ return new class extends clsCadastro
                 $opcoes[$i] = "Etapa {$i}";
             }
         }
-
         $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
+        $opcoes = ['' => 'Selecione', 1 => 'não', 2 => 'sim'];
+        $this->campoLista('concluinte', 'Concluinte', $opcoes, $this->concluinte);
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false, false, '', 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
 
         // Regra de avaliação
         $mapper = new RegraAvaliacao_Model_RegraDataMapper();
@@ -213,31 +233,10 @@ return new class extends clsCadastro
         $this->campoNumero('anos_letivos', 'Ano letivo', $this->anos_letivos, 4, 4, true);
         $this->campoTabelaFim();
 
-        $opcoes = ['' => 'Selecione', 1 => 'não', 2 => 'sim'];
-
-        $this->campoLista('concluinte', 'Concluinte', $opcoes, $this->concluinte);
-
-        $this->campoMonetario('carga_horaria', 'Carga Horária', $this->carga_horaria, 7, 7, true);
-
-        $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 10, 10, true);
-
-        $this->campoNumero('idade_ideal', 'Idade padrão', $this->idade_ideal, 2, 2, false);
-
-        $this->campoNumero(
-            'idade_inicial',
-            'Faixa etária',
-            $this->idade_inicial,
-            2,
-            2,
-            false,
-            '',
-            '',
-            false,
-            false,
-            true
+        $this->campoRotulo(
+            nome: 'autenticador_documentos_digitais',
+            campo: '<b>Autenticador de documentos digitais</b>'
         );
-
-        $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
 
         $this->campoMemo('observacao_historico', 'Observação histórico', $this->observacao_historico, 60, 5, false);
 
@@ -246,6 +245,12 @@ return new class extends clsCadastro
 
         $this->campoCheck('exigir_inep', 'Exigir INEP para a matrícula?', $this->exigir_inep);
         $this->campoCheck('importar_serie_pre_matricula', 'Importar os dados da série para o recurso de pré-matrícula online?', $this->importar_serie_pre_matricula);
+
+        $etapas_educacenso = loadJson(file: 'educacenso_json/etapas_ensino.json');
+        $etapas_educacenso = array_replace([null => 'Selecione'], $etapas_educacenso);
+
+        $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70];
+        $this->inputsHelper()->select(attrName: 'etapa_educacenso', inputOptions: $options);
     }
 
     public function Novo()
@@ -282,7 +287,8 @@ return new class extends clsCadastro
             $this->idade_ideal,
             !is_null($this->exigir_inep),
             !is_null($this->importar_serie_pre_matricula),
-            $this->descricao
+            $this->descricao,
+            $this->etapa_educacenso
         );
 
         $this->cod_serie = $cadastrou = $obj->cadastra();
@@ -333,7 +339,8 @@ return new class extends clsCadastro
             $this->idade_ideal,
             !is_null($this->exigir_inep),
             !is_null($this->importar_serie_pre_matricula),
-            $this->descricao
+            $this->descricao,
+            $this->etapa_educacenso
         );
 
         $editou = $obj->edita();
