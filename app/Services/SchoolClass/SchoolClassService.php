@@ -164,8 +164,14 @@ class SchoolClassService
      */
     public function getStudentsPeriods(int $schoolClassId)
     {
+        $dataEducacenso = LegacySchoolClass::query()
+            ->select('data_educacenso')
+            ->join('pmieducar.instituicao', 'instituicao.cod_instituicao', '=', 'turma.ref_cod_instituicao')
+            ->whereKey($schoolClassId)
+            ->value('data_educacenso');
+
         return LegacyEnrollment::query()
-            ->active()
+            ->where('data_enturmacao', '<', $dataEducacenso)
             ->whereHas('registration', function ($q) {
                 $q->active();
             })
