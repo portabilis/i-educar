@@ -334,7 +334,7 @@ function buscaEtapasDaEscola() {
   getResources(options);
 }
 
-$j('[name="ref_cod_serie"], #multiseriada').change(function () {
+function atualizaEtapaEducacenso() {
   $j('select[name="etapa_educacenso"] option').show();
   if ($j('#ref_cod_serie').val() === '' || $j('#multiseriada').val() == 1) {
     return;
@@ -359,8 +359,10 @@ $j('[name="ref_cod_serie"], #multiseriada').change(function () {
       }
     }
   });
-}).trigger('change');
+}
 
+$j('[name="ref_cod_serie"], #multiseriada').change(atualizaEtapaEducacenso);
+atualizaEtapaEducacenso();
 
 function preencheEtapasNaTurma(etapas) {
   $j.each( etapas, function( key, etapa ) {
