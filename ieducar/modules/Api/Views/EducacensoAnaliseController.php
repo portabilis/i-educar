@@ -817,7 +817,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $turmas = $registro20->getData($escola, $ano);
 
         if (empty($turmas)) {
-            $this->messenger->append('Ocorreu algum problema ao decorrer da análise.');
+            $this->messenger->append('Nenhuma turma localizada na escola selecionada para exportação.');
 
             return [
                 'title' => 'Análise exportação - Registro 20',
