@@ -164,19 +164,10 @@ class SchoolClassService
      */
     public function getStudentsPeriods(int $schoolClassId)
     {
-        $dataEducacenso = LegacySchoolClass::query()
-            ->select('data_educacenso')
-            ->join('pmieducar.instituicao', 'instituicao.cod_instituicao', '=', 'turma.ref_cod_instituicao')
-            ->whereKey($schoolClassId)
-            ->value('data_educacenso');
-
-        return LegacyEnrollment::query()
-            ->where('data_enturmacao', '<', $dataEducacenso)
-            ->whereHas('registration', function ($q) {
-                $q->active();
-            })
-            ->whereSchoolClass($schoolClassId)
-            ->pluck('turno_id')
+        return DB::table('public.educacenso_record60')
+            ->where('codigoTurma', $schoolClassId)
+            ->get()
+            ->pluck('turnoId')
             ->map(fn ($periodId) => $periodId ?? Period::FULLTIME)
             ->unique()
             ->sortBy(function ($periodId) {
