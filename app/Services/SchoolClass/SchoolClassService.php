@@ -2,6 +2,7 @@
 
 namespace App\Services\SchoolClass;
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
@@ -11,6 +12,9 @@ use App\Rules\CanDeleteTurma;
 use App\Rules\CheckAlternativeReportCardExists;
 use App\Rules\CheckMandatoryCensoFields;
 use App\Rules\CheckSchoolClassExistsByName;
+use Carbon\Carbon;
+use iEducar\Modules\SchoolClass\Period;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -142,5 +146,37 @@ class SchoolClassService
                 ],
             ]
         )->validate();
+    }
+
+    public function hasStudentsPartials(int $schoolClassId)
+    {
+        return Cache::remember('hasStudentsPartials_' . $schoolClassId, Carbon::now()->addMinutes(5), function () use ($schoolClassId) {
+            $studentPeriods = $this->getStudentsPeriods($schoolClassId);
+
+            return $studentPeriods->isNotEmpty() && ($studentPeriods->count() > 1 || !$studentPeriods->contains(Period::FULLTIME));
+        });
+    }
+
+    /**
+     * Retorna os períodos que os alunos estão matriculados em uma turma
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getStudentsPeriods(int $schoolClassId)
+    {
+        return DB::table('public.educacenso_record60')
+            ->where('codigoTurma', $schoolClassId)
+            ->get()
+            ->pluck('turnoId')
+            ->map(fn ($periodId) => $periodId ?? Period::FULLTIME)
+            ->unique()
+            ->sortBy(function ($periodId) {
+                return match ($periodId) {
+                    4 => 1,
+                    1 => 2,
+                    2 => 3,
+                    3 => 4
+                };
+            });
     }
 }

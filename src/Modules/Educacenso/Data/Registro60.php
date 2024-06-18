@@ -3,7 +3,9 @@
 namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro60 as Registro60Model;
+use App\Services\SchoolClass\SchoolClassService;
 use iEducar\Modules\Educacenso\Formatters;
+use iEducar\Modules\SchoolClass\Period;
 use Portabilis_Utils_Database;
 
 class Registro60 extends AbstractRegistro
@@ -25,6 +27,7 @@ class Registro60 extends AbstractRegistro
         $models = [];
         foreach ($data as $record) {
             $record = $this->processData($record);
+            $record = $this->processPeriodSchoolClass($record);
             $models[] = $this->hydrateModel($record);
         }
 
@@ -60,5 +63,19 @@ class Registro60 extends AbstractRegistro
         $modelArray = $this->getData($ano, $escola);
 
         return $modelArray;
+    }
+
+    private function processPeriodSchoolClass($record)
+    {
+        if ($record->turmaTurnoId === Period::FULLTIME) {
+            $service = new SchoolClassService();
+
+            $hasPeriods = $service->hasStudentsPartials($record->codigoTurma);
+            if ($hasPeriods) {
+                $record->codigoTurma .= '-' . $record->turnoId;
+            }
+        }
+
+        return $record;
     }
 }

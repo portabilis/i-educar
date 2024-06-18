@@ -81,7 +81,21 @@ class Registro10 extends Registro10Fields
             $this->aguaPocoArtesiano ||
             $this->aguaCacimbaCisternaPoco ||
             $this->aguaFonteRio ||
+            $this->aguaCarroPipa ||
             $this->aguaInexistente;
+    }
+
+    /**
+     * @return bool
+     */
+    public function acaoAmbientalNenhumaEOutrosCamposPreenchidos()
+    {
+        return $this->acaoAmbientalNenhuma == 1 &&
+            ($this->acaoConteudoComponente ||
+                $this->acaoConteudoCurricular ||
+                $this->acaoEixoCurriculo ||
+                $this->acaoEventos ||
+                $this->acaoProjetoInterdisciplinares);
     }
 
     /**
@@ -90,7 +104,7 @@ class Registro10 extends Registro10Fields
     public function aguaInexistenteEOutrosCamposPreenchidos()
     {
         return $this->aguaInexistente == 1 &&
-            ($this->aguaRedePublica || $this->aguaPocoArtesiano || $this->aguaCacimbaCisternaPoco || $this->aguaFonteRio);
+            ($this->aguaRedePublica || $this->aguaPocoArtesiano || $this->aguaCacimbaCisternaPoco || $this->aguaFonteRio || $this->aguaCarroPipa);
     }
 
     /**
@@ -102,6 +116,15 @@ class Registro10 extends Registro10Fields
             $this->energiaGerador ||
             $this->energiaOutros ||
             $this->energiaInexistente;
+    }
+
+    public function existeAcaoAmbiental()
+    {
+        return $this->acaoConteudoComponente ||
+            $this->acaoConteudoCurricular ||
+            $this->acaoEixoCurriculo ||
+            $this->acaoEventos ||
+            $this->acaoProjetoInterdisciplinares;
     }
 
     /**
@@ -439,6 +462,14 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function areasExternasHorta()
+    {
+        return in_array(AreasExternas::HORTA, $this->areasExternas);
+    }
+
+    /**
+     * @return bool
+     */
     public function dormitoriosAluno()
     {
         return in_array(Dormitorios::ALUNO, $this->dormitorios);
@@ -570,6 +601,14 @@ class Registro10 extends Registro10Fields
     public function recursosAcessibilidadeRampas()
     {
         return in_array(RecursosAcessibilidade::RAMPAS, $this->recursosAcessibilidade);
+    }
+
+    /**
+     * @return bool
+     */
+    public function recursosAcessibilidadeAlarmeLuminoso()
+    {
+        return in_array(RecursosAcessibilidade::ALARME_LUMINOSO, $this->recursosAcessibilidade);
     }
 
     /**
@@ -812,6 +851,7 @@ class Registro10 extends Registro10Fields
     public function quantidadeProfissionaisPreenchida()
     {
         return $this->qtdSecretarioEscolar ||
+            $this->qtdAgronomosHorticultores ||
             $this->qtdAuxiliarAdministrativo ||
             $this->qtdApoioPedagogico ||
             $this->qtdCoordenadorTurno ||
@@ -991,6 +1031,30 @@ class Registro10 extends Registro10Fields
     public function instrumentosPedagogicosInstrumentosMusicais()
     {
         return in_array(InstrumentosPedagogicos::INSTRUMENTOS_MUSICAIS, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosAreaHorta()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAIS_AREA_HORTA, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosEducacaoQuilombola()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAL_EDUCACAO_QUILOMBOLA, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosEducacaoEspecial()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAL_EDUCACAO_ESPECIAL, $this->instrumentosPedagogicos);
     }
 
     /**

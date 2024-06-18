@@ -46,6 +46,8 @@ class clsPmieducarSerie extends Model
 
     public $descricao;
 
+    public $etapa_educacenso;
+
     public function __construct(
         $cod_serie = null,
         $ref_usuario_exc = null,
@@ -69,12 +71,13 @@ class clsPmieducarSerie extends Model
         $idade_ideal = null,
         $exigir_inep = false,
         $importar_serie_pre_matricula = false,
-        $descricao = null
+        $descricao = null,
+        $etapa_educacenso = null
     ) {
 
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie";
-        $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep, s.importar_serie_pre_matricula, s.descricao';
+        $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep, s.importar_serie_pre_matricula, s.descricao, s.etapa_educacenso';
 
         if (is_numeric($ref_cod_curso)) {
             $this->ref_cod_curso = $ref_cod_curso;
@@ -195,6 +198,10 @@ class clsPmieducarSerie extends Model
 
         if (dbBool($importar_serie_pre_matricula)) {
             $this->importar_serie_pre_matricula = $importar_serie_pre_matricula;
+        }
+
+        if (is_numeric($etapa_educacenso)) {
+            $this->etapa_educacenso = $etapa_educacenso;
         }
 
         $this->observacao_historico = $observacao_historico;
@@ -330,6 +337,11 @@ class clsPmieducarSerie extends Model
                 $valores[] = ' false ';
             }
 
+            if (is_numeric($this->etapa_educacenso)) {
+                $campos[] = 'etapa_educacenso';
+                $valores[] = "'{$this->etapa_educacenso}'";
+            }
+
             $campos = implode(', ', $campos);
             $valores = implode(', ', $valores);
 
@@ -455,6 +467,12 @@ class clsPmieducarSerie extends Model
                 $set[] = 'importar_serie_pre_matricula = true ';
             } else {
                 $set[] = 'importar_serie_pre_matricula = false ';
+            }
+
+            if (is_numeric($this->etapa_educacenso)) {
+                $set[] = "etapa_educacenso = '{$this->etapa_educacenso}'";
+            } else {
+                $set[] = 'etapa_educacenso = NULL';
             }
 
             $set = implode(', ', $set);
