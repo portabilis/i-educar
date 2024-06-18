@@ -27,7 +27,7 @@
         "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
         "dex/composer-plug-and-play": "^0.20",
-        "dex/frontier": "^0.11.0",
+        "dex/frontier": "^0.12.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^4.0",

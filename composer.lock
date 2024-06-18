@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "748480f9c16fec68ef24d89e457a7cab",
+    "content-hash": "9d368a3dadba8e74cd3c36439f7b7e06",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -114,16 +114,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.314.3",
+            "version": "3.314.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "c9e8a31cfa07f47b7ab9ecc741845a3a9d50fc61"
+                "reference": "fd1261a60495a7aeb2661d8b7eecfd5fc16abd41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c9e8a31cfa07f47b7ab9ecc741845a3a9d50fc61",
-                "reference": "c9e8a31cfa07f47b7ab9ecc741845a3a9d50fc61",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fd1261a60495a7aeb2661d8b7eecfd5fc16abd41",
+                "reference": "fd1261a60495a7aeb2661d8b7eecfd5fc16abd41",
                 "shasum": ""
             },
             "require": {
@@ -203,9 +203,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.314.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.314.4"
             },
-            "time": "2024-06-17T18:13:22+00:00"
+            "time": "2024-06-18T18:13:34+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -547,16 +547,16 @@
         },
         {
             "name": "dex/frontier",
-            "version": "0.11.0",
+            "version": "0.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/frontier.git",
-                "reference": "3f460d7f5fe55a65376baca1fb36bf4b2a33a80b"
+                "reference": "15a6eeee849edf381c47b875e1642d7251c19c7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/frontier/zipball/3f460d7f5fe55a65376baca1fb36bf4b2a33a80b",
-                "reference": "3f460d7f5fe55a65376baca1fb36bf4b2a33a80b",
+                "url": "https://api.github.com/repos/edersoares/frontier/zipball/15a6eeee849edf381c47b875e1642d7251c19c7d",
+                "reference": "15a6eeee849edf381c47b875e1642d7251c19c7d",
                 "shasum": ""
             },
             "require": {
@@ -598,9 +598,9 @@
             "description": "The frontier between your Laravel app and your decoupled frontend",
             "support": {
                 "issues": "https://github.com/edersoares/frontier/issues",
-                "source": "https://github.com/edersoares/frontier/tree/0.11.0"
+                "source": "https://github.com/edersoares/frontier/tree/0.12.0"
             },
-            "time": "2024-06-18T17:08:11+00:00"
+            "time": "2024-06-18T18:45:33+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
