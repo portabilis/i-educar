@@ -20,7 +20,7 @@ RUN apk add --update \
     libzip-dev  \
     linux-headers \
     openjdk8  \
-    postgresql14-client \
+    postgresql16-client \
     postgresql-dev \
     ttf-dejavu \
     unzip \
