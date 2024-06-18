@@ -1,5 +1,7 @@
 FROM php:8.3-fpm-alpine
 
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -62,5 +64,3 @@ RUN docker-php-ext-enable  \
 RUN apk del .phpize_deps
 
 RUN ln -s /var/www/ieducar/artisan /usr/local/bin/artisan
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
