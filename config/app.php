@@ -200,5 +200,8 @@ return [
 
     'default_host' => env('APP_DEFAULT_HOST', 'ieducar.com.br'),
 
+    'multi_tenant' => env('APP_MULTI_TENANT', false),
+
     'nickname' => 'ieducar',
+
 ];
