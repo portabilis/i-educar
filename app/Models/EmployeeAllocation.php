@@ -65,4 +65,9 @@ class EmployeeAllocation extends LegacyModel
     {
         return $this->belongsTo(Employee::class, 'ref_cod_servidor', 'cod_servidor');
     }
+
+    public function bond()
+    {
+        return $this->belongsTo(LegacyBondType::class, 'ref_cod_funcionario_vinculo', 'cod_funcionario_vinculo');
+    }
 }
