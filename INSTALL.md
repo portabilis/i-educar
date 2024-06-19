@@ -157,8 +157,6 @@ rm /etc/nginx/sites-enabled/default
 nginx -s reload
 ```
 
-Configure a variável de ambiente `APP_DEFAULT_HOST` do arquivo `.env` com o IP ou domínio do seu servidor.
-
 Faça a instalação do i-Educar:
 
 ```bash 
