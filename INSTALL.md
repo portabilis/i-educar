@@ -80,7 +80,7 @@ cp .env.example .env.testing
 Execute o comando:
 
 ```bash
-docker-compose exec php vendor/bin/phpunit
+docker-compose exec php vendor/bin/pest
 ```
 
 ## Instalação em servidor web
