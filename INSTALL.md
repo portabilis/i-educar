@@ -80,7 +80,7 @@ cp .env.example .env.testing
 Execute o comando:
 
 ```bash
-docker-compose exec php vendor/bin/phpunit
+docker-compose exec php vendor/bin/pest
 ```
 
 ## Instalação em servidor web
@@ -107,7 +107,7 @@ apt update
 Instale as dependências:
 
 ```bash
-apt install -y nginx redis postgresql postgresql-contrib openjdk-8-jdk openssl unzip php8.2-common php8.2-cli php8.2-fpm php8.2-bcmath php8.2-curl php8.2-mbstring php8.2-pgsql php8.2-xml php8.2-zip php8.2-gd
+apt install -y nginx redis postgresql postgresql-contrib openjdk-8-jdk openssl unzip php8.3-common php8.3-cli php8.3-fpm php8.3-bcmath php8.3-curl php8.3-mbstring php8.3-pgsql php8.3-xml php8.3-zip php8.3-gd
 ```
 
 Inicie o serviço de banco de dados:
@@ -156,8 +156,6 @@ sed -i 's/php:9000/unix:\/run\/php\/php-fpm.sock/g' /etc/nginx/conf.d/upstream.c
 rm /etc/nginx/sites-enabled/default
 nginx -s reload
 ```
-
-Configure a variável de ambiente `APP_DEFAULT_HOST` do arquivo `.env` com o IP ou domínio do seu servidor.
 
 Faça a instalação do i-Educar:
 

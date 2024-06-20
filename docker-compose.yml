@@ -17,7 +17,7 @@ services:
 
   nginx:
     container_name: ieducar-nginx
-    image: nginx:alpine
+    image: nginx:1.26-alpine
     links:
       - php
     working_dir: /var/www/ieducar
@@ -27,7 +27,7 @@ services:
 
   postgres:
     container_name: ieducar-postgres
-    image: postgres:alpine
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: ieducar
       POSTGRES_USER: ieducar
@@ -37,7 +37,7 @@ services:
 
   redis:
     container_name: ieducar-redis
-    image: redis:alpine
+    image: redis:7-alpine
     restart: always
 
 volumes:
