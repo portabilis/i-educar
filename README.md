@@ -70,6 +70,7 @@ pacote, siga as instruções de instalação encontradas no repositório do proj
 - [Módulo de Relatórios](https://github.com/portabilis/i-educar-reports-package/)
 - [Módulo de Biblioteca](https://github.com/portabilis/i-educar-library-package/)
 - [Módulo de Transporte](https://github.com/portabilis/i-educar-transport-package/)
+- [Módulo do Educacenso](https://github.com/portabilis/i-educar-educacenso-package/)
 
 ## Upgrade
 
