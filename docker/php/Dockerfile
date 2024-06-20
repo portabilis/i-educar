@@ -1,6 +1,7 @@
+FROM composer:2.7 as composer
 FROM php:8.3-fpm-alpine
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
