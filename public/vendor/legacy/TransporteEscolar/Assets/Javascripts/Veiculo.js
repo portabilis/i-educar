@@ -44,26 +44,27 @@ resourceOptions.handleGet = function(dataResponse) {
 
   $idField.val(dataResponse.id);
   $j('#descricao').val(dataResponse.descricao);
-  $j('#placa').val(dataResponse.placa);  
-  $j('#renavam').val(dataResponse.renavam);  
-  $j('#chassi').val(dataResponse.chassi);  
-  $j('#marca').val(dataResponse.marca);  
-  $j('#ano_fabricacao').val(dataResponse.ano_fabricacao);  
-  $j('#ano_modelo').val(dataResponse.ano_modelo);  
-  $j('#passageiros').val(dataResponse.passageiros);  
-  $j('#malha').val(dataResponse.malha);  
-  $j('#tipo').val(dataResponse.tipo);  
+  $j('#placa').val(dataResponse.placa);
+  $j('#renavam').val(dataResponse.renavam);
+  $j('#data_licenca').val(dataResponse.data_licenca);
+  $j('#chassi').val(dataResponse.chassi);
+  $j('#marca').val(dataResponse.marca);
+  $j('#ano_fabricacao').val(dataResponse.ano_fabricacao);
+  $j('#ano_modelo').val(dataResponse.ano_modelo);
+  $j('#passageiros').val(dataResponse.passageiros);
+  $j('#malha').val(dataResponse.malha);
+  $j('#tipo').val(dataResponse.tipo);
   if (dataResponse.exclusivo_transporte_escolar == 'S'){
-    $j('#exclusivo_transporte_escolar').attr('checked',true);  
-    $j('#exclusivo_transporte_escolar').val('on');  
+    $j('#exclusivo_transporte_escolar').attr('checked',true);
+    $j('#exclusivo_transporte_escolar').val('on');
   }
   if (dataResponse.adaptado_necessidades_especiais == 'S'){
-    $j('#adaptado_necessidades_especiais').attr('checked',true);  
-    $j('#adaptado_necessidades_especiais').val('on');   
+    $j('#adaptado_necessidades_especiais').attr('checked',true);
+    $j('#adaptado_necessidades_especiais').val('on');
   }
 
   if (dataResponse.ativo == 'N'){
-    $j('#ativo').attr('checked',false);  
+    $j('#ativo').attr('checked',false);
     $j('#ativo').val('');
     $j('#descricao_inativo').closest('tr').show();
   }else{
@@ -71,14 +72,14 @@ resourceOptions.handleGet = function(dataResponse) {
   }
 
   if (dataResponse.motorista){
-    $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);  
-    $j('#motorista_id').val(dataResponse.motorista);  
+    $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);
+    $j('#motorista_id').val(dataResponse.motorista);
   }
 
-  $j('#descricao_inativo').val(dataResponse.descricao_inativo);  
-  $j('#empresa_empresa').val(dataResponse.empresa+' - '+dataResponse.empresaNome);  
+  $j('#descricao_inativo').val(dataResponse.descricao_inativo);
+  $j('#empresa_empresa').val(dataResponse.empresa+' - '+dataResponse.empresaNome);
   $j('#empresa_id').val(dataResponse.empresa);
-  $j('#observacao').val(dataResponse.observacao);  
+  $j('#observacao').val(dataResponse.observacao);
 
 };
 
@@ -92,7 +93,7 @@ var handleGetPersonDetails = function(dataResponse) {
                                       .show().css('display', 'inline');
 
     $submitButton.removeAttr('disabled').show();
-  
+
 
   $j('#pessoa_id').val(dataResponse.id);
   $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
