@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * LegacyCourse
@@ -37,6 +38,14 @@ class LegacyDocument extends Model
         'origem_gravacao',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'data_exp_rg' => 'date',
+            'data_emissao_cert_civil' => 'date'
+        ];
+    }
+
     /**
      * The "booting" method of the model.
      *
@@ -50,6 +59,20 @@ class LegacyDocument extends Model
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
         });
+    }
+
+    public function issuingBody(): BelongsTo
+    {
+        return $this->belongsTo(LegacyIssuingBody::class, 'idorg_exp_rg');
+    }
+
+    public function issuingBodyWithUf(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->issuingBody->sigla . '/'. $this->sigla_uf_exp_rg;
+            },
+        );
     }
 
     public function birthRegistration(): Attribute
