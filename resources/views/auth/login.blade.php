@@ -9,7 +9,7 @@
     <form action="{{ Asset::get('login') }}" method="post" id="form-login">
 
         <label for="login">Matrícula:</label>
-        <input type="text" name="login" id="login">
+        <input type="text" name="login" id="login" value="{{ old('login') }}">
 
         <label for="password">Senha:</label>
         <input type="password" name="password" id="password">
