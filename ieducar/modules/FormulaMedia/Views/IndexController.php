@@ -45,7 +45,9 @@ class IndexController extends Core_Controller_Page_ListController
     {
         return LegacyAverageFormula::query()
             ->when(request('nome'), fn ($q, $nome) => $q->whereRaw('unaccent(nome) ~* unaccent(?)', $nome))
-            ->when(request('formula_media'), fn ($q, $formulaMedia) => $q->where('formula_media', '~*', $formulaMedia))
+            ->when(request('formula_media'), function ($q, $formulaMedia) {
+                return $q->where('formula_media', 'ilike', "%{$formulaMedia}%");
+            })
             ->when(request('tipo_formula'), fn ($q, $tipoFormula) => $q->where('tipo_formula', $tipoFormula))
             ->orderBy('nome')
             ->get()
