@@ -6,7 +6,7 @@
 
 @section('content')
     <div>
-        <table class="table-default">
+        <table class="table-default" role="presentation">
             <thead>
                 <tr>
                     <td colspan="2"><strong>Filtros de busca</strong></td>
@@ -40,7 +40,7 @@
         </table>
     </div>
     <div>
-        <table class="tablelistagem" width="100%">
+        <table class="tablelistagem" width="100%" role="presentation">
             <tbody>
                 <tr>
                     <td class="titulo-tabela-listagem" colspan="14">Lista de enturmações da matrícula</td>

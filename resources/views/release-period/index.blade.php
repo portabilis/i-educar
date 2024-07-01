@@ -1,11 +1,11 @@
 <form id="formcadastro" method="get">
-    <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+    <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
         <tbody>
         <tr>
             <td class="formdktd" colspan="2" height="24"><b>Filtros de busca</b></td>
         </tr>
         <td id="tr_nm_data" valign="top" align="center" colspan="2">
-            <table cellspacing="0" id="dates-table" class="tabela-adicao">
+            <table cellspacing="0" id="dates-table" class="tabela-adicao" role="presentation">
                 <tbody>
                 <tr align="center" style="font-weight:bold" id="tr_gestores_cab">
                     <td class="formmdtd" align="center"><span class="form">Instituição</span></td>
@@ -49,7 +49,7 @@
     </table>
 </form>
 <div>
-    <table width="100%">
+    <table width="100%" role="presentation">
         <tr>
             <td>
                 @if($canRemove)<span id="text-count-delete">Nenhum período de liberação selecionado</span>@endif

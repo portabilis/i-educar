@@ -8,7 +8,7 @@
 @section('content')
 
     <form id="formcadastro" action="" method="post">
-        <table class="table-default" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="table-default" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
             <tbody>
             <tr>
                 <td class="titulo-tabela-listagem" colspan="2" height="24"><b>Configurações iniciais</b></td>
