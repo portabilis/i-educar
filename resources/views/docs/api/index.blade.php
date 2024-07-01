@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -8,6 +9,7 @@
             display: none;
         }
     </style>
+    <title>API</title>
 </head>
 
 <body>

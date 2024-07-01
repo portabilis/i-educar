@@ -281,7 +281,6 @@ return new class extends clsListagem
             nome: $this->nome,
             intResultadosPorPagina: $this->limite
         );
-        new clsPermissoes();
         $this->largura = '100%';
     }
 
