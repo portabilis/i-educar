@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.19.5/swagger-ui.css" integrity="sha512-+EPE8aR1DXy53X3XoNDfnIqwayrk1ftACKcZu/eCNcoiaugvrtrve6SKl1zMstzXwyVy8BTlt4ltFj0EgpW5vw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
