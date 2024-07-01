@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION relatorio.get_situacao_componente(cod_situacao numeri
     LANGUAGE plpgsql
 AS $$
 DECLARE
-    texto_situacao varchar := '';
+    texto_situacao varchar(30) := '';
 BEGIN
     texto_situacao := (CASE
                            WHEN cod_situacao = 1 THEN 'Aprovado'

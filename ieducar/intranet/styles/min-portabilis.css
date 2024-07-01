@@ -128,8 +128,8 @@ table.strong th , tr.strong th, tr.strong td{
 ul.chosen-choices.error {
   color: #ff4e4e !important;
   border: 1px solid #ffe5e5 !important;
-  background-color: #ffeeee !important;
   background: none;
+  background-color: #ffeeee !important;
 }
 
 .simple-block {

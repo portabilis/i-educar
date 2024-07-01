@@ -1071,7 +1071,7 @@ makeCM.prototype.construct=function(nowrite)
     o = m.b;
     if(mpa)
     {
-      rows?x=cm_cp(mp[i]):y=cm_cp(mp[i],0,0,1);
+      rows?x=cm_cp(mp[i]):y=cm_cp(mp[i],0,0);
     }
     o.moveIt(x,y);
     o.showIt();
