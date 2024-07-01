@@ -144,10 +144,10 @@ return new class extends clsListagem
         $this->title = 'Reserva Vaga';
         $this->processoAp = '639';
     }
-};
 
-?>
-
+    public function makeExtra()
+    {
+        return <<<SCRIPT
 <script type='text/javascript'>
 document.getElementById('ref_cod_escola').onchange = function() {
   getEscolaCurso();
@@ -157,3 +157,6 @@ document.getElementById('ref_cod_curso').onchange = function() {
   getEscolaCursoSerie();
 }
 </script>
+SCRIPT;
+    }
+};
