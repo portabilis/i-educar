@@ -3,7 +3,7 @@ function subgoogle()
 	formulario = document.getElementById("formg");
 	caminho = "q="+encodeURI(formulario.w.value) + " site:itajai.sc.gov.br"
 	formulario.w.value = "";
-	caminho = "http://www.google.com/search?hl=en&"+caminho;
+	caminho = "https://www.google.com/search?hl=en&"+caminho;
 	janelaa = window.open(caminho, "janelaa", "");
 	janelaa.focus();
 }
