@@ -48,7 +48,7 @@
                     @method('put')
                 @endif
 
-                <table width="100%" cellpadding="0" cellspacing="0">
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                     <tr>
                         <td class="formdktd" colspan="2" height="24"><b>Novo </b></td>
                     </tr>
@@ -85,7 +85,7 @@
                         </td>
                     </tr>
                 </table>
-                <table width="100%" cellpadding="0" cellspacing="0">
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                     <tr><td colspan="2"><hr></td></tr>
                     <tr>
                         <td class="formlttd">
