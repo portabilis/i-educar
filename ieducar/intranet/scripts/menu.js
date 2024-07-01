@@ -381,14 +381,14 @@ function cm_checkalign(a)
 {
   switch(a)
   {
-    case "right": return 1; break;
-    case "left": return 2; break;
-    case "bottom": return 3; break;
-    case "top": return 4; break;
-    case "righttop": return 5; break;
-    case "lefttop": return 6; break;
-    case "bottomleft": return 7; break;
-    case "topleft": return 8; break;
+    case "right": return 1;
+    case "left": return 2;
+    case "bottom": return 3;
+    case "top": return 4;
+    case "righttop": return 5;
+    case "lefttop": return 6;
+    case "bottomleft": return 7;
+    case "topleft": return 8;
   }
   return null
 }
