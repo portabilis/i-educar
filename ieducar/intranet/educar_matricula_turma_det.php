@@ -221,7 +221,7 @@ return new class extends clsDetalhe
                 $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
             }
 
-            if ($capacidadeMaximaAlunosSala - $total_alunos <= 0) {
+            if ($totalVagas - $total_alunos <= 0) {
                 $msg = sprintf(format: 'Atenção! A capacidade da sala foi atingida. Não é possível enturmar mais alunos.');
                 $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
             }
