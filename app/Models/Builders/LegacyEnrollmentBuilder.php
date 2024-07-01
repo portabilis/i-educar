@@ -37,15 +37,15 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     /**
      * Filtra por validos
      */
-    public function whereValid(): self
+    public function whereValid(): LegacyBuilder
     {
         return $this->where(function ($q) {
             $q->active();
-            $q->orWhere('transferido', true);
-            $q->orWhere('remanejado', true);
-            $q->orWhere('reclassificado', true);
-            $q->orWhere('abandono', true);
-            $q->orWhere('falecido', true);
+            $q->orWhere('matricula_turma.transferido', true);
+            $q->orWhere('matricula_turma.remanejado', true);
+            $q->orWhere('matricula_turma.reclassificado', true);
+            $q->orWhere('matricula_turma.abandono', true);
+            $q->orWhere('matricula_turma.falecido', true);
             $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
         });
     }
