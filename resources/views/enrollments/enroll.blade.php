@@ -6,7 +6,7 @@
 
 @section('content')
     <form id="enrollments-enroll" action="{{ Asset::get('/matricula/' .  $registration->id . '/enturmar/' . $schoolClass->id)}}" method="post">
-        <table class="table-default">
+        <table class="table-default" role="presentation">
             <thead>
                 <tr>
                     <td colspan="2"><b>Enturmar</b></td>

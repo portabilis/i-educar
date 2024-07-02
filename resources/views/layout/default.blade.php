@@ -170,10 +170,8 @@
     </tr>
 
     <tr class="rodape">
-        <td colspan="3">
-            <center>
-                @include('layout.footer')
-            </center>
+        <td colspan="3" style="text-align: center">
+            @include('layout.footer')
         </td>
     </tr>
 </table>
