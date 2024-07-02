@@ -84,7 +84,7 @@
         <table class="table-default">
             <thead>
             <tr>
-                <th width="25"><label for="mark-all"><input id="mark-all" class="registration-check-master" type="checkbox" /></label></th>
+                <th width="25"><input class="registration-check-master" type="checkbox" /></th>
                 <th width="100">Matrícula</th>
                 <th>Nome</th>
                 <th>Data de saída</th>
