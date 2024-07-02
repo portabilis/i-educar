@@ -412,6 +412,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
             $this->messenger->append($msg, 'error', true);
         }
+
+        return null;
     }
 
     protected static function mergeOptions($options, $defaultOptions)

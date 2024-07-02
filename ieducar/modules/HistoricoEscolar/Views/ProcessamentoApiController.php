@@ -1246,7 +1246,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $this->appendMsg('Exception: ' . $e->getMessage(), $type = 'error', $encodeToUtf8 = true);
             }
         }
-        echo $this->prepareResponse();
+        $this->prepareResponse();
     }
 
     protected function appendResponse($name, $value)
