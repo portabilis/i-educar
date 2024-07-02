@@ -133,7 +133,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function canChange()
     {
-        throw new Exception('canChange must be overwritten!');
+        return false;
     }
 
     protected function canPost()
@@ -248,7 +248,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $this->messenger->append('Exception: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
         }
 
-        echo $this->prepareResponse();
+        $this->prepareResponse();
     }
 
     /**
