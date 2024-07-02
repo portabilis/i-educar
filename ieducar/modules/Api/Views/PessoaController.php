@@ -606,13 +606,11 @@ class PessoaController extends ApiCoreController
 
         if ($fone_fixo || $fone_fixo == '') {
             $ddd_fixo = $ddd_fone_fixo;
-            $fone_fixo = $fone_fixo;
             $telefone = new clsPessoaTelefone($individual->idpes, 1, $fone_fixo, $ddd_fixo);
             $telefone->cadastra();
         }
         if ($fone_mov || $fone_mov == '') {
             $ddd_mov = $ddd_fone_mov;
-            $fone_mov = $fone_mov;
             $telefone = new clsPessoaTelefone($individual->idpes, 2, $fone_mov, $ddd_mov);
             $telefone->cadastra();
         }
