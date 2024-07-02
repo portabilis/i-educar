@@ -96,7 +96,7 @@
     <!-- End Google Tag Manager (noscript) -->
 @endif
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
-<table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0' role="presentation">
+<table class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0' role="presentation">
     <tr id="topo" class="topo">
         <td colspan="2">
             <header class="ieducar-header">
@@ -135,14 +135,14 @@
 
     <tr>
         <td colspan="3">
-            <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0' role="presentation">
+            <table class='tabelanum2' border='0' cellspacing='0' cellpadding='0' role="presentation">
                 <tr>
                     <td id="menu_lateral" class="r3c1" width='170'>
                         @include('layout.menu')
                     </td>
 
                     <td valign=top>
-                        <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0' role="presentation">
+                        <table class='tabelanum2' border='0' cellspacing='0' cellpadding='0' role="presentation">
                             <tr>
                                 <td>
                                     @include('layout.topmenu')
