@@ -43,7 +43,7 @@
 
 <!-- Google Tag Manager (noscript) -->
 <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id={{ config('legacy.gtm') }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    <iframe src="https://www.googletagmanager.com/ns.html?id={{ config('legacy.gtm') }}" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
 
@@ -82,13 +82,13 @@
             <div class="social-icons">
                 <p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
                 @if(config('legacy.config.facebook_url'))
-                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-facebook.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-facebook.png') }}" alt="Facebook"></a>
                 @endif
                 @if(config('legacy.config.linkedin_url'))
-                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-linkedin.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-linkedin.png') }}" alt="LinkedIn "></a>
                 @endif
                 @if(config('legacy.config.twitter_url'))
-                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-twitter.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-twitter.png') }}" alt="Twitter"></a>
                 @endif
             </div>
         @endif
