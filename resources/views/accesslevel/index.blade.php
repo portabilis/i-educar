@@ -48,22 +48,22 @@
                     @method('put')
                 @endif
 
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <table style="width: 100%">
                     <tr>
                         <td class="formdktd" colspan="2" height="24"><b>Novo </b></td>
                     </tr>
                     <tr id="tr_nm_tipo">
-                        <td class="formmdtd">
+                        <th scope="row" class="formmdtd">
                             <span class="form">Tipo de Usuário</span><span class="campo_obrigatorio">*</span>
-                        </td>
+                        </th>
                         <td class="formmdtd">
                             <span class="form"><input class="obrigatorio" type="text" name="name" v-model="userType.nm_tipo" size="40" maxlength="255"> </span>
                         </td>
                     </tr>
                     <tr id="tr_nivel">
-                        <td class="formlttd">
+                        <th scope="row" class="formlttd">
                             <span class="form">Nível</span><span class="campo_obrigatorio">*</span>
-                        </td>
+                        </th>
                         <td class="formlttd">
                             <span class="form">
                                 <select v-model="userType.nivel" class="obrigatorio" name="level">
@@ -75,9 +75,9 @@
                         </td>
                     </tr>
                     <tr id="tr_descricao">
-                        <td class="formmdtd">
+                        <th scope="row" class="formmdtd">
                             <span class="form">Descrição</span>
-                        </td>
+                        </th>
                         <td class="formmdtd">
                             <span class="form">
                                 <textarea v-model="userType.descricao" class="geral" name="description" cols="37" rows="5"></textarea>
@@ -85,12 +85,12 @@
                         </td>
                     </tr>
                 </table>
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <table style="width: 100%">
                     <tr><td colspan="2"><hr></td></tr>
                     <tr>
-                        <td class="formlttd">
+                        <th scope="row" class="formlttd">
                             <span class="form">Procure pelo nome do menu: </span><input type="text" v-model="search" placeholder="Digite o menu que procura" style="width: 300px;">
-                        </td>
+                        </th>
                         <td class="formlttd">
                             <div style="clear: both;"><small class="text-muted">Marcar opção para todos</small></div>
                             <div class="radiogroup">
