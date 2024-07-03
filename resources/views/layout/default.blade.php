@@ -151,7 +151,7 @@
 
                             <tr>
                                 <td height="100%" id="corpo" style="vertical-align: top">
-                                    <table class='tablelistagem' style="border: 0; padding: 0; border-collapse: collapse; width: 100%">
+                                    <table class='tablelistagem' style="border: 0; width: 100%">
                                         <tr height='10px'>
                                             <td class='fundoLocalizacao' colspan='2'>
                                                 @include('layout.breadcrumb')

@@ -343,6 +343,11 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 	border-color: #495C67;
 }
 
+.tabelanum1 tr td, tabelanum2 tr td {
+  margin: 0;
+  padding: 0;
+}
+
 /* graficos diarios */
 .graf_meses {
 	font-family: verdana,heveltica,arial,sans-serif;

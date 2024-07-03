@@ -292,7 +292,7 @@ HTML;
                 app(Breadcrumb::class)->setLegacy($this->locale);
             }
 
-            $retorno .= "<table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
+            $retorno .= "<table class='tablelistagem' style='border: 0; padding: 2px; border-collapse: collapse; width: $this->largura'>";
 
             $retorno .= "
                 <tr>
