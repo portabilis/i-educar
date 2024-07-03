@@ -42,7 +42,7 @@ class LegacyDocument extends Model
     {
         return [
             'data_exp_rg' => 'date',
-            'data_emissao_cert_civil' => 'date'
+            'data_emissao_cert_civil' => 'date',
         ];
     }
 

@@ -3,12 +3,16 @@
 use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     use InteractWithDatabase;
 
     public $idpais;
+
     public $nome;
+
     public $geom;
+
     public $cod_ibge;
 
     public function model()
@@ -60,7 +64,7 @@ return new class extends clsCadastro {
                 'required' => false,
                 'label_hint' => 'Somente números',
                 'max_length' => 12,
-                'placeholder' => 'INEP'
+                'placeholder' => 'INEP',
             ]
         );
 

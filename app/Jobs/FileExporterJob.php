@@ -27,9 +27,7 @@ class FileExporterJob implements ShouldQueue
 
     public $retryAfter = 5;
 
-    public function __construct(private FileExport $fileExport, private array $args)
-    {
-    }
+    public function __construct(private FileExport $fileExport, private array $args) {}
 
     public function handle()
     {

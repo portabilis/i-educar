@@ -64,9 +64,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
 </table>
 ';
 
-    protected function setUp(): void
-    {
-    }
+    protected function setUp(): void {}
 
     public function testCreateHeader()
     {

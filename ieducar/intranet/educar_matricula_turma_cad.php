@@ -292,17 +292,11 @@ return new class extends clsCadastro
         exit;
     }
 
-    public function Novo()
-    {
-    }
+    public function Novo() {}
 
-    public function Editar()
-    {
-    }
+    public function Editar() {}
 
-    public function Excluir()
-    {
-    }
+    public function Excluir() {}
 
     public function isTurmaIntegral($turmaId)
     {

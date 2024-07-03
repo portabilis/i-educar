@@ -1,5 +1,3 @@
 <?php
 
-class CoreExt_Session extends CoreExt_Session_Abstract
-{
-}
+class CoreExt_Session extends CoreExt_Session_Abstract {}

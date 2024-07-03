@@ -4,13 +4,18 @@ use App\Models\City;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     use InteractWithDatabase, SelectOptions;
 
     public $idmun;
+
     public $nome;
+
     public $iduf;
+
     public $cod_ibge;
+
     public $idpais;
 
     public function model()
