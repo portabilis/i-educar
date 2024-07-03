@@ -6,7 +6,7 @@
 
 @section('content')
     <div>
-        <table class="table-default" role="presentation">
+        <table class="table-default">
             <thead>
                 <tr>
                     <td colspan="2"><strong>Filtros de busca</strong></td>
@@ -46,20 +46,20 @@
                     <td class="titulo-tabela-listagem" colspan="14">Lista de enturmações da matrícula</td>
                 </tr>
                 <tr>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Sequencial</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Turma</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Turno do aluno</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Ativo</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de enturmação</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de saída</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Transferido</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Remanejado</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Reclassificado</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Abandono</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Falecido</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário criou</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário editou</th>
-                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Sequencial</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Turma</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Turno do aluno</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Ativo</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Data de enturmação</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Data de saída</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Transferido</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Remanejado</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Reclassificado</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Abandono</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Falecido</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Usuário criou</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Usuário editou</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">
                         Editar
                     </th>
                 </tr>
@@ -110,12 +110,12 @@
                 </tr>
                 @endforeach
                 <tr>
-                    <td class="formdktd" valign="top" align="left" colspan="14">
+                    <td class="formdktd" colspan="14">
                         <small>A coluna "Turno do aluno" permanecerá em branco quando o turno do aluno for o mesmo da turma.</small>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="14" align="center">
+                    <td colspan="14" class="text-center">
                         <input type="button" class="btn-green botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $registration->id }}')" value=" Voltar ">
                     </td>
                 </tr>
