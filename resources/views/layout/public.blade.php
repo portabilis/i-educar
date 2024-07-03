@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="utf-8"/>
-    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="{{ url('favicon.ico') }}">
     <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    <link rel="stylesheet" type="text/css" href="{{ Asset::get('intranet/styles/login.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ Asset::get('intranet/styles/font-awesome.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <link rel="stylesheet" href="{{ Asset::get('intranet/styles/login.css') }}">
+    <link rel="stylesheet" href="{{ Asset::get('intranet/styles/font-awesome.css') }}">
 
     <!-- Google Tag Manager -->
     <script>
@@ -50,7 +50,7 @@
 <div id="main">
 
     <div>
-        <img alt="Logo" width="150px" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/brasao-republica.png') }}"/>
+        <img alt="Logo" style="width: 150px" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/brasao-republica.png') }}"/>
     </div>
 
     <h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>
@@ -70,9 +70,9 @@
 </div>
 
 <div id="footer">
-    <p>
+    <div>
         {!! config('legacy.config.ieducar_login_footer') !!}
-    </p>
+    </div>
 
     <div class="footer-social">
 
@@ -82,13 +82,13 @@
             <div class="social-icons">
                 <p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
                 @if(config('legacy.config.facebook_url'))
-                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-facebook.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}" rel="noopener"><img alt="Logomarca do Facebbok" src="{{ Asset::get('intranet/imagens/icon-social-facebook.png') }}"></a>
                 @endif
                 @if(config('legacy.config.linkedin_url'))
-                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-linkedin.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}" rel="noopener"><img alt="Logomarca do Linkedin" src="{{ Asset::get('intranet/imagens/icon-social-linkedin.png') }}"></a>
                 @endif
                 @if(config('legacy.config.twitter_url'))
-                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-twitter.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}" rel="noopener"><img alt="Logomarca do Twitter" src="{{ Asset::get('intranet/imagens/icon-social-twitter.png') }}"></a>
                 @endif
             </div>
         @endif
