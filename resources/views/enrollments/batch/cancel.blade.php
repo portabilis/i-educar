@@ -6,7 +6,7 @@
 
 @section('content')
     <form id="formcadastro" action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post">
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
+        <table class="tablecadastro" style="width: 100%">
             <tbody>
                 <tr>
                     <td class="formdktd" colspan="2" height="24"><b>Desenturmar em lote</b></td>
