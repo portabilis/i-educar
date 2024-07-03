@@ -15,7 +15,7 @@ class ClsCamposTest extends TestCase
 
         $this->assertEquals(
             $this->getHtmlCodeFromFile('form_scripts.html') . $this->getHtmlCodeFromFile('file_field.html'),
-            $clsCampos->makeCampos()
+            $clsCampos->makeCampos() . '\n'
         );
     }
 }
