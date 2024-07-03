@@ -11,9 +11,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
     /**
      * Construtor singleton.
      */
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 
     /**
      * Retorna uma instância singleton.

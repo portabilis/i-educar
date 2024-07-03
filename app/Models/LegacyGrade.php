@@ -76,7 +76,7 @@ class LegacyGrade extends LegacyModel
         'exigir_inep',
         'importar_serie_pre_matricula',
         'descricao',
-        'etapa_educacenso'
+        'etapa_educacenso',
     ];
 
     protected function name(): Attribute

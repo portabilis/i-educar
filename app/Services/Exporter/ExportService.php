@@ -17,8 +17,7 @@ class ExportService
     public function __construct(
         private Export $export,
         private ?string $disk = null
-    ) {
-    }
+    ) {}
 
     /**
      * @param null $disk

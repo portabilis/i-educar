@@ -23,6 +23,5 @@ class StudentFilter
         public readonly ?int $perPage = null,
         public readonly ?string $pageName = null,
         public readonly ?bool $similarity = null,
-    ) {
-    }
+    ) {}
 }

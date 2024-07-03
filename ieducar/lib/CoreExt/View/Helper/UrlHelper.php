@@ -53,9 +53,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
     /**
      * Construtor singleton.
      */
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 
     /**
      * Retorna uma instância singleton.

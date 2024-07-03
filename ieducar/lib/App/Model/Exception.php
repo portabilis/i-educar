@@ -1,5 +1,3 @@
 <?php
 
-class App_Model_Exception extends CoreExt_Exception
-{
-}
+class App_Model_Exception extends CoreExt_Exception {}

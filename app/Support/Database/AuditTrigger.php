@@ -34,7 +34,7 @@ trait AuditTrigger
             if (in_array($table->table_name, $this->getSkippedTables())) {
                 continue;
             }
-            
+
             $return[] = $table->table_schema . '.' . $table->table_name;
         }
 

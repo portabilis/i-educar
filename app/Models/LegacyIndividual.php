@@ -134,15 +134,18 @@ class LegacyIndividual extends Model
         return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
     }
 
-    public function maritalStatus()  {
+    public function maritalStatus()
+    {
         return $this->belongsTo(LegacyMaritalStatus::class, 'ideciv');
     }
 
-    public function religion()  {
+    public function religion()
+    {
         return $this->belongsTo(Religion::class, 'ref_cod_religiao');
     }
 
-    public function foreignCountry() {
+    public function foreignCountry()
+    {
         return $this->belongsTo(Country::class, 'idpais_estrangeiro');
     }
 

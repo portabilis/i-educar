@@ -5,13 +5,18 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     use InteractWithDatabase, SelectOptions;
 
     public $__limite;
+
     public $__offset;
+
     public $sigla_uf;
+
     public $nome;
+
     public $idpais;
 
     public function model()
@@ -30,7 +35,7 @@ return new class extends clsListagem {
         $this->addCabecalhos([
             'Nome',
             'Sigla Uf',
-            'Pais'
+            'Pais',
         ]);
 
         $opcoes = ['' => 'Selecione'] + $this->getCountries();
@@ -60,7 +65,7 @@ return new class extends clsListagem {
             $this->addLinhas([
                 "<a href=\"public_uf_det.php?id={$item->id}\">{$item->name}</a>",
                 "<a href=\"public_uf_det.php?id={$item->id}\">{$item->abbreviation}</a>",
-                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->country->name}</a>"
+                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->country->name}</a>",
             ]);
         }
 

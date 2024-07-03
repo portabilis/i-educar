@@ -11,8 +11,7 @@ class ReportIssued
         public string $template,
         public bool $success,
         public bool $authenticate = false,
-    ) {
-    }
+    ) {}
 
     public function replace(string $content): void
     {

@@ -218,11 +218,10 @@ return new class extends clsCadastro
                 $this->codigo_inep_educacenso = $inep;
             }
 
-            if($this->turma_turno_id === Period::FULLTIME) {
+            if ($this->turma_turno_id === Period::FULLTIME) {
 
                 $service = new SchoolClassService();
                 $this->hasStudentsPartials = $service->hasStudentsPartials($this->cod_turma);
-
 
                 if ($this->hasStudentsPartials) {
                     $this->codigo_inep_matutino = $obj_turma->getInepTurno(Period::MORNING);
