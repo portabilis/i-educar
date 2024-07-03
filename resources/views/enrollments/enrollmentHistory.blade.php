@@ -40,7 +40,7 @@
         </table>
     </div>
     <div>
-        <table class="tablelistagem" width="100%">
+        <table class="tablelistagem" style="width: 100%">
             <tbody>
                 <tr>
                     <td class="titulo-tabela-listagem" colspan="14">Lista de enturmações da matrícula</td>

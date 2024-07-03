@@ -5,15 +5,15 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-define('alTopLeft', 'valign=top align=left');
-define('alTopCenter', 'valign=top align=center');
-define('alTopRight', 'valign=top align=right');
-define('alMiddleLeft', 'valign=middle align=left');
-define('alMiddleCenter', 'valign=middle align=center');
-define('alMiddleRight', 'valign=middle align=right');
-define('alBottomLeft', 'valign=bottom align=left');
-define('alBottomCenter', 'valign=bottom align=center');
-define('alBottomRight', 'valign=bottom align=right');
+const alTopLeft = 'style=\'vertical-align: top; text-align:left\'';
+const alTopCenter = 'style=\'vertical-align: top; text-align:center\'';
+const alTopRight = 'style=\'vertical-align: top; text-align:right\'';
+const alMiddleLeft = 'style=\'vertical-align: middle; text-align:left\'';
+const alMiddleCenter = 'style=\'vertical-align: middle; text-align:center\'';
+const alMiddleRight = 'style=\'vertical-align: middle; text-align:right\'';
+const alBottomLeft = 'style=\'vertical-align: bottom; text-align:left\'';
+const alBottomCenter = 'style=\'vertical-align: bottom; text-align:center\'';
+const alBottomRight = 'style=\'vertical-align: bottom; text-align:right\'';
 
 class clsListagem extends clsCampos
 {
@@ -527,8 +527,8 @@ HTML;
 
                     $retorno .= "
                         <tr>
-                            <td class='$classe' valign='top'><span class='form'>$campo</span></td>
-                            <td class='$classe' valign='top'>
+                            <td class='$classe' style='vertical-align: top'><span class='form'>$campo</span></td>
+                            <td class='$classe' style='vertical-align: top'>
                             <span class='form'>";
 
                     switch ($tipo) {
