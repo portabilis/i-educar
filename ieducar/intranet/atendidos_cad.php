@@ -1082,12 +1082,13 @@ return new class extends clsCadastro
             [
                 'telefone.required_with' => "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.",
                 'ddd.required_with' => "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.",
-                'ddd.regex' => "O campo: DDD não pode conter apenas zeros.",
+                'ddd.regex' => 'O campo: DDD não pode conter apenas zeros.',
                 'telefone.regex' => "O campo: {$nomeCampo} não pode conter apenas zeros.",
             ]
         );
         if ($validator->fails()) {
             $this->mensagem = $validator->errors()->first();
+
             return false;
         }
 

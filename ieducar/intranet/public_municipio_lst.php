@@ -4,23 +4,38 @@ use App\Models\City;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     use InteractWithDatabase, SelectOptions;
 
     public $__limite;
+
     public $__offset;
+
     public $idmun;
+
     public $nome;
+
     public $sigla_uf;
+
     public $cod_ibge;
+
     public $geom;
+
     public $tipo;
+
     public $idpes_rev;
+
     public $idpes_cad;
+
     public $data_rev;
+
     public $data_cad;
+
     public $origem_gravacao;
+
     public $operacao;
+
     public $idpais;
 
     public function model()
@@ -38,7 +53,7 @@ return new class extends clsListagem {
 
         $this->addCabecalhos([
             'Nome',
-            'Estado'
+            'Estado',
         ]);
 
         $opcoes = ['' => 'Selecione'] + $this->getCountries();
@@ -71,7 +86,7 @@ return new class extends clsListagem {
         foreach ($data as $item) {
             $this->addLinhas([
                 "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->name}</a>",
-                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->state->abbreviation}</a>"
+                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->state->abbreviation}</a>",
             ]);
         }
 

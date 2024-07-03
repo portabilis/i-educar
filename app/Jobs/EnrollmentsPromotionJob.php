@@ -24,8 +24,7 @@ class EnrollmentsPromotionJob implements ShouldQueue
         private int $enrollmentId,
         private string $databaseConnection,
         private bool $updateScore = false
-    ) {
-    }
+    ) {}
 
     public function handle(DatabaseManager $manager, PromocaoApiController $promocaoApiController): void
     {

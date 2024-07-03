@@ -2,7 +2,6 @@
 
 namespace App\Services\SchoolClass;
 
-use App\Models\LegacyEnrollment;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;

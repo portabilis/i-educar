@@ -22,7 +22,5 @@ class AssetServiceProvider extends ServiceProvider
     /**
      * {@inheritdoc}
      */
-    public function register()
-    {
-    }
+    public function register() {}
 }

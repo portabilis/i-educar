@@ -1,5 +1,3 @@
 <?php
 
-class CoreExt_SingletonIncompleteStub extends CoreExt_Singleton
-{
-}
+class CoreExt_SingletonIncompleteStub extends CoreExt_Singleton {}
