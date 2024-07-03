@@ -133,7 +133,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
             $retorno .= '
         <tr>
           <td colspan=\'2\' align=\'center\'>
-            <script type=\'text/javascript\'>
+            <script>
               function go(url) {
                 document.location = url;
               }

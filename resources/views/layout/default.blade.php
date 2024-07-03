@@ -152,7 +152,7 @@
                             <tr>
                                 <td height="100%" id="corpo" style="vertical-align: top">
                                     <table class='tablelistagem' style="border: 0; width: 100%">
-                                        <tr height='10px'>
+                                        <tr style="height: 10px">
                                             <td class='fundoLocalizacao' colspan='2'>
                                                 @include('layout.breadcrumb')
                                             </td>
@@ -239,14 +239,14 @@
     })(jQuery);
 </script>
 
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/js/app.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.plugin.min.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
+<script src="{{ Asset::get("/js/app.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.plugin.min.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
 <script>
     getNotifications();
 </script>
