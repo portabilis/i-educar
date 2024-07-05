@@ -40,22 +40,6 @@
         }
     </script>
 
-    <style>
-        #eye {
-            cursor: pointer;
-            position: absolute;
-            margin-top: -37px;
-            margin-left: 335px;
-            color: #188ad1;
-        }
-        @-moz-document url-prefix() {
-            #eye {
-                margin-top: 17px !important;
-                margin-left: -25px !important;
-            }
-        }
-    </style>
-
     @if (config('legacy.app.recaptcha_v3.public_key') && config('legacy.app.recaptcha_v3.private_key'))
         <script src="https://www.google.com/recaptcha/api.js?render={{config('legacy.app.recaptcha_v3.public_key')}}"></script>
         <script src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>

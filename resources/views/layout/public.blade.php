@@ -50,7 +50,7 @@
 <div id="main">
 
     <div>
-        <img alt="Logo" style="width: 150px" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/brasao-republica.png') }}"/>
+        <img alt="Logo" style="width: 150px" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/brasao-republica.png') }}" >
     </div>
 
     <h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>
