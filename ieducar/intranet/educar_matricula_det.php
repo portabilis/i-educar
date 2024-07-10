@@ -134,8 +134,10 @@ return new class extends clsDetalhe
 
         // Nome da turma
         $enturmacoes = new clsPmieducarMatriculaTurma();
+
         $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->ref_cod_matricula
+            int_ref_cod_matricula: $this->ref_cod_matricula,
+            int_ativo: 3
         );
 
         $existeTurma = false;
