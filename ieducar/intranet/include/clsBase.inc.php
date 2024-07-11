@@ -62,6 +62,12 @@ class clsBase
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
             }
+
+            if (method_exists($form, 'makeExtraEnd')) {
+                $corpo .= '<script>';
+                $corpo .= $form->makeExtraEnd();
+                $corpo .= '</script>';
+            }
         }
 
         return $corpo;

@@ -32,6 +32,8 @@ return new class extends clsCadastro
 
     public $force_reset_password;
 
+    public $motivo;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -148,6 +150,8 @@ return new class extends clsCadastro
             $this->campoLista(nome: 'ativo', campo: 'Status', valor: $opcoes, default: 1);
         }
 
+        $this->campoMemo(nome: 'motivo', campo: 'Motivo', valor: $this->motivo, descricao: 'Mensagem que será exibida ao usuário no momento de tentar acessar sua conta.', colunas: 60, linhas: 5);
+
         $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
         $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
         $this->campoLista(nome: 'ref_cod_funcionario_vinculo', campo: 'Vínculo', valor: $opcoes, default: $this->ref_cod_funcionario_vinculo);
@@ -240,7 +244,7 @@ return new class extends clsCadastro
 
         $senha = Hash::make($this->_senha);
 
-        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: $senha, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: 'NOW()', data_reativa_conta: 'NOW()', ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: 1, email: $this->email, matricula_interna: $this->matricula_interna, forceResetPassword: !is_null($this->force_reset_password));
+        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: $senha, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: 'NOW()', data_reativa_conta: 'NOW()', ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: 1, email: $this->email, matricula_interna: $this->matricula_interna, forceResetPassword: !is_null($this->force_reset_password), motivo: $this->motivo);
 
         if ($obj_funcionario->cadastra()) {
             if ($this->ref_cod_instituicao) {
@@ -302,7 +306,7 @@ return new class extends clsCadastro
 
         $data_reativa_conta = $this->hasChangeStatusUser() && $this->ativo == '1' ? 'NOW()' : null;
 
-        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: null, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: null, data_reativa_conta: $data_reativa_conta, ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: null, email: $this->email, matricula_interna: $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: null, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: null, data_reativa_conta: $data_reativa_conta, ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: null, email: $this->email, matricula_interna: $this->matricula_interna, motivo: $this->motivo);
 
         if ($obj_funcionario->edita()) {
             if ($this->ref_cod_instituicao) {
@@ -475,5 +479,10 @@ return new class extends clsCadastro
         $this->fexcluir = $edita;
 
         $this->nome_url_cancelar = 'Cancelar';
+    }
+
+    public function makeExtra(): string
+    {
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-usuario-cad.js');
     }
 };

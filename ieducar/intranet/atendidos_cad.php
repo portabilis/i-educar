@@ -68,6 +68,8 @@ return new class extends clsCadastro
 
     public $ocupacao;
 
+    public $idesco;
+
     public $empresa;
 
     public $ddd_telefone_empresa;
@@ -117,7 +119,7 @@ return new class extends clsCadastro
                 $this->ddd_telefone_fax, $this->telefone_fax, $this->email,
                 $this->tipo_pessoa, $this->sexo, $this->estado_civil,
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
-                $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
+                $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->idesco, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
                 $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia,
                 $this->observacao
@@ -148,6 +150,7 @@ return new class extends clsCadastro
                 'sus',
                 'nis_pis_pasep',
                 'ocupacao',
+                'idesco',
                 'empresa',
                 'ddd_telefone_empresa',
                 'telefone_empresa',
@@ -771,6 +774,25 @@ return new class extends clsCadastro
         // renda
         $this->campoRotulo(nome: 'renda', campo: '<b>Trabalho e renda</b>', valor: '', duplo: '', descricao: 'Informações de trabalho e renda da pessoa');
         $this->campoTexto(nome: 'ocupacao', campo: 'Ocupação', valor: $this->ocupacao, tamanhovisivel: '50', tamanhomaximo: '255');
+
+        $opcoes = ['' => 'Selecione'];
+        $objTemp = new clsCadastroEscolaridade();
+        $lista = $objTemp->lista();
+
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes[$registro['idesco']] = $registro['descricao'];
+            }
+        }
+
+        $this->campoLista(
+            nome: 'idesco',
+            campo: 'Escolaridade',
+            valor: $opcoes,
+            default: $this->idesco->idesco,
+            obrigatorio: false
+        );
+
         $this->campoMonetario(nome: 'renda_mensal', campo: 'Renda mensal (R$)', valor: $this->renda_mensal, tamanhovisivel: '9', tamanhomaximo: '10');
         $this->campoData(nome: 'data_admissao', campo: 'Data de admissão', valor: $this->data_admissao);
         $this->campoTexto(nome: 'empresa', campo: 'Empresa', valor: $this->empresa, tamanhovisivel: '50', tamanhomaximo: '255');
@@ -1349,6 +1371,7 @@ return new class extends clsCadastro
         $fisica->sus = trim(string: $this->sus);
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
         $fisica->ocupacao = $db->escapeString(string: $this->ocupacao);
+        $fisica->idesco = $this->idesco;
         $fisica->empresa = $db->escapeString(string: $this->empresa);
         $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
         $fisica->telefone_empresa = $this->telefone_empresa;

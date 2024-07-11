@@ -343,6 +343,15 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 	border-color: #495C67;
 }
 
+.tabelanum1 tr td, tabelanum2 tr td, paginacao tr td {
+  margin: 0;
+  padding: 0;
+}
+
+.tablelistagem td td {
+  padding: 4px;
+}
+
 /* graficos diarios */
 .graf_meses {
 	font-family: verdana,heveltica,arial,sans-serif;
