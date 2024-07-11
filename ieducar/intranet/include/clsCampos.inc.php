@@ -1306,7 +1306,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $name = '';
                     }
 
-                    $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' style='vertical-align: top'><span class='form'>$campo</span>{$obrigatorio}</td><td class='$classe' style='vertical-align: top'><span class='form'>\n";
+                    $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' style='vertical-align: top'><span class='form'><label for='$nome'>$campo</label></span>{$obrigatorio}</td><td class='$classe' style='vertical-align: top'><span class='form'>\n";
                 } elseif (!$foiDuplo) {
                     if ($campo == '-:') {
                         if (empty($componente[3])) {
@@ -1331,7 +1331,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $explicacao = !empty($componente[6]) ?
                             "<br><sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
 
-                        $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' style='vertical-align: top'><span class='form'>$campo</span>{$obrigatorio}{$explicacao}</td><td class='$classe' style='vertical-align: top'><span class='form'>\n";
+                        $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' style='vertical-align: top'><span class='form'><label for='$nome'>$campo</label></span>{$obrigatorio}{$explicacao}</td><td class='$classe' style='vertical-align: top'><span class='form'>\n";
                     }
                 } elseif ($tipo) {
                     if (!empty($componente[10]) && $componente[10] == true) {
