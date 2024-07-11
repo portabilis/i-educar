@@ -54,15 +54,17 @@ class clsPortalFuncionario extends Model
 
     public $atualizou_cadastro;
 
+    public $motivo;
+
     public $forceResetPassword = false;
 
-    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null, $forceResetPassword = null)
+    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null, $forceResetPassword = null, $motivo = null)
     {
         $db = new clsBanco();
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}funcionario";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, tipo_menu, email, receber_novidades, atualizou_cadastro';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, tipo_menu, email, receber_novidades, atualizou_cadastro, motivo';
 
         if (is_numeric($ref_ref_cod_pessoa_fj)) {
             if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
@@ -143,6 +145,10 @@ class clsPortalFuncionario extends Model
 
         if (is_string($matricula_interna)) {
             $this->matricula_interna = $matricula_interna;
+        }
+
+        if (is_string($motivo)) {
+            $this->motivo = $motivo;
         }
 
         if ($forceResetPassword) {
@@ -279,6 +285,12 @@ class clsPortalFuncionario extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->motivo)) {
+                $campos .= "{$gruda}motivo";
+                $valores .= "{$gruda}'{$this->motivo}'";
+                $gruda = ', ';
+            }
+
             if ($this->forceResetPassword) {
                 $campos .= "{$gruda}force_reset_password";
                 $valores .= "{$gruda} true";
@@ -405,6 +417,11 @@ class clsPortalFuncionario extends Model
 
             if (is_numeric($this->atualizou_cadastro)) {
                 $set .= "{$gruda}atualizou_cadastro = '{$this->atualizou_cadastro}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->motivo)) {
+                $set .= "{$gruda}motivo = '{$this->motivo}'";
                 $gruda = ', ';
             }
 

@@ -6,7 +6,7 @@
   </tr>
 </table>
 
-<table class="paginacao" border="0" cellpadding="0" cellspacing="0" align="center">
+<table class="paginacao" style="border: 0; padding: 0; border-collapse: collapse;">
     <tbody>
     <tr>
         {{-- Previous Page Link --}}

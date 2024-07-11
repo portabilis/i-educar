@@ -125,7 +125,7 @@ class clsCadastro extends clsCampos
             if ($this->tipoacao == 'Novo') {
                 $this->sucesso = $this->Novo();
                 if ($this->sucesso && !empty($this->script_sucesso)) {
-                    $this->script = "<script type=\"text/javascript\">
+                    $this->script = "<script>
               window.opener.AdicionaItem($this->chave, '$this->item_campo_pai', '$this->nome_pai', $this->submete );
               window.close();
             </script>";
@@ -281,7 +281,7 @@ class clsCadastro extends clsCampos
         $retorno .=
             '<tr><td class=\'tableDetalheLinhaSeparador\' colspan=\'2\'></td></tr>
     <tr class=\'linhaBotoes\'><td colspan=\'2\' align=\'center\'>
-    <script type="text/javascript">
+    <script>
     var goodIE = (document.all) ? 1:0;
     var netscape6 = (document.getElementById && !document.all) ? 1:0;
     var aux = \'\';
@@ -566,7 +566,7 @@ class clsCadastro extends clsCampos
         $retorno .= "</form>\n";
 
         if (!empty($this->executa_script)) {
-            $retorno .= "<script type=\"text/javascript\">{$this->executa_script}</script>";
+            $retorno .= "<script>{$this->executa_script}</script>";
         }
 
         Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);

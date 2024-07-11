@@ -29,7 +29,7 @@ class AuthenticatedUser
             Auth::logout();
 
             throw ValidationException::withMessages([
-                $event->user->login => __('auth.inactive'),
+                $event->user->login => $event->user->employee->motivo ?: __('auth.inactive'),
             ]);
         }
 

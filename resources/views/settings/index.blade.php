@@ -3,6 +3,12 @@
 
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}"/>
+    <style>
+        .table-default tbody tr td {
+            padding: 8px;
+            font-size: 14px;
+        }
+    </style>
 @endpush
 
 @section('content')

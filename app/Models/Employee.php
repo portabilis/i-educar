@@ -163,4 +163,9 @@ class Employee extends LegacyModel
     {
         return $this->hasMany(EmployeeWithdrawal::class, 'ref_cod_servidor', 'cod_servidor');
     }
+
+    public function schoolClassTeachers(): HasMany
+    {
+        return $this->hasMany(LegacySchoolClassTeacher::class, 'servidor_id');
+    }
 }
