@@ -1075,19 +1075,19 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $classe = $md ? 'formlttd' : 'formmdtd';
                 $md = $md ? false : true;
 
-                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td valign='top' align='center' colspan='2'>";
+                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td style='vertical-align: top; text-align: center' colspan='2'>";
                 $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' class='tabela-adicao' cellpadding='2' style='margin:10px 0px 10px 0px;' >";
 
                 $total_campos = count($cabecalho);
                 $span = $total_campos + 1;
 
                 if ($titulo) {
-                    $retorno .= "<tr align='center' id='tr_{$nome_tabela}_tit' style='font-weight:bold'  class='formdktd'><td colspan='$span'>$titulo</td></tr>";
+                    $retorno .= "<tr id='tr_{$nome_tabela}_tit' style='font-weight:bold; text-align: center' class='formdktd'><td colspan='$span'>$titulo</td></tr>";
                 } else {
-                    $retorno .= "<tr align='center' id='tr_{$nome_tabela}_tit' style='font-weight:bold;display:none;visibility:hidden;' ><td colspan='$span'>&nbsp;</td></tr>";
+                    $retorno .= "<tr id='tr_{$nome_tabela}_tit' style='font-weight:bold;display:none;visibility:hidden; text-align: center' ><td colspan='$span'>&nbsp;</td></tr>";
                 }
 
-                $retorno .= "<tr align='center' style='font-weight:bold' id='tr_{$nome_tabela}_cab'>";
+                $retorno .= "<tr style='font-weight:bold; text-align: center;' id='tr_{$nome_tabela}_cab'>";
 
                 foreach ($cabecalho as $key => $cab) {
                     $expressao_regular = $componente[$key][2];
@@ -1099,10 +1099,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                     }
                     $cabId = str_replace(' ', '_', strtolower($cab));
 
-                    $retorno .= "<td class='formmdtd' id='td_$cabId' align='center'><span class='form'>$cab</span>{$obrigatorio}</td>";
+                    $retorno .= "<td class='formmdtd' id='td_$cabId' style='text-align: center'><span class='form'>$cab</span>{$obrigatorio}</td>";
                 }
 
-                $retorno .= '<td class=\'formmdtd\' id=\'td_acao\' align=\'center\'><span class=\'form\'>Ação</span></td>';
+                $retorno .= '<td class=\'formmdtd\' id=\'td_acao\' style=\'text-align: center\'><span class=\'form\'>Ação</span></td>';
                 $retorno .= '</tr>';
 
                 $click = "$nome_add.removeRow(this);";
@@ -1147,7 +1147,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $center = (strtolower($campo_[0]) == 'rotulo' || strtolower($campo_[0]) == 'check' || $largura) ?
                             'align="center"' : '';
 
-                        $retorno .= "<td class='$classe2 {$nome}' $center id='td_{$nome}[{$key2}]' valign='top'>\n";
+                        $retorno .= "<td class='$classe2 {$nome}' $center id='td_{$nome}[{$key2}]' style='vertical-align: top'>\n";
 
                         switch (strtolower($campo_[0])) {
                             case 'html':
@@ -1269,7 +1269,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $retorno .= $componente;
             } elseif // Separador: insere uma linha preta
             ($componente[0] == 'linha_preta') {
-                $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};' colspan='2' height='{$componente['altura']}'></td></tr>";
+                $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};height: {$componente['altura']}' colspan='2'></td></tr>";
 
                 continue;
             } elseif ($componente[0] == 'espaco') {
@@ -1306,7 +1306,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $name = '';
                     }
 
-                    $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><span class='form'>$campo</span>{$obrigatorio}</td><td class='$classe' valign='top'><span class='form'>\n";
+                    $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' style='vertical-align: top'><span class='form'>$campo</span>{$obrigatorio}</td><td class='$classe' style='vertical-align: top'><span class='form'>\n";
                 } elseif (!$foiDuplo) {
                     if ($campo == '-:') {
                         if (empty($componente[3])) {
@@ -1331,7 +1331,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $explicacao = !empty($componente[6]) ?
                             "<br><sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
 
-                        $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><span class='form'>$campo</span>{$obrigatorio}{$explicacao}</td><td class='$classe' valign='top'><span class='form'>\n";
+                        $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' style='vertical-align: top'><span class='form'>$campo</span>{$obrigatorio}{$explicacao}</td><td class='$classe' style='vertical-align: top'><span class='form'>\n";
                     }
                 } elseif ($tipo) {
                     if (!empty($componente[10]) && $componente[10] == true) {

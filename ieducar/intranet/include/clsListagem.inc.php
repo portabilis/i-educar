@@ -5,15 +5,15 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-define('alTopLeft', 'valign=top align=left');
-define('alTopCenter', 'valign=top align=center');
-define('alTopRight', 'valign=top align=right');
-define('alMiddleLeft', 'valign=middle align=left');
-define('alMiddleCenter', 'valign=middle align=center');
-define('alMiddleRight', 'valign=middle align=right');
-define('alBottomLeft', 'valign=bottom align=left');
-define('alBottomCenter', 'valign=bottom align=center');
-define('alBottomRight', 'valign=bottom align=right');
+const alTopLeft = 'style=\'vertical-align: top; text-align:left\'';
+const alTopCenter = 'style=\'vertical-align: top; text-align:center\'';
+const alTopRight = 'style=\'vertical-align: top; text-align:right\'';
+const alMiddleLeft = 'style=\'vertical-align: middle; text-align:left\'';
+const alMiddleCenter = 'style=\'vertical-align: middle; text-align:center\'';
+const alMiddleRight = 'style=\'vertical-align: middle; text-align:right\'';
+const alBottomLeft = 'style=\'vertical-align: bottom; text-align:left\'';
+const alBottomCenter = 'style=\'vertical-align: bottom; text-align:center\'';
+const alBottomRight = 'style=\'vertical-align: bottom; text-align:right\'';
 
 class clsListagem extends clsCampos
 {
@@ -191,13 +191,13 @@ class clsListagem extends clsCampos
 </table>
 HTML;
 
-            $strReturn .= '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
+            $strReturn .= '<table class=\'paginacao\' style=\'border: 0; padding: 0; border-collapse: collapse; text-align: center\'><tr>';
 
             // Setas de início e anterior
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier) : '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
+            $strReturn .= "<td style='width: 23px; text-align: center'><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"> &lsaquo; </a></td> ";
+            $strReturn .= "<td style='width: 23px; text-align: center'><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"> &lsaquo; </a></td> ";
 
             // Meio
             $strReturn .= '';
@@ -207,14 +207,14 @@ HTML;
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
                 $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
-                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a página " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
+                $strReturn .= "<td class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;text-align: center\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a página " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
+            $strReturn .= "<td style='width: 23px; text-align: center'><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier) : '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"> &raquo; </a></td> ";
+            $strReturn .= "<td style='width: 23px; text-align: center'><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"> &raquo; </a></td> ";
 
             $strReturn .= '</tr></table>';
 
@@ -255,7 +255,7 @@ HTML;
         ob_end_clean();
 
         $retorno .= '
-            <script type="text/javascript">function go(url) { document.location = url; }
+            <script>function go(url) { document.location = url; }
             var goodIE = (document.all) ? 1:0;
             var netscape6 = (document.getElementById && !document.all) ? 1:0;
             var aux = \'\';
@@ -292,7 +292,7 @@ HTML;
                 app(Breadcrumb::class)->setLegacy($this->locale);
             }
 
-            $retorno .= "<table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
+            $retorno .= "<table class='tablelistagem' style='border: 0; padding: 2px; border-collapse: collapse; width: $this->largura'>";
 
             $retorno .= "
                 <tr>
@@ -314,8 +314,8 @@ HTML;
                 </tr>';
             $retorno .= '
                 <tr>
-                    <td colspan=\'2\' align=\'center\'>
-                        <script type="text/javascript" language=\'javascript\'>';
+                    <td colspan=\'2\' style="text-align: center">
+                        <script language=\'javascript\'>';
 
             if ($this->funcAcao) {
                 $retorno .= $this->funcAcao;
@@ -357,7 +357,7 @@ HTML;
         $retorno .= "
             <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
                 <!-- listagem begin -->
-                <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
+                <table class='tablelistagem' style='border: 0; padding: 0; border-collapse: collapse; width: 100%'>
                     <tr>
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
                     </tr>";
@@ -392,7 +392,7 @@ HTML;
                         $fim = '</a>';
                     }
 
-                    $retorno .= "<td class='formdktd' $fmt style=\"font-weight:bold;\" valign='middle'>{$inicio}$texto{$fim}</td>";
+                    $retorno .= "<td class='formdktd' $fmt style=\"font-weight:bold;\">{$inicio}$texto{$fim}</td>";
                 }
             }
 
@@ -401,7 +401,7 @@ HTML;
 
         // Lista
         if (empty($this->linhas)) {
-            $retorno .= "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informação para ser apresentada</td></tr>";
+            $retorno .= "<tr><td class='formlttd' colspan='$ncols' style='text-align: center'>Não há informação para ser apresentada</td></tr>";
         } else {
             reset($this->linhas);
 
@@ -464,7 +464,7 @@ HTML;
             $i = 0;
             $retorno .= "
                 <tr>
-                    <td colspan='$ncols' align='center'>";
+                    <td colspan='$ncols' style='text-align: center'>";
 
             foreach ($this->paginador as $pagina) {
                 if ($pagina[2]) {
@@ -527,8 +527,8 @@ HTML;
 
                     $retorno .= "
                         <tr>
-                            <td class='$classe' valign='top'><span class='form'>$campo</span></td>
-                            <td class='$classe' valign='top'>
+                            <td class='$classe' style='vertical-align: top'><span class='form'>$campo</span></td>
+                            <td class='$classe' style='vertical-align: top'>
                             <span class='form'>";
 
                     switch ($tipo) {
@@ -580,18 +580,18 @@ HTML;
         if (!empty($this->acao) && $this->show_botao_novo) {
             $retorno .= "
                 <tr>
-                    <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
+                    <td colspan=\"$ncols\" style='text-align: center'><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
                 </tr>";
         } elseif ($this->acao_imprimir) {
             $retorno .= "
                 <tr>
-                    <td colspan=\"$ncols\" align=\"center\">$botao</td>
+                    <td colspan=\"$ncols\" style='text-align: center'>$botao</td>
                 </tr>";
         }
 
         $retorno .= "
             <tr>
-                <td colspan=\"$ncols\" align=\"center\">";
+                <td colspan=\"$ncols\" style='text-align: center'>";
 
         if (is_array($this->array_botao_script) && count($this->array_botao_script)) {
             for ($i = 0; $i < count($this->array_botao); $i++) {
@@ -628,7 +628,7 @@ HTML;
             </tr>';
 
         if (!is_null($this->rodape)) {
-            $retorno .= "<tr><td colspan=\"$ncols\" align=\"center\" id=\"td_rodape\">\n";
+            $retorno .= "<tr><td colspan=\"$ncols\" style=\"text-align: center\" id=\"td_rodape\">\n";
             $retorno .= $this->rodape;
             $retorno .= '
                     </td>
