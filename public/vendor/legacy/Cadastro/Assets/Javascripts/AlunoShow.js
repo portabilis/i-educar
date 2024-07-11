@@ -91,7 +91,7 @@ var handleGetMatriculas = function(dataResponse) {
       }
 
 
-      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.turma_id}">${matricula.turma_nome}</a>`).appendTo($tr);
+      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.turma_id}">${matricula.turma_nome ?? ''}</a>`).appendTo($tr);
       $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.ultima_enturmacao_turma_id}">${matricula.ultima_enturmacao}</a>`).appendTo($tr);
       $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_serie_det.php?cod_serie=${matricula.serie_id}">${matricula.serie_nome}</a>`).appendTo($tr);
       $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_curso_det.php?cod_curso=${matricula.curso_id}">${matricula.curso_nome}</a>`).appendTo($tr);
