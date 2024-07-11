@@ -150,6 +150,10 @@ return new class extends clsDetalhe
         $nomesTurnos = [];
 
         foreach ($enturmacoes as $enturmacao) {
+            if ($enturmacao['ativo'] == 0) {
+                continue;
+            }
+
             $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
             $turma = $turma->detalhe() ?? [];
             $turma_id = $enturmacao['ref_cod_turma'];
@@ -168,10 +172,6 @@ return new class extends clsDetalhe
                 in_array($turma['etapa_educacenso'], $etapasItinerario)
             ) {
                 $existeTurmaItineraria = true;
-            }
-
-            if ($enturmacao['ativo'] == 0) {
-                continue;
             }
 
             $nomesTurmas[] = $turma['nm_turma'];
