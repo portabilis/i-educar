@@ -12,9 +12,7 @@ abstract class CoreExt_Singleton
     /**
      * Construtor.
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Sobrescreva esse método para garantir que a subclasse possa criar um

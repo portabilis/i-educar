@@ -2,6 +2,4 @@
 
 namespace iEducar\Support\Exceptions;
 
-class DisciplinesWithoutInformedHoursException extends Exception
-{
-}
+class DisciplinesWithoutInformedHoursException extends Exception {}

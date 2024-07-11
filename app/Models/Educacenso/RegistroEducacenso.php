@@ -2,6 +2,4 @@
 
 namespace App\Models\Educacenso;
 
-interface RegistroEducacenso
-{
-}
+interface RegistroEducacenso {}

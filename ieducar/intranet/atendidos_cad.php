@@ -1070,17 +1070,24 @@ return new class extends clsCadastro
 
     protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
     {
-        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
-        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
-
-        if (!empty($valorDDD) && empty($valorTelefone)) {
-            $this->mensagem = $msgRequereTelefone;
-
-            return false;
-        }
-
-        if (empty($valorDDD) && !empty($valorTelefone)) {
-            $this->mensagem = $msgRequereDDD;
+        $validator = Validator::make(
+            [
+                'ddd' => $valorDDD,
+                'telefone' => preg_replace('/[^0-9]/', '', $valorTelefone),
+            ],
+            [
+                'ddd' => ['required_with:telefone', 'regex:/^(?!0+$)[0-9]+$/'],
+                'telefone' => ['required_with:ddd', 'regex:/^(?!0+$)[0-9]+$/'],
+            ],
+            [
+                'telefone.required_with' => "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.",
+                'ddd.required_with' => "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.",
+                'ddd.regex' => 'O campo: DDD não pode conter apenas zeros.',
+                'telefone.regex' => "O campo: {$nomeCampo} não pode conter apenas zeros.",
+            ]
+        );
+        if ($validator->fails()) {
+            $this->mensagem = $validator->errors()->first();
 
             return false;
         }

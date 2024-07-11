@@ -1,5 +1,3 @@
 <?php
 
-class StdClassExtStub extends stdClass
-{
-}
+class StdClassExtStub extends stdClass {}

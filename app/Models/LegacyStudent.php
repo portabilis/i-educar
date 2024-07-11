@@ -125,6 +125,13 @@ class LegacyStudent extends LegacyModel
         return $this->hasMany(LegacyRegistration::class, 'ref_cod_aluno');
     }
 
+    public function lastRegistration(): HasOne
+    {
+        return $this->hasOne(LegacyRegistration::class, 'ref_cod_aluno')
+            ->orderByDesc('ano')
+            ->active();
+    }
+
     protected function guardianType(): Attribute
     {
         return Attribute::make(

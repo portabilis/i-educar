@@ -2,6 +2,4 @@
 
 namespace iEducar\Reports\Contracts;
 
-interface StudentRecordReport
-{
-}
+interface StudentRecordReport {}

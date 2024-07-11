@@ -191,6 +191,7 @@ return new class extends clsCadastro
             $det_ser = $obj_ser->detalhe();
 
             $this->visivel = (int) $registro['visivel'];
+            $this->turma_turno_id = $registro['turma_turno_id'];
 
             $regra_avaliacao_id = $det_ser['regra_avaliacao_id'];
             if ($regra_avaliacao_id) {
@@ -217,12 +218,15 @@ return new class extends clsCadastro
                 $this->codigo_inep_educacenso = $inep;
             }
 
-            $service = new SchoolClassService();
-            $this->hasStudentsPartials = $service->hasStudentsPartials($this->cod_turma);
+            if ($this->turma_turno_id === Period::FULLTIME) {
 
-            if ($this->hasStudentsPartials) {
-                $this->codigo_inep_matutino = $obj_turma->getInepTurno(Period::MORNING);
-                $this->codigo_inep_vespertino = $obj_turma->getInepTurno(Period::AFTERNOON);
+                $service = new SchoolClassService();
+                $this->hasStudentsPartials = $service->hasStudentsPartials($this->cod_turma);
+
+                if ($this->hasStudentsPartials) {
+                    $this->codigo_inep_matutino = $obj_turma->getInepTurno(Period::MORNING);
+                    $this->codigo_inep_vespertino = $obj_turma->getInepTurno(Period::AFTERNOON);
+                }
             }
 
             if ($registro) {

@@ -3,11 +3,14 @@
 use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     use InteractWithDatabase;
 
     public $idpais;
+
     public $nome;
+
     public $geom;
 
     public function model()

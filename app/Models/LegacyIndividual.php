@@ -134,6 +134,21 @@ class LegacyIndividual extends Model
         return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
     }
 
+    public function maritalStatus()
+    {
+        return $this->belongsTo(LegacyMaritalStatus::class, 'ideciv');
+    }
+
+    public function religion()
+    {
+        return $this->belongsTo(Religion::class, 'ref_cod_religiao');
+    }
+
+    public function foreignCountry()
+    {
+        return $this->belongsTo(Country::class, 'idpais_estrangeiro');
+    }
+
     public function mother()
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes_mae', 'idpes');
@@ -204,7 +219,7 @@ class LegacyIndividual extends Model
     protected function cpf(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => int2CPF($value),
+            get: fn ($value) => $value ? int2CPF($value) : null,
         );
     }
 

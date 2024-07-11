@@ -4,12 +4,16 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     use InteractWithDatabase, SelectOptions;
 
     public $idmun;
+
     public $geom;
+
     public $iddis;
+
     public $nome;
 
     public function model()

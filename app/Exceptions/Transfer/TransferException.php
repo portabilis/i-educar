@@ -4,6 +4,4 @@ namespace App\Exceptions\Transfer;
 
 use Exception;
 
-class TransferException extends Exception
-{
-}
+class TransferException extends Exception {}
