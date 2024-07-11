@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDiscipline;
+
 return new class extends clsListagem
 {
     public $pessoa_logada;
@@ -32,14 +34,11 @@ return new class extends clsListagem
             'Nome',
             'Abreviatura',
             'Base',
-            'área de conhecimento',
+            'Área de Conhecimento',
         ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Instituição';
-        }
 
         $this->addCabecalhos($lista_busca);
 
@@ -88,43 +87,56 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
+        $result = LegacyDiscipline::query()
+            ->from('modules.componente_curricular', 'cc')
+            ->select([
+                'cc.id',
+                'cc.nome',
+                'area_conhecimento_id',
+                'abreviatura',
+                'tipo_base',
+                'area_conhecimento.nome as area_conhecimento',
+            ])
+            ->join('modules.area_conhecimento', 'cc.area_conhecimento_id', 'area_conhecimento.id')
+            ->when(request('nome'), function ($query) {
+                $query->where('cc.nome', 'ilike', '%' . request('nome') . '%');
+            })
+            ->when(request('abreviatura'), function ($query) {
+                $query->where('cc.abreviatura', 'ilike', '%' . request('abreviatura') . '%');
+            })
+            ->when(request('area_conhecimento_id'), function ($query) {
+                $query->where('area_conhecimento_id', request('area_conhecimento_id'));
+            })
+            ->when(request('tipo_base'), function ($query) {
+                $query->where('cc.tipo_base', request('tipo_base'));
+            })
+            ->orderBy('cc.nome')
+            ->paginate(
+                perPage: $this->limite,
+                pageName: 'pagina_' . $this->nome
+            );
 
-        $objCC = new clsModulesComponenteCurricular();
-        $objCC->setOrderby('cc.nome ASC');
-        $objCC->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+            $disciplinas = $result->items();
+            $total = $result->total();
 
-        $lista = $objCC->lista(
-            instituicao_id: $this->ref_cod_instituicao,
-            nome: $this->nome,
-            abreviatura: $this->abreviatura,
-            tipo_base: $this->tipo_base,
-            area_conhecimento_id: $this->area_conhecimento_id
-        );
-
-        $total = $objCC->_total;
-
-        // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['instituicao_id']);
-                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                $registro['instituicao_id'] = $obj_cod_instituicao_det['nm_instituicao'];
-
+            foreach ($disciplinas as $disciplina) {
                 $lista_busca = [
-                    "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['nome']}</a>",
-                    "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['abreviatura']}</a>",
-                    "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">".$tipos[$registro['tipo_base']].'</a>',
-                    "<a href=\"/module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['area_conhecimento']}</a>",
+                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->nome . '</a>',
+                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->abreviatura . '</a>',
+                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $tipos[$disciplina->tipo_base] . '</a>',
+                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->area_conhecimento . '</a>',
                 ];
 
-                if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"module/ComponenteCurricular/view?id={$registro['id']}\">{$registro['instituicao_id']}</a>";
-                }
                 $this->addLinhas($lista_busca);
             }
-        }
-        $this->addPaginador2(strUrl: 'educar_componente_curricular_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
+
+            $this->addPaginador2(
+                strUrl: 'educar_componente_curricular_lst.php',
+                intTotalRegistros: $total,
+                mixVariaveisMantidas: $_GET,
+                nome: $this->nome,
+                intResultadosPorPagina: $this->limite
+            );
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 580, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("/module/ComponenteCurricular/edit")';
