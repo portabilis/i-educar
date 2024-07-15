@@ -5,14 +5,20 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     use InteractWithDatabase, SelectOptions;
 
     public $id;
+
     public $sigla_uf;
+
     public $nome;
+
     public $geom;
+
     public $idpais;
+
     public $cod_ibge;
 
     public function model()
@@ -65,7 +71,7 @@ return new class extends clsCadastro {
         $this->campoNumero('cod_ibge', 'Código INEP', $this->cod_ibge);
 
         $scripts = [
-            '/vendor/legacy/Portabilis/Assets/Javascripts/cad_uf.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/cad_uf.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

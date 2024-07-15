@@ -65,17 +65,11 @@ return new class extends clsCadastro
         exit();
     }
 
-    public function Gerar()
-    {
-    }
+    public function Gerar() {}
 
-    public function Novo()
-    {
-    }
+    public function Novo() {}
 
-    public function Excluir()
-    {
-    }
+    public function Excluir() {}
 
     public function makeExtra()
     {

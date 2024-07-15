@@ -945,7 +945,7 @@ return new class extends clsDetalhe
         $scripts = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=3',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=5',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);

@@ -7,9 +7,7 @@ use Illuminate\Support\Fluent;
 
 class TypeIntergerArray extends PostgresGrammar
 {
-    public function __construct(public ?int $size = null)
-    {
-    }
+    public function __construct(public ?int $size = null) {}
 
     /**
      * Create the column definition for a type array.

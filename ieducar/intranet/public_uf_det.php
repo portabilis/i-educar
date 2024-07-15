@@ -3,13 +3,18 @@
 use App\Models\State;
 use iEducar\Legacy\InteractWithDatabase;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     use InteractWithDatabase;
 
     public $id;
+
     public $sigla_uf;
+
     public $nome;
+
     public $cod_ibge;
+
     public $idpais;
 
     public function model()

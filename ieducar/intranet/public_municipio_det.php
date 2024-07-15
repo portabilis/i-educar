@@ -3,12 +3,16 @@
 use App\Models\City;
 use iEducar\Legacy\InteractWithDatabase;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     use InteractWithDatabase;
 
     public $idmun;
+
     public $nome;
+
     public $sigla_uf;
+
     public $cod_ibge;
 
     public function model()

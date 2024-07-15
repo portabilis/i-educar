@@ -98,13 +98,9 @@ return new class extends clsCadastro
         return false;
     }
 
-    public function Editar()
-    {
-    }
+    public function Editar() {}
 
-    public function Excluir()
-    {
-    }
+    public function Excluir() {}
 
     public function makeExtra()
     {

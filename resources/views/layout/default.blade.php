@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt" class="no-js">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
@@ -69,22 +70,22 @@
         })(document, window, 0);
     </script>
 
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true" charset="utf-8"></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/padrao.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/novo.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/dom.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/menu.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/forms.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/phpjs.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery.modal.min.js") }} "></script>
+    <script src="https://maps.google.com/maps/api/js?sensor=true" charset="utf-8"></script>
+    <script src="{{ Asset::get("/intranet/scripts/padrao.js") }} "></script>
+    <script src="{{ Asset::get("/intranet/scripts/novo.js") }} "></script>
+    <script src="{{ Asset::get("/intranet/scripts/dom.js") }} "></script>
+    <script src="{{ Asset::get("/intranet/scripts/menu.js") }} "></script>
+    <script src="{{ Asset::get("/intranet/scripts/ied/forms.js") }} "></script>
+    <script src="{{ Asset::get("/intranet/scripts/ied/phpjs.js") }} "></script>
+    <script src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
+    <script src="{{ Asset::get("/intranet/scripts/jquery/jquery.modal.min.js") }} "></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.1.0/prototype.min.js" integrity="sha512-BfwTGy/vhB1IOMlnxjnHLDQFX9FAidk1uYzXB6JOj9adeMoKlO3Bi3rZGGOrYfCOhBMZggeXTBmmdkfscYOQ/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery.mask.min.js") }} "></script>
-    <script type='text/javascript' src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-lite.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-pt-BR.js') }}'></script>
+    <script src="{{ Asset::get("/intranet/scripts/jquery.mask.min.js") }} "></script>
+    <script src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
+    <script src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
+    <script src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
+    <script src='{{ Asset::get('/intranet/scripts/summernote/summernote-lite.js') }}'></script>
+    <script src='{{ Asset::get('/intranet/scripts/summernote/summernote-pt-BR.js') }}'></script>
 </head>
 <body>
 
@@ -96,7 +97,7 @@
     <!-- End Google Tag Manager (noscript) -->
 @endif
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
-<table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
+<table class='tabelanum1' id="tablenum1" style="border: 0; padding: 0; border-collapse: collapse;">
     <tr id="topo" class="topo">
         <td colspan="2">
             <header class="ieducar-header">
@@ -135,14 +136,14 @@
 
     <tr>
         <td colspan="3">
-            <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
+            <table class='tabelanum2' style="border: 0; padding: 0; border-collapse: collapse;">
                 <tr>
-                    <td id="menu_lateral" class="r3c1" width='170'>
+                    <td id="menu_lateral" class="r3c1" style="width: 170px">
                         @include('layout.menu')
                     </td>
 
-                    <td valign=top>
-                        <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
+                    <td style="vertical-align: top">
+                        <table class='tabelanum2' style="border: 0; padding: 0; border-collapse: collapse; margin: 0">
                             <tr>
                                 <td>
                                     @include('layout.topmenu')
@@ -150,9 +151,9 @@
                             </tr>
 
                             <tr>
-                                <td height="100%" valign="top" id="corpo">
-                                    <table class='tablelistagem' width='100%' border='0' cellpadding='0' cellspacing='0'>
-                                        <tr height='10px'>
+                                <td height="100%" id="corpo" style="vertical-align: top">
+                                    <table class='tablelistagem' style="border: 0; width: 100%">
+                                        <tr style="height: 10px">
                                             <td class='fundoLocalizacao' colspan='2'>
                                                 @include('layout.breadcrumb')
                                             </td>
@@ -239,14 +240,14 @@
     })(jQuery);
 </script>
 
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/js/app.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.plugin.min.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
+<script src="{{ Asset::get("/js/app.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.plugin.min.js") }}"></script>
+<script src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
 <script>
     getNotifications();
 </script>

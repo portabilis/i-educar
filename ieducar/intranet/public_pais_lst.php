@@ -3,13 +3,18 @@
 use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     use InteractWithDatabase;
 
     public $__limite;
+
     public $__offset;
+
     public $idpais;
+
     public $nome;
+
     public $geom;
 
     public function model()
@@ -31,7 +36,7 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-            'Nome'
+            'Nome',
         ]);
 
         $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, false);
@@ -48,7 +53,7 @@ return new class extends clsListagem {
 
         foreach ($data as $item) {
             $this->addLinhas([
-                "<a href=\"public_pais_det.php?idpais={$item->id}\">{$item->name}</a>"
+                "<a href=\"public_pais_det.php?idpais={$item->id}\">{$item->name}</a>",
             ]);
         }
 

@@ -739,6 +739,24 @@ class AlunoController extends ApiCoreController
         return $this->toUtf8(Portabilis_Utils_Database::selectField($sql, $matriculaId), ['transform' => true]);
     }
 
+    protected function loadIdTurmaOrigem($matriculaId)
+    {
+        $sql = 'SELECT cod_turma
+                  FROM pmieducar.matricula_turma mt
+             LEFT JOIN pmieducar.turma t ON (t.cod_turma = mt.ref_cod_turma)
+                 WHERE ref_cod_matricula = $1
+                   AND mt.ativo = 0
+                   AND mt.ref_cod_turma <> COALESCE((SELECT ref_cod_turma
+                                                       FROM pmieducar.matricula_turma
+                                                      WHERE ref_cod_matricula = $1
+                                                        AND ativo = 1
+                                                      LIMIT 1), 0)
+              ORDER BY mt.data_exclusao DESC
+                 LIMIT 1';
+
+        return $this->toUtf8(Portabilis_Utils_Database::selectField($sql, $matriculaId), ['transform' => true]);
+    }
+
     protected function loadTransferenciaDataSaida($matriculaId)
     {
         $sql = '
@@ -1446,6 +1464,7 @@ class AlunoController extends ApiCoreController
                 $matriculas[$index]['curso_nome'] = $this->loadCursoNome($matricula['curso_id']);
                 $matriculas[$index]['serie_nome'] = $this->loadSerieNome($matricula['serie_id']);
                 $matriculas[$index]['ultima_enturmacao'] = $this->loadNomeTurmaOrigem($matricula['id']);
+                $matriculas[$index]['ultima_enturmacao_turma_id'] = $this->loadIdTurmaOrigem($matricula['id']);
                 $matriculas[$index]['data_entrada'] = $this->loadTransferenciaDataEntrada($matricula['id']);
                 $matriculas[$index]['data_saida'] = $this->loadTransferenciaDataSaida($matricula['id']);
 
@@ -1477,6 +1496,7 @@ class AlunoController extends ApiCoreController
                 'curso_nome',
                 'serie_nome',
                 'ultima_enturmacao',
+                'ultima_enturmacao_turma_id',
                 'data_entrada',
                 'data_entrada',
                 'data_saida',
