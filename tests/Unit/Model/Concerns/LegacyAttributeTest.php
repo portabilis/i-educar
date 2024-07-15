@@ -15,6 +15,7 @@ class LegacyAttributeTest extends TestCase
         $class = new class() extends Model
         {
             use HasBuilder;
+
             public static string $builder = LegacySchoolBuilder::class;
         };
 

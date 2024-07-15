@@ -5,7 +5,6 @@ namespace App\Models;
 use Ankurk91\Eloquent\HasBelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Traits\HasLegacyDates;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;

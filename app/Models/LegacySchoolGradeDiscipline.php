@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolGradeDisciplineBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacySchoolGradeDiscipline extends Model
 {
-    use LegacyAttribute;
+    use HasBuilder;
 
     protected $table = 'pmieducar.escola_serie_disciplina';
 

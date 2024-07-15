@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmployeeAllocation extends LegacyModel
 {
-    use HasLegacyDates;
     use HasBuilder;
+    use HasLegacyDates;
     use HasLegacyUserAction;
 
     protected $primaryKey = 'cod_servidor_alocacao';

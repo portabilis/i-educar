@@ -29,8 +29,6 @@ class State extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected static string $builder = StateBuilder::class;
 

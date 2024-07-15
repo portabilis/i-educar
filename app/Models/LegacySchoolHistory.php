@@ -8,10 +8,12 @@ use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistory extends LegacyModel
 {
+    use HasBuilder;
     use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;

@@ -7,10 +7,12 @@ use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Models\Enums\AbsenceDelayType;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAbsenceDelay extends LegacyModel
 {
+    use HasBuilder;
     use HasFiles;
     use HasLegacyUserAction;
     use LegacySoftDeletes;

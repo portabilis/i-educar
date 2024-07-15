@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyAcademicYearStageBuilder;
 use App\Support\Database\DateSerializer;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
+    use HasBuilder;
 
     /**
      * @var string

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builders\LegacyActiveLookingBuilder;
 use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class LegacyActiveLooking extends LegacyModel
 {
+    use HasBuilder;
     use HasFiles;
     use SoftDeletes;
 

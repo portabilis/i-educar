@@ -5,18 +5,18 @@ namespace App\Models;
 use App\Models\Builders\EmployeeBuilder;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employee extends LegacyModel
 {
+    use HasBuilder;
     use HasInstitution;
     use HasLegacyDates;
-    use LegacyAttribute;
 
     /**
      * @var string

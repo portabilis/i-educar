@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolAcademicYearBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacySchoolAcademicYear extends LegacyModel
 {
-    use LegacyAttribute;
+    use HasBuilder;
 
     public const NOT_INITIALIZED = 0;
 

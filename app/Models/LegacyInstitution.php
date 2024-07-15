@@ -8,6 +8,7 @@ use App\Services\Reports\Util;
 use App\Traits\HasLegacyDates;
 use DateTime;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 {
+    use HasBuilder;
     use HasLegacyDates;
 
     /**

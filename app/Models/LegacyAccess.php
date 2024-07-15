@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyAccessBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAccess extends LegacyModel
 {
+    use HasBuilder;
+
     public const CREATED_AT = 'data_hora';
 
     public const UPDATED_AT = null;

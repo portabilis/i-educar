@@ -28,8 +28,6 @@ class City extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
     protected static string $builder = CityBuilder::class;
 

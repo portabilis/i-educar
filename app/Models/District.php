@@ -5,15 +5,15 @@ namespace App\Models;
 use App\Models\Builders\DistrictBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
-use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class District extends Model
 {
     use DateSerializer;
+    use HasBuilder;
     use HasIbgeCode;
-    use LegacyAttribute;
 
     /**
      * Builder dos filtros
