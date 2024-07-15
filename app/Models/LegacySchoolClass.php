@@ -57,7 +57,7 @@ class LegacySchoolClass extends Model
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolClassBuilder::class;
+    protected static string $builder = LegacySchoolClassBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

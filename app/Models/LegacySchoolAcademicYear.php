@@ -33,7 +33,7 @@ class LegacySchoolAcademicYear extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolAcademicYearBuilder::class;
+    protected static string $builder = LegacySchoolAcademicYearBuilder::class;
 
     /**
      * @var array

@@ -35,7 +35,7 @@ class LegacyGrade extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyGradeBuilder::class;
+    protected static string $builder = LegacyGradeBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

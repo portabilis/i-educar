@@ -29,7 +29,7 @@ class LegacyPerson extends LegacyModel
      */
     protected $primaryKey = 'idpes';
 
-    protected string $builder = LegacyPersonBuilder::class;
+    protected static string $builder = LegacyPersonBuilder::class;
 
     /**
      * @var array

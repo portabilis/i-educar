@@ -23,7 +23,7 @@ class LegacySchoolClassStage extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolClassStageBuilder::class;
+    protected static string $builder = LegacySchoolClassStageBuilder::class;
 
     protected $casts = [
         'data_inicio' => 'date',

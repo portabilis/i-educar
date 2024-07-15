@@ -16,7 +16,7 @@ class Discipline extends LegacyModel
 
     public $timestamps = false;
 
-    protected string $builder = DisciplineBuilder::class;
+    protected static string $builder = DisciplineBuilder::class;
 
     protected $casts = [
         'tipos_base' => LegacyArray::class,

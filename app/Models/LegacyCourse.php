@@ -38,7 +38,7 @@ class LegacyCourse extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyCourseBuilder::class;
+    protected static string $builder = LegacyCourseBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

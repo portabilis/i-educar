@@ -6,18 +6,20 @@ use App\Models\Builders\EmployeeAllocationBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmployeeAllocation extends LegacyModel
 {
     use HasLegacyDates;
+    use HasBuilder;
     use HasLegacyUserAction;
 
     protected $primaryKey = 'cod_servidor_alocacao';
 
     protected $table = 'pmieducar.servidor_alocacao';
 
-    public string $builder = EmployeeAllocationBuilder::class;
+    protected static string $builder = EmployeeAllocationBuilder::class;
 
     protected $fillable = [
         'carga_horaria',

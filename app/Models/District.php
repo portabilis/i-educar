@@ -18,7 +18,7 @@ class District extends Model
     /**
      * Builder dos filtros
      */
-    protected string $builder = DistrictBuilder::class;
+    protected static string $builder = DistrictBuilder::class;
 
     /**
      * @var array

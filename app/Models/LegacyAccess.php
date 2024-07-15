@@ -21,7 +21,7 @@ class LegacyAccess extends LegacyModel
      */
     protected $primaryKey = 'cod_acesso';
 
-    protected string $builder = LegacyAccessBuilder::class;
+    protected static string $builder = LegacyAccessBuilder::class;
 
     public array $legacy = [
         'id' => 'cod_acesso',

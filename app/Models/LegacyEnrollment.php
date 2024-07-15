@@ -40,7 +40,7 @@ class LegacyEnrollment extends LegacyModel
      */
     protected $primaryKey = 'id';
 
-    protected string $builder = LegacyEnrollmentBuilder::class;
+    protected static string $builder = LegacyEnrollmentBuilder::class;
 
     /**
      * @var array

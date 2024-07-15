@@ -18,7 +18,7 @@ class LegacyAcademicYearStage extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyAcademicYearStageBuilder::class;
+    protected static string $builder = LegacyAcademicYearStageBuilder::class;
 
     protected $casts = [
         'data_inicio' => 'date',

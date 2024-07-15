@@ -25,7 +25,7 @@ class LegacyAbsenceDelay extends LegacyModel
 
     protected $primaryKey = 'cod_falta_atraso';
 
-    protected string $builder = LegacyAbsenceDelayBuilder::class;
+    protected static string $builder = LegacyAbsenceDelayBuilder::class;
 
     protected $fillable = [
         'ref_cod_escola',

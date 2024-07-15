@@ -31,7 +31,7 @@ class Employee extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = EmployeeBuilder::class;
+    protected static string $builder = EmployeeBuilder::class;
 
     protected $fillable = [
         'cod_servidor',

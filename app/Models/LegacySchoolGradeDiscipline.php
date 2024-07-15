@@ -24,7 +24,7 @@ class LegacySchoolGradeDiscipline extends Model
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolGradeDisciplineBuilder::class;
+    protected static string $builder = LegacySchoolGradeDisciplineBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

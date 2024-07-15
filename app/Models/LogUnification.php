@@ -21,7 +21,7 @@ class LogUnification extends Model
     /**
      * Builder dos filtros
      */
-    protected string $builder = LogUnificationBuilder::class;
+    protected static string $builder = LogUnificationBuilder::class;
 
     /**
      * @return BelongsTo

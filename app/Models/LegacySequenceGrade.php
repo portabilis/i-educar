@@ -14,7 +14,7 @@ class LegacySequenceGrade extends LegacyModel
 
     public const CREATED_AT = 'data_cadastro';
 
-    protected string $builder = LegacySequenceGradeBuilder::class;
+    protected static string $builder = LegacySequenceGradeBuilder::class;
 
     /**
      * @var array

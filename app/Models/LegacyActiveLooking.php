@@ -24,7 +24,7 @@ class LegacyActiveLooking extends LegacyModel
      */
     protected $table = 'pmieducar.busca_ativa';
 
-    protected string $builder = LegacyActiveLookingBuilder::class;
+    protected static string $builder = LegacyActiveLookingBuilder::class;
 
     /**
      * @var array

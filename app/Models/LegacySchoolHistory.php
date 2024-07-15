@@ -27,7 +27,7 @@ class LegacySchoolHistory extends LegacyModel
      */
     protected $table = 'pmieducar.historico_escolar';
 
-    protected string $builder = SchoolHistoryBuilder::class;
+    protected static string $builder = SchoolHistoryBuilder::class;
 
     protected $fillable = [
         'ref_cod_aluno',

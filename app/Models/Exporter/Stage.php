@@ -3,12 +3,16 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\EnrollmentEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Stage extends Model
 {
+    use HasBuilder;
+
+    protected static string $builder = EnrollmentEloquentBuilder::class;
+
     /**
      * @var string
      */
@@ -18,15 +22,6 @@ class Stage extends Model
      * @var Collection
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return EnrollmentEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new EnrollmentEloquentBuilder($query);
-    }
 
     /**
      * @return array

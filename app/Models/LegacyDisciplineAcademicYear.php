@@ -24,7 +24,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyDisciplineAcademicYearBuilder::class;
+    protected static string $builder = LegacyDisciplineAcademicYearBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

@@ -37,7 +37,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyInstitutionBuilder::class;
+    protected static string $builder = LegacyInstitutionBuilder::class;
 
     /**
      * @var array

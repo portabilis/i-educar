@@ -29,7 +29,7 @@ class LegacyDisciplineExemption extends LegacyModel
 
     protected $primaryKey = 'cod_dispensa';
 
-    protected string $builder = LegacyDisciplineExemptionBuilder::class;
+    protected static string $builder = LegacyDisciplineExemptionBuilder::class;
 
     /**
      * @var array
