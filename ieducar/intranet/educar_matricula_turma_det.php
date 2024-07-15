@@ -220,11 +220,6 @@ return new class extends clsDetalhe
                 $msg = sprintf(format: 'Enturmação não pode ser realizada,\n\no limite de vagas da turma já foi atingido e para esta série e escola foi definido bloqueio de enturmação após atingir tal limite.');
                 $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
             }
-
-            if ($totalVagas - $total_alunos <= 0) {
-                $msg = sprintf(format: 'Atenção! A capacidade da sala foi atingida. Não é possível enturmar mais alunos.');
-                $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
-            }
         } else {
             $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
         }
