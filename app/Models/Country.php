@@ -13,7 +13,7 @@ class Country extends Model
 {
     use DateSerializer;
 
-    /** @use HasBuilder<CountryBuilder<static>> */
+    /** @use HasBuilder<CountryBuilder> */
     use HasBuilder;
 
     use HasIbgeCode;
@@ -26,7 +26,7 @@ class Country extends Model
     protected static string $builder = CountryBuilder::class;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'id',
@@ -35,9 +35,9 @@ class Country extends Model
     ];
 
     /**
-     * @return HasMany
+     * @return HasMany<State, $this>
      */
-    public function states()
+    public function states(): HasMany
     {
         return $this->hasMany(State::class);
     }

@@ -12,6 +12,9 @@ class Backup extends Model
 
     public const UPDATED_AT = null;
 
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'caminho',
     ];

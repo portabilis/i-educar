@@ -13,7 +13,7 @@ class District extends Model
 {
     use DateSerializer;
 
-    /** @use HasBuilder<DistrictBuilder<static>> */
+    /** @use HasBuilder<DistrictBuilder> */
     use HasBuilder;
 
     use HasIbgeCode;
@@ -24,7 +24,7 @@ class District extends Model
     protected static string $builder = DistrictBuilder::class;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'city_id',
@@ -33,9 +33,9 @@ class District extends Model
     ];
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<City, $this>
      */
-    public function city()
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }

@@ -19,6 +19,9 @@ class EmployeeWithdrawal extends LegacyModel
 
     protected $table = 'pmieducar.servidor_afastamento';
 
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'ref_cod_servidor',
         'sequencial',
@@ -28,16 +31,25 @@ class EmployeeWithdrawal extends LegacyModel
         'data_saida',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     protected $casts = [
         'data_retorno' => 'date',
         'data_saida' => 'date',
     ];
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'ref_cod_servidor');
     }
 
+    /**
+     * @return BelongsTo<WithdrawalReason, $this>
+     */
     public function reason(): BelongsTo
     {
         return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento');

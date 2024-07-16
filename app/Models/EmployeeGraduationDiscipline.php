@@ -8,10 +8,16 @@ class EmployeeGraduationDiscipline extends LegacyModel
 {
     public $timestamps = false;
 
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
     ];
 
+    /**
+     * @return HasMany<EmployeeGraduation, $this>
+     */
     public function employeeGraduations(): HasMany
     {
         return $this->hasMany(EmployeeGraduation::class, 'discipline_id');

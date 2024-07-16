@@ -9,6 +9,9 @@ class EducacensoImport extends Model
 {
     protected $table = 'educacenso_imports';
 
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'year',
         'school',
@@ -17,19 +20,22 @@ class EducacensoImport extends Model
         'registration_date',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     protected $casts = [
         'registration_date' => 'date',
     ];
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<Individual, $this>
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'user_id', 'id');
     }
 
-    public function getDateFormat()
+    public function getDateFormat(): string
     {
         return 'Y-m-d H:i:s';
     }

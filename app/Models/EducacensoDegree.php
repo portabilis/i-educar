@@ -17,14 +17,17 @@ class EducacensoDegree extends Model
      */
     protected $primaryKey = 'id';
 
-    public const GRAU_TECNOLOGICO = 1;
+    public const int GRAU_TECNOLOGICO = 1;
 
-    public const GRAU_LICENCIATURA = 2;
+    public const int GRAU_LICENCIATURA = 2;
 
-    public const GRAU_BACHARELADO = 3;
+    public const int GRAU_BACHARELADO = 3;
 
-    public const GRAU_SEQUENCIAL = 4;
+    public const int GRAU_SEQUENCIAL = 4;
 
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'curso_id',
         'nome',
@@ -34,11 +37,17 @@ class EducacensoDegree extends Model
         'grau_academico',
     ];
 
+    /**
+     * @return HasMany<EmployeeGraduation, $this>
+     */
     public function employeeGraduations(): HasMany
     {
         return $this->hasMany(EmployeeGraduation::class, 'course_id');
     }
 
+    /**
+     * @return HasMany<Employee, $this>
+     */
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class, 'codigo_curso_superior_2');
