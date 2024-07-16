@@ -12,13 +12,13 @@ class EducacensoDegree extends Model
 {
     protected $table = 'modules.educacenso_curso_superior';
 
-    public const int GRAU_TECNOLOGICO = 1;
+    public const GRAU_TECNOLOGICO = 1;
 
-    public const int GRAU_LICENCIATURA = 2;
+    public const GRAU_LICENCIATURA = 2;
 
-    public const int GRAU_BACHARELADO = 3;
+    public const GRAU_BACHARELADO = 3;
 
-    public const int GRAU_SEQUENCIAL = 4;
+    public const GRAU_SEQUENCIAL = 4;
 
     protected $fillable = [
         'curso_id',
