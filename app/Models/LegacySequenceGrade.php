@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySequenceGradeBuilder;
 use App\Traits\Ativo;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySequenceGrade extends LegacyModel
 {
     use Ativo;
+    use HasBuilder;
 
     protected $table = 'pmieducar.sequencia_serie';
 
