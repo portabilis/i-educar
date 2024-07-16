@@ -34,6 +34,9 @@ class RegistrationStatus implements Enum
 
     public const DECEASED = 15;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [
@@ -54,12 +57,15 @@ class RegistrationStatus implements Enum
         ];
     }
 
+    /**
+     * @return array<int, int>
+     */
     public static function getStatusInactive(): array
     {
         return [
-            RegistrationStatus::ABANDONED,
-            RegistrationStatus::TRANSFERRED,
-            RegistrationStatus::DECEASED,
+            self::ABANDONED,
+            self::TRANSFERRED,
+            self::DECEASED,
         ];
     }
 }

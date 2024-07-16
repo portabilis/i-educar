@@ -10,6 +10,9 @@ class Gender implements Enum
 
     public const FEMALE = 2;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [
