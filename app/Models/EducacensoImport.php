@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EducacensoImport extends Model
 {
     protected $table = 'educacenso_imports';
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'year',
         'school',

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property LegacyPeriod $period
+ * @property array<int, string> $fillable
  */
 class EmployeeAllocation extends LegacyModel
 {
@@ -26,9 +27,6 @@ class EmployeeAllocation extends LegacyModel
 
     protected static string $builder = EmployeeAllocationBuilder::class;
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'carga_horaria',
         'periodo',

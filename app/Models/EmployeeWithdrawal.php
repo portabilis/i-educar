@@ -9,6 +9,9 @@ use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EmployeeWithdrawal extends LegacyModel
 {
     use Ativo;
@@ -19,9 +22,6 @@ class EmployeeWithdrawal extends LegacyModel
 
     protected $table = 'pmieducar.servidor_afastamento';
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'ref_cod_servidor',
         'sequencial',

@@ -5,21 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EducacensoInstitution extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.educacenso_ies';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'ies_id',
         'nome',

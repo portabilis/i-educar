@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class Country extends Model
 {
     use DateSerializer;
@@ -25,9 +28,6 @@ class Country extends Model
      */
     protected static string $builder = CountryBuilder::class;
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'id',
         'name',

@@ -6,16 +6,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EmployeePosgraduate extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'public.employee_posgraduate';
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'employee_id',
         'entity_id',

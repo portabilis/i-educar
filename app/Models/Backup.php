@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class Backup extends Model
 {
     public $table = 'pmieducar.backup';
@@ -12,9 +15,6 @@ class Backup extends Model
 
     public const UPDATED_AT = null;
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'caminho',
     ];

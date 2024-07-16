@@ -10,17 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property Employee $employee
  * @property int $cod_docente_inep
+ * @property array<int, string> $fillable
  */
 class EmployeeInep extends LegacyModel
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.educacenso_cod_docente';
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'cod_servidor',
         'cod_docente_inep',

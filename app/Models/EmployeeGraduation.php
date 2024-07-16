@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EmployeeGraduation extends LegacyModel
 {
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'employee_id',
         'course_id',

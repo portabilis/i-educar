@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class District extends Model
 {
     use DateSerializer;
@@ -23,9 +26,6 @@ class District extends Model
      */
     protected static string $builder = DistrictBuilder::class;
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'city_id',
         'name',

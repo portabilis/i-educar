@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int $cod_servidor
  * @property LegacyPerson $person
+ * @property array<int, string> $fillable
  */
 class Employee extends LegacyModel
 {
@@ -24,19 +25,10 @@ class Employee extends LegacyModel
     use HasInstitution;
     use HasLegacyDates;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.servidor';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_servidor';
 
-    /**
-     * Builder dos filtros
-     */
     protected static string $builder = EmployeeBuilder::class;
 
     protected $fillable = [

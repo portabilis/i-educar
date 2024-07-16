@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class City extends Model
 {
     use DateSerializer;
@@ -20,9 +23,6 @@ class City extends Model
 
     use HasIbgeCode;
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'state_id',
         'name',

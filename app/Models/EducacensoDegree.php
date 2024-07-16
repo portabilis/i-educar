@@ -5,17 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EducacensoDegree extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.educacenso_curso_superior';
-
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
 
     public const int GRAU_TECNOLOGICO = 1;
 
@@ -25,9 +20,6 @@ class EducacensoDegree extends Model
 
     public const int GRAU_SEQUENCIAL = 4;
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'curso_id',
         'nome',

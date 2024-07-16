@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EmployeeGraduationDiscipline extends LegacyModel
 {
     public $timestamps = false;
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
     ];
