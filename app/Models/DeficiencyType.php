@@ -4,9 +4,9 @@ namespace App\Models;
 
 class DeficiencyType
 {
-    public const int DEFICIENCY = 1;
+    public const DEFICIENCY = 1;
 
-    public const int DISORDER = 2;
+    public const DISORDER = 2;
 
     /**
      * @return array<int, string>
