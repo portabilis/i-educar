@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
  */
 class LegacyPerson extends LegacyModel
 {
+    /** @use HasBuilder<LegacyPersonBuilder<static>> */
     use HasBuilder;
 
     public const CREATED_AT = 'data_cad';

@@ -17,7 +17,10 @@ use Illuminate\Support\Collection;
 class LegacyStudent extends LegacyModel
 {
     use HasBelongsToOne;
+
+    /** @use HasBuilder<LegacyStudentBuilder<static>> */
     use HasBuilder;
+
     use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';

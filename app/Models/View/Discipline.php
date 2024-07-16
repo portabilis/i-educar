@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 
 class Discipline extends LegacyModel
 {
+    /** @use HasBuilder<DisciplineBuilder<static>> */
     use HasBuilder;
 
     protected $table = 'relatorio.view_componente_curricular';

@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LegacySequenceGrade extends LegacyModel
 {
     use Ativo;
+
+    /** @use HasBuilder<LegacySequenceGradeBuilder<static>> */
     use HasBuilder;
 
     protected $table = 'pmieducar.sequencia_serie';

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAccess extends LegacyModel
 {
+    /** @use HasBuilder<LegacyAccessBuilder<static>> */
     use HasBuilder;
 
     public const CREATED_AT = 'data_hora';

@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employee extends LegacyModel
 {
+    /** @use HasBuilder<EmployeeBuilder<static>> */
     use HasBuilder;
+
     use HasInstitution;
     use HasLegacyDates;
 

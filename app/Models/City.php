@@ -14,7 +14,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class City extends Model
 {
     use DateSerializer;
+
+    /** @use HasBuilder<CityBuilder<static>> */
     use HasBuilder;
+
     use HasIbgeCode;
 
     /**

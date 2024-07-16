@@ -14,7 +14,10 @@ use Illuminate\Support\Collection;
 class State extends Model
 {
     use DateSerializer;
+
+    /** @use HasBuilder<StateBuilder<static>> */
     use HasBuilder;
+
     use HasIbgeCode;
 
     /**

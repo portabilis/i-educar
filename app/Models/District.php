@@ -12,7 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class District extends Model
 {
     use DateSerializer;
+
+    /** @use HasBuilder<DistrictBuilder<static>> */
     use HasBuilder;
+
     use HasIbgeCode;
 
     /**

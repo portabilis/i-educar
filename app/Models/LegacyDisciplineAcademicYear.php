@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class LegacyDisciplineAcademicYear extends Pivot
 {
+    /** @use HasBuilder<LegacyDisciplineAcademicYearBuilder<static>> */
     use HasBuilder;
 
     protected $table = 'modules.componente_curricular_ano_escolar';

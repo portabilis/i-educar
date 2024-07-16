@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacySchoolAcademicYear extends LegacyModel
 {
+    /** @use HasBuilder<LegacySchoolAcademicYearBuilder<static>> */
     use HasBuilder;
 
     public const NOT_INITIALIZED = 0;

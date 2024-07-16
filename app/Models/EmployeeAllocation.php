@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmployeeAllocation extends LegacyModel
 {
+    /** @use HasBuilder<EmployeeAllocationBuilder<static>> */
     use HasBuilder;
+
     use HasLegacyDates;
     use HasLegacyUserAction;
 

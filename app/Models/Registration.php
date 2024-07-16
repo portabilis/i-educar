@@ -17,7 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Registration extends Model
 {
+    /** @use HasBuilder<RegistrationBuilder<static>> */
     use HasBuilder;
+
     use RegistrationScopes;
     use SoftDeletes;
 

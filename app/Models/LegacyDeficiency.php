@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\HasBuilder;
 
 class LegacyDeficiency extends LegacyModel
 {
+    /** @use HasBuilder<LegacyDeficiencyBuilder<static>> */
     use HasBuilder;
 
     /**

@@ -17,7 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class LegacyActiveLooking extends LegacyModel
 {
+    /** @use HasBuilder<LegacyActiveLookingBuilder<static>> */
     use HasBuilder;
+
     use HasFiles;
     use SoftDeletes;
 

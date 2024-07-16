@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyTransferRequest extends LegacyModel
 {
+    /** @use HasBuilder<LegacyTransferRequestBuilder<static>> */
     use HasBuilder;
+
     use HasLegacyDates;
     use HasLegacyUserAction;
     use LegacySoftDeletes;

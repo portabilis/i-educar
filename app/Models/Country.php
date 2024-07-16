@@ -12,7 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Country extends Model
 {
     use DateSerializer;
+
+    /** @use HasBuilder<CountryBuilder<static>> */
     use HasBuilder;
+
     use HasIbgeCode;
 
     public const BRASIL = 45;

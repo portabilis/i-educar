@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacyModel extends Model
 {
+    /** @use HasBuilder<LegacyBuilder<static>> */
     use HasBuilder;
 
     public array $legacy = [];

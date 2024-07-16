@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAbsenceDelay extends LegacyModel
 {
+    /** @use HasBuilder<LegacyAbsenceDelayBuilder<static>> */
     use HasBuilder;
+
     use HasFiles;
     use HasLegacyUserAction;
     use LegacySoftDeletes;

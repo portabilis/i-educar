@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyEvaluationRule extends Model
 {
+    /** @use HasBuilder<LegacyEvaluationRuleBuilder<static>> */
     use HasBuilder;
 
     public const CREATED_AT = null;

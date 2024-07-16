@@ -23,7 +23,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 {
+    /** @use HasBuilder<LegacyInstitutionBuilder<static>> */
     use HasBuilder;
+
     use HasLegacyDates;
 
     /**

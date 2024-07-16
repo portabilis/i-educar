@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacySchool extends LegacyModel
 {
+    /** @use HasBuilder<LegacySchoolBuilder<static>> */
     use HasBuilder;
 
     public const CREATED_AT = 'data_cadastro';

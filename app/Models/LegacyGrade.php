@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LegacyGrade extends LegacyModel
 {
     use HasBelongsToOne;
+
+    /** @use HasBuilder<LegacyGradeBuilder<static>> */
     use HasBuilder;
 
     public const CREATED_AT = 'data_cadastro';

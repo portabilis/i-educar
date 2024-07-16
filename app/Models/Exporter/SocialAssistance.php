@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 class SocialAssistance extends Model
 {
+    /** @use HasBuilder<EnrollmentEloquentBuilder<static>> */
     use HasBuilder;
 
     protected static string $builder = EnrollmentEloquentBuilder::class;

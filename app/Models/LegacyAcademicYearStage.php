@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
+
+    /** @use HasBuilder<LegacyAcademicYearStageBuilder<static>> */
     use HasBuilder;
 
     /**

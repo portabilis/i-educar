@@ -40,6 +40,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacySchoolClass extends Model
 {
+    /** @use HasBuilder<LegacySchoolClassBuilder<static>> */
     use HasBuilder;
 
     /**

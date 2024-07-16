@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LegacySchoolClassStage extends LegacyModel
 {
     use DateSerializer;
+
+    /** @use HasBuilder<LegacySchoolClassStageBuilder<static>> */
     use HasBuilder;
 
     /**

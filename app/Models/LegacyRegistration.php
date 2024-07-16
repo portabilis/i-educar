@@ -35,7 +35,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class LegacyRegistration extends LegacyModel
 {
     use HasBelongsToOne;
+
+    /** @use HasBuilder<LegacyRegistrationBuilder<static>> */
     use HasBuilder;
+
     use HasLegacyDates;
 
     /**

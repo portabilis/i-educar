@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistory extends LegacyModel
 {
+    /** @use HasBuilder<SchoolHistoryBuilder<static>> */
     use HasBuilder;
+
     use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;

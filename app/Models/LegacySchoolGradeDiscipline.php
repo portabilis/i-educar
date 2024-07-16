@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacySchoolGradeDiscipline extends Model
 {
+    /** @use HasBuilder<LegacySchoolGradeDisciplineBuilder<static>> */
     use HasBuilder;
 
     protected $table = 'pmieducar.escola_serie_disciplina';

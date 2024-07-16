@@ -18,7 +18,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacyDisciplineExemption extends LegacyModel
 {
+    /** @use HasBuilder<LegacyDisciplineExemptionBuilder<static>> */
     use HasBuilder;
+
     use HasLegacyUserAction;
     use LegacySoftDeletes;
 

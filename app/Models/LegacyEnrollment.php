@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class LegacyEnrollment extends LegacyModel
 {
     use DateSerializer;
+
+    /** @use HasBuilder<LegacyEnrollmentBuilder<static>> */
     use HasBuilder;
 
     public const CREATED_AT = 'data_cadastro';

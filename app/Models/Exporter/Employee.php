@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 class Employee extends Model
 {
+    /** @use HasBuilder<EmployeeEloquentBuilder<static>> */
     use HasBuilder;
 
     protected static string $builder = EmployeeEloquentBuilder::class;

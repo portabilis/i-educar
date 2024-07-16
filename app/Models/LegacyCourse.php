@@ -20,7 +20,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacyCourse extends LegacyModel
 {
+    /** @use HasBuilder<LegacyCourseBuilder<static>> */
     use HasBuilder;
+
     use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';
