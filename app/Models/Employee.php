@@ -46,13 +46,6 @@ class Employee extends LegacyModel
         'workload' => 'carga_horaria',
     ];
 
-    protected function casts()
-    {
-        return [
-            'curso_formacao_continuada' => LegacyArray::class
-        ];
-    }
-
     /**
      * @return BelongsTo
      */
@@ -78,7 +71,7 @@ class Employee extends LegacyModel
     protected function continuedTrainingCourse(): Attribute
     {
         return Attribute::make(
-            get: fn () => collect($this->curso_formacao_continuada)->map(fn ($course) => match ($course) {
+            get: fn () => collect(transformStringFromDBInArray($this->curso_formacao_continuada) ?? [])->map(fn ($course) => match ($course) {
                 '1' => 'Creche (0 a 3 anos)',
                 '2' => 'Pré-escola (4 e 5 anos)',
                 '3' => 'Anos iniciais do ensino fundamental',
