@@ -116,27 +116,27 @@ return new class extends clsListagem
                 pageName: 'pagina_' . $this->nome
             );
 
-            $disciplinas = $result->items();
-            $total = $result->total();
+        $disciplinas = $result->items();
+        $total = $result->total();
 
-            foreach ($disciplinas as $disciplina) {
-                $lista_busca = [
-                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->nome . '</a>',
-                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->abreviatura . '</a>',
-                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $tipos[$disciplina->tipo_base] . '</a>',
-                    '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->area_conhecimento . '</a>',
-                ];
+        foreach ($disciplinas as $disciplina) {
+            $lista_busca = [
+                '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->nome . '</a>',
+                '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->abreviatura . '</a>',
+                '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $tipos[$disciplina->tipo_base] . '</a>',
+                '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->area_conhecimento . '</a>',
+            ];
 
-                $this->addLinhas($lista_busca);
-            }
+            $this->addLinhas($lista_busca);
+        }
 
-            $this->addPaginador2(
-                strUrl: 'educar_componente_curricular_lst.php',
-                intTotalRegistros: $total,
-                mixVariaveisMantidas: $_GET,
-                nome: $this->nome,
-                intResultadosPorPagina: $this->limite
-            );
+        $this->addPaginador2(
+            strUrl: 'educar_componente_curricular_lst.php',
+            intTotalRegistros: $total,
+            mixVariaveisMantidas: $_GET,
+            nome: $this->nome,
+            intResultadosPorPagina: $this->limite
+        );
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 580, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("/module/ComponenteCurricular/edit")';
