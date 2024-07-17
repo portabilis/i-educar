@@ -28,6 +28,7 @@ class LegacyIndividual extends Model
 
     protected $casts = [
         'data_nasc' => 'date',
+        'data_admissao' => 'date',
     ];
 
     /**

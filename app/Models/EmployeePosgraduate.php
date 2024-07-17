@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
+use iEducar\Modules\Educacenso\Model\PosGraduacao;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -26,6 +29,20 @@ class EmployeePosgraduate extends Model
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
+    }
+
+    protected function typeName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => PosGraduacao::getDescriptiveValues()[$this->type_id] ?? null
+        );
+    }
+
+    protected function areaName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => AreaPosGraduacao::getDescriptiveValues()[$this->area_id] ?? null
+        );
     }
 
     /**
