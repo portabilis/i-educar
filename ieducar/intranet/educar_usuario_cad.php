@@ -230,6 +230,10 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        if ($this->notValidaDataInicial()) {
+            return false;
+        }
+
         if ($this->email && !filter_var(value: $this->email, filter: FILTER_VALIDATE_EMAIL)) {
             $this->mensagem = 'Formato do e-mail inválido.';
 
@@ -278,8 +282,34 @@ return new class extends clsCadastro
         return false;
     }
 
+    public function notValidaDataInicial()
+    {
+        $validator = Validator::make([
+            'data_inicial' => $this->data_inicial
+        ], [
+            'data_inicial' => [
+                'nullable',
+                'bail',
+                'date_format:d/m/Y',
+                'after_or_equal:today'
+            ]
+        ], [
+            'data_inicial.after_or_equal' => 'O campo :attribute deve ser uma data posterior ou igual a hoje.'
+        ]);
+        if ($validator->fails()) {
+            $this->mensagem = $validator->errors()->first();
+
+            return true;
+        }
+        return false;
+    }
+
     public function Editar()
     {
+        if ($this->notValidaDataInicial()) {
+            return false;
+        }
+
         /** @var User $user */
         $user = Auth::user();
         if (!$this->canChange(currentUser: $user, changedUserId: $this->ref_pessoa)) {
