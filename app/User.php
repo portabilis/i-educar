@@ -232,6 +232,18 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isNotStarted()
+    {
+        if (empty($date = $this->employee->data_inicial)) {
+            return false;
+        }
+
+        return now()->isBefore($date);
+    }
+
+    /**
      * @return BelongsTo
      */
     public function employee()
