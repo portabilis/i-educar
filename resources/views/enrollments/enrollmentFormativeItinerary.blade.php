@@ -21,17 +21,17 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Aluno:</td>
+                    <th scope="row">Aluno:</th>
                     <td>{{ $enrollment->studentName ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Turma:</td>
+                    <th scope="row">Turma:</th>
                     <td>{{ $enrollment->schoolClass->name ?? null }}</td>
                 </tr>
                 <tr id="tr_itinerary_type">
-                    <td>
+                    <th scope="row">
                         Trilha de aprofundamento do itinerário formativo:
-                    </td>
+                    </th>
                     <td>
                         @php
                             $types = $enrollment->tipo_itinerario;
@@ -44,9 +44,9 @@
                     </td>
                 </tr>
                 <tr id="tr_itinerary_composition">
-                    <td>
+                    <th scope="row">
                         Composição do itinerário formativo integrado (entre as áreas de conhecimento ou entre as áreas de conhecimento e a formação técnica profissional):
-                    </td>
+                    </th>
                     <td>
                         @php
                             $compositions = $enrollment->composicao_itinerario;
@@ -59,7 +59,7 @@
                     </td>
                 </tr>
                 <tr id="tr_itinerary_course">
-                    <td>Tipo do curso do itinerário de formação técnica e profissional:</td>
+                    <th scope="row">Tipo do curso do itinerário de formação técnica e profissional:</th>
                     <td>
                         <select name="itinerary_course" id="itinerary_course" class="select-default">
                             <option value="">Selecione</option>
@@ -70,9 +70,9 @@
                     </td>
                 </tr>
                 <tr id="tr_technical_course">
-                    <td>
+                    <th scope="row">
                         Código do curso técnico:
-                    </td>
+                    </th>
                     <td>
                         <select name="technical_course" id="technical_course" class="select-default">
                             <option value="">Selecione</option>
@@ -83,7 +83,7 @@
                     </td>
                 </tr>
                 <tr id="tr_concomitant_itinerary">
-                    <td>Itinerário concomitante intercomplementar à matrícula de formação geral básica:</td>
+                    <th scope="row">Itinerário concomitante intercomplementar à matrícula de formação geral básica:</th>
                     <td>
                         <select name="concomitant_itinerary" id="concomitant_itinerary" class="select-default">
                             <option value="">Selecione</option>
@@ -94,9 +94,9 @@
                 </tr>
                 <input type="hidden" name="show_concomitant_itinerary" id="show_concomitant_itinerary" value="{{ $showConcomitantItinerary ? 1 : 0 }}">
                 <tr>
-                    <td colspan="2">
+                    <th scope="row" colspan="2">
                     <input type="hidden" id="enrollment_id" name="enrollment_id" value="{{ $enrollment->id }}">
-                    </td>
+                    </th>
                 </tr>
             </tbody>
             <tr>

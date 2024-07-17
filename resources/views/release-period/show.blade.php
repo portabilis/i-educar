@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <table class="tableDetalhe" width="100%" border="0" cellpadding="2" cellspacing="0">
+    <table class="tableDetalhe" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
         <tbody>
         <tr>
             <td class="formdktd" colspan="2" height="24"><b>Período de lançamento de notas e faltas por etapa -

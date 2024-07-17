@@ -32,7 +32,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^4.0",
         "intervention/image": "^2.6",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "11.14",
         "laravel/horizon": "^5.15",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.6",

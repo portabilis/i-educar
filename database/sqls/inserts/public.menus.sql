@@ -59,7 +59,6 @@ INSERT INTO public.menus VALUES (88, 25, 'Estados', 'Estados', '/intranet/public
 INSERT INTO public.menus VALUES (89, 25, 'Municípios', 'Municípios', '/intranet/public_municipio_lst.php', NULL, 3, 3, 755, 755, 999930, true, NULL, NULL);
 INSERT INTO public.menus VALUES (90, 25, 'Distritos', 'Distritos', '/intranet/public_distrito_lst.php', NULL, 4, 3, 759, 759, 999930, true, NULL, NULL);
 INSERT INTO public.menus VALUES (97, 30, '1ª fase - Matrícula inicial', 'Exportação do educacenso - 1ª fase', '/intranet/educar_exportacao_educacenso.php', NULL, 1, 3, 846, 846, 999932, true, NULL, NULL);
-INSERT INTO public.menus VALUES (98, 31, 'Importação educacenso', 'Importação educacenso', '/intranet/educar_importacao_educacenso.php', NULL, 0, 3, 9998849, 9998849, 9998848, true, NULL, NULL);
 INSERT INTO public.menus VALUES (99, 10, 'Unificações', NULL, NULL, NULL, 1, 3, NULL, 9998877, 9998876, true, NULL, NULL);
 INSERT INTO public.menus VALUES (104, 75, 'Funções', 'Funções do servidor', '/intranet/educar_funcao_lst.php', NULL, 1, 4, 634, 21153, 999912, true, NULL, NULL);
 INSERT INTO public.menus VALUES (105, 75, 'Escolaridade', 'Escolaridade do servidor', '/intranet/educar_escolaridade_lst.php', NULL, 2, 4, 632, 21146, 999912, true, NULL, NULL);
@@ -108,6 +107,5 @@ INSERT INTO public.menus VALUES (167, 3, 'Permitir lançamento de notas/faltas f
 INSERT INTO public.menus VALUES (168, 3, 'Permitir editar endereço no cadastro de pessoa física', NULL, NULL, NULL, 9999, 2, 999878, 999878, 55, true, NULL, NULL);
 INSERT INTO public.menus VALUES (169, 3, 'Histórico de enturmações da matrícula', NULL, NULL, NULL, 99, 1, 1001, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (170, 3, 'Desfazer unificação de alunos', NULL, NULL, NULL, 99, 1, 2001, NULL, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (230, 31, 'Histórico de importações', NULL, '/educacenso/importacao/historico', NULL, 99, 1, 2004, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (233, 20, 'Exportações', 'Exportações', NULL, NULL, 99, 1, 1020, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (234, 233, 'Exportação para o SEB', 'Exportação para o SEB', '/exportacao-para-o-seb', NULL, 99, 1, 1021, NULL, NULL, true, NULL, NULL);

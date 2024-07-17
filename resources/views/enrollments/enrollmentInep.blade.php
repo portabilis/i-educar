@@ -6,7 +6,7 @@
 
 @section('content')
     <form id="formcadastro" action="{{ route('enrollments.enrollment-inep.update', $enrollment->getKey()) }}" method="post">
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
             <tbody>
                 <tr>
                     <td class="formlttd" valign="top">

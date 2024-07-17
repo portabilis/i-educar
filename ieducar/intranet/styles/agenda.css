@@ -6,7 +6,7 @@ TD.escuro
 
 .titulo
 {
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 16px;
 	font-weight: bold;
 	color: #708694;
@@ -14,35 +14,35 @@ TD.escuro
 
 .data1
 {
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 22px;
 	font-weight: bold;
 	color: #f5f9fd;
 }
 .data2
 {
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 16px;
 	font-weight: bold;
 	color: #f5f9fd;
 }
 .data3
 {
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 13px;
 	font-weight: bold;
 	color: #f5f9fd;
 }
 .comp_tit
 {
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 15px;
 	color: #000000;
 	font-weight: bolder;
 }
 .comp_tit_antigo
 {
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 15px;
 	color: #708694;
 	font-weight: bolder;
@@ -59,7 +59,7 @@ INPUT.notas
 {
 	height: 17px;
 	width: 132px;
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 9px;
 	color: #000000;
 	background-color: #f5f9fd;
@@ -93,7 +93,7 @@ TEXTAREA.agenda_conteudo
 }
 INPUT.agenda_rap_botao
 {
-	font-family: arial, heveltica, sans, verdana;
+	font-family: arial, heveltica, sans, verdana, sans-serif;
 	font-size: 12px;
 	color: #000000;
 	width: 175px;

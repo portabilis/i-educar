@@ -1,20 +1,4 @@
 <?php
-
-?>
-<?php /*
-            caso o campo seja de busca criar uma variavel
-              ***  $obrigatorio = false;  *** antes de dar o include do arquivo
-
-            //- Adicionado por Adriano Erik Weiguert Nagasava
-            $escola_obrigatorio = true //- Indica se o campo escola vai ser obrigatório ou não
-
-            $obrigatorio = true;
-            include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-
-
-        */
-
-//** 4 - Escola 2 - institucional 1 - poli-institucional
 $obj_permissao = new clsPermissoes();
 $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
@@ -37,16 +21,6 @@ if ($nivel_usuario == 1) {
         }
     }
 
-    /*      if(isset($_GET["ref_cod_instituicao"]) &&  !empty($_GET["ref_cod_instituicao"]) && is_array($opcoes_instituicao) && array_key_exists($_GET["ref_cod_instituicao"],$opcoes_instituicao) )
-            {
-                $this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
-            }
-            else
-            {
-                $this->ref_cod_instituicao = null;
-            }*/
-
-    //**** javascript  Array dinamico das instituicoes - escolas
     $obj_instituicao = new clsPmieducarInstituicao();
     $lista_instituicao23 = $obj_instituicao->lista();
 
@@ -74,7 +48,7 @@ if ($nivel_usuario == 1) {
 }
 
 if ($nivel_usuario == 1 || $nivel_usuario == 2) {
-    $selecione = $nivel_usuario == 2 ? 'Selecione uma escola' : 'Selecione uma escola';
+    $selecione = 'Selecione uma escola';
     $opcoes = ['' => $selecione];
     $objTemp = new clsPmieducarEscola();
     if ((!empty($this->ref_cod_instituicao) && $nivel_usuario == 1) || $nivel_usuario == 2) {
