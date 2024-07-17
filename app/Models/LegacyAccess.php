@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyAccessBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAccess extends LegacyModel
 {
+    /** @use HasBuilder<LegacyAccessBuilder<static>> */
+    use HasBuilder;
+
     public const CREATED_AT = 'data_hora';
 
     public const UPDATED_AT = null;
@@ -21,7 +25,7 @@ class LegacyAccess extends LegacyModel
      */
     protected $primaryKey = 'cod_acesso';
 
-    protected string $builder = LegacyAccessBuilder::class;
+    protected static string $builder = LegacyAccessBuilder::class;
 
     public array $legacy = [
         'id' => 'cod_acesso',

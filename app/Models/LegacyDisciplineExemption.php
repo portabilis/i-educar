@@ -6,6 +6,7 @@ use App\Models\Builders\LegacyDisciplineExemptionBuilder;
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -17,6 +18,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacyDisciplineExemption extends LegacyModel
 {
+    /** @use HasBuilder<LegacyDisciplineExemptionBuilder<static>> */
+    use HasBuilder;
+
     use HasLegacyUserAction;
     use LegacySoftDeletes;
 
@@ -29,7 +33,7 @@ class LegacyDisciplineExemption extends LegacyModel
 
     protected $primaryKey = 'cod_dispensa';
 
-    protected string $builder = LegacyDisciplineExemptionBuilder::class;
+    protected static string $builder = LegacyDisciplineExemptionBuilder::class;
 
     /**
      * @var array

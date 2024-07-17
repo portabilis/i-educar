@@ -5,11 +5,11 @@ namespace App\Models;
 use App\Models\Builders\LegacySchoolClassBuilder;
 use App\Models\Enums\DayOfWeek;
 use App\Models\View\Discipline;
-use App\Traits\LegacyAttribute;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -40,7 +40,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacySchoolClass extends Model
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LegacySchoolClassBuilder<static>> */
+    use HasBuilder;
 
     /**
      * @var string
@@ -57,7 +58,7 @@ class LegacySchoolClass extends Model
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolClassBuilder::class;
+    protected static string $builder = LegacySchoolClassBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

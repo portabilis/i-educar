@@ -4,11 +4,15 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySchoolClassStageBuilder;
 use App\Support\Database\DateSerializer;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolClassStage extends LegacyModel
 {
     use DateSerializer;
+
+    /** @use HasBuilder<LegacySchoolClassStageBuilder<static>> */
+    use HasBuilder;
 
     /**
      * @var string
@@ -23,7 +27,7 @@ class LegacySchoolClassStage extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolClassStageBuilder::class;
+    protected static string $builder = LegacySchoolClassStageBuilder::class;
 
     protected $casts = [
         'data_inicio' => 'date',

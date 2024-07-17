@@ -7,6 +7,7 @@ use App\Models\Builders\LegacyEnrollmentBuilder;
 use App\Support\Database\DateSerializer;
 use DateTime;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -26,6 +27,9 @@ class LegacyEnrollment extends LegacyModel
 {
     use DateSerializer;
 
+    /** @use HasBuilder<LegacyEnrollmentBuilder<static>> */
+    use HasBuilder;
+
     public const CREATED_AT = 'data_cadastro';
 
     public const UPDATED_AT = 'updated_at';
@@ -40,7 +44,7 @@ class LegacyEnrollment extends LegacyModel
      */
     protected $primaryKey = 'id';
 
-    protected string $builder = LegacyEnrollmentBuilder::class;
+    protected static string $builder = LegacyEnrollmentBuilder::class;
 
     /**
      * @var array

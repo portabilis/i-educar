@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyPersonBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -15,6 +16,9 @@ use Illuminate\Support\Str;
  */
 class LegacyPerson extends LegacyModel
 {
+    /** @use HasBuilder<LegacyPersonBuilder<static>> */
+    use HasBuilder;
+
     public const CREATED_AT = 'data_cad';
 
     public const UPDATED_AT = 'data_rev';
@@ -29,7 +33,7 @@ class LegacyPerson extends LegacyModel
      */
     protected $primaryKey = 'idpes';
 
-    protected string $builder = LegacyPersonBuilder::class;
+    protected static string $builder = LegacyPersonBuilder::class;
 
     /**
      * @var array

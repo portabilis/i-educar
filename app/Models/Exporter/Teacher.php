@@ -3,12 +3,17 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\TeacherEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Teacher extends Model
 {
+    /** @use HasBuilder<TeacherEloquentBuilder<static>> */
+    use HasBuilder;
+
+    protected static string $builder = TeacherEloquentBuilder::class;
+
     /**
      * @var string
      */
@@ -18,15 +23,6 @@ class Teacher extends Model
      * @var Collection
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return TeacherEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new TeacherEloquentBuilder($query);
-    }
 
     /**
      * @return array

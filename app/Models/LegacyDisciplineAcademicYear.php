@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyDisciplineAcademicYearBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class LegacyDisciplineAcademicYear extends Pivot
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LegacyDisciplineAcademicYearBuilder<static>> */
+    use HasBuilder;
 
     protected $table = 'modules.componente_curricular_ano_escolar';
 
@@ -24,7 +25,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyDisciplineAcademicYearBuilder::class;
+    protected static string $builder = LegacyDisciplineAcademicYearBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

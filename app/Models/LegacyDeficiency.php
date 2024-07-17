@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyDeficiencyBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 
 class LegacyDeficiency extends LegacyModel
 {
+    /** @use HasBuilder<LegacyDeficiencyBuilder<static>> */
+    use HasBuilder;
+
     /**
      * @var string
      */
@@ -21,7 +25,7 @@ class LegacyDeficiency extends LegacyModel
      */
     public $timestamps = false;
 
-    public string $builder = LegacyDeficiencyBuilder::class;
+    protected static string $builder = LegacyDeficiencyBuilder::class;
 
     protected $fillable = [
         'nm_deficiencia',

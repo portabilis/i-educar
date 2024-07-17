@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Models\Builders\CityBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,8 +14,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class City extends Model
 {
     use DateSerializer;
+
+    /** @use HasBuilder<CityBuilder<static>> */
+    use HasBuilder;
+
     use HasIbgeCode;
-    use LegacyAttribute;
 
     /**
      * @var array
@@ -28,10 +31,8 @@ class City extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
-    protected $builder = CityBuilder::class;
+    protected static string $builder = CityBuilder::class;
 
     /**
      * @return BelongsTo

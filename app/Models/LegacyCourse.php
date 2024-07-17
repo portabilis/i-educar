@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyCourseBuilder;
 use App\Traits\HasLegacyDates;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,8 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacyCourse extends LegacyModel
 {
+    /** @use HasBuilder<LegacyCourseBuilder<static>> */
+    use HasBuilder;
+
     use HasLegacyDates;
-    use LegacyAttribute;
 
     public const CREATED_AT = 'data_cadastro';
 
@@ -38,7 +40,7 @@ class LegacyCourse extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyCourseBuilder::class;
+    protected static string $builder = LegacyCourseBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
