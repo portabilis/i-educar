@@ -6,39 +6,39 @@
 
 @section('content')
     <form id="formcadastro" action="" method="post">
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="tablecadastro" style="width: 100%">
             <tbody>
             <tr>
                 <td class="formdktd" colspan="2" height="24"><b>Atualização de boletins em lote</b></td>
             </tr>
             <tr id="tr_nm_ano">
-                <td class="formmdtd" valign="top">
+                <th scope="row" class="formmdtd" valign="top">
                     <span class="form">Ano</span>
                     <span class="campo_obrigatorio">*</span>
                     <br>
                     <sub style="vertical-align:top;">somente números</sub>
-                </td>
+                </th>
                 <td class="formmdtd" valign="top">
                     @include('form.select-year')
                 </td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formlttd" valign="top">
+                <th scope="row" class="formlttd" valign="top">
                     <span class="form">Instituição</span>
                     <span class="campo_obrigatorio">*</span>
-                </td>
+                </th>
                 <td class="formlttd" valign="top">
                     @include('form.select-institution')
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formmdtd" valign="top"><span class="form">Escola</span></td>
+                <th scope="row" class="formmdtd" valign="top"><span class="form">Escola</span></th>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <td class="formlttd" valign="top"><span class="form">Curso</span></td>
+                <th scope="row" class="formlttd" valign="top"><span class="form">Curso</span></th>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" data-refresh-ano="false" style="width: 308px;">
@@ -66,18 +66,18 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Série</span></td>
+                <th scope="row" class="formmdtd" valign="top"><span class="form">Série</span></th>
                 <td class="formmdtd" valign="top">
                     @include('form.select-grade-multiple')
                 </td>
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formlttd" valign="top">
+                <th scope="row" class="formlttd" valign="top">
                     <span class="form">Modelo de boletim antigo</span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para atualizar em todas as turmas</sub>
-                </td>
+                </th>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="old_report_card" id="old_report_card" style="width: 308px;">
@@ -102,11 +102,11 @@
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formmdtd" valign="top">
+                <th scope="row" class="formmdtd" valign="top">
                     <span class="form">Novo modelo de boletim</span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
-                </td>
+                </th>
                 <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="new_report_card" id="new_report_card" style="width: 308px;">
@@ -131,11 +131,11 @@
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formlttd" valign="top">
+                <th scope="row" class="formlttd" valign="top">
                     <span class="form">Novo modelo de boletim (diferenciado)</span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
-                </td>
+                </th>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="new_alternative_report_card" id="new_alternative_report_card" style="width: 308px;">

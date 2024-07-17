@@ -2,11 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\Ativo;
-use App\Traits\HasInstitution;
-use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 /**

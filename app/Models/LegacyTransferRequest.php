@@ -6,10 +6,14 @@ use App\Models\Builders\LegacyTransferRequestBuilder;
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyTransferRequest extends LegacyModel
 {
+    /** @use HasBuilder<LegacyTransferRequestBuilder<static>> */
+    use HasBuilder;
+
     use HasLegacyDates;
     use HasLegacyUserAction;
     use LegacySoftDeletes;
@@ -24,7 +28,7 @@ class LegacyTransferRequest extends LegacyModel
      */
     protected $primaryKey = 'cod_transferencia_solicitacao';
 
-    public string $builder = LegacyTransferRequestBuilder::class;
+    protected static string $builder = LegacyTransferRequestBuilder::class;
 
     protected $casts = [
         'data_transferencia' => 'date',

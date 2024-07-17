@@ -4,17 +4,21 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySequenceGradeBuilder;
 use App\Traits\Ativo;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySequenceGrade extends LegacyModel
 {
     use Ativo;
 
+    /** @use HasBuilder<LegacySequenceGradeBuilder<static>> */
+    use HasBuilder;
+
     protected $table = 'pmieducar.sequencia_serie';
 
     public const CREATED_AT = 'data_cadastro';
 
-    protected string $builder = LegacySequenceGradeBuilder::class;
+    protected static string $builder = LegacySequenceGradeBuilder::class;
 
     /**
      * @var array

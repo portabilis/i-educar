@@ -1,5 +1,5 @@
 body, html{
-  font-family: "Open Sans" !important;
+  font-family: "Open Sans", sans-serif !important;
   height: 100% !important;
 }
 
@@ -25,7 +25,7 @@ input, select, textarea, span.select2.select2-container.select2-container--defau
   border: solid 1px #cddce6 !important;
   color: #47728f;
   border-radius: 3px;
-  font-family: 'Open Sans' !important;
+  font-family: 'Open Sans', sans-serif !important;
 }
 
 input:read-only {
@@ -39,16 +39,16 @@ input:read-only {
 .select2-container{
   font-size: 14px;
   line-height: 15px;
-  font-family: "Opens Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
-    font-family: "Open Sans";
+    font-family: "Open Sans", sans-serif;
     font-size: 14px;
     padding: 4px;
 }
 .select2-results__option {
-    font-family: "Open Sans";
+    font-family: "Open Sans", sans-serif;
     color: #47728f;
 }
 
@@ -100,7 +100,7 @@ input[type="button"] {
   border-radius: 3px !important;
   font-weight: normal;
   margin: 15px 0px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 select{
@@ -406,7 +406,7 @@ a.icons-top{
   font-size: 12px;
   padding: 11px;
   margin-bottom: 10px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 @-moz-document url-prefix() {
@@ -448,7 +448,7 @@ a.icons-top{
 .nvp_tabelaMenu .nvp_sub a{
   color: #47728f;
   font-size: 12px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 .nvp_tabelaMenu ul.menu{
@@ -509,7 +509,7 @@ a.icons-top{
 
 .menu_susp_root{
   color: #47728f !important;
-  font-family: "Open Sans" !important;
+  font-family: "Open Sans", sans-serif !important;
   font-size: 16px;
   padding: 10px 0;
   width: 100%;
@@ -606,7 +606,7 @@ table.calendar .header {
   background: #fff;
   color: #47728f;
   border: 0;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 table.calendar .header td{
@@ -620,7 +620,7 @@ table.calendar .dayLastMonth, .day{
   padding: 10px !important;
   width: 45px !important;
   color: #47728f;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 table.calendar .day{
@@ -639,7 +639,7 @@ table.calendar .anotacao{
 
 table.calendar .legenda{
   border: 0;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   color: #47728f;
   font-size: 12px;
 }
@@ -677,7 +677,7 @@ table.calendar .cor{
 .fundoCalendario .dia_agenda,
 .fundoCalendarioUrgente .dia_agenda,
 .fundoCalendarioProximo .dia_agenda {
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   position: absolute !important;
   font-size: 30px;
   font-weight: bold;
@@ -687,7 +687,7 @@ table.calendar .cor{
 .fundoCalendario span,
 .fundoCalendarioUrgente span,
 .fundoCalendarioProximo span{
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   color: #47728f;
   font-size: 12px;
   font-weight: bold;
@@ -695,14 +695,14 @@ table.calendar .cor{
 }
 
 .fundoCalendarioMesDiferente{
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   background-color: #e9f0f8;
   border: 0;
   color: #47728f;
 }
 
 .fundoCalendarioMesDiferente span{
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   font-size: 30px;
   color: #FFF;
 }
@@ -737,14 +737,14 @@ table.calendar .cal_esq_qh{
   height: auto;
   font-size: 40px;
   padding: 0 10px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 table.calendar .mes{
   color: #47728f;
   padding: 10px;
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 table.calendar .horario {
@@ -767,7 +767,7 @@ table.calendar .horario {
 
 .titulo, .comp_tit_antigo{
   color: #47728f !important;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 td.arrow-dia a {
@@ -818,7 +818,7 @@ td.data-info span{
 .compromisso input,
 textarea.agenda_conteudo {
     margin: 5px !important;
-    font-family: "Open Sans";
+    font-family: "Open Sans", sans-serif;
     font-size: 12px;
 }
 
@@ -913,7 +913,7 @@ table.calendario td a{
 }
 
 .ui-dialog label{
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   font-size: 14px;
   font-weight: normal;
   font-style: normal;
@@ -924,7 +924,7 @@ table.calendario td a{
 }
 
 .ui-dialog a, .ui-dialog .decorated{
-  font-family: "Open Sans" !important;
+  font-family: "Open Sans", sans-serif !important;
   font-size: 14px !important;
   font-weight: normal;
   font-style: normal;
@@ -947,7 +947,7 @@ table.calendario td a{
 }
 
 .ui-button span{
-  font-family: "Open Sans" !important;
+  font-family: "Open Sans", sans-serif !important;
   border-radius: 3px;
   border: solid 1px #cddce6 !important;
   font-size: 14px !important;
@@ -999,7 +999,7 @@ table.calendario td a{
   color: #FFF;
   vertical-align: middle;
   text-align: center;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   font-size: 18px;
   font-weight: bold;
 }
@@ -1023,7 +1023,7 @@ table.calendario td a{
 
 table {
     color: #47728f;
-    font-family: "Open Sans" !important;
+    font-family: "Open Sans", sans-serif !important;
     font-size: 12px;
 }
 
@@ -1072,7 +1072,7 @@ td.area-conhecimento-destaque {
 .tableDetalhe .formdktd,
 .titulo-tabela-listagem {
   background-color: #ccdce6 !important;
-  font-family: "Open Sans" !important;
+  font-family: "Open Sans", sans-serif !important;
   font-size: 16px;
   font-weight: bold;
   font-style: normal;
@@ -1118,7 +1118,7 @@ td.area-conhecimento-destaque {
 #formcadastro .formmdtd,
 #formcadastro .formlttd{
   color: #47728f;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   font-size: 14px;
   padding: 4px 8px;
   vertical-align: middle;
@@ -1142,7 +1142,7 @@ td.area-conhecimento-destaque {
 }
 
 .tablelistagem .formdktd{
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   background-color: #f5f9fd !important;
   font-size: 14px;
   font-weight: bold;
@@ -1158,7 +1158,7 @@ td.area-conhecimento-destaque {
 .tablelistagem .formmdtd a,
 .tablelistagem .formlttd a{
   color: #47728f;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   font-size: 12px;
   padding: 8px;
   vertical-align: top;
@@ -1172,14 +1172,14 @@ td.area-conhecimento-destaque {
 .tableDetalhe .formmdtd,
 .tableDetalhe .formlttd{
   color: #47728f;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   font-size: 14px;
   padding: 8px;
   vertical-align: middle;
 }
 
 .tableDetalhe th{
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   background-color: #f5f9fd !important;
   font-size: 14px;
   font-weight: bold;
@@ -1301,7 +1301,7 @@ table.paginacao td a.nvp_paginador {
 
 p.title-table-matricula {
   background-color: #ccdce6 !important;
-  font-family: "Open Sans" !important;
+  font-family: "Open Sans", sans-serif !important;
   font-size: 16px;
   font-weight: bold;
   font-style: normal;
@@ -1386,7 +1386,7 @@ input.btn_small {
     margin: 4px 0;
     padding: 7px 7px !important;
     color: #188ad1 !important;
-    font-family: "Open Sans";
+    font-family: "Open Sans", sans-serif;
     font-size: 12px !important;
 }
 

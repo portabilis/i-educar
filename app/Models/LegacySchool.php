@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builders\LegacySchoolBuilder;
 use App\Models\View\SchoolData;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,6 +21,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacySchool extends LegacyModel
 {
+    /** @use HasBuilder<LegacySchoolBuilder<static>> */
+    use HasBuilder;
+
     public const CREATED_AT = 'data_cadastro';
 
     /**
@@ -35,7 +39,7 @@ class LegacySchool extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolBuilder::class;
+    protected static string $builder = LegacySchoolBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

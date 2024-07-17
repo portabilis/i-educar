@@ -587,8 +587,8 @@ class PessoaController extends ApiCoreController
         $individual->nacionalidade = $this->getRequest()->tipo_nacionalidade ?: $individual->nacionalidade;
         $individual->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo ?: $individual->zona_localizacao_censo;
         $individual->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada ?: $individual->localizacao_diferenciada;
-        $individual->nome_social = $this->getRequest()->nome_social ?? $this->getRequest()->nome_social;
-        $individual->observacao = $this->getRequest()->observacao_aluno ?? $this->getRequest()->observacao_aluno;
+        $individual->nome_social = $this->getRequest()->nome_social ?: $individual->nome_social;
+        $individual->observacao = $this->getRequest()->observacao_aluno ?: $individual->observacao;
 
         $individual->saveOrFail();
 
@@ -606,13 +606,11 @@ class PessoaController extends ApiCoreController
 
         if ($fone_fixo || $fone_fixo == '') {
             $ddd_fixo = $ddd_fone_fixo;
-            $fone_fixo = $fone_fixo;
             $telefone = new clsPessoaTelefone($individual->idpes, 1, $fone_fixo, $ddd_fixo);
             $telefone->cadastra();
         }
         if ($fone_mov || $fone_mov == '') {
             $ddd_mov = $ddd_fone_mov;
-            $fone_mov = $fone_mov;
             $telefone = new clsPessoaTelefone($individual->idpes, 2, $fone_mov, $ddd_mov);
             $telefone->cadastra();
         }

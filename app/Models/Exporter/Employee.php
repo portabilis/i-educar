@@ -3,13 +3,17 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\EmployeeEloquentBuilder;
-use App\Models\Exporter\Builders\TeacherEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Employee extends Model
 {
+    /** @use HasBuilder<EmployeeEloquentBuilder<static>> */
+    use HasBuilder;
+
+    protected static string $builder = EmployeeEloquentBuilder::class;
+
     /**
      * @var string
      */
@@ -19,15 +23,6 @@ class Employee extends Model
      * @var Collection
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return TeacherEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new EmployeeEloquentBuilder($query);
-    }
 
     /**
      * @return array

@@ -8,10 +8,14 @@ use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistory extends LegacyModel
 {
+    /** @use HasBuilder<SchoolHistoryBuilder<static>> */
+    use HasBuilder;
+
     use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;
@@ -27,7 +31,7 @@ class LegacySchoolHistory extends LegacyModel
      */
     protected $table = 'pmieducar.historico_escolar';
 
-    protected string $builder = SchoolHistoryBuilder::class;
+    protected static string $builder = SchoolHistoryBuilder::class;
 
     protected $fillable = [
         'ref_cod_aluno',

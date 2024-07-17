@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolGradeDisciplineBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacySchoolGradeDiscipline extends Model
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LegacySchoolGradeDisciplineBuilder<static>> */
+    use HasBuilder;
 
     protected $table = 'pmieducar.escola_serie_disciplina';
 
@@ -24,7 +25,7 @@ class LegacySchoolGradeDiscipline extends Model
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolGradeDisciplineBuilder::class;
+    protected static string $builder = LegacySchoolGradeDisciplineBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

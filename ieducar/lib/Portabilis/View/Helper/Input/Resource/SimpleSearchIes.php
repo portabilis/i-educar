@@ -5,11 +5,15 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchIes extends Portabilis_V
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql = 'select ies_id || \' - \' || nome AS nome from modules.educacenso_ies where id = $1';
-            $options = ['params' => $id, 'return_only' => 'first-row'];
-            $ies = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+            if (is_numeric($id)) {
+                $sql = 'select ies_id || \' - \' || nome AS nome from modules.educacenso_ies where id = $1';
+                $options = ['params' => $id, 'return_only' => 'first-row'];
+                $ies = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-            return $ies['nome'];
+                return $ies['nome'];
+            }
+
+            return $id;
         }
     }
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Builders\StateBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
-use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,8 +14,11 @@ use Illuminate\Support\Collection;
 class State extends Model
 {
     use DateSerializer;
+
+    /** @use HasBuilder<StateBuilder<static>> */
+    use HasBuilder;
+
     use HasIbgeCode;
-    use LegacyAttribute;
 
     /**
      * @var array
@@ -29,10 +32,8 @@ class State extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
-    protected $builder = StateBuilder::class;
+    protected static string $builder = StateBuilder::class;
 
     public function country(): BelongsTo
     {

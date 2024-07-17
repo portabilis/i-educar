@@ -4,11 +4,15 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyAcademicYearStageBuilder;
 use App\Support\Database\DateSerializer;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
+
+    /** @use HasBuilder<LegacyAcademicYearStageBuilder<static>> */
+    use HasBuilder;
 
     /**
      * @var string
@@ -18,7 +22,7 @@ class LegacyAcademicYearStage extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyAcademicYearStageBuilder::class;
+    protected static string $builder = LegacyAcademicYearStageBuilder::class;
 
     protected $casts = [
         'data_inicio' => 'date',

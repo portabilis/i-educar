@@ -16,7 +16,7 @@
         <span class="breadcrumb-current">{{ $breadcrumb->currentPage() }}</span>
 
         @if ($breadcrumb->isBeta())
-            <img src="{{ Asset::get('/img/beta.png') }}" class="beta-badge" title="Versão de testes">
+            <img src="{{ Asset::get('/img/beta.png') }}" alt="Recurso Beta" class="beta-badge" title="Versão de testes">
         @endif
 
     </div>

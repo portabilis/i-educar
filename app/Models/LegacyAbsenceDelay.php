@@ -7,10 +7,14 @@ use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Models\Enums\AbsenceDelayType;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAbsenceDelay extends LegacyModel
 {
+    /** @use HasBuilder<LegacyAbsenceDelayBuilder<static>> */
+    use HasBuilder;
+
     use HasFiles;
     use HasLegacyUserAction;
     use LegacySoftDeletes;
@@ -25,7 +29,7 @@ class LegacyAbsenceDelay extends LegacyModel
 
     protected $primaryKey = 'cod_falta_atraso';
 
-    protected string $builder = LegacyAbsenceDelayBuilder::class;
+    protected static string $builder = LegacyAbsenceDelayBuilder::class;
 
     protected $fillable = [
         'ref_cod_escola',

@@ -7,6 +7,7 @@ use App\Models\Builders\LegacyGradeBuilder;
 use App\Models\View\Discipline;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,6 +20,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LegacyGrade extends LegacyModel
 {
     use HasBelongsToOne;
+
+    /** @use HasBuilder<LegacyGradeBuilder<static>> */
+    use HasBuilder;
 
     public const CREATED_AT = 'data_cadastro';
 
@@ -35,7 +39,7 @@ class LegacyGrade extends LegacyModel
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyGradeBuilder::class;
+    protected static string $builder = LegacyGradeBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

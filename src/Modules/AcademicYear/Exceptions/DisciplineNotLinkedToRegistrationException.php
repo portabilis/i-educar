@@ -14,7 +14,6 @@ class DisciplineNotLinkedToRegistrationException extends Exception
             Error::DISCIPLINE_NOT_ENROLLED_IN_SCHOOL_LEVELS
         );
 
-        $this->enrollmentId = $enrollmentId;
         $this->schoolId = $schoolId;
         $this->disciplineId = $disciplineId;
         $this->academicYearId = $academicYearId;
@@ -29,7 +28,6 @@ class DisciplineNotLinkedToRegistrationException extends Exception
     public function getExtraInfo()
     {
         return [
-            'enrollment_code' => $this->enrollmentId,
             'school_code' => $this->schoolId,
             'discipline_code' => $this->disciplineId,
             'academicYear_code' => $this->academicYearId,

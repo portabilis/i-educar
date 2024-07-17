@@ -161,7 +161,10 @@ class clsCadastro extends clsCampos
         }
     }
 
-    public function Inicializar() {}
+    public function Inicializar()
+    {
+        return '';
+    }
 
     public function Formular() {}
 

@@ -7,16 +7,20 @@ use App\Models\Builders\DisciplineBuilder;
 use App\Models\LegacyKnowledgeArea;
 use App\Models\LegacyModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
 class Discipline extends LegacyModel
 {
+    /** @use HasBuilder<DisciplineBuilder<static>> */
+    use HasBuilder;
+
     protected $table = 'relatorio.view_componente_curricular';
 
     public $timestamps = false;
 
-    protected string $builder = DisciplineBuilder::class;
+    protected static string $builder = DisciplineBuilder::class;
 
     protected $casts = [
         'tipos_base' => LegacyArray::class,
