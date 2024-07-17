@@ -1838,8 +1838,6 @@ class AlunoController extends ApiCoreController
 
                 return false;
             }
-
-            return false;
         } else {
             $this->objPhoto = null;
 

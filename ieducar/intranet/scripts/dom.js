@@ -360,7 +360,7 @@ function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 	}
 
 
-	centralizaExpansivel(expansivel);
+	centralizaExpansivel();
 	document.onscroll = function() { centralizaExpansivel(); };
 }
 

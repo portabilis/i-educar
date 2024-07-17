@@ -14,44 +14,44 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Nome do aluno:</td>
+                    <th scope="row">Nome do aluno:</th>
                     <td>{{ $registration->student->person->name ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Escola:</td>
+                    <th scope="row">Escola:</th>
                     <td>{{ $schoolClass->school->person->name ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Curso:</td>
+                    <th scope="row">Curso:</th>
                     <td>{{ $schoolClass->course->name ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Série:</td>
+                    <th scope="row">Série:</th>
                     <td>{{ $registration->grade->name ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Turma selecionada:</td>
+                    <th scope="row">Turma selecionada:</th>
                     <td>{{ $schoolClass->name ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Total de vagas:</td>
+                    <th scope="row">Total de vagas:</th>
                     <td>{{ $schoolClass->max_aluno }}</td>
                 </tr>
                 <tr>
-                    <td>Vagas disponíveis:</td>
+                    <th scope="row">Vagas disponíveis:</th>
                     <td>{{ $schoolClass->vacancies }}</td>
                 </tr>
                 <tr>
-                    <td>Alunos enturmados:</td>
+                    <th scope="row">Alunos enturmados:</th>
                     <td>{{ $schoolClass->getTotalEnrolled() }}</td>
                 </tr>
                 <tr>
-                    <td>Período de enturmação:</td>
+                    <th scope="row">Período de enturmação:</th>
                     <td>{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</td>
                 </tr>
                 @if($enrollments->count())
                 <tr>
-                    <td>Turma de origem:</td>
+                    <th scope="row">Turma de origem:</th>
                     <td>
                         <select name="enrollment_from_id" class="select-default">
                             @foreach($enrollments as $enrollment)
@@ -68,11 +68,11 @@
                 </tr>
                 @endif
                 <tr>
-                    <td>
+                    <th scope="row">
                         Data da enturmação/saída<span class="campo_obrigatorio">*</span>
                         <br>
                         <small class="text-muted">dd/mm/aaaa</small>
-                    </td>
+                    </th>
                     <td>
                         <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10">
                     </td>

@@ -95,7 +95,9 @@ trait LegacySoftDeletes
             return $this->setKeysForSaveQuery($this->newModelQuery())->forceDelete();
         }
 
-        return $this->runSoftDelete();
+        $this->runSoftDelete();
+
+        return null;
     }
 
     protected function runSoftDelete()

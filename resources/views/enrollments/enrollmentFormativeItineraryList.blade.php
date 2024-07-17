@@ -12,11 +12,11 @@
                     <td class="titulo-tabela-listagem" colspan="13">Lista de enturmações da matrícula</td>
                 </tr>
                 <tr>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Sequencial</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Turma</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Ativo</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de enturmação</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de saída</td>
+                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Sequencial</th>
+                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Turma</th>
+                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Ativo</th>
+                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de enturmação</th>
+                    <th scope="col" class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de saída</th>
                 </tr>
                 @foreach($registration->enrollments->sortBy('sequencial') as $enrollment)
                 <tr>

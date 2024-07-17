@@ -86,7 +86,7 @@ return new class() extends clsCadastro
         }
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola']);
 
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_calendario_ano_letivo_det.php?cod_calendario_ano_letivo={$registro['cod_calendario_ano_letivo']}" : 'educar_calendario_ano_letivo_lst.php';
+        $this->url_cancelar = 'educar_calendario_ano_letivo_lst.php';
 
         $ano_array = ['' => 'Selecione um ano'];
         if ($this->ref_cod_escola) {

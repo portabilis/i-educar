@@ -48,23 +48,22 @@
                     @method('put')
                 @endif
 
-                <table width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
+                <table style="width: 100%">
                     <tr>
                         <td class="formdktd" colspan="2" height="24"><b>Novo </b></td>
                     </tr>
                     <tr id="tr_nm_tipo">
-                        <td class="formmdtd">
+                        <th scope="row" class="formmdtd">
                             <span class="form">Tipo de Usuário</span><span class="campo_obrigatorio">*</span>
-                        </td>
+                        </th>
                         <td class="formmdtd">
                             <span class="form"><input class="obrigatorio" type="text" name="name" v-model="userType.nm_tipo" size="40" maxlength="255"> </span>
                         </td>
                     </tr>
                     <tr id="tr_nivel">
-                        <td class="formlttd">
+                        <th scope="row" class="formlttd">
                             <span class="form">Nível</span><span class="campo_obrigatorio">*</span>
-                        </td>
+                        </th>
                         <td class="formlttd">
                             <span class="form">
                                 <select v-model="userType.nivel" class="obrigatorio" name="level">
@@ -76,74 +75,71 @@
                         </td>
                     </tr>
                     <tr id="tr_descricao">
-                        <td class="formmdtd">
+                        <th scope="row" class="formmdtd">
                             <span class="form">Descrição</span>
-                        </td>
+                        </th>
                         <td class="formmdtd">
                             <span class="form">
                                 <textarea v-model="userType.descricao" class="geral" name="description" cols="37" rows="5"></textarea>
                             </span>
                         </td>
                     </tr>
-                    </tbody>
                 </table>
-                <table width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
+                <table style="width: 100%">
+                    <tr><td colspan="2"><hr></td></tr>
+                    <tr>
+                        <th scope="row" class="formlttd">
+                            <span class="form">Procure pelo nome do menu: </span><input type="text" v-model="search" placeholder="Digite o menu que procura" style="width: 300px;">
+                        </th>
+                        <td class="formlttd">
+                            <div style="clear: both;"><small class="text-muted">Marcar opção para todos</small></div>
+                            <div class="radiogroup">
+                                <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 3))">Exclui</button>
+                                <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 2))">Cadastra</button>
+                                <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 1))">Visualiza</button>
+                                <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 0))">Sem permissão</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <template v-for="menu in menus">
                         <tr><td colspan="2"><hr></td></tr>
                         <tr>
-                            <td class="formlttd">
-                                <span class="form">Procure pelo nome do menu: </span><input type="text" v-model="search" placeholder="Digite o menu que procura" style="width: 300px;">
+                            <td class="formlttd" height="24">
+                                <b style="font-size: 16px">@{{ menu.menu.title }}</b>
                             </td>
-                            <td class="formlttd">
-                                <div style="clear: both;"><small class="text-muted">Marcar opção para todos</small></div>
+                            <td class="formlttd" height="24">
+                                <div style="clear: both;"><small class="text-muted">Marcar opção para todos os itens: <b>@{{ menu.menu.title }}</b></small></div>
                                 <div class="radiogroup">
-                                    <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 3))">Exclui</button>
-                                    <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 2))">Cadastra</button>
-                                    <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 1))">Visualiza</button>
-                                    <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 0))">Sem permissão</button>
+                                    <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 3)">Exclui</button>
+                                    <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 2)">Cadastra</button>
+                                    <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 1)">Visualiza</button>
+                                    <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 0)">Sem permissão</button>
                                 </div>
                             </td>
                         </tr>
-                        <template v-for="menu in menus">
-                            <tr><td colspan="2"><hr></td></tr>
-                            <tr>
-                                <td class="formlttd" height="24">
-                                    <b style="font-size: 16px">@{{ menu.menu.title }}</b>
-                                </td>
-                                <td class="formlttd" height="24">
-                                    <div style="clear: both;"><small class="text-muted">Marcar opção para todos os itens: <b>@{{ menu.menu.title }}</b></small></div>
-                                    <div class="radiogroup">
-                                        <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 3)">Exclui</button>
-                                        <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 2)">Cadastra</button>
-                                        <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 1)">Visualiza</button>
-                                        <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 0)">Sem permissão</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr v-for="(process, i) in menu.processes" v-show="process.title.slugify().includes(search.slugify())">
-                                <td :class="{ formmdtd: i % 2 == 0, formlttd: i % 2 != 0 }">
-                                    <span class="form">@{{ process.title }}</span>
-                                    <br>
-                                    <a :href="process.link" target="_blank"><sup>@{{ process.description }}</sup></a>
-                                </td>
-                                <td :class="{ formmdtd: i % 2 == 0, formlttd: i % 2 != 0 }" width="500">
-                                    <access-level-menu-radiogroup :process="process" v-model="processes[process.process]"></access-level-menu-radiogroup>
-                                </td>
-                            </tr>
-                        </template>
-                        <tr><td class="tableDetalheLinhaSeparador" colspan="2"></td></tr>
-                        <tr class="linhaBotoes">
-                            <td colspan="2" align="center">
-                                <button class="btn-green" type="submit">Salvar</button>
-                                <a class="btn" href="{{ Asset::get('/usuarios/tipos') }}">Cancelar</a>
-                                @can('remove', 554)
-                                @if($userType->getKey())
-                                <button class="btn" type="button" onclick="this.form._method.value = 'delete'; this.form.action = '{{ Asset::get('/usuarios/tipos/' . $userType->getKey()) }}'; this.form.submit()">Excluir</button>
-                                @endif
-                                @endcan
+                        <tr v-for="(process, i) in menu.processes" v-show="process.title.slugify().includes(search.slugify())">
+                            <td :class="{ formmdtd: i % 2 == 0, formlttd: i % 2 != 0 }">
+                                <span class="form">@{{ process.title }}</span>
+                                <br>
+                                <a :href="process.link" target="_blank"><sup>@{{ process.description }}</sup></a>
+                            </td>
+                            <td :class="{ formmdtd: i % 2 == 0, formlttd: i % 2 != 0 }" width="500">
+                                <access-level-menu-radiogroup :process="process" v-model="processes[process.process]"></access-level-menu-radiogroup>
                             </td>
                         </tr>
-                    </tbody>
+                    </template>
+                    <tr><td class="tableDetalheLinhaSeparador" colspan="2"></td></tr>
+                    <tr class="linhaBotoes">
+                        <td colspan="2" align="center">
+                            <button class="btn-green" type="submit">Salvar</button>
+                            <a class="btn" href="{{ Asset::get('/usuarios/tipos') }}">Cancelar</a>
+                            @can('remove', 554)
+                            @if($userType->getKey())
+                            <button class="btn" type="button" onclick="this.form._method.value = 'delete'; this.form.action = '{{ Asset::get('/usuarios/tipos/' . $userType->getKey()) }}'; this.form.submit()">Excluir</button>
+                            @endif
+                            @endcan
+                        </td>
+                    </tr>
                 </table>
             </form>
         </div>

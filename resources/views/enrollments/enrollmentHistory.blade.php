@@ -14,23 +14,23 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Escola:</td>
+                    <th scope="row">Escola:</th>
                     <td>{{ $registration->school->name ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Nome do aluno:</td>
+                    <th scope="row">Nome do aluno:</th>
                     <td>{{ $registration->student->person->name ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Matrícula:</td>
+                    <th scope="row">Matrícula:</th>
                     <td>{{ $registration->id ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Situação:</td>
+                    <th scope="row">Situação:</th>
                     <td>{{ $registration->status_description ?? null }}</td>
                 </tr>
                 <tr>
-                    <td>Data saída:</td>
+                    <th scope="row">Data saída:</th>
                     <td>{{ dataToBrasil($registration->data_cancel) ?? null }}</td>
                 </tr>
             </tbody>
@@ -46,22 +46,22 @@
                     <td class="titulo-tabela-listagem" colspan="14">Lista de enturmações da matrícula</td>
                 </tr>
                 <tr>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Sequencial</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Turma</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Turno do aluno</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Ativo</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de enturmação</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Data de saída</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Transferido</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Remanejado</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Reclassificado</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Abandono</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Falecido</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário criou</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário editou</td>
-                    <td class="formdktd" valign="top" align="left" style="font-weight:bold;">
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Sequencial</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Turma</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Turno do aluno</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Ativo</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Data de enturmação</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Data de saída</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Transferido</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Remanejado</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Reclassificado</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Abandono</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Falecido</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Usuário criou</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">Usuário editou</th>
+                    <th scope="col" class="formdktd" style="font-weight:bold;">
                         Editar
-                    </td>
+                    </th>
                 </tr>
                 @foreach($registration->enrollments->sortBy('sequencial') as $enrollment)
                 <tr>
@@ -110,12 +110,12 @@
                 </tr>
                 @endforeach
                 <tr>
-                    <td class="formdktd" valign="top" align="left" colspan="14">
+                    <td class="formdktd" colspan="14">
                         <small>A coluna "Turno do aluno" permanecerá em branco quando o turno do aluno for o mesmo da turma.</small>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="14" align="center">
+                    <td colspan="14" class="text-center">
                         <input type="button" class="btn-green botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $registration->id }}')" value=" Voltar ">
                     </td>
                 </tr>

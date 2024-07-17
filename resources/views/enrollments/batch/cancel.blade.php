@@ -6,45 +6,45 @@
 
 @section('content')
     <form id="formcadastro" action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post">
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="tablecadastro" style="width: 100%">
             <tbody>
                 <tr>
                     <td class="formdktd" colspan="2" height="24"><b>Desenturmar em lote</b></td>
                 </tr>
                 <tr id="tr_nm_instituicao">
-                    <td class="formmdtd" valign="top"><span class="form">Instituição:</span></td>
+                    <th scope="row" class="formmdtd" valign="top"><span class="form">Instituição:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->school->institution->name ?? null }}</span></td>
                 </tr>
                 <tr id="tr_nm_escola">
-                    <td class="formlttd" valign="top"><span class="form">Escola:</span></td>
+                    <th scope="row" class="formlttd" valign="top"><span class="form">Escola:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->school->person->name ?? null }}</span></td>
                 </tr>
                 <tr id="tr_nm_curso">
-                    <td class="formmdtd" valign="top"><span class="form">Curso:</span></td>
+                    <th scope="row" class="formmdtd" valign="top"><span class="form">Curso:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->course->name ?? null }}</span></td>
                 </tr>
                 <tr id="tr_nm_serie">
-                    <td class="formlttd" valign="top"><span class="form">Série:</span></td>
+                    <th scope="row" class="formlttd" valign="top"><span class="form">Série:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->grade->name ?? null }}</span></td>
                 </tr>
                 <tr id="tr_nm_turma">
-                    <td class="formmdtd" valign="top"><span class="form">Turma:</span></td>
+                    <th scope="row" class="formmdtd" valign="top"><span class="form">Turma:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->name ?? null }}</span></td>
                 </tr>
                 <tr id="tr_ano">
-                    <td class="formlttd" valign="top"><span class="form">Ano:</span></td>
+                    <th scope="row" class="formlttd" valign="top"><span class="form">Ano:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->year ?? null }}</span></td>
                 </tr>
                 <tr id="tr_ano">
-                    <td class="formmdtd" valign="top"><span class="form">Total de vagas na turma:</span></td>
+                    <th scope="row" class="formmdtd" valign="top"><span class="form">Total de vagas na turma:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->max_aluno }}</span></td>
                 </tr>
                 <tr id="tr_ano">
-                    <td class="formlttd" valign="top"><span class="form">Vagas disponíveis na turma:</span></td>
+                    <th scope="row" class="formlttd" valign="top"><span class="form">Vagas disponíveis na turma:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->vacancies }}</span></td>
                 </tr>
                 <tr id="tr_ano">
-                    <td class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></td>
+                    <th scope="row" class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
                 </tr>
             </tbody>
@@ -82,7 +82,7 @@
         <table class="table-default">
             <thead>
             <tr>
-                <th width="25"><label><input class="enrollment-check-master" type="checkbox"></label></th>
+                <th width="25"><input class="enrollment-check-master" type="checkbox" /></th>
                 <th width="100">Matrícula</th>
                 <th>Nome</th>
                 <th>Data da enturmação</th>
