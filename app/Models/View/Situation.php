@@ -14,6 +14,7 @@ class Situation extends Model
 
     public $timestamps = false;
 
+    /** @phpstan-ignore-next-line  */
     public function scopeApproved($query): void
     {
         $query->whereIn('cod_situacao', [
@@ -23,10 +24,12 @@ class Situation extends Model
         ]);
     }
 
+    /** @phpstan-ignore-next-line  */
     public function scopeSituation($query, int $situation): void
     {
         if ($situation === 16) {
             $query->whereExists(
+                /** @phpstan-ignore-next-line  */
                 LegacyDisciplineScoreAverage::selectRaw(1)
                     ->whereHas('registrationScore', function ($q) {
                         $q->whereColumn('matricula_id', 'cod_matricula');

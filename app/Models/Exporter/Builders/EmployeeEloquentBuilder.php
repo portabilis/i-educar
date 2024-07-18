@@ -2,10 +2,14 @@
 
 namespace App\Models\Exporter\Builders;
 
+use App\Models\Exporter\Employee;
 use App\Support\Database\JoinableBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
+/**
+ * @extends Builder<Employee>
+ */
 class EmployeeEloquentBuilder extends Builder
 {
     use JoinableBuilder;
