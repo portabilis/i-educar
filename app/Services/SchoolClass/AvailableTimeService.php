@@ -2,9 +2,11 @@
 
 namespace App\Services\SchoolClass;
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacySchoolClass;
 use DateTime;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\SchoolClass\Period;
 
 class AvailableTimeService
 {
@@ -24,9 +26,10 @@ class AvailableTimeService
      *
      * @param int $studentId     ID do aluno
      * @param int $schoolClassId ID da turma
+     * @param int|null $turnoId  ID do turno da enturmação
      * @return bool
      */
-    public function isAvailable(int $studentId, int $schoolClassId)
+    public function isAvailable(int $studentId, int $schoolClassId, ?int $turnoId = null)
     {
         $schoolClass = LegacySchoolClass::findOrFail($schoolClassId);
 
@@ -56,7 +59,7 @@ class AvailableTimeService
         $otherSchoolClass = $schoolClassQuery->get();
 
         foreach ($otherSchoolClass as $oneSchoolClass) {
-            if ($this->schedulesMatch($schoolClass, $oneSchoolClass)) {
+            if ($this->schedulesMatch($schoolClass, $oneSchoolClass, $studentId, $turnoId)) {
                 return false;
             }
         }
@@ -96,7 +99,7 @@ class AvailableTimeService
      *
      * @return bool
      */
-    private function schedulesMatch(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass)
+    private function schedulesMatch(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass, int $studentId, $turnoId = null)
     {
         // O aluno pode ter matrícula em duas turmas no mesmo horário desde que:
         //
@@ -138,8 +141,59 @@ class AvailableTimeService
         // Caso os períodos do ano letivo sejam conflitantes, valida se os
         // horários se sobrepoem.
 
-        $startBefore = $schoolClass->hora_inicial <= $otherSchoolClass->hora_final;
-        $endAfter = $schoolClass->hora_final >= $otherSchoolClass->hora_inicial;
+        return $this->overlappingSchedules($schoolClass, $otherSchoolClass, $studentId, $turnoId);
+    }
+
+    private function overlappingSchedules(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass, int $studentId, $turnoId = null)
+    {
+        $horaInicial = $schoolClass->hora_inicial;
+        $horaFinal = $schoolClass->hora_final;
+
+        $otherHoraFinal = $otherSchoolClass->hora_final;
+        $otherHoraInicial = $otherSchoolClass->hora_inicial;
+
+        if (
+            !is_null($turnoId) && // Se o turno for diferente de nulo
+            $schoolClass->turma_turno_id === Period::FULLTIME && // Se a turma for integral
+            $schoolClass->turma_turno_id !== $turnoId && // Se a enturmação é não é integral
+            in_array($turnoId, [
+                Period::MORNING,
+                Period::AFTERNOON,
+            ], true) // Se a enturmação é parcial
+        ) {
+            // Nesses cenários precisamos alterar o horário de comparação para o horário parcial
+            if ($turnoId == Period::MORNING) {
+                $horaInicial = $schoolClass->hora_inicial_matutino;
+                $horaFinal = $schoolClass->hora_final_matutino;
+            } elseif ($turnoId == Period::AFTERNOON) {
+                $horaInicial = $schoolClass->hora_inicial_vespertino;
+                $horaFinal = $schoolClass->hora_final_vespertino;
+            }
+        }
+
+        if ($otherSchoolClass->turma_turno_id === Period::FULLTIME) {
+            $turnoMatricula = LegacyEnrollment::query()
+                ->where('ref_cod_turma', $otherSchoolClass->cod_turma)
+                ->whereHas('registration', function ($query) use ($studentId, $otherSchoolClass) {
+                    $query->where('ref_cod_aluno', $studentId);
+                    $query->where('ano', $otherSchoolClass->ano);
+                    $query->where('ativo', 1);
+                    $query->where('aprovado', 3);
+                })
+                ->where('ativo', 1)
+                ->value('turno_id');
+
+            if ($turnoMatricula == Period::MORNING) {
+                $otherHoraInicial = $otherSchoolClass->hora_inicial_matutino;
+                $otherHoraFinal = $otherSchoolClass->hora_final_matutino;
+            } elseif ($turnoMatricula == Period::AFTERNOON) {
+                $otherHoraInicial = $otherSchoolClass->hora_inicial_vespertino;
+                $otherHoraFinal = $otherSchoolClass->hora_final_vespertino;
+            }
+        }
+
+        $startBefore = $horaInicial <= $otherHoraFinal;
+        $endAfter = $horaFinal >= $otherHoraInicial;
 
         return $startBefore && $endAfter;
     }
