@@ -285,22 +285,23 @@ return new class extends clsCadastro
     public function notValidaDataInicial()
     {
         $validator = Validator::make([
-            'data_inicial' => $this->data_inicial
+            'data_inicial' => $this->data_inicial,
         ], [
             'data_inicial' => [
                 'nullable',
                 'bail',
                 'date_format:d/m/Y',
-                'after_or_equal:today'
-            ]
+                'after_or_equal:today',
+            ],
         ], [
-            'data_inicial.after_or_equal' => 'O campo :attribute deve ser uma data posterior ou igual a hoje.'
+            'data_inicial.after_or_equal' => 'O campo :attribute deve ser uma data posterior ou igual a hoje.',
         ]);
         if ($validator->fails()) {
             $this->mensagem = $validator->errors()->first();
 
             return true;
         }
+
         return false;
     }
 

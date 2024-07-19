@@ -70,6 +70,11 @@ class LoginController extends Controller
             $this->username() => 'required|string',
             'password' => 'required|string',
             'grecaptcha' => [new ReCaptchaV3()],
+        ], [
+            $this->username() . '.required' => 'O campo matrícula é obrigatório.',
+            $this->username() . '.string' => 'O campo matrícula é obrigatório.',
+            'password.required' => 'O campo senha é obrigatório.',
+            'password.string' => 'O campo senha é obrigatório.',
         ]);
     }
 }

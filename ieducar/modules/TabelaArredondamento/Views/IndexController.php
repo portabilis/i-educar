@@ -32,7 +32,7 @@ class IndexController extends Core_Controller_Page_ListController
         $this->campoLista(
             nome: 'tipo_nota',
             campo: 'Sistema de nota',
-            valor:  $tipoNotas,
+            valor: $tipoNotas,
             default: request('tipo_nota')
         );
     }
