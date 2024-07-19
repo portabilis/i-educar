@@ -25,6 +25,22 @@ class EmployeeAllocationBuilder extends LegacyBuilder
      */
     public function whereInstitution(int $institution): self
     {
-        return $this->where('ref_ref_cod_instituicao', $institution);
+        return $this->where($this->model->getTable() . '.ref_ref_cod_instituicao', $institution);
+    }
+
+    /**
+     * Filtra por Ano
+     */
+    public function whereYearEq(int $year): self
+    {
+        return $this->where('ano', $year);
+    }
+
+    /**
+     * Filtra por ativo
+     */
+    public function active(): self
+    {
+        return $this->where($this->model->getTable() . '.ativo', 1);
     }
 }
