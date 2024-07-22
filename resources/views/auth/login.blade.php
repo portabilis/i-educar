@@ -9,11 +9,11 @@
     <form action="{{ Asset::get('login') }}" method="post" id="form-login">
 
         <label for="login">Matrícula:</label>
-        <input type="text" name="login" id="login">
+        <input type="text" name="login" id="login" value="{{ old('login') }}">
 
         <label for="password">Senha:</label>
         <input type="password" name="password" id="password">
-        <i class="fa fa-eye-slash" id="eye" onclick="return showPassword();" aria-hidden="true"></i>
+        <i class="fa fa-eye-slash" id="eye" onclick="showPassword()" onkeyup="showPassword()" aria-hidden="true"></i>
 
         <button id="form-login-submit" type="submit" class="submit">Entrar</button>
 

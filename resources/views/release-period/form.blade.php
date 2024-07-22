@@ -9,7 +9,7 @@
         <form id="formcadastro"
               action="@if($releasePeriod->exists) {{ Asset::get('/periodo-lancamento/atualizar/' . $releasePeriod->id) }} @else {{Asset::get('/periodo-lancamento/criar') }}@endif"
               method="post">
-            <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+            <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
                 <tbody>
                 <tr>
                     <td class="formdktd" colspan="2" height="24"><b>Período de lançamento de notas e faltas por etapa</b>
@@ -71,7 +71,7 @@
                 <tr>
                     <td id="tr_nm_data" valign="top" align="center" colspan="2">
                         <table cellspacing="0" id="dates-table" class="tabela-adicao" cellpadding="2"
-                               style="margin:10px 0px 10px 0px;">
+                               style="margin:10px 0px 10px 0px;" role="presentation">
                             <tbody>
                             <tr align="center" id="tr_gestores_tit" style="font-weight:bold" class="formdktd">
                                 <td colspan="6">Datas</td>
