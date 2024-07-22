@@ -29,14 +29,6 @@ class EmployeeAllocationBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por Ano
-     */
-    public function whereYearEq(int $year): self
-    {
-        return $this->where('ano', $year);
-    }
-
-    /**
      * Filtra por ativo
      */
     public function active(): self
