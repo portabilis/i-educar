@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class Backup extends Model
 {
     public $table = 'pmieducar.backup';

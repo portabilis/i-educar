@@ -11,18 +11,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class State extends Model
 {
     use DateSerializer;
 
-    /** @use HasBuilder<StateBuilder<static>> */
+    /** @use HasBuilder<StateBuilder> */
     use HasBuilder;
 
     use HasIbgeCode;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'country_id',
         'name',
@@ -35,21 +35,35 @@ class State extends Model
      */
     protected static string $builder = StateBuilder::class;
 
+    /**
+     * @return BelongsTo<Country, $this>
+     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
 
+    /**
+     * @return HasMany<City, $this>
+     */
     public function cities(): HasMany
     {
         return $this->hasMany(City::class);
     }
 
+    /**
+     * @param string $abbreviation
+     * @return self|null
+     */
     public static function findByAbbreviation(string $abbreviation): ?self
     {
+        /** @var self|null */
         return static::query()->where('abbreviation', $abbreviation)->first();
     }
 
+    /**
+     * @return Collection<string, string>
+     */
     public static function getListKeyAbbreviation(): Collection
     {
         return static::query()->orderBy('name')->pluck('name', 'abbreviation');

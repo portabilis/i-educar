@@ -13,11 +13,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Registration
  *
+ * @property string $status
  * @method static RegistrationBuilder query()
  */
 class Registration extends Model
 {
-    /** @use HasBuilder<RegistrationBuilder<static>> */
+    /** @use HasBuilder<RegistrationBuilder> */
     use HasBuilder;
 
     use RegistrationScopes;
@@ -25,6 +26,9 @@ class Registration extends Model
 
     protected static string $builder = RegistrationBuilder::class;
 
+    /**
+     * @return BelongsTo<Student, $this>
+     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);

@@ -11,6 +11,9 @@ class ManagerLinkType extends Model
 
     protected $fillable = ['name'];
 
+    /**
+     * @return HasMany<SchoolManager, $this>
+     */
     public function schoolManagers(): HasMany
     {
         return $this->hasMany(SchoolManager::class, 'link_type_id');

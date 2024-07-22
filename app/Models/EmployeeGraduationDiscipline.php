@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EmployeeGraduationDiscipline extends LegacyModel
 {
     public $timestamps = false;
@@ -12,6 +15,9 @@ class EmployeeGraduationDiscipline extends LegacyModel
         'name',
     ];
 
+    /**
+     * @return HasMany<EmployeeGraduation, $this>
+     */
     public function employeeGraduations(): HasMany
     {
         return $this->hasMany(EmployeeGraduation::class, 'discipline_id');

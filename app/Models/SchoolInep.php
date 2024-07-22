@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $cod_escola_inep
+ */
 class SchoolInep extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.educacenso_cod_escola';
 
     protected $fillable = [
@@ -29,6 +30,9 @@ class SchoolInep extends Model
         );
     }
 
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'cod_escola', 'cod_escola');

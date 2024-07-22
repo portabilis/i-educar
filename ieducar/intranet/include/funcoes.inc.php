@@ -429,6 +429,7 @@ if (!function_exists('formatDateParse')) {
         $formats = [
             'd/m/Y',
             'Y-m-d',
+            'Y-m-d\TH:i:s',
             'Y-m-d\TH:i:s.u',
         ];
         foreach ($formats as $format) {

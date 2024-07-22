@@ -95,7 +95,7 @@ return new class extends clsListagem
         $this->campoTexto(nome: 'nome_responsavel', campo: 'Nome do Responsável', valor: $this->nome_responsavel, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoRotulo(nome: 'filtros_matricula', campo: '<b>Filtros de alunos</b>');
 
-        $this->inputsHelper()->integer(attrName: 'ano', inputOptions: ['required' => false, 'value' => $this->ano, 'max_length' => 4, 'label_hint' => 'Retorna alunos com matrículas no ano selecionado']);
+        $this->inputsHelper()->integer(attrName: 'ano', inputOptions: ['required' => false, 'value' => $this->ano ?? now()->year, 'max_length' => 4, 'label_hint' => 'Retorna alunos com matrículas no ano selecionado']);
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic(helperNames: 'escolaSemFiltroPorUsuario', inputOptions: ['required' => false, 'value' => $this->ref_cod_escola, 'label_hint' => 'Retorna alunos com matrículas na escola selecionada']);
         $this->inputsHelper()->dynamic(helperNames: 'curso', inputOptions: ['required' => false, 'label_hint' => 'Retorna alunos com matrículas no curso selecionado']);
@@ -171,7 +171,7 @@ return new class extends clsListagem
 
             $linhas = array_filter(array: [
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
-                $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->inepNumber</a>" : null,
+                $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">" . ($student->inepNumber ?? '-'). '</a>' : null,
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
                 "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",

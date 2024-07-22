@@ -38,7 +38,7 @@ class AuthenticatedUser
             Auth::logout();
 
             throw ValidationException::withMessages([
-                $event->user->login => __('auth.not_started', ['date' =>  Portabilis_Date_Utils::pgSQLToBr($event->user->employee->data_inicial)]),
+                $event->user->login => __('auth.not_started', ['date' => Portabilis_Date_Utils::pgSQLToBr($event->user->employee->data_inicial)]),
             ]);
         }
 

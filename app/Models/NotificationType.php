@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class NotificationType extends Model
 {
     public const TRANSFER = 1;
@@ -17,15 +20,15 @@ class NotificationType extends Model
 
     public $timestamps = false;
 
-    /**
-     * @var string
-     */
     protected $table = 'public.notification_type';
 
     protected $fillable = [
         'name',
     ];
 
+    /**
+     * @return HasMany<Notification, $this>
+     */
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'type_id');

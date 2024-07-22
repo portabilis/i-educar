@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EmployeePosgraduate extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'public.employee_posgraduate';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'employee_id',
         'entity_id',
@@ -23,6 +21,9 @@ class EmployeePosgraduate extends Model
         'completion_year',
     ];
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
@@ -31,10 +32,9 @@ class EmployeePosgraduate extends Model
     /**
      * Filtra pelo ID do servidor
      *
-     * @param Builder $query
-     * @return Builder
+     * @phpstan-ignore-next-line
      */
-    public function scopeOfEmployee($query, $employeeId)
+    public function scopeOfEmployee(Builder $query, $employeeId): Builder
     {
         return $query->where('employee_id', $employeeId);
     }

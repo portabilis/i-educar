@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 
@@ -66,42 +67,15 @@ return new class extends clsListagem
             'Tipo Ensino',
         ];
 
-        $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Instituição';
-        }
-
         $this->addCabecalhos($lista_busca);
-
-        include 'include/pmieducar/educar_campo_lista.php';
-
         // outros Filtros
         $this->campoTexto(nome: 'nm_curso', campo: 'Curso', valor: $this->nm_curso, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
 
-        // outros de Foreign Keys
-        $opcoes = ['' => 'Selecione'];
-
-        $todos_niveis_ensino = "nivel_ensino = new Array();\n";
-        $lista = LegacyEducationLevel::query()
-            ->select(['cod_nivel_ensino', 'nm_nivel', 'ref_cod_instituicao'])
+        $opcoes = LegacyEducationLevel::query()
             ->where(column: 'ativo', operator: 1)
             ->orderBy(column: 'nm_nivel', direction: 'ASC')
-            ->get();
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $todos_niveis_ensino .= "nivel_ensino[nivel_ensino.length] = new Array({$registro['cod_nivel_ensino']},'{$registro['nm_nivel']}', {$registro['ref_cod_instituicao']});\n";
-            }
-        }
-        echo "<script>{$todos_niveis_ensino}</script>";
-
-        if ($this->ref_cod_instituicao) {
-            $opcoes = LegacyEducationLevel::query()
-                ->where(column: 'ativo', operator: 1)
-                ->orderBy(column: 'nm_nivel', direction: 'ASC')
-                ->pluck(column: 'nm_nivel', key: 'cod_nivel_ensino');
-        }
+            ->pluck(column: 'nm_nivel', key: 'cod_nivel_ensino')
+            ->prepend(value: 'Selecione', key: '');
 
         $this->campoLista(
             nome: 'ref_cod_nivel_ensino',
@@ -116,10 +90,6 @@ return new class extends clsListagem
             obrigatorio: false
         );
 
-        $opcoes = ['' => 'Selecione'];
-
-        $todos_tipos_ensino = "tipo_ensino = new Array();\n";
-
         $query = LegacyEducationType::query()
             ->where(column: 'ativo', operator: 1)
             ->limit($this->limite)
@@ -127,103 +97,69 @@ return new class extends clsListagem
             ->orderBy(column: 'nm_tipo', direction: 'ASC');
         $lista = $query->get();
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $todos_tipos_ensino .= "tipo_ensino[tipo_ensino.length] = new Array({$registro['cod_tipo_ensino']},'{$registro['nm_tipo']}', {$registro['ref_cod_instituicao']});\n";
-            }
-        }
-        echo "<script>{$todos_tipos_ensino}</script>";
-
-        if ($this->ref_cod_instituicao) {
-            $opcoes = LegacyEducationType::query()
-                ->where(column: 'ativo', operator: 1)
-                ->orderBy(column: 'nm_tipo', direction: 'ASC')
-                ->pluck(column: 'nm_tipo', key: 'cod_tipo_ensino')
-                ->prepend(value: 'Selecione', key: '');
-        }
+        $opcoes = LegacyEducationType::query()
+            ->where(column: 'ativo', operator: 1)
+            ->orderBy(column: 'nm_tipo', direction: 'ASC')
+            ->pluck(column: 'nm_tipo', key: 'cod_tipo_ensino')
+            ->prepend(value: 'Selecione', key: '');
 
         $this->campoLista(
             nome: 'ref_cod_tipo_ensino',
             campo: 'Tipo Ensino',
             valor: $opcoes,
             default: $this->ref_cod_tipo_ensino,
-            acao: '',
-            duplo: false,
-            descricao: '',
-            complemento: '',
             desabilitado: '',
             obrigatorio: false
         );
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ?
-            $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_curso = new clsPmieducarCurso();
-        $obj_curso->setOrderby('nm_curso ASC');
-        $obj_curso->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $result = LegacyCourse::query()
+            ->select([
+                'cod_curso',
+                'nm_curso',
+                'nm_nivel',
+                'nm_tipo',
+            ])
+            ->join('pmieducar.tipo_ensino', 'tipo_ensino.cod_tipo_ensino', 'curso.ref_cod_tipo_ensino')
+            ->join('pmieducar.nivel_ensino', 'nivel_ensino.cod_nivel_ensino', 'curso.ref_cod_nivel_ensino')
+            ->when(request('ref_cod_nivel_ensino'), function ($query) {
+                return $query->where('curso.ref_cod_nivel_ensino', request('ref_cod_nivel_ensino'));
+            })
+            ->when(request('ref_cod_tipo_ensino'), function ($query) {
+                return $query->where('curso.ref_cod_tipo_ensino', request('ref_cod_tipo_ensino'));
+            })
+            ->when(request('nm_curso'), function ($query) {
+                return $query->where('nm_curso', 'ILIKE', '%' . request('nm_curso') . '%');
+            })
+            ->orderBy('nm_curso')
+            ->paginate(
+                perPage: $this->limite,
+                pageName: 'pagina_' . $this->nome
+            );
 
-        $lista = $obj_curso->lista(
-            int_cod_curso: null,
-            int_ref_usuario_cad: null,
-            int_ref_cod_tipo_regime: null,
-            int_ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino,
-            int_ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino,
-            int_ref_cod_tipo_avaliacao: null,
-            str_nm_curso: $this->nm_curso,
-            str_sgl_curso: null,
-            int_qtd_etapas: null,
-            int_frequencia_minima: null,
-            int_media: null,
-            int_media_exame: null,
-            int_falta_ch_globalizada: null,
-            int_carga_horaria: null,
-            str_ato_poder_publico: null,
-            int_edicao_final: null,
-            str_objetivo_curso: null,
-            str_publico_alvo: null,
-            date_data_cadastro_ini: null,
-            date_data_cadastro_fim: null,
-            date_data_exclusao_ini: null,
-            date_data_exclusao_fim: null,
-            int_ativo: 1,
-            int_ref_usuario_exc: null,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
-
-        $total = $obj_curso->_total;
+        $total = $result->total();
+        $cursos = $result->items();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $det_ref_cod_nivel_ensino = LegacyEducationLevel::findOrFail($registro['ref_cod_nivel_ensino'])?->getAttributes();
-                $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
+        foreach ($cursos as $curso) {
+            $lista_busca = [
+                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . $curso->nm_curso . '</a>',
+                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . $curso->nm_nivel . '</a>',
+                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . $curso->nm_tipo . '</a>',
+            ];
 
-                $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->getAttributes();
-                $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
-
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
-
-                $nomeCurso = empty($registro['descricao']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao']})";
-
-                $lista_busca = [
-                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$nomeCurso}</a>",
-                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_nivel_ensino']}</a>",
-                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_tipo_ensino']}</a>",
-                ];
-
-                if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_instituicao']}</a>";
-                }
-
-                $this->addLinhas($lista_busca);
-            }
+            $this->addLinhas($lista_busca);
         }
 
-        $this->addPaginador2(strUrl: 'educar_curso_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
+        $this->addPaginador2(
+            strUrl: 'educar_curso_lst.php',
+            intTotalRegistros: $total,
+            mixVariaveisMantidas: $_GET,
+            nome: $this->nome,
+            intResultadosPorPagina: $this->limite
+        );
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 566, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {

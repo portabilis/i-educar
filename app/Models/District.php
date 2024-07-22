@@ -9,11 +9,14 @@ use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class District extends Model
 {
     use DateSerializer;
 
-    /** @use HasBuilder<DistrictBuilder<static>> */
+    /** @use HasBuilder<DistrictBuilder> */
     use HasBuilder;
 
     use HasIbgeCode;
@@ -23,9 +26,6 @@ class District extends Model
      */
     protected static string $builder = DistrictBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'city_id',
         'name',
@@ -33,9 +33,9 @@ class District extends Model
     ];
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<City, $this>
      */
-    public function city()
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }

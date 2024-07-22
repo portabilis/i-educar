@@ -14,6 +14,9 @@ class GuardianType implements Enum
 
     public const OTHER = 4;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [

@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property string $name
+ * @property string $nome
  */
 class LegacyPerson extends LegacyModel
 {
