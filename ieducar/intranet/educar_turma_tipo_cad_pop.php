@@ -86,8 +86,8 @@ return new class extends clsCadastro
             echo "<script>
                         if (parent.document.getElementById('ref_cod_turma_tipo').disabled)
                             parent.document.getElementById('ref_cod_turma_tipo').options[0] = new Option('Selectione um tipo de turma', '', false, false);
-                        parent.document.getElementById('ref_cod_turma_tipo').options[parent.document.getElementById('ref_cod_turma_tipo').options.length] = new Option('$this->nm_tipo', '$cadastrou', false, false);
-                        parent.document.getElementById('ref_cod_turma_tipo').value = '$cadastrou';
+                        parent.document.getElementById('ref_cod_turma_tipo').options[parent.document.getElementById('ref_cod_turma_tipo').options.length] = new Option('$this->nm_tipo', '', false, false);
+                        parent.document.getElementById('ref_cod_turma_tipo').value = '';
                         parent.document.getElementById('ref_cod_turma_tipo').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";

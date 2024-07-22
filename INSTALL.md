@@ -55,6 +55,7 @@ Execute o comando para fazer uma nova instalação:
 
 ```bash
 docker-compose exec php composer new-install
+docker-compose exec php artisan db:seed
 ```
 
 ### Personalizando a instalação
@@ -161,6 +162,12 @@ Faça a instalação do i-Educar:
 
 ```bash 
 composer new-install
+```
+
+Popule o banco de dados com os dados iniciais necessários para o funcionamento:
+
+```bash 
+php artisan db:seed
 ```
 
 Este passo é opcional, mas caso você desejar, você pode popular o banco de dados com alguns dados iniciais utilizando o 

@@ -74,7 +74,6 @@
     <script src="{{ Asset::get("/intranet/scripts/padrao.js") }} "></script>
     <script src="{{ Asset::get("/intranet/scripts/novo.js") }} "></script>
     <script src="{{ Asset::get("/intranet/scripts/dom.js") }} "></script>
-    <script src="{{ Asset::get("/intranet/scripts/menu.js") }} "></script>
     <script src="{{ Asset::get("/intranet/scripts/ied/forms.js") }} "></script>
     <script src="{{ Asset::get("/intranet/scripts/ied/phpjs.js") }} "></script>
     <script src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
@@ -92,12 +91,12 @@
 @if(!empty($config['app']['gtm']['id']))
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id={{$config['app']['gtm']['id']}}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        <iframe src="https://www.googletagmanager.com/ns.html?id={{$config['app']['gtm']['id']}}" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 @endif
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
-<table class='tabelanum1' id="tablenum1" style="border: 0; padding: 0; border-collapse: collapse;">
+<table class='tabelanum1' id="tablenum1" style="border: 0; padding: 0; border-collapse: collapse;" role="presentation">
     <tr id="topo" class="topo">
         <td colspan="2">
             <header class="ieducar-header">
@@ -136,14 +135,14 @@
 
     <tr>
         <td colspan="3">
-            <table class='tabelanum2' style="border: 0; padding: 0; border-collapse: collapse;">
+            <table class='tabelanum2' style="border: 0; padding: 0; border-collapse: collapse;" role="presentation">
                 <tr>
                     <td id="menu_lateral" class="r3c1" style="width: 170px">
                         @include('layout.menu')
                     </td>
 
                     <td style="vertical-align: top">
-                        <table class='tabelanum2' style="border: 0; padding: 0; border-collapse: collapse; margin: 0">
+                        <table class='tabelanum2' style="border: 0; padding: 0; border-collapse: collapse; margin: 0" role="presentation">
                             <tr>
                                 <td>
                                     @include('layout.topmenu')
@@ -152,7 +151,7 @@
 
                             <tr>
                                 <td height="100%" id="corpo" style="vertical-align: top">
-                                    <table class='tablelistagem' style="border: 0; width: 100%">
+                                    <table class='tablelistagem' style="border: 0; width: 100%" role="presentation">
                                         <tr style="height: 10px">
                                             <td class='fundoLocalizacao' colspan='2'>
                                                 @include('layout.breadcrumb')
@@ -171,10 +170,8 @@
     </tr>
 
     <tr class="rodape">
-        <td colspan="3">
-            <center>
-                @include('layout.footer')
-            </center>
+        <td colspan="3" style="text-align: center">
+            @include('layout.footer')
         </td>
     </tr>
 </table>

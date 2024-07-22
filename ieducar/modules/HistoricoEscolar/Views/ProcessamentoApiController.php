@@ -448,7 +448,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $ref_usuario_cad = null,
                     //TODO nm_curso
                     $nm_serie = null,
-                    $ano = $ano,
+                    $ano,
                     $carga_horaria = null,
                     $dias_letivos = null,
                     $escola = null,
@@ -1246,7 +1246,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $this->appendMsg('Exception: ' . $e->getMessage(), $type = 'error', $encodeToUtf8 = true);
             }
         }
-        echo $this->prepareResponse();
+        $this->prepareResponse();
     }
 
     protected function appendResponse($name, $value)

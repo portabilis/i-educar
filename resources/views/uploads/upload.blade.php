@@ -15,7 +15,7 @@
             @endif
             <input @if($disabled) disabled @endif class="inputfile inputfile-buttom" name="file" id="file" type="file" size="40" value="">
             <label id="file" for="file"><span></span> <strong>Escolha um arquivo</strong></label>&nbsp;<br>
-            <img src="imagens/indicator.gif" style="margin-top: 3px; display: none;">
+            <img src="imagens/indicator.gif" style="margin-top: 3px; display: none;" alt="Carregando..">
             <span id="span-documento" style="font-style: italic; font-size: 10px;">
                 São aceitos arquivos nos formatos jpg, png, jpeg e pdf. Tamanho máximo: 2MB
             </span>
