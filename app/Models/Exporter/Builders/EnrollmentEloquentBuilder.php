@@ -2,11 +2,15 @@
 
 namespace App\Models\Exporter\Builders;
 
+use App\Models\Exporter\Enrollment;
 use App\Support\Database\JoinableBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @extends Builder<Enrollment>
+ */
 class EnrollmentEloquentBuilder extends Builder
 {
     use JoinableBuilder;
@@ -107,6 +111,8 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @param array $columns
+     * @return $this
+     * @phpstan-return EnrollmentEloquentBuilder
      */
     public function mother($columns)
     {
@@ -139,7 +145,8 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @param array $columns
-     * @return void
+     * @return $this
+     * @phpstan-return EnrollmentEloquentBuilder
      */
     public function father($columns)
     {
@@ -205,6 +212,7 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @return EnrollmentEloquentBuilder
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function benefits()
     {
@@ -219,6 +227,7 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @return EnrollmentEloquentBuilder
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disabilities()
     {
@@ -233,6 +242,7 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @return EnrollmentEloquentBuilder
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function phones()
     {
@@ -245,6 +255,11 @@ class EnrollmentEloquentBuilder extends Builder
         });
     }
 
+    /**
+     * @param array $columns
+     * @return $this
+     * @phpstan-return EnrollmentEloquentBuilder
+     */
     public function place($columns)
     {
         $this->leftJoin('person_has_place', static function (JoinClause $join) {
@@ -263,6 +278,11 @@ class EnrollmentEloquentBuilder extends Builder
         return $this;
     }
 
+    /**
+     * @param array $columns
+     * @return EnrollmentEloquentBuilder
+     * @phpstan-return \Illuminate\Database\Query\Builder
+     */
     public function transport($columns)
     {
         if (in_array('tipo_transporte', $columns)) {
