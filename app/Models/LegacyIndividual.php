@@ -129,7 +129,7 @@ class LegacyIndividual extends Model
 
     public function phones(): HasMany
     {
-        return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes')->where('fone', '<>', 0);
+        return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes');
     }
 
     public function phone(): HasOne
