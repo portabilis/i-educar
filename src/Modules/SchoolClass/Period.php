@@ -24,7 +24,7 @@ class Period implements Enum
         ];
     }
 
-    public function getShortDescriptiveValues(): array
+    public static function getShortDescriptiveValues(): array
     {
         return [
             self::MORNING => 'M',
