@@ -70,6 +70,18 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
         ]);
     }
 
+    public function addJoinViewSituacao(int $situation): self
+    {
+        return $this->join('relatorio.view_situacao', function ($join) use ($situation) {
+            $join->on('view_situacao.cod_matricula', 'ref_cod_matricula');
+            $join->on('view_situacao.cod_turma', 'ref_cod_turma');
+            $join->on('view_situacao.sequencial', 'matricula_turma.sequencial');
+            $join->where('view_situacao.cod_situacao', $situation);
+        })->addSelect([
+            'view_situacao.texto_situacao',
+        ]);
+    }
+
     public function wherePeriod(int $period): self
     {
         return $this->where(function ($q) use ($period) {
