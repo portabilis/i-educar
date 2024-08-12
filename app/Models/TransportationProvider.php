@@ -26,7 +26,6 @@ class TransportationProvider implements Enum
 
     /**
      * @param int $value
-     * @return int
      */
     public function from($value): int
     {
@@ -39,7 +38,6 @@ class TransportationProvider implements Enum
 
     /**
      * @param int $value
-     * @return string
      */
     public function getValueDescription($value): string
     {

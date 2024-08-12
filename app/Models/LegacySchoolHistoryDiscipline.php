@@ -6,6 +6,11 @@ use App\Services\Reports\Util;
 use ComponenteCurricular_Model_TipoBase;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ * @property string $nota
+ * @property int $tipo_base
+ */
 class LegacySchoolHistoryDiscipline extends LegacyModel
 {
     public $timestamps = false;
@@ -25,6 +30,9 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
         'ordenamento',
     ];
 
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_ref_cod_aluno');

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property LegacyStudent $student
  * @property array<int, string> $fillable
- * /
+ * @property string $number
  */
 class StudentInep extends LegacyModel
 {

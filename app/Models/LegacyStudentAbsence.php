@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RegraAvaliacao_Model_TipoPresenca;
 
+/**
+ * @property int $tipo_falta
+ */
 class LegacyStudentAbsence extends Model
 {
     /**
@@ -15,7 +18,7 @@ class LegacyStudentAbsence extends Model
     protected $table = 'modules.falta_aluno';
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'matricula_id',
@@ -27,11 +30,17 @@ class LegacyStudentAbsence extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @return BelongsTo<LegacyRegistration, $this>
+     */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'matricula_id');
     }
 
+    /**
+     * @return HasMany<LegacyDisciplineAbsence, $this>|HasMany<LegacyGeneralAbsence, $this>
+     */
     public function absences(): HasMany
     {
         if ($this->isByDiscipline()) {
@@ -41,11 +50,17 @@ class LegacyStudentAbsence extends Model
         return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id');
     }
 
+    /**
+     * @return HasMany<LegacyDisciplineAbsence, $this>
+     */
     public function absencesByDiscipline(): HasMany
     {
         return $this->hasMany(LegacyDisciplineAbsence::class, 'falta_aluno_id');
     }
 
+    /**
+     * @return HasMany<LegacyGeneralAbsence, $this>
+     */
     public function generalAbsences(): HasMany
     {
         return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id', 'id');

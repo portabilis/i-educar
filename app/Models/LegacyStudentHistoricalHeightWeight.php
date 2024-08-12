@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentHistoricalHeightWeight extends Model
 {
@@ -10,10 +11,16 @@ class LegacyStudentHistoricalHeightWeight extends Model
 
     public $timestamps = false;
 
+    /**
+     * @var array<string, string>
+     */
     public $casts = [
         'data_historico' => 'date',
     ];
 
+    /**
+     * @var array<int, string>
+     */
     public $fillable = [
         'ref_cod_aluno',
         'data_historico',
@@ -21,7 +28,10 @@ class LegacyStudentHistoricalHeightWeight extends Model
         'peso',
     ];
 
-    public function student()
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
+    public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
     }

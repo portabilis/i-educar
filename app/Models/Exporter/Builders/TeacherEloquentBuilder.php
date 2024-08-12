@@ -20,6 +20,7 @@ class TeacherEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function person($columns)
@@ -35,6 +36,7 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disabilities()
@@ -50,6 +52,7 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function phones()
@@ -66,6 +69,7 @@ class TeacherEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function place($columns)
@@ -83,6 +87,7 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disciplines()
@@ -98,6 +103,7 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function allocations(array $columns)

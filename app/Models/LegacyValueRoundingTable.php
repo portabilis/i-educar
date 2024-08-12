@@ -13,7 +13,7 @@ class LegacyValueRoundingTable extends Model
     protected $table = 'modules.tabela_arredondamento_valor';
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'tabela_arredondamento_id',
@@ -27,7 +27,7 @@ class LegacyValueRoundingTable extends Model
     ];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'valor_minimo' => 'float',
@@ -39,6 +39,9 @@ class LegacyValueRoundingTable extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @return BelongsTo<LegacyRoundingTable, $this>
+     */
     public function roundingTable(): BelongsTo
     {
         return $this->belongsTo(LegacyRoundingTable::class, 'tabela_arredondamento_id');

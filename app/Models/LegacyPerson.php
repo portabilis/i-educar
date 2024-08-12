@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 /**
  * @property string $name
  * @property string $nome
+ * @property string $real_name
  */
 class LegacyPerson extends LegacyModel
 {

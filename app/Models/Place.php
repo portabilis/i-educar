@@ -27,7 +27,6 @@ class Place extends Model
 
     /**
      * @return BelongsTo<City, $this>
-
      */
     public function city(): BelongsTo
     {

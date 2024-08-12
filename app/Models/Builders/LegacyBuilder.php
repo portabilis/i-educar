@@ -310,9 +310,6 @@ class LegacyBuilder extends Builder
     }
 
     /**
-     * @param $sql
-     * @param $bindings
-     * @param $boolean
      * @return $this
      */
     public function whereRaw($sql, $bindings = [], $boolean = 'and')

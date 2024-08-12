@@ -24,7 +24,6 @@ class PersonHasPlace extends Pivot
 
     /**
      * @return BelongsTo<Place, $this>
-
      */
     public function place(): BelongsTo
     {

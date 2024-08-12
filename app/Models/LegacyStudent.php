@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\HasBelongsToOne;
+use Ankurk91\Eloquent\Relations\BelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,11 +15,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 
+/**
+ * @property string $url_laudo_medico
+ * @property Person $person
+ * @property LegacyIndividual $individual
+ * @property StudentInep $inep
+ * @property string $tipo_responsavel
+ * @property string $guardianType
+ * @property int $aluno_estado_id
+ */
 class LegacyStudent extends LegacyModel
 {
     use HasBelongsToOne;
 
-    /** @use HasBuilder<LegacyStudentBuilder<static>> */
+    /** @use HasBuilder<LegacyStudentBuilder> */
     use HasBuilder;
 
     use HasLegacyDates;
@@ -38,7 +48,7 @@ class LegacyStudent extends LegacyModel
     protected $primaryKey = 'cod_aluno';
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'ref_idpes',
@@ -46,16 +56,25 @@ class LegacyStudent extends LegacyModel
         'codigo_sistema',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public array $legacy = [
         'id' => 'cod_aluno',
         'person_id' => 'ref_idpes',
     ];
 
+    /**
+     * @return BelongsTo<LegacyIndividual, $this>
+     */
     public function individual(): BelongsTo
     {
         return $this->belongsTo(LegacyIndividual::class, 'ref_idpes');
     }
 
+    /**
+     * @return BelongsTo<LegacyDocument, $this>
+     */
     public function document(): BelongsTo
     {
         return $this->belongsTo(LegacyDocument::class, 'ref_idpes');
@@ -89,16 +108,25 @@ class LegacyStudent extends LegacyModel
         );
     }
 
+    /**
+     * @return HasOne<LegacyIndividualPicture, $this>
+     */
     public function picture(): HasOne
     {
         return $this->hasOne(LegacyIndividualPicture::class, 'idpes', 'ref_idpes');
     }
 
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
     }
 
+    /**
+     * @return BelongsToMany<LegacyDeficiency, $this>
+     */
     public function deficiencies(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -111,7 +139,7 @@ class LegacyStudent extends LegacyModel
         );
     }
 
-    public function deficiency()
+    public function deficiency(): BelongsToOne
     {
         return $this->belongsToOne(
             LegacyDeficiency::class,
@@ -123,11 +151,17 @@ class LegacyStudent extends LegacyModel
         );
     }
 
+    /**
+     * @return HasMany<LegacyRegistration, $this>
+     */
     public function registrations(): HasMany
     {
         return $this->hasMany(LegacyRegistration::class, 'ref_cod_aluno');
     }
 
+    /**
+     * @return HasOne<LegacyRegistration, $this>
+     */
     public function lastRegistration(): HasOne
     {
         return $this->hasOne(LegacyRegistration::class, 'ref_cod_aluno')
@@ -147,6 +181,9 @@ class LegacyStudent extends LegacyModel
         return $this->url_laudo_medico !== null && $this->url_laudo_medico !== '[]';
     }
 
+    /**
+     * @return Collection<int, LegacyPerson>
+     */
     public function getGuardions(): Collection
     {
         return collect([
@@ -166,7 +203,7 @@ class LegacyStudent extends LegacyModel
         };
     }
 
-    public function getGuardianCpf()
+    public function getGuardianCpf(): ?string
     {
         return match ($this->guardianType) {
             'm' => $this->individual->mother->individual->cpf ?? 'não informado',
@@ -205,11 +242,14 @@ class LegacyStudent extends LegacyModel
         );
     }
 
-    public function setStateRegistrationIdAttribute($value): void
+    public function setStateRegistrationIdAttribute(?int $value): void
     {
         $this->aluno_estado_id = $value;
     }
 
+    /**
+     * @return HasOne<StudentInep, $this>
+     */
     public function inep(): HasOne
     {
         return $this->hasOne(StudentInep::class, 'cod_aluno', 'cod_aluno');
@@ -232,21 +272,33 @@ class LegacyStudent extends LegacyModel
             ->where('sexo', 'F');
     }
 
+    /**
+     * @return BelongsToMany<LegacyBenefit, $this>
+     */
     public function benefits(): BelongsToMany
     {
         return $this->belongsToMany(LegacyBenefit::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_id', 'aluno_beneficio_id');
     }
 
+    /**
+     * @return HasMany<LegacySchoolHistory, $this>
+     */
     public function schoolHistories(): HasMany
     {
         return $this->hasMany(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')->active();
     }
 
+    /**
+     * @return HasMany<LegacySchoolHistoryDiscipline, $this>
+     */
     public function schoolHistoryDisciplines(): HasMany
     {
         return $this->hasMany(LegacySchoolHistoryDiscipline::class, 'ref_ref_cod_aluno', 'cod_aluno');
     }
 
+    /**
+     * @return HasOne<LegacyRegistration, $this>
+     */
     public function registration_transfer(): HasOne
     {
         return $this->hasOne(LegacyRegistration::class, 'ref_cod_aluno')->transfer();
