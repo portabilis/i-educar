@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyInstitution;
+
 return new class extends clsListagem
 {
     public $limite;
@@ -41,15 +43,16 @@ return new class extends clsListagem
 
         if ($nivel == 1) {
             $cabecalhos[] = 'Instituição';
-            $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = ['' => 'Selecione'];
-            $objInstituicao->setOrderby('nm_instituicao ASC');
-            $lista = $objInstituicao->lista();
-            if (is_array($lista)) {
-                foreach ($lista as $linha) {
-                    $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
-                }
-            }
+            $opcoes = LegacyInstitution::query()
+                ->select([
+                    'cod_instituicao',
+                    'nm_instituicao',
+                ])
+                ->orderBy('nm_instituicao')
+                ->get()
+                ->pluck('nm_instituicao', 'cod_instituicao')
+                ->prepend('Selecione', '');
+
             $this->campoLista(nome: 'ref_cod_instituicao', campo: 'Instituição', valor: $opcoes, default: $this->ref_cod_instituicao, acao: false, descricao: false, complemento: false, desabilitado: false);
         } else {
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
