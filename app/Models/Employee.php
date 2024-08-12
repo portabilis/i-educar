@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\LegacyArray;
 use App\Models\Builders\EmployeeBuilder;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
