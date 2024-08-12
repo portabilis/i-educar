@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacyIndividual extends Model
@@ -28,6 +29,7 @@ class LegacyIndividual extends Model
 
     protected $casts = [
         'data_nasc' => 'date',
+        'data_admissao' => 'date',
     ];
 
     /**
@@ -124,6 +126,16 @@ class LegacyIndividual extends Model
     public function person()
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes', 'idpes');
+    }
+
+    public function phones(): HasMany
+    {
+        return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes');
+    }
+
+    public function phone(): HasOne
+    {
+        return $this->hasOne(LegacyPhone::class, 'idpes', 'idpes')->where('fone', '<>', 0)->orderBy('tipo');
     }
 
     /**

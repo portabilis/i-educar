@@ -89,8 +89,8 @@ class SchoolClassService
     {
         return LegacySchoolClassStage::query()
             ->select([
-                DB::raw('(SELECT min(data_inicio) FROM turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as start_date'),
-                DB::raw('(SELECT max(data_fim) FROM turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as end_date'),
+                DB::raw('(SELECT min(data_inicio) FROM pmieducar.turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as start_date'),
+                DB::raw('(SELECT max(data_fim) FROM pmieducar.turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as end_date'),
             ])
             ->distinct()
             ->whereIn('ref_cod_turma', $schoolClassId)
