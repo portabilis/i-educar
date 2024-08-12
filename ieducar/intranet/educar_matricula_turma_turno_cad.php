@@ -106,7 +106,13 @@ return new class extends clsCadastro
             $codTurma = $codTurmaESequencial[0];
             $sequencial = $codTurmaESequencial[1];
 
-            if (LegacyEnrollment::where(column: 'ref_cod_matricula', operator: $this->cod_matricula)->where(column: 'ref_cod_turma', operator: $codTurma)->value('turno_id') != (int) $turno) {
+            $turnoEnturmacao = LegacyEnrollment::query()
+                ->where('ref_cod_matricula', $this->cod_matricula)
+                ->where('ref_cod_turma', $codTurma)
+                ->where('sequencial', $sequencial)
+                ->value('turno_id');
+
+            if ($turnoEnturmacao != (int) $turno) {
                 $is_change = true;
 
                 $obj = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->cod_matricula, ref_cod_turma: $codTurma, ref_usuario_exc: $this->pessoa_logada);
