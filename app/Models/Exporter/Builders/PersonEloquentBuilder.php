@@ -17,6 +17,7 @@ class PersonEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return PersonEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function mother($columns)
@@ -33,6 +34,7 @@ class PersonEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return PersonEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function father($columns)
@@ -49,6 +51,7 @@ class PersonEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return PersonEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function guardian($columns)
@@ -64,6 +67,7 @@ class PersonEloquentBuilder extends Builder
 
     /**
      * @return PersonEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disabilities()
@@ -79,6 +83,7 @@ class PersonEloquentBuilder extends Builder
 
     /**
      * @return PersonEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function phones()
@@ -95,6 +100,7 @@ class PersonEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return PersonEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function place($columns)
