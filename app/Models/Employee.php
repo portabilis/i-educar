@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\LegacyArray;
 use App\Models\Builders\EmployeeBuilder;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * @property int $cod_servidor
@@ -66,12 +69,44 @@ class Employee extends LegacyModel
         );
     }
 
+    protected function continuedTrainingCourse(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => collect(transformStringFromDBInArray($this->curso_formacao_continuada) ?? [])->map(fn ($course) => match ($course) {
+                '1' => 'Creche (0 a 3 anos)',
+                '2' => 'Pré-escola (4 e 5 anos)',
+                '3' => 'Anos iniciais do ensino fundamental',
+                '4' => 'Anos finais do ensino fundamental',
+                '5' => 'Ensino médio',
+                '6' => 'Educação de jovens e adultos',
+                '7' => 'Educação especial',
+                '8' => 'Educação indígena',
+                '9' => 'Educação do campo',
+                '10' => 'Educação ambiental',
+                '11' => 'Educação em direitos humanos',
+                '18' => 'Educação bilíngue de surdos',
+                '19' => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
+                '12' => 'Gênero e diversidade sexual',
+                '13' => 'Direitos de criança e adolescente',
+                '14' => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',
+                '17' => 'Gestão Escolar',
+                '15' => 'Outros',
+                default => null
+            })->filter(),
+        );
+    }
+
     /**
      * @return HasMany<EmployeeAllocation, $this>
      */
     public function employeeAllocations(): HasMany
     {
         return $this->hasMany(EmployeeAllocation::class, 'ref_cod_servidor', 'cod_servidor');
+    }
+
+    public function employeeAllocation(): HasOne
+    {
+        return $this->hasOne(EmployeeAllocation::class, 'ref_cod_servidor', 'cod_servidor');
     }
 
     /**
@@ -127,6 +162,23 @@ class Employee extends LegacyModel
     public function graduations(): HasMany
     {
         return $this->hasMany(EmployeeGraduation::class, 'employee_id');
+    }
+
+    public function posGraduations(): HasMany
+    {
+        return $this->hasMany(EmployeePosgraduate::class, 'employee_id');
+    }
+
+    public function place(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Place::class,
+            PersonHasPlace::class,
+            'person_id',
+            'id',
+            'cod_servidor',
+            'place_id'
+        )->orderBy('type');
     }
 
     /**
