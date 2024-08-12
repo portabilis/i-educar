@@ -9,6 +9,9 @@ use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EmployeeWithdrawal extends LegacyModel
 {
     use Ativo;
@@ -28,16 +31,25 @@ class EmployeeWithdrawal extends LegacyModel
         'data_saida',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     protected $casts = [
         'data_retorno' => 'date',
         'data_saida' => 'date',
     ];
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'ref_cod_servidor');
     }
 
+    /**
+     * @return BelongsTo<WithdrawalReason, $this>
+     */
     public function reason(): BelongsTo
     {
         return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento');

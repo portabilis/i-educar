@@ -9,12 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * EmployeeInep
  *
  * @property Employee $employee
+ * @property int $cod_docente_inep
+ * @property array<int, string> $fillable
  */
 class EmployeeInep extends LegacyModel
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.educacenso_cod_docente';
 
     protected $fillable = [
@@ -29,6 +28,9 @@ class EmployeeInep extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'cod_servidor', 'cod_servidor');

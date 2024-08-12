@@ -9,11 +9,14 @@ use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class Country extends Model
 {
     use DateSerializer;
 
-    /** @use HasBuilder<CountryBuilder<static>> */
+    /** @use HasBuilder<CountryBuilder> */
     use HasBuilder;
 
     use HasIbgeCode;
@@ -25,9 +28,6 @@ class Country extends Model
      */
     protected static string $builder = CountryBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'id',
         'name',
@@ -35,9 +35,9 @@ class Country extends Model
     ];
 
     /**
-     * @return HasMany
+     * @return HasMany<State, $this>
      */
-    public function states()
+    public function states(): HasMany
     {
         return $this->hasMany(State::class);
     }

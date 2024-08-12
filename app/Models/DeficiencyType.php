@@ -8,6 +8,9 @@ class DeficiencyType
 
     public const DISORDER = 2;
 
+    /**
+     * @return array<int, string>
+     */
     public static function getDescriptiveValues(): array
     {
         return [
@@ -16,9 +19,10 @@ class DeficiencyType
         ];
     }
 
-    public static function getValueDescription($value)
+    public static function getValueDescription(int $value): string
     {
-        return match ((int) $value) {
+        /** @phpstan-ignore-next-line */
+        return match ($value) {
             self::DEFICIENCY => 'Deficiência',
             self::DISORDER => 'Transtorno',
         };

@@ -5,17 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class EducacensoDegree extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.educacenso_curso_superior';
-
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
 
     public const GRAU_TECNOLOGICO = 1;
 
@@ -34,11 +29,17 @@ class EducacensoDegree extends Model
         'grau_academico',
     ];
 
+    /**
+     * @return HasMany<EmployeeGraduation, $this>
+     */
     public function employeeGraduations(): HasMany
     {
         return $this->hasMany(EmployeeGraduation::class, 'course_id');
     }
 
+    /**
+     * @return HasMany<Employee, $this>
+     */
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class, 'codigo_curso_superior_2');
