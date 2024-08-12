@@ -10,6 +10,9 @@ class LocalizationZone implements Enum
 
     public const RURAL = 2;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [

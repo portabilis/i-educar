@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Phone extends Model
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'person_id' => 'integer',
@@ -32,16 +32,25 @@ class Phone extends Model
 
     protected $keyType = 'string';
 
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'person_id');
     }
 
+    /**
+     * @return BelongsTo<LegacyUser, $this>
+     */
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(LegacyUser::class, 'created_by');
     }
 
+    /**
+     * @return BelongsTo<LegacyUser, $this>
+     */
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(LegacyUser::class, 'updated_by');
@@ -57,7 +66,7 @@ class Phone extends Model
                 if (empty($number)) {
                     return null;
                 }
-
+                /** @phpstan-ignore-next-line */
                 $number = preg_replace('/(\d{4,5})(\d{4})/', '$1-$2', $number);
 
                 if ($areaCode) {

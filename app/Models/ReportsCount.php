@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $count
+ */
 class ReportsCount extends Model
 {
     public $timestamps = false;

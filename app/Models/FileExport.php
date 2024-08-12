@@ -4,9 +4,20 @@ namespace App\Models;
 
 use App\Models\Enums\FileExportStatus;
 use App\Services\UrlPresigner;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $user_id
+ * @property string $url
+ * @property string $hash
+ * @property string $filename
+ * @property int $status_id
+ * @property int $size
+ * @property Carbon $created_at
+ */
 class FileExport extends Model
 {
     protected $fillable = [
@@ -22,8 +33,8 @@ class FileExport extends Model
     {
         parent::boot();
         static::creating(function (self $studentFileExport) {
-            $studentFileExport->hash = md5(time());
-            $studentFileExport->status_id = FileExportStatus::WAITING;
+            $studentFileExport->hash = md5((string) time());
+            $studentFileExport->status_id = FileExportStatus::WAITING->value;
         });
     }
 

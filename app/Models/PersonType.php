@@ -10,6 +10,9 @@ class PersonType implements Enum
 
     public const ORGANIZATION = 2;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [

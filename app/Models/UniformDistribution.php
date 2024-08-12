@@ -8,12 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class UniformDistribution extends Model
 {
     use SoftDeletes;
 
     protected $table = 'public.uniform_distributions';
 
+    /**
+     * @var array<string, string>
+     */
     protected $casts = [
         'complete_kit' => 'boolean',
         'distribution_date' => 'date:d/m/Y',
@@ -50,11 +56,17 @@ class UniformDistribution extends Model
         'type',
     ];
 
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'student_id');
     }
 
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'school_id');

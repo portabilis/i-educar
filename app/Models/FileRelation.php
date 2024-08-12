@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class FileRelation extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'public.files_relations';
 
     protected $fillable = [
@@ -19,9 +19,9 @@ class FileRelation extends Model
     ];
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<File, $this>
      */
-    public function file()
+    public function file(): BelongsTo
     {
         return $this->belongsTo(File::class, 'file_id');
     }
