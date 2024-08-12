@@ -117,7 +117,7 @@ class LegacyPerson extends LegacyModel
 
     public function phone(): HasOne
     {
-        return $this->hasOne(LegacyPhone::class, 'idpes', 'idpes');
+        return $this->hasOne(LegacyPhone::class, 'idpes', 'idpes')->where('fone', '<>', 0)->orderBy('tipo');
     }
 
     public function individual(): HasOne

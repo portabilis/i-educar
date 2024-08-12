@@ -102,6 +102,8 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
 
     public $modalidadeCurso;
 
+    public $turnoId;
+
     /**
      * @var string Campo usado somente na análise
      */
