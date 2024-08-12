@@ -242,7 +242,7 @@ class LegacyStudent extends LegacyModel
         );
     }
 
-    public function setStateRegistrationIdAttribute(?int $value): void
+    public function setStateRegistrationIdAttribute(int|string|null $value): void
     {
         $this->aluno_estado_id = $value;
     }
