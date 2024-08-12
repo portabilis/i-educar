@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Builders\SchoolManagerBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,6 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class SchoolManager extends Model
 {
+    /** @use HasBuilder<SchoolManagerBuilder<static>> */
+    use HasBuilder;
+
+    protected static string $builder = SchoolManagerBuilder::class;
+
     protected $fillable = [
         'employee_id',
         'school_id',
@@ -73,14 +79,5 @@ class SchoolManager extends Model
     public function isChief(): bool
     {
         return (bool) $this->chief;
-    }
-
-    /**
-     * Filtra pelo ID da escola
-     * @phpstan-ignore-next-line
-     */
-    public function scopeOfSchool(Builder $query, int $schoolId): Builder
-    {
-        return $query->where('school_id', $schoolId);
     }
 }

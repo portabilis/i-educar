@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Builders\EmployeePosgraduateBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -11,7 +12,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class EmployeePosgraduate extends Model
 {
+    /** @use HasBuilder<EmployeePosgraduateBuilder> */
+    use HasBuilder;
+
     protected $table = 'public.employee_posgraduate';
+
+    protected static string $builder = EmployeePosgraduateBuilder::class;
 
     protected $fillable = [
         'employee_id',
@@ -27,15 +33,5 @@ class EmployeePosgraduate extends Model
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
-    }
-
-    /**
-     * Filtra pelo ID do servidor
-     *
-     * @phpstan-ignore-next-line
-     */
-    public function scopeOfEmployee(Builder $query, $employeeId): Builder
-    {
-        return $query->where('employee_id', $employeeId);
     }
 }

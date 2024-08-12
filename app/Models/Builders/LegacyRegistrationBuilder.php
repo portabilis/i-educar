@@ -252,4 +252,50 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     {
         return $this->whereHas('school', fn ($q) => $q->whereDifferentiatedLocalizationArea($differentiatedLocalizationArea));
     }
+
+    /**
+     * Filtra por alunos do sexo masculino
+     *
+     * @return self
+     */
+    public function male(): self
+    {
+        return $this->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
+            ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('aluno.ativo', 1)
+            ->where('sexo', 'M');
+    }
+
+    /**
+     * Filtra por alunos do sexo feminino
+     *
+     * @return self
+     */
+    public function female(): self
+    {
+        return $this->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
+            ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('aluno.ativo', 1)
+            ->where('sexo', 'F');
+    }
+
+    /**
+     * Filtra por registros do ano anterior
+     *
+     * @return self
+     */
+    public function lastYear(): self
+    {
+        return $this->where('matricula.ano', date('Y') - 1);
+    }
+
+    /**
+     * Filtra por registros do ano corrente
+     *
+     * @return self
+     */
+    public function currentYear(): self
+    {
+        return $this->where('matricula.ano', date('Y'));
+    }
 }

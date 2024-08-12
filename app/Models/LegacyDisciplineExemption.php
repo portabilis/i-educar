@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Builders\LegacyDisciplineExemptionBuilder;
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasLegacyUserAction;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -94,14 +93,6 @@ class LegacyDisciplineExemption extends LegacyModel
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(LegacyUser::class, 'ref_usuario_cad');
-    }
-
-    /**
-     * @param Builder $query
-     */
-    public function scopeActive($query): Builder
-    {
-        return $query->where('ativo', 1);
     }
 
     public function getDateFormat(): string

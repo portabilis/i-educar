@@ -112,4 +112,41 @@ class EmployeeBuilder extends LegacyBuilder
             $q->whereRaw('matricula ~* ?', $role);
         });
     }
+
+    /**
+     * Filtra por servidores ativos
+     *
+     */
+    public function whereActive(): self
+    {
+        return $this->where('servidor.ativo', 1);
+    }
+
+    /**
+     * Filtra por servidores que são professores
+     */
+    public function whereProfessor(bool $onlyTeacher = true): self
+    {
+        return $this->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
+            ->where('funcao.professor', (int) $onlyTeacher);
+    }
+
+    /**
+     * Filtra servidores alocados no último ano
+     */
+    public function whereLastYear(): self
+    {
+        return $this->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
+            ->where('servidor_alocacao.ano', date('Y') - 1);
+    }
+
+    /**
+     * Filtra servidores alocados no ano corrente
+     */
+    public function whereCurrentYear(): self
+    {
+        return $this->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
+            ->where('servidor_alocacao.ano', date('Y'));
+    }
 }
