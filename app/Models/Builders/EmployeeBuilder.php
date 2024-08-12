@@ -116,7 +116,7 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por servidores ativos
      */
-    public function whereActive(): self
+    public function active(): self
     {
         return $this->where('servidor.ativo', 1);
     }
@@ -124,7 +124,7 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra por servidores que são professores
      */
-    public function whereProfessor(bool $onlyTeacher = true): self
+    public function professor(bool $onlyTeacher = true): self
     {
         return $this->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
@@ -134,7 +134,7 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra servidores alocados no último ano
      */
-    public function whereLastYear(): self
+    public function lastYear(): self
     {
         return $this->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
             ->where('servidor_alocacao.ano', date('Y') - 1);
@@ -143,7 +143,7 @@ class EmployeeBuilder extends LegacyBuilder
     /**
      * Filtra servidores alocados no ano corrente
      */
-    public function whereCurrentYear(): self
+    public function currentYear(): self
     {
         return $this->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
             ->where('servidor_alocacao.ano', date('Y'));
