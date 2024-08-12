@@ -115,7 +115,6 @@ class EmployeeBuilder extends LegacyBuilder
 
     /**
      * Filtra por servidores ativos
-     *
      */
     public function whereActive(): self
     {

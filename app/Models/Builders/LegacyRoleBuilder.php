@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Builders;
+
 class LegacyRoleBuilder extends LegacyBuilder
 {
     public function ativo(): self

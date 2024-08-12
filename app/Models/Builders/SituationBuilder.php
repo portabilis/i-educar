@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Builders;
+
 use App\Models\LegacyDisciplineScoreAverage;
 use App_Model_MatriculaSituacao;
 
@@ -8,9 +9,6 @@ class SituationBuilder extends LegacyBuilder
 {
     /**
      * Filtra por situação específica
-     *
-     * @param int $situation
-     * @return self
      */
     public function situation(int $situation): self
     {
@@ -32,8 +30,6 @@ class SituationBuilder extends LegacyBuilder
 
     /**
      * Filtra por situações aprovadas
-     *
-     * @return self
      */
     public function approved(): self
     {

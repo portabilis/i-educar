@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Builders\EmployeePosgraduateBuilder;
 use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
 use iEducar\Modules\Educacenso\Model\PosGraduacao;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Models\Builders\EmployeePosgraduateBuilder;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -219,8 +219,6 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     /**
      * Filtra por alunos ativos
-     *
-     * @return self
      */
     public function active(): self
     {
@@ -229,8 +227,6 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     /**
      * Filtra por alunos do sexo masculino
-     *
-     * @return self
      */
     public function male(): self
     {
@@ -240,8 +236,6 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     /**
      * Filtra por alunos do sexo feminino
-     *
-     * @return self
      */
     public function female(): self
     {

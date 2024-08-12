@@ -112,6 +112,7 @@ class EnrollmentEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return $this
+     *
      * @phpstan-return EnrollmentEloquentBuilder
      */
     public function mother($columns)
@@ -146,6 +147,7 @@ class EnrollmentEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return $this
+     *
      * @phpstan-return EnrollmentEloquentBuilder
      */
     public function father($columns)
@@ -212,6 +214,7 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @return EnrollmentEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function benefits()
@@ -227,6 +230,7 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @return EnrollmentEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disabilities()
@@ -242,6 +246,7 @@ class EnrollmentEloquentBuilder extends Builder
 
     /**
      * @return EnrollmentEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function phones()
@@ -258,6 +263,7 @@ class EnrollmentEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return $this
+     *
      * @phpstan-return EnrollmentEloquentBuilder
      */
     public function place($columns)
@@ -281,6 +287,7 @@ class EnrollmentEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return EnrollmentEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function transport($columns)

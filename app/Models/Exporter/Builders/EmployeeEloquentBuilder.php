@@ -17,6 +17,7 @@ class EmployeeEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function person($columns)
@@ -32,6 +33,7 @@ class EmployeeEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disabilities()
@@ -47,6 +49,7 @@ class EmployeeEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function phones()
@@ -63,6 +66,7 @@ class EmployeeEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
      * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function place($columns)

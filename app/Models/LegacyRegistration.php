@@ -7,7 +7,6 @@ use App\Models\Builders\LegacyRegistrationBuilder;
 use App\Models\View\Situation;
 use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\HasBuilder;

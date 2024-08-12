@@ -13,19 +13,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyRole extends LegacyModel
 {
+    /** @use HasBuilder<LegacyRoleBuilder> */
+    use HasBuilder;
     use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;
+
     use LegacySoftDeletes;
-    /** @use HasBuilder<LegacyRoleBuilder> */
-    use HasBuilder;
 
     protected $table = 'pmieducar.funcao';
 
     protected $primaryKey = 'cod_funcao';
 
     protected static string $builder = LegacyRoleBuilder::class;
-
 
     protected $fillable = [
         'nm_funcao',

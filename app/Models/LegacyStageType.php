@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyStageType extends LegacyModel
 {
-    use HasInstitution;
-    use HasLegacyDates;
-    use HasLegacyUserAction;
-
     /** @use HasBuilder<LegacyStageTypeBuilder> */
     use HasBuilder;
+    use HasInstitution;
+    use HasLegacyDates;
+
+    use HasLegacyUserAction;
 
     public const CREATED_AT = 'data_cadastro';
 

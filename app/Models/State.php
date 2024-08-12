@@ -51,10 +51,6 @@ class State extends Model
         return $this->hasMany(City::class);
     }
 
-    /**
-     * @param string $abbreviation
-     * @return self|null
-     */
     public static function findByAbbreviation(string $abbreviation): ?self
     {
         /** @var self|null */

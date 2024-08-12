@@ -9,9 +9,6 @@ class LegacyTransferRequestBuilder extends LegacyBuilder
         return $this->where('ativo', 1);
     }
 
-    /**
-     * @return LegacyBuilder
-     */
     public function unattended(): LegacyBuilder
     {
         /** @var LegacyBuilder $return */

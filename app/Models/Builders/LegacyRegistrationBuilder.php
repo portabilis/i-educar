@@ -255,8 +255,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Filtra por alunos do sexo masculino
-     *
-     * @return self
      */
     public function male(): self
     {
@@ -268,8 +266,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Filtra por alunos do sexo feminino
-     *
-     * @return self
      */
     public function female(): self
     {
@@ -281,8 +277,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Filtra por registros do ano anterior
-     *
-     * @return self
      */
     public function lastYear(): self
     {
@@ -291,8 +285,6 @@ class LegacyRegistrationBuilder extends LegacyBuilder
 
     /**
      * Filtra por registros do ano corrente
-     *
-     * @return self
      */
     public function currentYear(): self
     {
