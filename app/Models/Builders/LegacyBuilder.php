@@ -309,15 +309,9 @@ class LegacyBuilder extends Builder
         return parent::where($column, $operator, $value, $boolean);
     }
 
-    /**
-     * @param $sql
-     * @param $bindings
-     * @param $boolean
-     * @return $this
-     */
     public function whereRaw($sql, $bindings = [], $boolean = 'and')
     {
-        return parent::whereRaw($sql, $bindings = [], $boolean = 'and');
+        return parent::whereRaw($sql, $bindings, $boolean);
     }
 
     public function whereIn($column, $values, $boolean = 'and', $not = false)
