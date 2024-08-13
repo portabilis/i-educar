@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyInstitution;
+use Illuminate\Support\Facades\Cache;
+
 $pessoa_logada = \Illuminate\Support\Facades\Auth::id();
 
 if (!isset($exibe_campo_lista_curso_escola)) {
@@ -41,16 +44,17 @@ $nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 
 //Se administrador
 if ($nivel_usuario == 1 || $cad_usuario) {
-    $opcoes = ['' => $get_select_name_full ? 'Selecione uma instituição' : 'Selecione'];
-    $obj_instituicao = new clsPmieducarInstituicao();
-    $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
-    $obj_instituicao->setOrderby('nm_instituicao ASC');
-    $lista = $obj_instituicao->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
-    if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-            $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
-        }
-    }
+    $opcoes = Cache::remember('select_instituicao', now()->addMinutes(180), function () use ($get_select_name_full) {
+        return LegacyInstitution::query()
+            ->select([
+                'cod_instituicao',
+                'nm_instituicao',
+            ])
+            ->orderBy('nm_instituicao')
+            ->get()
+            ->pluck('nm_instituicao', 'cod_instituicao')
+            ->prepend($get_select_name_full ? 'Selecione uma instituição' : 'Selecione', '');
+    });
 
     if ($get_escola && $get_biblioteca) {
         $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, 'getDuploEscolaBiblioteca();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
