@@ -66,7 +66,6 @@ class City extends Model
     {
         $name = str_replace('\'', '\'\'', $name);
 
-        /** @phpstan-ignore-next-line  */
         return static::query()->whereRaw(
             "translate(upper(name),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$name}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')"
         );

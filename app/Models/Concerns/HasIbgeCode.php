@@ -2,11 +2,13 @@
 
 namespace App\Models\Concerns;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait HasIbgeCode
 {
     /**
      * @param int $ibgeCode
-     * @return $this
+     * @return Model|null
      */
     public static function findByIbgeCode($ibgeCode)
     {

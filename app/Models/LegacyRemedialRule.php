@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ * @property string $etapas_recuperadas
+ */
 class LegacyRemedialRule extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.regra_avaliacao_recuperacao';
 
     public const CREATED_AT = null;
 
-    /**
-     * @var array
-     */
     protected $casts = [
         'nota_maxima' => 'float',
     ];
@@ -40,6 +38,9 @@ class LegacyRemedialRule extends Model
         return max($this->getStages());
     }
 
+    /**
+     * @return BelongsTo<LegacyEvaluationRule, $this>
+     */
     public function evaluationRule(): BelongsTo
     {
         return $this->belongsTo(LegacyEvaluationRule::class, 'regra_avaliacao_id');
