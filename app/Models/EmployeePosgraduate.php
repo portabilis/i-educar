@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Builders\EmployeePosgraduateBuilder;
 use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
 use iEducar\Modules\Educacenso\Model\PosGraduacao;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,7 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class EmployeePosgraduate extends Model
 {
+    /** @use HasBuilder<EmployeePosgraduateBuilder> */
+    use HasBuilder;
+
     protected $table = 'public.employee_posgraduate';
+
+    protected static string $builder = EmployeePosgraduateBuilder::class;
 
     protected $fillable = [
         'employee_id',
@@ -44,15 +50,5 @@ class EmployeePosgraduate extends Model
         return Attribute::make(
             get: fn () => AreaPosGraduacao::getDescriptiveValues()[$this->area_id] ?? null
         );
-    }
-
-    /**
-     * Filtra pelo ID do servidor
-     *
-     * @phpstan-ignore-next-line
-     */
-    public function scopeOfEmployee(Builder $query, $employeeId): Builder
-    {
-        return $query->where('employee_id', $employeeId);
     }
 }

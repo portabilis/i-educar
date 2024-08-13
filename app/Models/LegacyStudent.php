@@ -6,7 +6,6 @@ use Ankurk91\Eloquent\HasBelongsToOne;
 use Ankurk91\Eloquent\Relations\BelongsToOne;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Traits\HasLegacyDates;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -253,23 +252,6 @@ class LegacyStudent extends LegacyModel
     public function inep(): HasOne
     {
         return $this->hasOne(StudentInep::class, 'cod_aluno', 'cod_aluno');
-    }
-
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('aluno.ativo', 1);
-    }
-
-    public function scopeMale(Builder $query): Builder
-    {
-        return $query->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
-            ->where('sexo', 'M');
-    }
-
-    public function scopeFemale(Builder $query): Builder
-    {
-        return $query->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
-            ->where('sexo', 'F');
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Builders\EmployeeBuilder;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -204,37 +203,6 @@ class Employee extends LegacyModel
             'ref_cod_servidor',
             'ref_cod_curso'
         )->withPivot('ref_ref_cod_instituicao');
-    }
-
-    /** @phpstan-ignore-next-line  */
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('servidor.ativo', 1);
-    }
-
-    /** @phpstan-ignore-next-line  */
-    public function scopeProfessor(Builder $query, $onlyTeacher = true): Builder
-    {
-        /** @phpstan-ignore-next-line */
-        return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
-            ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
-            ->where('funcao.professor', (int) $onlyTeacher);
-    }
-
-    /** @phpstan-ignore-next-line  */
-    public function scopeLastYear(Builder $query): Builder
-    {
-        /** @phpstan-ignore-next-line */
-        return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
-            ->where('servidor_alocacao.ano', date('Y') - 1);
-    }
-
-    /** @phpstan-ignore-next-line */
-    public function scopeCurrentYear(Builder $query): Builder
-    {
-        /** @phpstan-ignore-next-line  */
-        return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
-            ->where('servidor_alocacao.ano', date('Y'));
     }
 
     /**
