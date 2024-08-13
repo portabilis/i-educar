@@ -37,4 +37,9 @@ class LegacyDisciplineExemptionBuilder extends LegacyBuilder
     {
         return $this->orderBy('data_cadastro', $direction);
     }
+
+    public function active(): self
+    {
+        return $this->where('ativo', 1);
+    }
 }

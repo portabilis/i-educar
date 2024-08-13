@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyStageTypeBuilder;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyStageType extends LegacyModel
 {
+    /** @use HasBuilder<LegacyStageTypeBuilder> */
+    use HasBuilder;
     use HasInstitution;
     use HasLegacyDates;
+
     use HasLegacyUserAction;
 
     public const CREATED_AT = 'data_cadastro';
@@ -28,6 +32,8 @@ class LegacyStageType extends LegacyModel
      * @var string
      */
     protected $primaryKey = 'cod_modulo';
+
+    protected static string $builder = LegacyStageTypeBuilder::class;
 
     /**
      * @var array
@@ -59,14 +65,6 @@ class LegacyStageType extends LegacyModel
         return Attribute::make(
             get: fn () => sprintf('%s - %d etapa(s)', $this->nm_tipo, $this->num_etapas)
         );
-    }
-
-    /**
-     * @param Builder $query
-     */
-    public function scopeActive($query): Builder
-    {
-        return $query->where('ativo', 1);
     }
 
     /**

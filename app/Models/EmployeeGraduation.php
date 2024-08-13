@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Builders\EmployeeGraduationBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -10,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class EmployeeGraduation extends LegacyModel
 {
+    /** @use HasBuilder<EmployeeGraduationBuilder> */
+    use HasBuilder;
+
     protected $fillable = [
         'employee_id',
         'course_id',
@@ -17,6 +21,8 @@ class EmployeeGraduation extends LegacyModel
         'college_id',
         'discipline_id',
     ];
+
+    protected static string $builder = EmployeeGraduationBuilder::class;
 
     /**
      * @return BelongsTo<Employee, $this>
@@ -40,15 +46,5 @@ class EmployeeGraduation extends LegacyModel
     public function educacensoInstitution(): BelongsTo
     {
         return $this->belongsTo(EducacensoInstitution::class, 'college_id');
-    }
-
-    /**
-     * Filtra pelo ID do servidor
-     *
-     * @phpstan-ignore-next-line
-     */
-    public function scopeOfEmployee(Builder $query, $employeeId): Builder
-    {
-        return $query->where('employee_id', $employeeId);
     }
 }
