@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 class Enrollment extends Model
 {
-    /** @use HasBuilder<EnrollmentEloquentBuilder<static>> */
+    /** @use HasBuilder<EnrollmentEloquentBuilder> */
     use HasBuilder;
 
     protected static string $builder = EnrollmentEloquentBuilder::class;
@@ -20,7 +20,7 @@ class Enrollment extends Model
     protected $table = 'exporter_student';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
 
@@ -156,15 +156,12 @@ class Enrollment extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Matrículas';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Os dados exportados serão contabilizados por quantidade de matrículas, duplicando o(a) aluno(a) caso o mesmo possua mais de uma matrícula no ano filtrado.';
     }
@@ -175,7 +172,9 @@ class Enrollment extends Model
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(static fn ($item) => $item);
         }
 

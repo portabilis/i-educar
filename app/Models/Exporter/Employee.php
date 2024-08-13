@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 class Employee extends Model
 {
-    /** @use HasBuilder<EmployeeEloquentBuilder<static>> */
+    /** @use HasBuilder<EmployeeEloquentBuilder> */
     use HasBuilder;
 
     protected static string $builder = EmployeeEloquentBuilder::class;
@@ -20,7 +20,7 @@ class Employee extends Model
     protected $table = 'exporter_employee';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
 
@@ -85,15 +85,12 @@ class Employee extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Servidores';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Os dados exportados serão contabilizados por quantidade de servidores(as) alocados(as) no ano filtrado, agrupando as informações das alocações nas escolas.';
     }
@@ -104,7 +101,9 @@ class Employee extends Model
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
                 return $item;
             });

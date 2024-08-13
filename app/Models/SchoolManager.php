@@ -77,6 +77,7 @@ class SchoolManager extends Model
 
     /**
      * Filtra pelo ID da escola
+     *
      * @phpstan-ignore-next-line
      */
     public function scopeOfSchool(Builder $query, int $schoolId): Builder

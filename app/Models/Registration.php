@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Registration
  *
  * @property string $status
+ *
  * @method static RegistrationBuilder query()
  */
 class Registration extends Model

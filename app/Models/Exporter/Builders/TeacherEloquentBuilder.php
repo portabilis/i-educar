@@ -2,6 +2,7 @@
 
 namespace App\Models\Exporter\Builders;
 
+use App\Models\Exporter\Teacher;
 use App\Support\Database\JoinableBuilder;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
@@ -9,6 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @extends Builder<Teacher>
+ */
 class TeacherEloquentBuilder extends Builder
 {
     use JoinableBuilder;
@@ -16,6 +20,8 @@ class TeacherEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function person($columns)
     {
@@ -30,6 +36,8 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disabilities()
     {
@@ -44,6 +52,8 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function phones()
     {
@@ -59,6 +69,8 @@ class TeacherEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function place($columns)
     {
@@ -75,6 +87,8 @@ class TeacherEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disciplines()
     {
@@ -87,7 +101,12 @@ class TeacherEloquentBuilder extends Builder
         });
     }
 
-    public function allocations($columns)
+    /**
+     * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
+     */
+    public function allocations(array $columns)
     {
 
         if (in_array('funcao_exercida', $columns)) {
