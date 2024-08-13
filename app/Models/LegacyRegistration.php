@@ -7,7 +7,6 @@ use App\Models\Builders\LegacyRegistrationBuilder;
 use App\Models\View\Situation;
 use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\HasBuilder;
@@ -243,15 +242,6 @@ class LegacyRegistration extends LegacyModel
         return $this->hasMany(LegacyActiveLooking::class, 'ref_cod_matricula', 'cod_matricula');
     }
 
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('matricula.ativo', 1);
-    }
-
     protected function isTransferred(): Attribute
     {
         return Attribute::make(
@@ -319,31 +309,5 @@ class LegacyRegistration extends LegacyModel
         return Attribute::make(
             get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int) $this->aprovado]
         );
-    }
-
-    public function scopeMale(Builder $query): Builder
-    {
-        return $query->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
-            ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
-            ->where('aluno.ativo', 1)
-            ->where('sexo', 'M');
-    }
-
-    public function scopeFemale(Builder $query): Builder
-    {
-        return $query->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
-            ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
-            ->where('aluno.ativo', 1)
-            ->where('sexo', 'F');
-    }
-
-    public function scopeLastYear(Builder $query): Builder
-    {
-        return $query->where('matricula.ano', date('Y') - 1);
-    }
-
-    public function scopeCurrentYear(Builder $query): Builder
-    {
-        return $query->where('matricula.ano', date('Y'));
     }
 }

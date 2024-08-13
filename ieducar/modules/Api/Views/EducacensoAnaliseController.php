@@ -1686,7 +1686,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $codigoTurma = $aluno->codigoTurma;
             $codigoMatricula = $aluno->codigoMatricula;
 
-            if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma)) {
+            if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma, $aluno->turnoId)) {
                 $notAvaliableTime[$codigoAluno] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) {$nomeAluno} possui mais de um vínculo em diferentes turmas presenciais com horário e dias coincidentes.",
                     'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',

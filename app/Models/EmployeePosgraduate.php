@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Builders\EmployeePosgraduateBuilder;
+use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
+use iEducar\Modules\Educacenso\Model\PosGraduacao;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -11,7 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class EmployeePosgraduate extends Model
 {
+    /** @use HasBuilder<EmployeePosgraduateBuilder> */
+    use HasBuilder;
+
     protected $table = 'public.employee_posgraduate';
+
+    protected static string $builder = EmployeePosgraduateBuilder::class;
 
     protected $fillable = [
         'employee_id',
@@ -29,13 +38,17 @@ class EmployeePosgraduate extends Model
         return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
     }
 
-    /**
-     * Filtra pelo ID do servidor
-     *
-     * @phpstan-ignore-next-line
-     */
-    public function scopeOfEmployee(Builder $query, $employeeId): Builder
+    protected function typeName(): Attribute
     {
-        return $query->where('employee_id', $employeeId);
+        return Attribute::make(
+            get: fn () => PosGraduacao::getDescriptiveValues()[$this->type_id] ?? null
+        );
+    }
+
+    protected function areaName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => AreaPosGraduacao::getDescriptiveValues()[$this->area_id] ?? null
+        );
     }
 }

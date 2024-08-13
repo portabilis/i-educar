@@ -23,4 +23,14 @@ class Period implements Enum
             self::FULLTIME => 'Integral',
         ];
     }
+
+    public static function getShortDescriptiveValues(): array
+    {
+        return [
+            self::MORNING => 'M',
+            self::AFTERNOON => 'V',
+            self::NIGTH => 'N',
+            self::FULLTIME => 'I',
+        ];
+    }
 }
