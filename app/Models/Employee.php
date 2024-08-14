@@ -174,7 +174,7 @@ class Employee extends LegacyModel
         return $this->hasMany(EmployeePosgraduate::class, 'employee_id');
     }
 
-    public function place(): HasOneThrough
+    public function place(): HasOneThrough //@phpstan-ignore-line
     {
         // @phpstan-ignore-next-line
         return $this->hasOneThrough(
@@ -184,7 +184,7 @@ class Employee extends LegacyModel
             'id',
             'cod_servidor',
             'place_id'
-        )->orderBy('type'); // @phpstan-ignore-next-line
+        )->orderBy('type');
     }
 
     /**

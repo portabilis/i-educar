@@ -9,19 +9,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LegacyDistrict extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'public.distrito';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'iddis';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idmun',
         'geom',
@@ -39,9 +30,6 @@ class LegacyDistrict extends Model
         'operacao',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
@@ -52,6 +40,7 @@ class LegacyDistrict extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            /** @var LegacyDistrict $district */
             $district = LegacyDistrict::query()->whereKey($model->idmun)->first();
 
             $model->origem_gravacao = 'M';

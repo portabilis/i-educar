@@ -6,21 +6,15 @@ use App\Services\Reports\Util;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property float $media_arredondada
+ */
 class LegacyDisciplineScoreAverage extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.nota_componente_curricular_media';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'nota_aluno_id';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nota_aluno_id',
         'componente_curricular_id',
@@ -31,20 +25,17 @@ class LegacyDisciplineScoreAverage extends Model
         'bloqueada',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyRegistrationScore, $this>
      */
     public function registrationScore()
     {
         return $this->belongsTo(LegacyRegistrationScore::class, 'nota_aluno_id');
     }
 
-    public function average(int $decimalPlaces): ?string
+    public function average(int $decimalPlaces): string|float|null
     {
         $score = $this->media_arredondada;
         if (!is_numeric($score) || empty($score)) {

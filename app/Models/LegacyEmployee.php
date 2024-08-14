@@ -14,6 +14,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email
  * @property string $remember_token
  * @property bool   $active
+ * @property string $matricula
+ * @property string $senha
+ * @property int $ref_cod_setor_new
+ * @property int $tipo_menu
+ * @property int $status_token
+ * @property int $ativo
+ * @property Carbon $data_reativa_conta
+ * @property Carbon $data_troca_senha
  */
 class LegacyEmployee extends Model
 {

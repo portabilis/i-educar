@@ -80,7 +80,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->discipline?->name,
+            get: fn () => $this->discipline?->name, // @phpstan-ignore-line
         );
     }
 

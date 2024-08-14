@@ -7,14 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyGeneralScore extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.nota_geral';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nota_aluno_id',
         'nota',
@@ -22,15 +16,12 @@ class LegacyGeneralScore extends Model
         'etapa',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyStudentScore, $this>
      */
-    public function studentScore()
+    public function studentScore(): BelongsTo
     {
         return $this->belongsTo(LegacyStudentScore::class, 'nota_aluno_id');
     }
