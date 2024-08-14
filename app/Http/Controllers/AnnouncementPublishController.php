@@ -31,17 +31,19 @@ class AnnouncementPublishController extends Controller
 
     public function update(AnnouncementRequest $request, $announcementId)
     {
-        DB::beginTransaction();
-        try {
+        $announcement = DB::transaction(function () use ($announcementId, $request) {
             $announcement = Announcement::query()->withTrashed()->findOrFail($announcementId);
             $announcement->fill($request->all());
             $announcement->save();
             $announcement->userTypes()->sync($request->get('tipo_usuario'));
             $request->get('active') ? $announcement->restore() : $announcement->delete();
-            DB::commit();
+
+            return $announcement;
+        });
+
+        if ($announcement) {
             session()->flash('success', 'Edição efetuada com sucesso.');
-        } catch (Exception) {
-            DB::rollBack();
+        } else {
             session()->flash('error', 'Edição não realizada.');
         }
 
@@ -50,15 +52,17 @@ class AnnouncementPublishController extends Controller
 
     public function store(AnnouncementRequest $request)
     {
-        DB::beginTransaction();
-        try {
+        $announcement = DB::transaction(function () use ($request) {
             $announcement = Announcement::create($request->all());
             $announcement->userTypes()->sync($request->get('tipo_usuario'));
             $request->get('active') ? $announcement->restore() : $announcement->delete();
-            DB::commit();
+
+            return $announcement;
+        });
+
+        if ($announcement) {
             session()->flash('success', 'Cadastro efetuado com sucesso.');
-        } catch (Exception) {
-            DB::rollBack();
+        } else  {
             session()->flash('error', 'Cadastro não realizado.');
         }
 
