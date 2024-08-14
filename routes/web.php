@@ -5,6 +5,7 @@ use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;
+use App\Http\Middleware\AnnouncementMiddleware;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -121,7 +122,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
 
     Route::get('/notificacoes', 'NotificationController@index')->name('notifications.index');
-    Route::get('/notificacoes/retorna-notificacoes-usuario', 'NotificationController@getByLoggedUser')->name('notifications.get-by-logged-user');
+    Route::get('/notificacoes/retorna-notificacoes-usuario', 'NotificationController@getByLoggedUser')->withoutMiddleware(AnnouncementMiddleware::class)->name('notifications.get-by-logged-user');
     Route::get('/notificacoes/quantidade-nao-lidas', 'NotificationController@getNotReadCount')->name('notifications.get-not-read-count');
     Route::post('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
@@ -139,8 +140,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/avisos/publicacao/criar', 'AnnouncementPublishController@store')->middleware('can:create:' . Process::ANNOUNCEMENT)->name('announcement.publish.store');
     Route::get('/avisos/publicacao/{announcement}/editar', 'AnnouncementPublishController@edit')->middleware('can:modify:' . Process::ANNOUNCEMENT)->name('announcement.publish.edit');
     Route::post('/avisos/publicacao/{announcement}/editar', 'AnnouncementPublishController@update')->middleware('can:modify:' . Process::ANNOUNCEMENT)->name('announcement.publish.update');
-    Route::get('/avisos', 'AnnouncementUserController@show')->name('announcement.user.show');
-    Route::post('/avisos', 'AnnouncementUserController@confirm')->name('announcement.user.confirm');
+    Route::get('/avisos', 'AnnouncementUserController@show')->withoutMiddleware(AnnouncementMiddleware::class)->name('announcement.user.show');
+    Route::post('/avisos', 'AnnouncementUserController@confirm')->withoutMiddleware(AnnouncementMiddleware::class)->name('announcement.user.confirm');
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.update-date');

@@ -1,12 +1,13 @@
 <?php
 
+use App\Menu;
+use App\Process;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Menu;
-use App\Process;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('announcements', function (Blueprint $table) {
@@ -30,7 +31,7 @@ return new class extends Migration {
             $table->foreign('user_type_id')->references('cod_tipo_usuario')->on('pmieducar.tipo_usuario')->onDelete('cascade')->onUpdate('cascade');
             $table->primary([
                 'user_type_id',
-                'announcement_id'
+                'announcement_id',
             ]);
         });
 
@@ -44,7 +45,7 @@ return new class extends Migration {
             $table->timestamp('read_at')->nullable();
             $table->primary([
                 'user_id',
-                'announcement_id'
+                'announcement_id',
             ]);
         });
 

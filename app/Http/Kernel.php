@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLayoutVariables::class,
+            \App\Http\Middleware\AnnouncementMiddleware::class,
         ],
 
         'api' => [

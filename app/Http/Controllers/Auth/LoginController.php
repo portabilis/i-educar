@@ -83,10 +83,25 @@ class LoginController extends Controller
     {
         $announcement = Announcement::latest()->first();
 
-        if ($announcement && $announcement->userTypes?->contains($user->ref_cod_tipo_usuario)) {
-            if ($announcement->repeat_on_login || !$this->userReadAnnouncement($announcement, $user)) {
-                return redirect()->route('announcement.user.show');
-            }
+        if (!$announcement || !$announcement->userTypes?->contains($user->ref_cod_tipo_usuario)) {
+            return null;
+        }
+
+        if ($announcement->repeat_on_login) {
+            $this->resetAnnouncementConfirmation($announcement, $user);
+
+            return redirect()->route('announcement.user.show');
+        }
+
+        if (!$this->userReadAnnouncement($announcement, $user)) {
+            return redirect()->route('announcement.user.show');
+        }
+    }
+
+    private function resetAnnouncementConfirmation(Announcement $announcement, $user): void
+    {
+        if ($announcement->show_confirmation) {
+            $announcement->users()->updateExistingPivot($user->getKey(), ['confirmed_at' => null]);
         }
     }
 
@@ -97,5 +112,4 @@ class LoginController extends Controller
             ->wherePivotNotNull('read_at')
             ->exists();
     }
-
 }

@@ -58,7 +58,7 @@
             @endif
             </tbody>
         </table>
-        @if($announcement->show_vacancy && $schools->isNotEmpty())
+        @if($announcement->show_vacancy)
             <table id="table-announcement">
                 <thead>
                 <tr>
@@ -70,7 +70,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($schools as $schoolName => $courses)
+                @forelse($schools as $schoolName => $courses)
                     @php
                         $row1 = 0;
                         foreach ($courses as $grades) {
@@ -125,7 +125,11 @@
                             @endforeach
                         @endforeach
                     @endforeach
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="5">Nenhuma escola com vaga encontrada</td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         @endif
