@@ -15,26 +15,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $number
  * @property int $created_by
  * @property int $updated_by
+ * @property string $fone
+ * @property string $ddd
  */
 class LegacyPhone extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'cadastro.fone_pessoa';
 
     public const CREATED_AT = 'data_cad';
 
     public const UPDATED_AT = 'data_rev';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idpes';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idpes',
         'tipo',
@@ -62,6 +55,9 @@ class LegacyPhone extends Model
         });
     }
 
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes');

@@ -12,19 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacyPersonAddress extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'cadastro.endereco_pessoa';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idpes';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idpes',
         'tipo',
@@ -47,13 +38,10 @@ class LegacyPersonAddress extends Model
         'observacoes',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyPersonAddress, $this>
      */
     public function person()
     {

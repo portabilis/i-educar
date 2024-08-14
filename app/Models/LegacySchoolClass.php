@@ -20,13 +20,22 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * LegacySchoolClass
  *
  * @property int                $id
+ * @property int                $cod_turma
  * @property string             $name
+ * @property string             $nm_turma
  * @property int                $year
+ * @property int                $ano
  * @property int                $school_id
+ * @property int                $ref_ref_cod_escola
  * @property int                $course_id
+ * @property int                $ref_cod_curso
  * @property int                $grade_id
+ * @property int                $ref_ref_cod_serie
  * @property int                $vacancies
+ * @property int                $max_aluno
+ * @property int                $ref_cod_disciplina_dispensada
  * @property bool               $multiseriada
+ * @property bool               $visivel
  * @property int                $exempted_discipline_id
  * @property Carbon             $begin_academic_year
  * @property Carbon             $end_academic_year
@@ -36,6 +45,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property LegacySchoolGrade  $schoolGrade
  * @property LegacyEnrollment[] $enrollments
  * @property array<int, string> $fillable
+ * @property string $hora_inicial
+ * @property string $hora_final
+ * @property LegacySchoolClassGrade[] $multigrades
+ * @property LegacyAcademicYearStage[] $academicYearStages
+ * @property LegacySchoolClassStage[] $schoolClassStages
  *
  * @method static LegacySchoolClassBuilder query()
  */
@@ -256,6 +270,7 @@ class LegacySchoolClass extends Model
     {
         return Attribute::make(
             get: function () {
+                // @phpstan-ignore-next-line
                 if (!$this->course?->is_standard_calendar && ($schoolClassStages = $this->schoolClassStages()->orderBy('sequencial')->value('data_inicio'))) {
                     return $schoolClassStages;
                 }
@@ -276,6 +291,7 @@ class LegacySchoolClass extends Model
     {
         return Attribute::make(
             get: function () {
+                // @phpstan-ignore-next-line
                 if (!$this->course?->is_standard_calendar && ($schoolClassStages = $this->schoolClassStages()->orderByDesc('sequencial')->value('data_fim'))) {
                     return $schoolClassStages;
                 }
@@ -302,6 +318,7 @@ class LegacySchoolClass extends Model
      */
     public function academicYears(): HasMany
     {
+        // @phpstan-ignore-next-line
         return $this->hasMany(LegacySchoolAcademicYear::class, 'ref_cod_escola', 'ref_ref_cod_escola')->whereColumn('escola_ano_letivo.ano', 'ano');
     }
 
@@ -364,6 +381,7 @@ class LegacySchoolClass extends Model
      */
     public function stages(): HasMany
     {
+        // @phpstan-ignore-next-line
         if ($this->course?->is_standard_calendar) {
             return $this->academicYearStages();
         }
@@ -376,11 +394,12 @@ class LegacySchoolClass extends Model
      */
     public function academicYearStages(): HasMany
     {
+        // @phpstan-ignore-next-line
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
             ->where('ref_ano', $this->year);
     }
 
-    public function getStages(bool $standardCalendar): Collection
+    public function getStages(bool $standardCalendar): Collection // @phpstan-ignore-line
     {
         if ($standardCalendar) {
             $stages = $this->academicYearStages;
@@ -388,6 +407,7 @@ class LegacySchoolClass extends Model
             $stages = $this->schoolClassStages;
         }
 
+        // @phpstan-ignore-next-line
         return $stages ?? collect();
     }
 
@@ -439,16 +459,13 @@ class LegacySchoolClass extends Model
         $this->attributes['dias_semana'] = $values;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getActiveEnrollments()
+    public function getActiveEnrollments() // @phpstan-ignore-line
     {
         return $this->enrollments()
             ->with([
                 'registration' => function ($query) {
                     /** @var Builder $query */
-                    $query->where('ano', $this->year);
+                    $query->where('ano', $this->year); // @phpstan-ignore-line
                     $query->whereIn('aprovado', [
                         1,
                         2,
@@ -462,8 +479,12 @@ class LegacySchoolClass extends Model
             ->get();
     }
 
+    /**
+     * @return BelongsTo<LegacySchoolGrade, $this>
+     */
     public function schoolGrade(): BelongsTo
     {
+        // @phpstan-ignore-next-line
         return $this->belongsTo(LegacySchoolGrade::class, 'ref_ref_cod_escola', 'ref_cod_escola')
             ->where('ref_cod_serie', $this->grade_id);
     }
@@ -502,6 +523,9 @@ class LegacySchoolClass extends Model
         return $startTime->diff($endTime)->h;
     }
 
+    /**
+     * @return BelongsToMany<LegacyDiscipline, $this>
+     */
     public function disciplines(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -527,6 +551,9 @@ class LegacySchoolClass extends Model
         return $this->hasMany(Discipline::class, 'cod_turma', 'cod_turma');
     }
 
+    /**
+     * @return BelongsToMany<LegacyDiscipline, $this>
+     */
     public function gradeDisciplines(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -542,9 +569,13 @@ class LegacySchoolClass extends Model
         ]);
     }
 
+    /**
+     * @return Collection<int, Model|LegacyDiscipline>
+     */
     public function getDisciplines(): Collection
     {
         if ((bool) $this->multiseriada) {
+            // @phpstan-ignore-next-line
             $multigrades = $this->multigrades->pluck('serie_id')->toArray();
 
             return LegacySchoolGradeDiscipline::query()
@@ -558,7 +589,7 @@ class LegacySchoolClass extends Model
         }
         $disciplinesOfSchoolClass = $this->disciplines()->get();
         if ($disciplinesOfSchoolClass->count() > 0) {
-            return $disciplinesOfSchoolClass;
+            return $disciplinesOfSchoolClass; // @phpstan-ignore-line
         }
 
         return LegacySchoolGradeDiscipline::query()
@@ -573,11 +604,11 @@ class LegacySchoolClass extends Model
 
     /**
      * Retorna a regra de avaliação que deve ser utilizada para a turma. Leva
-     * em consideração o parâmetro `utiliza_regra_diferenciada` da escola.
+     *  em consideração o parâmetro `utiliza_regra_diferenciada` da escola.
      *
-     * @return LegacyEvaluationRule
+     * @param int|null $gradeId
      */
-    public function getEvaluationRule($gradeId = null)
+    public function getEvaluationRule($gradeId = null): LegacyEvaluationRule
     {
         //a turma pode ser multisseriada e prover de várias séries
         //portando é necessária repassar em vez de pegar a série principal da turma

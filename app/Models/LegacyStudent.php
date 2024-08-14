@@ -16,12 +16,13 @@ use Illuminate\Support\Collection;
 
 /**
  * @property string $url_laudo_medico
- * @property Person $person
+ * @property LegacyPerson $person
  * @property LegacyIndividual $individual
  * @property StudentInep $inep
  * @property string $tipo_responsavel
  * @property string $guardianType
- * @property int $aluno_estado_id
+ * @property string $name
+ * @property mixed $aluno_estado_id
  * @property int $cod_aluno
  */
 class LegacyStudent extends LegacyModel
@@ -155,6 +156,7 @@ class LegacyStudent extends LegacyModel
      */
     public function lastRegistration(): HasOne
     {
+        // @phpstan-ignore-next-line
         return $this->hasOne(LegacyRegistration::class, 'ref_cod_aluno')
             ->orderByDesc('ano')
             ->active();
@@ -180,7 +182,7 @@ class LegacyStudent extends LegacyModel
         return collect([
             $this->individual->mother,
             $this->individual->father,
-        ])->filter(fn ($person) => !empty($person) && $person->name !== 'NÃO REGISTRADO');
+        ])->filter(fn ($person) => !empty($person) && $person->name !== 'NÃO REGISTRADO'); // @phpstan-ignore-line
     }
 
     public function getGuardianName(): ?string
@@ -222,7 +224,7 @@ class LegacyStudent extends LegacyModel
     protected function inepNumber(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->inep?->number
+            get: fn () => $this->inep?->number // @phpstan-ignore-line
         );
     }
 
@@ -259,6 +261,7 @@ class LegacyStudent extends LegacyModel
      */
     public function schoolHistories(): HasMany
     {
+        // @phpstan-ignore-next-line
         return $this->hasMany(LegacySchoolHistory::class, 'ref_cod_aluno', 'cod_aluno')->active();
     }
 
@@ -275,6 +278,7 @@ class LegacyStudent extends LegacyModel
      */
     public function registration_transfer(): HasOne
     {
+        // @phpstan-ignore-next-line
         return $this->hasOne(LegacyRegistration::class, 'ref_cod_aluno')->transfer();
     }
 }

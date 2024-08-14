@@ -29,11 +29,17 @@ class LegacyGradeSequence extends LegacyModel
         'data_exclusao',
     ];
 
+    /**
+     * @return BelongsTo<LegacyGrade, $this>
+     */
     public function from(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_serie_origem');
     }
 
+    /**
+     * @return BelongsTo<LegacyGrade, $this>
+     */
     public function to(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_serie_destino');

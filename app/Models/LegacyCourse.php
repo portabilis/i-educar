@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int           $qtd_etapas
  * @property int           $padrao_ano_escolar
  * @property float         $hora_falta
+ * @property bool          $is_standard_calendar
  *
  * @method static LegacyCourseBuilder query()
  */

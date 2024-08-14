@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property LegacyEvaluationRule $evaluationRule
+ * @property LegacyEvaluationRule $differentiatedEvaluationRule
+ */
 class LegacyEvaluationRuleGradeYear extends Model
 {
     protected $table = 'modules.regra_avaliacao_serie_ano';

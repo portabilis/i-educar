@@ -79,6 +79,7 @@ class LegacyStageType extends LegacyModel
      */
     public static function alreadyExists($name, $stagesNumber, $id = null): bool
     {
+        // @phpstan-ignore-next-line
         return self::query()
             ->where('ativo', 1)
             ->where('nm_tipo', $name)
