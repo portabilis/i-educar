@@ -60,7 +60,10 @@ class LegacyModel extends Model
         return parent::fill($attributes);
     }
 
-    public function getLegacyColumn(string $key): string
+    /**
+     * @phpstan-ignore-next-line
+     */
+    public function getLegacyColumn($key)
     {
         if (is_string($key)) {
             return $this->legacy[$key] ?? $key;
