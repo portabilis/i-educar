@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use App\Rules\ReCaptchaV3;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -77,4 +78,24 @@ class LoginController extends Controller
             'password.string' => 'O campo senha é obrigatório.',
         ]);
     }
+
+    protected function authenticated(Request $request, $user)
+    {
+        $announcement = Announcement::latest()->first();
+
+        if ($announcement && $announcement->userTypes?->contains($user->ref_cod_tipo_usuario)) {
+            if ($announcement->repeat_on_login || !$this->userReadAnnouncement($announcement, $user)) {
+                return redirect()->route('announcement.user.show');
+            }
+        }
+    }
+
+    private function userReadAnnouncement(Announcement $announcement, $user): bool
+    {
+        return $announcement->users()
+            ->whereKey($user->getKey())
+            ->wherePivotNotNull('read_at')
+            ->exists();
+    }
+
 }
