@@ -15,31 +15,28 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property string        $name
  * @property LegacyGrade[] $grades
+ * @property int           $cod_curso
+ * @property string        $nm_curso
+ * @property string        $descricao
+ * @property int           $qtd_etapas
+ * @property int           $padrao_ano_escolar
+ * @property float         $hora_falta
  *
  * @method static LegacyCourseBuilder query()
  */
 class LegacyCourse extends LegacyModel
 {
-    /** @use HasBuilder<LegacyCourseBuilder<static>> */
+    /** @use HasBuilder<LegacyCourseBuilder> */
     use HasBuilder;
 
     use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.curso';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_curso';
 
-    /**
-     * Builder dos filtros
-     */
     protected static string $builder = LegacyCourseBuilder::class;
 
     /**
@@ -53,9 +50,6 @@ class LegacyCourse extends LegacyModel
         'description' => 'descricao',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_usuario_cad',
         'ref_cod_tipo_regime',
@@ -74,9 +68,6 @@ class LegacyCourse extends LegacyModel
         'multi_seriado',
     ];
 
-    /**
-     * @var array
-     */
     protected $casts = [
         'padrao_ano_escolar' => 'boolean',
     ];
@@ -129,6 +120,9 @@ class LegacyCourse extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<LegacyInstitution, $this>
+     */
     public function institution(): BelongsTo
     {
         return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
@@ -137,26 +131,34 @@ class LegacyCourse extends LegacyModel
     /**
      * Relacionamento com as series
      *
-     * @return HasMany
+     * @return HasMany<LegacyGrade, $this>
      */
-    public function grades()
+    public function grades(): HasMany
     {
         return $this->hasMany(LegacyGrade::class, 'ref_cod_curso');
     }
 
     /**
      * Relaciona com  as escolas
+     *
+     * @return BelongsToMany<LegacySchool, $this>
      */
     public function schools(): BelongsToMany
     {
         return $this->belongsToMany(LegacySchool::class, 'pmieducar.escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
 
+    /**
+     * @return BelongsTo<LegacyEducationType, $this>
+     */
     public function educationType(): BelongsTo
     {
         return $this->belongsTo(LegacyEducationType::class, 'ref_cod_tipo_ensino');
     }
 
+    /**
+     * @return BelongsTo<LegacyEducationLevel, $this>
+     */
     public function educationLevel(): BelongsTo
     {
         return $this->belongsTo(LegacyEducationLevel::class, 'ref_cod_nivel_ensino');

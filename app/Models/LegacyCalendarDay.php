@@ -6,7 +6,11 @@ use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacyCalendarDay extends LegacyModel
 {
     use Ativo;
@@ -29,12 +33,18 @@ class LegacyCalendarDay extends LegacyModel
         'descricao',
     ];
 
-    public function calendarDayReason()
+    /**
+     * @return BelongsTo<LegacyCalendarDayReason, $this>
+     */
+    public function calendarDayReason(): BelongsTo
     {
         return $this->belongsTo(LegacyCalendarDayReason::class, 'ref_cod_calendario_dia_motivo');
     }
 
-    public function calendarYear()
+    /**
+     * @return BelongsTo<LegacyCalendarYear, $this>
+     */
+    public function calendarYear(): BelongsTo
     {
         return $this->belongsTo(LegacyCalendarYear::class, 'ref_cod_calendario_ano_letivo');
     }

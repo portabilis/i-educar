@@ -7,14 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyDisciplineDescriptiveOpinion extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.parecer_componente_curricular';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'parecer_aluno_id',
         'componente_curricular_id',
@@ -22,23 +16,20 @@ class LegacyDisciplineDescriptiveOpinion extends Model
         'etapa',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyStudentDescriptiveOpinion, $this>
      */
-    public function studentDescriptiveOpinion()
+    public function studentDescriptiveOpinion(): BelongsTo
     {
         return $this->belongsTo(LegacyStudentDescriptiveOpinion::class, 'parecer_aluno_id');
     }
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyDiscipline, $this>
      */
-    public function discipline()
+    public function discipline(): BelongsTo
     {
         return $this->belongsTo(LegacyDiscipline::class, 'componente_curricular_id');
     }

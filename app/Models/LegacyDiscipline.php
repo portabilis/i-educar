@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property array<int, string> $fillable
  * @property string $name
+ * @property int $instituicao_id
+ * @property int $area_conhecimento_id
+ * @property string $nome
+ * @property string $abreviatura
+ * @property string $tipo_base
+ * @property int $ordenamento
+ * @property int $codigo_educacenso
  */
 class LegacyDiscipline extends LegacyModel
 {
@@ -47,6 +54,9 @@ class LegacyDiscipline extends LegacyModel
         );
     }
 
+    /**
+     * @return HasMany<LegacySchoolGradeDiscipline, $this>
+     */
     public function schoolGradeDisciplines(): HasMany
     {
         return $this->hasMany(LegacySchoolGradeDiscipline::class, 'ref_cod_disciplina');
@@ -95,9 +105,9 @@ class LegacyDiscipline extends LegacyModel
     }
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyKnowledgeArea, $this>
      */
-    public function knowledgeArea()
+    public function knowledgeArea(): BelongsTo
     {
         return $this->belongsTo(LegacyKnowledgeArea::class, 'area_conhecimento_id');
     }

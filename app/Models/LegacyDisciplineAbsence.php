@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $quantidade
+ */
 class LegacyDisciplineAbsence extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.falta_componente_curricular';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'falta_aluno_id',
         'componente_curricular_id',
@@ -22,15 +19,12 @@ class LegacyDisciplineAbsence extends Model
         'etapa',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyStudentAbsence, $this>
      */
-    public function studentAbsence()
+    public function studentAbsence(): BelongsTo
     {
         return $this->belongsTo(LegacyStudentAbsence::class, 'falta_aluno_id');
     }

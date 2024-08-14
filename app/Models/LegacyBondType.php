@@ -9,19 +9,16 @@ use Illuminate\Database\Eloquent\Model;
  * Class LegacyDisciplineExemption
  *
  * @property LegacyRegistration $registration
+ * @property array<int, string> $fillable
+ * @property string $nm_vinculo
+ * @property string $abreviatura
  */
 class LegacyBondType extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'portal.funcionario_vinculo';
 
     protected $primaryKey = 'cod_funcionario_vinculo';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nm_vinculo',
         'abreviatura',
