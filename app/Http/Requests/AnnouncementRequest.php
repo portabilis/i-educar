@@ -9,7 +9,6 @@ use Illuminate\Validation\Rule;
 
 class AnnouncementRequest extends FormRequest
 {
-
     protected function prepareForValidation()
     {
         $this->merge([
@@ -18,14 +17,14 @@ class AnnouncementRequest extends FormRequest
             'show_vacancy' => $this->has('show_vacancy'),
             'active' => $this->has('active'),
             'tipo_usuario' => Arr::flatten($this->get('tipo_usuario', [])),
-            'created_by_user_id' =>  $this->user()->getKey()
+            'created_by_user_id' => $this->user()->getKey(),
         ]);
     }
 
     public function rules()
     {
         return [
-            'name'  => ['required', 'max:255'],
+            'name' => ['required', 'max:255'],
             'description' => ['required'],
             'repeat_on_login' => ['boolean'],
             'show_confirmation' => ['boolean'],
@@ -51,7 +50,7 @@ class AnnouncementRequest extends FormRequest
     {
         return [
             'description' => 'Conteúdo do aviso',
-            'tipo_usuario' => 'Tipos de usuários que serão notificados'
+            'tipo_usuario' => 'Tipos de usuários que serão notificados',
         ];
     }
 }

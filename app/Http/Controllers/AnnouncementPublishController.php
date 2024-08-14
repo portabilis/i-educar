@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AnnouncementRequest;
 use App\Models\Announcement;
 use App\Process;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class AnnouncementPublishController extends Controller
@@ -14,18 +13,18 @@ class AnnouncementPublishController extends Controller
     {
         $this->menu(Process::ANNOUNCEMENT);
         $this->breadcrumb('Publicação de avisos', [
-            url('/intranet/educar_configuracoes_index.php') => 'Configurações'
+            url('/intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
         $announcements = Announcement::query()
             ->withTrashed()
             ->with([
-                'userTypes'
+                'userTypes',
             ])
             ->latest()
             ->paginate();
 
         return view('announcement.publish.index', [
-            'announcements' => $announcements
+            'announcements' => $announcements,
         ]);
     }
 
@@ -62,7 +61,7 @@ class AnnouncementPublishController extends Controller
 
         if ($announcement) {
             session()->flash('success', 'Cadastro efetuado com sucesso.');
-        } else  {
+        } else {
             session()->flash('error', 'Cadastro não realizado.');
         }
 
@@ -73,12 +72,12 @@ class AnnouncementPublishController extends Controller
     {
         $this->menu(Process::ANNOUNCEMENT);
         $this->breadcrumb('Publicação de avisos', [
-            url('/intranet/educar_configuracoes_index.php') => 'Configurações'
+            url('/intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
 
         return view('announcement.publish.create', [
             'announcement' => new Announcement(),
-            'userTypes' => null
+            'userTypes' => null,
         ]);
     }
 
@@ -86,14 +85,14 @@ class AnnouncementPublishController extends Controller
     {
         $this->menu(Process::ANNOUNCEMENT);
         $this->breadcrumb('Publicação de avisos', [
-            url('/intranet/educar_configuracoes_index.php') => 'Configurações'
+            url('/intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
         $announcement = Announcement::query()->withTrashed()->findOrFail($announcementId);
         $userTypes = $announcement->userTypes->pluck('cod_tipo_usuario');
 
         return view('announcement.publish.create', [
             'announcement' => $announcement,
-            'userTypes' => $userTypes
+            'userTypes' => $userTypes,
         ]);
     }
 }

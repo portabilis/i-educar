@@ -18,7 +18,7 @@ class AnnouncementUserController extends Controller
         $this->menu(Process::ANNOUNCEMENT);
         $announcement = Announcement::query()->latest()->first();
         $announcement->users()->sync([
-            $request->user()->getKey() => ['read_at' => now()]
+            $request->user()->getKey() => ['read_at' => now()],
         ]);
         $schools = null;
         if ($announcement->show_vacancy) {
@@ -54,11 +54,11 @@ class AnnouncementUserController extends Controller
                     'curso',
                     'serie',
                 ]);
-        };
+        }
 
         return view('announcement.user.show', [
             'announcement' => $announcement,
-            'schools' => $schools
+            'schools' => $schools,
         ]);
     }
 
@@ -66,7 +66,7 @@ class AnnouncementUserController extends Controller
     {
         $announcement = Announcement::query()->latest()->first();
         $announcement->users()->sync([
-            $request->user()->getKey() => ['confirmed_at' => now()]
+            $request->user()->getKey() => ['confirmed_at' => now()],
         ]);
 
         return redirect('/');

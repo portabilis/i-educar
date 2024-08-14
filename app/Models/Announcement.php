@@ -17,7 +17,7 @@ class Announcement extends Model
         'repeat_on_login',
         'show_confirmation',
         'show_vacancy',
-        'created_by_user_id'
+        'created_by_user_id',
     ];
 
     public function userTypes(): BelongsToMany
