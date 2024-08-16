@@ -47,6 +47,7 @@ class LegacyPerson extends LegacyModel
         'origem_gravacao',
         'operacao',
         'email',
+        'slug',
     ];
 
     public array $legacy = [

@@ -74,6 +74,8 @@ class LegacyRegistration extends LegacyModel
         'ultima_matricula',
         'bloquear_troca_de_situacao',
         'observacao',
+        'ref_cod_abandono_tipo',
+        'data_cancel',
     ];
 
     protected $casts = [

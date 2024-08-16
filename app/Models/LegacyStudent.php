@@ -44,6 +44,8 @@ class LegacyStudent extends LegacyModel
         'ref_idpes',
         'tipo_responsavel',
         'codigo_sistema',
+        'ativo',
+        'ref_usuario_cad',
     ];
 
     public array $legacy = [

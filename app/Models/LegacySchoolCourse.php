@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\LegacyArray;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,6 +21,10 @@ class LegacySchoolCourse extends LegacyModel
      * @var string
      */
     protected $primaryKey = 'ref_cod_escola';
+
+    protected $casts = [
+        'anos_letivos' => LegacyArray::class,
+    ];
 
     /**
      * @var array
