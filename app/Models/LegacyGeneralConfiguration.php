@@ -8,21 +8,12 @@ class LegacyGeneralConfiguration extends LegacyModel
 {
     use HasInstitution;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.configuracoes_gerais';
 
     public $incrementing = false;
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'ref_cod_instituicao';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'permite_relacionamento_posvendas',
         'url_novo_educacao',

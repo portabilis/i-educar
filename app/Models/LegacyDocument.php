@@ -9,7 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * LegacyCourse
  *
- * @property string $name Nome do curso
+ * @property string $tipo_cert_civil
+ * @property string $num_termo
+ * @property string $num_livro
+ * @property string $num_folha
+ * @property string $certidao_nascimento
+ * @property string $sigla_uf_exp_rg
+ * @property LegacyIssuingBody $issuingBody
  */
 class LegacyDocument extends Model
 {
@@ -17,19 +23,10 @@ class LegacyDocument extends Model
 
     public const UPDATED_AT = null;
 
-    /**
-     * @var string
-     */
     protected $table = 'cadastro.documento';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idpes';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idpes',
         'rg',
@@ -90,6 +87,9 @@ class LegacyDocument extends Model
         });
     }
 
+    /**
+     * @return BelongsTo<LegacyIssuingBody, $this>
+     */
     public function issuingBody(): BelongsTo
     {
         return $this->belongsTo(LegacyIssuingBody::class, 'idorg_exp_rg');

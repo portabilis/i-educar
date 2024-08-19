@@ -22,6 +22,7 @@ use Illuminate\Support\Collection;
  * @property string $tipo_responsavel
  * @property string $guardianType
  * @property int $aluno_estado_id
+ * @property int $cod_aluno
  */
 class LegacyStudent extends LegacyModel
 {
@@ -36,19 +37,10 @@ class LegacyStudent extends LegacyModel
 
     protected static string $builder = LegacyStudentBuilder::class;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.aluno';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_aluno';
 
-    /**
-     * @var array<int, string>
-     */
     protected $fillable = [
         'ref_idpes',
         'tipo_responsavel',

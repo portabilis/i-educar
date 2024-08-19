@@ -7,14 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyGeneralAverage extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.media_geral';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nota_aluno_id',
         'media',
@@ -22,17 +16,14 @@ class LegacyGeneralAverage extends Model
         'etapa',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     public $primaryKey = 'nota_aluno_id';
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyStudentScore, $this>
      */
-    public function studentScore()
+    public function studentScore(): BelongsTo
     {
         return $this->belongsTo(LegacyStudentScore::class, 'nota_aluno_id');
     }
