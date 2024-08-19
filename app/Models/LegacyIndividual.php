@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property LegacyPerson $mother
+ * @property LegacyPerson $father
+ * @property LegacyPerson $responsible
+ * @property Carbon $data_nasc
+ */
 class LegacyIndividual extends Model
 {
     use HasFiles;
@@ -161,16 +168,25 @@ class LegacyIndividual extends Model
         return $this->belongsTo(Country::class, 'idpais_estrangeiro');
     }
 
-    public function mother()
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
+    public function mother(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes_mae', 'idpes');
     }
 
-    public function father()
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
+    public function father(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes_pai', 'idpes');
     }
 
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
     public function responsible()
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes_responsavel', 'idpes');

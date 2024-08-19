@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ * @property string $nm_tipo
+ * @property int $num_etapas
+ */
 class LegacyStageType extends LegacyModel
 {
     /** @use HasBuilder<LegacyStageTypeBuilder> */
@@ -23,14 +28,8 @@ class LegacyStageType extends LegacyModel
 
     public const UPDATED_AT = null;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.modulo';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_modulo';
 
     protected static string $builder = LegacyStageTypeBuilder::class;
@@ -50,11 +49,17 @@ class LegacyStageType extends LegacyModel
         'ativo',
     ];
 
+    /**
+     * @return HasMany<LegacyAcademicYearStage, $this>
+     */
     public function academicYearStages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_cod_modulo');
     }
 
+    /**
+     * @return HasMany<LegacySchoolClassStage, $this>
+     */
     public function schoolClassStage(): HasMany
     {
         return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_modulo');

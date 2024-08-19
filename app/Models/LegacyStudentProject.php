@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentProject extends Model
 {
@@ -16,6 +17,9 @@ class LegacyStudentProject extends Model
      */
     protected $table = 'pmieducar.projeto_aluno';
 
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'ref_cod_aluno',
         'data_inclusao',
@@ -24,12 +28,18 @@ class LegacyStudentProject extends Model
         'turno',
     ];
 
-    public function student()
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
+    public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
     }
 
-    public function project()
+    /**
+     * @return BelongsTo<LegacyProject, $this>
+     */
+    public function project(): BelongsTo
     {
         return $this->belongsTo(LegacyProject::class, 'ref_cod_projeto');
     }
