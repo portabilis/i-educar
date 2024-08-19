@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class LegacyCalendarDayNote extends Pivot
@@ -19,7 +20,10 @@ class LegacyCalendarDayNote extends Pivot
         'ref_cod_calendario_anotacao',
     ];
 
-    public function calendarNote()
+    /**
+     * @return BelongsTo<LegacyCalendarNote, $this>
+     */
+    public function calendarNote(): BelongsTo
     {
         return $this->belongsTo(LegacyCalendarNote::class, 'ref_cod_calendario_anotacao');
     }

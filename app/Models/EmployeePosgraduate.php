@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property array<int, string> $fillable
+ * @property int $type_id
+ * @property int $area_id
  */
 class EmployeePosgraduate extends Model
 {

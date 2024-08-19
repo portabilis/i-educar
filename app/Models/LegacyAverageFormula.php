@@ -4,19 +4,8 @@ namespace App\Models;
 
 class LegacyAverageFormula extends LegacyModel
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.formula_media';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
-     * @var array
-     */
     protected $fillable = [
         'instituicao_id',
         'nome',
@@ -25,9 +14,6 @@ class LegacyAverageFormula extends LegacyModel
         'substitui_menor_nota_rc',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     public array $legacy = [

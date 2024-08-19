@@ -7,7 +7,13 @@ use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property string $tipo
+ * @property string $nm_motivo
+ * @property LegacySchool $school
+ */
 class LegacyCalendarDayReason extends LegacyModel
 {
     use Ativo;
@@ -27,7 +33,10 @@ class LegacyCalendarDayReason extends LegacyModel
         'nm_motivo',
     ];
 
-    public function school()
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
+    public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }

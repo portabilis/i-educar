@@ -6,6 +6,9 @@ use App\Traits\Ativo;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacyAbandonmentType extends LegacyModel
 {
     use Ativo;
@@ -16,19 +19,10 @@ class LegacyAbandonmentType extends LegacyModel
 
     public const UPDATED_AT = null;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.abandono_tipo';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_abandono_tipo';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_usuario_exc',
         'ref_usuario_cad',

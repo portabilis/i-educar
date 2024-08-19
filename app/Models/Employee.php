@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property int $cod_servidor
  * @property LegacyPerson $person
  * @property array<int, string> $fillable
+ * @property int $curso_formacao_continuada
  */
 class Employee extends LegacyModel
 {
@@ -102,6 +103,9 @@ class Employee extends LegacyModel
         return $this->hasMany(EmployeeAllocation::class, 'ref_cod_servidor', 'cod_servidor');
     }
 
+    /**
+     * @return HasOne<EmployeeAllocation, $this>
+     */
     public function employeeAllocation(): HasOne
     {
         return $this->hasOne(EmployeeAllocation::class, 'ref_cod_servidor', 'cod_servidor');
@@ -162,6 +166,9 @@ class Employee extends LegacyModel
         return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
 
+    /**
+     * @return HasMany<EmployeePosgraduate, $this>
+     */
     public function posGraduations(): HasMany
     {
         return $this->hasMany(EmployeePosgraduate::class, 'employee_id');
@@ -169,6 +176,7 @@ class Employee extends LegacyModel
 
     public function place(): HasOneThrough
     {
+        // @phpstan-ignore-next-line
         return $this->hasOneThrough(
             Place::class,
             PersonHasPlace::class,
@@ -176,7 +184,7 @@ class Employee extends LegacyModel
             'id',
             'cod_servidor',
             'place_id'
-        )->orderBy('type');
+        )->orderBy('type'); // @phpstan-ignore-next-line
     }
 
     /**

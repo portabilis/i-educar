@@ -14,19 +14,10 @@ class LegacyDisciplinaryOccurrenceType extends LegacyModel
     use HasLegacyDates;
     use HasLegacyUserAction;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.tipo_ocorrencia_disciplinar';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_tipo_ocorrencia_disciplinar';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nm_tipo',
         'descricao',

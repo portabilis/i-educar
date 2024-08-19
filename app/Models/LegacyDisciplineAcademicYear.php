@@ -12,10 +12,14 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * LegacyDisciplineAcademicYear
  *
  * @method static LegacyDisciplineAcademicYearBuilder query()
+ *
+ * @property int $componente_curricular_id
+ * @property int $carga_horaria
+ * @property LegacyDiscipline $discipline
  */
 class LegacyDisciplineAcademicYear extends Pivot
 {
-    /** @use HasBuilder<LegacyDisciplineAcademicYearBuilder<static>> */
+    /** @use HasBuilder<LegacyDisciplineAcademicYearBuilder> */
     use HasBuilder;
 
     protected $table = 'modules.componente_curricular_ano_escolar';
@@ -51,7 +55,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     public $incrementing = false;
 
     /**
-     * Serie
+     * @return BelongsTo<LegacyGrade, $this>
      */
     public function grade(): BelongsTo
     {
@@ -59,7 +63,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     }
 
     /**
-     * Component Curricular
+     * @return BelongsTo<LegacyDiscipline, $this>
      */
     public function discipline(): BelongsTo
     {

@@ -11,12 +11,9 @@ class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
 
-    /** @use HasBuilder<LegacyAcademicYearStageBuilder<static>> */
+    /** @use HasBuilder<LegacyAcademicYearStageBuilder> */
     use HasBuilder;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.ano_letivo_modulo';
 
     /**
@@ -29,9 +26,6 @@ class LegacyAcademicYearStage extends LegacyModel
         'data_fim' => 'date',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_ano',
         'ref_ref_cod_escola',
@@ -43,16 +37,19 @@ class LegacyAcademicYearStage extends LegacyModel
         'escola_ano_letivo_id',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
+    /**
+     * @return BelongsTo<LegacyStageType, $this>
+     */
     public function stageType(): BelongsTo
     {
         return $this->belongsTo(LegacyStageType::class, 'ref_cod_modulo');
     }
 
+    /**
+     * @return BelongsTo<LegacySchoolAcademicYear, $this>
+     */
     public function schoolAcademicYear(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolAcademicYear::class, 'ref_ref_cod_escola', 'ref_cod_escola');
