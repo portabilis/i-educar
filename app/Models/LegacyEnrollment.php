@@ -65,6 +65,11 @@ class LegacyEnrollment extends LegacyModel
         'etapa_educacenso',
         'cod_curso_profissional',
         'desconsiderar_educacenso',
+        'transferido',
+        'remanejado',
+        'reclassificado',
+        'abandono',
+        'falecido',
     ];
 
     protected $casts = [

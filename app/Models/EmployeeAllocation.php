@@ -43,6 +43,8 @@ class EmployeeAllocation extends LegacyModel
         'hora_atividade',
         'horas_excedentes',
         'data_saida',
+        'ativo',
+        'ref_usuario_cad',
     ];
 
     protected function periodName(): Attribute
