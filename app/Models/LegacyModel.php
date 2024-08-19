@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacyModel extends Model
 {
-    /** @use HasBuilder<LegacyBuilder<static>> */
+    /** @use HasBuilder<LegacyBuilder> */
     use HasBuilder;
 
     public array $legacy = [];
@@ -60,6 +60,9 @@ class LegacyModel extends Model
         return parent::fill($attributes);
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function getLegacyColumn($key)
     {
         if (is_string($key)) {

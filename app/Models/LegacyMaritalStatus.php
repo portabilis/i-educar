@@ -5,21 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $ideciv
+ */
 class LegacyMaritalStatus extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'cadastro.estado_civil';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'ideciv';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ideciv',
         'descricao',
@@ -33,11 +27,11 @@ class LegacyMaritalStatus extends Model
         });
     }
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
+    /**
+     * @return HasMany<LegacyIndividual, $this>
+     */
     public function individuals(): HasMany
     {
         return $this->hasMany(LegacyIndividual::class, 'ideciv');

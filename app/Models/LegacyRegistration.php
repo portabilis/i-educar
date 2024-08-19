@@ -185,6 +185,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function schoolClasses(): BelongsToMany
     {
+        // @phpstan-ignore-next-line
         return $this->belongsToMany(
             LegacySchoolClass::class,
             'pmieducar.matricula_turma',
@@ -214,11 +215,13 @@ class LegacyRegistration extends LegacyModel
      */
     public function situationApproved(): HasOne
     {
+        // @phpstan-ignore-next-line
         return $this->hasOne(Situation::class, 'cod_matricula')->approved();
     }
 
     public function schoolClass(): BelongsToOne
     {
+        // @phpstan-ignore-next-line
         return $this->belongsToOne(
             LegacySchoolClass::class,
             'pmieducar.matricula_turma',
@@ -265,6 +268,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function activeEnrollments(): HasMany
     {
+        // @phpstan-ignore-next-line
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula')->where('ativo', 1);
     }
 
@@ -273,6 +277,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function lastEnrollment(): HasOne
     {
+        // @phpstan-ignore-next-line
         return $this->hasOne(LegacyEnrollment::class, 'ref_cod_matricula')->orderBy('sequencial', 'DESC');
     }
 
@@ -350,6 +355,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function getEvaluationRule()
     {
+        /** @var LegacyEvaluationRuleGradeYear $evaluationRuleGradeYear */
         $evaluationRuleGradeYear = $this->evaluationRuleGradeYear()
             ->where('ano_letivo', $this->ano)
             ->firstOrFail();

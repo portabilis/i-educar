@@ -6,35 +6,24 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * @property string $fantasia
+ */
 class LegacyOrganization extends LegacyModel
 {
-    /**
-     * @var string
-     */
     protected $table = 'cadastro.juridica';
 
     public const CREATED_AT = 'data_cad';
 
     public const UPDATED_AT = 'data_rev';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idpes';
 
-    /**
-     * Atributos legados para serem usados nas queries
-     *
-     * @var string[]
-     */
     public array $legacy = [
         'id' => 'idpes',
         'fantasy' => 'fantasia',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idpes',
         'cnpj',
@@ -72,6 +61,9 @@ class LegacyOrganization extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
     public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes');

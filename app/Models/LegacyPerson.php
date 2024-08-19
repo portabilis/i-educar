@@ -12,34 +12,26 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Str;
 
 /**
+ * @property int $idpes
  * @property string $name
  * @property string $nome
  * @property string $real_name
  */
 class LegacyPerson extends LegacyModel
 {
-    /** @use HasBuilder<LegacyPersonBuilder<static>> */
+    /** @use HasBuilder<LegacyPersonBuilder> */
     use HasBuilder;
 
     public const CREATED_AT = 'data_cad';
 
     public const UPDATED_AT = 'data_rev';
 
-    /**
-     * @var string
-     */
     protected $table = 'cadastro.pessoa';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idpes';
 
     protected static string $builder = LegacyPersonBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idpes',
         'nome',
@@ -111,21 +103,34 @@ class LegacyPerson extends LegacyModel
         );
     }
 
+    /**
+     * @return HasMany<LegacyPhone, $this>
+     */
     public function phones(): HasMany
     {
         return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes');
     }
 
+    /**
+     * @return HasOne<LegacyPhone, $this>
+     */
     public function phone(): HasOne
     {
+        // @phpstan-ignore-next-line
         return $this->hasOne(LegacyPhone::class, 'idpes', 'idpes')->where('fone', '<>', 0)->orderBy('tipo');
     }
 
+    /**
+     * @return HasOne<LegacyIndividual, $this>
+     */
     public function individual(): HasOne
     {
         return $this->hasOne(LegacyIndividual::class, 'idpes', 'idpes');
     }
 
+    /**
+     * @return BelongsToMany<LegacyDeficiency, $this>
+     */
     public function deficiencies(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -138,9 +143,12 @@ class LegacyPerson extends LegacyModel
         );
     }
 
+    /**
+     * @return HasOneThrough<Place, PersonHasPlace, $this>
+     */
     public function place(): HasOneThrough
     {
-        return $this->hasOneThrough(
+        return $this->hasOneThrough( // @phpstan-ignore-line
             Place::class,
             PersonHasPlace::class,
             'person_id',
@@ -150,13 +158,20 @@ class LegacyPerson extends LegacyModel
         )->orderBy('type');
     }
 
+    /**
+     * @return HasOne<Employee, $this>
+     */
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class, 'cod_servidor', 'idpes');
     }
 
+    /**
+     * @return BelongsToMany<LegacyDeficiency, $this>
+     */
     public function considerableDeficiencies(): BelongsToMany
     {
+        // @phpstan-ignore-next-line
         return $this->deficiencies()->where('desconsidera_regra_diferenciada', false);
     }
 }

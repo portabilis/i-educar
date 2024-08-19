@@ -13,19 +13,10 @@ class LegacyRegistrationDisciplinaryOccurrenceType extends LegacyModel
     use HasLegacyDates;
     use HasLegacyUserAction;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.matricula_ocorrencia_disciplinar';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_ocorrencia_disciplinar';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_matricula',
         'ref_cod_tipo_ocorrencia_disciplinar',
@@ -39,11 +30,17 @@ class LegacyRegistrationDisciplinaryOccurrenceType extends LegacyModel
         'updated_at',
     ];
 
+    /**
+     * @return BelongsTo<LegacyRegistration, $this>
+     */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
     }
 
+    /**
+     * @return BelongsTo<LegacyDisciplinaryOccurrenceType, $this>
+     */
     public function disciplinarOccurrenceType(): BelongsTo
     {
         return $this->belongsTo(LegacyDisciplinaryOccurrenceType::class, 'ref_cod_tipo_ocorrencia_disciplinar');
