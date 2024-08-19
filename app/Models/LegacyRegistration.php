@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\HasBelongsToOne;
+use Ankurk91\Eloquent\Relations\BelongsToOne;
 use App\Models\Builders\LegacyRegistrationBuilder;
 use App\Models\View\Situation;
 use App\Traits\HasLegacyDates;
@@ -18,47 +19,44 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int              $id
- * @property bool              $isTransferred
- * @property bool              $isAbandoned
- * @property bool              $isCanceled
- * @property bool              $bloquear_troca_de_situacao
- * @property bool              $dependencia
- * @property int              $cod_matricula
- * @property int              $ano
- * @property LegacyStudentAbsence $studentAbsence
- * @property LegacyStudentScore   $studentScore
- * @property LegacyCourse         $course
- * @property Collection           $enrollments
+ * @property int                    $id
+ * @property bool                   $isTransferred
+ * @property bool                   $isAbandoned
+ * @property bool                   $isCanceled
+ * @property bool                   $bloquear_troca_de_situacao
+ * @property bool                   $dependencia
+ * @property int                    $cod_matricula
+ * @property int                    $ref_ref_cod_escola
+ * @property int                    $ano
+ * @property int                    $aprovado
+ * @property int                    $ativo
+ * @property LegacyStudentAbsence   $studentAbsence
+ * @property LegacyStudentScore     $studentScore
+ * @property LegacyCourse           $course
+ * @property LegacySchool           $school
+ * @property Collection             $enrollments
+ * @property array<int, string> $fillable
+ * @property LegacyStudent $student
  */
 class LegacyRegistration extends LegacyModel
 {
     use HasBelongsToOne;
 
-    /** @use HasBuilder<LegacyRegistrationBuilder<static>> */
+    /** @use HasBuilder<LegacyRegistrationBuilder> */
     use HasBuilder;
 
     use HasLegacyDates;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.matricula';
 
     public const CREATED_AT = 'data_cadastro';
 
     public const UPDATED_AT = 'updated_at';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_matricula';
 
     protected static string $builder = LegacyRegistrationBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
@@ -77,12 +75,18 @@ class LegacyRegistration extends LegacyModel
         'data_cancel',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     protected $casts = [
         'data_matricula' => 'date',
         'data_cancel' => 'date',
         'data_exclusao' => 'date',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public array $legacy = [
         'id' => 'cod_matricula',
         'student_id' => 'ref_cod_aluno',
@@ -130,6 +134,8 @@ class LegacyRegistration extends LegacyModel
 
     /**
      * Relação com o aluno.
+     *
+     * @return BelongsTo<LegacyStudent, $this>
      */
     public function student(): BelongsTo
     {
@@ -138,6 +144,8 @@ class LegacyRegistration extends LegacyModel
 
     /**
      * Relação com a escola.
+     *
+     * @return BelongsTo<LegacySchool, $this>
      */
     public function school(): BelongsTo
     {
@@ -146,6 +154,8 @@ class LegacyRegistration extends LegacyModel
 
     /**
      * Relação com a série.
+     *
+     * @return BelongsTo<LegacyGrade, $this>
      */
     public function grade(): BelongsTo
     {
@@ -154,17 +164,25 @@ class LegacyRegistration extends LegacyModel
 
     /**
      * Relação com o curso.
+     *
+     * @return BelongsTo<LegacyCourse, $this>
      */
     public function course(): BelongsTo
     {
         return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
     }
 
+    /**
+     * @return HasMany<LegacyEnrollment, $this>
+     */
     public function enrollments(): HasMany
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula');
     }
 
+    /**
+     * @return BelongsToMany<LegacySchoolClass, $this>
+     */
     public function schoolClasses(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -175,22 +193,31 @@ class LegacyRegistration extends LegacyModel
         )->where('pmieducar.turma.ativo', 1);
     }
 
+    /**
+     * @return HasMany<Situation, $this>
+     */
     public function situations(): HasMany
     {
         return $this->hasMany(Situation::class, 'cod_matricula');
     }
 
+    /**
+     * @return HasOne<Situation, $this>
+     */
     public function situation(): HasOne
     {
         return $this->hasOne(Situation::class, 'cod_matricula');
     }
 
+    /**
+     * @return HasOne<Situation, $this>
+     */
     public function situationApproved(): HasOne
     {
         return $this->hasOne(Situation::class, 'cod_matricula')->approved();
     }
 
-    public function schoolClass()
+    public function schoolClass(): BelongsToOne
     {
         return $this->belongsToOne(
             LegacySchoolClass::class,
@@ -201,44 +228,65 @@ class LegacyRegistration extends LegacyModel
             ->orderBy('matricula_turma.sequencial', 'desc');
     }
 
+    /**
+     * @return HasOne<LegacyTransferRequest, $this>
+     */
     public function transferStart(): HasOne
     {
         return $this->hasOne(LegacyTransferRequest::class, 'ref_cod_matricula_entrada');
     }
 
+    /**
+     * @return HasOne<LegacyTransferRequest, $this>
+     */
     public function transferEnd(): HasOne
     {
         return $this->hasOne(LegacyTransferRequest::class, 'ref_cod_matricula_saida');
     }
 
+    /**
+     * @return HasMany<LegacyRegistrationScore, $this>
+     */
     public function registrationStores(): HasMany
     {
         return $this->hasMany(LegacyRegistrationScore::class, 'matricula_id');
     }
 
+    /**
+     * @return HasMany<LegacyDisciplineScore, $this>
+     */
     public function disciplineScores(): HasMany
     {
         return $this->hasMany(LegacyDisciplineScore::class, 'nota_aluno_id');
     }
 
+    /**
+     * @return HasMany<LegacyEnrollment, $this>
+     */
     public function activeEnrollments(): HasMany
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula')->where('ativo', 1);
     }
 
     /**
-     * @return HasOne
+     * @return HasOne<LegacyEnrollment, $this>
      */
-    public function lastEnrollment()
+    public function lastEnrollment(): HasOne
     {
         return $this->hasOne(LegacyEnrollment::class, 'ref_cod_matricula')->orderBy('sequencial', 'DESC');
     }
 
+    /**
+     * @return HasMany<LegacyDisciplineExemption, $this>
+     */
     public function exemptions(): HasMany
     {
         return $this->hasMany(LegacyDisciplineExemption::class, 'ref_cod_matricula', 'cod_matricula');
     }
 
+    /**
+     * @return HasMany<LegacyActiveLooking, $this>
+     */
     public function activeLookings(): HasMany
     {
         return $this->hasMany(LegacyActiveLooking::class, 'ref_cod_matricula', 'cod_matricula');
@@ -265,21 +313,33 @@ class LegacyRegistration extends LegacyModel
         );
     }
 
+    /**
+     * @return HasOne<LegacyStudentAbsence, $this>
+     */
     public function studentAbsence(): HasOne
     {
         return $this->hasOne(LegacyStudentAbsence::class, 'matricula_id');
     }
 
+    /**
+     * @return HasOne<LegacyStudentScore, $this>
+     */
     public function studentScore(): HasOne
     {
         return $this->hasOne(LegacyStudentScore::class, 'matricula_id');
     }
 
+    /**
+     * @return HasOne<LegacyStudentDescriptiveOpinion, $this>
+     */
     public function studentDescriptiveOpinion(): HasOne
     {
         return $this->hasOne(LegacyStudentDescriptiveOpinion::class, 'matricula_id');
     }
 
+    /**
+     * @return HasMany<LegacyDisciplineDependence, $this>
+     */
     public function dependencies(): HasMany
     {
         return $this->hasMany(LegacyDisciplineDependence::class, 'ref_cod_matricula', 'cod_matricula');
@@ -301,6 +361,9 @@ class LegacyRegistration extends LegacyModel
         return $evaluationRuleGradeYear->evaluationRule;
     }
 
+    /**
+     * @return BelongsTo<LegacyEvaluationRuleGradeYear, $this>
+     */
     public function evaluationRuleGradeYear(): BelongsTo
     {
         return $this->belongsTo(LegacyEvaluationRuleGradeYear::class, 'ref_ref_cod_serie', 'serie_id');

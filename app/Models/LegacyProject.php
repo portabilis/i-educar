@@ -5,21 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacyProject extends Model
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.projeto';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_projeto';
 
     protected $fillable = [
@@ -27,6 +21,9 @@ class LegacyProject extends Model
         'observacao',
     ];
 
+    /**
+     * @return HasMany<LegacyStudentProject, $this>
+     */
     public function studentProjects(): HasMany
     {
         return $this->hasMany(LegacyStudentProject::class, 'ref_cod_projeto');

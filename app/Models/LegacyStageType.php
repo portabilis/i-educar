@@ -19,9 +19,9 @@ class LegacyStageType extends LegacyModel
 {
     /** @use HasBuilder<LegacyStageTypeBuilder> */
     use HasBuilder;
+
     use HasInstitution;
     use HasLegacyDates;
-
     use HasLegacyUserAction;
 
     public const CREATED_AT = 'data_cadastro';
@@ -34,9 +34,6 @@ class LegacyStageType extends LegacyModel
 
     protected static string $builder = LegacyStageTypeBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'cod_modulo',
         'ref_usuario_cad',

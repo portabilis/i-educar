@@ -14,10 +14,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $ano
  *
  * @method static LegacySchoolAcademicYearBuilder query()
+ *
+ * @property array<int, string> $fillable
  */
 class LegacySchoolAcademicYear extends LegacyModel
 {
-    /** @use HasBuilder<LegacySchoolAcademicYearBuilder<static>> */
+    /** @use HasBuilder<LegacySchoolAcademicYearBuilder> */
     use HasBuilder;
 
     public const NOT_INITIALIZED = 0;
@@ -26,9 +28,6 @@ class LegacySchoolAcademicYear extends LegacyModel
 
     public const FINALIZED = 2;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.escola_ano_letivo';
 
     /**
@@ -36,9 +35,6 @@ class LegacySchoolAcademicYear extends LegacyModel
      */
     protected static string $builder = LegacySchoolAcademicYearBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_escola',
         'ano',
@@ -59,11 +55,17 @@ class LegacySchoolAcademicYear extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 
+    /**
+     * @return HasMany<LegacyAcademicYearStage, $this>
+     */
     public function academicYearStages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'escola_ano_letivo_id');

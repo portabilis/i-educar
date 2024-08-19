@@ -35,24 +35,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property LegacySchool       $school
  * @property LegacySchoolGrade  $schoolGrade
  * @property LegacyEnrollment[] $enrollments
+ * @property array<int, string> $fillable
  *
  * @method static LegacySchoolClassBuilder query()
  */
 class LegacySchoolClass extends Model
 {
-    /** @use HasBuilder<LegacySchoolClassBuilder<static>> */
+    /** @use HasBuilder<LegacySchoolClassBuilder> */
     use HasBuilder;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.turma';
 
     public const CREATED_AT = 'data_cadastro';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_turma';
 
     /**
@@ -63,7 +58,7 @@ class LegacySchoolClass extends Model
     /**
      * Atributos legados para serem usados nas queries
      *
-     * @var string[]
+     * @var array<string, string>
      */
     public array $legacy = [
         'id' => 'cod_turma',
@@ -71,9 +66,6 @@ class LegacySchoolClass extends Model
         'year' => 'ano',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_usuario_exc',
         'ref_usuario_cad',
@@ -295,6 +287,8 @@ class LegacySchoolClass extends Model
 
     /**
      * Séries
+     *
+     * @return BelongsToMany<LegacyGrade, $this>
      */
     public function grades(): BelongsToMany
     {
@@ -303,17 +297,25 @@ class LegacySchoolClass extends Model
 
     /**
      * Anos Letivos
+     *
+     * @return HasMany<LegacySchoolAcademicYear, $this>
      */
     public function academicYears(): HasMany
     {
         return $this->hasMany(LegacySchoolAcademicYear::class, 'ref_cod_escola', 'ref_ref_cod_escola')->whereColumn('escola_ano_letivo.ano', 'ano');
     }
 
+    /**
+     * @return BelongsTo<LegacyCourse, $this>
+     */
     public function course(): BelongsTo
     {
         return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
     }
 
+    /**
+     * @return BelongsTo<LegacyGrade, $this>
+     */
     public function grade(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
@@ -321,12 +323,17 @@ class LegacySchoolClass extends Model
 
     /**
      * Relacionamento com a escola.
+     *
+     * @return BelongsTo<LegacySchool, $this>
      */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');
     }
 
+    /**
+     * @return BelongsTo<LegacyPerson, $this>
+     */
     public function regentPerson(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_cod_regente');
@@ -334,6 +341,8 @@ class LegacySchoolClass extends Model
 
     /**
      * Relacionamento com as enturmações.
+     *
+     * @return HasMany<LegacyEnrollment, $this>
      */
     public function enrollments(): HasMany
     {
@@ -342,12 +351,17 @@ class LegacySchoolClass extends Model
 
     /**
      * Relacionamento com professor.
+     *
+     * @return HasMany<LegacySchoolClassTeacher, $this>
      */
     public function schoolClassTeachers(): HasMany
     {
         return $this->hasMany(LegacySchoolClassTeacher::class, 'turma_id');
     }
 
+    /**
+     * @return HasMany<LegacyAcademicYearStage, $this>|HasMany<LegacySchoolClassStage, $this>
+     */
     public function stages(): HasMany
     {
         if ($this->course?->is_standard_calendar) {
@@ -357,6 +371,9 @@ class LegacySchoolClass extends Model
         return $this->schoolClassStages();
     }
 
+    /**
+     * @return HasMany<LegacyAcademicYearStage, $this>
+     */
     public function academicYearStages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
@@ -374,11 +391,17 @@ class LegacySchoolClass extends Model
         return $stages ?? collect();
     }
 
+    /**
+     * @return HasMany<LegacySchoolClassStage, $this>
+     */
     public function schoolClassStages(): HasMany
     {
         return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
     }
 
+    /**
+     * @return HasMany<LegacySchoolClassGrade, $this>
+     */
     public function multigrades(): HasMany
     {
         return $this->hasMany(LegacySchoolClassGrade::class, 'turma_id');
@@ -496,6 +519,9 @@ class LegacySchoolClass extends Model
         ]);
     }
 
+    /**
+     * @return HasMany<Discipline, $this>
+     */
     public function viewDisciplines(): HasMany
     {
         return $this->hasMany(Discipline::class, 'cod_turma', 'cod_turma');
@@ -568,12 +594,17 @@ class LegacySchoolClass extends Model
 
     /**
      * Retorna o turno da turma.
+     *
+     * @return BelongsTo<LegacyPeriod, $this>
      */
     public function period(): BelongsTo
     {
         return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
     }
 
+    /**
+     * @return HasOne<SchoolClassInep, $this>
+     */
     public function inep(): HasOne
     {
         return $this->hasOne(SchoolClassInep::class, 'cod_turma');

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class SchoolManager extends Model
 {
-    /** @use HasBuilder<SchoolManagerBuilder<static>> */
+    /** @use HasBuilder<SchoolManagerBuilder> */
     use HasBuilder;
 
     protected static string $builder = SchoolManagerBuilder::class;

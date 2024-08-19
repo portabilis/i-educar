@@ -6,23 +6,16 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ * @property string $name
+ */
 class LegacyDiscipline extends LegacyModel
 {
     public const CREATED_AT = null;
 
-    /**
-     * @var string
-     */
     protected $table = 'modules.componente_curricular';
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
-     * @var array
-     */
     protected $fillable = [
         'instituicao_id',
         'area_conhecimento_id',
@@ -34,6 +27,9 @@ class LegacyDiscipline extends LegacyModel
         'desconsidera_para_progressao',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public array $legacy = [
         'institution_id' => 'instituicao_id',
         'knowledge_area_id' => 'area_conhecimento_id',

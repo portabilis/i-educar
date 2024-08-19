@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property array<int, string> $fillable
- * @property array<string, string> $legacy
+ * @property int $idesco
  */
 class LegacySchoolingDegree extends LegacyModel
 {
@@ -28,6 +28,9 @@ class LegacySchoolingDegree extends LegacyModel
         'escolaridade',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public array $legacy = [
         'id' => 'idesco',
         'description' => 'descricao',
@@ -40,7 +43,7 @@ class LegacySchoolingDegree extends LegacyModel
     public $timestamps = false;
 
     /**
-     * @return HasMany<LegacyEmployee, $this>
+     * @return HasMany<Employee, $this>
      */
     public function employees(): HasMany
     {
