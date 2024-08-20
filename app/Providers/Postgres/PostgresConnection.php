@@ -14,19 +14,15 @@ class PostgresConnection extends ParentPostgresConnection
                 return [];
             }
 
-            $useReadPdo = false;
-            if (Str::startsWith(trim($query), 'SELECT')) {
-                $useReadPdo = true;
-            }
-
-            if ($forceUseWritePdo) {
-                $useReadPdo = false;
-            }
-
-            $statement = $this->prepared($this->getPdoForSelect($useReadPdo)
+            $statement = $this->prepared($this->getPdoForSelect(!$forceUseWritePdo)
                 ->prepare($query));
             $this->bindValues($statement, $this->prepareBindings($bindings));
             $statement->execute();
+
+            $lower = strtolower($query);
+            if (str_contains($lower, 'insert') || str_contains($lower, 'update') || str_contains($lower, 'delete')) {
+                $this->recordsHaveBeenModified();
+            }
 
             return $statement;
         });
