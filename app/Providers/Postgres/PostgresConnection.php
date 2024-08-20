@@ -14,7 +14,7 @@ class PostgresConnection extends ParentPostgresConnection
                 return [];
             }
 
-            $statement = $this->prepared($this->getPdoForSelect(!$forceUseWritePdo)
+            $statement = $this->prepared($this->getPdoForSelect($forceUseWritePdo)
                 ->prepare($query));
             $this->bindValues($statement, $this->prepareBindings($bindings));
             $statement->execute();
