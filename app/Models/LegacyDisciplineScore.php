@@ -55,6 +55,16 @@ class LegacyDisciplineScore extends Model
         return Util::format($score, $decimalPlaces);
     }
 
+    public function originalScore(int $decimalPlaces = 1, bool $isGeneralAbsence = false): ?string
+    {
+        $score = $isGeneralAbsence ? 0 : $this->nota_original;
+        if (!is_numeric($score) || empty($score)) {
+            return $score;
+        }
+
+        return Util::format($score, $decimalPlaces);
+    }
+
     public function recoveryScore(int $decimalPlaces = 1, bool $isGeneralAbsence = false): ?string
     {
         $score = $isGeneralAbsence ? 0 : $this->nota_recuperacao ?? $this->nota_recuperacao_especifica;
