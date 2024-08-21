@@ -7,6 +7,7 @@ use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -458,6 +459,12 @@ return new class extends clsCadastro
      */
     private function canChange(User $currentUser, $changedUserId)
     {
+        $allow = Gate::allows('modify', 555);
+
+        if (!$allow) {
+            return false;
+        }
+
         if (!$changedUserId) {
             return true;
         }
