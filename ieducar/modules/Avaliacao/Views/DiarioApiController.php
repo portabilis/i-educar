@@ -14,7 +14,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class DiarioApiController extends ApiCoreController
@@ -1026,35 +1025,33 @@ class DiarioApiController extends ApiCoreController
      */
     protected function serviceBoletim($reload = false)
     {
-        return DB::setReadWriteType('write')->transaction(function () use ($reload) {
-            $matriculaId = $this->getCurrentMatriculaId();
+        $matriculaId = $this->getCurrentMatriculaId();
 
-            if (!isset($this->_boletimServiceInstances)) {
-                $this->_boletimServiceInstances = [];
+        if (!isset($this->_boletimServiceInstances)) {
+            $this->_boletimServiceInstances = [];
+        }
+
+        // set service
+        if (!isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
+            try {
+                $params = [
+                    'matricula' => $matriculaId,
+                    'usuario' => Auth::id(),
+                    'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
+                    'turmaId' => $this->getRequest()->turma_id,
+                ];
+                $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+            } catch (Exception $e) {
+                $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
             }
+        }
 
-            // set service
-            if (!isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
-                try {
-                    $params = [
-                        'matricula' => $matriculaId,
-                        'usuario' => Auth::id(),
-                        'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
-                        'turmaId' => $this->getRequest()->turma_id,
-                    ];
-                    $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
-                } catch (Exception $e) {
-                    $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
-                }
-            }
+        // validates service
+        if (is_null($this->_boletimServiceInstances[$matriculaId])) {
+            throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matricula $matriculaId.");
+        }
 
-            // validates service
-            if (is_null($this->_boletimServiceInstances[$matriculaId])) {
-                throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matricula $matriculaId.");
-            }
-
-            return $this->_boletimServiceInstances[$matriculaId];
-        });
+        return $this->_boletimServiceInstances[$matriculaId];
     }
 
     protected function trySaveServiceBoletim()
