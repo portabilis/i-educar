@@ -41,7 +41,7 @@ class AnnouncementUserController extends Controller
                 ->join('pmieducar.matricula', 'matricula.cod_matricula', 'ref_cod_matricula')
                 ->join('pmieducar.serie', fn ($join) => $join->on('cod_serie', 'matricula.ref_ref_cod_serie')->where('matricula.ativo', 1))
                 ->join('pmieducar.curso', fn ($join) => $join->on('cod_curso', 'matricula.ref_cod_curso')->where('curso.ativo', 1))
-                ->when(Auth::user()->isSchooling(), fn ($q) => $q->whereIn('cod_escola', Auth::user()->schools()->pluck('id')))
+                ->when(Auth::user()->isSchooling(), fn ($q) => $q->whereIn('cod_escola', Auth::user()->schools()->pluck('ref_cod_escola')))
                 ->having('max_aluno', '>', DB::raw('COUNT(distinct matricula.cod_matricula)'))
                 ->orderBy('escola')
                 ->orderBy('curso')
