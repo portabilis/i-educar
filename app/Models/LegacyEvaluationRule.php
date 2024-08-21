@@ -91,7 +91,7 @@ class LegacyEvaluationRule extends Model
      */
     public function deficiencyEvaluationRule(): BelongsTo
     {
-        return $this->belongsTo(__CLASS__, 'regra_avaliacao_deficiencia_id');
+        return $this->belongsTo(__CLASS__, 'regra_diferenciada_id');
     }
 
     public function isAverageBetweenScoreAndRemedialCalculation(): bool
