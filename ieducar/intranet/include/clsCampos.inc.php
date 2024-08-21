@@ -1255,6 +1255,8 @@ class clsCampos extends Core_Controller_Page_Abstract
             $adicionador_complemento_campo = '';
             $campo_valor = $componente[3] ?? null;
 
+            $campo_valor = is_string($campo_valor) ? htmlspecialchars($campo_valor, ENT_QUOTES) : null;
+
             $nome .= $adicionador_complemento_campo;
             $expressao_regular = $componente[2];
 
