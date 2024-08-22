@@ -46,6 +46,7 @@ class AnnouncementUserController extends Controller
                 ->orderBy('escola')
                 ->orderBy('curso')
                 ->orderBy('serie')
+                ->where('matricula_turma.ativo', 1)
                 ->orderBy('nm_turma')
                 ->groupBy('nm_turma', 'max_aluno', 'pessoa.nome')
                 ->get()
