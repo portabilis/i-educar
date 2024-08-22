@@ -8,22 +8,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @deprecated Usar novo módulo de endereço
+ *
+ * @property string $nome
+ * @property string $sigla_uf
  */
 class LegacyCity extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'public.municipio';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idmun';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idmun',
         'nome',
@@ -44,9 +38,6 @@ class LegacyCity extends Model
         'nome_limpo',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
@@ -64,7 +55,7 @@ class LegacyCity extends Model
     }
 
     /**
-     * @return HasMany
+     * @return HasMany<LegacyDistrict, $this>
      */
     public function districts()
     {

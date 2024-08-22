@@ -58,8 +58,8 @@ input.form-input {
 }
 
 .table-default td {
-  padding: 8px;
-  font-size: 14px;
+  padding: 8px !important;
+  font-size: 14px !important;
   font-weight: normal;
 }
 

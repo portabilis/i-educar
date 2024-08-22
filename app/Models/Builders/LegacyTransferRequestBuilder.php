@@ -11,6 +11,9 @@ class LegacyTransferRequestBuilder extends LegacyBuilder
 
     public function unattended(): LegacyBuilder
     {
-        return $this->whereNull('ref_cod_matricula_entrada');
+        /** @var LegacyBuilder $return */
+        $return = $this->whereNull('ref_cod_matricula_entrada');
+
+        return $return;
     }
 }

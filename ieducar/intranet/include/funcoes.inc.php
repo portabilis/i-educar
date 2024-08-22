@@ -429,6 +429,9 @@ if (!function_exists('formatDateParse')) {
         $formats = [
             'd/m/Y',
             'Y-m-d',
+            'Y-m-d\TH:i:s',
+            'Y-m-d\TH:i:s.u',
+            'd/m/Y H:i',
         ];
         foreach ($formats as $format) {
             $dateObj = DateTime::createFromFormat($format, $date);

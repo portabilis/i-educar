@@ -5,21 +5,24 @@ namespace App\Models;
 use App\Models\Builders\CityBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class City extends Model
 {
     use DateSerializer;
-    use HasIbgeCode;
-    use LegacyAttribute;
 
-    /**
-     * @var array
-     */
+    /** @use HasBuilder<CityBuilder> */
+    use HasBuilder;
+
+    use HasIbgeCode;
+
     protected $fillable = [
         'state_id',
         'name',
@@ -28,40 +31,38 @@ class City extends Model
 
     /**
      * Builder dos filtros
-     *
-     * @var string
      */
-    protected $builder = CityBuilder::class;
+    protected static string $builder = CityBuilder::class;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<State, $this>
      */
-    public function state()
+    public function state(): BelongsTo
     {
         return $this->belongsTo(State::class);
     }
 
     /**
-     * @return HasMany
+     * @return HasMany<District, $this>
      */
-    public function districts()
+    public function districts(): HasMany
     {
         return $this->hasMany(District::class);
     }
 
     /**
-     * @return HasMany
+     * @return HasMany<Place, $this>
      */
-    public function places()
+    public function places(): HasMany
     {
         return $this->hasMany(Place::class);
     }
 
     /**
      * @param string $name
-     * @return Builder
+     * @return Builder<City>
      */
-    public static function queryFindByName($name)
+    public static function queryFindByName($name): Builder
     {
         $name = str_replace('\'', '\'\'', $name);
 
@@ -72,9 +73,8 @@ class City extends Model
 
     /**
      * @param int $id
-     * @return string
      */
-    public static function getNameById($id)
+    public static function getNameById($id): string
     {
         $city = static::query()->find($id);
 

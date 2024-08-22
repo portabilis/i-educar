@@ -12,6 +12,9 @@ class Nationality implements Enum
 
     public const FOREIGN = 3;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [

@@ -8,6 +8,9 @@ use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class WithdrawalReason extends LegacyModel
 {
     use HasInstitution;
@@ -24,12 +27,18 @@ class WithdrawalReason extends LegacyModel
         'descricao',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public array $legacy = [
         'id' => 'cod_motivo_afastamento',
         'name' => 'nm_motivo',
         'description' => 'descricao',
     ];
 
+    /**
+     * @return HasMany<EmployeeWithdrawal, $this>
+     */
     public function employeeWithdrawals(): HasMany
     {
         return $this->hasMany(EmployeeWithdrawal::class, 'ref_cod_motivo_afastamento');

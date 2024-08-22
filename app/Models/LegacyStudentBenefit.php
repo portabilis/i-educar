@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentBenefit extends Model
 {
@@ -17,19 +18,25 @@ class LegacyStudentBenefit extends Model
     protected $table = 'pmieducar.aluno_aluno_beneficio';
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'aluno_id',
         'aluno_beneficio_id',
     ];
 
-    public function student()
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
+    public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'aluno_id');
     }
 
-    public function benefit()
+    /**
+     * @return BelongsTo<LegacyBenefit, $this>
+     */
+    public function benefit(): BelongsTo
     {
         return $this->belongsTo(LegacyBenefit::class, 'aluno_beneficio_id');
     }

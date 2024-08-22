@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Builders\LegacyDisciplineExemptionBuilder;
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasLegacyUserAction;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,27 +13,24 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class LegacyDisciplineExemption
  *
  * @property LegacyRegistration $registration
- * @property int            cod_dispensa
+ * @property int            $cod_dispensa
  */
 class LegacyDisciplineExemption extends LegacyModel
 {
+    /** @use HasBuilder<LegacyDisciplineExemptionBuilder> */
+    use HasBuilder;
+
     use HasLegacyUserAction;
     use LegacySoftDeletes;
 
     public const CREATED_AT = 'data_cadastro';
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.dispensa_disciplina';
 
     protected $primaryKey = 'cod_dispensa';
 
-    protected string $builder = LegacyDisciplineExemptionBuilder::class;
+    protected static string $builder = LegacyDisciplineExemptionBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_matricula',
         'ref_cod_disciplina',
@@ -65,39 +62,43 @@ class LegacyDisciplineExemption extends LegacyModel
     ];
 
     /**
-     * Relação com a matrícula.
+     * @return BelongsTo<LegacyRegistration, $this>
      */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
     }
 
+    /**
+     * @return BelongsTo<LegacyDiscipline, $this>
+     */
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
     }
 
+    /**
+     * @return BelongsTo<LegacyExemptionType, $this>
+     */
     public function type(): BelongsTo
     {
         return $this->belongsTo(LegacyExemptionType::class, 'ref_cod_tipo_dispensa');
     }
 
+    /**
+     * @return HasMany<LegacyExemptionStage, $this>
+     */
     public function stages(): HasMany
     {
         return $this->hasMany(LegacyExemptionStage::class, 'ref_cod_dispensa', 'cod_dispensa');
     }
 
+    /**
+     * @return BelongsTo<LegacyUser, $this>
+     */
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(LegacyUser::class, 'ref_usuario_cad');
-    }
-
-    /**
-     * @param Builder $query
-     */
-    public function scopeActive($query): Builder
-    {
-        return $query->where('ativo', 1);
     }
 
     public function getDateFormat(): string

@@ -6,9 +6,6 @@ class StateBuilder extends LegacyBuilder
 {
     /**
      * Filtra por nome do curso
-     *
-     *
-     * @return $this
      */
     public function whereName(string $name): self
     {

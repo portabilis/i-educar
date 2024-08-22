@@ -37,15 +37,15 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     /**
      * Filtra por validos
      */
-    public function whereValid(): self
+    public function whereValid(): LegacyBuilder
     {
         return $this->where(function ($q) {
             $q->active();
-            $q->orWhere('transferido', true);
-            $q->orWhere('remanejado', true);
-            $q->orWhere('reclassificado', true);
-            $q->orWhere('abandono', true);
-            $q->orWhere('falecido', true);
+            $q->orWhere('matricula_turma.transferido', true);
+            $q->orWhere('matricula_turma.remanejado', true);
+            $q->orWhere('matricula_turma.reclassificado', true);
+            $q->orWhere('matricula_turma.abandono', true);
+            $q->orWhere('matricula_turma.falecido', true);
             $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
         });
     }
@@ -67,6 +67,18 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
             $join->where('view_situacao_relatorios.cod_situacao', $situation);
         })->addSelect([
             'view_situacao_relatorios.texto_situacao',
+        ]);
+    }
+
+    public function addJoinViewSituacao(int $situation): self
+    {
+        return $this->join('relatorio.view_situacao', function ($join) use ($situation) {
+            $join->on('view_situacao.cod_matricula', 'ref_cod_matricula');
+            $join->on('view_situacao.cod_turma', 'ref_cod_turma');
+            $join->on('view_situacao.sequencial', 'matricula_turma.sequencial');
+            $join->where('view_situacao.cod_situacao', $situation);
+        })->addSelect([
+            'view_situacao.texto_situacao',
         ]);
     }
 

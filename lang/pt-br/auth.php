@@ -16,6 +16,7 @@ return [
     'failed' => 'Usuário ou senha incorreta.',
     'throttle' => 'Você errou a senha muitas vezes, por favor, aguarde :seconds segundos.',
     'inactive' => 'Sua conta de usuário foi desativada. Por favor, entre em contato com o responsável pelo sistema (Secretaria de Educação) para reativação.',
+    'not_started' => 'A sua conta só estará ativa a partir de :date. Por favor, aguarde até essa data.',
     'expired' => 'A sua conta de usuário expirou. Favor contatar a Secretaria de sua escola ou o responsável pelo sistema (Secretaria de Educação) para reativação.',
 
 ];

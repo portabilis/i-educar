@@ -2,15 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyStageTypeBuilder;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ * @property string $nm_tipo
+ * @property int $num_etapas
+ */
 class LegacyStageType extends LegacyModel
 {
+    /** @use HasBuilder<LegacyStageTypeBuilder> */
+    use HasBuilder;
+
     use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;
@@ -19,19 +28,12 @@ class LegacyStageType extends LegacyModel
 
     public const UPDATED_AT = null;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.modulo';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_modulo';
 
-    /**
-     * @var array
-     */
+    protected static string $builder = LegacyStageTypeBuilder::class;
+
     protected $fillable = [
         'cod_modulo',
         'ref_usuario_cad',
@@ -44,11 +46,17 @@ class LegacyStageType extends LegacyModel
         'ativo',
     ];
 
+    /**
+     * @return HasMany<LegacyAcademicYearStage, $this>
+     */
     public function academicYearStages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_cod_modulo');
     }
 
+    /**
+     * @return HasMany<LegacySchoolClassStage, $this>
+     */
     public function schoolClassStage(): HasMany
     {
         return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_modulo');
@@ -62,14 +70,6 @@ class LegacyStageType extends LegacyModel
     }
 
     /**
-     * @param Builder $query
-     */
-    public function scopeActive($query): Builder
-    {
-        return $query->where('ativo', 1);
-    }
-
-    /**
      * Indica se já existe um registro cadastrado com o mesmo nome e o mesmo
      * número de etapa(s).
      *
@@ -79,6 +79,7 @@ class LegacyStageType extends LegacyModel
      */
     public static function alreadyExists($name, $stagesNumber, $id = null): bool
     {
+        // @phpstan-ignore-next-line
         return self::query()
             ->where('ativo', 1)
             ->where('nm_tipo', $name)

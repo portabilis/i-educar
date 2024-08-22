@@ -9,6 +9,9 @@ use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $nm_tipo
+ */
 class LegacyTransferType extends LegacyModel
 {
     use Ativo;
@@ -27,7 +30,7 @@ class LegacyTransferType extends LegacyModel
     protected $primaryKey = 'cod_transferencia_tipo';
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'ref_usuario_exc',
@@ -45,6 +48,9 @@ class LegacyTransferType extends LegacyModel
         );
     }
 
+    /**
+     * @return HasMany<LegacyTransferRequest, $this>
+     */
     public function transferRequests(): HasMany
     {
         return $this->hasMany(LegacyTransferRequest::class, 'ref_cod_transferencia_tipo');

@@ -3,21 +3,28 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyEvaluationRuleBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacyEvaluationRule
  *
  * @method static LegacyEvaluationRuleBuilder query()
+ *
+ * @property int $tipo_recuperacao_paralela
+ * @property int $tipo_calculo_recuperacao_paralela
+ * @property int $tipo_presenca
+ * @property int $parecer_descritivo
+ * @property int $nota_geral_por_etapa
+ * @property string $nome
  */
 class LegacyEvaluationRule extends Model
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LegacyEvaluationRuleBuilder> */
+    use HasBuilder;
 
     public const CREATED_AT = null;
 
@@ -33,35 +40,18 @@ class LegacyEvaluationRule extends Model
 
     public const PARALLEL_REMEDIAL_SUM_SCORE = 3;
 
-    /**
-     * @var string
-     */
     protected $table = 'modules.regra_avaliacao';
 
-    /**
-     * @var array
-     */
     protected $casts = [
         'media_recuperacao_paralela' => 'float',
     ];
 
-    /**
-     * Builder dos filtros
-     */
-    protected string $builder = LegacyEvaluationRuleBuilder::class;
+    protected static string $builder = LegacyEvaluationRuleBuilder::class;
 
-    /**
-     * Atributos legados para serem usados nas queries
-     *
-     * @var string[]
-     */
     public array $legacy = [
         'name' => 'nome',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'instituicao_id',
         'nome',
@@ -73,58 +63,49 @@ class LegacyEvaluationRule extends Model
     ];
 
     /**
-     * @return HasMany
+     * @return HasMany<LegacyRemedialRule, $this>
      */
-    public function remedialRules()
+    public function remedialRules(): HasMany
     {
         return $this->hasMany(LegacyRemedialRule::class, 'regra_avaliacao_id');
     }
 
     /**
-     * @return HasOne
+     * @return BelongsTo<LegacyRoundingTable, $this>
      */
-    public function roundingTable()
+    public function roundingTable(): BelongsTo
     {
         return $this->belongsTo(LegacyRoundingTable::class, 'tabela_arredondamento_id');
     }
 
     /**
-     * @return HasOne
+     * @return BelongsTo<LegacyRoundingTable, $this>
      */
-    public function conceptualRoundingTable()
+    public function conceptualRoundingTable(): BelongsTo
     {
         return $this->belongsTo(LegacyRoundingTable::class, 'tabela_arredondamento_id_conceitual');
     }
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyEvaluationRule, $this>
      */
-    public function deficiencyEvaluationRule()
+    public function deficiencyEvaluationRule(): BelongsTo
     {
         return $this->belongsTo(__CLASS__, 'regra_diferenciada_id');
     }
 
-    /**
-     * @return bool
-     */
-    public function isAverageBetweenScoreAndRemedialCalculation()
+    public function isAverageBetweenScoreAndRemedialCalculation(): bool
     {
         return $this->tipo_recuperacao_paralela == self::PARALLEL_REMEDIAL_PER_STAGE
             && $this->tipo_calculo_recuperacao_paralela == self::PARALLEL_REMEDIAL_AVERAGE_SCORE;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSpecificRetake()
+    public function isSpecificRetake(): bool
     {
         return $this->tipo_recuperacao_paralela == self::PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSumScoreCalculation()
+    public function isSumScoreCalculation(): bool
     {
         return $this->tipo_recuperacao_paralela == self::PARALLEL_REMEDIAL_PER_STAGE
             && $this->tipo_calculo_recuperacao_paralela == self::PARALLEL_REMEDIAL_SUM_SCORE;
@@ -145,10 +126,7 @@ class LegacyEvaluationRule extends Model
         return $this->nota_geral_por_etapa === 1;
     }
 
-    /**
-     * @return bool
-     */
-    public function isGlobalScore()
+    public function isGlobalScore(): bool
     {
         return $this->nota_geral_por_etapa == 1;
     }
@@ -160,17 +138,26 @@ class LegacyEvaluationRule extends Model
         );
     }
 
-    public function gradeYears()
+    /**
+     * @return HasMany<LegacyEvaluationRuleGradeYear, $this>
+     */
+    public function gradeYears(): HasMany
     {
         return $this->hasMany(LegacyEvaluationRuleGradeYear::class, 'regra_avaliacao_id');
     }
 
-    public function averageFormula()
+    /**
+     * @return BelongsTo<LegacyAverageFormula, $this>
+     */
+    public function averageFormula(): BelongsTo
     {
         return $this->belongsTo(LegacyAverageFormula::class, 'formula_media_id');
     }
 
-    public function recoveryFormula()
+    /**
+     * @return BelongsTo<LegacyAverageFormula, $this>
+     */
+    public function recoveryFormula(): BelongsTo
     {
         return $this->belongsTo(LegacyAverageFormula::class, 'formula_recuperacao_id');
     }

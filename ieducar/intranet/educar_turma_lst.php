@@ -162,7 +162,10 @@ return new class extends clsListagem
                 'year_eq' => $this->ano,
             ])
             ->with(relations: [
-                'school' => fn ($q) => $q->select('cod_escola', 'ref_idpes')->with('organization:idpes,fantasia'),
+                'school' => fn ($q) => $q->select('cod_escola', 'ref_idpes')->with([
+                    'person',
+                    'organization:idpes,fantasia',
+                ]),
                 'course:cod_curso,nm_curso',
                 'grades' => fn ($q) => $q->select('cod_serie', 'nm_serie', 'ref_cod_curso')->with('course:cod_curso,nm_curso')->orderBy('nm_serie'),
                 'grade:cod_serie,nm_serie',

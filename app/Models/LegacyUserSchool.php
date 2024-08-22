@@ -17,11 +17,17 @@ class LegacyUserSchool extends Model
         'escola_atual',
     ];
 
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 
+    /**
+     * @return BelongsTo<LegacyUser, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(LegacyUser::class, 'ref_cod_usuario');

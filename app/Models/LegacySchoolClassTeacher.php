@@ -6,8 +6,13 @@ use iEducar\Modules\Servidores\Model\TipoVinculo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $tipo_vinculo
+ */
 class LegacySchoolClassTeacher extends Model
 {
     public const CREATED_AT = null;
@@ -21,9 +26,6 @@ class LegacySchoolClassTeacher extends Model
         'tipo_vinculo',
     ];
 
-    /**
-     * @var string
-     */
     protected $table = 'modules.professor_turma';
 
     protected function linkTypeName(): Attribute
@@ -41,27 +43,42 @@ class LegacySchoolClassTeacher extends Model
         );
     }
 
+    /**
+     * @return HasMany<LegacySchoolClassTeacherDiscipline, $this>
+     */
     public function schoolClassTeacherDisciplines(): HasMany
     {
         return $this->hasMany(LegacySchoolClassTeacherDiscipline::class, 'professor_turma_id');
     }
 
+    /**
+     * @return BelongsTo<LegacySchoolClass, $this>
+     */
     public function schoolClass(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolClass::class, 'turma_id');
     }
 
+    /**
+     * @return BelongsTo<LegacyPeriod, $this>
+     */
     public function period(): BelongsTo
     {
         return $this->belongsTo(LegacyPeriod::class, 'turno_id');
     }
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'servidor_id');
     }
 
-    public function disciplines()
+    /**
+     * @return BelongsToMany<LegacyDiscipline, $this>
+     */
+    public function disciplines(): BelongsToMany
     {
         return $this->belongsToMany(LegacyDiscipline::class, 'modules.professor_turma_disciplina', 'professor_turma_id', 'componente_curricular_id');
     }

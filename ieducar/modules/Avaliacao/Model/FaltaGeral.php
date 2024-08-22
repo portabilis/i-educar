@@ -1,5 +1,3 @@
 <?php
 
-class Avaliacao_Model_FaltaGeral extends Avaliacao_Model_FaltaAbstract
-{
-}
+class Avaliacao_Model_FaltaGeral extends Avaliacao_Model_FaltaAbstract {}

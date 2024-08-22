@@ -4,22 +4,36 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-return new class extends clsListagem {
+return new class extends clsListagem
+{
     use InteractWithDatabase, SelectOptions;
 
     public $__limite;
+
     public $__offset;
+
     public $idmun;
+
     public $geom;
+
     public $idbai;
+
     public $nome;
+
     public $idpes_rev;
+
     public $data_rev;
+
     public $origem_gravacao;
+
     public $idpes_cad;
+
     public $data_cad;
+
     public $operacao;
+
     public $idpais;
+
     public $iduf;
 
     public function model()
@@ -44,7 +58,7 @@ return new class extends clsListagem {
             'Nome',
             'Município',
             'Estado',
-            'Pais'
+            'Pais',
         ]);
 
         $opcoes = ['' => 'Selecione'] + $this->getCountries();
@@ -126,7 +140,7 @@ return new class extends clsListagem {
                 $url->l($district->name, 'public_distrito_det.php', $options),
                 $url->l($district->city->name, 'public_distrito_det.php', $options),
                 $url->l($district->city->state->name, 'public_distrito_det.php', $options),
-                $url->l($district->city->state->country->name, 'public_distrito_det.php', $options)
+                $url->l($district->city->state->country->name, 'public_distrito_det.php', $options),
             ]);
         }
 

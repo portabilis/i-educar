@@ -6,8 +6,10 @@ use App\Models\Builders\LegacyInstitutionBuilder;
 use App\Services\RelocationDate\RelocationDateProvider;
 use App\Services\Reports\Util;
 use App\Traits\HasLegacyDates;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -19,29 +21,43 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string   $state           Sigla do estado da instituição
  * @property DateTime $relocation_date Data base para remanejamento
  * @property DateTime $educacenso_date Data de corte do Educacenso
+ * @property int $ref_usuario_cad,
+ * @property int $ref_idtlog,
+ * @property string $ref_sigla_uf,
+ * @property string $cep,
+ * @property string $cidade,
+ * @property string $bairro,
+ * @property string $logradouro,
+ * @property int $numero,
+ * @property string $ddd_telefone,
+ * @property string $telefone,
+ * @property string $nm_responsavel,
+ * @property string $nm_instituicao,
+ * @property string $orgao_regional,
+ * @property Carbon $data_base_remanejamento,
+ * @property Carbon $data_base_transferencia,
+ * @property Carbon $data_expiracao_reserva_vaga,
+ * @property Carbon $data_base_matricula,
+ * @property Carbon $data_fechamento,
+ * @property Carbon $data_educacenso,
+ * @property Carbon|null $relocationDate,
+ * @property bool $obrigar_campos_censo,
+ * @property int $cod_instituicao,
+ * @property bool $permitir_matricula_fora_periodo_letivo,
  */
 class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 {
+    /** @use HasBuilder<LegacyInstitutionBuilder> */
+    use HasBuilder;
+
     use HasLegacyDates;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.instituicao';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_instituicao';
 
-    /**
-     * Builder dos filtros
-     */
-    protected string $builder = LegacyInstitutionBuilder::class;
+    protected static string $builder = LegacyInstitutionBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_usuario_cad',
         'ref_idtlog',
@@ -71,6 +87,9 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         'name' => 'nm_instituicao',
     ];
 
+    /**
+     * @return HasOne<LegacyGeneralConfiguration, $this>
+     */
     public function generalConfiguration(): HasOne
     {
         return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
@@ -162,13 +181,16 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         );
     }
 
+    /**
+     * @return HasMany<LegacySchool, $this>
+     */
     public function schools(): HasMany
     {
         return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
     }
 
     /**
-     * Regras de avaliação
+     * @return HasMany<LegacyEvaluationRule, $this>
      */
     public function evaluationRules(): HasMany
     {

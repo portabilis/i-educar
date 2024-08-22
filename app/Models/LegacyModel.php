@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Builders\LegacyBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyModel extends Model
 {
+    /** @use HasBuilder<LegacyBuilder> */
+    use HasBuilder;
+
     public array $legacy = [];
 
-    protected string $builder = LegacyBuilder::class;
+    protected static string $builder = LegacyBuilder::class;
 
     public function __get($key)
     {
@@ -25,11 +29,6 @@ class LegacyModel extends Model
     public function __set($key, $value)
     {
         parent::__set($this->getLegacyColumn($key), $value);
-    }
-
-    public function newEloquentBuilder($query)
-    {
-        return new $this->builder($query);
     }
 
     public function attributesToArray()
@@ -61,6 +60,9 @@ class LegacyModel extends Model
         return parent::fill($attributes);
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function getLegacyColumn($key)
     {
         if (is_string($key)) {

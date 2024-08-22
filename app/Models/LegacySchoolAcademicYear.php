@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolAcademicYearBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,10 +14,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $ano
  *
  * @method static LegacySchoolAcademicYearBuilder query()
+ *
+ * @property array<int, string> $fillable
  */
 class LegacySchoolAcademicYear extends LegacyModel
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LegacySchoolAcademicYearBuilder> */
+    use HasBuilder;
 
     public const NOT_INITIALIZED = 0;
 
@@ -25,19 +28,13 @@ class LegacySchoolAcademicYear extends LegacyModel
 
     public const FINALIZED = 2;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.escola_ano_letivo';
 
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolAcademicYearBuilder::class;
+    protected static string $builder = LegacySchoolAcademicYearBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_escola',
         'ano',
@@ -58,11 +55,17 @@ class LegacySchoolAcademicYear extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 
+    /**
+     * @return HasMany<LegacyAcademicYearStage, $this>
+     */
     public function academicYearStages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'escola_ano_letivo_id');

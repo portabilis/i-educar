@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolGradeDisciplineBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,10 +12,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * LegacySchoolGradeDiscipline
  *
  * @method static LegacySchoolGradeDisciplineBuilder query()
+ *
+ * @property LegacyDiscipline $discipline
+ * @property int $ref_cod_disciplina
+ * @property int $carga_horaria
  */
 class LegacySchoolGradeDiscipline extends Model
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LegacySchoolGradeDisciplineBuilder> */
+    use HasBuilder;
 
     protected $table = 'pmieducar.escola_serie_disciplina';
 
@@ -24,7 +29,7 @@ class LegacySchoolGradeDiscipline extends Model
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacySchoolGradeDisciplineBuilder::class;
+    protected static string $builder = LegacySchoolGradeDisciplineBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
@@ -61,7 +66,7 @@ class LegacySchoolGradeDiscipline extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->discipline?->name
+            get: fn () => $this->discipline->name ?? null
         );
     }
 
@@ -72,16 +77,25 @@ class LegacySchoolGradeDiscipline extends Model
         );
     }
 
+    /**
+     * @return BelongsTo<LegacyDiscipline, $this>
+     */
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
     }
 
+    /**
+     * @return BelongsTo<LegacyGrade, $this>
+     */
     public function grade(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
     }
 
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');

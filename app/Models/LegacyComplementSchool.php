@@ -16,19 +16,10 @@ class LegacyComplementSchool extends LegacyModel
     use HasLegacyUserAction;
     use LegacySoftDeletes;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.escola_complemento';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'ref_cod_escola';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'cep',
         'numero',
@@ -60,7 +51,7 @@ class LegacyComplementSchool extends LegacyModel
     ];
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacySchool, $this>
      */
     public function school()
     {

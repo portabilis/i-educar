@@ -50,12 +50,12 @@ return new class() extends Migration
     public function createOrUpdate($state_abbreviation, $name, $ibge_code, $old_name = null)
     {
         //verifica se o codigo ibge já existe
-        if (City::where('ibge_code', $ibge_code)->exists()) {
+        if (City::query()->where('ibge_code', $ibge_code)->exists()) {
             return;
         }
 
         //atualiza ibge_code e nome, se a cidade estiver cadastrada sem o ibge_code
-        $city = City::whereRaw('unaccent(name) ILIKE unaccent(?)', $old_name ?? $name)->whereHas('state', fn ($q) => $q->where('abbreviation', $state_abbreviation))->whereNull('ibge_code')->first();
+        $city = City::query()->whereRaw('unaccent(name) ILIKE unaccent(?)', $old_name ?? $name)->whereHas('state', fn ($q) => $q->where('abbreviation', $state_abbreviation))->whereNull('ibge_code')->first();
 
         if ($city) {
             $city->update(['ibge_code' => $ibge_code, 'name' => $name]);
@@ -64,12 +64,10 @@ return new class() extends Migration
         }
 
         //cria a cidade
-        if ($state_id = State::where('abbreviation', $state_abbreviation)->value('id')) {
+        if ($state_id = State::query()->where('abbreviation', $state_abbreviation)->value('id')) {
             City::create(compact('state_id', 'name', 'ibge_code'));
         }
     }
 
-    public function down()
-    {
-    }
+    public function down() {}
 };

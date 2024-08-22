@@ -4,16 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $idesco
+ */
 class LegacySchoolingDegree extends LegacyModel
 {
-    /**
-     * @var string
-     */
     protected $table = 'cadastro.escolaridade';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idesco';
 
     public static function boot()
@@ -24,15 +22,15 @@ class LegacySchoolingDegree extends LegacyModel
         });
     }
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idesco',
         'descricao',
         'escolaridade',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public array $legacy = [
         'id' => 'idesco',
         'description' => 'descricao',
@@ -44,11 +42,17 @@ class LegacySchoolingDegree extends LegacyModel
      */
     public $timestamps = false;
 
+    /**
+     * @return HasMany<Employee, $this>
+     */
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class, 'ref_idesco');
     }
 
+    /**
+     * @return HasMany<LegacyIndividual, $this>
+     */
     public function individuals(): HasMany
     {
         return $this->hasMany(LegacyIndividual::class, 'idesco');

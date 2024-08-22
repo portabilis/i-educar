@@ -3,30 +3,26 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\EnrollmentEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class SocialAssistance extends Model
 {
+    /** @use HasBuilder<EnrollmentEloquentBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = EnrollmentEloquentBuilder::class;
+
     /**
      * @var string
      */
     protected $table = 'exporter_social_assistance';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return EnrollmentEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new EnrollmentEloquentBuilder($query);
-    }
 
     /**
      * @return array
@@ -50,15 +46,12 @@ class SocialAssistance extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Dados de escolaridade - Assistência Social';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Os dados exportados serão contabilizados por quantidade de matrículas dos(as) alunos(as), duplicando o(a) aluno(a) caso o mesmo possua mais de uma matrícula no ano filtrado. Opção utilizada para integração com sistemas de Assistência social que coletem dados de escolaridade das famílias atendidas.';
     }
@@ -69,7 +62,9 @@ class SocialAssistance extends Model
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
                 return $item;
             });

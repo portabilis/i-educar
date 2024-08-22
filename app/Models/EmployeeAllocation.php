@@ -6,10 +6,18 @@ use App\Models\Builders\EmployeeAllocationBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property LegacyPeriod $period
+ * @property array<int, string> $fillable
+ */
 class EmployeeAllocation extends LegacyModel
 {
+    /** @use HasBuilder<EmployeeAllocationBuilder> */
+    use HasBuilder;
+
     use HasLegacyDates;
     use HasLegacyUserAction;
 
@@ -17,7 +25,7 @@ class EmployeeAllocation extends LegacyModel
 
     protected $table = 'pmieducar.servidor_alocacao';
 
-    public string $builder = EmployeeAllocationBuilder::class;
+    protected static string $builder = EmployeeAllocationBuilder::class;
 
     protected $fillable = [
         'carga_horaria',
@@ -35,6 +43,8 @@ class EmployeeAllocation extends LegacyModel
         'hora_atividade',
         'horas_excedentes',
         'data_saida',
+        'ativo',
+        'ref_usuario_cad',
     ];
 
     protected function periodName(): Attribute
@@ -46,23 +56,43 @@ class EmployeeAllocation extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<LegacyPeriod, $this>
+     */
     public function period(): BelongsTo
     {
         return $this->belongsTo(LegacyPeriod::class, 'periodo');
     }
 
-    public function school()
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
+    public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola', 'cod_escola');
     }
 
-    public function employeeRole()
+    /**
+     * @return BelongsTo<LegacyEmployeeRole, $this>
+     */
+    public function employeeRole(): BelongsTo
     {
         return $this->belongsTo(LegacyEmployeeRole::class, 'ref_cod_servidor_funcao', 'cod_servidor_funcao');
     }
 
-    public function employee()
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
+    public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'ref_cod_servidor', 'cod_servidor');
+    }
+
+    /**
+     * @return BelongsTo<LegacyBondType, $this>
+     */
+    public function bond(): BelongsTo
+    {
+        return $this->belongsTo(LegacyBondType::class, 'ref_cod_funcionario_vinculo', 'cod_funcionario_vinculo');
     }
 }

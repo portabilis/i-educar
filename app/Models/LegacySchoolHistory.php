@@ -8,10 +8,20 @@ use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $aprovado
+ * @property int $carga_horaria
+ * @property int $frequencia
+ * @property int $historico_grade_curso_id
+ */
 class LegacySchoolHistory extends LegacyModel
 {
+    /** @use HasBuilder<SchoolHistoryBuilder> */
+    use HasBuilder;
+
     use HasInstitution;
     use HasLegacyDates;
     use HasLegacyUserAction;
@@ -27,7 +37,7 @@ class LegacySchoolHistory extends LegacyModel
      */
     protected $table = 'pmieducar.historico_escolar';
 
-    protected string $builder = SchoolHistoryBuilder::class;
+    protected static string $builder = SchoolHistoryBuilder::class;
 
     protected $fillable = [
         'ref_cod_aluno',
@@ -60,11 +70,17 @@ class LegacySchoolHistory extends LegacyModel
         'posicao',
     ];
 
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
     }
 
+    /**
+     * @return BelongsTo<LegacySchoolHistoryDiscipline, $this>
+     */
     public function disciplines(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolHistoryDiscipline::class, 'ref_cod_aluno');
@@ -110,6 +126,9 @@ class LegacySchoolHistory extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<LegacySchoolHistoryGradeCourse, $this>
+     */
     public function schoolHistoryGradeCourse(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolHistoryGradeCourse::class, 'historico_grade_curso_id');

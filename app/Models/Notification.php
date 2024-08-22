@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $type_id
+ */
 class Notification extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'public.notifications';
 
     protected $fillable = [
@@ -20,11 +21,17 @@ class Notification extends Model
         'type_id',
     ];
 
+    /**
+     * @return BelongsTo<NotificationType, $this>
+     */
     public function type(): BelongsTo
     {
         return $this->belongsTo(NotificationType::class);
     }
 
+    /**
+     * @return BelongsTo<LegacyUser, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(LegacyUser::class, 'user_id');

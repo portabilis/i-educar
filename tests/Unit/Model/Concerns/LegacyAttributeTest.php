@@ -3,8 +3,8 @@
 namespace Tests\Unit\Model\Concerns;
 
 use App\Models\Builders\LegacySchoolBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
@@ -14,9 +14,9 @@ class LegacyAttributeTest extends TestCase
     {
         $class = new class() extends Model
         {
-            use LegacyAttribute;
+            use HasBuilder;
 
-            public string $builder = LegacySchoolBuilder::class;
+            public static string $builder = LegacySchoolBuilder::class;
         };
 
         $this->assertEquals(LegacySchoolBuilder::class, get_class($class->newQuery()));
@@ -26,7 +26,7 @@ class LegacyAttributeTest extends TestCase
     {
         $class = new class() extends Model
         {
-            use LegacyAttribute;
+            use HasBuilder;
         };
 
         $this->assertEquals(Builder::class, get_class($class->newQuery()));

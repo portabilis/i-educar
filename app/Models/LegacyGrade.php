@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\HasBelongsToOne;
+use Ankurk91\Eloquent\Relations\BelongsToOne;
 use App\Models\Builders\LegacyGradeBuilder;
 use App\Models\View\Discipline;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,33 +16,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * LegacyGrade
  *
  * @method static LegacyGradeBuilder query()
+ *
+ * @property string $nm_serie
+ * @property int $carga_horaria
  */
 class LegacyGrade extends LegacyModel
 {
     use HasBelongsToOne;
 
+    /** @use HasBuilder<LegacyGradeBuilder> */
+    use HasBuilder;
+
     public const CREATED_AT = 'data_cadastro';
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.serie';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_serie';
 
-    /**
-     * Builder dos filtros
-     */
-    protected string $builder = LegacyGradeBuilder::class;
+    protected static string $builder = LegacyGradeBuilder::class;
 
-    /**
-     * Atributos legados para serem usados nas queries
-     *
-     * @var string[]
-     */
     public array $legacy = [
         'id' => 'cod_serie',
         'name' => 'nm_serie',
@@ -50,9 +43,6 @@ class LegacyGrade extends LegacyModel
         'course_id' => 'ref_cod_curso',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_usuario_exc',
         'ref_usuario_cad',
@@ -76,7 +66,7 @@ class LegacyGrade extends LegacyModel
         'exigir_inep',
         'importar_serie_pre_matricula',
         'descricao',
-        'etapa_educacenso'
+        'etapa_educacenso',
     ];
 
     protected function name(): Attribute
@@ -93,7 +83,7 @@ class LegacyGrade extends LegacyModel
     }
 
     /**
-     * Regras de avaliação
+     * @return BelongsToMany<LegacyEvaluationRule, $this>
      */
     public function evaluationRules(): BelongsToMany
     {
@@ -105,6 +95,9 @@ class LegacyGrade extends LegacyModel
         )->withPivot('ano_letivo', 'regra_avaliacao_diferenciada_id');
     }
 
+    /**
+     * @return BelongsToOne
+     */
     public function evaluationRule()
     {
         return $this->belongsToOne(
@@ -122,13 +115,16 @@ class LegacyGrade extends LegacyModel
         );
     }
 
+    /**
+     * @return HasMany<Discipline, $this>
+     */
     public function disciplines(): HasMany
     {
         return $this->hasMany(Discipline::class, 'cod_serie');
     }
 
     /**
-     * Escolas
+     * @return BelongsToMany<LegacySchool, $this>
      */
     public function schools(): BelongsToMany
     {
@@ -136,7 +132,7 @@ class LegacyGrade extends LegacyModel
     }
 
     /**
-     * Relacionamento com o curso.
+     * @return BelongsTo<LegacyCourse, $this>
      */
     public function course(): BelongsTo
     {
@@ -144,7 +140,7 @@ class LegacyGrade extends LegacyModel
     }
 
     /**
-     * Relacionamento com a turma.
+     * @return HasMany<LegacySchoolClass, $this>
      */
     public function schoolClass(): HasMany
     {
@@ -152,13 +148,19 @@ class LegacyGrade extends LegacyModel
     }
 
     // TODO remover
-    public function schoolGradeDisciplines()
+    /**
+     * @return HasMany<LegacySchoolGradeDiscipline, $this>
+     */
+    public function schoolGradeDisciplines(): HasMany
     {
         return $this->hasMany(LegacySchoolGradeDiscipline::class, 'ref_ref_cod_serie');
     }
 
     // TODO remover
-    public function academicYearDisciplines()
+    /**
+     * @return BelongsToMany<LegacyDiscipline, $this>
+     */
+    public function academicYearDisciplines(): BelongsToMany
     {
         return $this->belongsToMany(LegacyDiscipline::class, 'modules.componente_curricular_ano_escolar', 'ano_escolar_id', 'componente_curricular_id')
             ->withPivot(
@@ -166,6 +168,9 @@ class LegacyGrade extends LegacyModel
             );
     }
 
+    /**
+     * @return HasMany<LegacyDisciplineAcademicYear, $this>
+     */
     public function allDisciplines(): HasMany
     {
         return $this->hasMany(LegacyDisciplineAcademicYear::class, 'ano_escolar_id');

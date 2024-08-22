@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
+use Illuminate\Support\Facades\Cache;
 
 class clsPmieducarInstituicao extends Model
 {
@@ -1296,11 +1297,13 @@ class clsPmieducarInstituicao extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_instituicao)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT {$this->_todos_campos},fcn_upper_nrm(nm_instituicao) as nm_instituicao_upper FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
-            $db->ProximoRegistro();
+            return Cache::remember('instituicao_', now()->addMinutes(180), function () {
+                $db = new clsBanco();
+                $db->Consulta("SELECT {$this->_todos_campos},fcn_upper_nrm(nm_instituicao) as nm_instituicao_upper FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
+                $db->ProximoRegistro();
 
-            return $db->Tupla();
+                return $db->Tupla();
+            });
         }
 
         return false;

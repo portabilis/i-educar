@@ -3,30 +3,26 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\EnrollmentEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Stage extends Model
 {
+    /** @use HasBuilder<EnrollmentEloquentBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = EnrollmentEloquentBuilder::class;
+
     /**
      * @var string
      */
     protected $table = 'exporter_stages';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return EnrollmentEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new EnrollmentEloquentBuilder($query);
-    }
 
     /**
      * @return array
@@ -47,15 +43,12 @@ class Stage extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Calendário letivo';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Exportação de todos os calendários letivos do ano filtrado para identificação das datas de início e fim das etapas e existência de lançamentos.';
     }
@@ -66,7 +59,9 @@ class Stage extends Model
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
                 return $item;
             });

@@ -3,25 +3,21 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyDeficiencyBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyDeficiency extends LegacyModel
 {
-    /**
-     * @var string
-     */
+    /** @use HasBuilder<LegacyDeficiencyBuilder> */
+    use HasBuilder;
+
     protected $table = 'cadastro.deficiencia';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_deficiencia';
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    public string $builder = LegacyDeficiencyBuilder::class;
+    protected static string $builder = LegacyDeficiencyBuilder::class;
 
     protected $fillable = [
         'nm_deficiencia',
@@ -40,9 +36,9 @@ class LegacyDeficiency extends LegacyModel
     ];
 
     /**
-     * @return BelongsToMany
+     * @return BelongsToMany<LegacyIndividual, $this>
      */
-    public function individuals()
+    public function individuals(): BelongsToMany
     {
         return $this->belongsToMany(
             LegacyIndividual::class,

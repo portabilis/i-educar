@@ -7,25 +7,19 @@ use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacySchoolClassType extends LegacyModel
 {
     use Ativo;
     use HasInstitution;
     use HasLegacyDates;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.turma_tipo';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_turma_tipo';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_usuario_cad',
         'nm_tipo',
@@ -33,6 +27,9 @@ class LegacySchoolClassType extends LegacyModel
         'ativo',
     ];
 
+    /**
+     * @return HasMany<LegacySchoolClass, $this>
+     */
     public function schoolClasses(): HasMany
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_cod_turma_tipo');

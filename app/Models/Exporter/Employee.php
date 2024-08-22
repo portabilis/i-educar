@@ -3,31 +3,26 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\EmployeeEloquentBuilder;
-use App\Models\Exporter\Builders\TeacherEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Employee extends Model
 {
+    /** @use HasBuilder<EmployeeEloquentBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = EmployeeEloquentBuilder::class;
+
     /**
      * @var string
      */
     protected $table = 'exporter_employee';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return TeacherEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new EmployeeEloquentBuilder($query);
-    }
 
     /**
      * @return array
@@ -90,15 +85,12 @@ class Employee extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Servidores';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Os dados exportados serão contabilizados por quantidade de servidores(as) alocados(as) no ano filtrado, agrupando as informações das alocações nas escolas.';
     }
@@ -109,7 +101,9 @@ class Employee extends Model
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
                 return $item;
             });

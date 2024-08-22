@@ -9,19 +9,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LegacyPlace extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'logradouro';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'idlog';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'idlog',
         'idtlog',
@@ -37,8 +28,5 @@ class LegacyPlace extends Model
         'operacao',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 }

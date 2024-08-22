@@ -80,7 +80,7 @@ class LegacyUserProvider implements UserProvider
     {
         if ($user->isInactive()) {
             throw ValidationException::withMessages([
-                $user->login => __('auth.inactive'),
+                $user->login => $user->employee->motivo ?: __('auth.inactive'),
             ]);
         }
 

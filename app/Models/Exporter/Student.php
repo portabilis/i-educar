@@ -3,30 +3,26 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\StudentEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Student extends Model
 {
+    /** @use HasBuilder<StudentEloquentBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = StudentEloquentBuilder::class;
+
     /**
      * @var string
      */
     protected $table = 'exporter_student_grouped_registration';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return StudentEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new StudentEloquentBuilder($query);
-    }
 
     /**
      * @return array
@@ -185,15 +181,12 @@ class Student extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Alunos';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Os dados exportados serão contabilizados por quantidade de alunos(as), agrupando as informações de séries, cursos, turmas quando o(a) aluno(a) possuir mais de uma matrícula para a situação e ano filtrados.';
     }
@@ -204,7 +197,9 @@ class Student extends Model
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(static fn ($item) => $item);
         }
 

@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Portabilis_Date_Utils;
 
 class AuthenticatedUser
 {
@@ -29,7 +30,15 @@ class AuthenticatedUser
             Auth::logout();
 
             throw ValidationException::withMessages([
-                $event->user->login => __('auth.inactive'),
+                $event->user->login => $event->user->employee->motivo ?: __('auth.inactive'),
+            ]);
+        }
+
+        if ($event->user->isNotStarted()) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                $event->user->login => __('auth.not_started', ['date' => Portabilis_Date_Utils::pgSQLToBr($event->user->employee->data_inicial)]),
             ]);
         }
 

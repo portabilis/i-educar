@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentMedicalRecord extends Model
 {
@@ -14,6 +15,9 @@ class LegacyStudentMedicalRecord extends Model
 
     public $incrementing = false;
 
+    /**
+     * @var array<int, string>
+     */
     public $fillable = [
         'ref_cod_aluno',
         'grupo_sanguineo',
@@ -60,7 +64,10 @@ class LegacyStudentMedicalRecord extends Model
         'desc_aceita_hospital_proximo',
     ];
 
-    public function student()
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
+    public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
     }

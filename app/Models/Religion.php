@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class Religion extends Model
 {
     use SoftDeletes;
@@ -16,6 +19,9 @@ class Religion extends Model
         'name',
     ];
 
+    /**
+     * @return HasMany<LegacyIndividual, $this>
+     */
     public function individual(): HasMany
     {
         return $this->hasMany(LegacyIndividual::class, 'ref_cod_religiao');

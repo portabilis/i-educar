@@ -147,7 +147,7 @@ return new class extends clsListagem
 
     public function makeExtra()
     {
-        return <<<SCRIPT
+        return <<<'SCRIPT'
 <script type='text/javascript'>
 document.getElementById('ref_cod_escola').onchange = function() {
   getEscolaCurso();

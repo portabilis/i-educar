@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacySchoolClassGrade extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.turma_serie';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'escola_id',
         'serie_id',
@@ -23,11 +20,17 @@ class LegacySchoolClassGrade extends Model
         'boletim_diferenciado_id',
     ];
 
+    /**
+     * @return BelongsTo<LegacySchoolClass, $this>
+     */
     public function schoolClass(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolClass::class, 'turma_id');
     }
 
+    /**
+     * @return BelongsTo<LegacyGrade, $this>
+     */
     public function grade(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'serie_id');

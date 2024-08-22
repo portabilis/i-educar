@@ -202,9 +202,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      *
      * @return void
      */
-    public function afterValidation()
-    {
-    }
+    public function afterValidation() {}
 
     /**
      * Valida se o usuário está logado, caso contrário redireciona para a

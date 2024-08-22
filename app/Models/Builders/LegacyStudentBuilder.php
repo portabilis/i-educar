@@ -216,4 +216,30 @@ class LegacyStudentBuilder extends LegacyBuilder
             'pagina_' . $studentFilter->pageName
         );
     }
+
+    /**
+     * Filtra por alunos ativos
+     */
+    public function active(): self
+    {
+        return $this->where('aluno.ativo', 1);
+    }
+
+    /**
+     * Filtra por alunos do sexo masculino
+     */
+    public function male(): self
+    {
+        return $this->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('sexo', 'M');
+    }
+
+    /**
+     * Filtra por alunos do sexo feminino
+     */
+    public function female(): self
+    {
+        return $this->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('sexo', 'F');
+    }
 }

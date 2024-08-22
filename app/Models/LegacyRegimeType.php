@@ -7,25 +7,19 @@ use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacyRegimeType extends LegacyModel
 {
     use Ativo;
     use HasInstitution;
     use HasLegacyDates;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.tipo_regime';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'cod_tipo_regime';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_usuario_exc',
         'ref_usuario_cad',
@@ -34,6 +28,9 @@ class LegacyRegimeType extends LegacyModel
         'ativo',
     ];
 
+    /**
+     * @return HasMany<LegacyCourse, $this>
+     */
     public function courses(): HasMany
     {
         return $this->hasMany(LegacyCourse::class, 'ref_cod_tipo_regime');

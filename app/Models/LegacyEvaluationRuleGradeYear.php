@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property LegacyEvaluationRule $evaluationRule
+ * @property LegacyEvaluationRule $differentiatedEvaluationRule
+ */
 class LegacyEvaluationRuleGradeYear extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.regra_avaliacao_serie_ano';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'serie_id';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'serie_id',
         'regra_avaliacao_id',
@@ -27,23 +22,20 @@ class LegacyEvaluationRuleGradeYear extends Model
         'ano_letivo',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyEvaluationRule, $this>
      */
-    public function evaluationRule()
+    public function evaluationRule(): BelongsTo
     {
         return $this->belongsTo(LegacyEvaluationRule::class, 'regra_avaliacao_id');
     }
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyEvaluationRule, $this>
      */
-    public function differentiatedEvaluationRule()
+    public function differentiatedEvaluationRule(): BelongsTo
     {
         return $this->belongsTo(LegacyEvaluationRule::class, 'regra_avaliacao_diferenciada_id');
     }

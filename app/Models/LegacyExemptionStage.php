@@ -12,34 +12,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacyExemptionStage extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.dispensa_etapa';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'ref_cod_dispensa';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_dispensa',
         'etapa',
         'ref_cod_disciplina',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyDisciplineExemption, $this>
      */
-    public function exemption()
+    public function exemption(): BelongsTo
     {
         return $this->belongsTo(LegacyDisciplineExemption::class, 'ref_cod_dispensa', 'cod_dispensa');
     }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 trait HasFiles
 {
     /**
-     * @return BelongsToMany
+     * @return BelongsToMany<File, $this>
      */
-    public function files()
+    public function files(): BelongsToMany
     {
         return $this->morphToMany(File::class, 'relation', 'files_relations');
     }

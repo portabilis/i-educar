@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\Ativo;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyCalendarYear extends LegacyModel
 {
@@ -32,7 +33,10 @@ class LegacyCalendarYear extends LegacyModel
         'ano',
     ];
 
-    public function school()
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
+    public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }

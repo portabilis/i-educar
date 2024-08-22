@@ -6,24 +6,18 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property string $nome
+ */
 class LegacyPeriod extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.turma_turno';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'nome',
         'ativo',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
     protected function name(): Attribute
@@ -33,11 +27,17 @@ class LegacyPeriod extends Model
         );
     }
 
+    /**
+     * @return HasMany<LegacySchoolClass, $this>
+     */
     public function schoolClass(): HasMany
     {
         return $this->hasMany(LegacySchoolClass::class, 'turma_turno_id');
     }
 
+    /**
+     * @return HasMany<LegacySchoolClassTeacher, $this>
+     */
     public function schoolClassTeacher(): HasMany
     {
         return $this->hasMany(LegacySchoolClassTeacher::class, 'turno_id');

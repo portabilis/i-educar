@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyDisciplineAcademicYearBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -12,10 +12,15 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * LegacyDisciplineAcademicYear
  *
  * @method static LegacyDisciplineAcademicYearBuilder query()
+ *
+ * @property int $componente_curricular_id
+ * @property int $carga_horaria
+ * @property LegacyDiscipline $discipline
  */
 class LegacyDisciplineAcademicYear extends Pivot
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LegacyDisciplineAcademicYearBuilder> */
+    use HasBuilder;
 
     protected $table = 'modules.componente_curricular_ano_escolar';
 
@@ -24,7 +29,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyDisciplineAcademicYearBuilder::class;
+    protected static string $builder = LegacyDisciplineAcademicYearBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
@@ -50,7 +55,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     public $incrementing = false;
 
     /**
-     * Serie
+     * @return BelongsTo<LegacyGrade, $this>
      */
     public function grade(): BelongsTo
     {
@@ -58,7 +63,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     }
 
     /**
-     * Component Curricular
+     * @return BelongsTo<LegacyDiscipline, $this>
      */
     public function discipline(): BelongsTo
     {
@@ -75,7 +80,7 @@ class LegacyDisciplineAcademicYear extends Pivot
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->discipline?->name,
+            get: fn () => $this->discipline?->name, // @phpstan-ignore-line
         );
     }
 

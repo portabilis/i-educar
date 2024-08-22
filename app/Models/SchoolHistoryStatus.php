@@ -24,6 +24,9 @@ class SchoolHistoryStatus implements Enum
 
     public const REPROVED_BY_ABSENCE = 14;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [

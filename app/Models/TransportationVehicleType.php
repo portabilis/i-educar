@@ -28,6 +28,9 @@ class TransportationVehicleType implements Enum
 
     public const TRAIN = 11;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [

@@ -6,23 +6,19 @@ use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $ref_cod_escola
+ * @property int $ref_cod_serie
+ */
 class LegacySchoolGrade extends LegacyModel
 {
     use HasLegacyDates;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.escola_serie';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'ref_cod_escola';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_escola',
         'ref_cod_serie',
@@ -32,6 +28,7 @@ class LegacySchoolGrade extends LegacyModel
         'hora_final',
         'hora_inicio_intervalo',
         'hora_fim_intervalo',
+        'bloquear_enturmacao_sem_vagas',
     ];
 
     /**
@@ -55,6 +52,8 @@ class LegacySchoolGrade extends LegacyModel
 
     /**
      * Relacionamento com a série.
+     *
+     * @return BelongsTo<LegacyGrade, $this>
      */
     public function grade(): BelongsTo
     {

@@ -4,30 +4,28 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyAcademicYearStageBuilder;
 use App\Support\Database\DateSerializer;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyAcademicYearStage extends LegacyModel
 {
     use DateSerializer;
 
-    /**
-     * @var string
-     */
+    /** @use HasBuilder<LegacyAcademicYearStageBuilder> */
+    use HasBuilder;
+
     protected $table = 'pmieducar.ano_letivo_modulo';
 
     /**
      * Builder dos filtros
      */
-    protected string $builder = LegacyAcademicYearStageBuilder::class;
+    protected static string $builder = LegacyAcademicYearStageBuilder::class;
 
     protected $casts = [
         'data_inicio' => 'date',
         'data_fim' => 'date',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_ano',
         'ref_ref_cod_escola',
@@ -39,16 +37,19 @@ class LegacyAcademicYearStage extends LegacyModel
         'escola_ano_letivo_id',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
+    /**
+     * @return BelongsTo<LegacyStageType, $this>
+     */
     public function stageType(): BelongsTo
     {
         return $this->belongsTo(LegacyStageType::class, 'ref_cod_modulo');
     }
 
+    /**
+     * @return BelongsTo<LegacySchoolAcademicYear, $this>
+     */
     public function schoolAcademicYear(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolAcademicYear::class, 'ref_ref_cod_escola', 'ref_cod_escola');

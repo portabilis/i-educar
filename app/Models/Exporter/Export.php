@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+/**
+ * @property array<int, string> $fillable
+ * @property Model $model
+ * @property array<int, string>  $fields
+ * @property array<int, array>  $filters
+ */
 class Export extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'export';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'user_id',
         'model',
@@ -28,7 +28,7 @@ class Export extends Model
     ];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'fields' => 'json',
@@ -36,7 +36,7 @@ class Export extends Model
     ];
 
     /**
-     * @return array
+     * @return array<int, Model>
      */
     public function getAllowedExports()
     {
@@ -78,7 +78,7 @@ class Export extends Model
     }
 
     /**
-     * @return Builder
+     * @return Builder<Model>
      */
     public function newExportQueryBuilder()
     {
@@ -86,7 +86,7 @@ class Export extends Model
     }
 
     /**
-     * @return Builder
+     * @return Builder<Model>
      */
     public function getExportQuery()
     {
@@ -111,12 +111,16 @@ class Export extends Model
             $query->{$relation}($columns);
         }
 
+        /** @var Builder<Model> $query */
         $this->applyFilters($query);
 
         return $query;
     }
 
-    public function applyFilters(Builder $query)
+    /**
+     * @param Builder<Model> $query
+     */
+    public function applyFilters(Builder $query): void
     {
         foreach ($this->filters as $filter) {
             $column = $filter['column'];

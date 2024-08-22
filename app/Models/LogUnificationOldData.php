@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LogUnificationOldData extends Model
 {
@@ -12,9 +13,9 @@ class LogUnificationOldData extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo<LogUnification, $this>
      */
-    public function unification()
+    public function unification(): BelongsTo
     {
         return $this->belongsTo(LogUnification::class, 'unification_id', 'id');
     }

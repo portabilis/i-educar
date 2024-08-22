@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Casts\LegacyArray;
 use App\Models\Builders\LegacyEnrollmentBuilder;
 use App\Support\Database\DateSerializer;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -17,34 +19,32 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int                $registration_id
  * @property int                $school_class_id
  * @property int                $etapa_educacenso
+ * @property int                $ref_cod_turma
+ * @property int                $ref_cod_matricula
  * @property string             $studentName
  * @property DateTime           $date
  * @property LegacyRegistration $registration
  * @property LegacySchoolClass  $schoolClass
+ * @property Carbon             $data_enturmacao
+ * @property Carbon             $data_exclusao
  */
 class LegacyEnrollment extends LegacyModel
 {
     use DateSerializer;
 
+    /** @use HasBuilder<LegacyEnrollmentBuilder> */
+    use HasBuilder;
+
     public const CREATED_AT = 'data_cadastro';
 
     public const UPDATED_AT = 'updated_at';
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.matricula_turma';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'id';
 
-    protected string $builder = LegacyEnrollmentBuilder::class;
+    protected static string $builder = LegacyEnrollmentBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_matricula',
         'ref_cod_turma',
@@ -61,6 +61,11 @@ class LegacyEnrollment extends LegacyModel
         'etapa_educacenso',
         'cod_curso_profissional',
         'desconsiderar_educacenso',
+        'transferido',
+        'remanejado',
+        'reclassificado',
+        'abandono',
+        'falecido',
     ];
 
     protected $casts = [
@@ -109,7 +114,7 @@ class LegacyEnrollment extends LegacyModel
     /**
      * Relação com a matrícula.
      *
-     * @return BelongsTo
+     * @return BelongsTo<LegacyRegistration, $this>
      */
     public function registration()
     {
@@ -119,7 +124,7 @@ class LegacyEnrollment extends LegacyModel
     /**
      * Relação com a turma.
      *
-     * @return BelongsTo
+     * @return BelongsTo<LegacySchoolClass, $this>
      */
     public function schoolClass()
     {
@@ -127,17 +132,16 @@ class LegacyEnrollment extends LegacyModel
     }
 
     /**
-     * Retorna o turno do aluno.
-     *
-     * Relação com turma_turno.
-     *
-     * @return bool | string
+     * @return BelongsTo<LegacyPeriod, $this>
      */
-    public function period()
+    public function period(): BelongsTo
     {
         return $this->belongsTo(LegacyPeriod::class, 'turno_id')->withDefault();
     }
 
+    /**
+     * @return HasOne<LegacyRegistrationScore, $this>
+     */
     public function registrationScore(): HasOne
     {
         return $this->hasOne(LegacyRegistrationScore::class, 'matricula_id', 'ref_cod_matricula');
@@ -146,7 +150,7 @@ class LegacyEnrollment extends LegacyModel
     /**
      * Relação com servidor.
      *
-     * @return BelongsTo
+     * @return BelongsTo<LegacyUser, $this>
      */
     public function createdBy()
     {
@@ -156,19 +160,22 @@ class LegacyEnrollment extends LegacyModel
     /**
      * Relação com servidor.
      *
-     * @return BelongsTo
+     * @return BelongsTo<LegacyUser, $this>
      */
     public function updatedBy()
     {
         return $this->belongsTo(LegacyUser::class, 'ref_usuario_exc');
     }
 
-    public function getStudentId()
+    public function getStudentId(): int
     {
         return $this->registration->student->cod_aluno;
     }
 
-    public function inep()
+    /**
+     * @return HasOne<EnrollmentInep, $this>
+     */
+    public function inep(): HasOne
     {
         return $this->hasOne(EnrollmentInep::class, 'matricula_turma_id');
     }

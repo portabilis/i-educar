@@ -13,8 +13,12 @@ use Illuminate\Support\Collection as SupportCollection;
 /**
  * @property int               $id
  * @property string            $name
+ * @property string            $nm_tipo
  * @property string            $description
+ * @property string            $descricao
  * @property int               $level
+ * @property int               $ativo
+ * @property int               $nivel
  * @property bool              $active
  * @property Collection|Menu[] $menus
  * @property Collection|User[] $users
@@ -50,7 +54,7 @@ class LegacyUserType extends LegacyModel
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'nivel',
@@ -59,11 +63,17 @@ class LegacyUserType extends LegacyModel
         'ref_funcionario_cad',
     ];
 
+    /**
+     * @return HasMany<LegacyUser, $this>
+     */
     public function users(): HasMany
     {
         return $this->hasMany(LegacyUser::class, 'ref_cod_tipo_usuario');
     }
 
+    /**
+     * @return BelongsToMany<Menu, $this>
+     */
     public function menus(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -78,6 +88,8 @@ class LegacyUserType extends LegacyModel
 
     /**
      * Retorna os processos e níveis de permissão em uma coleção chave => valor.
+     *
+     * @return SupportCollection<int|string, int>
      */
     public function getProcesses(): SupportCollection
     {
@@ -91,7 +103,7 @@ class LegacyUserType extends LegacyModel
 
         return $this->menus()
             ->get()
-            ->mapWithKeys(static function ($menu) {
+            ->mapWithKeys(static function (Menu $menu) {
                 $level = 0;
 
                 if ($menu->pivot->visualiza ?? false) {
@@ -106,10 +118,13 @@ class LegacyUserType extends LegacyModel
                     $level = 3;
                 }
 
-                return [$menu->id => $level];
+                return [$menu->getKey() => $level];
             });
     }
 
+    /**
+     * @return SupportCollection<int, string>
+     */
     public function getLevelDescriptions(): SupportCollection
     {
         $levels = [

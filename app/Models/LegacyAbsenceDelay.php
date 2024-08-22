@@ -7,10 +7,19 @@ use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Models\Enums\AbsenceDelayType;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ * @property int $tipo
+ * @property int $justificada
+ */
 class LegacyAbsenceDelay extends LegacyModel
 {
+    /** @use HasBuilder<LegacyAbsenceDelayBuilder> */
+    use HasBuilder;
+
     use HasFiles;
     use HasLegacyUserAction;
     use LegacySoftDeletes;
@@ -25,7 +34,7 @@ class LegacyAbsenceDelay extends LegacyModel
 
     protected $primaryKey = 'cod_falta_atraso';
 
-    protected string $builder = LegacyAbsenceDelayBuilder::class;
+    protected static string $builder = LegacyAbsenceDelayBuilder::class;
 
     protected $fillable = [
         'ref_cod_escola',
@@ -58,21 +67,33 @@ class LegacyAbsenceDelay extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsTo<LegacySchool, $this>
+     */
     public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 
+    /**
+     * @return BelongsTo<LegacyInstitution, $this>
+     */
     public function institution(): BelongsTo
     {
         return $this->belongsTo(LegacyInstitution::class, 'ref_ref_cod_instituicao');
     }
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'ref_cod_servidor');
     }
 
+    /**
+     * @return BelongsTo<LegacyEmployeeRole, $this>
+     */
     public function employeeRole(): BelongsTo
     {
         return $this->belongsTo(LegacyEmployeeRole::class, 'ref_cod_servidor_funcao');

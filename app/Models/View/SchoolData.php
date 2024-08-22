@@ -6,6 +6,19 @@ use App\Services\Reports\Util;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $nome
+ * @property string $telefone
+ * @property string $telefone_ddd
+ * @property string $celular
+ * @property string $celular_ddd
+ * @property string $logradouro
+ * @property string $numero
+ * @property string $bairro
+ * @property string $cep
+ * @property string $municipio
+ * @property string $uf_municipio
+ */
 class SchoolData extends Model
 {
     protected $primaryKey = 'cod_escola';

@@ -12,6 +12,9 @@ class TransportationProvider implements Enum
 
     public const CITY = 2;
 
+    /**
+     * @return array<int, string>
+     */
     public function getDescriptiveValues(): array
     {
         return [
@@ -21,6 +24,9 @@ class TransportationProvider implements Enum
         ];
     }
 
+    /**
+     * @param int $value
+     */
     public function from($value): int
     {
         return match ($value) {
@@ -30,7 +36,10 @@ class TransportationProvider implements Enum
         };
     }
 
-    public function getValueDescription($value)
+    /**
+     * @param int $value
+     */
+    public function getValueDescription($value): string
     {
         return match ((int) $value) {
             self::CITY => 'municipal',

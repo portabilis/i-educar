@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<int, string> $fillable
+ * @property HasMany $periodDates
+ */
 class ReleasePeriod extends Model
 {
     protected $fillable = [
@@ -16,7 +20,7 @@ class ReleasePeriod extends Model
     ];
 
     /**
-     * The roles that belong to the user.
+     * @return BelongsToMany<LegacySchool, $this>
      */
     public function schools(): BelongsToMany
     {
@@ -28,21 +32,31 @@ class ReleasePeriod extends Model
         );
     }
 
+    /**
+     * @return HasMany<ReleasePeriodDate, $this>
+     */
     public function periodDates(): HasMany
     {
         return $this->hasMany(ReleasePeriodDate::class);
     }
 
+    /**
+     * @return BelongsTo<LegacyStageType, $this>
+     */
     public function stageType(): BelongsTo
     {
         return $this->belongsTo(LegacyStageType::class, 'stage_type_id');
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getDatesArray(): array
     {
         $dates = $this->periodDates;
 
         $datesString = [];
+        /** @phpstan-ignore-next-line  */
         foreach ($dates as $date) {
             $datesString[] = $date->start_date->format('d/m/Y') . ' a ' . $date->end_date->format('d/m/Y');
         }

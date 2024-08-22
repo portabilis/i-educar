@@ -21,4 +21,13 @@ class RegraAvaliacao_Model_Nota_TipoValor extends CoreExt_Enum
     {
         return self::_getInstance(__CLASS__);
     }
+
+    public function getBasicDescriptiveValues()
+    {
+        $notaTipos = $this->getEnums();
+        unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
+        unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL]);
+
+        return $notaTipos;
+    }
 }

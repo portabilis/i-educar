@@ -2,10 +2,14 @@
 
 namespace App\Models\Exporter\Builders;
 
+use App\Models\Exporter\Employee;
 use App\Support\Database\JoinableBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
+/**
+ * @extends Builder<Employee>
+ */
 class EmployeeEloquentBuilder extends Builder
 {
     use JoinableBuilder;
@@ -13,6 +17,8 @@ class EmployeeEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function person($columns)
     {
@@ -27,6 +33,8 @@ class EmployeeEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function disabilities()
     {
@@ -41,6 +49,8 @@ class EmployeeEloquentBuilder extends Builder
 
     /**
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function phones()
     {
@@ -56,6 +66,8 @@ class EmployeeEloquentBuilder extends Builder
     /**
      * @param array $columns
      * @return TeacherEloquentBuilder
+     *
+     * @phpstan-return \Illuminate\Database\Query\Builder
      */
     public function place($columns)
     {

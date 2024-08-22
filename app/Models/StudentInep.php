@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * StudentInep
  *
  * @property LegacyStudent $student
+ * @property array<int, string> $fillable
+ * @property string $number
  */
 class StudentInep extends LegacyModel
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.educacenso_cod_aluno';
 
     protected $fillable = [
@@ -23,6 +22,9 @@ class StudentInep extends LegacyModel
         'fonte',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public array $legacy = [
         'student_id' => 'cod_aluno',
         'number' => 'cod_aluno_inep',
@@ -30,6 +32,9 @@ class StudentInep extends LegacyModel
         'font' => 'fonte',
     ];
 
+    /**
+     * @return BelongsTo<LegacyStudent, $this>
+     */
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'cod_aluno');

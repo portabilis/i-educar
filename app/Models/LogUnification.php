@@ -3,54 +3,58 @@
 namespace App\Models;
 
 use App\Models\Builders\LogUnificationBuilder;
-use App\Traits\LegacyAttribute;
 use Exception;
 use iEducar\Modules\Unification\LogUnificationTypeInterface;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * @property string $type
+ */
 class LogUnification extends Model
 {
-    use LegacyAttribute;
+    /** @use HasBuilder<LogUnificationBuilder> */
+    use HasBuilder;
 
     /**
      * Builder dos filtros
      */
-    protected string $builder = LogUnificationBuilder::class;
+    protected static string $builder = LogUnificationBuilder::class;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyIndividual, $this>
      */
-    public function updatedBy()
+    public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(LegacyIndividual::class, 'updated_by');
     }
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyIndividual, $this>
      */
-    public function createdBy()
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(LegacyIndividual::class, 'created_by');
     }
 
     /**
-     * @return HasMany
+     * @return HasMany<LogUnificationOldData, $this>
      */
-    public function oldData()
+    public function oldData(): HasMany
     {
         return $this->hasMany(LogUnificationOldData::class, 'unification_id', 'id');
     }
 
     /**
-     * @return MorphTo
+     * @phpstan-ignore-next-line
      */
-    public function main()
+    public function main(): MorphTo
     {
         return $this->morphTo(null, 'type', 'main_id');
     }
@@ -59,10 +63,11 @@ class LogUnification extends Model
      * Abordagem para permitir usar whereHas ou has em relacionamentos polimórficos
      * https://github.com/laravel/framework/issues/5429
      *
-     * @return BelongsTo
+     * @return BelongsTo<Student, $this>
      */
-    public function studentMain()
+    public function studentMain(): BelongsTo
     {
+        /** @phpstan-ignore-next-line */
         return $this->belongsTo(Student::class, 'main_id')
             ->where('type', Student::class);
     }
@@ -71,10 +76,11 @@ class LogUnification extends Model
      * Abordagem para permitir usar whereHas ou has em relacionamentos polimórficos
      * https://github.com/laravel/framework/issues/5429
      *
-     * @return BelongsTo
+     * @return BelongsTo<LegacyPerson, $this>
      */
-    public function personMain()
+    public function personMain(): BelongsTo
     {
+        /** @phpstan-ignore-next-line */
         return $this->belongsTo(LegacyPerson::class, 'main_id')
             ->where('type', Individual::class);
     }
@@ -87,21 +93,19 @@ class LogUnification extends Model
     }
 
     /**
-     * @return string
-     *
      * @throws Exception
      */
-    public function getMainName()
+    public function getMainName(): string
     {
         return $this->getAdapter()->getMainPersonName($this);
     }
 
     /**
-     * @return array
+     * @phpstan-ignore-next-line
      *
      * @throws Exception
      */
-    public function getDuplicatesName()
+    public function getDuplicatesName(): array
     {
         return $this->getAdapter()->getDuplicatedPeopleName($this);
     }

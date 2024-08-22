@@ -5,21 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacyScoreExam extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'modules.nota_exame';
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'ref_cod_matricula';
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_matricula',
         'ref_cod_componente_curricular',
@@ -32,7 +26,7 @@ class LegacyScoreExam extends Model
     public $timestamps = false;
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo<LegacyRegistration, $this>
      */
     public function registration()
     {

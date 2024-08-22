@@ -6,7 +6,7 @@ function fixupTabelaMatriculas() {
 
   $j('<p>').addClass('title-table-matricula').html(stringUtils.toUtf8('<strong>Matrículas:</strong>')).appendTo($parentTd);
 
-  var $table = $j('<table>').attr('id', 'matriculas').addClass('styled horizontal-expand').hide();
+  var $table = $j('<table class="tablelistagem">').attr('id', 'matriculas').addClass('styled horizontal-expand').hide();
   var $tr    = $j('<tr>');
 
   $j('<th>').html('').appendTo($tr);
@@ -91,11 +91,11 @@ var handleGetMatriculas = function(dataResponse) {
       }
 
 
-      $j('<td>').html(matricula.turma_nome).appendTo($tr);
-      $j('<td>').html(matricula.ultima_enturmacao).appendTo($tr);
-      $j('<td>').html(matricula.serie_nome).appendTo($tr);
-      $j('<td>').html(matricula.curso_nome).appendTo($tr);
-      $j('<td>').html(matricula.escola_nome).appendTo($tr);
+      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.turma_id}">${matricula.turma_nome ?? ''}</a>`).appendTo($tr);
+      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.ultima_enturmacao_turma_id}">${matricula.ultima_enturmacao}</a>`).appendTo($tr);
+      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_serie_det.php?cod_serie=${matricula.serie_id}">${matricula.serie_nome}</a>`).appendTo($tr);
+      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_curso_det.php?cod_curso=${matricula.curso_id}">${matricula.curso_nome}</a>`).appendTo($tr);
+      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_escola_det.php?cod_escola=${matricula.escola_id}">${matricula.escola_nome}</a>`).appendTo($tr);
 
       if(matricula.data_entrada != ""){
         if(matricula.user_can_access && matricula.user_can_change_date){

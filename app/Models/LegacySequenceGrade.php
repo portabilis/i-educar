@@ -4,21 +4,25 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySequenceGradeBuilder;
 use App\Traits\Ativo;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacySequenceGrade extends LegacyModel
 {
     use Ativo;
+
+    /** @use HasBuilder<LegacySequenceGradeBuilder> */
+    use HasBuilder;
 
     protected $table = 'pmieducar.sequencia_serie';
 
     public const CREATED_AT = 'data_cadastro';
 
-    protected string $builder = LegacySequenceGradeBuilder::class;
+    protected static string $builder = LegacySequenceGradeBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_serie_origem',
         'ref_serie_destino',
@@ -28,11 +32,17 @@ class LegacySequenceGrade extends LegacyModel
         'ativo',
     ];
 
+    /**
+     * @return BelongsTo<LegacyGrade, $this>
+     */
     public function gradeOrigin(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_serie_origem');
     }
 
+    /**
+     * @return BelongsTo<LegacyGrade, $this>
+     */
     public function gradeDestiny(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_serie_destino');

@@ -3,30 +3,26 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\PersonEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Person extends Model
 {
+    /** @use HasBuilder<PersonEloquentBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = PersonEloquentBuilder::class;
+
     /**
      * @var string
      */
     protected $table = 'exporter_person';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return PersonEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new PersonEloquentBuilder($query);
-    }
 
     /**
      * @return array
@@ -121,15 +117,12 @@ class Person extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Pessoas';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Exportação de pessoas';
     }
@@ -140,7 +133,9 @@ class Person extends Model
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
                 return $item;
             });

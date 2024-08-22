@@ -3,30 +3,26 @@
 namespace App\Models\Exporter;
 
 use App\Models\Exporter\Builders\TeacherEloquentBuilder;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class Teacher extends Model
 {
+    /** @use HasBuilder<TeacherEloquentBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = TeacherEloquentBuilder::class;
+
     /**
      * @var string
      */
     protected $table = 'exporter_teacher';
 
     /**
-     * @var Collection
+     * @var Collection<string, string>
      */
     protected $alias;
-
-    /**
-     * @param Builder $query
-     * @return TeacherEloquentBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new TeacherEloquentBuilder($query);
-    }
 
     /**
      * @return array
@@ -94,26 +90,25 @@ class Teacher extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'Professores';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Os dados exportados serão contabilizados por quantidade de professores(as) alocados(as) no ano filtrado, agrupando as informações de cursos de formação dos docentes.';
     }
 
     /**
      * @param string $column
-     * @return string
+     * @return mixed
      */
     public function alias($column)
     {
+        /** @phpstan-ignore-next-line */
         if (empty($this->alias)) {
+            /** @phpstan-ignore-next-line */
             $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
                 return $item;
             });

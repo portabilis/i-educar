@@ -3,32 +3,33 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyActiveLookingBuilder;
+use Carbon\Carbon;
 use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class LegacyActiveLooking
  *
- * @property LegacyRegistration $registration
- * @property int                id
+ * @property LegacyRegistration     $registration
+ * @property Carbon                 $data_inicio
+ * @property Carbon                 $data_fim
+ * @property int                 $result
  */
 class LegacyActiveLooking extends LegacyModel
 {
+    /** @use HasBuilder<LegacyActiveLookingBuilder> */
+    use HasBuilder;
+
     use HasFiles;
     use SoftDeletes;
 
-    /**
-     * @var string
-     */
     protected $table = 'pmieducar.busca_ativa';
 
-    protected string $builder = LegacyActiveLookingBuilder::class;
+    protected static string $builder = LegacyActiveLookingBuilder::class;
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'ref_cod_matricula',
         'data_inicio',
@@ -53,19 +54,19 @@ class LegacyActiveLooking extends LegacyModel
     /**
      * Relação com a matrícula.
      *
-     * @return BelongsTo
+     * @return BelongsTo<LegacyRegistration, $this>
      */
-    public function registration()
+    public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
     }
 
-    public function getStartDate()
+    public function getStartDate(): ?string
     {
         return $this->data_inicio ? $this->data_inicio->format('Y-m-d') : null;
     }
 
-    public function getEndDate()
+    public function getEndDate(): ?string
     {
         return $this->data_fim ? $this->data_fim->format('Y-m-d') : null;
     }

@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class File extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'public.files';
 
     protected $fillable = [
