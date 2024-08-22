@@ -28,16 +28,16 @@
                         <a href="{{ route('announcement.publish.edit', $announcement) }}">{{ $announcement->userTypes->implode('nm_tipo', ', ') }}</a>
                     </td>
                     <td>
-                        <a href="{{ route('announcement.publish.edit', $announcement) }}">{{ $announcement->trashed() ? 'Desativado' : 'Ativado' }}</a>
+                        <a href="{{ route('announcement.publish.edit', $announcement) }}">{{ $announcement->created_at->format('d/m/Y H:i') }}</a>
                     </td>
                     <td>
-                        <a href="{{ route('announcement.publish.edit', $announcement) }}">{{ $announcement->created_at->format('d/m/Y H:i') }}</a>
+                        <a href="{{ route('announcement.publish.edit', $announcement) }}">{{ $announcement->trashed() ? 'Desativado' : 'Ativado' }}</a>
                     </td>
                 @else
                     <td>{{ $announcement->name }}/></td>
                     <td>{{ $announcement->userTypes->implode('nm_tipo', ', ') }}</td>
-                    <td>{{ $announcement->trashed() ? 'Desativado' : 'Ativado' }}</td>
                     <td>{{ $announcement->created_at->format('d/m/Y H:i') }}</td>
+                    <td>{{ $announcement->trashed() ? 'Desativado' : 'Ativado' }}</td>
                 @endcan
 
             </tr>
