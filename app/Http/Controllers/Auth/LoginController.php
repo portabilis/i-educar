@@ -81,10 +81,12 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        $announcement = Announcement::latest()->first();
+        $announcement = Announcement::query()
+            ->whereHas('userTypes', fn ($q) => $q->whereKey($user->ref_cod_tipo_usuario))
+            ->latest()->first();
 
-        if (!$announcement || !$announcement->userTypes?->contains($user->ref_cod_tipo_usuario)) {
-            return null;
+        if (!$announcement) {
+            return;
         }
 
         if ($announcement->repeat_on_login) {

@@ -12,13 +12,14 @@ class AnnouncementMiddleware
     public function handle(Request $request, Closure $next)
     {
         if ($user = $request->user()) {
-            $announcement = Announcement::latest()->first();
-            if ($announcement && $announcement->userTypes?->contains($user->ref_cod_tipo_usuario)) {
-                if ($announcement->show_confirmation && !$this->userConfirmedAnnouncement($announcement, $user)) {
-                    Session::flash('error', 'Confirme a ciência do aviso antes de prosseguir!');
+            $announcement = Announcement::query()
+                ->whereHas('userTypes', fn ($q) => $q->whereKey($user->ref_cod_tipo_usuario)
+                )->latest()->first();
 
-                    return redirect()->route('announcement.user.show');
-                }
+            if ($announcement?->show_confirmation && !$this->userConfirmedAnnouncement($announcement, $user)) {
+                Session::flash('error', 'Confirme a ciência do aviso antes de prosseguir!');
+
+                return redirect()->route('announcement.user.show');
             }
         }
 
