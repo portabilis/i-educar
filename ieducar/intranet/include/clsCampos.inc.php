@@ -1436,6 +1436,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$evento} {$disabled}> {$componente[7]}";
+                        $campo_valor = ! is_null($campo_valor) ? htmlspecialchars($campo_valor, ENT_QUOTES) : null;
                         break;
 
                     case 'monetario':
