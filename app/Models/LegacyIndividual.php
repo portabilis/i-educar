@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyIndividualBuilder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -22,11 +24,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyIndividual extends Model
 {
+    /** @use HasBuilder<LegacyIndividualBuilder> */
+    use HasBuilder;
     use HasFiles;
 
     public const CREATED_AT = 'data_cad';
 
     public const UPDATED_AT = null;
+
+    protected static string $builder = LegacyIndividualBuilder::class;
 
     protected $table = 'cadastro.fisica';
 
@@ -106,6 +112,21 @@ class LegacyIndividual extends Model
             'cadastro.fisica_raca',
             'ref_idpes',
             'ref_cod_raca'
+        );
+    }
+
+    /**
+     * @return BelongsToMany<LegacyDeficiency, $this>
+     */
+    public function races(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            LegacyRace::class,
+            'cadastro.fisica_raca',
+            'ref_idpes',
+            'ref_cod_raca',
+            'idpes',
+            'cod_raca'
         );
     }
 
@@ -322,3 +343,6 @@ class LegacyIndividual extends Model
         );
     }
 }
+
+
+
