@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEvaluationRule;
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
 use Illuminate\Support\Facades\DB;
 
@@ -910,6 +911,16 @@ class EditController extends Core_Controller_Page_EditController
 
     protected function _save()
     {
+        $regraDiferenciada = $this->getRequest()->regraDiferenciada;
+        if ($regraDiferenciada != 0) {
+            $deficiencyEvaluationRule = LegacyEvaluationRule::findOrFail($regraDiferenciada);
+            if ($this->getRequest()->tipoPresenca != $deficiencyEvaluationRule->tipo_presenca) {
+                $this->mensagem = 'A regra inclusiva selecionada possuí apuração de frequência incompatível, verifique a configuração e tente novamente.';
+
+                return false;
+            }
+        }
+
         $data = [];
 
         if ($_POST['tipoNota'] == 3) {
