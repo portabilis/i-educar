@@ -214,6 +214,45 @@ return new class() extends clsCadastro
             'placeholder' => 'Tamanho',
         ]);
 
+        $this->inputsHelper()->integer(attrName: 'pants_fem_qty', inputOptions: [
+            'required' => false,
+            'label' => 'Calça Feminina (tecidos diversos)',
+            'value' => request(key: 'pants_fem_qty', default: $this->uniformDistribution->pants_fem_qty),
+            'max_length' => 2,
+            'size' => 15,
+            'inline' => true,
+            'placeholder' => 'Quantidade',
+        ]);
+
+        $this->inputsHelper()->text(attrNames: 'pants_fem_tm', inputOptions: [
+            'required' => false,
+            'label' => '',
+            'value' => request(key: 'pants_fem_tm', default: $this->uniformDistribution->pants_fem_tm),
+            'max_length' => 10,
+            'size' => 15,
+            'placeholder' => 'Tamanho',
+        ]);
+
+        $this->inputsHelper()->integer(attrName: 'pants_mas_qty', inputOptions: [
+            'required' => false,
+            'label' => 'Calça Masculina (tecidos diversos)',
+            'value' => request(key: 'pants_mas_qty', default: $this->uniformDistribution->pants_mas_qty),
+            'max_length' => 2,
+            'size' => 15,
+            'inline' => true,
+            'placeholder' => 'Quantidade',
+        ]);
+
+        $this->inputsHelper()->text(attrNames: 'pants_mas_tm', inputOptions: [
+            'required' => false,
+            'label' => '',
+            'value' => request(key: 'pants_mas_tm', default: $this->uniformDistribution->pants_mas_tm),
+            'max_length' => 10,
+            'size' => 15,
+            'placeholder' => 'Tamanho',
+        ]);
+
+
         $this->inputsHelper()->integer(attrName: 'socks_qty', inputOptions: [
             'required' => false,
             'label' => 'Meias',
@@ -247,6 +286,25 @@ return new class() extends clsCadastro
             'required' => false,
             'label' => '',
             'value' => request(key: 'skirt_tm', default: $this->uniformDistribution->skirt_tm),
+            'max_length' => 10,
+            'size' => 15,
+            'placeholder' => 'Tamanho',
+        ]);
+
+        $this->inputsHelper()->integer(attrName: 'shorts_skirt_qty', inputOptions: [
+            'required' => false,
+            'label' => 'Shorts saia',
+            'value' => request(key: 'shorts_skirt_qty', default: $this->uniformDistribution->shorts_skirt_qty),
+            'max_length' => 2,
+            'size' => 15,
+            'inline' => true,
+            'placeholder' => 'Quantidade',
+        ]);
+
+        $this->inputsHelper()->text(attrNames: 'shorts_skirt_tm', inputOptions: [
+            'required' => false,
+            'label' => '',
+            'value' => request(key: 'shorts_skirt_tm', default: $this->uniformDistribution->shorts_skirt_tm),
             'max_length' => 10,
             'size' => 15,
             'placeholder' => 'Tamanho',
