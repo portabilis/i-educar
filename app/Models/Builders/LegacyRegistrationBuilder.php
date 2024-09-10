@@ -124,6 +124,14 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Raca
+     */
+    public function whereRaceId(int $race): self
+    {
+        return $this->whereHas('student.individual', fn ($q) => $q->whereRace($race));
+    }
+
+    /**
      * Filtra por Situacao
      */
     public function whereSituation(int $situation): self
