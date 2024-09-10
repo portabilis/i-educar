@@ -270,7 +270,7 @@ class StudentEloquentBuilder extends Builder
         if ($only = $this->model->getLegacyExportedColumns('place', $columns)) {
             $this->addSelect($only);
 
-            $this->leftJoin('places as p', 'p.id', 'person_has_place.id')
+            $this->leftJoin('places as p', 'p.id', 'person_has_place.place_id')
                 ->leftJoin('cities as c', 'c.id', 'p.city_id')
                 ->leftJoin('states as s', 's.id', 'c.state_id')
                 ->leftJoin('countries as cn', 'cn.id', 's.country_id');
