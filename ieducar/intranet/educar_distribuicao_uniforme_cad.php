@@ -216,7 +216,7 @@ return new class() extends clsCadastro
 
         $this->inputsHelper()->integer(attrName: 'pants_fem_qty', inputOptions: [
             'required' => false,
-            'label' => 'Calça Feminina (tecidos diversos)',
+            'label' => 'Calça feminina (tecidos diversos)',
             'value' => request(key: 'pants_fem_qty', default: $this->uniformDistribution->pants_fem_qty),
             'max_length' => 2,
             'size' => 15,
@@ -235,7 +235,7 @@ return new class() extends clsCadastro
 
         $this->inputsHelper()->integer(attrName: 'pants_mas_qty', inputOptions: [
             'required' => false,
-            'label' => 'Calça Masculina (tecidos diversos)',
+            'label' => 'Calça masculina (tecidos diversos)',
             'value' => request(key: 'pants_mas_qty', default: $this->uniformDistribution->pants_mas_qty),
             'max_length' => 2,
             'size' => 15,
