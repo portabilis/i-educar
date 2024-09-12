@@ -257,7 +257,6 @@ return new class() extends clsCadastro
             'placeholder' => 'Tamanho',
         ]);
 
-
         $this->inputsHelper()->integer(attrName: 'socks_qty', inputOptions: [
             'required' => false,
             'label' => 'Meias',
@@ -434,7 +433,9 @@ return new class() extends clsCadastro
             'student_id' => request('ref_cod_aluno'),
         ]);
 
-        $uniformDistribution->update(request()->all());
+        $uniformDistribution->update(array_merge([
+            'complete_kit' => request()->boolean('complete_kit'),
+        ], request()->all()));
 
         if ($uniformDistribution->save()) {
             $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
