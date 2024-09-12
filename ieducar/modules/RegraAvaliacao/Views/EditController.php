@@ -911,14 +911,10 @@ class EditController extends Core_Controller_Page_EditController
 
     protected function _save()
     {
-        $regraDiferenciada = $this->getRequest()->regraDiferenciada;
-        if ($regraDiferenciada != 0) {
-            $deficiencyEvaluationRule = LegacyEvaluationRule::findOrFail($regraDiferenciada);
-            if ($this->getRequest()->tipoPresenca != $deficiencyEvaluationRule->tipo_presenca) {
-                $this->mensagem = 'A regra inclusiva selecionada possuí apuração de frequência incompatível, verifique a configuração e tente novamente.';
+        if (!$this->isPresenceTypeCompatible($this->getRequest()->tipoPresenca, $this->getRequest()->regraDiferenciada)) {
+            $this->mensagem = 'A regra inclusiva selecionada possuí apuração de frequência incompatível, verifique a configuração e tente novamente.';
 
-                return false;
-            }
+            return false;
         }
 
         $data = [];
@@ -1053,5 +1049,25 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         return true;
+    }
+
+    /**
+     * Valida se a regra a ser salva e a regra diferenciada possuem apuração de frequência compatível
+     *
+     * @return bool
+     */
+    private function isPresenceTypeCompatible(int $presenceType, ?int $deficiencyEvaluationRuleId)
+    {
+        if (empty($deficiencyEvaluationRuleId)) {
+            return true;
+        }
+
+        $deficiencyEvaluationRule = LegacyEvaluationRule::findOrFail($deficiencyEvaluationRuleId);
+
+        if ($presenceType == $deficiencyEvaluationRule->tipo_presenca) {
+            return true;
+        }
+
+        return false;
     }
 }
