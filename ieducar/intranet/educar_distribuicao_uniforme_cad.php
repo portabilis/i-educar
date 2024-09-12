@@ -11,6 +11,10 @@ return new class() extends clsCadastro
      */
     public $pessoa_logada;
 
+    public $ref_cod_instituicao;
+
+    public $ref_cod_escola;
+
     public UniformDistribution $uniformDistribution;
 
     public function Inicializar()
@@ -54,6 +58,7 @@ return new class() extends clsCadastro
     public function Gerar()
     {
         $this->uniformDistribution ?? $this->uniformDistribution = new UniformDistribution();
+        $this->ref_cod_escola = $this->uniformDistribution->school_id;
 
         $objEscola = new clsPmieducarEscola();
         $lista = $objEscola->lista();
