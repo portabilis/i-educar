@@ -33,10 +33,6 @@ return new class extends clsCadastro
         $this->inputsHelper()->dynamic(helperNames: 'turma', inputOptions: ['label' => 'Selecione a turma do ano anterior', 'required' => false]);
         $this->inputsHelper()->dynamic(helperNames: 'anoLetivo', inputOptions: ['label' => 'Ano destino'], helperOptions: $anoLetivoHelperOptions);
         $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
-
-        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
-            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js',
-        ]);
     }
 
     public function Novo()
