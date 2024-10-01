@@ -1,42 +1,51 @@
 <?php
 
+use App\Models\LegacyInstitutionDocument;
+
 class InstituicaoDocumentacaoController extends ApiCoreController
 {
     protected function insertDocuments()
     {
-        $var1 = $this->getRequest()->instituicao_id;
-        $var2 = $this->getRequest()->titulo_documento;
-        $var3 = $this->getRequest()->url_documento;
-        $var4 = $this->getRequest()->ref_usuario_cad;
-        $var5 = $this->getRequest()->ref_cod_escola;
+        LegacyInstitutionDocument::create([
+            'instituicao_id' => request()->integer('instituicao_id'),
+            'titulo_documento' => request()->string('titulo_documento'),
+            'url_documento' => request()->string('url_documento'),
+            'ref_usuario_cad' => request()->integer('ref_usuario_cad'),
+            'ref_cod_escola' => request()->integer('ref_cod_escola'),
+        ]);
 
-        $sql = "INSERT INTO pmieducar.instituicao_documentacao (instituicao_id, titulo_documento, url_documento, ref_usuario_cad, ref_cod_escola) VALUES ($var1, '$var2', '$var3', $var4, $var5)";
-        $this->fetchPreparedQuery($sql);
-
-        $sql = "SELECT MAX(id) FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1";
-        $novoId = $this->fetchPreparedQuery($sql);
-
-        return ['id' => $novoId[0][0]];
+        return [
+            'id' => LegacyInstitutionDocument::query()->select('id')->max('id'),
+        ];
     }
 
     protected function getDocuments()
     {
-        $var1 = $this->getRequest()->instituicao_id;
-        $sql = "SELECT * FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1 ORDER BY id DESC";
-        $instituicao = $this->fetchPreparedQuery($sql);
-        $attrs = ['id', 'titulo_documento', 'url_documento', 'ref_usuario_cad', 'ref_cod_escola'];
-        $instituicao = Portabilis_Array_Utils::filterSet($instituicao, $attrs);
+        $instituitionId = request()->integer('instituicao_id');
 
-        return ['documentos' => $instituicao];
+        $documents = LegacyInstitutionDocument::query()
+            ->select([
+                'id',
+                'titulo_documento',
+                'url_documento',
+                'ref_usuario_cad',
+                'ref_cod_escola',
+            ])
+            ->where('instituicao_id', $instituitionId)
+            ->orderByDesc('id')
+            ->get()
+            ->toArray();
+
+        return ['documentos' => $documents];
     }
 
     protected function deleteDocuments()
     {
-        $var1 = $this->getRequest()->id;
-        $sql = "DELETE FROM pmieducar.instituicao_documentacao WHERE id = $var1";
-        $instituicao = $this->fetchPreparedQuery($sql);
+        $documentId = request()->integer('id');
 
-        return $instituicao;
+        return LegacyInstitutionDocument::query()
+            ->whereKey($documentId)
+            ->delete();
     }
 
     public function Gerar()
