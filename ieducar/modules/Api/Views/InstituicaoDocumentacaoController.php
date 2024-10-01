@@ -14,7 +14,9 @@ class InstituicaoDocumentacaoController extends ApiCoreController
             'ref_cod_escola' => request()->integer('ref_cod_escola'),
         ]);
 
-        return ['id' => LegacyInstitutionDocument::query()->select('id')->max('id')];
+        return [
+            'id' => LegacyInstitutionDocument::query()->select('id')->max('id'),
+        ];
     }
 
     protected function getDocuments()
