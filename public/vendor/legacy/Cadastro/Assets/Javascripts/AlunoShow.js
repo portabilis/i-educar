@@ -91,11 +91,11 @@ var handleGetMatriculas = function(dataResponse) {
       }
 
 
-      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.turma_id}">${matricula.turma_nome ?? ''}</a>`).appendTo($tr);
-      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.ultima_enturmacao_turma_id}">${matricula.ultima_enturmacao}</a>`).appendTo($tr);
-      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_serie_det.php?cod_serie=${matricula.serie_id}">${matricula.serie_nome}</a>`).appendTo($tr);
-      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_curso_det.php?cod_curso=${matricula.curso_id}">${matricula.curso_nome}</a>`).appendTo($tr);
-      $j('<td class="formlttd">').html(`<a target="_blank" href="/intranet/educar_escola_det.php?cod_escola=${matricula.escola_id}">${matricula.escola_nome}</a>`).appendTo($tr);
+      $j('<td nowrap>').html(`<a style="color:#47728f; padding: 0 8px;" target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.turma_id}">${matricula.turma_nome ?? ''}</a>`).appendTo($tr);
+      $j('<td>').html(`<a style="color:#47728f; padding: 0 8px;" target="_blank" href="/intranet/educar_turma_det.php?cod_turma=${matricula.ultima_enturmacao_turma_id}">${matricula.ultima_enturmacao}</a>`).appendTo($tr);
+      $j('<td nowrap>').html(`<a style="color:#47728f; padding: 0 8px;" target="_blank" href="/intranet/educar_serie_det.php?cod_serie=${matricula.serie_id}">${matricula.serie_nome}</a>`).appendTo($tr);
+      $j('<td>').html(`<a style="color:#47728f; padding: 0 8px;" target="_blank" href="/intranet/educar_curso_det.php?cod_curso=${matricula.curso_id}">${matricula.curso_nome}</a>`).appendTo($tr);
+      $j('<td>').html(`<a style="color:#47728f; padding: 0 8px;" target="_blank" href="/intranet/educar_escola_det.php?cod_escola=${matricula.escola_id}">${matricula.escola_nome}</a>`).appendTo($tr);
 
       if(matricula.data_entrada != ""){
         if(matricula.user_can_access && matricula.user_can_change_date){
