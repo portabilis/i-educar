@@ -2,6 +2,7 @@
 
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\RegistrationStatus;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro
@@ -127,9 +128,10 @@ return new class extends clsCadastro
                         "
                     );
 
-                    if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13 || (config('legacy.app.rematricula.permitir_cursando') && $situacao == 3)) {
+                    if ($result && $situacao == RegistrationStatus::APPROVED ||$situacao == RegistrationStatus::APPROVED_WITH_DEPENDENCY ||
+                        $situacao == RegistrationStatus::APPROVED_BY_BOARD ||(config('legacy.app.rematricula.permitir_cursando') && $situacao == RegistrationStatus::ONGOING)) {
                         $result = $this->rematricularAlunoAprovado(escolaId: $escolaId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
-                    } elseif ($result && $situacao == 2 || $situacao == 14) {
+                    } elseif ($result && $situacao == RegistrationStatus::REPROVED || $situacao == RegistrationStatus::REPROVED_BY_ABSENCE) {
                         $result = $this->rematricularAlunoReprovado(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
                     }
 
@@ -219,7 +221,21 @@ return new class extends clsCadastro
     protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
         $anoAnterior = $this->ano_letivo - 1;
-        $situacoes = config('legacy.app.rematricula.permitir_cursando') ? '1, 2, 3, 12, 13, 14' : '1, 2, 12, 13, 14';
+
+        $situacoesBase = [
+            RegistrationStatus::APPROVED,
+            RegistrationStatus::REPROVED,
+            RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+            RegistrationStatus::APPROVED_BY_BOARD,
+            RegistrationStatus::REPROVED_BY_ABSENCE
+        ];
+
+        $situacoesArray = config('legacy.app.rematricula.permitir_cursando')
+            ? array_merge($situacoesBase, [RegistrationStatus::ONGOING])
+            : $situacoesBase;
+
+        $situacoes = implode(', ', $situacoesArray);
+
 
         $sql = "
             SELECT
@@ -289,8 +305,20 @@ return new class extends clsCadastro
         $matriculas = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $anoAnterior);
         $qtdMatriculasAprovadasReprovadas = 0;
 
+        $situacoesBase = [
+            RegistrationStatus::APPROVED,
+            RegistrationStatus::REPROVED,
+            RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+            RegistrationStatus::APPROVED_BY_BOARD,
+            RegistrationStatus::REPROVED_BY_ABSENCE
+        ];
+
+        $situacoesArray = config('legacy.app.rematricula.permitir_cursando')
+            ? array_merge($situacoesBase, [RegistrationStatus::ONGOING])
+            : $situacoesBase;
+
         foreach ($matriculas as $m) {
-            if (in_array(needle: $m['aprovado'], haystack: [1, 2, 12, 13, 14])) {
+            if (in_array(needle: $m['aprovado'], haystack: $situacoesArray)) {
                 $qtdMatriculasAprovadasReprovadas++;
             }
         }
