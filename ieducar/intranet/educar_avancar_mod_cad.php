@@ -33,6 +33,9 @@ return new class extends clsCadastro
         $this->inputsHelper()->dynamic(helperNames: 'turma', inputOptions: ['label' => 'Selecione a turma do ano anterior', 'required' => false]);
         $this->inputsHelper()->dynamic(helperNames: 'anoLetivo', inputOptions: ['label' => 'Ano destino'], helperOptions: $anoLetivoHelperOptions);
         $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
+            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js',
+        ]);
     }
 
     public function Novo()
@@ -124,7 +127,7 @@ return new class extends clsCadastro
                         "
                     );
 
-                    if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13 || $situacao == 3) {
+                    if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13 || (config('legacy.app.rematricula.permitir_cursando') && $situacao == 3)) {
                         $result = $this->rematricularAlunoAprovado(escolaId: $escolaId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
                     } elseif ($result && $situacao == 2 || $situacao == 14) {
                         $result = $this->rematricularAlunoReprovado(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
@@ -216,6 +219,7 @@ return new class extends clsCadastro
     protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
         $anoAnterior = $this->ano_letivo - 1;
+        $situacoes = config('legacy.app.rematricula.permitir_cursando') ? '1, 2, 3, 12, 13, 14' : '1, 2, 12, 13, 14';
 
         $sql = "
             SELECT
@@ -229,7 +233,7 @@ return new class extends clsCadastro
                     AND aluno.cod_aluno = ref_cod_aluno
                 ) as nome
             FROM pmieducar.matricula m, pmieducar.matricula_turma
-            WHERE aprovado in (1, 2, 3, 12, 13, 14)
+            WHERE aprovado in ({$situacoes})
             AND m.ativo = 1
             AND ref_ref_cod_escola = $escolaId
             AND ref_ref_cod_serie = $serieId
