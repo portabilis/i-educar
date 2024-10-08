@@ -13,6 +13,14 @@ return new class extends clsCadastro
 
     public $permitir_cursando;
 
+    public $situacoes_base = [
+        RegistrationStatus::APPROVED,
+        RegistrationStatus::REPROVED,
+        RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+        RegistrationStatus::APPROVED_BY_BOARD,
+        RegistrationStatus::REPROVED_BY_ABSENCE
+    ];
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -229,17 +237,9 @@ return new class extends clsCadastro
     {
         $anoAnterior = $this->ano_letivo - 1;
 
-        $situacoesBase = [
-            RegistrationStatus::APPROVED,
-            RegistrationStatus::REPROVED,
-            RegistrationStatus::APPROVED_WITH_DEPENDENCY,
-            RegistrationStatus::APPROVED_BY_BOARD,
-            RegistrationStatus::REPROVED_BY_ABSENCE
-        ];
-
         $situacoesArray = $this->permitir_cursando
-            ? array_merge($situacoesBase, [RegistrationStatus::ONGOING])
-            : $situacoesBase;
+            ? array_merge($this->situacoes_base, [RegistrationStatus::ONGOING])
+            : $this->situacoes_base;
 
         $situacoes = implode(', ', $situacoesArray);
 
@@ -312,17 +312,9 @@ return new class extends clsCadastro
         $matriculas = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $anoAnterior);
         $qtdMatriculasAprovadasReprovadas = 0;
 
-        $situacoesBase = [
-            RegistrationStatus::APPROVED,
-            RegistrationStatus::REPROVED,
-            RegistrationStatus::APPROVED_WITH_DEPENDENCY,
-            RegistrationStatus::APPROVED_BY_BOARD,
-            RegistrationStatus::REPROVED_BY_ABSENCE
-        ];
-
         $situacoesArray = $this->permitir_cursando
-            ? array_merge($situacoesBase, [RegistrationStatus::ONGOING])
-            : $situacoesBase;
+            ? array_merge($this->situacoes_base, [RegistrationStatus::ONGOING])
+            : $this->situacoes_base;
 
         foreach ($matriculas as $m) {
             if (in_array(needle: $m['aprovado'], haystack: $situacoesArray)) {
