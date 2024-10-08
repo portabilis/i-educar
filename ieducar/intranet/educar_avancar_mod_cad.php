@@ -2,6 +2,7 @@
 
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\RegistrationStatus;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro
@@ -9,6 +10,16 @@ return new class extends clsCadastro
     public $pessoa_logada;
 
     public $data_matricula;
+
+    public $permitir_cursando;
+
+    public const SITUACOES_BASE = [
+        RegistrationStatus::APPROVED,
+        RegistrationStatus::REPROVED,
+        RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+        RegistrationStatus::APPROVED_BY_BOARD,
+        RegistrationStatus::REPROVED_BY_ABSENCE
+    ];
 
     public function Inicializar()
     {
@@ -20,6 +31,8 @@ return new class extends clsCadastro
         $this->breadcrumb(currentPage: 'Rematrícula automática', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
+
+        $this->permitir_cursando = config('legacy.app.rematricula.permitir_cursando');
 
         return $retorno;
     }
@@ -33,10 +46,16 @@ return new class extends clsCadastro
         $this->inputsHelper()->dynamic(helperNames: 'turma', inputOptions: ['label' => 'Selecione a turma do ano anterior', 'required' => false]);
         $this->inputsHelper()->dynamic(helperNames: 'anoLetivo', inputOptions: ['label' => 'Ano destino'], helperOptions: $anoLetivoHelperOptions);
         $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
+        Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
+            $this->permitir_cursando ? '' : '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomatica.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js',
+        ]);
     }
 
     public function Novo()
     {
+        $this->permitir_cursando = config('legacy.app.rematricula.permitir_cursando');
+
         $anoLetivo = request('ano_letivo');
         $ano = request('ano');
 
@@ -124,9 +143,10 @@ return new class extends clsCadastro
                         "
                     );
 
-                    if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13 || $situacao == 3) {
+                    if ($result && $situacao == RegistrationStatus::APPROVED ||$situacao == RegistrationStatus::APPROVED_WITH_DEPENDENCY ||
+                        $situacao == RegistrationStatus::APPROVED_BY_BOARD ||($this->permitir_cursando && $situacao == RegistrationStatus::ONGOING)) {
                         $result = $this->rematricularAlunoAprovado(escolaId: $escolaId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
-                    } elseif ($result && $situacao == 2 || $situacao == 14) {
+                    } elseif ($result && $situacao == RegistrationStatus::REPROVED || $situacao == RegistrationStatus::REPROVED_BY_ABSENCE) {
                         $result = $this->rematricularAlunoReprovado(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
                     }
 
@@ -217,6 +237,13 @@ return new class extends clsCadastro
     {
         $anoAnterior = $this->ano_letivo - 1;
 
+        $situacoesArray = $this->permitir_cursando
+            ? array_merge(self::SITUACOES_BASE, [RegistrationStatus::ONGOING])
+            : self::SITUACOES_BASE;
+
+        $situacoes = implode(', ', $situacoesArray);
+
+
         $sql = "
             SELECT
                 cod_matricula,
@@ -229,7 +256,7 @@ return new class extends clsCadastro
                     AND aluno.cod_aluno = ref_cod_aluno
                 ) as nome
             FROM pmieducar.matricula m, pmieducar.matricula_turma
-            WHERE aprovado in (1, 2, 3, 12, 13, 14)
+            WHERE aprovado in ({$situacoes})
             AND m.ativo = 1
             AND ref_ref_cod_escola = $escolaId
             AND ref_ref_cod_serie = $serieId
@@ -285,8 +312,12 @@ return new class extends clsCadastro
         $matriculas = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $anoAnterior);
         $qtdMatriculasAprovadasReprovadas = 0;
 
+        $situacoesArray = $this->permitir_cursando
+            ? array_merge(self::SITUACOES_BASE, [RegistrationStatus::ONGOING])
+            : self::SITUACOES_BASE;
+
         foreach ($matriculas as $m) {
-            if (in_array(needle: $m['aprovado'], haystack: [1, 2, 12, 13, 14])) {
+            if (in_array(needle: $m['aprovado'], haystack: $situacoesArray)) {
                 $qtdMatriculasAprovadasReprovadas++;
             }
         }
