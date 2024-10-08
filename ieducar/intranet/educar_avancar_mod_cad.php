@@ -11,6 +11,8 @@ return new class extends clsCadastro
 
     public $data_matricula;
 
+    public $permitir_cursando;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -21,6 +23,8 @@ return new class extends clsCadastro
         $this->breadcrumb(currentPage: 'Rematrícula automática', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
+
+        $this->permitir_cursando = config('legacy.app.rematricula.permitir_cursando');
 
         return $retorno;
     }
@@ -35,12 +39,15 @@ return new class extends clsCadastro
         $this->inputsHelper()->dynamic(helperNames: 'anoLetivo', inputOptions: ['label' => 'Ano destino'], helperOptions: $anoLetivoHelperOptions);
         $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
+            $this->permitir_cursando ? '' : '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomatica.js',
             '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js',
         ]);
     }
 
     public function Novo()
     {
+        $this->permitir_cursando = config('legacy.app.rematricula.permitir_cursando');
+
         $anoLetivo = request('ano_letivo');
         $ano = request('ano');
 
@@ -129,7 +136,7 @@ return new class extends clsCadastro
                     );
 
                     if ($result && $situacao == RegistrationStatus::APPROVED ||$situacao == RegistrationStatus::APPROVED_WITH_DEPENDENCY ||
-                        $situacao == RegistrationStatus::APPROVED_BY_BOARD ||(config('legacy.app.rematricula.permitir_cursando') && $situacao == RegistrationStatus::ONGOING)) {
+                        $situacao == RegistrationStatus::APPROVED_BY_BOARD ||($this->permitir_cursando && $situacao == RegistrationStatus::ONGOING)) {
                         $result = $this->rematricularAlunoAprovado(escolaId: $escolaId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
                     } elseif ($result && $situacao == RegistrationStatus::REPROVED || $situacao == RegistrationStatus::REPROVED_BY_ABSENCE) {
                         $result = $this->rematricularAlunoReprovado(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
@@ -230,7 +237,7 @@ return new class extends clsCadastro
             RegistrationStatus::REPROVED_BY_ABSENCE
         ];
 
-        $situacoesArray = config('legacy.app.rematricula.permitir_cursando')
+        $situacoesArray = $this->permitir_cursando
             ? array_merge($situacoesBase, [RegistrationStatus::ONGOING])
             : $situacoesBase;
 
@@ -313,7 +320,7 @@ return new class extends clsCadastro
             RegistrationStatus::REPROVED_BY_ABSENCE
         ];
 
-        $situacoesArray = config('legacy.app.rematricula.permitir_cursando')
+        $situacoesArray = $this->permitir_cursando
             ? array_merge($situacoesBase, [RegistrationStatus::ONGOING])
             : $situacoesBase;
 
