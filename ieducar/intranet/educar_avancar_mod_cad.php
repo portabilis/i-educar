@@ -13,7 +13,7 @@ return new class extends clsCadastro
 
     public $permitir_cursando;
 
-    public $situacoes_base = [
+    public const SITUACOES_BASE = [
         RegistrationStatus::APPROVED,
         RegistrationStatus::REPROVED,
         RegistrationStatus::APPROVED_WITH_DEPENDENCY,
@@ -238,8 +238,8 @@ return new class extends clsCadastro
         $anoAnterior = $this->ano_letivo - 1;
 
         $situacoesArray = $this->permitir_cursando
-            ? array_merge($this->situacoes_base, [RegistrationStatus::ONGOING])
-            : $this->situacoes_base;
+            ? array_merge(self::SITUACOES_BASE, [RegistrationStatus::ONGOING])
+            : self::SITUACOES_BASE;
 
         $situacoes = implode(', ', $situacoesArray);
 
@@ -313,8 +313,8 @@ return new class extends clsCadastro
         $qtdMatriculasAprovadasReprovadas = 0;
 
         $situacoesArray = $this->permitir_cursando
-            ? array_merge($this->situacoes_base, [RegistrationStatus::ONGOING])
-            : $this->situacoes_base;
+            ? array_merge(self::SITUACOES_BASE, [RegistrationStatus::ONGOING])
+            : self::SITUACOES_BASE;
 
         foreach ($matriculas as $m) {
             if (in_array(needle: $m['aprovado'], haystack: $situacoesArray)) {
