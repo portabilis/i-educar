@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use App\Rules\ReCaptchaV3;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -76,5 +77,41 @@ class LoginController extends Controller
             'password.required' => 'O campo senha é obrigatório.',
             'password.string' => 'O campo senha é obrigatório.',
         ]);
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        $announcement = Announcement::query()
+            ->whereHas('userTypes', fn ($q) => $q->whereKey($user->ref_cod_tipo_usuario))
+            ->latest()->first();
+
+        if (!$announcement) {
+            return;
+        }
+
+        if ($announcement->repeat_on_login) {
+            $this->resetAnnouncementConfirmation($announcement, $user);
+
+            return redirect()->route('announcement.user.show');
+        }
+
+        if (!$this->userReadAnnouncement($announcement, $user)) {
+            return redirect()->route('announcement.user.show');
+        }
+    }
+
+    private function resetAnnouncementConfirmation(Announcement $announcement, $user): void
+    {
+        if ($announcement->show_confirmation) {
+            $announcement->users()->updateExistingPivot($user->getKey(), ['confirmed_at' => null]);
+        }
+    }
+
+    private function userReadAnnouncement(Announcement $announcement, $user): bool
+    {
+        return $announcement->users()
+            ->whereKey($user->getKey())
+            ->wherePivotNotNull('read_at')
+            ->exists();
     }
 }

@@ -10,6 +10,9 @@ function bloqueiaCamposQuantidade() {
   $j('#pants_jeans_qty').val('').attr('disabled', 'disabled');
   $j('#skirt_qty').val('').attr('disabled', 'disabled');
   $j('#coat_jacket_qty').val('').attr('disabled', 'disabled');
+  $j('#pants_fem_qty').val('').attr('disabled', 'disabled');
+  $j('#pants_mas_qty').val('').attr('disabled', 'disabled');
+  $j('#shorts_skirt_qty').val('').attr('disabled', 'disabled');
   return true;
 }
 
@@ -25,6 +28,9 @@ function liberaCamposQuantidade() {
   $j('#pants_jeans_qty').val('').removeAttr('disabled');
   $j('#skirt_qty').val('').removeAttr('disabled');
   $j('#coat_jacket_qty').val('').removeAttr('disabled');
+  $j('#pants_fem_qty').val('').removeAttr('disabled');
+  $j('#pants_mas_qty').val('').removeAttr('disabled');
+  $j('#shorts_skirt_qty').val('').removeAttr('disabled');
 }
 
 $j(document).ready(function () {
