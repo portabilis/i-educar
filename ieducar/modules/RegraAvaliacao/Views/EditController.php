@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEvaluationRule;
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
 use Illuminate\Support\Facades\DB;
 
@@ -910,6 +911,12 @@ class EditController extends Core_Controller_Page_EditController
 
     protected function _save()
     {
+        if (!$this->isPresenceTypeCompatible($this->getRequest()->tipoPresenca, $this->getRequest()->regraDiferenciada)) {
+            $this->mensagem = 'A regra inclusiva selecionada possuí apuração de frequência incompatível, verifique a configuração e tente novamente.';
+
+            return false;
+        }
+
         $data = [];
 
         if ($_POST['tipoNota'] == 3) {
@@ -1042,5 +1049,25 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         return true;
+    }
+
+    /**
+     * Valida se a regra a ser salva e a regra diferenciada possuem apuração de frequência compatível
+     *
+     * @return bool
+     */
+    private function isPresenceTypeCompatible(int $presenceType, ?int $deficiencyEvaluationRuleId)
+    {
+        if (empty($deficiencyEvaluationRuleId)) {
+            return true;
+        }
+
+        $deficiencyEvaluationRule = LegacyEvaluationRule::findOrFail($deficiencyEvaluationRuleId);
+
+        if ($presenceType == $deficiencyEvaluationRule->tipo_presenca) {
+            return true;
+        }
+
+        return false;
     }
 }

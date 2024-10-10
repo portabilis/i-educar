@@ -7,6 +7,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
+use App\Models\LegacyUserType;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -109,6 +110,19 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $query->get()->sortBy('name')->getKeyValueArray('name');
+    }
+
+    /**
+     * Retorna todos os tipo de usuários.
+     *
+     * @return array
+     */
+    public static function getTiposUsuario(bool $hideAdmin = true)
+    {
+        return LegacyUserType::query()
+            ->when($hideAdmin, fn ($q) => $q->where('nivel', '<>', LegacyUserType::LEVEL_ADMIN))
+            ->orderBy('nm_tipo')
+            ->pluck('nm_tipo', 'cod_tipo_usuario');
     }
 
     /**

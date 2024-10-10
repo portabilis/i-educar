@@ -755,6 +755,9 @@ class clsPmieducarInstituicao extends Model
     public function edita()
     {
         if (is_numeric($this->cod_instituicao)) {
+
+            Cache::forget('instituicao_' . $this->cod_instituicao);
+
             $db = new clsBanco();
             $gruda = '';
             $set = '';
@@ -1297,7 +1300,7 @@ class clsPmieducarInstituicao extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_instituicao)) {
-            return Cache::remember('instituicao_', now()->addMinutes(180), function () {
+            return Cache::remember('instituicao_' . $this->cod_instituicao, now()->addMinutes(180), function () {
                 $db = new clsBanco();
                 $db->Consulta("SELECT {$this->_todos_campos},fcn_upper_nrm(nm_instituicao) as nm_instituicao_upper FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
                 $db->ProximoRegistro();
@@ -1317,7 +1320,7 @@ class clsPmieducarInstituicao extends Model
     public function existe()
     {
         if (is_numeric($this->cod_instituicao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
             $db->ProximoRegistro();
 

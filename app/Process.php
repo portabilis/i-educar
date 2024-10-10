@@ -75,4 +75,6 @@ class Process
     public const CONSULTAS = 9998890;
 
     public const ACTIVE_LOOKING = 9998921;
+
+    public const ANNOUNCEMENT = 9999114;
 }
