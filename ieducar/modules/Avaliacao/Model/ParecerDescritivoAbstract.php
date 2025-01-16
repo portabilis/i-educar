@@ -28,7 +28,7 @@ abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model
 
         return [
             'etapa' => $etapa,
-            'parecer' => new CoreExt_Validate_String(),
+            'parecer' => new CoreExt_Validate_String,
         ];
     }
 

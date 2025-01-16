@@ -38,7 +38,7 @@ class clsPmieducarTurmaDisciplina extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -81,7 +81,7 @@ class clsPmieducarTurmaDisciplina extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $set = '';
 
             if ($set) {
@@ -128,7 +128,7 @@ class clsPmieducarTurmaDisciplina extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -166,7 +166,7 @@ class clsPmieducarTurmaDisciplina extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'");
             $db->ProximoRegistro();
 
@@ -184,7 +184,7 @@ class clsPmieducarTurmaDisciplina extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'");
             $db->ProximoRegistro();
 
@@ -210,12 +210,12 @@ class clsPmieducarTurmaDisciplina extends Model
     public function excluirTodos($ref_cod_turma = null, $ref_cod_escola = null, $ref_cod_serie = null)
     {
         if (is_numeric($ref_cod_turma) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$ref_cod_turma}' AND ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_serie = '{$ref_cod_serie}'");
 
             return true;
         } elseif (is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_serie = '{$ref_cod_serie}'");
 
             return true;
@@ -236,7 +236,7 @@ class clsPmieducarTurmaDisciplina extends Model
                 }
             }
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT ref_cod_disciplina FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_serie = '{$this->ref_cod_serie}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_disciplina not in ({$disciplina_in})");
 
             $resultado = [];

@@ -34,7 +34,7 @@ class clsPessoaTelefone
     {
         // Cadastro do telefone da pessoa na tabela fone_pessoa
         if ($this->idpes && $this->tipo && $this->idpes_cad) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->schema_cadastro}.{$this->tabela_telefone} WHERE idpes = '$this->idpes' AND tipo = '$this->tipo'");
             // Verifica se ja existe um telefone desse tipo cadastrado para essa pessoa
             if (!$db->numLinhas()) {
@@ -79,7 +79,7 @@ class clsPessoaTelefone
                 $gruda = ', ';
             }
             if ($set && $this->ddd != '' && $this->fone != '') {
-                $db = new clsBanco();
+                $db = new clsBanco;
                 $db->Consulta("UPDATE {$this->schema_cadastro}.{$this->tabela_telefone} SET $set WHERE idpes = $this->idpes AND tipo = $this->tipo");
 
                 return true;
@@ -96,7 +96,7 @@ class clsPessoaTelefone
     public function exclui()
     {
         if ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM $this->schema_cadastro.$this->tabela_telefone WHERE idpes = $this->idpes AND tipo = $this->tipo");
 
             return true;
@@ -109,7 +109,7 @@ class clsPessoaTelefone
     {
         // exclui todos os telefones da pessoa, nao importa o tipo
         if ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM $this->schema_cadastro.$this->tabela_telefone WHERE idpes = $this->idpes");
 
             return true;
@@ -150,13 +150,13 @@ class clsPessoaTelefone
             $limite = "LIMIT $int_qtd_registros OFFSET $int_inicio_limite ";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM $this->schema_cadastro.$this->tabela_telefone $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
 
         $db = new clsBanco($this->banco);
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $db->Consulta("SELECT idpes, tipo, ddd, fone FROM $this->schema_cadastro.$this->tabela_telefone $where $limite");
         $resultado = [];
@@ -175,13 +175,13 @@ class clsPessoaTelefone
     public function detalhe()
     {
         if ($this->idpes && $this->tipo) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT tipo, ddd, fone FROM cadastro.fone_pessoa WHERE idpes = $this->idpes AND tipo = '$this->tipo' ");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();
             }
         } elseif ($this->idpes && !$this->tipo) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT tipo, ddd, fone FROM cadastro.fone_pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();

@@ -19,7 +19,7 @@ class EducacensoDegreeTest extends EloquentTestCase
         return EducacensoDegree::class;
     }
 
-    public function testConstants(): void
+    public function test_constants(): void
     {
         $this->assertEquals(1, EducacensoDegree::GRAU_TECNOLOGICO);
         $this->assertEquals(2, EducacensoDegree::GRAU_LICENCIATURA);

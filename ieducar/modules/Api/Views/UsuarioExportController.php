@@ -8,7 +8,7 @@ class UsuarioExportController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $status = $this->getRequest()->status;
         $tipoUser = $this->getRequest()->tipoUsuario;
-        $getUsers = new clsPmieducarUsuario();
+        $getUsers = new clsPmieducarUsuario;
         $getUsers->setOrderby('nome ASC');
 
         $lstUsers = $getUsers->listaExportacao(
@@ -18,7 +18,7 @@ class UsuarioExportController extends ApiCoreController
             $status
         );
 
-        //Linhas do cabeçalho
+        // Linhas do cabeçalho
         $csv = 'Nome,';
         $csv .= 'Matricula,';
         $csv .= 'E-mail,';

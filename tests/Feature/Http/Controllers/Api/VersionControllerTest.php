@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 class VersionControllerTest extends TestCase
 {
-    public function testGetVersion()
+    public function test_get_version()
     {
         $this->get('api/version')
             ->assertSuccessful()

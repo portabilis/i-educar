@@ -37,7 +37,7 @@ class clsCadastroFisicaDeficiencia extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_idpes) && is_numeric($this->ref_cod_deficiencia)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -71,7 +71,7 @@ class clsCadastroFisicaDeficiencia extends Model
     public function edita()
     {
         if (is_numeric($this->ref_idpes) && is_numeric($this->ref_cod_deficiencia)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $set = '';
 
             if ($set) {
@@ -106,7 +106,7 @@ class clsCadastroFisicaDeficiencia extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -144,7 +144,7 @@ class clsCadastroFisicaDeficiencia extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_idpes) && is_numeric($this->ref_cod_deficiencia)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}' AND ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'");
             $db->ProximoRegistro();
 
@@ -162,7 +162,7 @@ class clsCadastroFisicaDeficiencia extends Model
     public function existe()
     {
         if (is_numeric($this->ref_idpes) && is_numeric($this->ref_cod_deficiencia)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}' AND ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'");
             $db->ProximoRegistro();
 
@@ -180,7 +180,7 @@ class clsCadastroFisicaDeficiencia extends Model
     public function excluir()
     {
         if (is_numeric($this->ref_idpes) && is_numeric($this->ref_cod_deficiencia)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}' AND ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'");
             $db->Consulta("UPDATE cadastro.deficiencia SET updated_at = now() WHERE cod_deficiencia = {$this->ref_cod_deficiencia}");
 

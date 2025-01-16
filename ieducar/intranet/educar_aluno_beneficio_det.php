@@ -44,7 +44,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Descrição', nl2br(string: "{$registro['desc_beneficio']}")]);
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_aluno_beneficio_cad.php';

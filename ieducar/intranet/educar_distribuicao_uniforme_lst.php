@@ -37,7 +37,7 @@ return new class extends clsListagem
 
         $this->addCabecalhos(coluna: ['Ano', 'Kit completo', 'Tipo', 'Data da Distribuição']);
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         $student = LegacyStudent::find(id: $this->ref_cod_aluno);
@@ -78,7 +78,7 @@ return new class extends clsListagem
             }
         }
         $this->addPaginador2(strUrl: 'educar_distribuicao_uniforme_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: 20);
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_distribuicao_uniforme_cad.php?ref_cod_aluno='.request(key: 'ref_cod_aluno').'")';
             $this->nome_acao = 'Novo';

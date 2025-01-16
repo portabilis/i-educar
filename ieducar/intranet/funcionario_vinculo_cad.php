@@ -14,7 +14,7 @@ return new class extends clsCadastro
     {
         parent::__construct();
 
-        $this->db = new clsBanco();
+        $this->db = new clsBanco;
     }
 
     public function Inicializar()
@@ -53,7 +53,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->duplicado(nmVinculo: $this->nm_vinculo, abreviatura: $this->abreviatura)) {
             $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
 
@@ -70,7 +70,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->duplicado(nmVinculo: $this->nm_vinculo, abreviatura: $this->abreviatura, id: $this->cod_vinculo)) {
             $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
 
@@ -104,7 +104,7 @@ return new class extends clsCadastro
 
     protected function duplicado($nmVinculo, $abreviatura, $id = null)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $nm_Vinculo = $db->escapeString(string: $nmVinculo);
         $abrevia = $db->escapeString(string: $abreviatura);
         $sql = "SELECT COUNT(*) FROM portal.funcionario_vinculo WHERE TRUE AND nm_vinculo ILIKE '{$nm_Vinculo}' OR abreviatura ILIKE '{$abrevia}'";

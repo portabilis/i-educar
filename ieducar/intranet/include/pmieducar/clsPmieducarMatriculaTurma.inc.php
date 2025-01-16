@@ -116,7 +116,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) &&
             is_numeric($this->ref_usuario_cad)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -206,7 +206,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) &&
             is_numeric($this->ref_usuario_exc) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -662,7 +662,7 @@ class clsPmieducarMatriculaTurma extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
@@ -836,7 +836,7 @@ class clsPmieducarMatriculaTurma extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -905,7 +905,7 @@ class clsPmieducarMatriculaTurma extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -938,7 +938,7 @@ class clsPmieducarMatriculaTurma extends Model
 
     public function listaPorSequencial($codTurma)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = "
         SELECT
             nome,
@@ -993,7 +993,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) &&
             is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} mt WHERE mt.ref_cod_matricula = '{$this->ref_cod_matricula}' AND mt.ref_cod_turma = '{$this->ref_cod_turma}' AND mt.sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -1012,7 +1012,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) &&
             is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' AND sequencial = '{$this->sequencial}' AND ativo = 1 ");
             $db->ProximoRegistro();
 
@@ -1042,10 +1042,10 @@ class clsPmieducarMatriculaTurma extends Model
     public function buscaSequencialMax()
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
-            //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma
-            //AND ref_cod_turma = '{$this->ref_cod_turma}'");
+            // removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma
+            // AND ref_cod_turma = '{$this->ref_cod_turma}'");
 
             return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'");
         }
@@ -1056,7 +1056,7 @@ class clsPmieducarMatriculaTurma extends Model
     public function getInstituicao()
     {
         if (is_numeric($this->ref_cod_matricula)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             return $db->CampoUnico("SELECT ref_cod_instituicao from pmieducar.escola
                                               INNER JOIN pmieducar.matricula ON (ref_ref_cod_escola = cod_escola)
@@ -1069,7 +1069,7 @@ class clsPmieducarMatriculaTurma extends Model
     public function getDataSaidaEnturmacaoAnterior($ref_matricula, $sequencial)
     {
         if (is_numeric($ref_matricula) && is_numeric($sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             return $db->CampoUnico("SELECT to_char(mtbefore.data_exclusao, 'YYYY-MM-DD')
                                       FROM {$this->_tabela} mt
@@ -1086,7 +1086,7 @@ class clsPmieducarMatriculaTurma extends Model
     public function getDataEntradaEnturmacaoSeguinte($ref_matricula, $sequencial)
     {
         if (is_numeric($ref_matricula) && is_numeric($sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             return $db->CampoUnico("SELECT to_char(mtnext.data_enturmacao, 'YYYY-MM-DD')
                                             FROM {$this->_tabela} mt
@@ -1102,7 +1102,7 @@ class clsPmieducarMatriculaTurma extends Model
 
     public function getDataExclusaoUltimaEnturmacao(int $codMatricula)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         return $db->CampoUnico("
         select
@@ -1120,7 +1120,7 @@ class clsPmieducarMatriculaTurma extends Model
 
     public function getMaiorDataEnturmacao(int $codMatricula)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         return $db->CampoUnico("
         select
@@ -1139,7 +1139,7 @@ class clsPmieducarMatriculaTurma extends Model
     public function getUltimaEnturmacao($ref_matricula)
     {
         if (is_numeric($ref_matricula)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             return $db->CampoUnico("SELECT MAX(matricula_turma.sequencial)
                                 FROM $this->_tabela
@@ -1157,7 +1157,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if ($this->ref_cod_matricula) {
             $cod_instituicao = $this->getInstituicao();
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             return $db->CampoUnico("SELECT data_base_remanejamento
                                                     FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
@@ -1170,7 +1170,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if ($this->ref_cod_matricula) {
             $cod_instituicao = $this->getInstituicao();
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             return $db->CampoUnico("SELECT data_base_transferencia
                                                   FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
@@ -1185,7 +1185,7 @@ class clsPmieducarMatriculaTurma extends Model
             $dataBaseRemanejamento = $this->getDataBaseRemanejamento();
             $data = $data ? $data : date('Y-m-d');
             if (is_null($dataBaseRemanejamento) || strtotime($dataBaseRemanejamento) < strtotime($data)) {
-                $db = new clsBanco();
+                $db = new clsBanco;
                 $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = true, abandono = false, reclassificado = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
             }
         }
@@ -1196,7 +1196,7 @@ class clsPmieducarMatriculaTurma extends Model
         if ($this->ref_cod_matricula && $this->sequencial) {
             $dataBaseTransferencia = $this->getDataBaseTransferencia();
             $data = $data ? $data : date('Y-m-d');
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
         }
     }
@@ -1205,7 +1205,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         $data = $data ? $data : date('Y-m-d');
         if ($this->ref_cod_matricula) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = false, reclassificado = true, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND ativo = 1");
         }
     }
@@ -1214,7 +1214,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         $data = $data ? implode('-', array_reverse(explode('/', $data))) : date('Y-m-d');
         if ($this->ref_cod_matricula && $this->sequencial) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = true, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
         }
     }
@@ -1223,7 +1223,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         $data = $data ? implode('-', array_reverse(explode('/', $data))) : date('Y-m-d');
         if ($this->ref_cod_matricula && $this->sequencial) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = false, reclassificado = false, falecido = true, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
         }
     }
@@ -1232,7 +1232,7 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if (is_numeric($this->ref_cod_matricula)) {
             $this->marcaAlunoReclassificado($data);
-            $db = new clsBanco();
+            $db = new clsBanco;
             $consulta = "UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'";
             $db->Consulta($consulta);
 
@@ -1249,7 +1249,7 @@ class clsPmieducarMatriculaTurma extends Model
               WHERE m.dependencia = 'f'
                 AND mt.ativo = 1
                 AND mt.ref_cod_turma = $turmaId";
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $db->ProximoRegistro();
 
@@ -1264,7 +1264,7 @@ class clsPmieducarMatriculaTurma extends Model
                 AND m.dependencia = 't'
                 AND mt.ativo = 1
                 AND mt.ref_cod_turma = $turmaId";
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $db->ProximoRegistro();
 
@@ -1273,7 +1273,7 @@ class clsPmieducarMatriculaTurma extends Model
 
     public function getMaxSequencialEnturmacao($matriculaId)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = 'select max(sequencial) from pmieducar.matricula_turma where ref_cod_matricula = $1';
 
         if ($db->execPreparedQuery($sql, $matriculaId) != false) {
@@ -1289,7 +1289,7 @@ class clsPmieducarMatriculaTurma extends Model
     public function getUltimaTurmaEnturmacao($matriculaId)
     {
         $sequencial = $this->getMaxSequencialEnturmacao($matriculaId);
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = 'select ref_cod_turma from pmieducar.matricula_turma where ref_cod_matricula = $1 and sequencial = $2';
 
         if ($db->execPreparedQuery($sql, [$matriculaId, $sequencial]) != false) {

@@ -31,7 +31,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     /**
      * O aluno deve ser aprovado ao lançar todas as faltas
      */
-    public function testPostAbsenceShouldReturnsApproved()
+    public function test_post_absence_should_returns_approved()
     {
         $enrollment = $this->getCommonFakeData($this->evaluationRule);
         $schoolClass = $enrollment->schoolClass;
@@ -52,7 +52,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     /**
      * O aluno deve continuar cursando quando não forem lançadas as faltas de todas as etapas
      */
-    public function testPostAPartOfAbsenceShouldReturnsStudying()
+    public function test_post_a_part_of_absence_should_returns_studying()
     {
         $enrollment = $this->getCommonFakeData($this->evaluationRule);
         $schoolClass = $enrollment->schoolClass;

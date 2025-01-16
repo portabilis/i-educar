@@ -18,7 +18,7 @@ class BlockEnrollmentController extends Controller
             ->when($request->get('ref_cod_curso'), function ($q, $course) {
                 $q->whereHas('grade', fn ($q) => $q->whereCourse($course));
             })
-            ->whereRaw("anos_letivos @> ?", ["{" . $request->get('ano') . "}"])
+            ->whereRaw('anos_letivos @> ?', ['{' . $request->get('ano') . '}'])
             ->where('ativo', 1);
 
         $gradesCount = $query->count();
@@ -35,7 +35,7 @@ class BlockEnrollmentController extends Controller
             DB::beginTransaction();
             $query->update([
                 'bloquear_enturmacao_sem_vagas' => $request->get('bloquear_enturmacao_sem_vagas'),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
             DB::commit();
             session()->flash('success', 'Atualização em lote efetuada com sucesso.');

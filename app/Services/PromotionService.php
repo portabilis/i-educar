@@ -37,7 +37,7 @@ class PromotionService
             ]
         );
 
-        $promocaoApi = new PromocaoApiController();
+        $promocaoApi = new PromocaoApiController;
         $promocaoApi->setRequest($fakeRequest);
 
         try {

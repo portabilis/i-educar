@@ -26,7 +26,7 @@ class LegacyUnificationStudentNotAlunoPrincipalTest extends TestCase
         $this->studentTwo = LegacyStudentFactory::new()->create();
     }
 
-    public function testNotAlunoPrincipal(): void
+    public function test_not_aluno_principal(): void
     {
         $request = [
             'tipoacao' => 'Novo',

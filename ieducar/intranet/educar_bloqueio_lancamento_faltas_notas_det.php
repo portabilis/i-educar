@@ -20,7 +20,7 @@ return new class extends clsDetalhe
             $this->simpleRedirect(url: 'educar_bloqueio_lancamento_faltas_notas_lst.php');
         }
 
-        //Nome da etapa
+        // Nome da etapa
         $etapas = [
             1 => '1ª Etapa',
             2 => '2ª Etapa',
@@ -54,7 +54,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Data final', dataToBrasil(data_original: $registro['data_fim'])]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_bloqueio_lancamento_faltas_notas_cad.php';

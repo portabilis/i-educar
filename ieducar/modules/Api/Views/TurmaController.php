@@ -45,7 +45,7 @@ class TurmaController extends ApiCoreController
         }
 
         $id = $this->getRequest()->id;
-        $turma = new clsPmieducarTurma();
+        $turma = new clsPmieducarTurma;
         $turma->cod_turma = $id;
         $turma = $turma->detalhe();
 
@@ -129,7 +129,7 @@ class TurmaController extends ApiCoreController
     protected function ordenaAlunosDaTurmaAlfabetica()
     {
         $codTurma = $this->getRequest()->id;
-        $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+        $objMatriculaTurma = new clsPmieducarMatriculaTurma;
         $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma, null, null, null, null, null, null, 3);
 
         $lstNomes = [];

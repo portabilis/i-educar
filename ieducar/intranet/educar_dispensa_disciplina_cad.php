@@ -50,7 +50,7 @@ return new class extends clsCadastro
         $this->ref_cod_disciplina = $this->getQueryString('ref_cod_disciplina');
         $this->ref_cod_matricula = $this->getQueryString('ref_cod_matricula');
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_ref_cod_matricula=' . $this->ref_cod_matricula);
 
         if (is_numeric($this->ref_cod_matricula)) {
@@ -82,7 +82,7 @@ return new class extends clsCadastro
 
                 $this->cod_dispensa = $registro['cod_dispensa'];
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
@@ -116,7 +116,7 @@ return new class extends clsCadastro
         /**
          * Busca dados da matricula
          */
-        $obj_ref_cod_matricula = new clsPmieducarMatricula();
+        $obj_ref_cod_matricula = new clsPmieducarMatricula;
         $detalhe_matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
 
         if (is_array($detalhe_matricula)) {
@@ -124,7 +124,7 @@ return new class extends clsCadastro
 
             $this->ano = $detalhe_matricula['ano'];
 
-            $obj_aluno = new clsPmieducarAluno();
+            $obj_aluno = new clsPmieducarAluno;
             $det_aluno = $obj_aluno->lista(int_cod_aluno: $detalhe_matricula['ref_cod_aluno'], int_ativo: 1);
             $det_aluno = array_shift($det_aluno);
         }
@@ -134,7 +134,7 @@ return new class extends clsCadastro
         $det_escola = $obj_escola->detalhe();
         $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+        $obj_matricula_turma = new clsPmieducarMatriculaTurma;
         $lst_matricula_turma = $obj_matricula_turma->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_ativo: 1, int_ref_cod_serie: $this->ref_cod_serie, int_ref_cod_escola: $this->ref_cod_escola);
 
         if (is_array($lst_matricula_turma)) {
@@ -230,7 +230,7 @@ return new class extends clsCadastro
 
         $exemptionService = new ExemptionService($this->user());
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         $disciplinasNaoExistentesNaSerieDaEscola = [];
 
@@ -258,13 +258,13 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
         $dadosDaDispensa = $this->obtemDadosDaDispensa();
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
+        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa;
         $objDispensaEtapa->excluirTodos($dadosDaDispensa['cod_dispensa']);
 
         $exemptionService = new ExemptionService($this->user());
@@ -286,13 +286,13 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
         $dadosDaDispensa = $this->obtemDadosDaDispensa();
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
+        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa;
         $objDispensaEtapa->excluirTodos($this->cod_dispensa);
         $excluiu = $objetoDispensa->excluir();
 
@@ -311,32 +311,32 @@ return new class extends clsCadastro
 
     public function montaEtapas()
     {
-        //Pega matricula para pegar curso, escola e ano
-        $objMatricula = new clsPmieducarMatricula();
+        // Pega matricula para pegar curso, escola e ano
+        $objMatricula = new clsPmieducarMatricula;
         $dadosMatricula = $objMatricula->lista($this->ref_cod_matricula);
-        //Pega curso para pegar padrao ano escolar
-        $objCurso = new clsPmieducarCurso();
+        // Pega curso para pegar padrao ano escolar
+        $objCurso = new clsPmieducarCurso;
         $dadosCurso = $objCurso->lista($dadosMatricula[0]['ref_cod_curso']);
         $padraoAnoEscolar = $dadosCurso[0]['padrao_ano_escolar'];
-        //Pega escola e ano para pegar as etapas em ano letivo modulo
+        // Pega escola e ano para pegar as etapas em ano letivo modulo
         $escolaId = $dadosMatricula[0]['ref_ref_cod_escola'];
         $ano = $dadosMatricula[0]['ano'];
-        //Pega dados da enturmação atual
-        $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+        // Pega dados da enturmação atual
+        $objMatriculaTurma = new clsPmieducarMatriculaTurma;
         $seqMatriculaTurma = $objMatriculaTurma->getUltimaEnturmacao($this->ref_cod_matricula);
         $dadosMatriculaTurma = $objMatriculaTurma->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_sequencial: $seqMatriculaTurma);
-        //Pega etapas definidas na escola
+        // Pega etapas definidas na escola
         $dadosAnoLetivoMod = LegacyAcademicYearStage::query()->whereSchool($escolaId)->whereYearEq($ano)->get();
-        //Pega etapas definida na turma
-        $objTurmaModulo = new clsPmieducarTurmaModulo();
+        // Pega etapas definida na turma
+        $objTurmaModulo = new clsPmieducarTurmaModulo;
         $dadosTurmaModulo = $objTurmaModulo->lista($dadosMatriculaTurma[0]['ref_cod_turma']);
-        //Define de onde as etapas serão pegas
+        // Define de onde as etapas serão pegas
         if ($padraoAnoEscolar == 1) {
             $dadosEtapa = $dadosAnoLetivoMod;
         } else {
             $dadosEtapa = $dadosTurmaModulo;
         }
-        //Pega nome do modulo
+        // Pega nome do modulo
         $nomeModulo = LegacyStageType::find($dadosEtapa[0]['ref_cod_modulo'])->nm_tipo;
         $conteudoHtml = '';
 

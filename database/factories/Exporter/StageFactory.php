@@ -13,7 +13,7 @@ class StageFactory extends Factory
     public function definition(): array
     {
         LegacyAcademicYearStageFactory::new()->create();
-        $instance = new $this->model();
+        $instance = new $this->model;
 
         return $instance->query()->first()->getAttributes();
     }

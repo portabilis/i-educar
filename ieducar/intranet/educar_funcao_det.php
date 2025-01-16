@@ -43,7 +43,7 @@ return new class extends clsDetalhe
             $this->simpleRedirect('educar_fonte_lst.php');
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {

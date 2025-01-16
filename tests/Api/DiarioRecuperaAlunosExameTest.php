@@ -14,7 +14,7 @@ class DiarioRecuperaAlunosExameTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaAlunosExame()
+    public function test_recupera_alunos_exame()
     {
         $scoreExam = LegacyScoreExamFactory::new()->create();
 

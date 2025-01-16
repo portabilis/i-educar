@@ -8,7 +8,7 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
         parent::setUp();
     }
 
-    public function testSituacaoFaltasEmAndamento()
+    public function test_situacao_faltas_em_andamento()
     {
         $this->markTestSkipped();
 
@@ -28,7 +28,7 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSituacaoFaltasAprovado()
+    public function test_situacao_faltas_aprovado()
     {
         $this->markTestSkipped();
 
@@ -71,7 +71,7 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSituacaoFaltasReprovado()
+    public function test_situacao_faltas_reprovado()
     {
         $this->markTestSkipped();
 

@@ -21,14 +21,14 @@ class TransportationProviderTest extends EnumTestCase
         return TransportationProvider::class;
     }
 
-    public function testFrom(): void
+    public function test_from(): void
     {
         $this->assertEquals(0, $this->enum->from(null));
         $this->assertEquals(1, $this->enum->from('estadual'));
         $this->assertEquals(2, $this->enum->from('municipal'));
     }
 
-    public function testValueDescription(): void
+    public function test_value_description(): void
     {
         $this->assertEquals('nenhum', $this->enum->getValueDescription(0));
         $this->assertEquals('estadual', $this->enum->getValueDescription(1));

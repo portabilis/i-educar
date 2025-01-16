@@ -11,7 +11,7 @@ class DiarioRecuperaBloqueioFaixaEtariaSerieTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaBloqueioFaixaEtariaSerie()
+    public function test_recupera_bloqueio_faixa_etaria_serie()
     {
         $grade = LegacyGradeFactory::new()->create();
 

@@ -306,7 +306,7 @@ class EscolaController extends ApiCoreController
 
     public function _getQtdMatriculaTurno($escolaId)
     {
-        $obj_mt = new clsPmieducarMatriculaTurma();
+        $obj_mt = new clsPmieducarMatriculaTurma;
 
         return count(array_filter(($obj_mt->lista(
             $int_ref_cod_matricula = null,
@@ -348,7 +348,7 @@ class EscolaController extends ApiCoreController
 
     public function _getMaxAlunoTurno($escolaId)
     {
-        $obj_t = new clsPmieducarTurma();
+        $obj_t = new clsPmieducarTurma;
         $det_t = $obj_t->detalhe();
 
         $lista_t = $obj_t->lista(
@@ -470,7 +470,7 @@ class EscolaController extends ApiCoreController
     protected function getEscolasMultipleSearch()
     {
         $cod_usuario = \Illuminate\Support\Facades\Auth::id();
-        $permissao = new clsPermissoes();
+        $permissao = new clsPermissoes;
         $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
 
@@ -542,7 +542,7 @@ class EscolaController extends ApiCoreController
             return null;
         }
 
-        $escolasUsuario = new clsPmieducarEscolaUsuario();
+        $escolasUsuario = new clsPmieducarEscolaUsuario;
         $escolasUsuario = $escolasUsuario->lista($ref_cod_usuario);
 
         $escolas = [];
@@ -557,7 +557,7 @@ class EscolaController extends ApiCoreController
     protected function getEscolasSelecao()
     {
         $userId = \Illuminate\Support\Facades\Auth::id();
-        $permissao = new clsPermissoes();
+        $permissao = new clsPermissoes;
         $nivel = $permissao->nivel_acesso($userId);
 
         if (

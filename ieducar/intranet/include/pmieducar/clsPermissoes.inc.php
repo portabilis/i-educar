@@ -151,7 +151,7 @@ class clsPermissoes
      */
     public function getEscolas($int_idpes_usuario)
     {
-        $objEscolaUsuario = new clsPmieducarEscolaUsuario();
+        $objEscolaUsuario = new clsPmieducarEscolaUsuario;
         $escolas = $objEscolaUsuario->lista($int_idpes_usuario);
 
         if (!empty($escolas)) {
@@ -201,7 +201,7 @@ class clsPermissoes
             return 0;
         }
 
-        $obj_usuario = new clsPmieducarBibliotecaUsuario();
+        $obj_usuario = new clsPmieducarBibliotecaUsuario;
         $lst_usuario_biblioteca = $obj_usuario->lista(null, $int_idpes_usuario);
 
         if ($lst_usuario_biblioteca) {

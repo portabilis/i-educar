@@ -63,7 +63,7 @@ class AccessLevelController extends Controller
      */
     public function new(Request $request)
     {
-        $view = $this->show($request, new LegacyUserType());
+        $view = $this->show($request, new LegacyUserType);
 
         $this->breadcrumb('Cadastrar tipo de usuário');
 

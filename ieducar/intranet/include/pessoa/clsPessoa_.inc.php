@@ -68,7 +68,7 @@ class clsPessoa_
                 $valores .= ", '$this->idpes_cad' ";
             }
 
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $slug = Str::lower(Str::slug($this->nome, ' '));
 
@@ -108,7 +108,7 @@ class clsPessoa_
                 $set .= "$gruda idpes_rev = '$this->idpes_rev'";
             }
             if ($set) {
-                $db = new clsBanco();
+                $db = new clsBanco;
                 $this->detalhe();
                 $db->Consulta("UPDATE {$this->schema_cadastro}.{$this->tabela_pessoa} SET $set, data_rev = 'NOW()' WHERE idpes = $this->idpes");
 
@@ -120,7 +120,7 @@ class clsPessoa_
     public function exclui()
     {
         if ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM $this->schema_cadastro.$this->tabela_pessoa WHERE idpes = $this->idpes");
 
             return true;

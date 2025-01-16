@@ -24,7 +24,7 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
      */
     public function __construct()
     {
-        $this->collection = new Collection();
+        $this->collection = new Collection;
     }
 
     /**

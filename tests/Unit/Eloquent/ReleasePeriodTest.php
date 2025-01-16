@@ -19,7 +19,7 @@ class ReleasePeriodTest extends EloquentTestCase
         return ReleasePeriod::class;
     }
 
-    public function testGetDatesArray(): void
+    public function test_get_dates_array(): void
     {
         $value = $this->model->getDatesArray();
         $dates = $this->model->periodDates;

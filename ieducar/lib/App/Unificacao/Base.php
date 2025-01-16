@@ -35,7 +35,7 @@ class App_Unificacao_Base
         $this->codPessoaLogada = $codPessoaLogada;
         $this->db = $db;
         $this->unificationId = $unificationId;
-        $this->unificationService = new UnificationService();
+        $this->unificationService = new UnificationService;
     }
 
     public function unifica()

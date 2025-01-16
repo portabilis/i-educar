@@ -26,7 +26,7 @@ class LegacyUnificationPersonValidIdPesTest extends TestCase
         $this->individualTwo = LegacyIndividualFactory::new()->create();
     }
 
-    public function testUnificationPersonNotPresentIdPes(): void
+    public function test_unification_person_not_present_id_pes(): void
     {
         $request = [
             'tipoacao' => 'Novo',
@@ -52,7 +52,7 @@ class LegacyUnificationPersonValidIdPesTest extends TestCase
             ->assertSee('Dados enviados inválidos, recarregue a tela e tente novamente!');
     }
 
-    public function testUnificationPersonDuplicateIdPes(): void
+    public function test_unification_person_duplicate_id_pes(): void
     {
         $request = [
             'tipoacao' => 'Novo',

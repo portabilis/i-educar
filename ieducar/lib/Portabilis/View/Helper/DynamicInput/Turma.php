@@ -36,7 +36,7 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
 
         if ($escolaId && $ano && !$naoFiltrarAno && $this->turmasPorAno($escolaId, $ano)) {
             foreach ($resources as $id => $nome) {
-                $turma = new clsPmieducarTurma();
+                $turma = new clsPmieducarTurma;
                 $turma->cod_turma = $id;
                 $turma = $turma->detalhe();
 

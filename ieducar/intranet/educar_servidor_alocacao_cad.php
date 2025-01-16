@@ -89,7 +89,7 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_servidor_lst.php');
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             635,
             $this->pessoa_logada,
@@ -216,7 +216,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->date('data_saida', $options);
 
         // Funções
-        $obj_funcoes = new clsPmieducarServidorFuncao();
+        $obj_funcoes = new clsPmieducarServidorFuncao;
 
         $lista_funcoes = $obj_funcoes->funcoesDoServidor($this->ref_ref_cod_instituicao, $this->ref_cod_servidor);
 
@@ -246,7 +246,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             635,
             $this->pessoa_logada,

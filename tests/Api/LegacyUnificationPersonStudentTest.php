@@ -31,7 +31,7 @@ class LegacyUnificationPersonStudentTest extends TestCase
         $this->studentTwo = LegacyStudentFactory::new()->create();
     }
 
-    public function testUnificationPersonStudent(): void
+    public function test_unification_person_student(): void
     {
         $request = [
             'tipoacao' => 'Novo',

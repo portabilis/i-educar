@@ -32,7 +32,7 @@ class clsFisicaCpf
      */
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric($this->idpes) && is_numeric($this->cpf) && $this->idpes_cad) {
             $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET cpf = '$this->cpf'  WHERE idpes = '$this->idpes' ");
@@ -51,7 +51,7 @@ class clsFisicaCpf
     public function edita()
     {
         if (is_numeric($this->idpes) && is_numeric($this->cpf) && is_numeric($this->idpes_rev)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET cpf = '$this->cpf'  WHERE idpes = '$this->idpes' ");
 
             return true;
@@ -87,7 +87,7 @@ class clsFisicaCpf
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -134,7 +134,7 @@ class clsFisicaCpf
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT idpes FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
         $resultado = [];
         while ($db->ProximoRegistro()) {
@@ -156,13 +156,13 @@ class clsFisicaCpf
     public function detalhe()
     {
         if ($this->cpf) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf} ");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();
             }
         } elseif ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes} ");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();

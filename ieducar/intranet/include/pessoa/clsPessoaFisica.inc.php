@@ -97,7 +97,7 @@ class clsPessoaFisica extends clsPessoaFj
     ) {
         $whereAnd = '';
         $where = '';
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_string(value: $str_nome) && $str_nome != '') {
             $str_nome = $db->escapeString(string: $str_nome);
@@ -139,7 +139,7 @@ class clsPessoaFisica extends clsPessoaFj
             $orderBy .= 'COALESCE(f.nome_social, p.nome) ';
         }
 
-        $dba = new clsBanco();
+        $dba = new clsBanco;
 
         if ($where) {
             $where = 'WHERE ' . $where;
@@ -351,7 +351,7 @@ class clsPessoaFisica extends clsPessoaFj
         } elseif ($this->cpf) {
             $tupla = parent::detalhe();
 
-            $objFisica = new clsFisica();
+            $objFisica = new clsFisica;
             $lista = $objFisica->lista(
                 int_limite_ini: false,
                 int_limite_qtd: false,
@@ -523,7 +523,7 @@ class clsPessoaFisica extends clsPessoaFj
     {
         if ($this->idpes) {
             $this->pessoa_logada = Auth::id();
-            $db = new clsBanco();
+            $db = new clsBanco;
             $excluir = $db->Consulta(consulta: 'UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
 
             if ($excluir) {
@@ -535,7 +535,7 @@ class clsPessoaFisica extends clsPessoaFj
     public function getNomeUsuario()
     {
         if ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $db->Consulta(consulta: "SELECT pessoa.nome, funcionario.matricula, usuario.cod_usuario
                        FROM cadastro.fisica
@@ -556,7 +556,7 @@ class clsPessoaFisica extends clsPessoaFj
         if (is_numeric(value: $this->idpes)) {
             $sql = "SELECT * FROM cadastro.fisica WHERE idpes = '{$this->idpes}' AND ativo = 1;";
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta(consulta: $sql);
             $db->ProximoRegistro();
 

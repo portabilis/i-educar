@@ -44,7 +44,7 @@ return new class extends clsListagem
             'Turma Tipo',
         ];
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Instituição';

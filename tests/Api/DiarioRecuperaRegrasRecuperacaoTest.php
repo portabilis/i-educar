@@ -11,7 +11,7 @@ class DiarioRecuperaRegrasRecuperacaoTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaRegrasRecuperacao()
+    public function test_recupera_regras_recuperacao()
     {
         $remedialRule = LegacyRemedialRuleFactory::new()->create();
 

@@ -76,11 +76,11 @@ return new class extends clsListagem
         ]);
 
         // Busca dados da matricula
-        $obj_ref_cod_matricula = new clsPmieducarMatricula();
+        $obj_ref_cod_matricula = new clsPmieducarMatricula;
         $matricula = $obj_ref_cod_matricula->lista(int_cod_matricula: $this->ref_cod_matricula);
         $detalhe_aluno = array_shift(array: $matricula);
 
-        $obj_aluno = (new clsPmieducarAluno())->lista(
+        $obj_aluno = (new clsPmieducarAluno)->lista(
             int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
             int_ativo: 1
         );
@@ -103,7 +103,7 @@ return new class extends clsListagem
         $opcoes = ['' => 'Selecione'];
 
         // Opções de turma
-        $objTemp = new clsPmieducarTurma();
+        $objTemp = new clsPmieducarTurma;
         $lista = $objTemp->lista3(
             int_ref_ref_cod_serie: $this->ref_cod_serie,
             int_ref_ref_cod_escola: $this->ref_cod_escola,
@@ -131,7 +131,7 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
             $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_matricula_turma = new clsPmieducarTurma();
+        $obj_matricula_turma = new clsPmieducarTurma;
         $obj_matricula_turma->setOrderby(strNomeCampo: ' t.nm_turma ASC');
         $obj_matricula_turma->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
@@ -165,7 +165,7 @@ return new class extends clsListagem
                   AND t.ref_ref_cod_escola = '{$this->ref_cod_escola}'
             ";
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta(consulta: $sql);
 
             $lista_aux = [];
@@ -183,7 +183,7 @@ return new class extends clsListagem
         }
         $total = $obj_matricula_turma->_total;
 
-        $enturmacoesMatricula = (new clsPmieducarMatriculaTurma())->lista3(
+        $enturmacoesMatricula = (new clsPmieducarMatriculaTurma)->lista3(
             int_ref_cod_matricula: $this->ref_cod_matricula,
             int_ativo: 1,
         );

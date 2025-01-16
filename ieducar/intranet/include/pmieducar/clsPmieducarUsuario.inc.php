@@ -68,7 +68,7 @@ class clsPmieducarUsuario extends Model
     public function cadastra()
     {
         if (is_numeric($this->cod_usuario) && is_numeric($this->ref_funcionario_cad) && is_numeric($this->ref_cod_tipo_usuario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -108,7 +108,7 @@ class clsPmieducarUsuario extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            //return $db->InsertId( "{$this->_tabela}_cod_usuario_seq");
+            // return $db->InsertId( "{$this->_tabela}_cod_usuario_seq");
             return $db->CampoUnico("SELECT 1 FROM {$this->_tabela} WHERE cod_usuario={$this->cod_usuario}");
         }
 
@@ -123,7 +123,7 @@ class clsPmieducarUsuario extends Model
     public function edita()
     {
         if (is_numeric($this->cod_usuario) && is_numeric($this->ref_funcionario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -233,7 +233,7 @@ class clsPmieducarUsuario extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -271,7 +271,7 @@ class clsPmieducarUsuario extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_usuario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} u WHERE u.cod_usuario = '{$this->cod_usuario}'");
             $db->ProximoRegistro();
 
@@ -327,7 +327,7 @@ class clsPmieducarUsuario extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -362,7 +362,7 @@ class clsPmieducarUsuario extends Model
     public function existe()
     {
         if (is_numeric($this->cod_usuario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_usuario = '{$this->cod_usuario}'");
             $db->ProximoRegistro();
 

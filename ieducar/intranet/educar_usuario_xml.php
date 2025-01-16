@@ -6,7 +6,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 if (is_numeric(value: $_GET['ins'])) {
-    $db = new clsBanco();
+    $db = new clsBanco;
 
     // USUARIO ESCOLA
     $db->Consulta(
@@ -58,7 +58,7 @@ if (is_numeric(value: $_GET['ins'])) {
         echo "  <usuario cod_usuario=\"{$cod}\">{$nome}</usuario>\n";
     }
 } elseif (is_numeric(value: $_GET['esc'])) {
-    $db = new clsBanco();
+    $db = new clsBanco;
 
     // USUARIO ESCOLA
     $db->Consulta(

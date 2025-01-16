@@ -2,7 +2,7 @@
 
 use App\Models\LegacySchoolAcademicYear;
 
-return new class() extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -29,7 +29,7 @@ return new class() extends clsCadastro
         $this->ano = $_GET['ano'];
         $this->ref_cod_escola = $_GET['cod_escola'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 561,
             int_idpes_usuario: $this->pessoa_logada,
@@ -81,7 +81,7 @@ return new class() extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 561,
             int_idpes_usuario: $this->pessoa_logada,

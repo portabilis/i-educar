@@ -6,7 +6,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 if (is_numeric($_GET['cur']) && is_numeric($_GET['ser_dif'])) {
-    $db = new clsBanco();
+    $db = new clsBanco;
     $consulta = 'SELECT cod_serie, nm_serie
                     FROM pmieducar.serie s
                     INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie

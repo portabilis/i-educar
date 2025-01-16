@@ -134,7 +134,7 @@ abstract class Portabilis_Report_ReportCore
             throw new CoreExt_Exception("Class '$factoryClassName' not found in path '$factoryClassPath'");
         }
 
-        return new $factoryClassName();
+        return new $factoryClassName;
     }
 
     /**

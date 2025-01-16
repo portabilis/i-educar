@@ -17,7 +17,7 @@ class LegacySchoolAcademicYearTest extends EloquentTestCase
         return LegacySchoolAcademicYear::class;
     }
 
-    public function testYearAttribute(): void
+    public function test_year_attribute(): void
     {
         $this->assertEquals($this->model->ano, $this->model->year);
     }

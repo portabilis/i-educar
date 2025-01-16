@@ -16,13 +16,13 @@ class DependencyTest extends TestCase
     /** @var LegacyEnrollment */
     private $enrollment;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
     }
 
-    public function testWithDependencyShouldReturnsApprovedWithDependency()
+    public function test_with_dependency_should_returns_approved_with_dependency()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -65,7 +65,7 @@ class DependencyTest extends TestCase
      * Quando o número de disciplinas em dependencia é maior do que o configurado, incluindo reprovações por falta,
      * deve retornar Reprovado
      */
-    public function testShouldReturnsReprovedWhenDependenciesIsOver()
+    public function test_should_returns_reproved_when_dependencies_is_over()
     {
         $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecovery();
 

@@ -34,7 +34,7 @@ class RequiredAlternativeReportCard implements Rule
             ->pluck('nm_serie', 'cod_serie')
             ->toArray();
 
-        $schoolClassService = new SchoolClassService();
+        $schoolClassService = new SchoolClassService;
 
         $gradesToValidate = [];
 

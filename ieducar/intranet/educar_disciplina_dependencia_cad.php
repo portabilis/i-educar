@@ -29,7 +29,7 @@ return new class extends clsCadastro
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 578,
             int_idpes_usuario: $this->pessoa_logada,
@@ -73,7 +73,7 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
@@ -107,10 +107,10 @@ return new class extends clsCadastro
         /**
          * Busca dados da matricula
          */
-        $obj_ref_cod_matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
+        $obj_ref_cod_matricula = (new clsPmieducarMatricula)->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($obj_ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $det_aluno = $obj_aluno->lista(
             int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
             int_ativo: 1
@@ -126,7 +126,7 @@ return new class extends clsCadastro
         $det_escola = $obj_escola->detalhe();
         $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+        $obj_matricula_turma = new clsPmieducarMatriculaTurma;
         $lst_matricula_turma = $obj_matricula_turma->lista(
             int_ref_cod_matricula: $this->ref_cod_matricula,
             int_ativo: 1,
@@ -192,7 +192,7 @@ return new class extends clsCadastro
 
     public function existeComponenteSerie()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = "SELECT  EXISTS (SELECT 1
                                 FROM pmieducar.escola_serie_disciplina
                                WHERE ref_ref_cod_serie = {$this->ref_cod_serie}
@@ -214,7 +214,7 @@ return new class extends clsCadastro
 SQL;
         $ano = Portabilis_Utils_Database::selectField(sql: $query, paramsOrOptions: [$this->ref_cod_matricula]);
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->consulta("SELECT (CASE
                                WHEN escola.utiliza_regra_diferenciada AND rasa.regra_avaliacao_diferenciada_id IS NOT NULL
                                THEN regra_avaliacao_diferenciada.qtd_disciplinas_dependencia
@@ -250,7 +250,7 @@ SQL;
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 578,
             int_idpes_usuario: $this->pessoa_logada,
@@ -271,7 +271,7 @@ SQL;
         }
 
         $sql = 'SELECT MAX(cod_disciplina_dependencia) + 1 FROM pmieducar.disciplina_dependencia';
-        $db = new clsBanco();
+        $db = new clsBanco;
         $max_cod_disciplina_dependencia = $db->CampoUnico($sql);
 
         // Caso não exista nenhuma dispensa, atribui o cÃ³digo 1, tabela não utiliza sequences
@@ -312,7 +312,7 @@ SQL;
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 578,
             int_idpes_usuario: $this->pessoa_logada,
@@ -341,7 +341,7 @@ SQL;
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(
             int_processo_ap: 578,
             int_idpes_usuario: $this->pessoa_logada,

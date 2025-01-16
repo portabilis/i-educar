@@ -44,14 +44,14 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nome Religião', "{$registro['name']}"]);
         }
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 579, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_religiao_cad.php';
             $this->url_editar = "educar_religiao_cad.php?cod_religiao={$registro['id']}";
         }
-        //**
+        // **
 
         $this->url_cancelar = 'educar_religiao_lst.php';
         $this->largura = '100%';

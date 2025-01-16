@@ -39,7 +39,7 @@ class BatchDisableUsersWithDaysGoneSinceLastAccess implements ShouldBeUniqueUnti
 
     private function disableUsersWithDaysGoneSinceLastAccess($expirationPeriod): void
     {
-        $users = (new User())->getActiveUsersNotAdmin();
+        $users = (new User)->getActiveUsersNotAdmin();
 
         foreach ($users as $user) {
             $disableUsersWithDaysGoneSinceLastAccessService = app(DisableUsersWithDaysGoneSinceLastAccessService::class);

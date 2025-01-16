@@ -25,7 +25,7 @@ class Portabilis_Utils_User
     public static function getClsPermissoes()
     {
         if (!isset(self::$_permissoes)) {
-            self::$_permissoes = new clsPermissoes();
+            self::$_permissoes = new clsPermissoes;
         }
 
         return self::$_permissoes;

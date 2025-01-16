@@ -81,7 +81,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
             }
         }
 
-        $builder = new JasperPHP();
+        $builder = new JasperPHP;
 
         // Compila o arquivo .jrxml caso o arquivo .jasper não exista.
 

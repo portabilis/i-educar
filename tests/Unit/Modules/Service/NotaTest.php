@@ -2,7 +2,7 @@
 
 class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
 {
-    public function testInstanciaDeNotaComponenteERegistradaApenasUmaVezNoBoletiom()
+    public function test_instancia_de_nota_componente_e_registrada_apenas_uma_vez_no_boletiom()
     {
         $service = $this->_getServiceInstance();
 
@@ -24,7 +24,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
         $this->assertEquals(2, count($service->getNotas()));
     }
 
-    public function testAdicionaNotaNoBoletim()
+    public function test_adiciona_nota_no_boletim()
     {
         $this->markTestSkipped();
         $service = $this->_getServiceInstance();
@@ -73,7 +73,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
      * Testa o service adicionando notas de apenas um componente curricular,
      * para todas as etapas regulares (1 a 4).
      */
-    public function testSalvarNotasDeUmComponenteCurricularNoBoletim()
+    public function test_salvar_notas_de_um_componente_curricular_no_boletim()
     {
         $this->markTestSkipped();
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
@@ -176,7 +176,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
      * Testa o service adicionando novas notas para um componente curricular,
      * que inclusive já tem a nota lançada para a segunda etapa.
      */
-    public function testSalvasNotasDeUmComponenteComEtapasLancadas()
+    public function test_salvas_notas_de_um_componente_com_etapas_lancadas()
     {
         $this->markTestSkipped();
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');

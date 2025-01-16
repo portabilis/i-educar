@@ -26,14 +26,14 @@ class LegacyTransferRequestTest extends EloquentTestCase
         return LegacyTransferRequest::class;
     }
 
-    public function testScopeActive(): void
+    public function test_scope_active(): void
     {
         LegacyTransferRequestFactory::new()->create(['ativo' => 0]);
         $found = $this->instanceNewEloquentModel()->active()->get();
         $this->assertCount(1, $found);
     }
 
-    public function testScopeUnattended(): void
+    public function test_scope_unattended(): void
     {
         LegacyTransferRequestFactory::new()->create(['ref_cod_matricula_entrada' => null]);
         $found = $this->instanceNewEloquentModel()->unattended()->get();

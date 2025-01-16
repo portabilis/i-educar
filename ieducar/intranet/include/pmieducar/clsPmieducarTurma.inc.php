@@ -233,7 +233,7 @@ class clsPmieducarTurma extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_turma) && is_numeric($this->max_aluno) && is_numeric($this->multiseriada) && is_numeric($this->ref_cod_turma_tipo)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -502,7 +502,7 @@ class clsPmieducarTurma extends Model
     public function edita()
     {
         if (is_numeric($this->cod_turma) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -832,7 +832,7 @@ class clsPmieducarTurma extends Model
      */
     public function lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} t";
         $filtros = '';
@@ -1216,7 +1216,7 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -1254,7 +1254,7 @@ class clsPmieducarTurma extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} t WHERE t.cod_turma = '{$this->cod_turma}'");
             $db->ProximoRegistro();
 
@@ -1267,7 +1267,7 @@ class clsPmieducarTurma extends Model
     public function checaAnoLetivoEmAndamento()
     {
         if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}' AND turma.ano in( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola AND andamento = 1)");
             $db->ProximoRegistro();
 

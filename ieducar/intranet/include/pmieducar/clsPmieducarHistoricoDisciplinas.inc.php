@@ -99,7 +99,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial) && is_string($this->nm_disciplina) && is_string($this->nota)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -180,7 +180,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
     public function edita()
     {
         if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -289,7 +289,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -330,7 +330,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
     public function detalhe()
     {
         if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'");
             $db->ProximoRegistro();
 
@@ -350,7 +350,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
     public function existe()
     {
         if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'");
             $db->ProximoRegistro();
 
@@ -376,7 +376,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
     public function excluirTodos($ref_cod_aluno, $ref_sequencial)
     {
         if (is_numeric($ref_cod_aluno) && is_numeric($ref_sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_aluno = '{$ref_cod_aluno}' AND ref_sequencial = '{$ref_sequencial}'");
 
             return true;

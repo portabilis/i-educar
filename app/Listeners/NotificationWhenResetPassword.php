@@ -18,6 +18,6 @@ class NotificationWhenResetPassword implements ShouldQueue
      */
     public function handle($event)
     {
-        $event->user->notify(new ResetPasswordNotification());
+        $event->user->notify(new ResetPasswordNotification);
     }
 }

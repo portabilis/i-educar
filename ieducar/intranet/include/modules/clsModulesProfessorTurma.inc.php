@@ -126,7 +126,7 @@ class clsModulesProfessorTurma extends Model
             && is_numeric($this->servidor_id)
             && is_numeric($this->instituicao_id)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $campos = '';
             $valores = '';
             $gruda = '';
@@ -230,7 +230,7 @@ class clsModulesProfessorTurma extends Model
             && is_numeric($this->servidor_id)
             && is_numeric($this->instituicao_id)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $set = '';
             $gruda = '';
 
@@ -414,7 +414,7 @@ class clsModulesProfessorTurma extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista)) + 8;
         $resultado = [];
 
@@ -460,7 +460,7 @@ class clsModulesProfessorTurma extends Model
     public function detalhe()
     {
         if (is_numeric($this->id)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_campos_lista}, t.nm_turma, s.nm_serie, c.nm_curso, p.nome as nm_escola
                      FROM {$this->_tabela} pt, pmieducar.turma t, pmieducar.serie s, pmieducar.curso c,
                      pmieducar.escola e, cadastro.pessoa p
@@ -484,7 +484,7 @@ class clsModulesProfessorTurma extends Model
     public function existe()
     {
         if (is_numeric($this->id)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} pt WHERE id = '{$this->id}'");
             $db->ProximoRegistro();
 
@@ -505,7 +505,7 @@ class clsModulesProfessorTurma extends Model
             && is_numeric($this->servidor_id)
             && is_numeric($this->turma_id)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $sql = "SELECT id FROM {$this->_tabela} pt WHERE ano = '{$this->ano}' AND turma_id = '{$this->turma_id}'
                AND instituicao_id = '{$this->instituicao_id}' AND servidor_id = '{$this->servidor_id}' ";
 
@@ -531,7 +531,7 @@ class clsModulesProfessorTurma extends Model
         if (is_numeric($this->id)) {
             $this->detalhe();
             $sql = "DELETE FROM {$this->_tabela} pt WHERE id = '{$this->id}'";
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
 
             return true;
@@ -543,7 +543,7 @@ class clsModulesProfessorTurma extends Model
     public function gravaComponentes($professor_turma_id, $componentes)
     {
         $this->excluiComponentes($professor_turma_id);
-        $db = new clsBanco();
+        $db = new clsBanco;
         foreach ($componentes as $componente) {
             $db->Consulta("INSERT INTO modules.professor_turma_disciplina VALUES ({$professor_turma_id},{$componente})");
         }
@@ -551,7 +551,7 @@ class clsModulesProfessorTurma extends Model
 
     public function excluiComponentes($professor_turma_id)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("DELETE FROM modules.professor_turma_disciplina WHERE professor_turma_id = {$professor_turma_id}");
     }
 
@@ -561,7 +561,7 @@ class clsModulesProfessorTurma extends Model
         $sql = "SELECT componente_curricular_id
                   FROM modules.professor_turma_disciplina
                  WHERE professor_turma_id = {$professor_turma_id}";
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
@@ -573,7 +573,7 @@ class clsModulesProfessorTurma extends Model
 
     public function retornaNomeDoComponente($idComponente)
     {
-        $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper();
+        $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper;
         $componente = $mapperComponente->find(['id' => $idComponente]);
 
         return $componente->nome;

@@ -20,7 +20,7 @@ class WhenDeletedTest extends TestCase
     {
         parent::setUp();
 
-        $this->instance = new class()
+        $this->instance = new class
         {
             use WhenDeleted;
         };
@@ -29,7 +29,7 @@ class WhenDeletedTest extends TestCase
     /**
      * @return void
      */
-    public function testTrait()
+    public function test_trait()
     {
         $from = 'schema.table';
         $columns = ['id', 'name'];
@@ -50,7 +50,7 @@ class WhenDeletedTest extends TestCase
     /**
      * @return void
      */
-    public function testCreateFunctionSql()
+    public function test_create_function_sql()
     {
         $expected = '
             CREATE FUNCTION when_deleted_some_table() 
@@ -73,7 +73,7 @@ class WhenDeletedTest extends TestCase
     /**
      * @return void
      */
-    public function testDropFunctionSql()
+    public function test_drop_function_sql()
     {
         $expected = 'DROP FUNCTION IF EXISTS when_deleted_other_table();';
 
@@ -83,7 +83,7 @@ class WhenDeletedTest extends TestCase
     /**
      * @return void
      */
-    public function testCreateTriggerSql()
+    public function test_create_trigger_sql()
     {
         $expected = '
             CREATE TRIGGER trigger_when_deleted_table AFTER DELETE
@@ -107,7 +107,7 @@ class WhenDeletedTest extends TestCase
     /**
      * @return void
      */
-    public function testCreate()
+    public function test_create()
     {
         $expectedFunction = '
             CREATE FUNCTION when_deleted_some_table() 
@@ -141,7 +141,7 @@ class WhenDeletedTest extends TestCase
     /**
      * @return void
      */
-    public function testDrop()
+    public function test_drop()
     {
         $expectedTrigger = 'DROP TRIGGER IF EXISTS trigger_when_deleted_some_table on some_table;';
         $expectedFunction = 'DROP FUNCTION IF EXISTS when_deleted_some_table();';

@@ -63,7 +63,7 @@ return new class extends clsDetalhe
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
-        $escolasUsuario = new clsPmieducarEscolaUsuario();
+        $escolasUsuario = new clsPmieducarEscolaUsuario;
         $escolasUsuario = $escolasUsuario->lista(ref_cod_usuario: $cod_pessoa);
 
         $nomesEscola = [];
@@ -87,7 +87,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Escolas', $registro['ref_cod_escola']]);
         }
 
-        $objPermissao = new clsPermissoes();
+        $objPermissao = new clsPermissoes;
         if ($objPermissao->permissao_cadastra(int_processo_ap: 555, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_usuario_cad.php';
             $this->url_editar = "educar_usuario_cad.php?ref_pessoa={$cod_pessoa}";

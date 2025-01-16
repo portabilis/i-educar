@@ -22,7 +22,7 @@ return new class extends clsListagem
             $pesquisa = str_replace(search: '%', replace: ' ', subject: $_GET['pesquisa']);
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $total = $db->UnicoCampo(consulta: "SELECT COUNT(0) FROM portal.agenda {$where}");
 
         // Paginador
@@ -31,7 +31,7 @@ return new class extends clsListagem
 
         $sql = "SELECT cod_agenda, nm_agenda, ref_ref_cod_pessoa_own FROM portal.agenda {$where} ORDER BY nm_agenda ASC LIMIT $limite OFFSET $iniciolimit";
 
-        $db2 = new clsBanco();
+        $db2 = new clsBanco;
         $db2->Consulta(consulta: $sql);
         while ($db2->ProximoRegistro()) {
             [$cod_agenda, $nm_agenda, $cod_pessoa_own] = $db2->Tupla();

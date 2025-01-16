@@ -40,7 +40,7 @@ class DispensaDisciplinaPorEtapaController extends ApiCoreController
 
     private function getNotaAlunoId($matriculaId)
     {
-        $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
+        $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper;
         $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
 
         return $notaAluno[0]->id;
@@ -50,7 +50,7 @@ class DispensaDisciplinaPorEtapaController extends ApiCoreController
     {
         $notaAluno = $this->getNotaAlunoId($matriculaId);
 
-        $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper();
+        $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper;
 
         return $notaComponenteCurricularMapper->findAll([], [
             'nota_aluno_id' => $notaAluno,

@@ -23,7 +23,7 @@ class GradeControllerTest extends ResourceTestCase
         GET('/api/grade', ['Grade'], 'Get all grades'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'Grade')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $this->index();
     }

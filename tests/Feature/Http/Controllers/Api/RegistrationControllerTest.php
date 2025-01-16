@@ -23,7 +23,7 @@ class RegistrationControllerTest extends ResourceTestCase
         GET('/api/registration', ['Registration'], 'Get all registrations'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'Registration')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $this->index();
     }

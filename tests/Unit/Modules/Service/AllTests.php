@@ -8,7 +8,7 @@ class Avaliacao_Service_AllTests extends UnitBaseTest
 
     public static function suite()
     {
-        $instance = new self();
+        $instance = new self;
 
         return $instance->addDirectoryTests();
     }

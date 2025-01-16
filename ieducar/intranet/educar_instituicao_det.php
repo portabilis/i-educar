@@ -64,7 +64,7 @@ return new class extends clsDetalhe
         $this->addDetalhe(['Telefone', "{$registro['telefone']}"]);
         $this->addDetalhe(['Nome do Responsável', "{$registro['nm_responsavel']}"]);
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 559, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_editar = "educar_instituicao_cad.php?cod_instituicao={$registro['cod_instituicao']}";
         }

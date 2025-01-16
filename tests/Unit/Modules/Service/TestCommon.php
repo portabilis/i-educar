@@ -890,7 +890,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->method('findAll')
             ->will($this->returnValue($tabelaValores));
 
-        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
+        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper;
         $tabelaDataMapper->setTabelaValorDataMapper($mock);
 
         $tabela = new TabelaArredondamento_Model_Tabela(['nome' => 'Numéricas']);
@@ -933,7 +933,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->method('findAll')
             ->willReturn($tabelaValores);
 
-        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
+        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper;
         $tabelaDataMapper->setTabelaValorDataMapper($mock);
 
         $tabela = new TabelaArredondamento_Model_Tabela(['nome' => 'Numéricas']);

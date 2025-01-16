@@ -11,15 +11,15 @@ class CoreExt_Validate_ChoiceTest extends PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->_validator = new CoreExt_Validate_Choice();
+        $this->_validator = new CoreExt_Validate_Choice;
     }
 
-    public function testValidaSeNenhumaOpcaoPadraoForInformada()
+    public function test_valida_se_nenhuma_opcao_padrao_for_informada()
     {
         $this->assertTrue($this->_validator->isValid(0));
     }
 
-    public function testEscolhaValida()
+    public function test_escolha_valida()
     {
         $this->_validator->setOptions(['choices' => $this->_choices['bit']]);
         $this->assertTrue($this->_validator->isValid(0), 'Falhou na asserção "0" numérico.');
@@ -35,7 +35,7 @@ class CoreExt_Validate_ChoiceTest extends PHPUnit\Framework\TestCase
         $this->assertTrue($this->_validator->isValid('nda'));
     }
 
-    public function testEscolhaInvalidaLancaExcecao()
+    public function test_escolha_invalida_lanca_excecao()
     {
         $this->_validator->setOptions(['choices' => $this->_choices['bit']]);
 

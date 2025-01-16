@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-return new class() extends clsListagem
+return new class extends clsListagem
 {
     public $cpf;
 
@@ -30,12 +30,12 @@ return new class() extends clsListagem
         $this->chave_campo = $_GET['chave_campo'];
 
         if ($_GET['campos']) {
-            $parametros = new clsParametrosPesquisas();
+            $parametros = new clsParametrosPesquisas;
             $parametros->deserializaCampos($_GET['campos']);
             Session::put('campos', $parametros->geraArrayComAtributos());
             unset($_GET['campos']);
         } else {
-            $parametros = new clsParametrosPesquisas();
+            $parametros = new clsParametrosPesquisas;
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
 
@@ -71,14 +71,14 @@ return new class() extends clsListagem
 
                 if ($busca == 'S') {
                     if (is_numeric($chave_busca)) {
-                        $obj_pessoa = new clsPessoaFisica();
+                        $obj_pessoa = new clsPessoaFisica;
                         $lst_pessoa = $obj_pessoa->lista(str_nome: null, numeric_cpf: (($cpf) ? idFederal2int($cpf) : null), inicio_limite: $iniciolimit, qtd_registros: $limite, int_ref_cod_sistema: $parametros->getCodSistema(), int_idpes: $chave_busca);
                     } else {
-                        $obj_pessoa = new clsPessoaFisica();
+                        $obj_pessoa = new clsPessoaFisica;
                         $lst_pessoa = $obj_pessoa->lista(str_nome: $chave_busca, numeric_cpf: (($cpf) ? idFederal2int($cpf) : null), inicio_limite: $iniciolimit, qtd_registros: $limite, int_ref_cod_sistema: $parametros->getCodSistema());
                     }
                 } else {
-                    $obj_pessoa = new clsPessoaFisica();
+                    $obj_pessoa = new clsPessoaFisica;
                     $lst_pessoa = $obj_pessoa->lista(str_nome: null, numeric_cpf: null, inicio_limite: $iniciolimit, qtd_registros: $limite, int_ref_cod_sistema: $parametros->getCodSistema());
                 }
 
@@ -140,14 +140,14 @@ return new class() extends clsListagem
 
             if ($busca == 'S') {
                 if (is_numeric($chave_busca)) {
-                    $obj_pessoa = new clsPessoaJuridica();
+                    $obj_pessoa = new clsPessoaJuridica;
                     $lst_pessoa = $obj_pessoa->lista(numeric_cnpj: (($cnpj) ? idFederal2int($cnpj) : null), inicio_limit: $iniciolimit, fim_limite: $limite, int_idpes: $chave_busca);
                 } else {
-                    $obj_pessoa = new clsPessoaJuridica();
+                    $obj_pessoa = new clsPessoaJuridica;
                     $lst_pessoa = $obj_pessoa->lista(numeric_cnpj: (($cnpj) ? idFederal2int($cnpj) : null), str_fantasia: $chave_busca, inicio_limit: $iniciolimit, fim_limite: $limite);
                 }
             } else {
-                $obj_pessoa = new clsPessoaJuridica();
+                $obj_pessoa = new clsPessoaJuridica;
                 $lst_pessoa = $obj_pessoa->lista(numeric_cnpj: null, str_fantasia: null, numeric_insc_estadual: null, inicio_limit: $iniciolimit, fim_limite: $limite);
             }
             if ($lst_pessoa) {
@@ -194,14 +194,14 @@ return new class() extends clsListagem
             $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
             if ($busca == 'S') {
                 if (is_numeric($chave_busca)) {
-                    $obj_pessoa = new clsPessoaFj();
+                    $obj_pessoa = new clsPessoaFj;
                     $lst_pessoa = $obj_pessoa->lista_rapida(idpes: $chave_busca, id_federal: idFederal2int($id_federal), inicio_limite: $iniciolimit, limite: $limite, int_ref_cod_sistema: $parametros->getCodSistema());
                 } else {
-                    $obj_pessoa = new clsPessoaFj();
+                    $obj_pessoa = new clsPessoaFj;
                     $lst_pessoa = $obj_pessoa->lista_rapida(nome: $chave_busca, id_federal: idFederal2int($id_federal), inicio_limite: $iniciolimit, limite: $limite, int_ref_cod_sistema: $parametros->getCodSistema());
                 }
             } else {
-                $obj_pessoa = new clsPessoaFj();
+                $obj_pessoa = new clsPessoaFj;
                 $lst_pessoa = $obj_pessoa->lista_rapida(inicio_limite: $iniciolimit, limite: $limite, str_order_by: 'nome ASC', int_ref_cod_sistema: $parametros->getCodSistema());
             }
             if ($lst_pessoa) {
@@ -267,14 +267,14 @@ return new class() extends clsListagem
 
             if ($busca == 'S') {
                 if (is_numeric($chave_busca)) {
-                    $obj_funcionario = new clsFuncionario();
+                    $obj_funcionario = new clsFuncionario;
                     $lst_pessoa = $obj_funcionario->lista(str_matricula: $this->matricula, int_ativo: $show, int_qtd_registros: $limite);
                 } else {
-                    $obj_funcionario = new clsFuncionario();
+                    $obj_funcionario = new clsFuncionario;
                     $lst_pessoa = $obj_funcionario->lista(str_matricula: $this->matricula, str_nome: $this->campo_busca, int_ativo: $show, int_inicio_limit: $iniciolimit, int_qtd_registros: $limite);
                 }
             } else {
-                $obj_funcionario = new clsFuncionario();
+                $obj_funcionario = new clsFuncionario;
                 $lst_pessoa = $obj_funcionario->lista(int_ativo: $show);
             }
             if ($lst_pessoa) {

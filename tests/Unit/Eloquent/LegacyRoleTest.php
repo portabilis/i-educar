@@ -23,13 +23,13 @@ class LegacyRoleTest extends EloquentTestCase
     }
 
     /** @test */
-    public function getIdAttribute(): void
+    public function get_id_attribute(): void
     {
         $this->assertEquals($this->model->id, $this->model->cod_funcao);
     }
 
     /** @test  */
-    public function scopeProfessor(): void
+    public function scope_professor(): void
     {
         $this->createNewModel();
 

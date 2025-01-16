@@ -103,14 +103,14 @@ class Student extends Model
     protected function guardianTypeDescription(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new GuardianType())->getDescriptiveValues()[(int) $this->guardian_type]
+            get: fn () => (new GuardianType)->getDescriptiveValues()[(int) $this->guardian_type]
         );
     }
 
     protected function transportationProviderDescription(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new TransportationProvider())->getDescriptiveValues()[(int) $this->transportation_provider]
+            get: fn () => (new TransportationProvider)->getDescriptiveValues()[(int) $this->transportation_provider]
         );
     }
 
@@ -120,7 +120,7 @@ class Student extends Model
             get: function () {
                 $value = str_replace(['{', '}'], '', $this->transportation_vehicle_type);
 
-                return (new TransportationVehicleType())->getDescriptiveValues()[(int) $value] ?? null;
+                return (new TransportationVehicleType)->getDescriptiveValues()[(int) $value] ?? null;
             }
         );
     }

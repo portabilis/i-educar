@@ -47,7 +47,7 @@ class clsPmieducarServidorFuncao extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_cod_funcao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -115,7 +115,7 @@ class clsPmieducarServidorFuncao extends Model
             return false;
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = sprintf(
             'UPDATE %s SET %s WHERE %s;',
             $this->_tabela,
@@ -154,7 +154,7 @@ class clsPmieducarServidorFuncao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -198,7 +198,7 @@ class clsPmieducarServidorFuncao extends Model
                 $this->_tabela,
                 $this->cod_servidor_funcao
             );
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
             $db->ProximoRegistro();
 
@@ -216,7 +216,7 @@ class clsPmieducarServidorFuncao extends Model
                 $sql .= sprintf(' AND ref_cod_funcao = \'%d\'', $this->ref_cod_funcao);
             }
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
             $db->ProximoRegistro();
 
@@ -247,7 +247,7 @@ class clsPmieducarServidorFuncao extends Model
             return false;
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $db->Consulta($sql);
 
@@ -276,7 +276,7 @@ class clsPmieducarServidorFuncao extends Model
     public function excluirTodos()
     {
         if (is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'");
 
             return true;
@@ -298,7 +298,7 @@ class clsPmieducarServidorFuncao extends Model
                 $delete .= ' AND cod_servidor_funcao NOT IN (' . implode(',', $funcoes) . ')';
             }
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($delete);
 
             return true;
@@ -325,7 +325,7 @@ class clsPmieducarServidorFuncao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

@@ -10,7 +10,7 @@ return new class extends clsCadastro
 
     public function Inicializar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 999869,
             int_idpes_usuario: $this->pessoa_logada,
@@ -38,7 +38,7 @@ return new class extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
 
-        $objTemp = new clsPmieducarTipoUsuario();
+        $objTemp = new clsPmieducarTipoUsuario;
         $objTemp->setOrderby('nm_tipo ASC');
 
         $lista = $objTemp->lista(int_ativo: 1);

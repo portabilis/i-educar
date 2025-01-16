@@ -24,7 +24,7 @@ class LegacyStudentDescriptiveOpinionTest extends EloquentTestCase
         return LegacyStudentDescriptiveOpinion::class;
     }
 
-    public function testIsByDiscipline(): void
+    public function test_is_by_discipline(): void
     {
         $model = Factory::factoryForModel(
             $this->getEloquentModelName()
@@ -34,7 +34,7 @@ class LegacyStudentDescriptiveOpinionTest extends EloquentTestCase
         $this->assertTrue($model->isByDiscipline());
     }
 
-    public function testIsGeneral(): void
+    public function test_is_general(): void
     {
         $model = Factory::factoryForModel(
             $this->getEloquentModelName()

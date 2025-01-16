@@ -36,7 +36,7 @@ return new class extends clsCadastro
         $this->ref_cod_instituicao = $this->getQueryString(name: 'ref_cod_instituicao');
         $this->ref_cod_funcao = $this->getQueryString(name: 'cod_funcao');
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
@@ -85,7 +85,7 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
         $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
-        $obj_cursos = new clsPmieducarCurso();
+        $obj_cursos = new clsPmieducarCurso;
         $obj_cursos->setOrderby(strNomeCampo: 'nm_curso');
         $lst_cursos = $obj_cursos->lista(
             int_ativo: 1,
@@ -175,7 +175,7 @@ return new class extends clsCadastro
         if ($this->ref_cod_curso) {
             for ($i = 0, $loop = count(value: $this->ref_cod_curso); $i < $loop; $i++) {
                 if ($this->ref_cod_disciplina[$i] === 'todas_disciplinas') {
-                    $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+                    $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper;
                     $componentes = $componenteAnoDataMapper->findComponentePorCurso(cursoId: $this->ref_cod_curso[$i]);
 
                     foreach ($componentes as $componente) {

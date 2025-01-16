@@ -18,22 +18,22 @@ class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
         $this->_frontController->resetOptions();
     }
 
-    public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
+    public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->_frontController->setOptions(['foo' => 'bar']);
     }
 
-    public function testControllerTemObjetosRequestDispatcherEViewPadroes()
+    public function test_controller_tem_objetos_request_dispatcher_e_view_padroes()
     {
         $this->assertInstanceOf('CoreExt_Controller_Request', $this->_frontController->getRequest());
         $this->assertInstanceOf('CoreExt_Controller_Dispatcher_Interface', $this->_frontController->getDispatcher());
         $this->assertInstanceOf('CoreExt_View', $this->_frontController->getView());
     }
 
-    public function testRequestCustomizadoERegistradoEmController()
+    public function test_request_customizado_e_registrado_em_controller()
     {
-        $request = new CoreExt_Controller_Request();
+        $request = new CoreExt_Controller_Request;
         $this->_frontController->setRequest($request);
         $this->assertSame($request, $this->_frontController->getRequest());
     }

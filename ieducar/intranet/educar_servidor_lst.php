@@ -51,7 +51,7 @@ return new class extends clsListagem
 
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'anoLetivo'], helperOptions: ['options' => ['required' => false]]);
 
-        $parametros = new clsParametrosPesquisas();
+        $parametros = new clsParametrosPesquisas;
         $parametros->setSubmit(submit: 0);
         $this->campoTexto(nome: 'nome', campo: 'Nome do servidor', valor: $this->nome, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoTexto(nome: 'matricula_servidor', campo: 'Matrícula', valor: $this->matricula_servidor, tamanhovisivel: 50, tamanhomaximo: 255);
@@ -111,7 +111,7 @@ return new class extends clsListagem
             mixVariaveisMantidas: $_GET,
             intResultadosPorPagina: $this->limite
         );
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_servidor_cad.php")';

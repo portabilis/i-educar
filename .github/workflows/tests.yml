@@ -54,7 +54,7 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
         env:
           update: true

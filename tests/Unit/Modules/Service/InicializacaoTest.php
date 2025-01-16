@@ -2,21 +2,21 @@
 
 class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
 {
-    public function testInstanciaLancaExcecaoCasoCodigoDeMatriculaNaoSejaInformado()
+    public function test_instancia_lanca_excecao_caso_codigo_de_matricula_nao_seja_informado()
     {
         $this->expectException(\CoreExt_Service_Exception::class);
-        new Avaliacao_Service_Boletim();
+        new Avaliacao_Service_Boletim;
     }
 
-    public function testInstanciaLancaExcecaoComOpcaoNaoAceitaPelaClasse()
+    public function test_instancia_lanca_excecao_com_opcao_nao_aceita_pela_classe()
     {
         $this->expectException(\InvalidArgumentException::class);
         new Avaliacao_Service_Boletim(['matricula' => 1, 'foo' => 'bar']);
     }
 
-    public function testDadosDeMatriculaInicializados()
+    public function test_dados_de_matricula_inicializados()
     {
-        //Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
+        // Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
         $service = $this->_getServiceInstance();
         $options = $service->getOptions();
@@ -60,7 +60,7 @@ class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
         $this->assertEquals($expected, $actual);
     }
 
-    public function testInstanciaRegraDeAvaliacaoAtravesDeUmNumeroDeMatricula()
+    public function test_instancia_regra_de_avaliacao_atraves_de_um_numero_de_matricula()
     {
         $service = $this->_getServiceInstance();
         $this->assertInstanceOf('RegraAvaliacao_Model_Regra', $service->getRegra());

@@ -39,7 +39,7 @@ return new class extends clsListagem
 
         $this->inputsHelper()->dynamic(helperNames: ['ano'], inputOptions: ['required' => false]);
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         $get_escola = true;
@@ -53,7 +53,7 @@ return new class extends clsListagem
         $this->offset = $_GET['pagina_' . $this->nome] ?
             $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_bloqueio_lancamento_fn = new clsPmieducarBloqueioLancamentoFaltasNotas();
+        $obj_bloqueio_lancamento_fn = new clsPmieducarBloqueioLancamentoFaltasNotas;
         $obj_bloqueio_lancamento_fn->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_bloqueio_lancamento_fn->lista(
@@ -102,7 +102,7 @@ return new class extends clsListagem
             intResultadosPorPagina: $this->limite
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao_url[] = 'educar_bloqueio_lancamento_faltas_notas_cad.php';

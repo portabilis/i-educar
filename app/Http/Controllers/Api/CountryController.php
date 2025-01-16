@@ -55,7 +55,7 @@ class CountryController extends ResourceController
 
         return [
             new CountryRestrictOperationRule($accessLevel),
-            new AddressingCountryRule(),
+            new AddressingCountryRule,
         ];
     }
 }

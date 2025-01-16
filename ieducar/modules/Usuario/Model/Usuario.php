@@ -17,7 +17,7 @@ class Usuario_Model_Usuario extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            $this->setDataMapper(new Usuario_Model_UsuarioDataMapper());
+            $this->setDataMapper(new Usuario_Model_UsuarioDataMapper);
         }
 
         return parent::getDataMapper();

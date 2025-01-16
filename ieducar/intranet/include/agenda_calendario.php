@@ -113,7 +113,7 @@ class calendario
         for ($i = $sel_ano_atual_real - 1; $i < $sel_ano_atual_real + 5; $i++) {
             $dif_dias = date('L', mktime(0, 0, 0, 1, 1, $i)) ? 31622400 : 31536000;
             $time = $this->time + ($i - $sel_ano_atual) * $dif_dias;
-            //echo ( ( $i - $sel_ano_atual ) * $dif_dias ) . " -<br>";
+            // echo ( ( $i - $sel_ano_atual ) * $dif_dias ) . " -<br>";
 
             $selecionado = '';
             if ($i == $sel_ano_atual) {

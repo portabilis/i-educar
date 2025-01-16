@@ -49,12 +49,12 @@ class FileExportService
     ) {
         $this->connection = $fileExport->getConnectionName();
 
-        //temp
+        // temp
         $this->mainPath = $this->getMainPath();
         $this->folderStudentsName = $this->getFolderStudentsName();
         $this->folderStudentsPath = $this->getFolderStudentsPath();
         $this->zipFilePath = $this->getZipFilePath();
-        //destiny
+        // destiny
         $this->disk = $disk ?? config('filesystems.default');
         $this->destinyMainPath = $this->getDestinyMainPath();
         $this->destinyZipFilePath = $this->getDestinyZipFilePath();
@@ -107,7 +107,7 @@ class FileExportService
      */
     private function createStudentsFolder(): void
     {
-        $this->deleteMainFolder(); //limpa a pasta principal em caso de falhas anteriores
+        $this->deleteMainFolder(); // limpa a pasta principal em caso de falhas anteriores
         $this->students = $this->getStudents();
         foreach ($this->students as $student) {
             $studentPath = $this->folderStudentsPath . $this->getStudentPath($student);
@@ -119,7 +119,7 @@ class FileExportService
                 studentPath: $studentPath,
                 files: $student['files']
             );
-            //conta somente os alunos que tem arquivo
+            // conta somente os alunos que tem arquivo
             if ($createStudentRecordReport || $createStudentFiles) {
                 $this->student_folders_count++;
             }
@@ -183,7 +183,7 @@ class FileExportService
             })
             ->get()
             ->map(function (LegacyStudent $student) {
-                //documentos
+                // documentos
                 $files = collect(json_decode($student->url_documento, false))
                     ->map(function ($file, $index) {
                         $number = sprintf('%02d', $index + 1);
@@ -193,7 +193,7 @@ class FileExportService
                             'url' => $file->url,
                         ];
                     });
-                //laudos
+                // laudos
                 $files = $files->merge(collect(json_decode($student->url_laudo_medico, false))
                     ->map(function ($file, $index) {
                         $number = sprintf('%02d', $index + 1);
@@ -203,7 +203,7 @@ class FileExportService
                             'url' => $file->url,
                         ];
                     }));
-                //foto
+                // foto
                 if ($student->picture) {
                     $files->push([
                         'filename' => 'Foto.' . $this->getExtension($student->picture->caminho),
@@ -237,7 +237,7 @@ class FileExportService
 
     private function getStudentPath(array $student): string
     {
-        //remove caracteres especiais e transforma em maiúsculo
+        // remove caracteres especiais e transforma em maiúsculo
         return preg_replace('/[^\w\s]/u', '', mb_strtoupper($student['name'])) . " ({$student['id']})" . '/';
     }
 
@@ -263,7 +263,7 @@ class FileExportService
             'data_emissao' => 0,
         ];
 
-        //precisa ignorar os erros devido o legado
+        // precisa ignorar os erros devido o legado
         $encoded = @$studentRecord->dumps([
             'options' => [
                 'encoding' => 'base64',
@@ -311,7 +311,7 @@ class FileExportService
 
     private function compressStudentsFolder(): void
     {
-        //se nao tiver documentos, deve-se colocar algum conteúdo para poder criar o zip
+        // se nao tiver documentos, deve-se colocar algum conteúdo para poder criar o zip
         if ($this->student_folders_count === 0) {
             $this->getStorageTemp()->put($this->folderStudentsPath . 'nenhum_documento_exportado.txt', '');
         }
@@ -376,7 +376,7 @@ class FileExportService
 
     private function notifyUser(): void
     {
-        (new NotificationService())->createByUser(
+        (new NotificationService)->createByUser(
             userId: $this->fileExport->user_id,
             text: $this->getMessage(),
             link: $this->getDestinyStorage()->url($this->destinyZipFilePath),

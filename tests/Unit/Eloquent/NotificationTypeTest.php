@@ -17,7 +17,7 @@ class NotificationTypeTest extends EloquentTestCase
         return NotificationType::class;
     }
 
-    public function testTypes()
+    public function test_types()
     {
         $this->assertEquals(1, NotificationType::TRANSFER);
         $this->assertEquals(2, NotificationType::OTHER);

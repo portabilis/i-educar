@@ -72,7 +72,7 @@ return new class extends clsListagem
             $this->offset = $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite;
         }
 
-        $obj_turma = new clsPmieducarTurma();
+        $obj_turma = new clsPmieducarTurma;
         $obj_turma->setOrderby(strNomeCampo: 'nm_turma ASC');
         $obj_turma->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 

@@ -41,7 +41,7 @@ class clsCadastroEscolaridade extends Model
     public function cadastra()
     {
         if (is_string($this->descricao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -88,7 +88,7 @@ class clsCadastroEscolaridade extends Model
     public function edita()
     {
         if (is_numeric($this->idesco)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $set = '';
             $gruda = '';
 
@@ -119,7 +119,7 @@ class clsCadastroEscolaridade extends Model
      */
     public function lista($int_idesco = null, $str_descricao = null, $escolaridade = null)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
@@ -177,7 +177,7 @@ class clsCadastroEscolaridade extends Model
     public function detalhe()
     {
         if (is_numeric($this->idesco)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE idesco = '{$this->idesco}'");
             $db->ProximoRegistro();
 
@@ -195,7 +195,7 @@ class clsCadastroEscolaridade extends Model
     public function excluir()
     {
         if (is_numeric($this->idesco)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE idesco = '{$this->idesco}'");
 
             return true;

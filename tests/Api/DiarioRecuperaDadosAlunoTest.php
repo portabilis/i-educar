@@ -11,7 +11,7 @@ class DiarioRecuperaDadosAlunoTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaDadosAluno()
+    public function test_recupera_dados_aluno()
     {
         $student = LegacyStudentFactory::new()->create();
         $data = [

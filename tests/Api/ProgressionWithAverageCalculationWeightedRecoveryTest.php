@@ -18,7 +18,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
      */
     private $enrollment;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecovery();
@@ -27,7 +27,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     /**
      * O aluno deverá ser Aprovado depois dos lançamentos (notas e faltas) nas etapas
      */
-    public function testApprovedAfterAllScoreAndAbsencePosted()
+    public function test_approved_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -65,7 +65,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     /**
      * O aluno deverá ser Reprovado por Falta depois do lançamento (notas e faltas) nas etapas
      */
-    public function testReprovedPerAbsenceAfterAllScoreAndAbsencePosted()
+    public function test_reproved_per_absence_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -103,7 +103,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     /**
      * O Aluno deverá continuar como Cursando depois dos lançamentos (notas e faltas) nas etapas, exceto para etapa de recuperação
      */
-    public function testStudyingAfterAllScoreAndAbsencePosted()
+    public function test_studying_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -142,7 +142,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
      * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
      * depois o aluno deverá ser Aprovado após o lançamento da nota de Recuperação
      */
-    public function testApprovedAfterExamAllScoreAndAbsencePosted()
+    public function test_approved_after_exam_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -194,7 +194,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
      * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
      * depois o aluno deverá ser Reprovado após o lançamento da nota de Recuperação
      */
-    public function testReprovedAfterExamAllScoreAndAbsencePosted()
+    public function test_reproved_after_exam_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -246,7 +246,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
      * O aluno deverá continuar com a situação Cursando e os componentes como Em Exame, depois dos lançamentos (notas e faltas) nas etapas,
      * exceto para etapa de recuperação. As faltas devem ser altas para que o aluno reprove por falta
      */
-    public function testInExamAfterAllScoreAndAbsencePostedWithAbsenceHigh()
+    public function test_in_exam_after_all_score_and_absence_posted_with_absence_high()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -284,7 +284,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     /**
      * O aluno deverá ganhar a situação Reprovado Por Falta, depois dos lançamentos (notas e faltas) nas etapas
      */
-    public function testReprovedPerAbsenceAfterExamAllScoreAndAbsencePosted()
+    public function test_reproved_per_absence_after_exam_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -335,7 +335,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     /**
      * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) em algumas etapas
      */
-    public function testStudyingAfterNotAllStageScoreAndAbsencePosted()
+    public function test_studying_after_not_all_stage_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -370,7 +370,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     /**
      * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) nas etapas e ter a falta removida da última etapa
      */
-    public function testStudyingAfterRemoveStageScoreAndAbsencePosted()
+    public function test_studying_after_remove_stage_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -416,7 +416,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     /**
      * Deverá retornar erro ao tentar remover falta de uma etapa, quando não é a útima etapa
      */
-    public function testErrorAfterRemoveNotLastStageScoreAndAbsencePosted()
+    public function test_error_after_remove_not_last_stage_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;

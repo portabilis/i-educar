@@ -43,7 +43,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
             'release-period.form',
             [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
-                'releasePeriod' => new ReleasePeriod(),
+                'releasePeriod' => new ReleasePeriod,
                 'data' => $this->applyFilters($request),
                 'canView' => $request->user()->can('view', Process::RELEASE_PERIOD),
                 'canModify' => $request->user()->can('modify', Process::RELEASE_PERIOD),

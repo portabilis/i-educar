@@ -2,7 +2,7 @@
 
 use App\Models\LegacyPerson;
 
-return new class() extends clsListagem
+return new class extends clsListagem
 {
     public function Gerar()
     {
@@ -67,7 +67,7 @@ return new class() extends clsListagem
             }
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(
             int_processo_ap: 43,

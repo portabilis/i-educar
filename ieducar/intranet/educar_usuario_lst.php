@@ -22,7 +22,7 @@ return new class extends clsListagem
 
         $opcoes = ['' => 'Selecione'];
 
-        $objTemp = new clsPmieducarTipoUsuario();
+        $objTemp = new clsPmieducarTipoUsuario;
         $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
         $lista = $objTemp->lista(int_ativo: 1);
         if (is_array(value: $lista) && count(value: $lista)) {
@@ -70,7 +70,7 @@ return new class extends clsListagem
         ];
 
         $this->inputsHelper()->select(attrName: 'int_ativo', inputOptions: $options);
-        //gambiarra pois o inputsHelper está bugado
+        // gambiarra pois o inputsHelper está bugado
         switch ($this->int_ativo) {
             case 0:
                 $this->int_ativo = null;
@@ -86,7 +86,7 @@ return new class extends clsListagem
         $limite = 10;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
-        $obj_func = new clsFuncionario();
+        $obj_func = new clsFuncionario;
         $obj_func->setOrderby(strNomeCampo: '(nome) ASC');
         $obj_func->setLimite(intLimiteQtd: $limite, intLimiteOffset: $iniciolimit);
         $lst_func = $obj_func->listaFuncionarioUsuario(
@@ -130,7 +130,7 @@ return new class extends clsListagem
 
         $this->addPaginador2(strUrl: 'educar_usuario_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $limite);
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 555, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true)) {
             $this->acao = 'go("educar_usuario_cad.php")';
             $this->nome_acao = 'Novo';

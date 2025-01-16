@@ -70,7 +70,7 @@ return new class extends clsDetalhe
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         // Alocação do servidor
-        $obj = new clsPmieducarServidorAlocacao();
+        $obj = new clsPmieducarServidorAlocacao;
         $obj->setOrderby('periodo, carga_horaria');
         $lista = $obj->lista(
             null,
@@ -112,7 +112,7 @@ return new class extends clsDetalhe
         }
 
         // Dados no Educacenso/Inep.
-        $docenteMapper = new Educacenso_Model_DocenteDataMapper();
+        $docenteMapper = new Educacenso_Model_DocenteDataMapper;
 
         $docenteInep = null;
         try {
@@ -276,7 +276,7 @@ return new class extends clsDetalhe
             ]);
         }
 
-        $isAllowedModify = (new clsPermissoes())->permissao_cadastra(635, $this->pessoa_logada, 7);
+        $isAllowedModify = (new clsPermissoes)->permissao_cadastra(635, $this->pessoa_logada, 7);
         if ($isAllowedModify) {
             $this->url_novo = 'educar_servidor_cad.php';
             $this->url_editar = "educar_servidor_cad.php?cod_servidor={$registro['cod_servidor']}&ref_cod_instituicao={$this->ref_cod_instituicao}";
@@ -322,7 +322,7 @@ return new class extends clsDetalhe
 
         $withdrawals = EmployeeWithdrawal::query()->where(['ref_cod_servidor' => $this->cod_servidor, 'data_exclusao' => null])->get();
 
-        $nivel_acesso = (new clsPermissoes())->nivel_acesso($this->pessoa_logada);
+        $nivel_acesso = (new clsPermissoes)->nivel_acesso($this->pessoa_logada);
 
         $isAllowedRemove = in_array($nivel_acesso, [LegacyUserType::LEVEL_ADMIN, LegacyUserType::LEVEL_INSTITUTIONAL], true);
 

@@ -13,7 +13,7 @@ class RelocationDateServiceTest extends TestCase
      *
      * @return void
      */
-    public function testRelocationDateWhenNull()
+    public function test_relocation_date_when_null()
     {
         $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();
@@ -26,7 +26,7 @@ class RelocationDateServiceTest extends TestCase
         $this->assertNull($relocationDateService->getRelocationDate('2021-03-28'));
     }
 
-    public function testRelocationDateWhenDefined()
+    public function test_relocation_date_when_defined()
     {
         $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();
@@ -39,7 +39,7 @@ class RelocationDateServiceTest extends TestCase
         $this->assertEquals('2021-03-01', $relocationDateService->getRelocationDate('2021-03-28'));
     }
 
-    public function testRelocationDateWhenDefinedWithDifferentYears()
+    public function test_relocation_date_when_defined_with_different_years()
     {
         $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();
@@ -52,7 +52,7 @@ class RelocationDateServiceTest extends TestCase
         $this->assertEquals('2021-03-01', $relocationDateService->getRelocationDate('2021-03-28'));
     }
 
-    public function testRelocationDateWhenDefinedWithLeapYear()
+    public function test_relocation_date_when_defined_with_leap_year()
     {
         $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();

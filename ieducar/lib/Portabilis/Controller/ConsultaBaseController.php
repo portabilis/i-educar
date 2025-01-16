@@ -12,7 +12,7 @@ class ConsultaBaseController extends ApiCoreController
     protected function getPDO()
     {
         if (is_null($this->pdo)) {
-            $base = new clsBanco();
+            $base = new clsBanco;
             $base->FraseConexao();
             $connectionString = 'pgsql:' . $base->getFraseConexao();
 

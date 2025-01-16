@@ -12,7 +12,7 @@ class Portabilis_Utils_Database
     public static function db()
     {
         if (!isset(self::$_db)) {
-            self::$_db = new clsBanco();
+            self::$_db = new clsBanco;
         }
 
         return self::$_db;

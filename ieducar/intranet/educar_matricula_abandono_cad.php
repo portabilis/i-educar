@@ -44,7 +44,7 @@ return new class extends clsCadastro
         $this->cod_matricula = $_GET['ref_cod_matricula'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->cod_matricula, ref_cod_reserva_vaga: null, ref_ref_cod_escola: null, ref_ref_cod_serie: null, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ref_cod_aluno: null, aprovado: 6);

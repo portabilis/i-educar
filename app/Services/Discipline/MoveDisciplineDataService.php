@@ -74,13 +74,13 @@ class MoveDisciplineDataService implements ToCollection
     public function setDefaultCopiers()
     {
         $this->moveDataServices = [
-            new MoveDataTeacherDiscipline(),
-            new MoveDataDisciplineScore(),
-            new MoveDataDisciplineScoreAverage(),
-            new MoveDataScoreExam(),
-            new MoveDataDisciplineDescritiveOpinion(),
-            new MoveDataDisciplineAbsence(),
-            new MoveDataDisciplineExemption(),
+            new MoveDataTeacherDiscipline,
+            new MoveDataDisciplineScore,
+            new MoveDataDisciplineScoreAverage,
+            new MoveDataScoreExam,
+            new MoveDataDisciplineDescritiveOpinion,
+            new MoveDataDisciplineAbsence,
+            new MoveDataDisciplineExemption,
         ];
     }
 

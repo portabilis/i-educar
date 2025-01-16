@@ -17,13 +17,13 @@ class LegacyRemedialRuleTest extends EloquentTestCase
         return LegacyRemedialRule::class;
     }
 
-    public function testGetStages(): void
+    public function test_get_stages(): void
     {
         $expected = explode(';', $this->model->etapas_recuperadas);
         $this->assertEquals($expected, $this->model->getStages());
     }
 
-    public function testGetLastStage(): void
+    public function test_get_last_stage(): void
     {
         $this->assertEquals(max($this->model->getStages()), $this->model->getLastStage());
     }

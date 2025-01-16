@@ -20,7 +20,7 @@ class ReCaptchaV3 implements Rule
             return true;
         }
 
-        $client = new Client();
+        $client = new Client;
 
         try {
             $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [

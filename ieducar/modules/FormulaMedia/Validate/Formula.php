@@ -28,7 +28,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
     {
         // Instancia
         if (is_null(self::$_model)) {
-            self::$_model = new FormulaMedia_Model_Formula();
+            self::$_model = new FormulaMedia_Model_Formula;
         }
 
         // Adiciona espaços entre os parênteses

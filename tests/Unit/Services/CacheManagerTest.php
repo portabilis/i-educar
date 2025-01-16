@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class CacheManagerTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -16,7 +16,7 @@ class CacheManagerTest extends TestCase
         Cache::flush();
     }
 
-    public function testFlushedTagsShouldReturnsEmpty()
+    public function test_flushed_tags_should_returns_empty()
     {
         Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
 
@@ -28,14 +28,14 @@ class CacheManagerTest extends TestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function testDriverNotSupportTagsDoesNotThrowException()
+    public function test_driver_not_support_tags_does_not_throw_exception()
     {
         Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
 
         Cache::invalidateByTags(['testTag']);
     }
 
-    public function testDriverSupportsPrefixDoesNotThrowException()
+    public function test_driver_supports_prefix_does_not_throw_exception()
     {
         $this->assertFalse(Cache::has('test-key'));
 

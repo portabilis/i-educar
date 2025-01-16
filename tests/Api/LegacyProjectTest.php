@@ -12,7 +12,7 @@ class LegacyProjectTest extends TestCase
     use DatabaseTransactions;
     use LoginFirstUser;
 
-    public function testSaveSuccess(): void
+    public function test_save_success(): void
     {
         $this->loginWithFirstUser();
 
@@ -37,7 +37,7 @@ class LegacyProjectTest extends TestCase
         ]);
     }
 
-    public function testEditSuccess(): void
+    public function test_edit_success(): void
     {
         $this->loginWithFirstUser();
 

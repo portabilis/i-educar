@@ -33,7 +33,7 @@ return new class extends clsDetalhe
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $tmp_obj = new clsPmieducarEscolaSerie();
+        $tmp_obj = new clsPmieducarEscolaSerie;
         $lst_obj = $tmp_obj->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
 
         if (!is_array($lst_obj)) {
@@ -63,7 +63,7 @@ return new class extends clsDetalhe
         $det_curso = $obj_curso->detalhe();
         $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $obj_permissao->nivel_acesso($this->pessoa_logada);
 
         if ($registro['ref_cod_instituicao']) {

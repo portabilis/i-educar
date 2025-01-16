@@ -6,19 +6,19 @@ abstract class EnumTestCase extends TestCase
 {
     public $enum;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $model = $this->getEnumName();
-        $this->enum = new $model();
+        $this->enum = new $model;
     }
 
     abstract public function getDescriptiveValues(): array;
 
     abstract protected function getEnumName(): string;
 
-    public function testDescriptiveValues(): void
+    public function test_descriptive_values(): void
     {
         $values = $this->enum->getDescriptiveValues();
         $this->assertIsArray($values);

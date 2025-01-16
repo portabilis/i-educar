@@ -26,7 +26,7 @@ class clsEscolaridade
      */
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_string($this->descricao)) {
             $this->idesco = $db->UnicoCampo('select max(idesco) from cadastro.escolaridade');
@@ -46,7 +46,7 @@ class clsEscolaridade
     public function edita()
     {
         if (is_numeric($this->idesco) && is_string($this->descricao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET descricao = '$this->descricao' WHERE idesco = '$this->idesco' ");
 
             return true;
@@ -63,7 +63,7 @@ class clsEscolaridade
     public function exclui()
     {
         if (is_numeric($this->idesco) && is_string($this->descricao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idesco = {$this->idesco}");
 
             return true;
@@ -99,7 +99,7 @@ class clsEscolaridade
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -125,7 +125,7 @@ class clsEscolaridade
     public function detalhe()
     {
         if ($this->idesco) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idesco, descricao FROM {$this->schema}.{$this->tabela} WHERE idesco = {$this->idesco}");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();

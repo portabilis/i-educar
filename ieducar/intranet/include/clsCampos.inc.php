@@ -1435,7 +1435,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $evento = '';
                         }
 
-                        $campo_valor = ! is_null($campo_valor) ? htmlspecialchars($campo_valor, ENT_QUOTES) : null;
+                        $campo_valor = !is_null($campo_valor) ? htmlspecialchars($campo_valor, ENT_QUOTES) : null;
 
                         $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$evento} {$disabled}> {$componente[7]}";
                         break;

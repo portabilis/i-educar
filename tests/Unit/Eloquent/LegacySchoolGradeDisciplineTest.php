@@ -26,7 +26,7 @@ class LegacySchoolGradeDisciplineTest extends EloquentTestCase
         ];
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->factoryModifier = function (LegacySchoolGradeDisciplineFactory $factory) {
             return $factory->withLegacyDefinition();

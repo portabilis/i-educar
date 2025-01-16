@@ -29,7 +29,7 @@ return new class extends clsCadastro
 
     public $url;
 
-    //Telefones
+    // Telefones
     public $ddd_telefone_1;
 
     public $telefone_1;

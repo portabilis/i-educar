@@ -81,7 +81,7 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
 
     public function Inicializar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(9998867, $this->pessoa_logada, 1, 'educar_index.php');
 
         $this->breadcrumb('Configuração movimento geral', [
@@ -101,7 +101,7 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
 
     public function loadConfig()
     {
-        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
+        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper;
         foreach ($this->configDataMapper->findAll() as $config) {
 
             $series = $this->_formMap['serie-'.$config->get('coluna')]['value'];
@@ -114,7 +114,7 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
 
     public function Editar()
     {
-        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
+        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper;
         $salvou = true;
         $this->deleteAllConfigs();
         foreach ($_POST as $key => $value) {
@@ -135,7 +135,7 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
 
     public function deleteAllConfigs()
     {
-        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
+        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper;
         foreach ($this->configDataMapper->findAll() as $config) {
             $this->configDataMapper->delete($config);
         }

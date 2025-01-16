@@ -2,7 +2,7 @@
 
 use App\Models\UniformDistribution;
 
-return new class() extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -21,7 +21,7 @@ return new class() extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         if (is_numeric(request('ref_cod_aluno')) && is_numeric(request('cod_distribuicao_uniforme'))) {
@@ -36,10 +36,10 @@ return new class() extends clsCadastro
                 }
                 $retorno = 'Editar';
             } else {
-                $this->uniformDistribution = new UniformDistribution();
+                $this->uniformDistribution = new UniformDistribution;
             }
         } else {
-            $this->uniformDistribution = new UniformDistribution();
+            $this->uniformDistribution = new UniformDistribution;
         }
 
         $this->url_cancelar = $retorno == 'Editar'
@@ -57,10 +57,10 @@ return new class() extends clsCadastro
 
     public function Gerar()
     {
-        $this->uniformDistribution ?? $this->uniformDistribution = new UniformDistribution();
+        $this->uniformDistribution ?? $this->uniformDistribution = new UniformDistribution;
         $this->ref_cod_escola = $this->uniformDistribution->school_id;
 
-        $objEscola = new clsPmieducarEscola();
+        $objEscola = new clsPmieducarEscola;
         $lista = $objEscola->lista();
 
         $escolaOpcoes = ['' => 'Selecione'];
@@ -376,7 +376,7 @@ return new class() extends clsCadastro
     {
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         $exists = UniformDistribution::where('student_id', request('ref_cod_aluno'))
@@ -415,7 +415,7 @@ return new class() extends clsCadastro
     {
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         $uniformDistribution = UniformDistribution::where('student_id', request('ref_cod_aluno'))
@@ -448,7 +448,7 @@ return new class() extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
 
         $obj = UniformDistribution::find(request('id'));

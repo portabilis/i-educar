@@ -228,7 +228,7 @@ class SelectOptions
 
     public static function zonasLocalizacao()
     {
-        $zones = new LocalizationZone();
+        $zones = new LocalizationZone;
 
         return self::getDefaultOption() + $zones->getDescriptiveValues();
     }

@@ -103,7 +103,7 @@ return new class extends clsCadastro
 
     public function Inicializar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 43, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'atendidos_lst.php');
 
         $this->cod_pessoa_fj = $this->getQueryString(name: 'cod_pessoa_fj');
@@ -111,7 +111,7 @@ return new class extends clsCadastro
 
         if (is_numeric(value: $this->cod_pessoa_fj)) {
             $this->retorno = 'Editar';
-            $objPessoa = new clsPessoaFisica();
+            $objPessoa = new clsPessoaFisica;
 
             [$this->nm_pessoa, $this->id_federal, $this->data_nasc,
                 $this->ddd_telefone_1, $this->telefone_1, $this->ddd_telefone_2,
@@ -263,7 +263,7 @@ return new class extends clsCadastro
         }
 
         if ($foto) {
-            $this->campoRotulo(nome: 'fotoAtual_', campo: 'Foto atual', valor: '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl(url: $foto) . '"/>');
+            $this->campoRotulo(nome: 'fotoAtual_', campo: 'Foto atual', valor: '<img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $foto) . '"/>');
             $this->inputsHelper()->checkbox(attrName: 'file_delete', inputOptions: ['label' => 'Excluir a foto']);
             $this->campoArquivo(nome: 'photo', campo: 'Trocar foto', valor: $this->arquivoFoto, tamanho: 40, descricao: '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         } else {
@@ -327,7 +327,7 @@ return new class extends clsCadastro
 
         // documentos
 
-        $documentos = new clsDocumento();
+        $documentos = new clsDocumento;
         $documentos->idpes = $this->cod_pessoa_fj;
         $documentos = $documentos->detalhe();
 
@@ -358,7 +358,7 @@ return new class extends clsCadastro
         // orgão emissão rg
 
         $selectOptions = [null => 'Órgão emissor'];
-        $orgaos = new clsOrgaoEmissorRg();
+        $orgaos = new clsOrgaoEmissorRg;
         $orgaos = $orgaos->lista();
 
         foreach ($orgaos as $orgao) {
@@ -683,7 +683,7 @@ return new class extends clsCadastro
             'resources' => $tiposNacionalidade,
             'required' => $obrigarCamposCenso,
             'inline' => true,
-            'value' => $this->retorno === 'Novo' ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade, //Quando for novo registro, preenche com o valor default brasileiro
+            'value' => $this->retorno === 'Novo' ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade, // Quando for novo registro, preenche com o valor default brasileiro
         ];
 
         $this->inputsHelper()->select(attrName: 'tipo_nacionalidade', inputOptions: $options);
@@ -707,7 +707,7 @@ return new class extends clsCadastro
 
         $this->inputsHelper()->simpleSearchPaisSemBrasil(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
 
-        //Falecido
+        // Falecido
         $options = [
             'label' => 'Falecido?',
             'required' => false,
@@ -776,7 +776,7 @@ return new class extends clsCadastro
         $this->campoTexto(nome: 'ocupacao', campo: 'Ocupação', valor: $this->ocupacao, tamanhovisivel: '50', tamanhomaximo: '255');
 
         $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsCadastroEscolaridade();
+        $objTemp = new clsCadastroEscolaridade;
         $lista = $objTemp->lista();
 
         if (is_array($lista) && count($lista)) {
@@ -848,7 +848,7 @@ return new class extends clsCadastro
     {
         $idPes = $this->cod_pessoa_fj;
 
-        $aluno = new clsPmieducarAluno();
+        $aluno = new clsPmieducarAluno;
         $aluno = $aluno->lista(int_cod_aluno: null, int_ref_cod_aluno_beneficio: null, int_ref_cod_religiao: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ref_idpes: $idPes, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
 
         if ($aluno) {
@@ -869,9 +869,9 @@ return new class extends clsCadastro
             return false;
         }
 
-        $usuario = new clsPmieducarUsuario();
+        $usuario = new clsPmieducarUsuario;
         $usuario = $usuario->lista(int_cod_usuario: $idPes, int_ref_cod_escola: null, int_ref_cod_instituicao: null, int_ref_funcionario_cad: null, int_ref_funcionario_exc: null, int_ref_cod_tipo_usuario: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: true);
-        $funcionario = new clsPortalFuncionario();
+        $funcionario = new clsPortalFuncionario;
         $funcionario->ref_cod_pessoa_fj = $idPes;
         $funcionario = $funcionario->lista(str_matricula: null, str_senha: null, int_ativo: 1);
 
@@ -881,7 +881,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $servidor = new clsPmieducarServidor();
+        $servidor = new clsPmieducarServidor;
         $servidor = $servidor->lista(int_cod_servidor: $idPes, int_ref_cod_deficiencia: null, int_ref_idesco: null, int_carga_horaria: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
 
         if ($servidor) {
@@ -923,7 +923,7 @@ return new class extends clsCadastro
 
     protected function loadAlunoByPessoaId($id)
     {
-        $aluno = new clsPmieducarAluno();
+        $aluno = new clsPmieducarAluno;
         $aluno->ref_idpes = $id;
 
         return $aluno->detalhe();
@@ -952,7 +952,7 @@ return new class extends clsCadastro
         $parentId = $this->{$parentType . '_id'};
 
         // mostra uma dica nos casos em que foi informado apenas o nome dos pais,
-        //pela antiga interface do cadastro de alunos.
+        // pela antiga interface do cadastro de alunos.
 
         if (!$parentId && $this->_aluno['nm_' . $parentType]) {
             $nome = $this->_aluno['nm_' . $parentType];
@@ -986,7 +986,7 @@ return new class extends clsCadastro
             $this->erros['id_federal'] = 'CPF inválido.';
             $isValid = false;
         } elseif ($cpf) {
-            $fisica = new clsFisica();
+            $fisica = new clsFisica;
             $fisica->cpf = idFederal2int(str: $cpf);
             $fisica = $fisica->detalhe();
 
@@ -1165,7 +1165,7 @@ return new class extends clsCadastro
         return true;
     }
 
-    //envia foto e salva caminha no banco
+    // envia foto e salva caminha no banco
     protected function savePhoto($id)
     {
         $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
@@ -1184,7 +1184,7 @@ return new class extends clsCadastro
 
                 return false;
             }
-            $caminhoFoto = (new UrlPresigner())->getPresignedUrl(url: $caminhoFoto);
+            $caminhoFoto = (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             $obj = new clsCadastroFisicaFoto(idpes: $id);
             $obj->excluir();
@@ -1333,7 +1333,7 @@ return new class extends clsCadastro
 
     protected function createOrUpdatePessoa($pessoaId = null)
     {
-        $pessoa = new clsPessoa_();
+        $pessoa = new clsPessoa_;
         $pessoa->idpes = $pessoaId;
         $pessoa->nome = $this->nm_pessoa;
         $pessoa->email = addslashes(string: $this->email);
@@ -1355,8 +1355,8 @@ return new class extends clsCadastro
 
     protected function createOrUpdatePessoaFisica($pessoaId)
     {
-        $db = new clsBanco();
-        $fisica = new clsFisica();
+        $db = new clsBanco;
+        $fisica = new clsFisica;
         $fisica->idpes = $pessoaId;
         $fisica->data_nasc = Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc);
         $fisica->sexo = $this->sexo;
@@ -1404,7 +1404,7 @@ return new class extends clsCadastro
 
         if ($corRaca == 0) {
             return false;
-        } //Quando não tiver cor/raça selecionado não faz update
+        } // Quando não tiver cor/raça selecionado não faz update
 
         $raca = new clsCadastroFisicaRaca(ref_idpes: $pessoaId, ref_cod_raca: $corRaca);
 
@@ -1417,7 +1417,7 @@ return new class extends clsCadastro
 
     protected function createOrUpdateDocumentos($pessoaId)
     {
-        $documentos = new clsDocumento();
+        $documentos = new clsDocumento;
         $documentos->idpes = $pessoaId;
 
         // rg

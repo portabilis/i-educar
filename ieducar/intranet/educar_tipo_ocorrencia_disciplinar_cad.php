@@ -32,7 +32,7 @@ return new class extends clsCadastro
 
         $this->cod_tipo_ocorrencia_disciplinar = $_GET['cod_tipo_ocorrencia_disciplinar'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(580, $this->pessoa_logada, 3, 'educar_tipo_ocorrencia_disciplinar_lst.php');
 
         if (is_numeric($this->cod_tipo_ocorrencia_disciplinar)) {
@@ -76,7 +76,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $ocorrencia = new LegacyDisciplinaryOccurrenceType();
+        $ocorrencia = new LegacyDisciplinaryOccurrenceType;
         $ocorrencia->ref_usuario_cad = $this->pessoa_logada;
         $ocorrencia->nm_tipo = $this->nm_tipo;
         $ocorrencia->descricao = $this->descricao;

@@ -87,7 +87,7 @@ return new class extends clsDetalhe
                 foreach ($files as $file) {
                     $html .= sprintf(
                         '<a href="%s" target="_blank">%s</a><br>',
-                        (new UrlPresigner())->getPresignedUrl($file->url),
+                        (new UrlPresigner)->getPresignedUrl($file->url),
                         $file->original_name
                     );
                 }
@@ -134,7 +134,7 @@ return new class extends clsDetalhe
             }
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->caption_novo = 'Compensar';

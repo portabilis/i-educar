@@ -85,7 +85,7 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
         $this->assertFalse(isset($validators['componenteCurricular']));
     }
 
-    public function testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
+    public function test_salvas_pareceres_atualizando_etapa_da_ultima_instancia_adicionada_no_boletim_com_etapas_lancadas()
     {
         $this->markTestSkipped();
     }

@@ -60,11 +60,11 @@ return new class extends clsDetalhe
         $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
         // Dados da matrícula
-        $obj_ref_cod_matricula = new clsPmieducarMatricula();
+        $obj_ref_cod_matricula = new clsPmieducarMatricula;
         $matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($matricula);
 
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $aluno = $obj_aluno->lista(
             int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
             int_ativo: 1
@@ -105,7 +105,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_cod_disciplina']) {
-            $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+            $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
             $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
             $this->addDetalhe(['Componente Curricular', $componente->nome]);
         }
@@ -118,7 +118,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Observação', $registro['observacao']]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $detalhe_aluno['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
             $this->url_novo = sprintf(

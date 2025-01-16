@@ -36,7 +36,7 @@ return new class extends clsCadastro
 
         $this->cod_nivel_ensino = $_GET['cod_nivel_ensino'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 571, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_nivel_ensino_lst.php');
 
         if (is_numeric($this->cod_nivel_ensino)) {
@@ -80,7 +80,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $level = new LegacyEducationLevel();
+        $level = new LegacyEducationLevel;
         $level->ref_usuario_cad = $this->pessoa_logada;
         $level->nm_nivel = $this->nm_nivel;
         $level->descricao = $this->descricao;

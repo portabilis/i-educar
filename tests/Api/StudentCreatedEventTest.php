@@ -14,7 +14,7 @@ class StudentCreatedEventTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testStudentCreatedEvent()
+    public function test_student_created_event()
     {
         Event::fake();
 

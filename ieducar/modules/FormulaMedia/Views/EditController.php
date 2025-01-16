@@ -191,7 +191,7 @@ class EditController extends Core_Controller_Page_EditController
             }
         }
 
-        //fixup for checkbox nota geral
+        // fixup for checkbox nota geral
         if (!isset($data['substituiMenorNotaRc'])) {
             $data['substituiMenorNotaRc'] = '0';
         }

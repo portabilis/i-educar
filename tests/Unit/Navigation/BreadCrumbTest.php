@@ -12,20 +12,20 @@ class BreadCrumbTest extends TestCase
      */
     private $breadCrumbObject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->breadCrumbObject = new Breadcrumb();
+        $this->breadCrumbObject = new Breadcrumb;
     }
 
-    public function testTitleWithoutParent()
+    public function test_title_without_parent()
     {
         $this->markTestSkipped();
         $htmlBreadCrumb = $this->breadCrumbObject->makeBreadcrumb('Página teste', []);
         $this->assertStringContainsString('Página teste', $htmlBreadCrumb);
     }
 
-    public function testTitleAndOneParent()
+    public function test_title_and_one_parent()
     {
         $this->markTestSkipped();
         $htmlBreadCrumb = $this->breadCrumbObject->makeBreadcrumb('Página teste', ['arquivo_teste.php' => 'Arquivo Teste']);
@@ -34,7 +34,7 @@ class BreadCrumbTest extends TestCase
         $this->assertStringContainsString('Arquivo Teste', $htmlBreadCrumb);
     }
 
-    public function testTitleAndMultipleParents()
+    public function test_title_and_multiple_parents()
     {
         $this->markTestSkipped();
         $htmlBreadCrumb = $this->breadCrumbObject->makeBreadcrumb(

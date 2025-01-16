@@ -63,7 +63,7 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_instituicao = new clsPmieducarInstituicao();
+        $obj_instituicao = new clsPmieducarInstituicao;
         $obj_instituicao->setOrderby('nm_responsavel ASC');
         $obj_instituicao->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
         $lista = $obj_instituicao->lista(

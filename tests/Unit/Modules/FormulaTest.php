@@ -16,22 +16,22 @@ class FormulaTest extends UnitBaseTest
 
     protected function setUp(): void
     {
-        $this->_entity = new FormulaMedia_Model_Formula();
+        $this->_entity = new FormulaMedia_Model_Formula;
     }
 
-    public function testSubstituiCorretamenteAsTokens()
+    public function test_substitui_corretamente_as_tokens()
     {
         $formula = $this->_entity->replaceTokens('Se / Et', $this->_values);
         $this->assertEquals('20 / 4', $formula);
     }
 
-    public function testFormulaDeMediaRetornaValorNumerico()
+    public function test_formula_de_media_retorna_valor_numerico()
     {
         $this->_entity->formulaMedia = '(E1 + E2 + E3 + E4) / Et';
         $this->assertEquals(5, $this->_entity->execFormulaMedia($this->_values));
     }
 
-    public function testFormulaDeRecuperacaoRetornaValorNumerico()
+    public function test_formula_de_recuperacao_retorna_valor_numerico()
     {
         $this->_entity->formulaMedia = '((Se / Et * 0.6) + (Rc * 0.4))';
         $values = $this->_values;
@@ -40,7 +40,7 @@ class FormulaTest extends UnitBaseTest
         $this->assertEqualsWithDelta(5.8, $nota, 0.3);
     }
 
-    public function testEntityValidators()
+    public function test_entity_validators()
     {
         // Valores de retorno
         $returnValue = [['cod_instituicao' => 1, 'nm_instituicao' => 'Instituição']];

@@ -63,7 +63,7 @@ return new class extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         if ($obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
@@ -128,7 +128,7 @@ return new class extends clsCadastro
         if ($this->id) {
             $detProfessorTurma = LegacySchoolClassTeacher::find($this->id);
             $ano = $detProfessorTurma['ano'];
-            $this->ano = $ano; //o inputsHelper necessita do valor para poder filtrar as turmas deste ano
+            $this->ano = $ano; // o inputsHelper necessita do valor para poder filtrar as turmas deste ano
         }
 
         if (isset($_GET['copia'])) {
@@ -247,7 +247,7 @@ return new class extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         if (!isset($this->ref_cod_turma)) {
@@ -299,7 +299,7 @@ return new class extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         $this->unidades_curriculares = $this->transformArrayInString(value: $this->unidades_curriculares);
@@ -359,7 +359,7 @@ return new class extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         $professorTurma = new clsModulesProfessorTurma(id: $this->id);

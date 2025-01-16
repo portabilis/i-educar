@@ -80,7 +80,7 @@ class Registro30 extends AbstractRegistro
                 continue;
             }
 
-            $registro30Model = new Registro30Model();
+            $registro30Model = new Registro30Model;
 
             if (isset($this->modelArray[$model->getCodigoPessoa()])) {
                 $registro30Model = $this->modelArray[$model->getCodigoPessoa()];

@@ -38,7 +38,7 @@ return new class extends clsListagem
 
         $get_escola = false;
         include 'include/pmieducar/educar_campo_lista.php';
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
         switch ($nivel_usuario) {
@@ -105,13 +105,13 @@ return new class extends clsListagem
             }
         }
 
-        //** Verificacao de permissao para exclusao
+        // ** Verificacao de permissao para exclusao
 
         if ($obj_permissao->permissao_cadastra(558, $this->pessoa_logada, 3)) {
             $this->acao = 'go("educar_tipo_ensino_cad.php")';
             $this->nome_acao = 'Novo';
         }
-        //**
+        // **
 
         $this->addPaginador2('educar_tipo_ensino_lst.php', $total, $_GET, $this->nome, $this->limite);
         $this->largura = '100%';

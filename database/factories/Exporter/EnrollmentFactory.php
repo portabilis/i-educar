@@ -30,7 +30,7 @@ class EnrollmentFactory extends Factory
     {
         $count = DB::table('relatorio.situacao_matricula')->count();
         if ($count === 0) {
-            $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder();
+            $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder;
             $seed->run();
         }
         $institution = LegacyInstitutionFactory::new()->current();
@@ -86,7 +86,7 @@ class EnrollmentFactory extends Factory
             'ref_cod_matricula' => $registration->id,
             'ref_cod_turma' => $schoolClass->id,
         ]);
-        $instance = new $this->model();
+        $instance = new $this->model;
 
         return $instance->query()->find($person->id)->getAttributes();
     }

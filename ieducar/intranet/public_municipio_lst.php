@@ -94,7 +94,7 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(755, $this->pessoa_logada, 7, null, true)) {
             $this->acao = 'go("public_municipio_cad.php")';

@@ -55,7 +55,7 @@ class StateController extends ResourceController
 
         return [
             new StateRestrictOperationRule($accessLevel),
-            new AddressingStateRule(),
+            new AddressingStateRule,
         ];
     }
 }

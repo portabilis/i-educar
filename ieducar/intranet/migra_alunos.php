@@ -89,7 +89,7 @@ return new class
     {
         DB::beginTransaction();
         $unificationId = $this->createLog(mainId: $principal, duplicatesId: $cod_alunos, createdBy: $this->pessoa_logada);
-        App_Unificacao_Aluno::unifica(codAlunoPrincipal: $principal, codAlunos: $cod_alunos, codPessoa: $this->pessoa_logada, db: new clsBanco(), unificationId: $unificationId);
+        App_Unificacao_Aluno::unifica(codAlunoPrincipal: $principal, codAlunos: $cod_alunos, codPessoa: $this->pessoa_logada, db: new clsBanco, unificationId: $unificationId);
 
         try {
             DB::commit();
@@ -103,7 +103,7 @@ return new class
 
     private function createLog($mainId, $duplicatesId, $createdBy)
     {
-        $log = new LogUnification();
+        $log = new LogUnification;
         $log->type = StudentLogUnification::getType();
         $log->main_id = $mainId;
         $log->duplicates_id = json_encode(value: $duplicatesId);
@@ -116,7 +116,7 @@ return new class
 
     private function createLogPerson($mainId, $duplicatesId, $createdBy)
     {
-        $log = new LogUnification();
+        $log = new LogUnification;
         $log->type = PersonLogUnification::getType();
         $log->main_id = $mainId;
         $log->duplicates_id = json_encode(value: $duplicatesId);
@@ -150,7 +150,7 @@ return new class
         DB::beginTransaction();
 
         $unificationId = $this->createLogPerson(mainId: $codPessoaPrincipal, duplicatesId: $codPessoas, createdBy: $this->pessoa_logada);
-        $unificador = new App_Unificacao_Pessoa(codigoUnificador: $codPessoaPrincipal, codigosDuplicados: $codPessoas, codPessoaLogada: $this->pessoa_logada, db: new clsBanco(), unificationId: $unificationId);
+        $unificador = new App_Unificacao_Pessoa(codigoUnificador: $codPessoaPrincipal, codigosDuplicados: $codPessoas, codPessoaLogada: $this->pessoa_logada, db: new clsBanco, unificationId: $unificationId);
 
         try {
             $unificador->unifica();

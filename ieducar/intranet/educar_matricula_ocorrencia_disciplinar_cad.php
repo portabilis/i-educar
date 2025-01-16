@@ -44,7 +44,7 @@ return new class extends clsCadastro
 
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(21145, $this->pessoa_logada, 7, 'educar_matricula_lst.php');
 
@@ -83,7 +83,7 @@ return new class extends clsCadastro
                 $this->hora_cadastro = dataFromPgToBr($this->data_cadastro, 'H:i');
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
                 if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)) {
                     $this->fexcluir = true;
                 }
@@ -93,7 +93,7 @@ return new class extends clsCadastro
         }
 
         if (is_numeric($this->ref_cod_matricula)) {
-            $obj_ref_cod_matricula = new clsPmieducarMatricula();
+            $obj_ref_cod_matricula = new clsPmieducarMatricula;
             $detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
             array_shift($detalhe_aluno);
             $this->ref_cod_escola = $detalhe_aluno['ref_ref_cod_escola'];
@@ -116,12 +116,12 @@ return new class extends clsCadastro
     public function Gerar()
     {
         if (is_numeric($this->ref_cod_matricula)) {
-            $obj_ref_cod_matricula = new clsPmieducarMatricula();
+            $obj_ref_cod_matricula = new clsPmieducarMatricula;
             $detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
             if ($detalhe_aluno) {
                 $detalhe_aluno = array_shift($detalhe_aluno);
             }
-            $obj_aluno = new clsPmieducarAluno();
+            $obj_aluno = new clsPmieducarAluno;
             $det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
             $det_aluno = current($det_aluno);
 
@@ -163,7 +163,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_matricula_ocorrencia_disciplinar_lst.php');
 
         $this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
@@ -176,7 +176,7 @@ return new class extends clsCadastro
         $detalhe_mat = $obj_ref_cod_matricula->detalhe();
         $this->ref_cod_instituicao = $detalhe_mat['ref_cod_instituicao'];
 
-        $obj = new LegacyRegistrationDisciplinaryOccurrenceType();
+        $obj = new LegacyRegistrationDisciplinaryOccurrenceType;
         $obj->ref_cod_matricula = $this->ref_cod_matricula;
         $obj->ref_cod_tipo_ocorrencia_disciplinar = $this->ref_cod_tipo_ocorrencia_disciplinar;
         $obj->ref_usuario_exc = $this->pessoa_logada;
@@ -212,7 +212,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_matricula_ocorrencia_disciplinar_lst.php');
 
         $this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
@@ -244,7 +244,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, 'educar_matricula_ocorrencia_disciplinar_lst.php');
 
         $obj = LegacyRegistrationDisciplinaryOccurrenceType::find($this->cod_ocorrencia_disciplinar);

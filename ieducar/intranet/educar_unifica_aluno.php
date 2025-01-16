@@ -42,7 +42,7 @@ return new class extends clsCadastro
 
     private function validaPermissaoDaPagina()
     {
-        (new clsPermissoes())
+        (new clsPermissoes)
             ->permissao_cadastra(
                 int_processo_ap: 999847,
                 int_idpes_usuario: $this->pessoa_logada,
@@ -88,7 +88,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $validationData = new ValidationDataService();
+        $validationData = new ValidationDataService;
 
         if (!$validationData->verifyQuantityByKey(data: $alunos, key: 'aluno_principal', quantity: 0)) {
             $this->mensagem = 'Aluno principal não informado';
@@ -113,7 +113,7 @@ return new class extends clsCadastro
 
         DB::beginTransaction();
         $unificationId = $this->createLog(mainId: $cod_aluno_principal, duplicatesId: $cod_alunos, createdBy: $this->pessoa_logada);
-        App_Unificacao_Aluno::unifica(codAlunoPrincipal: $cod_aluno_principal, codAlunos: $cod_alunos, codPessoa: $this->pessoa_logada, db: new clsBanco(), unificationId: $unificationId);
+        App_Unificacao_Aluno::unifica(codAlunoPrincipal: $cod_aluno_principal, codAlunos: $cod_alunos, codPessoa: $this->pessoa_logada, db: new clsBanco, unificationId: $unificationId);
 
         try {
             DB::commit();
@@ -146,7 +146,7 @@ return new class extends clsCadastro
 
     private function createLog($mainId, $duplicatesId, $createdBy)
     {
-        $log = new LogUnification();
+        $log = new LogUnification;
         $log->type = StudentLogUnification::getType();
         $log->main_id = $mainId;
         $log->duplicates_id = json_encode(value: array_values(array: $duplicatesId));

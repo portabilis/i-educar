@@ -52,7 +52,7 @@ class clsPmieducarTurmaModulo extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial) && is_string($this->data_inicio) && is_string($this->data_fim)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -105,7 +105,7 @@ class clsPmieducarTurmaModulo extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -177,7 +177,7 @@ class clsPmieducarTurmaModulo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -215,7 +215,7 @@ class clsPmieducarTurmaModulo extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -233,7 +233,7 @@ class clsPmieducarTurmaModulo extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -259,7 +259,7 @@ class clsPmieducarTurmaModulo extends Model
     public function excluirTodos($ref_cod_turma = null)
     {
         if (is_numeric($ref_cod_turma)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$ref_cod_turma}'");
 
             return true;
@@ -284,7 +284,7 @@ class clsPmieducarTurmaModulo extends Model
         ";
 
         try {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
@@ -313,7 +313,7 @@ class clsPmieducarTurmaModulo extends Model
         ";
 
         try {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();

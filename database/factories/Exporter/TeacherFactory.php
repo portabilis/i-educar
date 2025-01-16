@@ -44,7 +44,7 @@ class TeacherFactory extends Factory
             'turma_id' => $schoolClass,
             'servidor_id' => $person,
         ]);
-        $instance = new $this->model();
+        $instance = new $this->model;
 
         return $instance->query()->find($person->id)->getAttributes();
     }

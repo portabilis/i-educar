@@ -11,7 +11,7 @@ class TransferidoController extends ApiCoreController
     protected function getTransferido()
     {
         if ($this->canGetTransferido()) {
-            $matriculas = new clsPmieducarMatricula();
+            $matriculas = new clsPmieducarMatricula;
             $matriculas->setOrderby('sequencial_fechamento , translate(nome,\''.'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ'.'\', \''. 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN'.'\') ');
             $matriculas = $matriculas->lista_transferidos(
                 null,

@@ -27,8 +27,8 @@ class Util
     public static function formatWorkload(?float $workload): string
     {
         if ($workload !== null) {
-            $hours = (int)$workload;
-            $minutes = (int)round(($workload - $hours) * 60);
+            $hours = (int) $workload;
+            $minutes = (int) round(($workload - $hours) * 60);
             if ($minutes === 60) {
                 $hours++;
                 $minutes = 0;
@@ -118,5 +118,25 @@ class Util
         }
 
         return $postcode;
+    }
+
+    public static function disciplineSituation($disciplineSituation, $registrationSituation): ?string
+    {
+        $final = [
+            'Transferido',
+            'Reclassificado',
+            'Abandono',
+            'Remanejado',
+        ];
+
+        if (in_array($registrationSituation, $final)) {
+            return $registrationSituation;
+        }
+
+        if (in_array($disciplineSituation, $final)) {
+            return $disciplineSituation;
+        }
+
+        return $disciplineSituation;
     }
 }

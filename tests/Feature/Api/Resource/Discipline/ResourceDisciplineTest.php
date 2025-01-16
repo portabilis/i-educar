@@ -33,37 +33,37 @@ class ResourceDisciplineTest extends TestCase
     {
         parent::setUp();
 
-        //cursos
+        // cursos
         $courses = LegacyCourseFactory::new()->count(2)->create();
-        //curso
+        // curso
         $this->course = $courses->first();
 
-        //escolas
+        // escolas
         $schools = LegacySchoolFactory::new()->count(2)->create();
-        //escola
+        // escola
         $this->school = $schools->first();
 
         $schools->each(function ($school) use ($courses) {
             $courses->each(function ($course) use ($school) {
-                //series
+                // series
                 $grade = LegacyGradeFactory::new()->create([
                     'ref_cod_curso' => $course->id,
                 ]);
 
-                //escol_serie
+                // escol_serie
                 LegacySchoolGradeFactory::new()->create([
                     'ref_cod_serie' => $grade->id,
                     'ref_cod_escola' => $school->id,
                 ]);
 
-                //componente curricular ano escolar
+                // componente curricular ano escolar
                 $discipline_academic_years = LegacyDisciplineAcademicYearFactory::new()->count(2)->create([
                     'ano_escolar_id' => $grade->id,
                     'hora_falta' => null,
                 ]);
 
                 $discipline_academic_years->each(function ($discipline_academic_year) use ($school, $grade) {
-                    //escola serie disciplina
+                    // escola serie disciplina
                     LegacySchoolGradeDisciplineFactory::new()->create([
                         'ref_ref_cod_serie' => $grade->id,
                         'ref_ref_cod_escola' => $school->id,

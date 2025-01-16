@@ -59,21 +59,21 @@ class LegacySchoolTest extends EloquentTestCase
         $this->assertEquals($this->model->organization->fantasia, $this->model->name);
     }
 
-    public function testRelationshipCourses(): void
+    public function test_relationship_courses(): void
     {
         $school = LegacySchoolFactory::new()->hasAttached(LegacyCourseFactory::new(), ['ref_usuario_cad' => 1, 'data_cadastro' => now()], 'courses')->create();
         $this->assertCount(1, $school->courses);
         $this->assertInstanceOf(LegacyCourse::class, $school->courses->first());
     }
 
-    public function testRelationshipGrades(): void
+    public function test_relationship_grades(): void
     {
         $school = LegacySchoolFactory::new()->hasAttached(LegacyGradeFactory::new(), ['ref_usuario_cad' => 1, 'data_cadastro' => now()], 'grades')->create();
         $this->assertCount(1, $school->grades);
         $this->assertInstanceOf(LegacyGrade::class, $school->grades->first());
     }
 
-    public function testRelationshipSchoolClasses(): void
+    public function test_relationship_school_classes(): void
     {
         $school = LegacySchoolFactory::new()->create();
         $grade = LegacyGradeFactory::new()->create();
@@ -89,7 +89,7 @@ class LegacySchoolTest extends EloquentTestCase
         $this->assertInstanceOf(LegacySchoolClass::class, $school->schoolClasses->first());
     }
 
-    public function testRelationshipStages(): void
+    public function test_relationship_stages(): void
     {
         $school = LegacySchoolFactory::new()->create();
         $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create([

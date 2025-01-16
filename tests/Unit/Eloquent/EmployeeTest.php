@@ -44,7 +44,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function relationshipInep()
+    public function relationship_inep()
     {
         $employee = EmployeeFactory::new()->create();
         $employee->inep = EmployeeInepFactory::new()->create([
@@ -54,7 +54,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function relationshipIndividual()
+    public function relationship_individual()
     {
         $employee = EmployeeFactory::new()->create();
         $employee->individual = LegacyIndividualFactory::new()->create([
@@ -64,7 +64,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function getIdAttribute()
+    public function get_id_attribute()
     {
         $this->assertInstanceOf(Employee::class, $this->model);
         $this->assertIsInt($this->model->id);
@@ -72,7 +72,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function scopeProfessor()
+    public function scope_professor()
     {
         try {
             Employee::query()
@@ -85,7 +85,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function scopeLastYear()
+    public function scope_last_year()
     {
         try {
             Employee::query()
@@ -99,7 +99,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function scopeCurrentYear()
+    public function scope_current_year()
     {
         try {
             Employee::query()
@@ -113,7 +113,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function relationshipSchools(): void
+    public function relationship_schools(): void
     {
         EmployeeAllocationFactory::new()->create([
             'ref_cod_servidor' => $this->model,
@@ -125,7 +125,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function relationshipDisciplines(): void
+    public function relationship_disciplines(): void
     {
         $employeeRole = LegacyEmployeeRoleFactory::new()->create();
         $course = LegacyCourseFactory::new()->create();
@@ -141,7 +141,7 @@ class EmployeeTest extends EloquentTestCase
     }
 
     /** @test  */
-    public function relationshipCourses(): void
+    public function relationship_courses(): void
     {
         $employee = EmployeeFactory::new()->hasAttached(LegacyCourseFactory::new(), [
             'ref_ref_cod_instituicao' => $this->model->institution_id,

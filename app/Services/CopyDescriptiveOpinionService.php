@@ -113,7 +113,7 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
             return;
         }
 
-        throw new MissingDescriptiveOpinionType();
+        throw new MissingDescriptiveOpinionType;
     }
 
     /**

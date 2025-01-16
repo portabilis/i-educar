@@ -36,13 +36,13 @@ return new class extends clsCadastro
         $obj_usuario_det = $obj_usuario->detalhe();
         $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $nivelUsuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivelUsuario == 4) {
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
 
-            $obj_instituicao = new clsPmieducarInstituicao();
+            $obj_instituicao = new clsPmieducarInstituicao;
             $lst_instituicao = $obj_instituicao->lista($this->ref_cod_instituicao);
 
             if (is_array($lst_instituicao)) {

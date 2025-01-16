@@ -15,16 +15,16 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
      */
     protected $rule;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->rule = new IncompatibleChangeToMultiGrades();
+        $this->rule = new IncompatibleChangeToMultiGrades;
     }
 
     /**
      * @return void
      */
-    public function testCanNotChangeToMultiGrades()
+    public function test_can_not_change_to_multi_grades()
     {
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
@@ -71,7 +71,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
     /**
      * @return void
      */
-    public function testCanChangeToMultiGradesWhitContainsOriginalGrade()
+    public function test_can_change_to_multi_grades_whit_contains_original_grade()
     {
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
@@ -116,7 +116,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $this->assertEquals($message, $this->rule->message());
     }
 
-    public function testCanChangeToMultiGradesWithNotContainsActiveEnrollments()
+    public function test_can_change_to_multi_grades_with_not_contains_active_enrollments()
     {
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
@@ -161,7 +161,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $this->assertEquals($message, $this->rule->message());
     }
 
-    public function testCanChangeToMultiGradesWithNotMultiGrades()
+    public function test_can_change_to_multi_grades_with_not_multi_grades()
     {
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
@@ -203,7 +203,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $this->assertEquals($message, $this->rule->message());
     }
 
-    public function testCanChangeToMultiGradesWithoriginalMultiGradesInfoIsTrue()
+    public function test_can_change_to_multi_grades_withoriginal_multi_grades_info_is_true()
     {
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,

@@ -302,7 +302,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     {
         $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = new clsPmieducarConfiguracoesGerais;
         $configuracoes = $configuracoes->detalhe();
 
         if ($configuracoes['justificativa_falta_documentacao_obrigatorio']) {
@@ -316,11 +316,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                 $this->cod_pessoa_fj = $_GET['person'];
                 $this->inputsHelper()->hidden('person', ['value' => $this->cod_pessoa_fj]);
             } else {
-                $db = new clsBanco();
+                $db = new clsBanco;
                 $this->cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
             }
 
-            $documentos = new clsDocumento();
+            $documentos = new clsDocumento;
             $documentos->idpes = $this->cod_pessoa_fj;
             $documentos = $documentos->detalhe();
         }
@@ -343,7 +343,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto)  . '"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner)->getPresignedUrl($foto)  . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         } else {
@@ -407,7 +407,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->date('data_emissao_rg', $options);
 
         $selectOptions = [null => 'Órgão emissor'];
-        $orgaos = new clsOrgaoEmissorRg();
+        $orgaos = new clsOrgaoEmissorRg;
         $orgaos = $orgaos->lista();
 
         foreach ($orgaos as $orgao) {
@@ -1213,7 +1213,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->loadResourceAssets($this->getDispatcher());
 
-        $clsInstituicao = new clsPmieducarInstituicao();
+        $clsInstituicao = new clsPmieducarInstituicao;
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigarCamposCenso = false;
         $obrigarDocumentoPessoa = false;
@@ -1276,7 +1276,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'resources' => $tiposNacionalidade,
             'required' => $obrigarCamposCenso,
             'inline' => true,
-            'value' => $this->getRequest()->id == null ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade, //Quando for novo registro, preenche com o valor default brasileiro
+            'value' => $this->getRequest()->id == null ? Nacionalidade::BRASILEIRA : $this->tipo_nacionalidade, // Quando for novo registro, preenche com o valor default brasileiro
         ];
 
         $this->inputsHelper()->select('tipo_nacionalidade', $options);

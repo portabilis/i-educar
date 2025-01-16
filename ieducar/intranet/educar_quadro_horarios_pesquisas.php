@@ -2,7 +2,7 @@
 
 use App\Models\LegacySchoolAcademicYear;
 
-$obj_permissoes = new clsPermissoes();
+$obj_permissoes = new clsPermissoes;
 $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 $retorno .= '<tr>
                      <td height="24" colspan="2" class="formdktd">
@@ -33,11 +33,11 @@ if ($desabilitado) {
     $turma_desabilitado = isset($turma_desabilitado) ? $turma_desabilitado : $desabilitado;
 }
 
-$obj_permissoes = new clsPermissoes();
+$obj_permissoes = new clsPermissoes;
 $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
 $opcoes = ['' => 'Selecione'];
-$obj_instituicao = new clsPmieducarInstituicao();
+$obj_instituicao = new clsPmieducarInstituicao;
 $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
 $obj_instituicao->setOrderby('nm_instituicao ASC');
 $lista = $obj_instituicao->lista(int_ativo: 1);
@@ -97,11 +97,11 @@ if ($get_escola && $get_curso) {
 
 if ($get_escola) {
     $opcoes_escola = ['' => 'Selecione'];
-    $obj_escola = new clsPmieducarEscola();
+    $obj_escola = new clsPmieducarEscola;
     $lista = $obj_escola->lista(str_nome: 1);
     if ($nivel_usuario == 4 || $nivel_usuario == 8) {
         $opcoes_escola = ['' => 'Selecione'];
-        $obj_escola = new clsPmieducarEscolaUsuario();
+        $obj_escola = new clsPmieducarEscolaUsuario;
         $lista = $obj_escola->lista($this->pessoa_logada);
 
         if (is_array($lista) && count($lista)) {
@@ -116,7 +116,7 @@ if ($get_escola) {
         }
     } elseif ($this->ref_cod_instituicao) {
         $opcoes_escola = ['' => 'Selecione'];
-        $obj_escola = new clsPmieducarEscola();
+        $obj_escola = new clsPmieducarEscola;
         $lista = $obj_escola->lista(int_ref_cod_instituicao: $this->ref_cod_instituicao, str_nome: 1);
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
@@ -134,7 +134,7 @@ if ($get_escola) {
                              </td>';
         $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
-        $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 /*&& !$this->ref_cod_curso */ ? 'disabled=\'true\' ' : '';
+        $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 /* && !$this->ref_cod_curso */ ? 'disabled=\'true\' ' : '';
         $retorno .= " <select onchange=\"getCurso();getAnoLetivo();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
 
         reset($opcoes_escola);
@@ -195,7 +195,7 @@ if ($get_curso) {
 
     // EDITAR
     if ($this->ref_cod_escola) {
-        $obj_esc_cur = new clsPmieducarEscolaCurso();
+        $obj_esc_cur = new clsPmieducarEscolaCurso;
         $lst_esc_cur = $obj_esc_cur->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ativo: 1);
         if (is_array($lst_esc_cur) && count($lst_esc_cur)) {
             foreach ($lst_esc_cur as $detalhe) {
@@ -212,7 +212,7 @@ if ($get_curso) {
                          </td>';
     $retorno .= '<td valign="top" class="formlttd"><span class="form">';
 
-    $disabled = !$this->ref_cod_curso && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ? 'disabled=\'true\' ' : '';
+    $disabled = !$this->ref_cod_curso && $nivel_usuario == 1 /* && !$this->ref_cod_curso */ ? 'disabled=\'true\' ' : '';
     $retorno .= " <select onchange=\"getSerie();\" class='geral' name='ref_cod_curso' {$disabled} id='ref_cod_curso'>";
 
     reset($opcoes_curso);
@@ -234,7 +234,7 @@ if ($get_serie) {
     $opcoes_serie = ['' => 'Selecione'];
     // EDITAR
     if ($this->ref_cod_curso && $this->ref_cod_escola) {
-        $obj_serie = new clsPmieducarSerie();
+        $obj_serie = new clsPmieducarSerie;
         $obj_serie->setOrderby('nm_serie ASC');
         $lst_serie = $obj_serie->lista(int_ref_cod_curso: $this->ref_cod_curso, int_ativo: 1);
         if (is_array($lst_serie) && count($lst_serie)) {
@@ -252,7 +252,7 @@ if ($get_serie) {
                          </td>';
     $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
-    $disabled = !$this->ref_cod_serie && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ? 'disabled=\'true\' ' : '';
+    $disabled = !$this->ref_cod_serie && $nivel_usuario == 1 /* && !$this->ref_cod_curso */ ? 'disabled=\'true\' ' : '';
     $retorno .= " <select onchange=\"getTurma();\" class='geral' name='ref_cod_serie' {$disabled} id='ref_cod_serie'>";
 
     reset($opcoes_serie);
@@ -272,8 +272,8 @@ if ($get_serie) {
 if ($get_turma) {
     $opcoes_turma = ['' => 'Selecione'];
     // EDITAR
-    if ($this->ref_cod_serie /*|| $this->ref_cod_curso*/) {
-        $obj_turma = new clsPmieducarTurma();
+    if ($this->ref_cod_serie /* || $this->ref_cod_curso */) {
+        $obj_turma = new clsPmieducarTurma;
         $obj_turma->setOrderby('nm_turma ASC');
         $lst_turma = $obj_turma->lista(int_ref_ref_cod_serie: $this->ref_cod_serie, int_ref_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_curso: $this->ref_cod_curso, ano: $this->ano);
         if (is_array($lst_turma) && count($lst_turma)) {

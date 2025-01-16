@@ -49,7 +49,7 @@ return new class extends clsListagem
         $params['data_inicial_calendario'] = $startDate ?: null;
         $params['data_final_calendario'] = $endDate ?: null;
 
-        $base = new clsBanco();
+        $base = new clsBanco;
         $base->FraseConexao();
         $connectionString = 'pgsql:' . $base->getFraseConexao();
         $data = (new MovimentoMensalQueryFactory(connection: new \PDO(dsn: $connectionString), params: $params))

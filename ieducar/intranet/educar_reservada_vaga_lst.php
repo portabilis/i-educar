@@ -82,7 +82,7 @@ return new class extends clsListagem
             'Curso',
         ];
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if ($nivel_usuario == 1) {
@@ -133,7 +133,7 @@ return new class extends clsListagem
       : 0;
 
         // Instância objeto de mapeamento relacional com o tabela pmieducar.reserva_vaga
-        $obj_reserva_vaga = new clsPmieducarReservaVaga();
+        $obj_reserva_vaga = new clsPmieducarReservaVaga;
         $obj_reserva_vaga->setOrderby(strNomeCampo: 'data_cadastro ASC');
         $obj_reserva_vaga->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 

@@ -30,7 +30,7 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testDiarioGranaPareceresAnualPorComponente()
+    public function test_diario_grana_pareceres_anual_por_componente()
     {
         $school = LegacySchoolFactory::new()->create();
 
@@ -161,7 +161,7 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
         $this->assertDatabaseCount($disciplineDescriptiveOpinion->getTable(), 1);
         $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
 
-        //alterando a regra de avaliação da série
+        // alterando a regra de avaliação da série
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
             'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
         ]);

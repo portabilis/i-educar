@@ -28,11 +28,11 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        //** Verificacao de permissao para exclusao
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para exclusao
+        $obj_permissao = new clsPermissoes;
 
         $obj_permissao->permissao_cadastra(558, $this->pessoa_logada, 7, 'educar_tipo_ensino_lst.php');
-        //**
+        // **
 
         $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
@@ -51,9 +51,9 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                //** verificao de permissao para exclusao
+                // ** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissao->permissao_excluir(558, $this->pessoa_logada, 7);
-                //**
+                // **
 
                 $retorno = 'Editar';
             }
@@ -89,7 +89,7 @@ return new class extends clsCadastro
     {
         $this->atividade_complementar = is_null($this->atividade_complementar) ? false : true;
 
-        $object = new LegacyEducationType();
+        $object = new LegacyEducationType;
         $object->ref_usuario_cad = $this->pessoa_logada;
         $object->nm_tipo = $this->nm_tipo;
         $object->ref_cod_instituicao = $this->ref_cod_instituicao;

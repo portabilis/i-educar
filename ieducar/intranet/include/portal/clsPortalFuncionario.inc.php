@@ -60,7 +60,7 @@ class clsPortalFuncionario extends Model
 
     public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null, $forceResetPassword = null, $motivo = null, $data_inicial = null)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}funcionario";
 
@@ -165,7 +165,7 @@ class clsPortalFuncionario extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -310,7 +310,7 @@ class clsPortalFuncionario extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            return true; //$db->InsertId( "{$this->_tabela}_ref_cod_pessoa_fj_seq");
+            return true; // $db->InsertId( "{$this->_tabela}_ref_cod_pessoa_fj_seq");
         }
 
         return false;
@@ -319,7 +319,7 @@ class clsPortalFuncionario extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -567,7 +567,7 @@ class clsPortalFuncionario extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -600,7 +600,7 @@ class clsPortalFuncionario extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_pessoa_fj = '{$this->ref_cod_pessoa_fj}'");
             $db->ProximoRegistro();
 
@@ -613,7 +613,7 @@ class clsPortalFuncionario extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_pessoa_fj = '{$this->ref_cod_pessoa_fj}'");
 
             if ($db->ProximoRegistro()) {
@@ -643,7 +643,7 @@ class clsPortalFuncionario extends Model
     public function getNomeVinculo($cod_funcionario_vinculo)
     {
         if (is_numeric($cod_funcionario_vinculo)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT nm_vinculo FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = '{$cod_funcionario_vinculo}'");
 
             if ($db->ProximoRegistro()) {

@@ -14,7 +14,7 @@ class LegacyIndividualEndpointTestDelete extends TestCase
     use DatabaseTransactions;
     use LoginFirstUser;
 
-    public function testDeleteEndpoint(): void
+    public function test_delete_endpoint(): void
     {
         $individual = LegacyIndividualFactory::new()->create();
 
@@ -34,7 +34,7 @@ class LegacyIndividualEndpointTestDelete extends TestCase
         ]);
     }
 
-    public function testDeleteWhenHasStudent(): void
+    public function test_delete_when_has_student(): void
     {
         $student = LegacyStudentFactory::new()->create();
 
@@ -56,7 +56,7 @@ class LegacyIndividualEndpointTestDelete extends TestCase
         ]);
     }
 
-    public function testDeleteWhenHasResponsible(): void
+    public function test_delete_when_has_responsible(): void
     {
         $student = LegacyStudentFactory::new()->create();
 
@@ -74,7 +74,7 @@ class LegacyIndividualEndpointTestDelete extends TestCase
             ->assertSee('Não foi possível excluir. A pessoa possuí vínculo(s) com aluno(s) como mãe, pai ou outro responsável.');
     }
 
-    public function testDeleteWhenHasEmployee(): void
+    public function test_delete_when_has_employee(): void
     {
         $employee = EmployeeFactory::new()->create();
 

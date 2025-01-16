@@ -53,7 +53,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Código INEP', $district->ibge_code]);
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(759, $this->pessoa_logada, 7, null, true)) {
             $this->url_novo = 'public_distrito_cad.php';

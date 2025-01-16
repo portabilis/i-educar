@@ -38,7 +38,7 @@ return new class extends clsDetalhe
         $registro['ref_cod_instituicao'] = $registro->institution->nm_instituicao;
         $registro = $registro->getAttributes();
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {

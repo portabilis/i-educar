@@ -17,12 +17,12 @@ class Core_ViewTest extends TestCase
     {
         parent::setUp();
 
-        $this->_pageController = new Core_Controller_Page_AbstractStub();
+        $this->_pageController = new Core_Controller_Page_AbstractStub;
         $this->_pageController->setOptions(['processoAp' => 1, 'titulo' => 'foo']);
         $this->_view = new Core_ViewStub($this->_pageController);
     }
 
-    public function testTituloConfiguradoComValorDeConfiguracaoGlobal()
+    public function test_titulo_configurado_com_valor_de_configuracao_global()
     {
         $instituicao = config('legacy.app.template.vars.instituicao');
 
@@ -30,7 +30,7 @@ class Core_ViewTest extends TestCase
         $this->assertEquals($instituicao . ' | foo', $this->_view->getTitulo());
     }
 
-    public function testProcessoApConfiguradoPeloValorDePageController()
+    public function test_processo_ap_configurado_pelo_valor_de_page_controller()
     {
         $this->_view->MakeAll();
         $this->assertEquals(1, $this->_view->getProcessoAp());

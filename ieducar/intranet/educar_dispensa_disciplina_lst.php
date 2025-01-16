@@ -71,7 +71,7 @@ return new class extends clsListagem
 
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
-        $obj_matricula = new clsPmieducarMatricula();
+        $obj_matricula = new clsPmieducarMatricula;
         $lst_matricula = $obj_matricula->lista(int_cod_matricula: $this->ref_cod_matricula);
 
         if (is_array(value: $lst_matricula)) {
@@ -80,7 +80,7 @@ return new class extends clsListagem
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+            $obj_matricula_turma = new clsPmieducarMatriculaTurma;
             $lst_matricula_turma = $obj_matricula_turma->lista(
                 int_ref_cod_matricula: $this->ref_cod_matricula,
                 int_ativo: 1,
@@ -146,7 +146,7 @@ return new class extends clsListagem
         $this->offset = $_GET['pagina_' . $this->nome] ?
             $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_dispensa_disciplina = new clsPmieducarDispensaDisciplina();
+        $obj_dispensa_disciplina = new clsPmieducarDispensaDisciplina;
         $obj_dispensa_disciplina->setOrderby(strNomeCampo: 'data_cadastro ASC');
         $obj_dispensa_disciplina->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
@@ -160,7 +160,7 @@ return new class extends clsListagem
         $total = $obj_dispensa_disciplina->_total;
 
         // Mapper de componente curricular
-        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
 
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
@@ -201,7 +201,7 @@ return new class extends clsListagem
             intResultadosPorPagina: $this->limite
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7) && $det_matricula['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
             $this->array_botao_url[] = 'educar_dispensa_disciplina_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;

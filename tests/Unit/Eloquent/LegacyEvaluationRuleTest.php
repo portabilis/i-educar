@@ -24,7 +24,7 @@ class LegacyEvaluationRuleTest extends EloquentTestCase
     }
 
     /** @test */
-    public function isGlobalScoreRule()
+    public function is_global_score_rule()
     {
         if ($this->model->nota_geral_por_etapa == 1) {
             $this->assertEquals(true, $this->model->isGlobalScore());

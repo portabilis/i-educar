@@ -12,7 +12,7 @@ class DiarioRecuperaTodosAlunosTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testBuscaTodosAlunos()
+    public function test_busca_todos_alunos()
     {
         /** @var LegacyEnrollment $enrollments */
         $enrollments = LegacyEnrollmentFactory::new()->create();

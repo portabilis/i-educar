@@ -13,7 +13,7 @@ class LegacyGradeBuilder extends LegacyBuilder
     {
         $this->active()->orderByNameAndCourse()->filter($filters);
 
-        //description será usada em getNameAttribute, mas não aparece no recurso
+        // description será usada em getNameAttribute, mas não aparece no recurso
         return $this->setExcept(['description'])->resource(['id', 'name']);
     }
 

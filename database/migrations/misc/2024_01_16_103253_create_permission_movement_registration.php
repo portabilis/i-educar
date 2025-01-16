@@ -42,7 +42,7 @@ return new class extends Migration
         ]);
         $this->attachMenu($userTypes, $menu);
 
-        //Permissão movida apenas
+        // Permissão movida apenas
         Menu::query()->updateOrCreate([
             'process' => 627,
         ], [
@@ -64,7 +64,7 @@ return new class extends Migration
         ]);
         $this->attachMenu($userTypes, $menu);
 
-        //Permissão movida apenas
+        // Permissão movida apenas
         Menu::query()->updateOrCreate([
             'process' => 628,
         ], [
@@ -75,7 +75,7 @@ return new class extends Migration
             'order' => 11,
         ]);
 
-        //Permissão movida apenas
+        // Permissão movida apenas
         Menu::query()->updateOrCreate([
             'process' => Process::ACTIVE_LOOKING,
         ], [
@@ -141,7 +141,7 @@ return new class extends Migration
         ]);
         $this->attachMenu($userTypes, $menu);
 
-        //Permissão movida apenas
+        // Permissão movida apenas
         Menu::query()->updateOrCreate([
             'process' => 1004,
         ], [
@@ -234,7 +234,7 @@ return new class extends Migration
     {
         Menu::query()->updateOrCreate([
             'process' => 627,
-            //existe
+            // existe
         ], [
             'old' => 627,
             'parent_id' => Menu::query()->where('process', Process::MENU_SCHOOL)->value('id'),

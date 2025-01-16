@@ -58,7 +58,7 @@ return new class extends clsDetalhe
         $this->titulo = 'Matrícula - Detalhe';
         $this->ref_cod_matricula = $_GET['cod_matricula'];
 
-        $obj_matricula = new clsPmieducarMatricula();
+        $obj_matricula = new clsPmieducarMatricula;
         $lst_matricula = $obj_matricula->lista(int_cod_matricula: $this->ref_cod_matricula);
 
         if ($lst_matricula) {
@@ -97,7 +97,7 @@ return new class extends clsDetalhe
         $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
         // Nome do aluno
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $lst_aluno = $obj_aluno->lista(
             int_cod_aluno: $registro['ref_cod_aluno'],
             int_ativo: 1
@@ -133,7 +133,7 @@ return new class extends clsDetalhe
         }
 
         // Nome da turma
-        $enturmacoes = new clsPmieducarMatriculaTurma();
+        $enturmacoes = new clsPmieducarMatriculaTurma;
 
         $enturmacoes = $enturmacoes->lista(
             int_ref_cod_matricula: $this->ref_cod_matricula,
@@ -228,7 +228,7 @@ return new class extends clsDetalhe
         $this->addDetalhe(detalhe: ['Situação', $situacao]);
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO) {
-            $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
+            $obj_transferencia = new clsPmieducarTransferenciaSolicitacao;
 
             $lst_transferencia = $obj_transferencia->lista(int_ref_cod_matricula_saida: $registro['cod_matricula'], int_ativo: 1, int_ref_cod_aluno: $registro['ref_cod_aluno']);
 
@@ -273,12 +273,12 @@ return new class extends clsDetalhe
 
         $this->addDetalhe(detalhe: ['Formando', $registro['formando'] == 0 ? 'Não' : 'Sim']);
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             // verifica se existe transferencia
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
-                $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
+                $obj_transferencia = new clsPmieducarTransferenciaSolicitacao;
 
                 $lst_transferencia = $obj_transferencia->lista(
                     int_ref_cod_matricula_saida: $registro['cod_matricula'],
@@ -399,7 +399,7 @@ return new class extends clsDetalhe
             }
 
             $ultimaMatricula = $obj_matricula->getEndMatricula(codAluno: $registro['ref_cod_aluno']);
-            $permiteCancelarTransferencia = new clsPermissoes();
+            $permiteCancelarTransferencia = new clsPermissoes;
             $permiteCancelarTransferencia = $permiteCancelarTransferencia->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
 
             if ($this->permissaoSolicitarTransferencia()) {
@@ -575,7 +575,7 @@ return new class extends clsDetalhe
              WHERE ref_cod_matricula_saida = $matriculaId
                AND ativo = 1";
 
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         return $db->CampoUnico(consulta: $sql);
     }

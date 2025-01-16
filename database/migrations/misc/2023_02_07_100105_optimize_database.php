@@ -5,13 +5,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration
+return new class extends Migration
 {
     use AsView;
 
     public function up()
     {
-        //ANO LETIVO MODULO
+        // ANO LETIVO MODULO
         $this->dropView('public.exporter_stages');
         $this->dropView('public.exporter_school_stages');
         $this->dropView('public.exporter_school_class_stages');
@@ -37,7 +37,7 @@ return new class() extends Migration
             ]);
         });
 
-        //MODULO
+        // MODULO
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.modulo ALTER COLUMN cod_modulo type smallint USING cod_modulo::smallint;');
 
         Schema::table('pmieducar.modulo', function (Blueprint $table) {
@@ -52,7 +52,7 @@ return new class() extends Migration
         $this->createView('relatorio.view_modulo');
         $this->createView('relatorio.view_dados_modulo');
 
-        //ESCOLA ANO LETIVO
+        // ESCOLA ANO LETIVO
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.escola_ano_letivo DROP CONSTRAINT IF EXISTS escola_ano_letivo_pkey;');
         Schema::table('escola_ano_letivo', function (Blueprint $table) {
             $table->increments('id');
@@ -80,7 +80,7 @@ return new class() extends Migration
 
     public function down()
     {
-        //ANO LETIVO MODULO
+        // ANO LETIVO MODULO
         $this->dropView('public.exporter_stages');
         $this->dropView('public.exporter_school_stages');
         $this->dropView('public.exporter_school_class_stages');
@@ -104,7 +104,7 @@ return new class() extends Migration
         });
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo ADD CONSTRAINT ano_letivo_modulo_pkey PRIMARY KEY (ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo)');
 
-        //MODULO
+        // MODULO
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.modulo ALTER COLUMN cod_modulo type integer USING cod_modulo::integer');
 
         Schema::table('pmieducar.modulo', function (Blueprint $table) {
@@ -119,7 +119,7 @@ return new class() extends Migration
         $this->createView('relatorio.view_modulo');
         $this->createView('relatorio.view_dados_modulo');
 
-        //ESCOLA ANO LETIVO
+        // ESCOLA ANO LETIVO
         \DB::statement('DROP INDEX IF EXISTS pmieducar.escola_ano_letivo_ref_cod_escola_ano_index;');
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.escola_ano_letivo DROP CONSTRAINT IF EXISTS pmieducar_escola_ano_letivo_ref_cod_escola_foreign CASCADE;');
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.escola_ano_letivo DROP CONSTRAINT IF EXISTS escola_ano_letivo_ref_cod_escola_ano_unique;');
@@ -130,7 +130,7 @@ return new class() extends Migration
             $table->renameColumn('created_at', 'data_cadastro');
         });
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.escola_ano_letivo ADD CONSTRAINT escola_ano_letivo_pkey PRIMARY KEY (ref_cod_escola, ano);');
-        //ANO LETIVO MODULO
+        // ANO LETIVO MODULO
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo ADD CONSTRAINT pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign FOREIGN KEY (ref_ref_cod_escola, ref_ano) REFERENCES pmieducar.escola_ano_letivo(ref_cod_escola, ano) ON UPDATE RESTRICT ON DELETE RESTRICT');
     }
 };

@@ -80,14 +80,14 @@ return new class extends clsListagem
         }
         $this->addPaginador2(strUrl: 'educar_projeto_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: null, intResultadosPorPagina: $this->limite);
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 21250, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_projeto_cad.php")';
             $this->nome_acao = 'Novo';
         }
-        //**
+        // **
 
         $this->largura = '100%';
 

@@ -20,7 +20,7 @@ class ExemptionTest extends TestCase
     /** @var LegacyEnrollment */
     private $enrollment;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
@@ -29,7 +29,7 @@ class ExemptionTest extends TestCase
     /**
      * O aluno deverá ser aprovado sem lançamentos nas etapas dispensadas
      */
-    public function testApproveWithoutPostGradeInExemptionStages()
+    public function test_approve_without_post_grade_in_exemption_stages()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -97,7 +97,7 @@ class ExemptionTest extends TestCase
      * O aluno deverá ser aprovado sem lançamentos em disciplinas dispensadas
      * em todas as etapas
      */
-    public function testApproveWithoutPostGradeInExemption()
+    public function test_approve_without_post_grade_in_exemption()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -150,12 +150,12 @@ class ExemptionTest extends TestCase
      * Aluno com dispensa na ultima etapa de uma disciplina, deve ser aprovado após o lançamento
      * de nota nas etapas não dispensadas
      */
-    public function testApproveWithExemptionInLastStage()
+    public function test_approve_with_exemption_in_last_stage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        //Cria duas disciplinas e duas etapas
+        // Cria duas disciplinas e duas etapas
         $this->createStages($school, 2);
         $this->createDisciplines($schoolClass, 2);
 

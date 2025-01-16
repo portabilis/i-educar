@@ -51,7 +51,7 @@ return new class extends clsDetalhe
         $caminhoFoto = $objFoto->detalhe();
         if ($caminhoFoto != false) {
             $this->addDetalhe(detalhe: ['Nome', $detalhe['nome'].'
-                <p><img height="117" src="' . (new UrlPresigner())->getPresignedUrl(url: $caminhoFoto['caminho']) . '"/></p>']);
+                <p><img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto['caminho']) . '"/></p>']);
         } else {
             $this->addDetalhe(detalhe: ['Nome', $detalhe['nome']]);
         }
@@ -174,7 +174,7 @@ return new class extends clsDetalhe
             $this->addHtml(html: view(view: 'uploads.upload-details', data: ['files' => $files])->render());
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 43, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true)) {
             $this->url_novo = 'atendidos_cad.php';

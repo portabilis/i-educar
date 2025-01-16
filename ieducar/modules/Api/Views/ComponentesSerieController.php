@@ -194,7 +194,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function getEscolasSerieBySerie($serieId)
     {
-        $objEscolaSerie = new clsPmieducarEscolaSerie();
+        $objEscolaSerie = new clsPmieducarEscolaSerie;
         $escolasDaSerie = $objEscolaSerie->lista(null, $serieId);
 
         if ($escolasDaSerie) {
@@ -206,7 +206,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function getTurmasDaSerieNoAnoLetivoAtual($serieId)
     {
-        $objTurmas = new clsPmieducarTurma();
+        $objTurmas = new clsPmieducarTurma;
         $turmasDaSerie = $objTurmas->lista(null, null, null, $serieId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->getUltimoAnoLetivoAberto());
 
         if ($turmasDaSerie) {
@@ -229,7 +229,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function excluiComponenteDaTurma($componenteId, $turmaId)
     {
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+        $mapper = new ComponenteCurricular_Model_TurmaDataMapper;
         $where = ['componente_curricular_id' => $componenteId, 'turma_id' => $turmaId];
         $componente = $mapper->findAll(['componente_curricular_id', 'turma_id'], $where, [], false);
 
@@ -288,7 +288,7 @@ class ComponentesSerieController extends ApiCoreController
     public function excluiTodosComponenteDaTurma($serieId)
     {
         $turmas = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+        $mapper = new ComponenteCurricular_Model_TurmaDataMapper;
 
         if ($turmas) {
             foreach ($turmas as $turma) {

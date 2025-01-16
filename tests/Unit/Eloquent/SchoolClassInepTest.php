@@ -17,7 +17,7 @@ class SchoolClassInepTest extends EloquentTestCase
         return SchoolClassInep::class;
     }
 
-    public function testNumberAttribute(): void
+    public function test_number_attribute(): void
     {
         $this->assertEquals($this->model->cod_turma_inep, $this->model->number);
     }

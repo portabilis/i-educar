@@ -111,25 +111,25 @@ class StudentEloquentBuilder extends Builder
      */
     public function mother($columns): self
     {
-        //pessoa
+        // pessoa
         if ($only = $this->model->getLegacyExportedColumns('mother.person', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.pessoa as m', 'exporter_student_grouped_registration.mother_id', 'm.idpes');
         }
 
-        //fisica
+        // fisica
         if ($only = $this->model->getLegacyExportedColumns('mother.individual', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.fisica as mf', 'exporter_student_grouped_registration.mother_id', 'mf.idpes');
         }
 
-        //documento
+        // documento
         if ($only = $this->model->getLegacyExportedColumns('mother.document', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.documento as md', 'exporter_student_grouped_registration.mother_id', 'md.idpes');
         }
 
-        //telefone
+        // telefone
         if ($only = $this->model->getLegacyExportedColumns('mother.phone', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('exporter_phones as mep', 'exporter_student_grouped_registration.mother_id', 'mep.person_id');
@@ -143,25 +143,25 @@ class StudentEloquentBuilder extends Builder
      */
     public function father($columns): self
     {
-        //pessoa
+        // pessoa
         if ($only = $this->model->getLegacyExportedColumns('father.person', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.pessoa as f', 'exporter_student_grouped_registration.father_id', 'f.idpes');
         }
 
-        //fisica
+        // fisica
         if ($only = $this->model->getLegacyExportedColumns('father.individual', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.fisica as ff', 'exporter_student_grouped_registration.father_id', 'ff.idpes');
         }
 
-        //documento
+        // documento
         if ($only = $this->model->getLegacyExportedColumns('father.document', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.documento as fd', 'exporter_student_grouped_registration.father_id', 'fd.idpes');
         }
 
-        //telefone
+        // telefone
         if ($only = $this->model->getLegacyExportedColumns('father.phone', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('exporter_phones as fep', 'exporter_student_grouped_registration.father_id', 'fep.person_id');
@@ -175,25 +175,25 @@ class StudentEloquentBuilder extends Builder
      */
     public function guardian($columns): self
     {
-        //pessoa
+        // pessoa
         if ($only = $this->model->getLegacyExportedColumns('guardian.person', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.pessoa as g', 'exporter_student_grouped_registration.guardian_id', 'g.idpes');
         }
 
-        //fisica
+        // fisica
         if ($only = $this->model->getLegacyExportedColumns('guardian.individual', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.fisica as gf', 'exporter_student_grouped_registration.guardian_id', 'gf.idpes');
         }
 
-        //documento
+        // documento
         if ($only = $this->model->getLegacyExportedColumns('guardian.document', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.documento as gd', 'exporter_student_grouped_registration.guardian_id', 'gd.idpes');
         }
 
-        //telefone
+        // telefone
         if ($only = $this->model->getLegacyExportedColumns('guardian.phone', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('exporter_phones as gep', 'exporter_student_grouped_registration.guardian_id', 'gep.person_id');

@@ -17,7 +17,7 @@ class LegacyIndividualEndpointTestCreate extends TestCase
     use DatabaseTransactions;
     use LoginFirstUser;
 
-    public function testCreateEndpoint(): void
+    public function test_create_endpoint(): void
     {
         $this->loginWithFirstUser();
         $faker = Factory::create();

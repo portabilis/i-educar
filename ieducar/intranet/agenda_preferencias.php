@@ -41,8 +41,8 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $db = new clsBanco();
-        $db2 = new clsBanco();
+        $db = new clsBanco;
+        $db2 = new clsBanco;
 
         $objAgenda = new clsAgenda(int_cod_editor: $this->pessoa_logada, int_cod_pessoa_dono: $this->pessoa_logada);
         $this->cod_agenda = $objAgenda->getCodAgenda();
@@ -83,7 +83,7 @@ return new class extends clsCadastro
         $this->cod_agenda = $objAgenda->getCodAgenda();
 
         $set = '';
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric(value: $this->envia_alerta)) {
             $set .= ", envia_alerta = '{$this->envia_alerta}'";

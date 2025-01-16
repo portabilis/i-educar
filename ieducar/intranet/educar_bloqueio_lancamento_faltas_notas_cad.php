@@ -24,7 +24,7 @@ return new class extends clsCadastro
 
         $this->cod_bloqueio = $_GET['cod_bloqueio'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 999848,
             int_idpes_usuario: $this->pessoa_logada,
@@ -43,7 +43,7 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
@@ -112,7 +112,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_bloqueio_lancamento_faltas_notas_lst.php');
 
         $array_escolas = array_filter(array: $this->escola);
@@ -136,7 +136,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_bloqueio_lancamento_faltas_notas_lst.php');
 
         $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(
@@ -161,7 +161,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 999848, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_bloqueio_lancamento_faltas_notas_lst.php');
 
         $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(cod_bloqueio: $this->cod_bloqueio);

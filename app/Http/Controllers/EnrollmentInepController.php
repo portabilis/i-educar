@@ -14,7 +14,7 @@ class EnrollmentInepController extends Controller
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->menu(578); //dd($enrollment->toArray());
+        $this->menu(578); // dd($enrollment->toArray());
 
         return view('enrollments.enrollmentInep', compact('enrollment'));
     }

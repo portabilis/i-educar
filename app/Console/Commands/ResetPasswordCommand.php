@@ -39,7 +39,7 @@ class ResetPasswordCommand extends Command
     {
         $username = $this->argument('username');
 
-        $output = new NullOutput();
+        $output = new NullOutput;
         $service = new ImportUsersService($output);
 
         $newPassword = Str::random(8);

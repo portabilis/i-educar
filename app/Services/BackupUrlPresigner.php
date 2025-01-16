@@ -10,7 +10,7 @@ class BackupUrlPresigner
     {
         switch (config('filesystems.cloud')) {
             case 's3':
-                return (new S3BackupUrlPresigner())->getPresignedUrl($url);
+                return (new S3BackupUrlPresigner)->getPresignedUrl($url);
             default:
                 throw new Exception('Method BackupUrlPresigner::getPresignedUrl() not implemented for cloud filesystem: ' . config('filesystems.cloud'));
         }

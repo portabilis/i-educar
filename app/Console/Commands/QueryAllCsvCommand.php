@@ -47,7 +47,7 @@ class QueryAllCsvCommand extends Command
                 $connectionData = DB::connection($connection)->select($file);
 
                 if (!empty($connectionData) && empty($header)) {
-                    $header = array_merge(['conexao'], array_keys((array)$connectionData[0]));
+                    $header = array_merge(['conexao'], array_keys((array) $connectionData[0]));
                 }
                 $data[$connection] = $connectionData;
             } catch (Exception) {

@@ -11,28 +11,28 @@ use Tests\TestCase;
 
 class ValueTurmaMaisEducacaoTest extends TestCase
 {
-    public function testTurmaNaoPresencialValueNull()
+    public function test_turma_nao_presencial_value_null()
     {
         $value = $this->getValueObject();
         $value->setTipoMediacao(2);
         $this->assertNull($value->getValue());
     }
 
-    public function testDependenciaAdministrativaInvalidoValueNull()
+    public function test_dependencia_administrativa_invalido_value_null()
     {
         $value = $this->getValueObject();
         $value->setDependenciaAdministrativa(1);
         $this->assertNull($value->getValue());
     }
 
-    public function testTipoAtendimentoInvalidoValueNull()
+    public function test_tipo_atendimento_invalido_value_null()
     {
         $value = $this->getValueObject();
         $value->setTipoAtendimento(TipoAtendimentoTurma::CLASSE_HOSPITALAR);
         $this->assertNull($value->getValue());
     }
 
-    public function testTipoAtendimentoValidoModalidadeInvalidaValueNull()
+    public function test_tipo_atendimento_valido_modalidade_invalida_value_null()
     {
         $value = $this->getValueObject();
         $value->setTipoAtendimento(3);
@@ -40,7 +40,7 @@ class ValueTurmaMaisEducacaoTest extends TestCase
         $this->assertNull($value->getValue());
     }
 
-    public function testTipoAtendimentoValidoModalidadeValidaEtapaEnsinoInvalidaValueNull()
+    public function test_tipo_atendimento_valido_modalidade_valida_etapa_ensino_invalida_value_null()
     {
         $value = $this->getValueObject();
         $value->setTipoAtendimento(3);
@@ -48,7 +48,7 @@ class ValueTurmaMaisEducacaoTest extends TestCase
         $this->assertNull($value->getValue());
     }
 
-    public function testValueNaoNulo()
+    public function test_value_nao_nulo()
     {
         $value = $this->getValueObject();
         $this->assertEquals(1, $value->getValue());
@@ -62,7 +62,7 @@ class ValueTurmaMaisEducacaoTest extends TestCase
      */
     private function getValueObject()
     {
-        $valueObject = new ValueTurmaMaisEducacao();
+        $valueObject = new ValueTurmaMaisEducacao;
         $valueObject->setDependenciaAdministrativa(DependenciaAdministrativaEscola::MUNICIPAL);
         $valueObject->setTipoAtendimento(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR);
         $valueObject->setModalidade(1);

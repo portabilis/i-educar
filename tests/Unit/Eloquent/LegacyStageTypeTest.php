@@ -34,14 +34,14 @@ class LegacyStageTypeTest extends EloquentTestCase
         $this->assertEquals($expected, $this->model->descricao);
     }
 
-    public function testScopeActive(): void
+    public function test_scope_active(): void
     {
         LegacyStageTypeFactory::new()->create(['ativo' => 0]);
         $found = $this->instanceNewEloquentModel()->active()->get();
         $this->assertCount(1, $found);
     }
 
-    public function testAlreadyExists(): void
+    public function test_already_exists(): void
     {
         $id = 1;
         $name = $this->model->nm_tipo;

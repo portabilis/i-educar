@@ -73,7 +73,7 @@ class ExemptionService
 
         if ($objetoDispensa->existe()) {
             $exemption = LegacyDisciplineExemption::findOrFail($objetoDispensa->detalhe()['cod_dispensa']);
-            $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
+            $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa;
             $objDispensaEtapa->excluirTodos($exemption->getKey());
             $objetoDispensa->edita();
             $this->cadastraEtapasDaDispensa($exemption, $stages);
@@ -85,7 +85,7 @@ class ExemptionService
 
         $codigoDispensa = $objetoDispensa->cadastra();
         if (!$codigoDispensa) {
-            throw new Exception();
+            throw new Exception;
         }
 
         $exemption = LegacyDisciplineExemption::findOrFail($codigoDispensa);
@@ -157,7 +157,7 @@ class ExemptionService
             return false;
         }
 
-        $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
+        $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper;
         $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
 
         if (empty($notaAluno)) {
@@ -165,7 +165,7 @@ class ExemptionService
         }
 
         $notaAluno = $notaAluno[0]->id;
-        $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper();
+        $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper;
         $notaComponenteCurricular = $notaComponenteCurricularMapper->findAll([], [
             'nota_aluno_id' => $notaAluno,
             'componente_curricular_id' => $disciplinaId,
@@ -185,14 +185,14 @@ class ExemptionService
             return false;
         }
 
-        $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper();
+        $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper;
         $faltaAluno = $faltaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
         if (empty($faltaAluno)) {
             return false;
         }
 
         $faltaAluno = $faltaAluno[0]->id;
-        $faltaComponenteCurricularMapper = new Avaliacao_Model_FaltaComponenteDataMapper();
+        $faltaComponenteCurricularMapper = new Avaliacao_Model_FaltaComponenteDataMapper;
         $faltaComponenteCurricular = $faltaComponenteCurricularMapper->findAll([], [
             'falta_aluno_id' => $faltaAluno,
             'componente_curricular_id' => $disciplinaId,

@@ -39,10 +39,10 @@ if ($desabilitado) {
     $turma_desabilitado = isset($turma_desabilitado) ? $turma_desabilitado : false;
 }
 
-$obj_permissoes = new clsPermissoes();
+$obj_permissoes = new clsPermissoes;
 $nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 
-//Se administrador
+// Se administrador
 if ($nivel_usuario == 1 || $cad_usuario) {
     $opcoes = Cache::remember('select_instituicao', now()->addMinutes(180), function () use ($get_select_name_full) {
         return LegacyInstitution::query()
@@ -73,13 +73,13 @@ if ($nivel_usuario == 1 || $cad_usuario) {
     } else {
         $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, '', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     }
-} //se nao eh administrador
+} // se nao eh administrador
 elseif ($nivel_usuario != 1) {
     $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
     $det_usuario = $obj_usuario->detalhe();
     $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
     $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-    //se eh institucional - admin
+    // se eh institucional - admin
     if ($nivel_usuario == 4 || $nivel_usuario == 8) {
         $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
         $det_usuario = $obj_usuario->detalhe();
@@ -92,7 +92,7 @@ elseif ($nivel_usuario != 1) {
             $this->campoRotulo('nm_escola', 'Escola', $nm_escola);
         }
         if ($get_biblioteca) {
-            $obj_per = new clsPermissoes();
+            $obj_per = new clsPermissoes;
             $ref_cod_biblioteca_ = $obj_per->getBiblioteca($pessoa_logada);
         }
     }
@@ -109,7 +109,7 @@ if ($get_curso) {
 
     // EDITAR
     if ($this->ref_cod_escola) {
-        $obj_escola_curso = new clsPmieducarEscolaCurso();
+        $obj_escola_curso = new clsPmieducarEscolaCurso;
 
         $lst_escola_curso = \App\Models\LegacyCourse::query()
             ->active()
@@ -142,7 +142,7 @@ if ($get_escola_curso_serie) {
     $opcoes_series_curso_escola = ['' => 'Selecione'];
     // EDITAR
     if ($this->ref_cod_escola && $this->ref_cod_curso) {
-        $obj_escola_serie = new clsPmieducarEscolaSerie();
+        $obj_escola_serie = new clsPmieducarEscolaSerie;
         $obj_escola_serie->setOrderby('nm_serie ASC');
         $lst_escola_serie = $obj_escola_serie->lista($this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, $this->ref_cod_curso);
         if (is_array($lst_escola_serie) && count($lst_escola_serie)) {
@@ -158,7 +158,7 @@ if ($get_serie) {
     $opcoes_serie = ['' => 'Selecione'];
     // EDITAR
     if ($this->ref_cod_curso) {
-        $obj_serie = new clsPmieducarSerie();
+        $obj_serie = new clsPmieducarSerie;
         $obj_serie->setOrderby('nm_serie ASC');
         $lst_serie = $obj_serie->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
         if (is_array($lst_serie) && count($lst_serie)) {
@@ -198,7 +198,7 @@ if ($get_biblioteca && class_exists(clsPmieducarBiblioteca::class)) {
             $opcoes_biblioteca = ['' => 'Selecione'];
             // EDITAR
             if ($this->ref_cod_escola || $this->ref_cod_instituicao) {
-                $objTemp = new clsPmieducarBiblioteca();
+                $objTemp = new clsPmieducarBiblioteca;
                 $objTemp->setOrderby('nm_biblioteca ASC');
                 $lista = $objTemp->lista(null, $this->ref_cod_instituicao, null, null, null, null, null, null, null, null, null, null, 1);
 
@@ -221,7 +221,7 @@ if ($get_biblioteca && class_exists(clsPmieducarBiblioteca::class)) {
 if ($get_cliente_tipo && class_exists(clsPmieducarClienteTipo::class)) {
     $opcoes_cli_tpo = ['' => 'Selecione'];
     if ($this->ref_cod_biblioteca) {
-        $obj_cli_tpo = new clsPmieducarClienteTipo();
+        $obj_cli_tpo = new clsPmieducarClienteTipo;
         $obj_cli_tpo->setOrderby('nm_tipo ASC');
         $lst_cli_tpo = $obj_cli_tpo->lista(null, $this->ref_cod_biblioteca, null, null, null, null, null, null, null, null, 1);
         if (is_array($lst_cli_tpo) && count($lst_cli_tpo)) {
@@ -250,7 +250,7 @@ if ($get_turma) {
     $opcoes_turma = ['' => 'Selecione'];
     // EDITAR
     if (($this->ref_ref_cod_serie && $this->ref_cod_escola) || $this->ref_cod_curso) {
-        $obj_turma = new clsPmieducarTurma();
+        $obj_turma = new clsPmieducarTurma;
         $obj_turma->setOrderby('nm_turma ASC');
         $lst_turma = $obj_turma->lista(null, null, null, $this->ref_ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso);
         if (is_array($lst_turma) && count($lst_turma)) {
@@ -395,7 +395,7 @@ function getDuploEscolaCurso() {
 }
 <?php
 }
-//if ( $get_escola_curso )
+// if ( $get_escola_curso )
 if ($get_curso) {
     ?>
 function getEscolaCurso() {

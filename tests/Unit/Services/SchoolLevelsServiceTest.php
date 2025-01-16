@@ -19,7 +19,7 @@ class SchoolLevelsServiceTest extends TestCase
      */
     private $service;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->service = app(SchoolLevelsService::class);
@@ -28,13 +28,13 @@ class SchoolLevelsServiceTest extends TestCase
         LegacyEvaluationRule::query()->truncate();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->enableForeignKeys();
         parent::tearDown();
     }
 
-    public function testRetornaRegrasAvaliacao()
+    public function test_retorna_regras_avaliacao()
     {
         $regraAvaliacaoFake = LegacyEvaluationRuleFactory::new()->create();
         /** @var LegacyGrade $level */
@@ -48,14 +48,14 @@ class SchoolLevelsServiceTest extends TestCase
         $this->assertEquals($regraAvaliacaoFake->all(), $evaluationRules->first()->all());
     }
 
-    public function testSemRegrasDeveRetornarVazio()
+    public function test_sem_regras_deve_retornar_vazio()
     {
         $level = LegacyGradeFactory::new()->create();
         $evaluationRules = $this->service->getEvaluationRules($level->cod_serie);
         $this->assertEmpty($evaluationRules);
     }
 
-    public function testSemRegraAvaliacaoDeveRetornarFalse()
+    public function test_sem_regra_avaliacao_deve_retornar_false()
     {
         $result = $this->service->levelAllowDefineDisciplinePerStage(null, 2019);
         $this->assertFalse($result);
@@ -73,7 +73,7 @@ class SchoolLevelsServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testRegraAvaliacaoPermiteDefinirComponentesEtapa()
+    public function test_regra_avaliacao_permite_definir_componentes_etapa()
     {
         $level = LegacyGradeFactory::new()->create();
         $regraAvaliacaoFake = LegacyEvaluationRuleFactory::new()->create([

@@ -140,7 +140,7 @@ class relatoriosPref
             $this->qtd_pagina++;
         }
 
-        //Verifica se é o fim da página
+        // Verifica se é o fim da página
         if ($this->altura + $altura > ($this->pdf->altura * 0.80) || $this->qtd_pagina > 2 && $lembretes == false) {
             $this->fillText();
             //  if($this->altura == 0 || $this->qtd_pagina >2)
@@ -209,7 +209,7 @@ class relatoriosPref
                 $this->pdf->Write("$lembrete", 300, 842, 250, 80, 'Arial', 8, '#000000', 'left');
             }
 
-            //print_r($lembrete);
+            // print_r($lembrete);
         }
         $this->texto = '';
         $this->lembretes = '';

@@ -122,7 +122,7 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
         );
     }
 
-    public function testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
+    public function test_salvas_pareceres_atualizando_etapa_da_ultima_instancia_adicionada_no_boletim_com_etapas_lancadas()
     {
         $this->markTestSkipped();
     }

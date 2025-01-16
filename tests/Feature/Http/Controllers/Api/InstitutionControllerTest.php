@@ -23,7 +23,7 @@ class InstitutionControllerTest extends ResourceTestCase
         GET('/api/institution', ['Institution'], 'Get all institutions'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'Institution')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $response = $this->get($this->getUri());
         $response->assertOk();

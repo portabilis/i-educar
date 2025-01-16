@@ -125,7 +125,7 @@ return new class extends clsDetalhe
             ]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = "educar_distribuicao_uniforme_cad.php?ref_cod_aluno={$uniformDistribution->student_id}";

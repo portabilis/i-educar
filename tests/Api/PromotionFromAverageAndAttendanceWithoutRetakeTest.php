@@ -17,13 +17,13 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
      */
     private $enrollment;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
     }
 
-    public function testAproveAfterAllScoreAndAbsencePosted()
+    public function test_aprove_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -58,7 +58,7 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
         self::assertEquals(1, $registration->refresh()->aprovado);
     }
 
-    public function testFailureAfterAllScoreAndAbsencePosted()
+    public function test_failure_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -93,7 +93,7 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
         self::assertEquals(2, $registration->refresh()->aprovado);
     }
 
-    public function testFailureForNonAttendanceAfterAllScoreAndAbsencePosted()
+    public function test_failure_for_non_attendance_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -128,7 +128,7 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
         self::assertEquals(14, $registration->refresh()->aprovado);
     }
 
-    public function testReturnsToStudyingAfterRemoveScoreInLastStage()
+    public function test_returns_to_studying_after_remove_score_in_last_stage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -170,7 +170,7 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
         self::assertEquals(3, $registration->refresh()->aprovado);
     }
 
-    public function testRemoveScoreWhenNotLastStage()
+    public function test_remove_score_when_not_last_stage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -212,7 +212,7 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
         self::assertEquals(1, $registration->refresh()->aprovado);
     }
 
-    public function testReturnsToStudyingAfterRemoveAbsenceInLastStage()
+    public function test_returns_to_studying_after_remove_absence_in_last_stage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -254,7 +254,7 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
         self::assertEquals(3, $registration->refresh()->aprovado);
     }
 
-    public function testRemoveAbsenceWhenNotIsLastStage()
+    public function test_remove_absence_when_not_is_last_stage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;

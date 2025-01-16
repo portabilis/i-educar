@@ -65,7 +65,7 @@ return new class extends clsListagem
         $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
         $this->inputsHelper()->dynamic('anoLetivo', ['required' => false, 'show-select' => true, 'value' => $this->ano_letivo]);
 
-        $parametros = new clsParametrosPesquisas();
+        $parametros = new clsParametrosPesquisas;
         $parametros->setSubmit(0);
 
         // Paginador
@@ -73,7 +73,7 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
             $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_servidor_alocacao = new clsPmieducarServidorAlocacao();
+        $obj_servidor_alocacao = new clsPmieducarServidorAlocacao;
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $obj_servidor_alocacao->codUsuario = $this->pessoa_logada;
@@ -120,25 +120,25 @@ return new class extends clsListagem
                         'cod_servidor_alocacao' => $registro['cod_servidor_alocacao'],
                     ]];
 
-                //Escola
+                // Escola
                 $escola = new clsPmieducarEscola($registro['ref_cod_escola']);
                 $escola = $escola->detalhe();
 
-                //Periodo
+                // Periodo
                 $periodo = [
                     1 => 'Matutino',
                     2 => 'Vespertino',
                     3 => 'Noturno',
                 ];
 
-                //Função
+                // Função
                 $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $registro['ref_cod_servidor_funcao']);
                 $funcaoServidor = $funcaoServidor->detalhe();
 
                 $funcao = LegacyRole::find($funcaoServidor['ref_cod_funcao'])?->getAttributes();
 
-                //Vinculo
-                $funcionarioVinculo = new clsPortalFuncionario();
+                // Vinculo
+                $funcionarioVinculo = new clsPortalFuncionario;
                 $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
 
                 $this->addLinhas([
@@ -156,7 +156,7 @@ return new class extends clsListagem
 
         $this->addPaginador2('educar_servidor_alocacao_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $this->array_botao = [];
         $this->array_botao_url = [];

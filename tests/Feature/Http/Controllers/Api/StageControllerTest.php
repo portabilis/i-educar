@@ -33,7 +33,7 @@ class StageControllerTest extends TestCase
         GET('/api/stage', ['Stages'], 'Get all stages'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'Stage')
     ]
-    public function testIsStandardCalendar(): void
+    public function test_is_standard_calendar(): void
     {
         $school = LegacySchoolFactory::new()->create();
         $grade = LegacyGradeFactory::new()->create();
@@ -61,7 +61,7 @@ class StageControllerTest extends TestCase
         $response->assertJson($expected);
     }
 
-    public function testIsNotStandardCalendar(): void
+    public function test_is_not_standard_calendar(): void
     {
         $school = LegacySchoolFactory::new()->create();
         $grade = LegacyGradeFactory::new()->create();

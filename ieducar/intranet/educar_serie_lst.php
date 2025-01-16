@@ -50,7 +50,7 @@ return new class extends clsListagem
             'Curso',
         ];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if ($nivel_usuario == 1) {
@@ -69,7 +69,7 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = $_GET["pagina_{$this->nome}"] ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_serie = new clsPmieducarSerie();
+        $obj_serie = new clsPmieducarSerie;
         $obj_serie->setOrderby('nm_serie ASC');
         $obj_serie->setLimite($this->limite, $this->offset);
 

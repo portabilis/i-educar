@@ -71,7 +71,7 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
         $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_vinculo = new clsModulesProfessorTurma();
+        $obj_vinculo = new clsModulesProfessorTurma;
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
             $obj_vinculo->codUsuario = $this->pessoa_logada;
@@ -120,7 +120,7 @@ return new class extends clsListagem
         }
 
         $this->addPaginador2(strUrl: 'educar_servidor_vinculo_turma_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao[] = [

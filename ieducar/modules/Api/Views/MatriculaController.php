@@ -491,7 +491,7 @@ class MatriculaController extends ApiCoreController
     protected function getFrequencia()
     {
         $cod_matricula = $this->getRequest()->id;
-        $objBanco = new clsBanco();
+        $objBanco = new clsBanco;
         $frequencia = $objBanco->unicoCampo(" SELECT modules.frequencia_da_matricula({$cod_matricula}); ");
 
         return ['frequencia' => $frequencia];
@@ -560,12 +560,12 @@ class MatriculaController extends ApiCoreController
                 ]
             );
 
-            $promocaoApi = new PromocaoApiController();
+            $promocaoApi = new PromocaoApiController;
 
             $promocaoApi->setRequest($fakeRequest);
             $promocaoApi->Gerar();
 
-            //Desfaz a busca ativa como abandono
+            // Desfaz a busca ativa como abandono
             LegacyActiveLooking::query()
                 ->where('ref_cod_matricula', $matriculaId)
                 ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT)
@@ -670,7 +670,7 @@ class MatriculaController extends ApiCoreController
             $situacaoAntiga = $matricula->aprovado;
             $situacaoNova = $this->getRequest()->nova_situacao;
 
-            $enturmacoes = new clsPmieducarMatriculaTurma();
+            $enturmacoes = new clsPmieducarMatriculaTurma;
             $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1);
 
             if (
@@ -706,11 +706,11 @@ class MatriculaController extends ApiCoreController
                     }
                 }
 
-                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper)
                     ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0];
 
                 if (!is_null($notaAluno)) {
-                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper)
                         ->updateSituation($notaAluno->get('id'), $situacaoNova);
                 }
             } elseif (
@@ -721,7 +721,7 @@ class MatriculaController extends ApiCoreController
                 $situacaoNova == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
                 $situacaoNova == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS
             ) {
-                $matriculaTurma = new clsPmieducarMatriculaTurma();
+                $matriculaTurma = new clsPmieducarMatriculaTurma;
                 $enturmacoesParaAtivar = $matriculaTurma->lista($matriculaId);
                 if (!empty($enturmacoesParaAtivar)) {
                     $params = [$matriculaId];
@@ -749,7 +749,7 @@ class MatriculaController extends ApiCoreController
 
     protected function alteraFalecimentoPessoa($codAluno)
     {
-        $matriculas = new clsPmieducarMatricula();
+        $matriculas = new clsPmieducarMatricula;
 
         $matriculas = $matriculas->lista(
             null,

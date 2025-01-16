@@ -7,12 +7,12 @@ use Tests\ViewTestCase;
 
 class StageTest extends ViewTestCase
 {
-    public function testFindUsingEloquent(): void
+    public function test_find_using_eloquent(): void
     {
         $this->assertTrue(true);
     }
 
-    public function testPerson(): void
+    public function test_person(): void
     {
         $found = Stage::query()->get();
         $this->assertCount(1, $found);
@@ -20,23 +20,23 @@ class StageTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }
 
-    public function testGetAlias(): void
+    public function test_get_alias(): void
     {
         $aliases = collect($this->model->getExportedColumnsByGroup())->flatMap(fn ($item) => $item);
         $this->assertEquals('Escola', $aliases->get('school_name'));
     }
 
-    public function testGetLabel(): void
+    public function test_get_label(): void
     {
         $this->assertEquals('Calendário letivo', $this->model->getLabel());
     }
 
-    public function testGetDescription(): void
+    public function test_get_description(): void
     {
         $this->assertEquals('Exportação de todos os calendários letivos do ano filtrado para identificação das datas de início e fim das etapas e existência de lançamentos.', $this->model->getDescription());
     }
 
-    public function testGetExportedColumnsByGroup(): void
+    public function test_get_exported_columns_by_group(): void
     {
         $expected = [
             'Etapas' => [

@@ -57,7 +57,7 @@ class clsPortalAcesso extends Model
     public function cadastra()
     {
         if (is_string($this->data_hora) && is_string($this->ip_externo) && is_string($this->ip_interno) && is_numeric($this->cod_pessoa) && !is_null($this->sucesso)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -114,7 +114,7 @@ class clsPortalAcesso extends Model
     public function edita()
     {
         if (is_numeric($this->cod_acesso)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -199,7 +199,7 @@ class clsPortalAcesso extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -302,7 +302,7 @@ SELECT falha, cod_pessoa, ultimo_sucesso, quinto_erro FROM
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -343,7 +343,7 @@ SELECT COUNT(0) FROM (
     public function detalhe()
     {
         if (is_numeric($this->cod_acesso)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_acesso = '{$this->cod_acesso}'");
             $db->ProximoRegistro();
 
@@ -361,7 +361,7 @@ SELECT COUNT(0) FROM (
     public function existe()
     {
         if (is_numeric($this->cod_acesso)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_acesso = '{$this->cod_acesso}'");
             $db->ProximoRegistro();
 

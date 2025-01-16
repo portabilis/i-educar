@@ -36,7 +36,7 @@ class clsModulesComponenteCurricular extends Model
      */
     public function lista($instituicao_id = null, $nome = null, $abreviatura = null, $tipo_base = null, $area_conhecimento_id = null)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $sql = "SELECT {$this->_campos_lista}, ac.nome as area_conhecimento
               FROM {$this->_tabela} cc
@@ -118,7 +118,7 @@ class clsModulesComponenteCurricular extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 

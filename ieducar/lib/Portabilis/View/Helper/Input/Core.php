@@ -112,7 +112,7 @@ class Portabilis_View_Helper_Input_Core
 
     protected function getDataMapperFor($packageName, $modelName)
     {
-        return (new Portabilis_DataMapper_Utils())->getDataMapperFor($packageName, $modelName);
+        return (new Portabilis_DataMapper_Utils)->getDataMapperFor($packageName, $modelName);
     }
 
     protected static function mergeOptions($options, $defaultOptions)

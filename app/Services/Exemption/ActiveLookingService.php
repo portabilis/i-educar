@@ -16,7 +16,7 @@ class ActiveLookingService
                 'active_looking' => $activeLooking,
             ],
             ],
-            ['active_looking' => new CanStoreActiveLooking()]
+            ['active_looking' => new CanStoreActiveLooking]
         )->validate();
 
         $activeLooking->save();

@@ -32,7 +32,7 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $this->loginWithFirstUser();
     }
 
-    public function testUnificationPersonSuccessful(): void
+    public function test_unification_person_successful(): void
     {
         $individual = LegacyIndividualFactory::new()->create();
         $individualSecondary = LegacyIndividualFactory::new()->create();

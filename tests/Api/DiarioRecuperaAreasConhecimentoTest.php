@@ -11,7 +11,7 @@ class DiarioRecuperaAreasConhecimentoTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaAreasConhecimento()
+    public function test_recupera_areas_conhecimento()
     {
         $knowledgeArea = LegacyKnowledgeAreaFactory::new()->create();
         $knowledgeArea->refresh();

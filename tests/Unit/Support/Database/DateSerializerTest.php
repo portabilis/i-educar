@@ -12,7 +12,7 @@ class DateSerializerTest extends TestCase
 
     private $instance;
 
-    public function testTrait(): void
+    public function test_trait(): void
     {
         $expect = '2022-01-01 23:01:00';
 

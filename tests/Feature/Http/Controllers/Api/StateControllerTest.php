@@ -32,7 +32,7 @@ class StateControllerTest extends ResourceTestCase
         GET('/api/state', ['State'], 'Get all states'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'State')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $this->index();
     }
@@ -45,7 +45,7 @@ class StateControllerTest extends ResourceTestCase
         Property(Type::INT, 'ibge_code', 'IBGE code of the state', 12345),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'State'),
     ]
-    public function testStore(): void
+    public function test_store(): void
     {
         $this->store();
     }
@@ -55,7 +55,7 @@ class StateControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, ref: 'State')
     ]
-    public function testShow(): void
+    public function test_show(): void
     {
         $this->show();
     }
@@ -69,7 +69,7 @@ class StateControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'State'),
     ]
-    public function testUpdate(): void
+    public function test_update(): void
     {
         $this->update();
     }
@@ -79,12 +79,12 @@ class StateControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'State'),
     ]
-    public function testDelete(): void
+    public function test_delete(): void
     {
         $this->destroy();
     }
 
-    public function testFailUpdateState()
+    public function test_fail_update_state()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
         $model = $this->createStateIntoBrasil();
@@ -97,7 +97,7 @@ class StateControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testFailCreateState()
+    public function test_fail_create_state()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
         $model = $this->makeStateIntoBrasil();
@@ -109,7 +109,7 @@ class StateControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testFailDestroyState()
+    public function test_fail_destroy_state()
     {
         $user = LegacyUserFactory::new()->institutional()->withAccess(754)->create();
         $this->actingAs($user);
@@ -124,15 +124,15 @@ class StateControllerTest extends ResourceTestCase
 
     private function createStateIntoBrasil(): State
     {
-        $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
+        $country = (new CountryFactory)->create(['id' => Country::BRASIL]);
 
-        return (new StateFactory())->create(['country_id' => $country]);
+        return (new StateFactory)->create(['country_id' => $country]);
     }
 
     private function makeStateIntoBrasil(): State
     {
-        $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
+        $country = (new CountryFactory)->create(['id' => Country::BRASIL]);
 
-        return (new StateFactory())->make(['country_id' => $country]);
+        return (new StateFactory)->make(['country_id' => $country]);
     }
 }

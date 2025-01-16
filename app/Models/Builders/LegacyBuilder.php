@@ -48,7 +48,7 @@ class LegacyBuilder extends Builder
         $columnsNotExcept = $columns;
         $columns = array_merge($columns, $this->except);
         $columns = $this->replaceAttribute($columns);
-        //original do laravel
+        // original do laravel
         $resource = $this->get($columns);
 
         return $this->mapResource($resource, $columnsNotExcept);
@@ -61,7 +61,7 @@ class LegacyBuilder extends Builder
     {
         return $resource->map(function (Model $item) use ($columnsNotExcept) {
             $resource = [];
-            //Trata colunas com alias do banco de dados
+            // Trata colunas com alias do banco de dados
             foreach ($columnsNotExcept as $key) {
                 if (Str::contains($key, ' as ')) {
                     [, $alias] = explode(' as ', $key);
@@ -70,7 +70,7 @@ class LegacyBuilder extends Builder
                     $resource[$key] = $item->{$key};
                 }
             }
-            //Trata colunas com alias adicionais
+            // Trata colunas com alias adicionais
             foreach ($this->additional as $key) {
                 if (Str::contains($key, ' as ')) {
                     [$key, $alias] = explode(' as ', $key);
@@ -125,7 +125,7 @@ class LegacyBuilder extends Builder
      */
     private function replaceAttribute(array $columns): array
     {
-        //parametro definido no model
+        // parametro definido no model
         if (!property_exists($this->getModel(), 'legacy')) {
             return $columns;
         }
@@ -211,9 +211,9 @@ class LegacyBuilder extends Builder
     public function whereFilter(string $filters): self
     {
         $filters = array_filter(explode('|', $filters));
-        $groupRelations = new Collection();
+        $groupRelations = new Collection;
         foreach ($filters as $filter) {
-            //relacionamentos
+            // relacionamentos
             if (str_contains($filter, '.')) {
                 $relation = substr($filter, 0, strrpos($filter, '.'));
                 $column = substr($filter, (strrpos($filter, '.') + 1));
@@ -222,7 +222,7 @@ class LegacyBuilder extends Builder
                 continue;
             }
 
-            //filtros
+            // filtros
             $data = array_filter(explode(',', $filter));
             $method = 'where' . $this->getFilterName($data[0]);
             if (method_exists($this, $method)) {
@@ -231,12 +231,12 @@ class LegacyBuilder extends Builder
                     $this->{$method}($data[1]);
                 }
             } else {
-                //normal
+                // normal
                 $this->where(...$data);
             }
         }
 
-        //execução agrupada dos relacionamentos
+        // execução agrupada dos relacionamentos
         foreach ($groupRelations->groupBy(0) as $groupRelation => $groupRows) {
             $this->whereHas($groupRelation, static function ($q) use ($groupRows) {
                 foreach ($groupRows as $groupRow) {

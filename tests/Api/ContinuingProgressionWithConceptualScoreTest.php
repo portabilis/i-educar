@@ -20,7 +20,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
      */
     private $enrollment;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->enrollment = $this->getContinuingProgressionWithConceptualScoreTest();
@@ -91,7 +91,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         return $enrollment;
     }
 
-    public function testContinuingProgressionAfterAllScoreAndAbsencePosted()
+    public function test_continuing_progression_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
@@ -121,7 +121,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 
-    public function testContinuingProgressionAfterAllInsufficientScoreAndAbsencePosted()
+    public function test_continuing_progression_after_all_insufficient_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
@@ -156,7 +156,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
      *
      * Após o lançamentos das notas, não deverá reprovar mesmo com número de presenças insuficiente
      */
-    public function testContinuingProgressionMoreThanAbsenceLimitAfterAllScoreAndAbsencePosted()
+    public function test_continuing_progression_more_than_absence_limit_after_all_score_and_absence_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
@@ -186,7 +186,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 
-    public function testContinuingProgressionAfterScoreAndAbsenceStagesPosted()
+    public function test_continuing_progression_after_score_and_absence_stages_posted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
@@ -212,7 +212,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
-    public function testContinuingProgressionAfterAbsenceRemoveInLastStagesReturnsToStudying()
+    public function test_continuing_progression_after_absence_remove_in_last_stages_returns_to_studying()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
@@ -248,7 +248,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
-    public function testContinuingProgressionAfterRemoveAbsenceWhenNotIsLastStagesReturnsToStudying()
+    public function test_continuing_progression_after_remove_absence_when_not_is_last_stages_returns_to_studying()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;

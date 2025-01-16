@@ -28,7 +28,7 @@ abstract class EloquentTestCase extends TestCase
 
     protected ?Closure $factoryModifier;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -89,7 +89,7 @@ abstract class EloquentTestCase extends TestCase
     {
         $model = $this->getEloquentModelName();
 
-        return new $model();
+        return new $model;
     }
 
     /**
@@ -115,7 +115,7 @@ abstract class EloquentTestCase extends TestCase
      *
      * @return void
      */
-    public function testCreateUsingEloquent()
+    public function test_create_using_eloquent()
     {
         $this->assertDatabaseHas($this->model->getTable(), $this->model->getAttributes());
     }
@@ -125,7 +125,7 @@ abstract class EloquentTestCase extends TestCase
      *
      * @return void
      */
-    public function testUpdateUsingEloquent()
+    public function test_update_using_eloquent()
     {
         $modelUpdated = clone $this->model;
 
@@ -152,7 +152,7 @@ abstract class EloquentTestCase extends TestCase
      *
      * @throws Exception
      */
-    public function testDeleteUsingEloquent()
+    public function test_delete_using_eloquent()
     {
         $this->assertDatabaseHas($this->model->getTable(), $this->model->getAttributes());
 
@@ -170,7 +170,7 @@ abstract class EloquentTestCase extends TestCase
      *
      * @return void
      */
-    public function testFindUsingEloquent()
+    public function test_find_using_eloquent()
     {
         $modelFound = $this->instanceNewEloquentModel()
             ->newQuery()
@@ -189,7 +189,7 @@ abstract class EloquentTestCase extends TestCase
      *
      * @return void
      */
-    public function testRelationships()
+    public function test_relationships()
     {
         if (empty($this->relations)) {
             $this->assertTrue(true);
@@ -242,7 +242,7 @@ abstract class EloquentTestCase extends TestCase
         return [];
     }
 
-    public function testHasLegacyAttributes()
+    public function test_has_legacy_attributes()
     {
         if (!empty($this->getLegacyAttributes()) && get_parent_class($this->getEloquentModelName()) === LegacyModel::class) {
             $this->assertEquals($this->createNewModel()->legacy, $this->getLegacyAttributes());

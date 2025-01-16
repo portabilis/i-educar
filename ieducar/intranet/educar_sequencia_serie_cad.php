@@ -45,7 +45,7 @@ return new class extends clsCadastro
 
         $this->id = $_GET['id'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
         if (is_numeric($this->id)) {
             $registro = LegacySequenceGrade::query()
@@ -85,7 +85,7 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->campoOculto('serie_origem_old', $this->ref_serie_origem);
@@ -93,7 +93,7 @@ return new class extends clsCadastro
         // foreign keys
         if ($nivel_usuario == 1) {
             $GLOBALS['nivel_usuario_fora'] = 1;
-            $objInstituicao = new clsPmieducarInstituicao();
+            $objInstituicao = new clsPmieducarInstituicao;
             $opcoes = ['' => 'Selecione'];
             $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
@@ -114,7 +114,7 @@ return new class extends clsCadastro
 
         // EDITAR
         if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarCurso();
+            $objTemp = new clsPmieducarCurso;
             $objTemp->setOrderby('nm_curso');
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
             if (is_array($lista) && count($lista)) {
@@ -134,7 +134,7 @@ return new class extends clsCadastro
         $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
-            $objTemp = new clsPmieducarSerie();
+            $objTemp = new clsPmieducarSerie;
             $objTemp->setOrderby('nm_serie ASC');
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
@@ -144,7 +144,7 @@ return new class extends clsCadastro
             }
         }
         if ($this->ref_curso_destino) {
-            $objTemp = new clsPmieducarSerie();
+            $objTemp = new clsPmieducarSerie;
             $objTemp->setOrderby('nm_serie ASC');
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
@@ -167,7 +167,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
         $det_sequencia = LegacySequenceGrade::query()
@@ -212,7 +212,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
         $obj = LegacySequenceGrade::query()
@@ -251,7 +251,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
         $obj = LegacySequenceGrade::query()
             ->find(request('id'));

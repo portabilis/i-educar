@@ -76,7 +76,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_quadro_horario) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_instituicao_servidor) && is_numeric($this->ref_servidor) && is_numeric($this->dia_semana) && ($this->hora_inicial) && ($this->hora_final)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -164,7 +164,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_quadro_horario) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
             if (is_numeric($this->ref_cod_disciplina)) {
@@ -291,7 +291,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -329,7 +329,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_quadro_horario) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_quadro_horario = '{$this->ref_cod_quadro_horario}' AND sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -347,7 +347,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_quadro_horario) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_quadro_horario = '{$this->ref_cod_quadro_horario}' AND sequencial = '{$this->sequencial}'");
             if ($db->ProximoRegistro()) {
                 return true;
@@ -365,7 +365,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public function excluiRegistro($ref_cod_quadro_horario, $ref_cod_serie, $ref_cod_escola, $ref_cod_disciplina, $ref_cod_instituicao_servidor, $ref_servidor, $identificador)
     {
         if (is_numeric($ref_cod_quadro_horario) && is_numeric($ref_cod_serie) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_instituicao_servidor) && is_numeric($ref_servidor) && is_numeric($identificador)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_quadro_horario = '{$ref_cod_quadro_horario}' AND ref_cod_serie = '$ref_cod_serie' AND ref_cod_escola = '$ref_cod_escola' AND ref_cod_disciplina = '$ref_cod_disciplina' AND ref_cod_instituicao_servidor = '$ref_cod_instituicao_servidor' AND ref_servidor = '$ref_servidor' AND identificador = '$identificador'");
 
             return true;
@@ -382,7 +382,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public function excluirTodos($identificador)
     {
         if (is_numeric($identificador)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE identificador = '{$identificador}'");
 
             return true;
@@ -398,7 +398,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
      */
     public function excluirRegistrosAntigos()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("DELETE FROM {$this->_tabela} WHERE data_cadastro < NOW() - interval '3 hours'");
 
         return true;

@@ -25,7 +25,7 @@ return new class extends clsListagem
     public function Gerar()
     {
         if (is_numeric($_GET['cod_pessoa_libera'])) {
-            $obj_acesso = new clsPortalAcesso();
+            $obj_acesso = new clsPortalAcesso;
             $obj_acesso->setCamposLista('cod_acesso');
             $obj_acesso->setLimite(1);
             $obj_acesso->setOrderby('data_hora DESC');
@@ -69,7 +69,7 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_acesso = new clsPortalAcesso();
+        $obj_acesso = new clsPortalAcesso;
         $obj_acesso->setOrderby('falha DESC');
         $obj_acesso->setLimite($this->limite, $this->offset);
 

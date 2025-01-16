@@ -17,8 +17,8 @@ trait LegacySoftDeletes
 
     public static function bootSoftDeletes(): void
     {
-        static::withoutGlobalScope(new SoftDeletingScope());
-        static::addGlobalScope(new LegacySoftDeletesScope());
+        static::withoutGlobalScope(new SoftDeletingScope);
+        static::addGlobalScope(new LegacySoftDeletesScope);
     }
 
     /**

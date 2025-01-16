@@ -38,7 +38,7 @@ class ComponenteCurricular_Model_AnoEscolar extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            $this->setDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper());
+            $this->setDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper);
         }
 
         return parent::getDataMapper();

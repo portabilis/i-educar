@@ -131,7 +131,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
             is_numeric($this->ref_cod_aluno) &&
             is_numeric($this->ref_cod_serie) &&
             is_numeric($this->ref_cod_pessoa_cad)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -240,7 +240,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
     public function edita()
     {
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
             $campos = '';
@@ -417,7 +417,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
             $filtros .= " {$whereAnd} crv.cod_candidato_reserva_vaga = {$protocolo}";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -460,7 +460,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos},
                                           resp_pes.nome as nome_responsavel,
                                           pes.nome as nome,
@@ -520,7 +520,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
             $filtros .= " {$whereAnd} ref_cod_escola <> {$ref_cod_escola} ";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
         $db->Consulta($sql);
 
@@ -535,7 +535,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
     public function existe()
     {
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
             $db->ProximoRegistro();
 
@@ -553,7 +553,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
 
             return true;
@@ -612,7 +612,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
                            historico = '{$historico}'
                      WHERE ref_cod_escola = '{$ref_cod_escola}'
                        AND ref_cod_aluno = '{$ref_cod_aluno}'";
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
             $db->ProximoRegistro();
 
@@ -634,7 +634,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
             $historico = $this->montaHistorico();
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
                                       SET situacao = 'N',
                                           motivo = $motivo,
@@ -669,7 +669,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         $historico = $this->montaHistorico();
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
                                   SET situacao = {$situacao},
                                       motivo = '{$motivo}',

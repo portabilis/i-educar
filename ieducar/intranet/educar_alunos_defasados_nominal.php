@@ -60,7 +60,7 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada) > 7) {
             $this->simpleRedirect(url: 'index.php');
         }
@@ -70,7 +70,7 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if ($_POST) {

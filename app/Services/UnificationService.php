@@ -8,7 +8,7 @@ class UnificationService
 {
     public function storeLogOldData($unificationId, $table, $keys, $oldData)
     {
-        $logData = new LogUnificationOldData();
+        $logData = new LogUnificationOldData;
         $logData->unification_id = $unificationId;
         $logData->table = $table;
         $logData->keys = json_encode([$keys]);

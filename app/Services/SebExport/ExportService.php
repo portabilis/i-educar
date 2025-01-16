@@ -64,6 +64,6 @@ class ExportService
 
     private function records(array $filters): Collection
     {
-        return (new ExportQuery())->query($filters)->get();
+        return (new ExportQuery)->query($filters)->get();
     }
 }

@@ -46,7 +46,7 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
      * Testa o service adicionando faltas de apenas um componente curricular,
      * para todas as etapas regulares (1 a 4).
      */
-    public function testSalvarFaltasNoBoletim()
+    public function test_salvar_faltas_no_boletim()
     {
         $this->markTestSkipped();
 
@@ -110,7 +110,7 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
      * Testa o service adicionando novas faltas para um componente curricular,
      * que inclusive já tem a falta lançada para a segunda etapa.
      */
-    public function testSalvasFaltasNoBoletimComEtapasLancadas()
+    public function test_salvas_faltas_no_boletim_com_etapas_lancadas()
     {
         $this->markTestSkipped();
 
@@ -167,7 +167,7 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
         $service->saveFaltas();
     }
 
-    public function testSalvasFaltasAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
+    public function test_salvas_faltas_atualizando_etapa_da_ultima_instancia_adicionada_no_boletim_com_etapas_lancadas()
     {
         $this->markTestSkipped();
 

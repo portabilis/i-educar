@@ -22,7 +22,7 @@ return new class extends clsCadastro
 
         $this->serie_id = $_GET['serie_id'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 9998859,
             int_idpes_usuario: $this->pessoa_logada,

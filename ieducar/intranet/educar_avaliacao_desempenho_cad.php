@@ -39,7 +39,7 @@ return new class extends clsCadastro
 
         $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_ref_cod_instituicao = $_GET['ref_ref_cod_instituicao'];
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
         if (request()->has('id')) {
@@ -78,7 +78,7 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
         $this->campoOculto(nome: 'ref_ref_cod_instituicao', valor: $this->ref_ref_cod_instituicao);
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             $obj_instituicao = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
@@ -98,10 +98,10 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
-        $performance = new PerformanceEvaluation();
+        $performance = new PerformanceEvaluation;
         $performance->employee_id = $this->ref_cod_servidor;
         $performance->institution_id = $this->ref_ref_cod_instituicao;
         $performance->title = $this->titulo_avaliacao;
@@ -138,7 +138,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
         $avaliacao = PerformanceEvaluation::find(request('id'));

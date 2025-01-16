@@ -20,7 +20,7 @@ class PhoneTest extends ViewTestCase
         return Phone::class;
     }
 
-    public function testGetFormattedNumberAttribute()
+    public function test_get_formatted_number_attribute()
     {
         $areaCode = $this->model->area_code;
         $number = $this->model->number;

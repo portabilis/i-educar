@@ -13,7 +13,7 @@ class DiarioRecuperaNomeECodigoAlunoTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testGetNomeCodigoAluno()
+    public function test_get_nome_codigo_aluno()
     {
         $student = LegacyStudentFactory::new()->create([
             'ref_idpes' => fn () => LegacyIndividualFactory::new()->create([

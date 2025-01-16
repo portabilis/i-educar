@@ -30,7 +30,7 @@ class DiarioGravaNotaTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testGravaNota()
+    public function test_grava_nota()
     {
         $school = LegacySchoolFactory::new()->create();
 

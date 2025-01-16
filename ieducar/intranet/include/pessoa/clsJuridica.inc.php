@@ -56,7 +56,7 @@ class clsJuridica
      */
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric($this->idpes) && is_numeric($this->idpes_cad)) {
             $campos = '';
@@ -104,7 +104,7 @@ class clsJuridica
      */
     public function edita()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric($this->idpes) && is_numeric($this->idpes_rev)) {
             $set = [];
@@ -157,7 +157,7 @@ class clsJuridica
     public function exclui()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $this->detalhe();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
 
@@ -246,7 +246,7 @@ class clsJuridica
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM cadastro.juridica j INNER JOIN cadastro.pessoa pessoa ON pessoa.idpes = j.idpes $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -272,13 +272,13 @@ class clsJuridica
     public function detalhe()
     {
         if ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idpes, cnpj, fantasia, insc_estadual, capital_social FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();
             }
         } elseif ($this->cnpj) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idpes, cnpj, fantasia, insc_estadual, capital_social FROM {$this->schema}.{$this->tabela} WHERE cnpj = {$this->cnpj}");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();

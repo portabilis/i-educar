@@ -144,7 +144,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
         ";
 
         $componentesSerie = [];
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
@@ -168,7 +168,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             AND componente_curricular_id = {$componenteCurricularId}
 SQL;
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $db->ProximoRegistro();
 
@@ -199,7 +199,7 @@ SQL;
         $hora_falta = null
     ) {
         if (is_numeric($componente_curricular_id) && is_numeric($carga_horaria)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $tipo_nota = (int) $tipo_nota;
             $tipo_nota = $tipo_nota === 0 ? 'NULL' : $tipo_nota;
             $anosLetivosFormatados = Portabilis_Utils_Database::arrayToPgArray($anosLetivos);
@@ -236,7 +236,7 @@ SQL;
         $anosLetivos = null,
         $hora_falta = null
     ) {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $set = '';
         $gruda = '';
 
@@ -287,7 +287,7 @@ SQL;
     public function excluiComponente($componente_curricular_id = null)
     {
         if (is_numeric($componente_curricular_id)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $sql = "
                 DELETE FROM {$this->_tabela}
@@ -306,7 +306,7 @@ SQL;
     public function cadastra()
     {
         if (is_numeric($this->componente_curricular_id) && is_numeric($this->ano_escolar_id)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -348,7 +348,7 @@ SQL;
     public function exclui()
     {
         if (is_numeric($this->ano_escolar_id)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $sql = "
                 DELETE FROM {$this->_tabela}
@@ -390,7 +390,7 @@ SQL;
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

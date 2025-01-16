@@ -7,9 +7,9 @@ use Tests\TestCase;
 
 class ClsCamposTest extends TestCase
 {
-    public function testShowFileField()
+    public function test_show_file_field()
     {
-        $clsCampos = new clsCampos();
+        $clsCampos = new clsCampos;
 
         $clsCampos->campoArquivo('file', 'Foto', '/caminho/foto', 40, '<b>Foto do aluno</b>');
 

@@ -183,7 +183,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     {
         if (is_string($dataMapper)) {
             if (class_exists($dataMapper)) {
-                $this->_dataMapper = new $dataMapper();
+                $this->_dataMapper = new $dataMapper;
             } else {
                 throw new Core_Controller_Page_Exception('A classe "' . $dataMapper . '" não existe.');
             }
@@ -498,7 +498,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
 
     public function breadcrumb($currentPage, $breadcrumbs = [])
     {
-        $breadcrumb = new Breadcrumb();
+        $breadcrumb = new Breadcrumb;
         $breadcrumb->makeBreadcrumb($currentPage, $breadcrumbs);
     }
 }

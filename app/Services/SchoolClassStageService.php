@@ -36,8 +36,8 @@ class SchoolClassStageService
             ],
             [
                 'params' => [
-                    new CheckGradesAndAbsencesInStageExists(),
-                    new CheckGradesAndAbsencesInStageIDiarioExists(),
+                    new CheckGradesAndAbsencesInStageExists,
+                    new CheckGradesAndAbsencesInStageIDiarioExists,
                 ],
             ]
         )->validate();
@@ -65,7 +65,7 @@ class SchoolClassStageService
 
     public function storeStage(array $stage)
     {
-        $legacySchoolClassStage = new LegacySchoolClassStage();
+        $legacySchoolClassStage = new LegacySchoolClassStage;
         $legacySchoolClassStage->fill($stage);
         $legacySchoolClassStage->save();
     }

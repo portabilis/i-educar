@@ -66,7 +66,7 @@ class Registro10 extends AbstractRegistro
             $data->lixoQueima, // 33	Queima
             $data->lixoEnterra, // 34	Enterra
             $data->lixoDestinacaoPoderPublico, // 35	Leva a uma destinação final licenciada pelo poder público
-            $data->lixoJogaOutraArea, //36	Descarta em outra área
+            $data->lixoJogaOutraArea, // 36	Descarta em outra área
             $data->tratamentoLixoSeparacao() ?: 0, // 37	Separação do lixo/resíduos
             $data->tratamentoLixoReaproveitamento() ?: 0, // 38	Reaproveitamento/reutilização
             $data->tratamentoLixoReciclagem() ?: 0, // 39	Reciclagem
@@ -168,7 +168,7 @@ class Registro10 extends AbstractRegistro
             $data->semFuncionariosParaFuncoes ? null : $data->qtdOrientadorComunitario, // 135 Orientador(a) comunitário(a) ou assistente social
             $data->semFuncionariosParaFuncoes ? null : $data->qtdTradutorInterpreteLibrasOutroAmbiente, // 136 Tradutor e Intérprete de Libras para atendimento em outros ambientes da escola que não seja sala de aula
             $data->semFuncionariosParaFuncoes ? null : $data->qtdRevisorBraile, // 137 Revisor de texto Braile, assistente vidente (assistente de revisão do texto em Braille)
-            $data->semFuncionariosParaFuncoes ? 1 : null, //138	Não há funcionários para as funções listadas
+            $data->semFuncionariosParaFuncoes ? 1 : null, // 138	Não há funcionários para as funções listadas
             $data->alimentacaoEscolarAlunos, // 139	Alimentação escolar para os aluno(a)s
             $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 140 Acervo multimídia
             $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 141 Brinquedos para educação infantil
@@ -215,7 +215,7 @@ class Registro10 extends AbstractRegistro
             $data->acaoConteudoCurricular, // 182 Como um componente curricular especial, específico, flexível ou eletivo
             $data->acaoEixoCurriculo, // 183 Como um eixo estruturante do currículo
             $data->acaoEventos, // 184 Em eventos
-            $data->acaoProjetoInterdisciplinares, //185 Em projetos transversais ou interdisciplinares
+            $data->acaoProjetoInterdisciplinares, // 185 Em projetos transversais ou interdisciplinares
             $data->acaoAmbientalNenhuma, // 186 Nenhuma das opções listadas
         ];
 

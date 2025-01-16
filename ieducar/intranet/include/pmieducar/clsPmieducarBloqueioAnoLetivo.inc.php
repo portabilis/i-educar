@@ -42,7 +42,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano) && is_string($this->data_inicio) && is_string($this->data_fim)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -85,7 +85,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano) && is_string($this->data_inicio) && is_string($this->data_fim)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -130,7 +130,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -168,7 +168,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_campos_lista}, instituicao.nm_instituicao as instituicao FROM {$this->_tabela} INNER JOIN pmieducar.instituicao ON (ref_cod_instituicao = cod_instituicao)  WHERE ref_cod_instituicao = '{$this->ref_cod_instituicao}' AND ref_ano = '{$this->ref_ano}'");
             $db->ProximoRegistro();
 
@@ -186,7 +186,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_instituicao = '{$this->ref_cod_instituicao}' AND ref_ano = '{$this->ref_ano}'");
             $db->ProximoRegistro();
 
@@ -204,7 +204,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     public function excluir()
     {
         if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_instituicao = '{$this->ref_cod_instituicao}' AND ref_ano = '{$this->ref_ano}'");
 
             return true;

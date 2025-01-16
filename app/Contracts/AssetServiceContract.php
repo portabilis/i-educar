@@ -11,8 +11,6 @@ interface AssetServiceContract
 
     /**
      * Get assets version number.
-     *
-     * @return ?string
      */
     public function getVersion(): ?string;
 

@@ -13,7 +13,7 @@ class SequencialEnturmacaoTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testSequencialEqualsOneWhenRelocationDateIsNull()
+    public function test_sequencial_equals_one_when_relocation_date_is_null()
     {
         $schoolClass = LegacySchoolClassFactory::new()->create();
         $registration = LegacyRegistrationFactory::new()->create([
@@ -27,7 +27,7 @@ class SequencialEnturmacaoTest extends TestCase
         $this->assertEquals(1, $sequencial);
     }
 
-    public function testSequencialEqualsThreeWhenRelocationDateIsNull()
+    public function test_sequencial_equals_three_when_relocation_date_is_null()
     {
         $schoolClass = LegacySchoolClassFactory::new()->create();
         $registration1 = LegacyRegistrationFactory::new()->create([
@@ -58,7 +58,7 @@ class SequencialEnturmacaoTest extends TestCase
             'sequencial_fechamento' => 2,
         ]);
 
-        //Garante que o aluno será o último
+        // Garante que o aluno será o último
         $registration1->student->individual->person->nome = 'Aaa';
         $registration1->student->individual->person->save();
         $registration2->student->individual->person->nome = 'Bbb';

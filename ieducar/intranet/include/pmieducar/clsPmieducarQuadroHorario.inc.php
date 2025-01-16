@@ -63,7 +63,7 @@ class clsPmieducarQuadroHorario extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_turma)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -107,7 +107,7 @@ class clsPmieducarQuadroHorario extends Model
     public function edita()
     {
         if (is_numeric($this->cod_quadro_horario) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -200,7 +200,7 @@ class clsPmieducarQuadroHorario extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -238,13 +238,13 @@ class clsPmieducarQuadroHorario extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_quadro_horario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_quadro_horario = '{$this->cod_quadro_horario}' AND ativo = 1");
             $db->ProximoRegistro();
 
             return $db->Tupla();
         } elseif (is_numeric($this->ref_cod_turma)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ativo = 1");
             $db->ProximoRegistro();
 
@@ -262,7 +262,7 @@ class clsPmieducarQuadroHorario extends Model
     public function existe()
     {
         if (is_numeric($this->cod_quadro_horario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_quadro_horario = '{$this->cod_quadro_horario}'");
             $db->ProximoRegistro();
 

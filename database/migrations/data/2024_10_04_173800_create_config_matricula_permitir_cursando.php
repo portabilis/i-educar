@@ -5,7 +5,8 @@ use App\SettingCategory;
 use App\Support\Database\IncrementSequence;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class extends Migration
+{
     use IncrementSequence;
 
     public function up(): void

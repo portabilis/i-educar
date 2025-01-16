@@ -24,15 +24,15 @@ class ResourceSchoolTest extends TestCase
     {
         parent::setUp();
 
-        //instituição
+        // instituição
         $this->institution = LegacyInstitutionFactory::new()->create();
 
-        //escolas
+        // escolas
         $schools = LegacySchoolFactory::new()->count(2)->create([
             'ref_cod_instituicao' => $this->institution->id,
         ]);
 
-        //escola
+        // escola
         $this->school = $schools->first();
     }
 

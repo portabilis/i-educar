@@ -27,7 +27,7 @@ class DiarioPostaFaltasGeralTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testPostaFaltasGeral()
+    public function test_posta_faltas_geral()
     {
         $school = LegacySchoolFactory::new()->create();
 
@@ -133,7 +133,7 @@ class DiarioPostaFaltasGeralTest extends TestCase
             ->assertDatabaseCount($absence->getTable(), 1);
         $this->assertDatabaseCount(LegacyDisciplineAbsence::class, 0);
 
-        //alterando a regra de avaliação da série
+        // alterando a regra de avaliação da série
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
             'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
             'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,

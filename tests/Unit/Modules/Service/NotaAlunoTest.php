@@ -7,7 +7,7 @@ require_once 'Avaliacao/Model/NotaComponente.php';
 
 class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
 {
-    public function testCriaNovaInstanciaDeNotaAluno()
+    public function test_cria_nova_instancia_de_nota_aluno()
     {
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
         $notaSave = clone $notaAluno;
@@ -33,7 +33,7 @@ class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
         $this->_getServiceInstance();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Portabilis_Utils_Database::$_db = null;
     }

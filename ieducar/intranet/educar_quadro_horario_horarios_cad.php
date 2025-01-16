@@ -78,7 +78,7 @@ return new class extends clsCadastro
         $this->identificador = $_GET['identificador'];
         $this->ano_alocacao = $_GET['ano'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 641,
@@ -88,7 +88,7 @@ return new class extends clsCadastro
         );
 
         if (!$_POST) {
-            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux();
+            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux;
             $obj_quadro_horarios_aux->excluirTodos(identificador: $this->identificador);
         }
 
@@ -97,7 +97,7 @@ return new class extends clsCadastro
               var quadro_horario = 0;
             </script>';
 
-            $obj = new clsPmieducarQuadroHorarioHorarios();
+            $obj = new clsPmieducarQuadroHorarioHorarios;
             $lista = $obj->lista(
                 int_ref_cod_quadro_horario: $this->ref_cod_quadro_horario,
                 int_ref_ref_cod_serie: $this->ref_ref_cod_serie,
@@ -149,7 +149,7 @@ return new class extends clsCadastro
             }
 
             if ($lista) {
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 641, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     if ($this->descricao) {
@@ -354,7 +354,7 @@ return new class extends clsCadastro
         if (is_array(value: $this->quadro_horario)) {
             foreach ($this->quadro_horario as $campo) {
                 if ($this->excluir_horario == $campo['qtd_horario_']) {
-                    $obj_horario = new clsPmieducarQuadroHorarioHorarios();
+                    $obj_horario = new clsPmieducarQuadroHorarioHorarios;
                     $lst_horario = $obj_horario->lista(
                         int_ref_cod_quadro_horario: $campo['ref_cod_quadro_horario_'],
                         int_ref_ref_cod_serie: $campo['ref_ref_cod_serie_'],
@@ -388,7 +388,7 @@ return new class extends clsCadastro
 
                     $this->excluir_horario = null;
 
-                    $obj_horario = new clsPmieducarQuadroHorarioHorariosAux();
+                    $obj_horario = new clsPmieducarQuadroHorarioHorariosAux;
                     $lst_horario = $obj_horario->excluiRegistro(
                         ref_cod_quadro_horario: $campo['ref_cod_quadro_horario_'],
                         ref_cod_serie: $campo['ref_ref_cod_serie_'],
@@ -463,7 +463,7 @@ return new class extends clsCadastro
                         duplo: true
                     );
 
-                    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+                    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
                     $componente = $componenteMapper->find(pkey: $campo['ref_ref_cod_disciplina_']);
 
                     $this->campoTextoInv(
@@ -534,7 +534,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 641,
             int_idpes_usuario: $this->pessoa_logada,
@@ -634,7 +634,7 @@ return new class extends clsCadastro
         }
 
         if ($verifica) {
-            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux();
+            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux;
             $obj_quadro_horarios_aux->excluirTodos(identificador: $this->identificador);
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -648,7 +648,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 641,
             int_idpes_usuario: $this->pessoa_logada,
@@ -779,7 +779,7 @@ return new class extends clsCadastro
         }
 
         if ($verifica) {
-            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux();
+            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux;
             $obj_quadro_horarios_aux->excluirTodos(identificador: $this->identificador);
 
             $this->mensagem .= 'Cadastro editado com sucesso.<br>';
@@ -793,7 +793,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(
             int_processo_ap: 641,
             int_idpes_usuario: $this->pessoa_logada,
@@ -804,7 +804,7 @@ return new class extends clsCadastro
         $obj = LegacyCalendarDay::find($this->ref_cod_calendario_ano_letivo);
 
         if ($obj->delete()) {
-            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux();
+            $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux;
             $obj_quadro_horarios_aux->excluirTodos(identificador: $this->identificador);
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';

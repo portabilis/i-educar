@@ -33,7 +33,7 @@ return new class extends clsListagem
             'Extra-curricular',
         ];
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         $lista_busca[] = 'Escola';
         $lista_busca[] = 'Instituição';
@@ -58,7 +58,7 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_historico_escolar = new clsPmieducarHistoricoEscolar();
+        $obj_historico_escolar = new clsPmieducarHistoricoEscolar;
         $obj_historico_escolar->setOrderby('ano, sequencial ASC');
         $obj_historico_escolar->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
@@ -105,11 +105,11 @@ return new class extends clsListagem
             }
         }
         $this->addPaginador2(strUrl: 'educar_historico_escolar_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
-        $obj_permissoes = new clsPermissoes();
-        $this->obj_permissao = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
+        $this->obj_permissao = new clsPermissoes;
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $escolaAluno = $db->CampoUnico("SELECT ref_ref_cod_escola
                                           FROM pmieducar.matricula
                                          WHERE ref_cod_aluno = {$this->ref_cod_aluno}
@@ -125,7 +125,7 @@ return new class extends clsListagem
                                                                                 WHERE cod_escola = $escolaAluno);");
         }
 
-        $escolasUsuario = new clsPmieducarEscolaUsuario();
+        $escolasUsuario = new clsPmieducarEscolaUsuario;
         $escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
         $usuarioEscolaAluno = false;
 

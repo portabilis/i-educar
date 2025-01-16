@@ -550,7 +550,7 @@ class PessoaController extends ApiCoreController
 
     protected function createOrUpdatePessoa($pessoaId = null)
     {
-        $pessoa = new clsPessoa_();
+        $pessoa = new clsPessoa_;
         $pessoa->idpes = $pessoaId;
         $pessoa->nome = $this->getRequest()->nome;
 

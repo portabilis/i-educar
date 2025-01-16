@@ -88,7 +88,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     protected function messenger()
     {
         if (!isset($this->_messenger)) {
-            $this->_messenger = new Portabilis_Messenger();
+            $this->_messenger = new Portabilis_Messenger;
         }
 
         return $this->_messenger;
@@ -148,6 +148,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
     protected function getDataMapperFor($packageName, $modelName)
     {
-        return (new Portabilis_DataMapper_Utils())->getDataMapperFor($packageName, $modelName);
+        return (new Portabilis_DataMapper_Utils)->getDataMapperFor($packageName, $modelName);
     }
 }

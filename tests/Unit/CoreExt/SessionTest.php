@@ -13,28 +13,28 @@ class CoreExt_SessionTest extends TestCase
         $this->_session = new CoreExt_Session(['session_auto_start' => false]);
     }
 
-    public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
+    public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->_session->setOptions(['foo' => 'bar']);
     }
 
-    public function testInstanciaTemSessionInstanciaStorageDefaultPorPadrao()
+    public function test_instancia_tem_session_instancia_storage_default_por_padrao()
     {
         $this->assertInstanceOf('CoreExt_Session_Storage_Default', $this->_session->getSessionStorage());
     }
 
-    public function testInstanciaESubclasseDeArrayAccess()
+    public function test_instancia_e_subclasse_de_array_access()
     {
         $this->assertInstanceOf('ArrayAccess', $this->_session);
     }
 
-    public function testInstanciaESubclasseDeCountable()
+    public function test_instancia_e_subclasse_de_countable()
     {
         $this->assertInstanceOf('Countable', $this->_session);
     }
 
-    public function testInstanciaESubclasseDeIterator()
+    public function test_instancia_e_subclasse_de_iterator()
     {
         $this->assertInstanceOf('Iterator', $this->_session);
     }
@@ -42,14 +42,14 @@ class CoreExt_SessionTest extends TestCase
     /**
      * @backupGlobals disabled
      */
-    public function testArrayAccess()
+    public function test_array_access()
     {
         $this->assertNull($this->_session['foo'], '[foo] is not null');
 
         $this->_session['bar'] = 'foo';
         $this->assertEquals('foo', $this->_session['bar'], '[bar] != foo');
 
-        //$this->_session->offsetUnset('bar');
+        // $this->_session->offsetUnset('bar');
         unset($this->_session['bar']);
         $this->assertNull($this->_session['bar'], '[bar] not unset');
     }
@@ -57,9 +57,9 @@ class CoreExt_SessionTest extends TestCase
     /**
      * @backupGlobals disabled
      *
-     * @depends       testArrayAccess
+     * @depends       test_array_access
      */
-    public function testCountable()
+    public function test_countable()
     {
         $this->assertEquals(0, count($this->_session));
 
@@ -67,7 +67,7 @@ class CoreExt_SessionTest extends TestCase
         $this->assertEquals(1, count($this->_session));
     }
 
-    public function testOverload()
+    public function test_overload()
     {
         $this->assertNull($this->_session->foo, '->foo is not null');
 
@@ -83,7 +83,7 @@ class CoreExt_SessionTest extends TestCase
      * podemos acessá-los de forma dinâmica na forma $session->$key em um
      * iterador foreach, por exemplo.
      */
-    public function testIterator()
+    public function test_iterator()
     {
         $expected = [
             '_1' => 'bar1', '_2' => 'bar2', '_3' => 'bar3',

@@ -4,7 +4,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 {
-    public function testCriaNovaInstanciaDeFaltaAluno()
+    public function test_cria_nova_instancia_de_falta_aluno()
     {
         $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
@@ -32,7 +32,7 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
         $this->_getServiceInstance();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $_GET = [];
         Portabilis_Utils_Database::$_db = null;

@@ -3,7 +3,6 @@
 namespace App\Providers\Postgres;
 
 use Illuminate\Database\PostgresConnection as ParentPostgresConnection;
-use Illuminate\Support\Str;
 
 class PostgresConnection extends ParentPostgresConnection
 {

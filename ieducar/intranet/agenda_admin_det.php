@@ -8,8 +8,8 @@ return new class extends clsDetalhe
 
         $cod_agenda = $_GET['cod_agenda'] ?? null;
 
-        $db = new clsBanco();
-        $db2 = new clsBanco();
+        $db = new clsBanco;
+        $db2 = new clsBanco;
 
         if ($cod_agenda) {
             $db->Consulta(consulta: "SELECT cod_agenda, nm_agenda, publica, envia_alerta, ref_ref_cod_pessoa_cad, data_cad, ref_ref_cod_pessoa_own FROM portal.agenda WHERE cod_agenda = '{$cod_agenda}'");
@@ -18,10 +18,10 @@ return new class extends clsDetalhe
         if ($cod_agenda && $db->ProximoRegistro()) {
             [$cod_agenda, $nm_agenda, $publica, $envia_alerta, $pessoa_cad, $data_cad, $pessoa_own] = $db->Tupla();
 
-            $objPessoa = new clsPessoaFisica();
+            $objPessoa = new clsPessoaFisica;
             [$nome] = $objPessoa->queryRapida($pessoa_cad, 'nome');
 
-            $objPessoa_ = new clsPessoaFisica();
+            $objPessoa_ = new clsPessoaFisica;
             [$nm_pessoa_own] = $objPessoa_->queryRapida($pessoa_own, 'nome');
 
             $this->addDetalhe(detalhe: ['Código da Agenda', $cod_agenda]);
@@ -58,7 +58,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Erro', 'Codigo de agenda inválido']);
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 554, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: null, super_usuario: true)) {
             $this->url_editar = "agenda_admin_cad.php?cod_agenda={$cod_agenda}";

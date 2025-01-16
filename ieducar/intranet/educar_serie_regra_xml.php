@@ -7,7 +7,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 if (isset($_GET['ins']) && is_numeric($_GET['ins'])) {
-    $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+    $mapper = new RegraAvaliacao_Model_RegraDataMapper;
 
     $regras = $mapper->findAll(
         ['id', 'nome'],

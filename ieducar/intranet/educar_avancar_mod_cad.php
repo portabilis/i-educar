@@ -18,14 +18,14 @@ return new class extends clsCadastro
         RegistrationStatus::REPROVED,
         RegistrationStatus::APPROVED_WITH_DEPENDENCY,
         RegistrationStatus::APPROVED_BY_BOARD,
-        RegistrationStatus::REPROVED_BY_ABSENCE
+        RegistrationStatus::REPROVED_BY_ABSENCE,
     ];
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $obj_permissao->permissao_cadastra(int_processo_ap: 845, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_index.php');
 
         $this->breadcrumb(currentPage: 'Rematrícula automática', breadcrumbs: [
@@ -104,9 +104,9 @@ return new class extends clsCadastro
             }
         }
 
-        $this->db = new clsBanco();
-        $this->db2 = new clsBanco();
-        $this->db3 = new clsBanco();
+        $this->db = new clsBanco;
+        $this->db2 = new clsBanco;
+        $this->db3 = new clsBanco;
 
         return $this->rematricularAlunos(
             escolaId: $this->ref_cod_escola,
@@ -143,8 +143,8 @@ return new class extends clsCadastro
                         "
                     );
 
-                    if ($result && $situacao == RegistrationStatus::APPROVED ||$situacao == RegistrationStatus::APPROVED_WITH_DEPENDENCY ||
-                        $situacao == RegistrationStatus::APPROVED_BY_BOARD ||($this->permitir_cursando && $situacao == RegistrationStatus::ONGOING)) {
+                    if ($result && $situacao == RegistrationStatus::APPROVED || $situacao == RegistrationStatus::APPROVED_WITH_DEPENDENCY ||
+                        $situacao == RegistrationStatus::APPROVED_BY_BOARD || ($this->permitir_cursando && $situacao == RegistrationStatus::ONGOING)) {
                         $result = $this->rematricularAlunoAprovado(escolaId: $escolaId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
                     } elseif ($result && $situacao == RegistrationStatus::REPROVED || $situacao == RegistrationStatus::REPROVED_BY_ABSENCE) {
                         $result = $this->rematricularAlunoReprovado(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, ano: $this->ano_letivo, alunoId: $alunoId);
@@ -197,17 +197,17 @@ return new class extends clsCadastro
 
     protected function getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        //Pega todas as matriculas
-        $objMatricula = new clsPmieducarMatriculaTurma();
+        // Pega todas as matriculas
+        $objMatricula = new clsPmieducarMatriculaTurma;
         $objMatricula->setOrderby(strNomeCampo: 'nome');
         $lstMatricula = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $ano);
-        //Verifica o parametro na série pra exigir inep
+        // Verifica o parametro na série pra exigir inep
         $objSerie = new clsPmieducarSerie(cod_serie: $serieId);
         $serieDet = $objSerie->detalhe();
         $exigeInep = $serieDet['exigir_inep'];
-        //Retorna alunos sem inep
+        // Retorna alunos sem inep
         $alunosSemInep = [];
-        $objAluno = new clsPmieducarAluno();
+        $objAluno = new clsPmieducarAluno;
 
         foreach ($lstMatricula as $matricula) {
             $alunoInep = $objAluno->verificaInep(cod_aluno: $matricula['ref_cod_aluno']);
@@ -221,7 +221,7 @@ return new class extends clsCadastro
 
     protected function getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        $objMatricula = new clsPmieducarMatriculaTurma();
+        $objMatricula = new clsPmieducarMatriculaTurma;
         $objMatricula->setOrderby(strNomeCampo: 'nome');
         $alunosComSaidaDaEscola = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $ano, saida_escola: true);
         $alunos = [];
@@ -242,7 +242,6 @@ return new class extends clsCadastro
             : self::SITUACOES_BASE;
 
         $situacoes = implode(', ', $situacoesArray);
-
 
         $sql = "
             SELECT
@@ -306,7 +305,7 @@ return new class extends clsCadastro
 
     protected function existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        $objMatricula = new clsPmieducarMatriculaTurma();
+        $objMatricula = new clsPmieducarMatriculaTurma;
         $objMatricula->setOrderby(strNomeCampo: 'nome');
         $anoAnterior = $this->ano_letivo - 1;
         $matriculas = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $anoAnterior);

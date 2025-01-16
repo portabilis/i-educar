@@ -19,7 +19,7 @@ class PersonFactory extends Factory
             'ativo' => 1,
         ]);
 
-        $instance = new $this->model();
+        $instance = new $this->model;
 
         return $instance->query()->find($person->id)->getAttributes();
     }

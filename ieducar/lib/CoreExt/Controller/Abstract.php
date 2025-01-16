@@ -104,7 +104,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
     public function getRequest()
     {
         if (is_null($this->_request)) {
-            $this->setRequest(new CoreExt_Controller_Request());
+            $this->setRequest(new CoreExt_Controller_Request);
         }
 
         return $this->_request;
@@ -134,7 +134,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
     public function getSession()
     {
         if (is_null($this->_session)) {
-            $this->setSession(new CoreExt_Session());
+            $this->setSession(new CoreExt_Session);
         }
 
         return $this->_session;
@@ -161,7 +161,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
     public function getDispatcher()
     {
         if (is_null($this->_dispatcher)) {
-            $this->setDispatcher(new CoreExt_Controller_Dispatcher_Standard());
+            $this->setDispatcher(new CoreExt_Controller_Dispatcher_Standard);
         }
 
         return $this->_dispatcher;

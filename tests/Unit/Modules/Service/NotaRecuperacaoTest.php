@@ -2,7 +2,7 @@
 
 class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
 {
-    public function testSalvarNotasDeUmComponenteCurricularNoBoletimEmRecuperacao()
+    public function test_salvar_notas_de_um_componente_curricular_no_boletim_em_recuperacao()
     {
         $this->markTestSkipped();
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
@@ -123,7 +123,7 @@ class Avaliacao_Service_NotaRecuperacaoTest extends Avaliacao_Service_TestCommon
         }
     }
 
-    public function testSalvarNotasDeUmComponenteCurricularNoBoletimEmRecuperacaoComNotasLancadas()
+    public function test_salvar_notas_de_um_componente_curricular_no_boletim_em_recuperacao_com_notas_lancadas()
     {
         $this->markTestSkipped();
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');

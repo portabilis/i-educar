@@ -96,7 +96,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Disciplinas', $disciplinas]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = sprintf(

@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 class CoreExt_SingletonTest extends TestCase
 {
-    public function testInstanciaESingleton()
+    public function test_instancia_e_singleton()
     {
         $instance1 = CoreExt_SingletonStub::getInstance();
         $oid1 = spl_object_hash($instance1);
@@ -15,7 +15,7 @@ class CoreExt_SingletonTest extends TestCase
         $this->assertSame($oid1, $oid2);
     }
 
-    public function testClasseQueNaoImplementaMetodoLancaExcecao()
+    public function test_classe_que_nao_implementa_metodo_lanca_excecao()
     {
         $this->expectException(\CoreExt_Exception::class);
         $instance1 = CoreExt_SingletonIncompleteStub::getInstance();

@@ -77,7 +77,7 @@ return new class extends clsCadastro
                 foreach ($legacyActiveLookings->getAttributes() as $campo => $val) {
                     $this->$campo = $val;
                 }
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: Process::ACTIVE_LOOKING, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
@@ -142,7 +142,7 @@ return new class extends clsCadastro
             $this->id = null;
         }
 
-        $fileService = new FileService(new UrlPresigner());
+        $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyActiveLooking::find($this->id));
 
         $this->addHtml(view('uploads.upload', ['files' => $files])->render());
@@ -156,20 +156,20 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: Process::ACTIVE_LOOKING, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
         $legacyRegistration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
         $this->redirectIf(condition: !$legacyRegistration, url: 'educar_matricula_lst.php');
         $this->ref_cod_aluno = $legacyRegistration->ref_cod_aluno;
-        $activeLookingService = new ActiveLookingService();
+        $activeLookingService = new ActiveLookingService;
         $legacyActiveLooking = $this->buildObjectBeforeStore();
 
         try {
             DB::beginTransaction();
             $activeLooking = $activeLookingService->store(activeLooking: $legacyActiveLooking, registration: $legacyRegistration);
 
-            $fileService = new FileService(new UrlPresigner());
+            $fileService = new FileService(new UrlPresigner);
             if ($this->file_url) {
                 $newFiles = json_decode($this->file_url);
                 foreach ($newFiles as $file) {
@@ -227,10 +227,10 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: Process::ACTIVE_LOOKING, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
-        $activeLookingService = new ActiveLookingService();
+        $activeLookingService = new ActiveLookingService;
         $legacyActiveLooking = $this->buildObjectBeforeStore();
 
         try {
@@ -239,7 +239,7 @@ return new class extends clsCadastro
 
             $activeLookingService->delete(activeLooking: $legacyActiveLooking);
             if ($files->isNotEmpty()) {
-                $fileService = new FileService(new UrlPresigner());
+                $fileService = new FileService(new UrlPresigner);
                 $fileService->deleteFiles($files);
             }
 
@@ -273,7 +273,7 @@ return new class extends clsCadastro
     private function buildObjectBeforeStore()
     {
         if (empty($this->id)) {
-            $legacyActiveLooking = new LegacyActiveLooking();
+            $legacyActiveLooking = new LegacyActiveLooking;
         } else {
             $legacyActiveLooking = LegacyActiveLooking::find($this->id);
         }

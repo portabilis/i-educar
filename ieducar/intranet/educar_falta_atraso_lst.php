@@ -102,7 +102,7 @@ return new class extends clsListagem
             $obj_ins = new clsPmieducarInstituicao($registro['ref_ref_cod_instituicao']);
             $det_ins = $obj_ins->detalhe();
 
-            $service = new EmployeeService();
+            $service = new EmployeeService;
             $horas = $service->getHoursCompensate(
                 cod_servidor: $registro['ref_cod_servidor'],
                 cod_escola: $registro['ref_cod_escola'],
@@ -169,7 +169,7 @@ return new class extends clsListagem
             nome: $this->nome,
             intResultadosPorPagina: $this->limite
         );
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao[] = [

@@ -144,7 +144,7 @@ class clsPmieducarHistoricoEscolar extends Model
 
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
                                       FROM cadastro.pessoa ps, cadastro.juridica
                                      WHERE escola.ref_idpes = juridica.idpes
@@ -176,7 +176,7 @@ class clsPmieducarHistoricoEscolar extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_usuario_cad) && is_string($this->nm_serie) && is_numeric($this->ano) && is_string($this->escola) && is_string($this->escola_cidade) && is_numeric($this->aprovado) && is_numeric($this->ref_cod_instituicao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -377,7 +377,7 @@ class clsPmieducarHistoricoEscolar extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -639,7 +639,7 @@ class clsPmieducarHistoricoEscolar extends Model
             $whereAnd = ' AND ';
         }
         if (!is_null($int_ativo)) {
-            if ( /*is_null( $int_ativo ) ||*/ $int_ativo) {
+            if ( /* is_null( $int_ativo ) || */ $int_ativo) {
                 $filtros .= "{$whereAnd} ativo = '1'";
                 $whereAnd = ' AND ';
             } else {
@@ -656,7 +656,7 @@ class clsPmieducarHistoricoEscolar extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -694,7 +694,7 @@ class clsPmieducarHistoricoEscolar extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -712,7 +712,7 @@ class clsPmieducarHistoricoEscolar extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -741,7 +741,7 @@ class clsPmieducarHistoricoEscolar extends Model
     public function getMaxSequencial($ref_cod_aluno)
     {
         if (is_numeric($ref_cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             return $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}");
         }
@@ -791,7 +791,7 @@ class clsPmieducarHistoricoEscolar extends Model
             );
 
             if ($historicoEscolar->cadastra()) {
-                $sequencial = (new clsPmieducarHistoricoEscolar())->getMaxSequencial($detMatricula['ref_cod_aluno']);
+                $sequencial = (new clsPmieducarHistoricoEscolar)->getMaxSequencial($detMatricula['ref_cod_aluno']);
                 $disciplinas = self::dadosDisciplinas($ref_cod_matricula);
                 foreach ($disciplinas as $index => $disciplina) {
                     $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(($index + 1), $detMatricula['ref_cod_aluno'], $sequencial, $disciplina, '');
@@ -816,7 +816,7 @@ class clsPmieducarHistoricoEscolar extends Model
                  INNER JOIN modules.componente_curricular cc ON(esd.ref_cod_disciplina = cc.id)
                  WHERE esd.ref_ref_cod_serie = {$cod_serie}
                    AND esd.ref_ref_cod_escola = {$cod_escola}";
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
 
         while ($db->ProximoRegistro()) {
@@ -833,7 +833,7 @@ class clsPmieducarHistoricoEscolar extends Model
             INNER JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
             INNER JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso
             WHERE m.cod_matricula = {$ref_cod_matricula}";
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $db->ProximoRegistro();
 
@@ -850,7 +850,7 @@ class clsPmieducarHistoricoEscolar extends Model
             FROM relatorio.view_dados_escola
             WHERE cod_escola = {$cod_escola}
         ";
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $db->ProximoRegistro();
 
@@ -859,7 +859,7 @@ class clsPmieducarHistoricoEscolar extends Model
 
     protected static function deveGerarHistorico($cod_instituicao)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         return dbBool($db->campoUnico("select gerar_historico_transferencia FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao};"));
     }
@@ -870,7 +870,7 @@ class clsPmieducarHistoricoEscolar extends Model
             $detalhes = $this->detalhe();
 
             $registration = LegacyRegistration::findOrFail($detalhes['ref_cod_matricula']);
-            $service = new GlobalAverageService();
+            $service = new GlobalAverageService;
             $average = $service->getGlobalAverage($registration);
             $mediaGeral = $this->arredondaNota($registration->cod_matricula, $average, 2);
             $mediaGeral = is_numeric($mediaGeral) ? number_format($mediaGeral, 1, '.', ',') : $mediaGeral;

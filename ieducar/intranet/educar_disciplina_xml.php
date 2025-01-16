@@ -10,7 +10,7 @@ $componentes = [];
 
 // Seleciona os componentes de um curso ou série
 if (is_numeric($_GET['cur']) || is_numeric($_GET['ser'])) {
-    $mapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+    $mapper = new ComponenteCurricular_Model_AnoEscolarDataMapper;
 
     if (is_numeric($_GET['cur'])) {
         $componentes = $mapper->findComponentePorCurso($_GET['cur']);

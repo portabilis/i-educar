@@ -39,14 +39,14 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Data final permitida', dataToBrasil(data_original: $registro['data_fim'])]);
         }
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 21251, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_bloqueio_ano_letivo_cad.php';
             $this->url_editar = "educar_bloqueio_ano_letivo_cad.php?ref_cod_instituicao={$registro['ref_cod_instituicao']}&ref_ano={$registro['ref_ano']}";
         }
-        //**
+        // **
         $this->url_cancelar = 'educar_bloqueio_ano_letivo_lst.php';
         $this->largura = '100%';
 

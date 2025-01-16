@@ -26,7 +26,7 @@ class DisciplineControllerTest extends TestCase
 
     private $discipline;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->actingAs(LegacyUserFactory::new()->admin()->create());
@@ -69,7 +69,7 @@ class DisciplineControllerTest extends TestCase
         GET('/api/discipline', ['Discipline'], 'Get all disciplines'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'Discipline')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $response = $this->get('api/discipline');
         $response->assertOk();

@@ -41,12 +41,12 @@ class Export extends Model
     public function getAllowedExports()
     {
         return [
-            1 => new Enrollment(),
-            2 => new Student(),
-            3 => new Teacher(),
-            4 => new SocialAssistance(),
-            5 => new Stage(),
-            6 => new Employee(),
+            1 => new Enrollment,
+            2 => new Student,
+            3 => new Teacher,
+            4 => new SocialAssistance,
+            5 => new Stage,
+            6 => new Employee,
         ];
     }
 
@@ -56,7 +56,7 @@ class Export extends Model
      */
     public function getExportByCode($code)
     {
-        return $this->getAllowedExports()[$code] ?? new Student();
+        return $this->getAllowedExports()[$code] ?? new Student;
     }
 
     /**
@@ -74,7 +74,7 @@ class Export extends Model
     {
         $model = $this->model;
 
-        return new $model();
+        return new $model;
     }
 
     /**

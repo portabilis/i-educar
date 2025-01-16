@@ -262,7 +262,7 @@ class relatorios
             $this->valor_titulo = [$texto, $deslocamento, $altura, $titulo, $fonte, $divisoes, $fundo_titulo, $fundo_texo, $cor_texto_titulo, $bool_traco];
         }
 
-        //Verifica se é o fim da página
+        // Verifica se é o fim da página
         if ($this->altura + $altura > ($this->pdf->altura * 0.85)) {
             $this->fillText();
             if ($this->altura == 0) {
@@ -297,7 +297,7 @@ class relatorios
             $cor = $cor_texto_titulo;
         }
 
-        //Verifica se é o fim da página
+        // Verifica se é o fim da página
         if ($this->altura + $altura > ($this->pdf->altura * 0.85)) {
             $this->fillText();
             if ($this->altura == 0) {
@@ -353,7 +353,7 @@ class relatorios
                 foreach ($linha['texto'] as $texto) {
                     if ($linha['tfont'] == '') {
                         $linha['tfont'] = 10;
-                    }//$this->tfont;
+                    }// $this->tfont;
                     $posx = $this->margem_esquerda + $this->txt_padding_left + $i + $linha['desloc'];
                     $this->pdf->Write($texto, $posx, $linha['altura'] + $mod, $this->largura - $this->margem_direita - $posx, $linha['alturaLinha'], $linha['fonte'], $linha['tfont'], $linha['cor'], $linha['alinhamento']);
                     $colSum = (is_array($linha['divisoes'])) ? $linha['divisoes'][$col] : $linha['divisoes'];

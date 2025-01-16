@@ -32,7 +32,7 @@ return new class extends clsCadastro
 
         $this->cod_turma_tipo = $_GET['cod_turma_tipo'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 570, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_turma_tipo_lst.php');
 
         if (is_numeric($this->cod_turma_tipo)) {
@@ -76,7 +76,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $classType = new LegacySchoolClassType();
+        $classType = new LegacySchoolClassType;
         $classType->ref_usuario_cad = $this->pessoa_logada;
         $classType->nm_tipo = $this->nm_tipo;
         $classType->sgl_tipo = $this->sgl_tipo;

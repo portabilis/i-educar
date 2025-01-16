@@ -12,7 +12,7 @@ class SocialAssistanceFactory extends Factory
     public function definition(): array
     {
         EnrollmentFactory::new()->make();
-        $instance = new $this->model();
+        $instance = new $this->model;
 
         return $instance->query()->first()->getAttributes();
     }

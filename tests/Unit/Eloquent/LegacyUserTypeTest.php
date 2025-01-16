@@ -28,7 +28,7 @@ class LegacyUserTypeTest extends EloquentTestCase
         $this->assertEquals((bool) $this->model->ativo, $this->model->active);
     }
 
-    public function testGetProcesses(): void
+    public function test_get_processes(): void
     {
         if ($this->model->level === LegacyUserType::LEVEL_ADMIN) {
             $except = collect(Menu::all()->pluck('id')->mapWithKeys(fn ($id) => [$id => LegacyUserType::CAN_REMOVE]));
@@ -55,7 +55,7 @@ class LegacyUserTypeTest extends EloquentTestCase
         $this->assertJsonStringEqualsJsonString($except, $this->model->getProcesses());
     }
 
-    public function testGetLevelDescriptions(): void
+    public function test_get_level_descriptions(): void
     {
         $levels = [
             LegacyUserType::LEVEL_ADMIN => 'Poli-institucional',
@@ -68,7 +68,7 @@ class LegacyUserTypeTest extends EloquentTestCase
         $this->assertJsonStringEqualsJsonString($except, $this->model->getLevelDescriptions());
     }
 
-    public function testConstants(): void
+    public function test_constants(): void
     {
         $this->assertEquals(1, LegacyUserType::LEVEL_ADMIN);
         $this->assertEquals(2, LegacyUserType::LEVEL_INSTITUTIONAL);

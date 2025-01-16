@@ -113,7 +113,7 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(int_processo_ap: 559, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_instituicao_lst.php');
 
@@ -199,7 +199,7 @@ return new class extends clsCadastro
 
         if (!empty($this->ref_sigla_uf)) {
             $opcoes = [null => 'Selecione'];
-            $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper();
+            $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper;
             $orgaosRegionais = $orgaoRegional->findAll(
                 columns: ['sigla_uf', 'codigo'],
                 where: ['sigla_uf' => $this->ref_sigla_uf],

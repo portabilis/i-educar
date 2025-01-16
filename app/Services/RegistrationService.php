@@ -4,13 +4,11 @@ namespace App\Services;
 
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
-use App\Models\LegacyRegistrationScore;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacyTransferRequest;
 use App\User;
 use App_Model_MatriculaSituacao;
-use Avaliacao_Model_NotaAlunoDataMapper;
 use Avaliacao_Model_NotaComponenteMediaDataMapper;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
@@ -133,7 +131,7 @@ class RegistrationService
         $registrationScoreId = $registration->registrationStores()->value('id');
 
         if ($registrationScoreId) {
-            (new Avaliacao_Model_NotaComponenteMediaDataMapper())->updateSituation($registrationScoreId, $newStatus);
+            (new Avaliacao_Model_NotaComponenteMediaDataMapper)->updateSituation($registrationScoreId, $newStatus);
         }
     }
 

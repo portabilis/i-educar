@@ -76,7 +76,7 @@ return new class extends clsCadastro
 
         $this->cod_serie = $_GET['cod_serie'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             583,
             $this->pessoa_logada,
@@ -113,7 +113,7 @@ return new class extends clsCadastro
                 $retorno = 'Editar';
             }
 
-            $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
+            $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper;
             $regrasSerieAno = [];
 
             if (!is_null($this->ref_cod_instituicao)) {
@@ -196,7 +196,7 @@ return new class extends clsCadastro
         $opcoes = ['' => 'Selecione'];
 
         if ($this->ref_cod_curso) {
-            $objTemp = new clsPmieducarCurso();
+            $objTemp = new clsPmieducarCurso;
             $lista = $objTemp->lista(
                 int_cod_curso: $this->ref_cod_curso,
                 int_ativo: 1
@@ -218,7 +218,7 @@ return new class extends clsCadastro
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false, false, '', 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
 
         // Regra de avaliação
-        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+        $mapper = new RegraAvaliacao_Model_RegraDataMapper;
 
         // @TODO entender como funciona a tabela para poder popular os campos de regra
         // baseado na instituição escolhida
@@ -385,7 +385,7 @@ return new class extends clsCadastro
 
     protected function persisteRegraSerieAno()
     {
-        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
+        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper;
         $anosParaManter = [];
 
         foreach ($this->regras_avaliacao_id as $key => $regraAvaliacao) {
@@ -406,7 +406,7 @@ return new class extends clsCadastro
     protected function deletaRegraSerieAnoNaoEnviada(array $anosParaManter)
     {
         $anosParaManter = implode(',', $anosParaManter);
-        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
+        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper;
         $regrasSerieAnoDeletar = $serieAnoMapper->findAll([
             'regraAvaliacao',
             'regraAvaliacaoDiferenciada',

@@ -26,7 +26,7 @@ class SituationControllerTest extends TestCase
         GET('/api/situation', ['Situation'], 'Get all situations'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'Situation')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $response = $this->get('api/situation');
         $expected = [

@@ -196,7 +196,7 @@ class Registro20 extends AbstractRegistro
             return [$record];
         }
 
-        $service = new SchoolClassService();
+        $service = new SchoolClassService;
 
         $periodsNames = (new Period)->getDescriptiveValues();
         $studentPeriods = $service->getStudentsPeriods($record->codTurma);

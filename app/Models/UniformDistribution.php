@@ -87,6 +87,7 @@ class UniformDistribution extends Model
 
     /**
      * Retorna as labels das opções de Uniformes
+     *
      * @return array<string, string>
      */
     public function labels(): array

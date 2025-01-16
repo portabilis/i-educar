@@ -19,7 +19,7 @@ class EmailTracker implements Tracker
         try {
             $e = FlattenException::create($exception);
 
-            $handler = new ExceptionHandler();
+            $handler = new ExceptionHandler;
 
             $html = $handler->getHtml($e);
 

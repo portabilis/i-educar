@@ -87,14 +87,14 @@ return new class extends clsListagem
         }
         $this->addPaginador2(strUrl: 'educar_religiao_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 579, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_religiao_cad.php")';
             $this->nome_acao = 'Novo';
         }
-        //**
+        // **
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Listagem de religiões', breadcrumbs: [

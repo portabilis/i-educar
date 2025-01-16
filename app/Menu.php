@@ -208,7 +208,7 @@ class Menu extends Model
             function (LaravelCollection $collect, Menu $menu) use ($path, $process, $userLevel) {
                 return $collect->merge($menu->processes($path . ' > ' . $menu->title, $process, $userLevel));
             },
-            new LaravelCollection()
+            new LaravelCollection
         );
 
         $this->description = $path;

@@ -43,7 +43,7 @@ return new class extends clsListagem
             'Série Destino',
         ];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Instituição';
@@ -52,7 +52,7 @@ return new class extends clsListagem
 
         // Filtros de Foreign Keys
         if ($nivel_usuario == 1) {
-            $objInstituicao = new clsPmieducarInstituicao();
+            $objInstituicao = new clsPmieducarInstituicao;
             $opcoes = ['' => 'Selecione'];
             $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
@@ -73,7 +73,7 @@ return new class extends clsListagem
 
         // EDITAR
         if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarCurso();
+            $objTemp = new clsPmieducarCurso;
             $objTemp->setOrderby('nm_curso');
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
             if (is_array($lista) && count($lista)) {
@@ -93,7 +93,7 @@ return new class extends clsListagem
         $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
-            $objTemp = new clsPmieducarSerie();
+            $objTemp = new clsPmieducarSerie;
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
@@ -102,7 +102,7 @@ return new class extends clsListagem
             }
         }
         if ($this->ref_curso_destino) {
-            $objTemp = new clsPmieducarSerie();
+            $objTemp = new clsPmieducarSerie;
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
@@ -154,7 +154,7 @@ return new class extends clsListagem
             }
         }
         $this->addPaginador2('educar_sequencia_serie_lst.php', $total, $_GET, $this->nome, $this->limite);
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3)) {
             $this->acao = 'go("educar_sequencia_serie_cad.php")';
             $this->nome_acao = 'Novo';

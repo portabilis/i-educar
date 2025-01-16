@@ -26,7 +26,7 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testPostaPareceresAnualGeral()
+    public function test_posta_pareceres_anual_geral()
     {
         $school = LegacySchoolFactory::new()->create();
 
@@ -133,7 +133,7 @@ class DiarioPostaPareceresEtapaGeralTest extends TestCase
         $this->assertDatabaseCount($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
         $this->assertDatabaseCount($generalDescriptiveOpinion->getTable(), 1);
         $this->assertDatabaseCount(LegacyDisciplineDescriptiveOpinion::class, 0);
-        //alterando a regra de avaliação da série
+        // alterando a regra de avaliação da série
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
             'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
         ]);

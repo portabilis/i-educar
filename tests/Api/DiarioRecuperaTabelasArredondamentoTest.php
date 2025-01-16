@@ -11,7 +11,7 @@ class DiarioRecuperaTabelasArredondamentoTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaTabelasArredondamento()
+    public function test_recupera_tabelas_arredondamento()
     {
         $valueRoundingTable = LegacyValueRoundingTableFactory::new()->create();
         $valueRoundingTable->refresh();

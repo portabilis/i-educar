@@ -87,7 +87,7 @@ return new class extends clsCadastro
         $this->sequencial = $_GET['sequencial'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial)) {
@@ -151,7 +151,7 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'nomeEscola', valor: $nomeEscola);
         $this->campoOculto(nome: 'numeroSequencial', valor: $_GET['sequencial']);
 
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
 
         if (is_array($lst_aluno)) {
@@ -160,11 +160,11 @@ return new class extends clsCadastro
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
 
-        $obj_nivelUser = new clsPermissoes();
+        $obj_nivelUser = new clsPermissoes;
         $user_nivel = $obj_nivelUser->nivel_acesso($this->pessoa_logada);
 
         if ($user_nivel != App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL) {
-            $obj_permissoes = new clsPermissoes();
+            $obj_permissoes = new clsPermissoes;
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
             $habilitaCargaHoraria = $this->habilitaCargaHoraria($this->ref_cod_instituicao);
         }
@@ -255,11 +255,11 @@ return new class extends clsCadastro
         $this->campoTexto(nome: 'livro', campo: 'Livro', valor: $this->livro, tamanhovisivel: 30, tamanhomaximo: 50);
         $this->campoTexto(nome: 'folha', campo: 'Folha', valor: $this->folha, tamanhovisivel: 30, tamanhomaximo: 50);
 
-        //---------------------INCLUI DISCIPLINAS---------------------//
+        // ---------------------INCLUI DISCIPLINAS---------------------//
         $this->campoQuebra();
 
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial) && !$_POST) {
-            $obj = new clsPmieducarHistoricoDisciplinas();
+            $obj = new clsPmieducarHistoricoDisciplinas;
             $obj->setOrderby('nm_disciplina ASC');
             $registros = $obj->lista(int_ref_ref_cod_aluno: $this->ref_cod_aluno, int_ref_sequencial: $this->sequencial);
             $qtd_disciplinas = 0;
@@ -296,7 +296,7 @@ return new class extends clsCadastro
 
         $this->campoQuebra();
 
-        //---------------------FIM INCLUI DISCIPLINAS---------------------//
+        // ---------------------FIM INCLUI DISCIPLINAS---------------------//
 
         // carrega estilo para feedback messages, para exibir msg validação frequencia.
 
@@ -316,7 +316,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
@@ -356,12 +356,12 @@ return new class extends clsCadastro
 
         if ($cadastrou) {
 
-            //--------------CADASTRA DISCIPLINAS--------------//
+            // --------------CADASTRA DISCIPLINAS--------------//
             if ($this->nm_disciplina) {
                 $sequencial = 1;
 
                 foreach ($this->nm_disciplina as $key => $disciplina) {
-                    $obj_historico = new clsPmieducarHistoricoEscolar();
+                    $obj_historico = new clsPmieducarHistoricoEscolar;
                     $this->sequencial = $obj_historico->getMaxSequencial($this->ref_cod_aluno);
 
                     $obj = new clsPmieducarHistoricoDisciplinas(sequencial: $sequencial, ref_ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial, nm_disciplina: $disciplina, nota: $this->nota[$key], faltas: $this->faltas[$key], ordenamento: $this->ordenamento[$key], carga_horaria_disciplina: $this->carga_horaria_disciplina[$key], dependencia: $this->disciplinaDependencia[$key] == 'on' ? true : false, tipo_base: $this->tipo_base[$key]);
@@ -379,7 +379,7 @@ return new class extends clsCadastro
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
                 $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             }
-            //--------------FIM CADASTRA DISCIPLINAS--------------//
+            // --------------FIM CADASTRA DISCIPLINAS--------------//
         }
         $this->mensagem = 'Cadastro não realizado.<br>';
 
@@ -388,7 +388,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
@@ -438,14 +438,14 @@ return new class extends clsCadastro
 
         if ($editou) {
 
-            //--------------EDITA DISCIPLINAS--------------//
+            // --------------EDITA DISCIPLINAS--------------//
             if ($this->nm_disciplina) {
-                $obj = new clsPmieducarHistoricoDisciplinas();
+                $obj = new clsPmieducarHistoricoDisciplinas;
                 $excluiu = $obj->excluirTodos(ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial);
                 if ($excluiu) {
                     $sequencial = 1;
                     foreach ($this->nm_disciplina as $key => $disciplina) {
-                        //$campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
+                        // $campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
 
                         $obj = new clsPmieducarHistoricoDisciplinas(sequencial: $sequencial, ref_ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial, nm_disciplina: $disciplina, nota: $this->nota[$key], faltas: $this->faltas[$key], ordenamento: $this->ordenamento[$key], carga_horaria_disciplina: $this->carga_horaria_disciplina[$key], dependencia: $this->disciplinaDependencia[$key] == 'on' ? true : false, tipo_base: $this->tipo_base[$key]);
                         $cadastrou1 = $obj->cadastra();
@@ -460,7 +460,7 @@ return new class extends clsCadastro
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             }
-            //--------------FIM EDITA DISCIPLINAS--------------//
+            // --------------FIM EDITA DISCIPLINAS--------------//
         }
         $this->mensagem = 'Edição não realizada.<br>';
 
@@ -469,14 +469,14 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $obj = new clsPmieducarHistoricoEscolar(ref_cod_aluno: $this->ref_cod_aluno, sequencial: $this->sequencial, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, nm_serie: null, ano: null, carga_horaria: null, dias_letivos: null, escola: null, escola_cidade: null, escola_uf: null, observacao: null, aprovado: null, data_cadastro: null, data_exclusao: null, ativo: 0);
 
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $obj = new clsPmieducarHistoricoDisciplinas();
+            $obj = new clsPmieducarHistoricoDisciplinas;
             $excluiu = $obj->excluirTodos(ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial);
             if ($excluiu) {
                 $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
@@ -509,7 +509,7 @@ return new class extends clsCadastro
 
     public function getOpcoesGradeCurso()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = 'select * from pmieducar.historico_grade_curso where ativo = 1';
         $db->Consulta($sql);
 
@@ -525,7 +525,7 @@ return new class extends clsCadastro
     public function validaControlePosicaoHistorico()
     {
         $obj = new clsPmieducarInstituicao;
-        //Busca instituicao ativa
+        // Busca instituicao ativa
         $lst = $obj->lista(int_ativo: 1);
 
         return dbBool($lst[0]['controlar_posicao_historicos']);

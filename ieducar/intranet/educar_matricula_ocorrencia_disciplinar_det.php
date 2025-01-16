@@ -60,7 +60,7 @@ return new class extends clsDetalhe
         $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
         $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
-        $obj_mat_turma = new clsPmieducarMatriculaTurma();
+        $obj_mat_turma = new clsPmieducarMatriculaTurma;
 
         $det_mat_turma = $obj_mat_turma->lista($registro['ref_cod_matricula'], null, null, null, null, null, null, null, 1);
 
@@ -72,14 +72,14 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Matrícula', "{$registro['ref_cod_matricula']}"]);
         }
 
-        $obj_ref_cod_matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
+        $obj_ref_cod_matricula = (new clsPmieducarMatricula)->lista($this->ref_cod_matricula);
         if (is_array($obj_ref_cod_matricula)) {
             $obj_ref_cod_matricula = array_shift($obj_ref_cod_matricula);
         }
 
         $detalhe_aluno = $obj_ref_cod_matricula;
 
-        $obj_aluno = (new clsPmieducarAluno())->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+        $obj_aluno = (new clsPmieducarAluno)->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
         if (is_array($obj_aluno)) {
             $obj_aluno = array_shift($obj_aluno);
         }
@@ -111,7 +111,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Observação', nl2br("{$registro['observacao']}")]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
             $this->url_novo = "educar_matricula_ocorrencia_disciplinar_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}";
             $this->url_editar = "educar_matricula_ocorrencia_disciplinar_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}";

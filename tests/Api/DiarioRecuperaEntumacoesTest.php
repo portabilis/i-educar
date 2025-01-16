@@ -13,7 +13,7 @@ class DiarioRecuperaEntumacoesTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaEnturmacoes()
+    public function test_recupera_enturmacoes()
     {
         $school = LegacySchoolFactory::new()->create();
 

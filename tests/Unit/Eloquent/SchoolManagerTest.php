@@ -29,12 +29,12 @@ class SchoolManagerTest extends EloquentTestCase
         return SchoolManager::class;
     }
 
-    public function testIsChief(): void
+    public function test_is_chief(): void
     {
         $this->assertEquals($this->model->chief, $this->model->isChief());
     }
 
-    public function testScopeOfSchool(): void
+    public function test_scope_of_school(): void
     {
         $school = LegacySchoolFactory::new()->create();
         SchoolManagerFactory::new()->create(['school_id' => $school]);

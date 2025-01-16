@@ -43,7 +43,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Raça', $race->nm_raca]);
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 678, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_raca_cad.php';
             $this->url_editar = "educar_raca_cad.php?cod_raca=$race->cod_raca";

@@ -26,7 +26,7 @@ return new class extends clsCadastro
                 $this->campoQuebra();
             }
 
-            $matriculasTurma = new clsPmieducarMatriculaTurma();
+            $matriculasTurma = new clsPmieducarMatriculaTurma;
             $matriculasTurma = $matriculasTurma->listaPorSequencial(codTurma: $this->cod_turma);
 
             if ($matriculasTurma) {

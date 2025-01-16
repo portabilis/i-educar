@@ -62,7 +62,7 @@ class LegacyAbsenceDelay extends LegacyModel
     protected function justifyName(): Attribute
     {
         return Attribute::make(
-            //no banco é salvo 0 como "Sim"
+            // no banco é salvo 0 como "Sim"
             get: fn () => $this->justificada === 0 ? 'Sim' : 'Não',
         );
     }

@@ -39,7 +39,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
             ->method('findAll')
             ->will($this->returnValue($tabelaValores));
 
-        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
+        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper;
         $tabelaDataMapper->setTabelaValorDataMapper($mapperMock);
 
         $tabela = new TabelaArredondamento_Model_Tabela(['nome' => 'Numéricas']);
@@ -101,7 +101,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
         ];
     }
 
-    public function testGetCurso()
+    public function test_get_curso()
     {
         $returnValue = [
             'nm_curso' => 'Ensino Fundamental',
@@ -128,7 +128,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    public function testGetInstituicoes()
+    public function test_get_instituicoes()
     {
         $returnValue = [['cod_instituicao' => 1, 'nm_instituicao' => 'Instituição']];
         $expected = [1 => 'INSTITUIÇÃO'];
@@ -152,7 +152,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    public function testGetSeries()
+    public function test_get_series()
     {
         $this->instance(
             clsPmieducarSerie::class,
@@ -221,7 +221,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    public function testGetTurmas()
+    public function test_get_turmas()
     {
         $returnValue = [1 => ['cod_turma' => 1, 'nm_turma' => 'Primeiro ano', 'ano' => null]];
         $expected = [1 => 'Primeiro ano - Sem ano'];
@@ -247,9 +247,9 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    public function testGetEscolaSerieDisciplina()
+    public function test_get_escola_serie_disciplina()
     {
-        //Método foi alterado. Terá que ser escrito um novo teste
+        // Método foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
         $returnAnoEscolar = [
             1 => new ComponenteCurricular_Model_Componente(
@@ -307,9 +307,9 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    public function testGetComponentesTurma()
+    public function test_get_componentes_turma()
     {
-        //Método foi alterado. Terá que ser escrito um novo teste
+        // Método foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
         $mocks = $this->_getComponentesTurmaMock();
 
@@ -328,14 +328,14 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    public function testGetMatriculaAlunoNaoEnturmado()
+    public function test_get_matricula_aluno_nao_enturmado()
     {
         $this->expectException(StudentNotEnrolledInSchoolClass::class);
         $this->expectExceptionMessage('Aluno não enturmado.');
         App_Model_IedFinder::getMatricula(1);
     }
 
-    public function testGetRegraAvaliacaoPorMatricula()
+    public function test_get_regra_avaliacao_por_matricula()
     {
         $expected = new RegraAvaliacao_Model_Regra([
             'id' => 1,
@@ -378,11 +378,11 @@ class App_Model_IedFinderTest extends UnitBaseTest
     }
 
     /**
-     * @depends App_Model_IedFinderTest::testGetRegraAvaliacaoPorMatricula
+     * @depends App_Model_IedFinderTest::test_get_regra_avaliacao_por_matricula
      */
-    public function testGetComponentesPorMatricula()
+    public function test_get_componentes_por_matricula()
     {
-        //Método foi alterado. Terá que ser escrito um novo teste
+        // Método foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
         // A turma possui apenas 2 componentes, com os ids: 1 e 2
         $mocks = $this->_getComponentesTurmaMock();
@@ -435,9 +435,9 @@ class App_Model_IedFinderTest extends UnitBaseTest
     }
 
     /**
-     * @depends App_Model_IedFinderTest::testGetRegraAvaliacaoPorMatricula
+     * @depends App_Model_IedFinderTest::test_get_regra_avaliacao_por_matricula
      */
-    public function testGetQuantidadeDeModulosMatriculaCursoAnoNaoPadrao()
+    public function test_get_quantidade_de_modulos_matricula_curso_ano_nao_padrao()
     {
         $this->markTestSkipped();
 

@@ -32,13 +32,13 @@ class FileExportServiceTest extends TestCase
 
     private array $args = [];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->export = FileExportFactory::new()->create();
         $count = DB::table('relatorio.situacao_matricula')->count();
         if ($count === 0) {
-            $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder();
+            $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder;
             $seed->run();
         }
         $institution = LegacyInstitutionFactory::new()->create();
@@ -106,7 +106,7 @@ class FileExportServiceTest extends TestCase
         ];
     }
 
-    public function testExportService(): void
+    public function test_export_service(): void
     {
         Queue::fake();
         Queue::assertNothingPushed();

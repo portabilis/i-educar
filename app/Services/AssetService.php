@@ -74,7 +74,7 @@ class AssetService implements AssetServiceContract
             return $this->version ?: '';
         }
 
-        //Apenas no caso de estar faltando / no início do caminho
+        // Apenas no caso de estar faltando / no início do caminho
         if (!preg_match('#^/#', $pathUrl['path'])) {
             $pathUrl['path'] = '/' . $pathUrl['path'];
         }

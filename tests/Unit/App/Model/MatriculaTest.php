@@ -2,7 +2,7 @@
 
 class App_Model_MatriculaTest extends UnitBaseTest
 {
-    public function testAtualizaMatricula()
+    public function test_atualiza_matricula()
     {
         $matricula = $this->getCleanMock('clsPmieducarMatricula');
         $matricula->expects($this->once())

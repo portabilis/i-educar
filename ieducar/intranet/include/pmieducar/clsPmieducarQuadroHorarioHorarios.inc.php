@@ -73,7 +73,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         }
 
         if (is_numeric($ref_ref_cod_disciplina) && is_numeric($ref_ref_cod_serie)) {
-            $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+            $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper;
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_ref_cod_disciplina,
                 'anoEscolar' => $ref_ref_cod_serie,
@@ -133,7 +133,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($this->ref_servidor) && ($this->hora_inicial) && ($this->hora_final) &&
             is_numeric($this->dia_semana)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -248,7 +248,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($this->ref_ref_cod_disciplina) &&
             is_numeric($this->sequencial)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -447,7 +447,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             $whereAnd = ' AND ';
         }
 
-        //Só trás horários do ultimo quadro de horários
+        // Só trás horários do ultimo quadro de horários
         if ($bool_filtrar_ano) {
             $filtros .= "{$whereAnd} EXISTS (SELECT qh.ano
                                          FROM pmieducar.quadro_horario qh
@@ -458,7 +458,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -502,7 +502,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($this->ref_ref_cod_disciplina) &&
             is_numeric($this->sequencial)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_quadro_horario = '{$this->ref_cod_quadro_horario}' AND ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_ref_cod_disciplina}' AND sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -511,7 +511,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($this->ref_servidor) && is_string($this->hora_inicial) &&
             is_string($this->hora_final) && is_numeric($this->dia_semana)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_escola = {$ref_cod_escola} AND ref_cod_instituicao_servidor = {$this->ref_cod_instituicao_servidor} AND ref_servidor = {$this->ref_servidor} AND hora_inicial = '{$this->hora_inicial}' AND hora_final = '{$this->hora_final}' AND ativo = 1 AND dia_semana = {$this->dia_semana}");
             $db->ProximoRegistro();
 
@@ -532,7 +532,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola) &&
             is_numeric($this->ref_ref_cod_disciplina) && is_numeric($this->sequencial)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_quadro_horario = '{$this->ref_cod_quadro_horario}' AND ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_ref_cod_disciplina}' AND sequencial = '{$this->sequencial}'");
             $db->ProximoRegistro();
 
@@ -607,7 +607,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
                 $this->ref_cod_instituicao_servidor
             );
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
 
             return true;
@@ -627,7 +627,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
             is_numeric($int_ref_ref_cod_escola) && is_numeric($int_ref_ref_cod_serie) &&
             is_numeric($int_ref_ref_cod_turma) && is_numeric($int_dia_semana)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("
         SELECT
           qhh.*
@@ -667,7 +667,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
 
     public function excluirTodos()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if (is_numeric($this->ref_cod_quadro_horario)) {
             $db->Consulta("UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_quadro_horario = '{$this->ref_cod_quadro_horario}'");
 

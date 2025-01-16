@@ -22,7 +22,7 @@ class LegacyEmployeeRoleTest extends EloquentTestCase
         return LegacyEmployeeRole::class;
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

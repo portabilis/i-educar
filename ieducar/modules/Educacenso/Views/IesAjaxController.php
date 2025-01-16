@@ -1,6 +1,6 @@
 <?php
 
-$iesMapper = new Educacenso_Model_IesDataMapper();
+$iesMapper = new Educacenso_Model_IesDataMapper;
 $iesUf = $iesMapper->findAll([], ['uf' => $_GET['uf']], ['nome' => 'ASC']);
 
 // Adiciona "INSTITUIÇÃO NÃO CADASTRADA" nos resultados.

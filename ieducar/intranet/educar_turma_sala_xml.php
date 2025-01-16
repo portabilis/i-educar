@@ -10,7 +10,7 @@ if (is_numeric(value: $_GET['inst']) && is_numeric(value: $_GET['esc']) && is_nu
         $not_turma = " AND t.cod_turma != {$_GET['not_tur']} ";
     }
 
-    $db = new clsBanco();
+    $db = new clsBanco;
     $consulta = "SELECT to_char(hora_inicial,'hh24:mm') as hora_inicial
                         ,to_char(hora_final,'hh24:mm')  as hora_final
                    FROM pmieducar.turma t

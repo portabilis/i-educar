@@ -11,7 +11,7 @@ class DiarioRecuperaDisciplinasTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaDisciplinas()
+    public function test_recupera_disciplinas()
     {
         $discipline = LegacyDisciplineFactory::new()->create();
         $discipline->refresh();

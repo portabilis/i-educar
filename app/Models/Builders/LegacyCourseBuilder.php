@@ -12,10 +12,10 @@ class LegacyCourseBuilder extends LegacyBuilder
      */
     public function getResource(array $filters = []): Collection
     {
-        //filtros
+        // filtros
         $this->active()->orderByName()->filter($filters);
 
-        //description será usada em getNameAttribute, mas não aparece no recurso
+        // description será usada em getNameAttribute, mas não aparece no recurso
         return $this->setExcept(['description'])->resource(['id', 'name', 'is_standard_calendar', 'steps']);
     }
 

@@ -118,11 +118,11 @@ class LogUnification extends Model
     public function getAdapter()
     {
         if ($this->type == Individual::class) {
-            return new PersonLogUnification();
+            return new PersonLogUnification;
         }
 
         if ($this->type == Student::class) {
-            return new StudentLogUnification();
+            return new StudentLogUnification;
         }
 
         throw new Exception('Tipo de unificação inválido');

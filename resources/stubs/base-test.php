@@ -13,7 +13,7 @@ class BaseTestName extends TestCase
 
     public const ROUTE = 'ProjectRoute';
 
-    public function testSuccessResponse()
+    public function test_success_response()
     {
         $this->get(self::ROUTE)->assertSuccessful();
     }

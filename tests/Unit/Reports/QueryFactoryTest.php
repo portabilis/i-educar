@@ -29,7 +29,7 @@ class QueryFactoryTest extends TestCase
         );
     }
 
-    public function testUnvaluedKey()
+    public function test_unvalued_key()
     {
         $fakeClass = new class(self::$pdo, []) extends QueryFactory
         {
@@ -40,7 +40,7 @@ class QueryFactoryTest extends TestCase
         $fakeClass->getData();
     }
 
-    public function testArrayValue()
+    public function test_array_value()
     {
         self::$pdo->exec(
             "SET session_replication_role = replica;\n" .

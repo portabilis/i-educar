@@ -39,7 +39,7 @@ class EnrollmentsPromotionController extends Controller
         Bus::batch($jobs)
             ->finally(function (Batch $batch) use ($userId, $message) {
                 $message .= $batch->totalJobs . ' matrícula(s)';
-                (new NotificationService())->createByUser($userId, $message, '', NotificationType::OTHER);
+                (new NotificationService)->createByUser($userId, $message, '', NotificationType::OTHER);
             })
             ->dispatch();
 

@@ -31,7 +31,7 @@ return new class extends clsCadastro
         $this->editar = false;
         if (isset($_GET['cod_agenda'])) {
             $this->cod_agenda = $_GET['cod_agenda'];
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta(consulta: "SELECT cod_agenda, ref_ref_cod_pessoa_exc, ref_ref_cod_pessoa_cad,  nm_agenda, publica, envia_alerta, data_cad, data_edicao, ref_ref_cod_pessoa_own FROM portal.agenda WHERE cod_agenda='{$this->cod_agenda}'");
             if ($db->ProximoRegistro()) {
                 [$this->cod_agenda, $this->ref_ref_cod_pessoa_exc, $this->ref_ref_cod_pessoa_cad, $this->nm_agenda, $this->publica, $this->envia_alerta, $this->data_cad, $this->data_edicao, $this->ref_ref_cod_pessoa_own] = $db->Tupla();
@@ -74,8 +74,8 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $db = new clsBanco();
-        $objPessoa = new clsPessoaFisica();
+        $db = new clsBanco;
+        $objPessoa = new clsPessoaFisica;
 
         $this->campoOculto(nome: 'pessoaFj', valor: $this->pessoaFj);
         $this->campoOculto(nome: 'cod_agenda', valor: $this->cod_agenda);
@@ -102,20 +102,20 @@ return new class extends clsCadastro
                 [$nome] = $objPessoa->queryRapida($idpes, 'nome');
                 $this->campoTextoInv(nome: "editor{$i}", campo: 'Editores', valor: $nome, tamanhovisivel: 50, tamanhomaximo: 255, obrigatorio: false, expressao: false, duplo: false, descricao: false, descricao2: "<a href=\"agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_rem=$idpes\">remover</a>");
             }
-            //$this->campoListaPesq( "novo_editor", "Novo Editor", $lista, 0, "pesquisa_funcionario.php", false, false, false, "&nbsp; &nbsp; &nbsp; <a href=\"javascript:var idpes = document.getElementById('novo_editor').value; if( idpes != 0 ) { document.location.href='agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_add=' + idpes; } else { alert( 'Selecione a pessoa clicando na imagem da Lupa' ); }\">Adicionar</a>" );
-            $parametros = new clsParametrosPesquisas();
+            // $this->campoListaPesq( "novo_editor", "Novo Editor", $lista, 0, "pesquisa_funcionario.php", false, false, false, "&nbsp; &nbsp; &nbsp; <a href=\"javascript:var idpes = document.getElementById('novo_editor').value; if( idpes != 0 ) { document.location.href='agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_add=' + idpes; } else { alert( 'Selecione a pessoa clicando na imagem da Lupa' ); }\">Adicionar</a>" );
+            $parametros = new clsParametrosPesquisas;
             $parametros->setSubmit(submit: 1);
             $parametros->adicionaCampoSelect(campo_nome: 'novo_editor', campo_indice: 'ref_cod_pessoa_fj', campo_valor: 'nome');
             $this->campoListaPesq(nome: 'novo_editor', campo: 'Novo Editor', valor: $lista, default: 0, caminho: 'pesquisa_funcionario_lst.php', acao: '', duplo: false, descricao: '', descricao2: '', flag: null, pag_cadastro: null, disabled: '', div: false, serializedcampos: $parametros->serializaCampos());
-            //$this->campoLista( "edit_add", "Editores", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
+            // $this->campoLista( "edit_add", "Editores", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
             unset($campos);
         } else {
-            //$this->campoListaPesq( "dono", "Dono da agenda", $lista, 0, "pesquisa_funcionario.php" );
-            $parametros = new clsParametrosPesquisas();
+            // $this->campoListaPesq( "dono", "Dono da agenda", $lista, 0, "pesquisa_funcionario.php" );
+            $parametros = new clsParametrosPesquisas;
             $parametros->setSubmit(submit: 0);
             $parametros->adicionaCampoSelect(campo_nome: 'dono', campo_indice: 'ref_cod_pessoa_fj', campo_valor: 'nome');
             $this->campoListaPesq(nome: 'dono', campo: 'Dono da agenda', valor: $lista, default: 0, caminho: 'pesquisa_funcionario_lst.php', acao: '', duplo: false, descricao: '', descricao2: '', flag: null, pag_cadastro: null, disabled: '', div: false, serializedcampos: $parametros->serializaCampos());
-            //$this->campoLista( "dono", "Dono da agenda", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
+            // $this->campoLista( "dono", "Dono da agenda", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
         }
     }
 
@@ -123,7 +123,7 @@ return new class extends clsCadastro
     {
         $campos = '';
         $values = '';
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if ($this->nm_agenda) {
             if (is_string(value: $this->nm_agencia)) {
@@ -165,7 +165,7 @@ return new class extends clsCadastro
     public function Editar()
     {
         $set = '';
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric(value: $this->cod_agenda)) {
             if (is_string(value: $this->nm_agenda)) {
@@ -194,7 +194,7 @@ return new class extends clsCadastro
     public function Excluir()
     {
         if (is_numeric(value: $this->cod_agenda)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $db->Consulta(consulta: "DELETE FROM portal.agenda_compromisso WHERE ref_cod_agenda={$this->cod_agenda}");
             $db->Consulta(consulta: "DELETE FROM portal.agenda_responsavel WHERE ref_cod_agenda={$this->cod_agenda}");

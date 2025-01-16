@@ -1,4 +1,5 @@
 <?php
+
 /**
 Authors:
 JÃºlio Paulillo <julio@agendor.com.br>
@@ -45,9 +46,9 @@ class RDStationAPI
      **/
     protected function getURL($type = 'generic')
     {
-        //(POST) https://www.rdstation.com.br/api/1.2/services/PRIVATE_TOKEN/generic //USED TO CHANGE A LEAD STATUS
-        //(PUT) https://www.rdstation.com.br/api/1.2/leads/:lead_email //USED TO UPDATE A LEAD
-        //(POST) https://www.rdstation.com.br/api/1.2/conversions //USED TO SEND A NEW LEAD
+        // (POST) https://www.rdstation.com.br/api/1.2/services/PRIVATE_TOKEN/generic //USED TO CHANGE A LEAD STATUS
+        // (PUT) https://www.rdstation.com.br/api/1.2/leads/:lead_email //USED TO UPDATE A LEAD
+        // (POST) https://www.rdstation.com.br/api/1.2/conversions //USED TO SEND A NEW LEAD
         switch ($type) {
             case 'generic':     return $this->baseURL.$this->apiVersion.'/services/'.$this->privateToken.'/generic';
             case 'leads':       return $this->baseURL.$this->apiVersion.'/leads/';

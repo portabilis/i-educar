@@ -3,7 +3,7 @@
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassTeacher;
 
-return new class() extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -29,7 +29,7 @@ return new class() extends clsCadastro
 
         $this->cod_turma = $_GET['cod_turma'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 586, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_turma_lst.php');
 
         $schoolClass = LegacySchoolClass::find(request()->get('cod_turma'));

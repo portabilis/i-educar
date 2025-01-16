@@ -31,7 +31,7 @@ class LegacyUnificationStudentByHistoryAndRegistrationStudentOneTest extends Tes
         $this->studentTwo = LegacyStudentFactory::new()->create();
     }
 
-    public function testUnificationByHistoryAndRegistrationStudentOne(): void
+    public function test_unification_by_history_and_registration_student_one(): void
     {
         $registration = LegacyRegistrationFactory::new()->create([
             'ref_cod_aluno' => $this->studentOne->getKey(),

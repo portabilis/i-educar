@@ -25,7 +25,7 @@ class SchoolManagerService
 
     public function storeManager(SchoolManagerValueObject $valueObject)
     {
-        $schoolManager = new SchoolManager();
+        $schoolManager = new SchoolManager;
         $schoolManager->employee_id = $valueObject->employeeId;
         $schoolManager->school_id = $valueObject->schoolId;
         $schoolManager->role_id = $valueObject->roleId;

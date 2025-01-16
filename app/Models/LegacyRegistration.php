@@ -378,7 +378,7 @@ class LegacyRegistration extends LegacyModel
     protected function statusDescription(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int) $this->aprovado]
+            get: fn () => (new RegistrationStatus)->getDescriptiveValues()[(int) $this->aprovado]
         );
     }
 }

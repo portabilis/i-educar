@@ -25,7 +25,7 @@ class EmployeeGraduationService
 
     public function storeGraduation(EmployeeGraduationValueObject $valueObject)
     {
-        $employeeGraduation = new EmployeeGraduation();
+        $employeeGraduation = new EmployeeGraduation;
         $employeeGraduation->employee_id = $valueObject->employeeId;
         $employeeGraduation->course_id = $valueObject->courseId;
         $employeeGraduation->completion_year = $valueObject->completionYear;

@@ -41,7 +41,7 @@ return new class extends clsDetalhe
         if (!$registro) {
             $this->simpleRedirect('educar_sequencia_serie_lst.php');
         }
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro->gradeOrigin->course->institution) {
@@ -61,7 +61,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Série Destino', "{$registro->gradeDestiny->name}"]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3)) {
             $this->url_novo = 'educar_sequencia_serie_cad.php';
             $this->url_editar = "educar_sequencia_serie_cad.php?id={$this->id}";

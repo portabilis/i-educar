@@ -7,13 +7,13 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         CoreExt_View_Helper_UrlHelper::setBaseUrl('');
     }
 
-    public function testCriaUrlRelativa()
+    public function test_cria_url_relativa()
     {
         $expected = 'index.php';
         $this->assertEquals($expected, CoreExt_View_Helper_UrlHelper::url('index.php'));
     }
 
-    public function testCriaUrlRelativaComQuerystring()
+    public function test_cria_url_relativa_com_querystring()
     {
         $expected = 'index.php?param1=value1';
         $this->assertEquals(
@@ -25,7 +25,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCriaUrlRelativaComFragmento()
+    public function test_cria_url_relativa_com_fragmento()
     {
         $expected = 'index.php#fragment';
         $this->assertEquals(
@@ -37,7 +37,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCriaUrlRelativaComQuerystringEFragmento()
+    public function test_cria_url_relativa_com_querystring_e_fragmento()
     {
         $expected = 'index.php?param1=value1#fragment';
         $this->assertEquals(
@@ -52,7 +52,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCriaUrlAbsolutaComHostnameConfigurado()
+    public function test_cria_url_absoluta_com_hostname_configurado()
     {
         CoreExt_View_Helper_UrlHelper::setBaseUrl('localhost');
         $expected = 'http://localhost/index.php?param1=value1#fragment';
@@ -69,7 +69,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCriaUrlAbsolutaComHostnameImplicito()
+    public function test_cria_url_absoluta_com_hostname_implicito()
     {
         $expected = 'http://localhost/index.php?param1=value1#fragment';
         $this->assertEquals(
@@ -84,7 +84,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testUrlRetornaApenasSchemeEHost()
+    public function test_url_retorna_apenas_scheme_e_host()
     {
         $expected = 'http://www.example.com';
         $this->assertEquals(
@@ -100,7 +100,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testUrlRetornaComPath()
+    public function test_url_retorna_com_path()
     {
         $expected = 'http://www.example.com/controller';
         $this->assertEquals(
@@ -115,7 +115,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCriaLinkComUrlRelativa()
+    public function test_cria_link_com_url_relativa()
     {
         $expected = '<a href="index.php?param1=value1">Index</a>';
         $this->assertEquals(
@@ -128,7 +128,7 @@ class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCriaLinkComUrlAbsolutaImplicita()
+    public function test_cria_link_com_url_absoluta_implicita()
     {
         $expected = '<a href="http://localhost/index.php?param1=value1">Index</a>';
         $this->assertEquals(

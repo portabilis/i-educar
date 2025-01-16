@@ -10,7 +10,7 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
         parent::setUp();
     }
 
-    public function testCriaNovaInstanciaDeParecerDescritivoAluno()
+    public function test_cria_nova_instancia_de_parecer_descritivo_aluno()
     {
         $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
 

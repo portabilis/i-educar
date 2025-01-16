@@ -1,6 +1,6 @@
 <?php
 
-$obj_permissoes = new clsPermissoes();
+$obj_permissoes = new clsPermissoes;
 $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
 if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
@@ -32,13 +32,13 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         $escola_desabilitado = isset($escola_desabilitado) ?
       $escola_desabilitado : $desabilitado;
     }
-    $obj_permissoes = new clsPermissoes();
+    $obj_permissoes = new clsPermissoes;
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
     if ($nivel_usuario == 1) {
         $opcoes = ['' => 'Selecione'];
 
-        $obj_instituicao = new clsPmieducarInstituicao();
+        $obj_instituicao = new clsPmieducarInstituicao;
         $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
         $obj_instituicao->setOrderby('nm_instituicao ASC');
 
@@ -86,7 +86,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     if ($nivel_usuario == 2) {
         if ($get_instituicao) {
-            $obj_per = new clsPermissoes();
+            $obj_per = new clsPermissoes;
             $this->ref_cod_instituicao = $obj_per->getInstituicao($this->pessoa_logada);
             $retorno .= sprintf(
                 '<input type="hidden" id="red_cod_instituicao" value="%s">',
@@ -103,7 +103,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         $opcoes_escola = ['' => 'Selecione'];
 
         $todas_escolas = 'escola = new Array();' . "\n";
-        $obj_escola = new clsPmieducarEscola();
+        $obj_escola = new clsPmieducarEscola;
 
         $lista = $obj_escola->lista(
             str_nome: 1
@@ -124,7 +124,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
         if ($nivel_usuario == 4 || $nivel_usuario == 8) {
             $opcoes_escola = ['' => 'Selecione'];
-            $obj_escola = new clsPmieducarEscolaUsuario();
+            $obj_escola = new clsPmieducarEscolaUsuario;
             $lista = $obj_escola->lista($this->pessoa_logada);
 
             if (is_array($lista) && count($lista)) {
@@ -139,7 +139,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
             }
         } elseif ($this->ref_cod_instituicao) {
             $opcoes_escola = ['' => 'Selecione'];
-            $obj_escola = new clsPmieducarEscola();
+            $obj_escola = new clsPmieducarEscola;
             $lista = $obj_escola->lista(
                 int_ref_cod_instituicao: $this->ref_cod_instituicao,
                 str_nome: 1

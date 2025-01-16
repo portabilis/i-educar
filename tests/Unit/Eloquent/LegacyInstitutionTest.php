@@ -23,7 +23,7 @@ class LegacyInstitutionTest extends EloquentTestCase
         return LegacyInstitution::class;
     }
 
-    public function testScopeActive(): void
+    public function test_scope_active(): void
     {
         $found = LegacyInstitution::active()->get();
 
@@ -39,27 +39,27 @@ class LegacyInstitutionTest extends EloquentTestCase
         $this->assertEquals($this->model->state, $this->model->ref_sigla_uf);
     }
 
-    public function testRelocationDate(): void
+    public function test_relocation_date(): void
     {
         $this->assertEquals($this->model->relocationDate, $this->model->data_base_remanejamento);
     }
 
-    public function testEducacensoDate(): void
+    public function test_educacenso_date(): void
     {
         $this->assertEquals($this->model->educacensoDate, $this->model->data_educacenso);
     }
 
-    public function testIsMandatoryCensoFields(): void
+    public function test_is_mandatory_censo_fields(): void
     {
         $this->assertEquals((bool) $this->model->obrigar_campos_censo, $this->model->isMandatoryCensoFields());
     }
 
-    public function testGetAllowRegistrationOutAcademicYearAttribute(): void
+    public function test_get_allow_registration_out_academic_year_attribute(): void
     {
         $this->assertEquals((bool) $this->model->permitir_matricula_fora_periodo_letivo, $this->model->allowRegistrationOutAcademicYear);
     }
 
-    public function testRelationshipEvaluationRules()
+    public function test_relationship_evaluation_rules()
     {
         LegacyRoundingTableFactory::new()->create([
             'instituicao_id' => $this->model,
@@ -75,7 +75,7 @@ class LegacyInstitutionTest extends EloquentTestCase
         $this->assertInstanceOf(LegacyEvaluationRule::class, $this->model->evaluationRules->first());
     }
 
-    public function testGetRelocationDate(): void
+    public function test_get_relocation_date(): void
     {
         $this->assertEquals($this->model->relocationDate?->format('Y-m-d'), $this->model->getRelocationDate());
     }

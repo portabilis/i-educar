@@ -6,7 +6,7 @@ use App\Models\LegacySchoolAcademicYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class() extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -40,7 +40,7 @@ return new class() extends clsCadastro
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
         if (is_numeric(value: $this->cod_calendario_ano_letivo)) {
@@ -53,7 +53,7 @@ return new class() extends clsCadastro
                 $obj_escola = new clsPmieducarEscola(cod_escola: $this->ref_cod_escola);
                 $obj_escola->detalhe();
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
@@ -106,7 +106,7 @@ return new class() extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
         $data_inicio = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->min('data_inicio');
@@ -140,7 +140,7 @@ return new class() extends clsCadastro
 
                 return false;
             } else {
-                $obj_calend_ano_letivo = new LegacyCalendarYear();
+                $obj_calend_ano_letivo = new LegacyCalendarYear;
                 $obj_calend_ano_letivo->ref_cod_escola = $this->ref_cod_escola;
                 $obj_calend_ano_letivo->ref_usuario_cad = $this->pessoa_logada;
                 $obj_calend_ano_letivo->ano = $this->ano;
@@ -166,7 +166,7 @@ return new class() extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
         $data_inicio = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->min('data_inicio');
         $data_fim = LegacyAcademicYearStage::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->max('data_fim');
@@ -197,7 +197,7 @@ return new class() extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_ano_letivo_lst.php');
 
         $obj = LegacyCalendarYear::find($this->cod_calendario_ano_letivo);

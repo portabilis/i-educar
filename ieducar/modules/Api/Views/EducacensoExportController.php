@@ -114,7 +114,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim)
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             846,
             $this->pessoa_logada,
@@ -181,8 +181,8 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro00($escolaId, $ano, &$continuaExportacao)
     {
-        $educacensoRepository = new EducacensoRepository();
-        $registro00Model = new Registro00();
+        $educacensoRepository = new EducacensoRepository;
+        $registro00Model = new Registro00;
         $registro00 = new Registro00Data($educacensoRepository, $registro00Model);
         $data = $registro00->getExportFormatData($escolaId, $ano);
 
@@ -198,8 +198,8 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro10($escolaId, $ano)
     {
-        $educacensoRepository = new EducacensoRepository();
-        $registro10Model = new Registro10();
+        $educacensoRepository = new EducacensoRepository;
+        $registro10Model = new Registro10;
         $registro10 = new Registro10Data($educacensoRepository, $registro10Model);
         $data = $registro10->getExportFormatData($escolaId, $ano);
 
@@ -208,8 +208,8 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro20($escolaId, $ano)
     {
-        $educacensoRepository = new EducacensoRepository();
-        $registro20Model = new Registro20();
+        $educacensoRepository = new EducacensoRepository;
+        $registro20Model = new Registro20;
         $registro20 = new Registro20Data($educacensoRepository, $registro20Model);
         $data = $registro20->getExportFormatData($escolaId, $ano);
 
@@ -220,15 +220,15 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro30($escolaId, $ano)
     {
-        $educacensoRepository = new EducacensoRepository();
+        $educacensoRepository = new EducacensoRepository;
 
-        $registro40Model = new Registro40();
+        $registro40Model = new Registro40;
         $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
 
-        $registro50Model = new Registro50();
+        $registro50Model = new Registro50;
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-        $registro60Model = new Registro60();
+        $registro60Model = new Registro60;
         $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
 
         /** @var Registro40[] $gestores */
@@ -240,7 +240,7 @@ class EducacensoExportController extends ApiCoreController
         /** @var Registro60[] $alunos */
         $alunos = $registro60->getExportFormatData($escolaId, $ano);
 
-        $registro30Data = new Registro30Data($educacensoRepository, new Registro30());
+        $registro30Data = new Registro30Data($educacensoRepository, new Registro30);
         $registro30Data->setArrayDataByType($gestores, Registro30::TIPO_MANAGER);
         $registro30Data->setArrayDataByType($docentes, Registro30::TIPO_TEACHER);
         $registro30Data->setArrayDataByType($alunos, Registro30::TIPO_STUDENT);
@@ -362,8 +362,8 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro40($escolaId)
     {
-        $educacensoRepository = new EducacensoRepository();
-        $registro40Model = new Registro40();
+        $educacensoRepository = new EducacensoRepository;
+        $registro40Model = new Registro40;
         $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
 
         /** @var Registro40[] $gestores */
@@ -395,8 +395,8 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro50($escolaId, $ano)
     {
-        $educacensoRepository = new EducacensoRepository();
-        $registro50Model = new Registro50();
+        $educacensoRepository = new EducacensoRepository;
+        $registro50Model = new Registro50;
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
         $quantidadeComponentes = 25;
@@ -442,8 +442,8 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro60($escolaId, $ano)
     {
-        $educacensoRepository = new EducacensoRepository();
-        $registro60Model = new Registro60();
+        $educacensoRepository = new EducacensoRepository;
+        $registro60Model = new Registro60;
         $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
 
         /** @var Registro60[] $alunos */

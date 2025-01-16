@@ -30,7 +30,7 @@ return new class extends clsCadastro
 
         $this->cod_transferencia_tipo = $_GET['cod_transferencia_tipo'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 575, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_transferencia_tipo_lst.php');
 
         if (is_numeric(value: $this->cod_transferencia_tipo)) {
@@ -72,7 +72,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $object = new LegacyTransferType();
+        $object = new LegacyTransferType;
         $object->ref_usuario_cad = $this->pessoa_logada;
         $object->nm_tipo = $this->nm_tipo;
         $object->desc_tipo = $this->desc_tipo;

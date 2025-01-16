@@ -25,7 +25,7 @@ return new class extends clsDetalhe
         if ($registro['nm_deficiencia']) {
             $this->addDetalhe(['Deficiência ou transtorno', "{$registro['nm_deficiencia']}"]);
         }
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 631, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_deficiencia_cad.php';
             $this->url_editar = "educar_deficiencia_cad.php?cod_deficiencia={$registro['cod_deficiencia']}";

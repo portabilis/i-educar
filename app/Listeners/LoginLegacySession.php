@@ -54,7 +54,7 @@ class LoginLegacySession
         $individual = new LegacyIndividual(['idpes' => $user->cod_usuario]);
 
         $picture = $individual->picture()->first()
-            ? (new UrlPresigner())->getPresignedUrl($individual->picture()->first()->caminho)
+            ? (new UrlPresigner)->getPresignedUrl($individual->picture()->first()->caminho)
             : Asset::get('intranet/imagens/user-perfil.png');
 
         try {

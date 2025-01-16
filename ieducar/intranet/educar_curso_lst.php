@@ -161,7 +161,7 @@ return new class extends clsListagem
             intResultadosPorPagina: $this->limite
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 566, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_curso_cad.php")';
             $this->nome_acao = 'Novo';

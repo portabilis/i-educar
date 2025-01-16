@@ -68,7 +68,7 @@ class clsPmieducarEscolaCurso extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso) && is_numeric($this->ref_usuario_cad)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -123,7 +123,7 @@ class clsPmieducarEscolaCurso extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -231,7 +231,7 @@ class clsPmieducarEscolaCurso extends Model
             }
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -269,7 +269,7 @@ class clsPmieducarEscolaCurso extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} ec WHERE ec.ref_cod_escola = '{$this->ref_cod_escola}' AND ec.ref_cod_curso = '{$this->ref_cod_curso}'");
             $db->ProximoRegistro();
 
@@ -287,7 +287,7 @@ class clsPmieducarEscolaCurso extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_curso = '{$this->ref_cod_curso}'");
             $db->ProximoRegistro();
 
@@ -319,7 +319,7 @@ class clsPmieducarEscolaCurso extends Model
     public function excluirTodos()
     {
         if (is_numeric($this->ref_cod_escola)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_escola = '{$this->ref_cod_escola}'");
 
             return true;

@@ -16,7 +16,7 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
 
     public function Gerar()
     {
-        $regras = (new RegraAvaliacao_Model_RegraDataMapper())->findAll([], []);
+        $regras = (new RegraAvaliacao_Model_RegraDataMapper)->findAll([], []);
         $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
 
         $regras = ['' => 'Todas'] + $regras;

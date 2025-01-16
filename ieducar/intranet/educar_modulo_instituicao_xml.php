@@ -6,7 +6,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 if (is_numeric(value: $_GET['inst'])) {
-    $db = new clsBanco();
+    $db = new clsBanco;
     $consulta = "SELECT cod_modulo
                             ,nm_tipo
                        FROM pmieducar.modulo m

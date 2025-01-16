@@ -41,7 +41,7 @@ class NotificationService
             'user_id' => $userId,
         ]);
 
-        $url = (new NotificationUrlPresigner())->getNotificationUrl($notification);
+        $url = (new NotificationUrlPresigner)->getNotificationUrl($notification);
 
         event(new NotificationEvent($notification, $url, DB::getDefaultConnection()));
     }

@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class SituacaoFuncionamentoTest extends TestCase
 {
-    public function testCamposNullWithSituacaoFuncionamentoDiferenteDeEmAtividade()
+    public function test_campos_null_with_situacao_funcionamento_diferente_de_em_atividade()
     {
         $registro = $this->getFakeRegistro();
 
@@ -21,7 +21,7 @@ class SituacaoFuncionamentoTest extends TestCase
         $this->assertNull($registro->unidadeVinculada);
     }
 
-    public function testCamposNullWithSituacaoFuncionamentoEmAtividade()
+    public function test_campos_null_with_situacao_funcionamento_em_atividade()
     {
         $registro = $this->getFakeRegistro();
 
@@ -35,7 +35,7 @@ class SituacaoFuncionamentoTest extends TestCase
 
     private function getFakeRegistro()
     {
-        $registro = new Registro00();
+        $registro = new Registro00;
         $registro->inicioAnoLetivo = 'Data Fake';
         $registro->fimAnoLetivo = 'Data Fake';
         $registro->unidadeVinculada = 'Unidade Fake';

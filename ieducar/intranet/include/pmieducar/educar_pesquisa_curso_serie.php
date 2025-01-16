@@ -12,7 +12,7 @@
  *
  * @author Adriano Erik Weiguert Nagasava
  */
-$permissoes = new clsPermissoes();
+$permissoes = new clsPermissoes;
 $privilegio = $permissoes->nivel_acesso($this->pessoa_logada);
 
 $this->campoOculto('ref_cod_instituicao', $permissoes->getInstituicao($this->pessoa_logada));
@@ -26,7 +26,7 @@ if ($editar) {
 
 if ($privilegio == 4) {
     $opcoes = ['' => 'Selecione'];
-    $objTemp = new clsPmieducarEscolaCurso();
+    $objTemp = new clsPmieducarEscolaCurso;
     $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, 1);
     if ($lista) {
         $series = '';
@@ -79,7 +79,7 @@ if ($privilegio == 4) {
         $cursos = '';
         $series = '';
         foreach ($lst_escola as $escola) {
-            $objTemp = new clsPmieducarEscolaCurso();
+            $objTemp = new clsPmieducarEscolaCurso;
             $lista = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
             if ($lista) {
@@ -139,7 +139,7 @@ if ($privilegio == 4) {
         $cursos = '';
         $series = '';
         foreach ($lst_escola as $escola) {
-            $objTemp = new clsPmieducarEscolaCurso();
+            $objTemp = new clsPmieducarEscolaCurso;
             $lista = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
             if ($lista) {

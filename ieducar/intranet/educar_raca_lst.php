@@ -97,7 +97,7 @@ return new class extends clsListagem
         }
         $this->addPaginador2(strUrl: 'educar_raca_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->__limite);
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 678, int_idpes_usuario: $this->__pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_raca_cad.php")';
             $this->nome_acao = 'Novo';

@@ -37,7 +37,7 @@ return new class extends clsCadastro
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,
@@ -65,7 +65,7 @@ return new class extends clsCadastro
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
@@ -105,7 +105,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,
@@ -123,7 +123,7 @@ return new class extends clsCadastro
         $this->data_inicio = dataToBanco($this->data_inicio);
         $this->data_fim = dataToBanco($this->data_fim);
 
-        $obj = new LegacyAbsenceDelayCompensate();
+        $obj = new LegacyAbsenceDelayCompensate;
         $obj->ref_cod_servidor = $this->ref_cod_servidor;
         $obj->ref_cod_escola = $this->ref_cod_escola;
         $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
@@ -148,7 +148,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,
@@ -190,7 +190,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,

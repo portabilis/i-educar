@@ -11,7 +11,7 @@ class DiarioRecuperaBoletimTest extends UnitBaseTest
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaBoletimEstrutura()
+    public function test_recupera_boletim_estrutura()
     {
         if (class_exists(\BoletimReport::class)) {
             $this->markTestSkipped('Pacote de boletim instalado, o render em teste unitário não esta disponível');

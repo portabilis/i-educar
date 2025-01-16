@@ -96,7 +96,7 @@ return new class extends clsCadastro
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner)->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
         } else {
@@ -199,7 +199,7 @@ return new class extends clsCadastro
         $pessoaFisica = new clsFisica($this->pessoa_logada, false, $this->sexo);
         $pessoaFisica->edita();
 
-        $funcionario = new clsPortalFuncionario();
+        $funcionario = new clsPortalFuncionario;
 
         if ($this->matricula != $this->matricula_old) {
             $existeMatricula = $funcionario->lista($this->matricula);
@@ -253,7 +253,7 @@ return new class extends clsCadastro
             $escola = $escola['nome'];
         }
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = new clsPmieducarConfiguracoesGerais;
         $configuracoes = $configuracoes->detalhe();
 
         $permiteRelacionamentoPosvendas = $configuracoes['permite_relacionamento_posvendas'] ? 'Sim' : 'Não';
@@ -311,7 +311,7 @@ return new class extends clsCadastro
         }
     }
 
-    //envia foto e salva caminha no banco
+    // envia foto e salva caminha no banco
     public function savePhoto($id)
     {
         $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
@@ -330,7 +330,7 @@ return new class extends clsCadastro
 
                 return false;
             }
-            $caminhoFoto = (new UrlPresigner())->getPresignedUrl($caminhoFoto);
+            $caminhoFoto = (new UrlPresigner)->getPresignedUrl($caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();

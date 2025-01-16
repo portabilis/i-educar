@@ -49,7 +49,7 @@ abstract class CoreExt_Singleton
     protected static function _getInstance($self)
     {
         if (!isset(self::$_instance[$self])) {
-            self::$_instance[$self] = new $self();
+            self::$_instance[$self] = new $self;
         }
 
         return self::$_instance[$self];

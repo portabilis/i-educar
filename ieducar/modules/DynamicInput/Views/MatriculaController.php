@@ -11,7 +11,7 @@ class MatriculaController extends ApiCoreController
     protected function getMatriculas()
     {
         if ($this->canGetMatriculas()) {
-            $matriculas = new clsPmieducarMatricula();
+            $matriculas = new clsPmieducarMatricula;
             $matriculas->setOrderby('sequencial_fechamento , translate(nome,\''. 'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ'.'\', \''. 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN'.'\') ');
             $matriculas = $matriculas->lista(
                 null,

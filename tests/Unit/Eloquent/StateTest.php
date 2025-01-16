@@ -32,7 +32,7 @@ class StateTest extends EloquentTestCase
         return State::class;
     }
 
-    public function testFindByAbbreviation(): void
+    public function test_find_by_abbreviation(): void
     {
         $stateReturn = State::findByAbbreviation($this->model->abbreviation);
         $this->assertInstanceOf(State::class, $stateReturn);
@@ -40,7 +40,7 @@ class StateTest extends EloquentTestCase
         $this->assertEquals($stateReturn->abbreviation, $this->model->abbreviation);
     }
 
-    public function testGetListKeyAbbreviation(): void
+    public function test_get_list_key_abbreviation(): void
     {
         $list = State::getListKeyAbbreviation();
 
@@ -49,7 +49,7 @@ class StateTest extends EloquentTestCase
         $this->assertJsonStringEqualsJsonString($except, $list);
     }
 
-    public function testGetNameByAbbreviation(): void
+    public function test_get_name_by_abbreviation(): void
     {
         $name = State::getNameByAbbreviation($this->model->abbreviation);
         $expect = $this->model->name;

@@ -1,6 +1,6 @@
 <?php
 
-$configuracoes = new clsPmieducarConfiguracoesGerais();
+$configuracoes = new clsPmieducarConfiguracoesGerais;
 $configuracoes = $configuracoes->detalhe();
 $reason = $configuracoes['ieducar_suspension_message'];
 ?>

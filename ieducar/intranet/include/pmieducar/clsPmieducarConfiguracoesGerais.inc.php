@@ -232,7 +232,7 @@ class clsPmieducarConfiguracoesGerais
      */
     public function edita()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $set = [];
 
         if (is_numeric($this->permite_relacionamento_posvendas)) {
@@ -361,7 +361,7 @@ class clsPmieducarConfiguracoesGerais
             $ref_cod_instituicao = $this->getUltimaInstituicaoAtiva();
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
         $db->ProximoRegistro();
         $record = $db->Tupla();
@@ -375,7 +375,7 @@ class clsPmieducarConfiguracoesGerais
 
     public function getUltimaInstituicaoAtiva()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta('SELECT cod_instituicao
                      FROM pmieducar.instituicao
                     WHERE ativo = 1

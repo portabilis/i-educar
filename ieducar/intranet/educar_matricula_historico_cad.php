@@ -134,7 +134,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $enturmacao = new clsPmieducarMatriculaTurma();
+        $enturmacao = new clsPmieducarMatriculaTurma;
         $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
         $enturmacao->ref_cod_turma = $this->ref_cod_turma;
         $enturmacao->sequencial = $this->sequencial;
@@ -221,7 +221,8 @@ return new class extends clsCadastro
         return false;
     }
 
-    private function enturmacaoRemanejadaMesmaTurma($sequencial) {
+    private function enturmacaoRemanejadaMesmaTurma($sequencial)
+    {
         return LegacyEnrollment::query()
             ->where('ref_cod_turma', $this->ref_cod_turma)
             ->where('ref_cod_matricula', $this->ref_cod_matricula)
@@ -239,7 +240,6 @@ return new class extends clsCadastro
             ->first();
 
         DB::beginTransaction();
-
 
         if ($enturmacao->remanejado_mesma_turma) {
             $proximaEnturmacao = $this->enturmacaoRemanejadaMesmaTurma($this->sequencial + 1);

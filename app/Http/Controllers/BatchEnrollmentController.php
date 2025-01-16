@@ -39,8 +39,8 @@ class BatchEnrollmentController extends Controller
         return view('enrollments.batch.cancel', [
             'schoolClass' => $schoolClass,
             'enrollments' => $enrollments,
-            'fails' => $fails ?? new MessageBag(),
-            'success' => $success ?? new MessageBag(),
+            'fails' => $fails ?? new MessageBag,
+            'success' => $success ?? new MessageBag,
         ]);
     }
 
@@ -66,8 +66,8 @@ class BatchEnrollmentController extends Controller
         return view('enrollments.batch.enroll', [
             'schoolClass' => $schoolClass,
             'registrations' => $registrations,
-            'fails' => $fails ?? new MessageBag(),
-            'success' => $success ?? new MessageBag(),
+            'fails' => $fails ?? new MessageBag,
+            'success' => $success ?? new MessageBag,
         ]);
     }
 
@@ -97,8 +97,8 @@ class BatchEnrollmentController extends Controller
         $date = Carbon::createFromFormat('d/m/Y', $request->input('date'));
         $enrollmentsIds = $request->input('enrollments', []);
 
-        $fails = new MessageBag();
-        $success = new MessageBag();
+        $fails = new MessageBag;
+        $success = new MessageBag;
 
         $enrollments = $schoolClass->getActiveEnrollments();
 
@@ -142,8 +142,8 @@ class BatchEnrollmentController extends Controller
         $date = Carbon::createFromFormat('d/m/Y', $request->input('date'));
         $registrationsIds = $request->input('registrations', []);
 
-        $fails = new MessageBag();
-        $success = new MessageBag();
+        $fails = new MessageBag;
+        $success = new MessageBag;
 
         $registrations = $registrationService->getRegistrationsNotEnrolled($schoolClass);
 
@@ -174,8 +174,8 @@ class BatchEnrollmentController extends Controller
         ?MessageBag $success,
         string $type = 'enroll'
     ) {
-        $fail = $fail ?? new MessageBag();
-        $success = $success ?? new MessageBag();
+        $fail = $fail ?? new MessageBag;
+        $success = $success ?? new MessageBag;
 
         switch ($type) {
             case 'enroll':

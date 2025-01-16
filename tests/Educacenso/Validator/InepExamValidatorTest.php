@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class InepExamValidatorTest extends TestCase
 {
-    public function testJustNenhumSelected()
+    public function test_just_nenhum_selected()
     {
         $resources = [RecursosRealizacaoProvas::NENHUM];
         $deficiencies = [];
@@ -18,7 +18,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testNenhumAndAnotherResourceSelected()
+    public function test_nenhum_and_another_resource_selected()
     {
         $resources = [RecursosRealizacaoProvas::NENHUM, RecursosRealizacaoProvas::AUXILIO_LEDOR];
         $deficiencies = [Deficiencias::CEGUEIRA];
@@ -28,7 +28,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: <b>Nenhum</b> estiver selecionada', $validator->getMessage());
     }
 
-    public function testProvaAmpliadaAndAnotherPermitedOptionChoosed()
+    public function test_prova_ampliada_and_another_permited_option_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18, RecursosRealizacaoProvas::AUXILIO_LEDOR];
         $deficiencies = [Deficiencias::BAIXA_VISAO];
@@ -37,7 +37,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testProvaAmpliadaAndAnotherForbiddenOptionChoosed()
+    public function test_prova_ampliada_and_another_forbidden_option_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18, RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
         $deficiencies = [Deficiencias::BAIXA_VISAO, Deficiencias::VISAO_MONOCULAR];
@@ -47,7 +47,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testAuxilioLedorAndAllowedDeficiencyChoosed()
+    public function test_auxilio_ledor_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::AUXILIO_LEDOR];
         $deficiencies = [Deficiencias::CEGUEIRA];
@@ -56,7 +56,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testAuxilioLedorAndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_auxilio_ledor_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::AUXILIO_LEDOR];
         $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::SURDEZ];
@@ -66,7 +66,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testAuxilioLedorAndNeutralDeficiencyChoosed()
+    public function test_auxilio_ledor_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::AUXILIO_LEDOR];
         $deficiencies = [Deficiencias::DEFICIENCIA_AUDITIVA];
@@ -76,7 +76,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testAuxilioTranscricaoAndAllowedAloneDeficiencyChoosed()
+    public function test_auxilio_transcricao_and_allowed_alone_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO];
         $deficiencies = [Deficiencias::BAIXA_VISAO];
@@ -85,7 +85,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testAuxilioTranscricaoAndNotAllowedAloneDeficiencyChoosed()
+    public function test_auxilio_transcricao_and_not_allowed_alone_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO];
         $deficiencies = [Deficiencias::CEGUEIRA];
@@ -95,7 +95,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testAuxilioTranscricaoAndNotAllowedAloneDeficiencyWithAnotherResourceChoosed()
+    public function test_auxilio_transcricao_and_not_allowed_alone_deficiency_with_another_resource_choosed()
     {
         $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO, RecursosRealizacaoProvas::AUXILIO_LEDOR];
         $deficiencies = [Deficiencias::CEGUEIRA];
@@ -104,7 +104,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testAuxilioTranscricaoAndNeutralDeficiencyChoosed()
+    public function test_auxilio_transcricao_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO];
         $deficiencies = [Deficiencias::DEFICIENCIA_AUDITIVA];
@@ -114,7 +114,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testGuiaInterpreteAndNeutralDeficiencyChoosed()
+    public function test_guia_interprete_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::GUIA_INTERPRETE];
         $deficiencies = [Deficiencias::DEFICIENCIA_AUDITIVA];
@@ -123,7 +123,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testGuiaInterpreteAndForbiddenDeficiencyChoosed()
+    public function test_guia_interprete_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::GUIA_INTERPRETE];
         $deficiencies = [Deficiencias::SURDOCEGUEIRA];
@@ -133,7 +133,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testTradutorInterpreteAndAllowedDeficiencyChoosed()
+    public function test_tradutor_interprete_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS];
         $deficiencies = [Deficiencias::SURDEZ];
@@ -142,7 +142,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testTradutorInterpreteAndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_tradutor_interprete_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS];
         $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::SURDEZ];
@@ -152,7 +152,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testTradutorInterpreteAndNeutralDeficiencyChoosed()
+    public function test_tradutor_interprete_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS];
         $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
@@ -162,7 +162,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testLeituraLabialAndAllowedDeficiencyChoosed()
+    public function test_leitura_labial_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::LEITURA_LABIAL];
         $deficiencies = [Deficiencias::SURDEZ];
@@ -171,7 +171,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testLeituraLabialAndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_leitura_labial_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::LEITURA_LABIAL];
         $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::SURDEZ];
@@ -181,7 +181,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testLeituraLabialAndNeutralDeficiencyChoosed()
+    public function test_leitura_labial_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::LEITURA_LABIAL];
         $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
@@ -191,7 +191,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaAmpliadaFonte18AndAllowedDeficiencyChoosed()
+    public function test_prova_ampliada_fonte18_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18];
         $deficiencies = [Deficiencias::BAIXA_VISAO];
@@ -200,7 +200,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testProvaAmpliadaFonte18AndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_prova_ampliada_fonte18_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18];
         $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::BAIXA_VISAO];
@@ -210,7 +210,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaAmpliadaFonte18AndNeutralDeficiencyChoosed()
+    public function test_prova_ampliada_fonte18_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18];
         $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
@@ -220,7 +220,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaSuperAmpliadaFonte24AndAllowedDeficiencyChoosed()
+    public function test_prova_super_ampliada_fonte24_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
         $deficiencies = [Deficiencias::BAIXA_VISAO];
@@ -229,7 +229,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testProvaSuperAmpliadaFonte24AndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_prova_super_ampliada_fonte24_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
         $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::BAIXA_VISAO];
@@ -239,7 +239,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaSuperAmpliadaFonte24AndNeutralDeficiencyChoosed()
+    public function test_prova_super_ampliada_fonte24_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
         $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
@@ -249,7 +249,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testCdComAudioAndAllowedDeficiencyChoosed()
+    public function test_cd_com_audio_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL];
         $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::VISAO_MONOCULAR];
@@ -258,7 +258,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testCdComAudioAndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_cd_com_audio_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL];
         $deficiencies = [Deficiencias::SURDEZ, Deficiencias::CEGUEIRA];
@@ -268,7 +268,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testCdComAudioAndNeutralDeficiencyChoosed()
+    public function test_cd_com_audio_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL];
         $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
@@ -278,7 +278,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaLinguaPortuguesaSegundaLinguaAndAllowedDeficiencyChoosed()
+    public function test_prova_lingua_portuguesa_segunda_lingua_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS];
         $deficiencies = [Deficiencias::SURDEZ];
@@ -287,7 +287,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testProvaLinguaPortuguesaSegundaLinguaAndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_prova_lingua_portuguesa_segunda_lingua_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS];
         $deficiencies = [Deficiencias::SURDEZ, Deficiencias::CEGUEIRA];
@@ -297,7 +297,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaLinguaPortuguesaSegundaLinguaAndNeutralDeficiencyChoosed()
+    public function test_prova_lingua_portuguesa_segunda_lingua_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS];
         $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
@@ -307,7 +307,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaVideoLibrasAndAllowedDeficiencyChoosed()
+    public function test_prova_video_libras_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS];
         $deficiencies = [Deficiencias::SURDEZ];
@@ -316,7 +316,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testProvaVideoLibrasAndAllowedAndForbiddenDeficiencyChoosed()
+    public function test_prova_video_libras_and_allowed_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS];
         $deficiencies = [Deficiencias::SURDEZ, Deficiencias::CEGUEIRA];
@@ -326,7 +326,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testProvaVideoLibrasAndNeutralDeficiencyChoosed()
+    public function test_prova_video_libras_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS];
         $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
@@ -336,7 +336,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testMaterialDidaticoProvaBrailleAndAllowedDeficiencyChoosed()
+    public function test_material_didatico_prova_braille_and_allowed_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE];
         $deficiencies = [Deficiencias::CEGUEIRA];
@@ -345,7 +345,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testMaterialDidaticoProvaBrailleAndNeutralDeficiencyChoosed()
+    public function test_material_didatico_prova_braille_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE];
         $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
@@ -355,7 +355,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testNenhumAndForbiddenDeficiencyChoosed()
+    public function test_nenhum_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::NENHUM];
         $deficiencies = [Deficiencias::CEGUEIRA];
@@ -365,7 +365,7 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function testNenhumAndNeutralDeficiencyChoosed()
+    public function test_nenhum_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::NENHUM];
         $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];

@@ -14,7 +14,7 @@ class LegacyCopySchoolClassTeacherTest extends TestCase
     use DatabaseTransactions;
     use LoginFirstUser;
 
-    public function testCopySchoolClassTeacher(): void
+    public function test_copy_school_class_teacher(): void
     {
         $this->loginWithFirstUser();
 

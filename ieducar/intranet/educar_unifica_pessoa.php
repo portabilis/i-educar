@@ -30,7 +30,7 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 9998878,
             int_idpes_usuario: $this->pessoa_logada,
@@ -57,7 +57,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 9998878,
             int_idpes_usuario: $this->pessoa_logada,
@@ -93,7 +93,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $validationData = new ValidationDataService();
+        $validationData = new ValidationDataService;
 
         if (!$validationData->verifyQuantityByKey(data: $pessoas, key: 'pessoa_principal', quantity: 0)) {
             $this->mensagem = 'Pessoa principal não informada';
@@ -119,7 +119,7 @@ return new class extends clsCadastro
         DB::beginTransaction();
 
         $unificationId = $this->createLog(mainId: $codPessoaPrincipal, duplicatesId: $codPessoas, createdBy: $this->pessoa_logada);
-        $unificador = new App_Unificacao_Pessoa(codigoUnificador: $codPessoaPrincipal, codigosDuplicados: $codPessoas, codPessoaLogada: $this->pessoa_logada, db: new clsBanco(), unificationId: $unificationId);
+        $unificador = new App_Unificacao_Pessoa(codigoUnificador: $codPessoaPrincipal, codigosDuplicados: $codPessoas, codPessoaLogada: $this->pessoa_logada, db: new clsBanco, unificationId: $unificationId);
 
         try {
             $unificador->unifica();
@@ -169,7 +169,7 @@ return new class extends clsCadastro
 
     private function createLog($mainId, $duplicatesId, $createdBy)
     {
-        $log = new LogUnification();
+        $log = new LogUnification;
         $log->type = PersonLogUnification::getType();
         $log->main_id = $mainId;
         $log->duplicates_id = json_encode(array_values($duplicatesId));

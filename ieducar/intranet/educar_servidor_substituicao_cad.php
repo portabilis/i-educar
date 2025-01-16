@@ -40,7 +40,7 @@ return new class extends clsCadastro
         $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,
@@ -64,7 +64,7 @@ return new class extends clsCadastro
 
             $this->professor = $obj_servidor->isProfessor() == true ? 'true' : 'false';
 
-            $obj = new clsPmieducarServidorAlocacao();
+            $obj = new clsPmieducarServidorAlocacao;
             $lista = $obj->lista(
                 int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
                 int_ref_cod_servidor: $this->ref_cod_servidor,
@@ -164,7 +164,7 @@ return new class extends clsCadastro
         $professor = isset($_POST['professor']) ? strtolower(string: $_POST['professor']) : 'FALSE';
         $substituto = isset($_POST['ref_cod_servidor_todos']) ? $_POST['ref_cod_servidor_todos'] : null;
 
-        $permissoes = new clsPermissoes();
+        $permissoes = new clsPermissoes;
         $permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,

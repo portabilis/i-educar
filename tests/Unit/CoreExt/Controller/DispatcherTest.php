@@ -31,7 +31,7 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
     {
         $_SERVER['REQUEST_URI'] = $this->_uris[0]['uri'];
         $_SERVER['SCRIPT_FILENAME'] = '/var/www/ieducar/index.php';
-        $this->_dispatcher = new CoreExt_Controller_Dispatcher_AbstractStub();
+        $this->_dispatcher = new CoreExt_Controller_Dispatcher_AbstractStub;
     }
 
     protected function _setRequestUri($index = 0)
@@ -51,39 +51,39 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
             $this->_uris[$index]['uri'] : $this->_uris[0]['uri'];
     }
 
-    public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
+    public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->_dispatcher->setOptions(['foo' => 'bar']);
     }
 
-    public function testDispatcherEstabeleceControllerDefault()
+    public function test_dispatcher_estabelece_controller_default()
     {
         $this->assertEquals('index', $this->_dispatcher->getControllerName(), $this->_getRequestUri(0));
         $this->_setRequestUri(1);
         $this->assertEquals('index', $this->_dispatcher->getControllerName(), $this->_getRequestUri(1));
     }
 
-    public function testDispatcherEstabeleceControllerDefaultConfigurado()
+    public function test_dispatcher_estabelece_controller_default_configurado()
     {
         $this->_dispatcher->setOptions(['controller_default_name' => 'controller']);
         $this->assertEquals('controller', $this->_dispatcher->getControllerName(), $this->_getRequestUri(1));
     }
 
-    public function testDispatcherEstabeleceActionDefault()
+    public function test_dispatcher_estabelece_action_default()
     {
         $this->assertEquals('index', $this->_dispatcher->getActionName(), $this->_getRequestUri(0));
         $this->_setRequestUri(1);
         $this->assertEquals('index', $this->_dispatcher->getActionName(), $this->_getRequestUri(1));
     }
 
-    public function testDispatcherEstabeleceActionDefaultConfigurada()
+    public function test_dispatcher_estabelece_action_default_configurada()
     {
         $this->_dispatcher->setOptions(['action_default_name' => 'action']);
         $this->assertEquals('action', $this->_dispatcher->getActionName(), $this->_getRequestUri(1));
     }
 
-    public function testDispatcherEstabeleceController()
+    public function test_dispatcher_estabelece_controller()
     {
         $this->_setRequestUri(2);
         $this->assertEquals('controller', $this->_dispatcher->getControllerName(), $this->_getRequestUri(2));
@@ -97,7 +97,7 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
         $this->assertEquals('controller', $this->_dispatcher->getControllerName(), $this->_getRequestUri(6));
     }
 
-    public function testDispatcherEstabeleceAction()
+    public function test_dispatcher_estabelece_action()
     {
         $this->_setRequestUri(2);
         $this->assertEquals('action', $this->_dispatcher->getActionName(), $this->_getRequestUri(2));

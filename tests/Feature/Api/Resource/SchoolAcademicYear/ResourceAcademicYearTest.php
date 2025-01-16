@@ -23,7 +23,7 @@ class ResourceAcademicYearTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        //escolas
+        // escolas
         $schools = LegacySchoolFactory::new()->count(2)->create();
         $schools->each(function ($school) {
             LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => now()->year]);
@@ -31,9 +31,9 @@ class ResourceAcademicYearTest extends TestCase
             LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => now()->subYears(2)->year]);
             LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => now()->subYears(3)->year]);
         });
-        //escola
+        // escola
         $this->school = $schools->first();
-        //ano
+        // ano
         $this->year = $this->school->academicYears()->skip(1)->orderByYear()->first()->year;
     }
 

@@ -4,7 +4,7 @@ use App\Support\Database\DropPrimaryKey;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-return new class() extends Migration
+return new class extends Migration
 {
     use DropPrimaryKey;
 

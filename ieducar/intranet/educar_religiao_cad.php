@@ -26,11 +26,11 @@ return new class extends clsCadastro
 
         $this->cod_religiao = $_GET['cod_religiao'];
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro
+        $obj_permissao = new clsPermissoes;
 
         $obj_permissao->permissao_cadastra(int_processo_ap: 579, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_religiao_lst.php');
-        //**
+        // **
 
         if (is_numeric(value: $this->cod_religiao)) {
             $registro = Religion::findOrFail(id: $this->cod_religiao, columns: ['id', 'name']);
@@ -38,9 +38,9 @@ return new class extends clsCadastro
                 $this->nm_religiao = $registro->name;
                 $this->cod_religiao = $registro->id;
 
-                //** verificao de permissao para exclusao
+                // ** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissao->permissao_excluir(int_processo_ap: 579, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
-                //**
+                // **
 
                 $retorno = 'Editar';
             }
@@ -66,7 +66,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj = new Religion();
+        $obj = new Religion;
         $obj->name = $this->nm_religiao;
 
         if ($obj->save()) {

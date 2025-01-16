@@ -73,7 +73,7 @@ class AnnouncementPublishController extends Controller
         ]);
 
         return view('announcement.publish.create', [
-            'announcement' => new Announcement(),
+            'announcement' => new Announcement,
             'userTypes' => null,
         ]);
     }

@@ -65,7 +65,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testCancelEnrollment()
+    public function test_cancel_enrollment()
     {
         $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
@@ -89,7 +89,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testCancellationDateBeforeAcademicYearException()
+    public function test_cancellation_date_before_academic_year_exception()
     {
         $this->expectException(CancellationDateBeforeAcademicYearException::class);
 
@@ -116,7 +116,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testCancellationDateAfterAcademicYearException()
+    public function test_cancellation_date_after_academic_year_exception()
     {
         $this->expectException(CancellationDateAfterAcademicYearException::class);
 
@@ -140,7 +140,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testPreviousCancellationDateException()
+    public function test_previous_cancellation_date_exception()
     {
         $this->expectException(PreviousCancellationDateException::class);
 
@@ -156,7 +156,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @return void
      */
-    public function testEnroll()
+    public function test_enroll()
     {
         $enrollment = LegacyEnrollmentFactory::new()->make([
             'ref_cod_turma' => $this->schoolClass,
@@ -181,7 +181,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @return void
      */
-    public function testNoVacancyException()
+    public function test_no_vacancy_exception()
     {
         $this->expectException(NoVacancyException::class);
 
@@ -203,7 +203,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @return void
      */
-    public function testExistsActiveEnrollmentException()
+    public function test_exists_active_enrollment_exception()
     {
         $this->expectException(ExistsActiveEnrollmentException::class);
 
@@ -226,7 +226,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testEnrollDateBeforeAcademicYearException()
+    public function test_enroll_date_before_academic_year_exception()
     {
         $this->expectException(EnrollDateBeforeAcademicYearException::class);
 
@@ -257,7 +257,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testEnrollDateBeforeAcademicYearAllowed()
+    public function test_enroll_date_before_academic_year_allowed()
     {
         $enrollment = LegacyEnrollmentFactory::new()->make([
             'ref_cod_turma' => $this->schoolClass,
@@ -288,7 +288,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testEnrollDateAfterAcademicYearException()
+    public function test_enroll_date_after_academic_year_exception()
     {
         $this->expectException(EnrollDateAfterAcademicYearException::class);
 
@@ -315,7 +315,7 @@ class EnrollmentServiceTest extends TestCase
      *
      * @throws Throwable
      */
-    public function testPreviousEnrollDateException()
+    public function test_previous_enroll_date_exception()
     {
         $this->expectException(PreviousEnrollDateException::class);
 
@@ -335,7 +335,7 @@ class EnrollmentServiceTest extends TestCase
     /**
      * Instituição sem data base, a ultima enturmação deverá ser retornada
      */
-    public function testGetPreviousEnrollmentWithouRelocationDate()
+    public function test_get_previous_enrollment_withou_relocation_date()
     {
         /** @var LegacyEnrollment $enrollment */
         $enrollment = LegacyEnrollmentFactory::new()->create([
@@ -353,7 +353,7 @@ class EnrollmentServiceTest extends TestCase
     /**
      * Instituição com data base antes da data de remanejamento, devera retornar null
      */
-    public function testGetPreviousEnrollmentWithRelocationDateBeforeDepartedDate()
+    public function test_get_previous_enrollment_with_relocation_date_before_departed_date()
     {
         /** @var LegacyEnrollment $enrollment */
         $enrollment = LegacyEnrollmentFactory::new()->create([
@@ -372,7 +372,7 @@ class EnrollmentServiceTest extends TestCase
     /**
      * Instituição com data base depois da data de remanejamento, a ultima enturmação deverá ser retornada
      */
-    public function testGetPreviousEnrollmentWithRelocationDateAfterDepartedDate()
+    public function test_get_previous_enrollment_with_relocation_date_after_departed_date()
     {
         /** @var LegacyEnrollment $enrollment */
         $enrollment = LegacyEnrollmentFactory::new()->create([
@@ -388,7 +388,7 @@ class EnrollmentServiceTest extends TestCase
         $this->assertNull($lastEnrollment);
     }
 
-    public function testReorder()
+    public function test_reorder()
     {
         $schoolClass = $this->schoolClass->getKey();
 

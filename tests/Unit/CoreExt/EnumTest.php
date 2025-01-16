@@ -2,7 +2,7 @@
 
 class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
 {
-    public function testRetornaTodosOsValoresDoEnum()
+    public function test_retorna_todos_os_valores_do_enum()
     {
         $enum = CoreExt_Enum1Stub::getInstance();
         $this->assertEquals([1], $enum->getKeys());
@@ -14,7 +14,7 @@ class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
         $this->assertEquals(['red'], $enum->getKeys());
     }
 
-    public function testItemDeEnumRetornaDescricao()
+    public function test_item_de_enum_retorna_descricao()
     {
         $enum = CoreExt_Enum1Stub::getInstance();
         $this->assertEquals(1, $enum->getValue(CoreExt_Enum1Stub::ONE));
@@ -26,7 +26,7 @@ class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
         $this->assertEquals('#FF0000', $enum->getValue(CoreExt_EnumStringStub::RED));
     }
 
-    public function testEnumAcessadosComoArray()
+    public function test_enum_acessados_como_array()
     {
         $enum = CoreExt_Enum1Stub::getInstance();
         $this->assertEquals(1, $enum[CoreExt_Enum1Stub::ONE]);
@@ -38,7 +38,7 @@ class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
         $this->assertEquals('#FF0000', $enum[CoreExt_EnumStringStub::RED]);
     }
 
-    public function testEnumAcessosDiversosComoArray()
+    public function test_enum_acessos_diversos_como_array()
     {
         $enum = CoreExt_Enum1Stub::getInstance();
         $this->assertTrue(isset($enum[CoreExt_Enum1Stub::ONE]));
@@ -57,14 +57,14 @@ class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
         $this->assertEquals('red', $enum->getKey('#FF0000'));
     }
 
-    public function testEnumEApenasLeitura()
+    public function test_enum_e_apenas_leitura()
     {
         $this->expectException(\CoreExt_Exception::class);
         $enum = CoreExt_Enum1Stub::getInstance();
         $enum['foo'] = 'bar';
     }
 
-    public function testEnumNaoPermiteRemoverEntrada()
+    public function test_enum_nao_permite_remover_entrada()
     {
         $this->expectException(\CoreExt_Exception::class);
         $enum = CoreExt_Enum1Stub::getInstance();

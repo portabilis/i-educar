@@ -70,7 +70,7 @@ class LoginController extends Controller
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
-            'grecaptcha' => [new ReCaptchaV3()],
+            'grecaptcha' => [new ReCaptchaV3],
         ], [
             $this->username() . '.required' => 'O campo matrícula é obrigatório.',
             $this->username() . '.string' => 'O campo matrícula é obrigatório.',

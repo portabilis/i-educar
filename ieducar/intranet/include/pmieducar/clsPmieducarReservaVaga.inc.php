@@ -112,7 +112,7 @@ class clsPmieducarReservaVaga extends Model
         if (is_numeric($this->ref_ref_cod_escola) &&
             is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_usuario_cad) &&
             (is_numeric($this->ref_cod_aluno) || (is_numeric($this->cpf_responsavel) && is_string($this->nm_aluno)))) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -178,7 +178,7 @@ class clsPmieducarReservaVaga extends Model
     public function edita()
     {
         if (is_numeric($this->cod_reserva_vaga)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -361,7 +361,7 @@ class clsPmieducarReservaVaga extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -399,7 +399,7 @@ class clsPmieducarReservaVaga extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_reserva_vaga)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} rv WHERE rv.cod_reserva_vaga = '{$this->cod_reserva_vaga}'");
             $db->ProximoRegistro();
 
@@ -417,7 +417,7 @@ class clsPmieducarReservaVaga extends Model
     public function existe()
     {
         if (is_numeric($this->cod_reserva_vaga)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_reserva_vaga = '{$this->cod_reserva_vaga}'");
             $db->ProximoRegistro();
 

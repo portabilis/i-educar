@@ -14,7 +14,7 @@ class DiarioRecuperaEtapasPorEscolaTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaEtapasPorEscola()
+    public function test_recupera_etapas_por_escola()
     {
         $school = LegacySchoolFactory::new()->create();
 

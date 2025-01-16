@@ -25,7 +25,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,7 +36,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->enableForeignKeys();
 
@@ -46,7 +46,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testWithoutOthersEnrollmentsReturnsTrue()
+    public function test_without_others_enrollments_returns_true()
     {
         $schoolClass = LegacySchoolClassFactory::new()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $registration = LegacyRegistrationFactory::new()->create();
@@ -57,7 +57,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testWithEnrollmentsSameDayDifferentTimeReturnsTrue()
+    public function test_with_enrollments_same_day_different_time_returns_true()
     {
         $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $otherSchoolClass = LegacySchoolClassFactory::new()->afternoon()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
@@ -82,7 +82,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testWithEnrollmentsSameDaySameTimeSameYearReturnsFalse()
+    public function test_with_enrollments_same_day_same_time_same_year_returns_false()
     {
         $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
@@ -107,7 +107,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testWithEnrollmentsSameDaySameTimeDifferentYearReturnsTrue()
+    public function test_with_enrollments_same_day_same_time_different_year_returns_true()
     {
         $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
@@ -124,7 +124,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testWithEnrollmentsDifferentDaySameTimeReturnsFalse()
+    public function test_with_enrollments_different_day_same_time_returns_false()
     {
         $schoolClass = LegacySchoolClassFactory::new()->morning()->create([
             'tipo_mediacao_didatico_pedagogico' => 1,
@@ -144,7 +144,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testShouldLaunchExceptionWhenPassInvalidSchoolClassId()
+    public function test_should_launch_exception_when_pass_invalid_school_class_id()
     {
         $this->expectException(ModelNotFoundException::class);
 
@@ -156,7 +156,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testSameYearButDifferentAcademicPeriods()
+    public function test_same_year_but_different_academic_periods()
     {
         $student = LegacyStudentFactory::new()->create();
 
@@ -194,7 +194,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testWithEnrollmentsSameDaySameTimeSameYearAndOneAeeOtherEscolarizacaoReturnsTrue()
+    public function test_with_enrollments_same_day_same_time_same_year_and_one_aee_other_escolarizacao_returns_true()
     {
         $schoolClass = LegacySchoolClassFactory::new()->morning()->create(
             [
@@ -231,7 +231,7 @@ class AvailableTimeServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testWithInactiveEnrollmentsSameDaySameTimeSameYearReturnsTrue()
+    public function test_with_inactive_enrollments_same_day_same_time_same_year_returns_true()
     {
         $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);

@@ -11,7 +11,7 @@ class StudentControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testUpdateStateRegistration()
+    public function test_update_state_registration()
     {
         /** @var LegacyStudent $student */
         $student = LegacyStudentFactory::new()->create();
@@ -34,7 +34,7 @@ class StudentControllerTest extends TestCase
         ]);
     }
 
-    public function testUpdateStateRegistrationWithDigit()
+    public function test_update_state_registration_with_digit()
     {
         /** @var LegacyStudent $student */
         $student = LegacyStudentFactory::new()->create();
@@ -57,7 +57,7 @@ class StudentControllerTest extends TestCase
         ]);
     }
 
-    public function testUpdateStateRegistrationDuplicated()
+    public function test_update_state_registration_duplicated()
     {
         $stateRegistration = '000.000.000';
 
@@ -77,7 +77,7 @@ class StudentControllerTest extends TestCase
         $response->assertJsonValidationErrors(['state_registration_id' => ['Já existe uma aluno com este número de inscrição.']]);
     }
 
-    public function testUpdateStateRegistrationInvalid()
+    public function test_update_state_registration_invalid()
     {
         /** @var LegacyStudent $student */
         $student = LegacyStudentFactory::new()->create();

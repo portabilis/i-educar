@@ -60,14 +60,14 @@ class Person extends Model
     protected function typeDescription(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new PersonType())->getDescriptiveValues()[(int) $this->type],
+            get: fn () => (new PersonType)->getDescriptiveValues()[(int) $this->type],
         );
     }
 
     protected function registryOriginDescription(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new RegistryOrigin())->getDescriptiveValues()[(int) $this->registry_origin],
+            get: fn () => (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin],
         );
     }
 }

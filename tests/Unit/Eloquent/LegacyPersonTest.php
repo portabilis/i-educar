@@ -31,7 +31,7 @@ class LegacyPersonTest extends EloquentTestCase
     }
 
     /** @test */
-    public function relationshipDeficiencies(): void
+    public function relationship_deficiencies(): void
     {
         LegacyIndividualFactory::new()->hasDeficiency()->create(['idpes' => $this->model]);
 
@@ -40,7 +40,7 @@ class LegacyPersonTest extends EloquentTestCase
     }
 
     /** @test */
-    public function relationshipConsiderableDeficiencies(): void
+    public function relationship_considerable_deficiencies(): void
     {
         LegacyIndividualFactory::new()->hasDeficiency(['desconsidera_regra_diferenciada' => false])->create(['idpes' => $this->model]);
 

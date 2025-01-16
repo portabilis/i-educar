@@ -16,7 +16,7 @@ class FormulaTest extends TestCase
     {
         parent::setUp();
 
-        $this->formula = new FormulaMedia_Model_Formula();
+        $this->formula = new FormulaMedia_Model_Formula;
     }
 
     /**
@@ -24,7 +24,7 @@ class FormulaTest extends TestCase
      *
      * @return void
      */
-    public function testGetTokensMethod()
+    public function test_get_tokens_method()
     {
         $this->assertCount(63, $this->formula->getTokens());
     }
@@ -34,7 +34,7 @@ class FormulaTest extends TestCase
      *
      * @return void
      */
-    public function testIsNumericTokenMethod()
+    public function test_is_numeric_token_method()
     {
         $this->assertTrue(
             $this->formula->isNumericToken('E1')
@@ -50,7 +50,7 @@ class FormulaTest extends TestCase
      *
      * @return void
      */
-    public function testReplaceTokensMethod()
+    public function test_replace_tokens_method()
     {
         $formula = $this->formula->replaceTokens('Se / Et', [
             'Et' => 4,
@@ -65,7 +65,7 @@ class FormulaTest extends TestCase
      *
      * @return void
      */
-    public function testReplaceAliasTokensMethod()
+    public function test_replace_alias_tokens_method()
     {
         $formula = '(1x2)';
         $expected = ' ( 1*2 ) ';
@@ -79,7 +79,7 @@ class FormulaTest extends TestCase
      *
      * @return void
      */
-    public function testExecFormulaMediaMethod()
+    public function test_exec_formula_media_method()
     {
         $this->formula->formulaMedia = '(E1 + E2 + E3 + E4) / Et';
         $average = $this->formula->execFormulaMedia([
@@ -106,7 +106,7 @@ class FormulaTest extends TestCase
      *
      * @return void
      */
-    public function testGetDefaultValidatorCollectionMethod()
+    public function test_get_default_validator_collection_method()
     {
         // Este método tem muitas dependências e deverá ser refatorado.
 
@@ -124,7 +124,7 @@ class FormulaTest extends TestCase
      *
      * @return void
      */
-    public function testConsideringDispensedStages()
+    public function test_considering_dispensed_stages()
     {
         $this->formula->formulaMedia = '((C1*E1*1) + (C2*E2*2) + (C3*E3*3) + (C4*E4*4)) / ((C1*1) + (C2*2) + (C3*3) + (C4*4))';
         $average = $this->formula->execFormulaMedia([

@@ -82,7 +82,7 @@ class clsPmieducarAvaliacao extends Model
     public function cadastra()
     {
         if (is_numeric($this->disc_ref_ref_cod_serie) && is_numeric($this->disc_ref_ref_cod_escola) && is_numeric($this->disc_ref_ref_cod_disciplina) && is_numeric($this->disc_ref_ref_cod_turma) && is_numeric($this->ref_usuario_cad) && is_string($this->titulo) && is_numeric($this->aplicada)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -151,7 +151,7 @@ class clsPmieducarAvaliacao extends Model
     public function edita()
     {
         if (is_numeric($this->cod_avaliacao) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -288,7 +288,7 @@ class clsPmieducarAvaliacao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -326,7 +326,7 @@ class clsPmieducarAvaliacao extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_avaliacao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_avaliacao = '{$this->cod_avaliacao}'");
             $db->ProximoRegistro();
 
@@ -344,7 +344,7 @@ class clsPmieducarAvaliacao extends Model
     public function existe()
     {
         if (is_numeric($this->cod_avaliacao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_avaliacao = '{$this->cod_avaliacao}'");
             $db->ProximoRegistro();
 

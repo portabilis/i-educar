@@ -8,7 +8,7 @@ use Tests\ViewTestCase;
 
 class StudentTest extends ViewTestCase
 {
-    public function testStudent(): void
+    public function test_student(): void
     {
         $found = Student::query()->get();
         $this->assertEquals(9, $found[1]->status);
@@ -16,7 +16,7 @@ class StudentTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }
 
-    public function testRelationshipMother(): void
+    public function test_relationship_mother(): void
     {
         $found = Student::query()->mother([
             'id',
@@ -56,7 +56,7 @@ class StudentTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipFather(): void
+    public function test_relationship_father(): void
     {
         $found = Student::query()->father([
             'id',
@@ -96,7 +96,7 @@ class StudentTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipGuardian(): void
+    public function test_relationship_guardian(): void
     {
         $found = Student::query()->guardian([
             'id',
@@ -136,7 +136,7 @@ class StudentTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipBenefits(): void
+    public function test_relationship_benefits(): void
     {
         $found = Student::query()->benefits()->first();
         $this->assertInstanceOf(Student::class, $found);
@@ -146,7 +146,7 @@ class StudentTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipDisabilities(): void
+    public function test_relationship_disabilities(): void
     {
         $found = Student::query()->disabilities()->first();
         $this->assertInstanceOf(Student::class, $found);
@@ -156,7 +156,7 @@ class StudentTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPhones(): void
+    public function test_relationship_phones(): void
     {
         $found = Student::query()->phones()->first();
         $this->assertInstanceOf(Student::class, $found);
@@ -166,7 +166,7 @@ class StudentTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPlace(): void
+    public function test_relationship_place(): void
     {
         $found = Student::query()->place([
             'address',
@@ -198,23 +198,23 @@ class StudentTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testGetAlias(): void
+    public function test_get_alias(): void
     {
         $aliases = collect($this->model->getExportedColumnsByGroup())->flatMap(fn ($item) => $item);
         $this->assertEquals('ID Aluno', $aliases->get('student_id'));
     }
 
-    public function testGetLabel(): void
+    public function test_get_label(): void
     {
         $this->assertEquals('Alunos', $this->model->getLabel());
     }
 
-    public function testGetDescription(): void
+    public function test_get_description(): void
     {
         $this->assertEquals('Os dados exportados serão contabilizados por quantidade de alunos(as), agrupando as informações de séries, cursos, turmas quando o(a) aluno(a) possuir mais de uma matrícula para a situação e ano filtrados.', $this->model->getDescription());
     }
 
-    public function testGetExportedColumnsByGroup(): void
+    public function test_get_exported_columns_by_group(): void
     {
         $expected = [
             'Códigos' => [
@@ -370,7 +370,7 @@ class StudentTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
     }
 
-    public function testGetLegacyColumns(): void
+    public function test_get_legacy_columns(): void
     {
         $expected = [
             'mother.person' => [

@@ -47,7 +47,7 @@ class TransferRegistrationDataService
         }
 
         if (!$this->hasSameStages($registration, $transfer->oldRegistration)) {
-            throw new StagesAreNotSame();
+            throw new StagesAreNotSame;
         }
 
         $this->copyAbsenceService->copy($registration, $transfer->oldRegistration);

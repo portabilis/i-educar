@@ -35,7 +35,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Nome', "{$country->name}"]);
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(753, $this->pessoa_logada, 7, null, true)) {
             $this->url_novo = 'public_pais_cad.php';

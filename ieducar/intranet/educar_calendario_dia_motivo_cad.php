@@ -38,7 +38,7 @@ return new class extends clsCadastro
 
         $this->cod_calendario_dia_motivo = $_GET['cod_calendario_dia_motivo'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 576, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_calendario_dia_motivo_lst.php');
 
         if (is_numeric(value: $this->cod_calendario_dia_motivo)) {
@@ -87,7 +87,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj = new LegacyCalendarDayReason();
+        $obj = new LegacyCalendarDayReason;
         $obj->ref_cod_escola = $this->ref_cod_escola;
         $obj->ref_usuario_cad = $this->pessoa_logada;
         $obj->sigla = $this->sigla;

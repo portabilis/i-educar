@@ -19,7 +19,7 @@ class DiarioRecuperaTurmasEscolaTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaEscolas()
+    public function test_recupera_escolas()
     {
         $school = LegacySchoolFactory::new()->create();
 

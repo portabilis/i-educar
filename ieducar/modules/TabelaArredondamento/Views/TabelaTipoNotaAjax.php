@@ -3,7 +3,7 @@
 $tabelas = [];
 
 if (isset($_GET['tipoNota'])) {
-    $tabela = new TabelaArredondamento_Model_TabelaDataMapper();
+    $tabela = new TabelaArredondamento_Model_TabelaDataMapper;
     $tabelas = $tabela->findAll([], ['tipoNota' => (int) $_GET['tipoNota']]);
 }
 

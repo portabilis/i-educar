@@ -375,7 +375,7 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_escola_lst.php');
 
         $this->cod_escola = $this->getQueryString('cod_escola');
@@ -622,7 +622,7 @@ return new class extends clsCadastro
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
     {
-        $escola = (new clsPmieducarEscola())->lista(int_ref_idpes: $pessoaj_id);
+        $escola = (new clsPmieducarEscola)->lista(int_ref_idpes: $pessoaj_id);
 
         if (is_array($escola) && count($escola) > 0) {
             $current = current($escola);
@@ -669,7 +669,7 @@ return new class extends clsCadastro
             $this->array_botao_url_script = ['obj = document.getElementById(\'pessoaj_idpes\');if(obj.value != \'\' ) {
                 document.getElementById(\'tipoacao\').value = \'\'; acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
-            $obj_permissoes = new clsPermissoes();
+            $obj_permissoes = new clsPermissoes;
             $this->fexcluir = is_numeric($this->cod_escola) && $obj_permissoes->permissao_excluir(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
             $this->inputsHelper()->integer(attrName: 'escola_inep_id', inputOptions: ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
@@ -685,7 +685,7 @@ return new class extends clsCadastro
 
             if ($nivel === 1) {
                 $cabecalhos[] = 'Instituicao';
-                $objInstituicao = new clsPmieducarInstituicao();
+                $objInstituicao = new clsPmieducarInstituicao;
                 $opcoes = ['' => 'Selecione'];
                 $objInstituicao->setOrderby('nm_instituicao ASC');
                 $lista = $objInstituicao->lista();
@@ -754,7 +754,7 @@ return new class extends clsCadastro
 
             if ($nivel == 1) {
                 $cabecalhos[] = 'Instituicao';
-                $objInstituicao = new clsPmieducarInstituicao();
+                $objInstituicao = new clsPmieducarInstituicao;
                 $opcoes = ['' => 'Selecione'];
                 $objInstituicao->setOrderby('nm_instituicao ASC');
                 $lista = $objInstituicao->lista();
@@ -1064,7 +1064,7 @@ return new class extends clsCadastro
 
             // EDITAR
             if ($this->cod_escola || $this->ref_cod_instituicao) {
-                $objTemp = new clsPmieducarCurso();
+                $objTemp = new clsPmieducarCurso;
                 $objTemp->setOrderby('nm_curso');
                 $lista = $objTemp->lista(int_ativo: 1, int_ref_cod_instituicao: $this->ref_cod_instituicao);
 
@@ -1673,7 +1673,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
 
@@ -1996,7 +1996,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
 
@@ -2090,7 +2090,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_escola_lst.php');
         $obj = new clsPmieducarEscola(cod_escola: $this->cod_escola, ref_usuario_cad: null, ref_usuario_exc: $this->pessoa_logada, ref_cod_instituicao: null, zona_localizacao: null, ref_idpes: null, sigla: null, data_cadastro: null, data_exclusao: null, ativo: null, bloquear_lancamento_diario_anos_letivos_encerrados: 0);
         $obj->detalhe();
@@ -2559,7 +2559,7 @@ return new class extends clsCadastro
                 continue;
             }
 
-            $valueObject = new SchoolManagerValueObject();
+            $valueObject = new SchoolManagerValueObject;
             $valueObject->employeeId = $employeeId;
             $valueObject->schoolId = $schoolId;
             $valueObject->roleId = $this->managers_role_id[$key] ?: null;
@@ -2601,8 +2601,8 @@ return new class extends clsCadastro
     {
         request()->validate(
             [
-                'servidor_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
-                'managers_chief' => new SchoolManagerAtLeastOneChief(),
+                'servidor_id' => ['max:3', new SchoolManagerUniqueIndividuals],
+                'managers_chief' => new SchoolManagerAtLeastOneChief,
                 'managers_inep_id.*' => 'nullable|size:12',
             ],
             [
@@ -2621,7 +2621,7 @@ return new class extends clsCadastro
     {
         $managers = [];
         foreach ($this->servidor_id as $key => $value) {
-            $valueObject = new SchoolManagerValueObject();
+            $valueObject = new SchoolManagerValueObject;
             $valueObject->employeeId = $this->servidor_id[$key];
             $valueObject->inepId = $this->managers_inep_id[$key];
             $valueObject->roleId = $this->managers_role_id[$key];

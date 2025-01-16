@@ -39,14 +39,14 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Observação', nl2br(string: "{$registro['observacao']}")]);
         }
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 21250, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_projeto_cad.php';
             $this->url_editar = "educar_projeto_cad.php?cod_projeto={$registro['cod_projeto']}";
         }
-        //**
+        // **
         $this->url_cancelar = 'educar_projeto_lst.php';
         $this->largura = '100%';
 

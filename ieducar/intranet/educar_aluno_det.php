@@ -66,7 +66,7 @@ return new class extends clsDetalhe
         Session::forget(keys: ['reload_faixa_etaria', 'reload_reserva_vaga']);
 
         // Verificação de permissão para cadastro.
-        $this->obj_permissao = new clsPermissoes();
+        $this->obj_permissao = new clsPermissoes;
 
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         $this->titulo = 'Aluno - Detalhe';
@@ -93,7 +93,7 @@ return new class extends clsDetalhe
             $obj_fisica = new clsFisica(idpes: $this->ref_idpes);
             $det_fisica = $obj_fisica->detalhe();
 
-            $obj_fisica_raca = new clsCadastroFisicaRaca();
+            $obj_fisica_raca = new clsCadastroFisicaRaca;
             $lst_fisica_raca = $obj_fisica_raca->lista(int_ref_idpes: $this->ref_idpes);
 
             $nameRace = null;
@@ -120,7 +120,7 @@ return new class extends clsDetalhe
 
             $registro['sexo'] = $det_fisica['sexo'] ? $opcoes[$det_fisica['sexo']] : '';
 
-            $obj_estado_civil = new clsEstadoCivil();
+            $obj_estado_civil = new clsEstadoCivil;
             $obj_estado_civil_lista = $obj_estado_civil->lista();
 
             $lista_estado_civil = [];
@@ -199,7 +199,7 @@ return new class extends clsDetalhe
             $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
             $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
 
-            $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
+            $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia;
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista(int_ref_idpes: $this->ref_idpes);
 
             $obj_beneficios_lista = LegacyBenefit::query()
@@ -271,13 +271,13 @@ return new class extends clsDetalhe
         }
 
         // código inep
-        $alunoMapper = new Educacenso_Model_AlunoDataMapper();
+        $alunoMapper = new Educacenso_Model_AlunoDataMapper;
         $alunoInep = null;
 
         try {
             $alunoInep = $alunoMapper->find(pkey: ['aluno' => $this->cod_aluno]);
 
-            $configuracoes = new clsPmieducarConfiguracoesGerais();
+            $configuracoes = new clsPmieducarConfiguracoesGerais;
             $configuracoes = $configuracoes->detalhe();
 
             if ($configuracoes['mostrar_codigo_inep_aluno']) {
@@ -598,7 +598,7 @@ return new class extends clsDetalhe
         $this->addDetalhe(detalhe: ['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);
 
         if ($registro['tipo_transporte'] !== 0) {
-            $tipoTransporte = ucfirst(string: (new TransportationProvider())->getValueDescription(value: $registro['tipo_transporte']));
+            $tipoTransporte = ucfirst(string: (new TransportationProvider)->getValueDescription(value: $registro['tipo_transporte']));
             $this->addDetalhe(detalhe: ['Responsável transporte', $tipoTransporte]);
         }
 
@@ -981,7 +981,7 @@ return new class extends clsDetalhe
     private function urlPresigner()
     {
         if (!isset($this->urlPresigner)) {
-            $this->urlPresigner = new UrlPresigner();
+            $this->urlPresigner = new UrlPresigner;
         }
 
         return $this->urlPresigner;

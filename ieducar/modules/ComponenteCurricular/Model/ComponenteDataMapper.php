@@ -60,7 +60,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     public function getAreaDataMapper()
     {
         if (is_null($this->_areaDataMapper)) {
-            $this->setAreaDataMapper(new AreaConhecimento_Model_AreaDataMapper());
+            $this->setAreaDataMapper(new AreaConhecimento_Model_AreaDataMapper);
         }
 
         return $this->_areaDataMapper;
@@ -87,7 +87,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     public function getAnoEscolarDataMapper()
     {
         if (is_null($this->_anoEscolarDataMapper)) {
-            $this->setAnoEscolarDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper());
+            $this->setAnoEscolarDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper);
         }
 
         return $this->_anoEscolarDataMapper;

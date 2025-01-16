@@ -51,16 +51,16 @@ trait Formatters
     {
         $string = $this->upperAndUnaccent($string);
 
-        //Aceita apenas letras
+        // Aceita apenas letras
         $alphas = range('A', 'Z');
         $caracteresAceitos = [' '];
         $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
-        //Aplica filtro na string eliminando caracteres indesejados
+        // Aplica filtro na string eliminando caracteres indesejados
         $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 
-        //Elimina espaços indesejados
+        // Elimina espaços indesejados
         $string = trim($string);
         $string = preg_replace('/( )+/', ' ', $string);
 
@@ -71,18 +71,18 @@ trait Formatters
     {
         $string = $this->upperAndUnaccent($string);
 
-        //Aceita apenas letras e numeros e alguns caracteres especiais
+        // Aceita apenas letras e numeros e alguns caracteres especiais
         $alphas = range('A', 'Z');
         $numbers = range(0, 9);
         $caracteresAceitos = [' ', 'ª', 'º', '-'];
         $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
         $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
-        //Aplica filtro na string eliminando caracteres indesejados
+        // Aplica filtro na string eliminando caracteres indesejados
         $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 
-        //Elimina espaços indesejados
+        // Elimina espaços indesejados
         $string = trim($string);
         $string = preg_replace('/( )+/', ' ', $string);
 
@@ -93,12 +93,12 @@ trait Formatters
     {
         $string = $this->upperAndUnaccent($string);
 
-        //Aceita apenas números e letra X
+        // Aceita apenas números e letra X
         $numbers = range(0, 9);
         $caracteresAceitos = [' ', 'x', 'X'];
         $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
 
-        //Aplica filtro na string eliminando caracteres indesejados
+        // Aplica filtro na string eliminando caracteres indesejados
         $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 
@@ -109,14 +109,14 @@ trait Formatters
     {
         $string = $this->upperAndUnaccent($string);
 
-        //Aceita apenas letras e numeros e alguns caracteres especiais
+        // Aceita apenas letras e numeros e alguns caracteres especiais
         $alphas = range('A', 'Z');
         $numbers = range(0, 9);
         $caracteresAceitos = ['_', '-', '@', '.'];
         $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
         $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
-        //Aplica filtro na string eliminando caracteres indesejados
+        // Aplica filtro na string eliminando caracteres indesejados
         $regex = sprintf('/[^%s]/u', preg_quote(implode($caracteresAceitos), '/'));
         $string = preg_replace($regex, '', $string);
 

@@ -51,7 +51,7 @@ class Breadcrumb
      */
     public function push($label, $link)
     {
-        $std = new \stdClass();
+        $std = new \stdClass;
 
         $std->label = $label;
         $std->link = $link;

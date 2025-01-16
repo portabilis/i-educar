@@ -92,7 +92,7 @@ class clsPmieducarEscolaSerie extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_usuario_cad)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -174,7 +174,7 @@ class clsPmieducarEscolaSerie extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -345,7 +345,7 @@ class clsPmieducarEscolaSerie extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -383,7 +383,7 @@ class clsPmieducarEscolaSerie extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} es WHERE es.ref_cod_escola = '{$this->ref_cod_escola}' AND es.ref_cod_serie = '{$this->ref_cod_serie}'");
             $db->ProximoRegistro();
 
@@ -401,7 +401,7 @@ class clsPmieducarEscolaSerie extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'");
             $db->ProximoRegistro();
 

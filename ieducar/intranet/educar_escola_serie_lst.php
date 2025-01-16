@@ -88,7 +88,7 @@ return new class extends clsListagem
             ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite
             : 0;
 
-        $obj_escola_serie = new clsPmieducarEscolaSerie();
+        $obj_escola_serie = new clsPmieducarEscolaSerie;
         $obj_escola_serie->setOrderby('nm_serie ASC');
         $obj_escola_serie->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
@@ -145,7 +145,7 @@ return new class extends clsListagem
             intResultadosPorPagina: $this->limite
         );
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 585, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_escola_serie_cad.php")';
             $this->nome_acao = 'Novo';

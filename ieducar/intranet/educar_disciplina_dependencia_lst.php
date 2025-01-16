@@ -57,7 +57,7 @@ return new class extends clsListagem
 
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
-        $obj_matricula = new clsPmieducarMatricula();
+        $obj_matricula = new clsPmieducarMatricula;
         $lst_matricula = $obj_matricula->lista($this->ref_cod_matricula);
 
         if (is_array($lst_matricula)) {
@@ -66,7 +66,7 @@ return new class extends clsListagem
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma();
+            $obj_matricula_turma = new clsPmieducarMatriculaTurma;
             $lst_matricula_turma = $obj_matricula_turma->lista(
                 $this->ref_cod_matricula,
                 int_ativo: 1,
@@ -116,7 +116,7 @@ return new class extends clsListagem
         $this->offset = $_GET['pagina_' . $this->nome] ?
             $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_disciplina_dependencia = new clsPmieducarDisciplinaDependencia();
+        $obj_disciplina_dependencia = new clsPmieducarDisciplinaDependencia;
         $obj_disciplina_dependencia->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_disciplina_dependencia->lista(
@@ -127,7 +127,7 @@ return new class extends clsListagem
         $total = $obj_disciplina_dependencia->_total;
 
         // Mapper de componente curricular
-        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
@@ -157,7 +157,7 @@ return new class extends clsListagem
             intResultadosPorPagina: $this->limite
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao_url[] = 'educar_disciplina_dependencia_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;

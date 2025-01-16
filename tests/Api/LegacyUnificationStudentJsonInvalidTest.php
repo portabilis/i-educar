@@ -26,7 +26,7 @@ class LegacyUnificationStudentJsonInvalidTest extends TestCase
         $this->studentTwo = LegacyStudentFactory::new()->create();
     }
 
-    public function testJsonInvalid(): void
+    public function test_json_invalid(): void
     {
         $request = [
             'tipoacao' => 'Novo',

@@ -26,14 +26,14 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends PHPUnit\F
         $this->_pageStrategy = new CoreExt_Controller_Dispatcher_Strategy_FrontStrategy($this->_frontController);
     }
 
-    public function testRequisicaoAControllerNaoExistenteLancaExcecao()
+    public function test_requisicao_a_controller_nao_existente_lanca_excecao()
     {
         $this->expectException(\CoreExt_Controller_Dispatcher_Exception::class);
         $_SERVER['REQUEST_URI'] = 'http://www.example.com/PageController/view';
         $this->_pageStrategy->dispatch();
     }
 
-    public function testControllerConfiguradoCorretamente()
+    public function test_controller_configurado_corretamente()
     {
         $this->assertSame($this->_frontController, $this->_pageStrategy->getController());
     }

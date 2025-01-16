@@ -42,7 +42,7 @@ class clsLogAcesso
     public function cadastra()
     {
         if (is_numeric($this->cod_pessoa)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             // verificacoes de campos obrigatorios para insercao
             $campos = '';
             $valores = '';
@@ -131,7 +131,7 @@ class clsLogAcesso
             $orderBy = "ORDER BY $str_order_by";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -157,7 +157,7 @@ class clsLogAcesso
     public function detalhe()
     {
         if (is_numeric($this->cod_acesso)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT cod_acesso, ip_interno, ip_externo, data_hora, obs, cod_pessoa, sucesso FROM {$this->tabela} WHERE cod_acesso='{$this->cod_acesso}'");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();

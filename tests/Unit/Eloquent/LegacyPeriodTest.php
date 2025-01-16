@@ -20,7 +20,7 @@ class LegacyPeriodTest extends EloquentTestCase
     }
 
     /** @test */
-    public function getNameAttribute(): void
+    public function get_name_attribute(): void
     {
         $this->assertEquals($this->model->name, $this->model->nome);
     }

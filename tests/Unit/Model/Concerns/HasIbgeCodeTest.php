@@ -11,7 +11,7 @@ class HasIbgeCodeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testHasIbgeCode(): void
+    public function test_has_ibge_code(): void
     {
         $city = CityFactory::new()->create();
 

@@ -26,11 +26,11 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        //** Verificacao de permissao para exclusao
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para exclusao
+        $obj_permissao = new clsPermissoes;
 
         $obj_permissao->permissao_cadastra(558, $this->pessoa_logada, 7, 'educar_tipo_ensino_lst.php');
-        //**
+        // **
 
         $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
@@ -75,7 +75,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $object = new LegacyEducationType();
+        $object = new LegacyEducationType;
         $object->ref_usuario_cad = $this->pessoa_logada;
         $object->nm_tipo = $this->nm_tipo;
         $object->ref_cod_instituicao = $this->ref_cod_instituicao;

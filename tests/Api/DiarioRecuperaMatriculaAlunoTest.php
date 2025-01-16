@@ -11,7 +11,7 @@ class DiarioRecuperaMatriculaAlunoTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testBuscaMatriculaPorAluno()
+    public function test_busca_matricula_por_aluno()
     {
         $enrollment = LegacyEnrollmentFactory::new()->create();
 

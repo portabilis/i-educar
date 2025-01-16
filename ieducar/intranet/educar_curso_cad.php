@@ -67,7 +67,7 @@ return new class extends clsCadastro
         $retorno = 'Novo';
         $this->cod_curso = $this->getQueryString(name: 'cod_curso');
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 566,
             int_idpes_usuario: $this->pessoa_logada,
@@ -430,7 +430,7 @@ return new class extends clsCadastro
 
     public function updateClassStepsForCourse($courseCode, $standerdSchoolYear, $currentYear)
     {
-        $classStepsObject = new clsPmieducarTurmaModulo();
+        $classStepsObject = new clsPmieducarTurmaModulo;
 
         $classStepsObject->removeStepsOfClassesForCourseAndYear(courseCode: $courseCode, year: $currentYear);
 

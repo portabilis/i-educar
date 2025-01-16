@@ -75,7 +75,7 @@ class LegacySchoolClassTest extends EloquentTestCase
      *
      * @return void
      */
-    public function testGetTotalEnrolledMethod()
+    public function test_get_total_enrolled_method()
     {
         /** @var LegacySchoolClass $schoolClass */
         $schoolClass = LegacySchoolClassFactory::new()->create();
@@ -133,7 +133,7 @@ class LegacySchoolClassTest extends EloquentTestCase
     }
 
     /** @test */
-    public function relationshipGrades()
+    public function relationship_grades()
     {
         $grade = LegacyGradeFactory::new()->create();
         $school = LegacySchoolFactory::new()->create();
@@ -151,7 +151,7 @@ class LegacySchoolClassTest extends EloquentTestCase
     }
 
     /** @test */
-    public function relationshipStages()
+    public function relationship_stages()
     {
         LegacySchoolAcademicYearFactory::new()->create([
             'ref_cod_escola' => $this->model->ref_ref_cod_escola,
@@ -175,7 +175,7 @@ class LegacySchoolClassTest extends EloquentTestCase
     }
 
     /** @test */
-    public function getEvaluationRule(): void
+    public function get_evaluation_rule(): void
     {
         $evaluationRuleGradeYear = $this->model
             ->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
@@ -190,7 +190,7 @@ class LegacySchoolClassTest extends EloquentTestCase
     }
 
     /** @test */
-    public function getDisciplines(): void
+    public function get_disciplines(): void
     {
         if ($this->model->multiseriada) {
             $multigrades = $this->multigrades->pluck('serie_id')->toArray();

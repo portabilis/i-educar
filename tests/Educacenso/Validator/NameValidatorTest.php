@@ -7,21 +7,21 @@ use Tests\TestCase;
 
 class NameValidatorTest extends TestCase
 {
-    public function testNameWithoutRepeatedCharacters()
+    public function test_name_without_repeated_characters()
     {
         $validator = new NameValidator('Lorem Ipsum');
 
         $this->assertTrue($validator->isValid());
     }
 
-    public function testNameWithThreeRepeatedCharacters()
+    public function test_name_with_three_repeated_characters()
     {
         $validator = new NameValidator('Lorem Ipsuuum');
 
         $this->assertTrue($validator->isValid());
     }
 
-    public function testNameWithFourRepeatedCharacters()
+    public function test_name_with_four_repeated_characters()
     {
         $validator = new NameValidator('Lorem Ipsuuuum');
 

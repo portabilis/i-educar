@@ -14,7 +14,7 @@ class EmployeeCreatedEventTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testEmployeeCreatedEvent()
+    public function test_employee_created_event()
     {
         $user = LegacyUserFactory::new()->admin()->create();
         $this->actingAs($user);

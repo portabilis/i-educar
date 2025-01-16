@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class DeficiencyValidatorTest extends TestCase
 {
-    public function testOnlyOneDeficiencyChoosed()
+    public function test_only_one_deficiency_choosed()
     {
         $values = [Deficiencias::CEGUEIRA];
         $validator = new DeficiencyValidator($values);
@@ -16,7 +16,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testChooseCegueiraAndAllowedDeficiency()
+    public function test_choose_cegueira_and_allowed_deficiency()
     {
         $values = [Deficiencias::CEGUEIRA, Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA];
         $validator = new DeficiencyValidator($values);
@@ -24,7 +24,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testChooseCegueiraAndForbiddenDeficiency()
+    public function test_choose_cegueira_and_forbidden_deficiency()
     {
         $forbiddenDeficiencies = [
             Deficiencias::BAIXA_VISAO,
@@ -47,7 +47,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertStringContainsString("Quando a deficiência for: {$choosedDescription}, não pode ser preenchido também com {$forbiddenDescriptions}.", $validator->getMessage());
     }
 
-    public function testChooseBaixaVisaoAndAllowedDeficiency()
+    public function test_choose_baixa_visao_and_allowed_deficiency()
     {
         $values = [Deficiencias::BAIXA_VISAO, Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA];
         $validator = new DeficiencyValidator($values);
@@ -55,7 +55,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testChooseBaixaVisaoAndForbiddenDeficiency()
+    public function test_choose_baixa_visao_and_forbidden_deficiency()
     {
         $forbiddenDeficiencies = [
             Deficiencias::SURDOCEGUEIRA,
@@ -71,7 +71,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertStringContainsString("Quando a deficiência for: {$choosedDescription}, não pode ser preenchido também com {$forbiddenDescriptions}.", $validator->getMessage());
     }
 
-    public function testChooseSurdezAndAllowedDeficiency()
+    public function test_choose_surdez_and_allowed_deficiency()
     {
         $values = [Deficiencias::SURDEZ, Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA];
         $validator = new DeficiencyValidator($values);
@@ -79,7 +79,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testChooseSurdezAndForbiddenDeficiency()
+    public function test_choose_surdez_and_forbidden_deficiency()
     {
         $forbiddenDeficiencies = [
             Deficiencias::DEFICIENCIA_AUDITIVA,
@@ -100,7 +100,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertStringContainsString("Quando a deficiência for: {$choosedDescription}, não pode ser preenchido também com {$forbiddenDescriptions}.", $validator->getMessage());
     }
 
-    public function testChooseDeficienciaAuditivaAndAllowedDeficiency()
+    public function test_choose_deficiencia_auditiva_and_allowed_deficiency()
     {
         $values = [Deficiencias::DEFICIENCIA_AUDITIVA, Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA];
         $validator = new DeficiencyValidator($values);
@@ -108,7 +108,7 @@ class DeficiencyValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testChooseDeficienciaAuditivaAndForbiddenDeficiency()
+    public function test_choose_deficiencia_auditiva_and_forbidden_deficiency()
     {
         $forbiddenDeficiencies = [
             Deficiencias::SURDOCEGUEIRA,

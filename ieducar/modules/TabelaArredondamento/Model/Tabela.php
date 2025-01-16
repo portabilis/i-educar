@@ -35,7 +35,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            $this->setDataMapper(new TabelaArredondamento_Model_TabelaDataMapper());
+            $this->setDataMapper(new TabelaArredondamento_Model_TabelaDataMapper);
         }
 
         return parent::getDataMapper();
@@ -277,7 +277,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
         $tabelaArredondamentoId = $this->_data['id'];
 
         if ($tabelaArredondamentoId) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta('DELETE FROM modules.tabela_arredondamento_valor '
                 . 'WHERE tabela_arredondamento_id = ' . $tabelaArredondamentoId);
 

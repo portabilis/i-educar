@@ -37,7 +37,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Descrição', $registro['descricao']]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3)) {
             $this->url_novo = 'educar_escolaridade_cad.php';
             $this->url_editar = 'educar_escolaridade_cad.php?idesco=' . $registro['idesco'];

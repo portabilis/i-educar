@@ -27,7 +27,7 @@ class UpdateStateRegistrationRequest extends FormRequest
     {
         return [
             'state_registration_id' => [
-                new StateRegistrationFormatRule(),
+                new StateRegistrationFormatRule,
                 new StateRegistrationUniqueRule($this->student),
             ],
         ];

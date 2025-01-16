@@ -59,7 +59,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     {
         if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->etapa) &&
             is_string($this->data_inicio) && is_string($this->data_fim)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -113,7 +113,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     public function edita()
     {
         if (is_numeric($this->cod_bloqueio)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -174,7 +174,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -212,7 +212,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_bloqueio)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_bloqueio = '{$this->cod_bloqueio}' ");
             $db->ProximoRegistro();
 
@@ -230,13 +230,13 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     public function existe()
     {
         if (is_numeric($this->cod_bloqueio)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_bloqueio = '{$this->cod_bloqueio}' ");
             $db->ProximoRegistro();
 
             return $db->Tupla();
         } elseif (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->etapa)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1
                        FROM pmieducar.bloqueio_lancamento_faltas_notas
                       WHERE ref_cod_escola = {$this->ref_cod_escola}
@@ -258,7 +258,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_bloqueio)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_bloqueio = '{$this->cod_bloqueio}' ");
 
             return true;

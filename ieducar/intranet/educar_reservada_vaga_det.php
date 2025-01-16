@@ -74,7 +74,7 @@ return new class extends clsDetalhe
 
         $this->cod_reserva_vaga = $_GET['cod_reserva_vaga'];
 
-        $obj_reserva_vaga = new clsPmieducarReservaVaga();
+        $obj_reserva_vaga = new clsPmieducarReservaVaga;
         $lst_reserva_vaga = $obj_reserva_vaga->lista(int_cod_reserva_vaga: $this->cod_reserva_vaga);
 
         if (is_array(value: $lst_reserva_vaga)) {
@@ -121,7 +121,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_cod_aluno']) {
-            $obj_aluno = new clsPmieducarAluno();
+            $obj_aluno = new clsPmieducarAluno;
             $lst_aluno = $obj_aluno->lista(
                 int_cod_aluno: $registro['ref_cod_aluno'],
                 int_ativo: 1
@@ -159,7 +159,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Série', $registro['ref_ref_cod_serie']]);
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 639, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->array_botao = ['Emissão de Documento de Reserva de Vaga', 'Desativar Reserva'];
             $this->array_botao_url_script = ["showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatório de Solicitação de transferência\")", "go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")"];

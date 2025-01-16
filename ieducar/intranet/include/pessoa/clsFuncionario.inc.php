@@ -79,7 +79,7 @@ class clsFuncionario extends clsPessoaFisica
         $setVirgula = 'SET';
 
         if ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             if ($this->ref_cod_setor) {
                 $set = "{$setVirgula} ref_cod_setor_new = '$this->ref_cod_setor' ";
@@ -157,7 +157,7 @@ class clsFuncionario extends clsPessoaFisica
             $limite = "LIMIT $int_qtd_registros OFFSET $int_inicio_limit ";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -180,7 +180,7 @@ class clsFuncionario extends clsPessoaFisica
             }
         } else {
             while ($db->ProximoRegistro()) {
-                $resultado = $db->Tupla(); //$tupla;
+                $resultado = $db->Tupla(); // $tupla;
             }
         }
 
@@ -255,7 +255,7 @@ class clsFuncionario extends clsPessoaFisica
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -294,7 +294,7 @@ class clsFuncionario extends clsPessoaFisica
         if (is_numeric($this->idpes)) {
             $idpesOk = true;
         } elseif ($this->matricula) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $db->Consulta("SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = '{$this->matricula}'");
             if ($db->ProximoRegistro()) {
@@ -302,7 +302,7 @@ class clsFuncionario extends clsPessoaFisica
                 $idpesOk = true;
             }
         } elseif (is_numeric($this->cpf)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idpes FROM {$this->schema_cadastro}.fisica WHERE cpf = '{$this->cpf}'");
             if ($db->ProximoRegistro()) {
                 [$this->idpes] = $db->Tupla();
@@ -311,7 +311,7 @@ class clsFuncionario extends clsPessoaFisica
         }
         if ($idpesOk) {
             $tupla = parent::detalhe();
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, email FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
             if ($db->ProximoRegistro()) {

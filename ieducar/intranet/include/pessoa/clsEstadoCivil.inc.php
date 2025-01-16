@@ -31,7 +31,7 @@ class clsEstadoCivil
      */
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric($this->ideciv) && is_string($this->descricao)) {
             $db->Consulta("INSERT INTO {$this->$this->schema}.{$this->tabela} (ideciv, descricao) VALUES ($this->ideciv, $this->descricao)");
@@ -48,7 +48,7 @@ class clsEstadoCivil
     public function edita()
     {
         if (is_numeric($this->ideciv) && is_string($this->descricao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("UPDATE {$this->$this->schema}.{$this->tabela} SET descricao = '$this->descricao' WHERE ideciv = '$this->ideciv' ");
 
             return true;
@@ -65,7 +65,7 @@ class clsEstadoCivil
     public function exclui()
     {
         if (is_numeric($this->ideciv) && is_string($this->descricao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->$this->schema}.{$this->tabela} WHERE ideciv = {$this->ideciv}");
 
             return true;
@@ -101,7 +101,7 @@ class clsEstadoCivil
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -127,7 +127,7 @@ class clsEstadoCivil
     public function detalhe()
     {
         if ($this->ideciv) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT ideciv, descricao FROM {$this->schema}.{$this->tabela} WHERE ideciv = {$this->ideciv}");
             if ($db->ProximoRegistro()) {
                 return $db->Tupla();

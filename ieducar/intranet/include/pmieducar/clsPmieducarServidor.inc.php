@@ -88,7 +88,7 @@ class clsPmieducarServidor extends Model
         if (is_numeric($this->cod_servidor) && is_numeric($this->carga_horaria) &&
             is_numeric($this->ref_cod_instituicao)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $campos = '';
             $valores = '';
             $gruda = '';
@@ -163,7 +163,7 @@ class clsPmieducarServidor extends Model
     public function edita()
     {
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -316,7 +316,7 @@ class clsPmieducarServidor extends Model
 
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_schema}servidor s {$tabela_compl} {$filtros} GROUP BY {$this->_campos_lista}" . $this->getOrderby();
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -417,7 +417,7 @@ class clsPmieducarServidor extends Model
             $this->_campos_lista2 = $this->_todos_campos2;
             $this->setOrderby(' 1 ');
         }
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl}";
         if (is_numeric($int_cod_servidor)) {
             $filtros .= "{$whereAnd} s.cod_servidor = '{$int_cod_servidor}'";
@@ -819,7 +819,7 @@ class clsPmieducarServidor extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_servidor = '{$this->cod_servidor}' AND ref_cod_instituicao = '{$this->ref_cod_instituicao}'");
             $db->ProximoRegistro();
 
@@ -837,7 +837,7 @@ class clsPmieducarServidor extends Model
     public function existe()
     {
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_servidor = '{$this->cod_servidor}' AND ref_cod_instituicao = '{$this->ref_cod_instituicao}'");
             $db->ProximoRegistro();
 
@@ -885,7 +885,7 @@ class clsPmieducarServidor extends Model
      */
     public function getServidorFuncoes()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = 'SELECT t2.cod_funcao, t2.nm_funcao, t2.professor FROM pmieducar.servidor_funcao AS t1, pmieducar.funcao AS t2 ';
         $sql .= 'WHERE t1.ref_cod_servidor = \'%d\' AND t1.ref_ref_cod_instituicao = \'%d\' ';
         $sql .= 'AND t1.ref_cod_funcao = t2.cod_funcao';
@@ -928,7 +928,7 @@ class clsPmieducarServidor extends Model
         $sql .= 'WHERE qhh.ref_servidor = s.cod_servidor AND ';
         $sql .= 'qhh.ref_servidor = \'%d\' AND qhh.ref_cod_instituicao_servidor = \'%d\'';
         $sql = sprintf($sql, $codServidor, $codInstituicao);
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $disciplinas = [];
         while ($db->ProximoRegistro() != false) {
@@ -1000,7 +1000,7 @@ class clsPmieducarServidor extends Model
         $sql .= 'WHERE sd.ref_cod_servidor = s.cod_servidor AND ';
         $sql .= 'sd.ref_cod_servidor = \'%d\' AND sd.ref_ref_cod_instituicao = \'%d\'';
         $sql = sprintf($sql, $codigos['codServidor'], $codigos['codInstituicao']);
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $disciplinas = [];
         while ($db->ProximoRegistro() != false) {
@@ -1067,7 +1067,7 @@ class clsPmieducarServidor extends Model
               dia_semana,
               qhh.hora_inicial';
         $sql = sprintf($sql, $codigos['codServidor'], $codigos['codInstituicao']);
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta($sql);
         $horarios = [];
         while ($db->ProximoRegistro() != false) {

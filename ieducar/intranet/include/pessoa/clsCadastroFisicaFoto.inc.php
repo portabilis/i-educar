@@ -40,7 +40,7 @@ class clsCadastroFisicaFoto extends Model
     public function cadastra()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -73,7 +73,7 @@ class clsCadastroFisicaFoto extends Model
     public function edita()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $set = '';
             $gruda = '';
 
@@ -113,7 +113,7 @@ class clsCadastroFisicaFoto extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -151,7 +151,7 @@ class clsCadastroFisicaFoto extends Model
     public function detalhe()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE idpes = '{$this->idpes}'");
             $db->ProximoRegistro();
 
@@ -169,7 +169,7 @@ class clsCadastroFisicaFoto extends Model
     public function excluir()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE idpes = '{$this->idpes}'");
 
             return true;

@@ -32,7 +32,7 @@ class clsAgenda
 
     public function __construct($int_cod_editor = 0, $int_cod_pessoa_dono = false, $int_cod_agenda = false, $time = false)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $this->cod_pessoa_dono = $int_cod_pessoa_dono;
         $this->agenda = $int_cod_agenda;
         $this->editor = $int_cod_editor;
@@ -70,7 +70,7 @@ class clsAgenda
 
     public function cadastraAgenda()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         // o nome da agenda sera o nome da pessoa
         $nome = $db->CampoUnico("SELECT nome FROM cadastro.pessoa WHERE idpes = '{$this->cod_pessoa_dono}'");
         // trata o nome pra remover espacos no fim
@@ -92,7 +92,7 @@ class clsAgenda
 
     public function detalheCompromisso($cod_compromisso, $cod_agenda)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, ref_cod_agenda, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$cod_agenda}' AND cod_agenda_compromisso = '$cod_compromisso' AND ativo = 1 AND data_fim IS NOT NULL");
         if ($db->ProximoRegistro()) {
             return $db->Tupla();
@@ -103,13 +103,13 @@ class clsAgenda
 
     public function listaCompromissos($data_inicio, $data_fim)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $this->compromissos = [];
-        //echo "SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, titulo, descricao, importante, publico FROM agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NOT NULL AND data_inicio >= '{$data_inicio}' AND data_inicio <= '{$data_fim}' ORDER BY data_inicio ASC<br>";
+        // echo "SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, titulo, descricao, importante, publico FROM agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NOT NULL AND data_inicio >= '{$data_inicio}' AND data_inicio <= '{$data_fim}' ORDER BY data_inicio ASC<br>";
         $db->Consulta("SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NOT NULL AND data_inicio >= '{$data_inicio}' AND data_inicio <= '{$data_fim}' ORDER BY data_inicio ASC");
         while ($db->ProximoRegistro()) {
             $temp_arr_compromisso = [];
-            //list( $cod_agenda_compromisso, $versao, $data_inicio, $data_fim, $titulo, $descricao, $importante, $publico) = $db->Tupla();
+            // list( $cod_agenda_compromisso, $versao, $data_inicio, $data_fim, $titulo, $descricao, $importante, $publico) = $db->Tupla();
             [$temp_arr_compromisso['data_inicio'], $temp_arr_compromisso['cod_agenda_compromisso'], $temp_arr_compromisso['versao'], $temp_arr_compromisso['data_fim'], $temp_arr_compromisso['titulo'], $temp_arr_compromisso['descricao'], $temp_arr_compromisso['importante'], $temp_arr_compromisso['publico']] = $db->Tupla();
 
             $temp_arr_compromisso2['data_inicio'] = $temp_arr_compromisso['data_inicio'];
@@ -158,7 +158,7 @@ class clsAgenda
 
     public function listaVersoes($cod_compromisso)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             $this->versoes = [];
             // seleciona as versoes desse compromisso
@@ -174,7 +174,7 @@ class clsAgenda
 
     public function cadastraCompromisso($cod_compromisso, $titulo, $descricao, $data, $hora_inicio, $hora_fim = false, $publico = false, $importante = false, $repetir_dias = false, $repetir_qtd = false, $tipo_compromisso = false)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $campos = '';
         $valores = '';
 
@@ -247,7 +247,7 @@ class clsAgenda
 
     public function edita_compromisso($cod_compromisso, $titulo = false, $conteudo = false, $data = false, $hora_inicio = false, $hora_fim = false, $publico = false, $importante = false)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             $verifica = true;
 
@@ -296,7 +296,7 @@ class clsAgenda
 
     public function edita_nota2compromisso($cod_compromisso, $hora_fim)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             if (preg_match('/[0-9]{2}:[0-9]{2}/', $hora_fim)) {
                 // pega a versao da nota
@@ -319,7 +319,7 @@ class clsAgenda
 
     public function restaura_versao($cod_compromisso, $versao)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 1 WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versao}'");
@@ -329,7 +329,7 @@ class clsAgenda
 
     public function excluiCompromisso($cod_compromisso)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
         }
@@ -338,7 +338,7 @@ class clsAgenda
     public function permissao_agenda()
     {
         if (is_numeric($this->editor) && is_numeric($this->agenda)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             if ($this->editor == 0) {
                 return true;
             }
@@ -383,7 +383,7 @@ class clsAgenda
 
     public function getCompromissoVersao($cod_compromisso)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             return $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
         }
@@ -393,7 +393,7 @@ class clsAgenda
 
     public function compromissoPertenceAgenda($cod_compromisso)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         if ($cod_compromisso) {
             $db->Consulta("SELECT 1 FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND ref_cod_agenda = '{$this->agenda}'");
             if ($db->numLinhas()) {
@@ -414,9 +414,9 @@ class clsAgenda
     {
 
         // seleciona os dados
-        //$db->Consulta();
+        // $db->Consulta();
         if ($this->time_atual) {
-            $objEncaminha = new clsEncaminha();
+            $objEncaminha = new clsEncaminha;
             $listaEncaminha = $objEncaminha->lista(false, false, false, false, false, $this->cod_pessoa_dono, false, false, false, false, false, false, date('Y-m-d', $this->time_atual), date('Y-m-d', $this->time_atual).' 23:59:59', false, false);
             if ($listaEncaminha) {
                 foreach ($listaEncaminha as $encaminha) {
@@ -458,21 +458,21 @@ class clsAgenda
         }
     }
 
-    //Busca Compromissos marcados para o futuro e devem ser mostrados em dias anteriores
+    // Busca Compromissos marcados para o futuro e devem ser mostrados em dias anteriores
 
     public function add_compromisso_externo_2()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         // seleciona os dados
         if ($this->time_atual) {
             $data_atual = date('Y-m-d');
             $obj = new clsAgenda(false, $this->cod_pessoa_dono);
             $cod_agenda = $obj->getCodAgenda();
-            $obj = new clsAgendaJuris();
+            $obj = new clsAgendaJuris;
             $lista_avisos = $obj->lista(false, $cod_agenda, false, $data_atual, false, false, false, false, false);
             if ($lista_avisos) {
-                $db = new clsBanco();
+                $db = new clsBanco;
                 foreach ($lista_avisos as $aviso) {
                     $obj = new clsTipoCompromisso($aviso['ref_cod_juris_tipo_compromisso']);
                     $detalhe = $obj->detalhe();
@@ -509,10 +509,10 @@ class clsAgenda
 
     public function add_compromisso_externo_3()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         // seleciona os dados
-        //$db->Consulta();
+        // $db->Consulta();
         while ($db->ProximoRegistro()) {
             [$temp_arr_compromisso['data_inicio'], $temp_arr_compromisso['cod_agenda_compromisso'], $temp_arr_compromisso['versao'], $temp_arr_compromisso['data_fim'], $temp_arr_compromisso['titulo'], $temp_arr_compromisso['descricao'], $temp_arr_compromisso['importante'], $temp_arr_compromisso['publico']] = $db->Tupla();
             // usa os dados recebidos para montar um segundo array temporario

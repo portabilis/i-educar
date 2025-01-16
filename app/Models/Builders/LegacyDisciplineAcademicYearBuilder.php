@@ -11,10 +11,10 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
      */
     public function getResource(array $filters = []): Collection
     {
-        //filtros
+        // filtros
         $this->distinctDiscipline()->with('discipline:id,nome')->filter($filters);
 
-        //name é uma parametro adicional, que não está na query, mas é passado para o recurso sendo aplicado em getNameAttribute
+        // name é uma parametro adicional, que não está na query, mas é passado para o recurso sendo aplicado em getNameAttribute
         return $this->resource(['id', 'workload'], ['name']);
     }
 

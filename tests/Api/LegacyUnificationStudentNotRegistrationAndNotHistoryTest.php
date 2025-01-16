@@ -28,7 +28,7 @@ class LegacyUnificationStudentNotRegistrationAndNotHistoryTest extends TestCase
         $this->studentTwo = LegacyStudentFactory::new()->create();
     }
 
-    public function testUnificationNotRegistrationAndNotHistory(): void
+    public function test_unification_not_registration_and_not_history(): void
     {
         $request = [
             'tipoacao' => 'Novo',

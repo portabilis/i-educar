@@ -11,7 +11,7 @@ class DiarioRecuperaRegrasTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaRegras()
+    public function test_recupera_regras()
     {
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create();
         $evaluationRule->refresh();

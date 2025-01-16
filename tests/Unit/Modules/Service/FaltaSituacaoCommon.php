@@ -28,7 +28,7 @@ class Avaliacao_Service_FaltaSituacaoCommon extends Avaliacao_Service_TestCommon
         // Porcentagem configurada na regra
         $porcentagemPresenca = $this->_getRegraOption('porcentagemPresenca');
 
-        $expected = new stdClass();
+        $expected = new stdClass;
         $expected->situacao = 0;
         $expected->tipoFalta = 0;
         $expected->cargaHoraria = 0;

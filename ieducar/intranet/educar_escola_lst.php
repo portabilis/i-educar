@@ -32,7 +32,7 @@ return new class extends clsListagem
     {
         $this->titulo = 'Escola - Listagem';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -69,7 +69,7 @@ return new class extends clsListagem
 
         // Filtros de Foreign Keys
         $this->limite = 10;
-        $obj_escola = new clsPmieducarEscola();
+        $obj_escola = new clsPmieducarEscola;
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $obj_escola->codUsuario = $this->pessoa_logada;

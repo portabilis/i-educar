@@ -13,13 +13,13 @@ return new class extends clsListagem
         $this->nome = 'form1';
 
         if ($_GET['campos']) {
-            $parametros = new clsParametrosPesquisas();
+            $parametros = new clsParametrosPesquisas;
             $parametros->deserializaCampos($_GET['campos']);
             Session::put('campos', $parametros->geraArrayComAtributos());
 
             unset($_GET['campos']);
         } else {
-            $parametros = new clsParametrosPesquisas();
+            $parametros = new clsParametrosPesquisas;
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
 
@@ -58,14 +58,14 @@ return new class extends clsListagem
         }
 
         if ($busca == 'S') {
-            $obj_funcionario = new clsFuncionario();
+            $obj_funcionario = new clsFuncionario;
             $lst_funcionario = $obj_funcionario->lista(str_nome: $chave_busca, int_qtd_registros: $limite);
 
             if (!$lst_funcionario) {
                 $lst_funcionario = $obj_funcionario->lista(str_matricula: $chave_busca, int_inicio_limit: $iniciolimit, int_qtd_registros: $limite, matricula_is_not_null: $com_matricula);
             }
         } else {
-            $obj_funcionario = new clsFuncionario();
+            $obj_funcionario = new clsFuncionario;
             $lst_funcionario = $obj_funcionario->lista(int_inicio_limit: $iniciolimit, int_qtd_registros: $limite, matricula_is_not_null: $com_matricula);
         }
 

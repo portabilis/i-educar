@@ -42,7 +42,7 @@ return new class extends clsDetalhe
         $obj_instituicao_det = $obj_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
@@ -57,7 +57,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Sigla', "{$registro['sgl_tipo']}"]);
         }
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 570, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_turma_tipo_cad.php';
             $this->url_editar = "educar_turma_tipo_cad.php?cod_turma_tipo={$registro['cod_turma_tipo']}";

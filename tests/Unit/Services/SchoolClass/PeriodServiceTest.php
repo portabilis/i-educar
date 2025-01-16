@@ -16,13 +16,13 @@ class PeriodServiceTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->service = app(PeriodService::class);
     }
 
-    public function testMorningPeriod()
+    public function test_morning_period()
     {
         $period = $this->service->getPeriodByTime('08:00', '12:00');
         $this->assertEquals(Period::MORNING, $period);
@@ -34,7 +34,7 @@ class PeriodServiceTest extends TestCase
         $this->assertEquals(Period::MORNING, $period);
     }
 
-    public function testAfternoonPeriod()
+    public function test_afternoon_period()
     {
         $period = $this->service->getPeriodByTime('13:00', '17:30');
         $this->assertEquals(Period::AFTERNOON, $period);
@@ -46,7 +46,7 @@ class PeriodServiceTest extends TestCase
         $this->assertEquals(Period::AFTERNOON, $period);
     }
 
-    public function testNightPeriod()
+    public function test_night_period()
     {
         $period = $this->service->getPeriodByTime('18:00', '20:30');
         $this->assertEquals(Period::NIGTH, $period);
@@ -58,7 +58,7 @@ class PeriodServiceTest extends TestCase
         $this->assertEquals(Period::NIGTH, $period);
     }
 
-    public function testFulltimePeriod()
+    public function test_fulltime_period()
     {
         $period = $this->service->getPeriodByTime('08:00', '17:00');
         $this->assertEquals(Period::FULLTIME, $period);

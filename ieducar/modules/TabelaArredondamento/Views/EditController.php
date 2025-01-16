@@ -497,7 +497,7 @@ class EditController extends Core_Controller_Page_EditController
 
         $this->getDataMapper()->save($entity);
 
-        //Exclui todos os valores para inserir corretamente
+        // Exclui todos os valores para inserir corretamente
         $entity->deleteAllValues();
 
         // Processa os dados da requisição, apenas os valores para a tabela de valores.
@@ -525,7 +525,7 @@ class EditController extends Core_Controller_Page_EditController
             // Não atribui a instância de $entity senão não teria sucesso em verificar
             // se a instância é isNull().
             $data = [
-                //'id' => $id,
+                // 'id' => $id,
                 'nome' => $valores[$i]['nome'],
                 'descricao' => $valores[$i]['descricao'],
                 'observacao' => $valores[$i]['observacao'],

@@ -7,7 +7,7 @@ use Tests\ViewTestCase;
 
 class TeacherTest extends ViewTestCase
 {
-    public function testTeacher(): void
+    public function test_teacher(): void
     {
         $found = Teacher::query()->get();
         $this->assertCount(1, $found);
@@ -15,23 +15,23 @@ class TeacherTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }
 
-    public function testGetAlias(): void
+    public function test_get_alias(): void
     {
         $aliases = collect($this->model->getExportedColumnsByGroup())->flatMap(fn ($item) => $item);
         $this->assertEquals('ID Pessoa', $aliases->get('id'));
     }
 
-    public function testGetLabel(): void
+    public function test_get_label(): void
     {
         $this->assertEquals('Professores', $this->model->getLabel());
     }
 
-    public function testGetDescription(): void
+    public function test_get_description(): void
     {
         $this->assertEquals('Os dados exportados serão contabilizados por quantidade de professores(as) alocados(as) no ano filtrado, agrupando as informações de cursos de formação dos docentes.', $this->model->getDescription());
     }
 
-    public function testGetExportedColumnsByGroup(): void
+    public function test_get_exported_columns_by_group(): void
     {
         $expected = [
             'Códigos' => [
@@ -96,7 +96,7 @@ class TeacherTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
     }
 
-    public function testRelationshipPerson(): void
+    public function test_relationship_person(): void
     {
         $found = Teacher::query()->person([
             'id',
@@ -112,7 +112,7 @@ class TeacherTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipDisabilities(): void
+    public function test_relationship_disabilities(): void
     {
         $found = Teacher::query()->disabilities()->first();
         $this->assertInstanceOf(Teacher::class, $found);
@@ -122,7 +122,7 @@ class TeacherTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPhones(): void
+    public function test_relationship_phones(): void
     {
         $found = Teacher::query()->phones()->first();
         $this->assertInstanceOf(Teacher::class, $found);
@@ -132,7 +132,7 @@ class TeacherTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPlace(): void
+    public function test_relationship_place(): void
     {
         $found = Teacher::query()->place([
             'address',
@@ -164,7 +164,7 @@ class TeacherTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipDisciplies(): void
+    public function test_relationship_disciplies(): void
     {
         $found = Teacher::query()->disciplines()->first();
         $this->assertInstanceOf(Teacher::class, $found);

@@ -47,7 +47,7 @@ class DiarioController extends ApiCoreController
                 return $collection->where('cod_serie', $serieId);
             })->contains($componenteCurricularId);
 
-            //pula a mensagem se for area do conhecimento e um componente a turma
+            // pula a mensagem se for area do conhecimento e um componente a turma
             if (!$valid && !$componentesTurma->contains($componenteCurricularId)) {
                 $this->messenger->append("Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.", 'error');
                 $this->appendResponse('error', [
@@ -78,7 +78,7 @@ class DiarioController extends ApiCoreController
             $this->serviceBoletim($turmaId, $alunoId)->saveFaltas();
             $this->serviceBoletim($turmaId, $alunoId)->promover();
         } catch (CoreExt_Service_Exception) {
-            //...
+            // ...
         }
     }
 
@@ -461,9 +461,9 @@ class DiarioController extends ApiCoreController
 
                 if ($componentesArea->isNotEmpty()) {
                     $componenteAreaPrimeiro = $componentesArea->shift();
-                    //coloca a falta no primeiro componente do agrupamento
+                    // coloca a falta no primeiro componente do agrupamento
                     $novoFaltaTurmaAluno[$componenteAreaPrimeiro->id] = $faltaTurmaAlunoDisciplina;
-                    //coloca zero no restante dos componentes do agrupamento
+                    // coloca zero no restante dos componentes do agrupamento
                     foreach ($componentesArea as $componenteArea) {
                         $novoFaltaTurmaAluno[$componenteArea->id] = [
                             'valor' => 0,
@@ -680,7 +680,7 @@ class DiarioController extends ApiCoreController
 
     public function removeHtmlTags(string $text = ''): string
     {
-        return (new RemoveHtmlTagsStringService())->execute($text);
+        return (new RemoveHtmlTagsStringService)->execute($text);
     }
 
     public function Gerar()

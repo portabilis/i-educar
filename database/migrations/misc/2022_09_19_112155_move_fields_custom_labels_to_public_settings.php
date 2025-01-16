@@ -5,7 +5,7 @@ use App\Setting;
 use App\SettingCategory;
 use Illuminate\Database\Migrations\Migration;
 
-return new class() extends Migration
+return new class extends Migration
 {
     public function up()
     {
@@ -14,7 +14,7 @@ return new class() extends Migration
         if ($configutarion) {
             $custom_labels = json_decode($configutarion->custom_labels, true);
 
-            $customLabel = new CustomLabel();
+            $customLabel = new CustomLabel;
             $defaults = $customLabel->getDefaults();
 
             ksort($defaults);
@@ -23,7 +23,7 @@ return new class() extends Migration
             foreach ($defaults as $k => $v) {
                 $rotulo2 = explode('.', $k)[0];
 
-                $setting = new Setting();
+                $setting = new Setting;
                 $setting->key = $k;
                 $setting->value = $custom_labels[$k];
                 $setting->type = 'string';

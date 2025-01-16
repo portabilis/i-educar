@@ -36,7 +36,7 @@ class clsPmieducarEscolaUsuario extends Model
 
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $campos = '';
         $valores = '';
         $gruda = '';
@@ -64,7 +64,7 @@ class clsPmieducarEscolaUsuario extends Model
     public function edita()
     {
         if (is_numeric($this->id)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -93,7 +93,7 @@ class clsPmieducarEscolaUsuario extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_usuario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_usuario = '{$this->ref_cod_usuario}'");
             $db->ProximoRegistro();
 
@@ -120,7 +120,7 @@ class clsPmieducarEscolaUsuario extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -153,7 +153,7 @@ class clsPmieducarEscolaUsuario extends Model
     public function excluir()
     {
         if (is_numeric($this->id)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_usuario = '{$this->ref_cod_usuario}'");
 
             return true;
@@ -162,7 +162,7 @@ class clsPmieducarEscolaUsuario extends Model
 
     public function excluirTodos($codUsuario)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_usuario = '{$codUsuario}'");
 
         return true;

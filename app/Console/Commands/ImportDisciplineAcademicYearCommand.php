@@ -28,7 +28,7 @@ class ImportDisciplineAcademicYearCommand extends Command
      */
     public function handle()
     {
-        $importer = new DisciplineAcademicImport();
+        $importer = new DisciplineAcademicImport;
 
         $importer->withOutput($this->output)->import($this->argument('filename'));
     }

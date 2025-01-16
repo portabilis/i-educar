@@ -1,7 +1,7 @@
 <?php
 
 // Objeto de requisição
-$request = new CoreExt_Controller_Request();
+$request = new CoreExt_Controller_Request;
 
 // Helper de URL. Auxilia para criar uma URL no formato http://www.example.org/module
 $url = CoreExt_View_Helper_UrlHelper::getInstance();

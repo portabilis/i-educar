@@ -43,14 +43,14 @@ return new class extends clsCadastro
 
         $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL(date: $this->data_enturmacao);
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_matricula_lst.php');
 
         $this->breadcrumb(currentPage: 'Enturmação da matrícula', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 
-        //nova lógica
+        // nova lógica
         $retorno = false;
         if (is_numeric(value: $this->ref_cod_matricula)) {
             if ($this->ref_cod_turma_origem == 'remover-enturmacao-destino') {
@@ -85,7 +85,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $availableTimeService = new AvailableTimeService();
+        $availableTimeService = new AvailableTimeService;
         $availableTimeService->onlySchoolClassesInformedOnCensus();
 
         $registration = LegacyRegistration::find(id: $matriculaId);
@@ -96,7 +96,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $enturmacaoExists = new clsPmieducarMatriculaTurma();
+        $enturmacaoExists = new clsPmieducarMatriculaTurma;
         $enturmacaoExists = $enturmacaoExists->lista(
             int_ref_cod_matricula: $matriculaId,
             int_ref_cod_turma: $turmaDestinoId,
@@ -130,8 +130,8 @@ return new class extends clsCadastro
     public function validaDataEnturmacao($matriculaId, $turmaDestinoId, $transferir = false)
     {
         $dataObj = new \DateTime(datetime: $this->data_enturmacao . ' 23:59:59');
-        $matriculaObj = new clsPmieducarMatricula();
-        $enturmacaoObj = new clsPmieducarMatriculaTurma();
+        $matriculaObj = new clsPmieducarMatricula;
+        $enturmacaoObj = new clsPmieducarMatriculaTurma;
         $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio(cod_turma: $turmaDestinoId);
         $dataAnoLetivoFim = $matriculaObj->pegaDataAnoLetivoFim(cod_turma: $turmaDestinoId);
         $exclusaoEnturmacao = $enturmacaoObj->getDataExclusaoUltimaEnturmacao(codMatricula: $matriculaId);
@@ -239,7 +239,7 @@ return new class extends clsCadastro
 
     public function getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId)
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = 'select coalesce(max(sequencial), 1) from pmieducar.matricula_turma where ativo = 1 and ref_cod_matricula = $1 and ref_cod_turma = $2';
 
         if ($db->execPreparedQuery(query: $sql, params: [$matriculaId, $turmaId]) != false) {

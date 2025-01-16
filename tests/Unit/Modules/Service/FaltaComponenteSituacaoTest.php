@@ -8,7 +8,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
         parent::setUp();
     }
 
-    public function testSituacaoFaltasEmAndamento()
+    public function test_situacao_faltas_em_andamento()
     {
         $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
         $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, []);
@@ -29,7 +29,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSituacaoFaltasEmAndamentoUmComponenteAprovadoDeQuatroTotais()
+    public function test_situacao_faltas_em_andamento_um_componente_aprovado_de_quatro_totais()
     {
         $this->markTestSkipped();
         $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
@@ -85,7 +85,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
         $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::APROVADO;
         $expected->componentesCurriculares[2]->horasFaltas = $componenteHoraFalta;
         $expected->componentesCurriculares[2]->porcentagemFalta = $componentePorcentagemFalta;
@@ -98,9 +98,9 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSituacaoFaltasAprovado()
+    public function test_situacao_faltas_aprovado()
     {
-        //Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
+        // Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
         $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
         $componentes = $this->_getConfigOptions('escolaSerieDisciplina');
@@ -206,7 +206,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
         $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::APROVADO;
         $expected->componentesCurriculares[2]->horasFaltas = $componenteHoraFalta;
         $expected->componentesCurriculares[2]->porcentagemFalta = $componentePorcentagemFalta;
@@ -223,7 +223,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
         $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-        $expected->componentesCurriculares[3] = new stdClass();
+        $expected->componentesCurriculares[3] = new stdClass;
         $expected->componentesCurriculares[3]->situacao = App_Model_MatriculaSituacao::APROVADO;
         $expected->componentesCurriculares[3]->horasFaltas = $componenteHoraFalta;
         $expected->componentesCurriculares[3]->porcentagemFalta = $componentePorcentagemFalta;
@@ -240,7 +240,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
         $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-        $expected->componentesCurriculares[4] = new stdClass();
+        $expected->componentesCurriculares[4] = new stdClass;
         $expected->componentesCurriculares[4]->situacao = App_Model_MatriculaSituacao::APROVADO;
         $expected->componentesCurriculares[4]->horasFaltas = $componenteHoraFalta;
         $expected->componentesCurriculares[4]->porcentagemFalta = $componentePorcentagemFalta;
@@ -258,9 +258,9 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
      * Faltas para componentes funcionam usam os mesmos critérios das faltas
      * gerais para a definição de aprovado ou reprovado: presença geral.
      */
-    public function testSituacaoFaltasReprovado()
+    public function test_situacao_faltas_reprovado()
     {
-        //Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
+        // Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
         $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
         $componentes = $this->_getConfigOptions('escolaSerieDisciplina');
@@ -366,7 +366,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
         $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::REPROVADO;
         $expected->componentesCurriculares[2]->horasFaltas = $componenteHoraFalta;
         $expected->componentesCurriculares[2]->porcentagemFalta = $componentePorcentagemFalta;
@@ -383,7 +383,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
         $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-        $expected->componentesCurriculares[3] = new stdClass();
+        $expected->componentesCurriculares[3] = new stdClass;
         $expected->componentesCurriculares[3]->situacao = App_Model_MatriculaSituacao::APROVADO;
         $expected->componentesCurriculares[3]->horasFaltas = $componenteHoraFalta;
         $expected->componentesCurriculares[3]->porcentagemFalta = $componentePorcentagemFalta;
@@ -400,7 +400,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
         $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-        $expected->componentesCurriculares[4] = new stdClass();
+        $expected->componentesCurriculares[4] = new stdClass;
         $expected->componentesCurriculares[4]->situacao = App_Model_MatriculaSituacao::REPROVADO;
         $expected->componentesCurriculares[4]->horasFaltas = $componenteHoraFalta;
         $expected->componentesCurriculares[4]->porcentagemFalta = $componentePorcentagemFalta;

@@ -64,7 +64,7 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $obj_aluno->setOrderby('nome_aluno ASC');
         $obj_aluno->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 

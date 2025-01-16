@@ -24,19 +24,19 @@ return new class extends clsListagem
             $pesquisa = str_replace(search: '%', replace: ' ', subject: $_GET['pesquisa']);
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $total = $db->UnicoCampo(consulta: "SELECT COUNT(0) + (SELECT COUNT(*) FROM portal.agenda_responsavel WHERE ref_ref_cod_pessoa_fj = {$this->pessoa} ) FROM portal.agenda WHERE ref_ref_cod_pessoa_own = {$this->pessoa} {$and} ");
 
         // Paginador
         $limite = 15;
         $sql = "SELECT cod_agenda, 1 AS minha FROM agenda WHERE ref_ref_cod_pessoa_own = {$this->pessoa} {$and} UNION SELECT ref_cod_agenda, 0 AS minha FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = {$this->pessoa} ORDER BY minha DESC";
 
-        $db1 = new clsBanco();
+        $db1 = new clsBanco;
         $db1->Consulta(consulta: $sql);
         while ($db1->ProximoRegistro()) {
             [$cd_agenda, $propriedade] = $db1->Tupla();
 
-            $db2 = new clsBanco();
+            $db2 = new clsBanco;
             $db2->Consulta(consulta: "SELECT nm_agenda, ref_ref_cod_pessoa_own FROM agenda WHERE cod_agenda = {$cd_agenda} {$and}");
             while ($db2->ProximoRegistro()) {
                 [$nm_agenda, $cod_pessoa_own] = $db2->Tupla();

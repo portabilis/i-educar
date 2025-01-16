@@ -22,6 +22,6 @@ class CheckToken
             return $next($request);
         }
 
-        throw new UnauthorizedException();
+        throw new UnauthorizedException;
     }
 }

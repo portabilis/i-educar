@@ -46,7 +46,7 @@ class UpdateSchoolClassPeriod extends Command
             ->where('ano', '>=', 2019)
             ->get();
 
-        $service = new PeriodService();
+        $service = new PeriodService;
 
         DB::beginTransaction();
 

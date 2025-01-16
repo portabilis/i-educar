@@ -36,7 +36,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_dispensa) && is_numeric($this->etapa)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -68,7 +68,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_dispensa) && is_numeric($this->etapa)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -114,7 +114,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -152,7 +152,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_dispensa) && is_numeric($this->etapa)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1
                         FROM {$this->_tabela}
                        WHERE ref_cod_dispensa = '{$this->ref_cod_dispensa}'
@@ -171,7 +171,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     public function excluirTodos($ref_cod_dispensa = null)
     {
         if (is_numeric($ref_cod_dispensa)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela}
                             WHERE ref_cod_dispensa = '{$ref_cod_dispensa}'");
 

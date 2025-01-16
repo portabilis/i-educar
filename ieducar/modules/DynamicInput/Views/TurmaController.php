@@ -79,7 +79,7 @@ class TurmaController extends ApiCoreController
 
             if ($ano && $this->turmasPorAno($escolaId, $ano)) {
                 foreach ($turmas as $index => $t) {
-                    $turma = new clsPmieducarTurma();
+                    $turma = new clsPmieducarTurma;
                     $turma->cod_turma = $t['id'];
                     $turma = $turma->detalhe();
 
@@ -91,7 +91,7 @@ class TurmaController extends ApiCoreController
 
             if ($anoEmAndamento == 1) {
                 foreach ($turmas as $index => $t) {
-                    $turma = new clsPmieducarTurma();
+                    $turma = new clsPmieducarTurma;
                     $turma->cod_turma = $t['id'];
                     $turma = $turma->checaAnoLetivoEmAndamento();
 

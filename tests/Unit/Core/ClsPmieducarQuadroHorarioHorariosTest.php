@@ -7,7 +7,7 @@ class ClsPmieducarQuadroHorarioHorariosTest extends TestCase
     /**
      * Testa o método substituir_servidor()
      */
-    public function testSubstituirServidor()
+    public function test_substituir_servidor()
     {
         $stub = $this->getMockBuilder('clsPmieducarQuadroHorarioHorarios')->getMock();
 

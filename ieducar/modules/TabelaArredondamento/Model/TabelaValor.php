@@ -39,7 +39,7 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
     {
         if (is_null($this->_dataMapper)) {
             $this->setDataMapper(
-                new TabelaArredondamento_Model_TabelaValorDataMapper()
+                new TabelaArredondamento_Model_TabelaValorDataMapper
             );
         }
 

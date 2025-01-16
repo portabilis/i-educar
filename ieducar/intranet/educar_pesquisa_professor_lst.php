@@ -75,7 +75,7 @@ return new class extends clsListagem
         ]);
         $this->campoTexto(nome: 'nome_servidor', campo: 'Nome Servidor', valor: $this->nome_servidor, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoOculto(nome: 'tipo', valor: $_GET['tipo']);
-        $obj_servidor = new clsPmieducarServidor();
+        $obj_servidor = new clsPmieducarServidor;
         $obj_servidor->setOrderby(strNomeCampo: 'nome ASC');
 
         $lista_professor = false;

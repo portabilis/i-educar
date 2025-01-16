@@ -26,7 +26,7 @@ class LegacyUnificationPersonJsonInvalidTest extends TestCase
         $this->individualTwo = LegacyIndividualFactory::new()->create();
     }
 
-    public function testUnificationPersonJsonInvalid(): void
+    public function test_unification_person_json_invalid(): void
     {
         $request = [
             'tipoacao' => 'Novo',
@@ -52,7 +52,7 @@ class LegacyUnificationPersonJsonInvalidTest extends TestCase
             ->assertSee('Informações inválidas para unificação');
     }
 
-    public function testUnificationPersonCount(): void
+    public function test_unification_person_count(): void
     {
         $request = [
             'tipoacao' => 'Novo',

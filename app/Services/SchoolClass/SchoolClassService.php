@@ -117,7 +117,7 @@ class SchoolClassService
             ['schoolClass' => $schoolClass],
             [
                 'schoolClass' => [
-                    new CanDeleteTurma(),
+                    new CanDeleteTurma,
                 ],
             ]
         )->validate();
@@ -137,11 +137,11 @@ class SchoolClassService
             ['schoolClass' => $schoolClass],
             [
                 'schoolClass' => [
-                    new CanCreateSchoolClass(),
-                    new CanAlterSchoolClassGrade(),
-                    new CheckMandatoryCensoFields(),
-                    new CheckSchoolClassExistsByName(),
-                    new CheckAlternativeReportCardExists(),
+                    new CanCreateSchoolClass,
+                    new CanAlterSchoolClassGrade,
+                    new CheckMandatoryCensoFields,
+                    new CheckSchoolClassExistsByName,
+                    new CheckAlternativeReportCardExists,
                 ],
             ]
         )->validate();

@@ -105,7 +105,7 @@ class clsPmieducarAluno extends Model
         $rota_transporte = null,
         $utiliza_transporte_rural = null
     ) {
-        $db = new clsBanco();
+        $db = new clsBanco;
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'aluno a';
 
@@ -217,7 +217,7 @@ class clsPmieducarAluno extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -422,7 +422,7 @@ class clsPmieducarAluno extends Model
     public function edita()
     {
         if (is_numeric($this->cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -690,7 +690,7 @@ class clsPmieducarAluno extends Model
 
         $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social';
 
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $sql = "
             SELECT
@@ -881,13 +881,13 @@ class clsPmieducarAluno extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_aluno = '{$this->cod_aluno}'");
             $db->ProximoRegistro();
 
             return $db->Tupla();
         } elseif (is_numeric($this->ref_idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}'");
             $db->ProximoRegistro();
 
@@ -905,13 +905,13 @@ class clsPmieducarAluno extends Model
     public function existe()
     {
         if (is_numeric($this->cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_aluno = '{$this->cod_aluno}'");
             $db->ProximoRegistro();
 
             return $db->Tupla();
         } elseif (is_numeric($this->ref_idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}'");
             $db->ProximoRegistro();
 
@@ -924,7 +924,7 @@ class clsPmieducarAluno extends Model
     public function verificaInep($cod_aluno = null)
     {
         if (is_numeric($cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $sql = "SELECT cod_aluno_inep
                 FROM {$this->_tabela}
                INNER JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = a.cod_aluno)

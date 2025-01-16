@@ -64,7 +64,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
      */
     public function setAcao()
     {
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra($this->_processoAp, $this->getPessoaLogada(), 7, null, true)) {
             $this->acao = 'go("edit")';

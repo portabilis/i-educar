@@ -29,7 +29,7 @@ class clsPessoaJuridica extends clsPessoaFj
 
     public function lista($numeric_cnpj = false, $str_fantasia = false, $numeric_insc_estadual = false, $inicio_limit = false, $fim_limite = false, $str_ordenacao = false, $arrayint_idisin = false, $arrayint_idnotin = false, $int_idpes = false)
     {
-        $objJuridica = new clsJuridica();
+        $objJuridica = new clsJuridica;
         $objJuridica->codUsuario = $this->codUsuario;
         $lista = $objJuridica->lista($str_fantasia, false, $numeric_cnpj, $str_ordenacao, $inicio_limit, $fim_limite, $arrayint_idisin, $arrayint_idnotin, $int_idpes);
         $resultado = [];

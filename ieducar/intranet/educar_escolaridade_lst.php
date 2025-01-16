@@ -55,7 +55,7 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_escolaridade = new clsCadastroEscolaridade();
+        $obj_escolaridade = new clsCadastroEscolaridade;
         $obj_escolaridade->setOrderby('descricao ASC');
         $obj_escolaridade->setLimite($this->limite, $this->offset);
         $lista = $obj_escolaridade->lista(
@@ -75,7 +75,7 @@ return new class extends clsListagem
         }
 
         $this->addPaginador2('educar_escolaridade_lst.php', $total, $_GET, $this->nome, $this->limite);
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3)) {
             $this->acao = 'go("educar_escolaridade_cad.php")';
             $this->nome_acao = 'Novo';

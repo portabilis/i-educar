@@ -71,7 +71,7 @@ return new class extends clsListagem
 
         $this->addPaginador2('public_uf_lst.php', $total, $_GET, $this->nome, $this->__limite);
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(754, $this->pessoa_logada, 7, null, true)) {
             $this->acao = 'go("public_uf_cad.php")';

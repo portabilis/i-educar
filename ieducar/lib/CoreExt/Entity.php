@@ -315,7 +315,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         $class = $reference['class'];
 
         if ($this->_isReferenceDataMapper($key)) {
-            $class = new $class();
+            $class = new $class;
         } elseif ($this->_isReferenceEnum($key)) {
             $class = $class . '::getInstance()';
             eval('?><?php $class = ' . $class . '?>');
@@ -631,7 +631,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             }
         } else {
             if (is_null(self::$_classStorage[strtolower($class)]['instance'])) {
-                self::$_classStorage[strtolower($class)]['instance'] = new $class();
+                self::$_classStorage[strtolower($class)]['instance'] = new $class;
                 self::$_classStorage[strtolower($class)]['sticky'] = $sticky;
             }
         }

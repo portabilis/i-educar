@@ -32,7 +32,7 @@ return new class extends clsCadastro
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 639,
             int_idpes_usuario: $this->pessoa_logada,
@@ -52,7 +52,7 @@ return new class extends clsCadastro
     public function Gerar()
     {
         if ($this->ref_cod_aluno) {
-            $obj_reserva_vaga = new clsPmieducarReservaVaga();
+            $obj_reserva_vaga = new clsPmieducarReservaVaga;
             $lst_reserva_vaga = $obj_reserva_vaga->lista(
                 int_ref_cod_aluno: $this->ref_cod_aluno,
                 int_ativo: 1

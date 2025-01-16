@@ -8,28 +8,28 @@ use Tests\TestCase;
 
 class NullOutputTest extends TestCase
 {
-    public function testNullOutputImplementInterfaceOutPut()
+    public function test_null_output_implement_interface_out_put()
     {
-        $this->assertInstanceOf(Output::class, new NullOutput());
+        $this->assertInstanceOf(Output::class, new NullOutput);
     }
 
-    public function testMethodProgressAdvanceWillReturnVoid()
+    public function test_method_progress_advance_will_return_void()
     {
-        $this->assertNull((new NullOutput())->progressAdvance());
+        $this->assertNull((new NullOutput)->progressAdvance());
     }
 
-    public function testMethodInfoWillReturnVoid()
+    public function test_method_info_will_return_void()
     {
-        $this->assertNull((new NullOutput())->info('message'));
+        $this->assertNull((new NullOutput)->info('message'));
     }
 
-    public function testMethodProgressStartWillReturnVoid()
+    public function test_method_progress_start_will_return_void()
     {
-        $this->assertNull((new NullOutput())->progressStart('max'));
+        $this->assertNull((new NullOutput)->progressStart('max'));
     }
 
-    public function testMethodProgressFinishWillReturnVoid()
+    public function test_method_progress_finish_will_return_void()
     {
-        $this->assertNull((new NullOutput())->progressFinish());
+        $this->assertNull((new NullOutput)->progressFinish());
     }
 }

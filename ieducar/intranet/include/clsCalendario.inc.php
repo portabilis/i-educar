@@ -641,7 +641,7 @@ class clsCalendario
             $remainingDays = 7 - $DiaSemana;
 
             for ($a = 1; $a <= $remainingDays; $a++) {
-                //dayLastMonth
+                // dayLastMonth
                 $calendario .= sprintf(
                     '
           <td class="dayLastMonth" style="padding-left:%spx;">%s</td>',

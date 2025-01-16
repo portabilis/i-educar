@@ -56,8 +56,8 @@ class CityController extends ResourceController
 
         return [
             new CityRestrictOperationRule($accessLevel),
-            new AddressingCityDistrictRule(),
-            new AddressingCityPlaceRule(),
+            new AddressingCityDistrictRule,
+            new AddressingCityPlaceRule,
         ];
     }
 }

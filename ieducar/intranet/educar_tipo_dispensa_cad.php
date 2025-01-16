@@ -30,7 +30,7 @@ return new class extends clsCadastro
 
         $this->cod_tipo_dispensa = $_GET['cod_tipo_dispensa'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(577, $this->pessoa_logada, 7, 'educar_tipo_dispensa_lst.php');
 
         if (is_numeric($this->cod_tipo_dispensa)) {
@@ -71,7 +71,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $object = new LegacyExemptionType();
+        $object = new LegacyExemptionType;
         $object->ref_usuario_cad = $this->pessoa_logada;
         $object->nm_tipo = $this->nm_tipo;
         $object->descricao = $this->descricao;

@@ -170,7 +170,7 @@ class EditController extends Core_Controller_Page_EditController
     {
         if (isset($this->getRequest()->id)) {
             $sql = 'SELECT id FROM modules.componente_curricular WHERE area_conhecimento_id = '. $this->getRequest()->id;
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
 
             if ($db->numLinhas()) {

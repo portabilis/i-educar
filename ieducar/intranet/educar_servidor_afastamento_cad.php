@@ -7,7 +7,7 @@ use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Carbon;
 
-return new class() extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -73,7 +73,7 @@ return new class() extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->sequencial) &&
@@ -190,7 +190,7 @@ return new class() extends clsCadastro
         if ($det_servidor) {
             // Se for professor
             if ($obj_servidor->isProfessor() == true) {
-                $obj = new clsPmieducarQuadroHorarioHorarios();
+                $obj = new clsPmieducarQuadroHorarioHorarios;
 
                 // Pega a lista de aulas alocadas para este servidor
                 $lista = $obj->lista(
@@ -364,7 +364,7 @@ return new class() extends clsCadastro
             if ($this->id == '') {
                 $this->id = null;
             }
-            $fileService = new FileService(new UrlPresigner());
+            $fileService = new FileService(new UrlPresigner);
             $files = $fileService->getFiles(EmployeeWithdrawal::find($this->id));
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
         }
@@ -389,10 +389,10 @@ return new class() extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
-        $withdrawal = new EmployeeWithdrawal();
+        $withdrawal = new EmployeeWithdrawal;
         $withdrawal->ref_cod_servidor = $this->ref_cod_servidor;
         $withdrawal->ref_usuario_cad = $this->pessoa_logada;
         $withdrawal->ref_cod_motivo_afastamento = $this->ref_cod_motivo_afastamento;
@@ -477,7 +477,7 @@ return new class() extends clsCadastro
             return false;
         }
 
-        $fileService = new FileService(new UrlPresigner());
+        $fileService = new FileService(new UrlPresigner);
 
         if ($this->file_url) {
             $newFiles = json_decode($this->file_url);
@@ -513,7 +513,7 @@ return new class() extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
         $returnDate = $this->data_retorno ? dataToBanco($this->data_retorno) : $this->data_retorno;
@@ -599,7 +599,7 @@ return new class() extends clsCadastro
                 }
             }
 
-            $fileService = new FileService(new UrlPresigner());
+            $fileService = new FileService(new UrlPresigner);
 
             if ($this->file_url) {
                 $newFiles = json_decode($this->file_url);
@@ -642,7 +642,7 @@ return new class() extends clsCadastro
             $this->ref_cod_instituicao
         );
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, $urlPermite);
 
         $withdrawal = EmployeeWithdrawal::query()

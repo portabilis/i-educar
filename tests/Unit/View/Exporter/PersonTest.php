@@ -7,7 +7,7 @@ use Tests\ViewTestCase;
 
 class PersonTest extends ViewTestCase
 {
-    public function testPerson(): void
+    public function test_person(): void
     {
         $found = Person::query()->get();
         $this->assertCount(1, $found);
@@ -15,7 +15,7 @@ class PersonTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }
 
-    public function testRelationshipMother(): void
+    public function test_relationship_mother(): void
     {
         $found = Person::query()->mother([
             'id',
@@ -55,7 +55,7 @@ class PersonTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipFather(): void
+    public function test_relationship_father(): void
     {
         $found = Person::query()->father([
             'id',
@@ -95,7 +95,7 @@ class PersonTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipGuardian(): void
+    public function test_relationship_guardian(): void
     {
         $found = Person::query()->guardian([
             'id',
@@ -135,23 +135,23 @@ class PersonTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testGetAlias(): void
+    public function test_get_alias(): void
     {
         $aliases = collect($this->model->getExportedColumnsByGroup())->flatMap(fn ($item) => $item);
         $this->assertEquals('ID', $aliases->get('id'));
     }
 
-    public function testGetLabel(): void
+    public function test_get_label(): void
     {
         $this->assertEquals('Pessoas', $this->model->getLabel());
     }
 
-    public function testGetDescription(): void
+    public function test_get_description(): void
     {
         $this->assertEquals('Exportação de pessoas', $this->model->getDescription());
     }
 
-    public function testGetExportedColumnsByGroup(): void
+    public function test_get_exported_columns_by_group(): void
     {
         $expected = [
             'Aluno' => [
@@ -242,7 +242,7 @@ class PersonTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
     }
 
-    public function testRelationshipDisabilities(): void
+    public function test_relationship_disabilities(): void
     {
         $found = Person::query()->disabilities()->first();
         $this->assertInstanceOf(Person::class, $found);
@@ -252,7 +252,7 @@ class PersonTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPhones(): void
+    public function test_relationship_phones(): void
     {
         $found = Person::query()->phones()->first();
         $this->assertInstanceOf(Person::class, $found);
@@ -262,7 +262,7 @@ class PersonTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPlace(): void
+    public function test_relationship_place(): void
     {
         $found = Person::query()->place([
             'address',

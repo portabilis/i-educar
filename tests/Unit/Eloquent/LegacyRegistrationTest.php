@@ -58,10 +58,10 @@ class LegacyRegistrationTest extends EloquentTestCase
         $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO, $this->model->isTransferred);
         $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::ABANDONO, $this->model->isAbandoned);
         $this->assertEquals($this->model->ativo === 0, $this->model->isCanceled);
-        $this->assertEquals((new RegistrationStatus())->getDescriptiveValues()[(int) $this->model->aprovado], $this->model->statusDescription);
+        $this->assertEquals((new RegistrationStatus)->getDescriptiveValues()[(int) $this->model->aprovado], $this->model->statusDescription);
     }
 
-    public function testScopeActive(): void
+    public function test_scope_active(): void
     {
         LegacyRegistrationFactory::new()->create(['ativo' => 0]);
         $found = $this->instanceNewEloquentModel()->newQuery()->active()->get();
@@ -69,7 +69,7 @@ class LegacyRegistrationTest extends EloquentTestCase
         $this->assertCount(1, $found);
     }
 
-    public function testGetEvaluationRule()
+    public function test_get_evaluation_rule()
     {
         LegacyEvaluationRuleGradeYearFactory::new()->create([
             'serie_id' => $this->model->ref_ref_cod_serie,
@@ -89,7 +89,7 @@ class LegacyRegistrationTest extends EloquentTestCase
         $this->assertEquals($expected, $this->model->getEvaluationRule());
     }
 
-    public function testScopeMale(): void
+    public function test_scope_male(): void
     {
         LegacyIndividual::query()->update([
             'sexo' => null,
@@ -120,7 +120,7 @@ class LegacyRegistrationTest extends EloquentTestCase
         $this->assertCount(1, $found);
     }
 
-    public function testScopeFemale(): void
+    public function test_scope_female(): void
     {
         LegacyIndividual::query()->update([
             'sexo' => null,
@@ -151,7 +151,7 @@ class LegacyRegistrationTest extends EloquentTestCase
         $this->assertCount(1, $found);
     }
 
-    public function testLastYear(): void
+    public function test_last_year(): void
     {
         LegacyRegistrationFactory::new()->create([
             'ano' => date('Y') - 1,
@@ -162,7 +162,7 @@ class LegacyRegistrationTest extends EloquentTestCase
         $this->assertCount(1, $found);
     }
 
-    public function testCurrentYear(): void
+    public function test_current_year(): void
     {
         $found = $this->instanceNewEloquentModel()->currentYear()->get();
 

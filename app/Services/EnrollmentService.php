@@ -55,7 +55,7 @@ class EnrollmentService
      */
     private function getAvailableTimeService()
     {
-        $availableTimeService = new AvailableTimeService();
+        $availableTimeService = new AvailableTimeService;
 
         return $availableTimeService->onlySchoolClassesInformedOnCensus();
     }
@@ -419,7 +419,7 @@ class EnrollmentService
                 ],
             ],
             [
-                'data' => [new CanChangeExitDate()],
+                'data' => [new CanChangeExitDate],
             ]
         )->validate();
 

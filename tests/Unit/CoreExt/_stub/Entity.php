@@ -15,7 +15,7 @@ class CoreExt_EntityStub extends CoreExt_Entity
     public function getDefaultValidatorCollection()
     {
         return [
-            'nome' => new CoreExt_Validate_String(),
+            'nome' => new CoreExt_Validate_String,
         ];
     }
 }

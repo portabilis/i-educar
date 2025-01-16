@@ -25,21 +25,21 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
     {
         $this->markTestSkipped();
         // Expectativa
-        $expected = new stdClass();
+        $expected = new stdClass;
         $expected->situacao = App_Model_MatriculaSituacao::EM_EXAME;
         $expected->componentesCurriculares = [];
 
         // Matemática estará em exame
-        $expected->componentesCurriculares[1] = new stdClass();
+        $expected->componentesCurriculares[1] = new stdClass;
         $expected->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-        $expected->componentesCurriculares[3] = new stdClass();
+        $expected->componentesCurriculares[3] = new stdClass;
         $expected->componentesCurriculares[3]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-        $expected->componentesCurriculares[4] = new stdClass();
+        $expected->componentesCurriculares[4] = new stdClass;
         $expected->componentesCurriculares[4]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
@@ -88,21 +88,21 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
     {
         $this->markTestSkipped();
         // Expectativa
-        $expected = new stdClass();
+        $expected = new stdClass;
         $expected->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         $expected->componentesCurriculares = [];
 
         // Matemática estará em exame
-        $expected->componentesCurriculares[1] = new stdClass();
+        $expected->componentesCurriculares[1] = new stdClass;
         $expected->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-        $expected->componentesCurriculares[3] = new stdClass();
+        $expected->componentesCurriculares[3] = new stdClass;
         $expected->componentesCurriculares[3]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-        $expected->componentesCurriculares[4] = new stdClass();
+        $expected->componentesCurriculares[4] = new stdClass;
         $expected->componentesCurriculares[4]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
@@ -151,21 +151,21 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
     {
         $this->markTestSkipped();
         // Expectativa
-        $expected = new stdClass();
+        $expected = new stdClass;
         $expected->situacao = App_Model_MatriculaSituacao::EM_EXAME;
         $expected->componentesCurriculares = [];
 
         // Matemática estará em exame
-        $expected->componentesCurriculares[1] = new stdClass();
+        $expected->componentesCurriculares[1] = new stdClass;
         $expected->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
 
-        $expected->componentesCurriculares[3] = new stdClass();
+        $expected->componentesCurriculares[3] = new stdClass;
         $expected->componentesCurriculares[3]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-        $expected->componentesCurriculares[4] = new stdClass();
+        $expected->componentesCurriculares[4] = new stdClass;
         $expected->componentesCurriculares[4]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
@@ -214,21 +214,21 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
     {
         $this->markTestSkipped();
         // Expectativa
-        $expected = new stdClass();
+        $expected = new stdClass;
         $expected->situacao = App_Model_MatriculaSituacao::EM_EXAME;
         $expected->componentesCurriculares = [];
 
         // Matemática estará em exame
-        $expected->componentesCurriculares[1] = new stdClass();
+        $expected->componentesCurriculares[1] = new stdClass;
         $expected->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
 
-        $expected->componentesCurriculares[3] = new stdClass();
+        $expected->componentesCurriculares[3] = new stdClass;
         $expected->componentesCurriculares[3]->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
-        $expected->componentesCurriculares[4] = new stdClass();
+        $expected->componentesCurriculares[4] = new stdClass;
         $expected->componentesCurriculares[4]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
@@ -283,21 +283,21 @@ abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_Te
         $this->_setRegraOption('formulaRecuperacao', null);
 
         // Expectativa
-        $expected = new stdClass();
+        $expected = new stdClass;
         $expected->situacao = App_Model_MatriculaSituacao::REPROVADO;
         $expected->componentesCurriculares = [];
 
         // Matemática estará em exame
-        $expected->componentesCurriculares[1] = new stdClass();
+        $expected->componentesCurriculares[1] = new stdClass;
         $expected->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
-        $expected->componentesCurriculares[2] = new stdClass();
+        $expected->componentesCurriculares[2] = new stdClass;
         $expected->componentesCurriculares[2]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-        $expected->componentesCurriculares[3] = new stdClass();
+        $expected->componentesCurriculares[3] = new stdClass;
         $expected->componentesCurriculares[3]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-        $expected->componentesCurriculares[4] = new stdClass();
+        $expected->componentesCurriculares[4] = new stdClass;
         $expected->componentesCurriculares[4]->situacao = App_Model_MatriculaSituacao::APROVADO;
 
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');

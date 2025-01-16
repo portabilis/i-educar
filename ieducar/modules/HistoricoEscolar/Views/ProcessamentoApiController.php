@@ -446,7 +446,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $sequencial,
                     $ref_usuario_exc = \Illuminate\Support\Facades\Auth::id(),
                     $ref_usuario_cad = null,
-                    //TODO nm_curso
+                    // TODO nm_curso
                     $nm_serie = null,
                     $ano,
                     $carga_horaria = null,
@@ -476,7 +476,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function deleteHistoricoDisplinas($alunoId, $historicoSequencial)
     {
-        $historicoDisciplinas = new clsPmieducarHistoricoDisciplinas();
+        $historicoDisciplinas = new clsPmieducarHistoricoDisciplinas;
         $historicoDisciplinas->excluirTodos($alunoId, $historicoSequencial);
     }
 
@@ -498,7 +498,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function getNextHistoricoSequencial($alunoId)
     {
-        //A consulta leva em consideração historicos inativos pois o sequencial é chave composta com ref_cod_aluno id
+        // A consulta leva em consideração historicos inativos pois o sequencial é chave composta com ref_cod_aluno id
         $sql = 'select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $1';
 
         return Portabilis_Utils_Database::selectField($sql, $alunoId);
@@ -853,7 +853,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $tipo_base = ComponenteCurricular_Model_TipoBase::DEFAULT;
                 $ordenamento = $i;
 
-                $componenteCurricular = (new ComponenteCurricular_Model_ComponenteDataMapper())->findByName($disciplina['nome']);
+                $componenteCurricular = (new ComponenteCurricular_Model_ComponenteDataMapper)->findByName($disciplina['nome']);
 
                 if ($componenteCurricular) {
                     $ordenamento = $componenteCurricular->ordenamento;
@@ -892,8 +892,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $cnsPresenca = RegraAvaliacao_Model_TipoPresenca::class;
             $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
-            //retorna '' caso não exista situacaoFalta para o componente curricular,
-            //como nos casos em que a regra de avaliação muda
+            // retorna '' caso não exista situacaoFalta para o componente curricular,
+            // como nos casos em que a regra de avaliação muda
             if ($tpPresenca == $cnsPresenca::POR_COMPONENTE && !is_null($situacaoFaltaComponenteCurricular)) {
                 $falta = $situacaoFaltaComponenteCurricular->total;
             } elseif ($tpPresenca == $cnsPresenca::POR_COMPONENTE) {
@@ -917,7 +917,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $params = ['params' => $matriculaId, 'return_only' => 'first-line'];
         $idsSerieCurso = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
 
-        $matriculaTurma = new clsPmieducarMatriculaTurma();
+        $matriculaTurma = new clsPmieducarMatriculaTurma;
         $matriculaTurma = $matriculaTurma->lista(
             $matriculaId,
             null,
@@ -1028,7 +1028,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $matriculas = [];
 
         if ($this->canGetMatriculas()) {
-            $alunos = new clsPmieducarMatriculaTurma();
+            $alunos = new clsPmieducarMatriculaTurma;
             $alunos->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, sequencial_fechamento, nome');
 
             $alunos = $alunos->lista(
@@ -1273,7 +1273,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $msg = mb_convert_encoding($msg, 'UTF-8');
         }
 
-        //error_log("$type msg: '$msg'");
+        // error_log("$type msg: '$msg'");
         $this->msgs[] = ['msg' => $msg, 'type' => $type];
     }
 

@@ -30,7 +30,7 @@ class Registro40 extends AbstractRegistro
         foreach ($return as $data) {
             $this->hydrateModel($data);
             $this->modelArray[] = $this->model;
-            $this->model = new Registro40Model();
+            $this->model = new Registro40Model;
         }
 
         return $this->modelArray;

@@ -45,7 +45,7 @@ return new class
 
         $retorno = '';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         if ($obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada) > 7) {
             return $retorno . '
@@ -96,7 +96,7 @@ return new class
         }
 
         // Componente curricular
-        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
 
         $obrigatorio = false;
         $get_instituicao = true;
@@ -140,7 +140,7 @@ return new class
                     $texto = '<tr>';
 
                     for ($c = 1; $c <= 7; $c++) {
-                        $obj_horarios = new clsPmieducarQuadroHorarioHorarios();
+                        $obj_horarios = new clsPmieducarQuadroHorarioHorarios;
                         $resultado = $obj_horarios->retornaHorario(
                             int_ref_cod_instituicao_servidor: $this->ref_cod_instituicao,
                             int_ref_ref_cod_escola: $this->ref_cod_escola,
@@ -150,7 +150,7 @@ return new class
                         );
 
                         $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro['cod_quadro_horario']}, {$c}, {$this->ano} )'>";
-                        $componente = new stdClass();
+                        $componente = new stdClass;
                         if (is_array(value: $resultado)) {
                             $resultado = $this->organizarHorariosIguais(valores: $resultado);
                             foreach ($resultado as $registro) {
@@ -161,7 +161,7 @@ return new class
                                 }
 
                                 // Servidor
-                                $obj_servidor = new clsPmieducarServidor();
+                                $obj_servidor = new clsPmieducarServidor;
 
                                 $det_servidor = null;
                                 if ($registro['ref_servidor_substituto']) {
@@ -190,7 +190,7 @@ return new class
                                     $det_servidor['nome'] = array_shift(array: $nomes);
                                 }
 
-                                //$texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>". substr($registro['hora_inicial'], 0, 5) . ' - ' . substr($registro['hora_final'], 0, 5) . " <br> {$componente->abreviatura} <br> {$det_servidor["nome"]}</div>";
+                                // $texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>". substr($registro['hora_inicial'], 0, 5) . ' - ' . substr($registro['hora_final'], 0, 5) . " <br> {$componente->abreviatura} <br> {$det_servidor["nome"]}</div>";
                                 $detalhes = sprintf(
                                     '%s - %s<br />%s<br />%s',
                                     substr(string: $registro['hora_inicial'], offset: 0, length: 5),

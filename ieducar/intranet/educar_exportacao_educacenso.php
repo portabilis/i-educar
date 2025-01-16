@@ -20,7 +20,7 @@ return new class extends clsCadastro
     {
         $codigoMenu = 846;
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: $codigoMenu,
             int_idpes_usuario: $this->pessoa_logada,

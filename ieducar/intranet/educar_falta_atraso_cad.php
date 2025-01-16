@@ -50,7 +50,7 @@ return new class extends clsCadastro
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,
@@ -69,7 +69,7 @@ return new class extends clsCadastro
 
                 $this->data_falta_atraso = dataFromPgToBr($this->data_falta_atraso);
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
@@ -131,7 +131,7 @@ return new class extends clsCadastro
             $this->cod_falta_atraso = null;
         }
 
-        $fileService = new FileService(new UrlPresigner());
+        $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyAbsenceDelay::find($this->cod_falta_atraso));
 
         $this->addHtml(view('uploads.upload', ['files' => $files])->render());
@@ -152,7 +152,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,
@@ -183,7 +183,7 @@ return new class extends clsCadastro
         }
 
         if ($this->tipo == 1) {
-            $obj = new LegacyAbsenceDelay();
+            $obj = new LegacyAbsenceDelay;
             $obj->ref_cod_escola = $this->ref_cod_escola;
             $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
             $obj->ref_usuario_cad = $this->pessoa_logada;
@@ -196,10 +196,10 @@ return new class extends clsCadastro
             $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
 
         } elseif ($this->tipo == 2) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $dia_semana = $db->CampoUnico(sprintf('(SELECT EXTRACT (DOW FROM date \'%s\') + 1 )', $this->data_falta_atraso));
 
-            $servive = new EmployeeService();
+            $servive = new EmployeeService;
             $horas = $servive->getQuantityHours(
                 cod_servidor: $this->ref_cod_servidor,
                 cod_escola: $this->ref_cod_escola,
@@ -208,7 +208,7 @@ return new class extends clsCadastro
             );
 
             if ($horas) {
-                $obj = new LegacyAbsenceDelay();
+                $obj = new LegacyAbsenceDelay;
                 $obj->ref_cod_escola = $this->ref_cod_escola;
                 $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
                 $obj->ref_usuario_cad = $this->pessoa_logada;
@@ -224,7 +224,7 @@ return new class extends clsCadastro
 
         if ($obj->save()) {
             if ($this->file_url) {
-                $fileService = new FileService(new UrlPresigner());
+                $fileService = new FileService(new UrlPresigner);
                 $newFiles = json_decode($this->file_url);
                 foreach ($newFiles as $file) {
                     $fileService->saveFile(
@@ -253,7 +253,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,
@@ -310,7 +310,7 @@ return new class extends clsCadastro
         }
         if ($obj->save()) {
 
-            $fileService = new FileService(new UrlPresigner());
+            $fileService = new FileService(new UrlPresigner);
 
             if ($this->file_url) {
                 $newFiles = json_decode($this->file_url);
@@ -347,7 +347,7 @@ return new class extends clsCadastro
     public function Excluir()
     {
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(
             int_processo_ap: 635,
             int_idpes_usuario: $this->pessoa_logada,

@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class DifferentiatedLocationValidatorTest extends TestCase
 {
-    public function testDifferentiatedLocationIsAreaAssentamentoAndLocationZoneIsUrbana()
+    public function test_differentiated_location_is_area_assentamento_and_location_zone_is_urbana()
     {
         $differentiatedLocation = LocalizacaoDiferenciadaPessoa::AREA_ASSENTAMENTO;
         $locationZone = App_Model_ZonaLocalizacao::URBANA;
@@ -19,7 +19,7 @@ class DifferentiatedLocationValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Localização diferenciada de residência não pode ser preenchido com <b>Área de assentamento</b> quando o campo: Zona de residência for <b>Urbana</b>.', $validator->getMessage());
     }
 
-    public function testDifferentiatedLocationIsAreaAssentamentoAndLocationZoneIsNull()
+    public function test_differentiated_location_is_area_assentamento_and_location_zone_is_null()
     {
         $differentiatedLocation = LocalizacaoDiferenciadaPessoa::AREA_ASSENTAMENTO;
         $locationZone = null;
@@ -28,7 +28,7 @@ class DifferentiatedLocationValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testDifferentiatedLocationIsAreaAssentamentoAndLocationZoneIsRural()
+    public function test_differentiated_location_is_area_assentamento_and_location_zone_is_rural()
     {
         $differentiatedLocation = LocalizacaoDiferenciadaPessoa::AREA_ASSENTAMENTO;
         $locationZone = App_Model_ZonaLocalizacao::RURAL;
@@ -37,7 +37,7 @@ class DifferentiatedLocationValidatorTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testDifferentiatedLocationNotIsAreaAssentamentoAndLocationZoneIsUrbana()
+    public function test_differentiated_location_not_is_area_assentamento_and_location_zone_is_urbana()
     {
         $anotherDifferentiatedLocations = [
             LocalizacaoDiferenciadaPessoa::TERRA_INDIGENA,

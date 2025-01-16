@@ -35,7 +35,7 @@ return new class extends clsCadastro
 
         $this->cod_motivo_afastamento = $_GET['cod_motivo_afastamento'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 633, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_motivo_afastamento_lst.php');
 
         if (is_numeric($this->cod_motivo_afastamento)) {
@@ -88,10 +88,10 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 633, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_motivo_afastamento_lst.php');
 
-        $obj = new WithdrawalReason();
+        $obj = new WithdrawalReason;
         $obj->ref_usuario_cad = $this->pessoa_logada;
         $obj->nm_motivo = $this->nm_motivo;
         $obj->descricao = $this->descricao;
@@ -109,7 +109,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 633,
             int_idpes_usuario: $this->pessoa_logada,
@@ -135,7 +135,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 633, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_motivo_afastamento_lst.php');
 
         $obj = WithdrawalReason::find($this->cod_motivo_afastamento);

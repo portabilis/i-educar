@@ -39,7 +39,7 @@ class Registro50 extends AbstractRegistro
                 $this->model->estruturaCurricular = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->estruturaCurricular));
 
                 $this->modelArray[] = $this->model;
-                $this->model = new Registro50Model();
+                $this->model = new Registro50Model;
             }
         }
 
@@ -59,7 +59,7 @@ class Registro50 extends AbstractRegistro
             return [$record];
         }
 
-        $service = new SchoolClassService();
+        $service = new SchoolClassService;
 
         $studentPeriods = $service->getStudentsPeriods($record->codigoTurma);
         $hasPeriods = $service->hasStudentsPartials($record->codigoTurma);

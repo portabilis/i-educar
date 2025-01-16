@@ -11,7 +11,7 @@ return new class extends clsListagem
         $this->addCabecalhos(['Nome']);
         $this->campoTexto('nome_', 'Nome', $nome_, '50', '255');
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $sql = 'SELECT cod_funcionario_vinculo, nm_vinculo FROM portal.funcionario_vinculo';
         $where = '';
         $where_and = '';

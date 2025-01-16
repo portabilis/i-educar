@@ -18,7 +18,7 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
 
     protected function _getFaltaTestAdicionaFaltaNoBoletim()
     {
-        //Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
+        // Método _hydrateComponentes em IedFinder foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
 
         return new Avaliacao_Model_FaltaComponente([
@@ -63,7 +63,7 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
      * Testa o service adicionando faltas de apenas um componente curricular,
      * para todas as etapas regulares (1 a 4).
      */
-    public function testSalvarFaltasDeUmComponenteCurricularNoBoletim()
+    public function test_salvar_faltas_de_um_componente_curricular_no_boletim()
     {
         $this->markTestSkipped();
 
@@ -132,7 +132,7 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
      * Testa o service adicionando novas faltas para um componente curricular,
      * que inclusive já tem a falta lançada para a segunda etapa.
      */
-    public function testSalvasFaltasDeUmComponenteComEtapasLancadas()
+    public function test_salvas_faltas_de_um_componente_com_etapas_lancadas()
     {
         $this->markTestSkipped();
 
@@ -193,7 +193,7 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
         $service->saveFaltas();
     }
 
-    public function testSalvasFaltasDeUmComponenteEAtualizadaEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
+    public function test_salvas_faltas_de_um_componente_e_atualizada_etapa_da_ultima_instancia_adicionada_no_boletim_com_etapas_lancadas()
     {
         $this->markTestSkipped();
 

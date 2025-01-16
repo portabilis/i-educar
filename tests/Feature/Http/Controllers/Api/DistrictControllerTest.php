@@ -33,7 +33,7 @@ class DistrictControllerTest extends ResourceTestCase
         GET('/api/district', ['District'], 'Get all districts'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'District')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $this->index();
     }
@@ -45,7 +45,7 @@ class DistrictControllerTest extends ResourceTestCase
         Property(Type::INT, 'ibge_code', 'IBGE code of the district', 12345),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'District'),
     ]
-    public function testStore(): void
+    public function test_store(): void
     {
         $this->store();
     }
@@ -55,7 +55,7 @@ class DistrictControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, ref: 'District')
     ]
-    public function testShow(): void
+    public function test_show(): void
     {
         $this->show();
     }
@@ -68,7 +68,7 @@ class DistrictControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'District'),
     ]
-    public function testUpdate(): void
+    public function test_update(): void
     {
         $this->update();
     }
@@ -78,12 +78,12 @@ class DistrictControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'District'),
     ]
-    public function testDelete(): void
+    public function test_delete(): void
     {
         $this->destroy();
     }
 
-    public function testFailUpdateDistrict()
+    public function test_fail_update_district()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 
@@ -101,7 +101,7 @@ class DistrictControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testFailCreateDistrict()
+    public function test_fail_create_district()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 
@@ -117,7 +117,7 @@ class DistrictControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testFailDestroyDistrict()
+    public function test_fail_destroy_district()
     {
         $user = LegacyUserFactory::new()->institutional()->withAccess(759)->create();
         $this->actingAs($user);
@@ -137,19 +137,19 @@ class DistrictControllerTest extends ResourceTestCase
 
     private function createDistrictIntoBrasil(): District
     {
-        $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
-        $state = (new StateFactory())->create(['country_id' => $country]);
-        $city = (new CityFactory())->create(['state_id' => $state]);
+        $country = (new CountryFactory)->create(['id' => Country::BRASIL]);
+        $state = (new StateFactory)->create(['country_id' => $country]);
+        $city = (new CityFactory)->create(['state_id' => $state]);
 
-        return (new DistrictFactory())->createOne(['city_id' => $city]);
+        return (new DistrictFactory)->createOne(['city_id' => $city]);
     }
 
     private function makeDistrictIntoBrasil(): District
     {
-        $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
-        $state = (new StateFactory())->create(['country_id' => $country]);
-        $city = (new CityFactory())->create(['state_id' => $state]);
+        $country = (new CountryFactory)->create(['id' => Country::BRASIL]);
+        $state = (new StateFactory)->create(['country_id' => $country]);
+        $city = (new CityFactory)->create(['state_id' => $state]);
 
-        return (new DistrictFactory())->makeOne(['city_id' => $city]);
+        return (new DistrictFactory)->makeOne(['city_id' => $city]);
     }
 }

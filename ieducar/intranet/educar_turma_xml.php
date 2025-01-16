@@ -8,7 +8,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n"
 if (is_numeric(value: $_GET['esc']) && is_numeric(value: $_GET['ser'])) {
     $anoLetivo = $_GET['ano'] ? $_GET['ano'] : 'NULL';
 
-    $db = new clsBanco();
+    $db = new clsBanco;
 
     $sql = "SELECT cod_turma,
                    nm_turma || ' - ' || turma.ano::varchar AS nm_turma
@@ -31,7 +31,7 @@ if (is_numeric(value: $_GET['esc']) && is_numeric(value: $_GET['ser'])) {
         echo "  <turma cod_turma=\"{$cod}\">{$nome}</turma>\n";
     }
 } elseif (is_numeric(value: $_GET['ins']) && is_numeric(value: $_GET['cur'])) {
-    $db = new clsBanco();
+    $db = new clsBanco;
 
     $sql = "SELECT cod_turma,
                    nm_turma

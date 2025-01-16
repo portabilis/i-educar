@@ -35,7 +35,7 @@ return new class extends clsCadastro
 
         $this->cod_modulo = $_GET['cod_modulo'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 584,
             int_idpes_usuario: $this->pessoa_logada,
@@ -51,7 +51,7 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
                     $this->fexcluir = true;
                 }
@@ -81,7 +81,7 @@ return new class extends clsCadastro
         $obrigatorio = true;
         include 'include/pmieducar/educar_campo_lista.php';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $option = false;
@@ -98,7 +98,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
         if (LegacyStageType::alreadyExists(name: $this->nm_tipo, stagesNumber: $this->num_etapas)) {
@@ -107,7 +107,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj = new LegacyStageType();
+        $obj = new LegacyStageType;
 
         $obj->ref_usuario_cad = $this->pessoa_logada;
         $obj->nm_tipo = $this->nm_tipo;
@@ -133,7 +133,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
         if (LegacyStageType::alreadyExists(name: $this->nm_tipo, stagesNumber: $this->num_etapas, id: $this->cod_modulo)) {
@@ -169,7 +169,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
         $obj = LegacyStageType::find($this->cod_modulo);

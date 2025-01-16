@@ -70,7 +70,7 @@ return new class extends clsCadastro
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
@@ -91,7 +91,7 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
         $this->campoOculto(nome: 'ref_cod_matricula', valor: $this->ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
         if (is_array(value: $lst_aluno)) {
             $det_aluno = array_shift(array: $lst_aluno);
@@ -114,7 +114,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
         $tamanhoObs = strlen(string: $this->observacao);
@@ -145,7 +145,7 @@ return new class extends clsCadastro
 
         if ($obj_matricula->edita()) {
             if ($obj_matricula->cadastraObs(obs: $this->observacao, tipoAbandono: $this->abandono_tipo)) {
-                $enturmacoes = new clsPmieducarMatriculaTurma();
+                $enturmacoes = new clsPmieducarMatriculaTurma;
                 $enturmacoes = $enturmacoes->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_ativo: 1);
 
                 foreach ($enturmacoes as $enturmacao) {
@@ -162,15 +162,15 @@ return new class extends clsCadastro
                     }
                 }
 
-                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper)
                     ->findAll(columns: ['id'], where: ['matricula_id' => $obj_matricula->cod_matricula])[0];
 
                 if (!is_null(value: $notaAluno)) {
-                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper)
                         ->updateSituation(notaAlunoId: $notaAluno->get('id'), situacao: App_Model_MatriculaSituacao::ABANDONO);
                 }
 
-                //Marca a busca ativa como abandono
+                // Marca a busca ativa como abandono
                 LegacyActiveLooking::query()
                     ->where('ref_cod_matricula', $this->ref_cod_matricula)
                     ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT)
@@ -194,7 +194,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
     }
 

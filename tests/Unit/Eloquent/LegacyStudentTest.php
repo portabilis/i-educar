@@ -38,7 +38,7 @@ class LegacyStudentTest extends EloquentTestCase
         $this->assertEquals($this->model->aluno_estado_id, $this->model->stateRegistrationId);
     }
 
-    public function testGetGuardianName(): void
+    public function test_get_guardian_name(): void
     {
         $individual = LegacyIndividualFactory::new()->father()->mother()->guardian()->create();
         $model = LegacyStudentFactory::new()->create([
@@ -56,7 +56,7 @@ class LegacyStudentTest extends EloquentTestCase
         $this->assertEquals($expected, $model->getGuardianName());
     }
 
-    public function testGetGuardianCpf(): void
+    public function test_get_guardian_cpf(): void
     {
         $join = ($this->model->individual->mother->individual->cpf ?? 'não informado') . ', ' . ($this->individual->model->father->individual->cpf ?? 'não informado');
         $expected = match ($this->model->guardianType) {
@@ -69,14 +69,14 @@ class LegacyStudentTest extends EloquentTestCase
         $this->assertEquals($expected, $this->model->getGuardianCpf());
     }
 
-    public function testScopeActive(): void
+    public function test_scope_active(): void
     {
         LegacyStudentFactory::new()->create(['ativo' => 0]);
         $found = $this->instanceNewEloquentModel()->active()->get();
         $this->assertCount(1, $found);
     }
 
-    public function testScopeMale(): void
+    public function test_scope_male(): void
     {
         LegacyIndividual::query()->update([
             'sexo' => null,
@@ -90,7 +90,7 @@ class LegacyStudentTest extends EloquentTestCase
         $this->assertCount(1, $found);
     }
 
-    public function testScopeFemale(): void
+    public function test_scope_female(): void
     {
         LegacyIndividual::query()->update([
             'sexo' => null,

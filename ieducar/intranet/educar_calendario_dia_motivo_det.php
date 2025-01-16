@@ -2,7 +2,7 @@
 
 use App\Models\LegacyCalendarDayReason;
 
-return new class() extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
 
@@ -52,7 +52,7 @@ return new class() extends clsDetalhe
 
         $this->addDetalhe(['Tipo', "{$registro->type}"]);
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 576, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_calendario_dia_motivo_cad.php';
             $this->url_editar = "educar_calendario_dia_motivo_cad.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}";

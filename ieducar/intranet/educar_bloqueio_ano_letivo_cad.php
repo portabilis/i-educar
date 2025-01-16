@@ -26,7 +26,7 @@ return new class extends clsCadastro
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
         $this->ref_ano = $_GET['ref_ano'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 21251, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_bloqueio_ano_letivo_lst.php');
 
         if (is_numeric(value: $this->ref_cod_instituicao) && is_numeric(value: $this->ref_ano)) {
@@ -39,9 +39,9 @@ return new class extends clsCadastro
 
                 $this->ano = $this->ref_ano;
 
-                //** verificao de permissao para exclusao
+                // ** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 21251, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
-                //**
+                // **
 
                 $retorno = 'Editar';
             }

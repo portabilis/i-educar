@@ -30,7 +30,7 @@ class CountryControllerTest extends ResourceTestCase
         GET('/api/country', ['Country'], 'Get all countries'),
         Response(200, schemaType: SchemaType::ARRAY, ref: 'Country')
     ]
-    public function testIndex(): void
+    public function test_index(): void
     {
         $this->index();
     }
@@ -41,7 +41,7 @@ class CountryControllerTest extends ResourceTestCase
         Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
     ]
-    public function testStore(): void
+    public function test_store(): void
     {
         $this->store();
     }
@@ -51,7 +51,7 @@ class CountryControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, ref: 'Country')
     ]
-    public function testShow(): void
+    public function test_show(): void
     {
         $this->show();
     }
@@ -63,7 +63,7 @@ class CountryControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
     ]
-    public function testUpdate(): void
+    public function test_update(): void
     {
         $this->update();
     }
@@ -73,12 +73,12 @@ class CountryControllerTest extends ResourceTestCase
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
     ]
-    public function testDelete(): void
+    public function test_delete(): void
     {
         $this->destroy();
     }
 
-    public function testFailUpdateCountry()
+    public function test_fail_update_country()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
         $model = $this->createCountryIntoBrasil();
@@ -91,7 +91,7 @@ class CountryControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testFailCreateCountry()
+    public function test_fail_create_country()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
         $model = $this->makeCountryIntoBrasil();
@@ -103,7 +103,7 @@ class CountryControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testFailDestroyCountry()
+    public function test_fail_destroy_country()
     {
         $user = LegacyUserFactory::new()->institutional()->withAccess(753)->create();
         $this->actingAs($user);
@@ -118,11 +118,11 @@ class CountryControllerTest extends ResourceTestCase
 
     private function createCountryIntoBrasil(): Country
     {
-        return (new CountryFactory())->create(['id' => Country::BRASIL]);
+        return (new CountryFactory)->create(['id' => Country::BRASIL]);
     }
 
     private function makeCountryIntoBrasil(): Country
     {
-        return (new CountryFactory())->make(['id' => Country::BRASIL]);
+        return (new CountryFactory)->make(['id' => Country::BRASIL]);
     }
 }

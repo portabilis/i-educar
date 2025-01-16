@@ -40,7 +40,7 @@ return new class extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_usuario_lst.php');
         $this->ref_pessoa = $_POST['ref_pessoa'];
 
@@ -98,7 +98,7 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         $this->campoOculto(nome: 'ref_pessoa', valor: $this->ref_pessoa);
 
@@ -122,7 +122,7 @@ return new class extends clsCadastro
 
             $this->campoRotulo(nome: 'nome', campo: 'Nome', valor: $this->nome);
         } else {
-            $parametros = new clsParametrosPesquisas();
+            $parametros = new clsParametrosPesquisas;
             $parametros->setSubmit(1);
             $parametros->setPessoa('F');
             $parametros->setPessoaNovo('S');
@@ -174,7 +174,7 @@ return new class extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
 
-        $objTemp = new clsPmieducarTipoUsuario();
+        $objTemp = new clsPmieducarTipoUsuario;
         $objTemp->setOrderby('nm_tipo ASC');
 
         /** @var User $user */
@@ -419,7 +419,7 @@ return new class extends clsCadastro
     public function validatesUniquenessOfMatricula($pessoaId, $matricula)
     {
         $sql = "select 1 from portal.funcionario where lower(matricula) = lower('$matricula') and ref_cod_pessoa_fj != $pessoaId";
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if ($db->CampoUnico($sql) == '1') {
             $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
@@ -432,7 +432,7 @@ return new class extends clsCadastro
 
     public function excluiTodosVinculosEscola($codUsuario)
     {
-        $usuarioEscola = new clsPmieducarEscolaUsuario();
+        $usuarioEscola = new clsPmieducarEscolaUsuario;
         $usuarioEscola->excluirTodos($codUsuario);
     }
 
@@ -441,7 +441,7 @@ return new class extends clsCadastro
         $this->excluiTodosVinculosEscola($codUsuario);
 
         foreach ($escolas as $e) {
-            $usuarioEscola = new clsPmieducarEscolaUsuario();
+            $usuarioEscola = new clsPmieducarEscolaUsuario;
             $usuarioEscola->ref_cod_usuario = $codUsuario;
             $usuarioEscola->ref_cod_escola = $e;
             $usuarioEscola->cadastra();

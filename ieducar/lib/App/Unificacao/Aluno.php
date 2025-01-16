@@ -71,7 +71,7 @@ class App_Unificacao_Aluno
         $historicos = DB::table('pmieducar.historico_escolar')->whereIn('ref_cod_aluno', $duplicatesId)->get();
 
         foreach ($historicos as $historico) {
-            $logData = new LogUnificationOldData();
+            $logData = new LogUnificationOldData;
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.historico_escolar';
             $logData->keys = json_encode([['id' => $historico->id]]);
@@ -85,7 +85,7 @@ class App_Unificacao_Aluno
         $matriculas = DB::table('pmieducar.matricula')->whereIn('ref_cod_aluno', $duplicatesId)->get();
 
         foreach ($matriculas as $matricula) {
-            $logData = new LogUnificationOldData();
+            $logData = new LogUnificationOldData;
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.matricula';
             $logData->keys = json_encode([['cod_matricula' => $matricula->cod_matricula]]);
@@ -99,7 +99,7 @@ class App_Unificacao_Aluno
         $alunos = DB::table('pmieducar.aluno')->whereIn('cod_aluno', $duplicatesId)->get();
 
         foreach ($alunos as $aluno) {
-            $logData = new LogUnificationOldData();
+            $logData = new LogUnificationOldData;
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.aluno';
             $logData->keys = json_encode([['cod_aluno' => $aluno->cod_aluno]]);

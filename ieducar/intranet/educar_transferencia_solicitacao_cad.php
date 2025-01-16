@@ -84,7 +84,7 @@ return new class extends clsCadastro
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
         $cancela = $_GET['cancela'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
         if (
@@ -128,7 +128,7 @@ return new class extends clsCadastro
 
         $sql = "select ref_cod_turma, sequencial from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and sequencial = (select max(sequencial) from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId) and not exists(select 1 from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and ativo = 1 limit 1) limit 1";
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta(consulta: $sql);
         $db->ProximoRegistro();
         $ultimaEnturmacao = $db->Tupla();
@@ -148,7 +148,7 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
         $this->campoOculto(nome: 'ref_cod_matricula', valor: $this->ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
 
         if (is_array(value: $lst_aluno)) {
@@ -185,7 +185,7 @@ return new class extends clsCadastro
     {
         DB::beginTransaction();
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
         $this->data_cancel = Portabilis_Date_Utils::brToPgSQL(date: $this->data_cancel);
@@ -223,7 +223,7 @@ return new class extends clsCadastro
                 return false;
             }
 
-            $enturmacoes = new clsPmieducarMatriculaTurma();
+            $enturmacoes = new clsPmieducarMatriculaTurma;
             $enturmacoes = $enturmacoes->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_ativo: 1);
 
             if ($enturmacoes) {
@@ -273,19 +273,19 @@ return new class extends clsCadastro
                 'data_cancel' => $this->data_cancel,
             ]);
 
-            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(columns: ['id'], where: ['matricula_id' => $this->ref_cod_matricula]);
+            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper)->findAll(columns: ['id'], where: ['matricula_id' => $this->ref_cod_matricula]);
 
             if ($notasAluno && count(value: $notasAluno)) {
                 $notaAlunoId = $notasAluno[0]->get('id');
 
                 try {
-                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper)
                         ->updateSituation(notaAlunoId: $notaAlunoId, situacao: App_Model_MatriculaSituacao::TRANSFERIDO);
                 } catch (\Throwable) {
                     DB::rollback();
                 }
             }
-            //Marca a busca ativa como transferência
+            // Marca a busca ativa como transferência
             LegacyActiveLooking::query()
                 ->where('ref_cod_matricula', $this->ref_cod_matricula)
                 ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT)
@@ -311,10 +311,10 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
-        $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
+        $obj_transferencia = new clsPmieducarTransferenciaSolicitacao;
         $lst_transferencia = $obj_transferencia->lista(int_ref_cod_matricula_saida: $this->ref_cod_matricula, int_ativo: 1, int_ref_cod_aluno: $this->ref_cod_aluno);
         if (is_array(value: $lst_transferencia)) {
             try {
@@ -323,7 +323,7 @@ return new class extends clsCadastro
                 $this->cod_transferencia_solicitacao = $det_transferencia['cod_transferencia_solicitacao'];
                 $obj = new clsPmieducarTransferenciaSolicitacao(cod_transferencia_solicitacao: $this->cod_transferencia_solicitacao, ref_cod_transferencia_tipo: null, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ref_cod_matricula_entrada: null, ref_cod_matricula_saida: null, observacao: null, data_cadastro: null, data_exclusao: null, ativo: 0);
                 $excluiu = $obj->excluir();
-                //Desfaz a busca ativa com transferencia
+                // Desfaz a busca ativa com transferencia
                 LegacyActiveLooking::query()
                     ->where('ref_cod_matricula', $this->ref_cod_matricula)
                     ->where('resultado_busca_ativa', ActiveLooking::ACTIVE_LOOKING_TRANSFER_RESULT)

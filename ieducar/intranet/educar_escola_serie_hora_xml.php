@@ -7,7 +7,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 if (is_numeric($_GET['esc']) && is_numeric($_GET['ser'])) {
-    $db = new clsBanco();
+    $db = new clsBanco;
     $db->Consulta(
         '
         SELECT to_char(hora_inicial,\'hh24:mi\'), to_char(hora_final,\'hh24:mi\'), '

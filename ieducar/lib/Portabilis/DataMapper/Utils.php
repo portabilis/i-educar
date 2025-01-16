@@ -13,6 +13,6 @@ class Portabilis_DataMapper_Utils
             throw new CoreExt_Exception("Class '$dataMapperClassName' not found in path $classPath.");
         }
 
-        return new $dataMapperClassName();
+        return new $dataMapperClassName;
     }
 }

@@ -26,6 +26,7 @@ class LegacyIndividual extends Model
 {
     /** @use HasBuilder<LegacyIndividualBuilder> */
     use HasBuilder;
+
     use HasFiles;
 
     public const CREATED_AT = 'data_cad';
@@ -116,7 +117,7 @@ class LegacyIndividual extends Model
     }
 
     /**
-     * @return BelongsToMany<LegacyDeficiency, $this>
+     * @return BelongsToMany<LegacyRace, $this>
      */
     public function races(): BelongsToMany
     {
@@ -299,7 +300,7 @@ class LegacyIndividual extends Model
     protected function nationalityName(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new Nationality())->getDescriptiveValues()[$this->nacionalidade]
+            get: fn () => (new Nationality)->getDescriptiveValues()[$this->nacionalidade]
         );
     }
 
@@ -343,6 +344,3 @@ class LegacyIndividual extends Model
         );
     }
 }
-
-
-

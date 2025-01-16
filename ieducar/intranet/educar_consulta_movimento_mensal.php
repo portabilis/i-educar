@@ -34,7 +34,7 @@ return new class extends clsCadastro
         $this->data_inicial = $this->getQueryString('data_inicial');
         $this->data_final = $this->getQueryString('data_final');
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: self::PROCESSO_AP,
@@ -90,7 +90,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: self::PROCESSO_AP,
@@ -128,7 +128,7 @@ return new class extends clsCadastro
     {
         $schoolClass = $this->getSchoolClass();
 
-        $schoolClassService = new SchoolClassService();
+        $schoolClassService = new SchoolClassService;
 
         return $schoolClassService->getCalendars($schoolClass);
     }

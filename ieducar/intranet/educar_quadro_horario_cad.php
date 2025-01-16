@@ -47,7 +47,7 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 641, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
@@ -57,7 +57,7 @@ return new class extends clsCadastro
             }
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 641,
@@ -93,7 +93,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 641,
             int_idpes_usuario: $this->pessoa_logada,
@@ -101,7 +101,7 @@ return new class extends clsCadastro
             str_pagina_redirecionar: "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
         );
 
-        $obj = new clsPmieducarQuadroHorario();
+        $obj = new clsPmieducarQuadroHorario;
         $lista = $obj->lista(null, null, $this->pessoa_logada, $this->ref_cod_turma, null, null, null, null, 1, $this->ano);
         if ($lista) {
             echo '<script>alert(\'Quadro de Horário já cadastrado para esta turma\');</script>';
@@ -132,7 +132,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(
             int_processo_ap: 641,
             int_idpes_usuario: $this->pessoa_logada,

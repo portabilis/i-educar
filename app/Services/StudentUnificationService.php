@@ -40,7 +40,7 @@ class StudentUnificationService
     public function canUndo(LogUnification $unification)
     {
         if (!$unification->active) {
-            throw new UndoInactiveUnification();
+            throw new UndoInactiveUnification;
         }
 
         if (empty($unification->main)) {
@@ -79,7 +79,7 @@ class StudentUnificationService
         $schoolsUnificationOwner = $unificationOwner->schools->pluck('cod_escola')->all();
 
         if (count(array_intersect($schoolsUser, $schoolsUnificationOwner)) < 1) {
-            throw new WithoutPermission();
+            throw new WithoutPermission;
         }
     }
 
@@ -99,6 +99,6 @@ class StudentUnificationService
             return;
         }
 
-        throw new WithoutPermission();
+        throw new WithoutPermission;
     }
 }

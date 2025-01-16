@@ -24,7 +24,7 @@ return new class extends clsListagem
         if ($_GET['razao_social']) {
             $par_razao = $_GET['razao_social'];
 
-            $objPessoaFJ = new clsPessoaFj();
+            $objPessoaFJ = new clsPessoaFj;
             $lista = $objPessoaFJ->lista(str_nome: $par_razao);
             if ($lista) {
                 foreach ($lista as $pessoa) {
@@ -36,8 +36,8 @@ return new class extends clsListagem
             $par_cnpj = idFederal2Int(str: $_GET['id_federal']);
         }
 
-        $objPessoa = new clsPessoaJuridica();
-        $db = new clsBanco();
+        $objPessoa = new clsPessoaJuridica;
+        $db = new clsBanco;
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
             $objPessoa->codUsuario = $this->pessoa_logada;
@@ -56,7 +56,7 @@ return new class extends clsListagem
         // Paginador
         $this->addPaginador2(strUrl: ' empresas_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $limite);
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 41, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true)) {
             $this->acao = 'go("empresas_cad.php")';

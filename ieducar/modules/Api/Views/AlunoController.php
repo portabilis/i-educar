@@ -146,7 +146,7 @@ class AlunoController extends ApiCoreController
             }
 
             $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
-            $configuracoes = new clsPmieducarConfiguracoesGerais();
+            $configuracoes = new clsPmieducarConfiguracoesGerais;
             $configuracoes = $configuracoes->detalhe();
 
             if (!empty($configuracoes['tamanho_min_rede_estadual'])) {
@@ -390,7 +390,7 @@ class AlunoController extends ApiCoreController
 
     protected function loadTransporte($responsavelTransporte): string
     {
-        return (new TransportationProvider())->getValueDescription($responsavelTransporte);
+        return (new TransportationProvider)->getValueDescription($responsavelTransporte);
     }
 
     protected function saveSus($pessoaId)
@@ -403,7 +403,7 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdateFichaMedica($id)
     {
-        $obj = new clsModulesFichaMedicaAluno();
+        $obj = new clsModulesFichaMedicaAluno;
 
         $obj->ref_cod_aluno = $id;
         $obj->altura = $this->getRequest()->altura;
@@ -458,7 +458,7 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdateMoradia($id)
     {
-        $obj = new clsModulesMoradiaAluno();
+        $obj = new clsModulesMoradiaAluno;
 
         $obj->ref_cod_aluno = $id;
         $obj->moradia = $this->getRequest()->moradia;
@@ -530,7 +530,7 @@ class AlunoController extends ApiCoreController
     // #TODO mover updateResponsavel e updateDeficiencias para API pessoa ?
     protected function updateResponsavel()
     {
-        $pessoa = new clsFisica();
+        $pessoa = new clsFisica;
         $pessoa->idpes = $this->getRequest()->pessoa_id;
         $pessoa->nome_responsavel = '';
 
@@ -567,7 +567,7 @@ class AlunoController extends ApiCoreController
     {
         $tiposResponsavel = ['pai' => 'p', 'mae' => 'm', 'outra_pessoa' => 'r', 'pai_mae' => 'a'];
 
-        $aluno = new clsPmieducarAluno();
+        $aluno = new clsPmieducarAluno;
         $aluno->cod_aluno = $id;
 
         $alunoEstadoId = mb_strtoupper($this->getRequest()->aluno_estado_id);
@@ -638,13 +638,13 @@ class AlunoController extends ApiCoreController
         $pessoaId = $this->getRequest()->pessoa_id;
         $this->savePhoto($pessoaId);
 
-        //documentos
+        // documentos
         $aluno->url_documento = $this->getRequest()->url_documento;
 
-        //laudo medico
+        // laudo medico
         $aluno->url_laudo_medico = $this->getRequest()->url_laudo_medico;
 
-        $aluno->tipo_transporte = (new TransportationProvider())->from($this->getRequest()->tipo_transporte);
+        $aluno->tipo_transporte = (new TransportationProvider)->from($this->getRequest()->tipo_transporte);
         $aluno->rota_transporte = $this->getRequest()->rota_transporte;
         $aluno->utiliza_transporte_rural = (bool) $this->getRequest()->utiliza_transporte_rural;
 
@@ -681,7 +681,7 @@ class AlunoController extends ApiCoreController
 
     protected function loadEscolaNome($id)
     {
-        $escola = new clsPmieducarEscola();
+        $escola = new clsPmieducarEscola;
         $escola->cod_escola = $id;
         $escola = $escola->detalhe();
 
@@ -695,7 +695,7 @@ class AlunoController extends ApiCoreController
 
     protected function loadCursoNome($id)
     {
-        $curso = new clsPmieducarCurso();
+        $curso = new clsPmieducarCurso;
         $curso->cod_curso = $id;
         $curso = $curso->detalhe();
 
@@ -704,7 +704,7 @@ class AlunoController extends ApiCoreController
 
     protected function loadSerieNome($id)
     {
-        $serie = new clsPmieducarSerie();
+        $serie = new clsPmieducarSerie;
         $serie->cod_serie = $id;
         $serie = $serie->detalhe();
 
@@ -1054,7 +1054,7 @@ class AlunoController extends ApiCoreController
         // responsavel um destes, na respectiva ordem, sendo assim esta api mantem
         // compatibilidade com o antigo cadastro.
         if (!$tipo) {
-            $pessoa = new clsFisica();
+            $pessoa = new clsFisica;
             $pessoa->idpes = $aluno['pessoa_id'];
             $pessoa = $pessoa->detalhe();
 
@@ -1412,7 +1412,7 @@ class AlunoController extends ApiCoreController
     protected function getMatriculas()
     {
         if ($this->canGetMatriculas()) {
-            $matriculas = new clsPmieducarMatricula();
+            $matriculas = new clsPmieducarMatricula;
             $matriculas->setOrderby('ano DESC, coalesce(m.data_matricula, m.data_cadastro) DESC, (CASE WHEN dependencia THEN 1 ELSE 0 END), nm_serie DESC, cod_matricula DESC, aprovado');
 
             $only_valid_boletim = $this->getRequest()->only_valid_boletim;
@@ -1565,7 +1565,7 @@ class AlunoController extends ApiCoreController
         LegacyStudentBenefit::query()->where('aluno_id', $id)->delete();
         foreach ($this->getRequest()->beneficios as $beneficioId) {
             if (!empty($beneficioId)) {
-                $alunoBeneficio = new LegacyStudentBenefit();
+                $alunoBeneficio = new LegacyStudentBenefit;
                 $alunoBeneficio->aluno_id = $id;
                 $alunoBeneficio->aluno_beneficio_id = $beneficioId;
 
@@ -1607,7 +1607,7 @@ class AlunoController extends ApiCoreController
                             if ($exists) {
                                 $this->messenger->append('A data de inclusão deve ser superior ao desligamento anterior do mesmo curso.');
                             } else {
-                                $alunoProjeto = new LegacyStudentProject();
+                                $alunoProjeto = new LegacyStudentProject;
                                 $alunoProjeto->ref_cod_aluno = $alunoId;
                                 $alunoProjeto->data_inclusao = $dataInclusao;
                                 if ($dataDesligamento && $dataDesligamento != '') {
@@ -1640,7 +1640,7 @@ class AlunoController extends ApiCoreController
             $altura = $this->getRequest()->historico_altura[$key];
             $peso = $this->getRequest()->historico_peso[$key];
 
-            $obj = new LegacyStudentHistoricalHeightWeight();
+            $obj = new LegacyStudentHistoricalHeightWeight;
             $obj->ref_cod_aluno = $alunoId;
             $obj->data_historico = $data_historico;
             $obj->altura = $altura;
@@ -1744,7 +1744,7 @@ class AlunoController extends ApiCoreController
         $id = $this->getRequest()->id;
 
         if ($this->canEnable()) {
-            $aluno = new clsPmieducarAluno();
+            $aluno = new clsPmieducarAluno;
             $aluno->cod_aluno = $id;
             $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
             $aluno->ativo = 1;
@@ -1766,7 +1766,7 @@ class AlunoController extends ApiCoreController
 
         if (!$matriculaAtiva) {
             if ($this->canDelete()) {
-                $aluno = new clsPmieducarAluno();
+                $aluno = new clsPmieducarAluno;
                 $aluno->cod_aluno = $id;
                 $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
 
@@ -1792,15 +1792,15 @@ class AlunoController extends ApiCoreController
         return Portabilis_Utils_Database::selectField($sql, $alunoId);
     }
 
-    //envia foto e salva caminha no banco
+    // envia foto e salva caminha no banco
     protected function savePhoto($id)
     {
         if ($this->objPhoto != null) {
-            //salva foto com data, para evitar problemas com o cache do navegador
+            // salva foto com data, para evitar problemas com o cache do navegador
             $caminhoFoto = $this->objPhoto->sendPicture();
 
             if ($caminhoFoto != '') {
-                //new clsCadastroFisicaFoto($id)->exclui();
+                // new clsCadastroFisicaFoto($id)->exclui();
                 $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
                 $detalheFoto = $obj->detalhe();
 
@@ -1847,7 +1847,7 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdateDocumentos($pessoaId)
     {
-        $documentos = new clsDocumento();
+        $documentos = new clsDocumento;
         $documentos->idpes = $pessoaId;
 
         // o tipo certidão novo padrão é apenas para exibição ao usuário,
@@ -1915,7 +1915,7 @@ class AlunoController extends ApiCoreController
 
     protected function loadAcessoDataEntradaSaida()
     {
-        $acesso = new clsPermissoes();
+        $acesso = new clsPermissoes;
 
         return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
     }

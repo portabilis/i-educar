@@ -11,15 +11,15 @@ class CoreExt_Session_Storage_DefaultTest extends TestCase
     {
         parent::setUp();
 
-        $this->_storage = new CoreExt_Session_Storage_Default();
+        $this->_storage = new CoreExt_Session_Storage_Default;
     }
 
-    public function testInstanciaESubclasseDeCountable()
+    public function test_instancia_e_subclasse_de_countable()
     {
         $this->assertInstanceOf('Countable', $this->_storage);
     }
 
-    public function testEscreveDadosNaSession()
+    public function test_escreve_dados_na_session()
     {
         $this->_storage->write('foo', 'bar');
         $this->_storage->write('foo/1', 'bar/1');
@@ -33,9 +33,9 @@ class CoreExt_Session_Storage_DefaultTest extends TestCase
     }
 
     /**
-     * @depends testEscreveDadosNaSession
+     * @depends test_escreve_dados_na_session
      */
-    public function testLerDadosArmazenadosNaSession()
+    public function test_ler_dados_armazenados_na_session()
     {
         $this->_storage->write('foo', 'bar');
         $this->_storage->write('foo/1', 'bar/1');
@@ -48,13 +48,13 @@ class CoreExt_Session_Storage_DefaultTest extends TestCase
         $this->assertEquals('bar/3', $this->_storage->read('foo/3'));
     }
 
-    public function testRemoveIndiceDaSession()
+    public function test_remove_indice_da_session()
     {
         $this->_storage->remove('bar/3');
         $this->assertNull($this->_storage->read('bar/3'));
     }
 
-    public function testIndiceNaoExistenteNaSessionRetornaNull()
+    public function test_indice_nao_existente_na_session_retorna_null()
     {
         $this->assertNull($this->_storage->read('null'));
     }

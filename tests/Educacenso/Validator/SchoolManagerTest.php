@@ -17,7 +17,7 @@ class SchoolManagerTest extends TestCase
         return new SchoolManagers($arrayValueObject, $administrativeDependency, $operatingSituation);
     }
 
-    public function testEmptyManagerShouldBeInvalid()
+    public function test_empty_manager_should_be_invalid()
     {
         $this->markTestSkipped();
 
@@ -27,7 +27,7 @@ class SchoolManagerTest extends TestCase
         $this->assertFalse($validator->isValid());
     }
 
-    public function testWithoutOrEmptyRoleShouldBeInvalid()
+    public function test_without_or_empty_role_should_be_invalid()
     {
         $valueObject = $this->getFakeValueObject();
         $valueObject->roleId = null;
@@ -35,7 +35,7 @@ class SchoolManagerTest extends TestCase
         $this->assertFalse($validator->isValid());
     }
 
-    public function testRoleIsDirectorAndAccesCriteriaIsEmptyShouldBeInvalid()
+    public function test_role_is_director_and_acces_criteria_is_empty_should_be_invalid()
     {
         $this->markTestSkipped();
 
@@ -50,7 +50,7 @@ class SchoolManagerTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testAccessCriteriaIsOtherAndDescriptionIsEmptyShouldBeInvalid()
+    public function test_access_criteria_is_other_and_description_is_empty_should_be_invalid()
     {
         $this->markTestSkipped();
 
@@ -65,7 +65,7 @@ class SchoolManagerTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testRoleIsDirectorAndAccessTypeIsEmptyShouldBeInvalid()
+    public function test_role_is_director_and_access_type_is_empty_should_be_invalid()
     {
         $this->markTestSkipped();
 
@@ -87,7 +87,7 @@ class SchoolManagerTest extends TestCase
     private function getFakeValueObject()
     {
         $faker = Factory::create();
-        $valueObject = new SchoolManagerValueObject();
+        $valueObject = new SchoolManagerValueObject;
         $valueObject->individualId = $faker->randomNumber(1);
         $valueObject->roleId = $faker->randomNumber(1);
         $valueObject->accessCriteriaId = $faker->randomNumber(1);

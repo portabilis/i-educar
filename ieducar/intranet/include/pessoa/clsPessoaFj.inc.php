@@ -103,7 +103,7 @@ class clsPessoaFj extends Model
         $arrayint_idnotin = false,
         $str_tipo_pessoa = false
     ) {
-        $objPessoa = new clsPessoa_();
+        $objPessoa = new clsPessoa_;
 
         $listaPessoa = $objPessoa->lista(
             $str_nome = pg_escape_string($str_nome),
@@ -132,7 +132,7 @@ class clsPessoaFj extends Model
         $str_order_by = null,
         $int_ref_cod_sistema = null
     ) {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         $filtros = '';
         $filtroTipo = '';
@@ -161,7 +161,7 @@ class clsPessoaFj extends Model
         }
 
         if (is_numeric($id_federal)) {
-            $db2 = new clsBanco();
+            $db2 = new clsBanco;
 
             $sql = sprintf(
                 'SELECT idpes FROM cadastro.juridica WHERE cnpj LIKE \'%%%s%%\'',
@@ -313,7 +313,7 @@ class clsPessoaFj extends Model
                 }
             }
 
-            $objFone = new clsPessoaTelefone();
+            $objFone = new clsPessoaTelefone;
             $listaFone = $objFone->lista($this->idpes);
 
             if ($listaFone) {

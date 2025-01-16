@@ -7,7 +7,7 @@ use Tests\ViewTestCase;
 
 class EmployeeTest extends ViewTestCase
 {
-    public function testEmployee(): void
+    public function test_employee(): void
     {
         $found = Employee::query()->get();
         $this->assertCount(1, $found);
@@ -15,23 +15,23 @@ class EmployeeTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }
 
-    public function testGetAlias(): void
+    public function test_get_alias(): void
     {
         $aliases = collect($this->model->getExportedColumnsByGroup())->flatMap(fn ($item) => $item);
         $this->assertEquals('ID Pessoa', $aliases->get('id'));
     }
 
-    public function testGetLabel(): void
+    public function test_get_label(): void
     {
         $this->assertEquals('Servidores', $this->model->getLabel());
     }
 
-    public function testGetDescription(): void
+    public function test_get_description(): void
     {
         $this->assertEquals('Os dados exportados serão contabilizados por quantidade de servidores(as) alocados(as) no ano filtrado, agrupando as informações das alocações nas escolas.', $this->model->getDescription());
     }
 
-    public function testGetExportedColumnsByGroup(): void
+    public function test_get_exported_columns_by_group(): void
     {
         $expected = [
             'Códigos' => [
@@ -90,7 +90,7 @@ class EmployeeTest extends ViewTestCase
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
     }
 
-    public function testRelationshipPerson(): void
+    public function test_relationship_person(): void
     {
         $found = Employee::query()->person([
             'id',
@@ -106,7 +106,7 @@ class EmployeeTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipDisabilities(): void
+    public function test_relationship_disabilities(): void
     {
         $found = Employee::query()->disabilities()->first();
         $this->assertInstanceOf(Employee::class, $found);
@@ -116,7 +116,7 @@ class EmployeeTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPhones(): void
+    public function test_relationship_phones(): void
     {
         $found = Employee::query()->phones()->first();
         $this->assertInstanceOf(Employee::class, $found);
@@ -126,7 +126,7 @@ class EmployeeTest extends ViewTestCase
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
-    public function testRelationshipPlace(): void
+    public function test_relationship_place(): void
     {
         $found = Employee::query()->place([
             'address',

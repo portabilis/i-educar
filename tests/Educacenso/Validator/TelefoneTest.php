@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class TelefoneTest extends TestCase
 {
-    public function testQuantidadeDeDigitos()
+    public function test_quantidade_de_digitos()
     {
         $telefoneValidator = new Telefone(null, '123');
         $this->assertFalse($telefoneValidator->isValid());
@@ -19,7 +19,7 @@ class TelefoneTest extends TestCase
         $this->assertTrue($telefoneValidator->isValid());
     }
 
-    public function testPrimeiroDigito()
+    public function test_primeiro_digito()
     {
         $telefoneValidator = new Telefone(null, '012345678');
         $this->assertFalse($telefoneValidator->isValid());
@@ -31,7 +31,7 @@ class TelefoneTest extends TestCase
         $this->assertTrue($telefoneValidator->isValid());
     }
 
-    public function testDigitosSequenciais()
+    public function test_digitos_sequenciais()
     {
         $telefoneValidator = new Telefone(null, '11111111');
         $this->assertFalse($telefoneValidator->isValid());
@@ -40,7 +40,7 @@ class TelefoneTest extends TestCase
         $this->assertTrue($telefoneValidator->isValid());
     }
 
-    public function testRetornaNomeCampo()
+    public function test_retorna_nome_campo()
     {
         $nomeCampo = 'nomeTeste';
         $telefoneValidator = new Telefone($nomeCampo, '11111111');

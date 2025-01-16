@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 class PessoaFjTest extends TestCase
 {
-    public function testGetById()
+    public function test_get_by_id()
     {
         $pdo = $this->getConnection()->getPdo();
         $pdo->exec(
@@ -14,7 +14,7 @@ class PessoaFjTest extends TestCase
         );
         $id = $pdo->lastInsertId('cadastro.seq_pessoa');
 
-        $pessoaFj = new \clsPessoaFj();
+        $pessoaFj = new \clsPessoaFj;
         $pessoaFj->idpes = $id;
         $pessoa = $pessoaFj->detalhe();
 

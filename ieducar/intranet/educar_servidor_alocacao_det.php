@@ -44,22 +44,22 @@ return new class extends clsDetalhe
         $this->ref_cod_funcionario_vinculo = $registro['ref_cod_funcionario_vinculo'];
         $this->ano = $registro['ano'];
 
-        //Nome do servidor
+        // Nome do servidor
         $fisica = new clsPessoaFisica($this->ref_cod_servidor);
         $fisica = $fisica->detalhe();
 
         $this->addDetalhe(['Servidor', "{$fisica['nome']}"]);
 
-        //Escola
+        // Escola
         $escola = new clsPmieducarEscola($registro['ref_cod_escola']);
         $escola = $escola->detalhe();
 
         $this->addDetalhe(['Escola', "{$escola['nome']}"]);
 
-        //Ano
+        // Ano
         $this->addDetalhe(['Ano', "{$registro['ano']}"]);
 
-        //Periodo
+        // Periodo
         $periodo = [
             1 => 'Matutino',
             2 => 'Vespertino',
@@ -68,18 +68,18 @@ return new class extends clsDetalhe
 
         $this->addDetalhe(['Periodo', "{$periodo[$registro['periodo']]}"]);
 
-        //Carga horária
+        // Carga horária
         $this->addDetalhe(['Carga horária', substr($registro['carga_horaria'], 0, -3)]);
 
-        //Função
+        // Função
         if ($this->ref_cod_servidor_funcao) {
             $employeeRole = LegacyEmployeeRole::find($this->ref_cod_servidor_funcao);
             $this->addDetalhe(['Função', $employeeRole->role->name]);
         }
 
-        //Vinculo
+        // Vinculo
         if ($this->ref_cod_funcionario_vinculo) {
-            $funcionarioVinculo = new clsPortalFuncionario();
+            $funcionarioVinculo = new clsPortalFuncionario;
             $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
 
             $this->addDetalhe(['Vinculo', "{$funcionarioVinculo}"]);
@@ -93,7 +93,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Data de saída', Portabilis_Date_Utils::pgSQLToBr($this->data_saida)]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
             $this->url_novo = "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
             $this->url_editar = "educar_servidor_alocacao_cad.php?cod_servidor_alocacao={$this->cod_servidor_alocacao}";

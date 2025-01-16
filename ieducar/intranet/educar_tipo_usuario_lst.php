@@ -63,7 +63,7 @@ return new class extends clsListagem
             'Nível',
         ]);
 
-        //niveis
+        // niveis
         $array_nivel = ['-1' => 'Selecione'] + $this->user()->type->getLevelDescriptions()->toArray();
 
         if (!isset($this->nivel)) {
@@ -81,7 +81,7 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_tipo_usuario = new clsPmieducarTipoUsuario();
+        $obj_tipo_usuario = new clsPmieducarTipoUsuario;
         $obj_tipo_usuario->setOrderby(strNomeCampo: 'nm_tipo ASC');
         $obj_tipo_usuario->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
@@ -112,8 +112,8 @@ return new class extends clsListagem
         }
         $this->addPaginador2(strUrl: 'educar_tipo_usuario_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 554, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, super_usuario: true)) {
             $this->acao = 'go("' . route(name: 'usertype.new') . '")';

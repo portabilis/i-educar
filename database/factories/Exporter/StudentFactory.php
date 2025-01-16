@@ -13,7 +13,7 @@ class StudentFactory extends Factory
     {
         EnrollmentFactory::new()->make();
 
-        $instance = new $this->model();
+        $instance = new $this->model;
 
         return $instance->query()->first()->getAttributes();
     }

@@ -11,7 +11,7 @@ class DiarioRecuperaDeficienciasTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaDeficiencias()
+    public function test_recupera_deficiencias()
     {
         LegacyDeficiencyFactory::new()->create();
 

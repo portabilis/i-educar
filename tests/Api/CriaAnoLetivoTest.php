@@ -38,7 +38,7 @@ class CriaAnoLetivoTest extends TestCase
     use DatabaseTransactions;
     use LoginFirstUser;
 
-    public function testCreateNewSchoolAcademicYear()
+    public function test_create_new_school_academic_year()
     {
         $school = LegacySchoolFactory::new()->create();
 
@@ -242,7 +242,7 @@ class CriaAnoLetivoTest extends TestCase
         ]);
     }
 
-    public function testCreateNewSchoolAcademicYearWithSchoolClassMultiplesGrades()
+    public function test_create_new_school_academic_year_with_school_class_multiples_grades()
     {
         $school = LegacySchoolFactory::new()->create();
 

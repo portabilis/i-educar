@@ -98,7 +98,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_transferencia_tipo) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_matricula_saida)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -184,7 +184,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     public function edita()
     {
         if (is_numeric($this->cod_transferencia_solicitacao) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -278,7 +278,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
         if ($entrada_aluno == true) {
             $filtros .= "{$whereAnd}ts.ref_cod_matricula_entrada = m.cod_matricula";
             $whereAnd = ' AND ';
-        } else { //if ($entrada_aluno == false)
+        } else { // if ($entrada_aluno == false)
             $filtros .= "{$whereAnd}ts.ref_cod_matricula_saida = m.cod_matricula";
             $whereAnd = ' AND ';
         }
@@ -367,7 +367,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
             }
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -407,7 +407,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_transferencia_solicitacao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} ts WHERE ts.cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
             $db->ProximoRegistro();
 
@@ -425,7 +425,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     public function existe()
     {
         if (is_numeric($this->cod_transferencia_solicitacao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
             $db->ProximoRegistro();
 
@@ -459,7 +459,7 @@ class clsPmieducarTransferenciaSolicitacao extends Model
     public function existSolicitacaoTransferenciaAtiva()
     {
         if (is_numeric($this->ref_cod_matricula_saida)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula_saida = '{$this->ref_cod_matricula_saida}' AND ativo = '1'");
             $db->ProximoRegistro();
 

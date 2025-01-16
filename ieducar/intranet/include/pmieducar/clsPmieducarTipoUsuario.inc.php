@@ -76,7 +76,7 @@ class clsPmieducarTipoUsuario extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_funcionario_cad) && is_string($this->nm_tipo) && is_numeric($this->nivel) && is_numeric($this->ativo)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -127,7 +127,7 @@ class clsPmieducarTipoUsuario extends Model
     public function edita()
     {
         if (is_numeric($this->cod_tipo_usuario) && is_numeric($this->ref_funcionario_exc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $gruda = '';
             $set = '';
 
@@ -227,7 +227,7 @@ class clsPmieducarTipoUsuario extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -265,7 +265,7 @@ class clsPmieducarTipoUsuario extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_tipo_usuario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_tipo_usuario = '{$this->cod_tipo_usuario}'");
             $db->ProximoRegistro();
 
@@ -283,7 +283,7 @@ class clsPmieducarTipoUsuario extends Model
     public function existe()
     {
         if (is_numeric($this->cod_tipo_usuario)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_tipo_usuario = '{$this->cod_tipo_usuario}'");
             $db->ProximoRegistro();
 

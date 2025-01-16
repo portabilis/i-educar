@@ -72,7 +72,7 @@ return new class extends clsCadastro
         $this->cod_matricula = $_GET['ref_cod_matricula'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(Process::RECLASSIFY_REGISTRATION, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
@@ -108,7 +108,7 @@ return new class extends clsCadastro
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
         $this->campoOculto('ref_cod_escola', $this->ref_ref_cod_escola);
 
-        $obj_aluno = new clsPmieducarAluno();
+        $obj_aluno = new clsPmieducarAluno;
         $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
@@ -151,7 +151,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(Process::RECLASSIFY_REGISTRATION, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
@@ -252,12 +252,12 @@ return new class extends clsCadastro
             echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
         }
 
-        $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+        $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper)
             ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
 
         if (!is_null($notaAluno)) {
             $notaAlunoId = $notaAluno->get('id');
-            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+            (new Avaliacao_Model_NotaComponenteMediaDataMapper)
                 ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
         }
 

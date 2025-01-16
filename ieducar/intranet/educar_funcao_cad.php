@@ -32,7 +32,7 @@ return new class extends clsCadastro
 
         $this->cod_funcao = $_GET['cod_funcao'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
         if (is_numeric($this->cod_funcao)) {
@@ -88,7 +88,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
         if ($this->professor == 'N') {
@@ -97,7 +97,7 @@ return new class extends clsCadastro
             $this->professor = '1';
         }
 
-        $obj = new LegacyRole();
+        $obj = new LegacyRole;
         $obj->nm_funcao = $this->nm_funcao;
         $obj->abreviatura = $this->abreviatura;
         $obj->professor = $this->professor;
@@ -122,7 +122,7 @@ return new class extends clsCadastro
             $this->professor = '1';
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
         $obj = LegacyRole::find($this->cod_funcao);
@@ -144,7 +144,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
         $obj = LegacyRole::find($this->cod_funcao);

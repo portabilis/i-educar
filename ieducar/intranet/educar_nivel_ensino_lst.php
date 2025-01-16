@@ -66,7 +66,7 @@ return new class extends clsListagem
             'Nível Ensino',
         ];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if ($nivel_usuario == 1) {

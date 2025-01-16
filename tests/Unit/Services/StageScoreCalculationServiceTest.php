@@ -19,13 +19,13 @@ class StageScoreCalculationServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new StageScoreCalculationService();
+        $this->service = new StageScoreCalculationService;
     }
 
     /**
      * @return void
      */
-    public function testCalculateAverageBetweenScoreAndRemedial()
+    public function test_calculate_average_between_score_and_remedial()
     {
         // (5 + 9) / 2 = 7
         // 7 > 5 = 7
@@ -74,7 +74,7 @@ class StageScoreCalculationServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testCalculateSumScore()
+    public function test_calculate_sum_score()
     {
         // 5 + 9 = 14
         $score1 = 5;
@@ -120,7 +120,7 @@ class StageScoreCalculationServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testCalculateRemedial()
+    public function test_calculate_remedial()
     {
         // 5 > 9 = 9
         $score1 = 5;

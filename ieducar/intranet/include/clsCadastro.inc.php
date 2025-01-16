@@ -449,10 +449,10 @@ class clsCadastro extends clsCampos
                         $retorno .= "else { if(! DvCnpjOk( document.getElementById('$nome')) ) return false; }  }";
                         $retorno .= "else{ if(! DvCpfOk( document.getElementById('$nome')) ) return false; }";
                     } elseif ($nome != 'html') {
-                        //substituito referencia a elementos por padrï¿½o W3C document.getElementById()
-                        //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
-                        //nao funcionava na referencia por nome
-                        //16-08-2006
+                        // substituito referencia a elementos por padrï¿½o W3C document.getElementById()
+                        // quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
+                        // nao funcionava na referencia por nome
+                        // 16-08-2006
                         $retornoNaFalha = "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
                         $retornoNaFalha .= "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
                         $retornoNaFalha .= "  alert( 'Preencha o campo \'" . extendChars($componente[1], true) . "\' corretamente!' ); \n";
@@ -677,7 +677,7 @@ class clsCadastro extends clsCampos
 
     protected function nivelAcessoPessoaLogada()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         return $obj_permissoes->nivel_acesso($this->currentUserId());
     }

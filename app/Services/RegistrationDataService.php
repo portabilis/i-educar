@@ -43,7 +43,7 @@ class RegistrationDataService
     public function copy(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
         if (!$this->hasSameStages($newRegistration, $oldRegistration)) {
-            throw new StagesAreNotSame();
+            throw new StagesAreNotSame;
         }
         $this->copyAbsenceService->copy($newRegistration, $oldRegistration);
         $this->copyDescriptiveOpinionService->copy($newRegistration, $oldRegistration);

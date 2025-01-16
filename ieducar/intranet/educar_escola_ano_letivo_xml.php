@@ -6,7 +6,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 if (is_numeric($_GET['esc'])) {
-    $db = new clsBanco();
+    $db = new clsBanco;
     if ($_GET['lim']) {
         $lim = 'limit 5';
     }

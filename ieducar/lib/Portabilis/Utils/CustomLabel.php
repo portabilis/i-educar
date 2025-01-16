@@ -27,7 +27,7 @@ class CustomLabel
 
     protected function getFromDatabase()
     {
-        $configs = new clsPmieducarConfiguracoesGerais();
+        $configs = new clsPmieducarConfiguracoesGerais;
         $detalhe = $configs->detalhe();
 
         return $detalhe['custom_labels'];
@@ -36,7 +36,7 @@ class CustomLabel
     public static function getInstance()
     {
         if (is_null(self::$instance)) {
-            self::$instance = new CustomLabel();
+            self::$instance = new CustomLabel;
         }
 
         return self::$instance;

@@ -11,7 +11,7 @@ class LegacyStageTypeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testSaveSuccess(): void
+    public function test_save_success(): void
     {
         $user = LegacyUserFactory::new()->admin()->create();
         $this->actingAs($user);
@@ -47,7 +47,7 @@ class LegacyStageTypeTest extends TestCase
         ]);
     }
 
-    public function testEditSuccess(): void
+    public function test_edit_success(): void
     {
         $user = LegacyUserFactory::new()->admin()->create();
         $this->actingAs($user);

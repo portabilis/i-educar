@@ -54,7 +54,7 @@ class LegacyGradeTest extends EloquentTestCase
         $this->assertEquals($except, $this->model->name);
     }
 
-    public function testRelationshipSchoolClass(): void
+    public function test_relationship_school_class(): void
     {
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
             'ref_cod_serie' => $this->model->id,

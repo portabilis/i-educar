@@ -68,7 +68,7 @@ class Registro60 extends AbstractRegistro
     private function processPeriodSchoolClass($record)
     {
         if ($record->turmaTurnoId === Period::FULLTIME) {
-            $service = new SchoolClassService();
+            $service = new SchoolClassService;
 
             $hasPeriods = $service->hasStudentsPartials($record->codigoTurma);
             if ($hasPeriods) {

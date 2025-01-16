@@ -26,7 +26,7 @@ class LegacyUnificationPersonValidPessoaPrincipalTest extends TestCase
         $this->individualTwo = LegacyIndividualFactory::new()->create();
     }
 
-    public function testUnificationPersonInvalidPessoaPrincipal(): void
+    public function test_unification_person_invalid_pessoa_principal(): void
     {
         $request = [
             'tipoacao' => 'Novo',
@@ -52,7 +52,7 @@ class LegacyUnificationPersonValidPessoaPrincipalTest extends TestCase
             ->assertSee('Dados enviados inválidos, recarregue a tela e tente novamente!');
     }
 
-    public function testUnificationPersonNotPresentPessoaPrincipal(): void
+    public function test_unification_person_not_present_pessoa_principal(): void
     {
         $request = [
             'tipoacao' => 'Novo',
@@ -78,7 +78,7 @@ class LegacyUnificationPersonValidPessoaPrincipalTest extends TestCase
             ->assertSee('Pessoa principal não informada');
     }
 
-    public function testUnificationPersonDuplicatePessoaPrincipal(): void
+    public function test_unification_person_duplicate_pessoa_principal(): void
     {
         $request = [
             'tipoacao' => 'Novo',

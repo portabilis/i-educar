@@ -21,7 +21,7 @@ class EmployeeFactory extends Factory
         \Database\Factories\EmployeeFactory::new()->create([
             'cod_servidor' => $person,
         ]);
-        $instance = new $this->model();
+        $instance = new $this->model;
 
         return $instance->query()->find($person->id)->getAttributes();
     }

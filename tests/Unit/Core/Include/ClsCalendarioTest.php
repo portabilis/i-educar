@@ -2,13 +2,13 @@
 
 class ClsCalendarioTest extends PHPUnit\Framework\TestCase
 {
-    public function testGenerateFormValues()
+    public function test_generate_form_values()
     {
         $formValues = [
             'formFieldKey' => 'formFieldValue',
         ];
 
-        $calendario = new clsCalendario();
+        $calendario = new clsCalendario;
 
         // Teste sem permissão de troca de ano
         $html = $calendario->getCalendario(1, 2000, 'testGenerateFormValues', [], $formValues);

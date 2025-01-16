@@ -131,7 +131,7 @@ class CheckMandatoryCensoFields implements Rule
 
     protected function validarCamposObrigatoriosCenso($refCodInstituicao)
     {
-        return (new LegacyInstitution())::query()
+        return (new LegacyInstitution)::query()
             ->find(['cod_instituicao' => $refCodInstituicao])
             ->first()
             ->isMandatoryCensoFields();

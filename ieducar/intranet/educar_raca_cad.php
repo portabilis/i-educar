@@ -33,7 +33,7 @@ return new class extends clsCadastro
 
         $this->cod_raca = $_GET['cod_raca'];
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $obj_permissao->permissao_cadastra(int_processo_ap: 678, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_raca_lst.php');
 
         if (is_numeric($this->cod_raca)) {

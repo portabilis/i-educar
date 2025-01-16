@@ -24,7 +24,7 @@ return new class extends clsCadastro
 
         $this->cod_projeto = $_GET['cod_projeto'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 21250, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_projeto_lst.php');
 
         if (is_numeric($this->cod_projeto)) {
@@ -34,9 +34,9 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                //** verificao de permissao para exclusao
+                // ** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 21250, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
-                //**
+                // **
 
                 $retorno = 'Editar';
             }
@@ -65,7 +65,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $project = new LegacyProject();
+        $project = new LegacyProject;
         $project->nome = $this->nome;
         $project->observacao = $this->observacao;
 

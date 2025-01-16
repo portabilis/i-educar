@@ -37,7 +37,7 @@ class clsModulesNotaExame extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular) && is_numeric($this->nota_exame)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -75,7 +75,7 @@ class clsModulesNotaExame extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular) && is_numeric($this->nota_exame)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $set = '';
             $gruda = '';
 
@@ -102,7 +102,7 @@ class clsModulesNotaExame extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'");
             $db->ProximoRegistro();
 
@@ -120,7 +120,7 @@ class clsModulesNotaExame extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'");
             $db->ProximoRegistro();
 
@@ -138,7 +138,7 @@ class clsModulesNotaExame extends Model
     public function excluir()
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'");
 
             return true;

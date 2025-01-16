@@ -33,8 +33,8 @@ return new class extends clsCadastro
     public function RenderHTML()
     {
         $this->scriptNome = 'agenda.php';
-        $db = new clsBanco();
-        $db2 = new clsBanco();
+        $db = new clsBanco;
+        $db2 = new clsBanco;
         // inicializacao de variaveis
         $this->editor = Auth::id();
 

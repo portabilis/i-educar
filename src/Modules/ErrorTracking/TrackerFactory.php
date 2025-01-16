@@ -9,11 +9,11 @@ class TrackerFactory
     public static function getTracker($trackerName)
     {
         if ($trackerName == 'HONEY_BADGER') {
-            return new HoneyBadgerTracker();
+            return new HoneyBadgerTracker;
         }
 
         if ($trackerName == 'EMAIL') {
-            return new EmailTracker();
+            return new EmailTracker;
         }
 
         throw new Exception('Invalid error tracker');

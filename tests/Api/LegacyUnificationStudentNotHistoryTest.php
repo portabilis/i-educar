@@ -29,7 +29,7 @@ class LegacyUnificationStudentNotHistoryTest extends TestCase
         $this->studentTwo = LegacyStudentFactory::new()->create();
     }
 
-    public function testUnificationNotHistory(): void
+    public function test_unification_not_history(): void
     {
         $registration = LegacyRegistrationFactory::new()->create([
             'ref_cod_aluno' => $this->studentTwo->getKey(),

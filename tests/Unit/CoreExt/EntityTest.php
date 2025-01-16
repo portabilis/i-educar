@@ -2,55 +2,55 @@
 
 class CoreExt_EntityTest extends UnitBaseTest
 {
-    public function testNovaInstanciaEMarcadaComoNew()
+    public function test_nova_instancia_e_marcada_como_new()
     {
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $this->assertTrue($entity->isNew());
     }
 
-    public function testSetaAtributoDoComponente()
+    public function test_seta_atributo_do_componente()
     {
         $esperado = 'fooBar';
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $entity->nome = $esperado;
         $this->assertEquals($esperado, $entity->nome);
     }
 
-    public function testPrintDaInstancia()
+    public function test_print_da_instancia()
     {
         $this->outputBuffer(true);
-        echo new CoreExt_EntityStub();
+        echo new CoreExt_EntityStub;
         $output = $this->outputBuffer(false);
         $this->assertEquals('CoreExt_EntityStub', $output);
     }
 
-    public function testSetarAtributoQueNaoExisteLancaExcecaoNaoVerificada()
+    public function test_setar_atributo_que_nao_existe_lanca_excecao_nao_verificada()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $entity->foo = 'bar';
     }
 
-    public function testAtributoEstaSetado()
+    public function test_atributo_esta_setado()
     {
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $this->assertFalse(isset($entity->nome));
         $entity->nome = 'fooBar';
         $this->assertTrue(isset($entity->nome));
     }
 
-    public function testAtributoFoiDestruido()
+    public function test_atributo_foi_destruido()
     {
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $entity->nome = 'fooBar';
         $this->assertTrue(isset($entity->nome));
         unset($entity->nome);
         $this->assertFalse(isset($entity->nome));
     }
 
-    public function testCampoIdentidadeEConsideradoNuloParaNaoNumericos()
+    public function test_campo_identidade_e_considerado_nulo_para_nao_numericos()
     {
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $entity->id = '';
         $this->assertNull($entity->id);
         $entity->id = '0';
@@ -61,9 +61,9 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertNull($entity->id);
     }
 
-    public function testAutoConversaoParaBooleano()
+    public function test_auto_conversao_para_booleano()
     {
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
 
         $entity->doador = 'f';
         $this->assertSame(false, $entity->doador);
@@ -76,27 +76,27 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertSame(true, $entity->doador);
     }
 
-    public function testNovaInstanciaENula()
+    public function test_nova_instancia_e_nula()
     {
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $this->assertTrue($entity->isNull());
     }
 
-    public function testInstanciaComAlgumAtributoNaoNuloTornaseNaoNula()
+    public function test_instancia_com_algum_atributo_nao_nulo_tornase_nao_nula()
     {
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $entity->nome = 'fooBar';
         $this->assertFalse($entity->isNull());
     }
 
-    public function testAutoConversaoTiposNumericos()
+    public function test_auto_conversao_tipos_numericos()
     {
-        $entity = new CoreExt_ChildEntityStub();
+        $entity = new CoreExt_ChildEntityStub;
         $entity->peso = '12,5';
         $this->assertIsFloat($entity->peso);
     }
 
-    public function testSetaAtributosNaInstanciacao()
+    public function test_seta_atributos_na_instanciacao()
     {
         $data = [
             'id' => 1,
@@ -108,11 +108,11 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals($data, $entity->toArray());
     }
 
-    public function testSetaDataMapper()
+    public function test_seta_data_mapper()
     {
-        $expected = new CoreExt_EntityDataMapperStub();
+        $expected = new CoreExt_EntityDataMapperStub;
 
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $entity->setDataMapper($expected);
 
         $this->assertSame($expected, $entity->getDataMapper());
@@ -121,27 +121,27 @@ class CoreExt_EntityTest extends UnitBaseTest
     /**
      * @group CoreExt_Validate_Validatable
      */
-    public function testConfiguraValidadorParaAtributo()
+    public function test_configura_validador_para_atributo()
     {
-        $entity = new CoreExt_EntityStub();
-        $entity->setValidator('estadoCivil', new CoreExt_Validate_String());
+        $entity = new CoreExt_EntityStub;
+        $entity->setValidator('estadoCivil', new CoreExt_Validate_String);
         $this->assertInstanceOf('CoreExt_Validate_String', $entity->getValidator('estadoCivil'));
     }
 
     /**
      * @group CoreExt_Validate_Validatable
      */
-    public function testConfigurarValidadorParaAtributoInexistenteLancaExcecao()
+    public function test_configurar_validador_para_atributo_inexistente_lanca_excecao()
     {
         $this->expectException(\Exception::class);
-        $entity = new CoreExt_EntityStub();
-        $entity->setValidator('fooAttr', new CoreExt_Validate_String());
+        $entity = new CoreExt_EntityStub;
+        $entity->setValidator('fooAttr', new CoreExt_Validate_String);
     }
 
     /**
      * @group CoreExt_Validate_Validatable
      */
-    public function testAtributosDaInstanciaSaoValidos()
+    public function test_atributos_da_instancia_sao_validos()
     {
         $data = [
             'nome' => 'fooBar',
@@ -156,7 +156,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     /**
      * @group CoreExt_Validate_Validatable
      */
-    public function testValidacaoGeralRetornaFalseSeUmAtributoForInvalido()
+    public function test_validacao_geral_retorna_false_se_um_atributo_for_invalido()
     {
         $data = [
             'nome' => '',
@@ -173,7 +173,7 @@ class CoreExt_EntityTest extends UnitBaseTest
      * @group Overload
      * @group CoreExt_Validate_Validatable
      */
-    public function testValidacaoSanitizaValorDeAtributoComReferenciasDataMapper()
+    public function test_validacao_sanitiza_valor_de_atributo_com_referencias_data_mapper()
     {
         $data = [
             'id' => 1,
@@ -191,7 +191,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $entity = new CoreExt_ParentEntityStub($data);
 
         // Atribui validadores para os atributos
-        $entity->setValidator('nome', new CoreExt_Validate_String());
+        $entity->setValidator('nome', new CoreExt_Validate_String);
         $entity->setValidator('filho', new CoreExt_Validate_Choice(['choices' => [1, 2]]));
 
         // Valida e verifica pelos valores
@@ -205,7 +205,7 @@ class CoreExt_EntityTest extends UnitBaseTest
      *
      * @group CoreExt_Validate_Validatable
      */
-    public function testValidacaoSanitizaValorDeAtributoComReferenciasEnum()
+    public function test_validacao_sanitiza_valor_de_atributo_com_referencias_enum()
     {
         $data = [
             'nome' => 'fooBar ',
@@ -216,10 +216,10 @@ class CoreExt_EntityTest extends UnitBaseTest
         $entity = new CoreExt_ChildEntityStub($data);
 
         // Atribui validadores para os atributos
-        $entity->setValidator('nome', new CoreExt_Validate_String());
+        $entity->setValidator('nome', new CoreExt_Validate_String);
         $entity->setValidator('sexo', new CoreExt_Validate_Choice(['choices' => [1, 2]]));
         $entity->setValidator('tipoSanguineo', new CoreExt_Validate_Choice(['choices' => [1, 2]]));
-        $entity->setValidator('peso', new CoreExt_Validate_Numeric());
+        $entity->setValidator('peso', new CoreExt_Validate_Numeric);
 
         // Valida e verifica pelos valores
         $this->assertTrue($entity->isValid());
@@ -230,7 +230,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     /**
      * @group CoreExt_Validate_Validatable
      */
-    public function testCriaUmValidadorDependendoDoValorDeUmAtribudoDaInstancia()
+    public function test_cria_um_validador_dependendo_do_valor_de_um_atribudo_da_instancia()
     {
         $entity = new CoreExt_EntityStub(['nome' => 'fooBar', 'estadoCivil' => '']);
 
@@ -265,10 +265,10 @@ class CoreExt_EntityTest extends UnitBaseTest
     /**
      * @group CoreExt_Validate_Validatable
      */
-    public function testMetodoDeCriacaoDeValidadorSensivelAoCasoLancaExcecaoQuandoClasseNaoESubclasseDeCoreextValidateAbstract()
+    public function test_metodo_de_criacao_de_validador_sensivel_ao_caso_lanca_excecao_quando_classe_nao_e_subclasse_de_coreext_validate_abstract()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
-        $entity = new CoreExt_EntityStub();
+        $entity = new CoreExt_EntityStub;
         $entity->validateIfEquals(
             'nome',
             '',
@@ -278,7 +278,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         );
     }
 
-    public function testTransformaEntityEmArrayDeValores()
+    public function test_transforma_entity_em_array_de_valores()
     {
         $data = [
             'id' => 1,
@@ -291,7 +291,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals([1], array_values($array));
     }
 
-    public function testTransformaEntityEmArrayAssociativo()
+    public function test_transforma_entity_em_array_associativo()
     {
         $data = [
             'id' => 1,
@@ -310,7 +310,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals([1 => 'fooBar'], $array);
     }
 
-    public function testTransformaEntitiesEmArrayAssociativo()
+    public function test_transforma_entities_em_array_associativo()
     {
         $data1 = $data2 = [
             'id' => 1,
@@ -332,34 +332,34 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals([1 => 'fooBar', 2 => 'barFoo'], $array);
     }
 
-    public function testSetterDeReferenciaParaAtributoInexistenteLancaExcecao()
+    public function test_setter_de_referencia_para_atributo_inexistente_lanca_excecao()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
-        $expected = new CoreExt_ChildEntityStub();
+        $expected = new CoreExt_ChildEntityStub;
         $expected->setReference('foo', []);
     }
 
-    public function testSetterDeReferenciaLancaExcecaoCasoArrayDeDefinicaoContenhaConfiguracaoInexistente()
+    public function test_setter_de_referencia_lanca_excecao_caso_array_de_definicao_contenha_configuracao_inexistente()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
-        $expected = new CoreExt_ChildEntityStub();
+        $expected = new CoreExt_ChildEntityStub;
         $expected->setReference('nome', ['autoload' => true]);
     }
 
-    public function testSetterDeReferenciaLancaExcecaoParaClasseCoreextDataMapperInvalida()
+    public function test_setter_de_referencia_lanca_excecao_para_classe_coreext_data_mapper_invalida()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
-        $expected = new CoreExt_ChildEntityStub();
-        $expected->setReference('nome', ['class' => new stdClass()]);
+        $expected = new CoreExt_ChildEntityStub;
+        $expected->setReference('nome', ['class' => new stdClass]);
     }
 
-    public function testSetterDeReferenciaOverloadAtribuiValorParaAReferenciaQuandoEInteiro()
+    public function test_setter_de_referencia_overload_atribui_valor_para_a_referencia_quando_e_inteiro()
     {
         $entity = new CoreExt_ParentEntityStub(['id' => 1, 'nome' => 'fooBar', 'filho' => 1]);
         $this->assertEquals(1, $entity->get('filho'));
     }
 
-    public function testSetterDeReferenciaOverloadAtribuiValorNullParaAReferenciaQuandoElaENullable()
+    public function test_setter_de_referencia_overload_atribui_valor_null_para_a_referencia_quando_ela_e_nullable()
     {
         $entity = new CoreExt_ParentEntityStub(['id' => 1, 'nome' => 'fooBar', 'filho' => null]);
         $this->assertNull($entity->filho);
@@ -369,7 +369,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     /**
      * @group Overload
      */
-    public function testSetterDeReferenciaOverloadAtribuiValorParaAReferenciaENoAtributoQuandoUmaInstanciaDeCoreExtEntityComFieldIdentityEPassada()
+    public function test_setter_de_referencia_overload_atribui_valor_para_a_referencia_e_no_atributo_quando_uma_instancia_de_core_ext_entity_com_field_identity_e_passada()
     {
         $child = new CoreExt_ChildEntityStub(['id' => 1, 'nome' => 'FooBar Jr']);
         $entity = new CoreExt_ParentEntityStub(['id' => 1, 'nome' => 'fooBar', 'filho' => $child]);
@@ -377,7 +377,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals(1, $entity->get('filho'));
     }
 
-    public function testEntityRecuperadaPeloDataMapperEMarcadaComoVelha()
+    public function test_entity_recuperada_pelo_data_mapper_e_marcada_como_velha()
     {
         $entity = new CoreExt_EntityStub(['nome' => 'fooBar']);
         $entity->markOld();
@@ -391,7 +391,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertFalse($mapper->find(1)->isNew());
     }
 
-    public function testReferenciaInstanciaAClasseAtribuidaAutomaticamente()
+    public function test_referencia_instancia_a_classe_atribuida_automaticamente()
     {
         $parent = new CoreExt_ParentEntityStub(['filho' => 1]);
         $child = new CoreExt_ChildEntityStub(['id' => 1, 'nome' => 'fooBar', 'sexo' => 1]);
@@ -411,7 +411,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals($expected, $child->sexo);
     }
 
-    public function testInstanciaDeClassNaoEspecificaEArmazenadaNoArrayStaticDaClasse()
+    public function test_instancia_de_class_nao_especifica_e_armazenada_no_array_static_da_classe()
     {
         CoreExt_EntityStub::addClassToStorage(
             'StdClassExtStub',
@@ -421,20 +421,20 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertInstanceOf('StdClassExtStub', CoreExt_EntityStub::getClassFromStorage('StdClassExtStub'));
     }
 
-    public function testInstanciaDeClassNaoEspecificaArmazenaInstanciaEspecifica()
+    public function test_instancia_de_class_nao_especifica_armazena_instancia_especifica()
     {
-        $obj = new stdClass();
+        $obj = new stdClass;
         $oid = spl_object_hash($obj);
         CoreExt_EntityStub::addClassToStorage('stdClass', $obj);
         $this->assertInstanceOf('stdClass', CoreExt_EntityStub::getClassFromStorage('stdClass'));
         $this->assertEquals($oid, spl_object_hash(CoreExt_EntityStub::getClassFromStorage('stdClass')));
     }
 
-    public function testInstanciaDeClassNaoEspecificaPodeSerRepostaPorNovaInstancia()
+    public function test_instancia_de_class_nao_especifica_pode_ser_reposta_por_nova_instancia()
     {
         // Só para facilitar.
         for ($i = 0; $i <= 1; $i++) {
-            $obj = new stdClass();
+            $obj = new stdClass;
             $obj->i = $i;
             $oid = spl_object_hash($obj);
             CoreExt_EntityStub::addClassToStorage('stdClass', $obj);
@@ -446,29 +446,29 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals($oid, spl_object_hash(CoreExt_EntityStub::getClassFromStorage('stdClass')));
     }
 
-    public function testInstanciaDeClassESobresritaPorInstanciasSticky()
+    public function test_instancia_de_class_e_sobresrita_por_instancias_sticky()
     {
-        $oid1 = CoreExt_EntityStub::addClassToStorage('stdClass', new stdClass(), null, true);
+        $oid1 = CoreExt_EntityStub::addClassToStorage('stdClass', new stdClass, null, true);
         $oid1 = spl_object_hash($oid1);
 
-        $oid2 = CoreExt_EntityStub::addClassToStorage('stdClass', new stdClass(), null, true);
+        $oid2 = CoreExt_EntityStub::addClassToStorage('stdClass', new stdClass, null, true);
         $oid2 = spl_object_hash($oid2);
 
         $this->assertNotEquals($oid2, $oid1);
     }
 
-    public function testInstanciaDeClassNaoEspecificaRetornaNullQuandoNaoEncontraUmaInstanciaDaClasse()
+    public function test_instancia_de_class_nao_especifica_retorna_null_quando_nao_encontra_uma_instancia_da_classe()
     {
         $this->assertNull(CoreExt_EntityStub::getClassFromStorage('fooBar'));
     }
 
-    public function testInstanciaDeClassNaoEspecificaLancaExcecaoQuandoInstanciaPassadaNaoTemAMesmaAssinaturaDoNomeDeClasseInformado()
+    public function test_instancia_de_class_nao_especifica_lanca_excecao_quando_instancia_passada_nao_tem_a_mesma_assinatura_do_nome_de_classe_informado()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
-        CoreExt_EntityStub::addClassToStorage('fooBar', new stdClass());
+        CoreExt_EntityStub::addClassToStorage('fooBar', new stdClass);
     }
 
-    public function testLazyLoadParaReferenciaNumericaAInstanciaEntity()
+    public function test_lazy_load_para_referencia_numerica_a_instancia_entity()
     {
         $data = [
             'nome' => 'fooBar',
@@ -494,7 +494,7 @@ class CoreExt_EntityTest extends UnitBaseTest
      * @group LazyLoad
      * @group CoreExt_Validate_Validatable
      */
-    public function testLazyLoadNaoCarregaInstanciaEntityParaValidacao()
+    public function test_lazy_load_nao_carrega_instancia_entity_para_validacao()
     {
         $data = [
             'nome' => 'fooBar',
@@ -512,7 +512,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertTrue($parent->isValid());
     }
 
-    public function testLazyLoadParaReferenciaObjetoAInstanciaEntityNaoCausaLazyLoad()
+    public function test_lazy_load_para_referencia_objeto_a_instancia_entity_nao_causa_lazy_load()
     {
         $expected = new CoreExt_ChildEntityStub(['id' => 1, 'nome' => 'barFoo']);
 
@@ -545,7 +545,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals($data, $parent->toDataArray());
     }
 
-    public function testLazyLoadNaoERealizadoQuandoReferenciaIgualA0OuNulo()
+    public function test_lazy_load_nao_e_realizado_quando_referencia_igual_a0_ou_nulo()
     {
         $expected = new CoreExt_ChildEntityStub(['id' => 1, 'nome' => 'barFoo']);
 
@@ -567,10 +567,10 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertNull($parent->filho);
     }
 
-    public function testLazyLoadParametroQueEReferenciaLancaExcecaoQuandoNaoEDoTipoIntegerOuCoreextEntity()
+    public function test_lazy_load_parametro_que_e_referencia_lanca_excecao_quando_nao_e_do_tipo_integer_ou_coreext_entity()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
-        $expected = new stdClass();
+        $expected = new stdClass;
 
         $data = [
             'id' => 1,
@@ -581,7 +581,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $parent = new CoreExt_ParentEntityStub($data);
     }
 
-    public function testLazyLoadDeReferenciaAUmTipoCoreextEnum()
+    public function test_lazy_load_de_referencia_a_um_tipo_coreext_enum()
     {
         $enum = CoreExt_EnumSexStub::getInstance();
 

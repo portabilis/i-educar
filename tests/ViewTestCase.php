@@ -23,7 +23,7 @@ abstract class ViewTestCase extends TestCase
 
     protected Model $model;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->factory = $this->createNewFactory();
@@ -49,7 +49,7 @@ abstract class ViewTestCase extends TestCase
     {
         $model = $this->getViewModelName();
 
-        return new $model();
+        return new $model;
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class ViewTestCase extends TestCase
     /**
      * Find a Eloquent model.
      */
-    public function testFindUsingEloquent(): void
+    public function test_find_using_eloquent(): void
     {
         $modelFound = $this->instanceNewViewModel()
             ->newQuery()
@@ -104,7 +104,7 @@ abstract class ViewTestCase extends TestCase
     /**
      * Relations.
      */
-    public function testRelationships(): void
+    public function test_relationships(): void
     {
         if (empty($this->relations)) {
             $this->assertTrue(true);

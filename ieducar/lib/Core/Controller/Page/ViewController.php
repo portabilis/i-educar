@@ -91,7 +91,7 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
      */
     public function getClsPermissoes()
     {
-        return new clsPermissoes();
+        return new clsPermissoes;
     }
 
     /**

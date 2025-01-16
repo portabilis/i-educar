@@ -157,7 +157,7 @@ abstract class ResourceController extends Controller
             $query = $model->newQuery();
         } else {
             $id = $model;
-            $query = (new $class())->newQuery();
+            $query = (new $class)->newQuery();
         }
 
         $this->columns($request, $query);

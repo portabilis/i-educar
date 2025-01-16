@@ -52,14 +52,14 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Nome Tipo', "{$registro['nm_tipo']}"]);
         }
 
-        //** Verificacao de permissao para cadastro ou edicao
-        $obj_permissao = new clsPermissoes();
+        // ** Verificacao de permissao para cadastro ou edicao
+        $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(558, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_tipo_ensino_cad.php';
             $this->url_editar = "educar_tipo_ensino_cad.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}";
         }
-        //**
+        // **
 
         $this->url_cancelar = 'educar_tipo_ensino_lst.php';
         $this->largura = '100%';

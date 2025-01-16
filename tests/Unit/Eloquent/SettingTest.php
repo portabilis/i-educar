@@ -19,7 +19,7 @@ class SettingTest extends EloquentTestCase
     /**
      * @return void
      */
-    public function testBoolean()
+    public function test_boolean()
     {
         $settingTrueString = SettingFactory::new()->create([
             'type' => 'boolean',

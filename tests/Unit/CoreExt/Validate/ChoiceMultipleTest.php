@@ -11,10 +11,10 @@ class CoreExt_Validate_ChoiceMultipleTest extends PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->_validator = new CoreExt_Validate_ChoiceMultiple();
+        $this->_validator = new CoreExt_Validate_ChoiceMultiple;
     }
 
-    public function testEscolhaMultiplaValida()
+    public function test_escolha_multipla_valida()
     {
         $this->_validator->setOptions(['choices' => $this->_choices['bit']]);
         $this->assertTrue($this->_validator->isValid([0, 1]));
@@ -23,7 +23,7 @@ class CoreExt_Validate_ChoiceMultipleTest extends PHPUnit\Framework\TestCase
         $this->assertTrue($this->_validator->isValid(['0', '1']));
     }
 
-    public function testEscolhaMultiplaInvalidaLancaExcecao()
+    public function test_escolha_multipla_invalida_lanca_excecao()
     {
         $this->_validator->setOptions(['choices' => $this->_choices['bit']]);
 

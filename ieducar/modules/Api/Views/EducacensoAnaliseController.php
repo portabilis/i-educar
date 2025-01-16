@@ -71,8 +71,8 @@ class EducacensoAnaliseController extends ApiCoreController
         $escolaId = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
-        $educacensoRepository = new EducacensoRepository();
-        $registro00Model = new Registro00();
+        $educacensoRepository = new EducacensoRepository;
+        $registro00Model = new Registro00;
         $registro00 = new Registro00Data($educacensoRepository, $registro00Model);
 
         /** @var Registro00 $escola */
@@ -426,8 +426,8 @@ class EducacensoAnaliseController extends ApiCoreController
     {
         $escolaId = $this->getRequest()->escola;
 
-        $educacensoRepository = new EducacensoRepository();
-        $registro10Model = new Registro10();
+        $educacensoRepository = new EducacensoRepository;
+        $registro10Model = new Registro10;
         $registro10 = new Registro10Data($educacensoRepository, $registro10Model);
 
         $escola = $registro10->getData($escolaId);
@@ -810,8 +810,8 @@ class EducacensoAnaliseController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
-        $educacensoRepository = new EducacensoRepository();
-        $registro20Model = new Registro20();
+        $educacensoRepository = new EducacensoRepository;
+        $registro20Model = new Registro20;
         $registro20 = new Registro20Data($educacensoRepository, $registro20Model);
 
         $turmas = $registro20->getData($escola, $ano);
@@ -834,7 +834,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             $nomeEscola = mb_strtoupper($turma->nomeEscola);
             $nomeTurma = mb_strtoupper($turma->nomeTurma);
-            $atividadeComplementar = ($turma->tipoAtendimento == 4); //Código 4 fixo no cadastro de turma
+            $atividadeComplementar = ($turma->tipoAtendimento == 4); // Código 4 fixo no cadastro de turma
             $existeAtividadeComplementar = !empty(array_filter($turma->atividadesComplementares));
 
             $chaveTurma = "{$nomeTurma}|{$turma->tipoMediacaoDidaticoPedagogico}|{$turma->horaInicial}|{$turma->horaFinal}|{$turma->tipoAtendimento}|{$turma->localFuncionamentoDiferenciado}|{$turma->modalidadeCurso}|{$turma->etapaEducacenso}";
@@ -935,7 +935,7 @@ class EducacensoAnaliseController extends ApiCoreController
             }
 
             if ((empty($turma->horaInicial) || empty($turma->horaFinal)) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
-                $service = new SchoolClassService();
+                $service = new SchoolClassService;
                 $hasStudentsPartials = $service->hasStudentsPartials($turma->codTurma);
 
                 if ($hasStudentsPartials) {
@@ -1335,15 +1335,15 @@ class EducacensoAnaliseController extends ApiCoreController
         $escolaId = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
-        $educacensoRepository = new EducacensoRepository();
+        $educacensoRepository = new EducacensoRepository;
 
-        $registro40Model = new Registro40();
+        $registro40Model = new Registro40;
         $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
 
-        $registro50Model = new Registro50();
+        $registro50Model = new Registro50;
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-        $registro60Model = new Registro60();
+        $registro60Model = new Registro60;
         $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
 
         /** @var Registro40[] $gestores */
@@ -1355,7 +1355,7 @@ class EducacensoAnaliseController extends ApiCoreController
         /** @var Registro60[] $alunos */
         $alunos = $registro60->getData($escolaId, $ano);
 
-        $registro30Data = new Registro30Data($educacensoRepository, new Registro30());
+        $registro30Data = new Registro30Data($educacensoRepository, new Registro30);
         $registro30Data->setArrayDataByType($gestores, Registro30::TIPO_MANAGER);
         $registro30Data->setArrayDataByType($docentes, Registro30::TIPO_TEACHER);
         $registro30Data->setArrayDataByType($alunos, Registro30::TIPO_STUDENT);
@@ -1436,8 +1436,8 @@ class EducacensoAnaliseController extends ApiCoreController
     {
         $escolaId = $this->getRequest()->escola;
 
-        $educacensoRepository = new EducacensoRepository();
-        $registro40Model = new Registro40();
+        $educacensoRepository = new EducacensoRepository;
+        $registro40Model = new Registro40;
         $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
         $gestores = $registro40->getData($escolaId);
 
@@ -1554,8 +1554,8 @@ class EducacensoAnaliseController extends ApiCoreController
         $escolaId = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
-        $educacensoRepository = new EducacensoRepository();
-        $registro50Model = new Registro50();
+        $educacensoRepository = new EducacensoRepository;
+        $registro50Model = new Registro50;
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
         $docentes = $registro50->getData($escolaId, $ano);
 
@@ -1650,8 +1650,8 @@ class EducacensoAnaliseController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
-        $educacensoRepository = new EducacensoRepository();
-        $registro60Model = new Registro60();
+        $educacensoRepository = new EducacensoRepository;
+        $registro60Model = new Registro60;
         $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
 
         $alunos = $registro60->getData($escola, $ano);
@@ -1670,7 +1670,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $school = LegacySchool::query()->findOrFail($escola);
         $educacensoDate = new DateTime($school->institution->data_educacenso);
 
-        $avaliableTimeService = new AvailableTimeService();
+        $avaliableTimeService = new AvailableTimeService;
 
         $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate)->onlySchoolClassesInformedOnCensus();
         $alunos = collect($alunos);

@@ -14,7 +14,7 @@ return new class extends clsCadastro
 
     public function Inicializar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_escola_lst.php');
 
         if (!$_POST) {
@@ -89,7 +89,7 @@ return new class extends clsCadastro
         /**
          * VERIFICA se nï¿½o existem matriculas em andamento
          */
-        $obj_matriculas = new clsPmieducarMatricula();
+        $obj_matriculas = new clsPmieducarMatricula;
         $existe_matricula_andamento_com_curso = $obj_matriculas->lista(int_cod_matricula: null, int_ref_cod_reserva_vaga: null, int_ref_ref_cod_escola: $this->ref_cod_escola, int_ref_ref_cod_serie: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, ref_cod_aluno: null, int_aprovado: 3, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1, int_ano: $this->ano, int_ref_cod_curso2: null, int_ref_cod_instituicao: null, int_ultima_matricula: 1, int_modulo: null, int_padrao_ano_escolar: null, int_analfabeto: null, int_formando: null, str_descricao_reclassificacao: null, int_matricula_reclassificacao: null, boo_com_deficiencia: null, int_ref_cod_curso: null, bool_curso_sem_avaliacao: false);
 
         if ($existe_matricula_andamento_com_curso) {

@@ -66,7 +66,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
 
     protected function setUp(): void {}
 
-    public function testCreateHeader()
+    public function test_create_header()
     {
         $table = CoreExt_View_Helper_TableHelper::getInstance();
 
@@ -91,7 +91,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
         $this->assertEquals(trim($this->_headerExpected), $header);
     }
 
-    public function testCreateBody()
+    public function test_create_body()
     {
         $table = CoreExt_View_Helper_TableHelper::getInstance();
 
@@ -118,7 +118,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
         $this->assertEquals(trim($this->_bodyExpected), $body);
     }
 
-    public function testCreateFooter()
+    public function test_create_footer()
     {
         $table = CoreExt_View_Helper_TableHelper::getInstance();
 
@@ -133,7 +133,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
         $this->assertEquals(trim($this->_footerExpected), $footer);
     }
 
-    public function testCreateTable()
+    public function test_create_table()
     {
         $table = CoreExt_View_Helper_TableHelper::getInstance();
         $table->addBodyRow([['data' => 'Example data']]);
@@ -141,7 +141,7 @@ class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
         $this->assertEquals(trim($this->_tableExpected), $table);
     }
 
-    public function testRowAttributes()
+    public function test_row_attributes()
     {
         $table = CoreExt_View_Helper_TableHelper::getInstance();
         $table->addBodyRow([['data' => 'Example data']], ['class' => 'trr']);

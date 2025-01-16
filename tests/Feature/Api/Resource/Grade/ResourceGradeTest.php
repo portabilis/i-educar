@@ -31,12 +31,12 @@ class ResourceGradeTest extends TestCase
     {
         parent::setUp();
 
-        //curso
+        // curso
         $this->course = LegacyCourseFactory::new()->create();
 
-        //escolas
+        // escolas
         $this->schools = LegacySchoolFactory::new()->count(2)->create();
-        //escola
+        // escola
         $this->school = $this->schools->first();
 
         $this->schools->each(function ($school) {
@@ -48,7 +48,7 @@ class ResourceGradeTest extends TestCase
             });
         });
 
-        //serie
+        // serie
         $this->grade = $this->course->grades()->first();
     }
 

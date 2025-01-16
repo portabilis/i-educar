@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class CnpjMantenedoraPrivadaTest extends TestCase
 {
-    public function testCnpjMantenedoraPreenchido()
+    public function test_cnpj_mantenedora_preenchido()
     {
         $registro = $this->getFakeRegistro();
         $registro->cnpjMantenedoraPrincipal = '123456';
@@ -19,7 +19,7 @@ class CnpjMantenedoraPrivadaTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testCnpjVazioMantenedoraSistemaS()
+    public function test_cnpj_vazio_mantenedora_sistema_s()
     {
         $registro = $this->getFakeRegistro();
         $registro->mantenedoraEscolaPrivada = MantenedoraDaEscolaPrivada::SISTEMA_S;
@@ -28,7 +28,7 @@ class CnpjMantenedoraPrivadaTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testCnpjVazioMantenedoraInstituicaoRegulamentacaoNao()
+    public function test_cnpj_vazio_mantenedora_instituicao_regulamentacao_nao()
     {
         $registro = $this->getFakeRegistro();
         $registro->mantenedoraEscolaPrivada = MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS;
@@ -38,7 +38,7 @@ class CnpjMantenedoraPrivadaTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testCnpjVazioMantenedoraInstituicaoRegulamentacaoSim()
+    public function test_cnpj_vazio_mantenedora_instituicao_regulamentacao_sim()
     {
         $registro = $this->getFakeRegistro();
         $registro->mantenedoraEscolaPrivada = MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS;
@@ -51,6 +51,6 @@ class CnpjMantenedoraPrivadaTest extends TestCase
 
     private function getFakeRegistro()
     {
-        return new Registro00();
+        return new Registro00;
     }
 }

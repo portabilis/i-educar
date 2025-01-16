@@ -33,7 +33,7 @@ class ImportDisciplineCommand extends Command
     {
         $filename = $this->argument('filename');
 
-        $importer = new DisciplineImport();
+        $importer = new DisciplineImport;
 
         $importer->withOutput($this->output)->import($filename);
 

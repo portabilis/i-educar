@@ -9,17 +9,17 @@ use Tests\EloquentTestCase;
 
 class FileExportTest extends EloquentTestCase
 {
-    public function testPresignedUrl(): void
+    public function test_presigned_url(): void
     {
         $this->assertEquals((new UrlPresigner)->getPresignedUrl($this->model->url), $this->model->presignedUrl);
     }
 
-    public function testFilename(): void
+    public function test_filename(): void
     {
         $this->assertEquals('Alunos_' . Carbon::now()->format('Y-m-d_H:i'), $this->model->filename);
     }
 
-    public function testSizeFormat(): void
+    public function test_size_format(): void
     {
         $units = [
             'B',

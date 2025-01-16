@@ -100,16 +100,16 @@ return new class extends clsCadastro
 
         $compromissos = [];
 
-        //busca nome da agenda para titulo do relatorio
-        $dba = new clsBanco();
+        // busca nome da agenda para titulo do relatorio
+        $dba = new clsBanco;
         $nm_agenda = $dba->CampoUnico(consulta: " SELECT nm_agenda FROM agenda WHERE cod_agenda = {$this->cod_agenda} ");
 
-        //verifica tipo de impressao
+        // verifica tipo de impressao
         if ($this->impressora == 1) {
-            //impressao laser
+            // impressao laser
             $relatorio = new relatoriosPref(nome: false, espacoEntreLinhas: 80, capa: false, rodape: false, tipoFolha: 'A4', cabecalho: 'Agenda: '.$nm_agenda);
         } else {
-            //impressao jato de tinta
+            // impressao jato de tinta
             $relatorio = new relatorios(nome: 'Agenda: '.$nm_agenda, espacoEntreLinhas: 10);
         }
 
@@ -117,7 +117,7 @@ return new class extends clsCadastro
             $this->mensagem = 'A data inicial não pode ser maior que a data final.';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta(consulta: "SELECT cod_agenda_compromisso, versao FROM agenda_compromisso WHERE ativo = 1 AND ref_cod_agenda = {$this->cod_agenda} AND $where data_fim IS NOT NULL ORDER BY data_inicio ASC ");
 
         while ($db->ProximoRegistro()) {
@@ -147,7 +147,7 @@ return new class extends clsCadastro
                     $hora_comp = substr(string: $data_inicio, offset: 11, length: 5);
                     $hora_fim = substr(string: $data_fim, offset: 11, length: 5);
 
-                    //verifica tipo da impressora 1 laser 0 jato de tinta
+                    // verifica tipo da impressora 1 laser 0 jato de tinta
                     if ($this->impressora == 0) {
                         if ($data_ant != substr(string: $data_inicio, offset: 0, length: 10)) {
                             $relatorio->novalinha(texto: [$this->semDesc(data_atual: $data_inicio).': '.date(format: 'd/m/Y', timestamp: strtotime(datetime: $data_inicio))], deslocamento: 0, altura: 12, titulo: true);

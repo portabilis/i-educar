@@ -26,7 +26,7 @@ class LegacyUnificationStudentNotPresentCodAlunoTest extends TestCase
         $this->studentTwo = LegacyStudentFactory::new()->create();
     }
 
-    public function testNotPresentCodAluno(): void
+    public function test_not_present_cod_aluno(): void
     {
         $request = [
             'tipoacao' => 'Novo',

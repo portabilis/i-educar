@@ -38,7 +38,7 @@ class CopyAbsenceService implements CopyRegistrationData
         $newEvaluationRule = $this->service->getEvaluationRule($newRegistration);
 
         if (!$newEvaluationRule) {
-            throw new MissingEvaluationRuleForCurrentYear();
+            throw new MissingEvaluationRuleForCurrentYear;
         }
 
         $oldEvaluationRule = $this->service->getEvaluationRule($oldRegistration);
@@ -104,7 +104,7 @@ class CopyAbsenceService implements CopyRegistrationData
             return;
         }
 
-        throw new MissingAbsenceType();
+        throw new MissingAbsenceType;
     }
 
     /**

@@ -13,7 +13,7 @@ class LegacyIndividualEndpointTestUpdate extends TestCase
     use DatabaseTransactions;
     use LoginFirstUser;
 
-    public function testUpdateEndpoint(): void
+    public function test_update_endpoint(): void
     {
         $this->loginWithFirstUser();
         $faker = Factory::create();

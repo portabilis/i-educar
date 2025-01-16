@@ -19,7 +19,7 @@ class LegacyCourseEducacensoStage extends Model
 
     public static function getIdsByCourse(int $course): array
     {
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         return static::query()->where('curso_id', $course)->pluck('etapa_id')?->toArray();
     }
 }

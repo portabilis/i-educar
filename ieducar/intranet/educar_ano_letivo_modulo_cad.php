@@ -49,7 +49,7 @@ return new class extends clsCadastro
         $this->ref_ref_cod_escola = $_GET['ref_cod_escola'];
         $this->ref_ano = $_GET['ano'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 561,
@@ -290,7 +290,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 561,
@@ -325,7 +325,7 @@ return new class extends clsCadastro
 
             DB::unprepared("SELECT pmieducar.copiaAnosLetivos({$this->ref_ano}::smallint, {$this->ref_ref_cod_escola});");
 
-            $schoolAcademicYear = new LegacySchoolAcademicYear();
+            $schoolAcademicYear = new LegacySchoolAcademicYear;
 
             $schoolAcademicYear->ref_cod_escola = $this->ref_ref_cod_escola;
             $schoolAcademicYear->ano = $this->ref_ano;
@@ -384,7 +384,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 561,
             int_idpes_usuario: $this->pessoa_logada,
@@ -479,7 +479,7 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $obj_permissoes->permissao_excluir(
             int_processo_ap: 561,
@@ -488,7 +488,7 @@ return new class extends clsCadastro
             str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
-        //Salvar com query raw, pois o model não tem primary key única e gera erro modificando todas as escolas em vez de uma
+        // Salvar com query raw, pois o model não tem primary key única e gera erro modificando todas as escolas em vez de uma
         LegacySchoolAcademicYear::query()->where(
             column: [
                 'ref_cod_escola' => $this->ref_ref_cod_escola,
@@ -520,7 +520,7 @@ return new class extends clsCadastro
             ->active()
             ->max(column: 'ano');
 
-        $turmasEscola = (new clsPmieducarTurma())->lista(
+        $turmasEscola = (new clsPmieducarTurma)->lista(
             int_ref_ref_cod_escola: $escolaId,
             int_ativo: 1,
             ano: $lastSchoolAcademicYear
@@ -694,7 +694,7 @@ return new class extends clsCadastro
             ->get();
 
         foreach ($turmasSeries as $turmaSerie) {
-            $newTurmaSerie = new LegacySchoolClassGrade();
+            $newTurmaSerie = new LegacySchoolClassGrade;
 
             $newTurmaSerie->escola_id = $turmaOrigem['ref_ref_cod_escola'];
             $newTurmaSerie->serie_id = $turmaSerie->serie_id;
@@ -708,7 +708,7 @@ return new class extends clsCadastro
 
     public function copiarComponenteCurricularTurma($turmaOrigemId, $turmaDestinoId)
     {
-        $dataMapper = new ComponenteCurricular_Model_TurmaDataMapper();
+        $dataMapper = new ComponenteCurricular_Model_TurmaDataMapper;
         $componentesTurmaOrigem = $dataMapper->findAll(columns: [], where: ['turma' => $turmaOrigemId]);
 
         foreach ($componentesTurmaOrigem as $componenteTurmaOrigem) {
@@ -729,11 +729,11 @@ return new class extends clsCadastro
 
     public function copiarModulosTurma($turmaOrigemId, $turmaDestinoId, $anoOrigem, $anoDestino)
     {
-        $modulosTurmaOrigem = new clsPmieducarTurmaModulo();
+        $modulosTurmaOrigem = new clsPmieducarTurmaModulo;
         $modulosTurmaOrigem = $modulosTurmaOrigem->lista(int_ref_cod_turma: $turmaOrigemId);
 
         foreach ($modulosTurmaOrigem as $moduloOrigem) {
-            $moduloDestino = new clsPmieducarTurmaModulo();
+            $moduloDestino = new clsPmieducarTurmaModulo;
 
             $moduloDestino->ref_cod_modulo = $moduloOrigem['ref_cod_modulo'];
             $moduloDestino->sequencial = $moduloOrigem['sequencial'];

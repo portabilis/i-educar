@@ -12,7 +12,7 @@ class DiarioReOcorrenciaDisciplinarTest extends TestCase
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaOcorrenciaDisciplinar()
+    public function test_recupera_ocorrencia_disciplinar()
     {
         /** @var LegacyRegistrationDisciplinaryOccurrenceType $enrollment */
         $enrollment = LegacyRegistrationDisciplinaryOccurrenceTypeFactory::new()->create(['visivel_pais' => true]);

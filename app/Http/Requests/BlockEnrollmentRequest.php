@@ -16,9 +16,9 @@ class BlockEnrollmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'ano' => ['required','integer'],
-            'ref_cod_instituicao'  => ['required','integer'],
-            'bloquear_enturmacao_sem_vagas' => ['required','in:0,1'],
+            'ano' => ['required', 'integer'],
+            'ref_cod_instituicao' => ['required', 'integer'],
+            'bloquear_enturmacao_sem_vagas' => ['required', 'in:0,1'],
         ];
     }
 }

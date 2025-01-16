@@ -128,7 +128,7 @@ class clsDocumento
      */
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric($this->idpes)) {
             $campos = '';
@@ -428,7 +428,7 @@ class clsDocumento
         }
 
         if ($set) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'");
 
             return true;
@@ -553,7 +553,7 @@ class clsDocumento
         }
 
         if ($set) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'");
 
             return true;
@@ -585,7 +585,7 @@ class clsDocumento
     public function existe()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}'");
             $db->ProximoRegistro();
 
@@ -714,7 +714,7 @@ class clsDocumento
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -742,7 +742,7 @@ class clsDocumento
     {
         $objPessoa = new clsFisica($this->idpes);
         if ($objPessoa->detalhe()) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT rg, data_exp_rg, sigla_uf_exp_rg, tipo_cert_civil, cartorio_cert_civil_inep, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, sigla_uf_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, certidao_nascimento , certidao_casamento, passaporte FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();

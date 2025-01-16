@@ -150,7 +150,7 @@ class LegacyController extends Controller
 
     private function processProperty(object $viewToRender): clsBase
     {
-        $class = new clsBase();
+        $class = new clsBase;
 
         if (method_exists($viewToRender, 'Formular')) {
             $viewToRender->Formular();

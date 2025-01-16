@@ -250,7 +250,7 @@ class clsFisica
      */
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_numeric($this->idpes) && is_numeric($this->idpes_cad)) {
             $campos = '';
@@ -760,7 +760,7 @@ class clsFisica
 
             if ($set) {
                 $set = "SET {$set}";
-                $db = new clsBanco();
+                $db = new clsBanco;
                 $detalheAntigo = $this->detalheSimples();
 
                 $detalheAntigo['cpf'] = str_pad((string) $detalheAntigo['cpf'], 11, '0', STR_PAD_LEFT);
@@ -786,7 +786,7 @@ class clsFisica
         if (is_numeric($this->idpes)) {
             $this->detalheSimples();
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
 
             return true;
@@ -978,7 +978,7 @@ class clsFisica
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -1006,7 +1006,7 @@ class clsFisica
     public function detalhe()
     {
         if ($this->idpes) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada, observacao FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) WHERE fisica.idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
@@ -1018,7 +1018,7 @@ class clsFisica
                 return $tupla;
             }
         } elseif ($this->cpf) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
@@ -1039,7 +1039,7 @@ class clsFisica
             return false;
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf}");
         if ($db->ProximoRegistro()) {
             return $db->Tupla();
@@ -1053,7 +1053,7 @@ class clsFisica
         if (is_numeric($this->idpes)) {
             $sql = "SELECT * FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}' AND ativo = 1;";
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
             $db->ProximoRegistro();
 
@@ -1066,7 +1066,7 @@ class clsFisica
     public function getIdade($data_nasc)
     {
         if (is_string($data_nasc)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT extract( year FROM age( NOW(),'{$data_nasc}') )");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();

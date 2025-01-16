@@ -32,7 +32,7 @@ return new class extends clsDetalhe
     public function Gerar()
     {
         // Verificação de permissão para cadastro.
-        $this->obj_permissao = new clsPermissoes();
+        $this->obj_permissao = new clsPermissoes;
 
         $this->nivel_usuario = $this->user()->getLevel();
 
@@ -66,7 +66,7 @@ return new class extends clsDetalhe
                 ->orderBy(column: 'type')
                 ->first();
 
-            $obj_telefone = new clsPessoaTelefone();
+            $obj_telefone = new clsPessoaTelefone;
             $telefone_lst = $obj_telefone->lista(int_idpes: $registro['ref_idpes'], str_ordenacao: 'tipo');
             if ($telefone_lst) {
                 foreach ($telefone_lst as $telefone) {
@@ -139,7 +139,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Fax', "{$telefone_fax}"]);
         }
 
-        $obj = new clsPmieducarEscolaCurso();
+        $obj = new clsPmieducarEscolaCurso;
         $lst = $obj->lista(int_ref_cod_escola: $this->cod_escola);
 
         if ($lst) {
@@ -176,7 +176,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['-', "{$tabela}"]);
         }
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $canCreate = $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
         $canEdit = $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
@@ -214,7 +214,7 @@ return new class extends clsDetalhe
 
         $tabela = '<table class=\'anosLetivos\'>';
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $canEdit = $obj_permissoes->permissao_cadastra(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
         $cor = null;
 
@@ -236,8 +236,8 @@ return new class extends clsDetalhe
                     $incluir = '<td width=\'130\'>&nbsp;</td>';
                 }
 
-                //verifica se o ano nao possui matricula em andamento para permitir finalizar o ano
-                $obj_matricula_ano = new clsPmieducarMatricula();
+                // verifica se o ano nao possui matricula em andamento para permitir finalizar o ano
+                $obj_matricula_ano = new clsPmieducarMatricula;
                 $matricula_em_andamento = $obj_matricula_ano->lista(int_ref_ref_cod_escola: $this->cod_escola, int_aprovado: 3, int_ativo: 1, int_ultima_matricula: 1, int_ano: $ano['ano'], bool_curso_sem_avaliacao: false);
 
                 if (!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1 && $canEdit) {

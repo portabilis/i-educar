@@ -37,7 +37,7 @@ return new class extends clsListagem
             'Área de Conhecimento',
         ];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->addCabecalhos($lista_busca);
@@ -62,7 +62,7 @@ return new class extends clsListagem
 
         $this->inputsHelper()->select(attrName: 'tipo_base', inputOptions: $options);
 
-        $objAreas = new AreaConhecimento_Model_AreaDataMapper();
+        $objAreas = new AreaConhecimento_Model_AreaDataMapper;
         $objAreas = $objAreas->findAll(['id', 'nome', 'agrupar_descritores']);
         $areas = [];
 

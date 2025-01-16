@@ -6,10 +6,10 @@ class Educacenso_Model_DocenteTest extends PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->_entity = new Educacenso_Model_Docente();
+        $this->_entity = new Educacenso_Model_Docente;
     }
 
-    public function testEntityValidators()
+    public function test_entity_validators()
     {
         // Recupera os objetos CoreExt_Validate
         $validators = $this->_entity->getDefaultValidatorCollection();

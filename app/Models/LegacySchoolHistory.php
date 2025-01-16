@@ -94,7 +94,7 @@ class LegacySchoolHistory extends LegacyModel
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new SchoolHistoryStatus())->getDescriptiveValues()[$this->aprovado]
+            get: fn () => (new SchoolHistoryStatus)->getDescriptiveValues()[$this->aprovado]
         );
     }
 

@@ -231,7 +231,7 @@ class clsPmieducarServidorAlocacao extends Model
             && is_string($this->carga_horaria)
             && $this->periodo
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -355,7 +355,7 @@ class clsPmieducarServidorAlocacao extends Model
             return false;
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $set = '';
         $gruda = '';
 
@@ -581,7 +581,7 @@ class clsPmieducarServidorAlocacao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -621,7 +621,7 @@ class clsPmieducarServidorAlocacao extends Model
     public function detalhe()
     {
         if (is_numeric($this->cod_servidor_alocacao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
             $db->ProximoRegistro();
 
@@ -641,7 +641,7 @@ class clsPmieducarServidorAlocacao extends Model
     public function existe()
     {
         if (is_numeric($this->cod_servidor_alocacao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
             $db->ProximoRegistro();
 
@@ -661,7 +661,7 @@ class clsPmieducarServidorAlocacao extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_servidor_alocacao)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
 
             return true;
@@ -726,7 +726,7 @@ class clsPmieducarServidorAlocacao extends Model
                 $this->periodo
             );
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
 
             return true;
@@ -770,7 +770,7 @@ class clsPmieducarServidorAlocacao extends Model
     public function getCargaHorariaAnoSemAlocacaoAtual()
     {
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $sql = "SELECT SUM(carga_horaria::interval)
                 FROM pmieducar.servidor_alocacao
@@ -795,7 +795,7 @@ class clsPmieducarServidorAlocacao extends Model
     public function getCargaHorariaAno()
     {
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $sql = "SELECT SUM(carga_horaria::interval)
                 FROM pmieducar.servidor_alocacao
@@ -820,7 +820,7 @@ class clsPmieducarServidorAlocacao extends Model
             && is_numeric($this->ano)
             && is_numeric($this->ref_cod_servidor)
         ) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $sql = "SELECT *
                 FROM pmieducar.servidor_alocacao

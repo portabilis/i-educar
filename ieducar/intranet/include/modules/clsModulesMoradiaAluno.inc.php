@@ -223,7 +223,7 @@ class clsModulesMoradiaAluno extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
 
             $campos = '';
             $valores = '';
@@ -419,7 +419,7 @@ class clsModulesMoradiaAluno extends Model
     public function edita()
     {
         if (is_numeric($this->ref_cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $set = '';
             $gruda = '';
 
@@ -588,7 +588,7 @@ class clsModulesMoradiaAluno extends Model
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 
@@ -625,7 +625,7 @@ class clsModulesMoradiaAluno extends Model
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");
             $db->ProximoRegistro();
 
@@ -643,7 +643,7 @@ class clsModulesMoradiaAluno extends Model
     public function existe()
     {
         if (is_numeric($this->ref_cod_aluno)) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");
             $db->ProximoRegistro();
 
@@ -662,7 +662,7 @@ class clsModulesMoradiaAluno extends Model
     {
         if (is_numeric($this->ref_cod_aluno)) {
             $sql = "DELETE FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'";
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta($sql);
 
             return true;

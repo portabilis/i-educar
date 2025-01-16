@@ -1,5 +1,5 @@
 <?php
-$obj_permissao = new clsPermissoes();
+$obj_permissao = new clsPermissoes;
 $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
 $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
@@ -11,7 +11,7 @@ $instituicao_usuario = $det_obj_usuario['ref_cod_instituicao'];
 if ($nivel_usuario == 1) {
     $opcoes_instituicao = ['' => 'Selecione'];
 
-    $objTemp = new clsPmieducarInstituicao();
+    $objTemp = new clsPmieducarInstituicao;
     $objTemp->setCamposLista('cod_instituicao,nm_instituicao');
 
     $lista_instituicao23 = $objTemp->lista();
@@ -21,13 +21,13 @@ if ($nivel_usuario == 1) {
         }
     }
 
-    $obj_instituicao = new clsPmieducarInstituicao();
+    $obj_instituicao = new clsPmieducarInstituicao;
     $lista_instituicao23 = $obj_instituicao->lista();
 
     $instituicoes = '';
     if ($lista_instituicao23) {
         foreach ($lista_instituicao23 as $instituicao) {
-            $obj_escola = new clsPmieducarEscola();
+            $obj_escola = new clsPmieducarEscola;
             $lista_escola23 = $obj_escola->lista(null, null, null, $instituicao['cod_instituicao'], null, null, null, null, null, null, 1);
 
             $escolas = " instituicao['_{$instituicao['cod_instituicao']}'] = new Array();\n";
@@ -50,7 +50,7 @@ if ($nivel_usuario == 1) {
 if ($nivel_usuario == 1 || $nivel_usuario == 2) {
     $selecione = 'Selecione uma escola';
     $opcoes = ['' => $selecione];
-    $objTemp = new clsPmieducarEscola();
+    $objTemp = new clsPmieducarEscola;
     if ((!empty($this->ref_cod_instituicao) && $nivel_usuario == 1) || $nivel_usuario == 2) {
         if ($nivel_usuario == 2) {
             $this->ref_cod_instituicao = $instituicao_usuario;

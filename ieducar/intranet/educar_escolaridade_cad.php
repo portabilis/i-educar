@@ -26,7 +26,7 @@ return new class extends clsCadastro
 
         $this->idesco = $_GET['idesco'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 632, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_escolaridade_lst.php');
 
         if (is_numeric($this->idesco)) {

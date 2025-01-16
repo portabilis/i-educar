@@ -51,7 +51,7 @@ return new class extends clsListagem
             'Instituição',
         ];
 
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $obj_permissao->nivel_acesso($this->pessoa_logada);
         $this->addCabecalhos($lista_busca);
 

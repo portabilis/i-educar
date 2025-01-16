@@ -7,7 +7,7 @@ use App\Models\LegacyCalendarDayReason;
 use App\Models\LegacyCalendarYear;
 use Illuminate\Support\Facades\Session;
 
-return new class() extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
 
@@ -43,7 +43,7 @@ return new class() extends clsListagem
 
     public function renderHTML()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $nivel = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
@@ -184,9 +184,9 @@ return new class() extends clsListagem
                 $turmas = App_Model_IedFinder::getTurmas(escolaId: $registro['ref_cod_escola']);
 
                 // Mapper de Calendario_Model_TurmaDataMapper
-                $calendarioTurmaMapper = new Calendario_Model_TurmaDataMapper();
+                $calendarioTurmaMapper = new Calendario_Model_TurmaDataMapper;
 
-                $obj_calendario = new clsCalendario();
+                $obj_calendario = new clsCalendario;
                 $obj_calendario->setLargura(int_largura: 600);
                 $obj_calendario->permite_trocar_ano = true;
 

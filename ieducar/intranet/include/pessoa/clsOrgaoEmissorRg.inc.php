@@ -30,7 +30,7 @@ class clsOrgaoEmissorRg
      */
     public function cadastra()
     {
-        $db = new clsBanco();
+        $db = new clsBanco;
 
         if (is_string($this->sigla) && is_string($this->descricao) && is_string($this->situacao)) {
             $campos = '';
@@ -54,7 +54,7 @@ class clsOrgaoEmissorRg
         if (is_string($this->sigla) && is_string($this->descricao) && is_string($this->situacao)) {
             $set = "SET sigla = '{$this->sigla}', descricao = '{$this->descricao}', idnum = '{$this->situacao}' ";
 
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE idorg_rg = '$this->idorg_rg'");
 
             return true;
@@ -110,7 +110,7 @@ class clsOrgaoEmissorRg
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
-        $db = new clsBanco();
+        $db = new clsBanco;
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
@@ -137,7 +137,7 @@ class clsOrgaoEmissorRg
     public function detalhe()
     {
         if ($this->idorg_rg) {
-            $db = new clsBanco();
+            $db = new clsBanco;
             $db->Consulta("SELECT idorg_rg, sigla, descricao, situacao FROM {$this->schema}.{$this->tabela} WHERE idorg_rg='{$this->idorg_rg}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();

@@ -24,7 +24,7 @@ class LegacyStudentAbsenceTest extends EloquentTestCase
         return LegacyStudentAbsence::class;
     }
 
-    public function testIsByDiscipline(): void
+    public function test_is_by_discipline(): void
     {
         $model = LegacyStudentAbsenceFactory::new()->create([
             'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
@@ -32,7 +32,7 @@ class LegacyStudentAbsenceTest extends EloquentTestCase
         $this->assertTrue($model->isByDiscipline());
     }
 
-    public function testIsGeneral(): void
+    public function test_is_general(): void
     {
         $model = LegacyStudentAbsenceFactory::new()->create([
             'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,

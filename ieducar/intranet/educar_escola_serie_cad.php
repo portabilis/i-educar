@@ -9,7 +9,7 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
-return new class() extends clsCadastro
+return new class extends clsCadastro
 {
     public $ref_cod_escola_;
 
@@ -70,11 +70,11 @@ return new class() extends clsCadastro
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 585, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_escola_serie_lst.php');
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $tmp_obj = new clsPmieducarEscolaSerie();
+            $tmp_obj = new clsPmieducarEscolaSerie;
             $lst_obj = $tmp_obj->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
 
             if (!is_array($lst_obj)) {
@@ -167,7 +167,7 @@ return new class() extends clsCadastro
 
         // Editar
         if ($this->ref_cod_curso) {
-            $obj_serie = new clsPmieducarSerie();
+            $obj_serie = new clsPmieducarSerie;
             $obj_serie->setOrderby('nm_serie ASC');
             $lst_serie = $obj_serie->lista(
                 [
@@ -224,7 +224,7 @@ return new class() extends clsCadastro
 
         // Inclui disciplinas
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $obj = new clsPmieducarEscolaSerieDisciplina();
+            $obj = new clsPmieducarEscolaSerieDisciplina;
             $registros = $obj->lista(int_ref_ref_cod_serie: $this->ref_cod_serie, int_ref_ref_cod_escola: $this->ref_cod_escola, int_ativo: 1);
 
             if ($registros) {
@@ -408,7 +408,7 @@ return new class() extends clsCadastro
         $this->campoRotulo(nome: 'disciplinas_', campo: 'Componentes curriculares', valor: "<div id='disciplinas'>$disciplinas</div>");
         $this->campoQuebra();
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $permissaoConsultaDispensas = $obj_permissoes->permissao_cadastra(int_processo_ap: Process::EXEMPTION_LIST, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: null);
         $this->campoOculto(nome: 'permissao_consulta_dispensas', valor: intval($permissaoConsultaDispensas));
     }
@@ -785,7 +785,7 @@ return new class() extends clsCadastro
         }
 
         if ($analise['remover']) {
-            $service = new CheckPostedDataService();
+            $service = new CheckPostedDataService;
             $schoolClass = LegacyGrade::find($this->ref_cod_serie)->schoolClass()
                 ->where('ref_ref_cod_escola', $this->ref_cod_escola)
                 ->pluck('cod_turma');
@@ -829,7 +829,7 @@ return new class() extends clsCadastro
         }
 
         if ($analise['atualizar']) {
-            $service = new CheckPostedDataService();
+            $service = new CheckPostedDataService;
             foreach ($analise['atualizar'] as $update) {
                 if (!empty($update['anos_letivos_remover'])) {
                     foreach ($update['anos_letivos_remover'] as $ano) {

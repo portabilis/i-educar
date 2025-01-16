@@ -85,7 +85,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Configu
     public function getRequest()
     {
         if (is_null($this->_request)) {
-            $this->setRequest(new CoreExt_Controller_Request());
+            $this->setRequest(new CoreExt_Controller_Request);
         }
 
         return $this->_request;

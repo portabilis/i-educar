@@ -55,7 +55,7 @@ return new class extends clsCadastro
 
     public function Inicializar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
 
         $nivel = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
@@ -80,7 +80,7 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
 
         $configuracoes = new clsPmieducarConfiguracoesGerais(ref_cod_instituicao: $ref_cod_instituicao);
@@ -277,7 +277,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
         $bloquearCadastroAluno = $this->bloquear_cadastro_aluno == 'on' ? 1 : 0;

@@ -23,7 +23,7 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testRecuperaServidoresComVinculosDeTurmasEDisciplinas()
+    public function test_recupera_servidores_com_vinculos_de_turmas_e_disciplinas()
     {
         $school = LegacySchoolFactory::new()->create();
 

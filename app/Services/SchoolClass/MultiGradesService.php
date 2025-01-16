@@ -33,17 +33,17 @@ class MultiGradesService
         ], [
             'grades' => [
                 'min:2',
-                new DuplicateMultiGrades(),
-                new IncompatibleAbsenceType(),
-                new IncompatibleDescriptiveOpinion(),
-                new IncompatibleRetakeType(),
-                new RequiredAlternativeReportCard(),
+                new DuplicateMultiGrades,
+                new IncompatibleAbsenceType,
+                new IncompatibleDescriptiveOpinion,
+                new IncompatibleRetakeType,
+                new RequiredAlternativeReportCard,
             ],
             'grades_delete' => [
-                new ExistsEnrollmentsInSchoolClassGrades(),
+                new ExistsEnrollmentsInSchoolClassGrades,
             ],
             'change_to_multi_grades' => [
-                new IncompatibleChangeToMultiGrades(),
+                new IncompatibleChangeToMultiGrades,
             ],
         ], [
             'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas.',
@@ -59,7 +59,7 @@ class MultiGradesService
             ],
         ], [
             'delete_all_grades' => [
-                new ExistsEnrollmentsInSchoolClassGrades(),
+                new ExistsEnrollmentsInSchoolClassGrades,
             ],
         ])->validate();
     }

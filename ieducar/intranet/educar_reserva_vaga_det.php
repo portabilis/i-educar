@@ -38,7 +38,7 @@ return new class extends clsDetalhe
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $tmp_obj = new clsPmieducarEscolaSerie();
+        $tmp_obj = new clsPmieducarEscolaSerie;
         $lst_obj = $tmp_obj->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
         $registro = array_shift(array: $lst_obj);
 
@@ -67,7 +67,7 @@ return new class extends clsDetalhe
         $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
         // Matrícula
-        $obj_matricula = new clsPmieducarMatricula();
+        $obj_matricula = new clsPmieducarMatricula;
         $lst_matricula = $obj_matricula->lista(
             int_ref_ref_cod_escola: $registro['ref_cod_escola'],
             int_ref_ref_cod_serie: $registro['ref_cod_serie'],
@@ -80,7 +80,7 @@ return new class extends clsDetalhe
         }
 
         // Detalhes da reserva
-        $obj_reserva_vaga = new clsPmieducarReservaVaga();
+        $obj_reserva_vaga = new clsPmieducarReservaVaga;
         $lst_reserva_vaga = $obj_reserva_vaga->lista(
             int_ref_ref_cod_escola: $registro['ref_cod_escola'],
             int_ref_ref_cod_serie: $registro['ref_cod_serie'],
@@ -92,7 +92,7 @@ return new class extends clsDetalhe
         }
 
         // Permissões
-        $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes;
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
         if ($nivel_usuario == 1) {
@@ -115,7 +115,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Série', $nm_serie]);
         }
 
-        $obj_turmas = new clsPmieducarTurma();
+        $obj_turmas = new clsPmieducarTurma;
         $lst_turmas = $obj_turmas->lista(
             int_ref_ref_cod_serie: $this->ref_cod_serie,
             int_ref_ref_cod_escola: $this->ref_cod_escola,

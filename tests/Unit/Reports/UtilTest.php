@@ -10,7 +10,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadNull()
+    public function format_workload_null()
     {
         $this->assertEquals('00:00', Util::formatWorkload(null));
     }
@@ -18,7 +18,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute5()
+    public function format_workload_minute5()
     {
         $this->assertEquals('00:05', Util::formatWorkload(0.08));
     }
@@ -26,7 +26,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute10()
+    public function format_workload_minute10()
     {
         $this->assertEquals('00:10', Util::formatWorkload(0.16));
     }
@@ -34,7 +34,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute15()
+    public function format_workload_minute15()
     {
         $this->assertEquals('00:15', Util::formatWorkload(0.25));
     }
@@ -42,7 +42,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute20()
+    public function format_workload_minute20()
     {
         $this->assertEquals('00:20', Util::formatWorkload(0.33));
     }
@@ -50,7 +50,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute25()
+    public function format_workload_minute25()
     {
         $this->assertEquals('00:25', Util::formatWorkload(0.41));
     }
@@ -58,7 +58,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute30()
+    public function format_workload_minute30()
     {
         $this->assertEquals('00:30', Util::formatWorkload(0.5));
     }
@@ -66,7 +66,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute35()
+    public function format_workload_minute35()
     {
         $this->assertEquals('00:35', Util::formatWorkload(0.58));
     }
@@ -74,7 +74,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute40()
+    public function format_workload_minute40()
     {
         $this->assertEquals('00:40', Util::formatWorkload(0.67));
     }
@@ -82,7 +82,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute45()
+    public function format_workload_minute45()
     {
         $this->assertEquals('00:45', Util::formatWorkload(0.75));
     }
@@ -90,7 +90,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute50()
+    public function format_workload_minute50()
     {
         $this->assertEquals('00:50', Util::formatWorkload(0.83));
     }
@@ -98,7 +98,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute55()
+    public function format_workload_minute55()
     {
         $this->assertEquals('00:55', Util::formatWorkload(0.91));
     }
@@ -106,7 +106,7 @@ class UtilTest extends TestCase
     /**
      * @test
      */
-    public function formatWorkloadMinute60()
+    public function format_workload_minute60()
     {
         $this->assertEquals('01:00', Util::formatWorkload(1));
     }

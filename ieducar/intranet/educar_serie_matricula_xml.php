@@ -195,7 +195,7 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
         $_GET['ins']
     );
 
-    $db = new clsBanco();
+    $db = new clsBanco;
     $db->Consulta($sql);
 
     $matriculas = [];

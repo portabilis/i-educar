@@ -6,7 +6,7 @@ use App\Models\LegacyCalendarYear;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-return new class() extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -39,7 +39,7 @@ return new class() extends clsCadastro
     public function _getCalendarioTurmaDataMapper()
     {
         if (is_null(value: $this->_calendarioTurmaDataMapper)) {
-            $this->_calendarioTurmaDataMapper = new Calendario_Model_TurmaDataMapper();
+            $this->_calendarioTurmaDataMapper = new Calendario_Model_TurmaDataMapper;
         }
 
         return $this->_calendarioTurmaDataMapper;
@@ -114,7 +114,7 @@ return new class() extends clsCadastro
         $this->mes = $_GET['mes'];
         $this->ref_cod_calendario_ano_letivo = $_GET['ref_cod_calendario_ano_letivo'];
 
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
@@ -137,7 +137,7 @@ return new class() extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes;
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     if ($this->descricao) {
@@ -221,7 +221,7 @@ return new class() extends clsCadastro
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
@@ -229,7 +229,7 @@ return new class() extends clsCadastro
             str_pagina_redirecionar: 'educar_calendario_anotacao_lst.php'
         );
 
-        $obj = new LegacyCalendarDay();
+        $obj = new LegacyCalendarDay;
         $obj->ref_cod_calendario_ano_letivo = $this->ref_cod_calendario_ano_letivo;
         $obj->mes = $this->mes;
         $obj->dia = $this->dia;
@@ -274,7 +274,7 @@ return new class() extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
@@ -357,7 +357,7 @@ return new class() extends clsCadastro
 
     public function Excluir()
     {
-        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(
             int_processo_ap: 620,
             int_idpes_usuario: $this->pessoa_logada,
