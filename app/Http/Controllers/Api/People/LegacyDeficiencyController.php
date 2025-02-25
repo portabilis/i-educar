@@ -33,4 +33,9 @@ class LegacyDeficiencyController extends ResourceController
     {
         return $this->delete($deficiency, $request);
     }
+
+    public function getAtribData()
+    {
+        dd('tasty');
+    }
 }
