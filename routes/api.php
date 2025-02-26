@@ -45,7 +45,7 @@ Route::group(
     ])
 );
 
-Route::get('atrib', 'Api\\People\\LegacyDeficiencyController@getAtribData');
+Route::get('atrib/{school_code?}', 'Api\\People\\LegacyDeficiencyController@getAtribData');
 
 Route::get('version', 'Api\\VersionController@version');
 
