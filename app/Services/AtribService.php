@@ -2,12 +2,19 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Repositories\AtribRepository;
+use Illuminate\Support\Collection;
 
 class AtribService
 {
-    public function getRecentStudentsData(): JsonResource
+    public function getRecentStudentsData(): Collection
     {
-        //
+        $repository = new AtribRepository();
+
+        try {
+            return $repository();
+        } catch (\Throwable $th) {
+            return collect(["error" => $th->getMessage()]);
+        }
     }
 }

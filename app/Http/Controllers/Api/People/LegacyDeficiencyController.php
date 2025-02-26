@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\People;
 
 use App\Http\Controllers\ResourceController;
 use App\Models\LegacyDeficiency;
+use App\Services\AtribService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -34,8 +35,8 @@ class LegacyDeficiencyController extends ResourceController
         return $this->delete($deficiency, $request);
     }
 
-    public function getAtribData()
+    public function getAtribData(): JsonResource
     {
-        dd('tasty');
+        return $this->newCollection(app(AtribService::class)->getRecentStudentsData());
     }
 }
