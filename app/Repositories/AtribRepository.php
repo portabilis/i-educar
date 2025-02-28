@@ -41,8 +41,8 @@ class AtribRepository
             ->leftJoin(
                 'pmieducar.matricula as m2',
                 fn($join) => $join->on('m2.ref_cod_aluno', '=', 'pmieducar.aluno.cod_aluno')
-                    ->where('m2.ano', 2025)
-                    ->where('m2.ativo', 1)
+                    ->where('m2.ano', self::CURRENT_YEAR)
+                    ->where('m2.ativo', self::ACTIVE_REGISTRATION)
                     ->whereColumn('m2.cod_matricula', '<>', 'm1.cod_matricula')
             )
             ->leftJoin('pmieducar.serie as s2', 's2.cod_serie', '=', 'm2.ref_ref_cod_serie')
