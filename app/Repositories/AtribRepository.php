@@ -14,9 +14,9 @@ class AtribRepository
         SPECIALIZED_EDUCATIONAL_ASSISTANCE = 41;
 
 
-    public function __invoke(?int $schoolCode = null): Collection
+    public function __invoke(int $schoolCode): Collection
     {
-        $query = LegacyStudent::select([
+        return LegacyStudent::select([
             'escola.idpes as codigo_escola',
             'escola.fantasia as nome_escola',
             'pessoa.nome as nome_aluno',
@@ -54,13 +54,8 @@ class AtribRepository
             ->where('m1.ano', self::CURRENT_YEAR)
             ->where('m1.ativo', self::ACTIVE_REGISTRATION)
             ->where('mt1.ativo', self::ACTIVE_REGISTRATION)
-            ->where('m1.ref_ref_cod_serie', self::SPECIALIZED_EDUCATIONAL_ASSISTANCE);
-
-        if ($schoolCode) {
-            $query->where('escola.idpes', $schoolCode);
-        }
-
-        return $query
+            ->where('m1.ref_ref_cod_serie', self::SPECIALIZED_EDUCATIONAL_ASSISTANCE)
+            ->where('escola.idpes', $schoolCode)
             ->orderBy('escola.fantasia')
             ->orderBy('s1.nm_serie')
             ->orderBy('t1.nm_turma')

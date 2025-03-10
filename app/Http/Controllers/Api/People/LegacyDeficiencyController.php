@@ -35,8 +35,8 @@ class LegacyDeficiencyController extends ResourceController
         return $this->delete($deficiency, $request);
     }
 
-    public function getAtribData(): JsonResource
+    public function getAtribData(int $schoolCode): JsonResource
     {
-        return $this->newCollection(app(AtribService::class)->getRecentStudentsData());
+        return $this->newCollection(app(AtribService::class)->getRecentStudentsData($schoolCode));
     }
 }

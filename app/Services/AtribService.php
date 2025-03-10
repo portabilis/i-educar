@@ -7,12 +7,12 @@ use Illuminate\Support\Collection;
 
 class AtribService
 {
-    public function getRecentStudentsData(): Collection
+    public function getRecentStudentsData(int $schoolCode): Collection
     {
         $repository = new AtribRepository();
 
         try {
-            return $repository();
+            return $repository($schoolCode);
         } catch (\Throwable $th) {
             return collect(["error" => $th->getMessage()]);
         }
