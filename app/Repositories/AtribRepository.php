@@ -5,17 +5,18 @@ namespace App\Repositories;
 use App\Models\LegacyStudent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class AtribRepository
 {
-    public const CURRENT_YEAR = 2025,
-        ENROLLED_STUDENT = 3,
+    public const ENROLLED_STUDENT = 3,
         ACTIVE_REGISTRATION = 1,
-        SPECIALIZED_EDUCATIONAL_ASSISTANCE = 41;
+        SPECIALIZED_EDUCATIONAL_ASSISTANCE = 41,
+        POA_ASSISTENCE = 65;
 
-
-    public function __invoke(int $schoolCode): Collection
+    public function __invoke(int $schoolCode, string $serie): Collection
     {
+        $currentYear = today()->format('Y');
         return LegacyStudent::select([
             'escola.idpes as codigo_escola',
             'escola.fantasia as nome_escola',
@@ -41,7 +42,7 @@ class AtribRepository
             ->leftJoin(
                 'pmieducar.matricula as m2',
                 fn($join) => $join->on('m2.ref_cod_aluno', '=', 'pmieducar.aluno.cod_aluno')
-                    ->where('m2.ano', self::CURRENT_YEAR)
+                    ->where('m2.ano', $currentYear)
                     ->where('m2.ativo', self::ACTIVE_REGISTRATION)
                     ->whereColumn('m2.cod_matricula', '<>', 'm1.cod_matricula')
             )
@@ -51,14 +52,26 @@ class AtribRepository
             ->leftJoin('pmieducar.escola as esco', 'esco.cod_escola', '=', 'm1.ref_ref_cod_escola')
             ->leftJoin('cadastro.juridica as escola', 'escola.idpes', '=', 'esco.ref_idpes')
             ->where('m1.aprovado', self::ENROLLED_STUDENT)
-            ->where('m1.ano', self::CURRENT_YEAR)
+            ->where('m1.ano', $currentYear)
             ->where('m1.ativo', self::ACTIVE_REGISTRATION)
             ->where('mt1.ativo', self::ACTIVE_REGISTRATION)
-            ->where('m1.ref_ref_cod_serie', self::SPECIALIZED_EDUCATIONAL_ASSISTANCE)
+            ->where('m1.ref_ref_cod_serie', $this->getSpecialSerie($serie))
             ->where('escola.idpes', $schoolCode)
             ->orderBy('escola.fantasia')
             ->orderBy('s1.nm_serie')
             ->orderBy('t1.nm_turma')
             ->get();
+    }
+
+    private function getSpecialSerie(string $serie): int
+    {
+        $serie = strtoupper($serie);
+        if (!in_array($serie, ['POA', 'AEE'])) {
+            throw new Exception("Serie not set to this value.");
+        }
+
+        return 'AEE' == $serie
+            ? self::SPECIALIZED_EDUCATIONAL_ASSISTANCE
+            : self::POA_ASSISTENCE;
     }
 }
