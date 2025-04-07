@@ -179,6 +179,11 @@ class AlunoController extends ApiCoreController
         return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('escola');
     }
 
+    protected function canGetAlunosByGuardianCpf()
+    {
+        return $this->validatesPresenceOf('aluno_id') && $this->validatesPresenceOf('cpf');
+    }
+
     protected function validateInepCode()
     {
         if ($this->getRequest()->aluno_inep_id) {
@@ -1325,6 +1330,62 @@ class AlunoController extends ApiCoreController
         }
     }
 
+    protected function getIdpesFromCpf($cpf)
+    {
+        $sql = 'SELECT idpes FROM cadastro.fisica WHERE cpf = $1';
+
+        return $this->fetchPreparedQuery($sql, $cpf, true, 'first-field');
+    }
+
+    protected function checkAlunoIdpesGuardian($idpesGuardian, $alunoId)
+    {
+        $sql = '
+            SELECT 1
+            FROM pmieducar.aluno
+            INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
+            WHERE cod_aluno = $2
+            AND (idpes_pai = $1
+            OR idpes_mae = $1
+            OR idpes_responsavel = $1) LIMIT 1
+        ';
+
+        return $this->fetchPreparedQuery($sql, [$idpesGuardian, $alunoId], true, 'first-field') == 1;
+    }
+
+    protected function getAlunosByGuardianCpf()
+    {
+        if ($this->canGetAlunosByGuardianCpf()) {
+            $cpf = $this->getRequest()->cpf;
+            $alunoId = $this->getRequest()->aluno_id;
+
+            $idpesGuardian = $this->getIdpesFromCpf($cpf);
+
+            if (is_numeric($idpesGuardian) && $this->checkAlunoIdpesGuardian($idpesGuardian, $alunoId)) {
+                $sql = '
+                    SELECT cod_aluno as aluno_id, pessoa.nome as nome_aluno
+                    FROM pmieducar.aluno
+                    INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
+                    INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
+                    WHERE idpes_pai = $1
+                    OR idpes_mae = $1
+                    OR idpes_responsavel = $1
+                ';
+
+                $alunos = $this->fetchPreparedQuery($sql, [$idpesGuardian]);
+                $attrs = ['aluno_id', 'nome_aluno'];
+                $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+                foreach ($alunos as &$aluno) {
+                    $aluno['nome_aluno'] = Portabilis_String_Utils::toUtf8($aluno['nome_aluno']);
+                }
+
+                return ['alunos' => $alunos];
+            } else {
+                $this->messenger->append('Não foi encontrado nenhum vínculos entre esse aluno e cpf.');
+            }
+        }
+    }
+
     protected function getMatriculas()
     {
         if ($this->canGetMatriculas()) {
@@ -2077,6 +2138,8 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getOcorrenciasDisciplinares());
         } elseif ($this->isRequestFor('get', 'grade_ultimo_historico')) {
             $this->appendResponse($this->getGradeUltimoHistorico());
+        } elseif ($this->isRequestFor('get', 'alunos_by_guardian_cpf')) {
+            $this->appendResponse($this->getAlunosByGuardianCpf());
         } elseif ($this->isRequestFor('post', 'aluno')) {
             $this->appendResponse($this->post());
         } elseif ($this->isRequestFor('put', 'aluno')) {

@@ -144,6 +144,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/exportacoes/novo', [ExportController::class, 'form'])->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
 
+    Route::get('/arquivo/exportacoes', 'FileExportController@index')->middleware('can:view:' . Process::DOCUMENT_EXPORT)->name('file.export.index');
+    Route::get('/arquivo/exportacoes/novo', 'FileExportController@create')->middleware('can:modify:' . Process::DOCUMENT_EXPORT)->name('file.export.create');
+    Route::post('/arquivo/exportacoes/novo', 'FileExportController@store')->middleware('can:modify:' . Process::DOCUMENT_EXPORT)->name('file.export.store');
+
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.update-date');
 

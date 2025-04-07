@@ -969,6 +969,7 @@ class MatriculaController extends ApiCoreController
                                   WHEN 1 THEN 'Abandono'::varchar
                                   WHEN 3 THEN 'Retorno com ausência justificada'::varchar
                                   WHEN 4 THEN 'Retorno sem ausência justificada'::varchar
+                                  WHEN 5 THEN 'Transferência'::varchar
                                   ELSE 'Em andamento'::varchar END AS resulta_busca_ativa_text")
             ->join('pmieducar.matricula', 'ref_cod_matricula', '=', 'cod_matricula')
             ->where('ano', $ano);

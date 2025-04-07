@@ -226,6 +226,7 @@ class EnrollmentTest extends ViewTestCase
                 'school_class_id' => 'ID Turma',
                 'grade_id' => 'ID Série',
                 'course_id' => 'ID Curso',
+                'inep_id' => 'Código INEP (Aluno)',
             ],
             'Aluno' => [
                 'name' => 'Nome',
