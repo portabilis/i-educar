@@ -14,7 +14,6 @@ ENV XDEBUG_START_WITH_REQUEST off
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-RUN apk update
 RUN apk add --update --no-cache \
     libc-dev \
     libpng-dev  \
@@ -30,9 +29,8 @@ RUN apk add --update --no-cache \
     openssl-dev
 
 # https://github.com/docker-library/php/issues/436#issuecomment-303171390
-RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
-
-RUN pecl install \
+RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS \
+    && pecl install \
     redis \
     xdebug
 
