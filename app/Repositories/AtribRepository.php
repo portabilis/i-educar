@@ -2,10 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\Atrib\SerieNotFound;
 use App\Models\LegacyStudent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class AtribRepository
 {
@@ -67,7 +67,7 @@ class AtribRepository
     {
         $serie = strtoupper($serie);
         if (!in_array($serie, ['POA', 'AEE'])) {
-            throw new Exception("Serie not set to this value.");
+            throw new SerieNotFound();
         }
 
         return 'AEE' == $serie
