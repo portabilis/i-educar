@@ -15,18 +15,18 @@ ENV XDEBUG_START_WITH_REQUEST off
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN apk add --update --no-cache \
+    git \
     libc-dev \
-    libpng-dev  \
-    libzip-dev  \
+    libpng-dev \
+    libzip-dev \
     linux-headers \
-    openjdk8  \
+    openjdk8 \
+    openssh \
+    openssl-dev \
     postgresql-client \
     postgresql-dev \
     ttf-dejavu \
-    unzip \
-    openssh \
-    git \
-    openssl-dev
+    unzip
 
 # https://github.com/docker-library/php/issues/436#issuecomment-303171390
 RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS \
