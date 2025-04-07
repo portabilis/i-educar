@@ -9,10 +9,10 @@ use Exception;
 
 class AtribRepository
 {
-    public const ENROLLED_STUDENT = 3,
-        ACTIVE_REGISTRATION = 1,
-        SPECIALIZED_EDUCATIONAL_ASSISTANCE = 41,
-        POA_ASSISTENCE = 65;
+    private const ENROLLED_STUDENT = 3;
+    private const ACTIVE_REGISTRATION = 1;
+    private const SPECIALIZED_EDUCATIONAL_ASSISTANCE = 41;
+    private const POA_ASSISTENCE = 65;
 
     public function __invoke(int $schoolCode, string $serie): Collection
     {
