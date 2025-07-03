@@ -70,7 +70,8 @@
             "ieducar/modules/*/Model",
             "ieducar/modules/Avaliacao/Service",
             "ieducar/modules/Avaliacao/Views",
-            "ieducar/modules/FormulaMedia/Validate"
+            "ieducar/modules/FormulaMedia/Validate",
+            "ieducar/modules/RegraAvaliacao/Validators"
         ],
         "files": [
             "ieducar/intranet/include/funcoes.inc.php"
