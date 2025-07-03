@@ -1029,6 +1029,14 @@ class EditController extends Core_Controller_Page_EditController
             return false;
         }
 
+        // Validação da regra de avaliação
+        require_once 'modules/RegraAvaliacao/Validators/RegraAvaliacaoValidator.php';
+        $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator();
+        if (!$validator->isValid($this->getEntity())) {
+            $this->mensagem = implode('<br>', $validator->getMessages());
+            return false;
+        }
+
         // Processa os dados da requisição, apenas os valores para a tabela de valores.
         $recuperacoes = $this->getRequest()->recuperacao;
 
