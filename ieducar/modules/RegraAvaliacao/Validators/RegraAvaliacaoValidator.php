@@ -14,7 +14,7 @@ class RegraAvaliacao_Validators_RegraAvaliacaoValidator
                 $this->messages[] = 'A nota máxima deve ser maior que a nota mínima.';
             }
         }
-        
+
        // Validação 2: porcentagem de presença entre 0 e 100
        if (isset($regra->porcentagemPresenca)) {
            $p = (float) $regra->porcentagemPresenca;
@@ -23,10 +23,15 @@ class RegraAvaliacao_Validators_RegraAvaliacaoValidator
            }
        }
 
+       // Validação 3: falta máxima > falta mínima
+       if (isset($regra->faltaMinimaGeral) && isset($regra->faltaMaximaGeral)) {
+           if ($regra->faltaMaximaGeral <= $regra->faltaMinimaGeral) {
+               $this->messages[] = 'A falta máxima deve ser maior que a falta mínima.';
+           }
+       }
+
         return empty($this->messages);
-
     }
-
     public function getMessages()
     {
         return $this->messages;

@@ -36,6 +36,20 @@ class RegraAvaliacaoTest extends UnitBaseTest
            $validator->getMessages()
        );
    }
+        public function testFaltaMaximaMenorOuIgualFaltaMinima()
+   {
+       $regra = $this->makeRegra([
+           'faltaMinimaGeral' => 5,
+           'faltaMaximaGeral' => 5
+       ]);
 
+
+       $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator();
+       $this->assertFalse($validator->isValid($regra));
+       $this->assertContains(
+           'A falta máxima deve ser maior que a falta mínima.',
+           $validator->getMessages()
+       );
+   }
 
 }
