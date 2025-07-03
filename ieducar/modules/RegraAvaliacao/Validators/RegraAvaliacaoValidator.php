@@ -14,8 +14,17 @@ class RegraAvaliacao_Validators_RegraAvaliacaoValidator
                 $this->messages[] = 'A nota máxima deve ser maior que a nota mínima.';
             }
         }
+        
+       // Validação 2: porcentagem de presença entre 0 e 100
+       if (isset($regra->porcentagemPresenca)) {
+           $p = (float) $regra->porcentagemPresenca;
+           if ($p < 0 || $p > 100) {
+               $this->messages[] = 'A porcentagem de presença deve estar entre 0 e 100.';
+           }
+       }
 
         return empty($this->messages);
+
     }
 
     public function getMessages()
