@@ -1,0 +1,8 @@
+client_body_buffer_size 64k;
+client_max_body_size 100m;
+client_body_in_single_buffer on;
+client_header_buffer_size 1m;
+large_client_header_buffers 4 8k;
+
+gzip 'on';
+gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;

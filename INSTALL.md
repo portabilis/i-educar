@@ -45,6 +45,23 @@ Configura as variáveis de ambiente que desejar:
 cp .env.example .env
 ```
 
+Ajustar as permissões de arquivos e UID do host:
+
+Ao utilizar Docker, os arquivos criados dentro do container (como `vendor/`, `storage/logs`, etc.) podem acabar sendo atribuídos ao usuário `root`, causando erros de permissão durante o desenvolvimento no host (ex: `Permission denied` ao escrever logs).
+
+Para evitar esse problema, o ambiente Docker do i-Educar permite configurar o **UID e GID do usuário do host** (por exemplo, `ieducar`) no momento do build da imagem.
+
+Esses valores devem ser definidos no seu arquivo `.env`, da seguinte forma:
+
+```env
+HOST_UID=1001  # Use `id -u` para descobrir o UID do seu usuário local
+HOST_GID=1001  # Use `id -g` para descobrir o GID do seu grupo local
+```
+
+Esses valores são utilizados durante o build do container para criar um usuário interno com o mesmo UID e GID, garantindo que os arquivos gerados dentro do container sejam acessíveis normalmente no seu host.
+
+> Importante: caso você não defina essas variáveis, valores padrão como 1001 serão utilizados. Isso evita que os arquivos sejam criados como root (UID 0), mas ainda assim pode gerar erros de permissão se o UID/GID do container não corresponder ao do seu usuário local.
+
 Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
 
 ```bash
