@@ -12,6 +12,7 @@ use App\Models\Religion;
 use App\Models\TransportationProvider;
 use App\Models\UniformDistribution;
 use App\Services\UrlPresigner;
+use App\Services\AntropometriaService;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -693,6 +694,30 @@ return new class extends clsDetalhe
                 $this->addDetalhe(detalhe: ['Número do cartão do SUS', $this->sus]);
             }
 
+           if (isset($reg['altura_cm'], $reg['peso_kg'])) {
+                $imc = AntropometriaService::calculaIMC($reg['peso_kg'], $reg['altura_cm']);
+
+                // exemplo fictício de escore Z: precisa ajustar conforme a OMS
+                $zScore = round($imc - 18.5, 1);
+
+                $classificacaoImc = AntropometriaService::classificaIMC($zScore);
+
+                $this->addDetalhe(['Altura (cm)', $reg['altura_cm']]);
+                $this->addDetalhe(['Peso (kg)', $reg['peso_kg']]);
+                $this->addDetalhe(['IMC', number_format($imc, 2)]);
+                $this->addDetalhe(['Classificação IMC', $classificacaoImc]);
+            }
+
+            if (isset($reg['circunferencia_cintura'], $det_fisica['sexo'])) {
+                $cintura = $reg['circunferencia_cintura'];
+                $sexo = $det_fisica['sexo'];
+
+                $classificacaoCintura = AntropometriaService::classificaCintura($sexo, $cintura);
+
+                $this->addDetalhe(['Circunferência da cintura (cm)', $cintura]);
+                $this->addDetalhe(['Classificação de risco (cintura)', $classificacaoCintura]);
+            }
+            
             $this->addDetalhe(detalhe: [
                 'Possui alergia a algum medicamento',
                 ($reg['alergia_medicamento'] == 'S' ? 'Sim' : 'Não'),
