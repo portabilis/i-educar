@@ -3,7 +3,6 @@
 use App\Models\LegacyAbandonmentType;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
-use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -163,10 +162,7 @@ return new class extends clsDetalhe
                 $existeTurmaMulti = true;
             }
 
-            $estruturaCurricular = transformStringFromDBInArray(string: $turma['estrutura_curricular']) ?? [];
             $tipoAtendimento = transformStringFromDBInArray(string: $turma['tipo_atendimento']) ?? [];
-            $turmaItineraria = in_array(needle: 2, haystack: $estruturaCurricular);
-            $turmaFormacaoBasica = in_array(needle: 1, haystack: $estruturaCurricular);
             $etapasItinerario = [25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 67, 71, 74];
 
             $nomesTurmas[] = $turma['nm_turma'];
@@ -359,12 +355,6 @@ return new class extends clsDetalhe
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
-            if ($this->permissaoItinerarioFormativo()) {
-                $this->array_botao[] = 'Itinerário formativo';
-                $link = route(name: 'registration.formative-itinerary.index', parameters: $registro['cod_matricula']);
-                $this->array_botao_url_script[] = "go(\"{$link}\")";
-            }
-
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
                 if ($this->permissaoSolicitarTransferencia()) {
                     if (is_array(value: $lst_transferencia) && isset($data_transferencia)) {
@@ -540,11 +530,6 @@ return new class extends clsDetalhe
     public function permissaoTurno()
     {
         return $this->getPermissaoVisualizar(689);
-    }
-
-    public function permissaoItinerarioFormativo()
-    {
-        return $this->getPermissaoVisualizar(690);
     }
 
     public function permissaoSolicitarTransferencia()

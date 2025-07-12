@@ -375,7 +375,7 @@ class clsPmieducarServidor extends Model
         $int_identificador = null,
         $int_ref_cod_curso = null,
         $int_ref_cod_disciplina = null,
-        $int_ref_cod_subnivel = null,
+        $int_ref_cod_subnivel = null, // TODO: remover no futuro
         $bool_servidor_sem_alocacao = false,
         $ano_alocacao = null,
         $matricula_funcionario = null

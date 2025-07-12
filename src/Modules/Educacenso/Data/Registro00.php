@@ -80,7 +80,7 @@ class Registro00 extends AbstractRegistro
             $record->nome, // 6	Nome da escola
             $record->cep, // 7	CEP
             $record->codigoIbgeMunicipio, // 8	Município
-            $record->codigoIbgeDistrito, // 9	Distrito
+            addLeadingZero($record->codigoIbgeDistrito, 2), // 9	Distrito
             $record->logradouro, // 10	Endereço
             $record->numero, // 11	Número
             $record->complemento, // 12	Complemento

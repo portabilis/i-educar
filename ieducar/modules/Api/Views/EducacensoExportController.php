@@ -33,6 +33,7 @@ use iEducar\Modules\Educacenso\ExportRule\UnidadesCurricularesServidor;
 use iEducar\Modules\Educacenso\ExportRule\VeiculoTransporte;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento as ModelSituacaoFuncionamento;
+use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 
 /**
  * Class EducacensoExportController
@@ -409,7 +410,6 @@ class EducacensoExportController extends ApiCoreController
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
         $quantidadeComponentes = 25;
-        $quantidadeUnidadesCurriculares = 8;
 
         /** @var Registro50[] $docentes */
         $docentes = $registro50->getExportFormatData($escolaId, $ano);
@@ -423,25 +423,25 @@ class EducacensoExportController extends ApiCoreController
             $docente = UnidadesCurricularesServidor::handle($docente);
 
             $data = [
-                $docente->registro,
-                $docente->inepEscola,
-                $docente->codigoPessoa,
-                $docente->inepDocente,
-                $docente->codigoTurma,
-                $docente->inepTurma,
-                $docente->funcaoDocente,
-                $docente->tipoVinculo,
+                $docente->registro, // 1 - Tipo de registro
+                $docente->inepEscola, // 2 - Código de escola - Inep
+                $docente->codigoPessoa, // 3 - Código da pessoa física no sistema próprio
+                $docente->inepDocente, // 4 - Identificação única (Inep)
+                $docente->codigoTurma, // 5 - Código da Turma na Entidade/Escola
+                $docente->inepTurma, // 6 - Código da turma no INEP
+                $docente->funcaoDocente, // 7 - Função que exerce na turma
+                $docente->tipoVinculo, // 8 - Situação funcional/regime de contratação/tipo de vínculo
             ];
 
             for ($count = 0; $count <= $quantidadeComponentes - 1; $count++) {
-                $data[] = $docente->componentes[$count];
+                $data[] = $docente->componentes[$count]; // 9 a 33 - Componentes curriculares
             }
 
-            for ($count = 1; $count <= $quantidadeUnidadesCurriculares; $count++) {
-                $data[] = $docente->unidadesCurriculares === null ? '' : (int) in_array($count, $docente->unidadesCurriculares);
-            }
-
-            $data[] = $docente->outrasUnidadesCurricularesObrigatorias;
+            $data[] = $docente->areaItinerario ? ((is_array($docente->areaItinerario) && in_array(TipoItinerarioFormativo::LINGUANGENS, $docente->areaItinerario)) ? 1 : 0) : ''; // 34 - Linguagens e suas tecnologias
+            $data[] = $docente->areaItinerario ? ((is_array($docente->areaItinerario) && in_array(TipoItinerarioFormativo::MATEMATICA, $docente->areaItinerario)) ? 1 : 0) : ''; // 35 - Matemática e suas tecnologias
+            $data[] = $docente->areaItinerario ? ((is_array($docente->areaItinerario) && in_array(TipoItinerarioFormativo::CIENCIAS_NATUREZA, $docente->areaItinerario)) ? 1 : 0) : ''; // 36 - Ciências da natureza e suas tecnologias
+            $data[] = $docente->areaItinerario ? ((is_array($docente->areaItinerario) && in_array(TipoItinerarioFormativo::CIENCIAS_HUMANAS, $docente->areaItinerario)) ? 1 : 0) : ''; // 37 - Ciências humanas e sociais aplicadas
+            $data[] = $docente->lecionaItinerarioTecnicoProfissional; // 38 - Profissional escolar leciona no Itinerário de formação técnica e profissional (IFTP)
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }

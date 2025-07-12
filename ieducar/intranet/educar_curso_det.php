@@ -29,7 +29,7 @@ return new class extends clsDetalhe
 
     public $ato_poder_publico;
 
-    public $habilitacao;
+    public $habilitacao; // TODO: remover no futuro
 
     public $objetivo_curso;
 

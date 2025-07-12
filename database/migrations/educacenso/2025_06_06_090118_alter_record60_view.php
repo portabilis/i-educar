@@ -1,7 +1,6 @@
 <?php
 
 use App\Support\Database\AsView;
-use App\Support\Database\MigrationUtils;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration

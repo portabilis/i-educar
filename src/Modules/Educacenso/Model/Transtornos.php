@@ -6,8 +6,6 @@ namespace iEducar\Modules\Educacenso\Model;
  * Class Transtornos
  * Os valores das constantes foram iniciados em 50,
  * pois não podem coincidir com os valores presentes na classe de Deficiências.
- *
- * @package iEducar\Modules\Educacenso\Model
  */
 class Transtornos
 {

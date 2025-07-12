@@ -36,7 +36,9 @@ class Registro50 extends AbstractRegistro
 
                 $this->model->componentes = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->componentes));
                 $this->model->unidadesCurriculares = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->unidadesCurriculares));
-                $this->model->estruturaCurricular = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->estruturaCurricular));
+                $this->model->tipoAtendimentoTurma = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->tipoAtendimentoTurma));
+                $this->model->organizacaoCurricular = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->organizacaoCurricular));
+                $this->model->areaItinerario = array_unique(Portabilis_Utils_Database::pgArrayToArray($this->model->areaItinerario));
 
                 $this->modelArray[] = $this->model;
                 $this->model = new Registro50Model;

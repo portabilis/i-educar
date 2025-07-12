@@ -28,7 +28,6 @@ class CreatePmieducarTurmaTable extends Migration
                     ref_usuario_cad integer NOT NULL,
                     ref_ref_cod_serie integer,
                     ref_ref_cod_escola integer,
-                    ref_cod_infra_predio_comodo integer,
                     nm_turma character varying(255) NOT NULL,
                     sgl_turma character varying(15),
                     max_aluno integer NOT NULL,

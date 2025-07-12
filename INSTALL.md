@@ -39,17 +39,23 @@ Clone o repositório:
 git clone git@github.com:portabilis/i-educar.git && cd i-educar
 ```
 
+Configura as variáveis de ambiente que desejar:
+
+```bash
+cp .env.example .env
+```
+
 Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 Execute o comando para fazer uma nova instalação:
 
 ```bash
-docker-compose exec php composer new-install
-docker-compose exec php php artisan db:seed
+docker compose exec php composer new-install
+docker compose exec php php artisan db:seed
 ```
 
 ### Personalizando a instalação
@@ -75,14 +81,14 @@ cp .env.example .env.testing
 Execute o comando:
 
 ```bash
-docker-compose exec php vendor/bin/pest
+docker compose exec php vendor/bin/pest
 ```
 
 ## Instalação em servidor web
 
 Para instalar o projeto execute **todos os passos** abaixo conectado em seu servidor web:
 
-> Este passo a passo serve para um servidor Ubuntu 22.04 LTS e não tem configurações mínimas de segurança
+> Este passo a passo serve para um servidor Ubuntu 24.04 LTS e não tem configurações mínimas de segurança
 
 Gere uma chave SSH no seu servidor, copie e adicione ao seu GitHub https://github.com/settings/keys.  
 
@@ -102,7 +108,7 @@ apt update
 Instale as dependências:
 
 ```bash
-apt install -y nginx redis postgresql postgresql-contrib openjdk-8-jdk openssl unzip php8.3-common php8.3-cli php8.3-fpm php8.3-bcmath php8.3-curl php8.3-mbstring php8.3-pgsql php8.3-xml php8.3-zip php8.3-gd
+apt install -y nginx redis postgresql postgresql-contrib openjdk-8-jdk openssl unzip php8.4-common php8.4-cli php8.4-fpm php8.4-bcmath php8.4-curl php8.4-mbstring php8.4-pgsql php8.4-xml php8.4-zip php8.4-gd
 ```
 
 Inicie o serviço de banco de dados:

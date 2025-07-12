@@ -7,7 +7,9 @@ use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
 use App\Services\SchoolClass\SchoolClassService;
-use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
+use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\SchoolClass\Period;
 use iEducar\Support\View\SelectOptions;
 
@@ -87,7 +89,7 @@ return new class extends clsCadastro
 
     public $codigo_inep_educacenso;
 
-    public $estrutura_curricular;
+    public $organizacao_curricular;
 
     public $tipo_mediacao_didatico_pedagogico;
 
@@ -171,6 +173,12 @@ return new class extends clsCadastro
     public $hora_final_vespertino;
 
     private $hasStudentsPartials;
+
+    private $area_itinerario;
+
+    private $tipo_curso_intinerario;
+
+    private $cod_curso_profissional_intinerario;
 
     public function Inicializar()
     {
@@ -259,9 +267,9 @@ return new class extends clsCadastro
 
         $this->dias_semana = transformStringFromDBInArray(string: $this->dias_semana);
         $this->atividades_complementares = transformStringFromDBInArray(string: $this->atividades_complementares);
-        $this->estrutura_curricular = transformStringFromDBInArray(string: $this->estrutura_curricular);
-        $this->cod_curso_profissional = transformStringFromDBInArray(string: $this->cod_curso_profissional);
+        $this->organizacao_curricular = transformStringFromDBInArray(string: $this->organizacao_curricular);
         $this->tipo_atendimento = transformStringFromDBInArray(string: $this->tipo_atendimento);
+        $this->area_itinerario = transformStringFromDBInArray(string: $this->area_itinerario);
 
         $this->url_cancelar = $retorno == 'Editar' ?
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
@@ -573,13 +581,6 @@ return new class extends clsCadastro
             'max_length' => 14,
             'value' => $this->codigo_inep_educacenso]);
 
-        $resources = [
-            null => 'Selecione',
-            0 => 'Curricular (etapa de ensino)',
-            4 => 'Atividade complementar',
-            5 => 'Atendimento educacional especializado (AEE)',
-        ];
-
         $helperOptions = ['objectName' => 'tipo_atendimento'];
         $options = [
             'label' => 'Tipo de turma',
@@ -587,24 +588,7 @@ return new class extends clsCadastro
             'size' => 70,
             'options' => [
                 'values' => $this->tipo_atendimento,
-                'all_values' => $resources,
-            ],
-        ];
-
-        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
-
-        $helperOptions = ['objectName' => 'estrutura_curricular'];
-        $options = [
-            'label' => 'Estrutura curricular',
-            'required' => false,
-            'size' => 70,
-            'options' => [
-                'values' => $this->estrutura_curricular,
-                'all_values' => [
-                    1 => 'Formação geral básica',
-                    2 => 'Itinerário formativo',
-                    3 => 'Não se aplica',
-                ],
+                'all_values' => TipoAtendimentoTurma::getDescriptiveValues(),
             ],
         ];
 
@@ -641,6 +625,20 @@ return new class extends clsCadastro
         $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'etapa_educacenso', inputOptions: $options);
 
+        $helperOptions = ['objectName' => 'organizacao_curricular'];
+        $options = [
+            'label' => 'Organização curricular da turma',
+            'required' => false,
+            'disabled' => true,
+            'size' => 70,
+            'options' => [
+                'values' => $this->organizacao_curricular,
+                'all_values' => OrganizacaoCurricular::getDescriptiveValues(),
+            ],
+        ];
+
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+
         $resources = [
             null => 'Selecione',
             1 => 'Série/ano (séries anuais)',
@@ -654,8 +652,11 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'formas_organizacao_turma', inputOptions: $options);
 
         $cursos = loadJson(file: 'educacenso_json/cursos_da_educacao_profissional.json');
-        $helperOptions = ['objectName' => 'cod_curso_profissional',
-            'type' => 'single'];
+
+        $helperOptions = [
+            'objectName' => 'cod_curso_profissional',
+            'type' => 'single',
+        ];
 
         $options = [
             'label' => 'Código do curso',
@@ -699,12 +700,6 @@ return new class extends clsCadastro
         ];
         $this->inputsHelper()->select(attrName: 'formacao_alternancia', inputOptions: $options);
 
-        $resources = [
-            null => 'Selecione',
-            1 => 'Sim',
-            2 => 'Não',
-        ];
-
         $options = [
             'label' => 'Turma de Educação Bilíngue de Surdos (classe bilíngue de surdos)',
             'resources' => $resources,
@@ -714,9 +709,56 @@ return new class extends clsCadastro
         ];
         $this->inputsHelper()->select(attrName: 'classe_com_lingua_brasileira_sinais', inputOptions: $options);
 
-        $options = ['label' => 'Não informar esta turma no Censo escolar',
+        $options = [
+            'label' => 'Área(s) do itinerário formativo',
+            'required' => false,
+            'disabled' => true,
+            'size' => 70,
+            'options' => [
+                'values' => $this->area_itinerario,
+                'all_values' => TipoItinerarioFormativo::getDescriptiveValues(),
+            ],
+        ];
+
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: [
+            'objectName' => 'area_itinerario',
+        ]);
+
+        $resources = [
+            null => 'Selecione',
+            1 => 'Curso Técnico',
+            2 => 'Qualificação Profissional Técnica',
+        ];
+
+        $options = [
+            'label' => 'Tipo do curso do itinerário de formação técnica e profissional',
+            'resources' => $resources,
+            'required' => false,
+            'value' => (int) $this->tipo_curso_intinerario,
+            'size' => 70,
+        ];
+        $this->inputsHelper()->select(attrName: 'tipo_curso_intinerario', inputOptions: $options);
+
+        $options = [
+            'label' => 'Código do curso técnico',
+            'size' => 50,
+            'required' => false,
+            'label_hint' => 'Esse campo se refere ao código do curso de educação profissional para o itinerário formativo',
+            'options' => [
+                'values' => $this->cod_curso_profissional_intinerario,
+                'all_values' => $cursos,
+            ],
+        ];
+        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: [
+            'objectName' => 'cod_curso_profissional_intinerario',
+            'type' => 'single']
+        );
+
+        $options = [
+            'label' => 'Não informar esta turma no Censo escolar',
             'value' => $this->nao_informar_educacenso,
-            'label_hint' => 'Caso marcado, esta turma e suas matrículas, não serão informadas no arquivo da 1° e 2° etapa do Censo escolar'];
+            'label_hint' => 'Caso marcado, esta turma e suas matrículas, não serão informadas no arquivo da 1° e 2° etapa do Censo escolar',
+        ];
         $this->inputsHelper()->checkbox(attrName: 'nao_informar_educacenso', inputOptions: $options);
 
         $this->campoOculto(

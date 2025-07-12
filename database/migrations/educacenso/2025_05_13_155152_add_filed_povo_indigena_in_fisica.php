@@ -14,7 +14,6 @@ return new class extends Migration
                 ->on('modules.povo_indigena_educacenso');
         });
 
-
     }
 
     public function down(): void

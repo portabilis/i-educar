@@ -19,7 +19,7 @@ class DatabaseServiceProvider extends ServiceProvider
         Connection::resolverFor('pgsql', function ($connection, $database, $prefix, $config) {
             $connection = new PostgresConnection($connection, $database, $prefix, $config);
 
-            $connection->getPdo()->exec('SET search_path = "$user", public, portal, cadastro, pmieducar, urbano, modules;');
+            $connection->getPdo()->exec('SET search_path = "$user", public, portal, cadastro, pmieducar, modules;');
 
             return $connection;
         });

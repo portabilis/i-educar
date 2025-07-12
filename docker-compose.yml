@@ -20,7 +20,9 @@ x-php: &php
     CACHE_DRIVER: redis
     REDIS_HOST: redis
     DB_HOST: postgres
-    PGPASSWORD: ieducar
+    PGPASSWORD: ${DB_PASSWORD}
+  extra_hosts:
+    - host.docker.internal:host-gateway
 
 services:
 
@@ -57,9 +59,10 @@ services:
     container_name: ieducar-postgres
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: ieducar
-      POSTGRES_USER: ieducar
-      POSTGRES_PASSWORD: ieducar
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGUSER: ${DB_USERNAME}
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
@@ -67,7 +70,7 @@ services:
 
   redis:
     container_name: ieducar-redis
-    image: redis:7-alpine
+    image: redis:8-alpine
     restart: always
     ports:
       - ${DOCKER_REDIS_PORT:-6379}:6379

@@ -44,12 +44,6 @@ class AddForeignKeysInPmieducarTurmaTable extends Migration
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
 
-            $table->foreign('ref_cod_infra_predio_comodo')
-                ->references('cod_infra_predio_comodo')
-                ->on('pmieducar.infra_predio_comodo')
-                ->onUpdate('restrict')
-                ->onDelete('restrict');
-
             $table->foreign('ref_cod_curso')
                 ->references('cod_curso')
                 ->on('pmieducar.curso')
@@ -81,7 +75,6 @@ class AddForeignKeysInPmieducarTurmaTable extends Migration
             $table->dropForeign(['ref_ref_cod_escola', 'ref_ref_cod_serie']);
             $table->dropForeign(['ref_cod_regente', 'ref_cod_instituicao_regente']);
             $table->dropForeign(['ref_cod_instituicao']);
-            $table->dropForeign(['ref_cod_infra_predio_comodo']);
             $table->dropForeign(['ref_cod_curso']);
             $table->dropForeign(['ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult']);
             $table->dropForeign(['ref_cod_disciplina_dispensada']);

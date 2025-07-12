@@ -27,7 +27,6 @@ class CreatePmieducarEscolaTable extends Migration
                     ref_usuario_cad integer NOT NULL,
                     ref_usuario_exc integer,
                     ref_cod_instituicao integer NOT NULL,
-                    ref_cod_escola_rede_ensino integer NOT NULL,
                     ref_idpes integer,
                     sigla character varying(20) NOT NULL,
                     data_cadastro timestamp without time zone NOT NULL,
@@ -199,8 +198,6 @@ class CreatePmieducarEscolaTable extends Migration
                     ADD CONSTRAINT escola_pkey PRIMARY KEY (cod_escola);
 
                 CREATE INDEX i_escola_ativo ON pmieducar.escola USING btree (ativo);
-
-                CREATE INDEX i_escola_ref_cod_escola_rede_ensino ON pmieducar.escola USING btree (ref_cod_escola_rede_ensino);
 
                 CREATE INDEX i_escola_ref_cod_instituicao ON pmieducar.escola USING btree (ref_cod_instituicao);
 

@@ -54,6 +54,7 @@ class LegacySchoolGradeDiscipline extends Model
         'updated_at',
         'anos_letivos',
         'hora_falta',
+        'aulas_por_semana'
     ];
 
     protected function id(): Attribute

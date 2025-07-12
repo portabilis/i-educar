@@ -24,6 +24,14 @@ class clsModulesProfessorTurma extends Model
 
     public $codUsuario;
 
+    public $data_inicial;
+
+    public $data_fim;
+
+    public $leciona_itinerario_tecnico_profissional;
+
+    public $area_itinerario;
+
     /**
      * Construtor.
      *
@@ -36,6 +44,10 @@ class clsModulesProfessorTurma extends Model
      * @param null $tipo_vinculo
      * @param null $permite_lancar_faltas_componente
      * @param null $turno_id
+     * @param null $data_inicial
+     * @param null $data_fim
+     * @param null $leciona_itinerario_tecnico_profissional
+     * @param null $area_itinerario
      */
     public function __construct(
         $id = null,
@@ -47,11 +59,15 @@ class clsModulesProfessorTurma extends Model
         $tipo_vinculo = null,
         $permite_lancar_faltas_componente = null,
         $turno_id = null,
+        $data_inicial = null,
+        $data_fim = null,
+        $leciona_itinerario_tecnico_profissional = null,
+        $area_itinerario = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
 
-        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id';
+        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id, pt.data_inicial, pt.data_fim, pt.leciona_itinerario_tecnico_profissional, pt.area_itinerario';
 
         if (is_numeric($id)) {
             $this->id = $id;
@@ -89,6 +105,22 @@ class clsModulesProfessorTurma extends Model
             $this->permite_lancar_faltas_componente = '1';
         } else {
             $this->permite_lancar_faltas_componente = '0';
+        }
+
+        if (is_string($data_inicial)) {
+            $this->data_inicial = $data_inicial;
+        }
+
+        if (is_string($data_fim)) {
+            $this->data_fim = $data_fim;
+        }
+
+        if (is_numeric($leciona_itinerario_tecnico_profissional)) {
+            $this->leciona_itinerario_tecnico_profissional = $leciona_itinerario_tecnico_profissional;
+        }
+
+        if (is_array($area_itinerario)) {
+            $this->area_itinerario = $area_itinerario;
         }
     }
 
@@ -158,6 +190,30 @@ class clsModulesProfessorTurma extends Model
             if (is_numeric($this->turno_id)) {
                 $campos .= "{$gruda}turno_id";
                 $valores .= "{$gruda}'{$this->turno_id}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->data_inicial) && !empty($this->data_inicial)) {
+                $campos .= "{$gruda}data_inicial";
+                $valores .= "{$gruda}'{$this->data_inicial}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->data_fim) && !empty($this->data_fim)) {
+                $campos .= "{$gruda}data_fim";
+                $valores .= "{$gruda}'{$this->data_fim}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->leciona_itinerario_tecnico_profissional)) {
+                $campos .= "{$gruda}leciona_itinerario_tecnico_profissional";
+                $valores .= "{$gruda}'{$this->leciona_itinerario_tecnico_profissional}'";
+                $gruda = ', ';
+            }
+
+            if (is_array($this->area_itinerario)) {
+                $campos .= "{$gruda}area_itinerario";
+                $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->area_itinerario) . ' ';
                 $gruda = ', ';
             }
 
@@ -240,6 +296,36 @@ class clsModulesProfessorTurma extends Model
             } elseif (is_null($this->turno_id)) {
                 $set .= "{$gruda}turno_id = NULL";
                 $gruda = ', ';
+            }
+
+            if (is_numeric($this->leciona_itinerario_tecnico_profissional)) {
+                $set .= "{$gruda}leciona_itinerario_tecnico_profissional = '{$this->leciona_itinerario_tecnico_profissional}'";
+                $gruda = ', ';
+            } elseif (is_null($this->leciona_itinerario_tecnico_profissional)) {
+                $set .= "{$gruda}leciona_itinerario_tecnico_profissional = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_array($this->area_itinerario)) {
+                $set .= "{$gruda} area_itinerario = " . Portabilis_Utils_Database::arrayToPgArray($this->area_itinerario) . ' ';
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda} area_itinerario = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->data_inicial) && !empty($this->data_inicial)) {
+                $set .= "{$gruda}data_inicial = '{$this->data_inicial}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}data_inicial = NULL ";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->data_fim) && !empty($this->data_fim)) {
+                $set .= "{$gruda}data_fim = '{$this->data_fim}'";
+            } else {
+                $set .= "{$gruda}data_fim = NULL ";
             }
 
             $set .= "{$gruda}updated_at = CURRENT_TIMESTAMP";

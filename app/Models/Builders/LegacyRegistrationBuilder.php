@@ -4,7 +4,6 @@ namespace App\Models\Builders;
 
 use App\Models\RegistrationStatus;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
-use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
 class LegacyRegistrationBuilder extends LegacyBuilder
 {

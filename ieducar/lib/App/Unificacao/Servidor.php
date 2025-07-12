@@ -27,10 +27,6 @@ class App_Unificacao_Servidor extends App_Unificacao_Base
             'coluna' => 'ref_cod_servidor',
         ],
         [
-            'tabela' => 'pmieducar.servidor_formacao',
-            'coluna' => 'ref_cod_servidor',
-        ],
-        [
             'tabela' => 'pmieducar.servidor_afastamento',
             'coluna' => 'ref_cod_servidor',
         ],

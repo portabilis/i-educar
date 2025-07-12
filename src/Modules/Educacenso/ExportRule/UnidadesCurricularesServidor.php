@@ -30,6 +30,6 @@ class UnidadesCurricularesServidor implements EducacensoExportRule
 
         return
             !in_array($registro50->funcaoDocente, $funcoesValidas) ||
-            !in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $registro50->estruturaCurricular);
+            !in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $registro50->organizacaoCurricular);
     }
 }

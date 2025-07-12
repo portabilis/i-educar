@@ -20,12 +20,6 @@ class AddForeignKeysInPmieducarServidorTable extends Migration
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
 
-            $table->foreign('ref_cod_subnivel')
-                ->references('cod_subnivel')
-                ->on('pmieducar.subnivel')
-                ->onUpdate('restrict')
-                ->onDelete('restrict');
-
             $table->foreign('ref_cod_instituicao')
                 ->references('cod_instituicao')
                 ->on('pmieducar.instituicao')
@@ -74,7 +68,6 @@ class AddForeignKeysInPmieducarServidorTable extends Migration
     {
         Schema::table('pmieducar.servidor', function (Blueprint $table) {
             $table->dropForeign(['ref_idesco']);
-            $table->dropForeign(['ref_cod_subnivel']);
             $table->dropForeign(['ref_cod_instituicao']);
             $table->dropForeign(['instituicao_curso_superior_3']);
             $table->dropForeign(['instituicao_curso_superior_2']);

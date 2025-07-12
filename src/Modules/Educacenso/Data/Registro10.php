@@ -124,7 +124,7 @@ class Registro10 extends AbstractRegistro
             $data->numeroSalasUtilizadasForaPredio, // 91 Quantidade de salas de aula utilizadas pela escola fora do prédio escolar
             $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasClimatizadas : null, // 92 Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)
             $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasAcessibilidade : null, // 93	Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida
-            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasCantinhoLeitura : null, // 94 Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)
+            (($data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio) && $data->numeroSalasCantinhoLeitura > 0) ? $data->numeroSalasCantinhoLeitura : null, // 94 Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)
             $data->possuiAntenaParabolica() ?: 0, // 95	Antena parabólica
             $data->possuiComputadores() ?: 0, // 96	Computadores
             $data->possuiCopiadora() ?: 0, // 97 Copiadora

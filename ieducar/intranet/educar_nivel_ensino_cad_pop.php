@@ -101,15 +101,6 @@ return new class extends clsCadastro
 
     public function Excluir() {}
 
-    public function makeExtra()
-    {
-        if (!$_GET['ref_cod_instituicao']) {
-            return file_get_contents(__DIR__ . '/scripts/extra/educar-habilitacao-cad-pop.js');
-        }
-
-        return '';
-    }
-
     public function Formular()
     {
         $this->title = 'Nível Ensino';

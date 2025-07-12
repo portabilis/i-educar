@@ -17,7 +17,7 @@ Os requisitos que foram testados para utilizar a versão [2.10](https://github.c
 | [Composer](https://getcomposer.org/)                     | `2.8`   | `composer --version`       | Gerenciador de dependências |
 | [Nginx](https://www.nginx.com/)                          | `1.28`  | `nginx -v`                 | Servidor web                |
 | [Postgres](https://www.postgresql.org/)                  | `17`    | `psql --version`           | Banco de dados              |
-| [Redis](https://redis.io/)                               | `7`     | `redis-cli --version`      | Banco de dados              |
+| [Redis](https://redis.io/)                               | `8`     | `redis-cli --version`      | Banco de dados              |
 | [Git](https://git-scm.com/)                              | `2.49`  | `git --version`            | Controle de versão          |
 | [Ubuntu](https://ubuntu.com/)                            | `24.04` | `lsb_release -a`           | Sistema operacional         |
 | [Docker](https://www.docker.com/) `dev`                  | `28`    | `docker --version`         | Conteinerização             |
@@ -40,8 +40,7 @@ git checkout 2.9
 php artisan migrate
 ```
 
-Neste momento é necessário **fazer backup do seu banco de dados** Postgres versão 15, instalar a versão 16 e **fazer a
-restauração do banco de dados** na nova versão.
+> Neste momento é necessário **fazer backup do seu banco de dados** na versão atual e fazer e a migração para a nova versão versão.
 
 Atualize o código fonte:
 
@@ -74,7 +73,7 @@ ambiente para expor as portas dos containers. Você pode adicionar no seu arquiv
 |-------------------------|---------------------------|
 | `DOCKER_NGINX_PORT`     | Porta HTTP da aplicação   |
 | `DOCKER_NGINX_SSL_PORT` | Porta HTTPS da aplicação  |
-| `DOCKER_POSTGRES_PORT`  | Porta do banco de Dados   |
+| `DOCKER_POSTGRES_PORT`  | Porta do banco de dados   |
 | `DOCKER_REDIS_PORT`     | Porta do serviço de cache |
 
 Você também pode utilizar o arquivo `docker-compose.override.yml` para mais configurações.

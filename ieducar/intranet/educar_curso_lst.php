@@ -34,7 +34,7 @@ return new class extends clsListagem
 
     public $ato_poder_publico;
 
-    public $habilitacao;
+    public $habilitacao; // TODO: remover no futuro
 
     public $objetivo_curso;
 
