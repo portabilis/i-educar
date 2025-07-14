@@ -39,17 +39,20 @@ Clone o repositório:
 git clone git@github.com:portabilis/i-educar.git && cd i-educar
 ```
 
-Configura as variáveis de ambiente que desejar:
+Configure as variáveis de ambiente que desejar:
 
 ```bash
 cp .env.example .env
 ```
 
-Ajustar as permissões de arquivos e UID do host:
+**Evitar problemas de permissão dos arquivos**
 
-Ao utilizar Docker, os arquivos criados dentro do container (como `vendor/`, `storage/logs`, etc.) podem acabar sendo atribuídos ao usuário `root`, causando erros de permissão durante o desenvolvimento no host (ex: `Permission denied` ao escrever logs).
+Ao utilizar Docker, os arquivos criados dentro do container (como `vendor/`, `storage/logs`, etc.) podem acabar sendo 
+atribuídos ao usuário `root`, causando erros de permissão durante o desenvolvimento no host (ex: `Permission denied` ao
+escrever logs).
 
-Para evitar esse problema, o ambiente Docker do i-Educar permite configurar o **UID e GID do usuário do host** (por exemplo, `ieducar`) no momento do build da imagem.
+Para evitar esse problema, o ambiente Docker do i-Educar permite configurar o **UID e GID do usuário do host** (por 
+exemplo, `ieducar`) no momento do build da imagem.
 
 Esses valores devem ser definidos no seu arquivo `.env`, da seguinte forma:
 
