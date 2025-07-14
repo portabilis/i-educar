@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Unit\Services;
+use App\Services\AntropometriaService;
+
 class ValidaDadosAntropometricosTest extends PHPUnit\Framework\TestCase
 {
 
