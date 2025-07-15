@@ -59,9 +59,8 @@ return new class extends clsListagem
     {
         $this->titulo = 'Matrícula - Listagem';
 
-        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null : $val;
-        }
+        $this->ref_cod_aluno = request()->integer('ref_cod_aluno');
+        $this->ref_cod_escola = request()->integer('ref_cod_escola');
 
         if (!$this->ref_cod_aluno) {
             $this->simpleRedirect(url: 'educar_aluno_lst.php');
