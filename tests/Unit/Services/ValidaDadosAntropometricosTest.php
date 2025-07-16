@@ -1,9 +1,11 @@
 <?php
 
 namespace Tests\Unit\Services;
-use App\Services\AntropometriaService;
 
-class ValidaDadosAntropometricosTest extends PHPUnit\Framework\TestCase
+use App\Services\AntropometriaService;
+use Tests\TestCase;
+
+class ValidaDadosAntropometricosTest extends TestCase
 {
 
     public function test_calcula_o_imc_corretamente()
