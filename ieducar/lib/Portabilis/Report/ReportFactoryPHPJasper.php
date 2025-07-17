@@ -36,12 +36,28 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      */
     public function logoPath()
     {
-        if (!$this->settings['logo_file_name']) {
+        $logo = $this->settings['logo_file_name'];
+
+        if (!$logo) {
             throw new Exception('No report.logo_file_name defined in configurations!');
         }
 
+        if (filter_var($logo, FILTER_VALIDATE_URL)) {
+            $tmpFile = sys_get_temp_dir() . '/logo_' . md5($logo) . '.png';
+
+            if (!file_exists($tmpFile)) {
+                $imageData = file_get_contents($logo);
+                if ($imageData === false) {
+                    throw new Exception("Erro ao baixar logo da URL: $logo");
+                }
+                file_put_contents($tmpFile, $imageData);
+            }
+
+            return $tmpFile;
+        }
+
         $rootPath = dirname(dirname(dirname(dirname(__FILE__))));
-        $filePath = $rootPath . "/modules/Reports/ReportLogos/{$this->settings['logo_file_name']}";
+        $filePath = $rootPath . "/modules/Reports/ReportLogos/{$logo}";
 
         if (!file_exists($filePath)) {
             throw new CoreExt_Exception("Report logo '{$this->settings['logo_file_name']}' not found in path '$filePath'");
