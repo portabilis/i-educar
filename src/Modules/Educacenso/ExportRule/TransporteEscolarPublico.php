@@ -23,7 +23,7 @@ class TransporteEscolarPublico implements EducacensoExportRule
         if ($registro60->tipoAtendimentoTurma != TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO ||
             !in_array($registro60->tipoMediacaoTurma, $arrayTipoMediacao) ||
             $registro60->paisResidenciaAluno != PaisResidencia::BRASIL) {
-            $registro60->transportePublico = null;
+            $registro60->transportePublico;
         }
 
         return $registro60;
