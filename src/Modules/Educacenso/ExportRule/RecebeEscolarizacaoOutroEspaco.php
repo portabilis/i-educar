@@ -21,7 +21,7 @@ class RecebeEscolarizacaoOutroEspaco implements EducacensoExportRule
                 $registro60->localFuncionamentoDiferenciadoTurma != \App_Model_LocalFuncionamentoDiferenciado::SALA_ANEXA
             )
         ) {
-            $registro60->recebeEscolarizacaoOutroEspacao = null;
+            $registro60->recebeEscolarizacaoOutroEspacao;
         }
 
         return $registro60;
