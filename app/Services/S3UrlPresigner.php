@@ -21,6 +21,8 @@ class S3UrlPresigner
     {
         $url = preg_replace('/\?.*/', '', $url);
 
-        return implode('/', array_slice(explode('/', $url), 3));
+        $path = implode('/', array_slice(explode('/', $url), 3));
+
+        return urldecode(urldecode($path));
     }
 }
