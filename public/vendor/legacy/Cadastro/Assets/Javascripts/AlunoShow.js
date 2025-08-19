@@ -304,8 +304,10 @@ var possui_moradia = $j('#fmoradia').length>0;
 
 var participa_projetos = $j('#fprojeto').length>0;
 
+var possui_dados_antropometricos = $j('#fantropometrico').length>0;
+
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab2"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab2"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab2"> <span class="tabText">Projetos</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab2"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab2"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab2"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab2"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab2"> <span class="tabText">Projetos</span></div></li><li><div id="tab6" class="alunoTab2"> <span class="tabText">Dados Antropom\u00e9tricos</span></div></li></ul></div>');
 $j('td .formdktd b').remove();
 $j('#tab1').addClass('alunoTab-active2').removeClass('alunoTab2');
 var linha_inicial_fmedica = 0;
@@ -385,6 +387,25 @@ if(participa_projetos){
   });
 }
 
+if(possui_dados_antropometricos){
+  // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
+  $j('#fantropometrico').closest('tr').attr('id','tfantropometrico');
+
+  // Pega o número dessa linha
+  linha_inicial_fantropometrico = $j('#tfantropometrico').index() + 1;
+  linha_final_fantropometrico = $j('#ffantropometrico').closest('tr').index() + 1;
+
+  // hide nos campos das outras abas (deixando só os campos da primeira aba)
+  $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
+    if (index>=linha_inicial_fantropometrico){
+      if (row.id!='stop')
+        row.hide();
+      else
+        return false;
+    }
+  });
+}
+
 jQuery(document).ready(function () {
   jQuery('.rotate-picture').click(function () {
     jQuery.post('/api/students/' + jQuery('#aluno_id').val() + '/rotate-picture', {
@@ -410,7 +431,7 @@ $j(document).ready(function() {
         $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
         $j('#tab1').toggleClass('alunoTab2 alunoTab-active2')
         $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
-          if (index>= (linha_inicial_fmedica || linha_inicial_funiforme)){
+          if (index>= (linha_inicial_fmedica || linha_inicial_funiforme || linha_inicial_fantropometrico)){
             if (row.id!='stop')
               row.hide();
             else
@@ -501,6 +522,27 @@ $j(document).ready(function() {
             });
           }else
             alert('Aluno n\u00e3o participa de projetos.');
+
+        });
+
+      // Dados Antropométricos
+      $j('#tab6').click(
+        function(){
+          if (possui_dados_antropometricos){
+            $j('.alunoTab-active2').toggleClass('alunoTab-active2 alunoTab2');
+            $j('#tab6').toggleClass('alunoTab2 alunoTab-active2')
+            $j('.tableDetalhe >tbody  > tr').each(function(index, row) {
+              if (row.id!='stop'){
+                if (index>=linha_inicial_fantropometrico && index<linha_final_fantropometrico){
+                  row.show();
+                }else if (index>1){
+                  row.hide();
+                }
+              }else
+                return false;
+            });
+          }else
+            alert('Dados antropométricos e demográficos não foram adicionados ainda.');
 
         });
 
