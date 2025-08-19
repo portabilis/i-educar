@@ -7,10 +7,12 @@ use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
+use App\Models\LegacyStudentHistoricalHeightWeight;
 use App\Models\PersonHasPlace;
 use App\Models\Religion;
 use App\Models\TransportationProvider;
 use App\Models\UniformDistribution;
+use App\Services\AnthropometricService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -790,7 +792,126 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nome', $reg['responsavel']]);
             $this->addDetalhe(detalhe: ['Parentesco', $reg['responsavel_parentesco']]);
             $this->addDetalhe(detalhe: ['Telefone', $reg['responsavel_parentesco_telefone']]);
-            $this->addDetalhe(detalhe: ['<span id="ffmedica"></span>Celular', $reg['responsavel_parentesco_celular']]);
+            // $this->addDetalhe(detalhe: ['<span id="ffmedica"></span>Celular', $reg['responsavel_parentesco_celular']]);
+            $this->addDetalhe(detalhe: ['Celular', $reg['responsavel_parentesco_celular']]);
+
+            try {
+
+                $latestAnthropometricData = LegacyStudentHistoricalHeightWeight::where('ref_cod_aluno', $this->cod_aluno)
+
+                    ->orderBy('data_historico', 'desc')
+
+                    ->first();
+
+                if ($latestAnthropometricData) {
+
+                    $this->addDetalhe(detalhe: ['Dados Antropométricos e Demográficos']);
+
+                    $this->addDetalhe(detalhe: ['Data da avaliação', $latestAnthropometricData->data_historico->format('d/m/Y')]);
+
+                    // Normalizar altura para centímetros
+
+                    $altura_original = (float) $latestAnthropometricData->altura;
+
+                    $altura_cm = $altura_original;
+
+                    $altura_display = '';
+
+                    if ($altura_original < 10) {
+
+                        // Se menor que 10, provavelmente está em metros, converter para cm
+
+                        $altura_cm = $altura_original * 100;
+
+                        $altura_display = number_format($altura_original, 2) . ' m (' . number_format($altura_cm, 0) . ' cm)';
+
+                    } else {
+
+                        // Já está em centímetros
+
+                        $altura_display = number_format($altura_cm, 0) . ' cm';
+
+                    }
+
+                    $this->addDetalhe(detalhe: ['Altura', $altura_display]);
+
+                    $this->addDetalhe(detalhe: ['Peso', $latestAnthropometricData->peso . ' kg']);
+
+                    if ($latestAnthropometricData->circunferencia_cintura !== null && $latestAnthropometricData->circunferencia_cintura !== '') {
+
+                        $this->addDetalhe(detalhe: ['Circunferência da cintura', $latestAnthropometricData->circunferencia_cintura . ' cm']);
+
+                    }
+
+                    // Calcular e exibir IMC e classificações
+
+                    $anthropometricService = new AnthropometricService;
+
+                    // Obter dados do estudante para idade e sexo
+
+                    $obj_fisica = new clsFisica(idpes: $this->ref_idpes);
+
+                    $det_fisica = $obj_fisica->detalhe();
+
+                    if ($det_fisica && $det_fisica['data_nasc'] && $det_fisica['sexo']) {
+
+                        $avaliacao = $anthropometricService->obterAvaliacaoCompleta(
+
+                            peso: (float) $latestAnthropometricData->peso,
+
+                            altura: $altura_cm,
+
+                            circunferenciaCintura: $latestAnthropometricData->circunferencia_cintura ? (float) $latestAnthropometricData->circunferencia_cintura : null,
+
+                            dataNascimento: $det_fisica['data_nasc'],
+
+                            sexo: $det_fisica['sexo'],
+
+                            dataAvaliacao: $latestAnthropometricData->data_historico
+
+                        );
+
+                        if ($avaliacao['imc']) {
+
+                            $this->addDetalhe(detalhe: ['IMC', number_format($avaliacao['imc'], 2, ',', '.') . ' kg/m²']);
+
+                            if ($avaliacao['idade_anos'] >= 18) {
+
+                                $this->addDetalhe(detalhe: ['Classificação do IMC (Adulto)', $avaliacao['classificacao_imc']]);
+
+                            } else {
+
+                                $this->addDetalhe(detalhe: ['Classificação do IMC (Criança/Adolescente)', $avaliacao['classificacao_imc']]);
+
+                                if (isset($avaliacao['escore_z_imc'])) {
+
+                                    $this->addDetalhe(detalhe: ['Escore Z do IMC', number_format($avaliacao['escore_z_imc'], 2, ',', '.')]);
+
+                                }
+
+                            }
+
+                        }
+
+                        $waist_risk_display = '';
+
+                        if ($latestAnthropometricData->circunferencia_cintura !== null && $latestAnthropometricData->circunferencia_cintura !== '' && isset($avaliacao['risco_cintura'])) {
+
+                            $waist_risk_display = $avaliacao['risco_cintura'];
+
+                        }
+
+                        $this->addDetalhe(detalhe: ['<span id="ffmedica"></span>Risco da circunferência da cintura', $waist_risk_display]);
+
+                    }
+
+                }
+
+            } catch (Exception $e) {
+
+                $this->addDetalhe(detalhe: ['<span id="ffmedica"></span>']);
+
+            }
         }
 
         $uniformDistribution = UniformDistribution::where('student_id', $this->cod_aluno)

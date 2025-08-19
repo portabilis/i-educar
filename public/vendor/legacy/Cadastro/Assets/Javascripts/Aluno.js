@@ -16,6 +16,7 @@ $j("#parentesco_um").closest("tr").show();
 
 $j('input[id^="historico_altura"]').mask("0.00", {reverse: true});
 $j('input[id^="historico_peso"]').mask("000.00", {reverse: true});
+$j('input[id^="circunferencia_cintura"]').mask("#0.0", {translation: {'#': {pattern: /[0-9]/, optional: true}}});
 
 $j("#autorizado_um").change(abriCampoDois);
 $j("#autorizado_dois").change(abriCampoTres);
@@ -610,6 +611,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j("#data_historico\\[" + i + "\\]").val(object.data_historico);
     $j("#historico_altura\\[" + i + "\\]").val(object.altura);
     $j("#historico_peso\\[" + i + "\\]").val(object.peso);
+    $j("#circunferencia_cintura\\[" + i + "\\]").val(object.circunferencia_cintura);
   });
 
   $j.each(dataResponse.projetos, function (i, object) {

@@ -1125,7 +1125,7 @@ class AlunoController extends ApiCoreController
     protected function loadHistoricoAlturaPeso($alunoId)
     {
         $sql = '
-            SELECT to_char(data_historico, \'dd/mm/yyyy\') AS data_historico, altura, peso
+            SELECT to_char(data_historico, \'dd/mm/yyyy\') AS data_historico, altura, peso, circunferencia_cintura
             FROM pmieducar.aluno_historico_altura_peso
             WHERE ref_cod_aluno = $1
         ';
@@ -1140,6 +1140,7 @@ class AlunoController extends ApiCoreController
                 'data_historico' => $alturaPeso['data_historico'],
                 'altura' => $alturaPeso['altura'],
                 'peso' => $alturaPeso['peso'],
+                'circunferencia_cintura' => $alturaPeso['circunferencia_cintura'],
             ];
         }
 
@@ -1645,12 +1646,14 @@ class AlunoController extends ApiCoreController
             $data_historico = Portabilis_Date_Utils::brToPgSQL($value);
             $altura = $this->getRequest()->historico_altura[$key];
             $peso = $this->getRequest()->historico_peso[$key];
+            $circunferencia_cintura = $this->getRequest()->circunferencia_cintura[$key] ?? null;
 
             $obj = new LegacyStudentHistoricalHeightWeight;
             $obj->ref_cod_aluno = $alunoId;
             $obj->data_historico = $data_historico;
             $obj->altura = $altura;
             $obj->peso = $peso;
+            $obj->circunferencia_cintura = $circunferencia_cintura;
 
             if (!$obj->save()) {
                 $this->messenger->append('Erro ao cadastrar histórico de altura e peso.');

@@ -26,6 +26,7 @@ class LegacyStudentHistoricalHeightWeight extends Model
         'data_historico',
         'altura',
         'peso',
+        'circunferencia_cintura',
     ];
 
     /**

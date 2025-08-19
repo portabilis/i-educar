@@ -854,13 +854,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $this->inputsHelper()->hidden('url_laudo_medico_obrigatorio');
         }
 
-        $this->campoTabelaInicio('historico_altura_peso', 'Histórico de altura e peso', ['Data', 'Altura (m)', 'Peso (kg)']);
+        $this->campoTabelaInicio('historico_altura_peso', 'Histórico de altura e peso', ['Data', 'Altura (m)', 'Peso (kg)', 'Circunferência da cintura (cm)']);
 
         $this->inputsHelper()->date('data_historico');
 
         $this->inputsHelper()->numeric('historico_altura');
 
         $this->inputsHelper()->numeric('historico_peso');
+
+        $this->inputsHelper()->numeric('circunferencia_cintura');
 
         $this->campoTabelaFim();
 
