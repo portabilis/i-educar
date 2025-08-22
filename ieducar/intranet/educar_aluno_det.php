@@ -848,25 +848,26 @@ return new class extends clsDetalhe
                         $this->addDetalhe(detalhe: ['IMC', number_format($avaliacao['imc'], 2, ',', '.') . ' kg/m²']);
 
                         if ($avaliacao['idade_anos'] >= 18) {
-                            $this->addDetalhe(detalhe: ['Classificação do IMC (Adulto)', $avaliacao['classificacao_imc']]);
+                            $classificacao_label = $avaliacao['imc_classificacao']['label'] ?? 'Não disponível';
+                            $this->addDetalhe(detalhe: ['Classificação do IMC (Adulto)', $classificacao_label]);
                         } else {
-                            $this->addDetalhe(detalhe: ['Classificação do IMC (Criança/Adolescente)', $avaliacao['classificacao_imc']]);
+                            $classificacao_label = $avaliacao['imc_classificacao']['label'] ?? 'Não disponível';
+                            $this->addDetalhe(detalhe: ['Classificação do IMC (Criança/Adolescente)', $classificacao_label]);
 
-                            if (isset($avaliacao['escore_z_imc'])) {
-                                $this->addDetalhe(detalhe: ['Escore Z do IMC', number_format($avaliacao['escore_z_imc'], 2, ',', '.')]);
+                            if (isset($avaliacao['imc_zscore'])) {
+                                $this->addDetalhe(detalhe: ['Escore Z do IMC', number_format($avaliacao['imc_zscore'], 2, ',', '.')]);
                             }
                         }
                     }
 
-                    $waist_risk_display = '';
-                    if ($latestAnthropometricData->circunferencia_cintura !== null && $latestAnthropometricData->circunferencia_cintura !== '' && isset($avaliacao['risco_cintura'])) {
-                        $waist_risk_display = $avaliacao['risco_cintura'];
+                    // Risco da circunferência da cintura
+                    if ($latestAnthropometricData->circunferencia_cintura !== null && $latestAnthropometricData->circunferencia_cintura !== '' && isset($avaliacao['cintura_classificacao'])) {
+                        $waist_risk_label = $avaliacao['cintura_classificacao']['label'] ?? 'Não disponível';
+                        $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>Risco da circunferência da cintura', $waist_risk_label]);
+                    } else {
+                        $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>Risco da circunferência da cintura', 'Não disponível']);
                     }
-
-                    $this->addDetalhe(detalhe: ['Risco da circunferência da cintura', $waist_risk_display]);
                 }
-
-                $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>']);
             }
         } catch (Exception $e) {
             // Em caso de erro, adicionar marcador vazio para evitar problemas no JavaScript
