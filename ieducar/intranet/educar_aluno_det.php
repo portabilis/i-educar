@@ -792,7 +792,6 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nome', $reg['responsavel']]);
             $this->addDetalhe(detalhe: ['Parentesco', $reg['responsavel_parentesco']]);
             $this->addDetalhe(detalhe: ['Telefone', $reg['responsavel_parentesco_telefone']]);
-            // $this->addDetalhe(detalhe: ['<span id="ffmedica"></span>Celular', $reg['responsavel_parentesco_celular']]);
             $this->addDetalhe(detalhe: ['<span id="ffmedica"></span>Celular', $reg['responsavel_parentesco_celular']]);
         }
 
