@@ -6,6 +6,6 @@ class AnthropometricPercentileGirlsSeeder extends AnthropometricPercentileSeeder
 {
     public function run()
     {
-        AnthropometricPercentileSeeder::forGender('F')->run();
+        AnthropometricPercentileSeeder::forGender('F')->setCommand($this->command)->runSeeder();
     }
 }

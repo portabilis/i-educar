@@ -49,9 +49,9 @@ abstract class AbstractAnthropometricSeeder extends XlsxSeeder
     abstract protected function getSpecificFields(array $data): array;
 
     /**
-     * Unified run method
+     * Unified seeder method
      */
-    public function run()
+    public function runSeeder()
     {
         $this->command->info("Carregando dados {$this->typeDescription} para {$this->getGenderDescription()}...");
 
@@ -61,7 +61,7 @@ abstract class AbstractAnthropometricSeeder extends XlsxSeeder
         }
 
         try {
-            $this->seedFromXlsx();
+            parent::run(); // Call XlsxSeeder's run method
             $this->command->info("Dados {$this->typeDescription} carregados com sucesso para {$this->getGenderDescription()}!");
         } catch (\Exception $e) {
             $this->command->error("Erro ao carregar dados {$this->typeDescription} para {$this->getGenderDescription()}: " . $e->getMessage());

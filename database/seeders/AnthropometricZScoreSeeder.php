@@ -10,6 +10,18 @@ class AnthropometricZScoreSeeder extends AbstractAnthropometricSeeder
     protected string $typeDescription = 'LMS';
 
     /**
+     * Run both boys and girls seeders
+     */
+    public function run()
+    {
+        // Seed boys data
+        self::forGender('M')->setCommand($this->command)->runSeeder();
+        
+        // Seed girls data  
+        self::forGender('F')->setCommand($this->command)->runSeeder();
+    }
+
+    /**
      * Create seeder for specific gender
      */
     public static function forGender(string $gender): self
@@ -18,6 +30,15 @@ class AnthropometricZScoreSeeder extends AbstractAnthropometricSeeder
         $instance->gender = strtoupper($gender);
         $instance->filename = $instance->getFilenameForGender($gender);
         return $instance;
+    }
+
+    /**
+     * Set command instance for output
+     */
+    public function setCommand($command): self
+    {
+        $this->command = $command;
+        return $this;
     }
 
     /**

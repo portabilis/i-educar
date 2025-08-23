@@ -6,6 +6,6 @@ class AnthropometricZScoreBoysSeeder extends AnthropometricZScoreSeeder
 {
     public function run()
     {
-        AnthropometricZScoreSeeder::forGender('M')->run();
+        AnthropometricZScoreSeeder::forGender('M')->setCommand($this->command)->runSeeder();
     }
 }
