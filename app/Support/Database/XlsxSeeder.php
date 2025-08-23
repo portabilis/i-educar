@@ -81,23 +81,23 @@ abstract class XlsxSeeder extends Seeder
     {
         $spreadsheet = IOFactory::load($this->getXlsxFilename());
         $worksheet = $spreadsheet->getSheet($this->sheetIndex);
-        
+
         // Get header from first row
         $header = $this->getHeaderRow($worksheet);
-        
+
         // Get highest row number
         $highestRow = $worksheet->getHighestRow();
-        
+
         for ($row = $this->startRow; $row <= $highestRow; $row++) {
             $data = [];
-            
+
             for ($col = 'A'; $col <= $worksheet->getHighestColumn(); $col++) {
                 $cellValue = $worksheet->getCell($col . $row)->getCalculatedValue();
                 $data[] = $cellValue === '' ? null : $cellValue;
             }
-            
+
             // Only yield if row has data
-            if (!empty(array_filter($data, fn($value) => $value !== null))) {
+            if (!empty(array_filter($data, fn ($value) => $value !== null))) {
                 yield array_combine($header, $data);
             }
         }
@@ -105,29 +105,23 @@ abstract class XlsxSeeder extends Seeder
 
     /**
      * Get header row from worksheet.
-     *
-     * @param Worksheet $worksheet
-     * @return array
      */
     protected function getHeaderRow(Worksheet $worksheet): array
     {
         $header = [];
         $headerRow = $this->startRow - 1; // Header is usually one row before start
-        
+
         for ($col = 'A'; $col <= $worksheet->getHighestColumn(); $col++) {
             $cellValue = $worksheet->getCell($col . $headerRow)->getCalculatedValue();
             $header[] = $cellValue;
         }
-        
+
         return $header;
     }
 
     /**
      * Transform data before saving.
      * Override this method to customize data transformation.
-     *
-     * @param array $data
-     * @return array
      */
     protected function transformData(array $data): array
     {

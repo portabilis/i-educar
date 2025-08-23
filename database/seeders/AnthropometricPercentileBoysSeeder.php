@@ -8,15 +8,13 @@ use App\Support\Database\XlsxSeeder;
 class AnthropometricPercentileBoysSeeder extends XlsxSeeder
 {
     protected $filename = __DIR__ . '/../xls/anthro/bmi-boys-perc-who2007-exp.xlsx';
+
     protected $model = AnthropometricPercentile::class;
 
     /**
      * Transform XLSX data to model format for percentiles.
-     * 
-     * Expected structure: Month, L, M, S, P01, P1, P3, P5, P10, P15, P25, P50, P75, P85, P90, P95, P97, P99, P999
      *
-     * @param array $data
-     * @return array
+     * Expected structure: Month, L, M, S, P01, P1, P3, P5, P10, P15, P25, P50, P75, P85, P90, P95, P97, P99, P999
      */
     protected function transformData(array $data): array
     {
@@ -54,9 +52,10 @@ class AnthropometricPercentileBoysSeeder extends XlsxSeeder
     public function run()
     {
         $this->command->info('Carregando dados de percentis para meninos (boys)...');
-        
+
         if (!file_exists($this->filename)) {
             $this->command->warn("Arquivo não encontrado: {$this->filename}");
+
             return;
         }
 

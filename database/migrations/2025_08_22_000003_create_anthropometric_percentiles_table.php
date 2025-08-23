@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('l_value', 10, 6);
             $table->decimal('m_value', 10, 6);
             $table->decimal('s_value', 10, 6);
-            
+
             // Percentiles data (from percentile files: bmi-boys-perc-who2007-exp.xlsx, bmi-girls-perc-who2007-exp.xlsx)
             $table->decimal('p01', 10, 6)->nullable();
             $table->decimal('p1', 10, 6)->nullable();
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->decimal('p999', 10, 6)->nullable();
             $table->string('source')->default('WHO_2007');
             $table->timestamps();
-            
+
             $table->unique(['age_months', 'gender', 'source'], 'anthropometric_percentiles_unique');
             $table->index(['age_months', 'gender'], 'anthropometric_percentiles_age_gender_index');
             $table->index('source', 'anthropometric_percentiles_source_index');

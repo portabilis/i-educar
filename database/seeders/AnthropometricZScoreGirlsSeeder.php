@@ -8,15 +8,13 @@ use App\Support\Database\XlsxSeeder;
 class AnthropometricZScoreGirlsSeeder extends XlsxSeeder
 {
     protected $filename = __DIR__ . '/../xls/anthro/bmi-girls-z-who-2007-exp.xlsx';
+
     protected $model = AnthropometricZScore::class;
 
     /**
      * Transform XLSX data to model format.
-     * 
-     * Expected structure: Month, L, M, S, SD4neg, SD3neg, SD2neg, SD1neg, SD0, SD1, SD2, SD3, SD4
      *
-     * @param array $data
-     * @return array
+     * Expected structure: Month, L, M, S, SD4neg, SD3neg, SD2neg, SD1neg, SD0, SD1, SD2, SD3, SD4
      */
     protected function transformData(array $data): array
     {
@@ -47,9 +45,10 @@ class AnthropometricZScoreGirlsSeeder extends XlsxSeeder
     public function run()
     {
         $this->command->info('Carregando dados LMS para meninas (girls)...');
-        
+
         if (!file_exists($this->filename)) {
             $this->command->warn("Arquivo não encontrado: {$this->filename}");
+
             return;
         }
 

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 class AnthropometricZScore extends Model
 {
     protected $table = 'pmieducar.anthropometric_z_scores';
-    
+
     protected $fillable = [
         'age_months',
         'gender',
@@ -25,7 +25,7 @@ class AnthropometricZScore extends Model
         'sd2',
         'sd3',
         'sd4',
-        'source'
+        'source',
     ];
 
     protected $casts = [
@@ -51,9 +51,9 @@ class AnthropometricZScore extends Model
     public static function getForAge(int $ageMonths, string $gender, string $source = 'WHO_2007'): ?self
     {
         return static::where('age_months', $ageMonths)
-                    ->where('gender', strtoupper($gender))
-                    ->where('source', $source)
-                    ->first();
+            ->where('gender', strtoupper($gender))
+            ->where('source', $source)
+            ->first();
     }
 
     /**
@@ -62,12 +62,12 @@ class AnthropometricZScore extends Model
     public static function getAllGroupedForCache(string $source = 'WHO_2007'): array
     {
         $cacheKey = "anthropometric_z_scores_data_{$source}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($source) {
             $data = static::where('source', $source)
-                         ->orderBy('age_months')
-                         ->get();
-            
+                ->orderBy('age_months')
+                ->get();
+
             $grouped = [];
             foreach ($data as $item) {
                 $grouped[$item->age_months][$item->gender] = [
@@ -76,7 +76,7 @@ class AnthropometricZScore extends Model
                     'S' => (float) $item->s_value,
                 ];
             }
-            
+
             return $grouped;
         });
     }
@@ -87,34 +87,34 @@ class AnthropometricZScore extends Model
     public static function getForInterpolation(int $ageMonths, string $gender, string $source = 'WHO_2007'): array
     {
         $gender = strtoupper($gender);
-        
+
         // Busca a idade exata
         $exact = static::getForAge($ageMonths, $gender, $source);
         if ($exact) {
             return [
                 'exact' => $exact,
                 'lower' => null,
-                'upper' => null
+                'upper' => null,
             ];
         }
-        
+
         // Busca idades para interpolação
         $lower = static::where('age_months', '<', $ageMonths)
-                      ->where('gender', $gender)
-                      ->where('source', $source)
-                      ->orderBy('age_months', 'desc')
-                      ->first();
-                      
+            ->where('gender', $gender)
+            ->where('source', $source)
+            ->orderBy('age_months', 'desc')
+            ->first();
+
         $upper = static::where('age_months', '>', $ageMonths)
-                      ->where('gender', $gender)
-                      ->where('source', $source)
-                      ->orderBy('age_months', 'asc')
-                      ->first();
-        
+            ->where('gender', $gender)
+            ->where('source', $source)
+            ->orderBy('age_months', 'asc')
+            ->first();
+
         return [
             'exact' => null,
             'lower' => $lower,
-            'upper' => $upper
+            'upper' => $upper,
         ];
     }
 
@@ -124,7 +124,7 @@ class AnthropometricZScore extends Model
     public static function getInterpolatedLMS(int $ageMonths, string $gender, string $source = 'WHO_2007'): ?array
     {
         $data = static::getForInterpolation($ageMonths, $gender, $source);
-        
+
         // Se tem dados exatos
         if ($data['exact']) {
             return [
@@ -133,21 +133,21 @@ class AnthropometricZScore extends Model
                 'S' => (float) $data['exact']->s_value,
             ];
         }
-        
+
         // Se tem dados para interpolação
         if ($data['lower'] && $data['upper']) {
             $lower = $data['lower'];
             $upper = $data['upper'];
-            
+
             $t = ($ageMonths - $lower->age_months) / ($upper->age_months - $lower->age_months);
-            
+
             return [
                 'L' => (float) $lower->l_value + ((float) $upper->l_value - (float) $lower->l_value) * $t,
                 'M' => (float) $lower->m_value + ((float) $upper->m_value - (float) $lower->m_value) * $t,
                 'S' => (float) $lower->s_value + ((float) $upper->s_value - (float) $lower->s_value) * $t,
             ];
         }
-        
+
         // Se só tem um lado, usa extrapolação
         $ref = $data['lower'] ?: $data['upper'];
         if ($ref) {
@@ -157,7 +157,7 @@ class AnthropometricZScore extends Model
                 'S' => (float) $ref->s_value,
             ];
         }
-        
+
         return null;
     }
 }

@@ -980,11 +980,11 @@ return new class extends clsDetalhe
 
         $this->url_cancelar = 'educar_aluno_lst.php';
         $this->largura = '100%';
-        
+
         // Garantir que os valores existam para o JavaScript
         $escola_id = $registro['ref_cod_escola'] ?? '';
         $aluno_id = $registro['cod_aluno'] ?? $this->cod_aluno;
-        
+
         $this->addDetalhe(detalhe: "<input type='hidden' id='escola_id' name='escola_id' value='{$escola_id}' />");
         $this->addDetalhe(detalhe: "<input type='hidden' id='aluno_id' name='aluno_id' value='{$aluno_id}' />");
         $mostraDependencia = config(key: 'legacy.app.matricula.dependencia');
@@ -1044,13 +1044,13 @@ return new class extends clsDetalhe
 
             if ($anthropometricData->isNotEmpty()) {
                 $this->addDetalhe(['<span id="fantropometrico"></span>Dados Antropométricos e Demográficos']);
-                
+
                 $anthropometricService = new AnthropometricService;
                 $anthropometricService->carregarReferenciasDoBanco();
                 $hasClassificationData = $anthropometricService->isUsingDatabaseData();
-                
+
                 $tabela = $this->montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica);
-                
+
                 $this->addDetalhe(['<span id="ffantropometrico"></span>Histórico Antropométrico', $tabela]);
             }
         } catch (Exception $e) {
@@ -1065,16 +1065,16 @@ return new class extends clsDetalhe
     {
         $tabela = $this->gerarCabecalhoTabela($hasClassificationData);
         $tabela .= '<tbody>';
-        
+
         $cor = '#f5f9fd';
         foreach ($anthropometricData as $registro) {
             $cor = $cor == '#f5f9fd' ? '#ffffff' : '#f5f9fd';
             $tabela .= $this->gerarLinhaTabela($registro, $anthropometricService, $hasClassificationData, $det_fisica, $cor);
         }
-        
+
         $tabela .= '</tbody></table>';
         $tabela .= $this->gerarNotaExplicativa($hasClassificationData);
-        
+
         return $tabela;
     }
 
@@ -1085,30 +1085,31 @@ return new class extends clsDetalhe
     {
         $html = '<table border="1" width="100%" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
         $html .= '<thead><tr style="background-color: #ccdce6; font-weight: bold; text-align: center;">';
-        
+
         $colunas = [
             ['style' => 'width: 80px;', 'label' => 'Data'],
             ['style' => 'width: 60px;', 'label' => 'Peso<br>(kg)'],
             ['style' => 'width: 60px;', 'label' => 'Altura<br>(cm)'],
-            ['style' => 'width: 70px;', 'label' => 'IMC<br>(kg/m²)']
+            ['style' => 'width: 70px;', 'label' => 'IMC<br>(kg/m²)'],
         ];
-        
+
         foreach ($colunas as $col) {
             $html .= "<td style=\"{$col['style']}\">{$col['label']}</td>";
         }
-        
+
         if ($hasClassificationData) {
             $html .= '<td style="min-width: 120px;">Classificação</td>';
             $html .= '<td style="width: 70px;">Z-Score</td>';
         }
-        
+
         $html .= '<td style="width: 60px;">Cintura<br>(cm)</td>';
-        
+
         if ($hasClassificationData) {
             $html .= '<td style="min-width: 140px;">Risco Cintura</td>';
         }
-        
+
         $html .= '</tr></thead>';
+
         return $html;
     }
 
@@ -1119,25 +1120,25 @@ return new class extends clsDetalhe
     {
         $altura_cm = $this->normalizarAltura($registro->altura);
         $altura_display = $this->formatarAltura($registro->altura, $altura_cm);
-        
+
         $avaliacao = null;
         if ($hasClassificationData) {
             $avaliacao = $anthropometricService->obterAvaliacaoCompleta(
-                peso: (float)$registro->peso,
+                peso: (float) $registro->peso,
                 altura: $altura_cm,
-                circunferenciaCintura: $registro->circunferencia_cintura ? (float)$registro->circunferencia_cintura : null,
+                circunferenciaCintura: $registro->circunferencia_cintura ? (float) $registro->circunferencia_cintura : null,
                 dataNascimento: $det_fisica['data_nasc'],
                 sexo: $det_fisica['sexo'],
                 dataAvaliacao: $registro->data_historico
             );
         }
-        
+
         $html = sprintf('<tr style="background-color: %s; text-align: center;">', $cor);
         $html .= $this->gerarCelulasDadosBasicos($registro, $altura_display);
         $html .= $this->gerarCelulasClassificacao($avaliacao, $hasClassificationData, $altura_cm, $registro);
         $html .= $this->gerarCelulaCintura($registro, $avaliacao, $hasClassificationData);
         $html .= '</tr>';
-        
+
         return $html;
     }
 
@@ -1147,6 +1148,7 @@ return new class extends clsDetalhe
     private function normalizarAltura($altura)
     {
         $altura_original = (float) $altura;
+
         return $altura_original < 10 ? $altura_original * 100 : $altura_original;
     }
 
@@ -1156,8 +1158,9 @@ return new class extends clsDetalhe
     private function formatarAltura($altura, $altura_cm)
     {
         $altura_original = (float) $altura;
-        return $altura_original < 10 
-            ? number_format($altura_original, 2) . 'm' 
+
+        return $altura_original < 10
+            ? number_format($altura_original, 2) . 'm'
             : number_format($altura_cm, 0) . 'cm';
     }
 
@@ -1167,8 +1170,9 @@ return new class extends clsDetalhe
     private function gerarCelulasDadosBasicos($registro, $altura_display)
     {
         $html = '<td style="white-space: nowrap;">' . $registro->data_historico->format('d/m/y') . '</td>';
-        $html .= '<td>' . number_format((float)$registro->peso, 1, ',', '.') . '</td>';
+        $html .= '<td>' . number_format((float) $registro->peso, 1, ',', '.') . '</td>';
         $html .= '<td>' . $altura_display . '</td>';
+
         return $html;
     }
 
@@ -1178,23 +1182,23 @@ return new class extends clsDetalhe
     private function gerarCelulasClassificacao($avaliacao, $hasClassificationData, $altura_cm, $registro)
     {
         $html = '';
-        
+
         if ($avaliacao) {
             $html .= '<td>' . number_format($avaliacao['imc'], 2, ',', '.') . '</td>';
-            
+
             $classificacao = $this->obterClassificacao($avaliacao);
             $html .= '<td style="font-size: 0.9em;">' . $classificacao . '</td>';
-            
+
             $zscore = isset($avaliacao['imc_zscore']) ? number_format($avaliacao['imc_zscore'], 2, ',', '.') : 'N/A';
             $html .= '<td>' . $zscore . '</td>';
         } else {
-            $imc_simples = (float)$registro->peso / (($altura_cm/100) * ($altura_cm/100));
+            $imc_simples = (float) $registro->peso / (($altura_cm / 100) * ($altura_cm / 100));
             $html .= '<td>' . number_format($imc_simples, 2, ',', '.') . '</td>';
             if ($hasClassificationData) {
                 $html .= '<td>N/A</td><td>N/A</td>';
             }
         }
-        
+
         return $html;
     }
 
@@ -1204,9 +1208,10 @@ return new class extends clsDetalhe
     private function obterClassificacao($avaliacao)
     {
         if (isset($avaliacao['imc_classificacao']['code']) && $avaliacao['imc_classificacao']['code'] !== 'no_reference_data') {
-            return '<span title="' . ($avaliacao['imc_classificacao']['label'] ?? '') . '">' . 
+            return '<span title="' . ($avaliacao['imc_classificacao']['label'] ?? '') . '">' .
                    $avaliacao['imc_classificacao']['label'] . '</span>';
         }
+
         return 'N/A';
     }
 
@@ -1215,14 +1220,14 @@ return new class extends clsDetalhe
      */
     private function gerarCelulaCintura($registro, $avaliacao, $hasClassificationData)
     {
-        $cintura_display = ($registro->circunferencia_cintura && $registro->circunferencia_cintura !== '') 
-            ? number_format((float)$registro->circunferencia_cintura, 1, ',', '.') 
+        $cintura_display = ($registro->circunferencia_cintura && $registro->circunferencia_cintura !== '')
+            ? number_format((float) $registro->circunferencia_cintura, 1, ',', '.')
             : '-';
-        
+
         $html = '<td>' . $cintura_display . '</td>';
-        
+
         if ($hasClassificationData) {
-            if ($avaliacao && isset($avaliacao['cintura_classificacao']['code']) && 
+            if ($avaliacao && isset($avaliacao['cintura_classificacao']['code']) &&
                 $avaliacao['cintura_classificacao']['code'] !== 'no_reference_data') {
                 $risco = $avaliacao['cintura_classificacao']['label'] ?? 'N/A';
                 $html .= '<td style="font-size: 0.9em;">' . $risco . '</td>';
@@ -1230,7 +1235,7 @@ return new class extends clsDetalhe
                 $html .= '<td>N/A</td>';
             }
         }
-        
+
         return $html;
     }
 
@@ -1243,7 +1248,7 @@ return new class extends clsDetalhe
             return '<br><small><strong>Nota:</strong> Classificações e Z-scores baseados nos padrões WHO 2007. ' .
                    'Aplicável para crianças e adolescentes de 5-19 anos.</small>';
         }
-        
+
         return '<br><small><strong>Nota:</strong> Para ver classificações e Z-scores WHO 2007, execute: ' .
                '<code>php artisan anthropometric:load</code></small>';
     }

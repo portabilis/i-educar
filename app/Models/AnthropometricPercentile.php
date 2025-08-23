@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 class AnthropometricPercentile extends Model
 {
     protected $table = 'pmieducar.anthropometric_percentiles';
-    
+
     protected $fillable = [
         'age_months',
         'gender',
@@ -31,7 +31,7 @@ class AnthropometricPercentile extends Model
         'p97',
         'p99',
         'p999',
-        'source'
+        'source',
     ];
 
     protected $casts = [
@@ -63,9 +63,9 @@ class AnthropometricPercentile extends Model
     public static function getForAge(int $ageMonths, string $gender, string $source = 'WHO_2007'): ?self
     {
         return static::where('age_months', $ageMonths)
-                    ->where('gender', strtoupper($gender))
-                    ->where('source', $source)
-                    ->first();
+            ->where('gender', strtoupper($gender))
+            ->where('source', $source)
+            ->first();
     }
 
     /**
@@ -74,19 +74,19 @@ class AnthropometricPercentile extends Model
     public static function getAllP90ForWaistCache(string $source = 'WHO_2007'): array
     {
         $cacheKey = "anthropometric_p90_waist_data_{$source}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($source) {
             $data = static::where('source', $source)
-                         ->whereNotNull('p90')
-                         ->orderBy('age_months')
-                         ->get();
-            
+                ->whereNotNull('p90')
+                ->orderBy('age_months')
+                ->get();
+
             $grouped = [];
             foreach ($data as $item) {
                 $ageYears = floor($item->age_months / 12); // Converter meses para anos
                 $grouped[$ageYears][$item->gender] = (float) $item->p90;
             }
-            
+
             return $grouped;
         });
     }
@@ -97,12 +97,12 @@ class AnthropometricPercentile extends Model
     public static function getAllGroupedForCache(string $source = 'WHO_2007'): array
     {
         $cacheKey = "anthropometric_percentiles_data_{$source}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($source) {
             $data = static::where('source', $source)
-                         ->orderBy('age_months')
-                         ->get();
-            
+                ->orderBy('age_months')
+                ->get();
+
             $grouped = [];
             foreach ($data as $item) {
                 $grouped[$item->age_months][$item->gender] = [
@@ -127,7 +127,7 @@ class AnthropometricPercentile extends Model
                     'p999' => (float) $item->p999,
                 ];
             }
-            
+
             return $grouped;
         });
     }
@@ -138,34 +138,34 @@ class AnthropometricPercentile extends Model
     public static function getForInterpolation(int $ageMonths, string $gender, string $source = 'WHO_2007'): array
     {
         $gender = strtoupper($gender);
-        
+
         // Busca a idade exata
         $exact = static::getForAge($ageMonths, $gender, $source);
         if ($exact) {
             return [
                 'exact' => $exact,
                 'lower' => null,
-                'upper' => null
+                'upper' => null,
             ];
         }
-        
+
         // Busca idades para interpolação
         $lower = static::where('age_months', '<', $ageMonths)
-                      ->where('gender', $gender)
-                      ->where('source', $source)
-                      ->orderBy('age_months', 'desc')
-                      ->first();
-                      
+            ->where('gender', $gender)
+            ->where('source', $source)
+            ->orderBy('age_months', 'desc')
+            ->first();
+
         $upper = static::where('age_months', '>', $ageMonths)
-                      ->where('gender', $gender)
-                      ->where('source', $source)
-                      ->orderBy('age_months', 'asc')
-                      ->first();
-        
+            ->where('gender', $gender)
+            ->where('source', $source)
+            ->orderBy('age_months', 'asc')
+            ->first();
+
         return [
             'exact' => null,
             'lower' => $lower,
-            'upper' => $upper
+            'upper' => $upper,
         ];
     }
 
@@ -175,28 +175,28 @@ class AnthropometricPercentile extends Model
     public static function getInterpolatedPercentile(int $ageMonths, string $gender, string $percentile = 'p50', string $source = 'WHO_2007'): ?float
     {
         $data = static::getForInterpolation($ageMonths, $gender, $source);
-        
+
         // Se tem dados exatos
         if ($data['exact']) {
             return (float) $data['exact']->$percentile;
         }
-        
+
         // Se tem dados para interpolação
         if ($data['lower'] && $data['upper']) {
             $lower = $data['lower'];
             $upper = $data['upper'];
-            
+
             $t = ($ageMonths - $lower->age_months) / ($upper->age_months - $lower->age_months);
-            
+
             return (float) $lower->$percentile + ((float) $upper->$percentile - (float) $lower->$percentile) * $t;
         }
-        
+
         // Se só tem um lado, usa extrapolação
         $ref = $data['lower'] ?: $data['upper'];
         if ($ref) {
             return (float) $ref->$percentile;
         }
-        
+
         return null;
     }
 }
