@@ -11,6 +11,8 @@ class AnthropometricServiceTest extends TestCase
 {
     private const TEST_BIRTH_DATE_1990 = '1990-01-01';
     private const TEST_BIRTH_DATE_2010 = '2010-01-15';
+    private const TEST_BIRTH_DATE_2020 = '2020-01-15';
+    private const TEST_BIRTH_DATE_2024 = '2024-01-01';
 
     private AnthropometricService $service;
 
@@ -116,7 +118,7 @@ class AnthropometricServiceTest extends TestCase
     public function test_calcular_idade_em_meses(): void
     {
         $nascimento = new DateTime(self::TEST_BIRTH_DATE_2010);
-        $referencia = new DateTime('2020-01-15');
+        $referencia = new DateTime(self::TEST_BIRTH_DATE_2020);
 
         $idadeMeses = $this->service->calcularIdadeEmMeses($nascimento, $referencia);
         $this->assertEquals(120, $idadeMeses); // 10 anos = 120 meses
@@ -126,7 +128,7 @@ class AnthropometricServiceTest extends TestCase
     public function test_calcular_idade_em_anos(): void
     {
         $nascimento = new DateTime(self::TEST_BIRTH_DATE_2010);
-        $referencia = new DateTime('2020-01-15');
+        $referencia = new DateTime(self::TEST_BIRTH_DATE_2020);
 
         $idadeAnos = $this->service->calcularIdadeEmAnos($nascimento, $referencia);
         $this->assertEquals(10, $idadeAnos);
@@ -135,10 +137,10 @@ class AnthropometricServiceTest extends TestCase
     #[Group('age-calculation')]
     public function test_calcular_idade_com_strings(): void
     {
-        $idadeMeses = $this->service->calcularIdadeEmMeses(self::TEST_BIRTH_DATE_2010, '2020-01-15');
+        $idadeMeses = $this->service->calcularIdadeEmMeses(self::TEST_BIRTH_DATE_2010, self::TEST_BIRTH_DATE_2020);
         $this->assertEquals(120, $idadeMeses);
 
-        $idadeAnos = $this->service->calcularIdadeEmAnos(self::TEST_BIRTH_DATE_2010, '2020-01-15');
+        $idadeAnos = $this->service->calcularIdadeEmAnos(self::TEST_BIRTH_DATE_2010, self::TEST_BIRTH_DATE_2020);
         $this->assertEquals(10, $idadeAnos);
     }
 
@@ -179,7 +181,7 @@ class AnthropometricServiceTest extends TestCase
             circunferenciaCintura: 85.0,
             dataNascimento: self::TEST_BIRTH_DATE_1990,
             sexo: 'M',
-            dataAvaliacao: '2024-01-01'
+            dataAvaliacao: self::TEST_BIRTH_DATE_2024
         );
 
         $this->assertEquals(70.0, $avaliacao['peso_kg']);
@@ -206,7 +208,7 @@ class AnthropometricServiceTest extends TestCase
             circunferenciaCintura: 60.0,
             dataNascimento: '2014-01-01',
             sexo: 'M',
-            dataAvaliacao: '2024-01-01'
+            dataAvaliacao: self::TEST_BIRTH_DATE_2024
         );
 
         $this->assertEquals(35.0, $avaliacao['peso_kg']);
@@ -232,7 +234,7 @@ class AnthropometricServiceTest extends TestCase
             circunferenciaCintura: null,
             dataNascimento: self::TEST_BIRTH_DATE_1990,
             sexo: 'X', // sexo inválido
-            dataAvaliacao: '2024-01-01'
+            dataAvaliacao: self::TEST_BIRTH_DATE_2024
         );
 
         $this->assertNull($avaliacao['imc']);
@@ -315,7 +317,7 @@ class AnthropometricServiceTest extends TestCase
             circunferenciaCintura: 75.0,
             dataNascimento: '2014-01-01',
             sexo: 'F',
-            dataAvaliacao: '2024-01-01'
+            dataAvaliacao: self::TEST_BIRTH_DATE_2024
         );
 
         $this->assertEquals(22.22, $avaliacao['imc']);
@@ -329,7 +331,7 @@ class AnthropometricServiceTest extends TestCase
             circunferenciaCintura: 110.0,
             dataNascimento: '1980-01-01',
             sexo: 'M',
-            dataAvaliacao: '2024-01-01'
+            dataAvaliacao: self::TEST_BIRTH_DATE_2024
         );
 
         $this->assertEquals(41.52, $avaliacao['imc']);

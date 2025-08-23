@@ -69,6 +69,9 @@ class AnthropometricDataSeeder extends Seeder
             case 'empty':
                 $this->command->error($completeness['message']);
                 break;
+            default:
+                $this->command->warn('Status de completude desconhecido');
+                break;
         }
     }
 }

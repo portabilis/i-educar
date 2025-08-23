@@ -18,6 +18,12 @@ use DateTime;
  */
 class AnthropometricService
 {
+    /**
+     * Constants for repeated literal strings
+     */
+    private const NO_REFERENCE_DATA_LABEL = 'Dados de referência não disponíveis';
+    private const NOT_EVALUABLE_LABEL = 'Não avaliável';
+
     /** Dados LMS e P90 carregados do banco de dados */
     private array $lms = [];
 
@@ -154,20 +160,18 @@ class AnthropometricService
     /** Classificação do IMC em adultos (OMS) */
     public function obterClassificacaoIMCAdulto(float $imc): array
     {
-        if ($imc < 18.5) {
-            return ['code' => 'underweight', 'label' => 'Baixo peso'];
-        }
-        if ($imc < 25) {
-            return ['code' => 'normal',      'label' => 'Peso normal'];
-        }
-        if ($imc < 30) {
-            return ['code' => 'overweight',  'label' => 'Sobrepeso'];
-        }
-        if ($imc < 35) {
-            return ['code' => 'obesity_class_1', 'label' => 'Obesidade grau I'];
-        }
-        if ($imc < 40) {
-            return ['code' => 'obesity_class_2', 'label' => 'Obesidade grau II'];
+        $classifications = [
+            ['limit' => 18.5, 'code' => 'underweight', 'label' => 'Baixo peso'],
+            ['limit' => 25.0, 'code' => 'normal', 'label' => 'Peso normal'],
+            ['limit' => 30.0, 'code' => 'overweight', 'label' => 'Sobrepeso'],
+            ['limit' => 35.0, 'code' => 'obesity_class_1', 'label' => 'Obesidade grau I'],
+            ['limit' => 40.0, 'code' => 'obesity_class_2', 'label' => 'Obesidade grau II']
+        ];
+
+        foreach ($classifications as $classification) {
+            if ($imc < $classification['limit']) {
+                return ['code' => $classification['code'], 'label' => $classification['label']];
+            }
         }
 
         return ['code' => 'obesity_class_3', 'label' => 'Obesidade grau III (grave)'];
@@ -180,17 +184,17 @@ class AnthropometricService
     {
         // Só calcular classificação de criança se estiver usando dados do banco
         if (!$this->usingDatabaseData) {
-            return ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'];
+            return ['code' => 'no_reference_data', 'label' => self::NO_REFERENCE_DATA_LABEL];
         }
 
         $sexo = $this->normalizarSexo($sexo);
         if ($sexo === null) {
-            return ['code' => 'not_evaluable', 'label' => 'Não avaliável'];
+            return ['code' => 'not_evaluable', 'label' => self::NOT_EVALUABLE_LABEL];
         }
 
         $z = $this->calcularEscoreZIMC($imc, $idadeEmMeses, $sexo);
         if ($z === null) {
-            return ['code' => 'not_evaluable', 'label' => 'Não avaliável'];
+            return ['code' => 'not_evaluable', 'label' => self::NOT_EVALUABLE_LABEL];
         }
 
         if ($z < -3) {
@@ -249,7 +253,7 @@ class AnthropometricService
     {
         $sexo = $this->normalizarSexo($sexo);
         if ($sexo === null) {
-            return ['code' => 'not_evaluable', 'label' => 'Não avaliável'];
+            return ['code' => 'not_evaluable', 'label' => self::NOT_EVALUABLE_LABEL];
         }
 
         if ($idadeAnos === null || $idadeAnos >= 18) {
@@ -286,12 +290,12 @@ class AnthropometricService
     {
         // Só calcular risco de criança se estiver usando dados do banco
         if (!$this->usingDatabaseData) {
-            return ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'];
+            return ['code' => 'no_reference_data', 'label' => self::NO_REFERENCE_DATA_LABEL];
         }
 
         $p90 = $this->getP90($idadeAnos, $sexo);
         if ($p90 === null) {
-            return ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'];
+            return ['code' => 'no_reference_data', 'label' => self::NO_REFERENCE_DATA_LABEL];
         }
 
         if ($circCinturaCm >= $p90) {
@@ -305,24 +309,33 @@ class AnthropometricService
     private function normalizarSexo(string $sexo): ?string
     {
         $s = strtoupper(trim($sexo));
-        if (in_array($s, ['M', 'F'], true)) {
-            return $s;
-        }
-        if (in_array($s, ['MALE', 'MASCULINO'], true)) {
-            return 'M';
-        }
-        if (in_array($s, ['FEMALE', 'FEMININO'], true)) {
-            return 'F';
-        }
+        
+        $genderMap = [
+            'M' => 'M', 'F' => 'F',
+            'MALE' => 'M', 'MASCULINO' => 'M',
+            'FEMALE' => 'F', 'FEMININO' => 'F'
+        ];
+        
+        return $genderMap[$s] ?? null;
+    }
 
-        return null;
+    /**
+     * Process reference date avoiding nested ternary operations
+     */
+    private function processReferenceDate(string|DateTime|null $dataReferencia): DateTime
+    {
+        if (!$dataReferencia) {
+            return new DateTime();
+        }
+        
+        return $dataReferencia instanceof DateTime ? clone $dataReferencia : new DateTime($dataReferencia);
     }
 
     /** Idade em meses (inteiros, como a WHO usa) */
     public function calcularIdadeEmMeses(string|DateTime $dataNascimento, string|DateTime|null $dataReferencia = null): int
     {
         $dn = $dataNascimento instanceof DateTime ? clone $dataNascimento : new DateTime($dataNascimento);
-        $ref = $dataReferencia ? ($dataReferencia instanceof DateTime ? clone $dataReferencia : new DateTime($dataReferencia)) : new DateTime;
+        $ref = $this->processReferenceDate($dataReferencia);
         $i = $dn->diff($ref);
 
         return ($i->y * 12) + $i->m;
@@ -332,7 +345,7 @@ class AnthropometricService
     public function calcularIdadeEmAnos(string|DateTime $dataNascimento, string|DateTime|null $dataReferencia = null): int
     {
         $dn = $dataNascimento instanceof DateTime ? clone $dataNascimento : new DateTime($dataNascimento);
-        $ref = $dataReferencia ? ($dataReferencia instanceof DateTime ? clone $dataReferencia : new DateTime($dataReferencia)) : new DateTime;
+        $ref = $this->processReferenceDate($dataReferencia);
 
         return $dn->diff($ref)->y;
     }
@@ -368,7 +381,7 @@ class AnthropometricService
                 $out['imc_zscore'] = $out['imc_classificacao']['z'] ?? $this->calcularEscoreZIMC($imc, $idadeMeses, $sexoNorm);
             }
         } else {
-            $out['imc_classificacao'] = ['code' => 'not_evaluable', 'label' => 'Não avaliável'];
+            $out['imc_classificacao'] = ['code' => 'not_evaluable', 'label' => self::NOT_EVALUABLE_LABEL];
         }
 
         if ($circunferenciaCintura !== null) {
@@ -420,12 +433,12 @@ class AnthropometricService
         if ($menor === null && $maior === null) {
             return null;
         }
-        if ($menor === null) {
-            return $dataSet[$maior][$sexo] ?? null;
+        
+        if ($menor === null || $maior === null) {
+            $age = $menor ?? $maior;
+            return $dataSet[$age][$sexo] ?? null;
         }
-        if ($maior === null) {
-            return $dataSet[$menor][$sexo] ?? null;
-        }
+        
         return null; // Continue with normal interpolation
     }
 

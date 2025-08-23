@@ -34,7 +34,7 @@ abstract class AbstractAnthropometricSeeder extends XlsxSeeder
         // Seed boys data
         static::forGender('M')->setCommand($this->command)->runSeeder();
         
-        // Seed girls data  
+        // Seed girls data
         static::forGender('F')->setCommand($this->command)->runSeeder();
     }
 

@@ -98,32 +98,32 @@ trait InterpolatesAnthropometricData
             return static::convertToFloatArray($data['exact'], $fieldMapping);
         }
 
-        // Se tem dados para interpolação
+        // Se tem dados para interpolação completa
         if ($data['lower'] && $data['upper']) {
-            $lower = $data['lower'];
-            $upper = $data['upper'];
-            $result = [];
-
-            foreach ($fieldMapping as $dbField => $outputKey) {
-                $result[$outputKey] = static::interpolateValue(
-                    $ageMonths,
-                    $lower->age_months,
-                    $upper->age_months,
-                    $lower->$dbField,
-                    $upper->$dbField
-                );
-            }
-
-            return $result;
+            return static::performInterpolation($data['lower'], $data['upper'], $ageMonths, $fieldMapping);
         }
 
         // Se só tem um lado, usa extrapolação
         $ref = $data['lower'] ?: $data['upper'];
-        if ($ref) {
-            return static::convertToFloatArray($ref, $fieldMapping);
-        }
+        return $ref ? static::convertToFloatArray($ref, $fieldMapping) : null;
+    }
 
-        return null;
+    /**
+     * Perform interpolation calculation
+     */
+    private static function performInterpolation($lower, $upper, int $ageMonths, array $fieldMapping): array
+    {
+        $result = [];
+        foreach ($fieldMapping as $dbField => $outputKey) {
+            $result[$outputKey] = static::interpolateValue(
+                $ageMonths,
+                $lower->age_months,
+                $upper->age_months,
+                $lower->$dbField,
+                $upper->$dbField
+            );
+        }
+        return $result;
     }
 
     /**
@@ -138,26 +138,19 @@ trait InterpolatesAnthropometricData
             return (float) $data['exact']->$field;
         }
 
-        // Se tem dados para interpolação
+        // Se tem dados para interpolação completa
         if ($data['lower'] && $data['upper']) {
-            $lower = $data['lower'];
-            $upper = $data['upper'];
-
             return static::interpolateValue(
                 $ageMonths,
-                $lower->age_months,
-                $upper->age_months,
-                $lower->$field,
-                $upper->$field
+                $data['lower']->age_months,
+                $data['upper']->age_months,
+                $data['lower']->$field,
+                $data['upper']->$field
             );
         }
 
         // Se só tem um lado, usa extrapolação
         $ref = $data['lower'] ?: $data['upper'];
-        if ($ref) {
-            return (float) $ref->$field;
-        }
-
-        return null;
+        return $ref ? (float) $ref->$field : null;
     }
 }
