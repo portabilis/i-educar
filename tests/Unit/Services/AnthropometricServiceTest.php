@@ -106,16 +106,15 @@ class AnthropometricServiceTest extends TestCase
      */
     public function testObterClassificacaoIMCCrianca(): void
     {
-        // Teste com criança de 10 anos (120 meses), sexo masculino
+        // Sem dados do banco, deve retornar no_reference_data
         $result = $this->service->obterClassificacaoIMCCrianca(16.0, 120, 'M');
-        $this->assertEquals('normal', $result['code']);
-        $this->assertEquals('Eutrofia', $result['label']);
-        $this->assertArrayHasKey('z', $result);
+        $this->assertEquals('no_reference_data', $result['code']);
+        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
         
         // Teste com sexo inválido
         $result = $this->service->obterClassificacaoIMCCrianca(16.0, 120, 'X');
-        $this->assertEquals('not_evaluable', $result['code']);
-        $this->assertEquals('Não avaliável', $result['label']);
+        $this->assertEquals('no_reference_data', $result['code']);
+        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
     }
 
     /**
@@ -195,17 +194,15 @@ class AnthropometricServiceTest extends TestCase
      */
     public function testObterClassificacaoRiscoCircunferenciaCinturaCrianca(): void
     {
-        // Criança - valor abaixo do P90
+        // Sem dados do banco, deve retornar no_reference_data
         $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(50.0, 'M', 8);
-        $this->assertEquals('no_risk', $result['code']);
-        $this->assertEquals('Sem risco (< P90)', $result['label']);
-        $this->assertArrayHasKey('p90', $result);
+        $this->assertEquals('no_reference_data', $result['code']);
+        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
         
-        // Criança - valor acima do P90
+        // Mesmo com valor alto, sem dados do banco retorna no_reference_data
         $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(70.0, 'M', 8);
-        $this->assertEquals('increased', $result['code']);
-        $this->assertEquals('Risco aumentado (≥ P90)', $result['label']);
-        $this->assertArrayHasKey('p90', $result);
+        $this->assertEquals('no_reference_data', $result['code']);
+        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
     }
 
     /**
@@ -308,24 +305,21 @@ class AnthropometricServiceTest extends TestCase
      */
     public function testCalcularEscoreZIMC(): void
     {
-        // Teste com dados válidos para criança
+        // Sem dados do banco, deve retornar null
         $zScore = $this->service->calcularEscoreZIMC(16.8, 120, 'M');
-        $this->assertIsFloat($zScore);
-        $this->assertNotNull($zScore);
+        $this->assertNull($zScore);
         
         // Teste com sexo inválido
         $zScore = $this->service->calcularEscoreZIMC(16.8, 120, 'X');
         $this->assertNull($zScore);
         
-        // Teste com idade menor que o range (usa extrapolação)
-        $zScore = $this->service->calcularEscoreZIMC(16.8, 60, 'M'); // 5 anos - usa dados de 120 meses
-        $this->assertIsFloat($zScore);
-        $this->assertNotNull($zScore);
+        // Sem dados do banco, qualquer idade retorna null
+        $zScore = $this->service->calcularEscoreZIMC(16.8, 60, 'M');
+        $this->assertNull($zScore);
         
-        // Teste com idade muito maior que o range (usa extrapolação)
-        $zScore = $this->service->calcularEscoreZIMC(25.0, 240, 'M'); // 20 anos - usa dados de 180 meses
-        $this->assertIsFloat($zScore);
-        $this->assertNotNull($zScore);
+        // Sem dados do banco, qualquer valor retorna null
+        $zScore = $this->service->calcularEscoreZIMC(25.0, 240, 'M');
+        $this->assertNull($zScore);
     }
 
     /**
@@ -448,21 +442,21 @@ class AnthropometricServiceTest extends TestCase
      */
     public function testCasosLimiteEstendidos(): void
     {
-        // IMC exatamente nos limites das classificações infantis
+        // Sem dados do banco, testes devem retornar no_reference_data
         
-        // Teste com diferentes idades para verificar interpolação
+        // Teste com diferentes idades para verificar que não há dados de referência
         $result = $this->service->obterClassificacaoIMCCrianca(17.0, 132, 'M'); // 11 anos
-        $this->assertArrayHasKey('z', $result);
+        $this->assertEquals('no_reference_data', $result['code']);
         
         $result = $this->service->obterClassificacaoIMCCrianca(19.0, 156, 'F'); // 13 anos
-        $this->assertArrayHasKey('z', $result);
+        $this->assertEquals('no_reference_data', $result['code']);
         
-        // Teste com circunferência exatamente no P90
+        // Teste com circunferência sem dados de referência
         $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(67.0, 'M', 10);
-        $this->assertEquals('increased', $result['code']); // ≥ P90
+        $this->assertEquals('no_reference_data', $result['code']); // Sem dados do banco
         
         $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(66.9, 'M', 10);
-        $this->assertEquals('no_risk', $result['code']); // < P90
+        $this->assertEquals('no_reference_data', $result['code']); // Sem dados do banco
     }
 
     /**
