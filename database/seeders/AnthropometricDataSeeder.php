@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Support\AnthropometricStatistics;
 
 class AnthropometricDataSeeder extends Seeder
 {
@@ -45,59 +46,29 @@ class AnthropometricDataSeeder extends Seeder
      */
     protected function showStatistics()
     {
-        $zScoreCount = \App\Models\AnthropometricZScore::count();
-        $zScoreBoys = \App\Models\AnthropometricZScore::where('gender', 'M')->count();
-        $zScoreGirls = \App\Models\AnthropometricZScore::where('gender', 'F')->count();
+        $tableData = AnthropometricStatistics::getTableData();
+        // Adjust headers for seeder context
+        $this->command->table(['Tipo de Dados', 'Quantidade', 'Descrição'], $tableData);
 
-        $percentileCount = \App\Models\AnthropometricPercentile::count();
-        $percentileBoys = \App\Models\AnthropometricPercentile::where('gender', 'M')->count();
-        $percentileGirls = \App\Models\AnthropometricPercentile::where('gender', 'F')->count();
-
-        $waistCount = $percentileCount > 0 ? $percentileCount : 0; // P90 vem dos percentis
-
-        $this->command->table([
-            'Tipo de Dados', 'Quantidade', 'Descrição',
-        ], [
-            ['Z-scores Total', $zScoreCount, 'Total de registros de Z-scores (meninos + meninas)'],
-            ['├─ Meninos Z-score', $zScoreBoys, 'Z-scores masculinos'],
-            ['└─ Meninas Z-score', $zScoreGirls, 'Z-scores femininos'],
-            ['Percentis Total', $percentileCount, 'Total de registros de percentis (meninos + meninas)'],
-            ['├─ Meninos Percentis', $percentileBoys, 'Percentis masculinos'],
-            ['└─ Meninas Percentis', $percentileGirls, 'Percentis femininos'],
-            ['P90 Cintura', $waistCount, 'P90 da circunferência (via percentis)'],
-            ['Total Geral', $zScoreCount + $percentileCount, 'Todos os registros carregados'],
-        ]);
-
-        if ($zScoreCount > 0) {
-            $ageRange = \App\Models\AnthropometricZScore::selectRaw('MIN(age_months) as min_age, MAX(age_months) as max_age')->first();
-            $minYears = floor($ageRange->min_age / 12);
-            $maxYears = floor($ageRange->max_age / 12);
-            $this->command->info("Faixa etária Z-scores: {$ageRange->min_age} - {$ageRange->max_age} meses ({$minYears} - {$maxYears} anos)");
-        }
-
-        if ($percentileCount > 0) {
-            $ageRange = \App\Models\AnthropometricPercentile::selectRaw('MIN(age_months) as min_age, MAX(age_months) as max_age')->first();
-            $minYears = floor($ageRange->min_age / 12);
-            $maxYears = floor($ageRange->max_age / 12);
-            $this->command->info("Faixa etária Percentis: {$ageRange->min_age} - {$ageRange->max_age} meses ({$minYears} - {$maxYears} anos)");
-        }
-
-        if ($percentileCount > 0) {
-            $this->command->info('P90 Cintura: Disponível via tabela de percentis (mesma faixa etária)');
+        foreach (AnthropometricStatistics::getAgeRangeMessages() as $message) {
+            $this->command->info($message);
         }
 
         // Verificar completude dos dados
         $this->command->newLine();
         $this->command->info('Verificação de Completude:');
-
-        if ($zScoreCount > 0 && $percentileCount > 0) {
-            $this->command->info('Dados completos: Z-scores E Percentis carregados em tabelas separadas');
-        } elseif ($zScoreCount > 0) {
-            $this->command->warn('Apenas Z-scores carregados. Faltam percentis.');
-        } elseif ($percentileCount > 0) {
-            $this->command->warn('Apenas Percentis carregados. Faltam Z-scores.');
-        } else {
-            $this->command->error('Nenhum dado antropométrico carregado');
+        
+        $completeness = AnthropometricStatistics::getCompletenessStatus();
+        switch ($completeness['status']) {
+            case 'complete':
+                $this->command->info($completeness['message']);
+                break;
+            case 'partial':
+                $this->command->warn($completeness['message']);
+                break;
+            case 'empty':
+                $this->command->error($completeness['message']);
+                break;
         }
     }
 }

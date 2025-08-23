@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Database\Seeders\AnthropometricDataSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use App\Support\AnthropometricStatistics;
 
 class LoadAnthropometricDataCommand extends Command
 {
@@ -199,41 +200,10 @@ class LoadAnthropometricDataCommand extends Command
      */
     private function showFinalStatistics()
     {
-        $zScoreCount = \App\Models\AnthropometricZScore::count();
-        $zScoreBoys = \App\Models\AnthropometricZScore::where('gender', 'M')->count();
-        $zScoreGirls = \App\Models\AnthropometricZScore::where('gender', 'F')->count();
+        $this->table(['Tipo', 'Quantidade', 'Detalhes'], AnthropometricStatistics::getTableData());
 
-        $percentileCount = \App\Models\AnthropometricPercentile::count();
-        $percentileBoys = \App\Models\AnthropometricPercentile::where('gender', 'M')->count();
-        $percentileGirls = \App\Models\AnthropometricPercentile::where('gender', 'F')->count();
-        $waistCount = $percentileCount > 0 ? $percentileCount : 0; // P90 via percentis
-
-        $this->table([
-            'Tipo', 'Quantidade', 'Detalhes',
-        ], [
-            ['Z-scores Total', $zScoreCount, 'Registros de Z-scores para cálculo BMI'],
-            ['├─ Meninos Z-score', $zScoreBoys, 'Z-scores masculinos'],
-            ['└─ Meninas Z-score', $zScoreGirls, 'Z-scores femininos'],
-            ['Percentis Total', $percentileCount, 'Registros de percentis BMI'],
-            ['├─ Meninos Percentis', $percentileBoys, 'Percentis masculinos'],
-            ['└─ Meninas Percentis', $percentileGirls, 'Percentis femininos'],
-            ['P90 Cintura', $waistCount, 'P90 da circunferência (via percentis)'],
-            ['Total Geral', $zScoreCount + $percentileCount, 'Todos os registros carregados'],
-        ]);
-
-        if ($zScoreCount > 0) {
-            $ageRange = \App\Models\AnthropometricZScore::selectRaw('MIN(age_months) as min_age, MAX(age_months) as max_age')->first();
-            $minYears = floor($ageRange->min_age / 12);
-            $maxYears = floor($ageRange->max_age / 12);
-            $this->info("Faixa etária Z-scores: {$ageRange->min_age} - {$ageRange->max_age} meses ({$minYears} - {$maxYears} anos)");
-        }
-
-        if ($percentileCount > 0) {
-            $ageRange = \App\Models\AnthropometricPercentile::selectRaw('MIN(age_months) as min_age, MAX(age_months) as max_age')->first();
-            $minYears = floor($ageRange->min_age / 12);
-            $maxYears = floor($ageRange->max_age / 12);
-            $this->info("Faixa etária Percentis: {$ageRange->min_age} - {$ageRange->max_age} meses ({$minYears} - {$maxYears} anos)");
-            $this->info('P90 Cintura: Disponível via percentis (mesma faixa etária)');
+        foreach (AnthropometricStatistics::getAgeRangeMessages() as $message) {
+            $this->info($message);
         }
 
         $this->newLine();

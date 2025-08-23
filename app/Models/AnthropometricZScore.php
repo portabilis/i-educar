@@ -2,72 +2,44 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Traits\InterpolatesAnthropometricData;
 
-class AnthropometricZScore extends Model
+class AnthropometricZScore extends AbstractAnthropometricModel
 {
-    use InterpolatesAnthropometricData;
     protected $table = 'pmieducar.anthropometric_z_scores';
 
-    protected $fillable = [
-        'age_months',
-        'gender',
-        'l_value',
-        'm_value',
-        's_value',
-        // Z-score deviations only
-        'sd4neg',
-        'sd3neg',
-        'sd2neg',
-        'sd1neg',
-        'sd0',
-        'sd1',
-        'sd2',
-        'sd3',
-        'sd4',
-        'source',
-    ];
 
-    protected $casts = [
-        'age_months' => 'integer',
-        'l_value' => 'decimal:6',
-        'm_value' => 'decimal:6',
-        's_value' => 'decimal:6',
-        // Z-score deviations
-        'sd4neg' => 'decimal:6',
-        'sd3neg' => 'decimal:6',
-        'sd2neg' => 'decimal:6',
-        'sd1neg' => 'decimal:6',
-        'sd0' => 'decimal:6',
-        'sd1' => 'decimal:6',
-        'sd2' => 'decimal:6',
-        'sd3' => 'decimal:6',
-        'sd4' => 'decimal:6',
-    ];
 
 
     /**
-     * Retorna todos os dados LMS agrupados por idade e sexo para cache
+     * Get Z-score specific fillable fields
      */
-    public static function getAllGroupedForCache(string $source = 'WHO_2007'): array
+    protected function getSpecificFillable(): array
     {
-        return static::getCachedData('lms_data', $source, function () use ($source) {
-            $data = static::where('source', $source)
-                ->orderBy('age_months')
-                ->get();
+        return [
+            'sd4neg', 'sd3neg', 'sd2neg', 'sd1neg', 'sd0',
+            'sd1', 'sd2', 'sd3', 'sd4'
+        ];
+    }
 
-            $grouped = [];
-            foreach ($data as $item) {
-                $grouped[$item->age_months][$item->gender] = static::convertToFloatArray(
-                    $item, 
-                    ['l_value' => 'L', 'm_value' => 'M', 's_value' => 'S']
-                );
-            }
+    /**
+     * Get Z-score specific casts
+     */
+    protected function getSpecificCasts(): array
+    {
+        return [
+            'sd4neg' => 'decimal:6', 'sd3neg' => 'decimal:6', 'sd2neg' => 'decimal:6',
+            'sd1neg' => 'decimal:6', 'sd0' => 'decimal:6', 'sd1' => 'decimal:6',
+            'sd2' => 'decimal:6', 'sd3' => 'decimal:6', 'sd4' => 'decimal:6'
+        ];
+    }
 
-            return $grouped;
-        });
+    /**
+     * Get Z-score specific data for cache (empty for Z-scores - only LMS needed)
+     */
+    public function getSpecificDataForCache(): array
+    {
+        return []; // Z-scores only need LMS data in cache
     }
 
 

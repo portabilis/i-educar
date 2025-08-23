@@ -2,62 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Traits\InterpolatesAnthropometricData;
 
-class AnthropometricPercentile extends Model
+class AnthropometricPercentile extends AbstractAnthropometricModel
 {
-    use InterpolatesAnthropometricData;
     protected $table = 'pmieducar.anthropometric_percentiles';
 
-    protected $fillable = [
-        'age_months',
-        'gender',
-        'l_value',
-        'm_value',
-        's_value',
-        // Percentiles only
-        'p01',
-        'p1',
-        'p3',
-        'p5',
-        'p10',
-        'p15',
-        'p25',
-        'p50',
-        'p75',
-        'p85',
-        'p90',
-        'p95',
-        'p97',
-        'p99',
-        'p999',
-        'source',
-    ];
 
-    protected $casts = [
-        'age_months' => 'integer',
-        'l_value' => 'decimal:6',
-        'm_value' => 'decimal:6',
-        's_value' => 'decimal:6',
-        // Percentiles
-        'p01' => 'decimal:6',
-        'p1' => 'decimal:6',
-        'p3' => 'decimal:6',
-        'p5' => 'decimal:6',
-        'p10' => 'decimal:6',
-        'p15' => 'decimal:6',
-        'p25' => 'decimal:6',
-        'p50' => 'decimal:6',
-        'p75' => 'decimal:6',
-        'p85' => 'decimal:6',
-        'p90' => 'decimal:6',
-        'p95' => 'decimal:6',
-        'p97' => 'decimal:6',
-        'p99' => 'decimal:6',
-        'p999' => 'decimal:6',
-    ];
 
 
     /**
@@ -82,29 +33,40 @@ class AnthropometricPercentile extends Model
     }
 
     /**
-     * Retorna todos os dados de percentis agrupados por idade e sexo para cache
+     * Get percentile specific fillable fields
      */
-    public static function getAllGroupedForCache(string $source = 'WHO_2007'): array
+    protected function getSpecificFillable(): array
     {
-        return static::getCachedData('percentiles_data', $source, function () use ($source) {
-            $data = static::where('source', $source)
-                ->orderBy('age_months')
-                ->get();
+        return [
+            'p01', 'p1', 'p3', 'p5', 'p10', 'p15', 'p25', 'p50',
+            'p75', 'p85', 'p90', 'p95', 'p97', 'p99', 'p999'
+        ];
+    }
 
-            $grouped = [];
-            foreach ($data as $item) {
-                $lmsData = static::convertToFloatArray($item, ['l_value' => 'L', 'm_value' => 'M', 's_value' => 'S']);
-                $percentileData = static::convertToFloatArray($item, [
-                    'p01' => 'p01', 'p1' => 'p1', 'p3' => 'p3', 'p5' => 'p5', 'p10' => 'p10',
-                    'p15' => 'p15', 'p25' => 'p25', 'p50' => 'p50', 'p75' => 'p75', 'p85' => 'p85',
-                    'p90' => 'p90', 'p95' => 'p95', 'p97' => 'p97', 'p99' => 'p99', 'p999' => 'p999'
-                ]);
-                
-                $grouped[$item->age_months][$item->gender] = array_merge($lmsData, $percentileData);
-            }
+    /**
+     * Get percentile specific casts
+     */
+    protected function getSpecificCasts(): array
+    {
+        return [
+            'p01' => 'decimal:6', 'p1' => 'decimal:6', 'p3' => 'decimal:6',
+            'p5' => 'decimal:6', 'p10' => 'decimal:6', 'p15' => 'decimal:6',
+            'p25' => 'decimal:6', 'p50' => 'decimal:6', 'p75' => 'decimal:6',
+            'p85' => 'decimal:6', 'p90' => 'decimal:6', 'p95' => 'decimal:6',
+            'p97' => 'decimal:6', 'p99' => 'decimal:6', 'p999' => 'decimal:6'
+        ];
+    }
 
-            return $grouped;
-        });
+    /**
+     * Get percentile specific data for cache
+     */
+    public function getSpecificDataForCache(): array
+    {
+        return static::convertToFloatArray($this, [
+            'p01' => 'p01', 'p1' => 'p1', 'p3' => 'p3', 'p5' => 'p5', 'p10' => 'p10',
+            'p15' => 'p15', 'p25' => 'p25', 'p50' => 'p50', 'p75' => 'p75', 'p85' => 'p85',
+            'p90' => 'p90', 'p95' => 'p95', 'p97' => 'p97', 'p99' => 'p99', 'p999' => 'p999'
+        ]);
     }
 
 
