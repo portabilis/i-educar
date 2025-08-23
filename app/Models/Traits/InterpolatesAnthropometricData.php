@@ -85,4 +85,79 @@ trait InterpolatesAnthropometricData
         }
         return $result;
     }
+
+    /**
+     * Generic interpolated data getter - removes duplication between Z-scores and Percentiles
+     */
+    public static function getInterpolatedData(int $ageMonths, string $gender, array $fieldMapping, string $source = 'WHO_2007'): ?array
+    {
+        $data = static::getForInterpolation($ageMonths, $gender, $source);
+
+        // Se tem dados exatos
+        if ($data['exact']) {
+            return static::convertToFloatArray($data['exact'], $fieldMapping);
+        }
+
+        // Se tem dados para interpolação
+        if ($data['lower'] && $data['upper']) {
+            $lower = $data['lower'];
+            $upper = $data['upper'];
+            $result = [];
+
+            foreach ($fieldMapping as $dbField => $outputKey) {
+                $result[$outputKey] = static::interpolateValue(
+                    $ageMonths, 
+                    $lower->age_months, 
+                    $upper->age_months, 
+                    $lower->$dbField, 
+                    $upper->$dbField
+                );
+            }
+
+            return $result;
+        }
+
+        // Se só tem um lado, usa extrapolação
+        $ref = $data['lower'] ?: $data['upper'];
+        if ($ref) {
+            return static::convertToFloatArray($ref, $fieldMapping);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get single interpolated field value
+     */
+    public static function getInterpolatedField(int $ageMonths, string $gender, string $field, string $source = 'WHO_2007'): ?float
+    {
+        $data = static::getForInterpolation($ageMonths, $gender, $source);
+
+        // Se tem dados exatos
+        if ($data['exact']) {
+            return (float) $data['exact']->$field;
+        }
+
+        // Se tem dados para interpolação
+        if ($data['lower'] && $data['upper']) {
+            $lower = $data['lower'];
+            $upper = $data['upper'];
+
+            return static::interpolateValue(
+                $ageMonths, 
+                $lower->age_months, 
+                $upper->age_months, 
+                $lower->$field, 
+                $upper->$field
+            );
+        }
+
+        // Se só tem um lado, usa extrapolação
+        $ref = $data['lower'] ?: $data['upper'];
+        if ($ref) {
+            return (float) $ref->$field;
+        }
+
+        return null;
+    }
 }

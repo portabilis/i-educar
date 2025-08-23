@@ -48,37 +48,6 @@ class AnthropometricZScore extends AbstractAnthropometricModel
      */
     public static function getInterpolatedLMS(int $ageMonths, string $gender, string $source = 'WHO_2007'): ?array
     {
-        $data = static::getForInterpolation($ageMonths, $gender, $source);
-
-        // Se tem dados exatos
-        if ($data['exact']) {
-            return static::convertToFloatArray(
-                $data['exact'], 
-                ['l_value' => 'L', 'm_value' => 'M', 's_value' => 'S']
-            );
-        }
-
-        // Se tem dados para interpolação
-        if ($data['lower'] && $data['upper']) {
-            $lower = $data['lower'];
-            $upper = $data['upper'];
-
-            return [
-                'L' => static::interpolateValue($ageMonths, $lower->age_months, $upper->age_months, $lower->l_value, $upper->l_value),
-                'M' => static::interpolateValue($ageMonths, $lower->age_months, $upper->age_months, $lower->m_value, $upper->m_value),
-                'S' => static::interpolateValue($ageMonths, $lower->age_months, $upper->age_months, $lower->s_value, $upper->s_value),
-            ];
-        }
-
-        // Se só tem um lado, usa extrapolação
-        $ref = $data['lower'] ?: $data['upper'];
-        if ($ref) {
-            return static::convertToFloatArray(
-                $ref, 
-                ['l_value' => 'L', 'm_value' => 'M', 's_value' => 'S']
-            );
-        }
-
-        return null;
+        return static::getInterpolatedData($ageMonths, $gender, ['l_value' => 'L', 'm_value' => 'M', 's_value' => 'S'], $source);
     }
 }

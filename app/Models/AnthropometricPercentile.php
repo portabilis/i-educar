@@ -75,33 +75,6 @@ class AnthropometricPercentile extends AbstractAnthropometricModel
      */
     public static function getInterpolatedPercentile(int $ageMonths, string $gender, string $percentile = 'p50', string $source = 'WHO_2007'): ?float
     {
-        $data = static::getForInterpolation($ageMonths, $gender, $source);
-
-        // Se tem dados exatos
-        if ($data['exact']) {
-            return (float) $data['exact']->$percentile;
-        }
-
-        // Se tem dados para interpolação
-        if ($data['lower'] && $data['upper']) {
-            $lower = $data['lower'];
-            $upper = $data['upper'];
-
-            return static::interpolateValue(
-                $ageMonths, 
-                $lower->age_months, 
-                $upper->age_months, 
-                $lower->$percentile, 
-                $upper->$percentile
-            );
-        }
-
-        // Se só tem um lado, usa extrapolação
-        $ref = $data['lower'] ?: $data['upper'];
-        if ($ref) {
-            return (float) $ref->$percentile;
-        }
-
-        return null;
+        return static::getInterpolatedField($ageMonths, $gender, $percentile, $source);
     }
 }

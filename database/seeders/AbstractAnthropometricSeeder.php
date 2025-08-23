@@ -22,6 +22,53 @@ abstract class AbstractAnthropometricSeeder extends XlsxSeeder
     protected string $source = 'WHO_2007';
 
     /**
+     * File type pattern for XLSX files
+     */
+    abstract protected function getFileTypePattern(): string;
+
+    /**
+     * Run both boys and girls seeders
+     */
+    public function run()
+    {
+        // Seed boys data
+        static::forGender('M')->setCommand($this->command)->runSeeder();
+        
+        // Seed girls data  
+        static::forGender('F')->setCommand($this->command)->runSeeder();
+    }
+
+    /**
+     * Create seeder for specific gender
+     */
+    public static function forGender(string $gender): static
+    {
+        $instance = new static();
+        $instance->gender = strtoupper($gender);
+        $instance->filename = $instance->getFilenameForGender($gender);
+        return $instance;
+    }
+
+    /**
+     * Set command instance for output
+     */
+    public function setCommand($command): static
+    {
+        $this->command = $command;
+        return $this;
+    }
+
+    /**
+     * Get filename based on gender
+     */
+    protected function getFilenameForGender(string $gender): string
+    {
+        $genderSuffix = strtolower($gender === 'M' ? 'boys' : 'girls');
+        $pattern = $this->getFileTypePattern();
+        return __DIR__ . "/../xls/anthro/bmi-{$genderSuffix}-{$pattern}.xlsx";
+    }
+
+    /**
      * Base transformation logic for anthropometric data
      */
     protected function transformData(array $data): array

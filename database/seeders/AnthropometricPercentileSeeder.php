@@ -9,50 +9,11 @@ class AnthropometricPercentileSeeder extends AbstractAnthropometricSeeder
     protected $model = AnthropometricPercentile::class;
     protected string $typeDescription = 'percentis';
 
-    /**
-     * Run both boys and girls seeders
-     */
-    public function run()
+    protected function getFileTypePattern(): string
     {
-        // Seed boys data
-        self::forGender('M')->setCommand($this->command)->runSeeder();
-        
-        // Seed girls data  
-        self::forGender('F')->setCommand($this->command)->runSeeder();
+        return 'perc-who2007-exp';
     }
 
-    /**
-     * Create seeder for specific gender
-     */
-    public static function forGender(string $gender): self
-    {
-        $instance = new static();
-        $instance->gender = strtoupper($gender);
-        $instance->filename = $instance->getFilenameForGender($gender);
-        return $instance;
-    }
-
-    /**
-     * Set command instance for output
-     */
-    public function setCommand($command): self
-    {
-        $this->command = $command;
-        return $this;
-    }
-
-    /**
-     * Get filename based on gender
-     */
-    private function getFilenameForGender(string $gender): string
-    {
-        $genderSuffix = strtolower($gender === 'M' ? 'boys' : 'girls');
-        return __DIR__ . "/../xls/anthro/bmi-{$genderSuffix}-perc-who2007-exp.xlsx";
-    }
-
-    /**
-     * Get percentile specific fields
-     */
     protected function getSpecificFields(array $data): array
     {
         return [
