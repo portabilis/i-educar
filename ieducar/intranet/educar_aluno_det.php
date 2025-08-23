@@ -796,127 +796,7 @@ return new class extends clsDetalhe
         }
 
         // Dados Antropométricos e Demográficos - Histórico completo
-        try {
-            $anthropometricData = LegacyStudentHistoricalHeightWeight::where('ref_cod_aluno', $this->cod_aluno)
-                ->orderBy('data_historico', 'desc')
-                ->take(10) // Limitar a 10 registros mais recentes
-                ->get();
-
-            if ($anthropometricData->isNotEmpty()) {
-                $this->addDetalhe(detalhe: ['<span id="fantropometrico"></span>Dados Antropométricos e Demográficos']);
-                
-                // Inicializar serviço antropométrico
-                $anthropometricService = new AnthropometricService;
-                $anthropometricService->carregarReferenciasDoBanco();
-                $hasClassificationData = $anthropometricService->isUsingDatabaseData();
-                
-                // Criar tabela HTML com larguras otimizadas
-                $tabela = '<table border="1" width="100%" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
-                
-                // Cabeçalho da tabela com larguras definidas
-                $tabela .= '<thead><tr style="background-color: #ccdce6; font-weight: bold; text-align: center;">';
-                $tabela .= '<td style="width: 80px;">Data</td>';
-                $tabela .= '<td style="width: 60px;">Peso<br>(kg)</td>';
-                $tabela .= '<td style="width: 60px;">Altura<br>(cm)</td>';
-                $tabela .= '<td style="width: 70px;">IMC<br>(kg/m²)</td>';
-                if ($hasClassificationData) {
-                    $tabela .= '<td style="min-width: 120px;">Classificação</td>';
-                    $tabela .= '<td style="width: 70px;">Z-Score</td>';
-                }
-                $tabela .= '<td style="width: 60px;">Cintura<br>(cm)</td>';
-                if ($hasClassificationData) {
-                    $tabela .= '<td style="min-width: 140px;">Risco Cintura</td>';
-                }
-                $tabela .= '</tr></thead>';
-                
-                // Corpo da tabela
-                $tabela .= '<tbody>';
-                $cor = '#f5f9fd';
-                
-                foreach ($anthropometricData as $registro) {
-                    $cor = $cor == '#f5f9fd' ? '#ffffff' : '#f5f9fd';
-                    
-                    // Normalizar altura para centímetros
-                    $altura_original = (float) $registro->altura;
-                    $altura_cm = $altura_original < 10 ? $altura_original * 100 : $altura_original;
-                    $altura_display = $altura_original < 10 
-                        ? number_format($altura_original, 2) . 'm' 
-                        : number_format($altura_cm, 0) . 'cm';
-                    
-                    // Calcular avaliação antropométrica completa
-                    $avaliacao = null;
-                    if ($hasClassificationData) {
-                        $avaliacao = $anthropometricService->obterAvaliacaoCompleta(
-                            peso: (float)$registro->peso,
-                            altura: $altura_cm,
-                            circunferenciaCintura: $registro->circunferencia_cintura ? (float)$registro->circunferencia_cintura : null,
-                            dataNascimento: $det_fisica['data_nasc'],
-                            sexo: $det_fisica['sexo'],
-                            dataAvaliacao: $registro->data_historico
-                        );
-                    }
-                    
-                    $tabela .= sprintf('<tr style="background-color: %s; text-align: center;">', $cor);
-                    $tabela .= '<td style="white-space: nowrap;">' . $registro->data_historico->format('d/m/y') . '</td>';
-                    $tabela .= '<td>' . number_format((float)$registro->peso, 1, ',', '.') . '</td>';
-                    $tabela .= '<td>' . $altura_display . '</td>';
-                    
-                    if ($avaliacao) {
-                        $tabela .= '<td>' . number_format($avaliacao['imc'], 2, ',', '.') . '</td>';
-                        
-                        // Classificação
-                        $classificacao = 'N/A';
-                        if (isset($avaliacao['imc_classificacao']['code']) && $avaliacao['imc_classificacao']['code'] !== 'no_reference_data') {
-                            $classificacao = '<span title="' . ($avaliacao['imc_classificacao']['label'] ?? '') . '">' . 
-                                           $avaliacao['imc_classificacao']['label'] . '</span>';
-                        }
-                        $tabela .= '<td style="font-size: 0.9em;">' . $classificacao . '</td>';
-                        
-                        // Z-Score
-                        $zscore = isset($avaliacao['imc_zscore']) ? number_format($avaliacao['imc_zscore'], 2, ',', '.') : 'N/A';
-                        $tabela .= '<td>' . $zscore . '</td>';
-                    } else {
-                        // IMC simples sem classificação
-                        $imc_simples = (float)$registro->peso / (($altura_cm/100) * ($altura_cm/100));
-                        $tabela .= '<td>' . number_format($imc_simples, 2, ',', '.') . '</td>';
-                        $tabela .= '<td>N/A</td>';
-                        $tabela .= '<td>N/A</td>';
-                    }
-                    
-                    // Circunferência da cintura
-                    $cintura_display = ($registro->circunferencia_cintura && $registro->circunferencia_cintura !== '') 
-                        ? number_format((float)$registro->circunferencia_cintura, 1, ',', '.') 
-                        : '-';
-                    $tabela .= '<td>' . $cintura_display . '</td>';
-                    
-                    // Risco da cintura - sem truncar o texto
-                    if ($hasClassificationData && $avaliacao && isset($avaliacao['cintura_classificacao']['code']) && $avaliacao['cintura_classificacao']['code'] !== 'no_reference_data') {
-                        $risco_cintura = $avaliacao['cintura_classificacao']['label'] ?? 'N/A';
-                        $tabela .= '<td style="font-size: 0.9em;">' . $risco_cintura . '</td>';
-                    } elseif ($hasClassificationData) {
-                        $tabela .= '<td>N/A</td>';
-                    }
-                    
-                    $tabela .= '</tr>';
-                }
-                
-                $tabela .= '</tbody></table>';
-                
-                // Adicionar nota explicativa se os dados WHO 2007 estão disponíveis
-                if ($hasClassificationData) {
-                    $tabela .= '<br><small><strong>Nota:</strong> Classificações e Z-scores baseados nos padrões WHO 2007. ' .
-                              'Aplicável para crianças e adolescentes de 5-19 anos.</small>';
-                } else {
-                    $tabela .= '<br><small><strong>Nota:</strong> Para ver classificações e Z-scores WHO 2007, execute: ' .
-                              '<code>php artisan anthropometric:load</code></small>';
-                }
-                
-                $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>Histórico Antropométrico', $tabela]);
-            }
-        } catch (Exception $e) {
-            // Em caso de erro, adicionar marcador vazio para evitar problemas no JavaScript
-            $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>Erro ao carregar dados antropométricos: ' . $e->getMessage()]);
-        }
+        $this->exibirDadosAntropometricos($det_fisica);
 
         $uniformDistribution = UniformDistribution::where('student_id', $this->cod_aluno)
             ->where('year', now()->year)
@@ -1149,5 +1029,222 @@ return new class extends clsDetalhe
     {
         $this->title = 'Aluno';
         $this->processoAp = 578;
+    }
+
+    /**
+     * Exibe dados antropométricos em formato de tabela histórica
+     */
+    private function exibirDadosAntropometricos($det_fisica)
+    {
+        try {
+            $anthropometricData = LegacyStudentHistoricalHeightWeight::where('ref_cod_aluno', $this->cod_aluno)
+                ->orderBy('data_historico', 'desc')
+                ->take(10)
+                ->get();
+
+            if ($anthropometricData->isNotEmpty()) {
+                $this->addDetalhe(['<span id="fantropometrico"></span>Dados Antropométricos e Demográficos']);
+                
+                $anthropometricService = new AnthropometricService;
+                $anthropometricService->carregarReferenciasDoBanco();
+                $hasClassificationData = $anthropometricService->isUsingDatabaseData();
+                
+                $tabela = $this->montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica);
+                
+                $this->addDetalhe(['<span id="ffantropometrico"></span>Histórico Antropométrico', $tabela]);
+            }
+        } catch (Exception $e) {
+            $this->addDetalhe(['<span id="ffantropometrico"></span>Erro ao carregar dados antropométricos: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Monta a tabela HTML com dados antropométricos
+     */
+    private function montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica)
+    {
+        $tabela = $this->gerarCabecalhoTabela($hasClassificationData);
+        $tabela .= '<tbody>';
+        
+        $cor = '#f5f9fd';
+        foreach ($anthropometricData as $registro) {
+            $cor = $cor == '#f5f9fd' ? '#ffffff' : '#f5f9fd';
+            $tabela .= $this->gerarLinhaTabela($registro, $anthropometricService, $hasClassificationData, $det_fisica, $cor);
+        }
+        
+        $tabela .= '</tbody></table>';
+        $tabela .= $this->gerarNotaExplicativa($hasClassificationData);
+        
+        return $tabela;
+    }
+
+    /**
+     * Gera o cabeçalho da tabela antropométrica
+     */
+    private function gerarCabecalhoTabela($hasClassificationData)
+    {
+        $html = '<table border="1" width="100%" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
+        $html .= '<thead><tr style="background-color: #ccdce6; font-weight: bold; text-align: center;">';
+        
+        $colunas = [
+            ['style' => 'width: 80px;', 'label' => 'Data'],
+            ['style' => 'width: 60px;', 'label' => 'Peso<br>(kg)'],
+            ['style' => 'width: 60px;', 'label' => 'Altura<br>(cm)'],
+            ['style' => 'width: 70px;', 'label' => 'IMC<br>(kg/m²)']
+        ];
+        
+        foreach ($colunas as $col) {
+            $html .= "<td style=\"{$col['style']}\">{$col['label']}</td>";
+        }
+        
+        if ($hasClassificationData) {
+            $html .= '<td style="min-width: 120px;">Classificação</td>';
+            $html .= '<td style="width: 70px;">Z-Score</td>';
+        }
+        
+        $html .= '<td style="width: 60px;">Cintura<br>(cm)</td>';
+        
+        if ($hasClassificationData) {
+            $html .= '<td style="min-width: 140px;">Risco Cintura</td>';
+        }
+        
+        $html .= '</tr></thead>';
+        return $html;
+    }
+
+    /**
+     * Gera uma linha da tabela antropométrica
+     */
+    private function gerarLinhaTabela($registro, $anthropometricService, $hasClassificationData, $det_fisica, $cor)
+    {
+        $altura_cm = $this->normalizarAltura($registro->altura);
+        $altura_display = $this->formatarAltura($registro->altura, $altura_cm);
+        
+        $avaliacao = null;
+        if ($hasClassificationData) {
+            $avaliacao = $anthropometricService->obterAvaliacaoCompleta(
+                peso: (float)$registro->peso,
+                altura: $altura_cm,
+                circunferenciaCintura: $registro->circunferencia_cintura ? (float)$registro->circunferencia_cintura : null,
+                dataNascimento: $det_fisica['data_nasc'],
+                sexo: $det_fisica['sexo'],
+                dataAvaliacao: $registro->data_historico
+            );
+        }
+        
+        $html = sprintf('<tr style="background-color: %s; text-align: center;">', $cor);
+        $html .= $this->gerarCelulasDadosBasicos($registro, $altura_display);
+        $html .= $this->gerarCelulasClassificacao($avaliacao, $hasClassificationData, $altura_cm, $registro);
+        $html .= $this->gerarCelulaCintura($registro, $avaliacao, $hasClassificationData);
+        $html .= '</tr>';
+        
+        return $html;
+    }
+
+    /**
+     * Normaliza altura para centímetros
+     */
+    private function normalizarAltura($altura)
+    {
+        $altura_original = (float) $altura;
+        return $altura_original < 10 ? $altura_original * 100 : $altura_original;
+    }
+
+    /**
+     * Formata altura para exibição
+     */
+    private function formatarAltura($altura, $altura_cm)
+    {
+        $altura_original = (float) $altura;
+        return $altura_original < 10 
+            ? number_format($altura_original, 2) . 'm' 
+            : number_format($altura_cm, 0) . 'cm';
+    }
+
+    /**
+     * Gera células com dados básicos
+     */
+    private function gerarCelulasDadosBasicos($registro, $altura_display)
+    {
+        $html = '<td style="white-space: nowrap;">' . $registro->data_historico->format('d/m/y') . '</td>';
+        $html .= '<td>' . number_format((float)$registro->peso, 1, ',', '.') . '</td>';
+        $html .= '<td>' . $altura_display . '</td>';
+        return $html;
+    }
+
+    /**
+     * Gera células de classificação e IMC
+     */
+    private function gerarCelulasClassificacao($avaliacao, $hasClassificationData, $altura_cm, $registro)
+    {
+        $html = '';
+        
+        if ($avaliacao) {
+            $html .= '<td>' . number_format($avaliacao['imc'], 2, ',', '.') . '</td>';
+            
+            $classificacao = $this->obterClassificacao($avaliacao);
+            $html .= '<td style="font-size: 0.9em;">' . $classificacao . '</td>';
+            
+            $zscore = isset($avaliacao['imc_zscore']) ? number_format($avaliacao['imc_zscore'], 2, ',', '.') : 'N/A';
+            $html .= '<td>' . $zscore . '</td>';
+        } else {
+            $imc_simples = (float)$registro->peso / (($altura_cm/100) * ($altura_cm/100));
+            $html .= '<td>' . number_format($imc_simples, 2, ',', '.') . '</td>';
+            if ($hasClassificationData) {
+                $html .= '<td>N/A</td><td>N/A</td>';
+            }
+        }
+        
+        return $html;
+    }
+
+    /**
+     * Obtém classificação formatada
+     */
+    private function obterClassificacao($avaliacao)
+    {
+        if (isset($avaliacao['imc_classificacao']['code']) && $avaliacao['imc_classificacao']['code'] !== 'no_reference_data') {
+            return '<span title="' . ($avaliacao['imc_classificacao']['label'] ?? '') . '">' . 
+                   $avaliacao['imc_classificacao']['label'] . '</span>';
+        }
+        return 'N/A';
+    }
+
+    /**
+     * Gera célula de cintura e risco
+     */
+    private function gerarCelulaCintura($registro, $avaliacao, $hasClassificationData)
+    {
+        $cintura_display = ($registro->circunferencia_cintura && $registro->circunferencia_cintura !== '') 
+            ? number_format((float)$registro->circunferencia_cintura, 1, ',', '.') 
+            : '-';
+        
+        $html = '<td>' . $cintura_display . '</td>';
+        
+        if ($hasClassificationData) {
+            if ($avaliacao && isset($avaliacao['cintura_classificacao']['code']) && 
+                $avaliacao['cintura_classificacao']['code'] !== 'no_reference_data') {
+                $risco = $avaliacao['cintura_classificacao']['label'] ?? 'N/A';
+                $html .= '<td style="font-size: 0.9em;">' . $risco . '</td>';
+            } else {
+                $html .= '<td>N/A</td>';
+            }
+        }
+        
+        return $html;
+    }
+
+    /**
+     * Gera nota explicativa
+     */
+    private function gerarNotaExplicativa($hasClassificationData)
+    {
+        if ($hasClassificationData) {
+            return '<br><small><strong>Nota:</strong> Classificações e Z-scores baseados nos padrões WHO 2007. ' .
+                   'Aplicável para crianças e adolescentes de 5-19 anos.</small>';
+        }
+        
+        return '<br><small><strong>Nota:</strong> Para ver classificações e Z-scores WHO 2007, execute: ' .
+               '<code>php artisan anthropometric:load</code></small>';
     }
 };
