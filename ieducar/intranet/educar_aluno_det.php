@@ -1119,7 +1119,6 @@ return new class extends clsDetalhe
     private function gerarLinhaTabela($registro, $anthropometricService, $hasClassificationData, $det_fisica, $cor)
     {
         $altura_cm = $this->normalizarAltura($registro->altura);
-        $altura_display = $this->formatarAltura($registro->altura, $altura_cm);
 
         $avaliacao = null;
         if ($hasClassificationData) {
@@ -1134,9 +1133,7 @@ return new class extends clsDetalhe
         }
 
         $html = sprintf('<tr style="background-color: %s; text-align: center;">', $cor);
-        $html .= $this->gerarCelulasDadosBasicos($registro, $altura_display);
-        $html .= $this->gerarCelulasClassificacao($avaliacao, $hasClassificationData, $altura_cm, $registro);
-        $html .= $this->gerarCelulaCintura($registro, $avaliacao, $hasClassificationData);
+        $html .= $this->gerarCelulasTabela($registro, $avaliacao, $hasClassificationData, $altura_cm);
         $html .= '</tr>';
 
         return $html;
@@ -1165,30 +1162,21 @@ return new class extends clsDetalhe
     }
 
     /**
-     * Gera células com dados básicos
+     * Gera todas as células de dados da linha da tabela
      */
-    private function gerarCelulasDadosBasicos($registro, $altura_display)
+    private function gerarCelulasTabela($registro, $avaliacao, $hasClassificationData, $altura_cm)
     {
+        $altura_display = $this->formatarAltura($registro->altura, $altura_cm);
+        
+        // Dados básicos
         $html = '<td style="white-space: nowrap;">' . $registro->data_historico->format('d/m/y') . '</td>';
         $html .= '<td>' . number_format((float) $registro->peso, 1, ',', '.') . '</td>';
         $html .= '<td>' . $altura_display . '</td>';
 
-        return $html;
-    }
-
-    /**
-     * Gera células de classificação e IMC
-     */
-    private function gerarCelulasClassificacao($avaliacao, $hasClassificationData, $altura_cm, $registro)
-    {
-        $html = '';
-
+        // IMC e classificação
         if ($avaliacao) {
             $html .= '<td>' . number_format($avaliacao['imc'], 2, ',', '.') . '</td>';
-
-            $classificacao = $this->obterClassificacao($avaliacao);
-            $html .= '<td style="font-size: 0.9em;">' . $classificacao . '</td>';
-
+            $html .= '<td style="font-size: 0.9em;">' . $this->obterClassificacao($avaliacao) . '</td>';
             $zscore = isset($avaliacao['imc_zscore']) ? number_format($avaliacao['imc_zscore'], 2, ',', '.') : 'N/A';
             $html .= '<td>' . $zscore . '</td>';
         } else {
@@ -1198,6 +1186,9 @@ return new class extends clsDetalhe
                 $html .= '<td>N/A</td><td>N/A</td>';
             }
         }
+
+        // Cintura
+        $html .= $this->gerarCelulaCintura($registro, $avaliacao, $hasClassificationData);
 
         return $html;
     }
