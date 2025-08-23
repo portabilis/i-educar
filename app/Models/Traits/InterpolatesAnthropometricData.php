@@ -106,10 +106,10 @@ trait InterpolatesAnthropometricData
 
             foreach ($fieldMapping as $dbField => $outputKey) {
                 $result[$outputKey] = static::interpolateValue(
-                    $ageMonths, 
-                    $lower->age_months, 
-                    $upper->age_months, 
-                    $lower->$dbField, 
+                    $ageMonths,
+                    $lower->age_months,
+                    $upper->age_months,
+                    $lower->$dbField,
                     $upper->$dbField
                 );
             }
@@ -144,10 +144,10 @@ trait InterpolatesAnthropometricData
             $upper = $data['upper'];
 
             return static::interpolateValue(
-                $ageMonths, 
-                $lower->age_months, 
-                $upper->age_months, 
-                $lower->$field, 
+                $ageMonths,
+                $lower->age_months,
+                $upper->age_months,
+                $lower->$field,
                 $upper->$field
             );
         }

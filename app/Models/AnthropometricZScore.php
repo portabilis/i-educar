@@ -28,9 +28,9 @@ class AnthropometricZScore extends AbstractAnthropometricModel
     protected function getSpecificCasts(): array
     {
         return [
-            'sd4neg' => 'decimal:6', 'sd3neg' => 'decimal:6', 'sd2neg' => 'decimal:6',
-            'sd1neg' => 'decimal:6', 'sd0' => 'decimal:6', 'sd1' => 'decimal:6',
-            'sd2' => 'decimal:6', 'sd3' => 'decimal:6', 'sd4' => 'decimal:6'
+            'sd4neg' => parent::DECIMAL_PRECISION, 'sd3neg' => parent::DECIMAL_PRECISION, 'sd2neg' => parent::DECIMAL_PRECISION,
+            'sd1neg' => parent::DECIMAL_PRECISION, 'sd0' => parent::DECIMAL_PRECISION, 'sd1' => parent::DECIMAL_PRECISION,
+            'sd2' => parent::DECIMAL_PRECISION, 'sd3' => parent::DECIMAL_PRECISION, 'sd4' => parent::DECIMAL_PRECISION
         ];
     }
 

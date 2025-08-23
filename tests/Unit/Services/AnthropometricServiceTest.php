@@ -9,6 +9,9 @@ use PHPUnit\Framework\Attributes\Group;
 
 class AnthropometricServiceTest extends TestCase
 {
+    private const TEST_BIRTH_DATE_1990 = '1990-01-01';
+    private const TEST_BIRTH_DATE_2010 = '2010-01-15';
+
     private AnthropometricService $service;
 
     protected function setUp(): void
@@ -49,7 +52,7 @@ class AnthropometricServiceTest extends TestCase
     private function assertNoReferenceData(array $result): void
     {
         $this->assertClassificationResult(
-            ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'], 
+            ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'],
             $result
         );
     }
@@ -71,10 +74,10 @@ class AnthropometricServiceTest extends TestCase
     public function test_calcular_imc_with_invalid_data(): void
     {
         $invalidCases = [
-            [-1.0, 175.0], [70.0, -1.0], [2.0, 175.0], 
+            [-1.0, 175.0], [70.0, -1.0], [2.0, 175.0],
             [350.0, 175.0], [70.0, 30.0], [70.0, 300.0]
         ];
-        
+
         foreach ($invalidCases as [$peso, $altura]) {
             $this->testIMCCalculation($peso, $altura, null);
         }
@@ -91,7 +94,7 @@ class AnthropometricServiceTest extends TestCase
             [37.0, 'obesity_class_2', 'Obesidade grau II'],
             [45.0, 'obesity_class_3', 'Obesidade grau III (grave)']
         ];
-        
+
         foreach ($testCases as [$imc, $expectedCode, $expectedLabel]) {
             $result = $this->service->obterClassificacaoIMCAdulto($imc);
             $this->assertClassificationResult(['code' => $expectedCode, 'label' => $expectedLabel], $result);
@@ -102,7 +105,7 @@ class AnthropometricServiceTest extends TestCase
     public function test_obter_classificacao_imc_crianca(): void
     {
         $testCases = [[16.0, 120, 'M'], [16.0, 120, 'X']];
-        
+
         foreach ($testCases as [$imc, $idadeMeses, $sexo]) {
             $result = $this->service->obterClassificacaoIMCCrianca($imc, $idadeMeses, $sexo);
             $this->assertNoReferenceData($result);
@@ -112,7 +115,7 @@ class AnthropometricServiceTest extends TestCase
     #[Group('age-calculation')]
     public function test_calcular_idade_em_meses(): void
     {
-        $nascimento = new DateTime('2010-01-15');
+        $nascimento = new DateTime(self::TEST_BIRTH_DATE_2010);
         $referencia = new DateTime('2020-01-15');
 
         $idadeMeses = $this->service->calcularIdadeEmMeses($nascimento, $referencia);
@@ -122,7 +125,7 @@ class AnthropometricServiceTest extends TestCase
     #[Group('age-calculation')]
     public function test_calcular_idade_em_anos(): void
     {
-        $nascimento = new DateTime('2010-01-15');
+        $nascimento = new DateTime(self::TEST_BIRTH_DATE_2010);
         $referencia = new DateTime('2020-01-15');
 
         $idadeAnos = $this->service->calcularIdadeEmAnos($nascimento, $referencia);
@@ -132,10 +135,10 @@ class AnthropometricServiceTest extends TestCase
     #[Group('age-calculation')]
     public function test_calcular_idade_com_strings(): void
     {
-        $idadeMeses = $this->service->calcularIdadeEmMeses('2010-01-15', '2020-01-15');
+        $idadeMeses = $this->service->calcularIdadeEmMeses(self::TEST_BIRTH_DATE_2010, '2020-01-15');
         $this->assertEquals(120, $idadeMeses);
 
-        $idadeAnos = $this->service->calcularIdadeEmAnos('2010-01-15', '2020-01-15');
+        $idadeAnos = $this->service->calcularIdadeEmAnos(self::TEST_BIRTH_DATE_2010, '2020-01-15');
         $this->assertEquals(10, $idadeAnos);
     }
 
@@ -146,7 +149,7 @@ class AnthropometricServiceTest extends TestCase
         $this->testWaistRiskAdult(90.0, 'M', 'no_risk', 'Sem risco');
         $this->testWaistRiskAdult(98.0, 'M', 'increased', 'Risco aumentado');
         $this->testWaistRiskAdult(110.0, 'M', 'high', 'Risco muito aumentado');
-        
+
         // Testes para mulheres
         $this->testWaistRiskAdult(75.0, 'F', 'no_risk', 'Sem risco');
         $this->testWaistRiskAdult(85.0, 'F', 'increased', 'Risco aumentado');
@@ -157,11 +160,11 @@ class AnthropometricServiceTest extends TestCase
     public function test_obter_classificacao_risco_circunferencia_cintura_crianca(): void
     {
         $testCases = [[50.0, 'M', 8], [70.0, 'M', 8]];
-        
+
         foreach ($testCases as [$circunferencia, $sexo, $idade]) {
             $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura($circunferencia, $sexo, $idade);
             $this->assertClassificationResult(
-                ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'], 
+                ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'],
                 $result
             );
         }
@@ -174,7 +177,7 @@ class AnthropometricServiceTest extends TestCase
             peso: 70.0,
             altura: 175.0,
             circunferenciaCintura: 85.0,
-            dataNascimento: '1990-01-01',
+            dataNascimento: self::TEST_BIRTH_DATE_1990,
             sexo: 'M',
             dataAvaliacao: '2024-01-01'
         );
@@ -227,7 +230,7 @@ class AnthropometricServiceTest extends TestCase
             peso: -1.0, // peso inválido
             altura: 175.0,
             circunferenciaCintura: null,
-            dataNascimento: '1990-01-01',
+            dataNascimento: self::TEST_BIRTH_DATE_1990,
             sexo: 'X', // sexo inválido
             dataAvaliacao: '2024-01-01'
         );
@@ -241,16 +244,16 @@ class AnthropometricServiceTest extends TestCase
     public function test_normalizacao_sexo(): void
     {
         // Teste através do método público que usa normalizarSexo internamente
-        $avaliacao1 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, '1990-01-01', 'MASCULINO');
+        $avaliacao1 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, self::TEST_BIRTH_DATE_1990, 'MASCULINO');
         $this->assertEquals('M', $avaliacao1['sexo']);
 
-        $avaliacao2 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, '1990-01-01', 'FEMININO');
+        $avaliacao2 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, self::TEST_BIRTH_DATE_1990, 'FEMININO');
         $this->assertEquals('F', $avaliacao2['sexo']);
 
-        $avaliacao3 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, '1990-01-01', 'male');
+        $avaliacao3 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, self::TEST_BIRTH_DATE_1990, 'male');
         $this->assertEquals('M', $avaliacao3['sexo']);
 
-        $avaliacao4 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, '1990-01-01', 'female');
+        $avaliacao4 = $this->service->obterAvaliacaoCompleta(70.0, 175.0, null, self::TEST_BIRTH_DATE_1990, 'female');
         $this->assertEquals('F', $avaliacao4['sexo']);
     }
 
@@ -258,10 +261,10 @@ class AnthropometricServiceTest extends TestCase
     public function test_calcular_escore_zimc(): void
     {
         $testCases = [
-            [16.8, 120, 'M'], [16.8, 120, 'X'], 
+            [16.8, 120, 'M'], [16.8, 120, 'X'],
             [16.8, 60, 'M'], [25.0, 240, 'M']
         ];
-        
+
         foreach ($testCases as [$imc, $idadeMeses, $sexo]) {
             $zScore = $this->service->calcularEscoreZIMC($imc, $idadeMeses, $sexo);
             $this->assertNull($zScore);
@@ -276,7 +279,7 @@ class AnthropometricServiceTest extends TestCase
             [24.99, 'normal'], [25.0, 'overweight'],
             [29.99, 'overweight'], [30.0, 'obesity_class_1']
         ];
-        
+
         foreach ($boundaryTests as [$imc, $expectedCode]) {
             $result = $this->service->obterClassificacaoIMCAdulto($imc);
             $this->assertEquals($expectedCode, $result['code']);
@@ -355,7 +358,7 @@ class AnthropometricServiceTest extends TestCase
             [70, 175, 22.86], // inteiros
             [70.5, 175.0, 23.02] // floats
         ];
-        
+
         foreach ($dataTypeTests as [$peso, $altura, $expectedIMC]) {
             $this->testIMCCalculation($peso, $altura, $expectedIMC);
         }
@@ -366,12 +369,12 @@ class AnthropometricServiceTest extends TestCase
     {
         $imcTests = [[17.0, 132, 'M'], [19.0, 156, 'F']];
         $waistTests = [[67.0, 'M', 10], [66.9, 'M', 10]];
-        
+
         foreach ($imcTests as [$imc, $idadeMeses, $sexo]) {
             $result = $this->service->obterClassificacaoIMCCrianca($imc, $idadeMeses, $sexo);
             $this->assertNoReferenceData($result);
         }
-        
+
         foreach ($waistTests as [$circunferencia, $sexo, $idade]) {
             $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura($circunferencia, $sexo, $idade);
             $this->assertNoReferenceData($result);
@@ -385,16 +388,16 @@ class AnthropometricServiceTest extends TestCase
             [5.0, 175.0, 1.63], [300.0, 175.0, 97.96],
             [70.0, 50.0, 280.0], [70.0, 250.0, 11.2]
         ];
-        
+
         $invalidTests = [
-            [4.9, 175.0], [300.1, 175.0], 
+            [4.9, 175.0], [300.1, 175.0],
             [70.0, 49.9], [70.0, 250.1]
         ];
-        
+
         foreach ($validTests as [$peso, $altura, $expectedIMC]) {
             $this->testIMCCalculation($peso, $altura, $expectedIMC);
         }
-        
+
         foreach ($invalidTests as [$peso, $altura]) {
             $this->testIMCCalculation($peso, $altura, null);
         }

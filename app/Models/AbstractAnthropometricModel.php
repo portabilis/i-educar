@@ -9,10 +9,15 @@ abstract class AbstractAnthropometricModel extends Model
 {
     use InterpolatesAnthropometricData;
 
+    /**
+     * Decimal precision constant for cast definitions
+     */
+    protected const DECIMAL_PRECISION = 'decimal:6';
+
     /** Common fillable fields for all anthropometric models */
     protected array $commonFillable = [
         'age_months',
-        'gender', 
+        'gender',
         'l_value',
         'm_value',
         's_value',
@@ -22,9 +27,9 @@ abstract class AbstractAnthropometricModel extends Model
     /** Common casts for all anthropometric models */
     protected array $commonCasts = [
         'age_months' => 'integer',
-        'l_value' => 'decimal:6',
-        'm_value' => 'decimal:6', 
-        's_value' => 'decimal:6',
+        'l_value' => self::DECIMAL_PRECISION,
+        'm_value' => self::DECIMAL_PRECISION,
+        's_value' => self::DECIMAL_PRECISION,
     ];
 
     /**
@@ -33,7 +38,7 @@ abstract class AbstractAnthropometricModel extends Model
     abstract protected function getSpecificFillable(): array;
 
     /**
-     * Get specific casts for each model type  
+     * Get specific casts for each model type
      */
     abstract protected function getSpecificCasts(): array;
 
@@ -62,7 +67,7 @@ abstract class AbstractAnthropometricModel extends Model
             foreach ($data as $item) {
                 $lmsData = static::convertToFloatArray($item, ['l_value' => 'L', 'm_value' => 'M', 's_value' => 'S']);
                 $specificData = $item->getSpecificDataForCache();
-                
+
                 $grouped[$item->age_months][$item->gender] = array_merge($lmsData, $specificData);
             }
 

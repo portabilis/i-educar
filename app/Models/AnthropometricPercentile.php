@@ -49,11 +49,11 @@ class AnthropometricPercentile extends AbstractAnthropometricModel
     protected function getSpecificCasts(): array
     {
         return [
-            'p01' => 'decimal:6', 'p1' => 'decimal:6', 'p3' => 'decimal:6',
-            'p5' => 'decimal:6', 'p10' => 'decimal:6', 'p15' => 'decimal:6',
-            'p25' => 'decimal:6', 'p50' => 'decimal:6', 'p75' => 'decimal:6',
-            'p85' => 'decimal:6', 'p90' => 'decimal:6', 'p95' => 'decimal:6',
-            'p97' => 'decimal:6', 'p99' => 'decimal:6', 'p999' => 'decimal:6'
+            'p01' => parent::DECIMAL_PRECISION, 'p1' => parent::DECIMAL_PRECISION, 'p3' => parent::DECIMAL_PRECISION,
+            'p5' => parent::DECIMAL_PRECISION, 'p10' => parent::DECIMAL_PRECISION, 'p15' => parent::DECIMAL_PRECISION,
+            'p25' => parent::DECIMAL_PRECISION, 'p50' => parent::DECIMAL_PRECISION, 'p75' => parent::DECIMAL_PRECISION,
+            'p85' => parent::DECIMAL_PRECISION, 'p90' => parent::DECIMAL_PRECISION, 'p95' => parent::DECIMAL_PRECISION,
+            'p97' => parent::DECIMAL_PRECISION, 'p99' => parent::DECIMAL_PRECISION, 'p999' => parent::DECIMAL_PRECISION
         ];
     }
 

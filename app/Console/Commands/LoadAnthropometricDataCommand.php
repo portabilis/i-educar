@@ -14,7 +14,7 @@ class LoadAnthropometricDataCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'anthropometric:load 
+    protected $signature = 'anthropometric:load
                            {--fresh : Truncate tables before loading}
                            {--source=WHO_2007 : Source identifier for the data}
                            {--boys-z-file= : Path to boys Z-score XLSX file}
@@ -105,7 +105,6 @@ class LoadAnthropometricDataCommand extends Command
             $this->info('Tabelas limpas');
         } else {
             $this->info('Operação cancelada');
-            return;
         }
     }
 
@@ -115,84 +114,118 @@ class LoadAnthropometricDataCommand extends Command
     private function verifyDataFiles(): bool
     {
         $dataDir = database_path('xls/anthro');
-
-        // Z-score files
-        $boysZFile = $this->option('boys-z-file') ?: $dataDir . '/bmi-boys-z-who-2007-exp.xlsx';
-        $girlsZFile = $this->option('girls-z-file') ?: $dataDir . '/bmi-girls-z-who-2007-exp.xlsx';
-
-        // Percentile files
-        $boysPercFile = $this->option('boys-perc-file') ?: $dataDir . '/bmi-boys-perc-who2007-exp.xlsx';
-        $girlsPercFile = $this->option('girls-perc-file') ?: $dataDir . '/bmi-girls-perc-who2007-exp.xlsx';
+        $files = $this->getDataFilesPaths($dataDir);
 
         $this->info('Verificando arquivos de dados...');
 
-        $required = [
-            'Z-score Boys' => $boysZFile,
-            'Z-score Girls' => $girlsZFile,
-        ];
+        $issues = $this->checkRequiredFiles($files['required']);
+        $warnings = $this->checkOptionalFiles($files['optional']);
 
-        $optional = [
-            'Percentiles Boys' => $boysPercFile,
-            'Percentiles Girls' => $girlsPercFile,
-        ];
+        if (!empty($issues)) {
+            $this->showFileErrors($issues, $dataDir);
+            return false;
+        }
 
+        if (!empty($warnings)) {
+            $this->showFileWarnings($warnings);
+        }
+
+        $this->showFileSummary($files['required'], $files['optional'], $issues, $warnings);
+        return true;
+    }
+
+    /**
+     * Get data files paths
+     */
+    private function getDataFilesPaths(string $dataDir): array
+    {
+        return [
+            'required' => [
+                'Z-score Boys' => $this->option('boys-z-file') ?: $dataDir . '/bmi-boys-z-who-2007-exp.xlsx',
+                'Z-score Girls' => $this->option('girls-z-file') ?: $dataDir . '/bmi-girls-z-who-2007-exp.xlsx',
+            ],
+            'optional' => [
+                'Percentiles Boys' => $this->option('boys-perc-file') ?: $dataDir . '/bmi-boys-perc-who2007-exp.xlsx',
+                'Percentiles Girls' => $this->option('girls-perc-file') ?: $dataDir . '/bmi-girls-perc-who2007-exp.xlsx',
+            ]
+        ];
+    }
+
+    /**
+     * Check required files and return issues
+     */
+    private function checkRequiredFiles(array $files): array
+    {
         $issues = [];
-        $warnings = [];
-
-        // Verificar arquivos obrigatórios
-        foreach ($required as $type => $file) {
+        foreach ($files as $type => $file) {
             if (!file_exists($file)) {
                 $issues[] = "Arquivo obrigatório não encontrado ({$type}): {$file}";
             } else {
                 $this->info("{$type}: {$file}");
             }
         }
+        return $issues;
+    }
 
-        // Verificar arquivos opcionais
-        foreach ($optional as $type => $file) {
+    /**
+     * Check optional files and return warnings
+     */
+    private function checkOptionalFiles(array $files): array
+    {
+        $warnings = [];
+        foreach ($files as $type => $file) {
             if (!file_exists($file)) {
                 $warnings[] = "Arquivo opcional não encontrado ({$type}): {$file}";
             } else {
                 $this->info("{$type}: {$file}");
             }
         }
+        return $warnings;
+    }
 
-        // Mostrar problemas críticos
-        if (!empty($issues)) {
-            $this->error('Problemas críticos encontrados:');
-            foreach ($issues as $issue) {
-                $this->error("  - {$issue}");
-            }
-
-            $this->newLine();
-            $this->info('Para resolver:');
-            $this->info('1. Baixe os arquivos WHO 2007 BMI obrigatórios');
-            $this->info('2. Coloque-os em: ' . $dataDir);
-            $this->info('3. Nomes esperados:');
-            $this->info('   - bmi-boys-z-who-2007-exp.xlsx (Z-scores meninos)');
-            $this->info('   - bmi-girls-z-who-2007-exp.xlsx (Z-scores meninas)');
-            $this->info('4. Arquivos opcionais para dados completos:');
-            $this->info('   - bmi-boys-perc-who2007-exp.xlsx (Percentis meninos)');
-            $this->info('   - bmi-girls-perc-who2007-exp.xlsx (Percentis meninas)');
-
-            return false;
+    /**
+     * Show file errors
+     */
+    private function showFileErrors(array $issues, string $dataDir): void
+    {
+        $this->error('Problemas críticos encontrados:');
+        foreach ($issues as $issue) {
+            $this->error("  - {$issue}");
         }
 
-        // Mostrar avisos para arquivos opcionais
-        if (!empty($warnings)) {
-            $this->warn('Avisos (não críticos):');
-            foreach ($warnings as $warning) {
-                $this->warn("  - {$warning}");
-            }
-            $this->warn('  Os dados de percentis não serão carregados, mas o sistema funcionará normalmente.');
-            $this->newLine();
-        }
+        $this->newLine();
+        $this->info('Para resolver:');
+        $this->info('1. Baixe os arquivos WHO 2007 BMI obrigatórios');
+        $this->info('2. Coloque-os em: ' . $dataDir);
+        $this->info('3. Nomes esperados:');
+        $this->info('   - bmi-boys-z-who-2007-exp.xlsx (Z-scores meninos)');
+        $this->info('   - bmi-girls-z-who-2007-exp.xlsx (Z-scores meninas)');
+        $this->info('4. Arquivos opcionais para dados completos:');
+        $this->info('   - bmi-boys-perc-who2007-exp.xlsx (Percentis meninos)');
+        $this->info('   - bmi-girls-perc-who2007-exp.xlsx (Percentis meninas)');
+    }
 
+    /**
+     * Show file warnings
+     */
+    private function showFileWarnings(array $warnings): void
+    {
+        $this->warn('Avisos (não críticos):');
+        foreach ($warnings as $warning) {
+            $this->warn("  - {$warning}");
+        }
+        $this->warn('  Os dados de percentis não serão carregados, mas o sistema funcionará normalmente.');
+        $this->newLine();
+    }
+
+    /**
+     * Show file summary
+     */
+    private function showFileSummary(array $required, array $optional, array $issues, array $warnings): void
+    {
         $foundFiles = count($required) - count($issues) + (count($optional) - count($warnings));
         $totalFiles = count($required) + count($optional);
         $this->info("Arquivos encontrados: {$foundFiles}/{$totalFiles}");
-
-        return true;
     }
 
     /**

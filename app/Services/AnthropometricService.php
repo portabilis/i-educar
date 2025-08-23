@@ -396,15 +396,9 @@ class AnthropometricService
         
         [$menor, $maior] = $this->findBoundingAges($idades, $targetAge);
         
-        // Casos especiais
-        if ($menor === null && $maior === null) {
-            return null;
-        }
-        if ($menor === null) {
-            return $dataSet[$maior][$sexo] ?? null;
-        }
-        if ($maior === null) {
-            return $dataSet[$menor][$sexo] ?? null;
+        $result = $this->processInterpolationBounds($dataSet, $menor, $maior, $sexo);
+        if ($result !== null || $menor === null || $maior === null) {
+            return $result;
         }
         
         // Interpolação
@@ -416,6 +410,23 @@ class AnthropometricService
         
         $t = ($targetAge - $menor) / ($maior - $menor);
         return $interpolateCallback($a, $b, $t);
+    }
+
+    /**
+     * Process interpolation bounds and return appropriate result
+     */
+    private function processInterpolationBounds(array $dataSet, ?int $menor, ?int $maior, string $sexo): mixed
+    {
+        if ($menor === null && $maior === null) {
+            return null;
+        }
+        if ($menor === null) {
+            return $dataSet[$maior][$sexo] ?? null;
+        }
+        if ($maior === null) {
+            return $dataSet[$menor][$sexo] ?? null;
+        }
+        return null; // Continue with normal interpolation
     }
 
     /**

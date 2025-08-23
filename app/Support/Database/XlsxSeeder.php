@@ -2,7 +2,7 @@
 
 namespace App\Support\Database;
 
-use Exception;
+use App\Exceptions\XlsxException;
 use Generator;
 use Illuminate\Database\Seeder;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -48,7 +48,7 @@ abstract class XlsxSeeder extends Seeder
     public function getXlsxFilename()
     {
         if (empty($this->filename)) {
-            throw new Exception('XLSX file not defined.');
+            throw new XlsxException('XLSX file not defined.');
         }
 
         return $this->filename;
@@ -64,7 +64,7 @@ abstract class XlsxSeeder extends Seeder
     public function getModelName()
     {
         if (empty($this->model)) {
-            throw new Exception('Model name not defined.');
+            throw new XlsxException('Model name not defined.');
         }
 
         return $this->model;
