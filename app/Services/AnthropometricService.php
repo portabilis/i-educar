@@ -105,48 +105,14 @@ class AnthropometricService
         if (isset($this->lms[$idadeMeses][$sexo])) {
             return $this->lms[$idadeMeses][$sexo];
         }
-
-        // Interpolação entre idades disponíveis
-        $idades = array_keys($this->lms);
-        if (empty($idades)) {
-            return null;
-        }
-
-        sort($idades);
-        $menor = null;
-        $maior = null;
-        foreach ($idades as $i) {
-            if ($i < $idadeMeses) {
-                $menor = $i;
-            } elseif ($i > $idadeMeses) {
-                $maior = $i;
-                break;
-            }
-        }
-
-        if ($menor === null && $maior === null) {
-            return null;
-        }
-        if ($menor === null) {
-            return $this->lms[$maior][$sexo] ?? null;
-        }
-        if ($maior === null) {
-            return $this->lms[$menor][$sexo] ?? null;
-        }
-
-        $a = $this->lms[$menor][$sexo] ?? null;
-        $b = $this->lms[$maior][$sexo] ?? null;
-        if (!$a || !$b) {
-            return null;
-        }
-
-        $t = ($idadeMeses - $menor) / ($maior - $menor);
-
-        return [
-            'L' => $a['L'] + ($b['L'] - $a['L']) * $t,
-            'M' => $a['M'] + ($b['M'] - $a['M']) * $t,
-            'S' => $a['S'] + ($b['S'] - $a['S']) * $t,
-        ];
+        
+        return $this->interpolateFromDataSet($this->lms, $idadeMeses, $sexo, function($a, $b, $t) {
+            return [
+                'L' => $this->interpolateValue($a['L'], $b['L'], $t),
+                'M' => $this->interpolateValue($a['M'], $b['M'], $t),
+                'S' => $this->interpolateValue($a['S'], $b['S'], $t)
+            ];
+        });
     }
 
     /** Retorna P90 interpolado para idade/sexo a partir dos dados do banco */
@@ -161,44 +127,10 @@ class AnthropometricService
         if (isset($this->waistP90[$idadeAnos][$sexo])) {
             return (float) $this->waistP90[$idadeAnos][$sexo];
         }
-
-        // Interpolação entre idades disponíveis
-        $idades = array_keys($this->waistP90);
-        if (empty($idades)) {
-            return null;
-        }
-
-        sort($idades);
-        $menor = null;
-        $maior = null;
-        foreach ($idades as $i) {
-            if ($i < $idadeAnos) {
-                $menor = $i;
-            } elseif ($i > $idadeAnos) {
-                $maior = $i;
-                break;
-            }
-        }
-
-        if ($menor === null && $maior === null) {
-            return null;
-        }
-        if ($menor === null) {
-            return isset($this->waistP90[$maior][$sexo]) ? (float) $this->waistP90[$maior][$sexo] : null;
-        }
-        if ($maior === null) {
-            return isset($this->waistP90[$menor][$sexo]) ? (float) $this->waistP90[$menor][$sexo] : null;
-        }
-
-        if (!isset($this->waistP90[$menor][$sexo]) || !isset($this->waistP90[$maior][$sexo])) {
-            return null;
-        }
-
-        $a = (float) $this->waistP90[$menor][$sexo];
-        $b = (float) $this->waistP90[$maior][$sexo];
-        $t = ($idadeAnos - $menor) / ($maior - $menor);
-
-        return $a + ($b - $a) * $t;
+        
+        return $this->interpolateFromDataSet($this->waistP90, $idadeAnos, $sexo, function($a, $b, $t) {
+            return $this->interpolateValue((float) $a, (float) $b, $t);
+        });
     }
 
     /** Calcula IMC (peso em kg, altura em cm) */
@@ -449,5 +381,69 @@ class AnthropometricService
         }
 
         return $out;
+    }
+
+    /**
+     * Método genérico para interpolação de dados de qualquer dataset
+     */
+    private function interpolateFromDataSet(array $dataSet, int $targetAge, string $sexo, callable $interpolateCallback)
+    {
+        // Interpolação entre idades disponíveis
+        $idades = array_keys($dataSet);
+        if (empty($idades)) {
+            return null;
+        }
+        
+        [$menor, $maior] = $this->findBoundingAges($idades, $targetAge);
+        
+        // Casos especiais
+        if ($menor === null && $maior === null) {
+            return null;
+        }
+        if ($menor === null) {
+            return $dataSet[$maior][$sexo] ?? null;
+        }
+        if ($maior === null) {
+            return $dataSet[$menor][$sexo] ?? null;
+        }
+        
+        // Interpolação
+        $a = $dataSet[$menor][$sexo] ?? null;
+        $b = $dataSet[$maior][$sexo] ?? null;
+        if (!$a || !$b) {
+            return null;
+        }
+        
+        $t = ($targetAge - $menor) / ($maior - $menor);
+        return $interpolateCallback($a, $b, $t);
+    }
+
+    /**
+     * Encontra as idades que cercam a idade alvo para interpolação
+     */
+    private function findBoundingAges(array $idades, int $targetAge): array
+    {
+        sort($idades);
+        $menor = null;
+        $maior = null;
+        
+        foreach ($idades as $idade) {
+            if ($idade < $targetAge) {
+                $menor = $idade;
+            } elseif ($idade > $targetAge) {
+                $maior = $idade;
+                break;
+            }
+        }
+        
+        return [$menor, $maior];
+    }
+
+    /**
+     * Interpolação linear simples entre dois valores
+     */
+    private function interpolateValue(float $a, float $b, float $t): float
+    {
+        return $a + ($b - $a) * $t;
     }
 }

@@ -24,90 +24,89 @@ class AnthropometricServiceTest extends TestCase
         }
     }
 
+    private function assertClassificationResult(array $expected, array $actual): void
+    {
+        $this->assertEquals($expected['code'], $actual['code']);
+        $this->assertEquals($expected['label'], $actual['label']);
+    }
+
+    private function testIMCCalculation(float $peso, float $altura, ?float $expectedIMC): void
+    {
+        $imc = $this->service->calcularIMC($peso, $altura);
+        if ($expectedIMC === null) {
+            $this->assertNull($imc);
+        } else {
+            $this->assertEquals($expectedIMC, $imc);
+        }
+    }
+
+    private function testWaistRiskAdult(float $circunferencia, string $sexo, string $expectedCode, string $expectedLabel): void
+    {
+        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura($circunferencia, $sexo, 25);
+        $this->assertClassificationResult(['code' => $expectedCode, 'label' => $expectedLabel], $result);
+    }
+
+    private function assertNoReferenceData(array $result): void
+    {
+        $this->assertClassificationResult(
+            ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'], 
+            $result
+        );
+    }
+
     #[Group('imc-calculation')]
     public function test_calcular_imc_with_valid_data(): void
     {
         // Teste básico: peso 70kg, altura 175cm
-        $imc = $this->service->calcularIMC(70.0, 175.0);
-        $this->assertEquals(22.86, $imc);
+        $this->testIMCCalculation(70.0, 175.0, 22.86);
 
         // Teste com sobrepeso: peso 85kg, altura 170cm
-        $imc = $this->service->calcularIMC(85.0, 170.0);
-        $this->assertEquals(29.41, $imc);
+        $this->testIMCCalculation(85.0, 170.0, 29.41);
 
         // Teste com obesidade: peso 100kg, altura 165cm
-        $imc = $this->service->calcularIMC(100.0, 165.0);
-        $this->assertEquals(36.73, $imc);
+        $this->testIMCCalculation(100.0, 165.0, 36.73);
     }
 
     #[Group('imc-calculation')]
     public function test_calcular_imc_with_invalid_data(): void
     {
-        // Peso negativo
-        $this->assertNull($this->service->calcularIMC(-1.0, 175.0));
-
-        // Altura negativa
-        $this->assertNull($this->service->calcularIMC(70.0, -1.0));
-
-        // Peso muito baixo
-        $this->assertNull($this->service->calcularIMC(2.0, 175.0));
-
-        // Peso muito alto
-        $this->assertNull($this->service->calcularIMC(350.0, 175.0));
-
-        // Altura muito baixa
-        $this->assertNull($this->service->calcularIMC(70.0, 30.0));
-
-        // Altura muito alta
-        $this->assertNull($this->service->calcularIMC(70.0, 300.0));
+        $invalidCases = [
+            [-1.0, 175.0], [70.0, -1.0], [2.0, 175.0], 
+            [350.0, 175.0], [70.0, 30.0], [70.0, 300.0]
+        ];
+        
+        foreach ($invalidCases as [$peso, $altura]) {
+            $this->testIMCCalculation($peso, $altura, null);
+        }
     }
 
     #[Group('imc-classification-adult')]
     public function test_obter_classificacao_imc_adulto(): void
     {
-        // Baixo peso
-        $result = $this->service->obterClassificacaoIMCAdulto(17.0);
-        $this->assertEquals('underweight', $result['code']);
-        $this->assertEquals('Baixo peso', $result['label']);
-
-        // Peso normal
-        $result = $this->service->obterClassificacaoIMCAdulto(22.0);
-        $this->assertEquals('normal', $result['code']);
-        $this->assertEquals('Peso normal', $result['label']);
-
-        // Sobrepeso
-        $result = $this->service->obterClassificacaoIMCAdulto(27.0);
-        $this->assertEquals('overweight', $result['code']);
-        $this->assertEquals('Sobrepeso', $result['label']);
-
-        // Obesidade grau I
-        $result = $this->service->obterClassificacaoIMCAdulto(32.0);
-        $this->assertEquals('obesity_class_1', $result['code']);
-        $this->assertEquals('Obesidade grau I', $result['label']);
-
-        // Obesidade grau II
-        $result = $this->service->obterClassificacaoIMCAdulto(37.0);
-        $this->assertEquals('obesity_class_2', $result['code']);
-        $this->assertEquals('Obesidade grau II', $result['label']);
-
-        // Obesidade grau III
-        $result = $this->service->obterClassificacaoIMCAdulto(45.0);
-        $this->assertEquals('obesity_class_3', $result['code']);
-        $this->assertEquals('Obesidade grau III (grave)', $result['label']);
+        $testCases = [
+            [17.0, 'underweight', 'Baixo peso'],
+            [22.0, 'normal', 'Peso normal'],
+            [27.0, 'overweight', 'Sobrepeso'],
+            [32.0, 'obesity_class_1', 'Obesidade grau I'],
+            [37.0, 'obesity_class_2', 'Obesidade grau II'],
+            [45.0, 'obesity_class_3', 'Obesidade grau III (grave)']
+        ];
+        
+        foreach ($testCases as [$imc, $expectedCode, $expectedLabel]) {
+            $result = $this->service->obterClassificacaoIMCAdulto($imc);
+            $this->assertClassificationResult(['code' => $expectedCode, 'label' => $expectedLabel], $result);
+        }
     }
 
     #[Group('imc-classification-child')]
     public function test_obter_classificacao_imc_crianca(): void
     {
-        // Sem dados do banco, deve retornar no_reference_data
-        $result = $this->service->obterClassificacaoIMCCrianca(16.0, 120, 'M');
-        $this->assertEquals('no_reference_data', $result['code']);
-        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
-
-        // Teste com sexo inválido
-        $result = $this->service->obterClassificacaoIMCCrianca(16.0, 120, 'X');
-        $this->assertEquals('no_reference_data', $result['code']);
-        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
+        $testCases = [[16.0, 120, 'M'], [16.0, 120, 'X']];
+        
+        foreach ($testCases as [$imc, $idadeMeses, $sexo]) {
+            $result = $this->service->obterClassificacaoIMCCrianca($imc, $idadeMeses, $sexo);
+            $this->assertNoReferenceData($result);
+        }
     }
 
     #[Group('age-calculation')]
@@ -143,49 +142,29 @@ class AnthropometricServiceTest extends TestCase
     #[Group('waist-risk-adult')]
     public function test_obter_classificacao_risco_circunferencia_cintura_adulto(): void
     {
-        // Homem adulto - sem risco
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(90.0, 'M', 25);
-        $this->assertEquals('no_risk', $result['code']);
-        $this->assertEquals('Sem risco', $result['label']);
-
-        // Homem adulto - risco aumentado
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(98.0, 'M', 25);
-        $this->assertEquals('increased', $result['code']);
-        $this->assertEquals('Risco aumentado', $result['label']);
-
-        // Homem adulto - risco muito aumentado
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(110.0, 'M', 25);
-        $this->assertEquals('high', $result['code']);
-        $this->assertEquals('Risco muito aumentado', $result['label']);
-
-        // Mulher adulta - sem risco
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(75.0, 'F', 25);
-        $this->assertEquals('no_risk', $result['code']);
-        $this->assertEquals('Sem risco', $result['label']);
-
-        // Mulher adulta - risco aumentado
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(85.0, 'F', 25);
-        $this->assertEquals('increased', $result['code']);
-        $this->assertEquals('Risco aumentado', $result['label']);
-
-        // Mulher adulta - risco muito aumentado
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(95.0, 'F', 25);
-        $this->assertEquals('high', $result['code']);
-        $this->assertEquals('Risco muito aumentado', $result['label']);
+        // Testes para homens
+        $this->testWaistRiskAdult(90.0, 'M', 'no_risk', 'Sem risco');
+        $this->testWaistRiskAdult(98.0, 'M', 'increased', 'Risco aumentado');
+        $this->testWaistRiskAdult(110.0, 'M', 'high', 'Risco muito aumentado');
+        
+        // Testes para mulheres
+        $this->testWaistRiskAdult(75.0, 'F', 'no_risk', 'Sem risco');
+        $this->testWaistRiskAdult(85.0, 'F', 'increased', 'Risco aumentado');
+        $this->testWaistRiskAdult(95.0, 'F', 'high', 'Risco muito aumentado');
     }
 
     #[Group('waist-risk-child')]
     public function test_obter_classificacao_risco_circunferencia_cintura_crianca(): void
     {
-        // Sem dados do banco, deve retornar no_reference_data
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(50.0, 'M', 8);
-        $this->assertEquals('no_reference_data', $result['code']);
-        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
-
-        // Mesmo com valor alto, sem dados do banco retorna no_reference_data
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(70.0, 'M', 8);
-        $this->assertEquals('no_reference_data', $result['code']);
-        $this->assertEquals('Dados de referência não disponíveis', $result['label']);
+        $testCases = [[50.0, 'M', 8], [70.0, 'M', 8]];
+        
+        foreach ($testCases as [$circunferencia, $sexo, $idade]) {
+            $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura($circunferencia, $sexo, $idade);
+            $this->assertClassificationResult(
+                ['code' => 'no_reference_data', 'label' => 'Dados de referência não disponíveis'], 
+                $result
+            );
+        }
     }
 
     #[Group('complete-evaluation')]
@@ -278,48 +257,30 @@ class AnthropometricServiceTest extends TestCase
     #[Group('z-score')]
     public function test_calcular_escore_zimc(): void
     {
-        // Sem dados do banco, deve retornar null
-        $zScore = $this->service->calcularEscoreZIMC(16.8, 120, 'M');
-        $this->assertNull($zScore);
-
-        // Teste com sexo inválido
-        $zScore = $this->service->calcularEscoreZIMC(16.8, 120, 'X');
-        $this->assertNull($zScore);
-
-        // Sem dados do banco, qualquer idade retorna null
-        $zScore = $this->service->calcularEscoreZIMC(16.8, 60, 'M');
-        $this->assertNull($zScore);
-
-        // Sem dados do banco, qualquer valor retorna null
-        $zScore = $this->service->calcularEscoreZIMC(25.0, 240, 'M');
-        $this->assertNull($zScore);
+        $testCases = [
+            [16.8, 120, 'M'], [16.8, 120, 'X'], 
+            [16.8, 60, 'M'], [25.0, 240, 'M']
+        ];
+        
+        foreach ($testCases as [$imc, $idadeMeses, $sexo]) {
+            $zScore = $this->service->calcularEscoreZIMC($imc, $idadeMeses, $sexo);
+            $this->assertNull($zScore);
+        }
     }
 
     #[Group('boundary-values')]
     public function test_valores_limite_imc(): void
     {
-        // Teste valores exatos dos limites de classificação
-
-        // Limite baixo peso/normal (18.5)
-        $result = $this->service->obterClassificacaoIMCAdulto(18.49);
-        $this->assertEquals('underweight', $result['code']);
-
-        $result = $this->service->obterClassificacaoIMCAdulto(18.5);
-        $this->assertEquals('normal', $result['code']);
-
-        // Limite normal/sobrepeso (25.0)
-        $result = $this->service->obterClassificacaoIMCAdulto(24.99);
-        $this->assertEquals('normal', $result['code']);
-
-        $result = $this->service->obterClassificacaoIMCAdulto(25.0);
-        $this->assertEquals('overweight', $result['code']);
-
-        // Limite sobrepeso/obesidade I (30.0)
-        $result = $this->service->obterClassificacaoIMCAdulto(29.99);
-        $this->assertEquals('overweight', $result['code']);
-
-        $result = $this->service->obterClassificacaoIMCAdulto(30.0);
-        $this->assertEquals('obesity_class_1', $result['code']);
+        $boundaryTests = [
+            [18.49, 'underweight'], [18.5, 'normal'],
+            [24.99, 'normal'], [25.0, 'overweight'],
+            [29.99, 'overweight'], [30.0, 'obesity_class_1']
+        ];
+        
+        foreach ($boundaryTests as [$imc, $expectedCode]) {
+            $result = $this->service->obterClassificacaoIMCAdulto($imc);
+            $this->assertEquals($expectedCode, $result['code']);
+        }
     }
 
     #[Group('performance')]
@@ -389,64 +350,53 @@ class AnthropometricServiceTest extends TestCase
     #[Group('data-types')]
     public function test_tipos_de_dados_variados(): void
     {
-        // Teste com strings numéricas
-        $imc = $this->service->calcularIMC('70.5', '175.0');
-        $this->assertEquals(23.02, $imc);
-
-        // Teste com inteiros
-        $imc = $this->service->calcularIMC(70, 175);
-        $this->assertEquals(22.86, $imc);
-
-        // Teste com floats
-        $imc = $this->service->calcularIMC(70.5, 175.0);
-        $this->assertEquals(23.02, $imc);
+        $dataTypeTests = [
+            ['70.5', '175.0', 23.02], // strings numéricas
+            [70, 175, 22.86], // inteiros
+            [70.5, 175.0, 23.02] // floats
+        ];
+        
+        foreach ($dataTypeTests as [$peso, $altura, $expectedIMC]) {
+            $this->testIMCCalculation($peso, $altura, $expectedIMC);
+        }
     }
 
     #[Group('edge-cases-extended')]
     public function test_casos_limite_estendidos(): void
     {
-        // Sem dados do banco, testes devem retornar no_reference_data
-
-        // Teste com diferentes idades para verificar que não há dados de referência
-        $result = $this->service->obterClassificacaoIMCCrianca(17.0, 132, 'M'); // 11 anos
-        $this->assertEquals('no_reference_data', $result['code']);
-
-        $result = $this->service->obterClassificacaoIMCCrianca(19.0, 156, 'F'); // 13 anos
-        $this->assertEquals('no_reference_data', $result['code']);
-
-        // Teste com circunferência sem dados de referência
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(67.0, 'M', 10);
-        $this->assertEquals('no_reference_data', $result['code']); // Sem dados do banco
-
-        $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura(66.9, 'M', 10);
-        $this->assertEquals('no_reference_data', $result['code']); // Sem dados do banco
+        $imcTests = [[17.0, 132, 'M'], [19.0, 156, 'F']];
+        $waistTests = [[67.0, 'M', 10], [66.9, 'M', 10]];
+        
+        foreach ($imcTests as [$imc, $idadeMeses, $sexo]) {
+            $result = $this->service->obterClassificacaoIMCCrianca($imc, $idadeMeses, $sexo);
+            $this->assertNoReferenceData($result);
+        }
+        
+        foreach ($waistTests as [$circunferencia, $sexo, $idade]) {
+            $result = $this->service->obterClassificacaoRiscoCircunferenciaCintura($circunferencia, $sexo, $idade);
+            $this->assertNoReferenceData($result);
+        }
     }
 
     #[Group('data-validation')]
     public function test_validacao_rigorosa_dados(): void
     {
-        // Teste com dados muito próximos dos limites de validação
-
-        // Peso mínimo válido
-        $imc = $this->service->calcularIMC(5.0, 175.0);
-        $this->assertEquals(1.63, $imc);
-
-        // Peso máximo válido
-        $imc = $this->service->calcularIMC(300.0, 175.0);
-        $this->assertEquals(97.96, $imc);
-
-        // Altura mínima válida
-        $imc = $this->service->calcularIMC(70.0, 50.0);
-        $this->assertEquals(280.0, $imc);
-
-        // Altura máxima válida
-        $imc = $this->service->calcularIMC(70.0, 250.0);
-        $this->assertEquals(11.2, $imc);
-
-        // Valores inválidos por 0.1
-        $this->assertNull($this->service->calcularIMC(4.9, 175.0));
-        $this->assertNull($this->service->calcularIMC(300.1, 175.0));
-        $this->assertNull($this->service->calcularIMC(70.0, 49.9));
-        $this->assertNull($this->service->calcularIMC(70.0, 250.1));
+        $validTests = [
+            [5.0, 175.0, 1.63], [300.0, 175.0, 97.96],
+            [70.0, 50.0, 280.0], [70.0, 250.0, 11.2]
+        ];
+        
+        $invalidTests = [
+            [4.9, 175.0], [300.1, 175.0], 
+            [70.0, 49.9], [70.0, 250.1]
+        ];
+        
+        foreach ($validTests as [$peso, $altura, $expectedIMC]) {
+            $this->testIMCCalculation($peso, $altura, $expectedIMC);
+        }
+        
+        foreach ($invalidTests as [$peso, $altura]) {
+            $this->testIMCCalculation($peso, $altura, null);
+        }
     }
 }
