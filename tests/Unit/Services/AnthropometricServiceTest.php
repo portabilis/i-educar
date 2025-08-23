@@ -5,6 +5,7 @@ namespace Tests\Unit\Services;
 use App\Services\AnthropometricService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 class AnthropometricServiceTest extends TestCase
 {
@@ -23,9 +24,7 @@ class AnthropometricServiceTest extends TestCase
         }
     }
 
-    /**
-     * @group imc-calculation
-     */
+    #[Group('imc-calculation')]
     public function test_calcular_imc_with_valid_data(): void
     {
         // Teste básico: peso 70kg, altura 175cm
@@ -41,9 +40,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals(36.73, $imc);
     }
 
-    /**
-     * @group imc-calculation
-     */
+    #[Group('imc-calculation')]
     public function test_calcular_imc_with_invalid_data(): void
     {
         // Peso negativo
@@ -65,9 +62,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertNull($this->service->calcularIMC(70.0, 300.0));
     }
 
-    /**
-     * @group imc-classification-adult
-     */
+    #[Group('imc-classification-adult')]
     public function test_obter_classificacao_imc_adulto(): void
     {
         // Baixo peso
@@ -101,9 +96,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('Obesidade grau III (grave)', $result['label']);
     }
 
-    /**
-     * @group imc-classification-child
-     */
+    #[Group('imc-classification-child')]
     public function test_obter_classificacao_imc_crianca(): void
     {
         // Sem dados do banco, deve retornar no_reference_data
@@ -117,9 +110,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('Dados de referência não disponíveis', $result['label']);
     }
 
-    /**
-     * @group age-calculation
-     */
+    #[Group('age-calculation')]
     public function test_calcular_idade_em_meses(): void
     {
         $nascimento = new DateTime('2010-01-15');
@@ -129,9 +120,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals(120, $idadeMeses); // 10 anos = 120 meses
     }
 
-    /**
-     * @group age-calculation
-     */
+    #[Group('age-calculation')]
     public function test_calcular_idade_em_anos(): void
     {
         $nascimento = new DateTime('2010-01-15');
@@ -141,9 +130,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals(10, $idadeAnos);
     }
 
-    /**
-     * @group age-calculation
-     */
+    #[Group('age-calculation')]
     public function test_calcular_idade_com_strings(): void
     {
         $idadeMeses = $this->service->calcularIdadeEmMeses('2010-01-15', '2020-01-15');
@@ -153,9 +140,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals(10, $idadeAnos);
     }
 
-    /**
-     * @group waist-risk-adult
-     */
+    #[Group('waist-risk-adult')]
     public function test_obter_classificacao_risco_circunferencia_cintura_adulto(): void
     {
         // Homem adulto - sem risco
@@ -189,9 +174,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('Risco muito aumentado', $result['label']);
     }
 
-    /**
-     * @group waist-risk-child
-     */
+    #[Group('waist-risk-child')]
     public function test_obter_classificacao_risco_circunferencia_cintura_crianca(): void
     {
         // Sem dados do banco, deve retornar no_reference_data
@@ -205,9 +188,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('Dados de referência não disponíveis', $result['label']);
     }
 
-    /**
-     * @group complete-evaluation
-     */
+    #[Group('complete-evaluation')]
     public function test_obter_avaliacao_completa_adulto(): void
     {
         $avaliacao = $this->service->obterAvaliacaoCompleta(
@@ -234,9 +215,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('no_risk', $avaliacao['cintura_classificacao']['code']);
     }
 
-    /**
-     * @group complete-evaluation
-     */
+    #[Group('complete-evaluation')]
     public function test_obter_avaliacao_completa_crianca(): void
     {
         $avaliacao = $this->service->obterAvaliacaoCompleta(
@@ -262,9 +241,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertArrayHasKey('imc_zscore', $avaliacao);
     }
 
-    /**
-     * @group edge-cases
-     */
+    #[Group('edge-cases')]
     public function test_obter_avaliacao_completa_com_dados_invalidos(): void
     {
         $avaliacao = $this->service->obterAvaliacaoCompleta(
@@ -281,9 +258,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('Não avaliável', $avaliacao['imc_classificacao']['label']);
     }
 
-    /**
-     * @group normalization
-     */
+    #[Group('normalization')]
     public function test_normalizacao_sexo(): void
     {
         // Teste através do método público que usa normalizarSexo internamente
@@ -300,9 +275,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('F', $avaliacao4['sexo']);
     }
 
-    /**
-     * @group z-score
-     */
+    #[Group('z-score')]
     public function test_calcular_escore_zimc(): void
     {
         // Sem dados do banco, deve retornar null
@@ -322,9 +295,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertNull($zScore);
     }
 
-    /**
-     * @group boundary-values
-     */
+    #[Group('boundary-values')]
     public function test_valores_limite_imc(): void
     {
         // Teste valores exatos dos limites de classificação
@@ -351,9 +322,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('obesity_class_1', $result['code']);
     }
 
-    /**
-     * @group performance
-     */
+    #[Group('performance')]
     public function test_performance_with_multiple_calculations(): void
     {
         $startTime = microtime(true);
@@ -372,9 +341,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertLessThan(0.1, $executionTime, 'Performance test failed: IMC calculations took too long');
     }
 
-    /**
-     * @group integration
-     */
+    #[Group('integration')]
     public function test_integracao_completa_scenarios(): void
     {
         // Cenário 1: Criança com sobrepeso
@@ -419,9 +386,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertArrayNotHasKey('cintura_classificacao', $avaliacao);
     }
 
-    /**
-     * @group data-types
-     */
+    #[Group('data-types')]
     public function test_tipos_de_dados_variados(): void
     {
         // Teste com strings numéricas
@@ -437,9 +402,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals(23.02, $imc);
     }
 
-    /**
-     * @group edge-cases-extended
-     */
+    #[Group('edge-cases-extended')]
     public function test_casos_limite_estendidos(): void
     {
         // Sem dados do banco, testes devem retornar no_reference_data
@@ -459,9 +422,7 @@ class AnthropometricServiceTest extends TestCase
         $this->assertEquals('no_reference_data', $result['code']); // Sem dados do banco
     }
 
-    /**
-     * @group data-validation
-     */
+    #[Group('data-validation')]
     public function test_validacao_rigorosa_dados(): void
     {
         // Teste com dados muito próximos dos limites de validação
