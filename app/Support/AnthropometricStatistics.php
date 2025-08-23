@@ -137,15 +137,19 @@ class AnthropometricStatistics
     public static function getCompletenessStatus(): array
     {
         $totals = self::getTotalStats();
+        $hasZScores = $totals['z_scores'] > 0;
+        $hasPercentiles = $totals['percentiles'] > 0;
         
-        if ($totals['z_scores'] > 0 && $totals['percentiles'] > 0) {
+        if ($hasZScores && $hasPercentiles) {
             return ['status' => 'complete', 'message' => 'Dados completos: Z-scores E Percentis carregados em tabelas separadas'];
-        } elseif ($totals['z_scores'] > 0) {
-            return ['status' => 'partial', 'message' => 'Apenas Z-scores carregados. Faltam percentis.'];
-        } elseif ($totals['percentiles'] > 0) {
-            return ['status' => 'partial', 'message' => 'Apenas Percentis carregados. Faltam Z-scores.'];
-        } else {
-            return ['status' => 'empty', 'message' => 'Nenhum dado antropométrico carregado'];
         }
+        
+        if ($hasZScores || $hasPercentiles) {
+            $missing = $hasZScores ? 'percentis' : 'Z-scores';
+            $existing = $hasZScores ? 'Z-scores' : 'Percentis';
+            return ['status' => 'partial', 'message' => "Apenas {$existing} carregados. Faltam {$missing}."];
+        }
+        
+        return ['status' => 'empty', 'message' => 'Nenhum dado antropométrico carregado'];
     }
 }

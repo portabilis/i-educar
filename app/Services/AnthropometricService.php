@@ -142,19 +142,22 @@ class AnthropometricService
     /** Calcula IMC (peso em kg, altura em cm) */
     public function calcularIMC(float $peso, float $altura): ?float
     {
-        if ($peso <= 0 || $altura <= 0) {
-            return null;
-        }
-        if ($peso < 5 || $peso > 300) {
-            return null;
-        }
-        if ($altura < 50 || $altura > 250) {
+        if (!$this->isValidIMCParameters($peso, $altura)) {
             return null;
         }
 
         $m = $altura / 100.0;
-
         return round($peso / ($m * $m), 2);
+    }
+
+    /**
+     * Validate IMC calculation parameters
+     */
+    private function isValidIMCParameters(float $peso, float $altura): bool
+    {
+        return $peso > 0 && $altura > 0 && 
+               $peso >= 5 && $peso <= 300 && 
+               $altura >= 50 && $altura <= 250;
     }
 
     /** Classificação do IMC em adultos (OMS) */
@@ -182,14 +185,9 @@ class AnthropometricService
      */
     public function obterClassificacaoIMCCrianca(float $imc, int $idadeEmMeses, string $sexo): array
     {
-        // Só calcular classificação de criança se estiver usando dados do banco
-        if (!$this->usingDatabaseData) {
-            return ['code' => 'no_reference_data', 'label' => self::NO_REFERENCE_DATA_LABEL];
-        }
-
-        $sexo = $this->normalizarSexo($sexo);
-        if ($sexo === null) {
-            return ['code' => 'not_evaluable', 'label' => self::NOT_EVALUABLE_LABEL];
+        $validationResult = $this->validateChildIMCParameters($sexo);
+        if ($validationResult) {
+            return $validationResult;
         }
 
         $z = $this->calcularEscoreZIMC($imc, $idadeEmMeses, $sexo);
@@ -197,22 +195,35 @@ class AnthropometricService
             return ['code' => 'not_evaluable', 'label' => self::NOT_EVALUABLE_LABEL];
         }
 
-        if ($z < -3) {
-            return ['code' => 'severe_thinness',   'label' => 'Magreza acentuada', 'z' => $z];
-        }
-        if ($z < -2) {
-            return ['code' => 'thinness',          'label' => 'Magreza',           'z' => $z];
-        }
-        if ($z <= 1) {
-            return ['code' => 'normal',            'label' => 'Eutrofia',          'z' => $z];
-        }
-        if ($z <= 2) {
-            return ['code' => 'overweight_risk',   'label' => 'Risco de sobrepeso', 'z' => $z];
-        }
-        if ($z <= 3) {
-            return ['code' => 'obesity',           'label' => 'Obesidade',         'z' => $z];
+        return $this->getChildIMCClassification($z);
+    }
+
+    /**
+     * Validate parameters for child IMC classification
+     */
+    private function validateChildIMCParameters(string $sexo): ?array
+    {
+        if (!$this->usingDatabaseData) {
+            return ['code' => 'no_reference_data', 'label' => self::NO_REFERENCE_DATA_LABEL];
         }
 
+        if ($this->normalizarSexo($sexo) === null) {
+            return ['code' => 'not_evaluable', 'label' => self::NOT_EVALUABLE_LABEL];
+        }
+
+        return null; // Valid parameters
+    }
+
+    /**
+     * Get child IMC classification based on Z-score
+     */
+    private function getChildIMCClassification(float $z): array
+    {
+        if ($z < -3) return ['code' => 'severe_thinness', 'label' => 'Magreza acentuada', 'z' => $z];
+        if ($z < -2) return ['code' => 'thinness', 'label' => 'Magreza', 'z' => $z];
+        if ($z <= 1) return ['code' => 'normal', 'label' => 'Eutrofia', 'z' => $z];
+        if ($z <= 2) return ['code' => 'overweight_risk', 'label' => 'Risco de sobrepeso', 'z' => $z];
+        if ($z <= 3) return ['code' => 'obesity', 'label' => 'Obesidade', 'z' => $z];
         return ['code' => 'severe_obesity', 'label' => 'Obesidade grave', 'z' => $z];
     }
 
@@ -222,26 +233,43 @@ class AnthropometricService
      */
     public function calcularEscoreZIMC(float $imc, int $idadeEmMeses, string $sexo): ?float
     {
+        $lms = $this->getLMSForZScore($idadeEmMeses, $sexo);
+        if ($lms === null) {
+            return null;
+        }
+
+        $z = $this->calculateZScore($imc, $lms);
+        return round($z, 2);
+    }
+
+    /**
+     * Get LMS data for Z-score calculation
+     */
+    private function getLMSForZScore(int $idadeEmMeses, string $sexo): ?array
+    {
         $sexo = $this->normalizarSexo($sexo);
         if ($sexo === null) {
             return null;
         }
 
         $lms = $this->obterLMS($idadeEmMeses, $sexo);
-        if ($lms === null) {
+        if ($lms === null || $lms['M'] <= 0 || $lms['S'] <= 0) {
             return null;
         }
 
+        return $lms;
+    }
+
+    /**
+     * Calculate Z-score using LMS method
+     */
+    private function calculateZScore(float $imc, array $lms): float
+    {
         [$L, $M, $S] = [$lms['L'], $lms['M'], $lms['S']];
-        if ($M <= 0 || $S <= 0) {
-            return null;
-        }
-
-        $z = ($L == 0.0)
+        
+        return ($L == 0.0)
             ? (log($imc / $M) / $S)                               // caso limite quando L≈0
             : ((pow(($imc / $M), $L) - 1.0) / ($L * $S));
-
-        return round($z, 2);
     }
 
     /**
@@ -265,21 +293,13 @@ class AnthropometricService
 
     private function obterRiscoCinturaAdulto(float $circCinturaCm, string $sexo): array
     {
-        if ($sexo === 'M') {
-            if ($circCinturaCm < 94) {
-                return ['code' => 'no_risk',  'label' => 'Sem risco'];
-            }
-            if ($circCinturaCm < 102) {
-                return ['code' => 'increased', 'label' => 'Risco aumentado'];
-            }
-
-            return ['code' => 'high', 'label' => 'Risco muito aumentado'];
+        $thresholds = $sexo === 'M' ? [94, 102] : [80, 88];
+        
+        if ($circCinturaCm < $thresholds[0]) {
+            return ['code' => 'no_risk', 'label' => 'Sem risco'];
         }
-        // sexo F
-        if ($circCinturaCm < 80) {
-            return ['code' => 'no_risk',  'label' => 'Sem risco'];
-        }
-        if ($circCinturaCm < 88) {
+        
+        if ($circCinturaCm < $thresholds[1]) {
             return ['code' => 'increased', 'label' => 'Risco aumentado'];
         }
 
@@ -288,7 +308,6 @@ class AnthropometricService
 
     private function obterRiscoCinturaCrianca(float $circCinturaCm, string $sexo, int $idadeAnos): array
     {
-        // Só calcular risco de criança se estiver usando dados do banco
         if (!$this->usingDatabaseData) {
             return ['code' => 'no_reference_data', 'label' => self::NO_REFERENCE_DATA_LABEL];
         }
@@ -298,11 +317,10 @@ class AnthropometricService
             return ['code' => 'no_reference_data', 'label' => self::NO_REFERENCE_DATA_LABEL];
         }
 
-        if ($circCinturaCm >= $p90) {
-            return ['code' => 'increased', 'label' => 'Risco aumentado (≥ P90)', 'p90' => $p90];
-        }
-
-        return ['code' => 'no_risk', 'label' => 'Sem risco (< P90)', 'p90' => $p90];
+        $riskStatus = $circCinturaCm >= $p90 ? 'increased' : 'no_risk';
+        $riskLabel = $circCinturaCm >= $p90 ? 'Risco aumentado (≥ P90)' : 'Sem risco (< P90)';
+        
+        return ['code' => $riskStatus, 'label' => $riskLabel, 'p90' => $p90];
     }
 
     /** Normaliza sexo para 'M' ou 'F' */
@@ -401,7 +419,6 @@ class AnthropometricService
      */
     private function interpolateFromDataSet(array $dataSet, int $targetAge, string $sexo, callable $interpolateCallback): mixed
     {
-        // Interpolação entre idades disponíveis
         $idades = array_keys($dataSet);
         if (empty($idades)) {
             return null;
@@ -409,14 +426,24 @@ class AnthropometricService
         
         [$menor, $maior] = $this->findBoundingAges($idades, $targetAge);
         
-        $result = $this->processInterpolationBounds($dataSet, $menor, $maior, $sexo);
-        if ($result !== null || $menor === null || $maior === null) {
-            return $result;
+        // Check boundary conditions first
+        $boundaryResult = $this->processInterpolationBounds($dataSet, $menor, $maior, $sexo);
+        if ($boundaryResult !== null || $menor === null || $maior === null) {
+            return $boundaryResult;
         }
         
-        // Interpolação
+        // Perform interpolation with validation
+        return $this->performDataSetInterpolation($dataSet, $menor, $maior, $targetAge, $sexo, $interpolateCallback);
+    }
+
+    /**
+     * Perform interpolation between two data points
+     */
+    private function performDataSetInterpolation(array $dataSet, int $menor, int $maior, int $targetAge, string $sexo, callable $interpolateCallback): mixed
+    {
         $a = $dataSet[$menor][$sexo] ?? null;
         $b = $dataSet[$maior][$sexo] ?? null;
+        
         if (!$a || !$b) {
             return null;
         }
