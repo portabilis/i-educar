@@ -76,21 +76,33 @@ class AnthropometricService
      */
     public function obterClassificacaoIMCCrianca(float $imc, int $idadeEmMeses, string $sexo): array
     {
+        $validationResult = $this->validateChildIMCInputs($sexo);
+        if ($validationResult !== null) {
+            return $validationResult;
+        }
+
+        $sexoNorm = $this->calculator->normalizarSexo($sexo);
+        $z = $this->calcularEscoreZIMC($imc, $idadeEmMeses, $sexoNorm);
+
+        return $z === null
+            ? ['code' => 'not_evaluable', 'label' => $this->calculator->getNotEvaluableLabel()]
+            : $this->calculator->getChildIMCClassification($z);
+    }
+
+    /**
+     * Validate inputs for child IMC classification
+     */
+    private function validateChildIMCInputs(string $sexo): ?array
+    {
         if (!$this->dataLoader->isUsingDatabaseData()) {
             return ['code' => 'no_reference_data', 'label' => $this->calculator->getNoReferenceDataLabel()];
         }
 
-        $sexoNorm = $this->calculator->normalizarSexo($sexo);
-        if ($sexoNorm === null) {
+        if ($this->calculator->normalizarSexo($sexo) === null) {
             return ['code' => 'not_evaluable', 'label' => $this->calculator->getNotEvaluableLabel()];
         }
 
-        $z = $this->calcularEscoreZIMC($imc, $idadeEmMeses, $sexoNorm);
-        if ($z === null) {
-            return ['code' => 'not_evaluable', 'label' => $this->calculator->getNotEvaluableLabel()];
-        }
-
-        return $this->calculator->getChildIMCClassification($z);
+        return null; // Valid inputs
     }
 
     /**
