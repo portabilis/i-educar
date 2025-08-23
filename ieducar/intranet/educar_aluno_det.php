@@ -795,72 +795,127 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['<span id="ffmedica"></span>Celular', $reg['responsavel_parentesco_celular']]);
         }
 
-        // Dados Antropométricos e Demográficos
+        // Dados Antropométricos e Demográficos - Histórico completo
         try {
-            $latestAnthropometricData = LegacyStudentHistoricalHeightWeight::where('ref_cod_aluno', $this->cod_aluno)
+            $anthropometricData = LegacyStudentHistoricalHeightWeight::where('ref_cod_aluno', $this->cod_aluno)
                 ->orderBy('data_historico', 'desc')
-                ->first();
+                ->take(10) // Limitar a 10 registros mais recentes
+                ->get();
 
-            if ($latestAnthropometricData) {
+            if ($anthropometricData->isNotEmpty()) {
                 $this->addDetalhe(detalhe: ['<span id="fantropometrico"></span>Dados Antropométricos e Demográficos']);
-                $this->addDetalhe(detalhe: ['Data da avaliação', $latestAnthropometricData->data_historico->format('d/m/Y')]);
-
-                // Normalizar altura para centímetros
-                $altura_original = (float) $latestAnthropometricData->altura;
-                $altura_cm = $altura_original;
-                $altura_display = '';
-
-                if ($altura_original < 10) {
-                    // Se menor que 10, provavelmente está em metros, converter para cm
-                    $altura_cm = $altura_original * 100;
-                    $altura_display = number_format($altura_original, 2) . ' m (' . number_format($altura_cm, 0) . ' cm)';
-                } else {
-                    // Já está em centímetros
-                    $altura_display = number_format($altura_cm, 0) . ' cm';
-                }
-
-                $this->addDetalhe(detalhe: ['Altura', $altura_display]);
-                $this->addDetalhe(detalhe: ['Peso', $latestAnthropometricData->peso . ' kg']);
-
-                if ($latestAnthropometricData->circunferencia_cintura !== null && $latestAnthropometricData->circunferencia_cintura !== '') {
-                    $this->addDetalhe(detalhe: ['Circunferência da cintura', $latestAnthropometricData->circunferencia_cintura . ' cm']);
-                }
-
-                // Calcular avaliação antropométrica completa usando AnthropometricService
+                
+                // Inicializar serviço antropométrico
                 $anthropometricService = new AnthropometricService;
                 $anthropometricService->carregarReferenciasDoBanco();
+                $hasClassificationData = $anthropometricService->isUsingDatabaseData();
                 
-                $avaliacao = $anthropometricService->obterAvaliacaoCompleta(
-                    peso: (float)$latestAnthropometricData->peso,
-                    altura: $altura_cm,
-                    circunferenciaCintura: $latestAnthropometricData->circunferencia_cintura ? (float)$latestAnthropometricData->circunferencia_cintura : null,
-                    dataNascimento: $det_fisica['data_nasc'],
-                    sexo: $det_fisica['sexo'],
-                    dataAvaliacao: $latestAnthropometricData->data_historico
-                );
-
-                $this->addDetalhe(detalhe: ['IMC', number_format($avaliacao['imc'], 2, ',', '.') . ' kg/m²']);
+                // Criar tabela HTML com larguras otimizadas
+                $tabela = '<table border="1" width="100%" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
                 
-                // Exibir classificações apenas se dados do banco estiverem disponíveis
-                if ($anthropometricService->isUsingDatabaseData() && isset($avaliacao['imc_classificacao']['code']) && $avaliacao['imc_classificacao']['code'] !== 'no_reference_data') {
-                    $classificacao_label = $avaliacao['imc_classificacao']['label'] ?? 'Não disponível';
-                    $this->addDetalhe(detalhe: ['Classificação do IMC (Criança/Adolescente)', $classificacao_label]);
+                // Cabeçalho da tabela com larguras definidas
+                $tabela .= '<thead><tr style="background-color: #ccdce6; font-weight: bold; text-align: center;">';
+                $tabela .= '<td style="width: 80px;">Data</td>';
+                $tabela .= '<td style="width: 60px;">Peso<br>(kg)</td>';
+                $tabela .= '<td style="width: 60px;">Altura<br>(cm)</td>';
+                $tabela .= '<td style="width: 70px;">IMC<br>(kg/m²)</td>';
+                if ($hasClassificationData) {
+                    $tabela .= '<td style="min-width: 120px;">Classificação</td>';
+                    $tabela .= '<td style="width: 70px;">Z-Score</td>';
+                }
+                $tabela .= '<td style="width: 60px;">Cintura<br>(cm)</td>';
+                if ($hasClassificationData) {
+                    $tabela .= '<td style="min-width: 140px;">Risco Cintura</td>';
+                }
+                $tabela .= '</tr></thead>';
+                
+                // Corpo da tabela
+                $tabela .= '<tbody>';
+                $cor = '#f5f9fd';
+                
+                foreach ($anthropometricData as $registro) {
+                    $cor = $cor == '#f5f9fd' ? '#ffffff' : '#f5f9fd';
                     
-                    if (isset($avaliacao['imc_zscore'])) {
-                        $this->addDetalhe(detalhe: ['Escore Z do IMC', number_format($avaliacao['imc_zscore'], 2, ',', '.')]);
+                    // Normalizar altura para centímetros
+                    $altura_original = (float) $registro->altura;
+                    $altura_cm = $altura_original < 10 ? $altura_original * 100 : $altura_original;
+                    $altura_display = $altura_original < 10 
+                        ? number_format($altura_original, 2) . 'm' 
+                        : number_format($altura_cm, 0) . 'cm';
+                    
+                    // Calcular avaliação antropométrica completa
+                    $avaliacao = null;
+                    if ($hasClassificationData) {
+                        $avaliacao = $anthropometricService->obterAvaliacaoCompleta(
+                            peso: (float)$registro->peso,
+                            altura: $altura_cm,
+                            circunferenciaCintura: $registro->circunferencia_cintura ? (float)$registro->circunferencia_cintura : null,
+                            dataNascimento: $det_fisica['data_nasc'],
+                            sexo: $det_fisica['sexo'],
+                            dataAvaliacao: $registro->data_historico
+                        );
                     }
+                    
+                    $tabela .= sprintf('<tr style="background-color: %s; text-align: center;">', $cor);
+                    $tabela .= '<td style="white-space: nowrap;">' . $registro->data_historico->format('d/m/y') . '</td>';
+                    $tabela .= '<td>' . number_format((float)$registro->peso, 1, ',', '.') . '</td>';
+                    $tabela .= '<td>' . $altura_display . '</td>';
+                    
+                    if ($avaliacao) {
+                        $tabela .= '<td>' . number_format($avaliacao['imc'], 2, ',', '.') . '</td>';
+                        
+                        // Classificação
+                        $classificacao = 'N/A';
+                        if (isset($avaliacao['imc_classificacao']['code']) && $avaliacao['imc_classificacao']['code'] !== 'no_reference_data') {
+                            $classificacao = '<span title="' . ($avaliacao['imc_classificacao']['label'] ?? '') . '">' . 
+                                           $avaliacao['imc_classificacao']['label'] . '</span>';
+                        }
+                        $tabela .= '<td style="font-size: 0.9em;">' . $classificacao . '</td>';
+                        
+                        // Z-Score
+                        $zscore = isset($avaliacao['imc_zscore']) ? number_format($avaliacao['imc_zscore'], 2, ',', '.') : 'N/A';
+                        $tabela .= '<td>' . $zscore . '</td>';
+                    } else {
+                        // IMC simples sem classificação
+                        $imc_simples = (float)$registro->peso / (($altura_cm/100) * ($altura_cm/100));
+                        $tabela .= '<td>' . number_format($imc_simples, 2, ',', '.') . '</td>';
+                        $tabela .= '<td>N/A</td>';
+                        $tabela .= '<td>N/A</td>';
+                    }
+                    
+                    // Circunferência da cintura
+                    $cintura_display = ($registro->circunferencia_cintura && $registro->circunferencia_cintura !== '') 
+                        ? number_format((float)$registro->circunferencia_cintura, 1, ',', '.') 
+                        : '-';
+                    $tabela .= '<td>' . $cintura_display . '</td>';
+                    
+                    // Risco da cintura - sem truncar o texto
+                    if ($hasClassificationData && $avaliacao && isset($avaliacao['cintura_classificacao']['code']) && $avaliacao['cintura_classificacao']['code'] !== 'no_reference_data') {
+                        $risco_cintura = $avaliacao['cintura_classificacao']['label'] ?? 'N/A';
+                        $tabela .= '<td style="font-size: 0.9em;">' . $risco_cintura . '</td>';
+                    } elseif ($hasClassificationData) {
+                        $tabela .= '<td>N/A</td>';
+                    }
+                    
+                    $tabela .= '</tr>';
                 }
                 
-                if ($anthropometricService->isUsingDatabaseData() && isset($avaliacao['cintura_classificacao']['code']) && $avaliacao['cintura_classificacao']['code'] !== 'no_reference_data') {
-                    $risco_label = $avaliacao['cintura_classificacao']['label'] ?? 'Não disponível';
-                    $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>Risco da circunferência da cintura', $risco_label]);
+                $tabela .= '</tbody></table>';
+                
+                // Adicionar nota explicativa se os dados WHO 2007 estão disponíveis
+                if ($hasClassificationData) {
+                    $tabela .= '<br><small><strong>Nota:</strong> Classificações e Z-scores baseados nos padrões WHO 2007. ' .
+                              'Aplicável para crianças e adolescentes de 5-19 anos.</small>';
                 } else {
-                    $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>']);
+                    $tabela .= '<br><small><strong>Nota:</strong> Para ver classificações e Z-scores WHO 2007, execute: ' .
+                              '<code>php artisan anthropometric:load</code></small>';
                 }
+                
+                $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>Histórico Antropométrico', $tabela]);
             }
         } catch (Exception $e) {
             // Em caso de erro, adicionar marcador vazio para evitar problemas no JavaScript
-            $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>']);
+            $this->addDetalhe(detalhe: ['<span id="ffantropometrico"></span>Erro ao carregar dados antropométricos: ' . $e->getMessage()]);
         }
 
         $uniformDistribution = UniformDistribution::where('student_id', $this->cod_aluno)
@@ -1045,8 +1100,13 @@ return new class extends clsDetalhe
 
         $this->url_cancelar = 'educar_aluno_lst.php';
         $this->largura = '100%';
-        $this->addDetalhe(detalhe: "<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
-        $this->addDetalhe(detalhe: "<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
+        
+        // Garantir que os valores existam para o JavaScript
+        $escola_id = $registro['ref_cod_escola'] ?? '';
+        $aluno_id = $registro['cod_aluno'] ?? $this->cod_aluno;
+        
+        $this->addDetalhe(detalhe: "<input type='hidden' id='escola_id' name='escola_id' value='{$escola_id}' />");
+        $this->addDetalhe(detalhe: "<input type='hidden' id='aluno_id' name='aluno_id' value='{$aluno_id}' />");
         $mostraDependencia = config(key: 'legacy.app.matricula.dependencia');
         $this->addDetalhe(detalhe: "<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
 
