@@ -1034,7 +1034,7 @@ return new class extends clsDetalhe
     /**
      * Exibe dados antropométricos em formato de tabela histórica
      */
-    private function exibirDadosAntropometricos($det_fisica)
+    private function exibirDadosAntropometricos($det_fisica): void
     {
         try {
             $anthropometricData = LegacyStudentHistoricalHeightWeight::where('ref_cod_aluno', $this->cod_aluno)
@@ -1061,7 +1061,7 @@ return new class extends clsDetalhe
     /**
      * Monta a tabela HTML com dados antropométricos
      */
-    private function montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica)
+    private function montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica): string
     {
         $tabela = $this->gerarCabecalhoTabela($hasClassificationData);
         $tabela .= '<tbody>';
@@ -1081,7 +1081,7 @@ return new class extends clsDetalhe
     /**
      * Gera o cabeçalho da tabela antropométrica
      */
-    private function gerarCabecalhoTabela($hasClassificationData)
+    private function gerarCabecalhoTabela($hasClassificationData): string
     {
         $html = '<table border="1" width="100%" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
         $html .= '<thead><tr style="background-color: #ccdce6; font-weight: bold; text-align: center;">';
@@ -1116,7 +1116,7 @@ return new class extends clsDetalhe
     /**
      * Gera uma linha da tabela antropométrica
      */
-    private function gerarLinhaTabela($registro, $anthropometricService, $hasClassificationData, $det_fisica, $cor)
+    private function gerarLinhaTabela($registro, $anthropometricService, $hasClassificationData, $det_fisica, $cor): string
     {
         $altura_cm = $this->normalizarAltura($registro->altura);
 
@@ -1142,7 +1142,7 @@ return new class extends clsDetalhe
     /**
      * Normaliza altura para centímetros
      */
-    private function normalizarAltura($altura)
+    private function normalizarAltura($altura): float
     {
         $altura_original = (float) $altura;
 
@@ -1152,7 +1152,7 @@ return new class extends clsDetalhe
     /**
      * Formata altura para exibição
      */
-    private function formatarAltura($altura, $altura_cm)
+    private function formatarAltura($altura, $altura_cm): string
     {
         $altura_original = (float) $altura;
 
@@ -1164,7 +1164,7 @@ return new class extends clsDetalhe
     /**
      * Gera todas as células de dados da linha da tabela
      */
-    private function gerarCelulasTabela($registro, $avaliacao, $hasClassificationData, $altura_cm)
+    private function gerarCelulasTabela($registro, $avaliacao, $hasClassificationData, $altura_cm): string
     {
         $altura_display = $this->formatarAltura($registro->altura, $altura_cm);
         
@@ -1177,7 +1177,7 @@ return new class extends clsDetalhe
         if ($avaliacao) {
             $html .= '<td>' . number_format($avaliacao['imc'], 2, ',', '.') . '</td>';
             $html .= '<td style="font-size: 0.9em;">' . $this->obterClassificacao($avaliacao) . '</td>';
-            $zscore = isset($avaliacao['imc_zscore']) ? number_format($avaliacao['imc_zscore'], 2, ',', '.') : 'N/A';
+            $zscore = ($avaliacao['imc_zscore'] ?? null) ? number_format($avaliacao['imc_zscore'], 2, ',', '.') : 'N/A';
             $html .= '<td>' . $zscore . '</td>';
         } else {
             $imc_simples = (float) $registro->peso / (($altura_cm / 100) * ($altura_cm / 100));
@@ -1196,9 +1196,9 @@ return new class extends clsDetalhe
     /**
      * Obtém classificação formatada
      */
-    private function obterClassificacao($avaliacao)
+    private function obterClassificacao($avaliacao): string
     {
-        if (isset($avaliacao['imc_classificacao']['code']) && $avaliacao['imc_classificacao']['code'] !== 'no_reference_data') {
+        if (($avaliacao['imc_classificacao']['code'] ?? 'no_reference_data') !== 'no_reference_data') {
             return '<span title="' . ($avaliacao['imc_classificacao']['label'] ?? '') . '">' .
                    $avaliacao['imc_classificacao']['label'] . '</span>';
         }
@@ -1209,7 +1209,7 @@ return new class extends clsDetalhe
     /**
      * Gera célula de cintura e risco
      */
-    private function gerarCelulaCintura($registro, $avaliacao, $hasClassificationData)
+    private function gerarCelulaCintura($registro, $avaliacao, $hasClassificationData): string
     {
         $cintura_display = ($registro->circunferencia_cintura && $registro->circunferencia_cintura !== '')
             ? number_format((float) $registro->circunferencia_cintura, 1, ',', '.')
@@ -1218,8 +1218,7 @@ return new class extends clsDetalhe
         $html = '<td>' . $cintura_display . '</td>';
 
         if ($hasClassificationData) {
-            if ($avaliacao && isset($avaliacao['cintura_classificacao']['code']) &&
-                $avaliacao['cintura_classificacao']['code'] !== 'no_reference_data') {
+            if ($avaliacao && ($avaliacao['cintura_classificacao']['code'] ?? 'no_reference_data') !== 'no_reference_data') {
                 $risco = $avaliacao['cintura_classificacao']['label'] ?? 'N/A';
                 $html .= '<td style="font-size: 0.9em;">' . $risco . '</td>';
             } else {
@@ -1233,7 +1232,7 @@ return new class extends clsDetalhe
     /**
      * Gera nota explicativa
      */
-    private function gerarNotaExplicativa($hasClassificationData)
+    private function gerarNotaExplicativa($hasClassificationData): string
     {
         if ($hasClassificationData) {
             return '<br><small><strong>Nota:</strong> Classificações e Z-scores baseados nos padrões WHO 2007. ' .

@@ -386,7 +386,7 @@ class AnthropometricService
     /**
      * Método genérico para interpolação de dados de qualquer dataset
      */
-    private function interpolateFromDataSet(array $dataSet, int $targetAge, string $sexo, callable $interpolateCallback)
+    private function interpolateFromDataSet(array $dataSet, int $targetAge, string $sexo, callable $interpolateCallback): mixed
     {
         // Interpolação entre idades disponíveis
         $idades = array_keys($dataSet);

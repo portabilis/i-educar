@@ -32,7 +32,7 @@ class LoadAnthropometricDataCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $this->info('Carregamento de Dados Antropométricos WHO 2007');
         $this->newLine();
@@ -81,7 +81,7 @@ class LoadAnthropometricDataCommand extends Command
     /**
      * Check if migrations are up to date.
      */
-    private function checkMigrations()
+    private function checkMigrations(): void
     {
         $this->info('Verificando migrations...');
 
@@ -95,7 +95,7 @@ class LoadAnthropometricDataCommand extends Command
     /**
      * Truncate tables if fresh option is used.
      */
-    private function freshTables()
+    private function freshTables(): void
     {
         $this->warn('Limpando tabelas existentes...');
 
@@ -105,7 +105,7 @@ class LoadAnthropometricDataCommand extends Command
             $this->info('Tabelas limpas');
         } else {
             $this->info('Operação cancelada');
-            exit(Command::FAILURE);
+            return;
         }
     }
 
@@ -198,7 +198,7 @@ class LoadAnthropometricDataCommand extends Command
     /**
      * Show final statistics after loading.
      */
-    private function showFinalStatistics()
+    private function showFinalStatistics(): void
     {
         $this->table(['Tipo', 'Quantidade', 'Detalhes'], AnthropometricStatistics::getTableData());
 

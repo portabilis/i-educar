@@ -29,7 +29,7 @@ abstract class AbstractAnthropometricSeeder extends XlsxSeeder
     /**
      * Run both boys and girls seeders
      */
-    public function run()
+    public function run(): void
     {
         // Seed boys data
         static::forGender('M')->setCommand($this->command)->runSeeder();
@@ -98,7 +98,7 @@ abstract class AbstractAnthropometricSeeder extends XlsxSeeder
     /**
      * Unified seeder method
      */
-    public function runSeeder()
+    public function runSeeder(): void
     {
         $this->command->info("Carregando dados {$this->typeDescription} para {$this->getGenderDescription()}...");
 
