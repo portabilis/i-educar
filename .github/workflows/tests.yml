@@ -50,8 +50,8 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
-      - name: Setup PHP
-        uses: actions/checkout@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -76,9 +76,6 @@ jobs:
 
       - name: Prepare tests
         run: php artisan legacy:create:tests
-
-      - name: Run migrations
-        run: php artisan migrate --force
 
       - name: Unit tests
         run: vendor/bin/pest
