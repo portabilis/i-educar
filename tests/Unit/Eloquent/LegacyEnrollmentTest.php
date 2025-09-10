@@ -30,8 +30,7 @@ class LegacyEnrollmentTest extends EloquentTestCase
         return LegacyEnrollment::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->ref_cod_matricula, $this->model->registration_id);
         $this->assertEquals($this->model->registration->student->person->nome, $this->model->student_name);

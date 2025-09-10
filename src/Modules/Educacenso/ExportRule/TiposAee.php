@@ -13,7 +13,7 @@ class TiposAee implements EducacensoExportRule
      */
     public static function handle(RegistroEducacenso $registro60): RegistroEducacenso
     {
-        if ($registro60->tipoAtendimentoTurma != TipoAtendimentoTurma::AEE) {
+        if (!in_array(TipoAtendimentoTurma::AEE, $registro60->tipoAtendimentoTurma)) {
             $registro60->tipoAtendimentoDesenvolvimentoFuncoesGognitivas = null;
             $registro60->tipoAtendimentoDesenvolvimentoVidaAutonoma = null;
             $registro60->tipoAtendimentoEnriquecimentoCurricular = null;

@@ -16,9 +16,9 @@ class SearchPath extends Migration
 
         DB::unprepared(
             '
-                ALTER DATABASE ' . $database . ' 
-                SET search_path = "$user", public, portal, cadastro, 
-                pmieducar, urbano, modules;
+                ALTER DATABASE ' . $database . '
+                SET search_path = "$user", public, portal, cadastro,
+                pmieducar, modules;
             '
         );
     }

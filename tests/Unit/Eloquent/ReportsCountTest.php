@@ -15,8 +15,7 @@ class ReportsCountTest extends EloquentTestCase
         return ReportsCount::class;
     }
 
-    /** @test  */
-    public function valid_increment_count()
+    public function test_valid_increment_count()
     {
         ReportsCount::updateOrCreate([
             'render' => 'html',

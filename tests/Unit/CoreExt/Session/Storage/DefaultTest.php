@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Session;
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\TestCase;
 
 class CoreExt_Session_Storage_DefaultTest extends TestCase
@@ -32,9 +33,7 @@ class CoreExt_Session_Storage_DefaultTest extends TestCase
         $this->assertEquals('bar/3', Session::get('foo/3'));
     }
 
-    /**
-     * @depends test_escreve_dados_na_session
-     */
+    #[Depends('test_escreve_dados_na_session')]
     public function test_ler_dados_armazenados_na_session()
     {
         $this->_storage->write('foo', 'bar');

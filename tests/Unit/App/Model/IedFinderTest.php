@@ -2,6 +2,7 @@
 
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Depends;
 
 class App_Model_IedFinderTest extends UnitBaseTest
 {
@@ -377,9 +378,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    /**
-     * @depends App_Model_IedFinderTest::test_get_regra_avaliacao_por_matricula
-     */
+    #[Depends('test_get_regra_avaliacao_por_matricula')]
     public function test_get_componentes_por_matricula()
     {
         // Método foi alterado. Terá que ser escrito um novo teste
@@ -434,9 +433,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
         );
     }
 
-    /**
-     * @depends App_Model_IedFinderTest::test_get_regra_avaliacao_por_matricula
-     */
+    #[Depends('test_get_regra_avaliacao_por_matricula')]
     public function test_get_quantidade_de_modulos_matricula_curso_ano_nao_padrao()
     {
         $this->markTestSkipped();

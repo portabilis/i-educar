@@ -5,10 +5,10 @@ namespace App\Models\Educacenso;
 use App\Models\LegacySchoolClass;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
-use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 
@@ -67,7 +67,7 @@ class Registro20 implements RegistroEducacenso
     /**
      * @var array
      */
-    public $estruturaCurricular;
+    public $organizacaoCurricular;
 
     /**
      * @var array
@@ -78,6 +78,8 @@ class Registro20 implements RegistroEducacenso
      * @var string
      */
     public $etapaEducacenso;
+
+    public $etapaAgregada;
 
     /**
      * @var array
@@ -214,9 +216,19 @@ class Registro20 implements RegistroEducacenso
 
     public $classeComLinguaBrasileiraSinais;
 
+    public $classeEspecial;
+
+    public $formacaoAlternancia;
+
     public $outrasUnidadesCurricularesObrigatorias;
 
     public $turmaTurnoId;
+
+    public $areaItinerario;
+
+    public $tipoCursoIntinerario;
+
+    public $codCursoProfissionalIntinerario;
 
     /**
      * @return bool
@@ -373,9 +385,9 @@ class Registro20 implements RegistroEducacenso
     /**
      * @return bool
      */
-    public function escolarizacao()
+    public function curricularEtapaDeEnsino()
     {
-        return $this->tipoAtendimento == TipoAtendimentoTurma::ESCOLARIZACAO;
+        return in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $this->tipoAtendimento);
     }
 
     /**
@@ -383,7 +395,7 @@ class Registro20 implements RegistroEducacenso
      */
     public function atividadeComplementar()
     {
-        return $this->tipoAtendimento == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR;
+        return in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $this->tipoAtendimento);
     }
 
     /**
@@ -391,7 +403,7 @@ class Registro20 implements RegistroEducacenso
      */
     public function atendimentoEducacionalEspecializado()
     {
-        return $this->tipoAtendimento == TipoAtendimentoTurma::AEE;
+        return in_array(TipoAtendimentoTurma::AEE, $this->tipoAtendimento);
     }
 
     /**
@@ -479,31 +491,37 @@ class Registro20 implements RegistroEducacenso
         return $descriptiveValues[$this->formasOrganizacaoTurma];
     }
 
-    public function itinerarioFormativo()
+    public function itinerarioFormativoAprofundamento()
     {
-        return in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $this->estruturaCurricular);
+        return in_array(OrganizacaoCurricular::ITINERARIO_FORMATIVO_APROFUNDAMENTO, $this->organizacaoCurricular);
     }
 
     public function formacaoGeralBasica()
     {
-        return in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $this->estruturaCurricular);
+        return in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $this->organizacaoCurricular);
     }
 
-    public function estruturaCurricularNaoSeAplica()
+    public function itinerarioFormacaoTecnicaProfissional()
     {
-        return in_array(EstruturaCurricular::NAO_SE_APLICA, $this->estruturaCurricular);
+        return in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $this->organizacaoCurricular);
+    }
+
+    public function possuiOrganizacaoCurricular()
+    {
+        return $this->itinerarioFormacaoTecnicaProfissional() ||
+            $this->itinerarioFormativoAprofundamento() ||
+            $this->formacaoGeralBasica();
     }
 
     public function requereFormasOrganizacaoTurma()
     {
-        return $this->escolarizacao() && !in_array($this->etapaEducacenso, [1, 2, 3, 24]);
+        return $this->curricularEtapaDeEnsino() && !in_array($this->etapaEducacenso, [1, 2, 3, 24]);
     }
 
     public function requereEtapaEducacenso()
     {
-        return in_array($this->estruturaCurricular, [
-            EstruturaCurricular::FORMACAO_GERAL_BASICA,
-            EstruturaCurricular::NAO_SE_APLICA,
+        return in_array($this->organizacaoCurricular, [
+            OrganizacaoCurricular::FORMACAO_GERAL_BASICA,
         ]);
     }
 }

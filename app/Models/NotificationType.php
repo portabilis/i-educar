@@ -18,6 +18,8 @@ class NotificationType extends Model
 
     public const EXPORT_TEACHER = 4;
 
+    public const ACTIVE_LOOKING = 5;
+
     public $timestamps = false;
 
     protected $table = 'public.notification_type';

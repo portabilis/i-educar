@@ -23,7 +23,7 @@ return new class extends clsListagem
 
     public $ref_cod_tipo_ensino;
 
-    public $ref_cod_tipo_avaliacao;
+    public $ref_cod_tipo_avaliacao; // TODO: remover no futuro
 
     public $nm_curso;
 
@@ -108,7 +108,6 @@ return new class extends clsListagem
         $lista = $obj_curso->lista(
             int_ref_cod_tipo_regime: $this->ref_cod_nivel_ensino,
             int_ref_cod_nivel_ensino: $this->ref_cod_tipo_ensino,
-            int_ref_cod_tipo_avaliacao: $this->nm_curso,
             date_data_cadastro_fim: 1
         );
 

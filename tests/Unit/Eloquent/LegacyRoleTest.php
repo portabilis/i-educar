@@ -22,14 +22,12 @@ class LegacyRoleTest extends EloquentTestCase
         return LegacyRole::class;
     }
 
-    /** @test */
-    public function get_id_attribute(): void
+    public function test_get_id_attribute(): void
     {
         $this->assertEquals($this->model->id, $this->model->cod_funcao);
     }
 
-    /** @test  */
-    public function scope_professor(): void
+    public function test_scope_professor(): void
     {
         $this->createNewModel();
 

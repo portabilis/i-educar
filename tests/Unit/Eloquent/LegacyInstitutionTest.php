@@ -30,8 +30,7 @@ class LegacyInstitutionTest extends EloquentTestCase
         $this->assertCount(1, $found);
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->cod_instituicao, $this->model->id);
         $this->assertEquals($this->model->nm_instituicao, $this->model->name);

@@ -2,7 +2,6 @@
 
 namespace App\Models\Educacenso;
 
-use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Model\PoderPublicoTransporte;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -105,6 +104,11 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
     public $turnoId;
 
     /**
+     * @var ?int Campo usado somente na análise
+     */
+    public $turmaClasseEspecial;
+
+    /**
      * @var string Campo usado somente na análise
      */
     public $nomeEscola;
@@ -137,7 +141,7 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
     /**
      * @var array Campo usado somente na análise
      */
-    public $estruturaCurricularTurma;
+    public $organizacaoCurricularTurma;
 
     /**
      * @var int Campo usado somente na análise
@@ -189,7 +193,7 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
             TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
         ];
 
-        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO
+        return in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $this->tipoAtendimentoTurma)
             && in_array($this->tipoMediacaoTurma, $tiposMediacaoPresencial)
             && $this->paisResidenciaAluno == PaisResidencia::BRASIL;
     }
@@ -209,8 +213,8 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
 
     public function isAtividadeComplementarOrAee()
     {
-        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR ||
-            $this->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE;
+        return in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $this->tipoAtendimentoTurma) ||
+            in_array(TipoAtendimentoTurma::AEE, $this->tipoAtendimentoTurma);
     }
 
     /**
@@ -218,35 +222,10 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
      */
     public function recebeEscolarizacaoOutroEspacoIsRequired()
     {
-        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO &&
+        return in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $this->tipoAtendimentoTurma) &&
             $this->tipoMediacaoTurma == TipoMediacaoDidaticoPedagogico::PRESENCIAL &&
             $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA &&
             $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::SALA_ANEXA;
-    }
-
-    /**
-     * @return bool
-     */
-    public function analisaDadosItinerario()
-    {
-        if (
-            in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $this->estruturaCurricularTurma) &&
-            count($this->estruturaCurricularTurma) === 1
-        ) {
-            return true;
-        }
-
-        $etapasValidas = [25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 71, 74];
-
-        if (
-            in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $this->estruturaCurricularTurma) &&
-            in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $this->estruturaCurricularTurma) &&
-            in_array($this->etapaTurma, $etapasValidas)
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

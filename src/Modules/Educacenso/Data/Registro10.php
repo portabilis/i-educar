@@ -120,103 +120,104 @@ class Registro10 extends AbstractRegistro
             $data->recursosAcessibilidadeSinalizacaoTatil() ?: 0, // 87	Sinalização tátil
             $data->recursosAcessibilidadeSinalizacaoVisual() ?: 0, // 88 Sinalização visual (piso/paredes)
             $data->recursosAcessibilidadeNenhum() ?: 0, // 89 Nenhum dos recursos de acessibilidade listados
-            $data->predioEscolar() ? $data->numeroSalasUtilizadasDentroPredio : '', // 90 Número de salas de aula utilizadas na escola dentro do prédio escolar
-            $data->numeroSalasUtilizadasForaPredio, // 91 Número de salas de aula utilizadas na escola fora do prédio escolar
-            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasClimatizadas : null, // 92 Número de salas de aula climatizadas (ar condicionado, aquecedor ou climatizador)
-            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasAcessibilidade : null, // 93	Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida
-            $data->possuiAntenaParabolica() ?: 0, // 94	Antena parabólica
-            $data->possuiComputadores() ?: 0, // 95	Computadores
-            $data->possuiCopiadora() ?: 0, // 96 Copiadora
-            $data->possuiImpressoras() ?: 0, // 97 Impressora
-            $data->possuiImpressorasMultifuncionais() ?: 0, // 98 Impressora Multifuncional
-            $data->possuiScanner() ?: 0, // 99 Scanner
-            $data->nenhumEquipamentoNaEscola() ?: 0, // 100 Nenhum dos equipamentos listados
-            $data->dvds ?: null, // 101 Aparelho de DVD/Blu-ray
-            $data->aparelhosDeSom ?: null, // 102 Aparelho de som
-            $data->televisoes ?: null, // 103 Aparelho de Televisão
-            $data->lousasDigitais ?: null, // 104 Lousa digital
-            $data->projetoresDigitais ?: null, // 105 Projetor Multimídia (Data show)
-            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosMesa : null, // 106 Computadores de mesa (desktop)
-            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosPortateis : null, // 107 Computadores portáteis
-            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosTablets : null, // 108 Tablets
-            $data->usoInternetAdministrativo() ?: 0, // 109	Para uso administrativo
-            $data->usoInternetProcessosEnsino() ?: 0, // 110 Para uso no processo de ensino e aprendizagem
-            $data->usoInternetAlunos() ?: 0, // 111	Para uso dos aluno(a)s
-            $data->usoInternetComunidade() ?: 0, // 112	Para uso da comunidade
-            $data->usoInternetNaoPossui() ?: 0, // 113	Não possui acesso à internet
-            $data->equipamentosAcessoInternetComputadorMesa() ?: 0, // 114 Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula etc.)
-            $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0, // 115 Dispositivos pessoais (computadores portáteis, celulares, tablets etc.)
-            $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 116 Internet banda larga
-            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalACabo() ?: 0) : null, // 117	A cabo
-            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalWireless() ?: 0) : null, // 118	Wireless
-            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalNenhuma() ?: 0) : null, // 119 Não há rede local interligando computadores
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdAgronomosHorticultores, // 120	Agrônomos(as), horticultores(as), técnicos ou monitores(as) responsáveis pela gestão da área de horta, plantio e/ou produção agrícola
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdAuxiliarAdministrativo, // 121	Auxiliares de secretaria ou auxiliares administrativos, atendentes
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdAuxiliarServicosGerais, // 122	Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), jardineiro(a)
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdBibliotecarios, // 123	Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdBombeiro, // 124 Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), enfermeiro(a), técnico(a) de enfermagem e socorrista
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdCoordenadorTurno, // 125 Coordenador(a) de turno/disciplinar
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdFonoaudiologo, // 126 Fonoaudiólogo(a)
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdNutricionistas, // 127 Nutricionista
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdPsicologo, // 128 Psicólogo(a) escolar
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdProfissionaisPreparacao, // 129 Profissionais de preparação e segurança alimentar, cozinheiro(a), merendeira e auxiliar de cozinha
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdApoioPedagogico, // 130 Profissionais de apoio e supervisão pedagógica: (pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdSecretarioEscolar, // 131 Secretário(a) escolar
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdSegurancas, // 132 Segurança, guarda ou segurança patrimonial
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdTecnicos, // 133 Técnicos(as), monitores(as), supervisores(as) ou auxiliares de laboratório(s), de apoio a tecnologias educacionais ou em multimeios/multimídias eletrônico-digitais.
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdViceDiretor, // 134 Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdOrientadorComunitario, // 135 Orientador(a) comunitário(a) ou assistente social
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdTradutorInterpreteLibrasOutroAmbiente, // 136 Tradutor e Intérprete de Libras para atendimento em outros ambientes da escola que não seja sala de aula
-            $data->semFuncionariosParaFuncoes ? null : $data->qtdRevisorBraile, // 137 Revisor de texto Braile, assistente vidente (assistente de revisão do texto em Braille)
-            $data->semFuncionariosParaFuncoes ? 1 : null, // 138	Não há funcionários para as funções listadas
-            $data->alimentacaoEscolarAlunos, // 139	Alimentação escolar para os aluno(a)s
-            $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 140 Acervo multimídia
-            $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 141 Brinquedos para educação infantil
-            $data->instrumentosPedagogicosMateriaisCientificos() ?: 0, // 142 Conjunto de materiais científicos
-            $data->instrumentosPedagogicosAmplificacaoDifusaoSom() ?: 0, // 143 Equipamento para amplificação e difusão de som/áudio
-            $data->instrumentosPedagogicosAreaHorta() ?: 0, // 144 Equipamentos e instrumentos para atividades em área de horta, plantio e/ou produção agrícola
-            $data->instrumentosPedagogicosInstrumentosMusicais() ?: 0, // 145 Instrumentos musicais para conjunto, banda/fanfarra e/ou aulas de música
-            $data->instrumentosPedagogicosJogosEducativos() ?: 0, // 146 Jogos educativos
-            $data->instrumentosPedagogicosMateriaisAtividadesCulturais() ?: 0, // 147 Materiais para atividades culturais e artísticas
-            $data->instrumentosPedagogicosMateriaisEducacaoProfissional() ?: 0, // 148 Materiais para educação profissional
-            $data->instrumentosPedagogicosMateriaisPraticaDesportiva() ?: 0, // 149 Materiais para prática desportiva e recreação
-            $data->instrumentosPedagogicosMateriaisEducacaoSurdos() ?: 0, // 150 Materiais pedagógicos para a educação bilíngue de surdos
-            $data->instrumentosPedagogicosMateriaisEducacaoIndigena() ?: 0, // 151 Materiais pedagógicos para a educação escolar indígena
-            $data->instrumentosPedagogicosMateriaisRelacoesEtnicosRaciais() ?: 0, // 152 Materiais pedagógicos para a educação das relações étnicos raciais
-            $data->instrumentosPedagogicosMateriaisEducacaoCampo() ?: 0, // 153	Materiais pedagógicos para a educação do campo
-            $data->instrumentosPedagogicosEducacaoQuilombola() ?: 0, // 154 Materiais pedagógicos para a educação escolar quilombola
-            $data->instrumentosPedagogicosEducacaoEspecial() ?: 0, // 155 Materiais pedagógicos para a educação especial
-            $data->instrumentosPedagogicosNenhum() ?: 0, // 156	Nenhum dos instrumentos listados
-            $data->educacaoIndigena, // 157	Educação escolar indígena
-            $data->educacaoIndigena ? ($data->linguaMinistradaIndigena() ?: 0) : null, // 158 Língua indígena
-            $data->educacaoIndigena ? ($data->linguaMinistradaPortugues() ?: 0) : null, // 159 Língua portuguesa
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[0] ?? null) : null, // 160 Código da língua indígena 1
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[1] ?? null) : null, // 161 Código da língua indígena 2
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[2] ?? null) : null, // 162 Código da língua indígena 3
-            $data->exameSelecaoIngresso ?: 0, // 163 A escola faz exame de seleção para ingresso de seus aluno(a)s (avaliação por prova e /ou analise curricular)
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasAutodeclaracaoPpi() ?: 0) : null, // 164	Autodeclarado preto, pardo ou indígena (PPI)
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasCondicaoRenda() ?: 0) : null, // 165 Condição de renda
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasEscolaPublica() ?: 0) : null, // 166 Oriundo de escola pública
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasPcd() ?: 0) : null, // 167 Pessoa com deficiência (PCD)
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasOutros() ?: 0) : null, // 168 Outros grupos que não os listados
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasNaoPossui() ?: 0) : null, // 169 Sem reservas de vagas para sistema de cotas (ampla concorrência)
-            empty($data->url) ? 0 : 1, // 170 A escola possui site ou blog ou página em redes sociais para comunicação institucional
-            $data->compartilhaEspacosAtividadesIntegracao ?: 0, // 171 A escola compartilha espaços para atividades de integração escola-comunidade
-            $data->usaEspacosEquipamentosAtividadesRegulares ?: 0, // 172 A escola usa espaços e equipamentos do entorno escolar para atividades regulares com os aluno(a)s
-            $data->orgaosColegiadosAssociacaoPais() ?: 0, // 173 Associação de Pais
-            $data->orgaosColegiadosAssociacaoPaisEMestres() ?: 0, // 174 Associação de pais e mestres
-            $data->orgaosColegiadosConselhoEscolar() ?: 0, // 175 Conselho escolar
-            $data->orgaosColegiadosGremioEstudantil() ?: 0, // 176 Grêmio estudantil
-            $data->orgaosColegiadosOutros() ?: 0, // 177 Outros
-            $data->orgaosColegiadosNenhum() ?: 0, // 178 Não há órgãos colegiados em funcionamento
-            $data->projetoPoliticoPedagogico ?: 0, // 179 O projeto político pedagógico ou a proposta pedagógica da escola (conforme art. 12 da LDB) foi atualizada nos últimos 12 meses até a data de referência
-            $data->acaoAreaAmbiental ?: 0, // 180 A escola desenvolve ações na área de educação ambiental?
-            $data->acaoConteudoComponente, // 181 Como conteúdo dos componentes/campos de experiências presentes no currículo
-            $data->acaoConteudoCurricular, // 182 Como um componente curricular especial, específico, flexível ou eletivo
-            $data->acaoEixoCurriculo, // 183 Como um eixo estruturante do currículo
-            $data->acaoEventos, // 184 Em eventos
-            $data->acaoProjetoInterdisciplinares, // 185 Em projetos transversais ou interdisciplinares
-            $data->acaoAmbientalNenhuma, // 186 Nenhuma das opções listadas
+            $data->predioEscolar() ? $data->numeroSalasUtilizadasDentroPredio : '', // 90 Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar
+            $data->numeroSalasUtilizadasForaPredio, // 91 Quantidade de salas de aula utilizadas pela escola fora do prédio escolar
+            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasClimatizadas : null, // 92 Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)
+            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasAcessibilidade : null, // 93	Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida
+            (($data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio) && $data->numeroSalasCantinhoLeitura > 0) ? $data->numeroSalasCantinhoLeitura : null, // 94 Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)
+            $data->possuiAntenaParabolica() ?: 0, // 95	Antena parabólica
+            $data->possuiComputadores() ?: 0, // 96	Computadores
+            $data->possuiCopiadora() ?: 0, // 97 Copiadora
+            $data->possuiImpressoras() ?: 0, // 98 Impressora
+            $data->possuiImpressorasMultifuncionais() ?: 0, // 99 Impressora Multifuncional
+            $data->possuiScanner() ?: 0, // 100 Scanner
+            $data->nenhumEquipamentoNaEscola() ?: 0, // 101 Nenhum dos equipamentos listados
+            $data->dvds ?: null, // 102 Aparelho de DVD/Blu-ray
+            $data->aparelhosDeSom ?: null, // 103 Aparelho de som
+            $data->televisoes ?: null, // 104 Aparelho de Televisão
+            $data->lousasDigitais ?: null, // 105 Lousa digital
+            $data->projetoresDigitais ?: null, // 106 Projetor Multimídia (Data show)
+            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosMesa : null, // 107 Computadores de mesa (desktop)
+            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosPortateis : null, // 108 Computadores portáteis
+            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosTablets : null, // 109 Tablets
+            $data->usoInternetAdministrativo() ?: 0, // 110	Para uso administrativo
+            $data->usoInternetProcessosEnsino() ?: 0, // 111 Para uso no processo de ensino e aprendizagem
+            $data->usoInternetAlunos() ?: 0, // 112	Para uso dos aluno(a)s
+            $data->usoInternetComunidade() ?: 0, // 113	Para uso da comunidade
+            $data->usoInternetNaoPossui() ?: 0, // 114 Não possui acesso à internet
+            $data->equipamentosAcessoInternetComputadorMesa() ?: 0, // 115 Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula etc.)
+            $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0, // 116 Dispositivos pessoais (computadores portáteis, celulares, tablets etc.)
+            $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 117 Internet banda larga
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalACabo() ?: 0) : null, // 118	A cabo
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalWireless() ?: 0) : null, // 119 Wireless
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalNenhuma() ?: 0) : null, // 120 Não há rede local interligando computadores
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdAgronomosHorticultores, // 121	Agrônomos(as), horticultores(as), técnicos ou monitores(as) responsáveis pela gestão da área de horta, plantio e/ou produção agrícola
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdAuxiliarAdministrativo, // 122	Auxiliares de secretaria ou auxiliares administrativos, atendentes
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdAuxiliarServicosGerais, // 123	Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), jardineiro(a)
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdBibliotecarios, // 124	Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdBombeiro, // 125 Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), enfermeiro(a), técnico(a) de enfermagem e socorrista
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdCoordenadorTurno, // 126 Coordenador(a) de turno/disciplinar
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdFonoaudiologo, // 127 Fonoaudiólogo(a)
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdNutricionistas, // 128 Nutricionista
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdPsicologo, // 129 Psicólogo(a) escolar
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdProfissionaisPreparacao, // 130 Profissionais de preparação e segurança alimentar, cozinheiro(a), merendeira e auxiliar de cozinha
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdApoioPedagogico, // 131 Profissionais de apoio e supervisão pedagógica: (pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdSecretarioEscolar, // 132 Secretário(a) escolar
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdSegurancas, // 133 Segurança, guarda ou segurança patrimonial
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdTecnicos, // 134 Técnicos(as), monitores(as), supervisores(as) ou auxiliares de laboratório(s), de apoio a tecnologias educacionais ou em multimeios/multimídias eletrônico-digitais.
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdViceDiretor, // 135 Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdOrientadorComunitario, // 136 Orientador(a) comunitário(a) ou assistente social
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdTradutorInterpreteLibrasOutroAmbiente, // 137 Tradutor e Intérprete de Libras para atendimento em outros ambientes da escola que não seja sala de aula
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdRevisorBraile, // 138 Revisor de texto Braile, assistente vidente (assistente de revisão do texto em Braille)
+            $data->semFuncionariosParaFuncoes ? 1 : null, // 139 Não há funcionários para as funções listadas
+            $data->alimentacaoEscolarAlunos, // 140	Alimentação escolar para os aluno(a)s
+            $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 141 Acervo multimídia
+            $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 142 Brinquedos para educação infantil
+            $data->instrumentosPedagogicosMateriaisCientificos() ?: 0, // 143 Conjunto de materiais científicos
+            $data->instrumentosPedagogicosAmplificacaoDifusaoSom() ?: 0, // 144 Equipamento para amplificação e difusão de som/áudio
+            $data->instrumentosPedagogicosAreaHorta() ?: 0, // 145 Equipamentos e instrumentos para atividades em área de horta, plantio e/ou produção agrícola
+            $data->instrumentosPedagogicosInstrumentosMusicais() ?: 0, // 146 Instrumentos musicais para conjunto, banda/fanfarra e/ou aulas de música
+            $data->instrumentosPedagogicosJogosEducativos() ?: 0, // 147 Jogos educativos
+            $data->instrumentosPedagogicosMateriaisAtividadesCulturais() ?: 0, // 148 Materiais para atividades culturais e artísticas
+            $data->instrumentosPedagogicosMateriaisEducacaoProfissional() ?: 0, // 149 Materiais para educação profissional
+            $data->instrumentosPedagogicosMateriaisPraticaDesportiva() ?: 0, // 150 Materiais para prática desportiva e recreação
+            $data->instrumentosPedagogicosMateriaisEducacaoSurdos() ?: 0, // 151 Materiais pedagógicos para a educação bilíngue de surdos
+            $data->instrumentosPedagogicosMateriaisEducacaoIndigena() ?: 0, // 152 Materiais pedagógicos para a educação escolar indígena
+            $data->instrumentosPedagogicosMateriaisRelacoesEtnicosRaciais() ?: 0, // 153 Materiais pedagógicos para a educação das relações étnicos raciais
+            $data->instrumentosPedagogicosMateriaisEducacaoCampo() ?: 0, // 154	Materiais pedagógicos para a educação do campo
+            $data->instrumentosPedagogicosEducacaoQuilombola() ?: 0, // 155 Materiais pedagógicos para a educação escolar quilombola
+            $data->instrumentosPedagogicosEducacaoEspecial() ?: 0, // 156 Materiais pedagógicos para a educação especial
+            $data->instrumentosPedagogicosNenhum() ?: 0, // 157	Nenhum dos instrumentos listados
+            $data->educacaoIndigena, // 158	Educação escolar indígena
+            $data->educacaoIndigena ? ($data->linguaMinistradaIndigena() ?: 0) : null, // 159 Língua indígena
+            $data->educacaoIndigena ? ($data->linguaMinistradaPortugues() ?: 0) : null, // 160 Língua portuguesa
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[0] ?? null) : null, // 161 Código da língua indígena 1
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[1] ?? null) : null, // 162 Código da língua indígena 2
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[2] ?? null) : null, // 163 Código da língua indígena 3
+            $data->exameSelecaoIngresso ?: 0, // 164 A escola faz exame de seleção para ingresso de seus aluno(a)s (avaliação por prova e /ou analise curricular)
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasAutodeclaracaoPpi() ?: 0) : null, // 165	Autodeclarado preto, pardo ou indígena (PPI)
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasCondicaoRenda() ?: 0) : null, // 166 Condição de renda
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasEscolaPublica() ?: 0) : null, // 167 Oriundo de escola pública
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasPcd() ?: 0) : null, // 169 Pessoa com deficiência (PCD)
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasOutros() ?: 0) : null, // 169 Outros grupos que não os listados
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasNaoPossui() ?: 0) : null, // 170 Sem reservas de vagas para sistema de cotas (ampla concorrência)
+            empty($data->url) ? 0 : 1, // 171 A escola possui site ou blog ou página em redes sociais para comunicação institucional
+            $data->compartilhaEspacosAtividadesIntegracao ?: 0, // 172 A escola compartilha espaços para atividades de integração escola-comunidade
+            $data->usaEspacosEquipamentosAtividadesRegulares ?: 0, // 173 A escola usa espaços e equipamentos do entorno escolar para atividades regulares com os aluno(a)s
+            $data->orgaosColegiadosAssociacaoPais() ?: 0, // 174 Associação de Pais
+            $data->orgaosColegiadosAssociacaoPaisEMestres() ?: 0, // 175 Associação de pais e mestres
+            $data->orgaosColegiadosConselhoEscolar() ?: 0, // 176 Conselho escolar
+            $data->orgaosColegiadosGremioEstudantil() ?: 0, // 177 Grêmio estudantil
+            $data->orgaosColegiadosOutros() ?: 0, // 178 Outros
+            $data->orgaosColegiadosNenhum() ?: 0, // 179 Não há órgãos colegiados em funcionamento
+            $data->projetoPoliticoPedagogico ?: 0, // 180 O projeto político pedagógico ou a proposta pedagógica da escola (conforme art. 12 da LDB) foi atualizada nos últimos 12 meses até a data de referência
+            $data->acaoAreaAmbiental ?: 0, // 181 A escola desenvolve ações na área de educação ambiental?
+            $data->acaoConteudoComponente, // 182 Como conteúdo dos componentes/campos de experiências presentes no currículo
+            $data->acaoConteudoCurricular, // 183 Como um componente curricular especial, específico, flexível ou eletivo
+            $data->acaoEixoCurriculo, // 184 Como um eixo estruturante do currículo
+            $data->acaoEventos, // 185 Em eventos
+            $data->acaoProjetoInterdisciplinares, // 186 Em projetos transversais ou interdisciplinares
+            $data->acaoAmbientalNenhuma, // 187 Nenhuma das opções listadas
         ];
 
         return $exportData;

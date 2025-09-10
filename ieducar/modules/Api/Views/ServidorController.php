@@ -127,16 +127,19 @@ class ServidorController extends ApiCoreController
                 $escola = implode(', ', $escola);
             }
 
-            $where = '';
+            $innerWhere = '';
+            $whereDeleted = '';
+            $having = '';
 
             if ($modified) {
                 $params[] = $modified;
-                $where = 'AND greatest(pt.updated_at, ccae.updated_at) >= $3';
                 $whereDeleted = 'AND pt.updated_at >= $3';
+                // o filtro deve acontecer na query principal, fora da query das disciplinas para não limita-los e dar um falso positivo de exclusão.
+                $having = 'HAVING MAX(tmp.updated_at) >= $3';
             }
 
             if ($ano) {
-                $where = $where . " AND {$ano} = ANY(ccae.anos_letivos)";
+                $innerWhere .= " AND {$ano} = ANY(ccae.anos_letivos)";
             }
 
             $sql = "
@@ -150,7 +153,7 @@ class ServidorController extends ApiCoreController
                         string_agg(distinct concat(serie_id,'|',tmp.componente_curricular_id, '|', tmp.tipo_nota)::varchar, ',') as disciplinas,
                         string_agg(distinct concat( tmp.serie_id, ' ',tmp.componente_curricular_id)::varchar, ',') as disciplinas_serie,
                         max(tmp.updated_at) as updated_at,
-                        deleted_at
+                        max(tmp.deleted_at) as deleted_at
                     from (
                              select
                                  coalesce(ts.serie_id, t.ref_ref_cod_serie) as serie_id,
@@ -181,9 +184,10 @@ class ServidorController extends ApiCoreController
                              and pt.instituicao_id = $1
                              and pt.ano = $2
                              and t.ref_ref_cod_escola in ({$escola})
-                            {$where}
+                            {$innerWhere}
                          ) as tmp
-                    group by tmp.id, tmp.servidor_id, tmp.turma_id, tmp.turno_id, tmp.permite_lancar_faltas_componente,deleted_at
+                    group by tmp.id, tmp.servidor_id, tmp.turma_id, tmp.turno_id, tmp.permite_lancar_faltas_componente
+                    {$having}
                 )
                 union all
                 (

@@ -14,7 +14,7 @@ class RecebeEscolarizacaoOutroEspaco implements EducacensoExportRule
      */
     public static function handle(RegistroEducacenso $registro60): RegistroEducacenso
     {
-        if ($registro60->tipoAtendimentoTurma != TipoAtendimentoTurma::ESCOLARIZACAO ||
+        if (!in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $registro60->tipoAtendimentoTurma) ||
             $registro60->tipoMediacaoTurma != TipoMediacaoDidaticoPedagogico::PRESENCIAL ||
             (
                 $registro60->localFuncionamentoDiferenciadoTurma != \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA &&

@@ -49,6 +49,7 @@ class Registro30 extends AbstractRegistro
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
             $this->modelArray[$data->codigoPessoa] = $this->model;
+            $this->modelArray[$data->codigoPessoa]->transtorno = null;
         }
 
         $arrayStudentId = $this->getArrayStudentId();

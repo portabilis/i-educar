@@ -30,7 +30,8 @@ jobs:
       API_ACCESS_KEY: ieducar-access-key
       API_SECRET_KEY: ieducar-secret-key
       BROADCAST_DRIVER: log
-      CACHE_DRIVER: array
+      CACHE_STORE: array
+      REDIS_CLIENT: predis
       QUEUE_CONNECTION: sync
       SESSION_DRIVER: array
       LEGACY_SEED_DATA: false
@@ -49,12 +50,12 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
         env:
           update: true

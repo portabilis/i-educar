@@ -96,6 +96,8 @@ class clsFisica
 
     public $zona_localizacao_censo;
 
+    public $povo_indigena_educacenso_id;
+
     public $tipo_trabalho;
 
     public $local_trabalho;
@@ -153,7 +155,8 @@ class clsFisica
         $horario_inicial_trabalho = false,
         $horario_final_trabalho = false,
         $nome_social = false,
-        $observacao = false
+        $observacao = false,
+        $povo_indigena_educacenso_id = false,
     ) {
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
@@ -228,6 +231,7 @@ class clsFisica
         $this->horario_final_trabalho = $horario_final_trabalho;
         $this->nome_social = $nome_social;
         $this->observacao = $observacao;
+        $this->povo_indigena_educacenso_id = $povo_indigena_educacenso_id;
 
         $cpf = idFederal2int($cpf);
 
@@ -434,6 +438,11 @@ class clsFisica
             if (is_numeric($this->zona_localizacao_censo)) {
                 $campos .= ', zona_localizacao_censo';
                 $valores .= ", $this->zona_localizacao_censo";
+            }
+
+            if (is_numeric($this->povo_indigena_educacenso_id)) {
+                $campos .= ', povo_indigena_educacenso_id';
+                $valores .= ", $this->povo_indigena_educacenso_id";
             }
 
             if (is_numeric($this->tipo_trabalho)) {
@@ -707,6 +716,14 @@ class clsFisica
                 $gruda = ', ';
             } elseif (is_null($this->zona_localizacao_censo)) {
                 $set .= "$gruda zona_localizacao_censo = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->povo_indigena_educacenso_id)) {
+                $set .= "$gruda povo_indigena_educacenso_id = {$this->povo_indigena_educacenso_id}";
+                $gruda = ', ';
+            } elseif (is_null($this->povo_indigena_educacenso_id)) {
+                $set .= "$gruda povo_indigena_educacenso_id = NULL";
                 $gruda = ', ';
             }
 
@@ -1007,7 +1024,7 @@ class clsFisica
     {
         if ($this->idpes) {
             $db = new clsBanco;
-            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada, observacao FROM {$this->schema}.{$this->tabela}
+            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada, observacao, povo_indigena_educacenso_id FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) WHERE fisica.idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
@@ -1019,7 +1036,7 @@ class clsFisica
             }
         } elseif ($this->cpf) {
             $db = new clsBanco;
-            $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
+            $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo, povo_indigena_educacenso_id FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 

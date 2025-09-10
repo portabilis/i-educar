@@ -1,5 +1,7 @@
 <?php
 
+use PHPUnit\Framework\Attributes\BackupGlobals;
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\TestCase;
 
 class CoreExt_SessionTest extends TestCase
@@ -39,9 +41,7 @@ class CoreExt_SessionTest extends TestCase
         $this->assertInstanceOf('Iterator', $this->_session);
     }
 
-    /**
-     * @backupGlobals disabled
-     */
+    #[BackupGlobals(false)]
     public function test_array_access()
     {
         $this->assertNull($this->_session['foo'], '[foo] is not null');
@@ -54,11 +54,8 @@ class CoreExt_SessionTest extends TestCase
         $this->assertNull($this->_session['bar'], '[bar] not unset');
     }
 
-    /**
-     * @backupGlobals disabled
-     *
-     * @depends       test_array_access
-     */
+    #[BackupGlobals(false)]
+    #[Depends('test_array_access')]
     public function test_countable()
     {
         $this->assertEquals(0, count($this->_session));

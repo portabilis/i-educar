@@ -186,7 +186,10 @@ return new class extends clsCadastro
             $this->campoOculto(nome: 'ref_cod_disciplina', valor: $this->ref_cod_disciplina);
             $this->campoOculto(nome: 'modo_edicao', valor: $this->modoEdicao);
         } else {
-            $this->inputsHelper()->multipleSearchComponenteCurricular(attrName: null, inputOptions: ['label' => 'Componentes lecionados', 'required' => true], helperOptions: ['searchForArea' => true]);
+            $this->inputsHelper()->multipleSearchComponenteCurricular(attrName: null, inputOptions: [
+                'label' => 'Componentes curriculares',
+                'required' => true,
+            ], helperOptions: ['searchForArea' => true]);
         }
 
         $opcoes = LegacyExemptionType::query()

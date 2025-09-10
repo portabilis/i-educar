@@ -83,7 +83,6 @@ INSERT INTO public.menus VALUES (126, 99, 'Unificação de pessoas', 'Unificaç�
 INSERT INTO public.menus VALUES (127, 81, 'Consulta de movimento geral', 'Consulta de movimento geral', '/intranet/educar_consulta_movimento_geral.php', NULL, 2, 4, 9998900, 9998900, 9998890, true, NULL, NULL);
 INSERT INTO public.menus VALUES (128, 81, 'Consulta de movimento mensal', 'Consulta de movimento mensal', '/intranet/educar_consulta_movimento_mensal.php', NULL, 3, 4, 9998910, 9998910, 9998890, true, NULL, NULL);
 INSERT INTO public.menus VALUES (129, 113, 'Tipos de ensino', 'Tipos de ensino do curso', '/intranet/educar_tipo_ensino_lst.php', NULL, 0, 5, 558, 21222, 21140, true, NULL, NULL);
-INSERT INTO public.menus VALUES (130, 113, 'Tipos de habilitação', 'Tipos de habilitação do curso', '/intranet/educar_habilitacao_lst.php', NULL, 0, 5, 573, 21208, 21140, true, NULL, NULL);
 INSERT INTO public.menus VALUES (131, 113, 'Tipos de nível ensino', 'Tipos de nível ensino do curso', '/intranet/educar_nivel_ensino_lst.php', NULL, 0, 5, 571, 21224, 21140, true, NULL, NULL);
 INSERT INTO public.menus VALUES (132, 113, 'Tipos de regime', 'Tipos de regime do curso', '/intranet/educar_tipo_regime_lst.php', NULL, 0, 5, 568, 21220, 21140, true, NULL, NULL);
 INSERT INTO public.menus VALUES (133, 115, 'Componentes da série', 'Componentes da série', '/intranet/educar_componentes_serie_lst.php', NULL, 0, 5, 9998859, 9998859, 21150, true, NULL, NULL);

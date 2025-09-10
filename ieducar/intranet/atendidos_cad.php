@@ -3,6 +3,7 @@
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Facades\Asset;
+use App\Models\EducacensoIndigenousPeople;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRace;
@@ -61,6 +62,8 @@ return new class extends clsCadastro
     public $retorno;
 
     public $cor_raca;
+
+    public $povo_indigena_educacenso_id;
 
     public $sus;
 
@@ -122,7 +125,7 @@ return new class extends clsCadastro
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->idesco, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
                 $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia,
-                $this->observacao
+                $this->observacao, $this->povo_indigena_educacenso_id
             ] =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -163,7 +166,8 @@ return new class extends clsCadastro
                 'localizacao_diferenciada',
                 'nome_social',
                 'pais_residencia',
-                'observacao'
+                'observacao',
+                'povo_indigena_educacenso_id',
             );
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
@@ -224,7 +228,8 @@ return new class extends clsCadastro
             'sexo',
             'ativo',
             'data_exclusao',
-            'observacao'
+            'observacao',
+            'povo_indigena_educacenso_id',
         );
 
         if (isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1 && $this->retorno == 'Editar') {
@@ -667,6 +672,14 @@ return new class extends clsCadastro
         $this->cod_raca = is_array(value: $raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
 
         $this->campoLista(nome: 'cor_raca', campo: 'Raça', valor: $race, default: $this->cod_raca, obrigatorio: $obrigarCamposCenso);
+
+        $indigenous = EducacensoIndigenousPeople::query()
+            ->orderBy(column: 'name')
+            ->pluck(column: 'name', key: 'id')
+            ->prepend(value: 'Selecione', key: '')
+            ->toArray();
+
+        $this->campoLista(nome: 'povo_indigena_educacenso_id', campo: 'Povo indígena', valor: $indigenous, default: $this->povo_indigena_educacenso_id, obrigatorio: false);
 
         // nacionalidade
 
@@ -1385,6 +1398,7 @@ return new class extends clsCadastro
         $fisica->nome_social = $this->nome_social;
         $fisica->pais_residencia = $this->pais_residencia;
         $fisica->observacao = str_replace(search: '+', replace: ' ', subject: $this->observacao);
+        $fisica->povo_indigena_educacenso_id = empty($this->povo_indigena_educacenso_id) ? null : $this->povo_indigena_educacenso_id;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

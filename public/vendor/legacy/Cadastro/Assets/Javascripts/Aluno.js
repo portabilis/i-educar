@@ -1179,6 +1179,11 @@ var handleGetPersonDetails = function (dataResponse) {
     nomeResponsavel = dataResponse.responsavel_id + " - " + nomeResponsavel;
   }
 
+  if (dataResponse.povo_indigena_educacenso_id) {
+    $j("#povo_indigena_educacenso_id").val(dataResponse.povo_indigena_educacenso_id);
+    $j("#povo_indigena_educacenso_id").trigger("change");
+  }
+
   $j("#data_nascimento").val(dataResponse.data_nascimento);
   $j("#rg").val(dataResponse.rg);
 
@@ -1203,9 +1208,12 @@ var handleGetPersonDetails = function (dataResponse) {
 
   function habilitaRecursosProvaInep() {
     var deficiencias = $j("#deficiencias").val();
+    var transtornos = $j("#transtornos").val();
+
+    var combinados = deficiencias.concat(transtornos);
 
     var additionalVars = {
-      deficiencias: deficiencias,
+      deficiencias: combinados,
     };
 
     var options = {
@@ -1961,18 +1969,20 @@ function canShowParentsFields() {
     $j("body").append(`
           <div id="dialog-recursos-prova-inep" style="font-size: 85%; z-index: 9999;">
           <ul style="padding-right: 30px;">
-            <li>Dentre as opções: Prova Ampliada (Fonte 18), Prova superampliada (Fonte 24) ou Material didático e Prova em Braille, apenas uma deve ser informada;</li>
-            <li><b>Auxílio ledor</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Visão monocular, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
-            <li><b>Auxílio transcrição</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Visão monocular, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. Obs.: Quando a deficiência for Cegueira ou Surdocegueira, obrigatoriamente este auxílio deve ser informado junto com um outro auxílio;</li>
-            <li><b>Guia-Intérprete</b>: pode ser informado quando o(a) aluno(a) possuir qualquer deficiência. <b>Exceto</b> se possuir Surdocegueira;</li>
-            <li><b>Tradutor-Intérprete de Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
-            <li><b>Leitura Labial</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
-            <li><b>Prova Ampliada (Fonte 18)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
-            <li><b>Prova superampliada (Fonte 24)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão, Visão monocular e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
-            <li><b>CD com áudio para deficiente visual</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Visão monocular, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
-            <li><b>Prova de Língua Portuguesa como segunda língua para surdos e deficientes auditivos</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
-            <li><b>Prova em Vídeo em Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
-            <li><b>Material didático e Prova em Braille</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
+            <li>Dentre as opções: Prova Ampliada (Fonte 18), Prova superampliada (Fonte 24), Material didático em Braille e Prova em Braille, apenas uma deve ser informada;</li>
+            <li><b>Auxílio ledor</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Visão Monocular, Surdocegueira, Deficiência física, Deficiência intelectual, Transtorno do espectro autista e algum dos transtornos<b>Exceto</b> se possuir também Surdez;</li>
+            <li><b>Auxílio transcrição</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Visão Monocular, Surdocegueira, Deficiência física, Deficiência intelectual, Transtorno do espectro autista e algum dos transtornos. Obs.: Quando a deficiência for Cegueira ou Surdocegueira, obrigatoriamente este auxílio deve ser informado junto com um outro auxílio;</li>
+            <li><b>Guia-Intérprete</b>: pode ser informado somente se o(a) aluno(a) possuir Surdocegueira;</li>
+            <li><b>Tradutor-Intérprete de Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira.</li>
+            <li><b>Leitura Labial</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira.</li>
+            <li><b>Prova Ampliada (Fonte 18)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão, Visão Monocular e Surdocegueira.</li>
+            <li><b>Prova superampliada (Fonte 24)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão, Visão Monocular e Surdocegueira.</li>
+            <li><b>CD com áudio para deficiente visual</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista.</li>
+            <li><b>Prova de Língua Portuguesa como segunda língua para surdos e deficientes auditivos</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira.</li>
+            <li><b>Prova em Vídeo em Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira.</li>
+            <li><b>Material didático em Braille</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
+            <li><b>Prova em Braille</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
+            <li><b>Tempo Adicional</b>: pode ser informado quando o(a) aluno(a) possuir deficiência(s);</li>
             <li><b>Nenhum</b>: não pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
            </ul>
           </div>
@@ -2250,6 +2260,25 @@ function canShowParentsFields() {
       .removeClass();
     $j("#cor_raca").unwrap().unwrap().unwrap();
 
+    $j("<label>")
+      .html("Povo Indígena")
+      .attr("for", "povo_indigena_educacenso_id")
+      .attr("style", "display:block;")
+      .insertBefore($j("#povo_indigena_educacenso_id"));
+
+    $j("#povo_indigena_educacenso_id")
+      .toggleClass("geral text")
+      .closest("tr")
+      .show()
+      .find("td:first-child")
+      .hide()
+      .closest("tr")
+      .removeClass()
+      .insertAfter("#cor_raca")
+      .find("td")
+      .removeClass();
+    $j("#povo_indigena_educacenso_id").unwrap().unwrap().unwrap();
+
     $label = $j("<label>")
       .html("Nacionalidade")
       .attr("for", "tipo_nacionalidade")
@@ -2263,7 +2292,7 @@ function canShowParentsFields() {
       .hide()
       .closest("tr")
       .removeClass()
-      .insertAfter("#cor_raca")
+      .insertAfter("#povo_indigena_educacenso_id")
       .find("td")
       .removeClass();
     $j("#tipo_nacionalidade").unwrap().unwrap().unwrap();
@@ -2395,7 +2424,8 @@ function canShowParentsFields() {
               $j("#zona_localizacao_censo").val(),
               $j("#localizacao_diferenciada").val(),
               nome_social.val(),
-              $j("#pais_residencia").val()
+              $j("#pais_residencia").val(),
+              $j("#povo_indigena_educacenso_id").val(),
             );
           }
         },
@@ -2551,8 +2581,6 @@ function canShowParentsFields() {
         "href",
         "/intranet/atendidos_cad.php?cod_pessoa_fj=" + person_details.id
       );
-
-      console.log(person_details);
 
       name.val(person_details.nome);
       observacao.val(person_details.observacao);
@@ -2953,7 +2981,8 @@ function canShowParentsFields() {
     zona_localizacao_censo,
     localizacao_diferenciada,
     nome_social,
-    pais_residencia
+    pais_residencia,
+    povo_indigena_educacenso_id
   ) {
     var data = {
       nome: nome,
@@ -2975,6 +3004,7 @@ function canShowParentsFields() {
       nome_social: nome_social,
       pais_residencia: pais_residencia,
       observacao_aluno: $j("#observacao").val(),
+      povo_indigena_educacenso_id: povo_indigena_educacenso_id
     };
 
     var options = {

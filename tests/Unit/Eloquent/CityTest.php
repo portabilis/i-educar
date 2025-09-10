@@ -33,8 +33,7 @@ class CityTest extends EloquentTestCase
         return City::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $query = City::queryFindByName($this->model->name)->first();
 

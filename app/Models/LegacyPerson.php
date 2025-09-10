@@ -167,6 +167,14 @@ class LegacyPerson extends LegacyModel
     }
 
     /**
+     * @return HasOne<LegacyEmployee, $this>
+     */
+    public function legacyEmployee()
+    {
+        return $this->hasOne(LegacyEmployee::class, 'ref_cod_pessoa_fj', 'idpes');
+    }
+
+    /**
      * @return BelongsToMany<LegacyDeficiency, $this>
      */
     public function considerableDeficiencies(): BelongsToMany

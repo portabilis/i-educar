@@ -108,6 +108,19 @@ class LegacyGrade extends LegacyModel
         )->withPivot('ano_letivo', 'regra_avaliacao_diferenciada_id');
     }
 
+    /**
+     * @return BelongsToOne
+     */
+    public function evaluationRuleDifferentiated()
+    {
+        return $this->belongsToOne(
+            LegacyEvaluationRule::class,
+            'modules.regra_avaliacao_serie_ano',
+            'serie_id',
+            'regra_avaliacao_diferenciada_id'
+        )->withPivot('ano_letivo');
+    }
+
     protected function workload(): Attribute
     {
         return Attribute::make(

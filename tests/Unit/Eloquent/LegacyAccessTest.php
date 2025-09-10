@@ -15,8 +15,7 @@ class LegacyAccessTest extends EloquentTestCase
         return LegacyAccess::class;
     }
 
-    /** @test */
-    public function get_last_access()
+    public function test_get_last_access()
     {
         $query = $this->model->getLastAccess();
 

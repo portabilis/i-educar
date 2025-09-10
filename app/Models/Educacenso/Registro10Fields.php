@@ -317,6 +317,11 @@ class Registro10Fields implements RegistroEducacenso
     /**
      * @var string
      */
+    public $numeroSalasCantinhoLeitura;
+
+    /**
+     * @var string
+     */
     public $televisoes;
 
     /**

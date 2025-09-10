@@ -45,10 +45,10 @@ $j(document).ready(function(){
             ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
              '<div id="modal_mensagem_desabilitado" style="width:400px;display:none; text-align:left">'+
-             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento todos os dados da sua escola, foram validados com sucesso!</p>' +
-             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px; font-weight: bold;">Mas porque o i-Educar não baixou o arquivo de exportação da minha escola?</p>' +
-             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O INEP está trabalhando nas mudanças de regras e campos solicitados pelo Censo em 2025. Estamos adaptando o sistema e exportação do arquivo para que tudo fique de acordo com o Layout.</p>' +
-             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, assim que todas essas alterações forem concluídas, a exportação do arquivo será liberada!</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento, todos os dados da sua escola foram validados com sucesso!</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px; font-weight: bold;">Mas por que o i-Educar ainda não baixou o arquivo de exportação da minha escola?</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O INEP está realizando atualizações nas regras e nos campos exigidos pelo Censo Escolar 2025. Estamos trabalhando para adequar o sistema e o processo de exportação ao novo layout.</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Fique tranquilo! Assim que todas as adaptações forem concluídas, a funcionalidade de exportação será liberada normalmente no i-Educar.</p>' +
              '</div>'+
             '</div>';
 

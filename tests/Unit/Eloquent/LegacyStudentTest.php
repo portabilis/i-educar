@@ -30,8 +30,7 @@ class LegacyStudentTest extends EloquentTestCase
         return LegacyStudent::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->tipo_responsavel, $this->model->guardianType);
         $this->assertEquals($this->model->inep ? $this->model->inep->number : null, $this->model->inepNumber);

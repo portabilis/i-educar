@@ -29,27 +29,17 @@ return new class extends clsDetalhe
 
     public $ativo;
 
-    public $ref_cod_instituicao;
-
     public function Gerar()
     {
         $this->titulo = 'Função - Detalhe';
 
         $this->cod_funcao = $_GET['cod_funcao'];
-        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-        $registro = LegacyRole::find($this->cod_funcao)?->getAttributes();
+        $registro = LegacyRole::find(request()->integer('cod_funcao'))?->getAttributes();
         if (!$registro) {
-            $this->simpleRedirect('educar_fonte_lst.php');
+            $this->simpleRedirect('educar_funcao_lst.php');
         }
 
-        $obj_permissoes = new clsPermissoes;
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivel_usuario == 1) {
-            if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
-            }
-        }
         if ($registro['cod_funcao']) {
             $this->addDetalhe(['Funcão', "{$registro['cod_funcao']}"]);
         }
@@ -68,6 +58,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Professor', "{$opcoes[$registro['professor']]}"]);
         }
 
+        $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(634, $this->pessoa_logada, 3)) {
             $this->url_novo = 'educar_funcao_cad.php';
             $this->url_editar = "educar_funcao_cad.php?cod_funcao={$registro['cod_funcao']}";

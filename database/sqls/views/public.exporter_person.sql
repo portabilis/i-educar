@@ -26,6 +26,7 @@ select
         else 'Não informado'::varchar
     end as nationality,
     COALESCE(ci."name" || '/' || st.abbreviation, 'Não informado') as birthplace,
+    coe.name AS country_of_origin,
     re.name AS religion,
     case f.localizacao_diferenciada
         when 1 then 'Área de assentamento'
@@ -42,6 +43,7 @@ left join cadastro.raca r on r.cod_raca = fr.ref_cod_raca
 left join cadastro.documento d on d.idpes = p.idpes
 left join public.cities ci on ci.id = f.idmun_nascimento
 left join public.states st on ci.state_id = st.id
+left join public.countries coe on coe.id = f.idpais_estrangeiro
 left join pmieducar.religions re on re.id = f.ref_cod_religiao
 where true
   and f.ativo = 1

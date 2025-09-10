@@ -1,6 +1,5 @@
 <?php
 
-use Database\Custom\TypeIntergerArray;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -15,13 +14,10 @@ return new class extends Migration
      */
     public function up()
     {
-        $typeClass = new TypeIntergerArray(2);
-
-        DB::connection()->setSchemaGrammar($typeClass);
+        DB::statement('ALTER TABLE IF EXISTS pmieducar.matricula_turma ADD COLUMN tipo_itinerario smallint[];');
+        DB::statement('ALTER TABLE IF EXISTS pmieducar.matricula_turma ADD COLUMN composicao_itinerario smallint[];');
 
         Schema::table('pmieducar.matricula_turma', function (Blueprint $table) {
-            $table->addColumn('int_array', 'tipo_itinerario')->nullable();
-            $table->addColumn('int_array', 'composicao_itinerario')->nullable();
             $table->addColumn('integer', 'curso_itinerario')->nullable();
             $table->addColumn('boolean', 'itinerario_concomitante')->nullable();
         });

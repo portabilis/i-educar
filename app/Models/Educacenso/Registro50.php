@@ -2,7 +2,7 @@
 
 namespace App\Models\Educacenso;
 
-use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
+use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 
 class Registro50 implements ItemOfRegistro30, RegistroEducacenso
@@ -104,7 +104,7 @@ class Registro50 implements ItemOfRegistro30, RegistroEducacenso
     public $tipoMediacaoTurma;
 
     /**
-     * @var int
+     * @var array
      *              Campo usado somente na análise
      */
     public $tipoAtendimentoTurma;
@@ -131,7 +131,19 @@ class Registro50 implements ItemOfRegistro30, RegistroEducacenso
      * @var array
      *            Campo usado somente na análise
      */
-    public $estruturaCurricular;
+    public $organizacaoCurricular;
+
+    /**
+     * @var array
+     *            Campo usado somente na análise
+     */
+    public $areaItinerario;
+
+    /**
+     * @var int
+     *            Campo usado somente na análise
+     */
+    public $lecionaItinerarioTecnicoProfissional;
 
     /**
      * @var int
@@ -174,15 +186,15 @@ class Registro50 implements ItemOfRegistro30, RegistroEducacenso
         // TODO: Implement getProperty() method.
     }
 
-    public function estruturasCurricularesDescritivas()
+    public function organizacaoCurricularDescritivas()
     {
-        $estruturasCurriculares = EstruturaCurricular::getDescriptiveValues();
+        $organizacaoCurriculares = OrganizacaoCurricular::getDescriptiveValues();
 
-        $estruturaDescritiva = array_map(function ($key) use ($estruturasCurriculares) {
-            return $estruturasCurriculares[$key];
-        }, $this->estruturaCurricular);
+        $organizacaoDescritiva = array_map(function ($key) use ($organizacaoCurriculares) {
+            return $organizacaoCurriculares[$key];
+        }, $this->organizacaoCurricular ?? []);
 
-        return implode('/', $estruturaDescritiva);
+        return implode('/', $organizacaoDescritiva);
     }
 
     public function estapaEducacensoDescritiva()

@@ -38,8 +38,7 @@ class LegacyGradeTest extends EloquentTestCase
         ];
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->cod_serie, $this->model->id);
         $this->assertEquals($this->model->descricao, $this->model->description);

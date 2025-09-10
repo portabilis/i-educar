@@ -49,7 +49,7 @@ class SocialAssistanceTest extends ViewTestCase
                 'school_inep' => 'Código INEP',
                 'period' => 'Turno',
                 'school_class_stage' => 'Etapa Educacenso',
-                'attendance_type' => 'Tipo de atendimento da turma',
+                'attendance_type' => 'Tipo da turma',
             ],
         ];
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));

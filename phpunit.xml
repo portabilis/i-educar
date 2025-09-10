@@ -23,12 +23,15 @@
     <ini name="memory_limit" value="512M"/>
     <server name="APP_ENV" value="testing"/>
     <server name="BCRYPT_ROUNDS" value="4"/>
-    <server name="CACHE_DRIVER" value="array"/>
+    <server name="CACHE_STORE" value="array"/>
     <server name="MAIL_MAILER" value="array"/>
     <server name="QUEUE_CONNECTION" value="sync"/>
     <server name="SESSION_DRIVER" value="array"/>
     <server name="TELESCOPE_ENABLED" value="false"/>
     <server name="APP_DEFAULT_HOST" value="localhost"/>
+    <server name="LEGACY_SEED_DATA" value="false"/>
+    <server name="API_ACCESS_KEY" value="ieducar-access-key"/>
+    <server name="API_SECRET_KEY" value="ieducar-secret-key"/>
   </php>
   <source>
     <include>
@@ -46,7 +49,6 @@
       <file>ieducar/intranet/educar_calendario_pesquisas.php</file>
       <file>ieducar/intranet/educar_consulta_movimento_geral_lst.php</file>
       <file>ieducar/intranet/educar_consulta_movimento_mensal_lst.php</file>
-      <file>ieducar/intranet/educar_matricula_cad_curso_segue_padrao.php</file>
       <file>ieducar/intranet/educar_quadro_horarios_pesquisas.php</file>
       <file>ieducar/intranet/educar_tombo_automatico.ajax.php</file>
       <file>ieducar/intranet/include/pmieducar/educar_campo_lista.php</file>

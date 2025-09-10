@@ -20,8 +20,7 @@ class LegacyDisciplineTest extends EloquentTestCase
         return LegacyDiscipline::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->instituicao_id, $this->model->institution_id);
         $this->assertEquals($this->model->area_conhecimento_id, $this->model->knowledge_area_id);

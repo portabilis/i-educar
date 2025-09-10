@@ -52,9 +52,7 @@ return new class extends clsListagem
     {
         $this->titulo = 'Benefício Aluno - Listagem';
 
-        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null : $val;
-        }
+        $this->nm_beneficio = request('nm_beneficio');
 
         $this->addCabecalhos(coluna: [
             'Beneficio',

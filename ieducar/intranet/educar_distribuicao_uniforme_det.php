@@ -69,11 +69,11 @@ return new class extends clsDetalhe
             ]);
             $this->addDetalhe(detalhe: [
                 'Quantidade de agasalhos (jaqueta)',
-                $uniformDistribution->coat_pants_qty ?: '0',
+                $uniformDistribution->coat_jacket_qty ?: '0',
             ]);
             $this->addDetalhe(detalhe: [
                 'Quantidade de agasalhos (calça)',
-                $uniformDistribution->coat_jacket_qty ?: '0',
+                $uniformDistribution->coat_pants_qty ?: '0',
             ]);
             $this->addDetalhe(detalhe: [
                 'Quantidade de camisetas (manga curta)',

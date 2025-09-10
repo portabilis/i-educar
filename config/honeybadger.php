@@ -2,6 +2,7 @@
 
 use Honeybadger\HoneybadgerLaravel\HoneybadgerLaravel;
 use iEducar\Support\Exceptions\DisciplinesWithoutInformedHoursException;
+use Illuminate\Validation\ValidationException;
 
 return [
     'api_key' => env('HONEYBADGER_API_KEY'),
@@ -32,5 +33,6 @@ return [
     'excluded_exceptions' => [
         App_Model_Exception::class,
         DisciplinesWithoutInformedHoursException::class,
+        ValidationException::class,
     ],
 ];

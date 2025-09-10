@@ -266,6 +266,7 @@ class EnrollmentTest extends ViewTestCase
             'Informações' => [
                 'nationality' => 'Nacionalidade',
                 'birthplace' => 'Naturalidade',
+                'country_of_origin' => 'País de Origem',
                 'phones.phones' => 'Telefones',
                 'benefits.benefits' => 'Benefícios',
                 'disabilities.disabilities' => 'Deficiências',

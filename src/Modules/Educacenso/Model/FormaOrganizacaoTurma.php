@@ -24,7 +24,6 @@ class FormaOrganizacaoTurma
             self::CICLOS => 'Ciclo(s)',
             self::NAO_SERIADO => 'Grupos não seriados com base na idade ou competência',
             self::MODULES => 'Módulos',
-            self::ALTERNANCIA_REGULAR => 'Alternância regular de períodos de estudos',
         ];
     }
 }

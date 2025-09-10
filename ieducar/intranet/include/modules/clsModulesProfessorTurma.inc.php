@@ -24,9 +24,13 @@ class clsModulesProfessorTurma extends Model
 
     public $codUsuario;
 
-    public $unidades_curriculares;
+    public $data_inicial;
 
-    public $outras_unidades_curriculares_obrigatorias;
+    public $data_fim;
+
+    public $leciona_itinerario_tecnico_profissional;
+
+    public $area_itinerario;
 
     /**
      * Construtor.
@@ -40,6 +44,10 @@ class clsModulesProfessorTurma extends Model
      * @param null $tipo_vinculo
      * @param null $permite_lancar_faltas_componente
      * @param null $turno_id
+     * @param null $data_inicial
+     * @param null $data_fim
+     * @param null $leciona_itinerario_tecnico_profissional
+     * @param null $area_itinerario
      */
     public function __construct(
         $id = null,
@@ -51,13 +59,15 @@ class clsModulesProfessorTurma extends Model
         $tipo_vinculo = null,
         $permite_lancar_faltas_componente = null,
         $turno_id = null,
-        $unidades_curriculares = null,
-        $outras_unidades_curriculares_obrigatorias = null
+        $data_inicial = null,
+        $data_fim = null,
+        $leciona_itinerario_tecnico_profissional = null,
+        $area_itinerario = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
 
-        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id, pt.unidades_curriculares';
+        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id, pt.data_inicial, pt.data_fim, pt.leciona_itinerario_tecnico_profissional, pt.area_itinerario';
 
         if (is_numeric($id)) {
             $this->id = $id;
@@ -91,22 +101,26 @@ class clsModulesProfessorTurma extends Model
             $this->turno_id = $turno_id;
         }
 
-        if (is_string($unidades_curriculares)) {
-            $this->unidades_curriculares = $unidades_curriculares;
-        }
-
         if (isset($permite_lancar_faltas_componente)) {
             $this->permite_lancar_faltas_componente = '1';
         } else {
             $this->permite_lancar_faltas_componente = '0';
         }
 
-        if (isset($outras_unidades_curriculares_obrigatorias) && ($outras_unidades_curriculares_obrigatorias) == 1) {
-            $this->outras_unidades_curriculares_obrigatorias = 1;
-        } elseif (isset($outras_unidades_curriculares_obrigatorias) && ($outras_unidades_curriculares_obrigatorias) == 0) {
-            $this->outras_unidades_curriculares_obrigatorias = 0;
-        } else {
-            $this->outras_unidades_curriculares_obrigatorias = null;
+        if (is_string($data_inicial)) {
+            $this->data_inicial = $data_inicial;
+        }
+
+        if (is_string($data_fim)) {
+            $this->data_fim = $data_fim;
+        }
+
+        if (is_numeric($leciona_itinerario_tecnico_profissional)) {
+            $this->leciona_itinerario_tecnico_profissional = $leciona_itinerario_tecnico_profissional;
+        }
+
+        if (is_array($area_itinerario)) {
+            $this->area_itinerario = $area_itinerario;
         }
     }
 
@@ -179,23 +193,27 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->unidades_curriculares)) {
-                $campos .= "{$gruda}unidades_curriculares";
-                $valores .= "{$gruda}='{{$this->unidades_curriculares}}'";
-                $gruda = ', ';
-            } else {
-                $campos .= "{$gruda}unidades_curriculares";
-                $valores .= "{$gruda}null";
+            if (is_string($this->data_inicial) && !empty($this->data_inicial)) {
+                $campos .= "{$gruda}data_inicial";
+                $valores .= "{$gruda}'{$this->data_inicial}'";
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->outras_unidades_curriculares_obrigatorias)) {
-                $campos .= "{$gruda}outras_unidades_curriculares_obrigatorias";
-                $valores .= "{$gruda}'{$this->outras_unidades_curriculares_obrigatorias}'";
+            if (is_string($this->data_fim) && !empty($this->data_fim)) {
+                $campos .= "{$gruda}data_fim";
+                $valores .= "{$gruda}'{$this->data_fim}'";
                 $gruda = ', ';
-            } else {
-                $campos .= "{$gruda}outras_unidades_curriculares_obrigatorias";
-                $valores .= "{$gruda}null";
+            }
+
+            if (is_numeric($this->leciona_itinerario_tecnico_profissional)) {
+                $campos .= "{$gruda}leciona_itinerario_tecnico_profissional";
+                $valores .= "{$gruda}'{$this->leciona_itinerario_tecnico_profissional}'";
+                $gruda = ', ';
+            }
+
+            if (is_array($this->area_itinerario)) {
+                $campos .= "{$gruda}area_itinerario";
+                $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->area_itinerario) . ' ';
                 $gruda = ', ';
             }
 
@@ -280,20 +298,34 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->unidades_curriculares)) {
-                $set .= "{$gruda}unidades_curriculares ='{{$this->unidades_curriculares}}'";
+            if (is_numeric($this->leciona_itinerario_tecnico_profissional)) {
+                $set .= "{$gruda}leciona_itinerario_tecnico_profissional = '{$this->leciona_itinerario_tecnico_profissional}'";
                 $gruda = ', ';
-            } else {
-                $set .= "{$gruda}unidades_curriculares = NULL";
+            } elseif (is_null($this->leciona_itinerario_tecnico_profissional)) {
+                $set .= "{$gruda}leciona_itinerario_tecnico_profissional = NULL";
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->outras_unidades_curriculares_obrigatorias)) {
-                $set .= "{$gruda}outras_unidades_curriculares_obrigatorias = '{$this->outras_unidades_curriculares_obrigatorias}'";
+            if (is_array($this->area_itinerario)) {
+                $set .= "{$gruda} area_itinerario = " . Portabilis_Utils_Database::arrayToPgArray($this->area_itinerario) . ' ';
                 $gruda = ', ';
             } else {
-                $set .= "{$gruda}outras_unidades_curriculares_obrigatorias = NULL";
+                $set .= "{$gruda} area_itinerario = NULL";
                 $gruda = ', ';
+            }
+
+            if (is_string($this->data_inicial) && !empty($this->data_inicial)) {
+                $set .= "{$gruda}data_inicial = '{$this->data_inicial}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}data_inicial = NULL ";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->data_fim) && !empty($this->data_fim)) {
+                $set .= "{$gruda}data_fim = '{$this->data_fim}'";
+            } else {
+                $set .= "{$gruda}data_fim = NULL ";
             }
 
             $set .= "{$gruda}updated_at = CURRENT_TIMESTAMP";

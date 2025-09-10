@@ -48,8 +48,7 @@ class LegacyRegistrationTest extends EloquentTestCase
         return LegacyRegistration::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->cod_matricula, $this->model->id);
         $this->assertEquals($this->model->bloquear_troca_de_situacao, $this->model->isLockedToChangeStatus());

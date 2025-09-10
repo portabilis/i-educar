@@ -26,14 +26,13 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
         28 => 'Estudos Sociais',
         29 => 'Sociologia',
         16 => 'Informática / Computação',
-        17 => 'Áreas do conhecimento profissionalizantes ',
+        17 => 'Áreas do conhecimento profissionalizantes',
         23 => 'Libras',
-        25 => 'Áreas do conhecimento pedagógicas ',
+        25 => 'Áreas do conhecimento pedagógicas',
         26 => 'Ensino religioso',
         27 => 'Língua indígena',
         31 => 'Língua Portuguesa como Segunda Língua',
         32 => 'Estágio Curricular Supervisionado',
-        33 => 'Projeto de vida',
         99 => 'Outras áreas do conhecimento',
     ];
 

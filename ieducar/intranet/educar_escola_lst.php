@@ -8,23 +8,7 @@ return new class extends clsListagem
 
     public $offset;
 
-    public $cod_escola;
-
-    public $ref_usuario_cad;
-
-    public $ref_usuario_exc;
-
     public $ref_cod_instituicao;
-
-    public $ref_idpes;
-
-    public $sigla;
-
-    public $data_cadastro;
-
-    public $data_exclusao;
-
-    public $ativo;
 
     public $nm_escola;
 
@@ -32,11 +16,11 @@ return new class extends clsListagem
     {
         $this->titulo = 'Escola - Listagem';
 
-        $obj_permissoes = new clsPermissoes;
+        $this->nm_escola = request('nm_escola');
+        $this->ref_cod_instituicao = request('ref_cod_instituicao');
+        $this->pagina_formulario = request('pagina_formulario');
 
-        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null : $val;
-        }
+        $obj_permissoes = new clsPermissoes;
 
         $cabecalhos = ['Escola'];
         $nivel = $this->user()->getLevel();
@@ -59,7 +43,7 @@ return new class extends clsListagem
             if ($this->ref_cod_instituicao) {
                 $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
             } else {
-                exit('Erro: Usuário não é do nivel poli-institucional e não possui uma instituição');
+                exit('Erro: Usuário não é do nível poli-institucional e não possui uma instituição');
             }
         }
 

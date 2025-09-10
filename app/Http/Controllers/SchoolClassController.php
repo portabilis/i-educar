@@ -23,7 +23,7 @@ class SchoolClassController extends Controller
     {
         $response = ['msg' => 'Edição efetuada com sucesso.'];
         $schoolClassService = new SchoolClassService;
-        $schoolClassInepService = new SchoolClassInepService;
+        $schoolClassInepService = app(SchoolClassInepService::class);
         $schoolClassStageService = new SchoolClassStageService;
 
         $codModulo = $request->get('ref_cod_modulo');
@@ -46,6 +46,19 @@ class SchoolClassController extends Controller
 
         try {
             DB::beginTransaction();
+
+            $schoolClassPeriodId = LegacySchoolClass::query()->whereKey($codTurmaRequest)->value('turma_turno_id');
+            if ($codigoInepEducacenso &&
+                $request->integer('turma_turno_id') !== Period::FULLTIME &&
+                (int) $schoolClassPeriodId !== $request->integer('turma_turno_id') &&
+                $schoolClassService->hasStudentsPartials($codTurmaRequest)) {
+
+                $turnoNome = (new Period)->getDescriptiveValues()[(int) $schoolClassPeriodId];
+
+                throw ValidationException::withMessages([
+                    'turma_turno_id' => "Esta turma possui turno {$turnoNome} e contém os códigos INEP dos turnos parciais informados. Para atender as regras de importação do censo, não é possível alterar o turno da turma.",
+                ]);
+            }
 
             $schoolClassToStore = $this->prepareSchoolClassDataToStore($request);
             $schoolClass = $schoolClassService->storeSchoolClass($schoolClassToStore);
@@ -91,51 +104,13 @@ class SchoolClassController extends Controller
                 $multiGradesService->deleteAllGradesOfSchoolClass($schoolClass);
             }
 
-            if ($codigoInepEducacenso) {
-                $turnoId = null;
-                if ($request->integer('turma_turno_id') === Period::FULLTIME) {
-                    $turnoId = Period::FULLTIME;
-                } else {
-                    if ($schoolClassService->hasStudentsPartials($codTurma)) {
-                        DB::rollBack();
-
-                        return response()->json([
-                            'msg' => 'Esta turma possui turno integral e contém os códigos INEP dos turnos parciais
-                            informados. Para atender as regras de importação do censo, não é possível
-                            alterar o turno da turma.',
-                        ], 422);
-                    }
-                }
-                $schoolClassInepService->store($codTurma, $codigoInepEducacenso, $turnoId);
-            } else {
-                $schoolClassInepService->delete($codTurma);
-            }
-
-            if ($codigoInepEducacensoMatutino) {
-                $schoolClassInepService->store(
-                    codTurma: $codTurma,
-                    codigoInepEducacenso: $codigoInepEducacensoMatutino,
-                    turnoId: Period::MORNING
-                );
-            } else {
-                $schoolClassInepService->delete(
-                    codTurma: $codTurma,
-                    turnoId: Period::MORNING
-                );
-            }
-
-            if ($codigoInepEducacensoVespertino) {
-                $schoolClassInepService->store(
-                    codTurma: $codTurma,
-                    codigoInepEducacenso: $codigoInepEducacensoVespertino,
-                    turnoId: Period::AFTERNOON
-                );
-            } else {
-                $schoolClassInepService->delete(
-                    codTurma: $codTurma,
-                    turnoId: Period::AFTERNOON
-                );
-            }
+            $schoolClassInepService->save(
+                codTurma: $codTurma,
+                codigoInepEducacenso: $codigoInepEducacenso,
+                codigoInepEducacensoMatutino: $codigoInepEducacensoMatutino,
+                codigoInepEducacensoVespertino: $codigoInepEducacensoVespertino,
+                turnoId: $request->integer('turma_turno_id')
+            );
 
             if ($datasInicioModulos[0] && $datasFimModulos[0]) {
                 $schoolClassStageService->store(
@@ -199,6 +174,14 @@ class SchoolClassController extends Controller
             $params['multiseriada'] = 0;
         }
 
+        if (empty($params['etapa_educacenso'])) {
+            $params['etapa_educacenso'] = null;
+        }
+
+        if (empty($params['etapa_agregada'])) {
+            $params['etapa_agregada'] = null;
+        }
+
         if (isset($params['dias_semana'])) {
             $params['dias_semana'] = '{' . implode(',', $params['dias_semana']) . '}';
         } else {
@@ -211,20 +194,28 @@ class SchoolClassController extends Controller
             $params['atividades_complementares'] = null;
         }
 
-        if (isset($params['estrutura_curricular'])) {
-            $params['estrutura_curricular'] = '{' . implode(',', $params['estrutura_curricular']) . '}';
+        if (isset($params['organizacao_curricular'])) {
+            $params['organizacao_curricular'] = '{' . implode(',', $params['organizacao_curricular']) . '}';
         } else {
-            $params['estrutura_curricular'] = null;
+            $params['organizacao_curricular'] = null;
         }
 
         if (empty($params['formas_organizacao_turma'])) {
             $params['formas_organizacao_turma'] = null;
         }
 
-        if (isset($params['unidade_curricular'])) {
-            $params['unidade_curricular'] = '{' . implode(',', $params['unidade_curricular']) . '}';
+        if (isset($params['tipo_atendimento']) && !in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $params['tipo_atendimento'])) {
+            $params['atividades_complementares'] = '{}';
+        }
+
+        if (isset($params['tipo_atendimento']) && !in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $params['tipo_atendimento'])) {
+            $params['classe_especial'] = null;
+        }
+
+        if (isset($params['tipo_atendimento'])) {
+            $params['tipo_atendimento'] = '{' . implode(',', $params['tipo_atendimento']) . '}';
         } else {
-            $params['unidade_curricular'] = null;
+            $params['tipo_atendimento'] = null;
         }
 
         if (isset($params['cod_curso_profissional'])) {
@@ -233,15 +224,25 @@ class SchoolClassController extends Controller
             $params['cod_curso_profissional'] = null;
         }
 
-        if ($params['tipo_atendimento'] != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
-            $params['atividades_complementares'] = '{}';
-        }
-
-        $etapasCursoTecnico = [30, 31, 32, 33, 34, 39, 40, 64, 74];
+        $etapasCursoTecnico = [39, 40, 64];
 
         if (isset($params['etapa_educacenso'])
             && !in_array($params['etapa_educacenso'], $etapasCursoTecnico)) {
             $params['cod_curso_profissional'] = null;
+        }
+
+        if (isset($params['area_itinerario'])) {
+            $params['area_itinerario'] = array_map('intval', $params['area_itinerario']);
+
+            $params['area_itinerario'] = '{' . implode(',', $params['area_itinerario']) . '}';
+        } else {
+            $params['area_itinerario'] = null;
+        }
+
+        if (isset($params['cod_curso_profissional_intinerario'])) {
+            $params['cod_curso_profissional_intinerario'] = $params['cod_curso_profissional_intinerario'][0];
+        } else {
+            $params['cod_curso_profissional_intinerario'] = null;
         }
 
         if (empty($params['cod_turma'])) {

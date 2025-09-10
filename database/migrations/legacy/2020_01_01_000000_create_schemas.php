@@ -19,7 +19,6 @@ class CreateSchemas extends Migration
                 CREATE SCHEMA pmieducar;
                 CREATE SCHEMA portal;
                 CREATE SCHEMA relatorio;
-                CREATE SCHEMA urbano;
             '
         );
     }
@@ -38,7 +37,6 @@ class CreateSchemas extends Migration
                 DROP SCHEMA pmieducar;
                 DROP SCHEMA portal;
                 DROP SCHEMA relatorio;
-                DROP SCHEMA urbano;
             '
         );
     }

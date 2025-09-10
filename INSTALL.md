@@ -39,17 +39,43 @@ Clone o repositório:
 git clone git@github.com:portabilis/i-educar.git && cd i-educar
 ```
 
+Configure as variáveis de ambiente que desejar:
+
+```bash
+cp .env.example .env
+```
+
+**Evitar problemas de permissão dos arquivos**
+
+Ao utilizar Docker, os arquivos criados dentro do container (como `vendor/`, `storage/logs`, etc.) podem acabar sendo 
+atribuídos ao usuário `root`, causando erros de permissão durante o desenvolvimento no host (ex: `Permission denied` ao
+escrever logs).
+
+Para evitar esse problema, o ambiente Docker do i-Educar permite configurar o **UID e GID do usuário do host** (por 
+exemplo, `ieducar`) no momento do build da imagem.
+
+Esses valores devem ser definidos no seu arquivo `.env`, da seguinte forma:
+
+```env
+HOST_UID=1001  # Use `id -u` para descobrir o UID do seu usuário local
+HOST_GID=1001  # Use `id -g` para descobrir o GID do seu grupo local
+```
+
+Esses valores são utilizados durante o build do container para criar um usuário interno com o mesmo UID e GID, garantindo que os arquivos gerados dentro do container sejam acessíveis normalmente no seu host.
+
+> Importante: caso você não defina essas variáveis, valores padrão como 1001 serão utilizados. Isso evita que os arquivos sejam criados como root (UID 0), mas ainda assim pode gerar erros de permissão se o UID/GID do container não corresponder ao do seu usuário local.
+
 Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 Execute o comando para fazer uma nova instalação:
 
 ```bash
-docker-compose exec php composer new-install
-docker-compose exec php php artisan db:seed
+docker compose exec php composer new-install
+docker compose exec php php artisan db:seed
 ```
 
 ### Personalizando a instalação
@@ -75,14 +101,14 @@ cp .env.example .env.testing
 Execute o comando:
 
 ```bash
-docker-compose exec php vendor/bin/pest
+docker compose exec php vendor/bin/pest
 ```
 
 ## Instalação em servidor web
 
 Para instalar o projeto execute **todos os passos** abaixo conectado em seu servidor web:
 
-> Este passo a passo serve para um servidor Ubuntu 22.04 LTS e não tem configurações mínimas de segurança
+> Este passo a passo serve para um servidor Ubuntu 24.04 LTS e não tem configurações mínimas de segurança
 
 Gere uma chave SSH no seu servidor, copie e adicione ao seu GitHub https://github.com/settings/keys.  
 
@@ -102,7 +128,7 @@ apt update
 Instale as dependências:
 
 ```bash
-apt install -y nginx redis postgresql postgresql-contrib openjdk-8-jdk openssl unzip php8.3-common php8.3-cli php8.3-fpm php8.3-bcmath php8.3-curl php8.3-mbstring php8.3-pgsql php8.3-xml php8.3-zip php8.3-gd
+apt install -y nginx redis postgresql postgresql-contrib openjdk-8-jdk openssl unzip php8.4-common php8.4-cli php8.4-fpm php8.4-bcmath php8.4-curl php8.4-mbstring php8.4-pgsql php8.4-xml php8.4-zip php8.4-gd
 ```
 
 Inicie o serviço de banco de dados:
@@ -145,8 +171,8 @@ cp /var/www/ieducar/.env.example /var/www/ieducar/.env
 Copie os arquivos de configuração do Nginx:
 
 ```bash 
-cp /var/www/ieducar/docker/nginx/default.conf /etc/nginx/conf.d/default.conf
-cp /var/www/ieducar/docker/nginx/upstream.conf /etc/nginx/conf.d/upstream.conf
+cp /var/www/ieducar/docker/nginx/conf.d/* /etc/nginx/conf.d/
+cp /var/www/ieducar/docker/nginx/snippets/* /etc/nginx/snippets/
 sed -i 's/fpm:9000/unix:\/run\/php\/php-fpm.sock/g' /etc/nginx/conf.d/upstream.conf
 rm /etc/nginx/sites-enabled/default
 nginx -s reload

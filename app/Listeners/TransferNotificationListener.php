@@ -6,10 +6,12 @@ use App\Models\LegacyTransferRequest;
 use App\Models\NotificationType;
 use App\Process;
 use App\Services\NotificationService;
-use Illuminate\Support\Facades\DB;
+use App\Traits\HasNotificationUsers;
 
 class TransferNotificationListener
 {
+    use HasNotificationUsers;
+
     /**
      * @var NotificationService
      */
@@ -48,23 +50,5 @@ class TransferNotificationListener
         foreach ($users as $user) {
             $this->service->createByUser($user->cod_usuario, $message, $link, NotificationType::TRANSFER);
         }
-    }
-
-    public function getUsers($process, $school)
-    {
-        return DB::select('
-            SELECT cod_usuario
-              FROM pmieducar.usuario u
-              JOIN pmieducar.menu_tipo_usuario mtu ON mtu.ref_cod_tipo_usuario = u.ref_cod_tipo_usuario
-              JOIN pmieducar.tipo_usuario tu ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
-              JOIN public.menus m ON m.id = mtu.menu_id
-         LEFT JOIN pmieducar.escola_usuario eu ON eu.ref_cod_usuario = u.cod_usuario
-             WHERE m.process = :process
-               AND u.ativo = 1
-               AND (eu.ref_cod_escola = :school OR tu.nivel <= 2) --INSTITUCIONAL
-        ', [
-            $process,
-            $school,
-        ]);
     }
 }

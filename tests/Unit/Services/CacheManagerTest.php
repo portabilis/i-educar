@@ -4,6 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Services\CacheManager;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Tests\TestCase;
 
 class CacheManagerTest extends TestCase
@@ -25,9 +26,7 @@ class CacheManagerTest extends TestCase
         $this->assertFalse(Cache::has('test-key'));
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
     public function test_driver_not_support_tags_does_not_throw_exception()
     {
         Cache::tags(['testTag'])->put('test-key', 'Test value', 10);

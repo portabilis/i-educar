@@ -2,6 +2,7 @@
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyProject;
@@ -208,10 +209,20 @@ return new class extends clsDetalhe
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = [];
+                $transtorno_pessoa = [];
 
                 foreach ($obj_deficiencia_pessoa_lista as $deficiencia) {
-                    $deficiencia_pessoa[$deficiencia['ref_cod_deficiencia']] = LegacyDeficiency::where('cod_deficiencia', $deficiencia['ref_cod_deficiencia'])->value('nm_deficiencia');
+                    $deficiencia_pessoa[$deficiencia['ref_cod_deficiencia']] = LegacyDeficiency::where('cod_deficiencia', $deficiencia['ref_cod_deficiencia'])
+                        ->where('deficiency_type_id', DeficiencyType::DEFICIENCY)
+                        ->value('nm_deficiencia');
+
+                    $transtorno_pessoa[$deficiencia['ref_cod_deficiencia']] = LegacyDeficiency::where('cod_deficiencia', $deficiencia['ref_cod_deficiencia'])
+                        ->where('deficiency_type_id', DeficiencyType::DISORDER)
+                        ->value('nm_deficiencia');
                 }
+
+                $deficiencia_pessoa = array_filter($deficiencia_pessoa, fn ($v) => !is_null($v));
+                $transtorno_pessoa = array_filter($transtorno_pessoa, fn ($v) => !is_null($v));
             }
 
             $ObjDocumento = new clsDocumento(int_idpes: $this->ref_idpes);
@@ -486,6 +497,23 @@ return new class extends clsDetalhe
             $tabela .= '</table>';
 
             $this->addDetalhe(detalhe: ['Deficiências', $tabela]);
+        }
+        if ($transtorno_pessoa) {
+            $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Transtornos</td></tr>';
+            $cor = '#D1DADF';
+
+            foreach ($transtorno_pessoa as $valor) {
+                $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
+
+                $tabela .= sprintf(
+                    '<tr bgcolor="%s" align="center"><td>%s</td></tr>',
+                    $cor,
+                    $valor
+                );
+            }
+
+            $tabela .= '</table>';
+            $this->addDetalhe(detalhe: ['Transtornos', $tabela]);
         }
 
         if (!empty($registro['url_documento']) && $registro['url_documento'] != '[]') {

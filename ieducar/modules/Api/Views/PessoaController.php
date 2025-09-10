@@ -95,7 +95,7 @@ class PessoaController extends ApiCoreController
         $sql = 'SELECT cpf, data_nasc as data_nascimento, idpes_pai as pai_id, ref_cod_religiao as religiao_id,
             idpes_mae as mae_id, idpes_responsavel as responsavel_id,
             ideciv as estadocivil, sexo, nis_pis_pasep,
-            nome_social,
+            nome_social, povo_indigena_educacenso_id,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
             (select nm_pai from pmieducar.aluno where cod_aluno = $1)) as nome_pai,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_mae),
@@ -194,6 +194,7 @@ class PessoaController extends ApiCoreController
             'pais_residencia',
             'sus',
             'observacao',
+            'povo_indigena_educacenso_id',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -589,6 +590,12 @@ class PessoaController extends ApiCoreController
         $individual->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada ?: $individual->localizacao_diferenciada;
         $individual->nome_social = $this->getRequest()->nome_social ?: $individual->nome_social;
         $individual->observacao = $this->getRequest()->observacao_aluno ?: $individual->observacao;
+
+        $povo_indigena_educacenso_id = null;
+        if ($this->getRequest()->povo_indigena_educacenso_id) {
+            $povo_indigena_educacenso_id = $this->getRequest()->povo_indigena_educacenso_id;
+        }
+        $individual->povo_indigena_educacenso_id = $povo_indigena_educacenso_id;
 
         $individual->saveOrFail();
 

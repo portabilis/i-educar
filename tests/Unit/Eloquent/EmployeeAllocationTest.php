@@ -25,8 +25,7 @@ class EmployeeAllocationTest extends EloquentTestCase
         return EmployeeAllocation::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->period->nome, $this->model->periodName);
     }

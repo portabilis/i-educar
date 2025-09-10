@@ -101,6 +101,7 @@ class LegacyIndividual extends Model
         'localizacao_diferenciada',
         'ideciv',
         'observacao',
+        'povo_indigena_educacenso_id',
     ];
 
     /**

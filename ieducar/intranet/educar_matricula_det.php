@@ -3,7 +3,6 @@
 use App\Models\LegacyAbandonmentType;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
-use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -146,7 +145,6 @@ return new class extends clsDetalhe
         $existeTurmaMulti = false;
         $existeTurmaTurnoIntegral = false;
         $existeAtendimentoEspecializado = false;
-        $existeTurmaItineraria = false;
         $nomesTurmas = [];
         $datasEnturmacoes = [];
         $nomesTurnos = [];
@@ -164,17 +162,8 @@ return new class extends clsDetalhe
                 $existeTurmaMulti = true;
             }
 
-            $estruturaCurricular = transformStringFromDBInArray(string: $turma['estrutura_curricular']) ?? [];
-            $unidadeCurricular = transformStringFromDBInArray(string: $turma['unidade_curricular']) ?? [];
-            $turmaItineraria = in_array(needle: 2, haystack: $estruturaCurricular);
-            $turmaFormacaoBasica = in_array(needle: 1, haystack: $estruturaCurricular);
+            $tipoAtendimento = transformStringFromDBInArray(string: $turma['tipo_atendimento']) ?? [];
             $etapasItinerario = [25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 67, 71, 74];
-
-            if (in_array(UnidadesCurriculares::TRILHAS_DE_APROFUNDAMENTO_APRENDIZAGENS, $unidadeCurricular) &&
-                in_array($turma['etapa_educacenso'], $etapasItinerario)
-            ) {
-                $existeTurmaItineraria = true;
-            }
 
             $nomesTurmas[] = $turma['nm_turma'];
             $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr(timestamp: $enturmacao['data_enturmacao']);
@@ -183,7 +172,7 @@ return new class extends clsDetalhe
                 $existeTurmaTurnoIntegral = true;
             }
 
-            if ($turma['tipo_atendimento'] == TipoAtendimentoTurma::AEE) {
+            if (in_array(TipoAtendimentoTurma::AEE, $tipoAtendimento)) {
                 $existeAtendimentoEspecializado = true;
             }
 
@@ -330,6 +319,11 @@ return new class extends clsDetalhe
                     $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}\")";
                 }
 
+                if ($this->permissaoRemanejar()) {
+                    $this->array_botao[] = 'Remanejar';
+                    $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}&acao=remanejar\")";
+                }
+
                 if ($this->permissaoModalidadeEnsino()) {
                     $this->array_botao[] = 'Modalidade de ensino';
                     $this->array_botao_url_script[] = "go(\"educar_matricula_modalidade_ensino.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
@@ -364,12 +358,6 @@ return new class extends clsDetalhe
             if ($this->permissaoTurno() && $existeTurmaTurnoIntegral) {
                 $this->array_botao[] = 'Turno';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
-            }
-
-            if ($this->permissaoItinerarioFormativo() && $existeTurmaItineraria) {
-                $this->array_botao[] = 'Itinerário formativo';
-                $link = route(name: 'registration.formative-itinerary.index', parameters: $registro['cod_matricula']);
-                $this->array_botao_url_script[] = "go(\"{$link}\")";
             }
 
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
@@ -511,7 +499,9 @@ return new class extends clsDetalhe
 
     public function permissaoEnturmar()
     {
-        return $this->getPermissaoVisualizar(683);
+        // a tela de enturmaçoes pode enturmar e desenturmar
+        return $this->getPermissaoVisualizar(Process::ENROLLMENT) ||
+            $this->getPermissaoVisualizar(Process::UNENROLLMENT);
     }
 
     public function permissaoModalidadeEnsino()
@@ -549,11 +539,6 @@ return new class extends clsDetalhe
         return $this->getPermissaoVisualizar(689);
     }
 
-    public function permissaoItinerarioFormativo()
-    {
-        return $this->getPermissaoVisualizar(690);
-    }
-
     public function permissaoSolicitarTransferencia()
     {
         return $this->getPermissaoVisualizar(691);
@@ -579,6 +564,16 @@ return new class extends clsDetalhe
         $db = new clsBanco;
 
         return $db->CampoUnico(consulta: $sql);
+    }
+
+    public function permissaoRemanejar()
+    {
+        return $this->getPermissaoVisualizar(Process::RELOCATE);
+    }
+
+    public function permissaoDesenturmar()
+    {
+        return $this->getPermissaoVisualizar(Process::UNENROLLMENT);
     }
 
     public function Formular()

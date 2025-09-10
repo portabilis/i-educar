@@ -1241,6 +1241,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
+        $indigenous = \App\Models\EducacensoIndigenousPeople::query()
+            ->orderBy(column: 'name')
+            ->pluck(column: 'name', key: 'id')
+            ->prepend(value: 'Selecione', key: '')
+            ->toArray();
+
+        $this->campoLista(nome: 'povo_indigena_educacenso_id', campo: 'Povo indígena', valor: $indigenous, default: $this->povo_indigena_educacenso_id, obrigatorio: false);
+
         $zonas = [
             '' => 'Selecione',
             1 => 'Urbana',

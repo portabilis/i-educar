@@ -117,7 +117,7 @@ class InepExamValidatorTest extends TestCase
     public function test_guia_interprete_and_neutral_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::GUIA_INTERPRETE];
-        $deficiencies = [Deficiencias::DEFICIENCIA_AUDITIVA];
+        $deficiencies = [Deficiencias::SURDOCEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -126,7 +126,7 @@ class InepExamValidatorTest extends TestCase
     public function test_guia_interprete_and_forbidden_deficiency_choosed()
     {
         $resources = [RecursosRealizacaoProvas::GUIA_INTERPRETE];
-        $deficiencies = [Deficiencias::SURDOCEGUEIRA];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -336,18 +336,27 @@ class InepExamValidatorTest extends TestCase
         $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
-    public function test_material_didatico_prova_braille_and_allowed_deficiency_choosed()
+    public function test_material_didatico_braille_and_allowed_deficiency_choosed()
     {
-        $resources = [RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE];
+        $resources = [RecursosRealizacaoProvas::MATERIAL_DIDATICO_EM_BRAILLE];
         $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
     }
 
-    public function test_material_didatico_prova_braille_and_neutral_deficiency_choosed()
+    public function test_prova_braille_and_allowed_deficiency_choosed()
     {
-        $resources = [RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE];
+        $resources = [RecursosRealizacaoProvas::PROVA_EM_BRAILLE];
+        $deficiencies = [Deficiencias::CEGUEIRA];
+        $validator = new InepExamValidator($resources, $deficiencies);
+
+        $this->assertTrue($validator->isValid());
+    }
+
+    public function test_prova_braille_and_neutral_deficiency_choosed()
+    {
+        $resources = [RecursosRealizacaoProvas::PROVA_EM_BRAILLE];
         $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 

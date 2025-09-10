@@ -24,7 +24,7 @@ class clsPmieducarTurma extends Model
 
     public $ref_ref_cod_escola;
 
-    public $ref_cod_infra_predio_comodo;
+    public $ref_cod_infra_predio_comodo; // TODO: remover no futuro
 
     public $nm_turma;
 
@@ -72,6 +72,8 @@ class clsPmieducarTurma extends Model
 
     public $cod_curso_profissional;
 
+    public $etapa_agregada;
+
     public $etapa_educacenso;
 
     public $ref_cod_disciplina_dispensada;
@@ -95,6 +97,10 @@ class clsPmieducarTurma extends Model
     public $atividades_aee;
 
     public $local_funcionamento_diferenciado;
+
+    public $classe_especial;
+
+    public $formacao_alternancia;
 
     public $listarNaoInformarEducacenso = true;
 
@@ -133,10 +139,10 @@ class clsPmieducarTurma extends Model
         $this->_tabela = "{$this->_schema}turma";
 
         $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
-        t.tipo_atendimento, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado, t.estrutura_curricular, t.formas_organizacao_turma, t.unidade_curricular, t.outras_unidades_curriculares_obrigatorias, t.classe_com_lingua_brasileira_sinais,
-        t.hora_inicial_matutino, t.hora_inicio_intervalo_matutino, t.hora_fim_intervalo_matutino, t.hora_final_matutino, t.hora_inicial_vespertino, t.hora_inicio_intervalo_vespertino, t.hora_fim_intervalo_vespertino, t.hora_final_vespertino
-        ';
+        t.tipo_atendimento, t.cod_curso_profissional, t.etapa_agregada, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado, t.organizacao_curricular, t.formas_organizacao_turma, t.classe_com_lingua_brasileira_sinais, t.classe_especial, t.formacao_alternancia,
+        t.hora_inicial_matutino, t.hora_inicio_intervalo_matutino, t.hora_fim_intervalo_matutino, t.hora_final_matutino, t.hora_inicial_vespertino, t.hora_inicio_intervalo_vespertino, t.hora_fim_intervalo_vespertino, t.hora_final_vespertino,
+        t.area_itinerario, t.tipo_curso_intinerario, t.cod_curso_profissional_intinerario';
 
         if (is_numeric($ref_cod_turma_tipo)) {
             $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
@@ -375,9 +381,9 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->tipo_atendimento)) {
+            if (is_array($this->tipo_atendimento)) {
                 $campos .= "{$gruda}tipo_atendimento";
-                $valores .= "{$gruda}'{$this->tipo_atendimento}'";
+                $valores .= "{$gruda}'{" . implode(',', $this->tipo_atendimento) . "}'";
                 $gruda = ', ';
             }
 
@@ -390,6 +396,12 @@ class clsPmieducarTurma extends Model
             if (is_numeric($this->etapa_educacenso)) {
                 $campos .= "{$gruda}etapa_educacenso";
                 $valores .= "{$gruda}'{$this->etapa_educacenso}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->etapa_agregada)) {
+                $campos .= "{$gruda}etapa_agregada";
+                $valores .= "{$gruda}'{$this->etapa_agregada}'";
                 $gruda = ', ';
             }
 
@@ -418,6 +430,18 @@ class clsPmieducarTurma extends Model
             if (is_numeric($this->local_funcionamento_diferenciado)) {
                 $campos .= "{$gruda}local_funcionamento_diferenciado";
                 $valores .= "{$gruda}'{$this->local_funcionamento_diferenciado}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->classe_especial)) {
+                $campos .= "{$gruda}classe_especial";
+                $valores .= "{$gruda}'{$this->classe_especial}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->formacao_alternancia)) {
+                $campos .= "{$gruda}formacao_alternancia";
+                $valores .= "{$gruda}'{$this->formacao_alternancia}'";
                 $gruda = ', ';
             }
 
@@ -657,8 +681,8 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->tipo_atendimento)) {
-                $set .= "{$gruda}tipo_atendimento = '{$this->tipo_atendimento}'";
+            if (is_array($this->tipo_atendimento)) {
+                $set .= "{$gruda} tipo_atendimento = " . Portabilis_Utils_Database::arrayToPgArray($this->tipo_atendimento) . ' ';
                 $gruda = ', ';
             } elseif ($this->tipo_atendimento !== false) {
                 $set .= "{$gruda}tipo_atendimento = NULL";
@@ -683,6 +707,14 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             } elseif (is_null($this->etapa_educacenso)) {
                 $set .= "{$gruda}etapa_educacenso = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->etapa_agregada)) {
+                $set .= "{$gruda}etapa_agregada = '{$this->etapa_agregada}'";
+                $gruda = ', ';
+            } elseif (is_null($this->etapa_agregada)) {
+                $set .= "{$gruda}etapa_agregada = NULL";
                 $gruda = ', ';
             }
 
@@ -726,6 +758,18 @@ class clsPmieducarTurma extends Model
                 $set .= "{$gruda}local_funcionamento_diferenciado = '{$this->local_funcionamento_diferenciado}'";
             } else {
                 $set .= "{$gruda}local_funcionamento_diferenciado = NULL ";
+            }
+
+            if (is_numeric($this->classe_especial)) {
+                $set .= "{$gruda}classe_especial = '{$this->classe_especial}'";
+            } else {
+                $set .= "{$gruda}classe_especial = NULL ";
+            }
+
+            if (is_numeric($this->formacao_alternancia)) {
+                $set .= "{$gruda}formacao_alternancia = '{$this->formacao_alternancia}'";
+            } else {
+                $set .= "{$gruda}formacao_alternancia = NULL ";
             }
 
             $gruda = ', ';

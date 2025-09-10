@@ -26,8 +26,7 @@ class LegacyCourseTest extends EloquentTestCase
         return LegacyCourse::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->id, $this->model->cod_curso);
         $this->assertEquals($this->model->description, $this->model->descricao);

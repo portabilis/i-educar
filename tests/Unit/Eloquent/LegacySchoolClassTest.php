@@ -96,8 +96,7 @@ class LegacySchoolClassTest extends EloquentTestCase
         $this->assertEquals(1, $schoolClass->getTotalEnrolled());
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->visivel, $this->model->visible);
         $this->assertEquals($this->model->ref_cod_disciplina_dispensada, $this->model->exemptedDisciplineId);
@@ -132,8 +131,7 @@ class LegacySchoolClassTest extends EloquentTestCase
         $this->assertEquals('Dom, Ter, Qui', $this->model->daysOfWeekName);
     }
 
-    /** @test */
-    public function relationship_grades()
+    public function test_relationship_grades()
     {
         $grade = LegacyGradeFactory::new()->create();
         $school = LegacySchoolFactory::new()->create();
@@ -150,8 +148,7 @@ class LegacySchoolClassTest extends EloquentTestCase
         $this->assertInstanceOf(LegacyGrade::class, $this->model->grades->first());
     }
 
-    /** @test */
-    public function relationship_stages()
+    public function test_relationship_stages()
     {
         LegacySchoolAcademicYearFactory::new()->create([
             'ref_cod_escola' => $this->model->ref_ref_cod_escola,
@@ -163,8 +160,7 @@ class LegacySchoolClassTest extends EloquentTestCase
         $this->assertCount(1, $this->model->stages);
     }
 
-    /** @test */
-    public function disciplines()
+    public function test_disciplines()
     {
         $discipline = LegacyDisciplineFactory::new()->create();
         LegacyDisciplineSchoolClassFactory::new()->create([
@@ -174,8 +170,7 @@ class LegacySchoolClassTest extends EloquentTestCase
         $this->assertCount(1, $this->model->disciplines);
     }
 
-    /** @test */
-    public function get_evaluation_rule(): void
+    public function test_get_evaluation_rule(): void
     {
         $evaluationRuleGradeYear = $this->model
             ->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
@@ -189,8 +184,7 @@ class LegacySchoolClassTest extends EloquentTestCase
         $this->assertEquals($expected, $this->model->getEvaluationRule());
     }
 
-    /** @test */
-    public function get_disciplines(): void
+    public function test_get_disciplines(): void
     {
         if ($this->model->multiseriada) {
             $multigrades = $this->multigrades->pluck('serie_id')->toArray();

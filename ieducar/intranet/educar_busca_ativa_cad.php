@@ -33,6 +33,8 @@ return new class extends clsCadastro
 
     public $resultado_busca_ativa;
 
+    public $aluno_incluso_programa_evasao;
+
     public function __construct()
     {
         parent::__construct();
@@ -118,7 +120,7 @@ return new class extends clsCadastro
         ]);
 
         $options = [
-            'label' => 'Resultado da BA',
+            'label' => 'Resultado da busca ativa',
             'resources' => SelectOptions::activeSearchResultOptions(),
             'value' => $this->resultado_busca_ativa,
             'required' => true,
@@ -127,16 +129,20 @@ return new class extends clsCadastro
 
         $this->inputsHelper()->select(attrName: 'resultado_busca_ativa', inputOptions: $options);
 
-        $textAreaSettings = [
-            'label' => 'Observação',
-            'value' => $this->observacoes,
-            'max_length' => 900,
-            'cols' => 60,
-            'rows' => 5,
-            'placeholder' => '',
+        $sigla = config('legacy.app.busca_ativa.sigla_programa_evasao');
+        $label = 'Aluno incluso em programa de combate a evasão escolar';
+
+        if ($sigla) {
+            $label .= ' (' . $sigla . ')';
+        }
+
+        $label .= '?';
+
+        $this->inputsHelper()->checkbox(attrName: 'aluno_incluso_programa_evasao', inputOptions: [
+            'label' => $label,
+            'value' => $this->aluno_incluso_programa_evasao,
             'required' => false,
-        ];
-        $this->inputsHelper()->textArea(attrName: 'observacoes', inputOptions: $textAreaSettings);
+        ]);
 
         if (empty($this->id)) {
             $this->id = null;
@@ -145,7 +151,27 @@ return new class extends clsCadastro
         $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyActiveLooking::find($this->id));
 
-        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+        $htmlContent = view('uploads.upload', ['files' => $files])->render();
+
+        if (!empty($this->id)) {
+            $activeLooking = LegacyActiveLooking::with(['messages' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])->find($this->id);
+
+            if ($activeLooking) {
+                $htmlContent .= view('active-looking.messages', [
+                    'messages' => $activeLooking->messages,
+                    'activeLookingId' => $this->id,
+                ])->render();
+            }
+        } else {
+            $htmlContent .= view('active-looking.messages', [
+                'messages' => collect([]),
+                'activeLookingId' => null,
+            ])->render();
+        }
+
+        $this->addHtml($htmlContent);
 
         $this->url_cancelar = 'educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->nome_url_cancelar = 'Cancelar';
@@ -165,9 +191,18 @@ return new class extends clsCadastro
         $activeLookingService = new ActiveLookingService;
         $legacyActiveLooking = $this->buildObjectBeforeStore();
 
+        $isEditing = !empty($this->id);
+
         try {
             DB::beginTransaction();
             $activeLooking = $activeLookingService->store(activeLooking: $legacyActiveLooking, registration: $legacyRegistration);
+
+            if (!empty($this->observacoes)) {
+                $activeLooking->messages()->create([
+                    'description' => $this->observacoes,
+                    'user_id' => $this->pessoa_logada,
+                ]);
+            }
 
             $fileService = new FileService(new UrlPresigner);
             if ($this->file_url) {
@@ -201,7 +236,12 @@ return new class extends clsCadastro
 
             return false;
         }
-        $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
+
+        if ($isEditing) {
+            $this->mensagem = 'Cadastro atualizado com sucesso.<br />';
+        } else {
+            $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
+        }
 
         if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT) {
             $this->simpleRedirect(url: 'educar_abandono_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
@@ -292,8 +332,8 @@ return new class extends clsCadastro
                 'ref_cod_matricula' => $this->ref_cod_matricula,
                 'data_inicio' => $this->data_inicio,
                 'data_fim' => $this->data_fim,
-                'observacoes' => $this->observacoes,
                 'resultado_busca_ativa' => $this->resultado_busca_ativa,
+                'aluno_incluso_programa_evasao' => !is_null($this->aluno_incluso_programa_evasao),
             ]
         );
     }

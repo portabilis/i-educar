@@ -23,15 +23,13 @@ class LegacyPersonTest extends EloquentTestCase
         return LegacyPerson::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->id, $this->model->idpes);
         $this->assertEquals($this->model->name, $this->model->nome);
     }
 
-    /** @test */
-    public function relationship_deficiencies(): void
+    public function test_relationship_deficiencies(): void
     {
         LegacyIndividualFactory::new()->hasDeficiency()->create(['idpes' => $this->model]);
 
@@ -39,8 +37,7 @@ class LegacyPersonTest extends EloquentTestCase
         $this->assertInstanceOf(LegacyDeficiency::class, $this->model->deficiencies->first());
     }
 
-    /** @test */
-    public function relationship_considerable_deficiencies(): void
+    public function test_relationship_considerable_deficiencies(): void
     {
         LegacyIndividualFactory::new()->hasDeficiency(['desconsidera_regra_diferenciada' => false])->create(['idpes' => $this->model]);
 

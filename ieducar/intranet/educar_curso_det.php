@@ -27,14 +27,6 @@ return new class extends clsDetalhe
 
     public $carga_horaria;
 
-    public $ato_poder_publico;
-
-    public $habilitacao;
-
-    public $objetivo_curso;
-
-    public $publico_alvo;
-
     public $data_cadastro;
 
     public $data_exclusao;
@@ -55,7 +47,7 @@ return new class extends clsDetalhe
 
         $this->cod_curso = $_GET['cod_curso'];
 
-        $tmp_obj = new clsPmieducarCurso($this->cod_curso);
+        $tmp_obj = new clsPmieducarCurso(request()->integer('cod_curso'));
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
@@ -131,7 +123,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Ato Poder P&uacute;blico', $registro['ato_poder_publico']]);
         }
 
-        $curso = LegacyCourse::find($this->cod_curso);
+        $curso = LegacyCourse::find(request()->integer('cod_curso'));
         $lst = $curso->qualifications?->toArray();
 
         if (!empty($lst)) {

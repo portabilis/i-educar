@@ -20,7 +20,11 @@ class RecursosRealizacaoProvas
 
     public const PROVA_SUPERAMPLIADA_FONTE_24 = 8;
 
-    public const MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE = 9;
+    public const MATERIAL_DIDATICO_EM_BRAILLE = 9;
+
+    public const PROVA_EM_BRAILLE = 15;
+
+    public const TEMPO_ADICIONAL = 16;
 
     public const CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL = 11;
 
@@ -39,7 +43,9 @@ class RecursosRealizacaoProvas
             self::LEITURA_LABIAL => 'Leitura labial',
             self::PROVA_AMPLIADA_FONTE_18 => 'Prova Ampliada (Fonte 18)',
             self::PROVA_SUPERAMPLIADA_FONTE_24 => 'Prova superampliada (Fonte 24)',
-            self::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE => 'Material didático e Prova em Braille',
+            self::MATERIAL_DIDATICO_EM_BRAILLE => 'Material didático em Braille',
+            self::PROVA_EM_BRAILLE => 'Prova em Braille',
+            self::TEMPO_ADICIONAL => 'Tempo adicional',
             self::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL => 'CD com áudio para deficiente visual',
             self::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS => 'Prova de Língua Portuguesa como segunda língua para surdos e deficientes auditivos',
             self::PROVA_EM_VIDEO_EM_LIBRAS => 'Prova em Vídeo em Libras',

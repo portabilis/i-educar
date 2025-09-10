@@ -24,8 +24,7 @@ class LegacyStageTypeTest extends EloquentTestCase
         return LegacyStageType::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $expected = sprintf('%s - %d etapa(s)', $this->model->nm_tipo, $this->model->num_etapas);
         $this->assertEquals($expected, $this->model->name);

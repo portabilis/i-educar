@@ -30,8 +30,7 @@ class LegacyDisciplineExemptionTest extends EloquentTestCase
         return LegacyDisciplineExemption::class;
     }
 
-    /** @test  */
-    public function scope_active()
+    public function test_scope_active()
     {
         $query = LegacyDisciplineExemption::query()
             ->active()

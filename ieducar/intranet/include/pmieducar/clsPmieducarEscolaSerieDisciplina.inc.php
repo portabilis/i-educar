@@ -22,6 +22,8 @@ class clsPmieducarEscolaSerieDisciplina extends Model
 
     public $hora_falta;
 
+    public $aulas_por_semana;
+
     public function __construct(
         $ref_ref_cod_serie = null,
         $ref_ref_cod_escola = null,
@@ -31,13 +33,14 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         $etapas_especificas = false,
         $etapas_utilizadas = false,
         $anos_letivos = [],
-        $hora_falta = null
+        $hora_falta = null,
+        $aulas_por_semana = null
     ) {
 
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola_serie_disciplina';
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas, ARRAY_TO_JSON(anos_letivos) AS anos_letivos, hora_falta ';
+        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas, ARRAY_TO_JSON(anos_letivos) AS anos_letivos, hora_falta, aulas_por_semana ';
 
         if (is_numeric($ref_cod_disciplina)) {
             $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
@@ -87,6 +90,12 @@ class clsPmieducarEscolaSerieDisciplina extends Model
 
         if (is_array($anos_letivos)) {
             $this->anos_letivos = $anos_letivos;
+        }
+
+        if (is_numeric($aulas_por_semana)) {
+            $this->aulas_por_semana = $aulas_por_semana;
+        } elseif (is_null($aulas_por_semana)) {
+            $this->aulas_por_semana = null;
         }
     }
 
@@ -163,6 +172,16 @@ class clsPmieducarEscolaSerieDisciplina extends Model
                 $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
             }
 
+            if (is_numeric($this->aulas_por_semana)) {
+                $campos .= "{$gruda}aulas_por_semana";
+                $valores .= "{$gruda}'{$this->aulas_por_semana}'";
+                $gruda = ', ';
+            } elseif (is_null($this->aulas_por_semana)) {
+                $campos .= "{$gruda}aulas_por_semana";
+                $valores .= "{$gruda}null";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
@@ -214,6 +233,12 @@ class clsPmieducarEscolaSerieDisciplina extends Model
 
             if (is_array($this->anos_letivos)) {
                 $set[] = 'anos_letivos = ' . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
+            }
+
+            if (is_numeric($this->aulas_por_semana)) {
+                $set[] = "aulas_por_semana = '{$this->aulas_por_semana}'";
+            } elseif (is_null($this->aulas_por_semana)) {
+                $set[] = 'aulas_por_semana = NULL';
             }
 
             $fields = implode(', ', $set);

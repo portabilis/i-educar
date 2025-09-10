@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyActiveLookingBuilder;
+use App\Models\Traits\HasMessages;
 use Carbon\Carbon;
 use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon                 $data_inicio
  * @property Carbon                 $data_fim
  * @property int                 $result
+ * @property bool                $aluno_incluso_programa_evasao
+ * @property \Illuminate\Database\Eloquent\Collection<Message> $messages
  */
 class LegacyActiveLooking extends LegacyModel
 {
@@ -24,6 +27,7 @@ class LegacyActiveLooking extends LegacyModel
     use HasBuilder;
 
     use HasFiles;
+    use HasMessages;
     use SoftDeletes;
 
     protected $table = 'pmieducar.busca_ativa';
@@ -36,6 +40,7 @@ class LegacyActiveLooking extends LegacyModel
         'data_fim',
         'observacoes',
         'resultado_busca_ativa',
+        'aluno_incluso_programa_evasao',
     ];
 
     protected $casts = [

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\ActiveLookingChanged;
 use App\Events\RegistrationCopyEvent;
 use App\Events\RegistrationEvent;
 use App\Events\ReportIssued;
@@ -9,6 +10,7 @@ use App\Events\TransferEvent;
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Listeners\AcceptTransferRequestListener;
+use App\Listeners\ActiveLookingNotificationListener;
 use App\Listeners\AuthenticatedUser;
 use App\Listeners\ConfigureAuthenticatedUserForAudit;
 use App\Listeners\CopyTransferDataListener;
@@ -73,6 +75,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ReportIssued::class => [
             ReportIssuedListener::class,
+        ],
+        ActiveLookingChanged::class => [
+            ActiveLookingNotificationListener::class,
         ],
     ];
 

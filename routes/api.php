@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActiveLookingMessageController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\CourseController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
 use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\InstitutionController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\People\LegacyDeficiencyController;
 use App\Http\Controllers\Api\PeriodController;
 use App\Http\Controllers\Api\RegistrationController;
@@ -71,6 +73,8 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'Api'], static func
     Route::resource('period', PeriodController::class)->only(['index']);
     Route::resource('discipline', DisciplineController::class)->only(['index']);
     Route::resource('stage', StageController::class)->only(['index']);
+    Route::resource('active-looking-messages', ActiveLookingMessageController::class);
+    Route::resource('messages', MessageController::class);
 });
 
 Route::group(['prefix' => 'resource', 'as' => 'api.resource.', 'namespace' => 'Api\Resource'], static function () {

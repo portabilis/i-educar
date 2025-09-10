@@ -377,3 +377,15 @@ function cloneValues(componente_id, classe){
 $j('#disciplinas').on('change','input[name^="disciplinas"]',function () {
   $j(this).closest('div').find('input[name^="usar_componente"]').prop('checked', $j(this).is(':checked'));
 })
+
+$j(document).ready(function() {
+    $j(document).on('keyup change', 'input.aulas_semana', function() {
+        var oldValue = this.value;
+
+        this.value = this.value.replace(/[^0-9\.]/g, '');
+        this.value = this.value.replace('.', '');
+
+        if (oldValue != this.value)
+            messageUtils.error('Informe apenas números.', this);
+    });
+});

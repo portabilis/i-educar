@@ -978,14 +978,6 @@ class Registro10 extends Registro10Fields
         return in_array(OrganizacaoEnsino::MODULOS, $this->organizacaoEnsino);
     }
 
-    /**
-     * @return bool
-     */
-    public function organizacaoEnsinoAlternanciaRegular()
-    {
-        return in_array(OrganizacaoEnsino::ALTERNANCIA_REGULAR, $this->organizacaoEnsino);
-    }
-
     public function HasDifferentStepsOfChildEducation()
     {
         $hasDifferentStepsOfChildEducation = new HasDifferentStepsOfChildEducationValidator($this->codEscola);

@@ -3,9 +3,9 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.9.0",
+    "version": "2.10.0",
     "keywords": [
-        "Portábilis",
+        "Portabilis",
         "i-Educar"
     ],
     "authors": [
@@ -27,12 +27,12 @@
         "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
         "dex/composer-plug-and-play": "^0.24",
-        "dex/frontier": "^0.15.0",
+        "dex/frontier": "^0.16.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^4.0",
         "intervention/image": "^2.6",
-        "laravel/framework": "^11.15",
+        "laravel/framework": "^12.0",
         "laravel/horizon": "^5.15",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.16",
@@ -44,8 +44,8 @@
         "league/flysystem-sftp-v3": "^3.0",
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.8",
-        "predis/predis": "^1.1",
-        "psr/simple-cache": "^2.0",
+        "predis/predis": "^2.3",
+        "psr/simple-cache": "^3.0",
         "socialiteproviders/laravelpassport": "^4.3",
         "staudenmeir/laravel-adjacency-list": "^1.0",
         "symfony/http-client": "^6.0",
@@ -58,7 +58,7 @@
         "laravel/telescope": "^5.0",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.1",
-        "pestphp/pest": "^2.33",
+        "pestphp/pest": "^3.0",
         "spatie/laravel-ignition": "^2.0",
         "symfony/yaml": "^7.0",
         "uderline/openapi-php-attributes": "^2.1"
@@ -70,7 +70,8 @@
             "ieducar/modules/*/Model",
             "ieducar/modules/Avaliacao/Service",
             "ieducar/modules/Avaliacao/Views",
-            "ieducar/modules/FormulaMedia/Validate"
+            "ieducar/modules/FormulaMedia/Validate",
+            "ieducar/modules/RegraAvaliacao/Validators"
         ],
         "files": [
             "ieducar/intranet/include/funcoes.inc.php"

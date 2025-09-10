@@ -62,6 +62,8 @@ return new class extends clsCadastro
 
     public $descricao;
 
+    public $bloquear_novas_matriculas;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -277,6 +279,8 @@ return new class extends clsCadastro
         ]);
 
         $this->campoCheck(nome: 'importar_curso_pre_matricula', campo: 'Importar os dados do curso para o recurso de pré-matrícula digital?', valor: $this->importar_curso_pre_matricula);
+
+        $this->campoCheck(nome: 'bloquear_novas_matriculas', campo: 'Bloquear matrículas realizadas através do i-Educar?', valor: $this->bloquear_novas_matriculas);
     }
 
     public function Novo()
@@ -290,6 +294,7 @@ return new class extends clsCadastro
             $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
             $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
+            $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
                 ref_usuario_cad: $this->pessoa_logada,
@@ -309,7 +314,8 @@ return new class extends clsCadastro
                 hora_falta: $this->hora_falta === null ? null : $this->hora_falta / 60,
                 multi_seriado: $this->multi_seriado,
                 importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
-                descricao: $this->descricao
+                descricao: $this->descricao,
+                bloquear_novas_matriculas: $this->bloquear_novas_matriculas
             );
             $obj->modalidade_curso = $this->modalidade_curso;
 
@@ -340,6 +346,7 @@ return new class extends clsCadastro
             $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
             $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
+            $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
                 cod_curso: $this->cod_curso,
@@ -360,7 +367,8 @@ return new class extends clsCadastro
                 hora_falta: $this->hora_falta === null ? null : $this->hora_falta / 60,
                 multi_seriado: $this->multi_seriado,
                 importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
-                descricao: $this->descricao
+                descricao: $this->descricao,
+                bloquear_novas_matriculas: $this->bloquear_novas_matriculas
             );
             $obj->modalidade_curso = $this->modalidade_curso;
 

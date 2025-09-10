@@ -43,8 +43,7 @@ class EmployeeTest extends EloquentTestCase
         return Employee::class;
     }
 
-    /** @test  */
-    public function relationship_inep()
+    public function test_relationship_inep()
     {
         $employee = EmployeeFactory::new()->create();
         $employee->inep = EmployeeInepFactory::new()->create([
@@ -53,8 +52,7 @@ class EmployeeTest extends EloquentTestCase
         $this->assertInstanceOf(EmployeeInep::class, $employee->inep);
     }
 
-    /** @test  */
-    public function relationship_individual()
+    public function test_relationship_individual()
     {
         $employee = EmployeeFactory::new()->create();
         $employee->individual = LegacyIndividualFactory::new()->create([
@@ -63,16 +61,14 @@ class EmployeeTest extends EloquentTestCase
         $this->assertInstanceOf(LegacyIndividual::class, $employee->individual);
     }
 
-    /** @test  */
-    public function get_id_attribute()
+    public function test_get_id_attribute()
     {
         $this->assertInstanceOf(Employee::class, $this->model);
         $this->assertIsInt($this->model->id);
         $this->assertEquals($this->model->cod_servidor, $this->model->id);
     }
 
-    /** @test  */
-    public function scope_professor()
+    public function test_scope_professor()
     {
         try {
             Employee::query()
@@ -84,8 +80,7 @@ class EmployeeTest extends EloquentTestCase
         }
     }
 
-    /** @test  */
-    public function scope_last_year()
+    public function test_scope_last_year()
     {
         try {
             Employee::query()
@@ -98,8 +93,7 @@ class EmployeeTest extends EloquentTestCase
         }
     }
 
-    /** @test  */
-    public function scope_current_year()
+    public function test_scope_current_year()
     {
         try {
             Employee::query()
@@ -112,8 +106,7 @@ class EmployeeTest extends EloquentTestCase
         }
     }
 
-    /** @test  */
-    public function relationship_schools(): void
+    public function test_relationship_schools(): void
     {
         EmployeeAllocationFactory::new()->create([
             'ref_cod_servidor' => $this->model,
@@ -124,8 +117,7 @@ class EmployeeTest extends EloquentTestCase
         $this->assertInstanceOf(LegacySchool::class, $this->model->schools->first());
     }
 
-    /** @test  */
-    public function relationship_disciplines(): void
+    public function test_relationship_disciplines(): void
     {
         $employeeRole = LegacyEmployeeRoleFactory::new()->create();
         $course = LegacyCourseFactory::new()->create();
@@ -140,8 +132,7 @@ class EmployeeTest extends EloquentTestCase
         $this->assertInstanceOf(LegacyDiscipline::class, $employee->disciplines->first());
     }
 
-    /** @test  */
-    public function relationship_courses(): void
+    public function test_relationship_courses(): void
     {
         $employee = EmployeeFactory::new()->hasAttached(LegacyCourseFactory::new(), [
             'ref_ref_cod_instituicao' => $this->model->institution_id,

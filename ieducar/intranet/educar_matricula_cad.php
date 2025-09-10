@@ -3,6 +3,7 @@
 use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
+use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
@@ -171,16 +172,6 @@ return new class extends clsCadastro
             );
         }
 
-        if (is_numeric(value: $this->ref_cod_curso)) {
-            $obj_curso = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
-            $det_curso = $obj_curso->detalhe();
-
-            if (is_numeric(value: $det_curso['ref_cod_tipo_avaliacao'])) {
-                $this->campoOculto(nome: 'apagar_radios', valor: $det_curso['padrao_ano_escolar']);
-                $this->campoOculto(nome: 'is_padrao', valor: $det_curso['padrao_ano_escolar']);
-            }
-        }
-
         $this->acao_enviar = 'formUtils.submit()';
     }
 
@@ -325,6 +316,12 @@ return new class extends clsCadastro
         DB::beginTransaction();
 
         $dependencia = $this->dependencia == 'on';
+
+        if ($this->bloqueiaNovaMatricula()) {
+            $this->mensagem = 'Não foi possível realizar a matrícula, o curso selecionado está configurado para não permitir a realização de novas matrículas.';
+
+            return false;
+        }
 
         if (!$this->validaAlunoAtivo()) {
             $this->mensagem = 'Não é possível matricular alunos inativos ou inexistentes.';
@@ -778,6 +775,11 @@ return new class extends clsCadastro
         $instituicao = $instituicao->detalhe();
 
         return dbBool(val: $instituicao['bloqueia_matricula_serie_nao_seguinte']);
+    }
+
+    public function bloqueiaNovaMatricula()
+    {
+        return (bool) LegacyCourse::query()->whereKey($this->ref_cod_curso)->value('bloquear_novas_matriculas');
     }
 
     public function permiteMatriculaSerieDestino()

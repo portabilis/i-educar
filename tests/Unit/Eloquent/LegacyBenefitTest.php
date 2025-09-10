@@ -25,8 +25,7 @@ class LegacyBenefitTest extends EloquentTestCase
         return LegacyBenefit::class;
     }
 
-    /** @test  */
-    public function students()
+    public function test_students()
     {
         $benefit = LegacyBenefitFactory::new()->create();
         $student = LegacyStudentFactory::new()->create();

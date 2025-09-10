@@ -49,17 +49,14 @@
                     <th scope="row">Período de enturmação:</th>
                     <td>{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</td>
                 </tr>
-                @if($enrollments->count())
+                @if($enableCancelButton && $enrollments->count())
                 <tr>
-                    <th scope="row">Turma de origem:</th>
+                    <th scope="row">Turma de origem<span class="campo_obrigatorio">*</span>:</th>
                     <td>
-                        <select name="enrollment_from_id" class="select-default">
+                        <select name="enrollment_from_id" class="select-default" required>
+                            <option value="">Selecione a turma de origem</option>
                             @foreach($enrollments as $enrollment)
-                                @if($enableCancelButton)
-                                    @if($enrollment->schoolClass->id == $schoolClass->id)
-                                        <option value="{{ $enrollment->id }}">{{ $enrollment->schoolClass->name }}</option>
-                                    @endif
-                                @else
+                                @if($enrollment->schoolClass->id == $schoolClass->id)
                                     <option value="{{ $enrollment->id }}">{{ $enrollment->schoolClass->name }}</option>
                                 @endif
                             @endforeach
@@ -69,7 +66,11 @@
                 @endif
                 <tr>
                     <th scope="row">
-                        Data da enturmação/saída<span class="campo_obrigatorio">*</span>
+                        @if($enableCancelButton)
+                            Data da saída<span class="campo_obrigatorio">*</span>
+                        @else
+                            Data da enturmação<span class="campo_obrigatorio">*</span>
+                        @endif
                         <br>
                         <small class="text-muted">dd/mm/aaaa</small>
                     </th>
@@ -84,11 +85,12 @@
 
         <div style="text-align: center">
             @if($enableCancelButton)
-                <button class="btn"  onclick="modalConfirmacao('is_cancellation')" type="button" name="is_cancellation" value="1">Desenturmar</button>
+                @if($canUnenroll)
+                    <button class="btn"  onclick="modalConfirmacao('is_cancellation')" type="button" name="is_cancellation" value="1">Desenturmar</button>
+                @endif
             @else
-                <button class="btn" type="submit">Enturmar</button>
-                @if($enrollments->count())
-                    <button class="btn" type="submit" name="is_relocation" value="1">Transferir para turma (remanejar)</button>
+                @if($canEnroll)
+                    <button class="btn" type="submit">Enturmar</button>
                 @endif
             @endif
             <a href="{{ Asset::get('/intranet/educar_matricula_turma_lst.php?ref_cod_matricula=' . $registration->id . '&ano_letivo=' . $registration->year) }}" class="btn">Cancelar</a>
@@ -127,14 +129,7 @@
                        'para isso você deve selecionar a turma nova e remanejar. Deseja continuar?';
             }
 
-            if (val === 'is_enturmacao') {
-                return 'Na opção <b>Enturmar</b> você está criando uma nova ' +
-                       'enturmação e esta não será considerada como remanejamento ou ' +
-                       'troca de turma. Deseja continuar?';
-            }
-
-            return 'Esta ação será considerada como remanejamento/troca de turma e ' +
-                    'será contabilizada nas movimentações do(a) aluno(a). Deseja continuar?';
+            return 'Deseja continuar?';
         }
 
         function makeDialog (params) {

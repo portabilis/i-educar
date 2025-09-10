@@ -13,9 +13,13 @@ return new class extends clsCadastro
 
     public $deficiencia_educacenso;
 
+    public $transtorno_educacenso;
+
     public $deficiency_type_id;
 
     public $exigir_laudo_medico;
+
+    public $desconsidera_regra_diferenciada;
 
     public $acao_enviar = 'acaoEnviar()';
 
@@ -73,7 +77,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'deficiency_type_id', inputOptions: $options);
 
         $options = [
-            'label' => 'Deficiência educacenso',
+            'label' => 'Deficiência Educacenso',
             'resources' => SelectOptions::educacensoDeficiencies(),
             'value' => $this->deficiencia_educacenso,
             'label_hint' => 'Deficiências definidas como "Outras" não serão exportadas no arquivo do Censo',
@@ -81,6 +85,17 @@ return new class extends clsCadastro
         ];
 
         $this->inputsHelper()->select(attrName: 'deficiencia_educacenso', inputOptions: $options);
+
+        $options = [
+            'label' => 'Transtorno Educacenso',
+            'resources' => SelectOptions::educacensoDisorders(),
+            'value' => $this->transtorno_educacenso,
+            'label_hint' => 'Transtornos definidos como "Outros" não serão exportadas no arquivo do Censo',
+            'required' => false,
+        ];
+
+        $this->inputsHelper()->select(attrName: 'transtorno_educacenso', inputOptions: $options);
+
         $this->campoCheck(nome: 'exigir_laudo_medico', campo: 'Exigir laudo médico?', valor: dbBool($this->exigir_laudo_medico));
         $this->campoCheck(nome: 'desconsidera_regra_diferenciada', campo: 'Desconsiderar deficiência ou transtorno na regra de avaliação diferenciada', valor: dbBool($this->desconsidera_regra_diferenciada));
     }
@@ -92,6 +107,7 @@ return new class extends clsCadastro
             $cadastrou = LegacyDeficiency::create([
                 'nm_deficiencia' => $this->nm_deficiencia,
                 'deficiencia_educacenso' => is_numeric($this->deficiencia_educacenso) ? $this->deficiencia_educacenso : null,
+                'transtorno_educacenso' => is_numeric($this->transtorno_educacenso) ? $this->transtorno_educacenso : null,
                 'deficiency_type_id' => is_numeric($this->deficiency_type_id) ? $this->deficiency_type_id : null,
                 'desconsidera_regra_diferenciada' => !is_null($this->desconsidera_regra_diferenciada),
                 'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico),
@@ -116,6 +132,7 @@ return new class extends clsCadastro
             $obj->fill([
                 'nm_deficiencia' => $this->nm_deficiencia,
                 'deficiencia_educacenso' => is_numeric($this->deficiencia_educacenso) ? $this->deficiencia_educacenso : null,
+                'transtorno_educacenso' => is_numeric($this->transtorno_educacenso) ? $this->transtorno_educacenso : null,
                 'deficiency_type_id' => is_numeric($this->deficiency_type_id) ? $this->deficiency_type_id : null,
                 'desconsidera_regra_diferenciada' => !is_null($this->desconsidera_regra_diferenciada),
                 'exigir_laudo_medico' => !is_null($this->exigir_laudo_medico),

@@ -23,8 +23,6 @@ class TipoItinerarioFormativo
             self::MATEMATICA => 'Matemática e suas tecnologias',
             self::CIENCIAS_NATUREZA => 'Ciências da natureza e suas tecnologias',
             self::CIENCIAS_HUMANAS => 'Ciências humanas e sociais aplicadas',
-            self::FORMACAO_TECNICA => 'Formação técnica e profissional',
-            self::ITINERARIO_INTEGRADO => 'Itinerário formativo integrado (entre as áreas de conhecimento ou entre as áreas de conhecimento e a formação técnica profissional)',
         ];
     }
 

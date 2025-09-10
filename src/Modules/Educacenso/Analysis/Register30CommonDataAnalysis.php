@@ -128,6 +128,18 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
+        if (
+            $data->raca == '5' &&
+            is_null($data->povoIndigena)
+        ) {
+            $this->messages[] = [
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se o povo indígena da pessoa {$data->nomePessoa} foi informado.",
+                'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Povo Indígena)',
+                'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
+                'fail' => true,
+            ];
+        }
+
         if (!$data->nacionalidade) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se o nacionalidade da pessoa {$data->nomePessoa} foi informado.",

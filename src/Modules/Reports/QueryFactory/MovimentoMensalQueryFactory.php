@@ -140,11 +140,11 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             when 1 then
                                 true
                             when 2 then
-                                coalesce(turma.tipo_atendimento, 0) = 0 -- Escolarização
+                                (0 = ANY(turma.tipo_atendimento) OR array_length(turma.tipo_atendimento, 1) IS NULL) -- Curricular (etapa de ensino)
                             when 3 then
-                                turma.tipo_atendimento = 5 -- AEE
+                                5 = ANY(turma.tipo_atendimento) -- AEE
                             when 4 then
-                                turma.tipo_atendimento = 4 -- Atividade complementar
+                                4 = ANY(turma.tipo_atendimento) -- Atividade complementar
                             when 5 then
                                 (
                                     curso.modalidade_curso = 3 -- EJA

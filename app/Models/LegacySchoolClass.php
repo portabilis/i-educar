@@ -138,10 +138,8 @@ class LegacySchoolClass extends Model
         'atividades_complementares',
         'atividades_aee',
         'local_funcionamento_diferenciado',
-        'estrutura_curricular',
+        'organizacao_curricular',
         'formas_organizacao_turma',
-        'unidade_curricular',
-        'outras_unidades_curriculares_obrigatorias',
         'classe_com_lingua_brasileira_sinais',
         'hora_inicial_matutino',
         'hora_inicio_intervalo_matutino',
@@ -151,6 +149,12 @@ class LegacySchoolClass extends Model
         'hora_inicio_intervalo_vespertino',
         'hora_fim_intervalo_vespertino',
         'hora_final_vespertino',
+        'etapa_agregada',
+        'classe_especial',
+        'formacao_alternancia',
+        'area_itinerario',
+        'tipo_curso_intinerario',
+        'cod_curso_profissional_intinerario',
     ];
 
     protected function id(): Attribute

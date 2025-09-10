@@ -1,5 +1,7 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Group;
+
 class CoreExt_EntityTest extends UnitBaseTest
 {
     public function test_nova_instancia_e_marcada_como_new()
@@ -118,9 +120,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertSame($expected, $entity->getDataMapper());
     }
 
-    /**
-     * @group CoreExt_Validate_Validatable
-     */
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_configura_validador_para_atributo()
     {
         $entity = new CoreExt_EntityStub;
@@ -128,9 +128,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertInstanceOf('CoreExt_Validate_String', $entity->getValidator('estadoCivil'));
     }
 
-    /**
-     * @group CoreExt_Validate_Validatable
-     */
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_configurar_validador_para_atributo_inexistente_lanca_excecao()
     {
         $this->expectException(\Exception::class);
@@ -138,9 +136,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $entity->setValidator('fooAttr', new CoreExt_Validate_String);
     }
 
-    /**
-     * @group CoreExt_Validate_Validatable
-     */
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_atributos_da_instancia_sao_validos()
     {
         $data = [
@@ -153,9 +149,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertFalse($entity->hasErrors());
     }
 
-    /**
-     * @group CoreExt_Validate_Validatable
-     */
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_validacao_geral_retorna_false_se_um_atributo_for_invalido()
     {
         $data = [
@@ -169,10 +163,9 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     /**
      * Testa com instância de CoreExt_Entity que contenha referências DataMapper.
-     *
-     * @group Overload
-     * @group CoreExt_Validate_Validatable
      */
+    #[Group('Overload')]
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_validacao_sanitiza_valor_de_atributo_com_referencias_data_mapper()
     {
         $data = [
@@ -202,9 +195,8 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     /**
      * Testa com instância de CoreExt_Entity que contenha referências Enum.
-     *
-     * @group CoreExt_Validate_Validatable
      */
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_validacao_sanitiza_valor_de_atributo_com_referencias_enum()
     {
         $data = [
@@ -227,9 +219,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertIsFloat($entity->peso);
     }
 
-    /**
-     * @group CoreExt_Validate_Validatable
-     */
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_cria_um_validador_dependendo_do_valor_de_um_atribudo_da_instancia()
     {
         $entity = new CoreExt_EntityStub(['nome' => 'fooBar', 'estadoCivil' => '']);
@@ -262,9 +252,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertTrue($entity->isValid('estadoCivil'), 'Falhou na asserção de validateIfEquals() para caso Else.');
     }
 
-    /**
-     * @group CoreExt_Validate_Validatable
-     */
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_metodo_de_criacao_de_validador_sensivel_ao_caso_lanca_excecao_quando_classe_nao_e_subclasse_de_coreext_validate_abstract()
     {
         $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
@@ -366,9 +354,7 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertNull($entity->get('filho'));
     }
 
-    /**
-     * @group Overload
-     */
+    #[Group('Overload')]
     public function test_setter_de_referencia_overload_atribui_valor_para_a_referencia_e_no_atributo_quando_uma_instancia_de_core_ext_entity_com_field_identity_e_passada()
     {
         $child = new CoreExt_ChildEntityStub(['id' => 1, 'nome' => 'FooBar Jr']);
@@ -490,10 +476,8 @@ class CoreExt_EntityTest extends UnitBaseTest
         $this->assertEquals(1, $parent->filho->id);
     }
 
-    /**
-     * @group LazyLoad
-     * @group CoreExt_Validate_Validatable
-     */
+    #[Group('LazyLoad')]
+    #[Group('CoreExt_Validate_Validatable')]
     public function test_lazy_load_nao_carrega_instancia_entity_para_validacao()
     {
         $data = [

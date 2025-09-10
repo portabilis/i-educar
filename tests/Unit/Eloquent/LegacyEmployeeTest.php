@@ -15,8 +15,7 @@ class LegacyEmployeeTest extends EloquentTestCase
         return LegacyEmployee::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->matricula, $this->model->login);
         $this->assertEquals($this->model->senha, $this->model->password);

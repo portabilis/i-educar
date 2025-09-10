@@ -2,7 +2,7 @@
 
 namespace App\Models\Educacenso;
 
-use iEducar\Modules\Educacenso\Model\Deficiencias;
+use iEducar\Modules\Educacenso\Model\Transtornos;
 
 class Registro30 implements RegistroEducacenso
 {
@@ -42,6 +42,8 @@ class Registro30 implements RegistroEducacenso
 
     public $raca;
 
+    public $povoIndigena;
+
     public $nacionalidade;
 
     public $paisNacionalidade;
@@ -72,6 +74,20 @@ class Registro30 implements RegistroEducacenso
 
     public $deficienciaVisaoMonocular;
 
+    public $transtorno;
+
+    public $transtornoDiscalculia;
+
+    public $transtornoDisgrafia;
+
+    public $transtornoDislalia;
+
+    public $transtornoDislexia;
+
+    public $transtornoTdah;
+
+    public $transtornoTpac;
+
     public $inepAluno;
 
     public $recursoLedor;
@@ -95,6 +111,10 @@ class Registro30 implements RegistroEducacenso
     public $recursoVideoLibras;
 
     public $recursoBraile;
+
+    public $provaBraile;
+
+    public $recursoTempoAdicional;
 
     public $recursoNenhum;
 
@@ -162,7 +182,7 @@ class Registro30 implements RegistroEducacenso
 
     public $formacaoContinuadaEducacaoBilingueSurdos;
 
-    public $formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao;
+    public $formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao;
 
     public $email;
 
@@ -245,7 +265,10 @@ class Registro30 implements RegistroEducacenso
             $this->deficienciaVisaoMonocular,
         ];
 
-        if (empty($this->arrayDeficiencias)) {
+        if (
+            empty($this->arrayDeficiencias) ||
+            count(Registro30::removeTranstornosArrayDeficiencias(transformStringFromDBInArray($this->arrayDeficiencias))) === 0
+        ) {
             return null;
         }
 
@@ -270,19 +293,20 @@ class Registro30 implements RegistroEducacenso
     }
 
     /**
-     * Remove "Altas habilidades/Superdotação" do array de deficiências informado
+     * Remove "Transtornos" do array de deficiências informado
      *
      *
-     * @return string
+     * @return array
      */
-    public static function removeAltasHabilidadesArrayDeficiencias($arrayDeficiencias)
+    public static function removeTranstornosArrayDeficiencias($arrayDeficiencias)
     {
-        $altasHabilidadesKey = array_search(Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO, $arrayDeficiencias);
-
-        if ($altasHabilidadesKey !== false) {
-            unset($arrayDeficiencias[$altasHabilidadesKey]);
-        }
-
-        return $arrayDeficiencias;
+        return array_diff($arrayDeficiencias, [
+            Transtornos::DISCALCULIA,
+            Transtornos::DISGRAFIA,
+            Transtornos::DISLALIA,
+            Transtornos::DISLEXIA,
+            Transtornos::TDAH,
+            Transtornos::TPAC,
+        ]);
     }
 }

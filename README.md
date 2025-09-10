@@ -67,6 +67,7 @@ Consulte o passo a passo no [guia de instalação](INSTALL.md).
 O i-Educar possui um conjunto de pacotes (módulos) que o extendem e o tornam um software mais robusto. Para instalar um
 pacote, siga as instruções de instalação encontradas no repositório do projeto.
 
+- [Pré-Matrícula Digital](https://github.com/portabilis/pre-matricula-digital/)
 - [Módulo de Relatórios](https://github.com/portabilis/i-educar-reports-package/)
 - [Módulo de Biblioteca](https://github.com/portabilis/i-educar-library-package/)
 - [Módulo de Transporte](https://github.com/portabilis/i-educar-transport-package/)

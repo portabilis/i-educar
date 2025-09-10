@@ -29,6 +29,7 @@ class LegacySchoolGrade extends LegacyModel
         'hora_inicio_intervalo',
         'hora_fim_intervalo',
         'bloquear_enturmacao_sem_vagas',
+        'bloquear_cadastro_turma_para_serie_com_vagas',
     ];
 
     /**

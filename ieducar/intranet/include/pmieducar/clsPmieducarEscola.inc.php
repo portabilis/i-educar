@@ -106,6 +106,8 @@ class clsPmieducarEscola extends Model
 
     public $numero_salas_acessibilidade = false;
 
+    public $numero_salas_cantinho_leitura = false;
+
     public $total_funcionario;
 
     public $atendimento_aee;
@@ -319,7 +321,7 @@ class clsPmieducarEscola extends Model
             e.condicao, e.predio_compartilhado_outra_escola, e.decreto_criacao, e.agua_potavel_consumo, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo, e.tratamento_lixo,
             e.alimentacao_escolar_alunos, e.compartilha_espacos_atividades_integracao, e.usa_espacos_equipamentos_atividades_regulares,
             e.salas_gerais, e.salas_funcionais, e.banheiros, e.laboratorios, e.salas_atividades, e.dormitorios, e.areas_externas, e.recursos_acessibilidade, e.possui_dependencias, e.numero_salas_utilizadas_dentro_predio,
-            e.numero_salas_utilizadas_fora_predio, e.numero_salas_climatizadas, e.numero_salas_acessibilidade,
+            e.numero_salas_utilizadas_fora_predio, e.numero_salas_climatizadas, e.numero_salas_acessibilidade, e.numero_salas_cantinho_leitura,
             e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.acao_area_ambiental, e.acoes_area_ambiental, e.projeto_politico_pedagogico, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada,
             e.codigo_lingua_indigena, e.atividade_complementar, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4,
             e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som,
@@ -755,6 +757,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->numero_salas_acessibilidade)) {
                 $campos .= "{$gruda}numero_salas_acessibilidade";
                 $valores .= "{$gruda}{$this->numero_salas_acessibilidade}";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->numero_salas_cantinho_leitura)) {
+                $campos .= "{$gruda}numero_salas_cantinho_leitura";
+                $valores .= "{$gruda}{$this->numero_salas_cantinho_leitura}";
                 $gruda = ', ';
             }
 
@@ -1737,6 +1745,14 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             } elseif ($this->numero_salas_acessibilidade !== false) {
                 $set .= "{$gruda}numero_salas_acessibilidade = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->numero_salas_cantinho_leitura)) {
+                $set .= "{$gruda}numero_salas_cantinho_leitura = {$this->numero_salas_cantinho_leitura}";
+                $gruda = ', ';
+            } elseif ($this->numero_salas_cantinho_leitura !== false) {
+                $set .= "{$gruda}numero_salas_cantinho_leitura = NULL";
                 $gruda = ', ';
             }
 

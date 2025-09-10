@@ -32,6 +32,18 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->deficienciaMultipla = null;
             $registro30->deficienciaAutismo = null;
             $registro30->deficienciaAltasHabilidades = null;
+        }
+
+        if (!$registro30->transtorno) {
+            $registro30->transtornoDiscalculia = null;
+            $registro30->transtornoDisgrafia = null;
+            $registro30->transtornoDislalia = null;
+            $registro30->transtornoDislexia = null;
+            $registro30->transtornoTdah = null;
+            $registro30->transtornoTpac = null;
+        }
+
+        if (!$registro30->deficiencia && !$registro30->transtorno) {
             $registro30->recursoLedor = null;
             $registro30->recursoTranscricao = null;
             $registro30->recursoGuia = null;
@@ -40,9 +52,11 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->recursoProvaAmpliada = null;
             $registro30->recursoProvaSuperampliada = null;
             $registro30->recursoAudio = null;
-            $registro30->recursoLinguaPortuguesaSegundaLingua = null;
             $registro30->recursoVideoLibras = null;
+            $registro30->recursoLinguaPortuguesaSegundaLingua = null;
             $registro30->recursoBraile = null;
+            $registro30->provaBraile = null;
+            $registro30->recursoTempoAdicional = null;
             $registro30->recursoNenhum = null;
         }
 
@@ -73,8 +87,7 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->posGraduacaoNaoPossui = null;
         }
 
-        // Remove "Altas Habilidades"
-        $arrayDeficiencias = $registro30::removeAltasHabilidadesArrayDeficiencias(Portabilis_Utils_Database::pgArrayToArray($registro30->arrayDeficiencias));
+        $arrayDeficiencias = Portabilis_Utils_Database::pgArrayToArray($registro30->arrayDeficiencias);
 
         if (empty($arrayDeficiencias)) {
             $registro30->recursoLedor = null;

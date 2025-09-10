@@ -15,8 +15,7 @@ class LegacyCourseEducacensoStageTest extends EloquentTestCase
         return LegacyCourseEducacensoStage::class;
     }
 
-    /** @test  */
-    public function get_ids_by_course()
+    public function test_get_ids_by_course()
     {
         $return = $this->model->getIdsByCourse($this->model->curso_id);
         $this->assertIsArray($return);

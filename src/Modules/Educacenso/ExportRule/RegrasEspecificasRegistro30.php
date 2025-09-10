@@ -21,9 +21,11 @@ class RegrasEspecificasRegistro30 implements EducacensoExportRule
             $registro30->recursoProvaAmpliada = null;
             $registro30->recursoProvaSuperampliada = null;
             $registro30->recursoAudio = null;
-            $registro30->recursoLinguaPortuguesaSegundaLingua = null;
             $registro30->recursoVideoLibras = null;
+            $registro30->recursoLinguaPortuguesaSegundaLingua = null;
             $registro30->recursoBraile = null;
+            $registro30->provaBraile = null;
+            $registro30->recursoTempoAdicional = null;
             $registro30->recursoNenhum = null;
             $registro30->nis = null;
             $registro30->certidaoNascimento = null;

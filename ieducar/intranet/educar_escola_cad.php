@@ -195,6 +195,8 @@ return new class extends clsCadastro
 
     public $numero_salas_acessibilidade;
 
+    public $numero_salas_cantinho_leitura;
+
     public $total_funcionario;
 
     public $atendimento_aee;
@@ -1370,17 +1372,20 @@ return new class extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
-            $options = ['label' => 'Número de salas de aula utilizadas na escola dentro do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_dentro_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
+            $options = ['label' => 'Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_dentro_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer(attrName: 'numero_salas_utilizadas_dentro_predio', inputOptions: $options);
 
-            $options = ['label' => 'Número de salas de aula utilizadas na escola fora do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_fora_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
+            $options = ['label' => 'Quantidade de salas de aula utilizadas pela escola fora do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_fora_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer(attrName: 'numero_salas_utilizadas_fora_predio', inputOptions: $options);
 
-            $options = ['label' => 'Número de salas de aula climatizadas', 'resources' => $resources, 'value' => $this->numero_salas_climatizadas, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
+            $options = ['label' => 'Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)', 'resources' => $resources, 'value' => $this->numero_salas_climatizadas, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer(attrName: 'numero_salas_climatizadas', inputOptions: $options);
 
-            $options = ['label' => 'Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida', 'resources' => $resources, 'value' => $this->numero_salas_acessibilidade, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
+            $options = ['label' => 'Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida', 'resources' => $resources, 'value' => $this->numero_salas_acessibilidade, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer(attrName: 'numero_salas_acessibilidade', inputOptions: $options);
+
+            $options = ['label' => 'Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)', 'resources' => $resources, 'value' => $this->numero_salas_cantinho_leitura, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
+            $this->inputsHelper()->integer(attrName: 'numero_salas_cantinho_leitura', inputOptions: $options);
 
             $helperOptions = ['objectName' => 'equipamentos'];
             $options = [
@@ -1885,6 +1890,7 @@ return new class extends clsCadastro
         $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
         $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
         $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
+        $obj->numero_salas_cantinho_leitura = $this->numero_salas_cantinho_leitura;
         $obj->total_funcionario = $this->total_funcionario;
         $obj->atendimento_aee = $this->atendimento_aee;
         $obj->fundamental_ciclo = $this->fundamental_ciclo;
@@ -2174,6 +2180,7 @@ return new class extends clsCadastro
             $this->validaSalasUtilizadasForaEscola() &&
             $this->validaSalasClimatizadas() &&
             $this->validaSalasAcessibilidade() &&
+            $this->validaSalasCantinhoLeitura() &&
             $this->validaEquipamentosAcessoInternet() &&
             $this->validaQuantidadeComputadoresAlunos() &&
             $this->validaQuantidadeEquipamentosEnsino() &&
@@ -2721,7 +2728,7 @@ return new class extends clsCadastro
         }
 
         if ($this->numero_salas_utilizadas_dentro_predio == '0') {
-            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não pode ser preenchido com 0';
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> não pode ser preenchido com 0';
 
             return false;
         }
@@ -2732,7 +2739,7 @@ return new class extends clsCadastro
     protected function validaSalasUtilizadasForaEscola()
     {
         if ($this->numero_salas_utilizadas_fora_predio == '0') {
-            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não pode ser preenchido com 0';
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b> não pode ser preenchido com 0';
 
             return false;
         }
@@ -2743,14 +2750,14 @@ return new class extends clsCadastro
     protected function validaSalasClimatizadas()
     {
         if ($this->numero_salas_climatizadas == '0') {
-            $this->mensagem = 'O campo: <b>Número de salas de aula climatizadas</b> não pode ser preenchido com 0';
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)</b> não pode ser preenchido com 0';
 
             return false;
         }
 
         $totalSalas = (int) $this->numero_salas_utilizadas_dentro_predio + (int) $this->numero_salas_utilizadas_fora_predio;
         if ((int) $this->numero_salas_climatizadas > $totalSalas) {
-            $this->mensagem = 'O campo: <b>Número de salas de aula climatizadas</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)</b> não pode ser maior que a soma dos campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b>';
 
             return false;
         }
@@ -2777,14 +2784,32 @@ return new class extends clsCadastro
     protected function validaSalasAcessibilidade()
     {
         if ($this->numero_salas_acessibilidade == '0') {
-            $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido com 0';
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido com 0';
 
             return false;
         }
 
         $totalSalas = (int) $this->numero_salas_utilizadas_dentro_predio + (int) $this->numero_salas_utilizadas_fora_predio;
         if ((int) $this->numero_salas_acessibilidade > $totalSalas) {
-            $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b>';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasCantinhoLeitura()
+    {
+        if ($this->numero_salas_cantinho_leitura == '0') {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)</b> não pode ser preenchido com 0';
+
+            return false;
+        }
+
+        $totalSalas = (int) $this->numero_salas_utilizadas_dentro_predio + (int) $this->numero_salas_utilizadas_fora_predio;
+        if ((int) $this->numero_salas_cantinho_leitura > $totalSalas) {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)</b> não pode ser maior que a soma dos campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b>';
 
             return false;
         }

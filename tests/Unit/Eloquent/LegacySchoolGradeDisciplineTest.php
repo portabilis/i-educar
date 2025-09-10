@@ -35,8 +35,7 @@ class LegacySchoolGradeDisciplineTest extends EloquentTestCase
         parent::setUp();
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->ref_cod_disciplina, $this->model->id);
         $this->assertEquals($this->model->discipline->name ?? null, $this->model->name);

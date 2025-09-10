@@ -43,6 +43,7 @@ SELECT p.id,
        array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text) AS technological_resources,
        p.nationality,
        p.birthplace,
+       p.country_of_origin,
        string_agg(
            CASE m.modalidade_ensino
                WHEN 0 THEN 'Semipresencial'::character varying
@@ -80,5 +81,5 @@ FROM exporter_person p
     ) ap on ap.ref_cod_aluno = a.cod_aluno
 WHERE true AND a.ativo = 1 AND m.ativo = 1
 GROUP BY p.id, p.name, p.social_name, p.cpf, p.rg, p.rg_issue_date, p.rg_state_abbreviation, p.date_of_birth, p.email, p.sus, p.nis, p.occupation, p.organization, p.monthly_income, p.gender, p.race, p.religion, p.mother_id, p.father_id, p.guardian_id, a.cod_aluno, a.aluno_estado_id, (array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text)), p.nationality, p.birthplace, m.ano, vs.cod_situacao, me.cod_aluno_inep,
-         ap.altura, ap.peso
+         ap.altura, ap.peso, p.country_of_origin
 ORDER BY a.ref_idpes;

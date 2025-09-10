@@ -121,7 +121,8 @@ class App_Model_IedFinder extends CoreExt_Entity
     {
         $query = LegacySchool::query()
             ->where('ativo', 1)
-            ->whereHas('person')->where('ref_cod_instituicao', $instituicaoId);
+            ->whereHas('person')
+            ->when($instituicaoId, fn ($q) => $q->where('ref_cod_instituicao', $instituicaoId));
 
         if (Auth::user()->isSchooling()) {
             $schools = Auth::user()->schools->pluck('cod_escola')->all();
@@ -303,6 +304,33 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $result;
+    }
+
+    /**
+     * Retorna todas as séries da instituição no formato "Curso - Nome da série".
+     *
+     * @param int|null $instituicaoId
+     * @return array
+     */
+    public static function getSeriesWithCourse($instituicaoId)
+    {
+        $db = new clsBanco;
+        $series = [];
+
+        if ($instituicaoId === null) {
+            $sql = 'SELECT s.cod_serie, s.nm_serie, c.nm_curso FROM pmieducar.serie s INNER JOIN pmieducar.curso c ON c.cod_curso = s.ref_cod_curso WHERE s.ativo = 1 AND c.ativo = 1 ORDER BY c.nm_curso, s.nm_serie';
+        } else {
+            $sql = "SELECT s.cod_serie, s.nm_serie, c.nm_curso FROM pmieducar.serie s INNER JOIN pmieducar.curso c ON c.cod_curso = s.ref_cod_curso WHERE c.ref_cod_instituicao = {$instituicaoId} AND s.ativo = 1 AND c.ativo = 1 ORDER BY c.nm_curso, s.nm_serie";
+        }
+
+        $db->Consulta($sql);
+        while ($db->ProximoRegistro()) {
+            [$cod_serie, $nm_serie, $nm_curso] = $db->Tupla();
+            $label = trim($nm_serie . ' (' . $nm_curso . ')', ' -');
+            $series[$cod_serie] = $label;
+        }
+
+        return $series;
     }
 
     /**

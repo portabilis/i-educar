@@ -357,7 +357,7 @@ class EscolaController extends ApiCoreController
             $int_ref_usuario_cad = null,
             $int_ref_ref_cod_serie = $this->getRequest()->serie_id,
             $int_ref_ref_cod_escola = $escolaId,
-            $int_ref_cod_infra_predio_comodo = null,
+            $int_ref_cod_infra_predio_comodo = null, // TODO: remover no futuro
             $str_nm_turma = null,
             $str_sgl_turma = null,
             $int_max_aluno = null,

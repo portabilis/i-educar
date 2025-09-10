@@ -22,6 +22,7 @@ class LegacyDeficiency extends LegacyModel
     protected $fillable = [
         'nm_deficiencia',
         'deficiencia_educacenso',
+        'transtorno_educacenso',
         'deficiency_type_id',
         'desconsidera_regra_diferenciada',
         'exigir_laudo_medico',
@@ -31,6 +32,7 @@ class LegacyDeficiency extends LegacyModel
         'id' => 'cod_deficiencia',
         'name' => 'nm_deficiencia',
         'educacenso' => 'deficiencia_educacenso',
+        'transtorno_educacenso' => 'transtorno_educacenso',
         'disregards_different_rule' => 'desconsidera_regra_diferenciada',
         'require_medical_report' => 'exigir_laudo_medico',
     ];

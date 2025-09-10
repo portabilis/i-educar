@@ -68,6 +68,8 @@ class clsPessoaFisica extends clsPessoaFj
 
     public $observacao;
 
+    public $povo_indigena_educacenso_id;
+
     public $banco = 'pmi';
 
     public $schema_cadastro = 'cadastro';
@@ -252,6 +254,7 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->nome_social = $detalhe_fisica['nome_social'];
                 $this->pais_residencia = $detalhe_fisica['pais_residencia'];
                 $this->observacao = $detalhe_fisica['observacao'];
+                $this->povo_indigena_educacenso_id = $detalhe_fisica['povo_indigena_educacenso_id'];
 
                 $tupla['idpes'] = $this->idpes;
                 $tupla[] = &$tupla['idpes'];
@@ -346,6 +349,9 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['observacao'] = $this->observacao;
                 $tupla[] = &$tupla['observacao'];
 
+                $tupla['povo_indigena_educacenso_id'] = $this->povo_indigena_educacenso_id;
+                $tupla[] = &$tupla['povo_indigena_educacenso_id'];
+
                 return $tupla;
             }
         } elseif ($this->cpf) {
@@ -399,6 +405,7 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->nome_social = $detalhe_fisica['nome_social'];
                     $this->pais_residencia = $detalhe_fisica['pais_residencia'];
                     $this->observacao = $detalhe_fisica['observacao'];
+                    $this->povo_indigena_educacenso_id = $detalhe_fisica['povo_indigena_educacenso_id'];
 
                     $tupla['idpes'] = $this->idpes;
                     $tupla[] = &$tupla['idpes'];
@@ -486,6 +493,9 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['observacao'] = $this->observacao;
                     $tupla[] = &$tupla['observacao'];
+
+                    $tupla['povo_indigena_educacenso_id'] = $this->povo_indigena_educacenso_id;
+                    $tupla[] = &$tupla['povo_indigena_educacenso_id'];
 
                     return $tupla;
                 }

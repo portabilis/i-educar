@@ -15,8 +15,7 @@ class LegacyIndividualPictureTest extends EloquentTestCase
         return LegacyIndividualPicture::class;
     }
 
-    /** @test */
-    public function attributes()
+    public function test_attributes()
     {
         $this->assertEquals($this->model->caminho, $this->model->url);
 

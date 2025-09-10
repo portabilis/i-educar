@@ -43,20 +43,20 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@viewEnroll')
         ->name('enrollments.enroll.create');
     Route::post('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@enroll')
+        ->middleware('can:modify:' . Process::ENROLLMENT)
         ->name('enrollments.enroll');
+    Route::get('/matricula/{registration}/remanejar/{schoolClass}', 'EnrollmentController@viewRelocate')
+        ->middleware('can:view:' . Process::RELOCATE)
+        ->name('enrollments.relocate.create');
+    Route::post('/matricula/{registration}/remanejar/{schoolClass}', 'EnrollmentController@relocate')
+        ->middleware('can:modify:' . Process::RELOCATE)
+        ->name('enrollments.relocate');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
     Route::get('/enrollment-inep/{enrollment}', [EnrollmentInepController::class, 'edit'])
         ->name('enrollments.enrollment-inep.edit');
     Route::post('/enrollment-inep/{enrollment}', [EnrollmentInepController::class, 'update'])
         ->name('enrollments.enrollment-inep.update');
-
-    Route::get('registration/{registration}/formative-itinerary', 'EnrollmentFormativeItineraryController@index')
-        ->name('registration.formative-itinerary.index')->middleware('can:view:690');
-    Route::get('registration/{registration}/formative-itinerary/{enrollment}/edit', 'EnrollmentFormativeItineraryController@edit')
-        ->name('registration.formative-itinerary.edit')->middleware('can:modify:690');
-    Route::put('registration/{registration}/formative-itinerary/{enrollment}', 'EnrollmentFormativeItineraryController@update')
-        ->name('registration.formative-itinerary.update')->middleware('can:modify:690');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');
@@ -145,11 +145,27 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/avisos', 'AnnouncementUserController@show')->withoutMiddleware(AnnouncementMiddleware::class)->name('announcement.user.show');
     Route::post('/avisos', 'AnnouncementUserController@confirm')->withoutMiddleware(AnnouncementMiddleware::class)->name('announcement.user.confirm');
 
+    Route::get('/importacao-situacao-final', 'FinalStatusImportController@index')->middleware('can:view:' . Process::FINAL_STATUS_IMPORT)->name('final-status-import.index');
+    Route::post('/importacao-situacao-final/upload', 'FinalStatusImportController@upload')->middleware('can:modify:' . Process::FINAL_STATUS_IMPORT)->name('final-status-import.upload');
+    Route::get('/importacao-situacao-final/analise', 'FinalStatusImportController@analysis')->middleware('can:view:' . Process::FINAL_STATUS_IMPORT)->name('final-status-import.analysis');
+    Route::get('/importacao-situacao-final/mapeamento', 'FinalStatusImportController@showMapping')->middleware('can:modify:' . Process::FINAL_STATUS_IMPORT)->name('final-status-import.mapping');
+    Route::post('/importacao-situacao-final/importar', 'FinalStatusImportController@import')->middleware('can:modify:' . Process::FINAL_STATUS_IMPORT)->name('final-status-import.import');
+    Route::get('/importacao-situacao-final/status', 'FinalStatusImportController@status')->middleware('can:view:' . Process::FINAL_STATUS_IMPORT)->name('final-status-import.status');
+
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.update-date');
 
     Route::get('/atualiza-etapa', 'StageController@edit')->middleware('can:modify:' . Process::STAGE)->name('stage.edit');
     Route::post('/atualiza-etapa', 'StageController@update')->middleware('can:modify:' . Process::STAGE)->name('stage.update');
+
+    Route::get('/ano-letivo-em-lote', 'AcademicYearBatchController@edit')->middleware('can:modify:' . Process::ACADEMIC_YEAR_IMPORT)->name('academic-year.edit');
+    Route::post('/ano-letivo-em-lote/processar', 'AcademicYearBatchController@process')->middleware('can:modify:' . Process::ACADEMIC_YEAR_IMPORT)->name('academic-year.process');
+    Route::get('/ano-letivo-em-lote/status', 'AcademicYearBatchController@status')->middleware('can:view:' . Process::ACADEMIC_YEAR_IMPORT)->name('academic-year.status');
+
+    Route::get('/atualizacao-em-lote-series-escola', 'SchoolGradeBatchUpdateController@index')->middleware('can:view:' . Process::SCHOOL_GRADE)->name('school-grade.batch-update.index');
+    Route::get('/atualizacao-em-lote-series-escola/visualizacao', 'SchoolGradeBatchUpdateController@preview')->middleware('can:modify:' . Process::SCHOOL_GRADE)->name('school-grade.batch-update.preview');
+    Route::post('/atualizacao-em-lote-series-escola/processo', 'SchoolGradeBatchUpdateController@process')->middleware('can:modify:' . Process::SCHOOL_GRADE)->name('school-grade.batch-update.process');
+    Route::get('/atualizacao-em-lote-series-escola/status', 'SchoolGradeBatchUpdateController@status')->middleware('can:view:' . Process::SCHOOL_GRADE)->name('school-grade.batch-update.status');
 
     Route::get('/bloquear-enturmacao', 'BlockEnrollmentController@edit')->middleware('can:modify:' . Process::BLOCK_ENROLLMENT)->name('block-enrollment.edit');
     Route::post('/bloquear-enturmacao', 'BlockEnrollmentController@update')->middleware('can:modify:' . Process::BLOCK_ENROLLMENT)->name('block-enrollment.update');

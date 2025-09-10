@@ -3,13 +3,12 @@
 namespace Tests\Unit\Services;
 
 use App\Services\RemoveHtmlTagsStringService;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class RemoveHtmlTagsServiceTest extends TestCase
 {
-    /**
-     * @dataProvider provideData
-     */
+    #[DataProvider('provideData')]
     public function test_remove_html_tag(string $text, string $pattern)
     {
         $parecer = (new RemoveHtmlTagsStringService)->execute($text);

@@ -29,7 +29,7 @@ class PostalCodeController extends Controller
         $postalCode = intval($postalCode);
 
         try {
-            $response = $http->get("https://viacep.com.br/ws/{$postalCode}/json/");
+            $response = $http->get("https://opencep.com/v1/{$postalCode}");
         } catch (Throwable $throwable) {
             return $this->notFound();
         }

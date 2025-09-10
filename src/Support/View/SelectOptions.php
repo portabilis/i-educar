@@ -18,6 +18,7 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoEnsinoMedioCursado;
+use iEducar\Modules\Educacenso\Model\Transtornos;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\School\Model\ActiveLooking;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
@@ -134,6 +135,16 @@ class SelectOptions
     public static function educacensoDeficiencies()
     {
         return self::getDefaultOption() + Deficiencias::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis referentes aos Transtornos do Educacenso
+     *
+     * @return array
+     */
+    public static function educacensoDisorders()
+    {
+        return self::getDefaultOption() + Transtornos::getDescriptiveValues();
     }
 
     /**

@@ -23,7 +23,6 @@ class CreatePmieducarServidorTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL,
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
-                    ref_cod_subnivel integer,
                     situacao_curso_superior_1 smallint,
                     formacao_complementacao_pedagogica_1 smallint,
                     codigo_curso_superior_1 integer,
@@ -51,10 +50,6 @@ class CreatePmieducarServidorTable extends Migration
 
                 ALTER TABLE ONLY pmieducar.servidor
                     ADD CONSTRAINT servidor_pkey PRIMARY KEY (cod_servidor, ref_cod_instituicao);
-
-                CREATE INDEX fki_servidor_ref_cod_subnivel ON pmieducar.servidor USING btree (ref_cod_subnivel);
-
-                CREATE INDEX fki_servidor_ref_cod_subnivel_ ON pmieducar.servidor USING btree (ref_cod_subnivel);
 
                 CREATE INDEX servidor_idx ON pmieducar.servidor USING btree (cod_servidor, ref_cod_instituicao, ativo);
             '

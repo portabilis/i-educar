@@ -1,8 +1,8 @@
 <?php
 
-use Database\Custom\TypeIntergerArray;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,15 +15,7 @@ return new class extends Migration
             $table->smallInteger('acao_area_ambiental')->nullable();
         });
 
-        $typeClass = new TypeIntergerArray(2);
-        DB::connection()->setSchemaGrammar($typeClass);
-
-        Schema::table(
-            'pmieducar.escola',
-            static fn (Blueprint $table) => $table
-                ->addColumn('int_array', 'acoes_area_ambiental')
-                ->nullable()
-        );
+        DB::statement('ALTER TABLE IF EXISTS pmieducar.escola ADD COLUMN acoes_area_ambiental smallint[];');
     }
 
     public function down(): void

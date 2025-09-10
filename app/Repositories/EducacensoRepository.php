@@ -246,6 +246,7 @@ SQL;
                 escola.numero_salas_utilizadas_fora_predio AS "numeroSalasUtilizadasForaPredio",
                 escola.numero_salas_climatizadas AS "numeroSalasClimatizadas",
                 escola.numero_salas_acessibilidade AS "numeroSalasAcessibilidade",
+                escola.numero_salas_cantinho_leitura AS "numeroSalasCantinhoLeitura",
                 escola.televisoes AS "televisoes",
                 escola.videocassetes AS "videocassetes",
                 escola.dvds AS "dvds",
@@ -423,6 +424,7 @@ SQL;
                 pessoa_pai.nome AS "filiacao2",
                 CASE WHEN fisica.sexo = 'M' THEN 1 ELSE 2 END AS "sexo",
                 raca.raca_educacenso AS "raca",
+                povo_indigena_educacenso_id AS "povoIndigena",
                 fisica.nacionalidade AS "nacionalidade",
                 CASE WHEN fisica.nacionalidade = 3 THEN countries.ibge_code ELSE 76 END AS "paisNacionalidade",
                 municipio_nascimento.ibge_code AS "municipioNascimento",
@@ -432,6 +434,8 @@ SQL;
                         FROM cadastro.fisica_deficiencia
                         JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
                         WHERE fisica_deficiencia.ref_idpes = fisica.idpes
+                        AND deficiencia.deficiency_type_id = 1
+                        AND deficiencia.deficiencia_educacenso IS NOT NULL
                         AND deficiencia.deficiencia_educacenso != 999
                         LIMIT 1
                     ) THEN 1
@@ -448,6 +452,25 @@ SQL;
                 CASE WHEN array_length(deficiencias.array_deficiencias, 1) > 1 THEN 1 ELSE 0 END "deficienciaMultipla",
                 13 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
                 25 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
+                CASE WHEN
+                    true = (
+                        SELECT true
+                        FROM cadastro.fisica_deficiencia
+                        JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
+                        WHERE fisica_deficiencia.ref_idpes = fisica.idpes
+                        AND deficiencia.deficiency_type_id = 2
+                        AND deficiencia.transtorno_educacenso IS NOT NULL
+                        AND deficiencia.transtorno_educacenso != 999
+                        LIMIT 1
+                    ) THEN 1
+                    ELSE 0 END
+                AS "transtorno",
+                50 = ANY (deficiencias.array_deficiencias)::INTEGER AS "transtornoDiscalculia",
+                51 = ANY (deficiencias.array_deficiencias)::INTEGER AS "transtornoDisgrafia",
+                52 = ANY (deficiencias.array_deficiencias)::INTEGER AS "transtornoDislalia",
+                53 = ANY (deficiencias.array_deficiencias)::INTEGER AS "transtornoDislexia",
+                54 = ANY (deficiencias.array_deficiencias)::INTEGER AS "transtornoTdah",
+                55 = ANY (deficiencias.array_deficiencias)::INTEGER AS "transtornoTpac",
                 fisica.pais_residencia AS "paisResidencia",
                 addresses.postal_code AS "cep",
                 addresses.city_ibge_code AS "municipioResidencia",
@@ -480,15 +503,22 @@ SQL;
                  WHERE educacenso_cod_escola.cod_escola = :school
                  ) dadosescola ON true
             LEFT JOIN LATERAL (
-                 SELECT fisica_deficiencia.ref_idpes,
-                        ARRAY_AGG(deficiencia.deficiencia_educacenso) as array_deficiencias
-                 FROM cadastro.fisica_deficiencia
-                 JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
-                 WHERE fisica_deficiencia.ref_idpes = fisica.idpes
-                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,8,25,13)
-                 GROUP BY 1
-                 ) deficiencias ON true
+                 SELECT ARRAY_AGG(def) AS array_deficiencias
+                    FROM (
+                        SELECT deficiencia.deficiencia_educacenso AS def
+                        FROM cadastro.fisica_deficiencia
+                        JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
+                        WHERE fisica_deficiencia.ref_idpes = fisica.idpes
+                          AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,8,25,13)
+                        UNION ALL
 
+                        SELECT deficiencia.transtorno_educacenso AS def
+                            FROM cadastro.fisica_deficiencia
+                            JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
+                            WHERE fisica_deficiencia.ref_idpes = fisica.idpes
+                              AND deficiencia.transtorno_educacenso IN (50,51,52,53,54,55)
+                    ) AS sub
+                ) deficiencias ON true
             WHERE fisica.idpes IN ({$stringPersonId})
 
 SQL;
@@ -527,7 +557,7 @@ SQL;
                 (ARRAY[10] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoAmbiental",
                 (ARRAY[11] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoDireitosHumanos",
                 (ARRAY[18] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoBilingueSurdos",
-                (ARRAY[19] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoTecnologiaInformaçãoComunicacao",
+                (ARRAY[19] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao",
                 (ARRAY[12] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaGeneroDiversidadeSexual",
                 (ARRAY[13] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaDireitosCriancaAdolescente",
                 (ARRAY[14] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoRelacoesEticoRaciais",
@@ -588,6 +618,8 @@ SQL;
                 (ARRAY[12] <@ aluno.recursos_prova_inep)::INT "recursoLinguaPortuguesaSegundaLingua",
                 (ARRAY[13] <@ aluno.recursos_prova_inep)::INT "recursoVideoLibras",
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
+                (ARRAY[15] <@ aluno.recursos_prova_inep)::INT "provaBraile",
+                (ARRAY[16] <@ aluno.recursos_prova_inep)::INT "recursoTempoAdicional",
                 (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
                 documento.certidao_nascimento AS "certidaoNascimento"

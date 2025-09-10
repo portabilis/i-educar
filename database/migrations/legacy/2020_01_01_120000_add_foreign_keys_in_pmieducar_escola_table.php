@@ -34,12 +34,6 @@ class AddForeignKeysInPmieducarEscolaTable extends Migration
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
 
-            $table->foreign('ref_cod_escola_rede_ensino')
-                ->references('cod_escola_rede_ensino')
-                ->on('pmieducar.escola_rede_ensino')
-                ->onUpdate('restrict')
-                ->onDelete('restrict');
-
             $table->foreign('codigo_ies')
                 ->references('id')
                 ->on('modules.educacenso_ies');
@@ -58,7 +52,6 @@ class AddForeignKeysInPmieducarEscolaTable extends Migration
             $table->dropForeign(['ref_idpes_gestor']);
             $table->dropForeign(['ref_idpes']);
             $table->dropForeign(['ref_cod_instituicao']);
-            $table->dropForeign(['ref_cod_escola_rede_ensino']);
             $table->dropForeign(['codigo_ies']);
         });
     }

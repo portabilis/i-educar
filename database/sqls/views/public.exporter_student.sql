@@ -43,6 +43,7 @@ SELECT  p.id,
         array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text) AS technological_resources,
         p.nationality,
         p.birthplace,
+        p.country_of_origin,
         CASE m.modalidade_ensino
            WHEN 0 THEN 'Semipresencial'::varchar
            WHEN 1 THEN 'EAD'::varchar
