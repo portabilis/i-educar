@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pmieducar.anthropometric_percentiles', function (Blueprint $table) {
+        Schema::create('anthropometric_percentiles', function (Blueprint $table) {
             $table->id();
             $table->integer('age_months');
             $table->enum('gender', ['M', 'F']);
@@ -49,6 +49,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pmieducar.anthropometric_percentiles');
+        Schema::dropIfExists('anthropometric_percentiles');
     }
 };

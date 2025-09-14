@@ -32,21 +32,17 @@ class AnthropometricDataLoader
             $hasWaistData = false;
 
             // Carregar dados Z-scores do banco
-            if (class_exists('\\App\\Models\\AnthropometricZScore')) {
-                $this->lmsCache = \App\Models\AnthropometricZScore::getAllGroupedForCache($source);
-                if (!empty($this->lmsCache)) {
-                    $this->lms = $this->lmsCache;
-                    $hasLmsData = true;
-                }
+            $this->lmsCache = \App\Models\AnthropometricZScore::getAllGroupedForCache($source);
+            if (!empty($this->lmsCache)) {
+                $this->lms = $this->lmsCache;
+                $hasLmsData = true;
             }
 
             // Carregar dados de cintura P90 da tabela de percentis
-            if (class_exists('\\App\\Models\\AnthropometricPercentile')) {
-                $this->waistCache = \App\Models\AnthropometricPercentile::getAllP90ForWaistCache($source);
-                if (!empty($this->waistCache)) {
-                    $this->waistP90 = $this->waistCache;
-                    $hasWaistData = true;
-                }
+            $this->waistCache = \App\Models\AnthropometricPercentile::getAllP90ForWaistCache($source);
+            if (!empty($this->waistCache)) {
+                $this->waistP90 = $this->waistCache;
+                $hasWaistData = true;
             }
 
             // Só marcar como carregado se realmente veio do banco
@@ -56,12 +52,10 @@ class AnthropometricDataLoader
 
         } catch (\Exception $e) {
             // Log do erro mas não falha - usa dados de fallback
-            if (function_exists('logger')) {
-                logger()->warning('Falha ao carregar dados antropométricos do banco', [
-                    'source' => $source,
-                    'error' => $e->getMessage(),
-                ]);
-            }
+            logger()->warning('Falha ao carregar dados antropométricos do banco', [
+                'source' => $source,
+                'error' => $e->getMessage(),
+            ]);
             $this->usingDatabaseData = false;
 
             return false;
