@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 class AnthropometricZScore extends AbstractAnthropometricModel
 {
-    protected $table = 'pmieducar.anthropometric_z_scores';
+    protected $table = 'anthropometric_z_scores';
 
 
 

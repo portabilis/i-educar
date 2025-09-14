@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 class AnthropometricPercentile extends AbstractAnthropometricModel
 {
-    protected $table = 'pmieducar.anthropometric_percentiles';
+    protected $table = 'anthropometric_percentiles';
 
 
 
