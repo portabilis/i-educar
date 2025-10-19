@@ -246,6 +246,13 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Valida a carga horária alocada antes de processar
+        $validacao = $this->validaCargaHoraria($this->carga_horaria_alocada);
+        if (!$validacao['valido']) {
+            $this->mensagem = $validacao['mensagem'];
+            return false;
+        }
+
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
             635,
@@ -375,6 +382,64 @@ return new class extends clsCadastro
         }
 
         return $total;
+    }
+
+    /**
+     * Valida o formato da carga horária
+     * @param string $cargaHoraria
+     * @return array
+     */
+    protected function validaCargaHoraria($cargaHoraria)
+    {
+        if (empty($cargaHoraria)) {
+            return [
+                'valido' => true,
+                'mensagem' => ''
+            ];
+        }
+
+        // Remove espaços em branco
+        $cargaHoraria = trim($cargaHoraria);
+
+        // Verifica se está no formato HH:MM
+        if (!preg_match('/^([0-2]?[0-9]):([0-5][0-9])$/', $cargaHoraria, $matches)) {
+            return [
+                'valido' => false,
+                'mensagem' => 'Carga horária inválida. Informe um valor no formato HH:MM.'
+            ];
+        }
+
+        $horas = (int) $matches[1];
+        $minutos = (int) $matches[2];
+
+        // Verifica se as horas são válidas (0-24)
+        if ($horas > 24) {
+            return [
+                'valido' => false,
+                'mensagem' => 'Carga horária inválida. As horas não podem ser maiores que 24.'
+            ];
+        }
+
+        // Verifica se os minutos são válidos (0-59)
+        if ($minutos > 59) {
+            return [
+                'valido' => false,
+                'mensagem' => 'Carga horária inválida. Os minutos não podem ser maiores que 59.'
+            ];
+        }
+
+        // Verifica se não é 24:XX com minutos > 00
+        if ($horas === 24 && $minutos > 0) {
+            return [
+                'valido' => false,
+                'mensagem' => 'Carga horária inválida. Se as horas forem 24, os minutos devem ser 00.'
+            ];
+        }
+
+        return [
+            'valido' => true,
+            'mensagem' => ''
+        ];
     }
 
     public function Formular()

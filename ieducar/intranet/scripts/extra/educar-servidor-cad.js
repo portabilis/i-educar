@@ -132,9 +132,75 @@ function getArrayHora(hora) {
   return array_h;
 }
 
+/**
+ * Valida o formato de carga horária HH:MM
+ */
+function validaCargaHoraria(cargaHoraria) {
+  // Remove espaços e verifica se está no formato correto
+  var valor = cargaHoraria.trim();
+  
+  // Verifica se está no formato HH:MM
+  var regex = /^([0-2]?[0-9]):([0-5][0-9])$/;
+  var match = valor.match(regex);
+  
+  if (!match) {
+    return {
+      valido: false,
+      mensagem: 'Carga horária inválida. Informe um valor no formato HH:MM.'
+    };
+  }
+  
+  var horas = parseInt(match[1], 10);
+  var minutos = parseInt(match[2], 10);
+  
+  // Verifica se as horas são válidas (0-24)
+  if (horas > 24) {
+    return {
+      valido: false,
+      mensagem: 'Carga horária inválida. As horas não podem ser maiores que 24.'
+    };
+  }
+  
+  // Verifica se os minutos são válidos (0-59)
+  if (minutos > 59) {
+    return {
+      valido: false,
+      mensagem: 'Carga horária inválida. Os minutos não podem ser maiores que 59.'
+    };
+  }
+  
+  // Verifica se não é 24:XX com minutos > 00
+  if (horas === 24 && minutos > 0) {
+    return {
+      valido: false,
+      mensagem: 'Carga horária inválida. Se as horas forem 24, os minutos devem ser 00.'
+    };
+  }
+  
+  return {
+    valido: true,
+    mensagem: ''
+  };
+}
+
 function acao2() {
+  var campoCargaHoraria = document.getElementById('carga_horaria');
+  var cargaHorariaValor = campoCargaHoraria ? campoCargaHoraria.value : '';
+  
+  // Valida a carga horária primeiro
+  if (cargaHorariaValor) {
+    var validacao = validaCargaHoraria(cargaHorariaValor);
+    if (!validacao.valido) {
+      alert(validacao.mensagem);
+      if (campoCargaHoraria) {
+        campoCargaHoraria.focus();
+      }
+      return false;
+    }
+  }
+  
   var total_horas_alocadas = getArrayHora(document.getElementById('total_horas_alocadas').value);
-  var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
+  var carga_horaria = cargaHorariaValor.replace(',', '.');
 
   if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
     alert('Atenção, carga horária deve ser maior que horas alocadas!');
@@ -312,4 +378,16 @@ $j(document).ready(function () {
 
   $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');
   $j('#cod_servidor').attr('onchange', 'verificaExistenciaDoServidor();');
+  
+  // Adiciona validação em tempo real para carga horária
+  $j('#carga_horaria').on('blur', function() {
+    var valor = $j(this).val();
+    if (valor) {
+      var validacao = validaCargaHoraria(valor);
+      if (!validacao.valido) {
+        alert(validacao.mensagem);
+        $j(this).focus();
+      }
+    }
+  });
 });
