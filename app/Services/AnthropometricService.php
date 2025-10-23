@@ -135,11 +135,16 @@ class AnthropometricService
             return ['code' => 'not_evaluable', 'label' => $this->calculator->getNotEvaluableLabel()];
         }
 
-        if ($idadeAnos === null || $idadeAnos >= 18) {
+        if ($idadeAnos === null || $idadeAnos >= 20) {
             return $this->obterRiscoCinturaAdulto($circCinturaCm, $sexoNorm);
         }
 
-        return $this->obterRiscoCinturaCrianca($circCinturaCm, $sexoNorm, $idadeAnos);
+        if ($idadeAnos >= 5) {
+            return $this->obterRiscoCinturaCrianca($circCinturaCm, $sexoNorm, $idadeAnos);
+        }
+
+        // Para crianças < 5 anos, não há padrões estabelecidos de cintura
+        return ['code' => 'not_applicable_age', 'label' => 'Avaliação de cintura não aplicável para < 5 anos'];
     }
 
     private function obterRiscoCinturaAdulto(float $circCinturaCm, string $sexo): array
@@ -200,6 +205,17 @@ class AnthropometricService
         $idadeMeses = $this->calcularIdadeEmMeses($dataNascimento, $dataAvaliacao);
         $sexoNorm = $this->calculator->normalizarSexo($sexo);
 
+        // Validação de dados plausíveis por faixa etária
+        $validationWarning = $this->validateMeasurementsByAge($peso, $altura, $idadeAnos);
+        if ($validationWarning) {
+            $validationWarning['dados_originais'] = [
+                'peso_kg' => $peso,
+                'altura_cm' => $altura,
+                'idade_anos' => $idadeAnos
+            ];
+            return $validationWarning;
+        }
+
         $out = [
             'peso_kg' => $peso,
             'altura_cm' => $altura,
@@ -210,11 +226,19 @@ class AnthropometricService
         ];
 
         if ($imc !== null && $sexoNorm !== null) {
-            if ($idadeAnos >= 18) {
+            if ($idadeAnos >= 20) {
+                // Adultos (≥20 anos): classificação por IMC
                 $out['imc_classificacao'] = $this->obterClassificacaoIMCAdulto($imc);
-            } else {
+            } elseif ($idadeMeses >= 61) {
+                // Crianças/adolescentes (5-19 anos): WHO 2007
                 $out['imc_classificacao'] = $this->obterClassificacaoIMCCrianca($imc, $idadeMeses, $sexoNorm);
                 $out['imc_zscore'] = $out['imc_classificacao']['z'] ?? $this->calcularEscoreZIMC($imc, $idadeMeses, $sexoNorm);
+            } elseif ($idadeMeses >= 24) {
+                // Crianças pequenas (2-5 anos): WHO 2006 - por enquanto não implementado
+                $out['imc_classificacao'] = ['code' => 'not_available_who_2006', 'label' => 'Avaliação requer padrões WHO 2006 (2-5 anos) - não implementado'];
+            } else {
+                // Bebês (0-2 anos): não se avalia IMC
+                $out['imc_classificacao'] = ['code' => 'not_applicable_age', 'label' => 'IMC não aplicável para < 2 anos'];
             }
         } else {
             $out['imc_classificacao'] = ['code' => 'not_evaluable', 'label' => $this->calculator->getNotEvaluableLabel()];
@@ -230,5 +254,41 @@ class AnthropometricService
         }
 
         return $out;
+    }
+
+    /**
+     * Valida se as medidas são plausíveis para a idade
+     */
+    private function validateMeasurementsByAge(float $peso, float $altura, int $idadeAnos): ?array
+    {
+        // Limites aproximados por faixa etária (podem ser ajustados)
+        $limits = [
+            // [idade_min, idade_max, altura_max_cm, peso_max_kg]
+            [0, 2, 95, 20],      // 0-2 anos
+            [2, 5, 130, 35],     // 2-5 anos  
+            [5, 12, 170, 80],    // 5-12 anos
+            [12, 18, 200, 150],  // 12-18 anos
+            [18, 120, 250, 300], // adultos
+        ];
+
+        foreach ($limits as [$idadeMin, $idadeMax, $alturaMax, $pesoMax]) {
+            if ($idadeAnos >= $idadeMin && $idadeAnos < $idadeMax) {
+                if ($altura > $alturaMax || $peso > $pesoMax) {
+                    return [
+                        'code' => 'implausible_measurements',
+                        'label' => "Medidas implausíveis para idade {$idadeAnos} anos (altura: {$altura}cm, peso: {$peso}kg). Verifique os dados.",
+                        'validacao_falhou' => true,
+                        'limites_esperados' => [
+                            'altura_max_cm' => $alturaMax,
+                            'peso_max_kg' => $pesoMax,
+                            'faixa_etaria' => "{$idadeMin}-{$idadeMax} anos"
+                        ]
+                    ];
+                }
+                break;
+            }
+        }
+
+        return null;
     }
 }

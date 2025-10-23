@@ -796,7 +796,7 @@ return new class extends clsDetalhe
         }
 
         // Dados Antropométricos e Demográficos - Histórico completo
-        $this->exibirDadosAntropometricos($det_fisica);
+        $this->exibirDadosAntropometricos($det_fisica, $registro);
 
         $uniformDistribution = UniformDistribution::where('student_id', $this->cod_aluno)
             ->where('year', now()->year)
@@ -1034,7 +1034,7 @@ return new class extends clsDetalhe
     /**
      * Exibe dados antropométricos em formato de tabela histórica
      */
-    private function exibirDadosAntropometricos($det_fisica): void
+    private function exibirDadosAntropometricos($det_fisica, $registro): void
     {
         try {
             $anthropometricData = LegacyStudentHistoricalHeightWeight::where('ref_cod_aluno', $this->cod_aluno)
@@ -1049,7 +1049,7 @@ return new class extends clsDetalhe
                 $anthropometricService->carregarReferenciasDoBanco();
                 $hasClassificationData = $anthropometricService->isUsingDatabaseData();
 
-                $tabela = $this->montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica);
+                $tabela = $this->montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica, $registro);
 
                 $this->addDetalhe(['<span id="ffantropometrico"></span>Histórico Antropométrico', $tabela]);
             }
@@ -1061,15 +1061,17 @@ return new class extends clsDetalhe
     /**
      * Monta a tabela HTML com dados antropométricos
      */
-    private function montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica): string
+    private function montarTabelaAntropometrica($anthropometricData, $anthropometricService, $hasClassificationData, $det_fisica, $registro): string
     {
-        $tabela = $this->gerarCabecalhoTabela($hasClassificationData);
+        // Cabeçalho com informações do aluno para identificação
+        $tabela = $this->gerarCabecalhoAluno($registro);
+        $tabela .= $this->gerarCabecalhoTabela($hasClassificationData);
         $tabela .= '<tbody>';
 
         $cor = '#f5f9fd';
-        foreach ($anthropometricData as $registro) {
+        foreach ($anthropometricData as $dadoAntropometrico) {
             $cor = $cor == '#f5f9fd' ? '#ffffff' : '#f5f9fd';
-            $tabela .= $this->gerarLinhaTabela($registro, $anthropometricService, $hasClassificationData, $det_fisica, $cor);
+            $tabela .= $this->gerarLinhaTabela($dadoAntropometrico, $anthropometricService, $hasClassificationData, $det_fisica, $cor);
         }
 
         $tabela .= '</tbody></table>';
@@ -1089,7 +1091,7 @@ return new class extends clsDetalhe
         $colunas = [
             ['style' => 'width: 80px;', 'label' => 'Data'],
             ['style' => 'width: 60px;', 'label' => 'Peso<br>(kg)'],
-            ['style' => 'width: 60px;', 'label' => 'Altura<br>(cm)'],
+            ['style' => 'width: 60px;', 'label' => 'Altura<br>(m)'],
             ['style' => 'width: 70px;', 'label' => 'IMC<br>(kg/m²)'],
         ];
 
@@ -1241,5 +1243,21 @@ return new class extends clsDetalhe
 
         return '<br><small><strong>Nota:</strong> Para ver classificações e Z-scores WHO 2007, execute: ' .
                '<code>php artisan anthropometric:load</code></small>';
+    }
+
+    /**
+     * Gera cabeçalho com informações do aluno para facilitar identificação
+     */
+    private function gerarCabecalhoAluno($registro): string
+    {
+        $nomeAluno = $registro['nome_aluno'] ?? 'N/A';
+        $dataNascimento = $registro['data_nasc'] ?? 'N/A';
+        $sexo = $registro['sexo'] ?? 'N/A';
+
+        return '<div style="background-color: #f0f8ff; border: 1px solid #ccdce6; padding: 10px; margin-bottom: 10px; border-radius: 5px;">' .
+               '<strong>Aluno:</strong> ' . htmlspecialchars($nomeAluno) . ' | ' .
+               '<strong>Data de Nascimento:</strong> ' . htmlspecialchars($dataNascimento) . ' | ' .
+               '<strong>Sexo:</strong> ' . htmlspecialchars($sexo) .
+               '</div>';
     }
 };
