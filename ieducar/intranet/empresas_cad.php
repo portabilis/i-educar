@@ -132,6 +132,13 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        if (empty($this->razao_social) || strlen(trim(string: $this->razao_social)) < 3) {
+            $this->mensagem = 'O campo Razão Social deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
@@ -244,6 +251,13 @@ return new class extends clsCadastro
 
     public function Editar()
     {
+        if (empty($this->razao_social) || strlen(trim(string: $this->razao_social)) < 3) {
+            $this->mensagem = 'O campo Razão Social deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
