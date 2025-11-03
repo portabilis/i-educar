@@ -411,19 +411,22 @@ return new class extends clsCadastro
 
     protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
     {
-        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
-        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
-
         if (!empty($valorDDD) && empty($valorTelefone)) {
-            $this->mensagem = $msgRequereTelefone;
-
+            $this->mensagem = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
             return false;
         }
 
         if (empty($valorDDD) && !empty($valorTelefone)) {
-            $this->mensagem = $msgRequereDDD;
-
+            $this->mensagem = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
             return false;
+        }
+
+        if (!empty($valorTelefone)) {
+            $telefoneLimpo = trim(str_replace('-', '', $valorTelefone));
+            if (!is_numeric($telefoneLimpo) || strlen($telefoneLimpo) < 10 || strlen($telefoneLimpo) > 11) {
+                $this->mensagem = "O campo: {$nomeCampo}, deve conter entre 10 e 11 dígitos (padrão brasileiro).";
+                return false;
+            }
         }
 
         return true;
