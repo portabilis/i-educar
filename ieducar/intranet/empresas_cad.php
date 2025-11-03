@@ -132,6 +132,13 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        if (!empty($this->email) && filter_var(variable: $this->email, options: FILTER_VALIDATE_EMAIL) === false) {
+            $this->mensagem = 'O campo E-mail deve conter um endereço de e-mail válido.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
@@ -244,6 +251,13 @@ return new class extends clsCadastro
 
     public function Editar()
     {
+        if (!empty($this->email) && filter_var(variable: $this->email, options: FILTER_VALIDATE_EMAIL) === false) {
+            $this->mensagem = 'O campo E-mail deve conter um endereço de e-mail válido.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
