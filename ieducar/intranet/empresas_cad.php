@@ -132,6 +132,13 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        if (!$this->validaTamanhoMinimoCampo(valor: $this->fantasia)) {
+            $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
@@ -232,6 +239,18 @@ return new class extends clsCadastro
         return is_numeric(value: $telefone) && (strlen(string: $telefone) < 12);
     }
 
+    /**
+     * Valida se um campo de texto possui tamanho mínimo
+     *
+     * @param string $valor O valor do campo a validar
+     * @param int $tamanhoMinimo O tamanho mínimo permitido
+     * @return bool True se válido, false caso contrário
+     */
+    private function validaTamanhoMinimoCampo($valor, $tamanhoMinimo = 3)
+    {
+        return !empty($valor) && strlen(trim(string: $valor)) >= $tamanhoMinimo;
+    }
+
     protected function validaCaracteresPermitidosComplemento()
     {
         if (empty($this->complement)) {
@@ -244,6 +263,13 @@ return new class extends clsCadastro
 
     public function Editar()
     {
+        if (!$this->validaTamanhoMinimoCampo(valor: $this->fantasia)) {
+            $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
