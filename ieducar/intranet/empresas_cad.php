@@ -227,9 +227,23 @@ return new class extends clsCadastro
         return trim(string: str_replace(search: '-', replace: '', subject: $telefone));
     }
 
+    /**
+     * Valida se um número de telefone possui formato válido
+     * Verifica se é numérico e possui entre 10 e 11 dígitos (padrão brasileiro)
+     *
+     * @param string $telefone O número de telefone a validar
+     * @return bool True se válido, false caso contrário
+     */
     private function validaDadosTelefone($telefone)
     {
-        return is_numeric(value: $telefone) && (strlen(string: $telefone) < 12);
+        if (empty($telefone)) {
+            return true;
+        }
+        
+        $telefoneLimpo = $this->limpaDadosTelefone(telefone: $telefone);
+        $tamanho = strlen(string: $telefoneLimpo);
+        
+        return is_numeric(value: $telefoneLimpo) && ($tamanho >= 10 && $tamanho <= 11);
     }
 
     protected function validaCaracteresPermitidosComplemento()
@@ -413,6 +427,7 @@ return new class extends clsCadastro
     {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+        $msgFormatoInvalido = "O campo: {$nomeCampo}, deve conter entre 10 e 11 dígitos (padrão brasileiro).";
 
         if (!empty($valorDDD) && empty($valorTelefone)) {
             $this->mensagem = $msgRequereTelefone;
@@ -422,6 +437,12 @@ return new class extends clsCadastro
 
         if (empty($valorDDD) && !empty($valorTelefone)) {
             $this->mensagem = $msgRequereDDD;
+
+            return false;
+        }
+
+        if (!$this->validaDadosTelefone(telefone: $valorTelefone)) {
+            $this->mensagem = $msgFormatoInvalido;
 
             return false;
         }
