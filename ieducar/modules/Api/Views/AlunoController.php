@@ -1252,7 +1252,7 @@ class AlunoController extends ApiCoreController
                 }
             }
 
-            $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
+            $sql = 'select sus, ref_cod_religiao, observacao, idpes_mae, idpes_pai, idpes_responsavel from cadastro.fisica where idpes = $1';
             $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
 
             $aluno['sus'] = $camposFisica['sus'];
@@ -1261,6 +1261,8 @@ class AlunoController extends ApiCoreController
             $aluno['beneficios'] = $this->loadBeneficios($id);
             $aluno['projetos'] = $this->loadProjetos($id);
             $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
+
+            $aluno['nomes_responsaveis'] = $this->getNomesResponsaveis($alunoDetalhe['tipo_responsavel'] ?? null, $camposFisica);
 
             $objFoto = new clsCadastroFisicaFoto($aluno['pessoa_id']);
             $detalheFoto = $objFoto->detalhe();
@@ -1271,6 +1273,35 @@ class AlunoController extends ApiCoreController
 
             return $aluno;
         }
+    }
+
+    private function getNomesResponsaveis(?string $tipoResponsavel, array $camposFisica): array
+    {
+        if (!$tipoResponsavel) {
+            return [];
+        }
+
+        $nomesResponsaveis = [];
+
+        switch ($tipoResponsavel) {
+            case 'm':
+                $nomesResponsaveis = [$camposFisica['idpes_mae'] ? LegacyPerson::whereKey($camposFisica['idpes_mae'])->value('nome') : null];
+                break;
+            case 'p':
+                $nomesResponsaveis = [$camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null];
+                break;
+            case 'r':
+                $nomesResponsaveis = [$camposFisica['idpes_responsavel'] ? LegacyPerson::whereKey($camposFisica['idpes_responsavel'])->value('nome') : null];
+                break;
+            case 'a':
+                $nomesResponsaveis = [
+                    $camposFisica['idpes_mae'] ? LegacyPerson::whereKey($camposFisica['idpes_mae'])->value('nome') : null,
+                    $camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null
+                ];
+                break;
+        }
+
+        return array_filter($nomesResponsaveis);
     }
 
     protected function getTodosAlunos()
