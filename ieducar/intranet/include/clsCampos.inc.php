@@ -360,8 +360,8 @@ class clsCampos extends Core_Controller_Page_Abstract
     public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false, $maxLength = 5)
     {
         // Expressão regular que permite de 00:00 até 24:00 (24:00 apenas com minutos 00)
-        $regexHora = $limitaHora ? '/^(([0-1]?[0-9]|2[0-3]):([0-5][0-9])|24:00)(:[0-5][0-9])?$/' : '/[0-9]{2}:[0-9]{2}/';
-        
+        $regexHora = $limitaHora ? '/^(?:(?:[01]?[0-9]|2[0-3]):[0-5][0-9]|24:00)$/' : '/[0-9]{2}:[0-9]{2}/';
+
         $arr_componente = [
             'hora',
             $this->__adicionando_tabela ? $nome : $campo,
@@ -385,8 +385,8 @@ class clsCampos extends Core_Controller_Page_Abstract
     public function campoHoraServidor($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true)
     {
         // Expressão regular que permite de 00:00 até 24:00 para servidor (24:00 apenas com minutos 00)
-        $regexHora = $limitaHora ? '/^(([0-1]?[0-9]|2[0-3]):([0-5][0-9])|24:00)(:[0-5][0-9])?$/' : '/[0-9]{2}:[0-9]{2}/';
-        
+        $regexHora = $limitaHora ? '/^(?:(?:[01]?[0-9]|2[0-3]):[0-5][0-9]|24:00)$/' : '/[0-9]{2}:[0-9]{2}/';
+
         $arr_componente = [
             'hora',
             $this->__adicionando_tabela ? $nome : $campo,

@@ -494,9 +494,7 @@ JS;
         $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
         // Valida a carga horária antes de processar
-        $validacao = $this->validaCargaHoraria($this->carga_horaria);
-        if (!$validacao['valido']) {
-            $this->mensagem = $validacao['mensagem'];
+        if ($this->notValidaCargaHoraria($this->carga_horaria)) {
             return false;
         }
 
@@ -581,9 +579,7 @@ JS;
         }
 
         // Valida a carga horária antes de processar
-        $validacao = $this->validaCargaHoraria($this->carga_horaria);
-        if (!$validacao['valido']) {
-            $this->mensagem = $validacao['mensagem'];
+        if ($this->notValidaCargaHoraria($this->carga_horaria)) {
             return false;
         }
 
@@ -1198,61 +1194,34 @@ JS;
     }
 
     /**
-     * Valida o formato da carga horária
+     * Valida o formato da carga horária usando Validator
      * @param string $cargaHoraria
-     * @return array
+     * @return bool
      */
-    protected function validaCargaHoraria($cargaHoraria)
+    protected function notValidaCargaHoraria($cargaHoraria)
     {
         if (empty($cargaHoraria)) {
-            return [
-                'valido' => true,
-                'mensagem' => ''
-            ];
+            return false;
         }
 
-        // Remove espaços em branco
-        $cargaHoraria = trim($cargaHoraria);
+        $validator = Validator::make([
+            'carga_horaria' => $cargaHoraria,
+        ], [
+            'carga_horaria' => [
+                'required',
+                'regex:/^(?:(?:[01]?[0-9]|2[0-3]):[0-5][0-9]|24:00)$/',
+            ],
+        ], [
+            'carga_horaria.required' => 'Carga horária é obrigatória.',
+            'carga_horaria.regex' => 'Carga horária inválida. Informe um valor no formato HH:MM (máximo 24:00).',
+        ]);
 
-        // Verifica se está no formato HH:MM
-        if (!preg_match('/^([0-2]?[0-9]):([0-5][0-9])$/', $cargaHoraria, $matches)) {
-            return [
-                'valido' => false,
-                'mensagem' => 'Carga horária inválida. Informe um valor no formato HH:MM.'
-            ];
+        if ($validator->fails()) {
+            $this->mensagem = $validator->errors()->first();
+            return true;
         }
 
-        $horas = (int) $matches[1];
-        $minutos = (int) $matches[2];
-
-        // Verifica se as horas são válidas (0-24)
-        if ($horas > 24) {
-            return [
-                'valido' => false,
-                'mensagem' => 'Carga horária inválida. As horas não podem ser maiores que 24.'
-            ];
-        }
-
-        // Verifica se os minutos são válidos (0-59)
-        if ($minutos > 59) {
-            return [
-                'valido' => false,
-                'mensagem' => 'Carga horária inválida. Os minutos não podem ser maiores que 59.'
-            ];
-        }
-
-        // Verifica se não é 24:XX com minutos > 00
-        if ($horas === 24 && $minutos > 0) {
-            return [
-                'valido' => false,
-                'mensagem' => 'Carga horária inválida. Se as horas forem 24, os minutos devem ser 00.'
-            ];
-        }
-
-        return [
-            'valido' => true,
-            'mensagem' => ''
-        ];
+        return false;
     }
 
     public function makeExtra()
