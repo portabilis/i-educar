@@ -12,9 +12,8 @@ $j(document).ready(function () {
   };
 
   const disableAddressing = (flag) => {
-    const disabled = !optional && flag;
-    $j('#search-postal-code').css('opacity', disabled ? 0.5 : 1);
-    $j('#address, #number, #complement, #neighborhood, #city_city').attr('disabled', disabled);
+    $j('#search-postal-code').css('opacity', flag ? 0.5 : 1);
+    $j('#address, #number, #complement, #neighborhood, #city_city').attr('disabled', flag);
   };
 
   const clearPostalCodeError = () => {
@@ -36,8 +35,6 @@ $j(document).ready(function () {
       })
       .text(message)
       .appendTo($j('#postal_code').parent());
-
-    !optional && disableAddressing(true);
   };
 
   const isInvalidCep = (cleanCep) => {
@@ -56,6 +53,7 @@ $j(document).ready(function () {
   const handleApiError = (xhr) => {
     const message = xhr.status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.SERVER_ERROR;
     showPostalCodeError(message);
+    !optional && disableAddressing(true);
   };
 
   const fetchPostalCode = (cleanCep) => {
@@ -75,7 +73,10 @@ $j(document).ready(function () {
     clearPostalCodeError();
 
     if (!CEP_FORMAT_REGEX.test(postalCode)) {
-      postalCode && showPostalCodeError(ERROR_MESSAGES.INVALID_FORMAT);
+      if (postalCode) {
+        showPostalCodeError(ERROR_MESSAGES.INVALID_FORMAT);
+      }
+      !optional && disableAddressing(true);
       return;
     }
 
@@ -83,6 +84,7 @@ $j(document).ready(function () {
 
     if (isInvalidCep(cleanCep)) {
       showPostalCodeError(ERROR_MESSAGES.INVALID_CEP);
+      !optional && disableAddressing(true);
       return;
     }
 
