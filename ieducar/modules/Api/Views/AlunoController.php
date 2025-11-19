@@ -1278,8 +1278,17 @@ class AlunoController extends ApiCoreController
 
     private function getNomesResponsaveis(?string $tipoResponsavel, array $camposFisica): array
     {
+        // Compatibilidade com cadastro antigo - mesmo comportamento da função tipoResponsavel
         if (!$tipoResponsavel) {
-            return [];
+            if ($camposFisica['idpes_responsavel']) {
+                $tipoResponsavel = 'r';
+            } elseif ($camposFisica['idpes_pai']) {
+                $tipoResponsavel = 'p';
+            } elseif ($camposFisica['idpes_mae']) {
+                $tipoResponsavel = 'm';
+            } else {
+                return [];
+            }
         }
 
         $nomesResponsaveis = [];
