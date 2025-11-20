@@ -1089,6 +1089,12 @@ return new class extends clsCadastro
         $this->createOrUpdateDocumentos(pessoaId: $pessoaId);
         $this->createOrUpdateTelefones(pessoaId: $pessoaId);
         $this->saveAddress(person: $pessoaId, optionalFields: true);
+        
+        // Issue #1059: Adicionar mensagem de sucesso para novos cadastros
+        if ($pessoaIdOrNull === null) {
+            session()->flash('success', 'Pessoa cadastrada com sucesso.');
+        }
+        
         $this->afterChangePessoa(id: $pessoaId);
         $this->saveFiles(idpes: $pessoaId);
 
