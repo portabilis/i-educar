@@ -322,7 +322,7 @@ return new class extends clsCadastro
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
-       if(GradeAgeGroupValidator::faixaEtariaEhValida($this->idade_inicial) === false) {
+       if(GradeAgeGroupValidator::faixaEtariaEhValida($this->idade_inicial,$this->idade_final, $this->idade_ideal) === false ) {
             $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
             return false;
         }
