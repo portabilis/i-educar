@@ -2,6 +2,7 @@
 
 use App\Models\DataSearch\StudentFilter;
 use App\Models\LegacyStudent;
+require_once __DIR__ . '/../lib/validations.php';
 
 return new class extends clsListagem
 {
@@ -119,6 +120,15 @@ return new class extends clsListagem
             'CPF Responsável',
         ];
 
+        // Exibe mensagem de erro em sessão, se houver (ex.: CPF inválido)
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            @session_start();
+        }
+        if (!empty($_SESSION['ieducar_error'])) {
+            echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['ieducar_error']) . '</div>';
+            unset($_SESSION['ieducar_error']);
+        }
+
         $this->addCabecalhos(coluna: array_filter(array: $cabecalhos));
 
         $validator_date = Validator::make(request()->only(keys: 'data_nascimento'), ['data_nascimento' => ['nullable', 'date_format:d/m/Y', 'after_or_equal:1990-01-01']]);
@@ -130,6 +140,18 @@ return new class extends clsListagem
         $this->nome_aluno = $this->cleanNameSearch(name: $this->nome_aluno);
         $this->nome_pai = $this->cleanNameSearch(name: $this->nome_pai);
         $this->nome_mae = $this->cleanNameSearch(name: $this->nome_mae);
+
+        // Validar CPF antes de aplicar como filtro: se inválido, informar e ignorar filtro
+        $cpf_normalizado = preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno);
+        if ($cpf_normalizado !== '' && !validar_cpf($cpf_normalizado)) {
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                @session_start();
+            }
+            $_SESSION['ieducar_error'] = 'CPF inválido.';
+            $this->cpf_aluno = null;
+        } else {
+            $this->cpf_aluno = $cpf_normalizado ?: null;
+        }
 
         $dataFilter = [
             'rg' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->rg_aluno),
