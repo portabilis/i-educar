@@ -1,5 +1,8 @@
 <?php
 
+use App\Support\GradeAgeGroupValidator;
+use Phiki\Grammar\Injections\Group;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -260,9 +263,8 @@ return new class extends clsCadastro
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
         
-        if (is_numeric($this->idade_inicial) && $this->idade_inicial < 0) {
-        $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
-
+        if(GradeAgeGroupValidator::faixaEtariaEhValida($this->idade_inicial) === false) {
+            $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
             return false;
         }
 
@@ -320,9 +322,9 @@ return new class extends clsCadastro
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
-        if (is_numeric($this->idade_inicial) && $this->idade_inicial < 0) {
-        $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
-        return false;
+       if(GradeAgeGroupValidator::faixaEtariaEhValida($this->idade_inicial) === false) {
+            $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
+            return false;
         }
         
         
