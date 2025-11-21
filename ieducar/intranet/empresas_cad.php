@@ -1,3 +1,4 @@
+
 <?php
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -135,6 +136,24 @@ return new class extends clsCadastro
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
+            return false;
+        }
+
+        // Valida se o email está vazio
+        if (empty($this->email)) {
+            $this->mensagem = 'Formato do e-mail inválido.';
+            return false;
+        }
+
+        // Valida se o email contém @
+        if (strpos($this->email, '@') === false) {
+            $this->mensagem = 'Formato do e-mail inválido.';
+            return false;
+        }
+
+        // Valida se o email tem formato válido (rejeita URLs e outros formatos)
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $this->mensagem = 'Formato do e-mail inválido.';
             return false;
         }
 
