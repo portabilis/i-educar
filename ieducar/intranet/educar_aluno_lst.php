@@ -120,14 +120,7 @@ return new class extends clsListagem
             'CPF Responsável',
         ];
 
-        // Exibe mensagem de erro em sessão, se houver (ex.: CPF inválido)
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            @session_start();
-        }
-        if (!empty($_SESSION['ieducar_error'])) {
-            echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['ieducar_error']) . '</div>';
-            unset($_SESSION['ieducar_error']);
-        }
+        // Flash messages are rendered by the shared partial; don't echo directly here.
 
         $this->addCabecalhos(coluna: array_filter(array: $cabecalhos));
 
@@ -144,10 +137,7 @@ return new class extends clsListagem
         // Validar CPF antes de aplicar como filtro: se inválido, informar e ignorar filtro
         $cpf_normalizado = preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno);
         if ($cpf_normalizado !== '' && !validar_cpf($cpf_normalizado)) {
-            if (session_status() !== PHP_SESSION_ACTIVE) {
-                @session_start();
-            }
-            $_SESSION['ieducar_error'] = 'CPF inválido.';
+            Session::flash('error', 'CPF inválido.');
             $this->cpf_aluno = null;
         } else {
             $this->cpf_aluno = $cpf_normalizado ?: null;
