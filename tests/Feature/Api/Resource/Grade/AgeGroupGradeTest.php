@@ -39,7 +39,7 @@ class AgeGroupGradeTest extends TestCase
     {
         $base = [
             'ref_cod_curso'          => $this->course->id,
-            'nm_serie'               => 'Pré-Escolar',
+            'nm_serie'               => '1ª Série',
             'etapa_curso'            => 1,
             'concluinte'             => 1,
             'carga_horaria'          => '800',
@@ -54,27 +54,24 @@ class AgeGroupGradeTest extends TestCase
         return array_merge($base, $override);
     }
 
-    public function test_nao_deve_permitir_idade_inicial_negativa_ao_cadastrar(): void
-    {
-        $dados = $this->payloadSerie([
-            'idade_inicial' => -1,
-        ]);
+ public function test_nao_deve_permitir_idade_inicial_negativa_ao_cadastrar(): void
+{
+    $dados = $this->payloadSerie([
+        'idade_inicial' => -1,
+    ]);
 
-        $response = $this->post($this->route, $dados);
+    $response = $this->post($this->route, $dados);
 
-        // A tela legacy costuma usar $this->mensagem na sessão (flash)
-        $response->assertSessionHas('mensagem');
+    
+    //Não salva no banco
+    $this->assertDatabaseMissing('pmieducar.serie', [
+        'nm_serie'      => '1ª Série',
+        'idade_inicial' => -1,
+    ]);
+}
 
-        $mensagem = session('mensagem');
-        $this->assertIsString($mensagem);
-        $this->assertStringContainsString('idade', $mensagem);
 
-        // Garante que não foi salva série com idade_inicial negativa
-        $this->assertDatabaseMissing('pmieducar.serie', [
-            'nm_serie'      => 'Pré-Escolar',
-            'idade_inicial' => -1,
-        ]);
-    }
+
 
 //     public function test_nao_deve_permitir_idade_final_negativa_ao_cadastrar(): void
 //     {

@@ -263,7 +263,7 @@ return new class extends clsCadastro
         if (is_numeric($this->idade_inicial) && $this->idade_inicial < 0) {
         $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
 
-        return false;
+            return false;
         }
 
         if ($this->regras_avaliacao_id === null) {
