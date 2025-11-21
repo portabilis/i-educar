@@ -70,6 +70,7 @@ return new class extends clsCadastro
 
     public $etapa_educacenso;
 
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -258,11 +259,20 @@ return new class extends clsCadastro
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
+        
+        if (is_numeric($this->idade_inicial) && $this->idade_inicial < 0) {
+        $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
+
+        return false;
+        }
+
         if ($this->regras_avaliacao_id === null) {
             $this->mensagem = 'Regra de avaliação não cadastrada';
 
             return false;
         }
+
+
 
         $obj = new clsPmieducarSerie(
             null,
@@ -310,11 +320,18 @@ return new class extends clsCadastro
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
+        if (is_numeric($this->idade_inicial) && $this->idade_inicial < 0) {
+        $this->mensagem = 'Os campos de idade devem ser maiores ou iguais a zero.<br>';
+        return false;
+        }
+        
+        
         if ($this->regras_avaliacao_id === null) {
             $this->mensagem = 'Regra de avaliação não cadastrada';
 
             return false;
         }
+
 
         $obj = new clsPmieducarSerie(
             $this->cod_serie,
