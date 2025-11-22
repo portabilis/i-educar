@@ -291,9 +291,8 @@ return new class extends clsCadastro
             $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
             $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
 
-            // Implementação da lógica que valida o cadastramento do campo, Hora Falta (min)
-            if ($this->hora_falta < 0) {
-                $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
+            // Chamada do método refatorado
+            if (! $this->validarHoraFalta()) {
                 return false;
             }
 
@@ -349,9 +348,8 @@ return new class extends clsCadastro
             $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
             $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
 
-            // Implementação da lógica que valida a edição do campo, Hora Falta (min)
-            if ($this->hora_falta < 0) {
-                $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
+            // Chamada do método refatorado
+            if (! $this->validarHoraFalta()) {
                 return false;
             }
             
@@ -468,5 +466,15 @@ return new class extends clsCadastro
     {
         $this->title = 'Curso';
         $this->processoAp = '566';
+    }
+
+    // Método auxiliar criado na refatoração
+    private function validarHoraFalta()
+    {
+        if ($this->hora_falta < 0) {
+            $this->mensagem = "O campo 'Hora Falta' não pode ser negativo.<br>";
+            return false;
+        }
+        return true;
     }
 };
