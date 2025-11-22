@@ -291,6 +291,21 @@ return new class extends clsCadastro
             $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
             $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
 
+            // validação: hora_falta (min) não pode ser negativa nem inválida
+            $horaFaltaMin = null;
+            if ($this->hora_falta !== null && $this->hora_falta !== '') {
+                if (!is_numeric($this->hora_falta)) {
+                    $this->mensagem = ($this->mensagem ?? '') . 'Hora Falta (min) inválida.<br>';
+                    return false;
+                }
+                $horaFaltaMin = (float) $this->hora_falta;
+            }
+
+            if ($horaFaltaMin !== null && $horaFaltaMin < 0) {
+                $this->mensagem = ($this->mensagem ?? '') . 'Hora Falta (min) deve ser maior ou igual a zero.<br>';
+                return false;
+            }
+
             $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
             $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
@@ -342,6 +357,21 @@ return new class extends clsCadastro
             $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
             $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
             $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
+
+            // validação: hora_falta (min) não pode ser negativa nem inválida
+            $horaFaltaMin = null;
+            if ($this->hora_falta !== null && $this->hora_falta !== '') {
+                if (!is_numeric($this->hora_falta)) {
+                    $this->mensagem = ($this->mensagem ?? '') . 'Hora Falta (min) inválida.<br>';
+                    return false;
+                }
+                $horaFaltaMin = (float) $this->hora_falta;
+            }
+
+            if ($horaFaltaMin !== null && $horaFaltaMin < 0) {
+                $this->mensagem = ($this->mensagem ?? '') . 'Hora Falta (min) deve ser maior ou igual a zero.<br>';
+                return false;
+            }
 
             $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
