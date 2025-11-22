@@ -291,6 +291,12 @@ return new class extends clsCadastro
             $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
             $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
 
+            // Implementação da lógica que valida o cadastramento do campo, Hora Falta (min)
+            if ($this->hora_falta < 0) {
+                $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
+                return false;
+            }
+
             $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
             $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
@@ -343,6 +349,12 @@ return new class extends clsCadastro
             $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
             $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
 
+            // Implementação da lógica que valida a edição do campo, Hora Falta (min)
+            if ($this->hora_falta < 0) {
+                $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
+                return false;
+            }
+            
             $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
             $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
