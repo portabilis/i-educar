@@ -472,7 +472,7 @@ return new class extends clsCadastro
     private function validarHoraFalta()
     {
         if ($this->hora_falta < 0) {
-            $this->mensagem = "O campo 'Hora Falta' não pode ser negativo.<br>";
+            $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
             return false;
         }
         return true;
