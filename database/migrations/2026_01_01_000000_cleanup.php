@@ -15,6 +15,7 @@ return new class extends Migration
         $this->dropView('cadastro.v_pessoa_fj');
         $this->dropView('cadastro.v_pessoafj_count');
         $this->dropView('relatorio.view_dados_modulo');
+        $this->dropView('relatorio.view_modulo');
 
         Schema::dropIfExists('pmieducar.escola_complemento');
     }
