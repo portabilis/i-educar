@@ -10,5 +10,6 @@ return new class extends Migration
     public function up(): void
     {
         $this->dropView('cadastro.endereco_externo');
+        $this->dropView('cadastro.endereco_pessoa');
     }
 };
