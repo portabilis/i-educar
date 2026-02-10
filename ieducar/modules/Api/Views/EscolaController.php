@@ -108,13 +108,6 @@ class EscolaController extends ApiCoreController
                 AND j.fantasia ILIKE \'%\'||$1||\'%\'
                 LIMIT 8';
 
-        $sqls[] = 'SELECT e.cod_escola as id, ec.nm_escola as name
-               FROM pmieducar.escola e, pmieducar.escola_complemento ec
-              WHERE e.cod_escola = ec.ref_cod_escola
-                AND e.ativo = 1
-                AND ec.nm_escola ILIKE \'%\'||$1||\'%\'
-                LIMIT 8';
-
         return $sqls;
     }
 
@@ -475,11 +468,10 @@ class EscolaController extends ApiCoreController
         $cursoId = $this->getRequest()->curso_id;
 
         $sql = 'SELECT cod_escola as id,
-                 COALESCE(juridica.fantasia, nm_escola) as nome
+                 juridica.fantasia as nome
             from pmieducar.escola
             left join cadastro.pessoa on(escola.ref_idpes = pessoa.idpes)
             left join cadastro.juridica on(juridica.idpes = pessoa.idpes)
-            left join pmieducar.escola_complemento ON (escola_complemento.ref_cod_escola = escola.cod_escola)
            inner join pmieducar.escola_curso on(escola.cod_escola = escola_curso.ref_cod_escola)
            inner join pmieducar.curso on(escola_curso.ref_cod_curso = curso.cod_curso)
           where escola.ativo = 1

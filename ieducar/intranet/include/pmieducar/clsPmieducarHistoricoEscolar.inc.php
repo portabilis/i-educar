@@ -149,10 +149,8 @@ class clsPmieducarHistoricoEscolar extends Model
                                       FROM cadastro.pessoa ps, cadastro.juridica
                                      WHERE escola.ref_idpes = juridica.idpes
                                        AND juridica.idpes = ps.idpes
-                                       AND ps.idpes = escola.ref_idpes),
-                                   (SELECT nm_escola
-                                      FROM pmieducar.escola_complemento
-                                    WHERE ref_cod_escola = escola.cod_escola)) AS nome
+                                       AND ps.idpes = escola.ref_idpes)
+                                   ) AS nome
                              FROM pmieducar.escola
                             WHERE escola.cod_escola = $this->ref_cod_escola
                          ORDER BY nome");

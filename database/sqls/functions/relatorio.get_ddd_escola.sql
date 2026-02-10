@@ -9,7 +9,5 @@ SELECT COALESCE(
                   (SELECT idpes
                    FROM cadastro.pessoa
                             INNER JOIN pmieducar.escola ON escola.ref_idpes = pessoa.idpes
-                   WHERE cod_escola = $1)),
-           (SELECT min(ddd_telefone)
-            FROM pmieducar.escola_complemento
-            WHERE ref_cod_escola = $1)); $_$;
+                   WHERE cod_escola = $1))
+           ); $_$;
