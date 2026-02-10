@@ -15,7 +15,6 @@ return new class extends Migration
         $this->dropView('public.exporter_stages');
         $this->dropView('public.exporter_school_stages');
         $this->dropView('public.exporter_school_class_stages');
-        $this->dropView('relatorio.view_dados_modulo');
         $this->dropView('relatorio.view_modulo');
 
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_pkey;');
@@ -50,7 +49,6 @@ return new class extends Migration
         $this->createView('public.exporter_school_stages', '2020-07-09');
         $this->createView('public.exporter_stages', '2020-07-10');
         $this->createView('relatorio.view_modulo');
-        $this->createView('relatorio.view_dados_modulo');
 
         // ESCOLA ANO LETIVO
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.escola_ano_letivo DROP CONSTRAINT IF EXISTS escola_ano_letivo_pkey;');
@@ -84,7 +82,6 @@ return new class extends Migration
         $this->dropView('public.exporter_stages');
         $this->dropView('public.exporter_school_stages');
         $this->dropView('public.exporter_school_class_stages');
-        $this->dropView('relatorio.view_dados_modulo');
         $this->dropView('relatorio.view_modulo');
 
         \DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_pkey;');
@@ -117,7 +114,6 @@ return new class extends Migration
         $this->createView('public.exporter_school_stages', '2020-07-09');
         $this->createView('public.exporter_stages', '2020-07-10');
         $this->createView('relatorio.view_modulo');
-        $this->createView('relatorio.view_dados_modulo');
 
         // ESCOLA ANO LETIVO
         \DB::statement('DROP INDEX IF EXISTS pmieducar.escola_ano_letivo_ref_cod_escola_ano_index;');
