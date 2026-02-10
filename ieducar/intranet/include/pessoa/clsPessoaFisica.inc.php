@@ -172,30 +172,6 @@ class clsPessoaFisica extends clsPessoaFj
             $tupla = $db->Tupla();
             $tupla['total'] = $total;
 
-            $dba->Consulta(consulta: sprintf(
-                'SELECT
-                ddd_1, fone_1, ddd_2, fone_2, ddd_mov, fone_mov, ddd_fax, fone_fax
-                FROM
-                cadastro.v_fone_pessoa
-                WHERE idpes = %d',
-                $tupla['idpes']
-            ));
-
-            if ($dba->ProximoRegistro()) {
-                $tupla_fone = $dba->Tupla();
-            } else {
-                $tupla_fone = '';
-            }
-
-            $tupla['ddd_1'] = $tupla_fone['ddd_1'] ?? null;
-            $tupla['fone_1'] = $tupla_fone['fone_1'] ?? null;
-            $tupla['ddd_2'] = $tupla_fone['ddd_2'] ?? null;
-            $tupla['fone_2'] = $tupla_fone['fone_2'] ?? null;
-            $tupla['ddd_mov'] = $tupla_fone['ddd_mov'] ?? null;
-            $tupla['fone_mov'] = $tupla_fone['fone_mov'] ?? null;
-            $tupla['ddd_fax'] = $tupla_fone['ddd_fax'] ?? null;
-            $tupla['fone_fax'] = $tupla_fone['fone_fax'] ?? null;
-
             $resultado[] = $tupla;
         }
 
