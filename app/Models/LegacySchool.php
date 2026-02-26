@@ -88,6 +88,7 @@ class LegacySchool extends LegacyModel
         'acoes_area_ambiental',
         'caracteristica_escolar',
         'lei_conclusao_ensino_medio',
+        'numero_salas_cantinho_leitura',
     ];
 
     protected function id(): Attribute

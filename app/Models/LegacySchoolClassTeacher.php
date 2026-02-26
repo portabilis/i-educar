@@ -28,6 +28,7 @@ class LegacySchoolClassTeacher extends Model
         'data_fim',
         'area_itinerario',
         'leciona_itinerario_tecnico_profissional',
+        'turno_id',
     ];
 
     protected $table = 'modules.professor_turma';

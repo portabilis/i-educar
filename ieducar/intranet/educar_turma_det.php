@@ -6,6 +6,8 @@ use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStageType;
 use App\Models\View\Discipline;
+use App\Process;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe
@@ -379,6 +381,11 @@ return new class extends clsDetalhe
             if ($doesntExist) {
                 $this->array_botao[] = 'Copiar vínculo de servidores';
                 $this->array_botao_url_script[] = sprintf('go("copia_vinculos_servidores_cad.php?cod_turma=%d");', $registro['cod_turma']);
+            }
+
+            if (Auth::user()->can('view', Process::TIMETABLE)) {
+                $this->array_botao[] = 'Quadro de horários';
+                $this->array_botao_url_script[] = sprintf('go("/new/quadro-de-horarios/%d");', $registro['cod_turma']);
             }
         }
 
