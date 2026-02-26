@@ -21,6 +21,7 @@ use App\Listeners\NotificationWhenResetPassword;
 use App\Listeners\RegistrationCopyListener;
 use App\Listeners\ReportIssuedListener;
 use App\Listeners\TransferNotificationListener;
+use App\Listeners\TransferWebhookListener;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use App\Models\SchoolManager;
 use App\Observers\LegacyRegistrationDisciplinaryOccurrenceTypeObserver;
@@ -63,6 +64,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         TransferEvent::class => [
             TransferNotificationListener::class,
+            TransferWebhookListener::class,
         ],
         MessageSending::class => [
             MessageSendingListener::class,
