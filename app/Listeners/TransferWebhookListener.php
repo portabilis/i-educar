@@ -10,28 +10,34 @@ use Illuminate\Support\Facades\Http;
 
 class TransferWebhookListener
 {
+    private string $url;
+
+    private string $token;
+
     public function __construct(
-        public NotificationService $service
+        public NotificationService $service,
+        public LegacyInstitution $institution,
     ) {
-        //
+        $configs = $institution->generalConfiguration;
+
+        if ($configs) {
+            $this->url = trim($configs->url_novo_educacao);
+            $this->token = trim($configs->token_novo_educacao);
+        }
     }
 
     public function handle(TransferEvent $event): void
     {
-        $registration = $event->transfer->oldRegistration;
-
-        $configs = LegacyInstitution::find(
-            $registration->school->institution->getKey()
-        )->generalConfiguration;
-
-        if (!$configs || empty($configs->url_novo_educacao)) {
+        if (!$this->url || !$this->token) {
             return;
         }
 
+        $registration = $event->transfer->oldRegistration;
+
         $callbackUrl = route('webhook.transfer.callback', ['id' => $event->transfer->getKey()]);
 
-        $response = Http::withHeader('token', trim($configs->token_novo_educacao))
-            ->post(trim($configs->url_novo_educacao, '/') . '/api/v2/ieducar_api_student_transfers', [
+        $response = Http::withHeader('token', trim($this->token))
+            ->post(trim($this->url, '/') . '/api/v2/ieducar_api_student_transfers', [
                 'student_enrollment_api_code' => $registration->getKey(),
                 'callback_url' => $callbackUrl,
             ]);

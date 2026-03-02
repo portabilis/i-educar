@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacyTransferRequest;
 use App\Models\NotificationType;
 use App\Services\NotificationService;
@@ -21,33 +20,21 @@ class TransferWebhookCallbackController extends Controller
         $transfer = LegacyTransferRequest::query()
             ->findOrFail($id);
 
-        if ($transfer) {
-            $registration = $transfer->oldRegistration;
+        $registration = $transfer->oldRegistration;
 
-            $configs = LegacyInstitution::find(
-                $registration->school->institution->getKey()
-            )->generalConfiguration;
+        $message = sprintf(
+            'Solicitação de envio dos lançamentos do(a) aluno(a) %s, concluída com sucesso. Os dados já estão disponíveis no i-Educar.',
+            $registration->student->person->name,
+        );
 
-            if ($request->headers->get('token') !== trim($configs->token_novo_educacao)) {
-                return response()->json([
-                    'message' => 'Unauthorized',
-                ], 401);
-            }
+        $link = '/intranet/educar_matricula_det.php?cod_matricula=' . $registration->getKey();
 
-            $message = sprintf(
-                'Solicitação de envio dos lançamentos do(a) aluno(a) %s, concluída com sucesso. Os dados já estão disponíveis no i-Educar.',
-                $registration->student->person->name,
-            );
-
-            $link = '/intranet/educar_matricula_det.php?cod_matricula=' . $registration->getKey();
-
-            $this->service->createByUser(
-                $transfer->ref_usuario_cad,
-                $message,
-                $link,
-                NotificationType::TRANSFER
-            );
-        }
+        $this->service->createByUser(
+            $transfer->ref_usuario_cad,
+            $message,
+            $link,
+            NotificationType::TRANSFER
+        );
 
         return response()->json([
             'message' => 'Notification created successfully',
