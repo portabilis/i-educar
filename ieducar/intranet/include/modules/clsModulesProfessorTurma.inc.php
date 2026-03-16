@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolClassTeacherDiscipline;
 use iEducar\Legacy\Model;
 
 class clsModulesProfessorTurma extends Model
@@ -574,40 +575,25 @@ class clsModulesProfessorTurma extends Model
 
     public function gravaComponentes($professor_turma_id, $componentes)
     {
-        $this->excluiComponentes($professor_turma_id);
-        $db = new clsBanco;
         foreach ($componentes as $componente) {
-            $db->Consulta("INSERT INTO modules.professor_turma_disciplina VALUES ({$professor_turma_id},{$componente})");
+            LegacySchoolClassTeacherDiscipline::query()->updateOrCreate([
+                'professor_turma_id' => $professor_turma_id,
+                'componente_curricular_id' => $componente,
+            ]);
         }
+
+        LegacySchoolClassTeacherDiscipline::query()
+            ->where('professor_turma_id', $professor_turma_id)
+            ->whereNotIn('componente_curricular_id', $componentes ?? [])
+            ->get()
+            ->each(fn (LegacySchoolClassTeacherDiscipline $model) => $model->delete());
     }
 
     public function excluiComponentes($professor_turma_id)
     {
-        $db = new clsBanco;
-        $db->Consulta("DELETE FROM modules.professor_turma_disciplina WHERE professor_turma_id = {$professor_turma_id}");
-    }
-
-    public function retornaComponentesVinculados($professor_turma_id)
-    {
-        $componentesVinculados = [];
-        $sql = "SELECT componente_curricular_id
-                  FROM modules.professor_turma_disciplina
-                 WHERE professor_turma_id = {$professor_turma_id}";
-        $db = new clsBanco;
-        $db->Consulta($sql);
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $componentesVinculados[] = $tupla['componente_curricular_id'];
-        }
-
-        return $componentesVinculados;
-    }
-
-    public function retornaNomeDoComponente($idComponente)
-    {
-        $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper;
-        $componente = $mapperComponente->find(['id' => $idComponente]);
-
-        return $componente->nome;
+        LegacySchoolClassTeacherDiscipline::query()
+            ->where('professor_turma_id', $professor_turma_id)
+            ->get()
+            ->each(fn (LegacySchoolClassTeacherDiscipline $model) => $model->delete());
     }
 }

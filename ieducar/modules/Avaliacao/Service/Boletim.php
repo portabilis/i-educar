@@ -2329,9 +2329,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      * @return mixed
      */
-    public function arredondaMedia($media)
+    public function arredondaMedia($media, $componenteId = null)
     {
-        $componenteId = $this->getCurrentComponenteCurricular();
+        if ($componenteId === null) {
+            $componenteId = $this->getCurrentComponenteCurricular();
+        }
 
         if ($media instanceof Avaliacao_Model_NotaComponenteMedia) {
             $media = $media->nota;
@@ -2834,7 +2836,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             ]);
 
             $notaComponenteCurricularMedia->media = $media;
-            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media, $componente);
             $notaComponenteCurricularMedia->bloqueada = $lock;
             $notaComponenteCurricularMedia->situacao = null;
 
@@ -2844,7 +2846,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 'notaAluno' => $this->_getNotaAluno()->id,
                 'componenteCurricular' => $componente,
                 'media' => $media,
-                'mediaArredondada' => $this->arredondaMedia($media),
+                'mediaArredondada' => $this->arredondaMedia($media, $componente),
                 'etapa' => $etapa,
                 'bloqueada' => $lock,
             ]);
@@ -3025,7 +3027,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                         // desbloqueá-la antes.
                         if (!$locked) {
                             $notaComponenteCurricularMedia->media = $media;
-                            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+                            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media, $id);
                         }
 
                         $notaComponenteCurricularMedia->etapa = $etapa;
@@ -3037,7 +3039,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                             'notaAluno' => $this->_getNotaAluno()->id,
                             'componenteCurricular' => $id,
                             'media' => $media,
-                            'mediaArredondada' => $this->arredondaMedia($media),
+                            'mediaArredondada' => $this->arredondaMedia($media, $id),
                             'etapa' => $etapa,
                             'bloqueada' => 'f',
                         ]);
@@ -3046,19 +3048,21 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     // Salva a média
                     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
 
-                    // Atualiza a nota arredondada baseada nas casas decimais da Regra de Avaliação
-                    // Essa opção só esta acessível através da atualização de matrículas
-                    if ($this->isUpdateScore()) {
-                        $score = \App\Models\LegacyDisciplineScore::query()
+                    // Recalcula nota_arredondada de todas as etapas do componente
+                    if ($this->isUpdateScore() && !$locked) {
+                        $scores = \App\Models\LegacyDisciplineScore::query()
                             ->where('nota_aluno_id', $this->_getNotaAluno()->id)
                             ->where('componente_curricular_id', $id)
-                            ->where('etapa', $etapa)
-                            ->first();
+                            ->get();
 
-                        if ($score && !$locked) {
-                            $score->update([
-                                'nota_arredondada' => $this->getRegraAvaliacaoTabelaArredondamento()->round($score->nota, 1, $this->getRegraAvaliacaoQtdCasasDecimais()),
-                            ]);
+                        foreach ($scores as $score) {
+                            if ($this->usaTabelaArredondamentoConceitual($id)) {
+                                $notaArredondada = $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($score->nota, 1);
+                            } else {
+                                $notaArredondada = $this->getRegraAvaliacaoTabelaArredondamento()->round($score->nota, 1, $this->getRegraAvaliacaoQtdCasasDecimais());
+                            }
+
+                            $score->update(['nota_arredondada' => $notaArredondada]);
                         }
                     }
 

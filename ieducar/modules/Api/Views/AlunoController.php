@@ -2091,12 +2091,13 @@ class AlunoController extends ApiCoreController
                 coalesce(to_char(f.data_nasc, 'dd/mm/yyyy'), 'Não consta') AS data_nascimento,
                 coalesce(f.cpf::varchar, 'Não consta') AS cpf,
                 coalesce(d.rg, 'Não consta') AS rg,
-                coalesce(relatorio.get_mae_aluno(a.cod_aluno), 'Não consta') AS mae_aluno
+                coalesce(mae.nome, a.nm_mae, 'Não consta') AS mae_aluno
             FROM pmieducar.aluno a
             JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
             JOIN cadastro.fisica f ON f.idpes = a.ref_idpes
             LEFT JOIN cadastro.documento d ON d.idpes = a.ref_idpes
             LEFT JOIN modules.educacenso_cod_aluno eca ON eca.cod_aluno = a.cod_aluno
+            LEFT JOIN cadastro.pessoa mae ON mae.idpes = f.idpes_mae
             WHERE a.cod_aluno IN ($alunosIds);
         ";
 

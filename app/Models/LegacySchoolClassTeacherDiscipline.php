@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacySchoolClassTeacherDiscipline extends Model
 {
-    public $incrementing = false;
-
     protected $fillable = [
         'professor_turma_id',
         'componente_curricular_id',

@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('pmieducar.escola', function (Blueprint $table) {
-            $table->smallInteger('caracteristica_escolar')->nullable();
+        Schema::table('modules.componente_curricular', function (Blueprint $table) {
+            $table->string('color', 10)->default('#FFFFFF');
         });
     }
 
     public function down(): void
     {
-        Schema::table('pmieducar.escola', function (Blueprint $table) {
-            $table->dropColumn('caracteristica_escolar');
+        Schema::table('modules.componente_curricular', function (Blueprint $table) {
+            $table->dropColumn('color');
         });
     }
 };

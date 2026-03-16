@@ -126,9 +126,9 @@ class PessoaController extends ApiCoreController
            fisica.zona_localizacao_censo,
            fisica.localizacao_diferenciada,
            fisica.nome_social,
-           (SELECT pais.nome
-                   FROM public.pais
-                   WHERE pais.idpais = fisica.idpais_estrangeiro) AS pais_origem_nome,
+           (SELECT countries.name
+                   FROM countries
+                   WHERE countries.id = fisica.idpais_estrangeiro) AS pais_origem_nome,
            (SELECT ref_cod_raca FROM cadastro.fisica_raca WHERE fisica.idpes = fisica_raca.ref_idpes) as cor_raca,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as fone_fixo,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as fone_mov,
@@ -262,7 +262,7 @@ class PessoaController extends ApiCoreController
         }
 
         if ($details['idmun_nascimento']) {
-            $_sql = ' SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ';
+            $_sql = ' SELECT c.name as nome, s.abbreviation as sigla_uf FROM cities c JOIN states s ON s.id = c.state_id WHERE c.id = $1; ';
             $mun = $this->fetchPreparedQuery($_sql, $details['idmun_nascimento'], false, 'first-row');
 
             $details['municipio_nascimento'] = $this->toUtf8($mun['nome']);
