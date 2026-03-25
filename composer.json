@@ -24,7 +24,7 @@
         "ext-pgsql": "*",
         "ext-zip": "*",
         "ankurk91/laravel-eloquent-relationships": "^2.1",
-        "aws/aws-sdk-php-laravel": "^3.7",
+        "aws/aws-sdk-php-laravel": "^3.11",
         "composer/semver": "^3.2",
         "dex/composer-plug-and-play": "^0.26",
         "dex/frontier": "^0.17.0",
