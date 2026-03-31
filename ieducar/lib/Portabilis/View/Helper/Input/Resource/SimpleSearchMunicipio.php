@@ -5,7 +5,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portab
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql = 'select nome, sigla_uf from public.municipio where idmun = $1';
+            $sql = 'SELECT c.name as nome, s.abbreviation as sigla_uf FROM cities c JOIN states s ON s.id = c.state_id WHERE c.id = $1';
             $options = ['params' => $id, 'return_only' => 'first-row'];
             $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 

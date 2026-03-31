@@ -5,6 +5,7 @@ namespace Tests\Unit\Eloquent;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacySchoolHistoryDiscipline;
 use App\Models\LegacyStudent;
 use App\Models\LegacyUser;
 use Tests\EloquentTestCase;
@@ -17,6 +18,7 @@ class LegacySchoolHistoryTest extends EloquentTestCase
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
         'school' => LegacySchool::class,
+        'disciplines' => LegacySchoolHistoryDiscipline::class,
     ];
 
     protected function getEloquentModelName(): string

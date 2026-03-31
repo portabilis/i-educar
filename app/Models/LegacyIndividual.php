@@ -243,14 +243,6 @@ class LegacyIndividual extends Model
     }
 
     /**
-     * @return BelongsTo<LegacyCity, $this>
-     */
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(LegacyCity::class, 'idmun_nascimento', 'idmun');
-    }
-
-    /**
      * @return BelongsTo<City, $this>
      */
     public function cityBirth(): BelongsTo

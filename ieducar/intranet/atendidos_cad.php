@@ -6,9 +6,13 @@ use App\Facades\Asset;
 use App\Models\EducacensoIndigenousPeople;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyIssuingBody;
+use App\Models\LegacyPhone;
 use App\Models\LegacyRace;
+use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyUser;
 use App\Services\FileService;
+use App\Services\PhoneService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -19,6 +23,7 @@ use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro
@@ -178,7 +183,7 @@ return new class extends clsCadastro
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr(data_original: $this->data_admissao) : '';
 
-            $this->estado_civil_id = $this->estado_civil->ideciv;
+            $this->estado_civil_id = $this->estado_civil;
             $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
         }
@@ -363,11 +368,10 @@ return new class extends clsCadastro
         // orgão emissão rg
 
         $selectOptions = [null => 'Órgão emissor'];
-        $orgaos = new clsOrgaoEmissorRg;
-        $orgaos = $orgaos->lista();
+        $orgaos = LegacyIssuingBody::orderBy('sigla')->get();
 
         foreach ($orgaos as $orgao) {
-            $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
+            $selectOptions[$orgao->idorg_rg] = $orgao->sigla;
         }
 
         $selectOptions = Portabilis_Array_Utils::sortByValue(array: $selectOptions);
@@ -667,9 +671,9 @@ return new class extends clsCadastro
             ->prepend(value: 'Selecione', key: '')
             ->toArray();
 
-        $raca = new clsCadastroFisicaRaca(ref_idpes: $this->cod_pessoa_fj);
-        $raca = $raca->detalhe();
-        $this->cod_raca = is_array(value: $raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
+        $this->cod_raca = is_numeric($this->cod_pessoa_fj)
+            ? LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->cod_pessoa_fj))->value('cod_raca') ?? $this->cor_raca
+            : $this->cor_raca;
 
         $this->campoLista(nome: 'cor_raca', campo: 'Raça', valor: $race, default: $this->cod_raca, obrigatorio: $obrigarCamposCenso);
 
@@ -788,21 +792,13 @@ return new class extends clsCadastro
         $this->campoRotulo(nome: 'renda', campo: '<b>Trabalho e renda</b>', valor: '', duplo: '', descricao: 'Informações de trabalho e renda da pessoa');
         $this->campoTexto(nome: 'ocupacao', campo: 'Ocupação', valor: $this->ocupacao, tamanhovisivel: '50', tamanhomaximo: '255');
 
-        $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsCadastroEscolaridade;
-        $lista = $objTemp->lista();
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['idesco']] = $registro['descricao'];
-            }
-        }
+        $opcoes = LegacySchoolingDegree::query()->orderBy('descricao')->pluck('descricao', 'idesco')->prepend('Selecione', '')->toArray();
 
         $this->campoLista(
             nome: 'idesco',
             campo: 'Escolaridade',
             valor: $opcoes,
-            default: $this->idesco->idesco,
+            default: $this->idesco,
             obrigatorio: false
         );
 
@@ -1420,13 +1416,10 @@ return new class extends clsCadastro
             return false;
         } // Quando não tiver cor/raça selecionado não faz update
 
-        $raca = new clsCadastroFisicaRaca(ref_idpes: $pessoaId, ref_cod_raca: $corRaca);
-
-        if ($raca->existe()) {
-            return $raca->edita();
+        $individual = LegacyIndividual::find($pessoaId, ['idpes']);
+        if ($individual) {
+            $individual->race()->sync([$corRaca]);
         }
-
-        return $raca->cadastra();
     }
 
     protected function createOrUpdateDocumentos($pessoaId)
@@ -1512,16 +1505,33 @@ return new class extends clsCadastro
 
     protected function createOrUpdateTelefones($pessoaId)
     {
-        $telefones = [];
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_LANDLINE,
+            ddd: $this->ddd_telefone_1,
+            phone: $this->telefone_1
+        );
 
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 1, str_fone: $this->telefone_1, str_ddd: $this->ddd_telefone_1);
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 2, str_fone: $this->telefone_2, str_ddd: $this->ddd_telefone_2);
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 3, str_fone: $this->telefone_mov, str_ddd: $this->ddd_telefone_mov);
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 4, str_fone: $this->telefone_fax, str_ddd: $this->ddd_telefone_fax);
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_MOBILE,
+            ddd: $this->ddd_telefone_2,
+            phone: $this->telefone_2
+        );
 
-        foreach ($telefones as $telefone) {
-            $telefone->cadastra();
-        }
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_MOBILE_ALT,
+            ddd: $this->ddd_telefone_mov,
+            phone: $this->telefone_mov
+        );
+
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_FAX,
+            ddd: $this->ddd_telefone_fax,
+            phone: $this->telefone_fax
+        );
     }
 
     // inputs usados em Gerar,

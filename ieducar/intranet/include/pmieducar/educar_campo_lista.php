@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
-$pessoa_logada = \Illuminate\Support\Facades\Auth::id();
+$pessoa_logada = Auth::id();
 
 if (!isset($exibe_campo_lista_curso_escola)) {
     $exibe_campo_lista_curso_escola = true;
@@ -111,7 +113,7 @@ if ($get_curso) {
     if ($this->ref_cod_escola) {
         $obj_escola_curso = new clsPmieducarEscolaCurso;
 
-        $lst_escola_curso = \App\Models\LegacyCourse::query()
+        $lst_escola_curso = LegacyCourse::query()
             ->active()
             ->whereSchool($this->ref_cod_escola, $this->ano)
             ->orderBy('nm_curso')
@@ -127,7 +129,7 @@ if ($get_curso) {
     } elseif ($this->ref_cod_instituicao) {
         $opcoes_curso = ['' => $get_select_name_full ? 'Selecione um curso' : 'Selecione'];
 
-        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->when($sem_padrao, function ($q) {
+        $lst_escola_curso = LegacyCourse::query()->active()->when($sem_padrao, function ($q) {
             $q->whereStandardCalendar(0);
         })->whereInstitution($this->ref_cod_instituicao)->orderBy('nm_curso')->get(['cod_curso', 'nm_curso', 'descricao']);
 

@@ -9,14 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pmieducar.escola', function (Blueprint $table) {
-            $table->smallInteger('característica_escolar')->nullable();
+            $table->smallInteger('caracteristica_escolar')->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::table('pmieducar.escola', function (Blueprint $table) {
-            $table->dropColumn('característica_escolar');
+            $table->dropColumn('caracteristica_escolar');
         });
     }
 };

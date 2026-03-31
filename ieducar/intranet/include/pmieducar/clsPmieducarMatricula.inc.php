@@ -1377,7 +1377,7 @@ class clsPmieducarMatricula extends Model
             return false;
         }
 
-        return new \DateTime($data);
+        return new DateTime($data);
     }
 
     public function pegaDataAnoLetivoInicio($cod_turma)
@@ -1409,7 +1409,7 @@ class clsPmieducarMatricula extends Model
             return false;
         }
 
-        return new \DateTime($data);
+        return new DateTime($data);
     }
 
     public function pegaDataAnoLetivoFim($cod_turma)
@@ -1460,6 +1460,6 @@ class clsPmieducarMatricula extends Model
             return false;
         }
 
-        return new \DateTime($data);
+        return new DateTime($data);
     }
 }

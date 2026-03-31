@@ -10,6 +10,7 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class DiarioController extends ApiCoreController
 {
@@ -664,11 +665,17 @@ class DiarioController extends ApiCoreController
             $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
 
         if (!empty($notaExame) && $situacaoEmExame) {
-            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId, $notaExame);
-            $obj->existe() ? $obj->edita() : $obj->cadastra();
-        } else {
-            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId);
-            $obj->excluir();
+            if (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId) && is_numeric($notaExame)) {
+                DB::table('modules.nota_exame')->updateOrInsert(
+                    ['ref_cod_matricula' => $matricula->cod_matricula, 'ref_cod_componente_curricular' => $componenteCurricularId],
+                    ['nota_exame' => $notaExame]
+                );
+            }
+        } elseif (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId)) {
+            DB::table('modules.nota_exame')
+                ->where('ref_cod_matricula', $matricula->cod_matricula)
+                ->where('ref_cod_componente_curricular', $componenteCurricularId)
+                ->delete();
         }
     }
 

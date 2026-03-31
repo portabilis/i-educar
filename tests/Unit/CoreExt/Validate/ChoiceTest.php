@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_Validate_ChoiceTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_Validate_ChoiceTest extends TestCase
 {
     protected $_validator = null;
 

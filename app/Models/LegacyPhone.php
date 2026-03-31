@@ -22,6 +22,14 @@ class LegacyPhone extends Model
 {
     protected $table = 'cadastro.fone_pessoa';
 
+    public const TYPE_LANDLINE = 1;
+
+    public const TYPE_MOBILE = 2;
+
+    public const TYPE_MOBILE_ALT = 3;
+
+    public const TYPE_FAX = 4;
+
     public const CREATED_AT = 'data_cad';
 
     public const UPDATED_AT = 'data_rev';

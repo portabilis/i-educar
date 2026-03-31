@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Message;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -61,7 +62,7 @@ class MessageService
         return Message::with('user')->find($messageId);
     }
 
-    public function get(string $messageableType, int $messageableId): \Illuminate\Database\Eloquent\Collection
+    public function get(string $messageableType, int $messageableId): Collection
     {
         return Message::with('user')
             ->where('messageable_type', $messageableType)

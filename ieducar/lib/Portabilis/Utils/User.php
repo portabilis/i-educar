@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 class Portabilis_Utils_User
 {
     public static $_currentUserId;
@@ -11,7 +13,7 @@ class Portabilis_Utils_User
     public static function currentUserId()
     {
         if (empty(self::$_currentUserId)) {
-            self::$_currentUserId = \Illuminate\Support\Facades\Auth::id();
+            self::$_currentUserId = Auth::id();
         }
 
         return self::$_currentUserId;

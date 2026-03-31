@@ -10,12 +10,6 @@ return new class extends Migration
     public function up()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_situacao_historico_2025-01-23.sql')
-        );
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_situacao_historico_abreviado_2025-01-23.sql')
-        );
-        DB::unprepared(
             file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_situacao_componente_2025-01-23.sql')
         );
 
@@ -28,12 +22,6 @@ return new class extends Migration
 
         DB::unprepared(
             file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_situacao_componente_2020-01-01.sql')
-        );
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_situacao_historico_abreviado_2020-01-01.sql')
-        );
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_situacao_historico_2020-01-01.sql')
         );
     }
 };

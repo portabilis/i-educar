@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyIssuingBody;
+
 class clsDocumento
 {
     public $idpes;
@@ -106,9 +108,7 @@ class clsDocumento
         $this->zona_tit_eleitor = $int_zona_tit_eleitor;
         $this->secao_tit_eleitor = $int_secao_tit_eleitor;
 
-        $objOrgEmisRg = new clsOrgaoEmissorRg($int_idorg_exp_rg);
-
-        if ($objOrgEmisRg->detalhe()) {
+        if ($int_idorg_exp_rg && LegacyIssuingBody::whereKey($int_idorg_exp_rg)->exists()) {
             $this->idorg_exp_rg = $int_idorg_exp_rg;
         }
 

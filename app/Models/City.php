@@ -6,6 +6,7 @@ use App\Models\Builders\CityBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,13 @@ class City extends Model
      * Builder dos filtros
      */
     protected static string $builder = CityBuilder::class;
+
+    protected function nameWithState(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->name . '-' . $this->state?->abbreviation
+        );
+    }
 
     /**
      * @return BelongsTo<State, $this>

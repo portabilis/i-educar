@@ -14,6 +14,7 @@ use PromocaoApiController;
 class EnrollmentsPromotionJob implements ShouldQueue
 {
     use Batchable;
+    use Concerns\SetsAuditContext;
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
@@ -29,6 +30,7 @@ class EnrollmentsPromotionJob implements ShouldQueue
     public function handle(DatabaseManager $manager, PromocaoApiController $promocaoApiController): void
     {
         $manager->setDefaultConnection($this->databaseConnection);
+        $this->setAuditContextFromLaravelContext();
         @$promocaoApiController->processEnrollmentsPromotion(
             userId: $this->user,
             enrollmentsId: $this->enrollmentId,

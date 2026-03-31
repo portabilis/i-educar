@@ -7,6 +7,7 @@ use App\Models\LegacyTransferRequest;
 use App\Models\LegacyTransferType;
 use App\Models\LegacyUser;
 use App\Services\PromotionService;
+use App\Services\SchoolHistoryService;
 use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Support\Facades\DB;
 
@@ -259,7 +260,7 @@ return new class extends clsCadastro
                 }
             }
         }
-        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia(ref_cod_matricula: $this->ref_cod_matricula, pessoa_logada: $this->pessoa_logada);
+        app(SchoolHistoryService::class)->gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
         if ($this->escola_em_outro_municipio === 'on') {
             $this->ref_cod_escola = null;
@@ -297,7 +298,7 @@ return new class extends clsCadastro
                 try {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper)
                         ->updateSituation(notaAlunoId: $notaAlunoId, situacao: App_Model_MatriculaSituacao::TRANSFERIDO);
-                } catch (\Throwable) {
+                } catch (Throwable) {
                     DB::rollback();
                 }
             }

@@ -67,16 +67,9 @@ return new class extends clsDetalhe
         }
 
         // Cor/Raça.
-        $raca = new clsCadastroFisicaRaca(ref_idpes: $cod_pessoa);
-        $raca = $raca->detalhe();
-        if (is_array(value: $raca)) {
-            $nameRace = LegacyRace::query()
-                ->whereKey(id: $raca['ref_cod_raca'])
-                ->value(column: 'nm_raca');
-
-            if ($nameRace) {
-                $this->addDetalhe(detalhe: ['Raça', $nameRace]);
-            }
+        $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($cod_pessoa))->value('nm_raca');
+        if ($nameRace) {
+            $this->addDetalhe(detalhe: ['Raça', $nameRace]);
         }
 
         if ($detalhe['logradouro']) {

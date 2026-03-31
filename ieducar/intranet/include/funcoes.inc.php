@@ -99,6 +99,11 @@ function int2CEP($int)
     }
 }
 
+function onlyDigits($valor)
+{
+    return preg_replace('/\D/', '', $valor ?? '');
+}
+
 function limpa_acentos($str_nome)
 {
     $procura1 = ['á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ç', 'ã', 'õ', 'ô', 'ê'];

@@ -141,8 +141,6 @@ class clsPessoaFisica extends clsPessoaFj
             $orderBy .= 'COALESCE(f.nome_social, p.nome) ';
         }
 
-        $dba = new clsBanco;
-
         if ($where) {
             $where = 'WHERE ' . $where;
         }
@@ -160,7 +158,24 @@ class clsPessoaFisica extends clsPessoaFj
                     p.url as url,
                     \'F\' AS tipo,
                     p.email as email,
-                    f.cpf FROM cadastro.pessoa p INNER JOIN cadastro.fisica f ON true AND f.idpes = p.idpes %s %s %s',
+                    f.cpf,
+                    fp.ddd_1, fp.fone_1, fp.ddd_2, fp.fone_2,
+                    fp.ddd_mov, fp.fone_mov, fp.ddd_fax, fp.fone_fax
+             FROM cadastro.pessoa p
+             INNER JOIN cadastro.fisica f ON f.idpes = p.idpes
+             LEFT JOIN LATERAL (
+                 SELECT
+                     MAX(CASE WHEN tipo = 1 THEN ddd END) AS ddd_1,
+                     MAX(CASE WHEN tipo = 1 THEN fone END) AS fone_1,
+                     MAX(CASE WHEN tipo = 2 THEN ddd END) AS ddd_2,
+                     MAX(CASE WHEN tipo = 2 THEN fone END) AS fone_2,
+                     MAX(CASE WHEN tipo = 3 THEN ddd END) AS ddd_mov,
+                     MAX(CASE WHEN tipo = 3 THEN fone END) AS fone_mov,
+                     MAX(CASE WHEN tipo = 4 THEN ddd END) AS ddd_fax,
+                     MAX(CASE WHEN tipo = 4 THEN fone END) AS fone_fax
+                 FROM cadastro.fone_pessoa WHERE idpes = p.idpes
+             ) fp ON true
+             %s %s %s',
             $where,
             $orderBy,
             $limite
@@ -171,30 +186,6 @@ class clsPessoaFisica extends clsPessoaFj
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $tupla['total'] = $total;
-
-            $dba->Consulta(consulta: sprintf(
-                'SELECT
-                ddd_1, fone_1, ddd_2, fone_2, ddd_mov, fone_mov, ddd_fax, fone_fax
-                FROM
-                cadastro.v_fone_pessoa
-                WHERE idpes = %d',
-                $tupla['idpes']
-            ));
-
-            if ($dba->ProximoRegistro()) {
-                $tupla_fone = $dba->Tupla();
-            } else {
-                $tupla_fone = '';
-            }
-
-            $tupla['ddd_1'] = $tupla_fone['ddd_1'] ?? null;
-            $tupla['fone_1'] = $tupla_fone['fone_1'] ?? null;
-            $tupla['ddd_2'] = $tupla_fone['ddd_2'] ?? null;
-            $tupla['fone_2'] = $tupla_fone['fone_2'] ?? null;
-            $tupla['ddd_mov'] = $tupla_fone['ddd_mov'] ?? null;
-            $tupla['fone_mov'] = $tupla_fone['fone_mov'] ?? null;
-            $tupla['ddd_fax'] = $tupla_fone['ddd_fax'] ?? null;
-            $tupla['fone_fax'] = $tupla_fone['fone_fax'] ?? null;
 
             $resultado[] = $tupla;
         }

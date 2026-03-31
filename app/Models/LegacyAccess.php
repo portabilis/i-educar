@@ -36,6 +36,14 @@ class LegacyAccess extends LegacyModel
         'success' => 'sucesso',
     ];
 
+    protected $fillable = [
+        'ip_externo',
+        'ip_interno',
+        'cod_pessoa',
+        'obs',
+        'sucesso',
+    ];
+
     public function getLastAccess(): self
     {
         return $this->query()

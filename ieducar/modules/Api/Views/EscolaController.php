@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchool;
+use Illuminate\Support\Facades\Auth;
 
 class EscolaController extends ApiCoreController
 {
@@ -469,7 +470,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasMultipleSearch()
     {
-        $cod_usuario = \Illuminate\Support\Facades\Auth::id();
+        $cod_usuario = Auth::id();
         $permissao = new clsPermissoes;
         $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
@@ -556,7 +557,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasSelecao()
     {
-        $userId = \Illuminate\Support\Facades\Auth::id();
+        $userId = Auth::id();
         $permissao = new clsPermissoes;
         $nivel = $permissao->nivel_acesso($userId);
 

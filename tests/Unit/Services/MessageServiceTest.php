@@ -8,6 +8,7 @@ use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyUserTypeFactory;
 use Database\Factories\MessageFactory;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -71,7 +72,7 @@ test('update message with invalid message id', function () {
     $user = LegacyUserFactory::new()->create();
     $newDescription = 'Updated description';
 
-    $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+    $this->expectException(ModelNotFoundException::class);
     $this->messageService->update(99999, $user->id, $newDescription);
 });
 
@@ -103,7 +104,7 @@ test('delete message without permission', function () {
 test('delete message with invalid message id', function () {
     $user = LegacyUserFactory::new()->create();
 
-    $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+    $this->expectException(ModelNotFoundException::class);
     $this->messageService->delete(99999, $user->id);
 });
 

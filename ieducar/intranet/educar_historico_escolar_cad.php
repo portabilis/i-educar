@@ -2,9 +2,13 @@
 
 use App\Models\Country;
 use App\Models\LegacyInstitution;
+use App\Models\LegacySchoolHistory;
+use App\Models\LegacySchoolHistoryDiscipline;
 use App\Models\RegistrationStatus;
 use App\Models\State;
+use App\Services\SchoolHistoryService;
 use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
 {
@@ -93,11 +97,10 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial)) {
-            $obj = new clsPmieducarHistoricoEscolar(ref_cod_aluno: $this->ref_cod_aluno, sequencial: $this->sequencial);
-            $registro = $obj->detalhe();
+            $registro = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
 
             if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro->getAttributes() as $campo => $val) {
                     $this->$campo = $val;
                 }
 
@@ -130,15 +133,8 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        if (isset($_GET['ref_cod_aluno'], $_GET['sequencial'])) {
-            $objCodNomeEscola = new clsPmieducarHistoricoEscolar(ref_cod_aluno: $_GET['ref_cod_aluno'], sequencial: $_GET['sequencial']);
-            $registro = $objCodNomeEscola->detalhe();
-
-            if ($registro) {
-                $nomeEscola = $registro['escola'];
-                $codigoEscola = $registro['ref_cod_escola'];
-            }
-        }
+        $nomeEscola = $this->escola;
+        $codigoEscola = $this->ref_cod_escola;
 
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
@@ -221,7 +217,7 @@ return new class extends clsCadastro
         $this->campoNumero(nome: 'ano', campo: 'Ano', valor: $this->ano, tamanhovisivel: 4, tamanhomaximo: 4, obrigatorio: true);
 
         if ($this->validaControlePosicaoHistorico()) {
-            $this->campoNumero(nome: 'posicao', campo: 'Posição', valor: $this->posicao, tamanhovisivel: 1, tamanhomaximo: 1, obrigatorio: true, descricao: 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2');
+            $this->campoNumero(nome: 'posicao', campo: 'Posição', valor: $this->posicao, tamanhovisivel: 1, tamanhomaximo: 1, obrigatorio: false, descricao: 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2');
         }
 
         $this->campoNumero(nome: 'carga_horaria', campo: 'Carga Horária', valor: $this->carga_horaria, tamanhovisivel: 8, tamanhomaximo: 8);
@@ -256,21 +252,21 @@ return new class extends clsCadastro
         $this->campoQuebra();
 
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial) && !$_POST) {
-            $obj = new clsPmieducarHistoricoDisciplinas;
-            $obj->setOrderby('nm_disciplina ASC');
-            $registros = $obj->lista(int_ref_ref_cod_aluno: $this->ref_cod_aluno, int_ref_sequencial: $this->sequencial);
+            $historicoEscolar = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
+
+            $registros = $historicoEscolar?->disciplines()->orderBy('nm_disciplina')->get();
             $qtd_disciplinas = 0;
 
             if ($registros) {
                 foreach ($registros as $campo) {
-                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo['nm_disciplina'];
-                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo['tipo_base'];
-                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo['nota'];
-                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo['faltas'];
-                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo['carga_horaria_disciplina'];
-                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo['ordenamento'];
-                    $this->historico_disciplinas[$qtd_disciplinas][] = dbBool($campo['dependencia']) ? 1 : 0;
-                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo['sequencial'];
+                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo->nm_disciplina;
+                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo->tipo_base;
+                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo->nota;
+                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo->faltas;
+                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo->carga_horaria_disciplina;
+                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo->ordenamento;
+                    $this->historico_disciplinas[$qtd_disciplinas][] = dbBool($campo->dependencia) ? 1 : 0;
+                    $this->historico_disciplinas[$qtd_disciplinas][] = $campo->sequencial;
                     $qtd_disciplinas++;
                 }
             }
@@ -316,71 +312,25 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $this->frequencia = $this->fixupFrequencia($this->frequencia);
-        $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
+        $service = app(SchoolHistoryService::class);
+        $instituicao = LegacyInstitution::active()->first();
+        $schoolName = is_numeric($this->ref_cod_escola) ? $service->getSchoolName($this->ref_cod_escola) : null;
 
-        $instituicao = $instituicao = LegacyInstitution::active()->first();
+        DB::transaction(function () use ($instituicao, $schoolName, $service) {
+            $faltasGlobalizadas = is_numeric($this->faltas_globalizadas) ? $this->faltas_globalizadas : null;
+            $attributes = $this->buildHistoricoAttributes($instituicao, $schoolName, $faltasGlobalizadas);
 
-        $obj = new clsPmieducarHistoricoEscolar(
-            ref_cod_aluno: $this->ref_cod_aluno,
-            ref_usuario_cad: $this->pessoa_logada,
-            nm_serie: $this->nm_serie,
-            ano: $this->ano,
-            carga_horaria: $this->carga_horaria,
-            dias_letivos: $this->dias_letivos,
-            escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao?->cidade),
-            escola_uf: $this->escola_uf ?: $instituicao?->ref_sigla_uf,
-            observacao: $this->observacao,
-            aprovado: $this->aprovado,
-            ativo: 1,
-            faltas_globalizadas: $this->faltas_globalizadas,
-            ref_cod_instituicao: $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
-            origem: 1,
-            extra_curricular: $this->extra_curricular,
-            frequencia: $this->frequencia,
-            registro: $this->registro,
-            livro: $this->livro,
-            folha: $this->folha,
-            nm_curso: $this->nm_curso,
-            historico_grade_curso_id: $this->historico_grade_curso_id,
-            aceleracao: $this->aceleracao,
-            ref_cod_escola: $this->ref_cod_escola,
-            dependencia: !is_null($this->dependencia),
-            posicao: $this->posicao
-        );
-        $cadastrou = $obj->cadastra();
+            $historicoEscolar = LegacySchoolHistory::create(array_merge($attributes, [
+                'ref_cod_aluno' => $this->ref_cod_aluno,
+                'sequencial' => $service->getNextSequencial($this->ref_cod_aluno),
+                'ref_usuario_cad' => $this->pessoa_logada,
+            ]));
 
-        if ($cadastrou) {
+            $this->createDisciplines($historicoEscolar);
+        });
 
-            // --------------CADASTRA DISCIPLINAS--------------//
-            if ($this->nm_disciplina) {
-                $sequencial = 1;
-
-                foreach ($this->nm_disciplina as $key => $disciplina) {
-                    $obj_historico = new clsPmieducarHistoricoEscolar;
-                    $this->sequencial = $obj_historico->getMaxSequencial($this->ref_cod_aluno);
-
-                    $obj = new clsPmieducarHistoricoDisciplinas(sequencial: $sequencial, ref_ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial, nm_disciplina: $disciplina, nota: $this->nota[$key], faltas: $this->faltas[$key], ordenamento: $this->ordenamento[$key], carga_horaria_disciplina: $this->carga_horaria_disciplina[$key], dependencia: $this->disciplinaDependencia[$key] == 'on' ? true : false, tipo_base: $this->tipo_base[$key]);
-                    $cadastrou1 = $obj->cadastra();
-
-                    if (!$cadastrou1) {
-                        $this->mensagem = 'Cadastro não realizado.<br>';
-
-                        return false;
-                    }
-
-                    $sequencial++;
-                }
-
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-            }
-            // --------------FIM CADASTRA DISCIPLINAS--------------//
-        }
-        $this->mensagem = 'Cadastro não realizado.<br>';
-
-        return false;
+        $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
+        $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
     }
 
     public function Editar()
@@ -388,80 +338,29 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $this->frequencia = $this->fixupFrequencia($this->frequencia);
-
-        $faltasGlobalizadas = $this->faltas_globalizadas;
-
-        if ($this->cb_faltas_globalizadas !== 'on') {
-            $faltasGlobalizadas = 'NULL';
-        }
-
-        $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
-        $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
-
+        $service = app(SchoolHistoryService::class);
         $instituicao = LegacyInstitution::active()->first();
+        $schoolName = is_numeric($this->ref_cod_escola) ? $service->getSchoolName($this->ref_cod_escola) : null;
+        $faltasGlobalizadas = $this->cb_faltas_globalizadas === 'on' ? $this->faltas_globalizadas : null;
 
-        $obj = new clsPmieducarHistoricoEscolar(
-            ref_cod_aluno: $this->ref_cod_aluno,
-            sequencial: $this->sequencial,
-            ref_usuario_exc: $this->pessoa_logada,
-            nm_serie: $this->nm_serie,
-            ano: $this->ano,
-            carga_horaria: $this->carga_horaria,
-            dias_letivos: $this->dias_letivos,
-            escola: mb_strtoupper($this->escola),
-            escola_cidade: mb_strtoupper($this->escola_cidade ?: $instituicao?->cidade),
-            escola_uf: $this->escola_uf ?: $instituicao?->ref_sigla_uf,
-            observacao: $this->observacao,
-            aprovado: $this->aprovado,
-            ativo: 1,
-            faltas_globalizadas: $faltasGlobalizadas,
-            ref_cod_instituicao: $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
-            origem: 1,
-            extra_curricular: $this->extra_curricular,
-            frequencia: $this->frequencia,
-            registro: $this->registro,
-            livro: $this->livro,
-            folha: $this->folha,
-            nm_curso: $this->nm_curso,
-            historico_grade_curso_id: $this->historico_grade_curso_id,
-            aceleracao: $this->aceleracao,
-            ref_cod_escola: $this->ref_cod_escola,
-            dependencia: !is_null($this->dependencia),
-            posicao: $this->posicao
-        );
+        DB::transaction(function () use ($instituicao, $faltasGlobalizadas, $schoolName) {
+            $attributes = $this->buildHistoricoAttributes($instituicao, $schoolName, $faltasGlobalizadas);
 
-        $editou = $obj->edita();
+            $historicoEscolar = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->firstOrFail();
 
-        if ($editou) {
+            $historicoEscolar->update(array_merge($attributes, [
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'data_exclusao' => now(),
+            ]));
 
-            // --------------EDITA DISCIPLINAS--------------//
             if ($this->nm_disciplina) {
-                $obj = new clsPmieducarHistoricoDisciplinas;
-                $excluiu = $obj->excluirTodos(ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial);
-                if ($excluiu) {
-                    $sequencial = 1;
-                    foreach ($this->nm_disciplina as $key => $disciplina) {
-                        // $campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
-
-                        $obj = new clsPmieducarHistoricoDisciplinas(sequencial: $sequencial, ref_ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial, nm_disciplina: $disciplina, nota: $this->nota[$key], faltas: $this->faltas[$key], ordenamento: $this->ordenamento[$key], carga_horaria_disciplina: $this->carga_horaria_disciplina[$key], dependencia: $this->disciplinaDependencia[$key] == 'on' ? true : false, tipo_base: $this->tipo_base[$key]);
-                        $cadastrou1 = $obj->cadastra();
-                        if (!$cadastrou1) {
-                            $this->mensagem = 'Cadastro não realizado.<br>';
-
-                            return false;
-                        }
-                        $sequencial++;
-                    }
-                }
-                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-                $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+                $historicoEscolar->disciplines()->delete();
+                $this->createDisciplines($historicoEscolar);
             }
-            // --------------FIM EDITA DISCIPLINAS--------------//
-        }
-        $this->mensagem = 'Edição não realizada.<br>';
+        });
 
-        return false;
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
+        $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
     }
 
     public function Excluir()
@@ -469,31 +368,76 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $obj = new clsPmieducarHistoricoEscolar(ref_cod_aluno: $this->ref_cod_aluno, sequencial: $this->sequencial, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, nm_serie: null, ano: null, carga_horaria: null, dias_letivos: null, escola: null, escola_cidade: null, escola_uf: null, observacao: null, aprovado: null, data_cadastro: null, data_exclusao: null, ativo: 0);
+        $historicoEscolar = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->firstOrFail();
 
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $obj = new clsPmieducarHistoricoDisciplinas;
-            $excluiu = $obj->excluirTodos(ref_cod_aluno: $this->ref_cod_aluno, ref_sequencial: $this->sequencial);
-            if ($excluiu) {
-                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-                $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-            }
-        }
+        DB::transaction(function () use ($historicoEscolar) {
+            $historicoEscolar->update([
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'ativo' => 0,
+                'data_exclusao' => now(),
+            ]);
+            $historicoEscolar->disciplines()->delete();
+        });
 
-        $this->mensagem = 'Exclusão não realizada.<br>';
-
-        return false;
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
+        $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
     }
 
-    protected function fixupFrequencia($frequencia)
+    private function buildHistoricoAttributes($instituicao, ?string $schoolName, $faltasGlobalizadas): array
     {
-        if (strpos(haystack: $frequencia, needle: ',')) {
-            $frequencia = str_replace(search: '.', replace: '', subject: $frequencia);
-            $frequencia = str_replace(search: ',', replace: '.', subject: $frequencia);
+        return [
+            'nm_serie' => $this->nm_serie,
+            'ano' => $this->ano,
+            'carga_horaria' => is_numeric($this->carga_horaria) ? $this->carga_horaria : null,
+            'dias_letivos' => is_numeric($this->dias_letivos) ? $this->dias_letivos : null,
+            'escola' => $schoolName ?? $this->escola,
+            'escola_cidade' => $this->escola_cidade ?: $instituicao?->cidade,
+            'escola_uf' => $this->escola_uf ?: $instituicao?->ref_sigla_uf,
+            'observacao' => $this->observacao,
+            'aprovado' => $this->aprovado,
+            'ativo' => 1,
+            'faltas_globalizadas' => $faltasGlobalizadas,
+            'ref_cod_instituicao' => $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
+            'origem' => 1,
+            'extra_curricular' => is_null($this->extra_curricular) ? 0 : 1,
+            'frequencia' => $this->frequencia,
+            'registro' => $this->registro,
+            'livro' => $this->livro,
+            'folha' => $this->folha,
+            'nm_curso' => $this->nm_curso,
+            'historico_grade_curso_id' => $this->historico_grade_curso_id,
+            'aceleracao' => is_null($this->aceleracao) ? 0 : 1,
+            'ref_cod_escola' => is_numeric($this->ref_cod_escola) ? $this->ref_cod_escola : null,
+            'dependencia' => !is_null($this->dependencia),
+            'posicao' => is_numeric($this->posicao) ? $this->posicao : null,
+        ];
+    }
+
+    private function createDisciplines(LegacySchoolHistory $historicoEscolar): void
+    {
+        if (!$this->nm_disciplina) {
+            return;
         }
 
-        return $frequencia;
+        foreach ($this->nm_disciplina as $key => $disciplina) {
+            $faltas = $this->faltas[$key] ?? null;
+            $ordenamento = $this->ordenamento[$key] ?? null;
+            $cargaHoraria = $this->carga_horaria_disciplina[$key] ?? null;
+
+            LegacySchoolHistoryDiscipline::create([
+                'historico_escolar_id' => $historicoEscolar->id,
+                'ref_ref_cod_aluno' => $this->ref_cod_aluno,
+                'ref_sequencial' => $historicoEscolar->sequencial,
+                'sequencial' => $key + 1,
+                'nm_disciplina' => $disciplina,
+                'nota' => $this->nota[$key] ?? '',
+                'faltas' => is_numeric($faltas) ? $faltas : null,
+                'ordenamento' => is_numeric($ordenamento) ? $ordenamento : null,
+                'carga_horaria_disciplina' => is_numeric($cargaHoraria) ? $cargaHoraria : null,
+                'dependencia' => ($this->disciplinaDependencia[$key] ?? '') == 'on',
+                'tipo_base' => $this->tipo_base[$key] ?? 1,
+            ]);
+        }
     }
 
     public function habilitaCargaHoraria($instituicao)

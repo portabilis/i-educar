@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyPhone;
+use App\Services\PhoneService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use Illuminate\Support\Facades\Auth;
 
@@ -197,21 +199,33 @@ return new class extends clsCadastro
             capital_social: $this->capital_social
         ))->cadastra();
 
-        if ($this->telefone_1) {
-            $this->cadastraTelefone(codPessoaJuridica: $this->cod_pessoa_fj, tipo: 1, telefone: $this->telefone_1, dddTelefone: $this->ddd_telefone_1);
-        }
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_LANDLINE,
+            ddd: $this->ddd_telefone_1,
+            phone: $this->telefone_1
+        );
 
-        if ($this->telefone_2) {
-            $this->cadastraTelefone(codPessoaJuridica: $this->cod_pessoa_fj, tipo: 2, telefone: $this->telefone_2, dddTelefone: $this->ddd_telefone_2);
-        }
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_MOBILE,
+            ddd: $this->ddd_telefone_2,
+            phone: $this->telefone_2
+        );
 
-        if ($this->telefone_mov) {
-            $this->cadastraTelefone(codPessoaJuridica: $this->cod_pessoa_fj, tipo: 3, telefone: $this->telefone_mov, dddTelefone: $this->ddd_telefone_mov);
-        }
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_MOBILE_ALT,
+            ddd: $this->ddd_telefone_mov,
+            phone: $this->telefone_mov
+        );
 
-        if ($this->telefone_fax) {
-            $this->cadastraTelefone(codPessoaJuridica: $this->cod_pessoa_fj, tipo: 4, telefone: $this->telefone_fax, dddTelefone: $this->ddd_telefone_fax);
-        }
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_FAX,
+            ddd: $this->ddd_telefone_fax,
+            phone: $this->telefone_fax
+        );
 
         $this->saveAddress(person: $this->cod_pessoa_fj);
 
@@ -220,30 +234,6 @@ return new class extends clsCadastro
         $this->simpleRedirect(url: 'empresas_lst.php');
 
         return true;
-    }
-
-    private function cadastraTelefone($codPessoaJuridica, $tipo, $telefone, $dddTelefone)
-    {
-        $telefone = $this->limpaDadosTelefone(telefone: $telefone);
-
-        if ($this->validaDadosTelefone(telefone: $telefone)) {
-            (new clsPessoaTelefone(
-                int_idpes: $codPessoaJuridica,
-                int_tipo: $tipo,
-                str_fone: $telefone,
-                str_ddd: $dddTelefone
-            ))->cadastra();
-        }
-    }
-
-    private function limpaDadosTelefone($telefone)
-    {
-        return trim(string: str_replace(search: '-', replace: '', subject: $telefone));
-    }
-
-    private function validaDadosTelefone($telefone)
-    {
-        return is_numeric(value: $telefone) && (strlen(string: $telefone) < 12);
     }
 
     /**
@@ -342,64 +332,33 @@ return new class extends clsCadastro
         );
         $objJuridica->edita();
 
-        if ($this->telefone_1) {
-            $this->telefone_1 = str_replace(search: '-', replace: '', subject: $this->telefone_1);
-            $this->telefone_1 = trim(string: $this->telefone_1);
-            if (is_numeric(value: $this->telefone_1) && (strlen(string: $this->telefone_1) < 12)) {
-                $objTelefone = new clsPessoaTelefone(int_idpes: $this->cod_pessoa_fj, int_tipo: 1, str_fone: $this->telefone_1, str_ddd: $this->ddd_telefone_1);
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
-                }
-            }
-        }
-        if ($this->telefone_2) {
-            $this->telefone_2 = str_replace(search: '-', replace: '', subject: $this->telefone_2);
-            $this->telefone_2 = trim(string: $this->telefone_2);
-            if (is_numeric(value: $this->telefone_2) && (strlen(string: $this->telefone_2) < 12)) {
-                $objTelefone = new clsPessoaTelefone(int_idpes: $this->cod_pessoa_fj, int_tipo: 2, str_fone: $this->telefone_2, str_ddd: $this->ddd_telefone_2);
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
-                }
-            }
-        }
-        if ($this->telefone_mov) {
-            $this->telefone_mov = str_replace(search: '-', replace: '', subject: $this->telefone_mov);
-            $this->telefone_mov = trim(string: $this->telefone_mov);
-            if (is_numeric(value: $this->telefone_mov) && (strlen(string: $this->telefone_mov) < 12)) {
-                $objTelefone = new clsPessoaTelefone(
-                    int_idpes: $this->cod_pessoa_fj,
-                    int_tipo: 3,
-                    str_fone: $this->telefone_mov,
-                    str_ddd: $this->ddd_telefone_mov
-                );
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
-                }
-            }
-        }
-        if ($this->telefone_fax) {
-            $this->telefone_fax = str_replace(search: '-', replace: '', subject: $this->telefone_fax);
-            $this->telefone_fax = trim(string: $this->telefone_fax);
-            if (is_numeric(value: $this->telefone_fax) && (strlen(string: $this->telefone_fax) < 12)) {
-                $objTelefone = new clsPessoaTelefone(
-                    int_idpes: $this->cod_pessoa_fj,
-                    int_tipo: 4,
-                    str_fone: $this->telefone_fax,
-                    str_ddd: $this->ddd_telefone_fax
-                );
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
-                }
-            }
-        }
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_LANDLINE,
+            ddd: $this->ddd_telefone_1,
+            phone: $this->telefone_1
+        );
+
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_MOBILE,
+            ddd: $this->ddd_telefone_2,
+            phone: $this->telefone_2
+        );
+
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_MOBILE_ALT,
+            ddd: $this->ddd_telefone_mov,
+            phone: $this->telefone_mov
+        );
+
+        app(PhoneService::class)->save(
+            personId: $this->cod_pessoa_fj,
+            type: LegacyPhone::TYPE_FAX,
+            ddd: $this->ddd_telefone_fax,
+            phone: $this->telefone_fax
+        );
 
         $this->saveAddress(person: $this->cod_pessoa_fj, optionalFields: true);
         $this->mensagem = 'Edição efetuada com sucesso.';

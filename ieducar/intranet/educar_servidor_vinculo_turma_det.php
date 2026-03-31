@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolClassTeacher;
+
 return new class extends clsDetalhe
 {
     public $titulo;
@@ -30,12 +32,18 @@ return new class extends clsDetalhe
 
         $this->id = $_GET['id'];
 
-        $tmp_obj = new clsModulesProfessorTurma(id: $this->id);
-        $registro = $tmp_obj->detalhe();
+        $professorTurma = LegacySchoolClassTeacher::find($this->id);
+        $registro = $professorTurma?->getAttributes();
 
         if (!$registro) {
             $this->simpleRedirect(url: 'educar_servidor_professor_vinculo_lst.php');
         }
+
+        $turma = $professorTurma->schoolClass;
+        $registro['nm_turma'] = $turma?->nm_turma;
+        $registro['nm_serie'] = $turma?->grade?->nm_serie;
+        $registro['nm_curso'] = $turma?->grade?->course?->nm_curso;
+        $registro['nm_escola'] = $turma?->school?->person?->nome;
 
         $resources_funcao = [null => 'Selecione',
             1 => 'Docente',
