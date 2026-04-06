@@ -403,7 +403,7 @@ return new class extends clsCadastro
             ->pluck(column: 'nm_tipo', key: 'cod_turma_tipo')
             ->prepend(value: 'Selecione', key: '');
 
-        $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
+        $script = "javascript:showExpansivelIframe(520, 170, 'educar_turma_tipo_cad_pop.php?ref_cod_instituicao=' + document.getElementById('ref_cod_instituicao').value);";
 
         $script = sprintf(
             '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',

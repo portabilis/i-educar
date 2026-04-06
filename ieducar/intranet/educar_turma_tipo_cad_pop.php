@@ -31,6 +31,7 @@ return new class extends clsCadastro
         $retorno = 'Novo';
 
         $this->cod_turma_tipo = $_GET['cod_turma_tipo'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 570, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_turma_tipo_lst.php');
