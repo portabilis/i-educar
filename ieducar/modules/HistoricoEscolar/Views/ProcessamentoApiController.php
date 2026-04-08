@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\LegacySchoolHistory;
+use App\Models\LegacySchoolHistoryDiscipline;
+use App\Services\SchoolHistoryService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 // TODO migrar classe novo padrao api controller
@@ -112,7 +116,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function requiresLogin($raiseExceptionOnEmpty)
     {
         return $this->validatesPresenceOf(
-            \Illuminate\Support\Facades\Auth::id(),
+            Auth::id(),
             '',
             $raiseExceptionOnEmpty,
             'Usuário deve estar logado'
@@ -439,28 +443,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
             if ($this->existsHistorico($alunoId, $ano, $matriculaId)) {
                 $sequencial = $this->getSequencial($alunoId, $ano, $matriculaId);
-                $this->deleteHistoricoDisplinas($alunoId, $sequencial);
+                $historicoEscolar = LegacySchoolHistory::forStudentSequential($alunoId, $sequencial)->first();
 
-                $historicoEscolar = new clsPmieducarHistoricoEscolar(
-                    $ref_cod_aluno = $alunoId,
-                    $sequencial,
-                    $ref_usuario_exc = \Illuminate\Support\Facades\Auth::id(),
-                    $ref_usuario_cad = null,
-                    // TODO nm_curso
-                    $nm_serie = null,
-                    $ano,
-                    $carga_horaria = null,
-                    $dias_letivos = null,
-                    $escola = null,
-                    $escola_cidade = null,
-                    $escola_uf = null,
-                    $observacao = null,
-                    $aprovado = null,
-                    $data_cadastro = null,
-                    $data_exclusao = date('Y-m-d'),
-                    $ativo = 0
-                );
-                $historicoEscolar->edita();
+                if ($historicoEscolar) {
+                    $historicoEscolar->disciplines()->delete();
+                    $historicoEscolar->update([
+                        'ref_usuario_exc' => Auth::id(),
+                        'ativo' => 0,
+                        'data_exclusao' => now(),
+                    ]);
+                }
 
                 $this->appendMsg('Histórico escolar removido com sucesso', 'success');
             } else {
@@ -476,8 +468,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function deleteHistoricoDisplinas($alunoId, $historicoSequencial)
     {
-        $historicoDisciplinas = new clsPmieducarHistoricoDisciplinas;
-        $historicoDisciplinas->excluirTodos($alunoId, $historicoSequencial);
+        LegacySchoolHistory::forStudentSequential($alunoId, $historicoSequencial)
+            ->first()
+            ?->disciplines()
+            ->delete();
     }
 
     protected function getdadosEscola($escolaId)
@@ -494,14 +488,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $params = ['params' => [$escolaId], 'return_only' => 'first-line'];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
-    }
-
-    protected function getNextHistoricoSequencial($alunoId)
-    {
-        // A consulta leva em consideração historicos inativos pois o sequencial é chave composta com ref_cod_aluno id
-        $sql = 'select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $1';
-
-        return Portabilis_Utils_Database::selectField($sql, $alunoId);
     }
 
     protected function getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId)
@@ -573,86 +559,31 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $ano = $dadosMatricula['ano'];
                 $isNewHistorico = !$this->existsHistorico($alunoId, $ano, $matriculaId);
 
+                $historicoData = $this->buildHistoricoData($alunoId, $dadosMatricula, $dadosEscola, $matriculaId);
+
                 if ($isNewHistorico) {
-                    $sequencial = $this->getNextHistoricoSequencial($alunoId);
+                    $sequencial = app(SchoolHistoryService::class)->getNextSequencial($alunoId);
 
-                    $historicoEscolar = new clsPmieducarHistoricoEscolar(
-                        $alunoId,
-                        $sequencial,
-                        $ref_usuario_exc = null,
-                        $ref_usuario_cad = \Illuminate\Support\Facades\Auth::id(),
-                        $dadosMatricula['nome_serie'],
-                        $ano,
-                        $this->getCargaHorariaDisciplinas($alunoId),
-                        $this->getRequest()->dias_letivos,
-                        mb_strtoupper($dadosEscola['nome']),
-                        mb_strtoupper($dadosEscola['cidade']),
-                        $dadosEscola['uf'],
-                        $this->getRequest()->observacao,
-                        $this->getSituacaoMatricula(),
-                        $data_cadastro = date('Y-m-d'),
-                        $data_exclusao = null,
-                        $ativo = 1,
-                        $this->getFaltaGlobalizada($defaultValue = 'null'),
-                        $dadosMatricula['instituicao_id'],
-                        $origem = 1,
-                        $this->getRequest()->extra_curricular,
-                        $matriculaId,
-                        $this->getPercentualFrequencia(),
-                        $this->getRequest()->registro,
-                        $this->getRequest()->livro,
-                        $this->getRequest()->folha,
-                        $dadosMatricula['nome_curso'],
-                        $this->getRequest()->grade_curso_id,
-                        null,
-                        $dadosMatricula['escola_id'],
-                        $this->getRequest()->dependencia,
-                        $this->getRequest()->posicao
-                    );
+                    $historicoEscolar = LegacySchoolHistory::create(array_merge($historicoData, [
+                        'ref_cod_aluno' => $alunoId,
+                        'sequencial' => $sequencial,
+                        'ref_usuario_cad' => Auth::id(),
+                    ]));
 
-                    $historicoEscolar->cadastra();
-                    $this->recreateHistoricoDisciplinas($sequencial, $alunoId, $dadosMatricula['turma_id']);
+                    $this->recreateHistoricoDisciplinas($sequencial, $alunoId, $dadosMatricula['turma_id'], $historicoEscolar->id);
 
                     $this->appendMsg('Histórico processado com sucesso', 'success');
                 } else {
                     $sequencial = $this->getSequencial($alunoId, $ano, $matriculaId);
 
-                    $historicoEscolar = new clsPmieducarHistoricoEscolar(
-                        $alunoId,
-                        $sequencial,
-                        \Illuminate\Support\Facades\Auth::id(),
-                        $ref_usuario_cad = null,
-                        $dadosMatricula['nome_serie'],
-                        $ano,
-                        $this->getCargaHorariaDisciplinas($alunoId),
-                        $this->getRequest()->dias_letivos,
-                        mb_strtoupper($dadosEscola['nome']),
-                        mb_strtoupper($dadosEscola['cidade']),
-                        $dadosEscola['uf'],
-                        $this->getRequest()->observacao,
-                        $this->getSituacaoMatricula(),
-                        $data_cadastro = null,
-                        $data_exclusao = null,
-                        $ativo = 1,
-                        $this->getFaltaGlobalizada($defaultValue = 'null'),
-                        $dadosMatricula['instituicao_id'],
-                        $origem = 1,
-                        $this->getRequest()->extra_curricular,
-                        $matriculaId,
-                        $this->getPercentualFrequencia(),
-                        $this->getRequest()->registro,
-                        $this->getRequest()->livro,
-                        $this->getRequest()->folha,
-                        $dadosMatricula['nome_curso'],
-                        $this->getRequest()->grade_curso_id,
-                        null,
-                        $dadosMatricula['escola_id'],
-                        $this->getRequest()->dependencia,
-                        $this->getRequest()->posicao
-                    );
+                    $historicoEscolar = LegacySchoolHistory::forStudentSequential($alunoId, $sequencial)->firstOrFail();
 
-                    $historicoEscolar->edita();
-                    $this->recreateHistoricoDisciplinas($sequencial, $alunoId, $dadosMatricula['turma_id']);
+                    $historicoEscolar->update(array_merge($historicoData, [
+                        'ref_usuario_exc' => Auth::id(),
+                        'data_exclusao' => now(),
+                    ]));
+
+                    $this->recreateHistoricoDisciplinas($sequencial, $alunoId, $dadosMatricula['turma_id'], $historicoEscolar->id);
                     $this->appendMsg('Histórico reprocessado com sucesso', 'success');
                 }
             } catch (Exception $e) {
@@ -669,21 +600,53 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
     }
 
+    private function buildHistoricoData(int $alunoId, array $dadosMatricula, array $dadosEscola, int $matriculaId): array
+    {
+        $faltasGlobalizadas = $this->getFaltaGlobalizada();
+
+        return [
+            'nm_serie' => $dadosMatricula['nome_serie'],
+            'ano' => $dadosMatricula['ano'],
+            'carga_horaria' => $this->getCargaHorariaDisciplinas($alunoId),
+            'dias_letivos' => $this->getRequest()->dias_letivos,
+            'escola' => $dadosEscola['nome'],
+            'escola_cidade' => $dadosEscola['cidade'],
+            'escola_uf' => $dadosEscola['uf'],
+            'observacao' => $this->getRequest()->observacao,
+            'aprovado' => $this->getSituacaoMatricula(),
+            'ativo' => 1,
+            'faltas_globalizadas' => is_numeric($faltasGlobalizadas) ? $faltasGlobalizadas : null,
+            'ref_cod_instituicao' => $dadosMatricula['instituicao_id'],
+            'origem' => 1,
+            'extra_curricular' => $this->getRequest()->extra_curricular,
+            'ref_cod_matricula' => $matriculaId,
+            'frequencia' => $this->getPercentualFrequencia(),
+            'registro' => $this->getRequest()->registro,
+            'livro' => $this->getRequest()->livro,
+            'folha' => $this->getRequest()->folha,
+            'nm_curso' => $dadosMatricula['nome_curso'],
+            'historico_grade_curso_id' => $this->getRequest()->grade_curso_id,
+            'ref_cod_escola' => $dadosMatricula['escola_id'],
+            'dependencia' => $this->getRequest()->dependencia,
+            'posicao' => $this->getRequest()->posicao,
+        ];
+    }
+
     protected function _createHistoricoDisciplinas($fields)
     {
-        $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(
-            $fields['sequencial'],
-            $fields['alunoId'],
-            $fields['historicoSequencial'],
-            $fields['nome'],
-            $fields['nota'],
-            $fields['falta'],
-            $fields['ordenamento'],
-            $fields['carga_horaria_disciplina'],
-            $fields['dependencia'],
-            $fields['tipo_base']
-        );
-        $historicoDisciplina->cadastra();
+        LegacySchoolHistoryDiscipline::create([
+            'historico_escolar_id' => $fields['historicoEscolarId'] ?? null,
+            'sequencial' => $fields['sequencial'],
+            'ref_ref_cod_aluno' => $fields['alunoId'],
+            'ref_sequencial' => $fields['historicoSequencial'],
+            'nm_disciplina' => $fields['nome'],
+            'nota' => $fields['nota'],
+            'faltas' => $fields['falta'] ?? null,
+            'ordenamento' => $fields['ordenamento'] ?? null,
+            'carga_horaria_disciplina' => $fields['carga_horaria_disciplina'] ?? null,
+            'dependencia' => $fields['dependencia'] ?? false,
+            'tipo_base' => $fields['tipo_base'] ?? 1,
+        ]);
     }
 
     protected function shouldProcessAreaConhecimento($areaConhecimento)
@@ -714,9 +677,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return $carga_horaria_disciplinas;
     }
 
-    protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId, $turmaId = null)
+    protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId, $turmaId = null, $historicoEscolarId = null)
     {
         $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
+
+        if (!$historicoEscolarId) {
+            $historicoEscolarId = LegacySchoolHistory::forStudentSequential($alunoId, $historicoSequencial)->value('id');
+        }
 
         if ($this->getRequest()->disciplinas === 'buscar-boletim') {
             $tpNota = $this->getService()->getRegra()->get('tipoNota');
@@ -796,6 +763,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 } else {
                     $this->_createHistoricoDisciplinas(
                         [
+                            'historicoEscolarId' => $historicoEscolarId,
                             'sequencial' => $sequencial,
                             'alunoId' => $alunoId,
                             'historicoSequencial' => $historicoSequencial,
@@ -825,6 +793,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
                     $this->_createHistoricoDisciplinas(
                         [
+                            'historicoEscolarId' => $historicoEscolarId,
                             'sequencial' => $sequencial,
                             'alunoId' => $alunoId,
                             'historicoSequencial' => $historicoSequencial,
@@ -862,6 +831,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
                 $this->_createHistoricoDisciplinas(
                     [
+                        'historicoEscolarId' => $historicoEscolarId,
                         'sequencial' => $sequencial,
                         'alunoId' => $alunoId,
                         'historicoSequencial' => $historicoSequencial,
@@ -881,9 +851,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function insereComponenteMediaGeral($historicoSequencial, $alunoId)
     {
         $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
-        $historicoEscolar = new clsPmieducarHistoricoEscolar($alunoId, $historicoSequencial);
 
-        $historicoEscolar->insereComponenteMediaGeral($sequencial);
+        app(SchoolHistoryService::class)->insertGlobalAverage($alunoId, $historicoSequencial, $sequencial);
     }
 
     protected function getFalta($situacaoFaltaComponenteCurricular = null)
@@ -1187,7 +1156,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $this->service = new Avaliacao_Service_Boletim(
                     [
                         'matricula' => $matriculaId,
-                        'usuario' => \Illuminate\Support\Facades\Auth::id(),
+                        'usuario' => Auth::id(),
                         'ignorarDispensasParciais' => true,
                     ]
                 );

@@ -12,6 +12,7 @@ use App\Services\RegistrationService;
 use App\User;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +40,7 @@ class UpdateRegistrationDateController extends Controller
      * Atualiza a data de entrada e enturmação de acordo com o filtro
      *
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function updateStatus(UpdateRegistrationDateRequest $request)
     {

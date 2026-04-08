@@ -4,10 +4,12 @@ use App\Models\City;
 use App\Models\EmployeeInep;
 use App\Models\Enums\SchoolCharacteristic;
 use App\Models\LegacyPerson;
+use App\Models\LegacyPhone;
 use App\Models\SchoolManager;
 use App\Models\SchoolSpace;
 use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
+use App\Services\PhoneService;
 use App\Services\SchoolManagerService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\AbastecimentoAgua;
@@ -41,6 +43,7 @@ use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducatio
 use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
+use iEducar\Support\Exceptions\Exception;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -1750,7 +1753,7 @@ return new class extends clsCadastro
         $pessoaJuridica = (new clsJuridica((int) $this->pessoaj_id_oculto))->detalhe();
 
         if ($pessoaJuridica === false) {
-            throw new \iEducar\Support\Exceptions\Exception('Pessoa jurídica não encontrada');
+            throw new Exception('Pessoa jurídica não encontrada');
         }
 
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
@@ -1947,19 +1950,40 @@ return new class extends clsCadastro
 
     private function processaTelefones($idpes)
     {
-        $objTelefone = new clsPessoaTelefone($idpes);
-        $objTelefone->excluiTodos();
+        $phoneService = app(PhoneService::class);
+        $phoneService->deleteAll($idpes);
 
-        $this->cadastraTelefone(idpes: $idpes, tipo: 1, telefone: str_replace(search: '-', replace: '', subject: $this->p_telefone_1), ddd: $this->p_ddd_telefone_1);
-        $this->cadastraTelefone(idpes: $idpes, tipo: 2, telefone: str_replace(search: '-', replace: '', subject: $this->p_telefone_2), ddd: $this->p_ddd_telefone_2);
-        $this->cadastraTelefone(idpes: $idpes, tipo: 3, telefone: str_replace(search: '-', replace: '', subject: $this->p_telefone_mov), ddd: $this->p_ddd_telefone_mov);
-        $this->cadastraTelefone(idpes: $idpes, tipo: 4, telefone: str_replace(search: '-', replace: '', subject: $this->p_telefone_fax), ddd: $this->p_ddd_telefone_fax);
+        $phoneService->save(
+            personId: $idpes,
+            type: LegacyPhone::TYPE_LANDLINE,
+            ddd: $this->p_ddd_telefone_1,
+            phone: $this->p_telefone_1,
+            userId: $this->pessoa_logada
+        );
 
-    }
+        $phoneService->save(
+            personId: $idpes,
+            type: LegacyPhone::TYPE_MOBILE,
+            ddd: $this->p_ddd_telefone_2,
+            phone: $this->p_telefone_2,
+            userId: $this->pessoa_logada
+        );
 
-    private function cadastraTelefone($idpes, $tipo, $telefone, $ddd)
-    {
-        return (new clsPessoaTelefone(int_idpes: $idpes, int_tipo: $tipo, str_fone: $telefone, str_ddd: $ddd, idpes_cad: $this->pessoa_logada))->cadastra();
+        $phoneService->save(
+            personId: $idpes,
+            type: LegacyPhone::TYPE_MOBILE_ALT,
+            ddd: $this->p_ddd_telefone_mov,
+            phone: $this->p_telefone_mov,
+            userId: $this->pessoa_logada
+        );
+
+        $phoneService->save(
+            personId: $idpes,
+            type: LegacyPhone::TYPE_FAX,
+            ddd: $this->p_ddd_telefone_fax,
+            phone: $this->p_telefone_fax,
+            userId: $this->pessoa_logada
+        );
     }
 
     public function cadastraEscola(int $pessoaj_id_oculto)

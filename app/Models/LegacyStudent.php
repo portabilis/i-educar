@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Ankurk91\Eloquent\HasBelongsToOne;
-use Ankurk91\Eloquent\Relations\BelongsToOne;
+use App\Models\Concerns\HasBelongsToOne;
+use App\Models\Relations\BelongsToOne;
 use App\Events\StudentCreated;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Traits\HasLegacyDates;

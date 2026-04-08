@@ -52,11 +52,13 @@ class LegacyUnificationStudentByHistoryAndRegistrationStudentOneAndTwoTest exten
         $schoolHistoryDisciplineOne = LegacySchoolHistoryDisciplineFactory::new()->create([
             'ref_ref_cod_aluno' => $schoolHistoryOne->student->getKey(),
             'ref_sequencial' => $schoolHistoryOne->sequencial,
+            'historico_escolar_id' => $schoolHistoryOne->id,
         ]);
 
         $schoolHistoryDisciplineTwo = LegacySchoolHistoryDisciplineFactory::new()->create([
             'ref_ref_cod_aluno' => $schoolHistoryTwo->student->getKey(),
             'ref_sequencial' => $schoolHistoryTwo->sequencial,
+            'historico_escolar_id' => $schoolHistoryTwo->id,
         ]);
 
         $request = [

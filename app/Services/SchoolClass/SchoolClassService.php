@@ -13,6 +13,7 @@ use App\Rules\CheckMandatoryCensoFields;
 use App\Rules\CheckSchoolClassExistsByName;
 use Carbon\Carbon;
 use iEducar\Modules\SchoolClass\Period;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -159,7 +160,7 @@ class SchoolClassService
     /**
      * Retorna os períodos que os alunos estão matriculados em uma turma
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getStudentsPeriods(int $schoolClassId)
     {

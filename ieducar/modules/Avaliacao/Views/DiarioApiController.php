@@ -14,6 +14,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class DiarioApiController extends ApiCoreController
@@ -1295,16 +1296,26 @@ class DiarioApiController extends ApiCoreController
 
     protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame)
     {
-        $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+        if (!is_numeric($matriculaId) || !is_numeric($componenteCurricularId) || !is_numeric($notaExame)) {
+            return;
+        }
 
-        return $obj->existe() ? $obj->edita() : $obj->cadastra();
+        DB::table('modules.nota_exame')->updateOrInsert(
+            ['ref_cod_matricula' => $matriculaId, 'ref_cod_componente_curricular' => $componenteCurricularId],
+            ['nota_exame' => $notaExame]
+        );
     }
 
     protected function deleteNotaExame($matriculaId, $componenteCurricularId)
     {
-        $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
+        if (!is_numeric($matriculaId) || !is_numeric($componenteCurricularId)) {
+            return;
+        }
 
-        return $obj->excluir();
+        DB::table('modules.nota_exame')
+            ->where('ref_cod_matricula', $matriculaId)
+            ->where('ref_cod_componente_curricular', $componenteCurricularId)
+            ->delete();
     }
 
     /**

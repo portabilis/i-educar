@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPhone;
 use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
 
@@ -137,26 +138,21 @@ class clsPessoaFj extends Model
         $filtros = '';
         $filtroTipo = '';
         $whereAnd = ' WHERE ';
-        $outros_filtros = false;
-        $filtro_cnpj = false;
 
         if (is_string($nome) && $nome != '') {
             $nome = pg_escape_string($nome);
 
-            $filtros .= "{$whereAnd} slug ILIKE '%{$nome}%'";
+            $filtros .= "{$whereAnd} p.slug ILIKE '%{$nome}%'";
             $whereAnd = ' AND ';
-            $outros_filtros = true;
         }
 
         if (is_numeric($idpes)) {
-            $filtros .= "{$whereAnd} idpes = '{$idpes}'";
+            $filtros .= "{$whereAnd} p.idpes = '{$idpes}'";
             $whereAnd = ' AND ';
-            $outros_filtros = true;
         }
 
         if (is_numeric($int_ref_cod_sistema)) {
-            $filtro_sistema = true;
-            $filtros .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR id_federal is not null)";
+            $filtros .= "{$whereAnd} (f.ref_cod_sistema = '{$int_ref_cod_sistema}' OR COALESCE(f.cpf, j.cnpj) IS NOT NULL)";
             $whereAnd = ' AND ';
         }
 
@@ -177,17 +173,15 @@ class clsPessoaFj extends Model
 
             if (is_array($array_idpes)) {
                 $array_idpes = implode(', ', $array_idpes);
-                $filtros .= "{$whereAnd} idpes IN ($array_idpes)";
+                $filtros .= "{$whereAnd} p.idpes IN ($array_idpes)";
                 $whereAnd = ' AND ';
-                $filtro_idfederal = true;
             } else {
                 return false;
             }
         }
 
         if (is_string($str_tipo_pessoa)) {
-            $filtroTipo .= " AND tipo  = '{$str_tipo_pessoa}' ";
-            $outros_filtros = true;
+            $filtroTipo .= " AND p.tipo = '{$str_tipo_pessoa}' ";
         }
 
         if (is_string($str_order_by)) {
@@ -200,38 +194,21 @@ class clsPessoaFj extends Model
             $limit = "LIMIT $limite OFFSET $inicio_limite";
         }
 
-        if ($filtro_idfederal) {
-            $this->_total = $db->CampoUnico(
-                sprintf('SELECT COUNT(0) FROM cadastro.v_pessoa_fj %s', $filtros)
-            );
-        } else {
-            if ($filtro_sistema && $outros_filtros == false || $filtro_cnpj) {
-                $this->_total = $db->CampoUnico(
-                    sprintf('SELECT COUNT(0) FROM cadastro.v_pessoafj_count %s', $filtros)
-                );
-            } else {
-                $this->_total = $db->CampoUnico(
-                    sprintf('SELECT COUNT(0) FROM cadastro.v_pessoa_fj %s', $filtros)
-                );
-            }
-        }
+        $fromJoins = 'cadastro.pessoa p
+            LEFT JOIN cadastro.fisica f ON f.idpes = p.idpes
+            LEFT JOIN cadastro.juridica j ON j.idpes = p.idpes';
+
+        $this->_total = $db->CampoUnico(
+            sprintf('SELECT COUNT(0) FROM %s %s', $fromJoins, $filtros)
+        );
 
         $sql = sprintf(
-            '
-      SELECT
-        idpes,
-        nome,
-        ref_cod_sistema,
-        fantasia,
-        tipo,
-        id_federal AS cpf,
-        id_federal AS cnpj,
-        id_federal
-      FROM
-        cadastro.v_pessoa_fj
-        %s
-        %s
-        %s',
+            'SELECT p.idpes, p.nome, f.ref_cod_sistema, j.fantasia, p.tipo,
+                COALESCE(f.cpf, j.cnpj) AS cpf,
+                COALESCE(f.cpf, j.cnpj) AS cnpj,
+                COALESCE(f.cpf, j.cnpj) AS id_federal
+            FROM %s %s %s %s',
+            $fromJoins,
             $filtros,
             $order,
             $limit
@@ -313,51 +290,30 @@ class clsPessoaFj extends Model
                 }
             }
 
-            $objFone = new clsPessoaTelefone;
-            $listaFone = $objFone->lista($this->idpes);
+            $listaFone = LegacyPhone::query()
+                ->where('idpes', $this->idpes)
+                ->get();
 
-            if ($listaFone) {
-                foreach ($listaFone as $fone) {
-                    if ($fone['tipo'] == 1) {
-                        $detalhePessoa['ddd_1'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_1'];
-                        $detalhePessoa['fone_1'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_1'];
+            foreach ($listaFone as $fone) {
+                $sufixo = match ((int) $fone->tipo) {
+                    LegacyPhone::TYPE_LANDLINE => '1',
+                    LegacyPhone::TYPE_MOBILE => '2',
+                    LegacyPhone::TYPE_MOBILE_ALT => 'mov',
+                    LegacyPhone::TYPE_FAX => 'fax',
+                    default => null,
+                };
 
-                        $this->ddd_1 = $fone['ddd'];
-                        $this->fone_1 = $fone['fone'];
-                    }
-
-                    if ($fone['tipo'] == 2) {
-                        $detalhePessoa['ddd_2'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_2'];
-                        $detalhePessoa['fone_2'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_2'];
-
-                        $this->ddd_2 = $fone['ddd'];
-                        $this->fone_2 = $fone['fone'];
-                    }
-
-                    if ($fone['tipo'] == 3) {
-                        $detalhePessoa['ddd_mov'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_mov'];
-                        $detalhePessoa['fone_mov'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_mov'];
-
-                        $this->ddd_mov = $fone['ddd'];
-                        $this->fone_mov = $fone['fone'];
-                    }
-
-                    if ($fone['tipo'] == 4) {
-                        $detalhePessoa['ddd_fax'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_fax'];
-                        $detalhePessoa['fone_fax'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_fax'];
-
-                        $this->ddd_fax = $fone['ddd'];
-                        $this->fone_fax = $fone['fone'];
-                    }
+                if ($sufixo === null) {
+                    continue;
                 }
+
+                $detalhePessoa["ddd_{$sufixo}"] = $fone->ddd;
+                $detalhePessoa[] = &$detalhePessoa["ddd_{$sufixo}"];
+                $detalhePessoa["fone_{$sufixo}"] = $fone->fone;
+                $detalhePessoa[] = &$detalhePessoa["fone_{$sufixo}"];
+
+                $this->{"ddd_{$sufixo}"} = $fone->ddd;
+                $this->{"fone_{$sufixo}"} = $fone->fone;
             }
 
             $obj_documento = new clsDocumento($this->idpes);

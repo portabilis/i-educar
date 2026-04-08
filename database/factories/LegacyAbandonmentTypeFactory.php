@@ -6,7 +6,7 @@ use App\Models\LegacyAbandonmentType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LegacyAbandonmentType>
+ * @extends Factory<LegacyAbandonmentType>
  */
 class LegacyAbandonmentTypeFactory extends Factory
 {

@@ -1,10 +1,11 @@
 <?php
 
+use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
 class AddColumnsEnrollmentInfo extends Migration
 {
-    use \App\Support\Database\AsView;
+    use AsView;
 
     /**
      * Run the migrations.

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolHistory;
+
 return new class extends clsListagem
 {
     public $pessoa_logada;
@@ -58,22 +60,20 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_historico_escolar = new clsPmieducarHistoricoEscolar;
-        $obj_historico_escolar->setOrderby('ano, sequencial ASC');
-        $obj_historico_escolar->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $query = LegacySchoolHistory::query()
+            ->active()
+            ->forStudent($this->ref_cod_aluno)
+            ->when($this->ano, fn ($q) => $q->where('ano', $this->ano))
+            ->when($this->ref_cod_instituicao, fn ($q) => $q->where('ref_cod_instituicao', $this->ref_cod_instituicao))
+            ->when(isset($this->extra_curricular) && $this->extra_curricular !== '', fn ($q) => $q->where('extra_curricular', $this->extra_curricular))
+            ->orderBy('ano')
+            ->orderBy('sequencial');
 
-        $lista = $obj_historico_escolar->lista(
-            int_ref_cod_aluno: $this->ref_cod_aluno,
-            int_ano: $this->ano,
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao,
-            int_extra_curricular: $this->extra_curricular
-        );
-
-        $total = $obj_historico_escolar->_total;
+        $total = $query->count();
+        $lista = $query->offset($this->offset)->limit($this->limite)->get();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
                 $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();

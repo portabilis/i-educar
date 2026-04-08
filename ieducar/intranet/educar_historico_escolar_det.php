@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolHistory;
 use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 return new class extends clsDetalhe
@@ -55,12 +56,13 @@ return new class extends clsDetalhe
         $this->sequencial = $_GET['sequencial'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
-        $tmp_obj = new clsPmieducarHistoricoEscolar(ref_cod_aluno: $this->ref_cod_aluno, sequencial: $this->sequencial);
-        $registro = $tmp_obj->detalhe();
+        $historicoModel = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
 
-        if (!$registro) {
+        if (!$historicoModel) {
             $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
+
+        $registro = $historicoModel->getAttributes();
 
         $obj_aluno = new clsPmieducarAluno;
         $lst_aluno = $obj_aluno->lista(int_cod_aluno: $registro['ref_cod_aluno'], int_ativo: 1);
@@ -161,11 +163,9 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Folha', "{$registro['folha']}"]);
         }
 
-        $obj = new clsPmieducarHistoricoDisciplinas;
-        $obj->setOrderby('nm_disciplina ASC');
-        $lst = $obj->lista(int_ref_ref_cod_aluno: $this->ref_cod_aluno, int_ref_sequencial: $this->sequencial);
+        $lst = $historicoModel->disciplines()->orderBy('nm_disciplina')->get()->toArray();
 
-        $qtd_disciplinas = $obj->_total;
+        $qtd_disciplinas = count($lst ?? []);
         if ($lst) {
             $tabela = '<table>
                            <tr align=\'center\'>

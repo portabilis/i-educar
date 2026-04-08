@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 class clsJuridica
 {
     public $idpes;
@@ -25,7 +27,7 @@ class clsJuridica
     /**
      * Construtor
      *
-     * @return Object:clsEstadoCivil
+     * @return void
      */
     public function __construct($idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad = false, $idpes_rev = false)
     {
@@ -42,8 +44,8 @@ class clsJuridica
         $this->cnpj = $cnpj;
         $this->insc_estadual = $insc_estadual;
         $this->capital_social = $capital_social;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : \Illuminate\Support\Facades\Auth::id();
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : \Illuminate\Support\Facades\Auth::id();
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : Auth::id();
 
         $this->tabela = 'juridica';
         $this->schema = 'cadastro';

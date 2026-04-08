@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPhone;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\PersonHasPlace;
 
@@ -66,20 +67,21 @@ return new class extends clsDetalhe
                 ->orderBy(column: 'type')
                 ->first();
 
-            $obj_telefone = new clsPessoaTelefone;
-            $telefone_lst = $obj_telefone->lista(int_idpes: $registro['ref_idpes'], str_ordenacao: 'tipo');
-            if ($telefone_lst) {
-                foreach ($telefone_lst as $telefone) {
-                    if ($telefone['tipo'] == 1) {
-                        $telefone_1 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    } elseif ($telefone['tipo'] == 2) {
-                        $telefone_2 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    } elseif ($telefone['tipo'] == 3) {
-                        $telefone_mov = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    } elseif ($telefone['tipo'] == 4) {
-                        $telefone_fax = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    }
-                }
+            $telefone_lst = LegacyPhone::query()
+                ->where('idpes', $registro['ref_idpes'])
+                ->orderBy('tipo')
+                ->get();
+
+            foreach ($telefone_lst as $telefone) {
+                $numero = '(' . $telefone->ddd . ') ' . $telefone->fone;
+
+                match ((int) $telefone->tipo) {
+                    LegacyPhone::TYPE_LANDLINE => $telefone_1 = $numero,
+                    LegacyPhone::TYPE_MOBILE => $telefone_2 = $numero,
+                    LegacyPhone::TYPE_MOBILE_ALT => $telefone_mov = $numero,
+                    LegacyPhone::TYPE_FAX => $telefone_fax = $numero,
+                    default => null,
+                };
             }
         }
 

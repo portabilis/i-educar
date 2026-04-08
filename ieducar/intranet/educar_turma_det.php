@@ -2,6 +2,7 @@
 
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStageType;
@@ -373,7 +374,7 @@ return new class extends clsDetalhe
             $this->array_botao[] = 'Lançar pareceres da turma';
             $this->array_botao_url_script[] = sprintf('go("educar_parecer_turma_cad.php?cod_turma=%d");', $registro['cod_turma']);
 
-            $doesntExist = \App\Models\LegacySchoolClassTeacher::query()
+            $doesntExist = LegacySchoolClassTeacher::query()
                 ->where('ano', $registro['ano'])
                 ->where('turma_id', $registro['cod_turma'])
                 ->doesntExist();

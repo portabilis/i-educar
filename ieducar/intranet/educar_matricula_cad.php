@@ -615,7 +615,7 @@ return new class extends clsCadastro
                 observacoes: $this->observacoes
             );
 
-            $dataMatriculaObj = new \DateTime(datetime: $this->data_matricula);
+            $dataMatriculaObj = new DateTime(datetime: $this->data_matricula);
             $dataTransferencia = $obj->pegaDataDeTransferencia(cod_aluno: $this->ref_cod_aluno, ano: $this->ano);
             $dataAnoLetivoInicio = $obj->pegaDataAnoLetivoInicio(cod_turma: $this->ref_cod_turma);
             $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim(cod_turma: $this->ref_cod_turma);

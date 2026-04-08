@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\SchoolGradeDisciplineService;
+use Illuminate\Support\Facades\Auth;
 
 class ComponenteCurricularController extends ApiCoreController
 {
@@ -42,7 +43,7 @@ class ComponenteCurricularController extends ApiCoreController
     protected function getComponentesCurricularesForDiario()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $userId = \Illuminate\Support\Facades\Auth::id();
+            $userId = Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $serieId = $this->getRequest()->serie_id;
             $turmaId = $this->getRequest()->turma_id;
@@ -144,7 +145,7 @@ class ComponenteCurricularController extends ApiCoreController
     protected function getComponentesCurriculares()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $userId = \Illuminate\Support\Facades\Auth::id();
+            $userId = Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $serieId = $this->getRequest()->serie_id;
             $turmaId = $this->getRequest()->turma_id;

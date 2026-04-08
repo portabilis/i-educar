@@ -936,7 +936,9 @@ class clsPmieducarServidor extends Model
             $disciplinas[] = $row['ref_cod_disciplina'];
         }
         if (count($disciplinas)) {
-            return asort($disciplinas);
+            asort($disciplinas);
+
+            return $disciplinas;
         }
 
         return false;
@@ -1008,7 +1010,9 @@ class clsPmieducarServidor extends Model
             $disciplinas[] = $row['ref_cod_disciplina'];
         }
         if (count($disciplinas)) {
-            return asort($disciplinas);
+            asort($disciplinas);
+
+            return $disciplinas;
         }
 
         return false;
