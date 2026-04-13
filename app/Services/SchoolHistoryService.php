@@ -49,7 +49,7 @@ class SchoolHistoryService
                 'ref_cod_escola' => $dadosMatricula['ref_ref_cod_escola'],
             ]);
 
-            $disciplinas = $this->getDisciplineNames($dadosMatricula['cod_serie'], $dadosMatricula['ref_ref_cod_escola']);
+            $disciplinas = $this->getDisciplineNames($dadosMatricula['cod_serie'], $dadosMatricula['ref_ref_cod_escola'], $dadosMatricula['ano']);
             foreach ($disciplinas as $index => $nome) {
                 LegacySchoolHistoryDiscipline::create([
                     'historico_escolar_id' => $historicoEscolar->id,
@@ -133,7 +133,7 @@ class SchoolHistoryService
         ', [$schoolId]);
     }
 
-    private function getDisciplineNames(int $gradeId, int $schoolId): array
+    private function getDisciplineNames(int $gradeId, int $schoolId, int $year): array
     {
         $results = DB::select("
             SELECT translate(upper(cc.nome),
@@ -143,7 +143,8 @@ class SchoolHistoryService
             INNER JOIN modules.componente_curricular cc ON (esd.ref_cod_disciplina = cc.id)
             WHERE esd.ref_ref_cod_serie = ?
               AND esd.ref_ref_cod_escola = ?
-        ", [$gradeId, $schoolId]);
+              AND ? = ANY(esd.anos_letivos)
+        ", [$gradeId, $schoolId, $year]);
 
         return array_column($results, 'nome');
     }

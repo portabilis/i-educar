@@ -5,6 +5,7 @@ use App\Models\Country;
 use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
@@ -99,12 +100,7 @@ return new class extends clsDetalhe
 
             $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->ref_idpes))->value('nm_raca');
 
-            $objFoto = new clsCadastroFisicaFoto(idpes: $this->ref_idpes);
-            $detalheFoto = $objFoto->detalhe();
-
-            if ($detalheFoto) {
-                $caminhoFoto = $detalheFoto['caminho'];
-            }
+            $caminhoFoto = LegacyIndividualPicture::whereKey($this->ref_idpes)->value('caminho');
 
             $registro['nome_aluno'] = mb_strtoupper(string: $det_pessoa_fj['nome']);
             $registro['cpf'] = int2IdFederal(int: $det_fisica['cpf']);

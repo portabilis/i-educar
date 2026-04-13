@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasBelongsToOne;
-use App\Models\Relations\BelongsToOne;
 use App\Events\StudentCreated;
 use App\Models\Builders\LegacyStudentBuilder;
+use App\Models\Concerns\HasBelongsToOne;
+use App\Models\Relations\BelongsToOne;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;

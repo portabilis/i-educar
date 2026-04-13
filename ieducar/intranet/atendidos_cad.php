@@ -5,6 +5,7 @@ use App\Events\UserUpdated;
 use App\Facades\Asset;
 use App\Models\EducacensoIndigenousPeople;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
 use App\Models\LegacyPhone;
@@ -263,11 +264,7 @@ return new class extends clsCadastro
 
         $foto = false;
         if (is_numeric(value: $this->cod_pessoa_fj)) {
-            $objFoto = new clsCadastroFisicaFoto(idpes: $this->cod_pessoa_fj);
-            $detalheFoto = $objFoto->detalhe();
-            if (is_array(value: $detalheFoto) && count(value: $detalheFoto)) {
-                $foto = $detalheFoto['caminho'];
-            }
+            $foto = LegacyIndividualPicture::whereKey($this->cod_pessoa_fj)->value('caminho') ?? false;
         } else {
             $foto = false;
         }
@@ -1181,12 +1178,8 @@ return new class extends clsCadastro
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
-                $obj = new clsCadastroFisicaFoto(idpes: $id, caminho: $caminhoFoto);
-                $detalheFoto = $obj->detalhe();
-                if (is_array(value: $detalheFoto) && count(value: $detalheFoto) > 0) {
-                    $obj->edita();
-                } else {
-                    $obj->cadastra();
+                if (is_numeric($id) && is_string($caminhoFoto)) {
+                    LegacyIndividualPicture::updateOrCreate(['idpes' => $id], ['caminho' => $caminhoFoto]);
                 }
             } else {
                 echo '<script>alert(\'Foto não salva.\')</script>';
@@ -1195,8 +1188,7 @@ return new class extends clsCadastro
             }
             $caminhoFoto = (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto);
         } elseif ($this->file_delete == 'on') {
-            $obj = new clsCadastroFisicaFoto(idpes: $id);
-            $obj->excluir();
+            LegacyIndividualPicture::whereKey($id)->delete();
         }
 
         $loggedUser = session(key: 'logged_user');

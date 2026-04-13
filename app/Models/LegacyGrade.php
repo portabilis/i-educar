@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyGradeBuilder;
 use App\Models\Concerns\HasBelongsToOne;
 use App\Models\Relations\BelongsToOne;
-use App\Models\Builders\LegacyGradeBuilder;
 use App\Models\View\Discipline;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;

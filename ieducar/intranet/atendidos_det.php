@@ -2,6 +2,7 @@
 
 use App\Models\Employee;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
 use App\Services\FileService;
@@ -47,11 +48,10 @@ return new class extends clsDetalhe
             'nome_social'
         );
 
-        $objFoto = new clsCadastroFisicaFoto(idpes: $cod_pessoa);
-        $caminhoFoto = $objFoto->detalhe();
-        if ($caminhoFoto != false) {
+        $caminhoFoto = LegacyIndividualPicture::whereKey($cod_pessoa)->value('caminho');
+        if ($caminhoFoto) {
             $this->addDetalhe(detalhe: ['Nome', $detalhe['nome'].'
-                <p><img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto['caminho']) . '"/></p>']);
+                <p><img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto) . '"/></p>']);
         } else {
             $this->addDetalhe(detalhe: ['Nome', $detalhe['nome']]);
         }
