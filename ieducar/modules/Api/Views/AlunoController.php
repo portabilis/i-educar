@@ -4,6 +4,7 @@ use App\Models\DeficiencyType;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
@@ -1242,11 +1243,9 @@ class AlunoController extends ApiCoreController
             $aluno['projetos'] = $this->loadProjetos($id);
             $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
 
-            $objFoto = new clsCadastroFisicaFoto($aluno['pessoa_id']);
-            $detalheFoto = $objFoto->detalhe();
-
-            if ($detalheFoto) {
-                $aluno['url_foto_aluno'] = $detalheFoto['caminho'];
+            $caminhoFoto = LegacyIndividualPicture::whereKey($aluno['pessoa_id'])->value('caminho');
+            if ($caminhoFoto) {
+                $aluno['url_foto_aluno'] = $caminhoFoto;
             }
 
             return $aluno;
@@ -1803,14 +1802,8 @@ class AlunoController extends ApiCoreController
             $caminhoFoto = $this->objPhoto->sendPicture();
 
             if ($caminhoFoto != '') {
-                // new clsCadastroFisicaFoto($id)->exclui();
-                $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
-                $detalheFoto = $obj->detalhe();
-
-                if (is_array($detalheFoto) && count($detalheFoto) > 0) {
-                    $obj->edita();
-                } else {
-                    $obj->cadastra();
+                if (is_numeric($id) && is_string($caminhoFoto)) {
+                    LegacyIndividualPicture::updateOrCreate(['idpes' => $id], ['caminho' => $caminhoFoto]);
                 }
 
                 return true;
@@ -1820,8 +1813,7 @@ class AlunoController extends ApiCoreController
                 return false;
             }
         } elseif ($this->del_foto == 'on') {
-            $obj = new clsCadastroFisicaFoto($id);
-            $obj->excluir();
+            LegacyIndividualPicture::whereKey($id)->delete();
         }
     }
 

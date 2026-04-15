@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EducacensoIndigenousPeople;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
 use App\Models\LegacyRace;
@@ -333,11 +334,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $personObject = new clsFisica($this->cod_pessoa_fj);
             $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
             $this->renda_mensal = (empty($personObject->detalhe()['renda_mensal']) == false) ? $personObject->detalhe()['renda_mensal'] : '';
-            $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
-            $detalheFoto = $objFoto->detalhe();
-            if (is_array($detalheFoto) && count($detalheFoto)) {
-                $foto = $detalheFoto['caminho'];
-            }
+            $foto = LegacyIndividualPicture::whereKey($this->cod_pessoa_fj)->value('caminho') ?? false;
         } else {
             $this->observacao = '';
             $this->renda_mensal = '';

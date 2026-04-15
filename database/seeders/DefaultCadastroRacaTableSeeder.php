@@ -2,20 +2,34 @@
 
 namespace Database\Seeders;
 
+use App\Models\LegacyRace;
+use App\Models\LegacyUser;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DefaultCadastroRacaTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/cadastro.raca.sql')
-        );
+        $user = LegacyUser::query()
+            ->orderBy('cod_usuario')
+            ->first();
+
+        $races = [
+            0 => 'Não Declarada',
+            1 => 'Branca',
+            2 => 'Preta',
+            3 => 'Parda',
+            4 => 'Amarela',
+            5 => 'Indígena',
+        ];
+
+        foreach ($races as $id => $name) {
+            LegacyRace::updateOrCreate([
+                'raca_educacenso' => $id,
+            ], [
+                'nm_raca' => $name,
+                'idpes_cad' => $user?->getKey(),
+            ]);
+        }
     }
 }
