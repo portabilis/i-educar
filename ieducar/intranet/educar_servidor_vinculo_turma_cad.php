@@ -4,6 +4,7 @@ use App\Models\Employee;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassTeacher;
+use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Services\iDiarioService;
 use Carbon\Carbon;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
@@ -176,10 +177,9 @@ return new class extends clsCadastro
             clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
             clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
         ];
-        $turma = LegacySchoolClass::with('course:cod_curso,modalidade_curso')->find($this->ref_cod_turma, [
-            'cod_turma',
-            'ref_cod_curso',
-        ]);
+        $turma = $this->ref_cod_turma
+            ? LegacySchoolClass::with('course:cod_curso,modalidade_curso')->find($this->ref_cod_turma, ['cod_turma', 'ref_cod_curso'])
+            : null;
 
         if ($turma && $turma->course->modalidade_curso === ModalidadeCurso::EJA) {
             $turnos[clsPmieducarTurma::TURNO_NOTURNO] = 'Noturno';
@@ -298,24 +298,9 @@ return new class extends clsCadastro
         $dataInicial = $this->data_inicial ? Carbon::createFromFormat('d/m/Y', $this->data_inicial)->format('Y-m-d') : null;
         $dataFim = $this->data_fim ? Carbon::createFromFormat('d/m/Y', $this->data_fim)->format('Y-m-d') : null;
 
-        $professorTurma = new clsModulesProfessorTurma(
-            id: null,
-            ano: $this->ano,
-            instituicao_id: $this->ref_cod_instituicao,
-            servidor_id: $this->servidor_id,
-            turma_id: $this->ref_cod_turma,
-            funcao_exercida: $this->funcao_exercida,
-            tipo_vinculo: $this->tipo_vinculo,
-            permite_lancar_faltas_componente: $this->permite_lancar_faltas_componente,
-            turno_id: $this->turma_turno_id,
-            data_inicial: $dataInicial,
-            data_fim: $dataFim,
-            leciona_itinerario_tecnico_profissional: $this->leciona_itinerario_tecnico_profissional,
-            area_itinerario: $this->area_itinerario
-        );
-        $id = $professorTurma->existe2();
-        if ($id) {
-            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
+        $idExistente = $this->verificaDuplicata($this->ano, $this->ref_cod_turma, $this->ref_cod_instituicao, $this->servidor_id);
+        if ($idExistente) {
+            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$idExistente\"><b>Acesse aqui</b></a>";
             $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
 
             return false;
@@ -324,8 +309,10 @@ return new class extends clsCadastro
         DB::beginTransaction();
 
         try {
-            $professorTurmaId = $professorTurma->cadastra();
-            $professorTurma->gravaComponentes(professor_turma_id: $professorTurmaId, componentes: $this->componentecurricular);
+            $data = $this->montaDadosProfessorTurma($dataInicial, $dataFim);
+            $model = LegacySchoolClassTeacher::create($data);
+            $professorTurmaId = $model->id;
+            $this->gravaComponentesProfessorTurma($professorTurmaId, $this->componentecurricular);
 
             DB::commit();
         } catch (Exception $exception) {
@@ -405,22 +392,6 @@ return new class extends clsCadastro
         $dataInicial = $this->data_inicial ? Carbon::createFromFormat('d/m/Y', $this->data_inicial)->format('Y-m-d') : null;
         $dataFim = $this->data_fim ? Carbon::createFromFormat('d/m/Y', $this->data_fim)->format('Y-m-d') : null;
 
-        $professorTurma = new clsModulesProfessorTurma(
-            id: $this->id,
-            ano: $this->ano,
-            instituicao_id: $this->ref_cod_instituicao,
-            servidor_id: $this->servidor_id,
-            turma_id: $this->ref_cod_turma,
-            funcao_exercida: $this->funcao_exercida,
-            tipo_vinculo: $this->tipo_vinculo,
-            permite_lancar_faltas_componente: $this->permite_lancar_faltas_componente,
-            turno_id: $this->turma_turno_id,
-            data_inicial: $dataInicial,
-            data_fim: $dataFim,
-            leciona_itinerario_tecnico_profissional: $this->leciona_itinerario_tecnico_profissional,
-            area_itinerario: $this->area_itinerario
-        );
-
         if (!$this->validaCamposCenso()) {
             return false;
         }
@@ -433,9 +404,9 @@ return new class extends clsCadastro
             return false;
         }
 
-        $id = $professorTurma->existe2();
-        if ($id) {
-            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
+        $idExistente = $this->verificaDuplicata($this->ano, $this->ref_cod_turma, $this->ref_cod_instituicao, $this->servidor_id, $this->id);
+        if ($idExistente) {
+            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$idExistente\"><b>Acesse aqui</b></a>";
             $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
 
             return false;
@@ -444,7 +415,8 @@ return new class extends clsCadastro
         DB::beginTransaction();
 
         try {
-            $editou = $professorTurma->edita();
+            $data = $this->montaDadosProfessorTurma($dataInicial, $dataFim);
+            $editou = LegacySchoolClassTeacher::whereKey($this->id)->update($data);
 
             if (empty($editou)) {
                 $this->mensagem = 'Edição não realizada.<br>';
@@ -452,7 +424,7 @@ return new class extends clsCadastro
                 return false;
             }
 
-            $professorTurma->gravaComponentes(professor_turma_id: $this->id, componentes: $this->componentecurricular);
+            $this->gravaComponentesProfessorTurma($this->id, $this->componentecurricular);
 
             DB::commit();
         } catch (Exception $exception) {
@@ -482,13 +454,11 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
-        $professorTurma = new clsModulesProfessorTurma(id: $this->id);
-
         DB::beginTransaction();
 
         try {
-            $professorTurma->excluiComponentes(professor_turma_id: $this->id);
-            $professorTurma->excluir();
+            $this->excluiComponentesProfessorTurma($this->id);
+            LegacySchoolClassTeacher::whereKey($this->id)->delete();
 
             DB::commit();
         } catch (Exception $exception) {
@@ -628,7 +598,7 @@ return new class extends clsCadastro
         $etapas_instrutor_educacao_pŕofissional = [39, 40, 73, 74, 64, 67, 68];
 
         if ($this->funcao_exercida == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL && (($turma['organizacao_curricular'] && !in_array(needle: '2', haystack: transformStringFromDBInArray(string: $turma['organizacao_curricular']), strict: true)) || !in_array(needle: $turma['etapa_educacenso'], haystack: $etapas_instrutor_educacao_pŕofissional, strict: true))) {
-            $opcoes = \Str::replaceLast(search: ', ', replace: ' ou ', subject: implode(separator: ', ', array: $etapas_instrutor_educacao_pŕofissional));
+            $opcoes = Str::replaceLast(search: ', ', replace: ' ou ', subject: implode(separator: ', ', array: $etapas_instrutor_educacao_pŕofissional));
             $this->mensagem = "O campo: <b>Função que exerce na turma</b> pode ser <b>Instrutor da Educação Profissional</b> apenas quando o campo <b>Organização Curricular</b> da turma for: <b>Itinerário formativo</b> e o campo <b>Etapa de ensino</b> for uma das opções: {$opcoes}.";
 
             return false;
@@ -682,5 +652,73 @@ return new class extends clsCadastro
     {
         $this->title = 'Servidores - Servidor vínculo turma';
         $this->processoAp = 635;
+    }
+
+    private function montaDadosProfessorTurma($dataInicial, $dataFim)
+    {
+        $data = [
+            'ano' => $this->ano,
+            'instituicao_id' => $this->ref_cod_instituicao,
+            'servidor_id' => $this->servidor_id,
+            'turma_id' => $this->ref_cod_turma,
+            'funcao_exercida' => $this->funcao_exercida,
+            'tipo_vinculo' => is_numeric($this->tipo_vinculo) ? $this->tipo_vinculo : null,
+            'permite_lancar_faltas_componente' => isset($this->permite_lancar_faltas_componente) ? '1' : '0',
+            'turno_id' => is_numeric($this->turma_turno_id) ? $this->turma_turno_id : null,
+            'data_inicial' => is_string($dataInicial) && !empty($dataInicial) ? $dataInicial : null,
+            'data_fim' => is_string($dataFim) && !empty($dataFim) ? $dataFim : null,
+            'leciona_itinerario_tecnico_profissional' => is_numeric($this->leciona_itinerario_tecnico_profissional) ? $this->leciona_itinerario_tecnico_profissional : null,
+        ];
+
+        if (is_array($this->area_itinerario)) {
+            $data['area_itinerario'] = DB::raw("'{" . implode(',', $this->area_itinerario) . "}'::integer[]");
+        } else {
+            $data['area_itinerario'] = null;
+        }
+
+        return $data;
+    }
+
+    private function verificaDuplicata($ano, $turmaId, $instituicaoId, $servidorId, $excluirId = null)
+    {
+        if (!is_numeric($ano) || !is_numeric($turmaId) || !is_numeric($instituicaoId) || !is_numeric($servidorId)) {
+            return false;
+        }
+
+        $query = LegacySchoolClassTeacher::query()
+            ->where('ano', $ano)
+            ->where('turma_id', $turmaId)
+            ->where('instituicao_id', $instituicaoId)
+            ->where('servidor_id', $servidorId);
+
+        if (is_numeric($excluirId)) {
+            $query->where('id', '<>', $excluirId);
+        }
+
+        return $query->value('id');
+    }
+
+    private function gravaComponentesProfessorTurma($professorTurmaId, $componentes)
+    {
+        foreach ($componentes as $componente) {
+            LegacySchoolClassTeacherDiscipline::query()->updateOrCreate([
+                'professor_turma_id' => $professorTurmaId,
+                'componente_curricular_id' => $componente,
+            ]);
+        }
+
+        LegacySchoolClassTeacherDiscipline::query()
+            ->where('professor_turma_id', $professorTurmaId)
+            ->whereNotIn('componente_curricular_id', $componentes ?? [])
+            ->get()
+            ->each(fn (LegacySchoolClassTeacherDiscipline $model) => $model->delete());
+    }
+
+    private function excluiComponentesProfessorTurma($professorTurmaId)
+    {
+        LegacySchoolClassTeacherDiscipline::query()
+            ->where('professor_turma_id', $professorTurmaId)
+            ->get()
+            ->each(fn (LegacySchoolClassTeacherDiscipline $model) => $model->delete());
     }
 };

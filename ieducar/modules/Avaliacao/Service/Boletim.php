@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplineAcademicYear;
+use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
@@ -15,6 +16,7 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
+use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Support\Facades\Cache;
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
@@ -1061,7 +1063,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
             if (empty($situacao->componentesCurriculares[$id])) {
-                $situacao->componentesCurriculares[$id] = new \stdClass;
+                $situacao->componentesCurriculares[$id] = new stdClass;
             }
 
             if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA) {
@@ -3050,7 +3052,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                     // Recalcula nota_arredondada de todas as etapas do componente
                     if ($this->isUpdateScore() && !$locked) {
-                        $scores = \App\Models\LegacyDisciplineScore::query()
+                        $scores = LegacyDisciplineScore::query()
                             ->where('nota_aluno_id', $this->_getNotaAluno()->id)
                             ->where('componente_curricular_id', $id)
                             ->get();
@@ -3502,7 +3504,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\HigherOrderBuilderProxy|mixed|void
+     * @return HigherOrderBuilderProxy|mixed|void
      */
     private function getHoraFalta(array $registration, int $disciplineId)
     {

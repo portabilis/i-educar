@@ -18,6 +18,7 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
     protected $table = 'pmieducar.historico_disciplinas';
 
     public $fillable = [
+        'historico_escolar_id',
         'ref_ref_cod_aluno',
         'sequencial',
         'ref_sequencial',
@@ -36,6 +37,14 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
     public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_ref_cod_aluno');
+    }
+
+    /**
+     * @return BelongsTo<LegacySchoolHistory, $this>
+     */
+    public function schoolHistory(): BelongsTo
+    {
+        return $this->belongsTo(LegacySchoolHistory::class, 'historico_escolar_id');
     }
 
     public function score(int $decimalPlaces = 2): ?string

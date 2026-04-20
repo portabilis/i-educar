@@ -1,15 +1,19 @@
 <?php
 
+use App\Models\ComponentBatchOperation;
+use App\Models\Enums\ComponentBatchStatus;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\RegistrationStatus;
 use App\Models\View\Discipline;
+use App\Services\ComponentBatchManagerService;
 use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class DiarioController extends ApiCoreController
 {
@@ -664,11 +668,17 @@ class DiarioController extends ApiCoreController
             $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
 
         if (!empty($notaExame) && $situacaoEmExame) {
-            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId, $notaExame);
-            $obj->existe() ? $obj->edita() : $obj->cadastra();
-        } else {
-            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId);
-            $obj->excluir();
+            if (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId) && is_numeric($notaExame)) {
+                DB::table('modules.nota_exame')->updateOrInsert(
+                    ['ref_cod_matricula' => $matricula->cod_matricula, 'ref_cod_componente_curricular' => $componenteCurricularId],
+                    ['nota_exame' => $notaExame]
+                );
+            }
+        } elseif (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId)) {
+            DB::table('modules.nota_exame')
+                ->where('ref_cod_matricula', $matricula->cod_matricula)
+                ->where('ref_cod_componente_curricular', $componenteCurricularId)
+                ->delete();
         }
     }
 
@@ -684,6 +694,44 @@ class DiarioController extends ApiCoreController
     public function removeHtmlTags(string $text = ''): string
     {
         return (new RemoveHtmlTagsStringService)->execute($text);
+    }
+
+    protected function postComponentBatchCallback()
+    {
+        $operationId = $this->getRequest()->operation_id ?? null;
+
+        if (!$operationId) {
+            $this->messenger->append('Parâmetro operation_id é obrigatório.', 'error');
+
+            return;
+        }
+
+        $operation = ComponentBatchOperation::find($operationId);
+
+        if (!$operation) {
+            $this->messenger->append('Operação não encontrada.', 'error');
+
+            return;
+        }
+
+        if ($operation->status_id !== ComponentBatchStatus::RUNNING->value) {
+            $this->appendResponse('message', 'Operação não está em execução. Status atual: ' . ComponentBatchStatus::from($operation->status_id)->label());
+
+            return;
+        }
+
+        $idiarioResult = [
+            'success' => filter_var($this->getRequest()->success ?? false, FILTER_VALIDATE_BOOLEAN),
+            'deleted' => (int) ($this->getRequest()->deleted ?? 0),
+        ];
+
+        if (!empty($this->getRequest()->error)) {
+            $idiarioResult['error'] = $this->getRequest()->error;
+        }
+
+        app(ComponentBatchManagerService::class)->processCallback($operation, $idiarioResult);
+
+        $this->appendResponse('message', 'Callback processado com sucesso.');
     }
 
     public function Gerar()
@@ -704,6 +752,8 @@ class DiarioController extends ApiCoreController
             $this->appendResponse($this->postPareceresAnualPorComponente());
         } elseif ($this->isRequestFor('post', 'pareceres-anual-geral')) {
             $this->appendResponse($this->postPareceresAnualGeral());
+        } elseif ($this->isRequestFor('post', 'component-batch-callback')) {
+            $this->postComponentBatchCallback();
         } else {
             $this->notImplementedOperationError();
         }

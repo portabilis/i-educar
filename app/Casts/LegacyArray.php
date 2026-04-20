@@ -3,13 +3,14 @@
 namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 
 class LegacyArray implements CastsAttributes
 {
     /**
      * Cast the given value.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param Model $model
      * @param mixed                               $value
      * @return mixed
      */
@@ -21,7 +22,7 @@ class LegacyArray implements CastsAttributes
     /**
      * Prepare the given value for storage.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param Model $model
      * @param mixed                               $value
      * @return mixed
      */

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDocument;
+use App\Models\LegacyPhone;
 use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
 
@@ -183,55 +185,33 @@ class clsPessoaFj extends Model
                 }
             }
 
-            $objFone = new clsPessoaTelefone;
-            $listaFone = $objFone->lista($this->idpes);
+            $listaFone = LegacyPhone::query()
+                ->where('idpes', $this->idpes)
+                ->get();
 
-            if ($listaFone) {
-                foreach ($listaFone as $fone) {
-                    if ($fone['tipo'] == 1) {
-                        $detalhePessoa['ddd_1'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_1'];
-                        $detalhePessoa['fone_1'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_1'];
+            foreach ($listaFone as $fone) {
+                $sufixo = match ((int) $fone->tipo) {
+                    LegacyPhone::TYPE_LANDLINE => '1',
+                    LegacyPhone::TYPE_MOBILE => '2',
+                    LegacyPhone::TYPE_MOBILE_ALT => 'mov',
+                    LegacyPhone::TYPE_FAX => 'fax',
+                    default => null,
+                };
 
-                        $this->ddd_1 = $fone['ddd'];
-                        $this->fone_1 = $fone['fone'];
-                    }
-
-                    if ($fone['tipo'] == 2) {
-                        $detalhePessoa['ddd_2'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_2'];
-                        $detalhePessoa['fone_2'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_2'];
-
-                        $this->ddd_2 = $fone['ddd'];
-                        $this->fone_2 = $fone['fone'];
-                    }
-
-                    if ($fone['tipo'] == 3) {
-                        $detalhePessoa['ddd_mov'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_mov'];
-                        $detalhePessoa['fone_mov'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_mov'];
-
-                        $this->ddd_mov = $fone['ddd'];
-                        $this->fone_mov = $fone['fone'];
-                    }
-
-                    if ($fone['tipo'] == 4) {
-                        $detalhePessoa['ddd_fax'] = $fone['ddd'];
-                        $detalhePessoa[] = &$detalhePessoa['ddd_fax'];
-                        $detalhePessoa['fone_fax'] = $fone['fone'];
-                        $detalhePessoa[] = &$detalhePessoa['fone_fax'];
-
-                        $this->ddd_fax = $fone['ddd'];
-                        $this->fone_fax = $fone['fone'];
-                    }
+                if ($sufixo === null) {
+                    continue;
                 }
+
+                $detalhePessoa["ddd_{$sufixo}"] = $fone->ddd;
+                $detalhePessoa[] = &$detalhePessoa["ddd_{$sufixo}"];
+                $detalhePessoa["fone_{$sufixo}"] = $fone->fone;
+                $detalhePessoa[] = &$detalhePessoa["fone_{$sufixo}"];
+
+                $this->{"ddd_{$sufixo}"} = $fone->ddd;
+                $this->{"fone_{$sufixo}"} = $fone->fone;
             }
 
-            $obj_documento = new clsDocumento($this->idpes);
-            $documentos = $obj_documento->detalhe();
+            $documentos = LegacyDocument::find($this->idpes)?->getAttributes();
 
             if (is_array($documentos)) {
                 if ($documentos['rg']) {

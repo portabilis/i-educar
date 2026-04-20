@@ -49,11 +49,10 @@ return new class extends clsCadastro
         }
 
         if (is_numeric($this->ref_pessoa)) {
-            $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
-            $det_funcionario = $obj_funcionario->detalhe();
+            $det_funcionario = LegacyEmployee::find($this->ref_pessoa);
 
             if ($det_funcionario) {
-                foreach ($det_funcionario as $campo => $valor) {
+                foreach ($det_funcionario->getAttributes() as $campo => $valor) {
                     $this->$campo = $valor;
                 }
 
@@ -80,7 +79,7 @@ return new class extends clsCadastro
                 $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 555, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
             }
 
-            if ($det_funcionario !== false) {
+            if ($det_funcionario) {
                 $retorno = 'Editar';
             }
         }
@@ -255,9 +254,22 @@ return new class extends clsCadastro
 
         $senha = Hash::make($this->_senha);
 
-        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: $senha, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: 'NOW()', data_reativa_conta: 'NOW()', ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: 1, email: $this->email, matricula_interna: $this->matricula_interna, forceResetPassword: !is_null($this->force_reset_password), motivo: $this->motivo, data_inicial: Portabilis_Date_Utils::brToPgSQL($this->data_inicial));
+        $dadosFuncionario = $this->montaDadosFuncionario($senha);
+        if (is_numeric($this->ref_pessoa)) {
+            $dadosFuncionario['ref_cod_pessoa_fj'] = $this->ref_pessoa;
+        }
+        $dadosFuncionario['ativo'] = 1;
+        $dadosFuncionario['data_troca_senha'] = now();
+        $dadosFuncionario['data_reativa_conta'] = now();
+        $dadosFuncionario['tipo_menu'] = 1;
 
-        if ($obj_funcionario->cadastra()) {
+        // Na antiga clsPortalFuncionario o campo só era incluído no INSERT
+        // quando truthy — assim o default da coluna era respeitado.
+        if ($this->force_reset_password) {
+            $dadosFuncionario['force_reset_password'] = true;
+        }
+
+        if (LegacyEmployee::create($dadosFuncionario)) {
             if ($this->ref_cod_instituicao) {
                 $obj = new clsPmieducarUsuario(cod_usuario: $this->ref_pessoa, ref_cod_escola: null, ref_cod_instituicao: $this->ref_cod_instituicao, ref_funcionario_cad: $this->pessoa_logada, ref_funcionario_exc: $this->pessoa_logada, ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario, data_cadastro: null, data_exclusao: null, ativo: 1);
             } else {
@@ -342,11 +354,16 @@ return new class extends clsCadastro
             }
         }
 
-        $data_reativa_conta = $this->hasChangeStatusUser() && $this->ativo == '1' ? 'NOW()' : null;
+        $dadosFuncionario = $this->montaDadosFuncionario();
+        if (is_numeric($this->ativo)) {
+            $dadosFuncionario['ativo'] = $this->ativo;
+        }
 
-        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: null, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: null, data_reativa_conta: $data_reativa_conta, ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: null, email: $this->email, matricula_interna: $this->matricula_interna, motivo: $this->motivo, data_inicial: Portabilis_Date_Utils::brToPgSQL($this->data_inicial));
+        if ($this->hasChangeStatusUser() && $this->ativo == '1') {
+            $dadosFuncionario['data_reativa_conta'] = now();
+        }
 
-        if ($obj_funcionario->edita()) {
+        if (LegacyEmployee::whereKey($this->ref_pessoa)->update($dadosFuncionario)) {
             if ($this->ref_cod_instituicao) {
                 $obj = new clsPmieducarUsuario(
                     cod_usuario: $this->ref_pessoa,
@@ -402,9 +419,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
-
-        if ($obj_funcionario->excluir()) {
+        if (LegacyEmployee::whereKey($this->ref_pessoa)->update(['ativo' => 0])) {
             UserDeleted::dispatch(User::findOrFail($this->ref_pessoa));
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
@@ -508,13 +523,10 @@ return new class extends clsCadastro
 
     private function montaBotoesDeAcao(): void
     {
-        $funcionario = (new clsPortalFuncionario($this->ref_pessoa))->detalhe();
+        $funcionarioExiste = LegacyEmployee::whereKey($this->ref_pessoa)->exists();
         $usuario = (new clsPmieducarUsuario($this->ref_pessoa))->detalhe();
 
-        $edita = false;
-        if ($funcionario !== false && $usuario !== false) {
-            $edita = true;
-        }
+        $edita = $funcionarioExiste && $usuario !== false;
 
         $this->url_cancelar = $edita
             ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}"
@@ -523,6 +535,55 @@ return new class extends clsCadastro
         $this->fexcluir = $edita;
 
         $this->nome_url_cancelar = 'Cancelar';
+    }
+
+    private function montaDadosFuncionario(?string $senha = null): array
+    {
+        // Replica os guards da antiga clsPortalFuncionario: só inclui a chave
+        // no array quando o valor passa is_numeric/is_string. Em UPDATE isso
+        // evita sobrescrever colunas com NULL quando o form não envia o campo.
+        $dados = [];
+
+        if (is_string($this->matricula)) {
+            $dados['matricula'] = $this->matricula;
+        }
+        if (is_string($this->matricula_interna)) {
+            $dados['matricula_interna'] = $this->matricula_interna;
+        }
+        if (is_string($senha)) {
+            $dados['senha'] = $senha;
+        }
+        if (is_numeric($this->ref_cod_funcionario_vinculo)) {
+            $dados['ref_cod_funcionario_vinculo'] = $this->ref_cod_funcionario_vinculo;
+        }
+        if (is_numeric($this->tempo_expira_senha)) {
+            $dados['tempo_expira_senha'] = $this->tempo_expira_senha;
+        }
+        if (is_numeric($this->pessoa_logada)) {
+            $dados['ref_ref_cod_pessoa_fj'] = $this->pessoa_logada;
+        }
+        if (is_string($this->email)) {
+            $dados['email'] = $this->email;
+        }
+        if (is_string($this->motivo)) {
+            $dados['motivo'] = $this->motivo;
+        }
+
+        $dataExpiracao = Portabilis_Date_Utils::brToPgSQL($this->data_expiracao);
+        if ($dataExpiracao) {
+            $dados['data_expiracao'] = $dataExpiracao;
+        } elseif ($dataExpiracao === null || $dataExpiracao === '') {
+            $dados['data_expiracao'] = null;
+        }
+
+        $dataInicial = Portabilis_Date_Utils::brToPgSQL($this->data_inicial);
+        if ($dataInicial) {
+            $dados['data_inicial'] = $dataInicial;
+        } elseif ($dataInicial === null || $dataInicial === '') {
+            $dados['data_inicial'] = null;
+        }
+
+        return $dados;
     }
 
     public function makeExtra(): string

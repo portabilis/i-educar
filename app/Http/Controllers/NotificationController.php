@@ -30,11 +30,11 @@ class NotificationController extends Controller
         }
 
         if ($request->get('status')) {
-            if ($request->get('status') == STATUS::READ) {
+            if ($request->get('status') == Status::READ) {
                 $query->whereNotNull('read_at');
             }
 
-            if ($request->get('status') == STATUS::UNREAD) {
+            if ($request->get('status') == Status::UNREAD) {
                 $query->whereNull('read_at');
             }
         }

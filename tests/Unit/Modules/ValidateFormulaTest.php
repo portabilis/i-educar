@@ -25,7 +25,7 @@ class ValidateFormulaTest extends UnitBaseTest
 
     public function test_formula_invalida_quando_utiliza_token_nao_permitido()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $formula = 'Rc * 0.4 + Se * 0.6';
         $validator = new FormulaMedia_Validate_Formula;
         $this->assertTrue($validator->isValid($formula));
@@ -40,7 +40,7 @@ class ValidateFormulaTest extends UnitBaseTest
 
     public function test_formula_invalida_por_erro_de_sintaxe()
     {
-        $this->expectException(\Error::class);
+        $this->expectException(Error::class);
         $formula = '(Rc * 0.4) + (Se * 0.6) ()';
         $validator = new FormulaMedia_Validate_Formula(['excludeToken' => null]);
         $this->assertTrue($validator->isValid($formula));

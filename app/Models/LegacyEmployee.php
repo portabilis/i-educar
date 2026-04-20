@@ -43,10 +43,24 @@ class LegacyEmployee extends Model
     protected $fillable = [
         'ref_cod_pessoa_fj',
         'matricula',
+        'matricula_interna',
         'senha',
         'ativo',
-        'force_reset_password',
+        'ref_sec',
+        'ref_cod_funcionario_vinculo',
+        'tempo_expira_senha',
+        'data_expiracao',
+        'data_troca_senha',
+        'data_reativa_conta',
+        'ref_ref_cod_pessoa_fj',
+        'ref_cod_setor_new',
+        'tipo_menu',
         'email',
+        'receber_novidades',
+        'atualizou_cadastro',
+        'force_reset_password',
+        'motivo',
+        'data_inicial',
     ];
 
     protected $casts = [

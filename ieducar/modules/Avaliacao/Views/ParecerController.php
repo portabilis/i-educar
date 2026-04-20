@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 class ParecerController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
@@ -50,7 +52,7 @@ class ParecerController extends Core_Controller_Page_EditController
     protected function _preConstruct()
     {
         // Id do usuário na session
-        $usuario = \Illuminate\Support\Facades\Auth::id();
+        $usuario = Auth::id();
 
         $this->_options = [
             'new_success' => 'boletim',

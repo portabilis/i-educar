@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyRemedialRule;
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
 use Illuminate\Support\Facades\DB;
 
@@ -1092,7 +1093,7 @@ class EditController extends Core_Controller_Page_EditController
                 // COMO OCORRE A EXCLUSÃO A CADA EDIÇÃO NO CASO DE CÓPIA, É NECESSÁRIO RECRIAR
                 // AS REGRAS DE RECUPERAÇÃO PARA O ID QUE ESTÁ SENDO COPIADO
                 if ($this->getRequest()->copy) {
-                    \App\Models\LegacyRemedialRule::create([
+                    LegacyRemedialRule::create([
                         'regra_avaliacao_id' => $this->getRequest()->id,
                         'descricao' => $regraRecuperacao->descricao,
                         'etapas_recuperadas' => $regraRecuperacao->etapasRecuperadas,

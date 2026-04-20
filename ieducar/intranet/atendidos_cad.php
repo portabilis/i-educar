@@ -4,11 +4,18 @@ use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Facades\Asset;
 use App\Models\EducacensoIndigenousPeople;
+use App\Models\LegacyDocument;
+use App\Models\LegacyEmployee;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyIssuingBody;
+use App\Models\LegacyPhone;
 use App\Models\LegacyRace;
+use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyUser;
 use App\Services\FileService;
+use App\Services\PhoneService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -19,6 +26,7 @@ use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro
@@ -178,7 +186,7 @@ return new class extends clsCadastro
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr(data_original: $this->data_admissao) : '';
 
-            $this->estado_civil_id = $this->estado_civil->ideciv;
+            $this->estado_civil_id = $this->estado_civil;
             $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
         }
@@ -258,11 +266,7 @@ return new class extends clsCadastro
 
         $foto = false;
         if (is_numeric(value: $this->cod_pessoa_fj)) {
-            $objFoto = new clsCadastroFisicaFoto(idpes: $this->cod_pessoa_fj);
-            $detalheFoto = $objFoto->detalhe();
-            if (is_array(value: $detalheFoto) && count(value: $detalheFoto)) {
-                $foto = $detalheFoto['caminho'];
-            }
+            $foto = LegacyIndividualPicture::whereKey($this->cod_pessoa_fj)->value('caminho') ?? false;
         } else {
             $foto = false;
         }
@@ -332,9 +336,9 @@ return new class extends clsCadastro
 
         // documentos
 
-        $documentos = new clsDocumento;
-        $documentos->idpes = $this->cod_pessoa_fj;
-        $documentos = $documentos->detalhe();
+        $documentos = is_numeric($this->cod_pessoa_fj)
+            ? LegacyDocument::find($this->cod_pessoa_fj)?->getAttributes()
+            : null;
 
         $options = [
             'required' => false,
@@ -363,11 +367,10 @@ return new class extends clsCadastro
         // orgão emissão rg
 
         $selectOptions = [null => 'Órgão emissor'];
-        $orgaos = new clsOrgaoEmissorRg;
-        $orgaos = $orgaos->lista();
+        $orgaos = LegacyIssuingBody::orderBy('sigla')->get();
 
         foreach ($orgaos as $orgao) {
-            $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
+            $selectOptions[$orgao->idorg_rg] = $orgao->sigla;
         }
 
         $selectOptions = Portabilis_Array_Utils::sortByValue(array: $selectOptions);
@@ -667,9 +670,9 @@ return new class extends clsCadastro
             ->prepend(value: 'Selecione', key: '')
             ->toArray();
 
-        $raca = new clsCadastroFisicaRaca(ref_idpes: $this->cod_pessoa_fj);
-        $raca = $raca->detalhe();
-        $this->cod_raca = is_array(value: $raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
+        $this->cod_raca = is_numeric($this->cod_pessoa_fj)
+            ? LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->cod_pessoa_fj))->value('cod_raca') ?? $this->cor_raca
+            : $this->cor_raca;
 
         $this->campoLista(nome: 'cor_raca', campo: 'Raça', valor: $race, default: $this->cod_raca, obrigatorio: $obrigarCamposCenso);
 
@@ -788,21 +791,13 @@ return new class extends clsCadastro
         $this->campoRotulo(nome: 'renda', campo: '<b>Trabalho e renda</b>', valor: '', duplo: '', descricao: 'Informações de trabalho e renda da pessoa');
         $this->campoTexto(nome: 'ocupacao', campo: 'Ocupação', valor: $this->ocupacao, tamanhovisivel: '50', tamanhomaximo: '255');
 
-        $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsCadastroEscolaridade;
-        $lista = $objTemp->lista();
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['idesco']] = $registro['descricao'];
-            }
-        }
+        $opcoes = LegacySchoolingDegree::query()->orderBy('descricao')->pluck('descricao', 'idesco')->prepend('Selecione', '')->toArray();
 
         $this->campoLista(
             nome: 'idesco',
             campo: 'Escolaridade',
             valor: $opcoes,
-            default: $this->idesco->idesco,
+            default: $this->idesco,
             obrigatorio: false
         );
 
@@ -884,11 +879,12 @@ return new class extends clsCadastro
 
         $usuario = new clsPmieducarUsuario;
         $usuario = $usuario->lista(int_cod_usuario: $idPes, int_ref_cod_escola: null, int_ref_cod_instituicao: null, int_ref_funcionario_cad: null, int_ref_funcionario_exc: null, int_ref_cod_tipo_usuario: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: true);
-        $funcionario = new clsPortalFuncionario;
-        $funcionario->ref_cod_pessoa_fj = $idPes;
-        $funcionario = $funcionario->lista(str_matricula: null, str_senha: null, int_ativo: 1);
+        $funcionarioAtivo = LegacyEmployee::query()
+            ->where('ref_cod_pessoa_fj', $idPes)
+            ->where('ativo', 1)
+            ->exists();
 
-        if ($funcionario && $usuario) {
+        if ($funcionarioAtivo && $usuario) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com usuário do sistema.';
 
             return false;
@@ -1185,12 +1181,8 @@ return new class extends clsCadastro
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
-                $obj = new clsCadastroFisicaFoto(idpes: $id, caminho: $caminhoFoto);
-                $detalheFoto = $obj->detalhe();
-                if (is_array(value: $detalheFoto) && count(value: $detalheFoto) > 0) {
-                    $obj->edita();
-                } else {
-                    $obj->cadastra();
+                if (is_numeric($id) && is_string($caminhoFoto)) {
+                    LegacyIndividualPicture::updateOrCreate(['idpes' => $id], ['caminho' => $caminhoFoto]);
                 }
             } else {
                 echo '<script>alert(\'Foto não salva.\')</script>';
@@ -1199,8 +1191,7 @@ return new class extends clsCadastro
             }
             $caminhoFoto = (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto);
         } elseif ($this->file_delete == 'on') {
-            $obj = new clsCadastroFisicaFoto(idpes: $id);
-            $obj->excluir();
+            LegacyIndividualPicture::whereKey($id)->delete();
         }
 
         $loggedUser = session(key: 'logged_user');
@@ -1420,33 +1411,20 @@ return new class extends clsCadastro
             return false;
         } // Quando não tiver cor/raça selecionado não faz update
 
-        $raca = new clsCadastroFisicaRaca(ref_idpes: $pessoaId, ref_cod_raca: $corRaca);
-
-        if ($raca->existe()) {
-            return $raca->edita();
+        $individual = LegacyIndividual::find($pessoaId, ['idpes']);
+        if ($individual) {
+            $individual->race()->sync([$corRaca]);
         }
-
-        return $raca->cadastra();
     }
 
     protected function createOrUpdateDocumentos($pessoaId)
     {
-        $documentos = new clsDocumento;
-        $documentos->idpes = $pessoaId;
-
-        // rg
-
-        $documentos->rg = $_REQUEST['rg'];
-
-        $documentos->data_exp_rg = Portabilis_Date_Utils::brToPgSQL(
-            date: $_REQUEST['data_emissao_rg']
-        );
-
-        $documentos->idorg_exp_rg = $_REQUEST['orgao_emissao_rg'];
-        $documentos->sigla_uf_exp_rg = $_REQUEST['uf_emissao_rg'];
+        if (!is_numeric($pessoaId)) {
+            return;
+        }
 
         // certidão civil
-
+        //
         // o tipo certidão novo padrão é apenas para exibição ao usuário,
         // não precisa ser gravado no banco
         //
@@ -1454,74 +1432,77 @@ return new class extends clsCadastro
         // é removido o valor de certidao_nascimento.
         //
         if ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato') {
-            $documentos->tipo_cert_civil = null;
-            $documentos->certidao_casamento = '';
-            $documentos->certidao_nascimento = $_REQUEST['certidao_nascimento'];
+            $tipoCertCivil = null;
+            $certidaoCasamento = '';
+            $certidaoNascimento = $_REQUEST['certidao_nascimento'];
         } elseif ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato') {
-            $documentos->tipo_cert_civil = null;
-            $documentos->certidao_nascimento = '';
-            $documentos->certidao_casamento = $_REQUEST['certidao_casamento'];
+            $tipoCertCivil = null;
+            $certidaoNascimento = '';
+            $certidaoCasamento = $_REQUEST['certidao_casamento'];
         } else {
-            $documentos->tipo_cert_civil = $_REQUEST['tipo_certidao_civil'];
-            $documentos->certidao_nascimento = '';
-            $documentos->certidao_casamento = '';
+            $tipoCertCivil = $_REQUEST['tipo_certidao_civil'];
+            $certidaoNascimento = '';
+            $certidaoCasamento = '';
         }
 
-        $documentos->num_termo = $_REQUEST['termo_certidao_civil'];
-        $documentos->num_livro = $_REQUEST['livro_certidao_civil'];
-        $documentos->num_folha = $_REQUEST['folha_certidao_civil'];
-
-        $documentos->data_emissao_cert_civil = Portabilis_Date_Utils::brToPgSQL(
-            date: $_REQUEST['data_emissao_certidao_civil']
+        LegacyDocument::updateOrCreate(
+            ['idpes' => $pessoaId],
+            [
+                'rg' => $_REQUEST['rg'] ?: null,
+                'data_exp_rg' => Portabilis_Date_Utils::brToPgSQL(date: $_REQUEST['data_emissao_rg']) ?: null,
+                'idorg_exp_rg' => (is_numeric($_REQUEST['orgao_emissao_rg']) && !empty($_REQUEST['orgao_emissao_rg'])) ? $_REQUEST['orgao_emissao_rg'] : null,
+                'sigla_uf_exp_rg' => $_REQUEST['uf_emissao_rg'] ?: null,
+                'tipo_cert_civil' => $tipoCertCivil ?: null,
+                'certidao_nascimento' => $certidaoNascimento,
+                'certidao_casamento' => $certidaoCasamento,
+                'num_termo' => (is_numeric($_REQUEST['termo_certidao_civil']) && !empty($_REQUEST['termo_certidao_civil'])) ? $_REQUEST['termo_certidao_civil'] : null,
+                'num_livro' => $_REQUEST['livro_certidao_civil'] ?: null,
+                'num_folha' => (is_numeric($_REQUEST['folha_certidao_civil']) && !empty($_REQUEST['folha_certidao_civil'])) ? $_REQUEST['folha_certidao_civil'] : null,
+                'data_emissao_cert_civil' => Portabilis_Date_Utils::brToPgSQL(date: $_REQUEST['data_emissao_certidao_civil']) ?: null,
+                'sigla_uf_cert_civil' => $_REQUEST['uf_emissao_certidao_civil'] ?: null,
+                'cartorio_cert_civil' => pg_escape_string(connection: $_REQUEST['cartorio_emissao_certidao_civil']) ?: null,
+                'cartorio_cert_civil_inep' => null,
+                'passaporte' => pg_escape_string(connection: $_REQUEST['passaporte']),
+                'num_cart_trabalho' => (is_numeric($_REQUEST['carteira_trabalho']) && !empty($_REQUEST['carteira_trabalho'])) ? $_REQUEST['carteira_trabalho'] : null,
+                'serie_cart_trabalho' => (is_numeric($_REQUEST['serie_carteira_trabalho']) && !empty($_REQUEST['serie_carteira_trabalho'])) ? $_REQUEST['serie_carteira_trabalho'] : null,
+                'data_emissao_cart_trabalho' => Portabilis_Date_Utils::brToPgSQL(date: $_REQUEST['data_emissao_carteira_trabalho']) ?: null,
+                'sigla_uf_cart_trabalho' => $_REQUEST['uf_emissao_carteira_trabalho'] ?: null,
+                'num_tit_eleitor' => (is_numeric($_REQUEST['titulo_eleitor']) && !empty($_REQUEST['titulo_eleitor'])) ? $_REQUEST['titulo_eleitor'] : null,
+                'zona_tit_eleitor' => (is_numeric($_REQUEST['zona_titulo_eleitor']) && !empty($_REQUEST['zona_titulo_eleitor'])) ? $_REQUEST['zona_titulo_eleitor'] : null,
+                'secao_tit_eleitor' => (is_numeric($_REQUEST['secao_titulo_eleitor']) && !empty($_REQUEST['secao_titulo_eleitor'])) ? $_REQUEST['secao_titulo_eleitor'] : null,
+            ]
         );
-
-        $documentos->sigla_uf_cert_civil = $_REQUEST['uf_emissao_certidao_civil'];
-        $documentos->cartorio_cert_civil = pg_escape_string(connection: $_REQUEST['cartorio_emissao_certidao_civil']);
-        $documentos->passaporte = pg_escape_string(connection: $_REQUEST['passaporte']);
-
-        // carteira de trabalho
-
-        $documentos->num_cart_trabalho = $_REQUEST['carteira_trabalho'];
-        $documentos->serie_cart_trabalho = $_REQUEST['serie_carteira_trabalho'];
-
-        $documentos->data_emissao_cart_trabalho = Portabilis_Date_Utils::brToPgSQL(
-            date: $_REQUEST['data_emissao_carteira_trabalho']
-        );
-
-        $documentos->sigla_uf_cart_trabalho = $_REQUEST['uf_emissao_carteira_trabalho'];
-
-        // titulo de eleitor
-
-        $documentos->num_tit_eleitor = $_REQUEST['titulo_eleitor'];
-        $documentos->zona_tit_eleitor = $_REQUEST['zona_titulo_eleitor'];
-        $documentos->secao_tit_eleitor = $_REQUEST['secao_titulo_eleitor'];
-
-        // Alteração de documentos compativel com a versão anterior do cadastro,
-        // onde era possivel criar uma pessoa, não informando os documentos,
-        // o que não criaria o registro do documento, sendo assim, ao editar uma pessoa,
-        // o registro do documento será criado, caso não exista.
-
-        $sql = 'select 1 from cadastro.documento WHERE idpes = $1 limit 1';
-
-        if (Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $pessoaId) != 1) {
-            $documentos->cadastra();
-        } else {
-            $documentos->edita();
-        }
     }
 
     protected function createOrUpdateTelefones($pessoaId)
     {
-        $telefones = [];
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_LANDLINE,
+            ddd: $this->ddd_telefone_1,
+            phone: $this->telefone_1
+        );
 
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 1, str_fone: $this->telefone_1, str_ddd: $this->ddd_telefone_1);
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 2, str_fone: $this->telefone_2, str_ddd: $this->ddd_telefone_2);
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 3, str_fone: $this->telefone_mov, str_ddd: $this->ddd_telefone_mov);
-        $telefones[] = new clsPessoaTelefone(int_idpes: $pessoaId, int_tipo: 4, str_fone: $this->telefone_fax, str_ddd: $this->ddd_telefone_fax);
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_MOBILE,
+            ddd: $this->ddd_telefone_2,
+            phone: $this->telefone_2
+        );
 
-        foreach ($telefones as $telefone) {
-            $telefone->cadastra();
-        }
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_MOBILE_ALT,
+            ddd: $this->ddd_telefone_mov,
+            phone: $this->telefone_mov
+        );
+
+        app(PhoneService::class)->save(
+            personId: $pessoaId,
+            type: LegacyPhone::TYPE_FAX,
+            ddd: $this->ddd_telefone_fax,
+            phone: $this->telefone_fax
+        );
     }
 
     // inputs usados em Gerar,

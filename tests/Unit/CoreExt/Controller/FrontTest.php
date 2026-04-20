@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_Controller_FrontTest extends TestCase
 {
     protected $_frontController = null;
 
@@ -15,7 +17,7 @@ class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
 
     public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->_frontController->setOptions(['foo' => 'bar']);
     }
 

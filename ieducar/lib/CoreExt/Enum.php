@@ -15,7 +15,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * @param string|int $key
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getValue($key)
     {
         return $this->_data[$key];
@@ -26,7 +26,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      *
      * @return array
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getValues()
     {
         return array_values($this->_data);
@@ -38,7 +38,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * @param mixed $value
      * @return int|string
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getKey($value)
     {
         return array_search($value, $this->_data);
@@ -49,7 +49,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      *
      * @return array
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getKeys()
     {
         return array_keys($this->_data);
@@ -84,7 +84,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      *
      * @throws CoreExt_Exception
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new CoreExt_Exception('Um "' . get_class($this) . '" é um objeto read-only.');
@@ -102,7 +102,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      *
      * @throws CoreExt_Exception
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new CoreExt_Exception('Um "' . get_class($this) . '" é um objeto read-only.');
@@ -116,7 +116,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * @param string|int $offset
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->_data[$offset];

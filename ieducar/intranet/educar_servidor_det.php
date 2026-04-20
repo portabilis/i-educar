@@ -2,6 +2,7 @@
 
 use App\Models\EmployeeWithdrawal;
 use App\Models\LegacyRole;
+use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyUserType;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Facades\DB;
@@ -47,9 +48,7 @@ return new class extends clsDetalhe
         }
 
         // Escolaridade
-        $obj_ref_idesco = new clsCadastroEscolaridade($registro['ref_idesco']);
-        $det_ref_idesco = $obj_ref_idesco->detalhe();
-        $registro['ref_idesco'] = $det_ref_idesco['descricao'];
+        $registro['ref_idesco'] = LegacySchoolingDegree::whereKey($registro['ref_idesco'])->value('descricao');
 
         // Função
         $det_ref_cod_funcao = LegacyRole::find($this->cod_funcao)?->getAttributes();

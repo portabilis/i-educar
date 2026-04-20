@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyBondType;
 use App\Models\LegacyRole;
 
 return new class extends clsListagem
@@ -138,8 +139,7 @@ return new class extends clsListagem
                 $funcao = LegacyRole::find($funcaoServidor['ref_cod_funcao'])?->getAttributes();
 
                 // Vinculo
-                $funcionarioVinculo = new clsPortalFuncionario;
-                $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
+                $funcionarioVinculo = LegacyBondType::whereKey($registro['ref_cod_funcionario_vinculo'])->value('nm_vinculo');
 
                 $this->addLinhas([
                     $url->l($escola['nome'], $path, $options),

@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyPerson;
+use App\Models\LegacySchoolingDegree;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -179,12 +181,10 @@ class clsFisica
         if ($objPessoaResponsavel->detalhe() || $idpes_responsavel == 'NULL') {
             $this->idpes_responsavel = $idpes_responsavel;
         }
-        $objEscolaridade = new clsEscolaridade($idesco);
-        if ($objEscolaridade->detalhe()) {
+        if ($idesco && LegacySchoolingDegree::whereKey($idesco)->exists()) {
             $this->idesco = $idesco;
         }
-        $objEstadoCivil = new clsEstadoCivil($ideciv);
-        if ($objEstadoCivil->detalhe()) {
+        if ($ideciv && LegacyMaritalStatus::whereKey($ideciv)->exists()) {
             $this->ideciv = $ideciv;
         }
         $objPessoaCon = new clsPessoa_($idpes_con);
@@ -1003,8 +1003,6 @@ class clsFisica
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-
             $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
@@ -1029,9 +1027,6 @@ class clsFisica
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla['idesco'] = new clsEscolaridade($tupla['idesco']);
-                $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-
                 return $tupla;
             }
         } elseif ($this->cpf) {
@@ -1039,9 +1034,6 @@ class clsFisica
             $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo, povo_indigena_educacenso_id FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-
-                $tupla['idesco'] = new clsEscolaridade($tupla['idesco']);
-                $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
 
                 return $tupla;
             }

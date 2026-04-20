@@ -47,7 +47,7 @@ $j(document).ready(function(){
              '<div id="modal_mensagem_desabilitado" style="width:400px;display:none; text-align:left">'+
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento, todos os dados da sua escola foram validados com sucesso!</p>' +
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px; font-weight: bold;">Mas por que o i-Educar ainda não baixou o arquivo de exportação da minha escola?</p>' +
-             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O INEP está realizando atualizações nas regras e nos campos exigidos pelo Censo Escolar 2025. Estamos trabalhando para adequar o sistema e o processo de exportação ao novo layout.</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O INEP está realizando atualizações nas regras e nos campos exigidos pelo Censo Escolar 2026. Estamos trabalhando para adequar o sistema e o processo de exportação ao novo layout.</p>' +
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Fique tranquilo! Assim que todas as adaptações forem concluídas, a funcionalidade de exportação será liberada normalmente no i-Educar.</p>' +
              '</div>'+
             '</div>';

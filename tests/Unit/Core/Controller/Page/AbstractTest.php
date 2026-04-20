@@ -15,7 +15,7 @@ class Core_Controller_Page_AbstractTest extends TestCase
 
     public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $this->_pageController->setOptions(['foo' => 'bar']);
     }
 
@@ -36,19 +36,19 @@ class Core_Controller_Page_AbstractTest extends TestCase
 
     public function test_classe_data_mapper_nao_existente_lanca_excecao()
     {
-        $this->expectException(\Core_Controller_Page_Exception::class);
+        $this->expectException(Core_Controller_Page_Exception::class);
         $this->_pageController->setDataMapper('FooDataMapper');
     }
 
     public function test_metodo_lanca_excecao_quando_nao_recebe_tipo_suportado()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $this->_pageController->setDataMapper(0);
     }
 
     public function test_classe_data_mapper_nao_informada_e_metodo_nao_subclassificado_lanca_excecao()
     {
-        $this->expectException(\Core_Controller_Page_Exception::class);
+        $this->expectException(Core_Controller_Page_Exception::class);
         $this->_pageController->getDataMapper();
     }
 
@@ -79,7 +79,7 @@ class Core_Controller_Page_AbstractTest extends TestCase
 
     public function test_numero_do_processo_nao_informado_e_metodo_nao_subclassificado_lanca_excecao()
     {
-        $this->expectException(\Core_Controller_Page_Exception::class);
+        $this->expectException(Core_Controller_Page_Exception::class);
         $this->_pageController->getBaseProcessoAp();
     }
 
@@ -98,7 +98,7 @@ class Core_Controller_Page_AbstractTest extends TestCase
 
     public function test_titulo_nao_informado_e_metodo_nao_subclassificado_lanca_excecao()
     {
-        $this->expectException(\Core_Controller_Page_Exception::class);
+        $this->expectException(Core_Controller_Page_Exception::class);
         $this->_pageController->getBaseTitulo();
     }
 
