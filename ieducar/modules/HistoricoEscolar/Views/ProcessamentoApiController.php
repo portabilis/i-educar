@@ -627,7 +627,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             'nm_curso' => $dadosMatricula['nome_curso'],
             'historico_grade_curso_id' => is_numeric($this->getRequest()->grade_curso_id) ? $this->getRequest()->grade_curso_id : null,
             'ref_cod_escola' => $dadosMatricula['escola_id'],
-            'dependencia' => (bool) $this->getRequest()->dependencia,
+            'dependencia' => $this->getRequest()->dependencia,
             'posicao' => is_numeric($this->getRequest()->posicao) ? $this->getRequest()->posicao : null,
         ];
     }
