@@ -15,7 +15,7 @@ class S3UrlPresigner
         }
 
         $options = [];
-        if ($filename !== null && $filename !== '') {
+        if ($filename) {
             $options['ResponseContentDisposition'] = 'inline; filename="' . rawurlencode($filename) . '"';
         }
 
