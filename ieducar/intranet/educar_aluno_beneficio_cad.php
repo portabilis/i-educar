@@ -20,6 +20,8 @@ return new class extends clsCadastro
 
     public $nm_beneficio;
 
+    public $bolsa_familia;
+
     public $desc_beneficio;
 
     public $data_cadastro;
@@ -72,6 +74,7 @@ return new class extends clsCadastro
         // text
         $this->campoTexto(nome: 'nm_beneficio', campo: 'Benefício', valor: $this->nm_beneficio, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
         $this->campoMemo(nome: 'desc_beneficio', campo: 'Descrição Benefício', valor: $this->desc_beneficio, colunas: 60, linhas: 5);
+        $this->campoCheck(nome: 'bolsa_familia', campo: 'Bolsa Família', valor: $this->bolsa_familia);
     }
 
     public function Novo()
@@ -80,6 +83,8 @@ return new class extends clsCadastro
         $classType->ref_usuario_cad = $this->pessoa_logada;
         $classType->nm_beneficio = $this->nm_beneficio;
         $classType->desc_beneficio = $this->desc_beneficio;
+        $classType->bolsa_familia = !is_null($this->bolsa_familia);
+
 
         if ($classType->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -98,6 +103,7 @@ return new class extends clsCadastro
         $classType->ativo = 1;
         $classType->nm_beneficio = $this->nm_beneficio;
         $classType->desc_beneficio = $this->desc_beneficio;
+        $classType->bolsa_familia = !is_null($this->bolsa_familia);
 
         if ($classType->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
