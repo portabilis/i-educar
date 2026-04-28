@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyOrganization;
+use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Services\PhoneService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -62,23 +64,25 @@ return new class extends clsCadastro
 
         if ($this->cod_pessoa_fj) {
             $this->busca_empresa = true;
-            $objPessoaJuridica = new clsPessoaJuridica(int_idpes: $this->cod_pessoa_fj);
-            $detalhePessoaJuridica = $objPessoaJuridica->detalhe();
-            $this->email = $detalhePessoaJuridica['email'];
-            $this->url = $detalhePessoaJuridica['url'];
-            $this->insc_est = $detalhePessoaJuridica['insc_estadual'];
-            $this->capital_social = $detalhePessoaJuridica['capital_social'];
-            $this->razao_social = $detalhePessoaJuridica['nome'];
-            $this->fantasia = $detalhePessoaJuridica['fantasia'];
-            $this->cnpj = validaCNPJ(cnpj: $detalhePessoaJuridica['cnpj']) ? int2CNPJ(int: $detalhePessoaJuridica['cnpj']) : null;
-            $this->ddd_telefone_1 = $detalhePessoaJuridica['ddd_1'];
-            $this->telefone_1 = $detalhePessoaJuridica['fone_1'];
-            $this->ddd_telefone_2 = $detalhePessoaJuridica['ddd_2'];
-            $this->telefone_2 = $detalhePessoaJuridica['fone_2'];
-            $this->ddd_telefone_mov = $detalhePessoaJuridica['ddd_mov'];
-            $this->telefone_mov = $detalhePessoaJuridica['fone_mov'];
-            $this->ddd_telefone_fax = $detalhePessoaJuridica['ddd_fax'];
-            $this->telefone_fax = $detalhePessoaJuridica['fone_fax'];
+            $pessoa = LegacyPerson::with(['organization', 'phones'])->find($this->cod_pessoa_fj);
+
+            if ($pessoa) {
+                $this->email = $pessoa->email;
+                $this->url = $pessoa->url;
+                $this->razao_social = $pessoa->nome;
+                $this->insc_est = $pessoa->organization?->insc_estadual;
+                $this->capital_social = $pessoa->organization?->capital_social;
+                $this->fantasia = $pessoa->organization?->fantasia;
+                $cnpj = $pessoa->organization?->cnpj;
+                $this->cnpj = validaCNPJ(cnpj: $cnpj) ? int2CNPJ(int: $cnpj) : null;
+
+                foreach ($pessoa->phones as $phone) {
+                    if ($sufixo = $phone->legacy_suffix) {
+                        $this->{"ddd_telefone_{$sufixo}"} = $phone->ddd;
+                        $this->{"telefone_{$sufixo}"} = $phone->fone;
+                    }
+                }
+            }
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
 
@@ -156,8 +160,7 @@ return new class extends clsCadastro
 
         $this->cnpj = validaCNPJ(cnpj: $this->cnpj) ? idFederal2int(str: urldecode(string: $this->cnpj)) : null;
 
-        $contemPessoaJuridica = (new clsJuridica(idpes: false, cnpj: $this->cnpj))->detalhe();
-        if ($this->cnpj !== null && $contemPessoaJuridica) {
+        if ($this->cnpj !== null && LegacyOrganization::where('cnpj', $this->cnpj)->exists()) {
             $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
             return false;
@@ -191,13 +194,15 @@ return new class extends clsCadastro
 
         $this->cod_pessoa_fj = $objPessoa->cadastra();
 
-        (new clsJuridica(
-            idpes: $this->cod_pessoa_fj,
-            cnpj: $this->cnpj,
-            fantasia: $this->fantasia,
-            insc_estadual: $this->insc_est,
-            capital_social: $this->capital_social
-        ))->cadastra();
+        if (is_numeric($this->cod_pessoa_fj) && Auth::check() && LegacyPerson::whereKey($this->cod_pessoa_fj)->exists()) {
+            LegacyOrganization::create([
+                'idpes' => $this->cod_pessoa_fj,
+                'cnpj' => $this->cnpj,
+                'fantasia' => $this->fantasia,
+                'insc_estadual' => is_numeric($this->insc_est) ? $this->insc_est : null,
+                'capital_social' => $this->capital_social,
+            ]);
+        }
 
         app(PhoneService::class)->save(
             personId: $this->cod_pessoa_fj,
@@ -291,11 +296,8 @@ return new class extends clsCadastro
             return false;
         }
 
-        $objJuridica = new clsJuridica(idpes: false, cnpj: $this->cnpj);
-
-        $detalhe = $objJuridica->detalhe();
-
-        if ($detalhe && $this->cod_pessoa_fj != $detalhe['idpes']) {
+        $idpesCnpjExistente = LegacyOrganization::where('cnpj', $this->cnpj)->value('idpes');
+        if ($idpesCnpjExistente !== null && $this->cod_pessoa_fj != $idpesCnpjExistente) {
             $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
             return false;
@@ -323,14 +325,14 @@ return new class extends clsCadastro
         );
         $objPessoa->edita();
 
-        $objJuridica = new clsJuridica(
-            idpes: $this->cod_pessoa_fj,
-            cnpj: $this->cnpj,
-            fantasia: $this->fantasia,
-            insc_estadual: $this->insc_est,
-            capital_social: $this->capital_social
-        );
-        $objJuridica->edita();
+        if (is_numeric($this->cod_pessoa_fj) && Auth::check()) {
+            LegacyOrganization::find($this->cod_pessoa_fj)?->update([
+                'cnpj' => is_numeric($this->cnpj) ? $this->cnpj : null,
+                'fantasia' => $this->fantasia,
+                'capital_social' => $this->capital_social,
+                'insc_estadual' => (is_numeric($this->insc_est) && $this->insc_est) ? $this->insc_est : null,
+            ]);
+        }
 
         app(PhoneService::class)->save(
             personId: $this->cod_pessoa_fj,

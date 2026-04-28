@@ -4,6 +4,7 @@ use App\Models\City;
 use App\Models\EmployeeInep;
 use App\Models\Enums\SchoolCharacteristic;
 use App\Models\LegacyCourse;
+use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchoolCourse;
@@ -416,10 +417,10 @@ return new class extends clsCadastro
 
             $this->carregaCamposComDadosDaEscola($registro);
 
-            $objJuridica = (new clsPessoaJuridica($this->ref_idpes))->detalhe();
+            $cnpjEscola = LegacyOrganization::whereKey($this->ref_idpes)->value('cnpj');
 
-            if (validaCNPJ($objJuridica['cnpj'])) {
-                $this->cnpj = int2CNPJ($objJuridica['cnpj']);
+            if (validaCNPJ($cnpjEscola)) {
+                $this->cnpj = int2CNPJ($cnpjEscola);
             }
 
             $this->fexcluir = is_numeric($this->cod_escola) && $obj_permissoes->permissao_excluir(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
@@ -675,8 +676,7 @@ return new class extends clsCadastro
 
             $this->carregaDadosDoPost();
 
-            $objTemp = new clsPessoaJuridica($this->ref_idpes);
-            $objTemp->detalhe();
+            $cnpjPessoaJuridica = LegacyOrganization::whereKey($this->ref_idpes)->value('cnpj');
 
             $this->campoOculto(nome: 'cod_escola', valor: $this->cod_escola);
             $this->campoTexto(nome: 'fantasia', campo: 'Escola', valor: $this->fantasia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -735,17 +735,15 @@ return new class extends clsCadastro
                 $this->cnpj = empty($this->cnpj) ? $this->cnpj : int2IdFederal($this->cnpj);
             }
 
-            if (empty($this->cnpj) && $objTemp->cnpj) {
-                $this->cnpj = $objTemp->cnpj;
+            if (empty($this->cnpj) && $cnpjPessoaJuridica) {
+                $this->cnpj = $cnpjPessoaJuridica;
             }
 
-            $objJuridica = new clsPessoaJuridica($this->pessoaj_id);
-
-            $det = $objJuridica->detalhe();
-            $this->ref_idpes = $det['idpes'];
+            $orgPessoaJuridica = LegacyOrganization::whereKey($this->pessoaj_id)->first(['idpes', 'fantasia']);
+            $this->ref_idpes = $orgPessoaJuridica?->idpes;
 
             if (!$this->fantasia) {
-                $this->fantasia = $det['fantasia'];
+                $this->fantasia = $orgPessoaJuridica?->fantasia;
             }
 
             if ($this->cnpj) {
@@ -1633,9 +1631,7 @@ return new class extends clsCadastro
 
         $this->preparaDados();
 
-        $pessoaJuridica = (new clsJuridica((int) $this->pessoaj_id_oculto))->detalhe();
-
-        if ($pessoaJuridica === false) {
+        if (!LegacyOrganization::whereKey((int) $this->pessoaj_id_oculto)->exists()) {
             throw new Exception('Pessoa jurídica não encontrada');
         }
 
@@ -2106,7 +2102,14 @@ return new class extends clsCadastro
 
     private function atualizaNomePessoaJuridica($idpes)
     {
-        (new clsJuridica(idpes: $idpes, cnpj: null, fantasia: $this->fantasia))->edita();
+        if (!is_numeric($idpes) || !Auth::check()) {
+            return;
+        }
+
+        LegacyOrganization::find($idpes)?->update([
+            'cnpj' => null,
+            'fantasia' => $this->fantasia,
+        ]);
     }
 
     public function Excluir()
