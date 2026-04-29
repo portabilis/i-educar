@@ -70,10 +70,7 @@ return new class extends clsListagem
 
         if ($busca == 'S' && is_string($chave_busca) && $chave_busca !== '') {
             $matchPorNome = (clone $baseQuery)
-                ->whereRaw(
-                    "translate(upper(cadastro.pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper(?),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')",
-                    ["%{$chave_busca}%"]
-                )
+                ->whereRaw('f_unaccent(cadastro.pessoa.nome) ILIKE f_unaccent(?)', ["%{$chave_busca}%"])
                 ->limit($limite)
                 ->get();
 

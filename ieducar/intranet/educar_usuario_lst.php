@@ -117,10 +117,7 @@ return new class extends clsListagem
         }
 
         if (is_string($strNome)) {
-            $query->whereRaw(
-                "translate(upper(cadastro.pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper(?),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')",
-                ["%{$strNome}%"]
-            );
+            $query->whereRaw('f_unaccent(cadastro.pessoa.nome) ILIKE f_unaccent(?)', ["%{$strNome}%"]);
         }
 
         if (is_numeric($this->ref_cod_escola)) {

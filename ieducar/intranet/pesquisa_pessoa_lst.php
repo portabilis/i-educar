@@ -281,10 +281,7 @@ return new class extends clsListagem
                 }
 
                 if (!is_numeric($chave_busca) && is_string($this->campo_busca) && $this->campo_busca !== '') {
-                    $query->whereRaw(
-                        "translate(upper(cadastro.pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper(?),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')",
-                        ["%{$this->campo_busca}%"]
-                    );
+                    $query->whereRaw('f_unaccent(cadastro.pessoa.nome) ILIKE f_unaccent(?)', ["%{$this->campo_busca}%"]);
                 }
             }
 
