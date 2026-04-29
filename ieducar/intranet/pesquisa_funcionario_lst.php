@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEmployee;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -57,23 +58,42 @@ return new class extends clsListagem
             $com_matricula = true;
         }
 
-        if ($busca == 'S') {
-            $obj_funcionario = new clsFuncionario;
-            $lst_funcionario = $obj_funcionario->lista(str_nome: $chave_busca, int_qtd_registros: $limite);
+        $baseQuery = LegacyEmployee::query()
+            ->join('cadastro.pessoa', 'cadastro.pessoa.idpes', 'portal.funcionario.ref_cod_pessoa_fj')
+            ->select(['portal.funcionario.ref_cod_pessoa_fj', 'portal.funcionario.matricula', 'cadastro.pessoa.nome'])
+            ->with('person.individual')
+            ->orderBy('cadastro.pessoa.nome');
 
-            if (!$lst_funcionario) {
-                $lst_funcionario = $obj_funcionario->lista(str_matricula: $chave_busca, int_inicio_limit: $iniciolimit, int_qtd_registros: $limite, matricula_is_not_null: $com_matricula);
-            }
-        } else {
-            $obj_funcionario = new clsFuncionario;
-            $lst_funcionario = $obj_funcionario->lista(int_inicio_limit: $iniciolimit, int_qtd_registros: $limite, matricula_is_not_null: $com_matricula);
+        if ($com_matricula) {
+            $baseQuery->whereNotNull('portal.funcionario.matricula');
         }
 
-        if ($lst_funcionario) {
+        if ($busca == 'S' && is_string($chave_busca) && $chave_busca !== '') {
+            $matchPorNome = (clone $baseQuery)
+                ->whereRaw(
+                    "translate(upper(cadastro.pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper(?),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')",
+                    ["%{$chave_busca}%"]
+                )
+                ->limit($limite)
+                ->get();
+
+            if ($matchPorNome->isNotEmpty()) {
+                $lst_funcionario = $matchPorNome;
+                $total = $matchPorNome->count();
+            } else {
+                $queryMatricula = (clone $baseQuery)
+                    ->where('portal.funcionario.matricula', 'like', "%{$chave_busca}%");
+                $total = (clone $queryMatricula)->count();
+                $lst_funcionario = $queryMatricula->offset($iniciolimit)->limit($limite)->get();
+            }
+        } else {
+            $total = (clone $baseQuery)->count();
+            $lst_funcionario = $baseQuery->offset($iniciolimit)->limit($limite)->get();
+        }
+
+        if ($lst_funcionario->isNotEmpty()) {
             foreach ($lst_funcionario as $funcionario) {
-                $obj_cod_servidor = new clsFuncionario($funcionario['ref_cod_pessoa_fj']);
-                $det_cod_servidor = $obj_cod_servidor->detalhe();
-                $det_cod_servidor = $det_cod_servidor['idpes']->detalhe();
+                $det_cod_servidor = ['cpf' => $funcionario->person?->individual?->cpf];
 
                 $funcao = ' set_campo_pesquisa(';
                 $virgula = '';
@@ -83,12 +103,10 @@ return new class extends clsListagem
                     if ($parametros->getCampoTipo($cont) == 'text') {
                         if ($parametros->getCampoValor($cont) == 'cpf') {
                             if ($this->importarCpf || $busca) {
-                                $objPessoa = new clsPessoaFisica($funcionario['ref_cod_pessoa_fj']);
-                                $objPessoa_det = $objPessoa->detalhe();
-                                $funcionario[$parametros->getCampoValor($cont)] = $objPessoa_det['cpf'];
+                                $funcionario['cpf'] = $funcionario->person?->individual?->cpf;
                             }
 
-                            $funcionario[$parametros->getCampoValor($cont)] = int2CPF($funcionario[$parametros->getCampoValor($cont)]);
+                            $funcionario['cpf'] = int2CPF($funcionario['cpf']);
                         }
 
                         $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoValor($cont)]}'";
@@ -96,12 +114,10 @@ return new class extends clsListagem
                     } elseif ($parametros->getCampoTipo($cont) == 'select') {
                         if ($parametros->getCampoValor($cont) == 'cpf') {
                             if ($this->importarCpf || $busca) {
-                                $objPessoa = new clsPessoaFisica($funcionario['ref_cod_pessoa_fj']);
-                                $objPessoa_det = $objPessoa->detalhe();
-                                $funcionario[$parametros->getCampoValor($cont)] = $objPessoa_det['cpf'];
+                                $funcionario['cpf'] = $funcionario->person?->individual?->cpf;
                             }
 
-                            $funcionario[$parametros->getCampoValor($cont)] = int2CPF($funcionario[$parametros->getCampoValor($cont)]);
+                            $funcionario['cpf'] = int2CPF($funcionario['cpf']);
                         }
 
                         $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoIndice($cont)]}', '{$funcionario[$parametros->getCampoValor($cont)]}'";
@@ -120,7 +136,6 @@ return new class extends clsListagem
                     <a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario['matricula']}</a>",
                     "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$det_cod_servidor['cpf']}</a>",
                     "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario['nome']}</a>"]);
-                $total = $funcionario['_total'];
             }
         }
         // Paginador

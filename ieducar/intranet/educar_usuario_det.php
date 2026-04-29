@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Models\LegacyPerson;
+
 return new class extends clsDetalhe
 {
     public $cod_usuario;
@@ -24,30 +27,20 @@ return new class extends clsDetalhe
 
         $cod_pessoa = $this->cod_usuario = $_GET['ref_pessoa'];
 
-        $obj_pessoa = new clsPessoa_(int_idpes: $cod_pessoa);
-        $det_pessoa = $obj_pessoa->detalhe();
+        $pessoa = LegacyPerson::with('individual')->whereKey($cod_pessoa)->first(['idpes', 'nome']);
+        $funcionario = LegacyEmployee::whereKey($cod_pessoa)->first(['email', 'matricula', 'matricula_interna']);
 
-        $this->addDetalhe(detalhe: ['Nome', $det_pessoa['nome']]);
+        $this->addDetalhe(detalhe: ['Nome', $pessoa?->nome]);
+        $this->addDetalhe(detalhe: ['CPF', int2CPF(int: $pessoa?->individual?->cpf)]);
+        $this->addDetalhe(detalhe: ['E-mail usuário', $funcionario?->email]);
 
-        $obj_fisica = new clsFisica(idpes: $cod_pessoa);
-        $det_fisica = $obj_fisica->detalhe();
-        $this->addDetalhe(detalhe: ['CPF', int2CPF(int: $det_fisica['cpf'])]);
-
-        $obj_funcionario = new clsFuncionario(int_idpes: $cod_pessoa);
-        $det_funcionario = $obj_funcionario->detalhe();
-
-        $this->addDetalhe(detalhe: ['E-mail usuário', $det_funcionario['email']]);
-
-        if (!empty($det_funcionario['matricula_interna'])) {
-            $this->addDetalhe(detalhe: ['Matrícula interna', $det_funcionario['matricula_interna']]);
+        if (!empty($funcionario?->matricula_interna)) {
+            $this->addDetalhe(detalhe: ['Matrícula interna', $funcionario->matricula_interna]);
         }
 
-        $obj_fisica = new clsFisica(idpes: $cod_pessoa);
-        $det_fisica = $obj_fisica->detalhe();
-
-        $sexo = ($det_fisica['sexo'] == 'M') ? 'Masculino' : 'Feminino';
+        $sexo = ($pessoa?->individual?->sexo == 'M') ? 'Masculino' : 'Feminino';
         $this->addDetalhe(detalhe: ['Sexo', $sexo]);
-        $this->addDetalhe(detalhe: ['Matrícula', $det_funcionario['matricula']]);
+        $this->addDetalhe(detalhe: ['Matrícula', $funcionario?->matricula]);
 
         $tmp_obj = new clsPmieducarUsuario(cod_usuario: $this->cod_usuario);
         $registro = $tmp_obj->detalhe();

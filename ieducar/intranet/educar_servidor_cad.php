@@ -7,6 +7,7 @@ use App\Models\EmployeePosgraduate;
 use App\Models\LegacyAbsenceDelay;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyPerson;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
@@ -219,11 +220,7 @@ return new class extends clsCadastro
          */
         $opcoes = ['' => 'Para procurar, clique na lupa ao lado.'];
         if ($this->cod_servidor) {
-            $servidor = new clsFuncionario($this->cod_servidor);
-            $servidor->detalhe();
-            // $detalhe = $detalhe['idpes']->detalhe();
-
-            $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
+            $this->campoRotulo('nm_servidor', 'Pessoa', LegacyPerson::whereKey($this->cod_servidor)->value('nome'));
             $this->campoOculto('cod_servidor', $this->cod_servidor);
             $this->campoOculto(
                 'ref_cod_instituicao_original',
