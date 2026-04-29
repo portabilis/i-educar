@@ -8,6 +8,8 @@ return new class extends clsCadastro
 
     public $cod_turma;
 
+    public $sequencia;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -15,27 +17,9 @@ return new class extends clsCadastro
         $this->cod_turma = $_GET['cod_turma'];
 
         if (is_numeric(value: $this->cod_turma)) {
-
-            $schoolclass = LegacySchoolClass::find(($this->cod_turma));
-
-            if ($schoolclass) {
-                $this->addHtml(view(
-                    'sequence.schoolclass', ['schoolclass' => $schoolclass]
-                )->render());
-
-                $this->campoQuebra();
-            }
-
-            $matriculasTurma = new clsPmieducarMatriculaTurma;
-            $matriculasTurma = $matriculasTurma->listaPorSequencial(codTurma: $this->cod_turma);
+            $matriculasTurma = (new clsPmieducarMatriculaTurma)->listaPorSequencial(codTurma: $this->cod_turma);
 
             if ($matriculasTurma) {
-                foreach ($matriculasTurma as $val) {
-                    $this->campoTexto(nome: 'nome_aluno_' . $val['id'], campo: '', valor: $val['nome'], tamanhovisivel: 60, tamanhomaximo: false, duplo: true, disabled: true);
-                    $this->campoTexto(nome: 'situacao_' . $val['id'], campo: '', valor: $val['situacao'], tamanhovisivel: 20, tamanhomaximo: false, duplo: true, disabled: true);
-                    $matriculaTurmaId = $val['id'];
-                    $this->campoTexto(nome: "sequencia[$matriculaTurmaId]", campo: '', valor: ($val['sequencial_fechamento']), tamanhovisivel: 5);
-                }
                 $retorno = 'Editar';
             }
         }
@@ -53,6 +37,36 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
+        $this->cod_turma = $this->cod_turma ?: ($_GET['cod_turma'] ?? null);
+
+        if (!is_numeric(value: $this->cod_turma)) {
+            return true;
+        }
+
+        $this->campoOculto(nome: 'cod_turma', valor: $this->cod_turma);
+
+        $schoolclass = LegacySchoolClass::find($this->cod_turma);
+
+        if ($schoolclass) {
+            $this->addHtml(view(
+                'sequence.schoolclass', ['schoolclass' => $schoolclass]
+            )->render());
+
+            $this->campoQuebra();
+        }
+
+        $matriculasTurma = (new clsPmieducarMatriculaTurma)->listaPorSequencial(codTurma: $this->cod_turma);
+
+        if ($matriculasTurma) {
+            foreach ($matriculasTurma as $val) {
+                $sequencia = $this->sequencia[$val['id']] ?? $val['sequencial_fechamento'];
+
+                $this->campoTexto(nome: 'nome_aluno_' . $val['id'], campo: '', valor: $val['nome'], tamanhovisivel: 60, tamanhomaximo: false, duplo: true, disabled: true);
+                $this->campoTexto(nome: 'situacao_' . $val['id'], campo: '', valor: $val['situacao'], tamanhovisivel: 20, tamanhomaximo: false, duplo: true, disabled: true);
+                $this->campoTexto(nome: "sequencia[{$val['id']}]", campo: '', valor: $sequencia, tamanhovisivel: 5);
+            }
+        }
+
         return true;
     }
 
@@ -63,6 +77,13 @@ return new class extends clsCadastro
 
     public function Editar()
     {
+        foreach ($this->sequencia as $sequencial) {
+            if (!is_numeric($sequencial)) {
+                $this->mensagem = 'Edição não realizada. É necessário preencher a sequência de todos os alunos.';
+
+                return false;
+            }
+        }
 
         foreach ($this->sequencia as $matriculaTurmaId => $sequencial) {
             Portabilis_Utils_Database::fetchPreparedQuery(
