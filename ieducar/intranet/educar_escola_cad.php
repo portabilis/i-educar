@@ -3,8 +3,10 @@
 use App\Models\City;
 use App\Models\EmployeeInep;
 use App\Models\Enums\SchoolCharacteristic;
+use App\Models\LegacyCourse;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
+use App\Models\LegacySchoolCourse;
 use App\Models\SchoolManager;
 use App\Models\SchoolSpace;
 use App\Rules\SchoolManagerAtLeastOneChief;
@@ -84,15 +86,7 @@ return new class extends clsCadastro
 
     public $passou;
 
-    public $escola_curso;
-
-    public $escola_curso_autorizacao;
-
-    public $escola_curso_anos_letivos;
-
     public $ref_cod_curso;
-
-    public $autorizacao;
 
     public $fantasia;
 
@@ -271,10 +265,6 @@ return new class extends clsCadastro
     public $mantenedora_escola_privada;
 
     public $cnpj_mantenedora_principal;
-
-    public $incluir_curso;
-
-    public $excluir_curso;
 
     public $sem_cnpj;
 
@@ -1008,119 +998,12 @@ return new class extends clsCadastro
 
             $this->campoQuebra();
             $this->addSchoolManagersTable();
-
-            if ($_POST['escola_curso']) {
-                $this->escola_curso = unserialize(data: urldecode($_POST['escola_curso']), options: ['stdclass']);
-            }
-
-            if ($_POST['escola_curso_autorizacao']) {
-                $this->escola_curso_autorizacao = unserialize(data: urldecode($_POST['escola_curso_autorizacao']), options: ['stdclass']);
-            }
-
-            if ($_POST['escola_curso_anos_letivos']) {
-                $this->escola_curso_anos_letivos = unserialize(data: urldecode($_POST['escola_curso_anos_letivos']), options: ['stdclass']);
-            }
-
-            if (is_numeric($this->cod_escola) && !$_POST) {
-                $obj = new clsPmieducarEscolaCurso($this->cod_escola);
-                $registros = $obj->lista($this->cod_escola);
-                if ($registros) {
-                    foreach ($registros as $campo) {
-                        $this->escola_curso[$campo['ref_cod_curso']] = $campo['ref_cod_curso'];
-                        $this->escola_curso_autorizacao[$campo['ref_cod_curso']] = $campo['autorizacao'];
-                        $this->escola_curso_anos_letivos[$campo['ref_cod_curso']] = json_decode($campo['anos_letivos']);
-                    }
-                }
-            }
-
-            if ($_POST['ref_cod_curso']) {
-                $this->escola_curso[$_POST['ref_cod_curso']] = $_POST['ref_cod_curso'];
-
-                if ($this->autorizacao) {
-                    $this->escola_curso_autorizacao[$_POST['ref_cod_curso']] = $this->autorizacao;
-                }
-
-                if ($this->adicionar_anos_letivos) {
-                    $this->escola_curso_anos_letivos[$_POST['ref_cod_curso']] = $this->adicionar_anos_letivos;
-                }
-
-                unset($this->ref_cod_curso);
-            }
-
             $this->campoQuebra();
-            $this->campoOculto(nome: 'excluir_curso', valor: '');
-            unset($aux);
 
-            if ($this->escola_curso) {
-                foreach ($this->escola_curso as $curso) {
-                    if ($this->excluir_curso == $curso) {
-                        unset($this->escola_curso[$curso]);
-                        $this->escola_curso_autorizacao[$curso] = null;
-                        $this->excluir_curso = null;
-                    } else {
-                        $obj_curso = new clsPmieducarCurso($curso);
-                        $obj_curso_det = $obj_curso->detalhe();
-                        $nm_curso = empty($obj_curso_det['descricao']) ? $obj_curso_det['nm_curso'] : "{$obj_curso_det['nm_curso']} ({$obj_curso_det['descricao']})";
-                        $nm_autorizacao = $this->escola_curso_autorizacao[$curso];
-                        $anosLetivos = $this->escola_curso_anos_letivos[$curso] ?: [];
-                        $this->campoTextoInv(nome: "ref_cod_curso_{$curso}", campo: '', valor: $nm_curso, tamanhovisivel: 50, tamanhomaximo: 255, duplo: true);
-                        $this->campoTextoInv(nome: "autorizacao_{$curso}", campo: '', valor: $nm_autorizacao, tamanhovisivel: 20, tamanhomaximo: 255);
-                        $this->campoTextoInv(nome: "anos_letivos_{$curso}", campo: '', valor: 'Anos: ' . implode(separator: ',', array: $anosLetivos), tamanhovisivel: 20, tamanhomaximo: 255, descricao2: "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
-                        $aux[$curso] = $curso;
-                        $aux_autorizacao[$curso] = $nm_autorizacao;
-                        $auxAnosLetivos[$curso] = $anosLetivos;
-                    }
-                }
-
-                unset($this->escola_curso);
-                $this->escola_curso = $aux;
-                $this->escola_curso_autorizacao = $aux_autorizacao;
-                $this->escola_curso_anos_letivos = $auxAnosLetivos;
+            if ($nivel === 1) {
+                $this->addSchoolCoursesTable();
             }
 
-            $this->campoOculto(nome: 'escola_curso', valor: serialize($this->escola_curso));
-            $this->campoOculto(nome: 'escola_curso_autorizacao', valor: serialize($this->escola_curso_autorizacao));
-            $this->campoOculto(nome: 'escola_curso_anos_letivos', valor: serialize($this->escola_curso_anos_letivos));
-            $opcoes = ['' => 'Selecione'];
-
-            // EDITAR
-            if ($this->cod_escola || $this->ref_cod_instituicao) {
-                $objTemp = new clsPmieducarCurso;
-                $objTemp->setOrderby('nm_curso');
-                $lista = $objTemp->lista(int_ativo: 1, int_ref_cod_instituicao: $this->ref_cod_instituicao);
-
-                if (is_array($lista) && count($lista)) {
-                    foreach ($lista as $registro) {
-                        $nm_curso = empty($registro['descricao']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao']})";
-                        $opcoes[$registro['cod_curso']] = $nm_curso;
-                    }
-                }
-            }
-
-            if ($aux) {
-                $this->campoLista(nome: 'ref_cod_curso', campo: 'Curso', valor: $opcoes, default: $this->ref_cod_curso, complemento: "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", obrigatorio: false);
-            } else {
-                $this->campoLista(nome: 'ref_cod_curso', campo: 'Curso', valor: $opcoes, default: $this->ref_cod_curso, complemento: "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-            }
-
-            $this->campoTexto(nome: 'autorizacao', campo: 'Autorização', valor: '', tamanhovisivel: 30, tamanhomaximo: 255);
-
-            $helperOptions = [
-                'objectName' => 'adicionar_anos_letivos',
-            ];
-
-            $options = [
-                'label' => 'Anos letivos',
-                'required' => false,
-                'size' => 50,
-                'value' => '',
-                'options' => [
-                    'all_values' => $this->sugestaoAnosLetivos(),
-                ],
-            ];
-            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
-
-            $this->campoOculto(nome: 'incluir_curso', valor: '');
             $this->campoQuebra();
 
             $helperOptions = ['objectName' => 'local_funcionamento'];
@@ -1819,30 +1702,120 @@ return new class extends clsCadastro
 
     private function cadastraEscolaCurso($cod_escola, $excluirEscolaCursos = false)
     {
-        if ($excluirEscolaCursos === true) {
-            (new clsPmieducarEscolaCurso($this->cod_escola))->excluirTodos();
+        // Se o JS não rodou ou o usuário não tem permissão poli, não mexe nos cursos
+        $obj_permissoes = new clsPermissoes;
+        if (!isset($_POST['cursos_ready']) || $obj_permissoes->nivel_acesso($this->pessoa_logada) !== 1) {
+            $this->storeManagers($cod_escola);
+
+            return true;
         }
 
-        $this->escola_curso = unserialize(data: urldecode($this->escola_curso), options: ['stdclass']);
-        $this->escola_curso_autorizacao = unserialize(data: urldecode($this->escola_curso_autorizacao), options: ['stdclass']);
-        $this->escola_curso_anos_letivos = unserialize(data: urldecode($this->escola_curso_anos_letivos), options: ['stdclass']);
-
-        if ($this->escola_curso) {
-            foreach ($this->escola_curso as $campo) {
-                $curso_escola = new clsPmieducarEscolaCurso(ref_cod_escola: $cod_escola, ref_cod_curso: $campo, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, data_cadastro: null, data_exclusao: null, ativo: 1, autorizacao: $this->escola_curso_autorizacao[$campo], anos_letivos: $this->escola_curso_anos_letivos[$campo]);
-                $cadastrou_ = $curso_escola->cadastra();
-
-                if (!$cadastrou_) {
-                    $this->mensagem = 'Cadastro não realizado.<br>';
-
-                    return false;
-                }
+        $cursosForm = [];
+        foreach ($_POST['cursos'] ?? [] as $linha) {
+            $cursoId = $linha['curso_id'] ?? null;
+            if (!is_numeric($cursoId) || isset($cursosForm[$cursoId])) {
+                continue;
             }
 
+            $anosStr = $linha['anos_letivos'] ?? '';
+            $anos = array_values(array_map('intval', array_filter(explode(',', $anosStr))));
+            sort($anos);
+
+            $cursosForm[(int) $cursoId] = [
+                'autorizacao' => trim($linha['autorizacao'] ?? ''),
+                'anos_letivos' => $anos,
+            ];
+        }
+
+        if (empty($cursosForm)) {
+            $this->mensagem = "Preencha o campo 'Curso' corretamente";
+
+            return false;
+        }
+
+        if ($excluirEscolaCursos) {
+            $this->syncEscolaCursos($cod_escola, $cursosForm);
+        } else {
+            $this->insertEscolaCursos($cod_escola, $cursosForm);
+        }
+
+        if (!empty($cursosForm)) {
             $this->storeManagers($cod_escola);
         }
 
         return true;
+    }
+
+    /**
+     * Insere cursos novos (usado no Novo)
+     */
+    private function insertEscolaCursos($cod_escola, $cursosForm)
+    {
+        foreach ($cursosForm as $cursoId => $dados) {
+            LegacySchoolCourse::create([
+                'ref_cod_escola' => $cod_escola,
+                'ref_cod_curso' => $cursoId,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ativo' => 1,
+                'autorizacao' => $dados['autorizacao'],
+                'anos_letivos' => '{' . implode(',', $dados['anos_letivos']) . '}',
+            ]);
+        }
+    }
+
+    /**
+     * Sincroniza cursos da escola (usado no Editar)
+     * Só insere novos, atualiza alterados e remove os que saíram
+     */
+    private function syncEscolaCursos($cod_escola, $cursosForm)
+    {
+        $registros = LegacySchoolCourse::where('ref_cod_escola', $cod_escola)
+            ->where('ativo', 1)
+            ->get();
+
+        $cursosDb = [];
+        foreach ($registros as $reg) {
+            $anosDb = array_map('intval', array_filter(explode(',', trim($reg->anos_letivos, '{}'))));
+            sort($anosDb);
+            $cursosDb[(int) $reg->ref_cod_curso] = [
+                'autorizacao' => trim($reg->autorizacao ?? ''),
+                'anos_letivos' => $anosDb,
+            ];
+        }
+
+        foreach ($cursosForm as $cursoId => $dados) {
+            if (!isset($cursosDb[$cursoId])) {
+                LegacySchoolCourse::create([
+                    'ref_cod_escola' => $cod_escola,
+                    'ref_cod_curso' => $cursoId,
+                    'ref_usuario_cad' => $this->pessoa_logada,
+                    'ativo' => 1,
+                    'autorizacao' => $dados['autorizacao'],
+                    'anos_letivos' => '{' . implode(',', $dados['anos_letivos']) . '}',
+                ]);
+            } else {
+                $dbDados = $cursosDb[$cursoId];
+                $mudou = $dados['autorizacao'] !== $dbDados['autorizacao']
+                    || $dados['anos_letivos'] !== $dbDados['anos_letivos'];
+
+                if ($mudou) {
+                    LegacySchoolCourse::where('ref_cod_escola', $cod_escola)
+                        ->where('ref_cod_curso', $cursoId)
+                        ->update([
+                            'autorizacao' => $dados['autorizacao'],
+                            'anos_letivos' => '{' . implode(',', $dados['anos_letivos']) . '}',
+                        ]);
+                }
+            }
+        }
+
+        foreach ($cursosDb as $cursoId => $dados) {
+            if (!isset($cursosForm[$cursoId])) {
+                LegacySchoolCourse::where('ref_cod_escola', $cod_escola)
+                    ->where('ref_cod_curso', $cursoId)
+                    ->delete();
+            }
+        }
     }
 
     private function constroiObjetoEscola($pessoaj_id_oculto, $escola = null)
@@ -2504,6 +2477,78 @@ return new class extends clsCadastro
             $options['value'] = $this->$campo;
             $this->inputsHelper()->integer(attrName: 'codigo_inep_escola_compartilhada' . $seq, inputOptions: $options);
         }
+    }
+
+    /**
+     * Cria tabela dinâmica com cursos da escola
+     */
+    protected function addSchoolCoursesTable()
+    {
+        $rows = [];
+
+        $cursosPost = $this->cursos ?? old('cursos');
+        if (!empty($cursosPost) && is_array($cursosPost)) {
+            foreach ($cursosPost as $linha) {
+                $rows[] = [
+                    $linha['curso_id'],
+                    $linha['autorizacao'] ?? '',
+                    $linha['anos_letivos'] ?? '',
+                ];
+            }
+        } elseif (is_numeric($this->cod_escola)) {
+            $registros = LegacySchoolCourse::where('ref_cod_escola', $this->cod_escola)
+                ->where('ativo', 1)
+                ->orderBy('data_cadastro')
+                ->get();
+
+            foreach ($registros as $reg) {
+                $anosLetivos = array_filter(explode(',', trim($reg->anos_letivos, '{}')));
+                $rows[] = [
+                    $reg->ref_cod_curso,
+                    $reg->autorizacao,
+                    implode(',', $anosLetivos),
+                ];
+            }
+        }
+
+        $opcoes = ['' => 'Selecione'];
+        if ($this->cod_escola || $this->ref_cod_instituicao) {
+            $objTemp = new clsPmieducarCurso;
+            $objTemp->setOrderby('nm_curso');
+            $lista = $objTemp->lista(int_ativo: 1, int_ref_cod_instituicao: $this->ref_cod_instituicao);
+            if (is_array($lista)) {
+                foreach ($lista as $registro) {
+                    $nm = empty($registro['descricao'])
+                        ? $registro['nm_curso']
+                        : "{$registro['nm_curso']} ({$registro['descricao']})";
+                    $opcoes[$registro['cod_curso']] = $nm;
+                }
+            }
+
+            $cursosInativos = [];
+            foreach ($rows as $row) {
+                if (!empty($row[0]) && !isset($opcoes[$row[0]])) {
+                    $nmCurso = LegacyCourse::whereKey($row[0])->value('nm_curso');
+                    if ($nmCurso) {
+                        $opcoes[$row[0]] = $nmCurso . ' (excluído)';
+                        $cursosInativos[] = $row[0];
+                    }
+                }
+            }
+        }
+
+        $this->campoOculto('sugestao_anos_letivos', json_encode(array_values($this->sugestaoAnosLetivos())));
+        $this->campoOculto('cursos_inativos', implode(',', $cursosInativos ?? []));
+
+        $this->campoTabelaInicio('cursos', 'Cursos', ['Curso', 'Autorização', 'Anos letivos'], $rows);
+        $options = [
+            'resources' => $opcoes,
+            'required' => true,
+        ];
+        $this->inputsHelper()->select(attrName: 'ref_cod_curso', inputOptions: $options);
+        $this->campoTexto('curso_autorizacao', 'Autorização', '', 20, 255);
+        $this->campoTexto('curso_anos_letivos', 'Anos letivos', '', 15, 255);
+        $this->campoTabelaFim();
     }
 
     /**

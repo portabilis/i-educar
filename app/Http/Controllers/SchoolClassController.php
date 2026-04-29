@@ -48,10 +48,11 @@ class SchoolClassController extends Controller
             DB::beginTransaction();
 
             $schoolClassPeriodId = LegacySchoolClass::query()->whereKey($codTurmaRequest)->value('turma_turno_id');
-            if ($codigoInepEducacenso &&
+            if ($codTurmaRequest &&
+                $codigoInepEducacenso &&
                 $request->integer('turma_turno_id') !== Period::FULLTIME &&
                 (int) $schoolClassPeriodId !== $request->integer('turma_turno_id') &&
-                $schoolClassService->hasStudentsPartials($codTurmaRequest)) {
+                $schoolClassService->hasStudentsPartials((int) $codTurmaRequest)) {
 
                 $turnoNome = (new Period)->getDescriptiveValues()[(int) $schoolClassPeriodId];
 

@@ -155,6 +155,27 @@ return new class extends clsDetalhe
             ));
         }
 
+        if ($mother = LegacyIndividual::query()->where('idpes_mae', $cod_pessoa)->first()) {
+            $vinculos->push(sprintf(
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Mãe da Pessoa Física</a>',
+                $mother->getKey(),
+            ));
+        }
+
+        if ($father = LegacyIndividual::query()->where('idpes_pai', $cod_pessoa)->first()) {
+            $vinculos->push(sprintf(
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Pai da Pessoa Física</a>',
+                $father->getKey(),
+            ));
+        }
+
+        if ($responsible = LegacyIndividual::query()->where('idpes_responsavel', $cod_pessoa)->first()) {
+            $vinculos->push(sprintf(
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Responsável da Pessoa Física</a>',
+                $responsible->getKey(),
+            ));
+        }
+
         if ($vinculos->isEmpty()) {
             $vinculos->push('Pessoa física não possui vínculos');
         }

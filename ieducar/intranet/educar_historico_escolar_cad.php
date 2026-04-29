@@ -341,7 +341,7 @@ return new class extends clsCadastro
         $service = app(SchoolHistoryService::class);
         $instituicao = LegacyInstitution::active()->first();
         $schoolName = is_numeric($this->ref_cod_escola) ? $service->getSchoolName($this->ref_cod_escola) : null;
-        $faltasGlobalizadas = $this->cb_faltas_globalizadas === 'on' ? $this->faltas_globalizadas : null;
+        $faltasGlobalizadas = $this->cb_faltas_globalizadas === 'on' && is_numeric($this->faltas_globalizadas) ? $this->faltas_globalizadas : null;
 
         DB::transaction(function () use ($instituicao, $faltasGlobalizadas, $schoolName) {
             $attributes = $this->buildHistoricoAttributes($instituicao, $schoolName, $faltasGlobalizadas);
@@ -400,12 +400,14 @@ return new class extends clsCadastro
             'ref_cod_instituicao' => $this->ref_cod_instituicao ?: $instituicao?->cod_instituicao,
             'origem' => 1,
             'extra_curricular' => is_null($this->extra_curricular) ? 0 : 1,
-            'frequencia' => $this->frequencia,
+            'frequencia' => str_contains($this->frequencia ?? '', ',')
+                ? str_replace(',', '.', str_replace('.', '', $this->frequencia))
+                : $this->frequencia,
             'registro' => $this->registro,
             'livro' => $this->livro,
             'folha' => $this->folha,
             'nm_curso' => $this->nm_curso,
-            'historico_grade_curso_id' => $this->historico_grade_curso_id,
+            'historico_grade_curso_id' => is_numeric($this->historico_grade_curso_id) ? $this->historico_grade_curso_id : null,
             'aceleracao' => is_null($this->aceleracao) ? 0 : 1,
             'ref_cod_escola' => is_numeric($this->ref_cod_escola) ? $this->ref_cod_escola : null,
             'dependencia' => !is_null($this->dependencia),
@@ -433,7 +435,7 @@ return new class extends clsCadastro
                 'nota' => $this->nota[$key] ?? '',
                 'faltas' => is_numeric($faltas) ? $faltas : null,
                 'ordenamento' => is_numeric($ordenamento) ? $ordenamento : null,
-                'carga_horaria_disciplina' => is_numeric($cargaHoraria) ? $cargaHoraria : null,
+                'carga_horaria_disciplina' => is_numeric($cargaHoraria) ? (int) $cargaHoraria : null,
                 'dependencia' => ($this->disciplinaDependencia[$key] ?? '') == 'on',
                 'tipo_base' => $this->tipo_base[$key] ?? 1,
             ]);

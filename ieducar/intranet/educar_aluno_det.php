@@ -5,6 +5,7 @@ use App\Models\Country;
 use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyDocument;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyProject;
@@ -207,8 +208,9 @@ return new class extends clsDetalhe
                 }
             }
 
-            $ObjDocumento = new clsDocumento(int_idpes: $this->ref_idpes);
-            $detalheDocumento = $ObjDocumento->detalhe();
+            $detalheDocumento = is_numeric($this->ref_idpes)
+                ? LegacyDocument::find($this->ref_idpes)?->getAttributes()
+                : null;
 
             $registro['rg'] = $detalheDocumento['rg'];
 

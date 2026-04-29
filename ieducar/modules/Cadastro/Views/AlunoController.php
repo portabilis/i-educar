@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EducacensoIndigenousPeople;
+use App\Models\LegacyDocument;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
@@ -323,9 +324,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                 $this->cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
             }
 
-            $documentos = new clsDocumento;
-            $documentos->idpes = $this->cod_pessoa_fj;
-            $documentos = $documentos->detalhe();
+            $documentos = is_numeric($this->cod_pessoa_fj)
+                ? LegacyDocument::find($this->cod_pessoa_fj)?->getAttributes()
+                : null;
         }
 
         $foto = false;

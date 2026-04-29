@@ -3,6 +3,7 @@
 use App\Models\DeficiencyType;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyDocument;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
@@ -1842,8 +1843,9 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdateDocumentos($pessoaId)
     {
-        $documentos = new clsDocumento;
-        $documentos->idpes = $pessoaId;
+        if (!is_numeric($pessoaId)) {
+            return;
+        }
 
         // o tipo certidão novo padrão é apenas para exibição ao usuário,
         // não precisa ser gravado no banco
@@ -1851,50 +1853,39 @@ class AlunoController extends ApiCoreController
         // quando selecionado um tipo diferente do novo formato,
         // é removido o valor de certidao_nascimento.
         if ($this->getRequest()->tipo_certidao_civil == CertificateType::BIRTH_NEW_FORMAT) {
-            $documentos->tipo_cert_civil = null;
-            $documentos->certidao_casamento = '';
-            $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
+            $tipoCertCivil = null;
+            $certidaoCasamento = '';
+            $certidaoNascimento = $this->getRequest()->certidao_nascimento;
         } elseif ($this->getRequest()->tipo_certidao_civil == CertificateType::MARRIAGE_NEW_FORMAT) {
-            $documentos->tipo_cert_civil = null;
-            $documentos->certidao_nascimento = '';
-            $documentos->certidao_casamento = $this->getRequest()->certidao_casamento;
+            $tipoCertCivil = null;
+            $certidaoNascimento = '';
+            $certidaoCasamento = $this->getRequest()->certidao_casamento;
         } else {
-            $documentos->tipo_cert_civil = $this->getRequest()->tipo_certidao_civil;
-            $documentos->certidao_nascimento = '';
-            $documentos->certidao_casamento = '';
+            $tipoCertCivil = $this->getRequest()->tipo_certidao_civil;
+            $certidaoNascimento = '';
+            $certidaoCasamento = '';
         }
 
-        $documentos->num_termo = $this->getRequest()->termo_certidao_civil;
-        $documentos->num_livro = $this->getRequest()->livro_certidao_civil;
-        $documentos->num_folha = $this->getRequest()->folha_certidao_civil;
-
-        $documentos->rg = trim($this->getRequest()->rg);
-        $documentos->data_exp_rg = Portabilis_Date_Utils::brToPgSQL(
-            $this->getRequest()->data_emissao_rg
+        LegacyDocument::updateOrCreate(
+            ['idpes' => $pessoaId],
+            [
+                'rg' => trim($this->getRequest()->rg) ?: null,
+                'data_exp_rg' => Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_emissao_rg) ?: null,
+                'sigla_uf_exp_rg' => $this->getRequest()->uf_emissao_rg ?: null,
+                'idorg_exp_rg' => (is_numeric($this->getRequest()->orgao_emissao_rg) && !empty($this->getRequest()->orgao_emissao_rg)) ? $this->getRequest()->orgao_emissao_rg : null,
+                'tipo_cert_civil' => $tipoCertCivil ?: null,
+                'certidao_nascimento' => $certidaoNascimento,
+                'certidao_casamento' => $certidaoCasamento,
+                'num_termo' => (is_numeric($this->getRequest()->termo_certidao_civil) && !empty($this->getRequest()->termo_certidao_civil)) ? $this->getRequest()->termo_certidao_civil : null,
+                'num_livro' => $this->getRequest()->livro_certidao_civil ?: null,
+                'num_folha' => (is_numeric($this->getRequest()->folha_certidao_civil) && !empty($this->getRequest()->folha_certidao_civil)) ? $this->getRequest()->folha_certidao_civil : null,
+                'data_emissao_cert_civil' => Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_emissao_certidao_civil) ?: null,
+                'sigla_uf_cert_civil' => $this->getRequest()->uf_emissao_certidao_civil ?: null,
+                'cartorio_cert_civil' => addslashes($this->getRequest()->cartorio_emissao_certidao_civil) ?: null,
+                'cartorio_cert_civil_inep' => null,
+                'passaporte' => addslashes($this->getRequest()->passaporte),
+            ]
         );
-        $documentos->sigla_uf_exp_rg = $this->getRequest()->uf_emissao_rg;
-        $documentos->idorg_exp_rg = $this->getRequest()->orgao_emissao_rg;
-
-        $documentos->data_emissao_cert_civil = Portabilis_Date_Utils::brToPgSQL(
-            $this->getRequest()->data_emissao_certidao_civil
-        );
-
-        $documentos->sigla_uf_cert_civil = $this->getRequest()->uf_emissao_certidao_civil;
-        $documentos->cartorio_cert_civil = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
-        $documentos->passaporte = addslashes($this->getRequest()->passaporte);
-
-        // Alteração de documentos compativel com a versão anterior do cadastro,
-        // onde era possivel criar uma pessoa, não informando os documentos,
-        // o que não criaria o registro do documento, sendo assim, ao editar uma pessoa,
-        // o registro do documento será criado, caso não exista.
-
-        $sql = 'select 1 from cadastro.documento WHERE idpes = $1 limit 1';
-
-        if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
-            $documentos->cadastra();
-        } else {
-            $documentos->edita_aluno();
-        }
     }
 
     protected function createOrUpdatePessoa($idPessoa)

@@ -167,6 +167,15 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/atualizacao-em-lote-series-escola/processo', 'SchoolGradeBatchUpdateController@process')->middleware('can:modify:' . Process::SCHOOL_GRADE)->name('school-grade.batch-update.process');
     Route::get('/atualizacao-em-lote-series-escola/status', 'SchoolGradeBatchUpdateController@status')->middleware('can:view:' . Process::SCHOOL_GRADE)->name('school-grade.batch-update.status');
 
+    Route::get('/gerenciamento-componentes/api/cursos', 'ComponentBatchManagerController@apiCourses')->middleware('can:view:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.api.courses');
+    Route::get('/gerenciamento-componentes/api/series', 'ComponentBatchManagerController@apiGrades')->middleware('can:view:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.api.grades');
+    Route::get('/gerenciamento-componentes/api/componentes', 'ComponentBatchManagerController@apiDisciplines')->middleware('can:view:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.api.disciplines');
+    Route::get('/gerenciamento-componentes', 'ComponentBatchManagerController@index')->middleware('can:view:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.index');
+    Route::get('/gerenciamento-componentes/novo', 'ComponentBatchManagerController@create')->middleware('can:modify:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.create');
+    Route::post('/gerenciamento-componentes/preview', 'ComponentBatchManagerController@preview')->middleware('can:modify:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.preview');
+    Route::post('/gerenciamento-componentes/executar', 'ComponentBatchManagerController@execute')->middleware('can:modify:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.execute');
+    Route::get('/gerenciamento-componentes/{componentBatchOperation}', 'ComponentBatchManagerController@show')->middleware('can:view:' . Process::COMPONENT_BATCH_MANAGER)->name('component-batch-manager.show');
+
     Route::get('/bloquear-enturmacao', 'BlockEnrollmentController@edit')->middleware('can:modify:' . Process::BLOCK_ENROLLMENT)->name('block-enrollment.edit');
     Route::post('/bloquear-enturmacao', 'BlockEnrollmentController@update')->middleware('can:modify:' . Process::BLOCK_ENROLLMENT)->name('block-enrollment.update');
 

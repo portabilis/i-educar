@@ -177,10 +177,9 @@ return new class extends clsCadastro
             clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
             clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
         ];
-        $turma = LegacySchoolClass::with('course:cod_curso,modalidade_curso')->find($this->ref_cod_turma, [
-            'cod_turma',
-            'ref_cod_curso',
-        ]);
+        $turma = $this->ref_cod_turma
+            ? LegacySchoolClass::with('course:cod_curso,modalidade_curso')->find($this->ref_cod_turma, ['cod_turma', 'ref_cod_curso'])
+            : null;
 
         if ($turma && $turma->course->modalidade_curso === ModalidadeCurso::EJA) {
             $turnos[clsPmieducarTurma::TURNO_NOTURNO] = 'Noturno';
