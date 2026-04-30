@@ -37,7 +37,7 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $this->cod_turma = $this->cod_turma ?: ($_GET['cod_turma'] ?? null);
+        $this->cod_turma = $this->cod_turma ?: (request('cod_turma') ?? null);
 
         if (!is_numeric(value: $this->cod_turma)) {
             return true;
