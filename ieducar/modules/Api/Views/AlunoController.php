@@ -541,23 +541,21 @@ class AlunoController extends ApiCoreController
     // #TODO mover updateResponsavel e updateDeficiencias para API pessoa ?
     protected function updateResponsavel()
     {
-        $pessoa = new clsFisica;
-        $pessoa->idpes = $this->getRequest()->pessoa_id;
-        $pessoa->nome_responsavel = '';
+        $pessoaId = $this->getRequest()->pessoa_id;
+        $individual = LegacyIndividual::find($pessoaId, ['idpes', 'idpes_pai', 'idpes_mae', 'idpes_responsavel']);
 
-        $_pessoa = $pessoa->detalhe();
-
-        if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
-            $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
-        } elseif ($this->getRequest()->tipo_responsavel == 'pai' && $_pessoa['idpes_pai']) {
-            $pessoa->idpes_responsavel = $_pessoa['idpes_pai'];
-        } elseif ($this->getRequest()->tipo_responsavel == 'mae' && $_pessoa['idpes_mae']) {
-            $pessoa->idpes_responsavel = $_pessoa['idpes_mae'];
-        } else {
-            $pessoa->idpes_responsavel = 'NULL';
+        if (!$individual) {
+            return false;
         }
 
-        return $pessoa->edita();
+        $idpesResponsavel = match ($this->getRequest()->tipo_responsavel) {
+            'outra_pessoa' => $this->getRequest()->responsavel_id,
+            'pai' => $individual->idpes_pai ?: null,
+            'mae' => $individual->idpes_mae ?: null,
+            default => null,
+        };
+
+        return $individual->update(['idpes_responsavel' => $idpesResponsavel]);
     }
 
     protected function updateDeficiencias()
@@ -1065,15 +1063,13 @@ class AlunoController extends ApiCoreController
         // responsavel um destes, na respectiva ordem, sendo assim esta api mantem
         // compatibilidade com o antigo cadastro.
         if (!$tipo) {
-            $pessoa = new clsFisica;
-            $pessoa->idpes = $aluno['pessoa_id'];
-            $pessoa = $pessoa->detalhe();
+            $pessoa = LegacyIndividual::find($aluno['pessoa_id'], ['idpes_responsavel', 'nome_responsavel', 'idpes_pai', 'nome_pai', 'idpes_mae', 'nome_mae']);
 
-            if ($pessoa['idpes_responsavel'] || $pessoa['nome_responsavel']) {
+            if ($pessoa?->idpes_responsavel || $pessoa?->nome_responsavel) {
                 $tipo = $tipos['r'];
-            } elseif ($pessoa['idpes_pai'] || $pessoa['nome_pai']) {
+            } elseif ($pessoa?->idpes_pai || $pessoa?->nome_pai) {
                 $tipo = $tipos['p'];
-            } elseif ($pessoa['idpes_mae'] || $pessoa['nome_mae']) {
+            } elseif ($pessoa?->idpes_mae || $pessoa?->nome_mae) {
                 $tipo = $tipos['m'];
             }
         }
@@ -1890,13 +1886,14 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdatePessoa($idPessoa)
     {
-        $fisica = new clsFisica($idPessoa);
-        $fisica->cpf = $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : 'NULL';
-        $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
-        $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep ?: 'NULL';
-        $fisica->observacao = $this->getRequest()->observacao_aluno ?: 'NULL';
-        $fisica->renda_mensal = $this->getRequest()->renda_mensal ?: 'NULL';
-        $fisica = $fisica->edita();
+        $individual = LegacyIndividual::find($idPessoa, ['idpes', 'cpf', 'ref_cod_religiao', 'nis_pis_pasep', 'observacao', 'renda_mensal']);
+        $individual?->update([
+            'cpf' => $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : null,
+            'ref_cod_religiao' => $this->getRequest()->religiao_id ?: null,
+            'nis_pis_pasep' => $this->getRequest()->nis_pis_pasep ?: null,
+            'observacao' => $this->getRequest()->observacao_aluno ?: null,
+            'renda_mensal' => $this->getRequest()->renda_mensal ?: null,
+        ]);
     }
 
     protected function loadAcessoDataEntradaSaida()

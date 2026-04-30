@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyIndividual;
 use Illuminate\Support\Facades\Auth;
 
 class clsPessoaFisica extends clsPessoaFj
@@ -202,8 +203,7 @@ class clsPessoaFisica extends clsPessoaFj
         if ($this->idpes) {
             $tupla = parent::detalhe();
 
-            $objFisica = new clsFisica(idpes: $this->idpes);
-            $detalhe_fisica = $objFisica->detalhe();
+            $detalhe_fisica = LegacyIndividual::find($this->idpes)?->getAttributes();
 
             if ($detalhe_fisica) {
                 $this->data_nasc = $detalhe_fisica['data_nasc'];
@@ -348,18 +348,11 @@ class clsPessoaFisica extends clsPessoaFj
         } elseif ($this->cpf) {
             $tupla = parent::detalhe();
 
-            $objFisica = new clsFisica;
-            $lista = $objFisica->lista(
-                int_limite_ini: false,
-                int_limite_qtd: false,
-                int_cpf: $this->cpf
-            );
+            $individual = LegacyIndividual::where('cpf', $this->cpf)->first();
 
-            $this->idpes = $lista[0]['idpes'];
-
-            if ($this->idpes) {
-                $objFisica = new clsFisica(idpes: $this->idpes);
-                $detalhe_fisica = $objFisica->detalhe();
+            if ($individual) {
+                $this->idpes = $individual->idpes;
+                $detalhe_fisica = $individual->getAttributes();
 
                 if ($detalhe_fisica) {
                     $this->data_nasc = $detalhe_fisica['data_nasc'];
