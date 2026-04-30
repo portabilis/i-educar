@@ -31,7 +31,7 @@ return new class extends clsDetalhe
         $funcionario = LegacyEmployee::whereKey($cod_pessoa)->first(['email', 'matricula', 'matricula_interna']);
 
         $this->addDetalhe(detalhe: ['Nome', $pessoa?->nome]);
-        $this->addDetalhe(detalhe: ['CPF', int2CPF(int: $pessoa?->individual?->cpf)]);
+        $this->addDetalhe(detalhe: ['CPF', $pessoa?->individual?->cpf]);
         $this->addDetalhe(detalhe: ['E-mail usuário', $funcionario?->email]);
 
         if (!empty($funcionario?->matricula_interna)) {
