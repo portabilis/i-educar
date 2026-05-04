@@ -4,6 +4,8 @@ namespace App\Models\Concerns\SoftDeletes;
 
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Events\QueuedClosure;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Collection as BaseCollection;
 
 /**
@@ -39,7 +41,7 @@ trait LegacySoftDeletes
      */
     public function initializeLegacySoftDeletes()
     {
-        if (! isset($this->casts[$this->getDeletedAtColumn()])) {
+        if (!isset($this->casts[$this->getDeletedAtColumn()])) {
             $this->casts[$this->getDeletedAtColumn()] = 'integer';
         }
 
@@ -83,7 +85,7 @@ trait LegacySoftDeletes
     /**
      * Força a exclusão permanente dos registros com os IDs informados.
      *
-     * @param  \Illuminate\Support\Collection|array|int|string  $ids
+     * @param  Collection|array|int|string  $ids
      * @return int
      */
     public static function forceDestroy($ids)
@@ -148,7 +150,7 @@ trait LegacySoftDeletes
 
         $this->{$this->getDeletedAtColumn()} = 0;
 
-        if ($this->usesTimestamps() && ! is_null($this->getUpdatedAtColumn())) {
+        if ($this->usesTimestamps() && !is_null($this->getUpdatedAtColumn())) {
             $this->{$this->getUpdatedAtColumn()} = $time;
 
             $columns[$this->getUpdatedAtColumn()] = $this->fromDateTime($time);
@@ -209,7 +211,7 @@ trait LegacySoftDeletes
     /**
      * Registra um callback para o evento softDeleted.
      *
-     * @param  \Illuminate\Events\QueuedClosure|callable|class-string  $callback
+     * @param  QueuedClosure|callable|class-string  $callback
      * @return void
      */
     public static function softDeleted($callback)
@@ -220,7 +222,7 @@ trait LegacySoftDeletes
     /**
      * Registra um callback para o evento restoring.
      *
-     * @param  \Illuminate\Events\QueuedClosure|callable|class-string  $callback
+     * @param  QueuedClosure|callable|class-string  $callback
      * @return void
      */
     public static function restoring($callback)
@@ -231,7 +233,7 @@ trait LegacySoftDeletes
     /**
      * Registra um callback para o evento restored.
      *
-     * @param  \Illuminate\Events\QueuedClosure|callable|class-string  $callback
+     * @param  QueuedClosure|callable|class-string  $callback
      * @return void
      */
     public static function restored($callback)
@@ -242,7 +244,7 @@ trait LegacySoftDeletes
     /**
      * Registra um callback para o evento forceDeleting.
      *
-     * @param  \Illuminate\Events\QueuedClosure|callable|class-string  $callback
+     * @param  QueuedClosure|callable|class-string  $callback
      * @return void
      */
     public static function forceDeleting($callback)
@@ -253,7 +255,7 @@ trait LegacySoftDeletes
     /**
      * Registra um callback para o evento forceDeleted.
      *
-     * @param  \Illuminate\Events\QueuedClosure|callable|class-string  $callback
+     * @param  QueuedClosure|callable|class-string  $callback
      * @return void
      */
     public static function forceDeleted($callback)
