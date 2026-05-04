@@ -90,17 +90,6 @@ class clsAgenda
         $this->nome_agenda = $nome;
     }
 
-    public function detalheCompromisso($cod_compromisso, $cod_agenda)
-    {
-        $db = new clsBanco;
-        $db->Consulta("SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, ref_cod_agenda, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$cod_agenda}' AND cod_agenda_compromisso = '$cod_compromisso' AND ativo = 1 AND data_fim IS NOT NULL");
-        if ($db->ProximoRegistro()) {
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
     public function listaCompromissos($data_inicio, $data_fim)
     {
         $db = new clsBanco;
