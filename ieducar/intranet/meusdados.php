@@ -49,17 +49,17 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $person = LegacyPerson::with('individual', 'phones')->find($this->pessoa_logada);
+        $pessoa = LegacyPerson::with('individual', 'phones')->find($this->pessoa_logada);
 
-        if ($person) {
-            $phones = $person->phones->keyBy('tipo');
+        if ($pessoa) {
+            $telefones = $pessoa->phones->keyBy('tipo');
 
-            $this->nome = $person->nome;
-            $this->ddd_telefone = $phones[LegacyPhone::TYPE_LANDLINE]?->ddd;
-            $this->telefone = $phones[LegacyPhone::TYPE_LANDLINE]?->fone;
-            $this->ddd_celular = $phones[LegacyPhone::TYPE_MOBILE_ALT]?->ddd;
-            $this->celular = $phones[LegacyPhone::TYPE_MOBILE_ALT]?->fone;
-            $this->sexo = $person->individual?->sexo;
+            $this->nome = $pessoa->nome;
+            $this->ddd_telefone = $telefones[LegacyPhone::TYPE_LANDLINE]?->ddd;
+            $this->telefone = $telefones[LegacyPhone::TYPE_LANDLINE]?->fone;
+            $this->ddd_celular = $telefones[LegacyPhone::TYPE_MOBILE_ALT]?->ddd;
+            $this->celular = $telefones[LegacyPhone::TYPE_MOBILE_ALT]?->fone;
+            $this->sexo = $pessoa->individual?->sexo;
 
             $funcionario = LegacyEmployee::find($this->pessoa_logada);
 

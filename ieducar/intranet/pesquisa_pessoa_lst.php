@@ -72,7 +72,7 @@ return new class extends clsListagem
                     $chave = '';
                 }
 
-                $phonesSubquery = DB::table('cadastro.fone_pessoa')
+                $telefonesSubquery = DB::table('cadastro.fone_pessoa')
                     ->select(
                         'idpes',
                         DB::raw('MAX(CASE WHEN tipo = 1 THEN ddd END) AS ddd_1'),
@@ -88,7 +88,7 @@ return new class extends clsListagem
 
                 $query = LegacyPerson::query()
                     ->join('cadastro.fisica', 'cadastro.fisica.idpes', 'cadastro.pessoa.idpes')
-                    ->leftJoinSub($phonesSubquery, 'fp', 'fp.idpes', 'cadastro.pessoa.idpes')
+                    ->leftJoinSub($telefonesSubquery, 'fp', 'fp.idpes', 'cadastro.pessoa.idpes')
                     ->select([
                         'cadastro.pessoa.idpes',
                         'cadastro.pessoa.nome',

@@ -258,7 +258,7 @@ return new class extends clsDetalhe
             $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'] ?? null;
             $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'] ?? null;
 
-            $place = PersonHasPlace::query()
+            $endereco = PersonHasPlace::query()
                 ->with(relations: 'place.city.state')
                 ->where(column: 'person_id', operator: $this->ref_idpes)
                 ->orderBy(column: 'type')
@@ -334,16 +334,16 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Estado Civil', $registro['ideciv']]);
         }
 
-        if (isset($place)) {
-            $place = $place->place;
+        if (isset($endereco)) {
+            $endereco = $endereco->place;
 
-            $this->addDetalhe(detalhe: ['Logradouro', $place->address]);
-            $this->addDetalhe(detalhe: ['Número', $place->number]);
-            $this->addDetalhe(detalhe: ['Complemento', $place->complement]);
-            $this->addDetalhe(detalhe: ['Bairro', $place->neighborhood]);
-            $this->addDetalhe(detalhe: ['Cidade', $place->city->name]);
-            $this->addDetalhe(detalhe: ['UF', $place->city->state->abbreviation]);
-            $this->addDetalhe(detalhe: ['CEP', int2CEP(int: $place->postal_code)]);
+            $this->addDetalhe(detalhe: ['Logradouro', $endereco->address]);
+            $this->addDetalhe(detalhe: ['Número', $endereco->number]);
+            $this->addDetalhe(detalhe: ['Complemento', $endereco->complement]);
+            $this->addDetalhe(detalhe: ['Bairro', $endereco->neighborhood]);
+            $this->addDetalhe(detalhe: ['Cidade', $endereco->city->name]);
+            $this->addDetalhe(detalhe: ['UF', $endereco->city->state->abbreviation]);
+            $this->addDetalhe(detalhe: ['CEP', int2CEP(int: $endereco->postal_code)]);
         }
 
         if ($registro['naturalidade']) {

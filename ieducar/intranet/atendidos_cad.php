@@ -123,19 +123,19 @@ return new class extends clsCadastro
         if (is_numeric(value: $this->cod_pessoa_fj)) {
             $this->retorno = 'Editar';
 
-            $individual = LegacyIndividual::with('person')->find($this->cod_pessoa_fj);
-            $person = $individual?->person;
-            $phones = LegacyPhone::query()->where('idpes', $this->cod_pessoa_fj)->get()->keyBy('tipo');
+            $fisica = LegacyIndividual::with('person')->find($this->cod_pessoa_fj);
+            $pessoa = $fisica?->person;
+            $telefones = LegacyPhone::query()->where('idpes', $this->cod_pessoa_fj)->get()->keyBy('tipo');
 
-            if ($individual && $person) {
-                $tel1 = $phones[LegacyPhone::TYPE_LANDLINE] ?? null;
-                $tel2 = $phones[LegacyPhone::TYPE_MOBILE] ?? null;
-                $cel = $phones[LegacyPhone::TYPE_MOBILE_ALT] ?? null;
-                $fax = $phones[LegacyPhone::TYPE_FAX] ?? null;
+            if ($fisica && $pessoa) {
+                $tel1 = $telefones[LegacyPhone::TYPE_LANDLINE] ?? null;
+                $tel2 = $telefones[LegacyPhone::TYPE_MOBILE] ?? null;
+                $cel = $telefones[LegacyPhone::TYPE_MOBILE_ALT] ?? null;
+                $fax = $telefones[LegacyPhone::TYPE_FAX] ?? null;
 
-                $this->nm_pessoa = $person->nome;
-                $this->id_federal = $individual->getRawOriginal('cpf');
-                $this->data_nasc = $individual->data_nasc;
+                $this->nm_pessoa = $pessoa->nome;
+                $this->id_federal = $fisica->getRawOriginal('cpf');
+                $this->data_nasc = $fisica->data_nasc;
                 $this->ddd_telefone_1 = $tel1?->ddd;
                 $this->telefone_1 = $tel1?->fone;
                 $this->ddd_telefone_2 = $tel2?->ddd;
@@ -144,33 +144,33 @@ return new class extends clsCadastro
                 $this->telefone_mov = $cel?->fone;
                 $this->ddd_telefone_fax = $fax?->ddd;
                 $this->telefone_fax = $fax?->fone;
-                $this->email = $person->email;
-                $this->tipo_pessoa = $person->tipo;
-                $this->sexo = $individual->sexo;
-                $this->estado_civil = $individual->ideciv;
-                $this->pai_id = $individual->idpes_pai ?: null;
-                $this->mae_id = $individual->idpes_mae ?: null;
-                $this->tipo_nacionalidade = $individual->nacionalidade;
-                $this->pais_origem = $individual->idpais_estrangeiro;
-                $this->naturalidade = $individual->idmun_nascimento;
-                $this->sus = $individual->sus;
-                $this->nis_pis_pasep = $individual->nis_pis_pasep;
-                $this->ocupacao = $individual->ocupacao;
-                $this->idesco = $individual->idesco;
-                $this->empresa = $individual->empresa;
-                $this->ddd_telefone_empresa = $individual->ddd_telefone_empresa;
-                $this->telefone_empresa = $individual->telefone_empresa;
-                $this->pessoa_contato = $individual->pessoa_contato;
-                $this->renda_mensal = $individual->renda_mensal;
-                $this->data_admissao = $individual->data_admissao;
-                $this->falecido = $individual->falecido;
-                $this->religiao_id = $individual->ref_cod_religiao;
-                $this->zona_localizacao_censo = $individual->zona_localizacao_censo;
-                $this->localizacao_diferenciada = $individual->localizacao_diferenciada;
-                $this->nome_social = $individual->nome_social;
-                $this->pais_residencia = $individual->pais_residencia;
-                $this->observacao = $individual->observacao;
-                $this->povo_indigena_educacenso_id = $individual->povo_indigena_educacenso_id;
+                $this->email = $pessoa->email;
+                $this->tipo_pessoa = $pessoa->tipo;
+                $this->sexo = $fisica->sexo;
+                $this->estado_civil = $fisica->ideciv;
+                $this->pai_id = $fisica->idpes_pai ?: null;
+                $this->mae_id = $fisica->idpes_mae ?: null;
+                $this->tipo_nacionalidade = $fisica->nacionalidade;
+                $this->pais_origem = $fisica->idpais_estrangeiro;
+                $this->naturalidade = $fisica->idmun_nascimento;
+                $this->sus = $fisica->sus;
+                $this->nis_pis_pasep = $fisica->nis_pis_pasep;
+                $this->ocupacao = $fisica->ocupacao;
+                $this->idesco = $fisica->idesco;
+                $this->empresa = $fisica->empresa;
+                $this->ddd_telefone_empresa = $fisica->ddd_telefone_empresa;
+                $this->telefone_empresa = $fisica->telefone_empresa;
+                $this->pessoa_contato = $fisica->pessoa_contato;
+                $this->renda_mensal = $fisica->renda_mensal;
+                $this->data_admissao = $fisica->data_admissao;
+                $this->falecido = $fisica->falecido;
+                $this->religiao_id = $fisica->ref_cod_religiao;
+                $this->zona_localizacao_censo = $fisica->zona_localizacao_censo;
+                $this->localizacao_diferenciada = $fisica->localizacao_diferenciada;
+                $this->nome_social = $fisica->nome_social;
+                $this->pais_residencia = $fisica->pais_residencia;
+                $this->observacao = $fisica->observacao;
+                $this->povo_indigena_educacenso_id = $fisica->povo_indigena_educacenso_id;
             }
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
@@ -209,15 +209,15 @@ return new class extends clsCadastro
             'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
         if (is_numeric(value: $this->cod_pessoa_fj) && $this->retorno == 'Editar') {
-            $individual = LegacyIndividual::find($this->cod_pessoa_fj, ['idpes', 'ativo', 'data_exclusao', 'ref_usuario_exc']);
+            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['idpes', 'ativo', 'data_exclusao', 'ref_usuario_exc']);
 
-            if ($individual && !$individual->ativo) {
+            if ($fisica && !$fisica->ativo) {
                 $matricula = LegacyEmployee::query()
-                    ->where('ref_cod_pessoa_fj', $individual->ref_usuario_exc)
+                    ->where('ref_cod_pessoa_fj', $fisica->ref_usuario_exc)
                     ->value('matricula');
 
-                $dataExclusao = $individual->data_exclusao
-                    ? date_format(object: new DateTime(datetime: $individual->data_exclusao), format: 'd/m/Y')
+                $dataExclusao = $fisica->data_exclusao
+                    ? date_format(object: new DateTime(datetime: $fisica->data_exclusao), format: 'd/m/Y')
                     : null;
 
                 $this->mensagem = 'Este cadastro foi desativado em <strong>' . $dataExclusao . '</strong>, pelo usuário <strong>' . $matricula . "</strong>. <a href='javascript:ativarPessoa($this->cod_pessoa_fj);'>Reativar cadastro</a>";
@@ -877,8 +877,8 @@ return new class extends clsCadastro
             return false;
         }
 
-        $individual = LegacyIndividual::find($idPes, ['idpes', 'ativo']);
-        $individual?->update([
+        $fisica = LegacyIndividual::find($idPes, ['idpes', 'ativo']);
+        $fisica?->update([
             'ativo' => 0,
             'ref_usuario_exc' => Auth::id(),
             'data_exclusao' => now(),
@@ -1393,9 +1393,9 @@ return new class extends clsCadastro
             return false;
         } // Quando não tiver cor/raça selecionado não faz update
 
-        $individual = LegacyIndividual::find($pessoaId, ['idpes']);
-        if ($individual) {
-            $individual->race()->sync([$corRaca]);
+        $fisica = LegacyIndividual::find($pessoaId, ['idpes']);
+        if ($fisica) {
+            $fisica->race()->sync([$corRaca]);
         }
     }
 

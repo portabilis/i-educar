@@ -2661,9 +2661,9 @@ return new class extends clsCadastro
 
     protected function storeManagerEmail($employeeId, $email)
     {
-        $person = LegacyPerson::find($employeeId);
-        $person->email = $email;
-        $person->save();
+        $pessoa = LegacyPerson::find($employeeId);
+        $pessoa->email = $email;
+        $pessoa->save();
     }
 
     protected function storeInepCode($employeeId, $inepCode)
