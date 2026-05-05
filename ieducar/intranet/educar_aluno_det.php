@@ -8,6 +8,8 @@ use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyMaritalStatus;
+use App\Models\LegacyPerson;
+use App\Models\LegacyPhone;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
 use App\Models\LegacyStudentMedicalRecord;
@@ -93,8 +95,12 @@ return new class extends clsDetalhe
         }
 
         if ($this->ref_idpes) {
-            $obj_pessoa_fj = new clsPessoaFj(int_idpes: $this->ref_idpes);
-            $det_pessoa_fj = $obj_pessoa_fj->detalhe();
+            $person = LegacyPerson::query()->with('phones')->find($this->ref_idpes, ['idpes', 'nome', 'email', 'url']);
+            $phones = $person?->phones->keyBy('tipo') ?? collect();
+            $tel1 = $phones->get(LegacyPhone::TYPE_LANDLINE);
+            $tel2 = $phones->get(LegacyPhone::TYPE_MOBILE);
+            $cel  = $phones->get(LegacyPhone::TYPE_MOBILE_ALT);
+            $fax  = $phones->get(LegacyPhone::TYPE_FAX);
 
             $obj_fisica = new clsFisica(idpes: $this->ref_idpes);
             $det_fisica = $obj_fisica->detalhe();
@@ -103,7 +109,7 @@ return new class extends clsDetalhe
 
             $caminhoFoto = LegacyIndividualPicture::whereKey($this->ref_idpes)->value('caminho');
 
-            $registro['nome_aluno'] = mb_strtoupper(string: $det_pessoa_fj['nome']);
+            $registro['nome_aluno'] = mb_strtoupper((string) $person?->nome);
             $registro['cpf'] = int2IdFederal(int: $det_fisica['cpf']);
             $registro['data_nasc'] = Portabilis_Date_Utils::pgSQLToBr(timestamp: $det_fisica['data_nasc']);
 
@@ -117,8 +123,8 @@ return new class extends clsDetalhe
             $lista_estado_civil = LegacyMaritalStatus::pluck('descricao', 'ideciv')->toArray();
 
             $registro['ideciv'] = $lista_estado_civil[$det_fisica['ideciv']] ?? '';
-            $registro['email'] = $det_pessoa_fj['email'];
-            $registro['url'] = $det_pessoa_fj['url'];
+            $registro['email'] = $person?->email;
+            $registro['url'] = $person?->url;
 
             $registro['nacionalidade'] = $det_fisica['nacionalidade'];
             $registro['nis_pis_pasep'] = int2Nis(nis: $det_fisica['nis_pis_pasep']);
@@ -139,11 +145,10 @@ return new class extends clsDetalhe
             $this->nm_mae = $registro['nm_mae'];
 
             if ($this->idpes_pai) {
-                $obj_pessoa_pai = new clsPessoaFj(int_idpes: $this->idpes_pai);
-                $det_pessoa_pai = $obj_pessoa_pai->detalhe();
+                $nomePai = LegacyPerson::query()->whereKey($this->idpes_pai)->value('nome');
 
-                if ($det_pessoa_pai) {
-                    $registro['nm_pai'] = $det_pessoa_pai['nome'];
+                if ($nomePai) {
+                    $registro['nm_pai'] = $nomePai;
 
                     // CPF
                     $obj_cpf = new clsFisica(idpes: $this->idpes_pai);
@@ -156,11 +161,10 @@ return new class extends clsDetalhe
             }
 
             if ($this->idpes_mae) {
-                $obj_pessoa_mae = new clsPessoaFj(int_idpes: $this->idpes_mae);
-                $det_pessoa_mae = $obj_pessoa_mae->detalhe();
+                $nomeMae = LegacyPerson::query()->whereKey($this->idpes_mae)->value('nome');
 
-                if ($det_pessoa_mae) {
-                    $registro['nm_mae'] = $det_pessoa_mae['nome'];
+                if ($nomeMae) {
+                    $registro['nm_mae'] = $nomeMae;
 
                     // CPF
                     $obj_cpf = new clsFisica(idpes: $this->idpes_mae);
@@ -172,17 +176,17 @@ return new class extends clsDetalhe
                 }
             }
 
-            $registro['ddd_fone_1'] = $det_pessoa_fj['ddd_1'];
-            $registro['fone_1'] = $det_pessoa_fj['fone_1'];
+            $registro['ddd_fone_1'] = $tel1?->ddd;
+            $registro['fone_1']     = $tel1?->fone;
 
-            $registro['ddd_fone_2'] = $det_pessoa_fj['ddd_2'];
-            $registro['fone_2'] = $det_pessoa_fj['fone_2'];
+            $registro['ddd_fone_2'] = $tel2?->ddd;
+            $registro['fone_2']     = $tel2?->fone;
 
-            $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'] ?? null;
-            $registro['fone_fax'] = $det_pessoa_fj['fone_fax'] ?? null;
+            $registro['ddd_fax']    = $fax?->ddd;
+            $registro['fone_fax']   = $fax?->fone;
 
-            $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
-            $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
+            $registro['ddd_mov']    = $cel?->ddd;
+            $registro['fone_mov']   = $cel?->fone;
 
             $deficiencias = is_numeric($this->ref_idpes)
                 ? LegacyDeficiency::query()
@@ -369,17 +373,14 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_idpes_responsavel']) {
-            $obj_pessoa_resp = new clsPessoaFj(int_idpes: $registro['ref_idpes_responsavel']);
-            $det_pessoa_resp = $obj_pessoa_resp->detalhe();
+            $nomeResponsavel = LegacyPerson::query()->whereKey($registro['ref_idpes_responsavel'])->value('nome');
 
-            if ($det_pessoa_resp) {
-                $urlResponsavel = sprintf(
+            if ($nomeResponsavel) {
+                $registro['ref_idpes_responsavel'] = sprintf(
                     '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
                     $registro['ref_idpes_responsavel'],
-                    $det_pessoa_resp['nome']
+                    $nomeResponsavel
                 );
-
-                $registro['ref_idpes_responsavel'] = $urlResponsavel;
             }
 
             $this->addDetalhe(detalhe: ['Responsável', $registro['ref_idpes_responsavel']]);

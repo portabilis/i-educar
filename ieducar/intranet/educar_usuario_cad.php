@@ -3,6 +3,7 @@
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyPerson;
 use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
 use App\User;
@@ -114,10 +115,7 @@ return new class extends clsCadastro
         }
 
         if ($_GET['ref_pessoa']) {
-            $obj_funcionario = new clsPessoaFj($this->ref_pessoa);
-            $det_funcionario = $obj_funcionario->detalhe();
-
-            $this->nome = $det_funcionario['nome'];
+            $this->nome = LegacyPerson::query()->whereKey($this->ref_pessoa)->value('nome');
 
             $this->campoRotulo(nome: 'nome', campo: 'Nome', valor: $this->nome);
         } else {

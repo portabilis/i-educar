@@ -465,33 +465,20 @@ return new class extends clsCadastro
 
     private function carregaDadosContato($idpes)
     {
-        $objPessoa = new clsPessoaFj($idpes);
-        [
-            $this->p_ddd_telefone_1,
-            $this->p_telefone_1,
-            $this->p_ddd_telefone_2,
-            $this->p_telefone_2,
-            $this->p_ddd_telefone_mov,
-            $this->p_telefone_mov,
-            $this->p_ddd_telefone_fax,
-            $this->p_telefone_fax,
-            $this->p_email,
-            $this->p_http,
-            $this->tipo_pessoa
-        ] = $objPessoa->queryRapida(
-            $idpes,
-            'ddd_1',
-            'fone_1',
-            'ddd_2',
-            'fone_2',
-            'ddd_mov',
-            'fone_mov',
-            'ddd_fax',
-            'fone_fax',
-            'email',
-            'url',
-            'tipo'
-        );
+        $person = LegacyPerson::query()->with('phones')->find($idpes, ['idpes', 'email', 'url', 'tipo']);
+        $phones = $person?->phones->keyBy('tipo') ?? collect();
+        $tel1 = $phones->get(LegacyPhone::TYPE_LANDLINE);
+        $tel2 = $phones->get(LegacyPhone::TYPE_MOBILE);
+        $cel  = $phones->get(LegacyPhone::TYPE_MOBILE_ALT);
+        $fax  = $phones->get(LegacyPhone::TYPE_FAX);
+
+        $this->p_ddd_telefone_1   = $tel1?->ddd; $this->p_telefone_1   = $tel1?->fone;
+        $this->p_ddd_telefone_2   = $tel2?->ddd; $this->p_telefone_2   = $tel2?->fone;
+        $this->p_ddd_telefone_mov = $cel?->ddd;  $this->p_telefone_mov = $cel?->fone;
+        $this->p_ddd_telefone_fax = $fax?->ddd;  $this->p_telefone_fax = $fax?->fone;
+        $this->p_email            = $person?->email;
+        $this->p_http             = $person?->url;
+        $this->tipo_pessoa        = $person?->tipo;
     }
 
     private function carregaDadosDoPost()
