@@ -199,9 +199,7 @@ return new class extends clsCadastro
             phone: $this->celular
         );
 
-        $pessoa = new clsPessoa_($this->pessoa_logada);
-        $pessoa->nome = $this->nome;
-        $pessoa->edita();
+        LegacyPerson::find($this->pessoa_logada)?->update(['nome' => $this->nome]);
 
         $pessoaFisica = new clsFisica($this->pessoa_logada, false, $this->sexo);
         $pessoaFisica->edita();

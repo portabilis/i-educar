@@ -10,6 +10,7 @@ use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
+use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacyRace;
 use App\Models\LegacySchoolingDegree;
@@ -1319,24 +1320,24 @@ return new class extends clsCadastro
 
     protected function createOrUpdatePessoa($pessoaId = null)
     {
-        $pessoa = new clsPessoa_;
-        $pessoa->idpes = $pessoaId;
-        $pessoa->nome = $this->nm_pessoa;
-        $pessoa->email = addslashes(string: $this->email);
-
-        $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
-
-        if (!$pessoaId || Portabilis_Utils_Database::selectField(sql: $sql, paramsOrOptions: $pessoaId) != 1) {
-            $pessoa->tipo = 'F';
-            $pessoa->idpes_cad = $this->currentUserId();
-            $pessoaId = $pessoa->cadastra();
-        } else {
-            $pessoa->idpes_rev = $this->currentUserId();
-            $pessoa->data_rev = date(format: 'Y-m-d H:i:s', timestamp: time());
-            $pessoa->edita();
+        if (!$this->nm_pessoa) {
+            return $pessoaId;
         }
 
-        return $pessoaId;
+        $dados = [
+            'nome' => $this->nm_pessoa,
+            'email' => $this->email ?: null,
+        ];
+
+        if ($pessoaId && LegacyPerson::whereKey($pessoaId)->exists()) {
+            LegacyPerson::find($pessoaId)?->update($dados);
+
+            return $pessoaId;
+        }
+
+        $dados['tipo'] = 'F';
+
+        return LegacyPerson::create($dados)->idpes;
     }
 
     protected function createOrUpdatePessoaFisica($pessoaId)

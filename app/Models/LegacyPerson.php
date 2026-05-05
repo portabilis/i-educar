@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -56,15 +57,38 @@ class LegacyPerson extends LegacyModel
     {
         parent::boot();
 
+        static::saving(function ($model) {
+            if (!$model->isDirty('nome')) {
+                return;
+            }
+
+            if (is_string($model->nome) && $model->nome !== '') {
+                $cleaned = trim(preg_replace('/\s+/', ' ', $model->nome));
+
+                if (config('legacy.app.uppercase_names')) {
+                    $cleaned = Str::upper($cleaned);
+                }
+
+                $model->nome = $cleaned;
+            }
+
+            $model->slug = Str::lower(Str::slug((string) $model->nome, ' '));
+        });
+
         static::creating(function ($model) {
             $model->data_cad = now();
-            $model->situacao = 'I';
-            $model->origem_gravacao = 'M';
+            $model->situacao ??= 'I';
+            $model->origem_gravacao ??= 'M';
             $model->operacao = 'I';
-            $model->slug = Str::lower(Str::slug($model->nome, ' '));
 
-            if (config('legacy.app.uppercase_names')) {
-                $model->nome = Str::upper($model->nome);
+            if (Auth::check() && empty($model->idpes_cad)) {
+                $model->idpes_cad = Auth::id();
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                $model->idpes_rev = Auth::id();
             }
         });
     }

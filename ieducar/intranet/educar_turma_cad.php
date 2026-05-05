@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineSchoolClass;
+use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
@@ -385,10 +386,8 @@ return new class extends clsCadastro
         $this->campoTabelaFim();
 
         $array_servidor = ['' => 'Selecione um servidor'];
-        if ($this->ref_cod_regente) {
-            $obj_pessoa = new clsPessoa_(int_idpes: $this->ref_cod_regente);
-            $det = $obj_pessoa->detalhe();
-            $array_servidor[$this->ref_cod_regente] = $det['nome'];
+        if (is_numeric($this->ref_cod_regente)) {
+            $array_servidor[$this->ref_cod_regente] = LegacyPerson::query()->whereKey($this->ref_cod_regente)->value('nome');
         }
 
         $this->campoListaPesq(nome: 'ref_cod_regente', campo: 'Professor/Regente', valor: $array_servidor, default: $this->ref_cod_regente, div: true);

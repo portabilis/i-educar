@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\PersonHasPlace;
@@ -53,10 +54,9 @@ return new class extends clsDetalhe
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         if ($registro['ref_idpes']) {
-            $obj_escola = new clsPessoa_(int_idpes: $registro['ref_idpes']);
-            $obj_escola_det = $obj_escola->detalhe();
-            $url = $obj_escola_det['url'];
-            $email = $obj_escola_det['email'];
+            $pessoa = LegacyPerson::find($registro['ref_idpes'], ['idpes', 'url', 'email']);
+            $url = $pessoa?->url;
+            $email = $pessoa?->email;
             $obj_escola1 = new clsPessoaJuridica(int_idpes: $registro['ref_idpes']);
             $obj_escola_det1 = $obj_escola1->detalhe();
             $nm_escola = $obj_escola_det1['fantasia'];

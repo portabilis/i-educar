@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use Illuminate\Support\Facades\Auth;
 
 class clsJuridica
@@ -31,8 +32,7 @@ class clsJuridica
      */
     public function __construct($idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad = false, $idpes_rev = false)
     {
-        $objPessoa = new clsPessoa_($idpes);
-        if ($objPessoa->detalhe()) {
+        if (is_numeric($idpes) && LegacyPerson::whereKey($idpes)->exists()) {
             $this->idpes = $idpes;
         }
 

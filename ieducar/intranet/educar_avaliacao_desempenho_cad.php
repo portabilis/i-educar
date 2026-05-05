@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use App\Models\PerformanceEvaluation;
 
 return new class extends clsCadastro
@@ -87,9 +88,9 @@ return new class extends clsCadastro
             $this->campoTexto(nome: 'nm_instituicao', campo: 'Instituição', valor: $nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255, evento: '', disabled: true);
         }
 
-        $obj_cod_servidor = new clsPessoa_($this->ref_cod_servidor);
-        $det_cod_servidor = $obj_cod_servidor->detalhe();
-        $nm_servidor = $det_cod_servidor['nome'];
+        $nm_servidor = is_numeric($this->ref_cod_servidor)
+            ? LegacyPerson::query()->whereKey($this->ref_cod_servidor)->value('nome')
+            : null;
 
         $this->campoTexto(nome: 'nm_servidor', campo: 'Servidor', valor: $nm_servidor, tamanhovisivel: 30, tamanhomaximo: 255, evento: '', disabled: true);
         $this->campoTexto(nome: 'titulo_avaliacao', campo: 'Avaliação', valor: $this->titulo_avaliacao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);

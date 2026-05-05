@@ -160,25 +160,21 @@ class clsFisica
         $observacao = false,
         $povo_indigena_educacenso_id = false,
     ) {
-        $objPessoa = new clsPessoa_($idpes);
-        if ($objPessoa->detalhe()) {
+        if (is_numeric($idpes) && LegacyPerson::whereKey($idpes)->exists()) {
             $this->idpes = $idpes;
         }
-        $objPessoaMae = new clsPessoa_($idpes_mae);
-        if ($objPessoaMae->detalhe()) {
+        if (is_numeric($idpes_mae) && LegacyPerson::whereKey($idpes_mae)->exists()) {
             $this->idpes_mae = $idpes_mae;
         } elseif ($idpes_mae == 'NULL') {
             $this->idpes_mae = 'NULL';
         }
-        $objPessoaPai = new clsPessoa_($idpes_pai);
-        if ($objPessoaPai->detalhe()) {
+        if (is_numeric($idpes_pai) && LegacyPerson::whereKey($idpes_pai)->exists()) {
             $this->idpes_pai = $idpes_pai;
         } elseif ($idpes_pai == 'NULL') {
             $this->idpes_pai = 'NULL';
         }
 
-        $objPessoaResponsavel = new clsPessoa_($idpes_responsavel);
-        if ($objPessoaResponsavel->detalhe() || $idpes_responsavel == 'NULL') {
+        if ((is_numeric($idpes_responsavel) && LegacyPerson::whereKey($idpes_responsavel)->exists()) || $idpes_responsavel == 'NULL') {
             $this->idpes_responsavel = $idpes_responsavel;
         }
         if ($idesco && LegacySchoolingDegree::whereKey($idesco)->exists()) {
@@ -187,8 +183,7 @@ class clsFisica
         if ($ideciv && LegacyMaritalStatus::whereKey($ideciv)->exists()) {
             $this->ideciv = $ideciv;
         }
-        $objPessoaCon = new clsPessoa_($idpes_con);
-        if ($objPessoaCon->detalhe()) {
+        if (is_numeric($idpes_con) && LegacyPerson::whereKey($idpes_con)->exists()) {
             $this->idpes_con = $idpes_con;
         }
         if (is_numeric($idpais_estrangeiro)) {

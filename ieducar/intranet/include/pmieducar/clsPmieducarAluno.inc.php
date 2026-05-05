@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\StudentCreated;
+use App\Models\LegacyPerson;
 use App\Models\LegacyStudent;
 use iEducar\Legacy\Model;
 
@@ -949,20 +950,20 @@ class clsPmieducarAluno extends Model
                 $det_fisica_aluno = $obj_fisica->detalhe();
 
                 if ($det_fisica_aluno['idpes_pai']) {
-                    $obj_ref_idpes = new clsPessoa_($det_fisica_aluno['idpes_pai']);
-                    $det_ref_idpes = $obj_ref_idpes->detalhe();
+                    $idPai = $det_fisica_aluno['idpes_pai'];
+                    $nomePai = LegacyPerson::query()->whereKey($idPai)->value('nome');
 
-                    $obj_fisica = new clsFisica($det_fisica_aluno['idpes_pai']);
+                    $obj_fisica = new clsFisica($idPai);
                     $det_fisica = $obj_fisica->detalhe();
 
                     if ($exibirUrl) {
                         $pai = sprintf(
                             '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
-                            $det_ref_idpes['idpes'],
-                            $det_ref_idpes['nome']
+                            $idPai,
+                            $nomePai
                         );
                     } else {
-                        $pai = $det_ref_idpes['nome'];
+                        $pai = $nomePai;
                     }
                     $registro['nome_responsavel'] = $pai;
                     $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : 'Não informado';
@@ -977,20 +978,20 @@ class clsPmieducarAluno extends Model
                 }
 
                 if ($det_fisica_aluno['idpes_mae']) {
-                    $obj_ref_idpes = new clsPessoa_($det_fisica_aluno['idpes_mae']);
-                    $det_ref_idpes = $obj_ref_idpes->detalhe();
+                    $idMae = $det_fisica_aluno['idpes_mae'];
+                    $nomeMae = LegacyPerson::query()->whereKey($idMae)->value('nome');
 
-                    $obj_fisica = new clsFisica($det_fisica_aluno['idpes_mae']);
+                    $obj_fisica = new clsFisica($idMae);
                     $det_fisica = $obj_fisica->detalhe();
 
                     if ($exibirUrl) {
                         $mae = sprintf(
                             '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
-                            $det_ref_idpes['idpes'],
-                            $det_ref_idpes['nome']
+                            $idMae,
+                            $nomeMae
                         );
                     } else {
-                        $mae = $det_ref_idpes['nome'];
+                        $mae = $nomeMae;
                     }
                     $registro['nome_responsavel'] = $mae;
                     $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : 'Não informado';
@@ -1005,20 +1006,20 @@ class clsPmieducarAluno extends Model
                 }
 
                 if ($det_fisica_aluno['idpes_responsavel']) {
-                    $obj_ref_idpes = new clsPessoa_($det_fisica_aluno['idpes_responsavel']);
-                    $obj_fisica = new clsFisica($det_fisica_aluno['idpes_responsavel']);
+                    $idResp = $det_fisica_aluno['idpes_responsavel'];
+                    $nomeResp = LegacyPerson::query()->whereKey($idResp)->value('nome');
 
-                    $det_ref_idpes = $obj_ref_idpes->detalhe();
+                    $obj_fisica = new clsFisica($idResp);
                     $det_fisica = $obj_fisica->detalhe();
 
                     if ($exibirUrl) {
                         $responsavel = sprintf(
                             '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
-                            $det_ref_idpes['idpes'],
-                            $det_ref_idpes['nome']
+                            $idResp,
+                            $nomeResp
                         );
                     } else {
-                        $responsavel = $det_ref_idpes['nome'];
+                        $responsavel = $nomeResp;
                     }
                     $registro['nome_responsavel'] = $responsavel;
                     $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : 'Não informado';
@@ -1032,28 +1033,30 @@ class clsPmieducarAluno extends Model
                 }
 
                 if ($det_fisica_aluno['idpes_mae'] && $det_fisica_aluno['idpes_pai']) {
-                    $obj_mae = new clsPessoa_($det_fisica_aluno['idpes_mae']);
-                    $fisica_mae = (new clsFisica($det_fisica_aluno['idpes_mae']))->detalhe();
-                    $det_mae = $obj_mae->detalhe();
+                    $idMae = $det_fisica_aluno['idpes_mae'];
+                    $idPai = $det_fisica_aluno['idpes_pai'];
 
-                    $obj_pai = new clsPessoa_($det_fisica_aluno['idpes_pai']);
-                    $fisica_pai = (new clsFisica($det_fisica_aluno['idpes_pai']))->detalhe();
-                    $det_pai = $obj_pai->detalhe();
+                    $nomesPais = LegacyPerson::query()->whereIn('idpes', [$idMae, $idPai])->pluck('nome', 'idpes');
+                    $nomeMae = $nomesPais[$idMae] ?? null;
+                    $nomePai = $nomesPais[$idPai] ?? null;
+
+                    $fisica_mae = (new clsFisica($idMae))->detalhe();
+                    $fisica_pai = (new clsFisica($idPai))->detalhe();
 
                     if ($exibirUrl) {
                         $pai = sprintf(
                             '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
-                            $det_pai['idpes'],
-                            $det_pai['nome']
+                            $idPai,
+                            $nomePai
                         );
                         $mae = sprintf(
                             '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
-                            $det_mae['idpes'],
-                            $det_mae['nome']
+                            $idMae,
+                            $nomeMae
                         );
                     } else {
-                        $pai = $det_pai['nome'];
-                        $mae = $det_mae['nome'];
+                        $pai = $nomePai;
+                        $mae = $nomeMae;
                     }
                     $registro['nome_responsavel'] = $pai . ', ' . $mae;
                     $cpfPai = $fisica_pai['cpf'] ? int2CPF($fisica_pai['cpf']) : 'Não informado';
