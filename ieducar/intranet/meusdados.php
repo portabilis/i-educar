@@ -3,6 +3,7 @@
 use App\Facades\Asset;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyIndividualPicture;
+use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Services\ChangeUserPasswordService;
 use App\Services\PhoneService;
@@ -48,16 +49,17 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $pessoaFisica = new clsPessoaFisica($this->pessoa_logada);
-        $pessoaFisica = $pessoaFisica->detalhe();
+        $person = LegacyPerson::with('individual', 'phones')->find($this->pessoa_logada);
 
-        if ($pessoaFisica) {
-            $this->nome = $pessoaFisica['nome'];
-            $this->ddd_telefone = $pessoaFisica['ddd_1'];
-            $this->telefone = $pessoaFisica['fone_1'];
-            $this->ddd_celular = $pessoaFisica['ddd_mov'];
-            $this->celular = $pessoaFisica['fone_mov'];
-            $this->sexo = $pessoaFisica['sexo'];
+        if ($person) {
+            $phones = $person->phones->keyBy('tipo');
+
+            $this->nome = $person->nome;
+            $this->ddd_telefone = $phones[LegacyPhone::TYPE_LANDLINE]?->ddd;
+            $this->telefone = $phones[LegacyPhone::TYPE_LANDLINE]?->fone;
+            $this->ddd_celular = $phones[LegacyPhone::TYPE_MOBILE_ALT]?->ddd;
+            $this->celular = $phones[LegacyPhone::TYPE_MOBILE_ALT]?->fone;
+            $this->sexo = $person->individual?->sexo;
 
             $funcionario = LegacyEmployee::find($this->pessoa_logada);
 

@@ -122,68 +122,62 @@ return new class extends clsCadastro
 
         if (is_numeric(value: $this->cod_pessoa_fj)) {
             $this->retorno = 'Editar';
-            $objPessoa = new clsPessoaFisica;
 
-            [$this->nm_pessoa, $this->id_federal, $this->data_nasc,
-                $this->ddd_telefone_1, $this->telefone_1, $this->ddd_telefone_2,
-                $this->telefone_2, $this->ddd_telefone_mov, $this->telefone_mov,
-                $this->ddd_telefone_fax, $this->telefone_fax, $this->email,
-                $this->tipo_pessoa, $this->sexo, $this->estado_civil,
-                $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
-                $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->idesco, $this->empresa, $this->ddd_telefone_empresa,
-                $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia,
-                $this->observacao, $this->povo_indigena_educacenso_id
-            ] =
-            $objPessoa->queryRapida(
-                $this->cod_pessoa_fj,
-                'nome',
-                'cpf',
-                'data_nasc',
-                'ddd_1',
-                'fone_1',
-                'ddd_2',
-                'fone_2',
-                'ddd_mov',
-                'fone_mov',
-                'ddd_fax',
-                'fone_fax',
-                'email',
-                'tipo',
-                'sexo',
-                'ideciv',
-                'idpes_pai',
-                'idpes_mae',
-                'nacionalidade',
-                'idpais_estrangeiro',
-                'idmun_nascimento',
-                'letra',
-                'sus',
-                'nis_pis_pasep',
-                'ocupacao',
-                'idesco',
-                'empresa',
-                'ddd_telefone_empresa',
-                'telefone_empresa',
-                'pessoa_contato',
-                'renda_mensal',
-                'data_admissao',
-                'falecido',
-                'ref_cod_religiao',
-                'zona_localizacao_censo',
-                'localizacao_diferenciada',
-                'nome_social',
-                'pais_residencia',
-                'observacao',
-                'povo_indigena_educacenso_id',
-            );
+            $individual = LegacyIndividual::with('person')->find($this->cod_pessoa_fj);
+            $person = $individual?->person;
+            $phones = LegacyPhone::query()->where('idpes', $this->cod_pessoa_fj)->get()->keyBy('tipo');
+
+            if ($individual && $person) {
+                $tel1 = $phones[LegacyPhone::TYPE_LANDLINE] ?? null;
+                $tel2 = $phones[LegacyPhone::TYPE_MOBILE] ?? null;
+                $cel = $phones[LegacyPhone::TYPE_MOBILE_ALT] ?? null;
+                $fax = $phones[LegacyPhone::TYPE_FAX] ?? null;
+
+                $this->nm_pessoa = $person->nome;
+                $this->id_federal = $individual->getRawOriginal('cpf');
+                $this->data_nasc = $individual->data_nasc;
+                $this->ddd_telefone_1 = $tel1?->ddd;
+                $this->telefone_1 = $tel1?->fone;
+                $this->ddd_telefone_2 = $tel2?->ddd;
+                $this->telefone_2 = $tel2?->fone;
+                $this->ddd_telefone_mov = $cel?->ddd;
+                $this->telefone_mov = $cel?->fone;
+                $this->ddd_telefone_fax = $fax?->ddd;
+                $this->telefone_fax = $fax?->fone;
+                $this->email = $person->email;
+                $this->tipo_pessoa = $person->tipo;
+                $this->sexo = $individual->sexo;
+                $this->estado_civil = $individual->ideciv;
+                $this->pai_id = $individual->idpes_pai ?: null;
+                $this->mae_id = $individual->idpes_mae ?: null;
+                $this->tipo_nacionalidade = $individual->nacionalidade;
+                $this->pais_origem = $individual->idpais_estrangeiro;
+                $this->naturalidade = $individual->idmun_nascimento;
+                $this->sus = $individual->sus;
+                $this->nis_pis_pasep = $individual->nis_pis_pasep;
+                $this->ocupacao = $individual->ocupacao;
+                $this->idesco = $individual->idesco;
+                $this->empresa = $individual->empresa;
+                $this->ddd_telefone_empresa = $individual->ddd_telefone_empresa;
+                $this->telefone_empresa = $individual->telefone_empresa;
+                $this->pessoa_contato = $individual->pessoa_contato;
+                $this->renda_mensal = $individual->renda_mensal;
+                $this->data_admissao = $individual->data_admissao;
+                $this->falecido = $individual->falecido;
+                $this->religiao_id = $individual->ref_cod_religiao;
+                $this->zona_localizacao_censo = $individual->zona_localizacao_censo;
+                $this->localizacao_diferenciada = $individual->localizacao_diferenciada;
+                $this->nome_social = $individual->nome_social;
+                $this->pais_residencia = $individual->pais_residencia;
+                $this->observacao = $individual->observacao;
+                $this->povo_indigena_educacenso_id = $individual->povo_indigena_educacenso_id;
+            }
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
 
             $this->id_federal = is_numeric(value: $this->id_federal) ? int2CPF(int: $this->id_federal) : '';
             $this->nis_pis_pasep = int2Nis(nis: $this->nis_pis_pasep);
             $this->renda_mensal = number_format(num: (float) $this->renda_mensal, decimals: 2, decimal_separator: ',', thousands_separator: '.');
-            // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr(data_original: $this->data_admissao) : '';
 
             $this->estado_civil_id = $this->estado_civil;
@@ -214,36 +208,20 @@ return new class extends clsCadastro
         $this->url_cancelar = $this->retorno == 'Editar' ?
             'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
-        $objPessoa = new clsPessoaFisica(int_idpes: $this->cod_pessoa_fj);
+        if (is_numeric(value: $this->cod_pessoa_fj) && $this->retorno == 'Editar') {
+            $individual = LegacyIndividual::find($this->cod_pessoa_fj, ['idpes', 'ativo', 'data_exclusao', 'ref_usuario_exc']);
 
-        $detalhe = $objPessoa->queryRapida(
-            $this->cod_pessoa_fj,
-            'idpes',
-            'nome',
-            'cpf',
-            'data_nasc',
-            'ddd_1',
-            'fone_1',
-            'ddd_2',
-            'fone_2',
-            'ddd_mov',
-            'fone_mov',
-            'ddd_fax',
-            'fone_fax',
-            'email',
-            'url',
-            'tipo',
-            'sexo',
-            'ativo',
-            'data_exclusao',
-            'observacao',
-            'povo_indigena_educacenso_id',
-        );
+            if ($individual && !$individual->ativo) {
+                $matricula = LegacyEmployee::query()
+                    ->where('ref_cod_pessoa_fj', $individual->ref_usuario_exc)
+                    ->value('matricula');
 
-        if (isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1 && $this->retorno == 'Editar') {
-            $getNomeUsuario = $objPessoa->getNomeUsuario();
-            $detalhe['data_exclusao'] = date_format(object: new DateTime(datetime: $detalhe['data_exclusao']), format: 'd/m/Y');
-            $this->mensagem = 'Este cadastro foi desativado em <strong>' . $detalhe['data_exclusao'] . '</strong>, pelo usuário <strong>' . $getNomeUsuario . "</strong>. <a href='javascript:ativarPessoa($this->cod_pessoa_fj);'>Reativar cadastro</a>";
+                $dataExclusao = $individual->data_exclusao
+                    ? date_format(object: new DateTime(datetime: $individual->data_exclusao), format: 'd/m/Y')
+                    : null;
+
+                $this->mensagem = 'Este cadastro foi desativado em <strong>' . $dataExclusao . '</strong>, pelo usuário <strong>' . $matricula . "</strong>. <a href='javascript:ativarPessoa($this->cod_pessoa_fj);'>Reativar cadastro</a>";
+            }
         }
 
         $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal);
@@ -899,8 +877,12 @@ return new class extends clsCadastro
             return false;
         }
 
-        $pessoaFisica = new clsPessoaFisica(int_idpes: $idPes);
-        $pessoaFisica->excluir();
+        $individual = LegacyIndividual::find($idPes, ['idpes', 'ativo']);
+        $individual?->update([
+            'ativo' => 0,
+            'ref_usuario_exc' => Auth::id(),
+            'data_exclusao' => now(),
+        ]);
 
         $user = LegacyUser::find($idPes);
         if ($user) {
