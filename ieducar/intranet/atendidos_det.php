@@ -19,34 +19,34 @@ return new class extends clsDetalhe
 
         $cod_pessoa = (int) $this->getQueryString(name: 'cod_pessoa');
 
-        $person = LegacyPerson::with('individual')->find($cod_pessoa);
+        $pessoa = LegacyPerson::with('individual')->find($cod_pessoa);
 
-        if (!$person) {
+        if (!$pessoa) {
             $this->addDetalhe(detalhe: ['Erro', 'Pessoa não encontrada']);
 
             return;
         }
 
-        $individual = $person->individual;
-        $place = PersonHasPlace::with('place.city.state')->where('person_id', $cod_pessoa)->first()?->place;
-        $phones = LegacyPhone::query()->where('idpes', $cod_pessoa)->get()->keyBy('tipo');
+        $fisica = $pessoa->individual;
+        $endereco = PersonHasPlace::with('place.city.state')->where('person_id', $cod_pessoa)->first()?->place;
+        $telefones = LegacyPhone::query()->where('idpes', $cod_pessoa)->get()->keyBy('tipo');
 
         $caminhoFoto = LegacyIndividualPicture::whereKey($cod_pessoa)->value('caminho');
         if ($caminhoFoto) {
-            $this->addDetalhe(detalhe: ['Nome', $person->nome.'
+            $this->addDetalhe(detalhe: ['Nome', $pessoa->nome.'
                 <p><img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto) . '"/></p>']);
         } else {
-            $this->addDetalhe(detalhe: ['Nome', $person->nome]);
+            $this->addDetalhe(detalhe: ['Nome', $pessoa->nome]);
         }
 
-        if ($individual?->social_name) {
-            $this->addDetalhe(detalhe: ['Nome social e/ou afetivo', $individual->social_name]);
+        if ($fisica?->social_name) {
+            $this->addDetalhe(detalhe: ['Nome social e/ou afetivo', $fisica->social_name]);
         }
 
-        $this->addDetalhe(detalhe: ['CPF', $individual?->cpf]);
+        $this->addDetalhe(detalhe: ['CPF', $fisica?->cpf]);
 
-        if ($individual?->data_nasc) {
-            $this->addDetalhe(detalhe: ['Data de Nascimento', dataFromPgToBr(data_original: $individual->data_nasc)]);
+        if ($fisica?->data_nasc) {
+            $this->addDetalhe(detalhe: ['Data de Nascimento', dataFromPgToBr(data_original: $fisica->data_nasc)]);
         }
 
         // Cor/Raça.
@@ -55,57 +55,57 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Raça', $nameRace]);
         }
 
-        if ($place?->address) {
-            $end = $place->number ? ' nº ' . $place->number : '';
-            $this->addDetalhe(detalhe: ['Endereço', $place->address . $end]);
+        if ($endereco?->address) {
+            $end = $endereco->number ? ' nº ' . $endereco->number : '';
+            $this->addDetalhe(detalhe: ['Endereço', $endereco->address . $end]);
         }
 
-        if ($place?->complement) {
-            $this->addDetalhe(detalhe: ['Complemento', $place->complement]);
+        if ($endereco?->complement) {
+            $this->addDetalhe(detalhe: ['Complemento', $endereco->complement]);
         }
 
-        if ($place?->city?->name) {
-            $this->addDetalhe(detalhe: ['Cidade', $place->city->name]);
+        if ($endereco?->city?->name) {
+            $this->addDetalhe(detalhe: ['Cidade', $endereco->city->name]);
         }
 
-        if ($place?->city?->state?->abbreviation) {
-            $this->addDetalhe(detalhe: ['Estado', $place->city->state->abbreviation]);
+        if ($endereco?->city?->state?->abbreviation) {
+            $this->addDetalhe(detalhe: ['Estado', $endereco->city->state->abbreviation]);
         }
 
-        if ($place?->postal_code) {
-            $this->addDetalhe(detalhe: ['CEP', int2cep(int: $place->postal_code)]);
+        if ($endereco?->postal_code) {
+            $this->addDetalhe(detalhe: ['CEP', int2cep(int: $endereco->postal_code)]);
         }
 
-        $telefoneFixo = $phones[LegacyPhone::TYPE_LANDLINE] ?? null;
+        $telefoneFixo = $telefones[LegacyPhone::TYPE_LANDLINE] ?? null;
         if ($telefoneFixo?->fone) {
             $this->addDetalhe(detalhe: ['Telefone 1', sprintf('(%s) %s', $telefoneFixo->ddd, $telefoneFixo->fone)]);
         }
 
-        $telefoneSecundario = $phones[LegacyPhone::TYPE_MOBILE] ?? null;
+        $telefoneSecundario = $telefones[LegacyPhone::TYPE_MOBILE] ?? null;
         if ($telefoneSecundario?->fone) {
             $this->addDetalhe(detalhe: ['Telefone 2', sprintf('(%s) %s', $telefoneSecundario->ddd, $telefoneSecundario->fone)]);
         }
 
-        $celular = $phones[LegacyPhone::TYPE_MOBILE_ALT] ?? null;
+        $celular = $telefones[LegacyPhone::TYPE_MOBILE_ALT] ?? null;
         if ($celular?->fone) {
             $this->addDetalhe(detalhe: ['Celular', sprintf('(%s) %s', $celular->ddd, $celular->fone)]);
         }
 
-        $fax = $phones[LegacyPhone::TYPE_FAX] ?? null;
+        $fax = $telefones[LegacyPhone::TYPE_FAX] ?? null;
         if ($fax?->fone) {
             $this->addDetalhe(detalhe: ['Fax', sprintf('(%s) %s', $fax->ddd, $fax->fone)]);
         }
 
-        if ($person->url) {
-            $this->addDetalhe(detalhe: ['Site', $person->url]);
+        if ($pessoa->url) {
+            $this->addDetalhe(detalhe: ['Site', $pessoa->url]);
         }
 
-        if ($person->email) {
-            $this->addDetalhe(detalhe: ['E-mail', $person->email]);
+        if ($pessoa->email) {
+            $this->addDetalhe(detalhe: ['E-mail', $pessoa->email]);
         }
 
-        if ($individual?->sexo) {
-            $this->addDetalhe(detalhe: ['Sexo', $individual->sexo == 'M' ? 'Masculino' : 'Feminino']);
+        if ($fisica?->sexo) {
+            $this->addDetalhe(detalhe: ['Sexo', $fisica->sexo == 'M' ? 'Masculino' : 'Feminino']);
         }
 
         $vinculos = collect();
