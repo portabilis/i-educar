@@ -202,8 +202,8 @@ return new class extends clsCadastro
         $pessoa->nome = $this->nome;
         $pessoa->edita();
 
-        $individual = LegacyIndividual::find($this->pessoa_logada, ['idpes', 'sexo']);
-        $individual?->update(['sexo' => $this->sexo]);
+        $fisica = LegacyIndividual::find($this->pessoa_logada, ['idpes', 'sexo']);
+        $fisica?->update(['sexo' => $this->sexo]);
 
         if ($this->matricula != $this->matricula_old) {
             $existeMatricula = LegacyEmployee::query()
