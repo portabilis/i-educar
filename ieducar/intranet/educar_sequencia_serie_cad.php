@@ -107,6 +107,7 @@ return new class extends clsCadastro
             $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
             $obj_usuario_det = $obj_usuario->detalhe();
             $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
+            $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 
         $opcoes = ['' => 'Selecione'];
