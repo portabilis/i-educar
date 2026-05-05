@@ -95,12 +95,12 @@ return new class extends clsDetalhe
         }
 
         if ($this->ref_idpes) {
-            $person = LegacyPerson::query()->with('phones')->find($this->ref_idpes, ['idpes', 'nome', 'email', 'url']);
-            $phones = $person?->phones->keyBy('tipo') ?? collect();
-            $tel1 = $phones->get(LegacyPhone::TYPE_LANDLINE);
-            $tel2 = $phones->get(LegacyPhone::TYPE_MOBILE);
-            $cel  = $phones->get(LegacyPhone::TYPE_MOBILE_ALT);
-            $fax  = $phones->get(LegacyPhone::TYPE_FAX);
+            $pessoa = LegacyPerson::query()->with('phones')->find($this->ref_idpes, ['idpes', 'nome', 'email', 'url']);
+            $telefones = $pessoa?->phones->keyBy('tipo') ?? collect();
+            $tel1 = $telefones->get(LegacyPhone::TYPE_LANDLINE);
+            $tel2 = $telefones->get(LegacyPhone::TYPE_MOBILE);
+            $cel  = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
+            $fax  = $telefones->get(LegacyPhone::TYPE_FAX);
 
             $obj_fisica = new clsFisica(idpes: $this->ref_idpes);
             $det_fisica = $obj_fisica->detalhe();
@@ -109,7 +109,7 @@ return new class extends clsDetalhe
 
             $caminhoFoto = LegacyIndividualPicture::whereKey($this->ref_idpes)->value('caminho');
 
-            $registro['nome_aluno'] = mb_strtoupper((string) $person?->nome);
+            $registro['nome_aluno'] = mb_strtoupper((string) $pessoa?->nome);
             $registro['cpf'] = int2IdFederal(int: $det_fisica['cpf']);
             $registro['data_nasc'] = Portabilis_Date_Utils::pgSQLToBr(timestamp: $det_fisica['data_nasc']);
 
@@ -123,8 +123,8 @@ return new class extends clsDetalhe
             $lista_estado_civil = LegacyMaritalStatus::pluck('descricao', 'ideciv')->toArray();
 
             $registro['ideciv'] = $lista_estado_civil[$det_fisica['ideciv']] ?? '';
-            $registro['email'] = $person?->email;
-            $registro['url'] = $person?->url;
+            $registro['email'] = $pessoa?->email;
+            $registro['url'] = $pessoa?->url;
 
             $registro['nacionalidade'] = $det_fisica['nacionalidade'];
             $registro['nis_pis_pasep'] = int2Nis(nis: $det_fisica['nis_pis_pasep']);

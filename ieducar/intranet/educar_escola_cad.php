@@ -465,20 +465,20 @@ return new class extends clsCadastro
 
     private function carregaDadosContato($idpes)
     {
-        $person = LegacyPerson::query()->with('phones')->find($idpes, ['idpes', 'email', 'url', 'tipo']);
-        $phones = $person?->phones->keyBy('tipo') ?? collect();
-        $tel1 = $phones->get(LegacyPhone::TYPE_LANDLINE);
-        $tel2 = $phones->get(LegacyPhone::TYPE_MOBILE);
-        $cel  = $phones->get(LegacyPhone::TYPE_MOBILE_ALT);
-        $fax  = $phones->get(LegacyPhone::TYPE_FAX);
+        $pessoa = LegacyPerson::query()->with('phones')->find($idpes, ['idpes', 'email', 'url', 'tipo']);
+        $telefones = $pessoa?->phones->keyBy('tipo') ?? collect();
+        $tel1 = $telefones->get(LegacyPhone::TYPE_LANDLINE);
+        $tel2 = $telefones->get(LegacyPhone::TYPE_MOBILE);
+        $cel  = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
+        $fax  = $telefones->get(LegacyPhone::TYPE_FAX);
 
         $this->p_ddd_telefone_1   = $tel1?->ddd; $this->p_telefone_1   = $tel1?->fone;
         $this->p_ddd_telefone_2   = $tel2?->ddd; $this->p_telefone_2   = $tel2?->fone;
         $this->p_ddd_telefone_mov = $cel?->ddd;  $this->p_telefone_mov = $cel?->fone;
         $this->p_ddd_telefone_fax = $fax?->ddd;  $this->p_telefone_fax = $fax?->fone;
-        $this->p_email            = $person?->email;
-        $this->p_http             = $person?->url;
-        $this->tipo_pessoa        = $person?->tipo;
+        $this->p_email            = $pessoa?->email;
+        $this->p_http             = $pessoa?->url;
+        $this->tipo_pessoa        = $pessoa?->tipo;
     }
 
     private function carregaDadosDoPost()
