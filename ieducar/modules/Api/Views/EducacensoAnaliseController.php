@@ -332,15 +332,6 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (in_array(PoderPublicoConveniado::NAO_POSSUI, $escola->poderPublicoConveniado) && count($escola->poderPublicoConveniado) > 1) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$nomeEscola} possui valor inválido. Verificamos que o Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições foi preenchido incorretamente.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true,
-            ];
-        }
-
         if (in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado) && empty(array_filter($escola->formasContratacaoPoderPublicoEstadual))) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se as formas de contratação entre a escola e a Secretaria estadual de educação foram informadas.",
