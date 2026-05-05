@@ -1359,10 +1359,10 @@ return new class extends clsCadastro
 
     protected function createOrUpdatePessoaFisica($pessoaId)
     {
-        $individual = LegacyIndividual::find($pessoaId);
+        $fisica = LegacyIndividual::find($pessoaId);
 
-        if ($individual) {
-            $individual->update($this->montarDadosFisicaEdicao());
+        if ($fisica) {
+            $fisica->update($this->montarDadosFisicaEdicao());
             $this->atualizarSlugPessoaFisica($pessoaId, isInsert: false);
         } else {
             LegacyIndividual::create($this->montarDadosFisicaCadastro($pessoaId));
@@ -1578,21 +1578,21 @@ return new class extends clsCadastro
             return;
         }
 
-        $person = LegacyPerson::find($pessoaId);
-        if (!$person) {
+        $pessoa = LegacyPerson::find($pessoaId);
+        if (!$pessoa) {
             return;
         }
 
         if (is_string($this->nome_social) && !empty($this->nome_social)) {
             $slug = Str::lower(Str::slug($this->nome_social, ' '));
-            $person->slug = $isInsert
-                ? "{$slug} {$person->slug}"
-                : trim("{$slug} {$person->slug}");
+            $pessoa->slug = $isInsert
+                ? "{$slug} {$pessoa->slug}"
+                : trim("{$slug} {$pessoa->slug}");
         } else {
-            $person->slug = Str::lower(Str::slug($person->nome, ' '));
+            $pessoa->slug = Str::lower(Str::slug($pessoa->nome, ' '));
         }
 
-        $person->save();
+        $pessoa->save();
     }
 
     public function createOrUpdateRaca($pessoaId, $corRaca)
