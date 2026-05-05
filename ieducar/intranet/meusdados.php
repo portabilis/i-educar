@@ -251,7 +251,8 @@ return new class extends clsCadastro
             $dadosAtualizar['matricula'] = $this->matricula;
         }
 
-        LegacyEmployee::whereKey($this->pessoa_logada)->update($dadosAtualizar);
+        $funcionario = LegacyEmployee::find($this->pessoa_logada);
+        $funcionario?->update($dadosAtualizar);
 
         $usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $usuario = $usuario->detalhe();
