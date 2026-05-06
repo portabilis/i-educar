@@ -1068,6 +1068,11 @@ $j(document).ready(function() {
 
         var novoCurso = lastRow.querySelector('select[id^="ref_cod_curso"]');
         if (novoCurso) {
+            var primeiroSelect = rows[0].querySelector('select[name$="[curso_id]"], select[id^="ref_cod_curso"]');
+            if (primeiroSelect && primeiroSelect.options.length > novoCurso.options.length) {
+                novoCurso.innerHTML = primeiroSelect.innerHTML;
+                novoCurso.value = '';
+            }
             inativos.forEach(function(id) {
                 var opt = novoCurso.querySelector('option[value="' + id + '"]');
                 if (opt) opt.remove();
