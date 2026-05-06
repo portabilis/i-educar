@@ -8,7 +8,7 @@ use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacySequenceGrade;
+use App\Models\LegacyGradeSequence;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Services\EnrollmentService;
@@ -802,7 +802,7 @@ return new class extends clsCadastro
         }
 
         if (in_array(needle: $this->situacaoUltimaMatricula, haystack: $aprovado)) {
-            $serieNovaMatricula = LegacySequenceGrade::query()->whereGradeOrigin($this->serieUltimaMatricula)->active()->value('ref_serie_destino');
+            $serieNovaMatricula = LegacyGradeSequence::query()->whereGradeOrigin($this->serieUltimaMatricula)->active()->value('ref_serie_destino');
         } elseif (in_array(needle: $this->situacaoUltimaMatricula, haystack: $reprovado)) {
             $serieNovaMatricula = $this->serieUltimaMatricula;
         }
@@ -890,7 +890,7 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-        $lst_sequencia = LegacySequenceGrade::query()
+        $lst_sequencia = LegacyGradeSequence::query()
             ->whereGradeDestiny($ref_cod_serie)
             ->active()
             ->get()
