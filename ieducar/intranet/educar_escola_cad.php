@@ -1000,9 +1000,7 @@ return new class extends clsCadastro
             $this->addSchoolManagersTable();
             $this->campoQuebra();
 
-            if ($nivel === 1) {
-                $this->addSchoolCoursesTable();
-            }
+            $this->addSchoolCoursesTable();
 
             $this->campoQuebra();
 
@@ -1702,9 +1700,8 @@ return new class extends clsCadastro
 
     private function cadastraEscolaCurso($cod_escola, $excluirEscolaCursos = false)
     {
-        // Se o JS não rodou ou o usuário não tem permissão poli, não mexe nos cursos
-        $obj_permissoes = new clsPermissoes;
-        if (!isset($_POST['cursos_ready']) || $obj_permissoes->nivel_acesso($this->pessoa_logada) !== 1) {
+        // Se o JS não rodou, não mexe nos cursos (proteção contra perda de dados)
+        if (!isset($_POST['cursos_ready'])) {
             $this->storeManagers($cod_escola);
 
             return true;
