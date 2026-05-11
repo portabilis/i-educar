@@ -222,7 +222,7 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        $sequencia = LegacyGradeSequence::query()->active()->find($this->id);
+        $sequencia = LegacyGradeSequence::query()->active()->find(request('id'));
 
         if (!$sequencia) {
             $this->mensagem = 'Edição não realizada.<br>';
@@ -230,7 +230,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        if ($this->findDuplicate(excludeId: (int) $this->id)) {
+        if ($this->findDuplicate(excludeId: (int) request('id'))) {
             echo '<script> alert(\'Edição não realizada! \\n Já existe essa sequência.\') </script>';
             $this->mensagem = 'Edição não realizada.<br>';
 
@@ -255,7 +255,7 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        $obj = LegacyGradeSequence::query()->find($this->id);
+        $obj = LegacyGradeSequence::query()->find(request('id'));
 
         if (!$obj) {
             $this->mensagem = 'Exclusão não realizada.<br>';
