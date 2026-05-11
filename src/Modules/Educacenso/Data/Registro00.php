@@ -4,7 +4,6 @@ namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro00 as Registro00Model;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
-use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Formatters;
@@ -67,7 +66,6 @@ class Registro00 extends AbstractRegistro
         $record = SituacaoFuncionamento::handle($record);
         $record = DependenciaAdministrativa::handle($record);
         $record = Regulamentacao::handle($record);
-        $record = EsferaAdministrativa::handle($record);
 
         return [
             $record->registro, // 1	Tipo de registro
@@ -119,12 +117,9 @@ class Registro00 extends AbstractRegistro
             $record->cnpjMantenedoraPrincipal, // 47	CNPJ da mantenedora principal da escola privada
             $record->cnpjEscolaPrivada, // 48	Número do CNPJ da escola privada
             $record->regulamentacao, // 49	Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educaçãof
-            $record->esferaFederal, // 50	Federal
-            $record->esferaEstadual, // 51	Estadual
-            $record->esferaMunicipal, // 52	Municipal
-            $record->unidadeVinculada, // 53	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
-            $record->inepEscolaSede, // 54	Código da Escola Sede
-            $record->codigoIes, // 55	Código da IES
+            $record->unidadeVinculada, // 50	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
+            $record->inepEscolaSede, // 51	Código da Escola Sede
+            $record->codigoIes, // 52	Código da IES
         ];
     }
 
