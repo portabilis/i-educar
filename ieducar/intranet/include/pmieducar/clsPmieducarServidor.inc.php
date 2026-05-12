@@ -780,7 +780,7 @@ class clsPmieducarServidor extends Model
         AND qhh.ativo = '1'
         {$whereAno}";
             if (is_string($lst_matriculas)) {
-                $filtros .= "AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
+                $filtros .= " AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
             }
             $filtros .= ' ) OR s.multi_seriado) ';
             $whereAnd = ' AND ';
