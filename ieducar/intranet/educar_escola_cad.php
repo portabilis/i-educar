@@ -1135,7 +1135,7 @@ return new class extends clsCadastro
             $options = [
                 'label' => 'Escola compartilha espaços para atividades de integração escola-comunidade',
                 'value' => $this->compartilha_espacos_atividades_integracao,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'prompt' => 'Selecione',
                 'size' => 70,
             ];
@@ -1144,7 +1144,7 @@ return new class extends clsCadastro
             $options = [
                 'label' => 'Escola usa espaços e equipamentos do entorno escolar para atividades regulares com os alunos(as)',
                 'value' => $this->usa_espacos_equipamentos_atividades_regulares,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'prompt' => 'Selecione',
                 'size' => 70,
             ];
@@ -1453,7 +1453,7 @@ return new class extends clsCadastro
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->exame_selecao_ingresso,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'exame_selecao_ingresso', inputOptions: $options);
 
@@ -1482,7 +1482,7 @@ return new class extends clsCadastro
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->projeto_politico_pedagogico,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
             ];
             $this->inputsHelper()->select(attrName: 'projeto_politico_pedagogico', inputOptions: $options);
 
