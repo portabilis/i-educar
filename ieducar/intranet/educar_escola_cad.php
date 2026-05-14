@@ -1303,29 +1303,21 @@ return new class extends clsCadastro
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'acesso_internet', inputOptions: $options);
 
-            $helperOptions = ['objectName' => 'rede_local'];
-            $options = [
-                'label' => 'Rede local de interligação de computadores',
-                'size' => 50,
-                'required' => false,
-                'options' => [
-                    'values' => $this->rede_local,
-                    'all_values' => RedeLocal::getDescriptiveValues(),
-                ],
-            ];
-            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+            $resources = [null => 'Selecione'] + RedeLocal::getDescriptiveValues();
+            $options = ['label' => 'Rede local de interligação de computadores',
+                'resources' => $resources,
+                'value' => is_array($this->rede_local) ? ($this->rede_local[0] ?? null) : $this->rede_local,
+                'required' => $obrigarCamposCenso,
+                'size' => 70];
+            $this->inputsHelper()->select(attrName: 'rede_local', inputOptions: $options);
 
-            $helperOptions = ['objectName' => 'equipamentos_acesso_internet'];
-            $options = [
-                'label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
-                'size' => 50,
+            $resources = [null => 'Selecione'] + EquipamentosAcessoInternet::getDescriptiveValues();
+            $options = ['label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
+                'resources' => $resources,
+                'value' => is_array($this->equipamentos_acesso_internet) ? ($this->equipamentos_acesso_internet[0] ?? null) : $this->equipamentos_acesso_internet,
                 'required' => false,
-                'options' => [
-                    'values' => $this->equipamentos_acesso_internet,
-                    'all_values' => EquipamentosAcessoInternet::getDescriptiveValues(),
-                ],
-            ];
-            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+                'size' => 70];
+            $this->inputsHelper()->select(attrName: 'equipamentos_acesso_internet', inputOptions: $options);
 
             $this->campoRotulo(
                 nome: 'quantidade_computadores_alunos',
@@ -2009,7 +2001,17 @@ return new class extends clsCadastro
 
     private function transformArrayInString($value): ?string
     {
-        return is_array($value) ? implode(separator: ',', array: array_filter($value)) : null;
+        if (is_array($value)) {
+            $filtered = array_filter($value);
+
+            return empty($filtered) ? null : implode(separator: ',', array: $filtered);
+        }
+
+        if (is_string($value) && $value !== '') {
+            return $value;
+        }
+
+        return null;
     }
 
     public function Editar()
@@ -2927,12 +2929,6 @@ return new class extends clsCadastro
             return false;
         }
 
-        if (is_array($this->rede_local) && in_array(needle: RedeLocal::NENHUMA, haystack: $this->rede_local) && count($this->rede_local) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
-
-            return false;
-        }
-
         if (is_array($this->uso_internet) && in_array(needle: UsoInternet::NAO_POSSUI, haystack: $this->uso_internet) && count($this->uso_internet) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
 
@@ -2968,9 +2964,14 @@ return new class extends clsCadastro
 
     protected function validaEquipamentosAcessoInternet()
     {
-        if (is_array($this->equipamentos_acesso_internet) && in_array(needle: 2, haystack: $this->equipamentos_acesso_internet) &&
-            is_array($this->rede_local) && !in_array(needle: 3, haystack: $this->rede_local)) {
-            $this->mensagem = 'O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.';
+        $equipamentos = (int) $this->equipamentos_acesso_internet;
+        $redeLocal = (int) $this->rede_local;
+
+        $exigeWireless = in_array($equipamentos, [EquipamentosAcessoInternet::DISPOSITIVOS_PESSOAIS, EquipamentosAcessoInternet::AMBOS]);
+        $temWireless = in_array($redeLocal, [RedeLocal::WIRELESS, RedeLocal::A_CABO_E_WIRELESS]);
+
+        if ($exigeWireless && !$temWireless) {
+            $this->mensagem = 'O campo: <b>Rede local de interligação de computadores</b> deve estar preenchido com <b>Wireless</b> ou <b>A cabo e Wireless</b> quando o campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Dispositivos pessoais</b> ou <b>Computadores de mesa, portáteis e tablets da escola e Dispositivos pessoais</b>.';
 
             return false;
         }
@@ -3028,8 +3029,11 @@ return new class extends clsCadastro
             return false;
         }
 
-        if (is_array($this->equipamentos_acesso_internet) && in_array(needle: EquipamentosAcessoInternet::COMPUTADOR_MESA, haystack: $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
-            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
+        $equipamentos = (int) $this->equipamentos_acesso_internet;
+        $exigeQuantidade = in_array($equipamentos, [EquipamentosAcessoInternet::COMPUTADOR_MESA, EquipamentosAcessoInternet::AMBOS]);
+
+        if ($exigeQuantidade && $quantidadesNaoPreenchidas) {
+            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola</b> ou <b>Computadores de mesa, portáteis e tablets da escola e Dispositivos pessoais</b>.';
 
             return false;
         }
