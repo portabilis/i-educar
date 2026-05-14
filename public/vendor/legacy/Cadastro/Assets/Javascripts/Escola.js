@@ -62,6 +62,13 @@ const PODER_PUBLICO_PARCERIA_CONVENIO = {
   NAO_POSSUI_PARCERIA_OU_CONVENIO: 3
 };
 
+const LINGUA_MINISTRADA = {
+  NAO_OFERECE_EDUCACAO_INDIGENA: 0,
+  PORTUGUESA: 1,
+  INDIGENA: 2,
+  INDIGENA_E_PORTUGUESA: 3
+};
+
 function validaEspacoEscolares() {
   const espacos = $j('tr.tr_espacos');
   let validacaoPassa = true;
@@ -663,7 +670,6 @@ $j(document).ready(function() {
         mostrarCamposDaUnidadeVinculada();
         obrigarCamposDaUnidadeVinculada();
         obrigarCnpjMantenedora();
-        habilitaCampoEducacaoIndigena();
         habilitaCampoLinguaMinistrada();
         habilitaReservaVagasCotas();
         habilitaAcoesAmbientais();
@@ -1259,34 +1265,19 @@ $j('#equipamentos_acesso_internet').on('change', function () {
   habilitaCamposQuantidadeComputadoresAlunos();
 });
 
-function habilitaCampoEducacaoIndigena() {
-    var escolaIndigena = $j('#educacao_indigena').val() == 1;
-    if(escolaIndigena && obrigarCamposCenso){
-        makeRequired('lingua_ministrada');
-    }else{
-        makeUnrequired('lingua_ministrada');
-        makeUnrequired('codigo_lingua_indigena');
-    }
-
-    $j('#lingua_ministrada').prop('disabled', !escolaIndigena);
-    habilitaCampoLinguaMinistrada();
-}
-
 function habilitaCampoLinguaMinistrada() {
-    var linguaIndigena = $j('#lingua_ministrada').val() == 2;
-    if(linguaIndigena && obrigarCamposCenso){
+    const lingua = parseInt($j('#lingua_ministrada').val(), 10);
+    const temLinguaIndigena = lingua === LINGUA_MINISTRADA.INDIGENA || lingua === LINGUA_MINISTRADA.INDIGENA_E_PORTUGUESA;
+
+    if (temLinguaIndigena && obrigarCamposCenso) {
         makeRequired('codigo_lingua_indigena');
-    }else{
+    } else {
         makeUnrequired('codigo_lingua_indigena');
     }
 
-    $j('#codigo_lingua_indigena').prop('disabled', !linguaIndigena);
+    $j('#codigo_lingua_indigena').prop('disabled', !temLinguaIndigena);
     $j("#codigo_lingua_indigena").trigger("chosen:updated");
 }
-
-$j('#educacao_indigena').on('change', function() {
-    habilitaCampoEducacaoIndigena()
-});
 
 $j('#lingua_ministrada').on('change', function() {
     habilitaCampoLinguaMinistrada()

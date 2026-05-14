@@ -25,6 +25,7 @@ use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
 use iEducar\Modules\Educacenso\Model\EsgotamentoSanitario;
 use iEducar\Modules\Educacenso\Model\FonteEnergia;
 use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
+use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -217,8 +218,6 @@ return new class extends clsCadastro
     public $projeto_politico_pedagogico;
 
     public $localizacao_diferenciada;
-
-    public $educacao_indigena;
 
     public $lingua_ministrada;
 
@@ -1495,25 +1494,11 @@ return new class extends clsCadastro
                 2 => 'Quilombola',
                 3 => 'Indígena'];
 
-            $options = [
-                'label' => 'Escola indígena',
-                'value' => $this->educacao_indigena,
-                'required' => false,
-                'prompt' => 'Selecione',
-            ];
-            $this->inputsHelper()->booleanSelect(attrName: 'educacao_indigena', inputOptions: $options);
-
-            $resources = [
-                null => 'Selecione',
-                1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena',
-            ];
-            $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
+            $resources = [null => 'Selecione'] + LinguaMinistrada::getDescriptiveValues();
             $options = ['label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
-                'required' => false,
-                'disabled' => !$habilitaLiguaMinistrada,
+                'required' => $obrigarCamposCenso,
                 'size' => 70];
             $this->inputsHelper()->select(attrName: 'lingua_ministrada', inputOptions: $options);
 
@@ -1876,7 +1861,6 @@ return new class extends clsCadastro
         $obj->acoes_area_ambiental = $this->acoes_area_ambiental;
         $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
         $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-        $obj->educacao_indigena = $this->educacao_indigena;
         $obj->lingua_ministrada = $this->lingua_ministrada;
         $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
         $obj->equipamentos = $this->equipamentos;
