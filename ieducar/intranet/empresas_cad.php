@@ -296,11 +296,13 @@ return new class extends clsCadastro
             return false;
         }
 
-        $idpesCnpjExistente = LegacyOrganization::where('cnpj', $this->cnpj)->value('idpes');
-        if ($idpesCnpjExistente !== null && $this->cod_pessoa_fj != $idpesCnpjExistente) {
-            $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
+        if ($this->cnpj !== null) {
+            $idpesCnpjExistente = LegacyOrganization::where('cnpj', $this->cnpj)->value('idpes');
+            if ($idpesCnpjExistente !== null && $this->cod_pessoa_fj != $idpesCnpjExistente) {
+                $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
-            return false;
+                return false;
+            }
         }
 
         if (!$this->validaDadosTelefones()) {
