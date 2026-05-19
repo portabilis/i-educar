@@ -38,10 +38,21 @@ var modoCadastro = $j('#retorno').val() == 'Novo';
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 let habilitaFormacaoAlternancia = ()=>{
-  $j('#formacao_alternancia').makeUnrequired();
+  const etapasBloqueiamSim = ['1', '2', '3', '4', '14', '15', '16', '17', '18', '56'];
+  const $campo = $j('#formacao_alternancia');
+  const bloqueada = $j.inArray($j('#etapa_educacenso').val(), etapasBloqueiamSim) != -1;
 
+  $campo.makeUnrequired();
   if (obrigarCamposCenso) {
-    $j('#formacao_alternancia').makeRequired();
+    $campo.makeRequired();
+  }
+
+  $campo.find('option').prop('disabled', false);
+  if (bloqueada) {
+    $campo.find('option[value="1"]').prop('disabled', true);
+    if ($campo.val() === '1') {
+      $campo.val('');
+    }
   }
 }
 
@@ -185,6 +196,7 @@ verificaLocalFuncionamentoDiferenciado();
 $j('#etapa_educacenso').change(function() {
   habilitaCursoTecnico();
   habilitaFormaOrganizacaoTurma();
+  habilitaFormacaoAlternancia();
 });
 
 function habilitaAtividadesComplementares(){
