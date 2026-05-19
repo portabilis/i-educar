@@ -204,7 +204,7 @@ function habilitaAtividadesComplementares(){
 }
 
 function habilitaCursoTecnico() {
-  var etapasEnsinoTecnico = ['39', '40', '64'];
+  var etapasEnsinoTecnico = ['39', '40', '64', '74'];
   var mostraCampo = $j.inArray($j('#etapa_educacenso').val(),etapasEnsinoTecnico) != -1;
   if (mostraCampo) {
     $j('#cod_curso_profissional').prop('disabled', false);
