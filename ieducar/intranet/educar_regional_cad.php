@@ -101,7 +101,7 @@ return new class extends clsCadastro
 
         if ($classType->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_aluno_beneficio_lst.php');
+            $this->simpleRedirect('educar_regional_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
