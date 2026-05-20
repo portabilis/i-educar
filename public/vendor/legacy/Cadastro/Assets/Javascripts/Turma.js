@@ -79,25 +79,51 @@ let verificaHorariosTurnoParcial = ()=>{
   }
 }
 
+const FORMAS_ORGANIZACAO_TURMA = {
+  SERIE_ANO: '1',
+  SEMESTRAL: '2',
+  CICLOS: '3',
+  NAO_SERIADO: '4',
+  MODULES: '5',
+};
+
+const ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO = {
+  [FORMAS_ORGANIZACAO_TURMA.SERIE_ANO]:   ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','68','69','70','71','72','73','74'],
+  [FORMAS_ORGANIZACAO_TURMA.SEMESTRAL]:   ['25','26','27','28','29','35','36','37','38','39','40','64','68','69','70','71','72','73','74'],
+  [FORMAS_ORGANIZACAO_TURMA.CICLOS]:      ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','41','56'],
+  [FORMAS_ORGANIZACAO_TURMA.NAO_SERIADO]: ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','68','69','70','71','72','73','74'],
+  [FORMAS_ORGANIZACAO_TURMA.MODULES]:     ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','68','69','70','71','72','73','74'],
+};
+
 let habilitaFormaOrganizacaoTurma = ()=> {
   const etapasInvalidas = ['1', '2', '3', '24', '62'];
   const tipoAtendimento = $j('#tipo_atendimento').val() || [];
   const escolarizacao = tipoAtendimento.includes('0');
-  const etapaEducacenso = $j('#etapa_educacenso').val()
+  const etapaEducacenso = $j('#etapa_educacenso').val();
+  const $campo = $j('#formas_organizacao_turma');
 
-  $j('#formas_organizacao_turma').makeUnrequired();
-  if (obrigarCamposCenso &&
-      escolarizacao &&
-      etapaEducacenso &&
-     !etapasInvalidas.includes(etapaEducacenso)
-  ) {
-    $j('#formas_organizacao_turma').makeRequired();
-  }
-
-  $j("#formas_organizacao_turma").prop('disabled', false);
+  $campo.makeUnrequired();
+  $campo.find('option').prop('disabled', false);
 
   if (!escolarizacao || !etapaEducacenso || etapasInvalidas.includes(etapaEducacenso)) {
-    $j("#formas_organizacao_turma").prop('disabled', true).val("");
+    $campo.prop('disabled', true).val('');
+    return;
+  }
+
+  $campo.prop('disabled', false);
+  if (obrigarCamposCenso) {
+    $campo.makeRequired();
+  }
+
+  Object.entries(ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO).forEach(([forma, etapasValidas]) => {
+    if (!etapasValidas.includes(etapaEducacenso)) {
+      $campo.find(`option[value="${forma}"]`).prop('disabled', true);
+    }
+  });
+
+  const valorAtual = $campo.val();
+  if (valorAtual && ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO[valorAtual] && !ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO[valorAtual].includes(etapaEducacenso)) {
+    $campo.val('');
   }
 }
 
