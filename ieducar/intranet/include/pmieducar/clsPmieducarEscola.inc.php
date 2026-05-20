@@ -298,6 +298,8 @@ class clsPmieducarEscola extends Model
 
     public $caracteristica_escolar;
 
+    public $regional_type_id;
+
     public function __construct(
         $cod_escola = null,
         $ref_usuario_cad = null,
@@ -367,7 +369,8 @@ class clsPmieducarEscola extends Model
             e.qtd_edu_especial_classe_especial_par,
             e.qtd_edu_especial_classe_especial_int,
             e.qtd_edu_eja_ensino_fund,
-            e.qtd_edu_eja_ensino_med
+            e.qtd_edu_eja_ensino_med,
+            e.regional_type_id
           ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -2387,6 +2390,13 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}qtd_edu_eja_ensino_med = NULL";
+            }
+
+            if (is_numeric($this->regional_type_id)) {
+                $set .= "{$gruda}regional_type_id = '{$this->regional_type_id}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}regional_type_id = NULL";
             }
 
             if (is_string($this->lei_conclusao_ensino_medio)) {
