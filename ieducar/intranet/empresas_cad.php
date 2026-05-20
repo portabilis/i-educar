@@ -248,7 +248,7 @@ return new class extends clsCadastro
             return true;
         }
 
-        return filter_var(variable: $url, options: FILTER_VALIDATE_URL) !== false;
+        return filter_var(value: $url, options: FILTER_VALIDATE_URL) !== false;
     }
 
     protected function validaCaracteresPermitidosComplemento()
