@@ -225,7 +225,7 @@ class SchoolClassController extends Controller
             $params['cod_curso_profissional'] = null;
         }
 
-        $etapasCursoTecnico = [39, 40, 64];
+        $etapasCursoTecnico = [39, 40, 64, 74];
 
         if (isset($params['etapa_educacenso'])
             && !in_array($params['etapa_educacenso'], $etapasCursoTecnico)) {
