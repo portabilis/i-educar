@@ -621,7 +621,6 @@ $j(document).ready(function() {
       });
       habilitaCampoAcessoInternet();
       habilitaCampoEquipamentosAcessoInternet();
-      habilitaCamposQuantidadeComputadoresAlunos();
       aplicaRestricoesRedeLocal();
       aplicaRestricoesEquipamentosAcessoInternet();
       obrigaEquipamentos();
@@ -1259,16 +1258,6 @@ $j('#uso_internet').on('change', function () {
     habilitaCampoEquipamentosAcessoInternet();
 });
 
-function habilitaCamposQuantidadeComputadoresAlunos() {
-    const equipamentos = parseInt($j('#equipamentos_acesso_internet').val(), 10);
-    const exigeQuantidade = equipamentos === EQUIPAMENTOS_ACESSO_INTERNET.COMPUTADOR_MESA
-        || equipamentos === EQUIPAMENTOS_ACESSO_INTERNET.AMBOS;
-    const disabled = !exigeQuantidade;
-
-    $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').prop('disabled', disabled);
-    $j("#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets").trigger("chosen:updated");
-}
-
 function aplicaRestricoesRedeLocal() {
     const equipamentos = parseInt($j('#equipamentos_acesso_internet').val(), 10);
     const computadoresZero = (parseInt($j('#quantidade_computadores_alunos_mesa').val(), 10) || 0) === 0
@@ -1332,7 +1321,6 @@ function aplicaRestricoesEquipamentosAcessoInternet() {
 }
 
 $j('#equipamentos_acesso_internet').on('change', function () {
-    habilitaCamposQuantidadeComputadoresAlunos();
     aplicaRestricoesRedeLocal();
 });
 

@@ -1311,14 +1311,6 @@ return new class extends clsCadastro
                 'size' => 70];
             $this->inputsHelper()->select(attrName: 'rede_local', inputOptions: $options);
 
-            $resources = [null => 'Selecione'] + EquipamentosAcessoInternet::getDescriptiveValues();
-            $options = ['label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
-                'resources' => $resources,
-                'value' => is_array($this->equipamentos_acesso_internet) ? ($this->equipamentos_acesso_internet[0] ?? null) : $this->equipamentos_acesso_internet,
-                'required' => false,
-                'size' => 70];
-            $this->inputsHelper()->select(attrName: 'equipamentos_acesso_internet', inputOptions: $options);
-
             $this->campoRotulo(
                 nome: 'quantidade_computadores_alunos',
                 campo: '<b>Quantidade de computadores de uso dos alunos</b>'
@@ -1332,6 +1324,14 @@ return new class extends clsCadastro
 
             $options = ['label' => 'Tablets', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_tablets, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer(attrName: 'quantidade_computadores_alunos_tablets', inputOptions: $options);
+
+            $resources = [null => 'Selecione'] + EquipamentosAcessoInternet::getDescriptiveValues();
+            $options = ['label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
+                'resources' => $resources,
+                'value' => is_array($this->equipamentos_acesso_internet) ? ($this->equipamentos_acesso_internet[0] ?? null) : $this->equipamentos_acesso_internet,
+                'required' => false,
+                'size' => 70];
+            $this->inputsHelper()->select(attrName: 'equipamentos_acesso_internet', inputOptions: $options);
 
             $this->campoRotulo(
                 nome: 'equipamentos_aprendizagem',
