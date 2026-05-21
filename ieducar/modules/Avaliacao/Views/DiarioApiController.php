@@ -1788,15 +1788,91 @@ class DiarioApiController extends ApiCoreController
 
     protected function inserirAuditoriaNotas($notaAntiga, $notaNova)
     {
-        if ($this->usaAuditoriaNotas()) {
-            $objAuditoria = new clsModulesAuditoriaNota($notaAntiga, $notaNova, $this->getRequest()->turma_id);
-            $objAuditoria->cadastra();
+        if (config('legacy.app.auditoria.notas') != '1') {
+            return;
         }
+
+        $notaAntigaValor = $this->extrairValorNota($notaAntiga);
+        $notaNovaValor = $this->extrairValorNota($notaNova);
+
+        if (is_null($notaAntigaValor) && is_null($notaNovaValor)) {
+            return;
+        }
+
+        // Ordem deve corresponder aos parâmetros do VALUES em sqlAuditoriaNotas()
+        DB::statement($this->sqlAuditoriaNotas(), [
+            $this->getRequest()->matricula_id,          // p.matricula_id
+            $this->getRequest()->turma_id,              // p.turma_id
+            $this->getRequest()->componente_curricular_id, // p.componente_id
+            (string) Auth::id(),                        // p.user_id
+            $this->determinarOperacaoAuditoria($notaAntigaValor, $notaNovaValor), // p.operacao
+            $notaAntigaValor,                           // p.nota_antiga
+            $notaNovaValor,                             // p.nota_nova
+            $this->getRequest()->etapa,                 // p.etapa
+        ]);
     }
 
-    protected function usaAuditoriaNotas()
+    private function extrairValorNota($nota): ?string
     {
-        return config('legacy.app.auditoria.notas') == '1';
+        return ($nota instanceof Avaliacao_Model_NotaComponente) ? (string) $nota->notaArredondada : null;
+    }
+
+    private function determinarOperacaoAuditoria(?string $notaAntiga, ?string $notaNova): int
+    {
+        return match (true) {
+            !is_null($notaAntiga) && !is_null($notaNova) => 2,
+            is_null($notaAntiga) => 1,
+            default => 3,
+        };
+    }
+
+    private function sqlAuditoriaNotas(): string
+    {
+        // COALESCE em cada campo replica o comportamento do PHP antigo, que
+        // tratava NULL como string vazia ao concatenar. Sem isso, no PostgreSQL
+        // qualquer campo NULL anularia a string inteira.
+        $contexto = "
+            '{instituicao:' || COALESCE(i.nm_instituicao, '') ||
+            ',instituicao_id:' || COALESCE(i.cod_instituicao::text, '') ||
+            ',escola:' || COALESCE(j.fantasia, ec.nm_escola, '') ||
+            ',escola_id:' || COALESCE(e.cod_escola::text, '') ||
+            ',curso:' || COALESCE(c.nm_curso, '') ||
+            ',curso_id:' || COALESCE(c.cod_curso::text, '') ||
+            ',serie:' || COALESCE(s.nm_serie, '') ||
+            ',serie_id:' || COALESCE(s.cod_serie::text, '') ||
+            ',turma:' || COALESCE(t.nm_turma, '') ||
+            ',turma_id:' || COALESCE(t.cod_turma::text, '') ||
+            ',aluno:' || COALESCE(pa.nome, '') ||
+            ',aluno_id:' || COALESCE(a.cod_aluno::text, '')";
+
+        return "
+            INSERT INTO modules.auditoria (usuario, operacao, rotina, valor_antigo, valor_novo, data_hora)
+            SELECT
+                p.user_id || ' - ' || COALESCE(f.matricula, ''),
+                p.operacao,
+                'notas',
+                CASE WHEN p.nota_antiga IS NOT NULL THEN
+                    {$contexto} || ',nota:' || p.nota_antiga || ',etapa:' || COALESCE(p.etapa, '') || ',componenteCurricular:' || COALESCE(cc.nome, '') || '}'
+                END,
+                CASE WHEN p.nota_nova IS NOT NULL THEN
+                    {$contexto} || ',nota:' || p.nota_nova || ',etapa:' || COALESCE(p.etapa, '') || ',componenteCurricular:' || COALESCE(cc.nome, '') || '}'
+                END,
+                NOW()
+            FROM (VALUES (?::integer, ?::integer, ?::integer, ?::text, ?::smallint, ?::text, ?::text, ?::text))
+                AS p(matricula_id, turma_id, componente_id, user_id, operacao, nota_antiga, nota_nova, etapa)
+            JOIN pmieducar.matricula m ON m.cod_matricula = p.matricula_id
+            JOIN pmieducar.escola e ON e.cod_escola = m.ref_ref_cod_escola
+            JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
+            LEFT JOIN cadastro.juridica j ON j.idpes = e.ref_idpes
+            LEFT JOIN pmieducar.escola_complemento ec ON ec.ref_cod_escola = e.cod_escola
+            JOIN pmieducar.curso c ON c.cod_curso = m.ref_cod_curso
+            JOIN pmieducar.serie s ON s.cod_serie = m.ref_ref_cod_serie
+            JOIN pmieducar.turma t ON t.cod_turma = p.turma_id
+            JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
+            JOIN cadastro.pessoa pa ON pa.idpes = a.ref_idpes
+            JOIN modules.componente_curricular cc ON cc.id = p.componente_id
+            LEFT JOIN portal.funcionario f ON f.ref_cod_pessoa_fj = p.user_id::integer
+        ";
     }
 
     public function canChange()

@@ -64,27 +64,17 @@ class LegacyDocument extends Model
         'declaracao_trabalho_autonomo',
     ];
 
+    protected $attributes = [
+        'origem_gravacao' => 'M',
+        'operacao' => 'I',
+    ];
+
     protected function casts(): array
     {
         return [
             'data_exp_rg' => 'date',
             'data_emissao_cert_civil' => 'date',
         ];
-    }
-
-    /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->origem_gravacao = 'M';
-            $model->operacao = 'I';
-        });
     }
 
     /**

@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\ComponentBatchOperation;
+use App\Models\Enums\ComponentBatchStatus;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\RegistrationStatus;
 use App\Models\View\Discipline;
+use App\Services\ComponentBatchManagerService;
 use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
@@ -693,6 +696,44 @@ class DiarioController extends ApiCoreController
         return (new RemoveHtmlTagsStringService)->execute($text);
     }
 
+    protected function postComponentBatchCallback()
+    {
+        $operationId = $this->getRequest()->operation_id ?? null;
+
+        if (!$operationId) {
+            $this->messenger->append('Parâmetro operation_id é obrigatório.', 'error');
+
+            return;
+        }
+
+        $operation = ComponentBatchOperation::find($operationId);
+
+        if (!$operation) {
+            $this->messenger->append('Operação não encontrada.', 'error');
+
+            return;
+        }
+
+        if ($operation->status_id !== ComponentBatchStatus::RUNNING->value) {
+            $this->appendResponse('message', 'Operação não está em execução. Status atual: ' . ComponentBatchStatus::from($operation->status_id)->label());
+
+            return;
+        }
+
+        $idiarioResult = [
+            'success' => filter_var($this->getRequest()->success ?? false, FILTER_VALIDATE_BOOLEAN),
+            'deleted' => (int) ($this->getRequest()->deleted ?? 0),
+        ];
+
+        if (!empty($this->getRequest()->error)) {
+            $idiarioResult['error'] = $this->getRequest()->error;
+        }
+
+        app(ComponentBatchManagerService::class)->processCallback($operation, $idiarioResult);
+
+        $this->appendResponse('message', 'Callback processado com sucesso.');
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('post', 'notas')) {
@@ -711,6 +752,8 @@ class DiarioController extends ApiCoreController
             $this->appendResponse($this->postPareceresAnualPorComponente());
         } elseif ($this->isRequestFor('post', 'pareceres-anual-geral')) {
             $this->appendResponse($this->postPareceresAnualGeral());
+        } elseif ($this->isRequestFor('post', 'component-batch-callback')) {
+            $this->postComponentBatchCallback();
         } else {
             $this->notImplementedOperationError();
         }

@@ -2,6 +2,7 @@
 
 use App\Models\Employee;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
 use App\Services\FileService;
@@ -47,11 +48,10 @@ return new class extends clsDetalhe
             'nome_social'
         );
 
-        $objFoto = new clsCadastroFisicaFoto(idpes: $cod_pessoa);
-        $caminhoFoto = $objFoto->detalhe();
-        if ($caminhoFoto != false) {
+        $caminhoFoto = LegacyIndividualPicture::whereKey($cod_pessoa)->value('caminho');
+        if ($caminhoFoto) {
             $this->addDetalhe(detalhe: ['Nome', $detalhe['nome'].'
-                <p><img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto['caminho']) . '"/></p>']);
+                <p><img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto) . '"/></p>']);
         } else {
             $this->addDetalhe(detalhe: ['Nome', $detalhe['nome']]);
         }
@@ -152,6 +152,27 @@ return new class extends clsDetalhe
                 '<a target="_blank" href="/intranet/educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s">Servidor</a>',
                 $servidor->getKey(),
                 $servidor->ref_cod_instituicao
+            ));
+        }
+
+        if ($mother = LegacyIndividual::query()->where('idpes_mae', $cod_pessoa)->first()) {
+            $vinculos->push(sprintf(
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Mãe da Pessoa Física</a>',
+                $mother->getKey(),
+            ));
+        }
+
+        if ($father = LegacyIndividual::query()->where('idpes_pai', $cod_pessoa)->first()) {
+            $vinculos->push(sprintf(
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Pai da Pessoa Física</a>',
+                $father->getKey(),
+            ));
+        }
+
+        if ($responsible = LegacyIndividual::query()->where('idpes_responsavel', $cod_pessoa)->first()) {
+            $vinculos->push(sprintf(
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Responsável da Pessoa Física</a>',
+                $responsible->getKey(),
             ));
         }
 
