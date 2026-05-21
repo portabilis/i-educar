@@ -37,7 +37,7 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 var modoCadastro = $j('#retorno').val() == 'Novo';
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
-const ORGANIZACAO_CURRICULAR_ITINERARIO_FORMATIVO = '5';
+const ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA = '5';
 
 let habilitaFormacaoAlternancia = ()=>{
   $j('#formacao_alternancia').makeUnrequired();
@@ -333,7 +333,7 @@ function habilitaTipoCursoIntinerario() {
   const notContainData = $j('#organizacao_curricular').val() === null;
   $j('#tipo_curso_intinerario').makeUnrequired();
 
-  if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMATIVO)) {
+  if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA)) {
     $j("#tipo_curso_intinerario").prop('disabled', false);
     $j('#tipo_curso_intinerario').makeRequired();
   } else {
@@ -360,7 +360,7 @@ function habilitaCargaHorariaTotal() {
   $j('#carga_horaria_total').prop('disabled', true).makeUnrequired();
   const notContainData = $j('#organizacao_curricular').val() === null;
 
-  if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMATIVO)) {
+  if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA)) {
     $j('#carga_horaria_total').prop('disabled', false);
     if (obrigarCamposCenso) {
       $j('#carga_horaria_total').makeRequired();
