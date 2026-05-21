@@ -6,6 +6,7 @@ use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyOrganization;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySequenceGrade;
@@ -459,13 +460,7 @@ return new class extends clsCadastro
                         $escola = $escola->detalhe();
 
                         if (is_array(value: $escola) && count(value: $escola)) {
-                            $escola = new clsJuridica(idpes: $escola['ref_idpes']);
-                            $escola = $escola->detalhe();
-                            if (is_array(value: $escola) && count(value: $escola)) {
-                                $escola = $escola['fantasia'];
-                            } else {
-                                $escola = '';
-                            }
+                            $escola = LegacyOrganization::whereKey($escola['ref_idpes'])->value('fantasia') ?? '';
                         } else {
                             $escola = '';
                         }
