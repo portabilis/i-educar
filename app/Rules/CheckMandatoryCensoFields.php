@@ -49,6 +49,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCampoLocalFuncionamentoDiferenciado($params)) {
                 return false;
             }
+            if (!$this->validaCargaHorariaTotal($params)) {
+                return false;
+            }
         }
 
         return true;
@@ -205,6 +208,54 @@ class CheckMandatoryCensoFields implements Rule
             $localFuncionamentoEscola
         ) && $params->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL) {
             $this->message = 'Não é possível selecionar a opção: Unidade prisional quando o local de funcionamento da escola não for: Unidade prisional.';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaCargaHorariaTotal($params)
+    {
+        $organizacaoCurricular = array_map('intval', (array) $this->getOrganizacaoCurricularValues($params));
+        $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
+
+        if (!$iftpAtivo) {
+            return true;
+        }
+
+        $carga = $params->carga_horaria_total;
+
+        if (empty($carga)) {
+            $this->message = 'O campo: Carga horária total do curso (em horas) é obrigatório quando o campo: Organização curricular da turma incluir: Itinerário de formação técnica e profissional.';
+
+            return false;
+        }
+
+        $carga = (int) $carga;
+
+        if ($carga <= 0) {
+            $this->message = 'O campo: Carga horária total do curso (em horas) deve ser maior que zero.';
+
+            return false;
+        }
+
+        $tipoCurso = (int) $params->tipo_curso_intinerario;
+
+        if ($tipoCurso === 1) {
+            $cursoSelecionado = (int) $params->cod_curso_profissional_intinerario;
+            $cursos = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/cursos_carga_horaria_minima.json');
+            $cargaMinima = (int) ($cursos[$cursoSelecionado]['carga_minima'] ?? 0);
+
+            if ($cargaMinima > 0 && $carga < $cargaMinima && $carga <= 2000) {
+                $this->message = "O campo: Carga horária total do curso (em horas) deve ser maior ou igual à carga horária mínima do curso ({$cargaMinima} horas) ou superior a 2000 horas.";
+
+                return false;
+            }
+        }
+
+        if ($tipoCurso === 2 && ($carga < 160 || $carga > 800)) {
+            $this->message = 'O campo: Carga horária total do curso (em horas) deve estar entre 160 e 800 horas quando o Tipo do curso do itinerário for: Qualificação Profissional Técnica.';
 
             return false;
         }

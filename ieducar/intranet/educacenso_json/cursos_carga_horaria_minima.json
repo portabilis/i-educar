@@ -1,0 +1,1042 @@
+{
+    "1000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "1001": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1002": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1004": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1005": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1006": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1007": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1008": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1009": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1010": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1011": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1012": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1013": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "1014": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1015": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1016": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1017": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "1018": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1019": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1020": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1021": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1022": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1023": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1024": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1025": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1026": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1028": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1029": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "1030": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1031": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1032": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "1033": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "1999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "2000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "2029": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "2030": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "2031": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "2032": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "2033": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "2034": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "2035": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "2036": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "2037": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "2038": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "2039": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "2040": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "2999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "3000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "3036": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3037": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3038": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3039": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3040": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3041": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3042": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3043": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3044": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3045": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3048": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3049": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3050": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3051": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3052": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3053": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3054": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3055": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3056": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3057": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3058": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3059": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3060": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3061": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3062": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3063": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3064": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "3999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "4050": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4051": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4052": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4053": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4054": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4055": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4056": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4057": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4058": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4059": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4060": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4061": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4062": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4063": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4064": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4065": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4066": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "4999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "5066": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5067": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5068": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5069": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5070": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5071": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5072": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "5999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "6000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "6073": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "6074": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "6075": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "6076": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "6077": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "6078": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "6080": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "6081": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "6082": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "6999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "7000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "7081": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "7082": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7083": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7084": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7085": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7086": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7087": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7088": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7089": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7091": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "7092": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7093": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "7094": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "7095": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "7096": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "7097": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "7098": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "7999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "8000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "8099": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8100": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8101": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8102": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8103": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8104": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8105": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8106": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8107": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8108": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8109": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8110": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8111": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8112": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8113": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8114": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8115": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8116": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8117": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8118": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8119": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8120": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8121": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8122": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8123": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8124": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8125": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8126": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8127": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8128": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8129": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8130": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8131": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8132": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "8133": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "8999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "9000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "9120": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "9121": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "9122": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "9123": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "9124": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "9125": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "9127": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "9999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "10128": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10129": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "10130": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10131": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10132": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "10133": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10134": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "10135": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10136": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10137": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10138": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10139": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10140": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10141": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10143": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10144": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10145": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10146": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10147": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "10148": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10149": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10150": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10151": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10152": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "10153": {
+        "carga_minima": 100,
+        "tipo": 1
+    },
+    "10154": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10155": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "10157": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10158": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10159": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10160": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "10999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "11000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "11154": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11155": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11156": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11157": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11158": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11159": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11160": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11161": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11164": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11165": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11166": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11167": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11168": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "11169": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11170": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11171": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11173": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11174": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11175": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11176": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "11177": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11178": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "11999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "12000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "12171": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12172": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12173": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12174": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12175": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "12176": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12177": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "12178": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12179": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12180": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12181": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12182": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "12184": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "12185": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12186": {
+        "carga_minima": 160,
+        "tipo": 1
+    },
+    "12188": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "12999": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "13000": {
+        "carga_minima": 160,
+        "tipo": 2
+    },
+    "13181": {
+        "carga_minima": 800,
+        "tipo": 1
+    },
+    "13182": {
+        "carga_minima": 1200,
+        "tipo": 1
+    },
+    "13183": {
+        "carga_minima": 1000,
+        "tipo": 1
+    },
+    "13999": {
+        "carga_minima": 800,
+        "tipo": 1
+    }
+}

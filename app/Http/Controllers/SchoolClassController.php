@@ -11,6 +11,7 @@ use App\Services\SchoolClassInepService;
 use App\Services\SchoolClassStageService;
 use ComponenteCurricular_Model_TurmaDataMapper;
 use Exception;
+use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\SchoolClass\Period;
 use Illuminate\Http\Request;
@@ -193,6 +194,17 @@ class SchoolClassController extends Controller
             $params['atividades_complementares'] = '{' . implode(',', $params['atividades_complementares']) . '}';
         } else {
             $params['atividades_complementares'] = null;
+        }
+
+        $organizacaoCurricular = is_array($params['organizacao_curricular'] ?? null)
+            ? array_map('intval', $params['organizacao_curricular'])
+            : [];
+        $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
+
+        if (!$iftpAtivo || empty($params['carga_horaria_total'])) {
+            $params['carga_horaria_total'] = null;
+        } else {
+            $params['carga_horaria_total'] = (int) $params['carga_horaria_total'];
         }
 
         if (isset($params['organizacao_curricular'])) {
