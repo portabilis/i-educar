@@ -14,7 +14,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Reginal - Detalhe';
+        $this->titulo = 'Regional - Detalhe';
 
         $registro = RegionalType::find(request()->integer('id'))?->getAttributes();
 
