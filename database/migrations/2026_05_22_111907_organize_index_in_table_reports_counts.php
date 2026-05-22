@@ -17,7 +17,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('public.reports_counts', function (Blueprint $table) {
-            $table->index(['render', 'template', 'success', 'date', 'authenticated']);
+            $table->dropIndex(['render', 'template', 'success', 'date', 'authenticated']);
             $table->dropIndex(['id']);
         });
     }
