@@ -439,10 +439,6 @@
         "carga_minima": 1000,
         "tipo": 1
     },
-    "6078": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
     "6080": {
         "carga_minima": 1200,
         "tipo": 1
@@ -517,10 +513,6 @@
     },
     "7095": {
         "carga_minima": 1000,
-        "tipo": 1
-    },
-    "7096": {
-        "carga_minima": 160,
         "tipo": 1
     },
     "7097": {
@@ -623,56 +615,12 @@
         "carga_minima": 1200,
         "tipo": 1
     },
-    "8120": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8121": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8122": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8123": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8124": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8125": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
     "8126": {
         "carga_minima": 1200,
         "tipo": 1
     },
-    "8127": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8128": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8129": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
     "8130": {
         "carga_minima": 1200,
-        "tipo": 1
-    },
-    "8131": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
-    "8132": {
-        "carga_minima": 160,
         "tipo": 1
     },
     "8133": {
@@ -693,10 +641,6 @@
     },
     "9121": {
         "carga_minima": 1000,
-        "tipo": 1
-    },
-    "9122": {
-        "carga_minima": 160,
         "tipo": 1
     },
     "9123": {
@@ -903,10 +847,6 @@
         "carga_minima": 1200,
         "tipo": 1
     },
-    "11168": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
     "11169": {
         "carga_minima": 1200,
         "tipo": 1
@@ -975,10 +915,6 @@
         "carga_minima": 1200,
         "tipo": 1
     },
-    "12177": {
-        "carga_minima": 160,
-        "tipo": 1
-    },
     "12178": {
         "carga_minima": 1200,
         "tipo": 1
@@ -1005,10 +941,6 @@
     },
     "12185": {
         "carga_minima": 1200,
-        "tipo": 1
-    },
-    "12186": {
-        "carga_minima": 160,
         "tipo": 1
     },
     "12188": {
