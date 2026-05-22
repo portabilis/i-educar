@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::table('public.reports_counts', function (Blueprint $table) {
             $table->index(['render', 'template', 'success', 'date', 'authenticated']);
-            $table->index(['id']);
         });
     }
 
@@ -18,7 +17,6 @@ return new class extends Migration
     {
         Schema::table('public.reports_counts', function (Blueprint $table) {
             $table->dropIndex(['render', 'template', 'success', 'date', 'authenticated']);
-            $table->dropIndex(['id']);
         });
     }
 };
