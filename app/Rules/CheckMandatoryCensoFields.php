@@ -226,8 +226,8 @@ class CheckMandatoryCensoFields implements Rule
 
         $carga = $params->carga_horaria_total;
 
-        if (empty($carga)) {
-            $this->message = 'O campo: Carga horária total do curso (em horas) é obrigatório quando o campo: Organização curricular da turma incluir: Itinerário de formação técnica e profissional.';
+        if ($carga === null || $carga === '') {
+            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> é obrigatório quando o campo: <b>Organização curricular da turma</b> incluir: <b>Itinerário de formação técnica e profissional</b>.';
 
             return false;
         }
@@ -235,7 +235,7 @@ class CheckMandatoryCensoFields implements Rule
         $carga = (int) $carga;
 
         if ($carga <= 0 || $carga > 9999) {
-            $this->message = 'O campo: Carga horária total do curso (em horas) deve ser um número maior que zero, com no máximo 4 dígitos.';
+            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve ser um número maior que zero, com no máximo 4 dígitos.';
 
             return false;
         }
@@ -248,14 +248,14 @@ class CheckMandatoryCensoFields implements Rule
             $cargaMinima = (int) ($cursos[$cursoSelecionado]['carga_minima'] ?? 0);
 
             if ($cargaMinima > 0 && $carga < $cargaMinima && $carga <= 2000) {
-                $this->message = "O campo: Carga horária total do curso (em horas) deve ser maior ou igual à carga horária mínima do curso ({$cargaMinima} horas) ou superior a 2000 horas.";
+                $this->message = "O campo: <b>Carga horária total do curso (em horas)</b> deve ser maior ou igual à carga horária mínima do curso ({$cargaMinima} horas) ou superior a 2000 horas.";
 
                 return false;
             }
         }
 
         if ($tipoCurso === 2 && ($carga < 160 || $carga > 800)) {
-            $this->message = 'O campo: Carga horária total do curso (em horas) deve estar entre 160 e 800 horas quando o Tipo do curso do itinerário for: Qualificação Profissional Técnica.';
+            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve estar entre 160 e 800 horas quando o <b>Tipo do curso do itinerário</b> for: <b>Qualificação Profissional Técnica</b>.';
 
             return false;
         }

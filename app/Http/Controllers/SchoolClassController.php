@@ -201,10 +201,11 @@ class SchoolClassController extends Controller
             : [];
         $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
 
-        if (!$iftpAtivo || empty($params['carga_horaria_total'])) {
+        $cargaHorariaTotal = $params['carga_horaria_total'] ?? null;
+        if (!$iftpAtivo || $cargaHorariaTotal === null || $cargaHorariaTotal === '') {
             $params['carga_horaria_total'] = null;
         } else {
-            $params['carga_horaria_total'] = (int) $params['carga_horaria_total'];
+            $params['carga_horaria_total'] = (int) $cargaHorariaTotal;
         }
 
         if (isset($params['organizacao_curricular'])) {
