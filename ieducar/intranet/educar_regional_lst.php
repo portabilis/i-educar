@@ -79,7 +79,7 @@ return new class extends clsListagem
 
         $obj_permissao = new clsPermissoes;
 
-        if ($obj_permissao->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 5841, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->acao = 'go("educar_regional_cad.php")';
             $this->nome_acao = 'Novo';
         }
@@ -94,6 +94,6 @@ return new class extends clsListagem
     public function Formular()
     {
         $this->title = 'Regionais';
-        $this->processoAp = '950';
+        $this->processoAp = '5841';
     }
 };
