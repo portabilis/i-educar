@@ -24,7 +24,7 @@ return new class extends clsCadastro
         $this->id = request('id');
 
         $obj_permissoes = new clsPermissoes;
-        $obj_permissoes->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_regional_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 5841, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_regional_lst.php');
 
         if (is_numeric($this->id)) {
             $registro = RegionalType::find($this->id)?->getAttributes();
@@ -34,7 +34,7 @@ return new class extends clsCadastro
                 }
 
                 // ** verificao de permissao para exclusao
-                $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 5841, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
                 // **
 
                 $retorno = 'Editar';
@@ -101,7 +101,7 @@ return new class extends clsCadastro
 
         if ($classType->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_aluno_beneficio_lst.php');
+            $this->simpleRedirect('educar_regional_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
@@ -112,6 +112,6 @@ return new class extends clsCadastro
     public function Formular()
     {
         $this->title = 'Regionais';
-        $this->processoAp = '581';
+        $this->processoAp = '5841';
     }
 };

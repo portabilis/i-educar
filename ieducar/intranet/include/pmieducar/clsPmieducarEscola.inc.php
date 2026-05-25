@@ -458,6 +458,12 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->regional_type_id)) {
+                $campos .= "{$gruda}regional_type_id";
+                $valores .= "{$gruda}{$this->regional_type_id}";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->caracteristica_escolar)) {
                 $campos .= "{$gruda}caracteristica_escolar";
                 $valores .= "{$gruda}{$this->caracteristica_escolar}";

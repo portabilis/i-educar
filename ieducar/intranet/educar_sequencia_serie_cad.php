@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LegacySequenceGrade;
+use App\Models\LegacyGradeSequence;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -48,13 +48,13 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
         if (is_numeric($this->id)) {
-            $registro = LegacySequenceGrade::query()
+            $registro = LegacyGradeSequence::query()
+                ->with(['gradeOrigin.course', 'gradeDestiny'])
                 ->find($this->id);
 
-            $this->ref_serie_origem = $registro['ref_serie_origem'];
-            $this->ref_serie_destino = $registro['ref_serie_destino'];
-
             if ($registro) {
+                $this->ref_serie_origem = $registro['ref_serie_origem'];
+                $this->ref_serie_destino = $registro['ref_serie_destino'];
                 $this->ref_curso_origem = $registro->gradeOrigin->ref_cod_curso;
                 $this->ref_cod_instituicao = $registro->gradeOrigin->course->ref_cod_instituicao;
                 $this->ref_curso_destino = $registro->gradeDestiny->ref_cod_curso;
@@ -166,49 +166,55 @@ return new class extends clsCadastro
         return $data[$dataName] . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');
     }
 
+    private function findDuplicate(?int $excludeId = null): ?LegacyGradeSequence
+    {
+        $query = LegacyGradeSequence::query()
+            ->whereGradeOrigin((int) $this->ref_serie_origem)
+            ->whereGradeDestiny((int) $this->ref_serie_destino);
+
+        if ($excludeId !== null) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return $query->first();
+    }
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        $det_sequencia = LegacySequenceGrade::query()
-            ->find($this->id);
+        $existente = $this->findDuplicate();
 
-        if (!$det_sequencia) {
-            $cadastrou = LegacySequenceGrade::create([
-                'ref_serie_origem' => $this->ref_serie_origem,
-                'ref_serie_destino' => $this->ref_serie_destino,
-                'ref_usuario_cad' => $this->pessoa_logada,
-                'ativo' => 1,
-            ]);
+        if ($existente && (int) $existente->ativo === 1) {
+            echo '<script> alert(\'Cadastro não realizado! \\n Já existe essa sequência.\') </script>';
+            $this->mensagem = 'Cadastro não realizado.<br>';
 
-            if ($cadastrou) {
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_sequencia_serie_lst.php')
-                );
-            }
-        } else {
-            $det_sequencia->fill([
-                'ref_serie_origem' => $this->ref_serie_origem,
-                'ref_serie_destino' => $this->ref_serie_destino,
-                'ref_usuario_cad' => $this->pessoa_logada,
-                'ativo' => 1,
-            ]);
-
-            if ($det_sequencia->save()) {
-                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_sequencia_serie_lst.php')
-                );
-            }
+            return false;
         }
 
-        $this->mensagem = 'Cadastro não realizado.<br>';
+        if ($existente) {
+            // Reativa registro inativo para evitar violação da constraint UNIQUE.
+            $existente->fill([
+                'ativo' => 1,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ref_usuario_exc' => null,
+                'data_exclusao' => null,
+            ])->save();
+        } else {
+            LegacyGradeSequence::create([
+                'ref_serie_origem' => $this->ref_serie_origem,
+                'ref_serie_destino' => $this->ref_serie_destino,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ativo' => 1,
+            ]);
+        }
 
-        return false;
+        $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_sequencia_serie_lst.php')
+        );
     }
 
     public function Editar()
@@ -216,58 +222,54 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        $obj = LegacySequenceGrade::query()
-            ->whereGradeOrigin($this->ref_serie_origem)
-            ->whereGradeDestiny($this->ref_serie_destino)
-            ->active()
-            ->first();
+        $sequencia = LegacyGradeSequence::query()->active()->find(request('id'));
 
-        if (!$obj) {
-            $objEdicao = LegacySequenceGrade::query()
-                ->active()
-                ->find(request('id'));
-
-            $objEdicao->fill([
-                'ref_serie_origem' => $this->ref_serie_origem,
-                'ref_serie_destino' => $this->ref_serie_destino,
-                'ref_usuario_exc' => $this->pessoa_logada,
-            ]);
-
-            if ($objEdicao->save()) {
-                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_sequencia_serie_lst.php')
-                );
-            }
+        if (!$sequencia) {
             $this->mensagem = 'Edição não realizada.<br>';
 
             return false;
         }
-        echo '<script> alert(\'Edição não realizada! \\n Já existe essa sequência.\') </script>';
-        $this->mensagem = 'Edição não realizada.<br>';
 
-        return false;
+        if ($this->findDuplicate(excludeId: (int) request('id'))) {
+            echo '<script> alert(\'Edição não realizada! \\n Já existe essa sequência.\') </script>';
+            $this->mensagem = 'Edição não realizada.<br>';
+
+            return false;
+        }
+
+        $sequencia->fill([
+            'ref_serie_origem' => $this->ref_serie_origem,
+            'ref_serie_destino' => $this->ref_serie_destino,
+            'ref_usuario_exc' => $this->pessoa_logada,
+        ])->save();
+
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_sequencia_serie_lst.php')
+        );
     }
 
     public function Excluir()
     {
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
-        $obj = LegacySequenceGrade::query()
-            ->find(request('id'));
 
-        if ($obj->delete()) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+        $obj = LegacyGradeSequence::query()->find(request('id'));
 
-            throw new HttpResponseException(
-                new RedirectResponse('educar_sequencia_serie_lst.php')
-            );
+        if (!$obj) {
+            $this->mensagem = 'Exclusão não realizada.<br>';
+
+            return false;
         }
 
-        $this->mensagem = 'Exclusão não realizada.<br>';
+        $obj->delete();
 
-        return false;
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_sequencia_serie_lst.php')
+        );
     }
 
     public function makeExtra()
