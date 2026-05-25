@@ -125,6 +125,7 @@ return new class extends clsListagem
 
                 $lst_pessoa = $query
                     ->orderByRaw('COALESCE(cadastro.fisica.nome_social, cadastro.pessoa.nome)')
+                    ->orderBy('cadastro.pessoa.idpes')
                     ->offset($iniciolimit)
                     ->limit($limite)
                     ->get();
