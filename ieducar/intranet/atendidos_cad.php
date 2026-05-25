@@ -135,7 +135,7 @@ return new class extends clsCadastro
 
                 $this->nm_pessoa = $pessoa->nome;
                 $this->id_federal = $fisica->getRawOriginal('cpf');
-                $this->data_nasc = $fisica->data_nasc;
+                $this->data_nasc = $fisica->data_nasc?->toDateString();
                 $this->ddd_telefone_1 = $tel1?->ddd;
                 $this->telefone_1 = $tel1?->fone;
                 $this->ddd_telefone_2 = $tel2?->ddd;
