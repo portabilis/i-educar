@@ -43,8 +43,6 @@ class CreateModulesNotaComponenteCurricularTable extends Migration
 
                 CREATE INDEX idx_nota_componente_curricular_etapa ON modules.nota_componente_curricular USING btree (nota_aluno_id, componente_curricular_id, etapa);
 
-                CREATE INDEX idx_nota_componente_curricular_etp ON modules.nota_componente_curricular USING btree (componente_curricular_id, etapa);
-
                 CREATE INDEX idx_nota_componente_curricular_id ON modules.nota_componente_curricular USING btree (componente_curricular_id);
 
                 SELECT pg_catalog.setval(\'modules.nota_componente_curricular_id_seq\', 1, true);
