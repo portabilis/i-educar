@@ -8,6 +8,7 @@ use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchoolCourse;
+use App\Models\RegionalType;
 use App\Models\SchoolManager;
 use App\Models\SchoolSpace;
 use App\Rules\SchoolManagerAtLeastOneChief;
@@ -350,6 +351,8 @@ return new class extends clsCadastro
     public $caracteristica_escolar;
 
     public $lei_conclusao_ensino_medio;
+
+    public $regional_type_id;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -726,6 +729,20 @@ return new class extends clsCadastro
             ];
 
             $this->inputsHelper()->select(attrName: 'zona_localizacao', inputOptions: $options);
+
+            $regionais = RegionalType::query()
+                ->select(['id', 'name'])
+                ->orderBy('name')
+                ->pluck('name', 'id')
+                ->prepend('Selecione', '');
+
+            $options = [
+                'label' => 'Regional',
+                'value' => $this->regional_type_id,
+                'resources' => $regionais,
+                'required' => false,
+            ];
+            $this->inputsHelper()->select(attrName: 'regional_type_id', inputOptions: $options);
 
             $this->campoOculto(nome: 'com_cnpj', valor: $this->com_cnpj);
 
@@ -1906,6 +1923,7 @@ return new class extends clsCadastro
         $obj->formas_contratacao_parceria_escola_secretaria_municipal = $this->formas_contratacao_parceria_escola_secretaria_municipal;
         $obj->caracteristica_escolar = $this->caracteristica_escolar;
         $obj->lei_conclusao_ensino_medio = $this->lei_conclusao_ensino_medio;
+        $obj->regional_type_id = $this->regional_type_id;
 
         foreach ($this->inputsRecursos as $key => $value) {
             $obj->{$key} = $this->{$key};
