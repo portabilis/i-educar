@@ -1654,6 +1654,7 @@ class AlunoController extends ApiCoreController
     protected function post()
     {
         if ($this->canPost()) {
+            DB::beginTransaction();
             $id = $this->createOrUpdateAluno();
             $pessoaId = $this->getRequest()->pessoa_id;
 
@@ -1679,6 +1680,7 @@ class AlunoController extends ApiCoreController
             } else {
                 $this->messenger->append('Aparentemente o aluno não pode ser cadastrado, por favor, verifique.');
             }
+            DB::commit();
         }
 
         return ['id' => $id];
@@ -1693,6 +1695,7 @@ class AlunoController extends ApiCoreController
             return [];
         }
 
+        DB::beginTransaction();
         if ($this->canPut() && $this->createOrUpdateAluno($id)) {
             $this->updateBeneficios($id);
             $this->updateResponsavel();
@@ -1711,6 +1714,7 @@ class AlunoController extends ApiCoreController
         } else {
             $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.', 'error', false, 'error');
         }
+        DB::commit();
 
         return ['id' => $id];
     }
@@ -1888,7 +1892,7 @@ class AlunoController extends ApiCoreController
     {
         $individual = LegacyIndividual::find($idPessoa, ['idpes', 'cpf', 'ref_cod_religiao', 'nis_pis_pasep', 'observacao', 'renda_mensal']);
         $individual?->update([
-            'cpf' => $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : null,
+            'cpf' => idFederal2int($this->getRequest()->id_federal) ?: null,
             'ref_cod_religiao' => $this->getRequest()->religiao_id ?: null,
             'nis_pis_pasep' => $this->getRequest()->nis_pis_pasep ?: null,
             'observacao' => $this->getRequest()->observacao_aluno ?: null,
