@@ -26,10 +26,11 @@
     "39" : "39 - Curso Técnico - Concomitante",
     "40" : "40 - Curso Técnico - Subsequente",
     "64" : "64 - Curso Técnico Misto",
-    "68" : "68 - Curso FIC concomitante ",
+    "68" : "68 - Qualificação profissional (Curso FIC) - concomitante",
     "69" : "69 - EJA - Ensino Fundamental - Anos iniciais (1º Segmento)",
     "70" : "70 - EJA - Ensino Fundamental - Anos finais (2º Segmento)",
     "72" : "72 - EJA - Ensino Fundamental - Anos iniciais e Anos Finais (EJA Multietapas)",
     "71" : "71 - EJA - Ensino Médio (3º segmento)",
-    "74" : "74 - Curso Técnico Integrado na Modalidade EJA (EJA integrada à Educação Profissional de Nível Médio)"
+    "74" : "74 - Curso Técnico Integrado na Modalidade EJA (EJA integrada à Educação Profissional de Nível Médio)",
+    "75" : "75 - Qualificação profissional (Curso FIC) - não vinculada"
 }
