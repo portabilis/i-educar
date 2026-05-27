@@ -297,7 +297,14 @@ return new class extends clsCadastro
             $rdAPI->updateLeadStage($this->email, 2);
         }
 
-        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+        $loggedUser = Session::get('logged_user');
+        if ($loggedUser) {
+            $loggedUser->name = $this->nome;
+            Session::put('logged_user', $loggedUser);
+            Session::save();
+        }
+
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
         header('Location: index.php');
         exit();
     }
