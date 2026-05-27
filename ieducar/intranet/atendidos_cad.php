@@ -1583,13 +1583,13 @@ return new class extends clsCadastro
             return;
         }
 
+        $slugNome = Str::lower(Str::slug($pessoa->nome, ' '));
+
         if (is_string($this->nome_social) && !empty($this->nome_social)) {
-            $slug = Str::lower(Str::slug($this->nome_social, ' '));
-            $pessoa->slug = $isInsert
-                ? "{$slug} {$pessoa->slug}"
-                : trim("{$slug} {$pessoa->slug}");
+            $slugNomeSocial = Str::lower(Str::slug($this->nome_social, ' '));
+            $pessoa->slug = trim("{$slugNomeSocial} {$slugNome}");
         } else {
-            $pessoa->slug = Str::lower(Str::slug($pessoa->nome, ' '));
+            $pessoa->slug = $slugNome;
         }
 
         $pessoa->save();
