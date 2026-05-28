@@ -42,16 +42,22 @@ class FormacaoContinuada
 
     public const EDUCACAO_TIC = 19;
 
+    public const ALFABETIZACAO = 20;
+
+    public const EDUCACAO_INTEGRAL_TEMPO_INTEGRAL = 21;
+
     public static function getDescriptiveValues()
     {
         return [
             self::CRECHE => 'Creche (0 a 3 anos)',
             self::PRE_ESCOLA => 'Pré-escola (4 e 5 anos)',
+            self::ALFABETIZACAO => 'Alfabetização',
             self::ANOS_INICIAIS => 'Anos iniciais do ensino fundamental',
             self::ANOS_FINAIS => 'Anos finais do ensino fundamental',
             self::ENSINO_MEDIO => 'Ensino médio',
             self::EDUCACAO_BILINGUE_SURDOS => 'Educação bilíngue para surdos',
             self::EDUCACAO_TIC => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
+            self::EDUCACAO_INTEGRAL_TEMPO_INTEGRAL => 'Educação integral em tempo integral',
             self::EJA => 'Educação de jovens e adultos',
             self::EDUCACAO_ESPECIAL => 'Educação especial',
             self::EDUCACAO_INDIGENA => 'Educação indígena',
