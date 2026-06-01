@@ -1029,6 +1029,30 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function instrumentosPedagogicosEquipamentosAudiovisuais()
+    {
+        return in_array(InstrumentosPedagogicos::EQUIPAMENTOS_AUDIOVISUAIS_PRODUCAO_ESTUDANTIL, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosKitsRobotica()
+    {
+        return in_array(InstrumentosPedagogicos::KITS_ROBOTICA, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosEducacaoEmocional()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAIS_EDUCACAO_EMOCIONAL, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
     public function instrumentosPedagogicosAreaHorta()
     {
         return in_array(InstrumentosPedagogicos::MATERIAIS_AREA_HORTA, $this->instrumentosPedagogicos);
