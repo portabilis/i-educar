@@ -390,6 +390,14 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function laboratoriosRobotica()
+    {
+        return in_array(Laboratorios::ROBOTICA, $this->laboratorios);
+    }
+
+    /**
+     * @return bool
+     */
     public function salasAtividadesLeitura()
     {
         return in_array(SalasAtividades::LEITURA, $this->salasAtividades);
