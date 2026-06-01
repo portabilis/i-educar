@@ -2,6 +2,7 @@
 
 use App\Facades\Asset;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyPhone;
 use App\Services\ChangeUserPasswordService;
@@ -201,8 +202,8 @@ return new class extends clsCadastro
         $pessoa->nome = $this->nome;
         $pessoa->edita();
 
-        $pessoaFisica = new clsFisica($this->pessoa_logada, false, $this->sexo);
-        $pessoaFisica->edita();
+        $fisica = LegacyIndividual::find($this->pessoa_logada, ['idpes', 'sexo']);
+        $fisica?->update(['sexo' => $this->sexo]);
 
         if ($this->matricula != $this->matricula_old) {
             $existeMatricula = LegacyEmployee::query()

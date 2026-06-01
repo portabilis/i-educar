@@ -270,6 +270,7 @@ function habilitaRecuros() {
     $j('#qtd_fonoaudiologo'),
     $j('#qtd_vice_diretor'),
     $j('#qtd_orientador_comunitario'),
+    $j('#qtd_assistente_social'),
     $j('#qtd_tradutor_interprete_libras_outro_ambiente'),
     $j('#qtd_revisor_braile'),
   ];
