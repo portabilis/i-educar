@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
 use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
+use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
@@ -1213,7 +1214,7 @@ class Registro10 extends Registro10Fields
      */
     public function linguaMinistradaPortugues()
     {
-        return $this->linguaMinistrada == 1;
+        return in_array($this->linguaMinistrada, [LinguaMinistrada::PORTUGUESA, LinguaMinistrada::INDIGENA_E_PORTUGUESA]);
     }
 
     /**
@@ -1221,7 +1222,7 @@ class Registro10 extends Registro10Fields
      */
     public function linguaMinistradaIndigena()
     {
-        return $this->linguaMinistrada == 2;
+        return in_array($this->linguaMinistrada, [LinguaMinistrada::INDIGENA, LinguaMinistrada::INDIGENA_E_PORTUGUESA]);
     }
 
     /**
