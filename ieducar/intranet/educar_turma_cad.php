@@ -673,7 +673,7 @@ return new class extends clsCadastro
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70];
+        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => $obrigarCamposCenso, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'local_funcionamento_diferenciado', inputOptions: $options);
 
         $resources = [
