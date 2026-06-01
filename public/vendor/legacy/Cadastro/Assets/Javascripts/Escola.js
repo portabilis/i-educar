@@ -543,6 +543,35 @@ function changePredioCompartilhadoEscola() {
     $j('#codigo_inep_escola_compartilhada4').prop("disabled",disabled);
     $j('#codigo_inep_escola_compartilhada5').prop("disabled",disabled);
     $j('#codigo_inep_escola_compartilhada6').prop("disabled",disabled);
+
+    if (!disabled) {
+        aplicaSequencialidadeEscolaCompartilhada();
+    }
+}
+
+function aplicaSequencialidadeEscolaCompartilhada() {
+    if ($j('#predio_compartilhado_outra_escola').val() != 1) {
+        return;
+    }
+
+    const ids = [
+        '#codigo_inep_escola_compartilhada',
+        '#codigo_inep_escola_compartilhada2',
+        '#codigo_inep_escola_compartilhada3',
+        '#codigo_inep_escola_compartilhada4',
+        '#codigo_inep_escola_compartilhada5',
+        '#codigo_inep_escola_compartilhada6',
+    ];
+
+    for (let i = 1; i < ids.length; i++) {
+        const $campo = $j(ids[i]);
+        const habilitado = !!$j(ids[i - 1]).val();
+
+        $campo.prop('disabled', !habilitado);
+        if (!habilitado) {
+            $campo.val('');
+        }
+    }
 }
 
 function changePossuiDependencias() {
@@ -605,6 +634,10 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
 }
 
 $j(document).ready(function() {
+
+  $j('input[id^="codigo_inep_escola_compartilhada"]:not(#codigo_inep_escola_compartilhada6)')
+    .on('input change blur', aplicaSequencialidadeEscolaCompartilhada);
+  aplicaSequencialidadeEscolaCompartilhada();
 
   // on click das abas
   habilitaCampoPoderPublicoOuConvenio();

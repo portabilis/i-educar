@@ -319,6 +319,8 @@ return new class extends clsCadastro
 
     public $qtd_orientador_comunitario;
 
+    public $qtd_assistente_social;
+
     public $qtd_tradutor_interprete_libras_outro_ambiente;
 
     public $qtd_revisor_braile;
@@ -369,7 +371,8 @@ return new class extends clsCadastro
         'qtd_psicologo' => 'Psicólogo(a) Escolar',
         'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
         'qtd_vice_diretor' => 'Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira',
-        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social',
+        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a)',
+        'qtd_assistente_social' => 'Assistente social',
         'qtd_tradutor_interprete_libras_outro_ambiente' => 'Tradutor e Intérprete de Libras para atendimento em outros ambientes da escola que não seja sala de aula',
         'qtd_revisor_braile' => 'Revisor de texto Braille, assistente vidente (assistente de revisão do texto em Braille)',
     ];
