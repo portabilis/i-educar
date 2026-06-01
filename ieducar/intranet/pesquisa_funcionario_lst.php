@@ -98,23 +98,15 @@ return new class extends clsListagem
 
                 foreach ($parametros->getCampoNome() as $campo) {
                     if ($parametros->getCampoTipo($cont) == 'text') {
-                        if ($parametros->getCampoValor($cont) == 'cpf') {
-                            if ($this->importarCpf || $busca) {
-                                $funcionario['cpf'] = $funcionario->person?->individual?->cpf;
-                            }
-
-                            $funcionario['cpf'] = int2CPF($funcionario['cpf']);
+                        if ($parametros->getCampoValor($cont) == 'cpf' && ($this->importarCpf || $busca)) {
+                            $funcionario['cpf'] = $funcionario->person?->individual?->cpf;
                         }
 
                         $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoValor($cont)]}'";
                         $virgula = ',';
                     } elseif ($parametros->getCampoTipo($cont) == 'select') {
-                        if ($parametros->getCampoValor($cont) == 'cpf') {
-                            if ($this->importarCpf || $busca) {
-                                $funcionario['cpf'] = $funcionario->person?->individual?->cpf;
-                            }
-
-                            $funcionario['cpf'] = int2CPF($funcionario['cpf']);
+                        if ($parametros->getCampoValor($cont) == 'cpf' && ($this->importarCpf || $busca)) {
+                            $funcionario['cpf'] = $funcionario->person?->individual?->cpf;
                         }
 
                         $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoIndice($cont)]}', '{$funcionario[$parametros->getCampoValor($cont)]}'";
