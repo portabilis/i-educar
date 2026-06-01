@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LegacySequenceGrade;
+use App\Models\LegacyGradeSequence;
 
 return new class extends clsDetalhe
 {
@@ -28,7 +28,7 @@ return new class extends clsDetalhe
 
         $this->id = $_GET['id'];
 
-        $registro = LegacySequenceGrade::query()
+        $registro = LegacyGradeSequence::query()
             ->with([
                 'gradeOrigin:cod_serie,nm_serie,ref_cod_curso',
                 'gradeDestiny:cod_serie,nm_serie,ref_cod_curso',

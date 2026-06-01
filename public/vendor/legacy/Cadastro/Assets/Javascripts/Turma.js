@@ -104,17 +104,37 @@ let habilitaFormaOrganizacaoTurma = ()=> {
 }
 
 
-let verificaLocalFuncionamentoDiferenciado = () => {
-  $j('#local_funcionamento_diferenciado').makeUnrequired();
-  let habilitaCampo = [1,2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
-  $j('#local_funcionamento_diferenciado').prop('disabled', !habilitaCampo);
+const TIPO_MEDIACAO_DIDATICO_PEDAGOGICO = {
+  PRESENCIAL: 1,
+  SEMIPRESENCIAL: 2,
+  EDUCACAO_A_DISTANCIA: 3,
+};
 
-  if (habilitaCampo) {
-    if (obrigarCamposCenso) {
-      $j('#local_funcionamento_diferenciado').makeRequired();
-    }
+const LOCAL_FUNCIONAMENTO_DIFERENCIADO = {
+  SALA_ANEXA: 1,
+};
+
+let verificaLocalFuncionamentoDiferenciado = () => {
+  const $campo = $j('#local_funcionamento_diferenciado');
+  const tipoMediacao = +$j('#tipo_mediacao_didatico_pedagogico').val();
+  const restringeSalaAnexa = [
+    TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.SEMIPRESENCIAL,
+    TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.EDUCACAO_A_DISTANCIA,
+  ].includes(tipoMediacao);
+
+  if (obrigarCamposCenso) {
+    $campo.makeRequired();
   } else {
-    $j('#local_funcionamento_diferenciado').val("");
+    $campo.makeUnrequired();
+  }
+
+  $campo.find('option').prop('disabled', false);
+
+  if (restringeSalaAnexa) {
+    $campo.find(`option[value="${LOCAL_FUNCIONAMENTO_DIFERENCIADO.SALA_ANEXA}"]`).prop('disabled', true);
+    if (+$campo.val() === LOCAL_FUNCIONAMENTO_DIFERENCIADO.SALA_ANEXA) {
+      $campo.val('');
+    }
   }
 }
 
