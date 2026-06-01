@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyOrganization;
+
 return new class extends clsListagem
 {
     public function Gerar()
@@ -15,17 +17,12 @@ return new class extends clsListagem
         // Paginador
         $limite = 10;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
-        $par_razao = false;
+        $par_fantasia = $_GET['fantasia'] ?? null;
         $par_cnpj = false;
         $opcoes = false;
-        if ($_GET['fantasia']) {
-            $par_fantasia = $_GET['fantasia'];
-        }
         if ($_GET['razao_social']) {
-            $par_razao = $_GET['razao_social'];
-
             $objPessoaFJ = new clsPessoaFj;
-            $lista = $objPessoaFJ->lista(str_nome: $par_razao);
+            $lista = $objPessoaFJ->lista(str_nome: $_GET['razao_social']);
             if ($lista) {
                 foreach ($lista as $pessoa) {
                     $opcoes[] = $pessoa['idpes'];
@@ -36,17 +33,50 @@ return new class extends clsListagem
             $par_cnpj = idFederal2Int(str: $_GET['id_federal']);
         }
 
-        $objPessoa = new clsPessoaJuridica;
         $db = new clsBanco;
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
-            $objPessoa->codUsuario = $this->pessoa_logada;
+        $query = LegacyOrganization::query()
+            ->join('cadastro.pessoa', 'cadastro.pessoa.idpes', 'cadastro.juridica.idpes')
+            ->select(['cadastro.juridica.idpes', 'cadastro.juridica.fantasia', 'cadastro.pessoa.nome']);
+
+        if (is_string($par_fantasia)) {
+            $query->whereRaw(
+                '(fcn_upper_nrm(cadastro.juridica.fantasia) LIKE fcn_upper_nrm(?) OR fcn_upper_nrm(cadastro.pessoa.nome) LIKE fcn_upper_nrm(?))',
+                ["%$par_fantasia%", "%$par_fantasia%"]
+            );
         }
 
-        $empresas = $objPessoa->lista(numeric_cnpj: $par_cnpj, str_fantasia: $par_fantasia, inicio_limit: $iniciolimit, fim_limite: $limite, str_ordenacao: 'fantasia asc', arrayint_idisin: $opcoes);
-        if ($empresas) {
+        if (is_numeric($par_cnpj)) {
+            $cnpjLimpo = ltrim((string) $par_cnpj, '0');
+            $query->whereRaw('cadastro.juridica.cnpj::varchar ILIKE ?', ["%$cnpjLimpo%"]);
+        }
+
+        if (is_array($opcoes)) {
+            $opcoesValidas = array_filter($opcoes, 'is_numeric');
+            if (count($opcoesValidas) === count($opcoes)) {
+                $query->whereIn('cadastro.juridica.idpes', $opcoesValidas);
+            }
+        }
+
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
+            $query->whereExists(function ($q) {
+                $q->from('pmieducar.escola')
+                    ->join('pmieducar.escola_usuario', 'escola_usuario.ref_cod_escola', 'escola.cod_escola')
+                    ->whereColumn('escola.ref_idpes', 'cadastro.juridica.idpes')
+                    ->where('escola_usuario.ref_cod_usuario', $this->pessoa_logada)
+                    ->where('escola.ativo', 1);
+            });
+        }
+
+        $total = (clone $query)->count();
+
+        $empresas = $query->orderBy('cadastro.juridica.fantasia')
+            ->offset($iniciolimit)
+            ->limit($limite)
+            ->get();
+
+        if ($empresas->isNotEmpty()) {
             foreach ($empresas as $empresa) {
-                $total = $empresa['total'];
                 $cod_empresa = $empresa['idpes'];
                 $razao_social = $db->escapeString(string: $empresa['nome']);
                 $nome_fantasia = $db->escapeString(string: $empresa['fantasia']);

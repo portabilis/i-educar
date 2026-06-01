@@ -142,7 +142,7 @@ class clsPmieducarTurma extends Model
         t.tipo_atendimento, t.cod_curso_profissional, t.etapa_agregada, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
         t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado, t.organizacao_curricular, t.formas_organizacao_turma, t.classe_com_lingua_brasileira_sinais, t.classe_especial, t.formacao_alternancia,
         t.hora_inicial_matutino, t.hora_inicio_intervalo_matutino, t.hora_fim_intervalo_matutino, t.hora_final_matutino, t.hora_inicial_vespertino, t.hora_inicio_intervalo_vespertino, t.hora_fim_intervalo_vespertino, t.hora_final_vespertino,
-        t.area_itinerario, t.tipo_curso_intinerario, t.cod_curso_profissional_intinerario';
+        t.area_itinerario, t.tipo_curso_intinerario, t.cod_curso_profissional_intinerario, t.carga_horaria_total';
 
         if (is_numeric($ref_cod_turma_tipo)) {
             $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;

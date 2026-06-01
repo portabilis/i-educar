@@ -85,4 +85,15 @@ class LegacyPhone extends Model
             },
         );
     }
+
+    protected function legacySuffix(): Attribute
+    {
+        return Attribute::get(fn () => match ((int) $this->tipo) {
+            self::TYPE_LANDLINE => '1',
+            self::TYPE_MOBILE => '2',
+            self::TYPE_MOBILE_ALT => 'mov',
+            self::TYPE_FAX => 'fax',
+            default => null,
+        });
+    }
 }

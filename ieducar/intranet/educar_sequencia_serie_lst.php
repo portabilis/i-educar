@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LegacySequenceGrade;
+use App\Models\LegacyGradeSequence;
 
 return new class extends clsListagem
 {
@@ -116,7 +116,7 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $lista = LegacySequenceGrade::query()
+        $lista = LegacyGradeSequence::query()
             ->filter([
                 'institution' => $this->ref_cod_instituicao,
                 'grade_origin' => $this->ref_serie_origem,
