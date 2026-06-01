@@ -31,7 +31,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^5.0",
         "intervention/image": "^2.6",
-        "laravel/framework": "^12.5",
+        "laravel/framework": "^13.0",
         "laravel/horizon": "^5.15",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.26",
@@ -55,7 +55,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
-        "laravel/telescope": "^5.0",
+        "laravel/telescope": "^5.18",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.0",
@@ -142,6 +142,15 @@
             "dex/composer-plug-and-play": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "audit": {
+            "ignore": [
+                "PKSA-gz3f-3cz3-3wsw",
+                "PKSA-x13r-n4wc-4gcr",
+                "PKSA-8cfg-tzhf-fr83",
+                "PKSA-hznc-gbby-6w16",
+                "PKSA-jtdk-dcr5-f11n"
+            ]
         }
     },
     "minimum-stability": "dev",
