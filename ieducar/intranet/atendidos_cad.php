@@ -18,7 +18,6 @@ use App\Models\LegacyUser;
 use App\Services\FileService;
 use App\Services\PhoneService;
 use App\Services\UrlPresigner;
-use Illuminate\Support\Str;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
@@ -30,6 +29,7 @@ use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 return new class extends clsCadastro
 {
