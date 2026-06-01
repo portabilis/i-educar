@@ -215,23 +215,21 @@ return new class extends clsDetalhe
         $this->addDetalhe(detalhe: ['Situação', $situacao]);
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO) {
-            $obj_transferencia = new clsPmieducarTransferenciaSolicitacao;
+            $transferencia = LegacyTransferRequest::query()
+                ->where('ref_cod_matricula_saida', $registro['cod_matricula'])
+                ->whereHas('oldRegistration', fn ($query) => $query->where('ref_cod_aluno', $registro['ref_cod_aluno']))
+                ->first(['ref_cod_escola_destino', 'escola_destino_externa', 'estado_escola_destino_externa', 'municipio_escola_destino_externa', 'observacao']);
 
-            $lst_transferencia = $obj_transferencia->lista(int_ref_cod_matricula_saida: $registro['cod_matricula'], int_ativo: 1, int_ref_cod_aluno: $registro['ref_cod_aluno']);
-
-            if (is_array(value: $lst_transferencia)) {
-                $det_transferencia = array_shift(array: $lst_transferencia);
-            }
-            if (!$det_transferencia['ref_cod_escola_destino'] == '0') {
-                $tmp_obj = new clsPmieducarEscola(cod_escola: $det_transferencia['ref_cod_escola_destino']);
+            if ($transferencia?->ref_cod_escola_destino) {
+                $tmp_obj = new clsPmieducarEscola(cod_escola: $transferencia->ref_cod_escola_destino);
                 $tmp_det = $tmp_obj->detalhe();
                 $this->addDetalhe(detalhe: ['Escola destino', $tmp_det['nome']]);
             } else {
-                $this->addDetalhe(detalhe: ['Escola destino', $det_transferencia['escola_destino_externa']]);
-                $this->addDetalhe(detalhe: ['Estado escola destino', $det_transferencia['estado_escola_destino_externa']]);
-                $this->addDetalhe(detalhe: ['Município escola destino', $det_transferencia['municipio_escola_destino_externa']]);
+                $this->addDetalhe(detalhe: ['Escola destino', $transferencia?->escola_destino_externa]);
+                $this->addDetalhe(detalhe: ['Estado escola destino', $transferencia?->estado_escola_destino_externa]);
+                $this->addDetalhe(detalhe: ['Município escola destino', $transferencia?->municipio_escola_destino_externa]);
             }
-            $this->addDetalhe(detalhe: ['Observação', $det_transferencia['observacao']]);
+            $this->addDetalhe(detalhe: ['Observação', $transferencia?->observacao]);
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
@@ -265,24 +263,16 @@ return new class extends clsDetalhe
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             // verifica se existe transferencia
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
-                $obj_transferencia = new clsPmieducarTransferenciaSolicitacao;
+                $transferencia = LegacyTransferRequest::query()
+                    ->where('ref_cod_matricula_saida', $registro['cod_matricula'])
+                    ->whereHas('oldRegistration', fn ($query) => $query->where('ref_cod_aluno', $registro['ref_cod_aluno']))
+                    ->first(['cod_transferencia_solicitacao', 'data_transferencia']);
 
-                $lst_transferencia = $obj_transferencia->lista(
-                    int_ref_cod_matricula_saida: $registro['cod_matricula'],
-                    int_ativo: 1,
-                    int_ref_cod_aluno: $registro['ref_cod_aluno']
-                );
-
-                // verifica se existe uma solicitacao de transferencia INTERNA
-                if (is_array(value: $lst_transferencia)) {
-                    $det_transferencia = array_shift(array: $lst_transferencia);
-                }
-
-                $data_transferencia = $det_transferencia['data_transferencia'];
+                $data_transferencia = $transferencia?->data_transferencia;
             }
 
             if ($registro['aprovado'] == 3 &&
-                (!is_array(value: $lst_transferencia) && !isset($data_transferencia))
+                (!isset($transferencia) && !isset($data_transferencia))
             ) {
 
                 // Verificar se tem permissao para executar cancelamento de matricula
@@ -362,7 +352,7 @@ return new class extends clsDetalhe
 
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
                 if ($this->permissaoSolicitarTransferencia()) {
-                    if (is_array(value: $lst_transferencia) && isset($data_transferencia)) {
+                    if (isset($transferencia) && isset($data_transferencia)) {
                         $this->array_botao[] = 'Cancelar solicitação transferência';
                         $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
                     } elseif ($registro['ref_ref_cod_serie'] && $registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
@@ -372,7 +362,7 @@ return new class extends clsDetalhe
                 }
 
                 if ($this->permissaoFormando() && $registro['aprovado'] == 3 &&
-                    (!is_array(value: $lst_transferencia) && !isset($data_transferencia))
+                    (!isset($transferencia) && !isset($data_transferencia))
                 ) {
                     if ($registro['formando'] == 0) {
                         $this->array_botao[] = 'Formando';
