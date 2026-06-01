@@ -6,6 +6,7 @@ use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyProject;
@@ -96,8 +97,7 @@ return new class extends clsDetalhe
             $obj_pessoa_fj = new clsPessoaFj(int_idpes: $this->ref_idpes);
             $det_pessoa_fj = $obj_pessoa_fj->detalhe();
 
-            $obj_fisica = new clsFisica(idpes: $this->ref_idpes);
-            $det_fisica = $obj_fisica->detalhe();
+            $det_fisica = LegacyIndividual::find($this->ref_idpes)?->getAttributes();
 
             $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->ref_idpes))->value('nm_raca');
 
@@ -145,12 +145,9 @@ return new class extends clsDetalhe
                 if ($det_pessoa_pai) {
                     $registro['nm_pai'] = $det_pessoa_pai['nome'];
 
-                    // CPF
-                    $obj_cpf = new clsFisica(idpes: $this->idpes_pai);
-                    $det_cpf = $obj_cpf->detalhe();
-
-                    if ($det_cpf['cpf']) {
-                        $this->cpf_pai = int2CPF(int: $det_cpf['cpf']);
+                    $cpfPai = LegacyIndividual::find($this->idpes_pai, ['idpes', 'cpf'])?->cpf;
+                    if ($cpfPai) {
+                        $this->cpf_pai = $cpfPai;
                     }
                 }
             }
@@ -162,12 +159,9 @@ return new class extends clsDetalhe
                 if ($det_pessoa_mae) {
                     $registro['nm_mae'] = $det_pessoa_mae['nome'];
 
-                    // CPF
-                    $obj_cpf = new clsFisica(idpes: $this->idpes_mae);
-                    $det_cpf = $obj_cpf->detalhe();
-
-                    if ($det_cpf['cpf']) {
-                        $this->cpf_mae = int2CPF(int: $det_cpf['cpf']);
+                    $cpfMae = LegacyIndividual::find($this->idpes_mae, ['idpes', 'cpf'])?->cpf;
+                    if ($cpfMae) {
+                        $this->cpf_mae = $cpfMae;
                     }
                 }
             }
