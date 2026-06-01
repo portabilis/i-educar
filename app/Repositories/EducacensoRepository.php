@@ -322,6 +322,7 @@ SQL;
                 escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico",
                 escola.qtd_vice_diretor AS "qtdViceDiretor",
                 escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario",
+                escola.qtd_assistente_social AS "qtdAssistenteSocial",
                 escola.qtd_tradutor_interprete_libras_outro_ambiente AS "qtdTradutorInterpreteLibrasOutroAmbiente",
                 escola.qtd_revisor_braile AS "qtdRevisorBraile",
                 escola.acao_area_ambiental AS "acaoAreaAmbiental",

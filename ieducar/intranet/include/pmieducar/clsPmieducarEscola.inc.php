@@ -248,6 +248,8 @@ class clsPmieducarEscola extends Model
 
     public $qtd_orientador_comunitario;
 
+    public $qtd_assistente_social;
+
     public $qtd_tradutor_interprete_libras_outro_ambiente;
 
     public $qtd_revisor_braile;
@@ -345,6 +347,7 @@ class clsPmieducarEscola extends Model
             e.qtd_fonoaudiologo,
             e.qtd_vice_diretor,
             e.qtd_orientador_comunitario,
+            e.qtd_assistente_social,
             e.qtd_tradutor_interprete_libras_outro_ambiente,
             e.qtd_revisor_braile,
             e.nao_ha_funcionarios_para_funcoes,
@@ -1154,6 +1157,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->qtd_orientador_comunitario)) {
                 $campos .= "{$gruda}qtd_orientador_comunitario";
                 $valores .= "{$gruda}$this->qtd_orientador_comunitario";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->qtd_assistente_social)) {
+                $campos .= "{$gruda}qtd_assistente_social";
+                $valores .= "{$gruda}$this->qtd_assistente_social";
                 $gruda = ', ';
             }
 
@@ -2217,6 +2226,14 @@ class clsPmieducarEscola extends Model
             } elseif (is_null($this->qtd_orientador_comunitario) || $this->qtd_orientador_comunitario == '') {
                 $gruda = ', ';
                 $set .= "{$gruda}qtd_orientador_comunitario = NULL ";
+            }
+
+            if (is_numeric($this->qtd_assistente_social) && $this->qtd_assistente_social > 0) {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_assistente_social = '{$this->qtd_assistente_social}'";
+            } elseif (is_null($this->qtd_assistente_social) || $this->qtd_assistente_social == '') {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_assistente_social = NULL ";
             }
 
             if (is_numeric($this->qtd_tradutor_interprete_libras_outro_ambiente) && $this->qtd_tradutor_interprete_libras_outro_ambiente > 0) {
