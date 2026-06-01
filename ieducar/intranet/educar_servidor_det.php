@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyEmployee;
+use App\Models\LegacyPerson;
 use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyUserType;
@@ -54,14 +56,9 @@ return new class extends clsDetalhe
         $det_ref_cod_funcao = LegacyRole::find($this->cod_funcao)?->getAttributes();
         $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 
-        // Nome
-        $obj_cod_servidor = new clsFuncionario($registro['cod_servidor']);
-        $det_cod_servidor = $obj_cod_servidor->detalhe();
-        $registro['matricula'] = $det_cod_servidor['matricula'];
-
-        $obj_cod_servidor = new clsPessoaFisica($registro['cod_servidor']);
-        $det_cod_servidor = $obj_cod_servidor->detalhe();
-        $registro['nome'] = $det_cod_servidor['nome'];
+        // Nome e matrícula
+        $registro['nome'] = LegacyPerson::query()->whereKey($registro['cod_servidor'])->value('nome');
+        $registro['matricula'] = LegacyEmployee::query()->whereKey($registro['cod_servidor'])->value('matricula');
 
         // Instituição
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

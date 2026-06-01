@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $login
@@ -114,6 +115,11 @@ class LegacyEmployee extends Model
         return Attribute::make(
             get: fn () => $this->ativo,
         );
+    }
+
+    public function person(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_cod_pessoa_fj', 'idpes');
     }
 
     public function getEnabledUserDate(): ?Carbon
