@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyAbandonmentType;
+use App\Models\LegacyTransferRequest;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Support\Facades\Auth;
