@@ -31,6 +31,22 @@ const MANTENEDORA_ESCOLA_PRIVADA = {
   OSCIP : 6
 }
 
+const CATEGORIA_ESCOLA_PRIVADA = {
+  PARTICULAR: 1,
+  COMUNITARIA: 2,
+  CONFESSIONAL: 3,
+  FILANTROPICA: 4
+}
+
+const FORMAS_CONTRATACAO_PODER_PUBLICO = {
+  TERMO_COLABORACAO: 1,
+  TERMO_FOMENTO: 2,
+  ACORDO_COOPERACAO: 3,
+  CONTRATO_PRESTACAO_SERVICO: 4,
+  TERMO_COOPERACAO_TECNICA: 5,
+  CONTRATO_CONSORCIO: 6
+}
+
 const SCHOOL_MANAGER_ROLE = {
     DIRETOR: 1,
 }
@@ -223,7 +239,10 @@ $j('#poder_publico_parceria_convenio').on('change', function () {
   habilitaCampoFormaDeContratacao();
   habilitaCampoFormaDeContratacaoEscolaSecretariaEstadual();
   habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal();
+  aplicaRestricoesFormasContratacao();
 });
+
+$j('#categoria_escola_privada').on('change', aplicaRestricoesFormasContratacao);
 
 function habilitaRecuros() {
 
@@ -373,6 +392,53 @@ function habilitaCampoFormaDeContratacaoEscolaSecretariaMunicipal() {
 
   $j("#formas_contratacao_parceria_escola_secretaria_municipal").prop('disabled', false);
   $j("#formas_contratacao_parceria_escola_secretaria_municipal").trigger("chosen:updated");
+}
+
+function aplicaRestricoesFormasContratacao() {
+  const depAdm = parseInt($j('#dependencia_administrativa').val(), 10);
+  const categoriaPriv = parseInt($j('#categoria_escola_privada').val(), 10);
+
+  let opcoesPermitidas = [];
+
+  if (depAdm === DEPENDENCIA_ADMINISTRATIVA.FEDERAL
+      || depAdm === DEPENDENCIA_ADMINISTRATIVA.ESTADUAL
+      || depAdm === DEPENDENCIA_ADMINISTRATIVA.MUNICIPAL) {
+    opcoesPermitidas = [
+      FORMAS_CONTRATACAO_PODER_PUBLICO.TERMO_COOPERACAO_TECNICA,
+      FORMAS_CONTRATACAO_PODER_PUBLICO.CONTRATO_CONSORCIO
+    ];
+  } else if (depAdm === DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+    if (categoriaPriv === CATEGORIA_ESCOLA_PRIVADA.PARTICULAR) {
+      opcoesPermitidas = [FORMAS_CONTRATACAO_PODER_PUBLICO.CONTRATO_PRESTACAO_SERVICO];
+    } else if ([CATEGORIA_ESCOLA_PRIVADA.COMUNITARIA,
+                CATEGORIA_ESCOLA_PRIVADA.CONFESSIONAL,
+                CATEGORIA_ESCOLA_PRIVADA.FILANTROPICA].includes(categoriaPriv)) {
+      opcoesPermitidas = [
+        FORMAS_CONTRATACAO_PODER_PUBLICO.TERMO_COLABORACAO,
+        FORMAS_CONTRATACAO_PODER_PUBLICO.TERMO_FOMENTO,
+        FORMAS_CONTRATACAO_PODER_PUBLICO.ACORDO_COOPERACAO,
+        FORMAS_CONTRATACAO_PODER_PUBLICO.CONTRATO_PRESTACAO_SERVICO
+      ];
+    }
+  }
+
+  ['#formas_contratacao_parceria_escola_secretaria_estadual',
+   '#formas_contratacao_parceria_escola_secretaria_municipal'].forEach(function (seletor) {
+    const $campo = $j(seletor);
+
+    $campo.find('option').each(function () {
+      const valor = parseInt($j(this).val(), 10);
+      $j(this).prop('disabled', opcoesPermitidas.length > 0 && !opcoesPermitidas.includes(valor));
+    });
+
+    const valoresAtuais = $campo.val() || [];
+    const valoresValidos = valoresAtuais.filter(v => opcoesPermitidas.includes(parseInt(v, 10)));
+    if (valoresAtuais.length !== valoresValidos.length) {
+      $campo.val(valoresValidos);
+    }
+
+    $campo.trigger('chosen:updated');
+  });
 }
 
 function habilitaCampoFormaDeContratacao() {
@@ -535,6 +601,7 @@ $j(document).ready(function() {
 
   // on click das abas
   habilitaCampoPoderPublicoOuConvenio();
+  aplicaRestricoesFormasContratacao();
   // DADOS GERAIS
   $j('#tab1').click(
     function() {
@@ -734,6 +801,7 @@ $j(document).ready(function() {
       verificaCamposDepAdm();
       habilitaCampoOrgaoVinculadoEscola();
       obrigaCampoOrgaoVinculadoEscola();
+      aplicaRestricoesFormasContratacao();
     }
   );
 
