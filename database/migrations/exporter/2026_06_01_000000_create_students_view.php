@@ -7,23 +7,13 @@ class CreateStudentsView extends Migration
 {
     use AsView;
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         $this->dropView('students');
-        $this->createView('students', '2020-01-01');
+        $this->createView('students');
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropView('students');
     }
