@@ -316,7 +316,8 @@ function validaAtividadesComplementares() {
 
 $j('#tipo_mediacao_didatico_pedagogico').on('change', function() {
   verificaLocalFuncionamentoDiferenciado();
-  habilitaEtapaEducacenso();
+  verificaOpcoesEtapaEducacenso();
+  $j('#etapa_educacenso').trigger('change');
 });
 
 function habilitaEtapaEducacenso() {
