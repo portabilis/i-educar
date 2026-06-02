@@ -340,12 +340,12 @@ function habilitaEtapaEducacenso() {
     $j("#etapa_educacenso").val('');
   }
 
-  restringeOpcoesEtapaEducacenso();
+  verificaOpcoesEtapaEducacenso();
 
   $j("#etapa_educacenso").trigger('change');
 }
 
-function restringeOpcoesEtapaEducacenso() {
+function verificaOpcoesEtapaEducacenso() {
   const $campo = $j('#etapa_educacenso');
   $campo.find('option').prop('disabled', false);
 
