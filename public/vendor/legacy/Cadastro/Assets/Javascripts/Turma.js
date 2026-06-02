@@ -37,6 +37,8 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 var modoCadastro = $j('#retorno').val() == 'Novo';
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
+const ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA = '5';
+
 let habilitaFormacaoAlternancia = ()=>{
   $j('#formacao_alternancia').makeUnrequired();
 
@@ -102,17 +104,37 @@ let habilitaFormaOrganizacaoTurma = ()=> {
 }
 
 
-let verificaLocalFuncionamentoDiferenciado = () => {
-  $j('#local_funcionamento_diferenciado').makeUnrequired();
-  let habilitaCampo = [1,2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
-  $j('#local_funcionamento_diferenciado').prop('disabled', !habilitaCampo);
+const TIPO_MEDIACAO_DIDATICO_PEDAGOGICO = {
+  PRESENCIAL: 1,
+  SEMIPRESENCIAL: 2,
+  EDUCACAO_A_DISTANCIA: 3,
+};
 
-  if (habilitaCampo) {
-    if (obrigarCamposCenso) {
-      $j('#local_funcionamento_diferenciado').makeRequired();
-    }
+const LOCAL_FUNCIONAMENTO_DIFERENCIADO = {
+  SALA_ANEXA: 1,
+};
+
+let verificaLocalFuncionamentoDiferenciado = () => {
+  const $campo = $j('#local_funcionamento_diferenciado');
+  const tipoMediacao = +$j('#tipo_mediacao_didatico_pedagogico').val();
+  const restringeSalaAnexa = [
+    TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.SEMIPRESENCIAL,
+    TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.EDUCACAO_A_DISTANCIA,
+  ].includes(tipoMediacao);
+
+  if (obrigarCamposCenso) {
+    $campo.makeRequired();
   } else {
-    $j('#local_funcionamento_diferenciado').val("");
+    $campo.makeUnrequired();
+  }
+
+  $campo.find('option').prop('disabled', false);
+
+  if (restringeSalaAnexa) {
+    $campo.find(`option[value="${LOCAL_FUNCIONAMENTO_DIFERENCIADO.SALA_ANEXA}"]`).prop('disabled', true);
+    if (+$campo.val() === LOCAL_FUNCIONAMENTO_DIFERENCIADO.SALA_ANEXA) {
+      $campo.val('');
+    }
   }
 }
 
@@ -169,6 +191,7 @@ $j('#organizacao_curricular').change(function() {
   habilitaEtapaEducacenso();
   habilitaAreasItinerarioFormativo();
   habilitaTipoCursoIntinerario();
+  habilitaCargaHorariaTotal();
 });
 
 $j('#tipo_curso_intinerario').change(function() {
@@ -204,7 +227,7 @@ function habilitaAtividadesComplementares(){
 }
 
 function habilitaCursoTecnico() {
-  var etapasEnsinoTecnico = ['39', '40', '64'];
+  var etapasEnsinoTecnico = ['39', '40', '64', '74'];
   var mostraCampo = $j.inArray($j('#etapa_educacenso').val(),etapasEnsinoTecnico) != -1;
   if (mostraCampo) {
     $j('#cod_curso_profissional').prop('disabled', false);
@@ -330,7 +353,7 @@ function habilitaTipoCursoIntinerario() {
   const notContainData = $j('#organizacao_curricular').val() === null;
   $j('#tipo_curso_intinerario').makeUnrequired();
 
-  if (!notContainData && $j('#organizacao_curricular').val().include('5')) {
+  if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA)) {
     $j("#tipo_curso_intinerario").prop('disabled', false);
     $j('#tipo_curso_intinerario').makeRequired();
   } else {
@@ -351,6 +374,20 @@ function habilitaCodigoCursoTecnico() {
     $j("#cod_curso_profissional_intinerario").val('');
   }
   $j('#cod_curso_profissional_intinerario').trigger('chosen:updated');
+}
+
+function habilitaCargaHorariaTotal() {
+  $j('#carga_horaria_total').prop('disabled', true).makeUnrequired();
+  const notContainData = $j('#organizacao_curricular').val() === null;
+
+  if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA)) {
+    $j('#carga_horaria_total').prop('disabled', false);
+    if (obrigarCamposCenso) {
+      $j('#carga_horaria_total').makeRequired();
+    }
+  } else {
+    $j('#carga_horaria_total').val('');
+  }
 }
 
 function habilitaEtapaAgregada() {
@@ -625,6 +662,7 @@ $j(document).ready(function() {
       habilitaCursoTecnico();
       habilitaFormaOrganizacaoTurma();
       habilitaCodigoCursoTecnico();
+      habilitaCargaHorariaTotal();
       habilitaFormacaoAlternancia();
     });
 

@@ -79,6 +79,8 @@ return new class extends clsCadastro
 
     public $cod_curso_profissional;
 
+    public $carga_horaria_total;
+
     public $etapa_agregada;
 
     public $etapa_educacenso;
@@ -670,10 +672,20 @@ return new class extends clsCadastro
         ];
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
+        $options = [
+            'label' => 'Carga horária total do curso (em horas)',
+            'placeholder' => 'em horas',
+            'required' => false,
+            'max_length' => 4,
+            'value' => $this->carga_horaria_total,
+            'size' => 50,
+        ];
+        $this->inputsHelper()->integer(attrName: 'carga_horaria_total', inputOptions: $options);
+
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70];
+        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => $obrigarCamposCenso, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'local_funcionamento_diferenciado', inputOptions: $options);
 
         $resources = [

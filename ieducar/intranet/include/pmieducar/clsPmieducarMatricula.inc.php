@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyIndividual;
 use iEducar\Legacy\Model;
 
 class clsPmieducarMatricula extends Model
@@ -1287,9 +1288,8 @@ class clsPmieducarMatricula extends Model
         $aluno = new clsPmieducarAluno($matricula['ref_cod_aluno']);
         $aluno = $aluno->detalhe();
 
-        $pessoaFisica = new clsFisica($aluno['ref_idpes']);
-        $pessoaFisica->falecido = true;
-        $pessoaFisica->edita();
+        $individual = LegacyIndividual::find($aluno['ref_idpes'], ['idpes', 'falecido']);
+        $individual?->update(['falecido' => true]);
     }
 
     public function existeSaidaEscola($codMatricula)
