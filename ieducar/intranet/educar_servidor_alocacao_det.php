@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyBondType;
 use App\Models\LegacyEmployeeRole;
 
 return new class extends clsDetalhe
@@ -79,10 +80,9 @@ return new class extends clsDetalhe
 
         // Vinculo
         if ($this->ref_cod_funcionario_vinculo) {
-            $funcionarioVinculo = new clsPortalFuncionario;
-            $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
+            $nomeVinculo = LegacyBondType::whereKey($registro['ref_cod_funcionario_vinculo'])->value('nm_vinculo');
 
-            $this->addDetalhe(['Vinculo', "{$funcionarioVinculo}"]);
+            $this->addDetalhe(['Vinculo', $nomeVinculo]);
         }
 
         if (!empty($this->data_admissao)) {

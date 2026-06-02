@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\EducacensoIndigenousPeople;
+use App\Models\LegacyDocument;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
 use App\Models\LegacyRace;
@@ -322,9 +324,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                 $this->cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
             }
 
-            $documentos = new clsDocumento;
-            $documentos->idpes = $this->cod_pessoa_fj;
-            $documentos = $documentos->detalhe();
+            $documentos = is_numeric($this->cod_pessoa_fj)
+                ? LegacyDocument::find($this->cod_pessoa_fj)?->getAttributes()
+                : null;
         }
 
         $foto = false;
@@ -333,11 +335,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $personObject = new clsFisica($this->cod_pessoa_fj);
             $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
             $this->renda_mensal = (empty($personObject->detalhe()['renda_mensal']) == false) ? $personObject->detalhe()['renda_mensal'] : '';
-            $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
-            $detalheFoto = $objFoto->detalhe();
-            if (is_array($detalheFoto) && count($detalheFoto)) {
-                $foto = $detalheFoto['caminho'];
-            }
+            $foto = LegacyIndividualPicture::whereKey($this->cod_pessoa_fj)->value('caminho') ?? false;
         } else {
             $this->observacao = '';
             $this->renda_mensal = '';

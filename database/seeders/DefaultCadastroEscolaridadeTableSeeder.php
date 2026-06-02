@@ -2,20 +2,27 @@
 
 namespace Database\Seeders;
 
+use App\Models\LegacySchoolingDegree;
+use iEducar\Modules\Educacenso\Model\Escolaridade;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DefaultCadastroEscolaridadeTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/cadastro.escolaridade.sql')
-        );
+        $schoolings = [
+            Escolaridade::ENSINO_MEDIO => 'Ensino Médio',
+            Escolaridade::ENSINO_FUNDAMENTAL => 'Ensino Fundamental Completo',
+            Escolaridade::NAO_CONCLUIU_ENSINO_FUNDAMENTAL => 'Ensino Fundamental Incompleto',
+            Escolaridade::EDUCACAO_SUPERIOR => 'Superior Completo',
+        ];
+
+        foreach ($schoolings as $id => $name) {
+            LegacySchoolingDegree::updateOrCreate([
+                'escolaridade' => $id,
+            ], [
+                'descricao' => $name,
+            ]);
+        }
     }
 }

@@ -232,4 +232,6 @@ return [
 
     'nickname' => 'ieducar',
 
+    'home' => '/web',
+
 ];

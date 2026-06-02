@@ -608,7 +608,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             'nm_serie' => $dadosMatricula['nome_serie'],
             'ano' => $dadosMatricula['ano'],
             'carga_horaria' => $this->getCargaHorariaDisciplinas($alunoId),
-            'dias_letivos' => $this->getRequest()->dias_letivos,
+            'dias_letivos' => is_numeric($this->getRequest()->dias_letivos) ? $this->getRequest()->dias_letivos : null,
             'escola' => $dadosEscola['nome'],
             'escola_cidade' => $dadosEscola['cidade'],
             'escola_uf' => $dadosEscola['uf'],
@@ -618,17 +618,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             'faltas_globalizadas' => is_numeric($faltasGlobalizadas) ? $faltasGlobalizadas : null,
             'ref_cod_instituicao' => $dadosMatricula['instituicao_id'],
             'origem' => 1,
-            'extra_curricular' => $this->getRequest()->extra_curricular,
+            'extra_curricular' => is_numeric($this->getRequest()->extra_curricular) ? $this->getRequest()->extra_curricular : null,
             'ref_cod_matricula' => $matriculaId,
             'frequencia' => $this->getPercentualFrequencia(),
             'registro' => $this->getRequest()->registro,
             'livro' => $this->getRequest()->livro,
             'folha' => $this->getRequest()->folha,
             'nm_curso' => $dadosMatricula['nome_curso'],
-            'historico_grade_curso_id' => $this->getRequest()->grade_curso_id,
+            'historico_grade_curso_id' => is_numeric($this->getRequest()->grade_curso_id) ? $this->getRequest()->grade_curso_id : null,
             'ref_cod_escola' => $dadosMatricula['escola_id'],
             'dependencia' => $this->getRequest()->dependencia,
-            'posicao' => $this->getRequest()->posicao,
+            'posicao' => is_numeric($this->getRequest()->posicao) ? $this->getRequest()->posicao : null,
         ];
     }
 
@@ -641,9 +641,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             'ref_sequencial' => $fields['historicoSequencial'],
             'nm_disciplina' => $fields['nome'],
             'nota' => $fields['nota'],
-            'faltas' => $fields['falta'] ?? null,
-            'ordenamento' => $fields['ordenamento'] ?? null,
-            'carga_horaria_disciplina' => $fields['carga_horaria_disciplina'] ?? null,
+            'faltas' => is_numeric($fields['falta'] ?? null) ? $fields['falta'] : null,
+            'ordenamento' => is_numeric($fields['ordenamento'] ?? null) ? $fields['ordenamento'] : null,
+            'carga_horaria_disciplina' => isset($fields['carga_horaria_disciplina']) && is_numeric($fields['carga_horaria_disciplina'])
+                ? (int) $fields['carga_horaria_disciplina']
+                : null,
             'dependencia' => $fields['dependencia'] ?? false,
             'tipo_base' => $fields['tipo_base'] ?? 1,
         ]);

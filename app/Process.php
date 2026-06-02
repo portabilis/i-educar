@@ -97,4 +97,6 @@ class Process
     public const RELOCATE = 695;
 
     public const UNENROLLMENT = 696;
+
+    public const COMPONENT_BATCH_MANAGER = 9999121;
 }

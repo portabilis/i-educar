@@ -248,4 +248,9 @@ class LegacySchool extends LegacyModel
     {
         return $this->hasMany(LegacyRegistration::class, 'ref_ref_cod_escola');
     }
+
+    public function activeSearches()
+    {
+        return $this->hasManyThrough(LegacyActiveLooking::class, LegacyRegistration::class, 'ref_ref_cod_escola', 'ref_cod_matricula');
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyDocument;
 use App\Models\LegacyPhone;
 use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
@@ -316,8 +317,7 @@ class clsPessoaFj extends Model
                 $this->{"fone_{$sufixo}"} = $fone->fone;
             }
 
-            $obj_documento = new clsDocumento($this->idpes);
-            $documentos = $obj_documento->detalhe();
+            $documentos = LegacyDocument::find($this->idpes)?->getAttributes();
 
             if (is_array($documentos)) {
                 if ($documentos['rg']) {
