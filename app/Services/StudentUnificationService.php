@@ -56,7 +56,11 @@ class StudentUnificationService
     private function checkPermission($unification)
     {
         $user = $this->user;
-        $unificationOwner = $unification->createdBy->user;
+        $unificationOwner = $unification->createdBy?->user;
+
+        if (is_null($unificationOwner)) {
+            return;
+        }
 
         if ($user->type->level > LegacyUserType::LEVEL_INSTITUTIONAL) {
             $this->checkPermissionSchoolingLevel($user, $unificationOwner);
