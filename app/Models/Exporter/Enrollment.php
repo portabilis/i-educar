@@ -74,6 +74,7 @@ class Enrollment extends Model
                 'status_text' => 'Situação da Matrícula',
                 'period' => 'Turno',
                 'school_class_stage' => 'Etapa Educacenso',
+                'regional_type' => 'Regional',
             ],
             'Informações' => [
                 'nationality' => 'Nacionalidade',

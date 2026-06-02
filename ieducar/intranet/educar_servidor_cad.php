@@ -8,12 +8,14 @@ use App\Models\LegacyAbsenceDelay;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyPerson;
 use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
 use App\Services\EmployeePosgraduateService;
 use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
+use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
 use iEducar\Modules\Educacenso\Model\PosGraduacao;
 use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 use iEducar\Modules\ValueObjects\EmployeePosgraduateValueObject;
@@ -219,11 +221,7 @@ return new class extends clsCadastro
          */
         $opcoes = ['' => 'Para procurar, clique na lupa ao lado.'];
         if ($this->cod_servidor) {
-            $servidor = new clsFuncionario($this->cod_servidor);
-            $servidor->detalhe();
-            // $detalhe = $detalhe['idpes']->detalhe();
-
-            $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
+            $this->campoRotulo('nm_servidor', 'Pessoa', LegacyPerson::whereKey($this->cod_servidor)->value('nome'));
             $this->campoOculto('cod_servidor', $this->cod_servidor);
             $this->campoOculto(
                 'ref_cod_instituicao_original',
@@ -409,27 +407,7 @@ return new class extends clsCadastro
             'required' => $obrigarCamposCenso,
             'options' => [
                 'values' => $this->curso_formacao_continuada,
-                'all_values' => [
-                    1 => 'Creche (0 a 3 anos)',
-                    2 => 'Pré-escola (4 e 5 anos)',
-                    3 => 'Anos iniciais do ensino fundamental',
-                    4 => 'Anos finais do ensino fundamental',
-                    5 => 'Ensino médio',
-                    6 => 'Educação de jovens e adultos',
-                    7 => 'Educação especial',
-                    8 => 'Educação indígena',
-                    9 => 'Educação do campo',
-                    10 => 'Educação ambiental',
-                    11 => 'Educação em direitos humanos',
-                    18 => 'Educação bilíngue de surdos',
-                    19 => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
-                    12 => 'Gênero e diversidade sexual',
-                    13 => 'Direitos de criança e adolescente',
-                    14 => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',
-                    17 => 'Gestão Escolar',
-                    15 => 'Outros',
-                    16 => 'Nenhum',
-                ],
+                'all_values' => FormacaoContinuada::getDescriptiveValues(),
             ],
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);

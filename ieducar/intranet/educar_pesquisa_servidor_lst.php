@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEmployee;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -229,10 +230,11 @@ return new class extends clsListagem
 
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
+            $matriculasPorServidor = LegacyEmployee::whereIn('ref_cod_pessoa_fj', array_column($lista, 'cod_servidor'))
+                ->pluck('matricula', 'ref_cod_pessoa_fj');
+
             foreach ($lista as $registro) {
-                $obj_cod_servidor = new clsFuncionario(int_idpes: $registro['cod_servidor']);
-                $det_cod_servidor = $obj_cod_servidor->detalhe();
-                $registro['matricula'] = $det_cod_servidor['matricula'];
+                $registro['matricula'] = $matriculasPorServidor[$registro['cod_servidor']] ?? null;
                 // Se servidor for professor, verifica se possui as mesmas
                 // disciplinas do servidor a ser substituido (este passo somente Ã©
                 // executado ao buscar um servidor substituto)

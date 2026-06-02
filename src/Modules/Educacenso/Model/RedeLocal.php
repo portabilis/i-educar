@@ -10,12 +10,15 @@ class RedeLocal
 
     public const WIRELESS = 3;
 
+    public const A_CABO_E_WIRELESS = 4;
+
     public static function getDescriptiveValues()
     {
         return [
+            self::NENHUMA => 'Não há rede local interligando computadores',
             self::A_CABO => 'A cabo',
             self::WIRELESS => 'Wireless',
-            self::NENHUMA => 'Não há rede local interligando computadores',
+            self::A_CABO_E_WIRELESS => 'A cabo e Wireless',
         ];
     }
 }
