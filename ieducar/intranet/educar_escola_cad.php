@@ -4,9 +4,11 @@ use App\Models\City;
 use App\Models\EmployeeInep;
 use App\Models\Enums\SchoolCharacteristic;
 use App\Models\LegacyCourse;
+use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchoolCourse;
+use App\Models\RegionalType;
 use App\Models\SchoolManager;
 use App\Models\SchoolSpace;
 use App\Rules\SchoolManagerAtLeastOneChief;
@@ -26,6 +28,7 @@ use iEducar\Modules\Educacenso\Model\EsgotamentoSanitario;
 use iEducar\Modules\Educacenso\Model\FonteEnergia;
 use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
+use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
@@ -218,8 +221,6 @@ return new class extends clsCadastro
 
     public $localizacao_diferenciada;
 
-    public $educacao_indigena;
-
     public $lingua_ministrada;
 
     public $codigo_lingua_indigena;
@@ -318,6 +319,8 @@ return new class extends clsCadastro
 
     public $qtd_orientador_comunitario;
 
+    public $qtd_assistente_social;
+
     public $qtd_tradutor_interprete_libras_outro_ambiente;
 
     public $qtd_revisor_braile;
@@ -350,6 +353,8 @@ return new class extends clsCadastro
 
     public $lei_conclusao_ensino_medio;
 
+    public $regional_type_id;
+
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
         'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
@@ -366,7 +371,8 @@ return new class extends clsCadastro
         'qtd_psicologo' => 'Psicólogo(a) Escolar',
         'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
         'qtd_vice_diretor' => 'Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira',
-        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social',
+        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a)',
+        'qtd_assistente_social' => 'Assistente social',
         'qtd_tradutor_interprete_libras_outro_ambiente' => 'Tradutor e Intérprete de Libras para atendimento em outros ambientes da escola que não seja sala de aula',
         'qtd_revisor_braile' => 'Revisor de texto Braille, assistente vidente (assistente de revisão do texto em Braille)',
     ];
@@ -416,10 +422,10 @@ return new class extends clsCadastro
 
             $this->carregaCamposComDadosDaEscola($registro);
 
-            $objJuridica = (new clsPessoaJuridica($this->ref_idpes))->detalhe();
+            $cnpjEscola = LegacyOrganization::whereKey($this->ref_idpes)->value('cnpj');
 
-            if (validaCNPJ($objJuridica['cnpj'])) {
-                $this->cnpj = int2CNPJ($objJuridica['cnpj']);
+            if (validaCNPJ($cnpjEscola)) {
+                $this->cnpj = int2CNPJ($cnpjEscola);
             }
 
             $this->fexcluir = is_numeric($this->cod_escola) && $obj_permissoes->permissao_excluir(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
@@ -662,8 +668,7 @@ return new class extends clsCadastro
 
             $this->carregaDadosDoPost();
 
-            $objTemp = new clsPessoaJuridica($this->ref_idpes);
-            $objTemp->detalhe();
+            $cnpjPessoaJuridica = LegacyOrganization::whereKey($this->ref_idpes)->value('cnpj');
 
             $this->campoOculto(nome: 'cod_escola', valor: $this->cod_escola);
             $this->campoTexto(nome: 'fantasia', campo: 'Escola', valor: $this->fantasia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -714,6 +719,20 @@ return new class extends clsCadastro
 
             $this->inputsHelper()->select(attrName: 'zona_localizacao', inputOptions: $options);
 
+            $regionais = RegionalType::query()
+                ->select(['id', 'name'])
+                ->orderBy('name')
+                ->pluck('name', 'id')
+                ->prepend('Selecione', '');
+
+            $options = [
+                'label' => 'Regional',
+                'value' => $this->regional_type_id,
+                'resources' => $regionais,
+                'required' => false,
+            ];
+            $this->inputsHelper()->select(attrName: 'regional_type_id', inputOptions: $options);
+
             $this->campoOculto(nome: 'com_cnpj', valor: $this->com_cnpj);
 
             if (!$this->cod_escola) {
@@ -722,17 +741,15 @@ return new class extends clsCadastro
                 $this->cnpj = empty($this->cnpj) ? $this->cnpj : int2IdFederal($this->cnpj);
             }
 
-            if (empty($this->cnpj) && $objTemp->cnpj) {
-                $this->cnpj = $objTemp->cnpj;
+            if (empty($this->cnpj) && $cnpjPessoaJuridica) {
+                $this->cnpj = $cnpjPessoaJuridica;
             }
 
-            $objJuridica = new clsPessoaJuridica($this->pessoaj_id);
-
-            $det = $objJuridica->detalhe();
-            $this->ref_idpes = $det['idpes'];
+            $orgPessoaJuridica = LegacyOrganization::whereKey($this->pessoaj_id)->first(['idpes', 'fantasia']);
+            $this->ref_idpes = $orgPessoaJuridica?->idpes;
 
             if (!$this->fantasia) {
-                $this->fantasia = $det['fantasia'];
+                $this->fantasia = $orgPessoaJuridica?->fantasia;
             }
 
             if ($this->cnpj) {
@@ -899,11 +916,7 @@ return new class extends clsCadastro
             $this->inputsHelper()->select(attrName: 'categoria_escola_privada', inputOptions: $options);
 
             $helperOptions = ['objectName' => 'poder_publico_parceria_convenio'];
-            $resources = [
-                1 => 'Secretaria estadual',
-                2 => 'Secretaria municipal',
-                3 => 'Não possui parceria ou convênio',
-            ];
+            $resources = PoderPublicoConveniado::getDescriptiveValues();
 
             $options = [
                 'label' => 'Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições',
@@ -987,9 +1000,7 @@ return new class extends clsCadastro
             $this->addSchoolManagersTable();
             $this->campoQuebra();
 
-            if ($nivel === 1) {
-                $this->addSchoolCoursesTable();
-            }
+            $this->addSchoolCoursesTable();
 
             $this->campoQuebra();
 
@@ -1292,29 +1303,13 @@ return new class extends clsCadastro
             ];
             $this->inputsHelper()->booleanSelect(attrName: 'acesso_internet', inputOptions: $options);
 
-            $helperOptions = ['objectName' => 'rede_local'];
-            $options = [
-                'label' => 'Rede local de interligação de computadores',
-                'size' => 50,
-                'required' => false,
-                'options' => [
-                    'values' => $this->rede_local,
-                    'all_values' => RedeLocal::getDescriptiveValues(),
-                ],
-            ];
-            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
-
-            $helperOptions = ['objectName' => 'equipamentos_acesso_internet'];
-            $options = [
-                'label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
-                'size' => 50,
-                'required' => false,
-                'options' => [
-                    'values' => $this->equipamentos_acesso_internet,
-                    'all_values' => EquipamentosAcessoInternet::getDescriptiveValues(),
-                ],
-            ];
-            $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+            $resources = [null => 'Selecione'] + RedeLocal::getDescriptiveValues();
+            $options = ['label' => 'Rede local de interligação de computadores',
+                'resources' => $resources,
+                'value' => is_array($this->rede_local) ? ($this->rede_local[0] ?? null) : $this->rede_local,
+                'required' => $obrigarCamposCenso,
+                'size' => 70];
+            $this->inputsHelper()->select(attrName: 'rede_local', inputOptions: $options);
 
             $this->campoRotulo(
                 nome: 'quantidade_computadores_alunos',
@@ -1329,6 +1324,14 @@ return new class extends clsCadastro
 
             $options = ['label' => 'Tablets', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_tablets, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer(attrName: 'quantidade_computadores_alunos_tablets', inputOptions: $options);
+
+            $resources = [null => 'Selecione'] + EquipamentosAcessoInternet::getDescriptiveValues();
+            $options = ['label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
+                'resources' => $resources,
+                'value' => is_array($this->equipamentos_acesso_internet) ? ($this->equipamentos_acesso_internet[0] ?? null) : $this->equipamentos_acesso_internet,
+                'required' => false,
+                'size' => 70];
+            $this->inputsHelper()->select(attrName: 'equipamentos_acesso_internet', inputOptions: $options);
 
             $this->campoRotulo(
                 nome: 'equipamentos_aprendizagem',
@@ -1484,25 +1487,11 @@ return new class extends clsCadastro
                 2 => 'Quilombola',
                 3 => 'Indígena'];
 
-            $options = [
-                'label' => 'Escola indígena',
-                'value' => $this->educacao_indigena,
-                'required' => false,
-                'prompt' => 'Selecione',
-            ];
-            $this->inputsHelper()->booleanSelect(attrName: 'educacao_indigena', inputOptions: $options);
-
-            $resources = [
-                null => 'Selecione',
-                1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena',
-            ];
-            $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
+            $resources = [null => 'Selecione'] + LinguaMinistrada::getDescriptiveValues();
             $options = ['label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
-                'required' => false,
-                'disabled' => !$habilitaLiguaMinistrada,
+                'required' => $obrigarCamposCenso,
                 'size' => 70];
             $this->inputsHelper()->select(attrName: 'lingua_ministrada', inputOptions: $options);
 
@@ -1620,9 +1609,7 @@ return new class extends clsCadastro
 
         $this->preparaDados();
 
-        $pessoaJuridica = (new clsJuridica((int) $this->pessoaj_id_oculto))->detalhe();
-
-        if ($pessoaJuridica === false) {
+        if (!LegacyOrganization::whereKey((int) $this->pessoaj_id_oculto)->exists()) {
             throw new Exception('Pessoa jurídica não encontrada');
         }
 
@@ -1689,9 +1676,8 @@ return new class extends clsCadastro
 
     private function cadastraEscolaCurso($cod_escola, $excluirEscolaCursos = false)
     {
-        // Se o JS não rodou ou o usuário não tem permissão poli, não mexe nos cursos
-        $obj_permissoes = new clsPermissoes;
-        if (!isset($_POST['cursos_ready']) || $obj_permissoes->nivel_acesso($this->pessoa_logada) !== 1) {
+        // Se o JS não rodou, não mexe nos cursos (proteção contra perda de dados)
+        if (!isset($_POST['cursos_ready'])) {
             $this->storeManagers($cod_escola);
 
             return true;
@@ -1866,7 +1852,6 @@ return new class extends clsCadastro
         $obj->acoes_area_ambiental = $this->acoes_area_ambiental;
         $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
         $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-        $obj->educacao_indigena = $this->educacao_indigena;
         $obj->lingua_ministrada = $this->lingua_ministrada;
         $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
         $obj->equipamentos = $this->equipamentos;
@@ -1900,6 +1885,7 @@ return new class extends clsCadastro
         $obj->formas_contratacao_parceria_escola_secretaria_municipal = $this->formas_contratacao_parceria_escola_secretaria_municipal;
         $obj->caracteristica_escolar = $this->caracteristica_escolar;
         $obj->lei_conclusao_ensino_medio = $this->lei_conclusao_ensino_medio;
+        $obj->regional_type_id = $this->regional_type_id;
 
         foreach ($this->inputsRecursos as $key => $value) {
             $obj->{$key} = $this->{$key};
@@ -1999,7 +1985,17 @@ return new class extends clsCadastro
 
     private function transformArrayInString($value): ?string
     {
-        return is_array($value) ? implode(separator: ',', array: array_filter($value)) : null;
+        if (is_array($value)) {
+            $filtered = array_filter($value);
+
+            return empty($filtered) ? null : implode(separator: ',', array: $filtered);
+        }
+
+        if (is_string($value) && $value !== '') {
+            return $value;
+        }
+
+        return null;
     }
 
     public function Editar()
@@ -2093,7 +2089,14 @@ return new class extends clsCadastro
 
     private function atualizaNomePessoaJuridica($idpes)
     {
-        (new clsJuridica(idpes: $idpes, cnpj: null, fantasia: $this->fantasia))->edita();
+        if (!is_numeric($idpes) || !Auth::check()) {
+            return;
+        }
+
+        LegacyOrganization::find($idpes)?->update([
+            'cnpj' => null,
+            'fantasia' => $this->fantasia,
+        ]);
     }
 
     public function Excluir()
@@ -2875,12 +2878,6 @@ return new class extends clsCadastro
 
     protected function validaOpcoesUnicasMultipleSearch()
     {
-        if (is_array($this->poder_publico_parceria_convenio) && in_array(needle: PoderPublicoConveniado::NAO_POSSUI, haystack: $this->poder_publico_parceria_convenio) && count($this->poder_publico_parceria_convenio) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
-
-            return false;
-        }
-
         if (is_array($this->abastecimento_agua) && in_array(needle: AbastecimentoAgua::INEXISTENTE, haystack: $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
 
@@ -2913,12 +2910,6 @@ return new class extends clsCadastro
 
         if (is_array($this->equipamentos) && in_array(needle: Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, haystack: $this->equipamentos) && count($this->equipamentos) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
-
-            return false;
-        }
-
-        if (is_array($this->rede_local) && in_array(needle: RedeLocal::NENHUMA, haystack: $this->rede_local) && count($this->rede_local) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
 
             return false;
         }
@@ -2958,9 +2949,14 @@ return new class extends clsCadastro
 
     protected function validaEquipamentosAcessoInternet()
     {
-        if (is_array($this->equipamentos_acesso_internet) && in_array(needle: 2, haystack: $this->equipamentos_acesso_internet) &&
-            is_array($this->rede_local) && !in_array(needle: 3, haystack: $this->rede_local)) {
-            $this->mensagem = 'O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.';
+        $equipamentos = (int) $this->equipamentos_acesso_internet;
+        $redeLocal = (int) $this->rede_local;
+
+        $exigeWireless = in_array($equipamentos, [EquipamentosAcessoInternet::DISPOSITIVOS_PESSOAIS, EquipamentosAcessoInternet::AMBOS]);
+        $temWireless = in_array($redeLocal, [RedeLocal::WIRELESS, RedeLocal::A_CABO_E_WIRELESS]);
+
+        if ($exigeWireless && !$temWireless) {
+            $this->mensagem = 'O campo: <b>Rede local de interligação de computadores</b> deve estar preenchido com <b>Wireless</b> ou <b>A cabo e Wireless</b> quando o campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Dispositivos pessoais</b> ou <b>Computadores de mesa, portáteis e tablets da escola e Dispositivos pessoais</b>.';
 
             return false;
         }
@@ -3018,8 +3014,11 @@ return new class extends clsCadastro
             return false;
         }
 
-        if (is_array($this->equipamentos_acesso_internet) && in_array(needle: EquipamentosAcessoInternet::COMPUTADOR_MESA, haystack: $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
-            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
+        $equipamentos = (int) $this->equipamentos_acesso_internet;
+        $exigeQuantidade = in_array($equipamentos, [EquipamentosAcessoInternet::COMPUTADOR_MESA, EquipamentosAcessoInternet::AMBOS]);
+
+        if ($exigeQuantidade && $quantidadesNaoPreenchidas) {
+            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola</b> ou <b>Computadores de mesa, portáteis e tablets da escola e Dispositivos pessoais</b>.';
 
             return false;
         }

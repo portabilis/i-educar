@@ -5,11 +5,12 @@ use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyGradeSequence;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyOrganization;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacySequenceGrade;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Services\EnrollmentService;
@@ -460,13 +461,7 @@ return new class extends clsCadastro
                         $escola = $escola->detalhe();
 
                         if (is_array(value: $escola) && count(value: $escola)) {
-                            $escola = new clsJuridica(idpes: $escola['ref_idpes']);
-                            $escola = $escola->detalhe();
-                            if (is_array(value: $escola) && count(value: $escola)) {
-                                $escola = $escola['fantasia'];
-                            } else {
-                                $escola = '';
-                            }
+                            $escola = LegacyOrganization::whereKey($escola['ref_idpes'])->value('fantasia') ?? '';
                         } else {
                             $escola = '';
                         }
@@ -801,7 +796,7 @@ return new class extends clsCadastro
         }
 
         if (in_array(needle: $this->situacaoUltimaMatricula, haystack: $aprovado)) {
-            $serieNovaMatricula = LegacySequenceGrade::query()->whereGradeOrigin($this->serieUltimaMatricula)->active()->value('ref_serie_destino');
+            $serieNovaMatricula = LegacyGradeSequence::query()->whereGradeOrigin($this->serieUltimaMatricula)->active()->value('ref_serie_destino');
         } elseif (in_array(needle: $this->situacaoUltimaMatricula, haystack: $reprovado)) {
             $serieNovaMatricula = $this->serieUltimaMatricula;
         }
@@ -889,7 +884,7 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-        $lst_sequencia = LegacySequenceGrade::query()
+        $lst_sequencia = LegacyGradeSequence::query()
             ->whereGradeDestiny($ref_cod_serie)
             ->active()
             ->get()

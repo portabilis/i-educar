@@ -206,7 +206,7 @@ HTML;
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
-                $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
+                $classe_botao = ($intPaginaAtual == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
                 $strReturn .= "<td class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;text-align: center\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a página " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 

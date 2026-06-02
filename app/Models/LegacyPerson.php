@@ -153,6 +153,14 @@ class LegacyPerson extends LegacyModel
     }
 
     /**
+     * @return HasOne<LegacyOrganization, $this>
+     */
+    public function organization(): HasOne
+    {
+        return $this->hasOne(LegacyOrganization::class, 'idpes', 'idpes');
+    }
+
+    /**
      * @return BelongsToMany<LegacyDeficiency, $this>
      */
     public function deficiencies(): BelongsToMany
