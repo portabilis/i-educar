@@ -212,6 +212,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 Route::get('/auth/redirect', SocialiteRedirectController::class)->name('socialite.redirect');
 Route::get('/auth/callback', SocialiteCallbackController::class)->name('socialite.callback');
 
-Route::get('/webhook/transfer/{id}', TransferWebhookCallbackController::class)
+Route::post('/webhook/transfer/{id}', TransferWebhookCallbackController::class)
     ->name('webhook.transfer.callback')
     ->middleware(\App\Http\Middleware\ValidToken::class);

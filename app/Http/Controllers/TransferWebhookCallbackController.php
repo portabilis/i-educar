@@ -31,7 +31,7 @@ class TransferWebhookCallbackController extends Controller
 
         $this->service->createByUser(
             $transfer->ref_usuario_cad,
-            $message,
+            $request->string('message')->toString() ?? $message,
             $link,
             NotificationType::TRANSFER
         );
