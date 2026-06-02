@@ -101,6 +101,9 @@ cp .env.example .env.testing
 Execute o comando:
 
 ```bash
+docker compose exec postgres dropdb testing --if-exists
+docker compose exec postgres createdb testing
+docker compose exec php composer testing-install
 docker compose exec php vendor/bin/pest
 ```
 
