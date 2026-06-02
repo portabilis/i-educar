@@ -271,7 +271,7 @@ return new class extends clsCadastro
         }
 
         if (is_numeric($this->ref_cod_matricula) && LegacyTransferRequest::where('ref_cod_matricula_saida', $this->ref_cod_matricula)->exists()) {
-            $this->mensagem = 'Já existe uma solitação de transferência ativa.<br>';
+            $this->mensagem = 'Já existe uma solicitação de transferência ativa.<br>';
 
             return false;
         }
