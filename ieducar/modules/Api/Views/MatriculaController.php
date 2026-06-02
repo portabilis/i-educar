@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyActiveLooking;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
@@ -770,19 +771,21 @@ class MatriculaController extends ApiCoreController
         $aluno = new clsPmieducarAluno($codAluno);
         $aluno = $aluno->detalhe();
 
-        $pessoaFisica = new clsFisica($aluno['ref_idpes']);
+        $individual = LegacyIndividual::find($aluno['ref_idpes'], ['idpes', 'falecido']);
+
+        if (!$individual) {
+            return;
+        }
 
         foreach ($matriculas as $matricula) {
             if ($matricula['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
-                $pessoaFisica->falecido = true;
-                $pessoaFisica->edita();
+                $individual->update(['falecido' => true]);
 
                 return;
             }
         }
 
-        $pessoaFisica->falecido = false;
-        $pessoaFisica->edita();
+        $individual->update(['falecido' => false]);
     }
 
     protected function canGetMatriculasDependencia()

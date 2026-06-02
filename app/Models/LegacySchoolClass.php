@@ -125,6 +125,7 @@ class LegacySchoolClass extends Model
         'aee_lingua_escrita',
         'aee_autonomia',
         'cod_curso_profissional',
+        'carga_horaria_total',
         'etapa_educacenso',
         'ref_cod_disciplina_dispensada',
         'parecer_1_etapa',

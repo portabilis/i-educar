@@ -6,6 +6,7 @@ use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyPerson;
@@ -102,8 +103,7 @@ return new class extends clsDetalhe
             $cel  = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
             $fax  = $telefones->get(LegacyPhone::TYPE_FAX);
 
-            $obj_fisica = new clsFisica(idpes: $this->ref_idpes);
-            $det_fisica = $obj_fisica->detalhe();
+            $det_fisica = LegacyIndividual::find($this->ref_idpes)?->getAttributes();
 
             $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->ref_idpes))->value('nm_raca');
 
@@ -150,12 +150,9 @@ return new class extends clsDetalhe
                 if ($nomePai) {
                     $registro['nm_pai'] = $nomePai;
 
-                    // CPF
-                    $obj_cpf = new clsFisica(idpes: $this->idpes_pai);
-                    $det_cpf = $obj_cpf->detalhe();
-
-                    if ($det_cpf['cpf']) {
-                        $this->cpf_pai = int2CPF(int: $det_cpf['cpf']);
+                    $cpfPai = LegacyIndividual::find($this->idpes_pai, ['idpes', 'cpf'])?->cpf;
+                    if ($cpfPai) {
+                        $this->cpf_pai = $cpfPai;
                     }
                 }
             }
@@ -166,12 +163,9 @@ return new class extends clsDetalhe
                 if ($nomeMae) {
                     $registro['nm_mae'] = $nomeMae;
 
-                    // CPF
-                    $obj_cpf = new clsFisica(idpes: $this->idpes_mae);
-                    $det_cpf = $obj_cpf->detalhe();
-
-                    if ($det_cpf['cpf']) {
-                        $this->cpf_mae = int2CPF(int: $det_cpf['cpf']);
+                    $cpfMae = LegacyIndividual::find($this->idpes_mae, ['idpes', 'cpf'])?->cpf;
+                    if ($cpfMae) {
+                        $this->cpf_mae = $cpfMae;
                     }
                 }
             }
