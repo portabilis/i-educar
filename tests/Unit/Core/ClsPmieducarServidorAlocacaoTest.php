@@ -1,6 +1,8 @@
 <?php
 
-class ClsPmieducarServidorAlocacaoTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class ClsPmieducarServidorAlocacaoTest extends TestCase
 {
     /**
      * Testa o método substituir_servidor().

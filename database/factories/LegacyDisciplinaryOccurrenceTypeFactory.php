@@ -6,7 +6,7 @@ use App\Models\LegacyDisciplinaryOccurrenceType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LegacyDisciplinaryOccurrenceType>
+ * @extends Factory<LegacyDisciplinaryOccurrenceType>
  */
 class LegacyDisciplinaryOccurrenceTypeFactory extends Factory
 {

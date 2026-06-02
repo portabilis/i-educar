@@ -52,7 +52,7 @@ return new class extends clsListagem
         $base = new clsBanco;
         $base->FraseConexao();
         $connectionString = 'pgsql:' . $base->getFraseConexao();
-        $data = (new MovimentoMensalQueryFactory(connection: new \PDO(dsn: $connectionString), params: $params))
+        $data = (new MovimentoMensalQueryFactory(connection: new PDO(dsn: $connectionString), params: $params))
             ->getData();
 
         $this->titulo = 'Parâmetros';

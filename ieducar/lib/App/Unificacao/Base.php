@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\UnificationService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class App_Unificacao_Base
@@ -223,7 +224,7 @@ class App_Unificacao_Base
      * Retorna dados da tabela de acordo com a chave informada
      *
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     private function getOldData($table, $key, $value)
     {

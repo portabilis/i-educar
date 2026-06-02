@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyPerson;
+
 return new class extends clsDetalhe
 {
     public function Gerar()
@@ -8,9 +10,32 @@ return new class extends clsDetalhe
 
         $cod_empresa = @$_GET['cod_empresa'];
 
-        $objPessoaJuridica = new clsPessoaJuridica;
-        [$cod_pessoa_fj, $nm_pessoa, $id_federal, $endereco, $cep, $nm_bairro, $cidade, $ddd_telefone_1, $telefone_1, $ddd_telefone_2, $telefone_2, $ddd_telefone_mov, $telefone_mov, $ddd_telefone_fax, $telefone_fax, $http, $email, $ins_est, $tipo_pessoa, $razao_social, $capital_social, $ins_mun, $idtlog] = $objPessoaJuridica->queryRapida($cod_empresa, 'idpes', 'fantasia', 'cnpj', 'logradouro', 'cep', 'bairro', 'cidade', 'ddd_1', 'fone_1', 'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'url', 'email', 'insc_estadual', 'tipo', 'nome', 'insc_municipal', 'idtlog');
-        $endereco = "$idtlog $endereco";
+        $pessoa = LegacyPerson::with(['organization', 'phones', 'place.city'])->find($cod_empresa);
+
+        $razao_social = $pessoa?->nome;
+        $nm_pessoa = $pessoa?->organization?->fantasia;
+        $id_federal = $pessoa?->organization?->cnpj;
+        $http = $pessoa?->url;
+        $email = $pessoa?->email;
+        $ins_est = $pessoa?->organization?->insc_estadual;
+        $capital_social = $pessoa?->organization?->capital_social;
+
+        $endereco = $pessoa?->place?->address;
+        $cep = $pessoa?->place?->postal_code;
+        $nm_bairro = $pessoa?->place?->neighborhood;
+        $cidade = $pessoa?->place?->city?->name;
+
+        $ddd_telefone_1 = $telefone_1 = null;
+        $ddd_telefone_2 = $telefone_2 = null;
+        $ddd_telefone_mov = $telefone_mov = null;
+        $ddd_telefone_fax = $telefone_fax = null;
+
+        foreach ($pessoa?->phones ?? [] as $phone) {
+            if ($sufixo = $phone->legacy_suffix) {
+                ${"ddd_telefone_$sufixo"} = $phone->ddd;
+                ${"telefone_$sufixo"} = $phone->fone;
+            }
+        }
 
         $this->addDetalhe(detalhe: ['Razão Social', $razao_social]);
         $this->addDetalhe(detalhe: ['Nome Fantasia', $nm_pessoa]);

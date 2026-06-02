@@ -16,8 +16,8 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
 
     public function test_situacao_aluno()
     {
-        $nota = new \stdClass;
-        $falta = new \stdClass;
+        $nota = new stdClass;
+        $falta = new stdClass;
 
         /** @var MockObject|Avaliacao_Service_Boletim $service */
         $service = $this

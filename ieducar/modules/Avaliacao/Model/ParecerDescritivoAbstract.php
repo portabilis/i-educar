@@ -1,6 +1,6 @@
 <?php
 
-abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model_Etapa implements \Stringable
+abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model_Etapa implements Stringable
 {
     protected $_data = [
         'parecerDescritivoAluno' => null,

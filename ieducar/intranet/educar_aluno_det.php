@@ -5,8 +5,13 @@ use App\Models\Country;
 use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyDocument;
+use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
+use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
+use App\Models\LegacyStudentMedicalRecord;
 use App\Models\PersonHasPlace;
 use App\Models\Religion;
 use App\Models\TransportationProvider;
@@ -15,6 +20,7 @@ use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
@@ -91,24 +97,11 @@ return new class extends clsDetalhe
             $obj_pessoa_fj = new clsPessoaFj(int_idpes: $this->ref_idpes);
             $det_pessoa_fj = $obj_pessoa_fj->detalhe();
 
-            $obj_fisica = new clsFisica(idpes: $this->ref_idpes);
-            $det_fisica = $obj_fisica->detalhe();
+            $det_fisica = LegacyIndividual::find($this->ref_idpes)?->getAttributes();
 
-            $obj_fisica_raca = new clsCadastroFisicaRaca;
-            $lst_fisica_raca = $obj_fisica_raca->lista(int_ref_idpes: $this->ref_idpes);
+            $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->ref_idpes))->value('nm_raca');
 
-            $nameRace = null;
-            if ($lst_fisica_raca) {
-                $det_fisica_raca = array_shift(array: $lst_fisica_raca);
-                $nameRace = LegacyRace::query()->whereKey(id: $det_fisica_raca['ref_cod_raca'])->value(column: 'nm_raca');
-            }
-
-            $objFoto = new clsCadastroFisicaFoto(idpes: $this->ref_idpes);
-            $detalheFoto = $objFoto->detalhe();
-
-            if ($detalheFoto) {
-                $caminhoFoto = $detalheFoto['caminho'];
-            }
+            $caminhoFoto = LegacyIndividualPicture::whereKey($this->ref_idpes)->value('caminho');
 
             $registro['nome_aluno'] = mb_strtoupper(string: $det_pessoa_fj['nome']);
             $registro['cpf'] = int2IdFederal(int: $det_fisica['cpf']);
@@ -121,18 +114,9 @@ return new class extends clsDetalhe
 
             $registro['sexo'] = $det_fisica['sexo'] ? $opcoes[$det_fisica['sexo']] : '';
 
-            $obj_estado_civil = new clsEstadoCivil;
-            $obj_estado_civil_lista = $obj_estado_civil->lista();
+            $lista_estado_civil = LegacyMaritalStatus::pluck('descricao', 'ideciv')->toArray();
 
-            $lista_estado_civil = [];
-
-            if ($obj_estado_civil_lista) {
-                foreach ($obj_estado_civil_lista as $estado_civil) {
-                    $lista_estado_civil[$estado_civil['ideciv']] = $estado_civil['descricao'];
-                }
-            }
-
-            $registro['ideciv'] = $lista_estado_civil[$det_fisica['ideciv']->ideciv];
+            $registro['ideciv'] = $lista_estado_civil[$det_fisica['ideciv']] ?? '';
             $registro['email'] = $det_pessoa_fj['email'];
             $registro['url'] = $det_pessoa_fj['url'];
 
@@ -161,12 +145,9 @@ return new class extends clsDetalhe
                 if ($det_pessoa_pai) {
                     $registro['nm_pai'] = $det_pessoa_pai['nome'];
 
-                    // CPF
-                    $obj_cpf = new clsFisica(idpes: $this->idpes_pai);
-                    $det_cpf = $obj_cpf->detalhe();
-
-                    if ($det_cpf['cpf']) {
-                        $this->cpf_pai = int2CPF(int: $det_cpf['cpf']);
+                    $cpfPai = LegacyIndividual::find($this->idpes_pai, ['idpes', 'cpf'])?->cpf;
+                    if ($cpfPai) {
+                        $this->cpf_pai = $cpfPai;
                     }
                 }
             }
@@ -178,12 +159,9 @@ return new class extends clsDetalhe
                 if ($det_pessoa_mae) {
                     $registro['nm_mae'] = $det_pessoa_mae['nome'];
 
-                    // CPF
-                    $obj_cpf = new clsFisica(idpes: $this->idpes_mae);
-                    $det_cpf = $obj_cpf->detalhe();
-
-                    if ($det_cpf['cpf']) {
-                        $this->cpf_mae = int2CPF(int: $det_cpf['cpf']);
+                    $cpfMae = LegacyIndividual::find($this->idpes_mae, ['idpes', 'cpf'])?->cpf;
+                    if ($cpfMae) {
+                        $this->cpf_mae = $cpfMae;
                     }
                 }
             }
@@ -200,33 +178,33 @@ return new class extends clsDetalhe
             $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
             $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
 
-            $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia;
-            $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista(int_ref_idpes: $this->ref_idpes);
+            $deficiencias = is_numeric($this->ref_idpes)
+                ? LegacyDeficiency::query()
+                    ->whereHas('individuals', fn ($q) => $q->whereKey($this->ref_idpes))
+                    ->get()
+                : collect();
 
             $obj_beneficios_lista = LegacyBenefit::query()
                 ->whereHas(relation: 'students', callback: fn ($q) => $q->where('cod_aluno', $this->cod_aluno))
                 ->get(columns: ['nm_beneficio']);
 
-            if ($obj_deficiencia_pessoa_lista) {
+            if ($deficiencias && $deficiencias->isNotEmpty()) {
                 $deficiencia_pessoa = [];
                 $transtorno_pessoa = [];
 
-                foreach ($obj_deficiencia_pessoa_lista as $deficiencia) {
-                    $deficiencia_pessoa[$deficiencia['ref_cod_deficiencia']] = LegacyDeficiency::where('cod_deficiencia', $deficiencia['ref_cod_deficiencia'])
-                        ->where('deficiency_type_id', DeficiencyType::DEFICIENCY)
-                        ->value('nm_deficiencia');
-
-                    $transtorno_pessoa[$deficiencia['ref_cod_deficiencia']] = LegacyDeficiency::where('cod_deficiencia', $deficiencia['ref_cod_deficiencia'])
-                        ->where('deficiency_type_id', DeficiencyType::DISORDER)
-                        ->value('nm_deficiencia');
+                foreach ($deficiencias as $deficiencia) {
+                    if ($deficiencia->deficiency_type_id == DeficiencyType::DEFICIENCY) {
+                        $deficiencia_pessoa[$deficiencia->cod_deficiencia] = $deficiencia->nm_deficiencia;
+                    }
+                    if ($deficiencia->deficiency_type_id == DeficiencyType::DISORDER) {
+                        $transtorno_pessoa[$deficiencia->cod_deficiencia] = $deficiencia->nm_deficiencia;
+                    }
                 }
-
-                $deficiencia_pessoa = array_filter($deficiencia_pessoa, fn ($v) => !is_null($v));
-                $transtorno_pessoa = array_filter($transtorno_pessoa, fn ($v) => !is_null($v));
             }
 
-            $ObjDocumento = new clsDocumento(int_idpes: $this->ref_idpes);
-            $detalheDocumento = $ObjDocumento->detalhe();
+            $detalheDocumento = is_numeric($this->ref_idpes)
+                ? LegacyDocument::find($this->ref_idpes)?->getAttributes()
+                : null;
 
             $registro['rg'] = $detalheDocumento['rg'];
 
@@ -676,8 +654,7 @@ return new class extends clsDetalhe
             }
         }
 
-        $objFichaMedica = new clsModulesFichaMedicaAluno(ref_cod_aluno: $this->cod_aluno);
-        $reg = $objFichaMedica->detalhe();
+        $reg = LegacyStudentMedicalRecord::whereKey($this->cod_aluno)->first()?->toArray();
 
         if ($reg) {
             $this->addHtml('<span id="fmedica"></span>');
@@ -833,8 +810,8 @@ return new class extends clsDetalhe
             }
         }
 
-        $objMoradia = new clsModulesMoradiaAluno(ref_cod_aluno: $this->cod_aluno);
-        $reg = $objMoradia->detalhe();
+        $reg = DB::table('modules.moradia_aluno')->where('ref_cod_aluno', $this->cod_aluno)->first();
+        $reg = $reg ? (array) $reg : null;
 
         if ($reg) {
             $moradia = '';

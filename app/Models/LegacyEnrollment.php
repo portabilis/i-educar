@@ -75,6 +75,11 @@ class LegacyEnrollment extends LegacyModel
         'data_enturmacao' => 'date',
         'data_exclusao' => 'date',
         'desconsiderar_educacenso' => 'boolean',
+        'transferido' => 'boolean',
+        'remanejado' => 'boolean',
+        'reclassificado' => 'boolean',
+        'abandono' => 'boolean',
+        'falecido' => 'boolean',
     ];
 
     protected function date(): Attribute

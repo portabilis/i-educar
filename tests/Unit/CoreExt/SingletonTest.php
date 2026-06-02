@@ -17,7 +17,7 @@ class CoreExt_SingletonTest extends TestCase
 
     public function test_classe_que_nao_implementa_metodo_lanca_excecao()
     {
-        $this->expectException(\CoreExt_Exception::class);
+        $this->expectException(CoreExt_Exception::class);
         $instance1 = CoreExt_SingletonIncompleteStub::getInstance();
     }
 }

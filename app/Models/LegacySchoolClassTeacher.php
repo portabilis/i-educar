@@ -24,6 +24,7 @@ class LegacySchoolClassTeacher extends Model
         'servidor_id',
         'funcao_exercida',
         'tipo_vinculo',
+        'permite_lancar_faltas_componente',
         'data_inicial',
         'data_fim',
         'area_itinerario',

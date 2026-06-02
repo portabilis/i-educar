@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SystemSettingsUpdatedEvent;
 use App\Process;
 use App\Setting;
 use App\SettingCategory;
@@ -37,6 +38,8 @@ class SettingController extends Controller
         foreach ($request->all() as $key => $value) {
             Setting::where('id', $key)->update(['value' => $value]);
         }
+
+        SystemSettingsUpdatedEvent::dispatch();
 
         return redirect()->route('settings.index')->with('success', 'Configurações de sistema salvas com sucesso.');
     }

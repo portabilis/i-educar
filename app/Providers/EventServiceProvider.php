@@ -22,8 +22,10 @@ use App\Listeners\RegistrationCopyListener;
 use App\Listeners\ReportIssuedListener;
 use App\Listeners\TransferNotificationListener;
 use App\Listeners\TransferWebhookListener;
+use App\Models\Announcement;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use App\Models\SchoolManager;
+use App\Observers\AnnouncementObserver;
 use App\Observers\LegacyRegistrationDisciplinaryOccurrenceTypeObserver;
 use App\Observers\SchoolManagerObserver;
 use Illuminate\Auth\Events\Authenticated;
@@ -94,6 +96,7 @@ class EventServiceProvider extends ServiceProvider
 
         SchoolManager::observe(SchoolManagerObserver::class);
         LegacyRegistrationDisciplinaryOccurrenceType::observe(LegacyRegistrationDisciplinaryOccurrenceTypeObserver::class);
+        Announcement::observe(AnnouncementObserver::class);
     }
 
     /**
