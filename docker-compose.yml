@@ -67,7 +67,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-ieducar}
       PGUSER: ${DB_USERNAME:-ieducar}
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/18/docker
     ports:
       - ${DOCKER_POSTGRES_PORT:-5432}:5432
 
