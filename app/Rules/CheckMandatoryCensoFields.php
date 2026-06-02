@@ -52,6 +52,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCargaHorariaTotal($params)) {
                 return false;
             }
+            if (!$this->validaEixoCursoProfissional($params)) {
+                return false;
+            }
         }
 
         return true;
@@ -256,6 +259,24 @@ class CheckMandatoryCensoFields implements Rule
 
         if ($tipoCurso === 2 && ($carga < 160 || $carga > 800)) {
             $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve estar entre 160 e 800 horas quando o <b>Tipo do curso do itinerário</b> for: <b>Qualificação Profissional Técnica</b>.';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaEixoCursoProfissional($params)
+    {
+        $etapasEixo = [67, 68, 73, 75];
+
+        if (!isset($params->etapa_educacenso)
+            || !in_array((int) $params->etapa_educacenso, $etapasEixo, true)) {
+            return true;
+        }
+
+        if ($params->cod_eixo_curso_profissional === null || $params->cod_eixo_curso_profissional === '') {
+            $this->message = 'O campo: <b>Código do eixo do curso de qualificação profissional</b> é obrigatório quando o campo: <b>Etapa de ensino</b> for de qualificação profissional (67, 68, 73 ou 75).';
 
             return false;
         }

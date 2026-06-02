@@ -38,6 +38,7 @@ var modoCadastro = $j('#retorno').val() == 'Novo';
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 const ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA = '5';
+const ETAPAS_EIXO_CURSO_PROFISSIONAL = ['67', '68', '73', '75'];
 
 let habilitaFormacaoAlternancia = ()=>{
   $j('#formacao_alternancia').makeUnrequired();
@@ -208,6 +209,7 @@ verificaLocalFuncionamentoDiferenciado();
 $j('#etapa_educacenso').change(function() {
   habilitaCursoTecnico();
   habilitaFormaOrganizacaoTurma();
+  habilitaEixoCursoProfissional();
 });
 
 function habilitaAtividadesComplementares(){
@@ -243,6 +245,20 @@ function habilitaCursoTecnico() {
   }
 
   $j('#cod_curso_profissional').trigger('change');
+}
+
+function habilitaEixoCursoProfissional() {
+  var mostraCampo = $j.inArray($j('#etapa_educacenso').val(), ETAPAS_EIXO_CURSO_PROFISSIONAL) != -1;
+  $j('#cod_eixo_curso_profissional').makeUnrequired();
+  if (mostraCampo) {
+    $j('#cod_eixo_curso_profissional').prop('disabled', false);
+    if (obrigarCamposCenso) {
+      $j('#cod_eixo_curso_profissional').makeRequired();
+    }
+  } else {
+    $j('#cod_eixo_curso_profissional').val('');
+    $j('#cod_eixo_curso_profissional').prop('disabled', true);
+  }
 }
 
 function validaHorarioInicialFinal() {
@@ -663,6 +679,7 @@ $j(document).ready(function() {
       habilitaFormaOrganizacaoTurma();
       habilitaCodigoCursoTecnico();
       habilitaCargaHorariaTotal();
+      habilitaEixoCursoProfissional();
       habilitaFormacaoAlternancia();
     });
 

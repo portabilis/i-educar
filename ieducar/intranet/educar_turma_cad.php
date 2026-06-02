@@ -7,6 +7,7 @@ use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
 use App\Services\SchoolClass\SchoolClassService;
+use iEducar\Modules\Educacenso\Model\EixoCursoProfissional;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
@@ -78,6 +79,8 @@ return new class extends clsCadastro
     public $atividades_complementares;
 
     public $cod_curso_profissional;
+
+    public $cod_eixo_curso_profissional;
 
     public $carga_horaria_total;
 
@@ -652,6 +655,10 @@ return new class extends clsCadastro
 
         $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'formas_organizacao_turma', inputOptions: $options);
+
+        $resources = [null => 'Selecione'] + EixoCursoProfissional::getDescriptiveValues();
+        $options = ['label' => 'Código do eixo do curso de qualificação profissional', 'resources' => $resources, 'value' => $this->cod_eixo_curso_profissional, 'required' => false, 'size' => 70];
+        $this->inputsHelper()->select(attrName: 'cod_eixo_curso_profissional', inputOptions: $options);
 
         $cursos = loadJson(file: 'educacenso_json/cursos_da_educacao_profissional.json');
 
