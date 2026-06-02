@@ -1,14 +1,14 @@
 # Guia de atualização
 
 Este guia tem o intuido de auxiliar no processo de atualização do i-Educar para a versão
-[2.10](https://github.com/portabilis/i-educar/tree/2.10) a partir da versão
-[2.9](https://github.com/portabilis/i-educar/tree/2.9).
+[2.11](https://github.com/portabilis/i-educar/tree/2.11) a partir da versão
+[2.10](https://github.com/portabilis/i-educar/tree/2.10).
 
 > **Importante: faça o backup do seu banco de dados antes de iniciar qualquer procedimento.**
 
 ## Requisitos mínimos
 
-Os requisitos que foram testados para utilizar a versão [2.10](https://github.com/portabilis/i-educar/tree/2.10) são:
+Os requisitos que foram testados para utilizar a versão [2.11](https://github.com/portabilis/i-educar/tree/2.11) são:
 
 | Software                                                 | Versão  | Comando                    | Descrição                   |
 |----------------------------------------------------------|---------|----------------------------|-----------------------------|
@@ -27,14 +27,14 @@ Os requisitos que foram testados para utilizar a versão [2.10](https://github.c
 
 ## Upgrade via linha de comando
 
-Para fazer o upgrade para a versão [2.10](https://github.com/portabilis/i-educar/tree/2.10) a partir da versão
-[2.9](https://github.com/portabilis/i-educar/tree/2.9) do i-Educar você precisará executar os seguintes passos:
+Para fazer o upgrade para a versão [2.11](https://github.com/portabilis/i-educar/tree/2.11) a partir da versão
+[2.10](https://github.com/portabilis/i-educar/tree/2.10) do i-Educar você precisará executar os seguintes passos:
 
 > Para usuários Docker, executar os comandos `# (Docker)` ao invés da linha seguinte.
 
 ```bash
 git fetch
-git checkout 2.9
+git checkout 2.10
 
 # (Docker) docker compose exec php php artisan migrate
 php artisan migrate
@@ -48,7 +48,7 @@ Atualize o código fonte:
 # Importante: faça o backup do seu banco de dados
  
 # (Docker) docker compose down
-git checkout 2.10.0
+git checkout 2.11
 
 # (Docker) docker compose build
 # (Docker) docker compose up -d
