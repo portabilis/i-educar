@@ -7,23 +7,13 @@ class CreateInfoEnrollmentView extends Migration
 {
     use AsView;
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         $this->dropView('public.info_enrollment');
-        $this->createView('public.info_enrollment', '2020-10-29');
+        $this->createView('public.info_enrollment');
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropView('public.info_enrollment');
     }
