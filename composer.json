@@ -123,6 +123,11 @@
             "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
+        "testing-install": [
+            "@composer install",
+            "@php artisan key:generate --ansi",
+            "@php artisan migrate --force --ansi --env=testing"
+        ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
