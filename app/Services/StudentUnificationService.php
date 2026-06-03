@@ -56,7 +56,7 @@ class StudentUnificationService
     private function checkPermission($unification)
     {
         $user = $this->user;
-        $unificationOwner = $unification->createdBy?->user;
+        $unificationOwner = $unification->createdByUser;
 
         if (is_null($unificationOwner)) {
             return;
