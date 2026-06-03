@@ -2,11 +2,11 @@ x-php: &php
   build:
     context: docker/php
     args:
-      PHP_VERSION: 8.4
-      COMPOSER_VERSION: 2.8
+      PHP_VERSION: 8.5
+      COMPOSER_VERSION: 2.10
       HOST_UID: ${HOST_UID:-1001}
       HOST_GID: ${HOST_GID:-1001}
-  image: php:8.4-ieducar
+  image: php:8.5-ieducar
   working_dir: /var/www/ieducar
   volumes:
     - ./:/var/www/ieducar
@@ -46,7 +46,7 @@ services:
 
   nginx:
     container_name: ieducar-nginx
-    image: nginx:1.28-alpine
+    image: nginx:1.30-alpine
     links:
       - fpm
     working_dir: /var/www/ieducar
@@ -60,7 +60,7 @@ services:
 
   postgres:
     container_name: ieducar-postgres
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
