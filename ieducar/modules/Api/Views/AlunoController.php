@@ -555,7 +555,21 @@ class AlunoController extends ApiCoreController
             default => null,
         };
 
-        return $individual->update(['idpes_responsavel' => $idpesResponsavel]);
+        // Devido a lógica de selecionar automaticamente o ID do responsável a partir do select do tipo de responsável
+        // quando o pai ou mãe forem responsável pelo aluno e mesmo assim tiver uma restrição judicial, é necessário
+        // marcar o responsável como restrição judicial
+
+        $responsavelRestricaoJudicial = match ($this->getRequest()->tipo_responsavel) {
+            'outra_pessoa' => request()->filled('responsavel_restricao_judicial'),
+            'pai' => request()->filled('pai_restricao_judicial'),
+            'mae' => request()->filled('mae_restricao_judicial'),
+            default => null,
+        };
+
+        return $individual->update([
+            'idpes_responsavel' => $idpesResponsavel,
+            'responsavel_restricao_judicial' => $responsavelRestricaoJudicial,
+        ]);
     }
 
     protected function updateDeficiencias()
