@@ -1515,41 +1515,24 @@ class AlunoController extends ApiCoreController
 
     protected function saveParents()
     {
-        $maeId = $this->getRequest()->mae_id;
-        $paiId = $this->getRequest()->pai_id;
+        $maeId = request('mae_id');
+        $paiId = request('pai_id');
 
-        if (!empty($maeId) && !empty($paiId) && $maeId == $paiId) {
+        if ($maeId && $paiId && $maeId == $paiId) {
             $this->messenger->append('Não é possível informar a mesma pessoa para Pai e Mãe.');
 
             return false;
         }
 
-        $pessoaId = $this->getRequest()->pessoa_id;
+        $individual = LegacyIndividual::query()->find(request('pessoa_id'));
 
-        $sql = 'UPDATE cadastro.fisica set ';
-
-        $virgulaOuNada = '';
-
-        if ($maeId) {
-            $sql .= " idpes_mae = {$maeId} ";
-            $virgulaOuNada = ', ';
-        } elseif ($maeId == '') {
-            $sql .= ' idpes_mae = NULL ';
-            $virgulaOuNada = ', ';
-        }
-
-        if ($paiId) {
-            $sql .= "{$virgulaOuNada} idpes_pai = {$paiId} ";
-            $virgulaOuNada = ', ';
-        } elseif ($paiId == '') {
-            $sql .= "{$virgulaOuNada} idpes_pai = NULL ";
-            $virgulaOuNada = ', ';
-        }
-
-        $sql .= " WHERE idpes = {$pessoaId}";
-        Portabilis_Utils_Database::fetchPreparedQuery($sql);
-
-        return true;
+        return $individual->update([
+            'idpes_mae' => $maeId,
+            'idpes_pai' => $paiId,
+            'pai_restricao_judicial' => request()->filled('pai_restricao_judicial'),
+            'mae_restricao_judicial' => request()->filled('mae_restricao_judicial'),
+            'responsavel_restricao_judicial' => request()->filled('responsavel_restricao_judicial'),
+        ]);
     }
 
     protected function getOcorrenciasDisciplinares()
