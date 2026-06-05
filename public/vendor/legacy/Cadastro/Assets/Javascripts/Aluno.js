@@ -473,6 +473,9 @@ var $pessoaResponsavelActionBar = $pessoaPaiActionBar
   .addClass("pessoa-responsavel-links")
   .appendTo($responsavelNomeField.parent());
 
+$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-pai" name="pai_restricao_judicial"> Pessoa com restrição judicial em relação ao aluno</label>')
+  .appendTo($pessoaPaiActionBar);
+
 var $linkToCreatePessoaPai = $j("<a>")
   .addClass("cadastrar-pessoa-pai decorated")
   .attr("id", "cadastrar-pessoa-pai-link")
@@ -485,6 +488,9 @@ var $linkToEditPessoaPai = $j("<a>")
   .attr("id", "editar-pessoa-pai-link")
   .html("Editar pessoa")
   .appendTo($pessoaPaiActionBar);
+
+$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-mae" name="mae_restricao_judicial"> Pessoa com restrição judicial em relação ao aluno</label>')
+  .appendTo($pessoaMaeActionBar);
 
 var $linkToCreatePessoaMae = $linkToCreatePessoaPai
   .clone()
@@ -499,6 +505,9 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai
   .addClass("editar-pessoa-mae")
   .attr("id", "editar-pessoa-mae-link")
   .appendTo($pessoaMaeActionBar);
+
+$j('<label id="restricao-judicial-responsavel" class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-responsavel" name="responsavel_restricao_judicial"> Pessoa com restrição judicial em relação ao aluno</label>')
+  .appendTo($pessoaResponsavelActionBar);
 
 var $linkToCreatePessoaResponsavel = $linkToCreatePessoaPai
   .clone()
@@ -1755,9 +1764,11 @@ function canShowParentsFields() {
       if ($j("#tipo_responsavel").val() == "outra_pessoa") {
         $j("#responsavel_nome").show();
         $j("#cadastrar-pessoa-responsavel-link").show();
+        $j("#restricao-judicial-responsavel").show();
       } else {
         $j("#responsavel_nome").hide();
         $j("#cadastrar-pessoa-responsavel-link").hide();
+        $j("#restricao-judicial-responsavel").hide();
       }
     };
 
