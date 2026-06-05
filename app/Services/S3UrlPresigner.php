@@ -19,9 +19,14 @@ class S3UrlPresigner
 
     private function getKeyFromUrl(string $url): string
     {
-        $url = preg_replace('/\?.*/', '', $url);
+        $path = ltrim((string) parse_url($url, PHP_URL_PATH), '/');
 
-        $path = implode('/', array_slice(explode('/', $url), 3));
+        // path-style (bucket no caminho) -> remove o prefixo do bucket;
+        // virtual-hosted (bucket no host) -> o path já é a key
+        $bucket = config('filesystems.disks.s3.bucket');
+        if ($bucket && str_starts_with($path, $bucket . '/')) {
+            $path = substr($path, strlen($bucket) + 1);
+        }
 
         return urldecode(urldecode($path));
     }
