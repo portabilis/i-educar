@@ -473,8 +473,12 @@ var $pessoaResponsavelActionBar = $pessoaPaiActionBar
   .addClass("pessoa-responsavel-links")
   .appendTo($responsavelNomeField.parent());
 
-$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-pai" name="pai_restricao_judicial"> Pessoa com restrição judicial em relação ao aluno</label>')
+$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-pai" name="pai_restricao_judicial" value="1"> Pessoa com restrição judicial em relação ao aluno</label>')
   .appendTo($pessoaPaiActionBar);
+
+if ($j('[name="pai_restricao_judicial_value"]').val() === '1') {
+  $j('#restricao-judicial-pai').prop('checked', true);
+}
 
 var $linkToCreatePessoaPai = $j("<a>")
   .addClass("cadastrar-pessoa-pai decorated")
@@ -489,8 +493,12 @@ var $linkToEditPessoaPai = $j("<a>")
   .html("Editar pessoa")
   .appendTo($pessoaPaiActionBar);
 
-$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-mae" name="mae_restricao_judicial"> Pessoa com restrição judicial em relação ao aluno</label>')
+$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-mae" name="mae_restricao_judicial" value="1"> Pessoa com restrição judicial em relação ao aluno</label>')
   .appendTo($pessoaMaeActionBar);
+
+if ($j('[name="mae_restricao_judicial_value"]').val() === '1') {
+  $j('#restricao-judicial-mae').prop('checked', true);
+}
 
 var $linkToCreatePessoaMae = $linkToCreatePessoaPai
   .clone()
@@ -506,8 +514,12 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai
   .attr("id", "editar-pessoa-mae-link")
   .appendTo($pessoaMaeActionBar);
 
-$j('<label id="restricao-judicial-responsavel" class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-responsavel" name="responsavel_restricao_judicial"> Pessoa com restrição judicial em relação ao aluno</label>')
+$j('<label id="restricao-judicial-responsavel" class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-responsavel" name="responsavel_restricao_judicial" value="1"> Pessoa com restrição judicial em relação ao aluno</label>')
   .appendTo($pessoaResponsavelActionBar);
+
+if ($j('[name="responsavel_restricao_judicial_value"]').val() === '1') {
+  $j('[name="responsavel_restricao_judicial"]').prop('checked', true);
+}
 
 var $linkToCreatePessoaResponsavel = $linkToCreatePessoaPai
   .clone()
