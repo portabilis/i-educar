@@ -5,11 +5,11 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post">
+    <form id="formcadastro" action="{{ Asset::get('/cancelar-matricula-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post">
         <table class="tablecadastro" style="width: 100%">
             <tbody>
                 <tr>
-                    <td class="formdktd" colspan="2" height="24"><b>Desenturmar em lote</b></td>
+                    <td class="formdktd" colspan="2" height="24"><b>Cancelar matrícula em lote</b></td>
                 </tr>
                 <tr id="tr_nm_instituicao">
                     <th scope="row" class="formmdtd" valign="top"><span class="form">Instituição:</span></th>
@@ -35,54 +35,24 @@
                     <th scope="row" class="formlttd" valign="top"><span class="form">Ano:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->year ?? null }}</span></td>
                 </tr>
-                <tr id="tr_ano">
-                    <th scope="row" class="formmdtd" valign="top"><span class="form">Total de vagas na turma:</span></th>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->max_aluno }}</span></td>
-                </tr>
-                <tr id="tr_ano">
-                    <th scope="row" class="formlttd" valign="top"><span class="form">Vagas disponíveis na turma:</span></th>
-                    <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->vacancies }}</span></td>
-                </tr>
-                <tr id="tr_ano">
-                    <th scope="row" class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></th>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
-                </tr>
             </tbody>
         </table>
     </form>
 
-    <form  id="enrollments-unenroll"  action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" method="post" class="open-sans">
+    <form id="registrations-cancel" action="{{ Asset::get('/cancelar-matricula-em-lote/' . $schoolClass->id) }}" method="post" class="open-sans">
 
         <h3>Alunos matriculados e enturmados</h3>
 
         <p>
             <div>
-                @if($schoolClass->school->institution->allowRegistrationOutAcademicYear)
-                    <span class="text-muted">A data de saída deve ser maior que a data da enturmação do aluno.</span>
-                @else
-                <span class="text-muted">A data de saída deve ser entre:</span> <strong>{{ $schoolClass->begin_academic_year->format('d/m/Y') }}</strong> e <strong>{{ $schoolClass->end_academic_year->format('d/m/Y') }}</strong> <span class="text-muted">e maior que a data da enturmação do aluno.</span>
-                @endif
+                <span class="text-muted">Selecione os alunos cujas matrículas deseja cancelar. Esta ação irá desativar a matrícula e todas as enturmações associadas.</span>
             </div>
         </p>
-
-        <div class="form-row">
-            <div class="form-col">
-                <label for="">
-                    <div>Data da saída<span class="campo_obrigatorio">*</span></div>
-                    <div><small class="text-muted">dd/mm/aaaa</small></div>
-                </label>
-            </div>
-            <div class="form-col">
-                <input name="date" value="{{ old('date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da saída">
-            </div>
-            <div class="form-col">
-            </div>
-        </div>
 
         <table class="table-default">
             <thead>
             <tr>
-                <th width="25"><input class="enrollment-check-master" type="checkbox" /></th>
+                <th width="25"><input class="registration-check-master" type="checkbox" /></th>
                 <th width="100">Matrícula</th>
                 <th>Nome</th>
                 <th>Data da enturmação</th>
@@ -91,24 +61,24 @@
             </thead>
             <tbody>
                 @foreach($enrollments as $enrollment)
-                    <tr class="{{ $fails->has($enrollment->id) ? 'form-error' : '' }} {{ $success->has($enrollment->id) ? 'form-success' : '' }}">
+                    <tr class="{{ $fails->has($enrollment->registration->cod_matricula) ? 'form-error' : '' }} {{ $success->has($enrollment->registration->cod_matricula) ? 'form-success' : '' }}">
                         <td>
                             <label>
                                 <input type="checkbox"
-                                       name="enrollments[{{ $enrollment->id }}]"
-                                       value="{{ $enrollment->id }}"
-                                       class="enrollment-check"
-                                       {{ old('enrollments.' . $enrollment->id) ? 'checked' : '' }}
-                                       {{ $success->first($enrollment->id) ? 'disabled' : '' }} />
+                                       name="registrations[{{ $enrollment->registration->cod_matricula }}]"
+                                       value="{{ $enrollment->registration->cod_matricula }}"
+                                       class="registration-check"
+                                       {{ old('registrations.' . $enrollment->registration->cod_matricula) ? 'checked' : '' }}
+                                       {{ $success->first($enrollment->registration->cod_matricula) ? 'disabled' : '' }} />
                             </label>
                         </td>
-                        <td>{{ $enrollment?->registration?->cod_matricula }}</td>
-                        <td>{{ $enrollment?->student_name }}</td>
-                        <td>{{ $enrollment?->data_enturmacao->format('d/m/Y') }}</td>
+                        <td>{{ $enrollment->registration->cod_matricula }}</td>
+                        <td>{{ $enrollment->student_name }}</td>
+                        <td>{{ $enrollment->data_enturmacao->format('d/m/Y') }}</td>
                         <td>
-                            {{ $success->first($enrollment->id) }}
-                            {{ $fails->first($enrollment->id) }}
-                            @if(empty($success->first($enrollment->id)) && empty($fails->first($enrollment->id)))
+                            {{ $success->first($enrollment->registration->cod_matricula) }}
+                            {{ $fails->first($enrollment->registration->cod_matricula) }}
+                            @if(empty($success->first($enrollment->registration->cod_matricula)) && empty($fails->first($enrollment->registration->cod_matricula)))
                                 Aluno enturmado.
                             @endif
                         </td>
@@ -127,11 +97,11 @@
         <div class="separator"></div>
 
         <div style="text-align: center">
-            <button class="btn-green" type="submit">Desenturmar</button>
-            <a href="javascript:void(0)" class="btn enrollment-btn-check">Selecionar todos</a>
+            <button class="btn-green" type="submit">Cancelar matrículas</button>
+            <a href="javascript:void(0)" class="btn registration-btn-check">Selecionar todos</a>
 
             <a href="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Enturmar em lote</a>
-            <a href="{{ Asset::get('/cancelar-matricula-em-lote/' . $schoolClass->id) }}" class="btn">Cancelar matrícula em lote</a>
+            <a href="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Desenturmar em lote</a>
             <a href="{{ Asset::get('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Voltar</a>
         </div>
 
@@ -140,42 +110,49 @@
     <script>
 
         $j(document).ready(function () {
-            $j('.enrollment-check-master').change(function () {
+            $j('.registration-check-master').change(function () {
                 if ($j(this).prop('checked')) {
-                    $j('.enrollment-check').prop('checked', true);
+                    $j('.registration-check').prop('checked', true);
                 } else {
-                    $j('.enrollment-check').prop('checked', false);
+                    $j('.registration-check').prop('checked', false);
                 }
             });
-            $j('.enrollment-check').change(function () {
+            $j('.registration-check').change(function () {
                 if ($j(this).prop('checked') === false) {
-                    $j('.enrollment-check-master').prop('checked', false);
+                    $j('.registration-check-master').prop('checked', false);
                 }
             });
-            $j('.enrollment-btn-check').click(function () {
-                $j('.enrollment-check-master').prop('checked', true);
-                $j('.enrollment-check').prop('checked', true);
+            $j('.registration-btn-check').click(function () {
+                $j('.registration-check-master').prop('checked', true);
+                $j('.registration-check').prop('checked', true);
             });
         });
 
-        $j('#enrollments-unenroll').submit(function (e) {
+        $j('#registrations-cancel').submit(function (e) {
             e.preventDefault();
+
+            var checked = $j('.registration-check:checked').length;
+            if (checked === 0) {
+                alert('Selecione ao menos uma matrícula para cancelar.');
+                return;
+            }
+
             makeDialog({
                 title: 'Atenção!',
-                content: 'O processo de desenturmação e enturmação manual ' +
-                    'não será considerado como remanejamento ou troca de turma, ' +
-                    'para isso você deve selecionar a turma nova e remanejar. Deseja continuar?',
+                content: 'Você está prestes a cancelar ' + checked + ' matrícula(s). ' +
+                    'Esta ação irá desativar a matrícula e todas as enturmações associadas. ' +
+                    'Deseja continuar?',
                 maxWidth: 860,
                 width: 860,
                 modal: true,
                 buttons: [{
-                    text: 'OK',
+                    text: 'Confirmar cancelamento',
                     click: function () {
                         e.currentTarget.submit();
                         $j(this).dialog('destroy');
                     }
                 },{
-                    text: 'Cancelar',
+                    text: 'Voltar',
                     click: function () {
                         $j(this).dialog('destroy');
                     }

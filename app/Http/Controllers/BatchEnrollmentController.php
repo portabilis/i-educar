@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Http\Requests\BatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchEnrollmentRequest;
+use App\Http\Requests\CancelBatchRegistrationRequest;
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
@@ -167,6 +170,100 @@ class BatchEnrollmentController extends Controller
     }
 
     /**
+     * Renderiza a view do cancelamento de matrícula em lote.
+     *
+     * @return View
+     */
+    public function viewCancelRegistrations(
+        LegacySchoolClass $schoolClass,
+        Collection $enrollments,
+        ?MessageBag $fails = null,
+        ?MessageBag $success = null
+    ) {
+        $this->breadcrumb('Cancelar matrícula em lote', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
+        $this->menu(659);
+
+        $this->setMessages($fails, $success, 'cancel-registration');
+
+        return view('enrollments.batch.cancel-registration', [
+            'schoolClass' => $schoolClass,
+            'enrollments' => $enrollments,
+            'fails' => $fails ?? new MessageBag,
+            'success' => $success ?? new MessageBag,
+        ]);
+    }
+
+    /**
+     * Lista as enturmações da turma e possibilita o cancelamento de matrícula em lote.
+     *
+     * @return View
+     */
+    public function indexCancelRegistrations(
+        LegacySchoolClass $schoolClass
+    ) {
+        return $this->viewCancelRegistrations($schoolClass, $schoolClass->getActiveEnrollments());
+    }
+
+    /**
+     * Cancela as matrículas selecionadas e renderiza a view.
+     *
+     * @return View
+     */
+    public function cancelRegistrations(
+        CancelBatchRegistrationRequest $request,
+        LegacySchoolClass $schoolClass,
+        EnrollmentService $enrollmentService
+    ) {
+        $registrationIds = $request->input('registrations', []);
+
+        $fails = new MessageBag;
+        $success = new MessageBag;
+
+        $user = auth()->user();
+
+        foreach ($registrationIds as $registrationId) {
+            try {
+                $registration = LegacyRegistration::findOrFail($registrationId);
+
+                // Desativar todas as enturmações da matrícula
+                $enrollments = LegacyEnrollment::query()
+                    ->where('ref_cod_matricula', $registrationId)
+                    ->where('ativo', 1)
+                    ->get();
+
+                foreach ($enrollments as $enrollment) {
+                    $enrollmentService->cancelEnrollment($enrollment, now());
+                }
+
+                // Desativar a matrícula
+                $registration->ativo = 0;
+                $registration->ref_usuario_exc = $user->id ?? null;
+                $registration->save();
+
+                // Reordenar sequências das enturmações
+                $allEnrollments = LegacyEnrollment::query()
+                    ->where('ref_cod_matricula', $registrationId)
+                    ->get();
+
+                foreach ($allEnrollments as $enrollment) {
+                    $enrollmentService->reorderSchoolClass($enrollment);
+                }
+
+                $success->add($registrationId, 'Matrícula cancelada.');
+            } catch (Throwable $throwable) {
+                $fails->add($registrationId, $throwable->getMessage());
+            }
+        }
+
+        $enrollments = $schoolClass->getActiveEnrollments();
+
+        return $this->viewCancelRegistrations($schoolClass, $enrollments, $fails, $success);
+    }
+
+    /**
      * @return void
      */
     protected function setMessages(
@@ -203,6 +300,20 @@ class BatchEnrollmentController extends Controller
                     Session::now('success', 'Foi desenturmado 1 aluno.');
                 } elseif ($success->count() > 1) {
                     Session::now('success', sprintf('Foram desenturmados %s alunos.', $success->count()));
+                }
+
+                break;
+            case 'cancel-registration':
+                if ($fail->count() === 1) {
+                    Session::now('error', 'Não foi possível cancelar 1 matrícula.');
+                } elseif ($fail->count() > 1) {
+                    Session::now('error', sprintf('Não foi possível cancelar %d matrículas.', $fail->count()));
+                }
+
+                if ($success->count() === 1) {
+                    Session::now('success', 'Foi cancelada 1 matrícula.');
+                } elseif ($success->count() > 1) {
+                    Session::now('success', sprintf('Foram canceladas %s matrículas.', $success->count()));
                 }
 
                 break;
