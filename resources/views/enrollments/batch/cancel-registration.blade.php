@@ -9,7 +9,7 @@
         <table class="tablecadastro" style="width: 100%">
             <tbody>
                 <tr>
-                    <td class="formdktd" colspan="2" height="24"><b>Cancelar matrícula em lote</b></td>
+                    <td class="formdktd" colspan="2"><b>Cancelar matrícula em lote</b></td>
                 </tr>
                 <tr id="tr_nm_instituicao">
                     <th scope="row" class="formmdtd" valign="top"><span class="form">Instituição:</span></th>

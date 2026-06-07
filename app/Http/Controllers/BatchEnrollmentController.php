@@ -20,6 +20,8 @@ use Throwable;
 
 class BatchEnrollmentController extends Controller
 {
+    private const SCHOOL_INDEX_URL = 'intranet/educar_index.php';
+
     /**
      * Renderiza a view da desenturmação em lote.
      *
@@ -32,7 +34,7 @@ class BatchEnrollmentController extends Controller
         ?MessageBag $success = null
     ) {
         $this->breadcrumb('Desenturmar em lote', [
-            url('intranet/educar_index.php') => 'Escola',
+            url(self::SCHOOL_INDEX_URL) => 'Escola',
         ]);
 
         $this->menu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
@@ -59,7 +61,7 @@ class BatchEnrollmentController extends Controller
         ?MessageBag $success = null
     ) {
         $this->breadcrumb('Enturmar em lote', [
-            url('intranet/educar_index.php') => 'Escola',
+            url(self::SCHOOL_INDEX_URL) => 'Escola',
         ]);
 
         $this->menu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
@@ -181,7 +183,7 @@ class BatchEnrollmentController extends Controller
         ?MessageBag $success = null
     ) {
         $this->breadcrumb('Cancelar matrícula em lote', [
-            url('intranet/educar_index.php') => 'Escola',
+            url(self::SCHOOL_INDEX_URL) => 'Escola',
         ]);
 
         $this->menu(659);
