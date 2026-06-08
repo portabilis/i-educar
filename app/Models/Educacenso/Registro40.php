@@ -56,6 +56,22 @@ class Registro40 implements ItemOfRegistro30, RegistroEducacenso
      */
     public function getProperty($column)
     {
-        // TODO: Implement getProperty() method.
+        $map = [
+            1 => 'registro',
+            2 => 'inepEscola',
+            3 => 'codigoPessoa',
+            4 => 'inepGestor',
+            5 => 'cargo',
+            6 => 'criterioAcesso',
+            7 => 'tipoVinculo',
+        ];
+
+        if (array_key_exists($column, $map)) {
+            $property = $map[$column];
+            return $this->$property;
+        }
+
+        return null;
     }
+    
 }
