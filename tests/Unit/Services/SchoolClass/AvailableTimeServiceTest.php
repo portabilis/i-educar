@@ -8,7 +8,9 @@ use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolClassStageFactory;
 use Database\Factories\LegacyStudentFactory;
+use DateTime;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\SchoolClass\Period;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -251,5 +253,258 @@ class AvailableTimeServiceTest extends TestCase
         ]);
 
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_non_presential_destination_school_class_returns_true_even_when_times_conflict()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 2]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_only_school_classes_informed_on_census_ignores_destination_not_informed_on_census()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create([
+            'tipo_mediacao_didatico_pedagogico' => 1,
+            'nao_informar_educacenso' => 1,
+        ]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->onlySchoolClassesInformedOnCensus()->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_only_school_classes_informed_on_census_ignores_other_school_class_not_informed_on_census()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create([
+            'tipo_mediacao_didatico_pedagogico' => 1,
+            'nao_informar_educacenso' => 1,
+        ]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->onlySchoolClassesInformedOnCensus()->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_only_until_enrollment_date_considers_previous_conflicting_enrollments()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+            'data_enturmacao' => '2026-06-06',
+        ]);
+
+        $this->assertFalse($this->service->onlyUntilEnrollmentDate(new DateTime('2026-06-07'))->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_only_until_enrollment_date_ignores_same_day_conflicting_enrollments()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+            'data_enturmacao' => '2026-06-07',
+        ]);
+
+        $this->assertTrue($this->service->onlyUntilEnrollmentDate(new DateTime('2026-06-07'))->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_missing_academic_period_dates_returns_true_even_when_times_conflict()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_touching_schedule_boundaries_returns_false()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create([
+            'tipo_mediacao_didatico_pedagogico' => 1,
+            'hora_inicial' => '11:45',
+            'hora_final' => '15:45',
+        ]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertFalse($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_fulltime_destination_uses_partial_morning_schedule_when_enrollment_period_is_morning()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create([
+            'tipo_mediacao_didatico_pedagogico' => 1,
+            'turma_turno_id' => Period::FULLTIME,
+            'hora_inicial' => '07:30',
+            'hora_final' => '17:30',
+            'hora_inicial_matutino' => '07:30',
+            'hora_final_matutino' => '11:30',
+            'hora_inicial_vespertino' => '13:00',
+            'hora_final_vespertino' => '17:30',
+        ]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->afternoon()->create([
+            'tipo_mediacao_didatico_pedagogico' => 1,
+            'turma_turno_id' => Period::AFTERNOON,
+        ]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma, Period::MORNING));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_fulltime_destination_uses_partial_afternoon_schedule_when_enrollment_period_is_afternoon()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create([
+            'tipo_mediacao_didatico_pedagogico' => 1,
+            'turma_turno_id' => Period::FULLTIME,
+            'hora_inicial' => '07:30',
+            'hora_final' => '17:30',
+            'hora_inicial_matutino' => '07:30',
+            'hora_final_matutino' => '11:30',
+            'hora_inicial_vespertino' => '13:00',
+            'hora_final_vespertino' => '17:30',
+        ]);
+        $otherSchoolClass = LegacySchoolClassFactory::new()->morning()->create([
+            'tipo_mediacao_didatico_pedagogico' => 1,
+            'turma_turno_id' => Period::MORNING,
+        ]);
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        LegacySchoolClassStageFactory::new()->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        LegacyEnrollmentFactory::new()->active()->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma, Period::AFTERNOON));
     }
 }

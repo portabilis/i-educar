@@ -1,0 +1,26 @@
+
+  [30;43;1m WARN [39;49;22m Your XML configuration validates against a deprecated schema. Migrate your XML configuration using "--migrate-configuration"!
+
+   PASS  Tests\Unit\Services\SchoolClass\AvailableTimeServiceTest
+  ✓ without others enrollments returns true                             37.43s  
+  ✓ with enrollments same day different time returns true                0.59s  
+  ✓ with enrollments same day same time same year returns false          0.43s  
+  ✓ with enrollments same day same time different year returns true      0.36s  
+  ✓ with enrollments different day same time returns false               0.34s  
+  ✓ should launch exception when pass invalid school class id            0.40s  
+  ✓ same year but different academic periods                             0.39s  
+  ✓ with enrollments same day same time same year and one aee other esc… 0.36s  
+  ✓ with inactive enrollments same day same time same year returns true  0.34s  
+  ✓ with non presential destination school class returns true even when… 0.35s  
+  ✓ only school classes informed on census ignores destination not info… 0.39s  
+  ✓ only school classes informed on census ignores other school class n… 0.35s  
+  ✓ only until enrollment date considers previous conflicting enrollmen… 0.35s  
+  ✓ only until enrollment date ignores same day conflicting enrollments  0.33s  
+  ✓ with missing academic period dates returns true even when times con… 0.38s  
+  ✓ with touching schedule boundaries returns false                      0.34s  
+  ✓ fulltime destination uses partial morning schedule when enrollment…  0.37s  
+  ✓ fulltime destination uses partial afternoon schedule when enrollmen… 0.38s  
+
+  Tests:    18 passed (18 assertions)
+  Duration: 56.04s
+

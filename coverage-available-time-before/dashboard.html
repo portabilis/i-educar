@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /var/www/ieducar/app/Services/SchoolClass</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=12.5.3" rel="stylesheet" type="text/css">
+  <link href="_css/billboard.min.css?v=12.5.3" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=12.5.3" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">/var/www/ieducar/app/Services/SchoolClass</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classesCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="ExemptedDisciplineLinksRemover.php.html#10">App\Services\SchoolClass\ExemptedDisciplineLinksRemover</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#15">App\Services\SchoolClass\MultiGradesService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PeriodService.php.html#8">App\Services\SchoolClass\PeriodService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#20">App\Services\SchoolClass\SchoolClassService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#11">App\Services\SchoolClass\AvailableTimeService</a></td><td class="text-right">63%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="SchoolClassService.php.html#20">App\Services\SchoolClass\SchoolClassService</a></td><td class="text-right">0.0%</td><td class="text-right">16</td><td class="text-right">272</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#11">App\Services\SchoolClass\AvailableTimeService</a></td><td class="text-right">63.2%</td><td class="text-right">43</td><td class="text-right">135</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#15">App\Services\SchoolClass\MultiGradesService</a></td><td class="text-right">0.0%</td><td class="text-right">9</td><td class="text-right">90</td></tr>
+       <tr><td><a href="PeriodService.php.html#8">App\Services\SchoolClass\PeriodService</a></td><td class="text-right">0.0%</td><td class="text-right">6</td><td class="text-right">42</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2 style="margin-top: 3rem;">Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodsCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="AvailableTimeService.php.html#77"><abbr title="App\Services\SchoolClass\AvailableTimeService::onlyUntilEnrollmentDate">onlyUntilEnrollmentDate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#89"><abbr title="App\Services\SchoolClass\AvailableTimeService::onlySchoolClassesInformedOnCensus">onlySchoolClassesInformedOnCensus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ExemptedDisciplineLinksRemover.php.html#12"><abbr title="App\Services\SchoolClass\ExemptedDisciplineLinksRemover::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ExemptedDisciplineLinksRemover.php.html#20"><abbr title="App\Services\SchoolClass\ExemptedDisciplineLinksRemover::updateAffectedSchoolClassTeacherTimestamps">updateAffectedSchoolClassTeacherTimestamps</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ExemptedDisciplineLinksRemover.php.html#31"><abbr title="App\Services\SchoolClass\ExemptedDisciplineLinksRemover::removeSchoolClassTeacherDisciplines">removeSchoolClassTeacherDisciplines</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#17"><abbr title="App\Services\SchoolClass\MultiGradesService::validate">validate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#53"><abbr title="App\Services\SchoolClass\MultiGradesService::validateDeleteAllGrades">validateDeleteAllGrades</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#67"><abbr title="App\Services\SchoolClass\MultiGradesService::storeSchoolClassGrade">storeSchoolClassGrade</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#74"><abbr title="App\Services\SchoolClass\MultiGradesService::deleteAllGradesOfSchoolClass">deleteAllGradesOfSchoolClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#94"><abbr title="App\Services\SchoolClass\MultiGradesService::saveSchoolClassGrade">saveSchoolClassGrade</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#110"><abbr title="App\Services\SchoolClass\MultiGradesService::deleteGradesOfSchoolClass">deleteGradesOfSchoolClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#119"><abbr title="App\Services\SchoolClass\MultiGradesService::getGradesToDelete">getGradesToDelete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PeriodService.php.html#19"><abbr title="App\Services\SchoolClass\PeriodService::getPeriodByTime">getPeriodByTime</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#37"><abbr title="App\Services\SchoolClass\SchoolClassService::isAvailableName">isAvailableName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#67"><abbr title="App\Services\SchoolClass\SchoolClassService::isRequiredAlternativeReportCard">isRequiredAlternativeReportCard</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#88"><abbr title="App\Services\SchoolClass\SchoolClassService::getCalendars">getCalendars</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#105"><abbr title="App\Services\SchoolClass\SchoolClassService::storeSchoolClass">storeSchoolClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#114"><abbr title="App\Services\SchoolClass\SchoolClassService::deleteSchoolClass">deleteSchoolClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#134"><abbr title="App\Services\SchoolClass\SchoolClassService::validate">validate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#150"><abbr title="App\Services\SchoolClass\SchoolClassService::hasStudentsPartials">hasStudentsPartials</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#164"><abbr title="App\Services\SchoolClass\SchoolClassService::getStudentsPeriods">getStudentsPeriods</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#147"><abbr title="App\Services\SchoolClass\AvailableTimeService::overlappingSchedules">overlappingSchedules</abbr></a></td><td class="text-right">40%</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#227"><abbr title="App\Services\SchoolClass\AvailableTimeService::hasDates">hasDates</abbr></a></td><td class="text-right">60%</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#102"><abbr title="App\Services\SchoolClass\AvailableTimeService::schedulesMatch">schedulesMatch</abbr></a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#32"><abbr title="App\Services\SchoolClass\AvailableTimeService::isAvailable">isAvailable</abbr></a></td><td class="text-right">86%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="PeriodService.php.html#19"><abbr title="App\Services\SchoolClass\PeriodService::getPeriodByTime">getPeriodByTime</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">6</td><td class="text-right">42</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#147"><abbr title="App\Services\SchoolClass\AvailableTimeService::overlappingSchedules">overlappingSchedules</abbr></a></td><td class="text-right">40.5%</td><td class="text-right">11</td><td class="text-right">36</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#164"><abbr title="App\Services\SchoolClass\SchoolClassService::getStudentsPeriods">getStudentsPeriods</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">5</td><td class="text-right">30</td></tr>
+       <tr><td><a href="MultiGradesService.php.html#94"><abbr title="App\Services\SchoolClass\MultiGradesService::saveSchoolClassGrade">saveSchoolClassGrade</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#150"><abbr title="App\Services\SchoolClass\SchoolClassService::hasStudentsPartials">hasStudentsPartials</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#102"><abbr title="App\Services\SchoolClass\AvailableTimeService::schedulesMatch">schedulesMatch</abbr></a></td><td class="text-right">81.2%</td><td class="text-right">10</td><td class="text-right">10</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#32"><abbr title="App\Services\SchoolClass\AvailableTimeService::isAvailable">isAvailable</abbr></a></td><td class="text-right">86.4%</td><td class="text-right">8</td><td class="text-right">8</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#37"><abbr title="App\Services\SchoolClass\SchoolClassService::isAvailableName">isAvailableName</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="SchoolClassService.php.html#67"><abbr title="App\Services\SchoolClass\SchoolClassService::isRequiredAlternativeReportCard">isRequiredAlternativeReportCard</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="AvailableTimeService.php.html#227"><abbr title="App\Services\SchoolClass\AvailableTimeService::hasDates">hasDates</abbr></a></td><td class="text-right">60.0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 12.5.3</a> using <a href="https://www.php.net/" target="_top">PHP 8.4.19</a> and <a href="https://phpunit.de/">PHPUnit 12.5.12</a> at Sun Jun 7 23:52:48 -03 2026.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/billboard.pkgd.min.js?v=12.5.3" type="text/javascript"></script>
+  <script type="application/json" id="complexity_class">[[0,3,"ExemptedDisciplineLinksRemover.php.html#10","App\\Services\\SchoolClass\\ExemptedDisciplineLinksRemover","12"],[0,9,"MultiGradesService.php.html#15","App\\Services\\SchoolClass\\MultiGradesService","90"],[0,6,"PeriodService.php.html#8","App\\Services\\SchoolClass\\PeriodService","42"],[0,16,"SchoolClassService.php.html#20","App\\Services\\SchoolClass\\SchoolClassService","272"],[63.1578947368421,43,"AvailableTimeService.php.html#11","App\\Services\\SchoolClass\\AvailableTimeService","135.46"]]</script>
+  <script type="application/json" id="complexity_method">[[0,1,"AvailableTimeService.php.html#77","App\\Services\\SchoolClass\\AvailableTimeService::onlyUntilEnrollmentDate","2"],[0,1,"AvailableTimeService.php.html#89","App\\Services\\SchoolClass\\AvailableTimeService::onlySchoolClassesInformedOnCensus","2"],[0,1,"ExemptedDisciplineLinksRemover.php.html#12","App\\Services\\SchoolClass\\ExemptedDisciplineLinksRemover::remove","2"],[0,1,"ExemptedDisciplineLinksRemover.php.html#20","App\\Services\\SchoolClass\\ExemptedDisciplineLinksRemover::updateAffectedSchoolClassTeacherTimestamps","2"],[0,1,"ExemptedDisciplineLinksRemover.php.html#31","App\\Services\\SchoolClass\\ExemptedDisciplineLinksRemover::removeSchoolClassTeacherDisciplines","2"],[0,1,"MultiGradesService.php.html#17","App\\Services\\SchoolClass\\MultiGradesService::validate","2"],[0,1,"MultiGradesService.php.html#53","App\\Services\\SchoolClass\\MultiGradesService::validateDeleteAllGrades","2"],[0,1,"MultiGradesService.php.html#67","App\\Services\\SchoolClass\\MultiGradesService::storeSchoolClassGrade","2"],[0,1,"MultiGradesService.php.html#74","App\\Services\\SchoolClass\\MultiGradesService::deleteAllGradesOfSchoolClass","2"],[0,3,"MultiGradesService.php.html#94","App\\Services\\SchoolClass\\MultiGradesService::saveSchoolClassGrade","12"],[0,1,"MultiGradesService.php.html#110","App\\Services\\SchoolClass\\MultiGradesService::deleteGradesOfSchoolClass","2"],[0,1,"MultiGradesService.php.html#119","App\\Services\\SchoolClass\\MultiGradesService::getGradesToDelete","2"],[0,6,"PeriodService.php.html#19","App\\Services\\SchoolClass\\PeriodService::getPeriodByTime","42"],[0,2,"SchoolClassService.php.html#37","App\\Services\\SchoolClass\\SchoolClassService::isAvailableName","6"],[0,2,"SchoolClassService.php.html#67","App\\Services\\SchoolClass\\SchoolClassService::isRequiredAlternativeReportCard","6"],[0,1,"SchoolClassService.php.html#88","App\\Services\\SchoolClass\\SchoolClassService::getCalendars","2"],[0,1,"SchoolClassService.php.html#105","App\\Services\\SchoolClass\\SchoolClassService::storeSchoolClass","2"],[0,1,"SchoolClassService.php.html#114","App\\Services\\SchoolClass\\SchoolClassService::deleteSchoolClass","2"],[0,1,"SchoolClassService.php.html#134","App\\Services\\SchoolClass\\SchoolClassService::validate","2"],[0,3,"SchoolClassService.php.html#150","App\\Services\\SchoolClass\\SchoolClassService::hasStudentsPartials","12"],[0,5,"SchoolClassService.php.html#164","App\\Services\\SchoolClass\\SchoolClassService::getStudentsPeriods","30"],[40.54054054054054,11,"AvailableTimeService.php.html#147","App\\Services\\SchoolClass\\AvailableTimeService::overlappingSchedules","36.44"],[60,3,"AvailableTimeService.php.html#227","App\\Services\\SchoolClass\\AvailableTimeService::hasDates","3.58"],[81.25,10,"AvailableTimeService.php.html#102","App\\Services\\SchoolClass\\AvailableTimeService::schedulesMatch","10.66"],[86.36363636363636,8,"AvailableTimeService.php.html#32","App\\Services\\SchoolClass\\AvailableTimeService::isAvailable","8.16"],[90.9090909090909,9,"AvailableTimeService.php.html#207","App\\Services\\SchoolClass\\AvailableTimeService::hasEscolarizacaoAndAee","9.06"]]</script>
+  <script type="text/javascript" defer>
+  const barLabels = [
+    '0%',
+    '0-10%',
+    '10-20%',
+    '20-30%',
+    '30-40%',
+    '40-50%',
+    '50-60%',
+    '60-70%',
+    '70-80%',
+    '80-90%',
+    '90-100%',
+    '100%'
+  ];
+  const barConfig = (name, fullName, values) => ({
+    axis: {
+      x: {
+        type: "category",
+        categories: barLabels,
+      },
+      y: {
+        label: {
+          text: `#${name}`,
+          position: 'outer-top',
+        },
+      },
+    },
+    bindto: `#${name}CoverageDistribution`,
+    data: {
+      columns: [
+        [fullName].concat(values),
+      ],
+      colors: {
+        [fullName]: "rgba(69, 114, 167, 0.75)",
+      },
+      type: "bar",
+    },
+    bar: {
+      width: {
+        ratio: 0.9,
+      },
+    },
+    grid: {
+      focus: {
+        show: false,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">Coverage ${barLabels[data[0].x]}</th></tr>
+            <tr><td class="value">${data[0].value} ${name}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  bb.generate(
+    barConfig('classes', "Class Coverage", [4,0,0,0,0,0,0,1,0,0,0,0])
+  );
+  bb.generate(
+    barConfig('methods', "Method Coverage", [21,0,0,0,0,1,0,1,0,2,1,0])
+  );
+
+  const scatterConfig = (name, complexityData) => ({
+    axis: {
+      x: {
+        label: {
+          text: 'Code Coverage (in percent)',
+          position: 'outer-right',
+        },
+        tick: {
+          values: [0, 20, 40, 60, 80, 100],
+        },
+      },
+      y: {
+        label: {
+          text: 'Cyclomatic Complexity',
+          position: 'outer-top',
+        },
+        min: 0,
+        padding: {
+          bottom: 0,
+          top: 5,
+        },
+      },
+    },
+    bindto: `#${name}Complexity`,
+    data: {
+      columns: [
+        ["complexity_x"].concat(complexityData.map(d => d[0])),
+        ["complexity"].concat(complexityData.map(d => d[1])),
+      ],
+      onclick: function(data, element) {
+        window.location = complexityData[data.index][2];
+      },
+      type: "scatter",
+      xs: {
+        "complexity": "complexity_x",
+      },
+    },
+    grid: {
+      focus: {
+        show: true,
+        y: true,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        const coverage = Math.round(data[0].x);
+        const complexity = data[0].value;
+        const targetName = complexityData[data[0].index][3];
+        const crap = complexityData[data[0].index][4];
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">${targetName}</th></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Coverage</td><td class="name">${coverage}%</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Complexity</td><td class="value">${complexity}</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Crap</td><td class="value">${crap}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  const classComplexityData = JSON.parse(document.getElementById('complexity_class').textContent);
+  bb.generate(
+    scatterConfig("class", classComplexityData)
+  );
+  const methodComplexityData = JSON.parse(document.getElementById('complexity_method').textContent);
+  bb.generate(
+    scatterConfig("method", methodComplexityData),
+  );
+  </script>
+ </body>
+</html>

@@ -1,0 +1,25 @@
+
+  [30;43;1m WARN [39;49;22m Your XML configuration validates against a deprecated schema. Migrate your XML configuration using "--migrate-configuration"!
+
+   PASS  Tests\Unit\Services\SchoolClass\AvailableTimeServiceTest
+  ✓ without others enrollments returns true                              7.25s  
+  ✓ with enrollments same day different time returns true                0.55s  
+  ✓ with enrollments same day same time same year returns false          0.48s  
+  ✓ with enrollments same day same time different year returns true      0.64s  
+  ✓ with enrollments different day same time returns false               0.56s  
+  ✓ should launch exception when pass invalid school class id            0.42s  
+  ✓ same year but different academic periods                             0.62s  
+  ✓ with enrollments same day same time same year and one aee other esc… 0.57s  
+  ✓ with inactive enrollments same day same time same year returns true  0.50s  
+
+  Tests:    9 passed (9 assertions)
+  Duration: 18.63s
+
+  AvailableTimeService  [33m37, 51, 56, 79..93, 114, 118, 128, 165..170, 175..191, 215, 230, 234[39m[33m [39m[90m/[39m[33m 63.2%[39m  
+  ExemptedDisciplineLinksRemover [90m........................................[39m [31m0.0%[39m  
+  MultiGradesService [90m....................................................[39m [31m0.0%[39m  
+  PeriodService [90m.........................................................[39m [31m0.0%[39m  
+  SchoolClassService [90m....................................................[39m [31m0.0%[39m  
+  [90m────────────────────────────────────────────────────────────────────────────[39m  
+                                                                 [1mTotal: 22.4 %[22m  
+

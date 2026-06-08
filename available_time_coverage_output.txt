@@ -1,0 +1,34 @@
+
+  [30;43;1m WARN [39;49;22m Your XML configuration validates against a deprecated schema. Migrate your XML configuration using "--migrate-configuration"!
+
+   PASS  Tests\Unit\Services\SchoolClass\AvailableTimeServiceTest
+  ✓ without others enrollments returns true                              9.76s  
+  ✓ with enrollments same day different time returns true                0.94s  
+  ✓ with enrollments same day same time same year returns false          0.79s  
+  ✓ with enrollments same day same time different year returns true      0.81s  
+  ✓ with enrollments different day same time returns false               0.74s  
+  ✓ should launch exception when pass invalid school class id            0.58s  
+  ✓ same year but different academic periods                             1.00s  
+  ✓ with enrollments same day same time same year and one aee other esc… 0.70s  
+  ✓ with inactive enrollments same day same time same year returns true  0.61s  
+  ✓ with non presential destination school class returns true even when… 0.69s  
+  ✓ only school classes informed on census ignores destination not info… 0.95s  
+  ✓ only school classes informed on census ignores other school class n… 0.83s  
+  ✓ only until enrollment date considers previous conflicting enrollmen… 0.57s  
+  ✓ only until enrollment date ignores same day conflicting enrollments  0.51s  
+  ✓ with missing academic period dates returns true even when times con… 0.50s  
+  ✓ with touching schedule boundaries returns false                      0.51s  
+  ✓ fulltime destination uses partial morning schedule when enrollment…  0.48s  
+  ✓ fulltime destination uses partial afternoon schedule when enrollmen… 0.51s  
+
+  Tests:    18 passed (18 assertions)
+  Duration: 30.83s
+
+  AvailableTimeService [90m..................[39m [33m114, 118, 175..191, 215, 234[39m[33m [39m[90m/[39m[33m 78.9%[39m  
+  ExemptedDisciplineLinksRemover [90m........................................[39m [31m0.0%[39m  
+  MultiGradesService [90m....................................................[39m [31m0.0%[39m  
+  PeriodService [90m.........................................................[39m [31m0.0%[39m  
+  SchoolClassService [90m....................................................[39m [31m0.0%[39m  
+  [90m────────────────────────────────────────────────────────────────────────────[39m  
+                                                                 [1mTotal: 28.0 %[22m  
+
