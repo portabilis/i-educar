@@ -3,6 +3,7 @@
 namespace App\Models\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
+use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 
 class Registro50 implements ItemOfRegistro30, RegistroEducacenso
@@ -183,7 +184,41 @@ class Registro50 implements ItemOfRegistro30, RegistroEducacenso
      */
     public function getProperty($column)
     {
-        // TODO: Implement getProperty() method.
+        if ($column >= 9 && $column <= 33) {
+            return $this->componentes[$column - 9] ?? null;
+        }
+
+        if ($column >= 34 && $column <= 37) {
+            return $this->getItineraryAreaProperty($column);
+        }
+
+        return [ 
+            1 => $this->registro,
+            2 => $this->inepEscola,
+            3 => $this->codigoPessoa,
+            4 => $this->inepDocente,
+            5 => $this->codigoTurma,
+            6 => $this->inepTurma,
+            7 => $this->funcaoDocente,
+            8 => $this->tipoVinculo,
+            38 => $this->lecionaItinerarioTecnicoProfissional,
+        ][$column] ?? null;
+    }
+
+    private function getItineraryAreaProperty(int $column)
+    {
+        if (empty($this->areaItinerario)) {
+            return '';
+        }
+
+        $areas = [
+            34 => TipoItinerarioFormativo::LINGUANGENS,
+            35 => TipoItinerarioFormativo::MATEMATICA,
+            36 => TipoItinerarioFormativo::CIENCIAS_NATUREZA,
+            37 => TipoItinerarioFormativo::CIENCIAS_HUMANAS,
+        ];
+
+        return is_array($this->areaItinerario) && in_array($areas[$column], $this->areaItinerario) ? 1 : 0;
     }
 
     public function organizacaoCurricularDescritivas()
