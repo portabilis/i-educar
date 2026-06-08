@@ -9,6 +9,7 @@ use App\Http\Requests\CancelBatchRegistrationRequest;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacyUserType;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
 use Carbon\Carbon;
@@ -46,6 +47,7 @@ class BatchEnrollmentController extends Controller
             'enrollments' => $enrollments,
             'fails' => $fails ?? new MessageBag,
             'success' => $success ?? new MessageBag,
+            'canCancelRegistration' => auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
         ]);
     }
 
@@ -73,6 +75,7 @@ class BatchEnrollmentController extends Controller
             'registrations' => $registrations,
             'fails' => $fails ?? new MessageBag,
             'success' => $success ?? new MessageBag,
+            'canCancelRegistration' => auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
         ]);
     }
 
@@ -206,6 +209,12 @@ class BatchEnrollmentController extends Controller
     public function indexCancelRegistrations(
         LegacySchoolClass $schoolClass
     ) {
+        abort_unless(
+            auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
+            403,
+            'Apenas usuários poli-institucionais podem cancelar matrículas em lote.'
+        );
+
         return $this->viewCancelRegistrations($schoolClass, $schoolClass->getActiveEnrollments());
     }
 
@@ -219,6 +228,12 @@ class BatchEnrollmentController extends Controller
         LegacySchoolClass $schoolClass,
         EnrollmentService $enrollmentService
     ) {
+        abort_unless(
+            auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
+            403,
+            'Apenas usuários poli-institucionais podem cancelar matrículas em lote.'
+        );
+
         $registrationIds = $request->input('registrations', []);
 
         $fails = new MessageBag;

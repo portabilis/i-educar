@@ -141,7 +141,9 @@
             <button class="btn-green" type="submit">Enturmar</button>
             <a href="javascript:void(0)" class="btn registration-btn-check" >Selecionar todos</a>
             <a href="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Desenturmar em lote</a>
+            @if($canCancelRegistration ?? false)
             <a href="{{ Asset::get('/cancelar-matricula-em-lote/' . $schoolClass->id) }}" class="btn">Cancelar matrícula em lote</a>
+            @endif
             <a href="{{ Asset::get('intranet/educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=' . $schoolClass->id) }}" class="btn">Copiar enturmações</a>
             <a href="{{ Asset::get('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
         </div>

@@ -131,7 +131,9 @@
             <a href="javascript:void(0)" class="btn enrollment-btn-check">Selecionar todos</a>
 
             <a href="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Enturmar em lote</a>
+            @if($canCancelRegistration ?? false)
             <a href="{{ Asset::get('/cancelar-matricula-em-lote/' . $schoolClass->id) }}" class="btn">Cancelar matrícula em lote</a>
+            @endif
             <a href="{{ Asset::get('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Voltar</a>
         </div>
 
