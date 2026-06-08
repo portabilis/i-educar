@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyGradeSequence;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
@@ -13,6 +14,7 @@ use Avaliacao_Model_NotaComponenteMediaDataMapper;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class RegistrationService
 {
@@ -286,5 +288,76 @@ class RegistrationService
         $registration->save();
 
         return $registration;
+    }
+
+    /**
+     * Cancela uma matrícula: desativa enturmações, desativa a matrícula,
+     * reordena sequenciais e re-flagra última matrícula da série de origem.
+     */
+    public function cancelRegistration(
+        LegacyRegistration $registration,
+        User $user
+    ): void {
+        $enrollmentService = app(EnrollmentService::class);
+
+        DB::transaction(function () use ($registration, $user, $enrollmentService) {
+            $enrollments = LegacyEnrollment::query()
+                ->where('ref_cod_matricula', $registration->getKey())
+                ->where('ativo', 1)
+                ->get();
+
+            foreach ($enrollments as $enrollment) {
+                $enrollmentService->cancelEnrollment($enrollment, now());
+            }
+
+            $registration->ativo = 0;
+            $registration->ref_usuario_exc = $user->getKey();
+            $registration->save();
+
+            $allEnrollments = LegacyEnrollment::query()
+                ->where('ref_cod_matricula', $registration->getKey())
+                ->get();
+
+            foreach ($allEnrollments as $enrollment) {
+                $enrollmentService->reorderSchoolClass($enrollment);
+            }
+
+            $this->reflagPreviousGradeRegistration($registration, $user);
+        });
+    }
+
+    /**
+     * Quando a série da matrícula cancelada é destino de uma sequência,
+     * re-flagra a matrícula anterior (série de origem) como última matrícula.
+     */
+    private function reflagPreviousGradeRegistration(
+        LegacyRegistration $registration,
+        User $user
+    ): void {
+        $gradeId = $registration->ref_ref_cod_serie;
+
+        $sequence = LegacyGradeSequence::query()
+            ->whereGradeDestiny($gradeId)
+            ->active()
+            ->first();
+
+        if (! $sequence) {
+            return;
+        }
+
+        $previousRegistration = LegacyRegistration::query()
+            ->where('ref_ref_cod_serie', $sequence->ref_serie_origem)
+            ->where('ref_cod_aluno', $registration->ref_cod_aluno)
+            ->where('ativo', 1)
+            ->where('ultima_matricula', 0)
+            ->first();
+
+        if (! $previousRegistration) {
+            return;
+        }
+
+        $previousRegistration->ultima_matricula = 1;
+        $previousRegistration->ref_usuario_exc = $user->getKey();
+        $previousRegistration->save();
     }
 }

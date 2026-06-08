@@ -6,8 +6,6 @@ use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Http\Requests\BatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchRegistrationRequest;
-use App\Models\LegacyEnrollment;
-use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyUserType;
 use App\Services\EnrollmentService;
@@ -47,7 +45,7 @@ class BatchEnrollmentController extends Controller
             'enrollments' => $enrollments,
             'fails' => $fails ?? new MessageBag,
             'success' => $success ?? new MessageBag,
-            'canCancelRegistration' => auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
+            'canCancelRegistration' => $this->isAdmin(),
         ]);
     }
 
@@ -75,7 +73,7 @@ class BatchEnrollmentController extends Controller
             'registrations' => $registrations,
             'fails' => $fails ?? new MessageBag,
             'success' => $success ?? new MessageBag,
-            'canCancelRegistration' => auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
+            'canCancelRegistration' => $this->isAdmin(),
         ]);
     }
 
@@ -209,11 +207,7 @@ class BatchEnrollmentController extends Controller
     public function indexCancelRegistrations(
         LegacySchoolClass $schoolClass
     ) {
-        abort_unless(
-            auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
-            403,
-            'Apenas usuários poli-institucionais podem cancelar matrículas em lote.'
-        );
+        $this->authorizeAdmin();
 
         return $this->viewCancelRegistrations($schoolClass, $schoolClass->getActiveEnrollments());
     }
@@ -226,13 +220,9 @@ class BatchEnrollmentController extends Controller
     public function cancelRegistrations(
         CancelBatchRegistrationRequest $request,
         LegacySchoolClass $schoolClass,
-        EnrollmentService $enrollmentService
+        RegistrationService $registrationService
     ) {
-        abort_unless(
-            auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN,
-            403,
-            'Apenas usuários poli-institucionais podem cancelar matrículas em lote.'
-        );
+        $this->authorizeAdmin();
 
         $registrationIds = $request->input('registrations', []);
 
@@ -241,43 +231,35 @@ class BatchEnrollmentController extends Controller
 
         $user = auth()->user();
 
-        foreach ($registrationIds as $registrationId) {
+        foreach ($registrationService->findAll($registrationIds) as $registration) {
             try {
-                $registration = LegacyRegistration::findOrFail($registrationId);
-
-                // Desativar todas as enturmações da matrícula
-                $enrollments = LegacyEnrollment::query()
-                    ->where('ref_cod_matricula', $registrationId)
-                    ->where('ativo', 1)
-                    ->get();
-
-                foreach ($enrollments as $enrollment) {
-                    $enrollmentService->cancelEnrollment($enrollment, now());
-                }
-
-                // Desativar a matrícula
-                $registration->ativo = 0;
-                $registration->ref_usuario_exc = $user->id ?? null;
-                $registration->save();
-
-                // Reordenar sequências das enturmações
-                $allEnrollments = LegacyEnrollment::query()
-                    ->where('ref_cod_matricula', $registrationId)
-                    ->get();
-
-                foreach ($allEnrollments as $enrollment) {
-                    $enrollmentService->reorderSchoolClass($enrollment);
-                }
-
-                $success->add($registrationId, 'Matrícula cancelada.');
+                $registrationService->cancelRegistration($registration, $user);
+                $success->add($registration->getKey(), 'Matrícula cancelada.');
             } catch (Throwable $throwable) {
-                $fails->add($registrationId, $throwable->getMessage());
+                $fails->add($registration->getKey(), $throwable->getMessage());
             }
         }
 
-        $enrollments = $schoolClass->getActiveEnrollments();
+        return $this->viewCancelRegistrations(
+            $schoolClass,
+            $schoolClass->getActiveEnrollments(),
+            $fails,
+            $success
+        );
+    }
 
-        return $this->viewCancelRegistrations($schoolClass, $enrollments, $fails, $success);
+    private function isAdmin(): bool
+    {
+        return auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN;
+    }
+
+    private function authorizeAdmin(): void
+    {
+        abort_unless(
+            $this->isAdmin(),
+            403,
+            'Apenas usuários poli-institucionais podem cancelar matrículas em lote.'
+        );
     }
 
     /**
