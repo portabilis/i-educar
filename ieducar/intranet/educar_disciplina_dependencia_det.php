@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\LegacyDisciplineAcademicYear;
+use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyRegistration;
+
 return new class extends clsDetalhe
 {
     public $titulo;
@@ -26,14 +30,18 @@ return new class extends clsDetalhe
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $tmp_obj = new clsPmieducarDisciplinaDependencia(
-            ref_cod_matricula: $this->ref_cod_matricula,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: $this->ref_cod_disciplina
-        );
-
-        $registro = $tmp_obj->detalhe();
+        $registro = null;
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
+            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
+            $this->dependenciaValida()
+        ) {
+            $registro = LegacyDisciplineDependence::query()
+                ->whereRegistration($this->ref_cod_matricula)
+                ->whereGrade($this->ref_cod_serie)
+                ->whereSchool($this->ref_cod_escola)
+                ->whereDiscipline($this->ref_cod_disciplina)
+                ->first(['cod_disciplina_dependencia', 'ref_cod_matricula', 'ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina', 'observacao']);
+        }
 
         if (!$registro) {
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
@@ -114,6 +122,22 @@ return new class extends clsDetalhe
         $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+    }
+
+    /**
+     * Uma dependência só é válida quando a matrícula existe e o componente
+     * curricular está vinculado ao ano/série.
+     */
+    private function dependenciaValida(): bool
+    {
+        if (!LegacyRegistration::query()->whereKey($this->ref_cod_matricula)->exists()) {
+            return false;
+        }
+
+        return LegacyDisciplineAcademicYear::query()
+            ->whereGrade($this->ref_cod_serie)
+            ->whereDiscipline($this->ref_cod_disciplina)
+            ->count() === 1;
     }
 
     public function Formular()
