@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Models\LegacyOrganization;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -138,19 +140,32 @@ return new class extends clsListagem
             $limite = 10;
             $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
-            if ($busca == 'S') {
-                if (is_numeric($chave_busca)) {
-                    $obj_pessoa = new clsPessoaJuridica;
-                    $lst_pessoa = $obj_pessoa->lista(numeric_cnpj: (($cnpj) ? idFederal2int($cnpj) : null), inicio_limit: $iniciolimit, fim_limite: $limite, int_idpes: $chave_busca);
-                } else {
-                    $obj_pessoa = new clsPessoaJuridica;
-                    $lst_pessoa = $obj_pessoa->lista(numeric_cnpj: (($cnpj) ? idFederal2int($cnpj) : null), str_fantasia: $chave_busca, inicio_limit: $iniciolimit, fim_limite: $limite);
-                }
-            } else {
-                $obj_pessoa = new clsPessoaJuridica;
-                $lst_pessoa = $obj_pessoa->lista(numeric_cnpj: null, str_fantasia: null, numeric_insc_estadual: null, inicio_limit: $iniciolimit, fim_limite: $limite);
+            $cnpjInt = $cnpj ? idFederal2int($cnpj) : null;
+
+            $query = LegacyOrganization::query()
+                ->join('cadastro.pessoa', 'cadastro.pessoa.idpes', 'cadastro.juridica.idpes')
+                ->select(['cadastro.juridica.idpes', 'cadastro.juridica.fantasia', 'cadastro.juridica.cnpj', 'cadastro.pessoa.nome']);
+
+            if ($busca == 'S' && is_numeric($cnpjInt)) {
+                $cnpjLimpo = ltrim((string) $cnpjInt, '0');
+                $query->whereRaw('cadastro.juridica.cnpj::varchar ILIKE ?', ["%$cnpjLimpo%"]);
             }
-            if ($lst_pessoa) {
+
+            if ($busca == 'S' && is_numeric($chave_busca)) {
+                $query->where('cadastro.juridica.idpes', $chave_busca);
+            } elseif ($busca == 'S' && is_string($chave_busca)) {
+                $query->whereRaw(
+                    '(fcn_upper_nrm(cadastro.juridica.fantasia) LIKE fcn_upper_nrm(?) OR fcn_upper_nrm(cadastro.pessoa.nome) LIKE fcn_upper_nrm(?))',
+                    ["%$chave_busca%", "%$chave_busca%"]
+                );
+            }
+
+            $total = (clone $query)->count();
+            $lst_pessoa = $query->orderBy('cadastro.juridica.fantasia')
+                ->offset($iniciolimit)
+                ->limit($limite)
+                ->get();
+            if ($lst_pessoa->isNotEmpty()) {
                 foreach ($lst_pessoa as $pessoa) {
                     $funcao = ' set_campo_pesquisa(';
                     $virgula = '';
@@ -173,7 +188,6 @@ return new class extends clsListagem
                     }
 
                     $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
-                    $total = $pessoa['total'];
                 }
             } else {
                 $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);
@@ -265,19 +279,29 @@ return new class extends clsListagem
             $limite = 10;
             $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
-            if ($busca == 'S') {
-                if (is_numeric($chave_busca)) {
-                    $obj_funcionario = new clsFuncionario;
-                    $lst_pessoa = $obj_funcionario->lista(str_matricula: $this->matricula, int_ativo: $show, int_qtd_registros: $limite);
-                } else {
-                    $obj_funcionario = new clsFuncionario;
-                    $lst_pessoa = $obj_funcionario->lista(str_matricula: $this->matricula, str_nome: $this->campo_busca, int_ativo: $show, int_inicio_limit: $iniciolimit, int_qtd_registros: $limite);
-                }
-            } else {
-                $obj_funcionario = new clsFuncionario;
-                $lst_pessoa = $obj_funcionario->lista(int_ativo: $show);
+            $query = LegacyEmployee::query()
+                ->join('cadastro.pessoa', 'cadastro.pessoa.idpes', 'portal.funcionario.ref_cod_pessoa_fj')
+                ->select(['portal.funcionario.ref_cod_pessoa_fj', 'portal.funcionario.matricula', 'cadastro.pessoa.nome'])
+                ->orderBy('cadastro.pessoa.nome');
+
+            if (is_numeric($show)) {
+                $query->where('portal.funcionario.ativo', $show);
             }
-            if ($lst_pessoa) {
+
+            if ($busca == 'S') {
+                if (is_string($this->matricula) && $this->matricula !== '') {
+                    $query->where('portal.funcionario.matricula', 'like', "%{$this->matricula}%");
+                }
+
+                if (!is_numeric($chave_busca) && is_string($this->campo_busca) && $this->campo_busca !== '') {
+                    $query->whereRaw('f_unaccent(cadastro.pessoa.nome) ILIKE f_unaccent(?)', ["%{$this->campo_busca}%"]);
+                }
+            }
+
+            $total = (clone $query)->count();
+            $lst_pessoa = $query->offset($iniciolimit)->limit($limite)->get();
+
+            if ($lst_pessoa->isNotEmpty()) {
                 foreach ($lst_pessoa as $pessoa) {
                     $funcao = ' set_campo_pesquisa(';
                     $virgula = '';
@@ -307,7 +331,6 @@ return new class extends clsListagem
                     } else {
                         $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['matricula']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
                     }
-                    $total = $pessoa['_total'];
                 }
             } else {
                 $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);

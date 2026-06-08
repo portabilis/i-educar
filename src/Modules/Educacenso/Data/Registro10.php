@@ -86,6 +86,7 @@ class Registro10 extends AbstractRegistro
             $data->dormitoriosProfessor() ?: 0, // 53	Dormitório de professor(a)
             $data->laboratoriosCiencias() ?: 0, // 54	Laboratório de ciências
             $data->laboratoriosInformatica() ?: 0, // 55	Laboratório de informática
+            $data->laboratoriosRobotica() ?: 0, // 56	Laboratório de robótica
             $data->laboratoriosEducacaoProfissional() ?: 0, // 56	Laboratório específico para a educação profissional
             $data->areasExternasParqueInfantil() ?: 0, // 57	Parque infantil
             $data->areasExternasPatioCoberto() ?: 0, // 58	Pátio coberto

@@ -647,6 +647,11 @@ class Registro10Fields implements RegistroEducacenso
     /**
      * @var int
      */
+    public $qtdAssistenteSocial;
+
+    /**
+     * @var int
+     */
     public $qtdTradutorInterpreteLibrasOutroAmbiente;
 
     /**
