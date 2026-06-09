@@ -7,6 +7,8 @@ class AddFunctionRelatorioGetSituacaoComponente extends Migration
 {
     public function up(): void
     {
+        $this->down();
+
         DB::unprepared(
             file_get_contents(database_path('sqls/functions/relatorio.get_situacao_componente.sql'))
         );
