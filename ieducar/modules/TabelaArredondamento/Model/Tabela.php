@@ -103,6 +103,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
                 && $this->get('normalizarMedia') == 1
                 && $qtdeEtapas > 0) {
                 $value = $value / $qtdeEtapas;
+                $value = Portabilis_Utils_Float::limitDecimal($value, ['limit' => $limitDecimalRound ?? 1]);
             }
 
             // Multiplicador para transformar os números em uma escala inteira.

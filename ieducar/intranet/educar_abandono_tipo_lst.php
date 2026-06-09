@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+
 return new class extends clsListagem
 {
     /**
@@ -75,7 +77,7 @@ return new class extends clsListagem
         // Paginador
         $this->limite = 20;
 
-        $query = \App\Models\LegacyAbandonmentType::query()
+        $query = LegacyAbandonmentType::query()
             ->where(column: 'ativo', operator: 1)
             ->orderBy(column: 'nome', direction: 'ASC');
 

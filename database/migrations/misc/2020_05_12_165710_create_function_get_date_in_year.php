@@ -14,7 +14,7 @@ class CreateFunctionGetDateInYear extends Migration
      */
     public function up()
     {
-        $this->executeSqlFile(database_path('sqls/views/pmieducar.get_date_in_year-2020-05-12.sql'));
+        $this->executeSqlFile(database_path('sqls/functions/pmieducar.get_date_in_year-2020-05-12.sql'));
     }
 
     /**

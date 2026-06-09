@@ -8,7 +8,9 @@ use App\Models\Traits\HasMessages;
 use Database\Factories\LegacyActiveLookingFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\MessageFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -26,7 +28,7 @@ test('trait adds messages relationship', function () {
     $model = new TestModel;
 
     $this->assertTrue(method_exists($model, 'messages'));
-    $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class, $model->messages());
+    $this->assertInstanceOf(MorphMany::class, $model->messages());
 });
 
 test('messages relationship works with LegacyActiveLooking', function () {
@@ -52,7 +54,7 @@ test('messages relationship returns empty collection when no messages', function
     $messages = $activeLooking->messages;
 
     $this->assertCount(0, $messages);
-    $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $messages);
+    $this->assertInstanceOf(Collection::class, $messages);
 });
 
 test('messages relationship loads with user', function () {

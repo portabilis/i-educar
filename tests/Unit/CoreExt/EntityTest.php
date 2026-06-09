@@ -28,7 +28,7 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     public function test_setar_atributo_que_nao_existe_lanca_excecao_nao_verificada()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $entity = new CoreExt_EntityStub;
         $entity->foo = 'bar';
     }
@@ -131,7 +131,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     #[Group('CoreExt_Validate_Validatable')]
     public function test_configurar_validador_para_atributo_inexistente_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $entity = new CoreExt_EntityStub;
         $entity->setValidator('fooAttr', new CoreExt_Validate_String);
     }
@@ -255,7 +255,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     #[Group('CoreExt_Validate_Validatable')]
     public function test_metodo_de_criacao_de_validador_sensivel_ao_caso_lanca_excecao_quando_classe_nao_e_subclasse_de_coreext_validate_abstract()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $entity = new CoreExt_EntityStub;
         $entity->validateIfEquals(
             'nome',
@@ -322,21 +322,21 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     public function test_setter_de_referencia_para_atributo_inexistente_lanca_excecao()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $expected = new CoreExt_ChildEntityStub;
         $expected->setReference('foo', []);
     }
 
     public function test_setter_de_referencia_lanca_excecao_caso_array_de_definicao_contenha_configuracao_inexistente()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $expected = new CoreExt_ChildEntityStub;
         $expected->setReference('nome', ['autoload' => true]);
     }
 
     public function test_setter_de_referencia_lanca_excecao_para_classe_coreext_data_mapper_invalida()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $expected = new CoreExt_ChildEntityStub;
         $expected->setReference('nome', ['class' => new stdClass]);
     }
@@ -450,7 +450,7 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     public function test_instancia_de_class_nao_especifica_lanca_excecao_quando_instancia_passada_nao_tem_a_mesma_assinatura_do_nome_de_classe_informado()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         CoreExt_EntityStub::addClassToStorage('fooBar', new stdClass);
     }
 
@@ -553,7 +553,7 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     public function test_lazy_load_parametro_que_e_referencia_lanca_excecao_quando_nao_e_do_tipo_integer_ou_coreext_entity()
     {
-        $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
+        $this->expectException(CoreExt_Exception_InvalidArgumentException::class);
         $expected = new stdClass;
 
         $data = [

@@ -132,7 +132,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetexists.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         $value = $this->getSessionStorage()->read($offset);
@@ -143,7 +143,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetget.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if ($this->offsetExists($offset)) {
@@ -156,7 +156,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetset.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->getSessionStorage()->write((string) $offset, $value);
@@ -165,7 +165,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/arrayaccess.offsetunset.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->getSessionStorage()->remove($offset);
@@ -227,7 +227,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
      *
      * @return int
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return $this->getSessionStorage()->count();
@@ -240,7 +240,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
      *
      * @link http://br.php.net/manual/en/iterator.current.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         $this->getSessionData();
@@ -251,7 +251,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/iterator.key.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         $this->getSessionData();
@@ -262,7 +262,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/iterator.next.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function next()
     {
         $this->getSessionData();
@@ -273,7 +273,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/iterator.rewind.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         $this->getSessionData();
@@ -284,7 +284,7 @@ abstract class CoreExt_Session_Abstract implements ArrayAccess, CoreExt_Configur
     /**
      * @link http://br.php.net/manual/en/iterator.valid.php
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function valid()
     {
         $key = key($this->_sessionData);

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Ankurk91\Eloquent\HasBelongsToOne;
-use Ankurk91\Eloquent\Relations\BelongsToOne;
 use App\Models\Builders\LegacyRegistrationBuilder;
+use App\Models\Concerns\HasBelongsToOne;
+use App\Models\Relations\BelongsToOne;
 use App\Models\View\Situation;
 use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;

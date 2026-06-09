@@ -8,6 +8,7 @@ use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
 use App\Models\Educacenso\Registro60;
 use App\Repositories\EducacensoRepository;
+use iEducar\App\Model\Servidor;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
@@ -546,7 +547,7 @@ class EducacensoExportController extends ApiCoreController
      */
     private function isCursoSuperiorBachareladoOuTecnologoCompleto($grauAcademico, $situacao): bool
     {
-        if ($situacao != iEducar\App\Model\Servidor::SITUACAO_CURSO_SUPERIOR_CONCLUIDO) {
+        if ($situacao != Servidor::SITUACAO_CURSO_SUPERIOR_CONCLUIDO) {
             return false;
         }
 

@@ -14,7 +14,7 @@ class SocialAssistanceTest extends ViewTestCase
 
     public function test_social_assistance(): void
     {
-        $found = SocialAssistance::query()->where('status', 9)->get();
+        $found = SocialAssistance::query()->where('status', 3)->get();
         $this->assertInstanceOf(SocialAssistance::class, $found->first());
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }

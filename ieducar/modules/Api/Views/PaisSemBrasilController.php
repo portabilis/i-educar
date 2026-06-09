@@ -4,7 +4,7 @@ class PaisSemBrasilController extends ApiCoreController
 {
     protected function searchOptions()
     {
-        return ['namespace' => 'public', 'idAttr' => 'idpais', 'table' => 'pais'];
+        return ['namespace' => 'public', 'idAttr' => 'id', 'table' => 'countries', 'labelAttr' => 'name'];
     }
 
     protected function sqlsForNumericSearch()
@@ -19,7 +19,7 @@ class PaisSemBrasilController extends ApiCoreController
         $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
         $selectFields = implode(', ', $searchOptions['selectFields']);
 
-        return "select distinct $selectFields from $namespace.$table where $idAttr::varchar like $1||'%' AND nome <> 'Brasil' AND coalesce(cod_ibge, 0) <> 76 order by $idAttr limit 15";
+        return "select distinct $selectFields from $namespace.$table where $idAttr::varchar like $1||'%' AND name <> 'Brasil' AND coalesce(ibge_code, 0) <> 76 order by $idAttr limit 15";
     }
 
     protected function sqlsForStringSearch()
@@ -34,7 +34,7 @@ class PaisSemBrasilController extends ApiCoreController
         $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
         $selectFields = implode(', ', $searchOptions['selectFields']);
 
-        return "select distinct $selectFields from $namespace.$table where lower($labelAttr) like '%'||lower($1)||'%' AND nome <> 'Brasil' AND coalesce(cod_ibge, 0) <> 76 order by $labelAttr limit 15";
+        return "select distinct $selectFields from $namespace.$table where lower($labelAttr) like '%'||lower($1)||'%' AND name <> 'Brasil' AND coalesce(ibge_code, 0) <> 76 order by $labelAttr limit 15";
     }
 
     public function Gerar()
