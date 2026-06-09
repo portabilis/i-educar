@@ -563,7 +563,7 @@ class AlunoController extends ApiCoreController
             'outra_pessoa' => request()->filled('responsavel_restricao_judicial'),
             'pai' => request()->filled('pai_restricao_judicial'),
             'mae' => request()->filled('mae_restricao_judicial'),
-            default => null,
+            default => false,
         };
 
         return $individual->update([
