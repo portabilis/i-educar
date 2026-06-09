@@ -63,7 +63,6 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.template.pdf.logo\' THEN \'Caminho logo apresentada na impressão da agenda\'
                     WHEN \'legacy.app.template.vars.instituicao\' THEN \'Nome da instituição no template\'
                     WHEN \'legacy.app.template.pdf.titulo\' THEN \'Título Relatório PDF\'
-                    WHEN \'legacy.app.template.layout\' THEN \'Layout do Template\'
                     WHEN \'legacy.app.user_accounts.default_password_expiration_period\' THEN \'Dias para expiração de senha\'
                     WHEN \'legacy.config.active_on_ieducar\' THEN \'Suspender cliente\'
                     WHEN \'legacy.educacenso.enable_export\' THEN \'Habilitar exportação do arquivo do Educacenso\'

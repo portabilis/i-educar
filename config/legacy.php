@@ -70,7 +70,6 @@ return [
                 'titulo' => 'Relatório i-Educar',
                 'logo' => '',
             ],
-            'layout' => 'login.tpl',
         ],
         'gtm' => [
             'id' => env('GOOGLE_TAG_MANAGER'),

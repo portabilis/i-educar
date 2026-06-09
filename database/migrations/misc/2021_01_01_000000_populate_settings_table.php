@@ -29,7 +29,6 @@ class PopulateSettingsTable extends Migration
             'legacy.app.template.vars.instituicao' => 'Prefeitura Municipal',
             'legacy.app.template.pdf.titulo' => 'Relatório i-Educar',
             'legacy.app.template.pdf.logo' => null,
-            'legacy.app.template.layout' => 'login.tpl',
             'legacy.app.gtm.id' => null,
             'legacy.app.rdstation.token' => null,
             'legacy.app.rdstation.private_token' => null,
