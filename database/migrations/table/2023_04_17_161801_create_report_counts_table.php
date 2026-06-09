@@ -15,6 +15,8 @@ return new class extends Migration
             $table->boolean('success');
             $table->date('date');
             $table->integer('count');
+            $table->boolean('authenticated')->default(false)->index();
+            $table->index(['render', 'template', 'success', 'date', 'authenticated']);
         });
     }
 
