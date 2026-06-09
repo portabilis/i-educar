@@ -97,10 +97,13 @@ let verificaHorariosTurnoParcial = ()=>{
   }
 }
 
+const TIPOS_COM_CURRICULAR = ['0', '9'];
+const TIPOS_COM_ATIVIDADE_COMPLEMENTAR = ['4', '9'];
+
 let habilitaFormaOrganizacaoTurma = ()=> {
   const etapasInvalidas = ['1', '2', '3', '24', '62'];
-  const tipoAtendimento = $j('#tipo_atendimento').val() || [];
-  const escolarizacao = tipoAtendimento.includes('0');
+  const tipoAtendimento = $j('#tipo_atendimento').val();
+  const escolarizacao = TIPOS_COM_CURRICULAR.includes(tipoAtendimento);
   const etapaEducacenso = $j('#etapa_educacenso').val()
 
   $j('#formas_organizacao_turma').makeUnrequired();
@@ -154,49 +157,7 @@ let verificaLocalFuncionamentoDiferenciado = () => {
   }
 }
 
-function atualizaOpcoesTipoAtendimento() {
-  let valores = $j('#tipo_atendimento').val() || [];
-  const $options = $j('#tipo_atendimento option');
-
-  if (valores.length > 1 && (valores.includes('') || valores.includes('null'))) {
-    valores = valores.filter(v => v !== '' && v !== 'null');
-    $j('#tipo_atendimento').val(valores).trigger('chosen:updated');
-  }
-
-  $options.prop('disabled', false);
-
-  $options.each(function() {
-    if ($j(this).val() === '' || $j(this).val() === 'null') {
-      $j(this).prop('disabled', true);
-    }
-  });
-
-  if (!valores.length) {
-    $j('#tipo_atendimento').trigger('chosen:updated');
-    return;
-  }
-
-  if (valores.includes('0') || valores.includes('4')) {
-    $options.each(function() {
-      if ($j(this).val() === '5') {
-        $j(this).prop('disabled', true);
-      }
-    });
-  }
-
-  if (valores.includes('5')) {
-    $options.each(function() {
-      if ($j(this).val() === '0' || $j(this).val() === '4') {
-        $j(this).prop('disabled', true);
-      }
-    });
-  }
-
-  $j('#tipo_atendimento').trigger('chosen:updated');
-}
-
 $j('#tipo_atendimento').change(function() {
-  atualizaOpcoesTipoAtendimento();
   habilitaAtividadesComplementares();
   habilitaFormaOrganizacaoTurma();
   habilitaEtapaAgregada();
@@ -228,8 +189,8 @@ $j('#etapa_educacenso').change(function() {
 });
 
 function habilitaAtividadesComplementares(){
-  var tipoAtendimento = $j('#tipo_atendimento').val() || [];
-  var mostraCampo = tipoAtendimento.includes('4');
+  var tipoAtendimento = $j('#tipo_atendimento').val();
+  var mostraCampo = TIPOS_COM_ATIVIDADE_COMPLEMENTAR.includes(tipoAtendimento);
   $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
     $j('#atividades_complementares').removeAttr('disabled');
@@ -451,16 +412,17 @@ function habilitaCargaHorariaTotal() {
 function habilitaEtapaAgregada() {
   $j("#etapa_agregada").prop('disabled', true);
 
-  const tipoAtendimento = $j('#tipo_atendimento').val() || [];
-  if (tipoAtendimento.includes('0')) {
+  const tipoAtendimento = $j('#tipo_atendimento').val();
+  const temCurricular = TIPOS_COM_CURRICULAR.includes(tipoAtendimento);
+
+  if (temCurricular) {
     $j("#etapa_agregada").prop('disabled', false);
   } else {
     $j("#etapa_agregada").val('');
   }
 
   $j('#etapa_agregada').makeUnrequired();
-  if (tipoAtendimento.includes('0') &&
-      obrigarCamposCenso) {
+  if (temCurricular && obrigarCamposCenso) {
     $j('#etapa_agregada').makeRequired();
   }
 
@@ -484,16 +446,17 @@ function habilitaOrganizacaoCurricular() {
 
 function habilitaClasseEspecial() {
   $j("#classe_especial").prop('disabled', true);
-  const tipoAtendimento = $j('#tipo_atendimento').val() || [];
-  if (tipoAtendimento.includes('0')) {
+  const tipoAtendimento = $j('#tipo_atendimento').val();
+  const temCurricular = TIPOS_COM_CURRICULAR.includes(tipoAtendimento);
+
+  if (temCurricular) {
     $j("#classe_especial").prop('disabled', false);
   } else {
     $j("#classe_especial").val('');
   }
 
   $j('#classe_especial').makeUnrequired();
-  if (tipoAtendimento.includes('0') &&
-      obrigarCamposCenso) {
+  if (temCurricular && obrigarCamposCenso) {
     $j('#classe_especial').makeRequired();
   }
 
@@ -709,7 +672,6 @@ $j(document).ready(function() {
         }else
           return false;
       });
-      atualizaOpcoesTipoAtendimento();
       habilitaAtividadesComplementares();
       habilitaEtapaAgregada();
       habilitaEtapaEducacenso();
