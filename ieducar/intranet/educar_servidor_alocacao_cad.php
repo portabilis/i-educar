@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyBondType;
 use App\Models\LegacyPerson;
 
 return new class extends clsCadastro
@@ -231,8 +232,7 @@ return new class extends clsCadastro
         $this->campoLista('cod_servidor_funcao', 'Função', $opcoes, $this->cod_servidor_funcao, '', false, '', '', false, false);
 
         // Vínculos
-        $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
-        $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
+        $opcoes = ['' => 'Selecione'] + LegacyBondType::orderBy('cod_funcionario_vinculo')->pluck('nm_vinculo', 'cod_funcionario_vinculo')->all();
 
         $this->campoLista('ref_cod_funcionario_vinculo', 'Vínculo', $opcoes, $this->ref_cod_funcionario_vinculo, null, false, '', '', false, false);
 
