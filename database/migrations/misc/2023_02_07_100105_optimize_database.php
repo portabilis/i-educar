@@ -11,11 +11,6 @@ return new class extends Migration
 
     public function up()
     {
-        // ANO LETIVO MODULO
-        $this->dropView('public.exporter_stages');
-        $this->dropView('public.exporter_school_stages');
-        $this->dropView('public.exporter_school_class_stages');
-
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_pkey;');
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_ref_ref_cod_escola_fkey;');
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS pmieducar_ano_letivo_modulo_ref_ref_cod_escola_ref_ano_foreign;');
@@ -43,10 +38,6 @@ return new class extends Migration
             $table->unsignedSmallInteger('num_semanas')->nullable()->change();
             $table->unsignedSmallInteger('num_etapas')->nullable()->default(0)->change();
         });
-
-        $this->createView('public.exporter_school_class_stages', '2020-09-18');
-        $this->createView('public.exporter_school_stages', '2020-07-09');
-        $this->createView('public.exporter_stages', '2020-07-10');
 
         // ESCOLA ANO LETIVO
         DB::statement('ALTER TABLE IF EXISTS pmieducar.escola_ano_letivo DROP CONSTRAINT IF EXISTS escola_ano_letivo_pkey;');
@@ -76,11 +67,6 @@ return new class extends Migration
 
     public function down()
     {
-        // ANO LETIVO MODULO
-        $this->dropView('public.exporter_stages');
-        $this->dropView('public.exporter_school_stages');
-        $this->dropView('public.exporter_school_class_stages');
-
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_pkey;');
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_ref_ano_ref_ref_cod_escola_sequencial_ref_cod;');
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_escola_ano_letivo_id_foreign;');
@@ -106,10 +92,6 @@ return new class extends Migration
             $table->unsignedInteger('num_semanas')->nullable()->change();
             $table->decimal('num_etapas', 2, 0)->nullable()->default(0)->change();
         });
-
-        $this->createView('public.exporter_school_class_stages', '2020-09-18');
-        $this->createView('public.exporter_school_stages', '2020-07-09');
-        $this->createView('public.exporter_stages', '2020-07-10');
 
         // ESCOLA ANO LETIVO
         DB::statement('DROP INDEX IF EXISTS pmieducar.escola_ano_letivo_ref_cod_escola_ano_index;');

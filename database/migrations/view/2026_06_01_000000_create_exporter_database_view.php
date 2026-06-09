@@ -3,21 +3,13 @@
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExporterPersonView extends Migration
+class CreateExporterDatabaseView extends Migration
 {
     use AsView;
 
     public function up(): void
     {
-        $this->dropView('public.exporter_social_assistance');
-        $this->dropView('public.exporter_student_grouped_registration');
-        $this->dropView('public.exporter_employee');
-        $this->dropView('public.exporter_teacher');
-        $this->dropView('public.exporter_student');
-        $this->dropView('public.exporter_person');
-        $this->dropView('public.exporter_benefits');
-        $this->dropView('public.exporter_disabilities');
-        $this->dropView('public.exporter_projects');
+        $this->down();
 
         $this->createView('public.exporter_person');
         $this->createView('public.exporter_student');
