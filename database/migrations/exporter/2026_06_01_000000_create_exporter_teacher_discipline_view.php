@@ -10,7 +10,7 @@ class CreateExporterTeacherDisciplineView extends Migration
     public function up(): void
     {
         $this->dropView('public.exporter_teacher_disciplines');
-        $this->dropView('public.exporter_teacher_disciplines');
+        $this->createView('public.exporter_teacher_disciplines');
     }
 
     public function down(): void
