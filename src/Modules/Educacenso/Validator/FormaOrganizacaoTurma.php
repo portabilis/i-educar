@@ -44,6 +44,9 @@ class FormaOrganizacaoTurma implements EducacensoValidator
             ModelFormaOrganizacaoTurma::MODULES => [
                 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 56, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
+            ModelFormaOrganizacaoTurma::ALTERNANCIA_REGULAR => [
+                75,
+            ],
         ];
 
         return in_array($this->turma->etapaEducacenso, $validOptionForEducacensoStage[$this->turma->formasOrganizacaoTurma]);
