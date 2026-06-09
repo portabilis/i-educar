@@ -100,8 +100,8 @@ return new class extends clsDetalhe
             $telefones = $pessoa?->phones->keyBy('tipo') ?? collect();
             $tel1 = $telefones->get(LegacyPhone::TYPE_LANDLINE);
             $tel2 = $telefones->get(LegacyPhone::TYPE_MOBILE);
-            $cel  = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
-            $fax  = $telefones->get(LegacyPhone::TYPE_FAX);
+            $cel = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
+            $fax = $telefones->get(LegacyPhone::TYPE_FAX);
 
             $det_fisica = LegacyIndividual::find($this->ref_idpes)?->getAttributes();
 
@@ -171,16 +171,16 @@ return new class extends clsDetalhe
             }
 
             $registro['ddd_fone_1'] = $tel1?->ddd;
-            $registro['fone_1']     = $tel1?->fone;
+            $registro['fone_1'] = $tel1?->fone;
 
             $registro['ddd_fone_2'] = $tel2?->ddd;
-            $registro['fone_2']     = $tel2?->fone;
+            $registro['fone_2'] = $tel2?->fone;
 
-            $registro['ddd_fax']    = $fax?->ddd;
-            $registro['fone_fax']   = $fax?->fone;
+            $registro['ddd_fax'] = $fax?->ddd;
+            $registro['fone_fax'] = $fax?->fone;
 
-            $registro['ddd_mov']    = $cel?->ddd;
-            $registro['fone_mov']   = $cel?->fone;
+            $registro['ddd_mov'] = $cel?->ddd;
+            $registro['fone_mov'] = $cel?->fone;
 
             $deficiencias = is_numeric($this->ref_idpes)
                 ? LegacyDeficiency::query()

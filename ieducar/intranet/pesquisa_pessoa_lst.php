@@ -275,8 +275,8 @@ return new class extends clsListagem
                     if (is_numeric($idFederalInt)) {
                         $query->whereIn('cadastro.pessoa.idpes', function ($q) use ($idFederalInt) {
                             $q->select('idpes')
-                              ->from('cadastro.juridica')
-                              ->whereRaw('cnpj::varchar LIKE ?', ["%{$idFederalInt}%"]);
+                                ->from('cadastro.juridica')
+                                ->whereRaw('cnpj::varchar LIKE ?', ["%{$idFederalInt}%"]);
                         });
                     }
                 }
@@ -285,7 +285,7 @@ return new class extends clsListagem
             if (is_numeric($parametros->getCodSistema())) {
                 $query->where(function ($q) use ($parametros) {
                     $q->where('cadastro.fisica.ref_cod_sistema', $parametros->getCodSistema())
-                      ->orWhereRaw('COALESCE(cadastro.fisica.cpf, cadastro.juridica.cnpj) IS NOT NULL');
+                        ->orWhereRaw('COALESCE(cadastro.fisica.cpf, cadastro.juridica.cnpj) IS NOT NULL');
                 });
             }
 
