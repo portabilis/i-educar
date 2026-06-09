@@ -704,7 +704,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'classe_especial', inputOptions: $options);
 
         $options = [
-            'label' => 'Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade',
+            'label' => 'Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade)',
             'resources' => $resources,
             'value' => (string) $this->formacao_alternancia,
             'required' => false,
