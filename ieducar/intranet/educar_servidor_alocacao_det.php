@@ -2,6 +2,7 @@
 
 use App\Models\LegacyBondType;
 use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyPerson;
 
 return new class extends clsDetalhe
 {
@@ -45,11 +46,9 @@ return new class extends clsDetalhe
         $this->ref_cod_funcionario_vinculo = $registro['ref_cod_funcionario_vinculo'];
         $this->ano = $registro['ano'];
 
-        // Nome do servidor
-        $fisica = new clsPessoaFisica($this->ref_cod_servidor);
-        $fisica = $fisica->detalhe();
+        $nome = LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome');
 
-        $this->addDetalhe(['Servidor', "{$fisica['nome']}"]);
+        $this->addDetalhe(['Servidor', "{$nome}"]);
 
         // Escola
         $escola = new clsPmieducarEscola($registro['ref_cod_escola']);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyOrganization;
+use App\Models\LegacyPerson;
 
 return new class extends clsListagem
 {
@@ -21,13 +22,13 @@ return new class extends clsListagem
         $par_cnpj = false;
         $opcoes = false;
         if ($_GET['razao_social']) {
-            $objPessoaFJ = new clsPessoaFj;
-            $lista = $objPessoaFJ->lista(str_nome: $_GET['razao_social']);
-            if ($lista) {
-                foreach ($lista as $pessoa) {
-                    $opcoes[] = $pessoa['idpes'];
-                }
-            }
+            $par_razao = $_GET['razao_social'];
+            $paraBusca = str_replace(' ', '%', $par_razao);
+
+            $opcoes = LegacyPerson::query()
+                ->whereRaw('f_unaccent(nome) ILIKE f_unaccent(?)', ["%{$paraBusca}%"])
+                ->pluck('idpes')
+                ->all();
         }
         if ($_GET['id_federal']) {
             $par_cnpj = idFederal2Int(str: $_GET['id_federal']);

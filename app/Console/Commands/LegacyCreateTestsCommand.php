@@ -237,7 +237,6 @@ class LegacyCreateTestsCommand extends Command
             'EducarBibliotecaDadosDet',
             'EducarBibliotecaDet',
             'EducarBloqueioAnoLetivoDet',
-            'EducarBloqueioLancamentoFaltasNotasDet',
             'EducarCalendarioAnotacaoCad',
             'EducarCalendarioAnotacaoDet',
             'EducarCalendarioAnotacaoLst',
