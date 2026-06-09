@@ -37,8 +37,6 @@ class PopulateSettingsTable extends Migration
             'legacy.app.locale.timezone' => 'America/Sao_Paulo',
             'legacy.app.entity.name' => 'i-Educar',
             'legacy.app.user_accounts.default_password_expiration_period' => '180',
-            'legacy.app.novoeducacao.url' => null,
-            'legacy.app.novoeducacao.caminho_api' => null,
             'legacy.app.auditoria.notas' => '1',
             'legacy.app.matricula.dependencia' => '1',
             'legacy.app.matricula.multiplas_matriculas' => '0',

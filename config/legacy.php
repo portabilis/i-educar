@@ -89,10 +89,6 @@ return [
         'user_accounts' => [
             'default_password_expiration_period' => '180',
         ],
-        'novoeducacao' => [
-            'url' => '',
-            'caminho_api' => '',
-        ],
         'auditoria' => [
             'notas' => '1',
         ],
