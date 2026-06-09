@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyBondType;
+use App\Models\LegacyPerson;
 
 return new class extends clsCadastro
 {
@@ -145,9 +146,7 @@ return new class extends clsCadastro
         }
 
         if ($this->ref_cod_servidor) {
-            $objTemp = new clsPessoaFisica($this->ref_cod_servidor);
-            $detalhe = $objTemp->detalhe();
-            $nm_servidor = $detalhe['nome'];
+            $nm_servidor = LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome');
         }
 
         $this->campoRotulo('nm_servidor', 'Servidor', $nm_servidor);

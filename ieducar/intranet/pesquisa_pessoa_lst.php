@@ -2,6 +2,8 @@
 
 use App\Models\LegacyEmployee;
 use App\Models\LegacyOrganization;
+use App\Models\LegacyPerson;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -71,20 +73,65 @@ return new class extends clsListagem
                     $chave = '';
                 }
 
+                $phonesSubquery = DB::table('cadastro.fone_pessoa')
+                    ->select(
+                        'idpes',
+                        DB::raw('MAX(CASE WHEN tipo = 1 THEN ddd END) AS ddd_1'),
+                        DB::raw('MAX(CASE WHEN tipo = 1 THEN fone END) AS fone_1'),
+                        DB::raw('MAX(CASE WHEN tipo = 2 THEN ddd END) AS ddd_2'),
+                        DB::raw('MAX(CASE WHEN tipo = 2 THEN fone END) AS fone_2'),
+                        DB::raw('MAX(CASE WHEN tipo = 3 THEN ddd END) AS ddd_mov'),
+                        DB::raw('MAX(CASE WHEN tipo = 3 THEN fone END) AS fone_mov'),
+                        DB::raw('MAX(CASE WHEN tipo = 4 THEN ddd END) AS ddd_fax'),
+                        DB::raw('MAX(CASE WHEN tipo = 4 THEN fone END) AS fone_fax'),
+                    )
+                    ->groupBy('idpes');
+
+                $query = LegacyPerson::query()
+                    ->join('cadastro.fisica', 'cadastro.fisica.idpes', 'cadastro.pessoa.idpes')
+                    ->leftJoinSub($phonesSubquery, 'fp', 'fp.idpes', 'cadastro.pessoa.idpes')
+                    ->select([
+                        'cadastro.pessoa.idpes',
+                        'cadastro.pessoa.nome',
+                        'cadastro.fisica.nome_social',
+                        'cadastro.pessoa.url',
+                        DB::raw("'F' AS tipo"),
+                        'cadastro.pessoa.email',
+                        'cadastro.fisica.cpf',
+                        'fp.ddd_1', 'fp.fone_1', 'fp.ddd_2', 'fp.fone_2',
+                        'fp.ddd_mov', 'fp.fone_mov', 'fp.ddd_fax', 'fp.fone_fax',
+                    ])
+                    ->where('cadastro.fisica.ativo', 1);
+
                 if ($busca == 'S') {
                     if (is_numeric($chave_busca)) {
-                        $obj_pessoa = new clsPessoaFisica;
-                        $lst_pessoa = $obj_pessoa->lista(str_nome: null, numeric_cpf: (($cpf) ? idFederal2int($cpf) : null), inicio_limite: $iniciolimit, qtd_registros: $limite, int_ref_cod_sistema: $parametros->getCodSistema(), int_idpes: $chave_busca);
-                    } else {
-                        $obj_pessoa = new clsPessoaFisica;
-                        $lst_pessoa = $obj_pessoa->lista(str_nome: $chave_busca, numeric_cpf: (($cpf) ? idFederal2int($cpf) : null), inicio_limite: $iniciolimit, qtd_registros: $limite, int_ref_cod_sistema: $parametros->getCodSistema());
+                        $query->where('cadastro.pessoa.idpes', $chave_busca);
+                    } elseif (is_string($chave_busca) && $chave_busca !== '') {
+                        $query->whereRaw('coalesce(cadastro.pessoa.slug, f_unaccent(cadastro.pessoa.nome)) ILIKE f_unaccent(?)', ["%{$chave_busca}%"]);
                     }
-                } else {
-                    $obj_pessoa = new clsPessoaFisica;
-                    $lst_pessoa = $obj_pessoa->lista(str_nome: null, numeric_cpf: null, inicio_limite: $iniciolimit, qtd_registros: $limite, int_ref_cod_sistema: $parametros->getCodSistema());
+
+                    if ($cpf) {
+                        $query->whereRaw('cadastro.fisica.cpf::varchar ILIKE ?', ['%' . idFederal2int($cpf) . '%']);
+                    }
                 }
 
-                if ($lst_pessoa) {
+                if (is_numeric($parametros->getCodSistema())) {
+                    $query->where(function ($q) use ($parametros) {
+                        $q->where('cadastro.fisica.ref_cod_sistema', $parametros->getCodSistema())
+                            ->orWhereNotNull('cadastro.fisica.cpf');
+                    });
+                }
+
+                $total = (clone $query)->count();
+
+                $lst_pessoa = $query
+                    ->orderByRaw('COALESCE(cadastro.fisica.nome_social, cadastro.pessoa.nome)')
+                    ->orderBy('cadastro.pessoa.idpes')
+                    ->offset($iniciolimit)
+                    ->limit($limite)
+                    ->get();
+
+                if ($lst_pessoa->isNotEmpty()) {
                     foreach ($lst_pessoa as $pessoa) {
                         $funcao = ' set_campo_pesquisa(';
                         $virgula = '';
@@ -110,7 +157,6 @@ return new class extends clsListagem
                         }
 
                         $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
-                        $total = $pessoa['total'];
                     }
                 } else {
                     $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);
