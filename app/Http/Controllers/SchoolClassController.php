@@ -218,15 +218,22 @@ class SchoolClassController extends Controller
             $params['formas_organizacao_turma'] = null;
         }
 
-        if (isset($params['tipo_atendimento']) && !in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $params['tipo_atendimento'])) {
+        if (isset($params['tipo_atendimento']) && !is_array($params['tipo_atendimento'])) {
+            $params['tipo_atendimento'] = $params['tipo_atendimento'] !== '' ? [$params['tipo_atendimento']] : [];
+        }
+
+        $tiposComAtividadeComplementar = [TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR];
+        $tiposComCurricular = [TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR];
+
+        if (isset($params['tipo_atendimento']) && empty(array_intersect($tiposComAtividadeComplementar, $params['tipo_atendimento']))) {
             $params['atividades_complementares'] = '{}';
         }
 
-        if (isset($params['tipo_atendimento']) && !in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $params['tipo_atendimento'])) {
+        if (isset($params['tipo_atendimento']) && empty(array_intersect($tiposComCurricular, $params['tipo_atendimento']))) {
             $params['classe_especial'] = null;
         }
 
-        if (isset($params['tipo_atendimento'])) {
+        if (isset($params['tipo_atendimento']) && !empty($params['tipo_atendimento'])) {
             $params['tipo_atendimento'] = '{' . implode(',', $params['tipo_atendimento']) . '}';
         } else {
             $params['tipo_atendimento'] = null;
