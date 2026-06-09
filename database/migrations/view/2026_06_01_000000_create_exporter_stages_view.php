@@ -9,9 +9,7 @@ class CreateExporterStagesView extends Migration
 
     public function up(): void
     {
-        $this->dropView('public.exporter_stages');
-        $this->dropView('public.exporter_school_stages');
-        $this->dropView('public.exporter_school_class_stages');
+        $this->down();
 
         $this->createView('public.exporter_school_stages');
         $this->createView('public.exporter_school_class_stages');

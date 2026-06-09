@@ -9,7 +9,8 @@ class CreateAddressesView extends Migration
 
     public function up(): void
     {
-        $this->dropView('addresses');
+        $this->down();
+
         $this->createView('addresses');
     }
 

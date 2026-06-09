@@ -9,7 +9,8 @@ class CreateViewDadosEscolaView extends Migration
 
     public function up(): void
     {
-        $this->dropView('relatorio.view_dados_escola');
+        $this->down();
+
         $this->createView('relatorio.view_dados_escola');
     }
 

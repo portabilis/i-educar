@@ -9,7 +9,8 @@ class CreateRegistrationsView extends Migration
 
     public function up(): void
     {
-        $this->dropView('registrations');
+        $this->down();
+
         $this->createView('registrations');
     }
 

@@ -7,22 +7,14 @@ class CreatePhonesView extends Migration
 {
     use AsView;
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
+        $this->down();
+
         $this->createView('phones');
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropView('phones');
     }
