@@ -38,6 +38,11 @@ var modoCadastro = $j('#retorno').val() == 'Novo';
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 const ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA = '5';
+const ORGANIZACAO_CURRICULAR_FORMACAO_GERAL_BASICA = '1';
+const ETAPA_AGREGADA_ENSINO_MEDIO = '304';
+
+const ETAPAS_VALIDAS_MEDIACAO_EAD = ['25', '26', '27', '28', '29', '35', '36', '37', '38', '39', '40', '64', '68', '75', '67', '70', '71', '73', '74'];
+const ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP = ['25', '26', '27', '28', '29'];
 
 let habilitaFormacaoAlternancia = ()=>{
   $j('#formacao_alternancia').makeUnrequired();
@@ -309,7 +314,11 @@ function validaAtividadesComplementares() {
   return true;
 }
 
-$j('#tipo_mediacao_didatico_pedagogico').on('change', verificaLocalFuncionamentoDiferenciado);
+$j('#tipo_mediacao_didatico_pedagogico').on('change', function() {
+  verificaLocalFuncionamentoDiferenciado();
+  verificaOpcoesEtapaEducacenso();
+  $j('#etapa_educacenso').trigger('change');
+});
 
 function habilitaEtapaEducacenso() {
   $j("#etapa_educacenso").prop('disabled', true);
@@ -331,7 +340,44 @@ function habilitaEtapaEducacenso() {
   } else {
     $j("#etapa_educacenso").val('');
   }
+
+  verificaOpcoesEtapaEducacenso();
+
   $j("#etapa_educacenso").trigger('change');
+}
+
+function verificaOpcoesEtapaEducacenso() {
+  const $campo = $j('#etapa_educacenso');
+  $campo.find('option').prop('disabled', false);
+
+  const mediacao = +$j('#tipo_mediacao_didatico_pedagogico').val();
+  const organizacaoCurricular = $j('#organizacao_curricular').val() || [];
+  const etapaAgregada = $j('#etapa_agregada').val();
+  const temFormacaoGeralBasica = organizacaoCurricular.includes(ORGANIZACAO_CURRICULAR_FORMACAO_GERAL_BASICA);
+  const temItinerarioFormacaoTecnica = organizacaoCurricular.includes(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA);
+
+  let etapasPermitidas = null;
+  if (mediacao === TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.EDUCACAO_A_DISTANCIA) {
+    etapasPermitidas = ETAPAS_VALIDAS_MEDIACAO_EAD;
+  } else if (etapaAgregada === ETAPA_AGREGADA_ENSINO_MEDIO && temFormacaoGeralBasica && !temItinerarioFormacaoTecnica) {
+    etapasPermitidas = ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP;
+  }
+
+  if (!etapasPermitidas) {
+    return;
+  }
+
+  $campo.find('option').each(function() {
+    const valor = $j(this).val();
+    if (valor && !etapasPermitidas.includes(valor)) {
+      $j(this).prop('disabled', true);
+    }
+  });
+
+  const valorAtual = $campo.val();
+  if (valorAtual && !etapasPermitidas.includes(valorAtual)) {
+    $campo.val('');
+  }
 }
 
 function habilitaAreasItinerarioFormativo() {
