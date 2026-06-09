@@ -2891,6 +2891,12 @@ return new class extends clsCadastro
 
     protected function validaOpcoesUnicasMultipleSearch()
     {
+        if (is_array($this->poder_publico_parceria_convenio) && in_array(needle: PoderPublicoConveniado::NAO_POSSUI, haystack: $this->poder_publico_parceria_convenio) && count($this->poder_publico_parceria_convenio) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
+
+            return false;
+        }
+
         if (is_array($this->abastecimento_agua) && in_array(needle: AbastecimentoAgua::INEXISTENTE, haystack: $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
 

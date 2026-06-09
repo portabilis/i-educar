@@ -124,8 +124,8 @@ class CheckMandatoryCensoFields implements Rule
 
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
             isset($params->etapa_educacenso) &&
-            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 67, 70, 71, 73], true)) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 67, 70, 71 ou 73';
+            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 75, 67, 70, 71, 73, 74], true)) {
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 75, 67, 70, 71, 73 ou 74';
 
             return false;
         }
@@ -315,6 +315,7 @@ class CheckMandatoryCensoFields implements Rule
         $etapaEnsinoCanContainsWithEnsinoMedioEFormacaoGeralBasica = [25, 26, 27, 28, 29];
         if (is_array($organizacaoCurricular) &&
             in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular) &&
+            !in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular) &&
             $params->etapa_agregada &&
             ((int) $params->etapa_agregada === EtapaAgregada::ENSINO_MEDIO) &&
             isset($params->etapa_educacenso) &&
