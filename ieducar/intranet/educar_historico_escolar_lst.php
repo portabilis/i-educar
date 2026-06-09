@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyUserSchool;
 
 return new class extends clsListagem
 {
@@ -125,17 +126,8 @@ return new class extends clsListagem
                                                                                 WHERE cod_escola = $escolaAluno);");
         }
 
-        $escolasUsuario = new clsPmieducarEscolaUsuario;
-        $escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
-        $usuarioEscolaAluno = false;
-
-        foreach ($escolasUsuario as $escolaUsuario) {
-            $usuarioEscolaAluno = $escolaAluno == $escolaUsuario['ref_cod_escola'];
-
-            if ($usuarioEscolaAluno) {
-                break;
-            }
-        }
+        $escolasUsuario = LegacyUserSchool::query()->where('ref_cod_usuario', $this->pessoa_logada)->pluck('ref_cod_escola');
+        $usuarioEscolaAluno = $escolasUsuario->contains($escolaAluno);
 
         $permissaoCadastra = $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
         $historicoRestringido = Portabilis_Date_Utils::brToPgSQL($historico_restringido);

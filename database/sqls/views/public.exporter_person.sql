@@ -25,7 +25,7 @@ select
         when 3 then 'Estrangeira'::varchar
         else 'Não informado'::varchar
     end as nationality,
-    COALESCE(ci."name" || '/' || st.abbreviation, 'Não informado') as birthplace,
+    COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace,
     coe.name AS country_of_origin,
     re.name AS religion,
     case f.localizacao_diferenciada

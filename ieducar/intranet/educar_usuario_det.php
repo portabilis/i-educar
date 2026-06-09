@@ -2,6 +2,7 @@
 
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
+use App\Models\LegacyUserSchool;
 
 return new class extends clsDetalhe
 {
@@ -56,12 +57,11 @@ return new class extends clsDetalhe
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
-        $escolasUsuario = new clsPmieducarEscolaUsuario;
-        $escolasUsuario = $escolasUsuario->lista(ref_cod_usuario: $cod_pessoa);
+        $escolasUsuario = LegacyUserSchool::query()->where('ref_cod_usuario', $cod_pessoa)->pluck('ref_cod_escola');
 
         $nomesEscola = [];
-        foreach ($escolasUsuario as $escola) {
-            $escolaDetalhe = new clsPmieducarEscola(cod_escola: $escola['ref_cod_escola']);
+        foreach ($escolasUsuario as $codEscola) {
+            $escolaDetalhe = new clsPmieducarEscola(cod_escola: $codEscola);
             $escolaDetalhe = $escolaDetalhe->detalhe();
             $nomesEscola[] = $escolaDetalhe['nome'];
         }
