@@ -9,7 +9,8 @@ class CreateInfoEnrollmentView extends Migration
 
     public function up(): void
     {
-        $this->dropView('public.info_enrollment');
+        $this->down();
+
         $this->createView('public.info_enrollment');
     }
 

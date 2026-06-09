@@ -9,13 +9,10 @@ class CreateEducacensoRecordsView extends Migration
 
     public function up(): void
     {
-        $this->dropView('public.educacenso_record20');
-        $this->dropView('public.educacenso_record40');
-        $this->dropView('public.educacenso_record50');
-        $this->dropView('public.educacenso_record60');
+        $this->down();
 
-        $this->createView('public.educacenso_record40');
         $this->createView('public.educacenso_record20');
+        $this->createView('public.educacenso_record40');
         $this->createView('public.educacenso_record50');
         $this->createView('public.educacenso_record60');
     }

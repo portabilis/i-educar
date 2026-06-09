@@ -1,14 +1,11 @@
 <?php
 
-use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    use AsView;
-
     public function up()
     {
         DB::statement('ALTER TABLE IF EXISTS pmieducar.ano_letivo_modulo DROP CONSTRAINT IF EXISTS ano_letivo_modulo_pkey;');

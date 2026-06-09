@@ -7,23 +7,14 @@ class CreateRelatorioViewSituacaoView extends Migration
 {
     use AsView;
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
-        $this->dropView('relatorio.view_situacao');
+        $this->down();
+
         $this->createView('relatorio.view_situacao');
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropView('relatorio.view_situacao');
     }
