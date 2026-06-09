@@ -7,7 +7,7 @@ SELECT matricula.cod_matricula,
            WHEN matricula_turma.remanejado THEN 'Remanejado'::character varying
            WHEN matricula_turma.transferido THEN 'Transferido'::character varying
            WHEN matricula_turma.reclassificado THEN 'Reclassificado'::character varying
-           WHEN matricula_turma.abandono THEN 'Abandono'::character varying
+           WHEN matricula_turma.abandono THEN 'Deixou de Frequentar'::character varying
            WHEN matricula.aprovado = 1 THEN 'Aprovado'::character varying
            WHEN matricula.aprovado = 12 THEN 'Ap. Depen.'::character varying
            WHEN matricula.aprovado = 13 THEN 'Ap. Cons.'::character varying
@@ -15,7 +15,7 @@ SELECT matricula.cod_matricula,
            WHEN matricula.aprovado = 3 THEN 'Cursando'::character varying
            WHEN matricula.aprovado = 4 THEN 'Transferido'::character varying
            WHEN matricula.aprovado = 5 THEN 'Reclassificado'::character varying
-           WHEN matricula.aprovado = 6 THEN 'Abandono'::character varying
+           WHEN matricula.aprovado = 6 THEN 'Deixou de Frequentar'::character varying
            WHEN matricula.aprovado = 14 THEN 'Rp. Faltas'::character varying
            WHEN matricula.aprovado = 15 THEN 'Falecido'::character varying
            ELSE 'Recl'::character varying
@@ -24,7 +24,7 @@ SELECT matricula.cod_matricula,
            WHEN matricula_turma.remanejado THEN 'Rem'::character varying
            WHEN matricula_turma.transferido THEN 'Trs'::character varying
            WHEN matricula_turma.reclassificado THEN 'Recl'::character varying
-           WHEN matricula_turma.abandono THEN 'Aba'::character varying
+           WHEN matricula_turma.abandono THEN 'DeFr'::character varying
            WHEN matricula.aprovado = 1 THEN 'Apr'::character varying
            WHEN matricula.aprovado = 12 THEN 'ApDp'::character varying
            WHEN matricula.aprovado = 13 THEN 'ApCo'::character varying
@@ -32,7 +32,7 @@ SELECT matricula.cod_matricula,
            WHEN matricula.aprovado = 3 THEN 'Cur'::character varying
            WHEN matricula.aprovado = 4 THEN 'Trs'::character varying
            WHEN matricula.aprovado = 5 THEN 'Recl'::character varying
-           WHEN matricula.aprovado = 6 THEN 'Aba'::character varying
+           WHEN matricula.aprovado = 6 THEN 'DeFr'::character varying
            WHEN matricula.aprovado = 14 THEN 'RpFt'::character varying
            WHEN matricula.aprovado = 15 THEN 'Fal'::character varying
            ELSE 'Recl'::character varying
