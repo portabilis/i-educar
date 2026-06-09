@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyUserSchool;
 use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 return new class extends clsDetalhe
@@ -224,13 +225,7 @@ return new class extends clsDetalhe
             // Verifica se a escola foi digitada manualmente no histórico
             $escola_usuario = '';
             if ($ref_cod_escola == '') {
-                $escolasUsuario = new clsPmieducarEscolaUsuario;
-                $escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
-
-                $idEscolasUsuario = [];
-                foreach ($escolasUsuario as $escola) {
-                    $idEscolasUsuario[] = $escola['ref_cod_escola'];
-                }
+                $idEscolasUsuario = LegacyUserSchool::query()->where('ref_cod_usuario', $this->pessoa_logada)->pluck('ref_cod_escola');
 
                 $escola_ultima_matricula = $db->CampoUnico("SELECT ref_ref_cod_escola
                                                               FROM pmieducar.matricula
@@ -238,7 +233,7 @@ return new class extends clsDetalhe
                                                           ORDER BY cod_matricula DESC
                                                              LIMIT 1");
 
-                $possuiVinculoComEscolaUltimaMatricula = in_array(needle: $escola_ultima_matricula, haystack: $idEscolasUsuario);
+                $possuiVinculoComEscolaUltimaMatricula = $idEscolasUsuario->contains($escola_ultima_matricula);
 
                 if (($possuiVinculoComEscolaUltimaMatricula) || $this->nivel_usuario == 1 || $this->nivel_usuario == 2) {
                     if ($registro['origem']) {

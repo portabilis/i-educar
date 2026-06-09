@@ -2,7 +2,7 @@
 
 namespace App\Models\Builders;
 
-class LegacySequenceGradeBuilder extends LegacyBuilder
+class LegacyGradeSequenceBuilder extends LegacyBuilder
 {
     /**
      * Filtra por Instituição

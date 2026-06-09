@@ -123,6 +123,11 @@
             "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
+        "testing-install": [
+            "@composer install",
+            "@php artisan key:generate --ansi",
+            "@php artisan migrate --force --ansi --env=testing"
+        ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
@@ -141,6 +146,7 @@
         "allow-plugins": {
             "dex/composer-plug-and-play": true,
             "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true,
             "php-http/discovery": true
         },
         "audit": {
