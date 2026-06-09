@@ -7,23 +7,14 @@ class CreatePeopleView extends Migration
 {
     use AsView;
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
-        $this->dropView('persons');
+        $this->down();
+
         $this->createView('persons');
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropView('persons');
     }

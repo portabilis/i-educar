@@ -9,7 +9,8 @@ class CreatePublicExporterPhonesView extends Migration
 
     public function up(): void
     {
-        $this->dropView('public.exporter_phones');
+        $this->down();
+
         $this->createView('public.exporter_phones');
     }
 

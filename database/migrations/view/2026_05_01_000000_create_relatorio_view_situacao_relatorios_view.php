@@ -9,7 +9,8 @@ class CreateRelatorioViewSituacaoRelatoriosView extends Migration
 
     public function up(): void
     {
-        $this->dropView('relatorio.view_situacao_relatorios');
+        $this->down();
+
         $this->createView('relatorio.view_situacao_relatorios');
     }
 
