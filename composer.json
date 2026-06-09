@@ -146,6 +146,7 @@
         "allow-plugins": {
             "dex/composer-plug-and-play": true,
             "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true,
             "php-http/discovery": true
         },
         "audit": {
