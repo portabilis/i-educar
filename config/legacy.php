@@ -86,7 +86,6 @@ return [
         'entity' => [
             'name' => 'Prefeitura Municipal',
         ],
-        'superuser' => 'admin',
         'user_accounts' => [
             'default_password_expiration_period' => '180',
         ],
