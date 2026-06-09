@@ -7,22 +7,14 @@ class CreateFunctionGetDateInYear extends Migration
 {
     use MigrationUtils;
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
-        $this->executeSqlFile(database_path('sqls/functions/pmieducar.get_date_in_year-2020-05-12.sql'));
+        $this->down();
+
+        $this->executeSqlFile(database_path('sqls/functions/pmieducar.get_date_in_year.sql'));
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         DB::statement('DROP FUNCTION IF EXISTS pmieducar.get_date_in_year(year INTEGER, date DATE)');
     }
