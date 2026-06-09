@@ -114,19 +114,6 @@ return [
         'faltas_notas' => [
             'mostrar_botao_replicar' => '1',
         ],
-        'mailer' => [
-            'smtp' => [
-                'from_name' => env('MAIL_FROM_NAME', 'Example'),
-                'from_email' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-                'port' => env('MAIL_PORT', 587),
-                'auth' => boolval(env('MAIL_ENCRYPTION', 'tls')),
-                'username' => env('MAIL_USERNAME'),
-                'password' => env('MAIL_PASSWORD'),
-                'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            ],
-            'debug' => false,
-        ],
         'recaptcha' => [
             'public_key' => '',
             'private_key' => '',

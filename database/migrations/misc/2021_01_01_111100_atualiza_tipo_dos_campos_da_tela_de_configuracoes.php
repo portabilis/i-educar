@@ -52,7 +52,6 @@ class AtualizaTipoDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.modules.error.track\' THEN \'boolean\'
                     WHEN \'legacy.report.reservas_de_vagas_integrais_por_escola.renda_per_capita_order\' THEN \'boolean\'
                     WHEN \'legacy.report.diario_classe.dias_temporarios\' THEN \'integer\'
-                    WHEN \'legacy.app.mailer.debug\' THEN \'boolean\'
                     WHEN \'legacy.modules.error.notification_email\' THEN \'boolean\'
                     WHEN \'preregistration.active\' THEN \'boolean\'
                     WHEN \'preregistration.enabled\' THEN \'boolean\'

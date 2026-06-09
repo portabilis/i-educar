@@ -119,15 +119,6 @@ class UpdateCategoriesInSettings extends Migration
                     WHEN \'legacy.app.recaptcha_v3.private_key\' THEN ' . $this->getSettingCategoryIdByName('Recaptcha v3') . '
                     WHEN \'legacy.app.recaptcha_v3.public_key\' THEN ' . $this->getSettingCategoryIdByName('Recaptcha v3') . '
                     WHEN \'legacy.app.recaptcha_v3.minimum_score\' THEN ' . $this->getSettingCategoryIdByName('Recaptcha v3') . '
-                    WHEN \'legacy.app.mailer.smtp.from_email\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.smtp.auth\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.smtp.from_name\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.smtp.host\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.smtp.password\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.smtp.username\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.smtp.port\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.smtp.encryption\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    WHEN \'legacy.app.mailer.debug\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
                     ELSE setting_category_id
                 END
             );
