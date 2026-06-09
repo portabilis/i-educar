@@ -226,8 +226,6 @@ return new class extends clsCadastro
             }
         }
 
-        $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal);
-
         $user = Auth::user();
 
         if ($user->ref_cod_instituicao) {
@@ -237,6 +235,8 @@ return new class extends clsCadastro
             $obrigarCpf = LegacyInstitution::query()
                 ->first(['obrigar_cpf'])?->obrigar_cpf;
         }
+
+        $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal, obrigatorio: (bool) $obrigarCpf);
 
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
 
