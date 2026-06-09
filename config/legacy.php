@@ -62,11 +62,6 @@ return [
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
         ],
-        'aws' => [
-            'bucketname' => env('AWS_BUCKET'),
-            'awsacesskey' => env('AWS_ACCESS_KEY_ID'),
-            'awssecretkey' => env('AWS_SECRET_ACCESS_KEY'),
-        ],
         'template' => [
             'vars' => [
                 'instituicao' => 'Prefeitura Municipal',
