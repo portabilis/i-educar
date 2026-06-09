@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyUserSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -151,11 +152,10 @@ class clsPermissoes
      */
     public function getEscolas($int_idpes_usuario)
     {
-        $objEscolaUsuario = new clsPmieducarEscolaUsuario;
-        $escolas = $objEscolaUsuario->lista($int_idpes_usuario);
+        $escolas = LegacyUserSchool::query()->where('ref_cod_usuario', $int_idpes_usuario)->pluck('ref_cod_escola');
 
-        if (!empty($escolas)) {
-            return Portabilis_Array_Utils::arrayColumn($escolas, 'ref_cod_escola');
+        if ($escolas->isNotEmpty()) {
+            return $escolas->all();
         }
 
         return false;

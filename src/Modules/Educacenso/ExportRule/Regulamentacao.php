@@ -13,22 +13,10 @@ class Regulamentacao implements EducacensoExportRule
      */
     public static function handle(RegistroEducacenso $registro00): RegistroEducacenso
     {
-        if ($registro00->regulamentacao == RegulamentacaoModel::NAO) {
-            $registro00->esferaFederal = null;
-            $registro00->esferaEstadual = null;
-            $registro00->esferaMunicipal = null;
-        }
+        $valoresPermitidos = [RegulamentacaoModel::SIM, RegulamentacaoModel::EM_TRAMITACAO];
 
-        if ($registro00->esferaFederal == 0) {
-            $registro00->esferaFederal = null;
-        }
-
-        if ($registro00->esferaEstadual == 0) {
-            $registro00->esferaEstadual = null;
-        }
-
-        if ($registro00->esferaMunicipal == 0) {
-            $registro00->esferaMunicipal = null;
+        if (!in_array($registro00->regulamentacao, $valoresPermitidos)) {
+            $registro00->esferaAdministrativa = null;
         }
 
         return $registro00;

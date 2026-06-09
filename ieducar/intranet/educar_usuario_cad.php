@@ -3,6 +3,7 @@
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyUserSchool;
 use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
 use App\User;
@@ -447,8 +448,7 @@ return new class extends clsCadastro
 
     public function excluiTodosVinculosEscola($codUsuario)
     {
-        $usuarioEscola = new clsPmieducarEscolaUsuario;
-        $usuarioEscola->excluirTodos($codUsuario);
+        LegacyUserSchool::query()->where('ref_cod_usuario', $codUsuario)->delete();
     }
 
     public function insereUsuarioEscolas($codUsuario, $escolas)
@@ -456,10 +456,11 @@ return new class extends clsCadastro
         $this->excluiTodosVinculosEscola($codUsuario);
 
         foreach ($escolas as $e) {
-            $usuarioEscola = new clsPmieducarEscolaUsuario;
-            $usuarioEscola->ref_cod_usuario = $codUsuario;
-            $usuarioEscola->ref_cod_escola = $e;
-            $usuarioEscola->cadastra();
+            LegacyUserSchool::create([
+                'ref_cod_usuario' => $codUsuario,
+                'ref_cod_escola' => $e,
+                'escola_atual' => 0,
+            ]);
         }
     }
 
