@@ -83,13 +83,6 @@ return [
             'province' => 'SP',
             'timezone' => 'America/Sao_Paulo',
         ],
-        'admin' => [
-            'reports' => [
-                'sql_tempo' => '3',
-                'pagina_tempo' => '5',
-                'emails' => '',
-            ],
-        ],
         'entity' => [
             'name' => 'Prefeitura Municipal',
         ],
