@@ -583,18 +583,18 @@ return new class extends clsCadastro
             'max_length' => 14,
             'value' => $this->codigo_inep_educacenso]);
 
-        $helperOptions = ['objectName' => 'tipo_atendimento'];
+        $resources = TipoAtendimentoTurma::getDescriptiveValues();
+        $resources = array_replace([null => 'Selecione'], $resources);
+
         $options = [
             'label' => 'Tipo de turma',
+            'resources' => $resources,
+            'value' => is_array($this->tipo_atendimento) ? ($this->tipo_atendimento[0] ?? null) : $this->tipo_atendimento,
             'required' => $obrigarCamposCenso,
             'size' => 70,
-            'options' => [
-                'values' => $this->tipo_atendimento,
-                'all_values' => TipoAtendimentoTurma::getDescriptiveValues(),
-            ],
         ];
 
-        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+        $this->inputsHelper()->select(attrName: 'tipo_atendimento', inputOptions: $options);
 
         $atividadesComplementares = loadJson(file: 'educacenso_json/atividades_complementares.json');
         $helperOptions = ['objectName' => 'atividades_complementares'];
