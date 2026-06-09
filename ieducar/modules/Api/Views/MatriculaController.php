@@ -240,13 +240,12 @@ class MatriculaController extends ApiCoreController
 
     protected function getNomeSituacaoMatricula(int $situacao): ?string
     {
-    return App_Model_MatriculaSituacao::getInstance()
-        ->getValue($situacao);
+        return App_Model_MatriculaSituacao::getInstance()
+            ->getValue($situacao);
     }
 
     protected function loadMatriculasAluno($alunoId, $escolaId)
     {
-        // #TODO mostrar o nome da situação da matricula
         // seleciona somente matriculas em andamento, aprovado, reprovado, em exame, aprovado apos exame e retido faltas
         $sql = 'select cod_matricula as id, ano, ref_cod_instituicao as instituicao_id, ref_ref_cod_escola as
             escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id, matricula.aprovado as aprovado from pmieducar.matricula,
@@ -265,7 +264,7 @@ class MatriculaController extends ApiCoreController
                 $matriculas[$key]['nome_escola'] = $this->loadNomeEscola($this->getRequest()->escola_id);
                 $matriculas[$key]['nome_serie'] = $this->loadNameFor('serie', $matricula['serie_id']);
                 $matriculas[$key]['situacao'] = $this->getNomeSituacaoMatricula((int) $matricula['aprovado']);
-                
+
                 $turma = $this->tryLoadMatriculaTurma($matricula['id']);
 
                 if (is_array($turma) and count($turma) > 0) {
