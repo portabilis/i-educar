@@ -15,6 +15,9 @@ class CreateExporterPersonView extends Migration
         $this->dropView('public.exporter_teacher');
         $this->dropView('public.exporter_student');
         $this->dropView('public.exporter_person');
+        $this->dropView('public.exporter_benefits');
+        $this->dropView('public.exporter_disabilities');
+        $this->dropView('public.exporter_projects');
 
         $this->createView('public.exporter_person');
         $this->createView('public.exporter_student');
@@ -22,6 +25,9 @@ class CreateExporterPersonView extends Migration
         $this->createView('public.exporter_teacher');
         $this->createView('public.exporter_employee');
         $this->createView('public.exporter_social_assistance');
+        $this->createView('public.exporter_benefits');
+        $this->createView('public.exporter_disabilities');
+        $this->createView('public.exporter_projects');
     }
 
     public function down(): void
@@ -32,5 +38,8 @@ class CreateExporterPersonView extends Migration
         $this->dropView('public.exporter_teacher');
         $this->dropView('public.exporter_student');
         $this->dropView('public.exporter_person');
+        $this->dropView('public.exporter_benefits');
+        $this->dropView('public.exporter_disabilities');
+        $this->dropView('public.exporter_projects');
     }
 }
