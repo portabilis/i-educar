@@ -16,7 +16,6 @@ class AtualizaNomenclaturaDeConfiguracoes extends Migration
             UPDATE settings
             SET description = (
                 CASE key
-                    WHEN \'legacy.code\' THEN \'Habilitar código legado?\'
                     WHEN \'legacy.display_errors\' THEN \'Exibir erros código legado?\'
                     WHEN \'legacy.apis.access_key\' THEN \'Chave de acesso ao i-Educar\'
                     WHEN \'legacy.apis.secret_key\' THEN \'Chave secreta do i-Educar\'

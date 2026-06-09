@@ -16,7 +16,6 @@ class AtualizaTipoDosCamposDaTelaDeConfiguracoes extends Migration
             UPDATE settings
             SET type = (
                 CASE key
-                    WHEN \'legacy.code\' THEN \'boolean\'
                     WHEN \'legacy.display_errors\' THEN \'boolean\'
                     WHEN \'legacy.app.administrative_pending.exist\' THEN \'boolean\'
                     WHEN \'legacy.app.alunos.mostrar_codigo_sistema\' THEN \'boolean\'

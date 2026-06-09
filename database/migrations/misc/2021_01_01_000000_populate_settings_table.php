@@ -13,7 +13,6 @@ class PopulateSettingsTable extends Migration
     public function up()
     {
         $settings = [
-            'legacy.code' => '1',
             'legacy.display_errors' => '0',
             'legacy.path' => 'ieducar',
             'legacy.apis.access_key' => 'ieducar-access-key',

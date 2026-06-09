@@ -4,19 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Legacy Code
-    |--------------------------------------------------------------------------
-    |
-    | This value determines which application is running. Default is the new
-    | version using Laravel structure. Another case your application is running
-    | using i-Educar legacy code.
-    |
-    */
-
-    'code' => env('LEGACY_CODE', true),
-
-    /*
-    |--------------------------------------------------------------------------
     | Display Errors
     |--------------------------------------------------------------------------
     |
