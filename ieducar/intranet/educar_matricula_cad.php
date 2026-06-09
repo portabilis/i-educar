@@ -6,6 +6,7 @@ use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyGradeSequence;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyRegistration;
@@ -498,10 +499,9 @@ return new class extends clsCadastro
                 $objAluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
                 $detAluno = $objAluno->detalhe();
 
-                $objPes = new clsPessoaFisica(int_idpes: $detAluno['ref_idpes']);
-                $detPes = $objPes->detalhe();
+                $dataNasc = LegacyIndividual::whereKey($detAluno['ref_idpes'])->value('data_nasc');
 
-                $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento(dataNascimento: $detPes['data_nasc'], ano: $this->ano);
+                $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento(dataNascimento: $dataNasc, ano: $this->ano);
 
                 if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
                     $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série';
@@ -758,10 +758,9 @@ return new class extends clsCadastro
         $aluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
         $aluno = $aluno->detalhe();
 
-        $pessoa = new clsPessoaFisica(int_idpes: $aluno['ref_idpes']);
-        $pessoa = $pessoa->detalhe();
+        $falecido = LegacyIndividual::whereKey($aluno['ref_idpes'])->value('falecido');
 
-        return dbBool(val: $pessoa['falecido']);
+        return dbBool(val: $falecido);
     }
 
     public function bloqueiaMatriculaSerieNaoSeguinte()
