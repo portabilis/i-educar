@@ -471,33 +471,20 @@ return new class extends clsCadastro
 
     private function carregaDadosContato($idpes)
     {
-        $objPessoa = new clsPessoaFj($idpes);
-        [
-            $this->p_ddd_telefone_1,
-            $this->p_telefone_1,
-            $this->p_ddd_telefone_2,
-            $this->p_telefone_2,
-            $this->p_ddd_telefone_mov,
-            $this->p_telefone_mov,
-            $this->p_ddd_telefone_fax,
-            $this->p_telefone_fax,
-            $this->p_email,
-            $this->p_http,
-            $this->tipo_pessoa
-        ] = $objPessoa->queryRapida(
-            $idpes,
-            'ddd_1',
-            'fone_1',
-            'ddd_2',
-            'fone_2',
-            'ddd_mov',
-            'fone_mov',
-            'ddd_fax',
-            'fone_fax',
-            'email',
-            'url',
-            'tipo'
-        );
+        $pessoa = LegacyPerson::query()->with('phones')->find($idpes, ['idpes', 'email', 'url', 'tipo']);
+        $telefones = $pessoa?->phones->keyBy('tipo') ?? collect();
+        $tel1 = $telefones->get(LegacyPhone::TYPE_LANDLINE);
+        $tel2 = $telefones->get(LegacyPhone::TYPE_MOBILE);
+        $cel  = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
+        $fax  = $telefones->get(LegacyPhone::TYPE_FAX);
+
+        $this->p_ddd_telefone_1   = $tel1?->ddd; $this->p_telefone_1   = $tel1?->fone;
+        $this->p_ddd_telefone_2   = $tel2?->ddd; $this->p_telefone_2   = $tel2?->fone;
+        $this->p_ddd_telefone_mov = $cel?->ddd;  $this->p_telefone_mov = $cel?->fone;
+        $this->p_ddd_telefone_fax = $fax?->ddd;  $this->p_telefone_fax = $fax?->fone;
+        $this->p_email            = $pessoa?->email;
+        $this->p_http             = $pessoa?->url;
+        $this->tipo_pessoa        = $pessoa?->tipo;
     }
 
     private function carregaDadosDoPost()
@@ -2677,9 +2664,9 @@ return new class extends clsCadastro
 
     protected function storeManagerEmail($employeeId, $email)
     {
-        $person = LegacyPerson::find($employeeId);
-        $person->email = $email;
-        $person->save();
+        $pessoa = LegacyPerson::find($employeeId);
+        $pessoa->email = $email;
+        $pessoa->save();
     }
 
     protected function storeInepCode($employeeId, $inepCode)
