@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDocument;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyPhone;
 use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
@@ -277,14 +278,13 @@ class clsPessoaFj extends Model
                 $detalhePessoa['idlog'] = $this->idlog;
             }
 
-            $obj_fisica = new clsFisica($this->idpes);
-            $detalhe_fisica = $obj_fisica->detalhe();
+            $detalhe_fisica = LegacyIndividual::find($this->idpes, ['cpf', 'data_nasc']);
 
             if ($detalhe_fisica) {
-                $detalhePessoa['cpf'] = $detalhe_fisica['cpf'];
+                $detalhePessoa['cpf'] = $detalhe_fisica->getRawOriginal('cpf');
 
-                $this->cpf = $detalhe_fisica['cpf'];
-                $this->data_nasc = $detalhe_fisica['data_nasc'];
+                $this->cpf = $detalhe_fisica->getRawOriginal('cpf');
+                $this->data_nasc = $detalhe_fisica->getRawOriginal('data_nasc');
 
                 if ($this->data_nasc) {
                     $detalhePessoa['data_nasc'] = $this->data_nasc;

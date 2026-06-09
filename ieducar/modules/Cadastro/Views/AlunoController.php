@@ -2,6 +2,7 @@
 
 use App\Models\EducacensoIndigenousPeople;
 use App\Models\LegacyDocument;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
@@ -332,9 +333,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $foto = false;
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $personObject = new clsFisica($this->cod_pessoa_fj);
-            $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
-            $this->renda_mensal = (empty($personObject->detalhe()['renda_mensal']) == false) ? $personObject->detalhe()['renda_mensal'] : '';
+            $personObject = LegacyIndividual::find($this->cod_pessoa_fj, ['observacao', 'renda_mensal']);
+            $this->observacao = !empty($personObject?->observacao) ? $personObject->observacao : '';
+            $this->renda_mensal = !empty($personObject?->renda_mensal) ? $personObject->renda_mensal : '';
             $foto = LegacyIndividualPicture::whereKey($this->cod_pessoa_fj)->value('caminho') ?? false;
         } else {
             $this->observacao = '';
@@ -440,10 +441,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $nisPisPasep = '';
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $fisica = new clsFisica($this->cod_pessoa_fj);
-            $fisica = $fisica->detalhe();
-            $valorCpf = is_numeric($fisica['cpf']) ? int2CPF($fisica['cpf']) : '';
-            $nisPisPasep = int2Nis($fisica['nis_pis_pasep']);
+            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep']);
+            $valorCpf = is_numeric($fisica?->getRawOriginal('cpf')) ? int2CPF($fisica->getRawOriginal('cpf')) : '';
+            $nisPisPasep = int2Nis($fisica?->nis_pis_pasep);
         }
 
         /** @var User $user */

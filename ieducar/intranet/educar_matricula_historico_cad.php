@@ -138,7 +138,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        if ($enturmacao->data_enturmacao?->format('Y-m-d') !== $dataEnturmacao) {
+        if ($dataEnturmacao && $enturmacao->data_enturmacao?->format('Y-m-d') !== $dataEnturmacao) {
             $enturmacao->data_enturmacao = $dataEnturmacao;
             $enturmacao->save();
         }
@@ -159,7 +159,7 @@ return new class extends clsCadastro
             $enturmacaoService->markWithSituation($enturmacao, $this->matricula_situacao);
         }
 
-        if (empty($dataSaidaMatricula)) {
+        if (empty($dataSaidaMatricula) && $dataExclusao) {
             $matricula->data_cancel = $dataExclusao;
             $matricula->save();
         }
