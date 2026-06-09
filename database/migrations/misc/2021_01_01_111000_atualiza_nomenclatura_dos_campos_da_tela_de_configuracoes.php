@@ -21,8 +21,6 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.apis.secret_key\' THEN \'Chave secreta do i-Educar\'
                     WHEN \'legacy.apis.educacao_token_header\' THEN \'Cabeçalho do Token da Api do i-Diário\'
                     WHEN \'legacy.apis.educacao_token_key\' THEN \'Chave do Token da Api do i-Diário\'
-                    WHEN \'legacy.app.administrative_pending.exist\' THEN \'Possui pendência administrativa?\'
-                    WHEN \'legacy.app.administrative_pending.msg\' THEN \'Texto de pendência administrativa\'
                     WHEN \'legacy.app.administrative_tools_url\' THEN \'Url do administrativo\'
                     WHEN \'legacy.app.alunos.mostrar_codigo_sistema\' THEN \'Exibir campo "Código sistema" no cadastro do aluno\'
                     WHEN \'legacy.app.alunos.codigo_sistema\' THEN \'Label do campo "Código sistema" no cadastro do aluno\'

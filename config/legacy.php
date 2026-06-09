@@ -62,10 +62,6 @@ return [
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
         ],
-        'administrative_pending' => [
-            'exist' => '',
-            'msg' => '',
-        ],
         'aws' => [
             'bucketname' => env('AWS_BUCKET'),
             'awsacesskey' => env('AWS_ACCESS_KEY_ID'),

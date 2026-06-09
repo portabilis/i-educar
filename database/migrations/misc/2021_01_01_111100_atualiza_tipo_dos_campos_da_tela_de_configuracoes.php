@@ -17,7 +17,6 @@ class AtualizaTipoDosCamposDaTelaDeConfiguracoes extends Migration
             SET type = (
                 CASE key
                     WHEN \'legacy.display_errors\' THEN \'boolean\'
-                    WHEN \'legacy.app.administrative_pending.exist\' THEN \'boolean\'
                     WHEN \'legacy.app.alunos.mostrar_codigo_sistema\' THEN \'boolean\'
                     WHEN \'legacy.app.alunos.laudo_medico_obrigatorio\' THEN \'boolean\'
                     WHEN \'legacy.app.alunos.nao_apresentar_campo_alfabetizado\' THEN \'boolean\'

@@ -26,8 +26,6 @@ class PopulateSettingsTable extends Migration
             'legacy.app.database.dbname' => 'ieducar',
             'legacy.app.database.username' => 'ieducar',
             'legacy.app.database.password' => 'ieducar',
-            'legacy.app.administrative_pending.exist' => null,
-            'legacy.app.administrative_pending.msg' => '<p>Identificamos pendências administrativas da sua instituição para utilização do sistema. Sendo assim, pedimos que o responsável pelo sistema entre em contato com o Administrador do sistema o mais breve.</p><br/><b>Telefone:</b> (xx) xxxx-xxxx <br/> <b>E-mail:</b> contato@domain.com.br',
             'legacy.app.aws.bucketname' => null,
             'legacy.app.aws.awsacesskey' => null,
             'legacy.app.aws.awssecretkey' => null,

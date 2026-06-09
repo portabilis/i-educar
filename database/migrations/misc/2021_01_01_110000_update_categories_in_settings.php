@@ -20,8 +20,6 @@ class UpdateCategoriesInSettings extends Migration
                     WHEN \'legacy.apis.educacao_token_key\' THEN ' . $this->getSettingCategoryIdByName('Integração entre iEducar e iDiário') . '
                     WHEN \'legacy.app.novoeducacao.caminho_api\' THEN ' . $this->getSettingCategoryIdByName('Integração entre iEducar e iDiário') . '
                     WHEN \'legacy.app.novoeducacao.url\' THEN ' . $this->getSettingCategoryIdByName('Integração entre iEducar e iDiário') . '
-                    WHEN \'legacy.app.administrative_pending.exist\' THEN ' . $this->getSettingCategoryIdByName('Administrativo') . '
-                    WHEN \'legacy.app.administrative_pending.msg\' THEN ' . $this->getSettingCategoryIdByName('Administrativo') . '
                     WHEN \'legacy.app.administrative_tools_url\' THEN ' . $this->getSettingCategoryIdByName('Administrativo') . '
                     WHEN \'legacy.config.active_on_ieducar\' THEN ' . $this->getSettingCategoryIdByName('Administrativo') . '
                     WHEN \'legacy.app.database.dbname\' THEN ' . $this->getSettingCategoryIdByName('Banco de dados') . '
