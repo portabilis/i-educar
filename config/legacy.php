@@ -41,8 +41,6 @@ return [
         database_path('migrations/legacy'),
     ],
 
-    'env' => env('LEGACY_ENV', 'local'),
-
     'gtm' => env('GOOGLE_TAG_MANAGER'),
 
     'apis' => [
