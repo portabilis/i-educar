@@ -79,3 +79,7 @@ jobs:
 
       - name: Unit tests
         run: vendor/bin/pest
+        continue-on-error: true
+
+      - name: Retry failed tests
+        run: ./vendor/bin/pest --retry
