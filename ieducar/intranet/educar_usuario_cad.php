@@ -2,6 +2,7 @@
 
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
+use App\Models\LegacyBondType;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyUserSchool;
 use App\Services\ChangeUserPasswordService;
@@ -159,8 +160,7 @@ return new class extends clsCadastro
 
         $this->campoMemo(nome: 'motivo', campo: 'Motivo', valor: $this->motivo, descricao: 'Mensagem que será exibida ao usuário no momento de tentar acessar sua conta.', colunas: 60, linhas: 5);
 
-        $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
-        $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
+        $opcoes = ['' => 'Selecione'] + LegacyBondType::orderBy('cod_funcionario_vinculo')->pluck('nm_vinculo', 'cod_funcionario_vinculo')->all();
         $this->campoLista(nome: 'ref_cod_funcionario_vinculo', campo: 'Vínculo', valor: $opcoes, default: $this->ref_cod_funcionario_vinculo);
 
         $tempoExpiraSenha = config('legacy.app.user_accounts.default_password_expiration_period');
