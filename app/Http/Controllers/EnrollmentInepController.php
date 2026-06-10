@@ -25,8 +25,9 @@ class EnrollmentInepController extends Controller
     {
         $cargaHorariaIntegralizada = $request->input('carga_horaria_integralizada');
         $cargaHorariaIntegralizada = $enrollment->schoolClass->permiteCargaHorariaIntegralizada()
-            && $cargaHorariaIntegralizada !== null
-            && $cargaHorariaIntegralizada !== ''
+            && is_numeric($cargaHorariaIntegralizada)
+            && $cargaHorariaIntegralizada >= 0
+            && $cargaHorariaIntegralizada <= 9999
                 ? (int) $cargaHorariaIntegralizada
                 : null;
 

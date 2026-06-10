@@ -101,6 +101,7 @@
                                    name="carga_horaria_integralizada"
                                    id="carga_horaria_integralizada"
                                    min="0"
+                                   max="9999"
                                    inputmode="numeric"
                                    value="{{ $enrollment->carga_horaria_integralizada ?? null }}"
                                    {{ $podePreencherCargaHoraria ? '' : 'disabled' }}
