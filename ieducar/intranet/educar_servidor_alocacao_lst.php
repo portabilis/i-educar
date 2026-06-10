@@ -114,6 +114,12 @@ return new class extends clsListagem
 
         // Monta a lista
         if (is_array($lista) && count($lista)) {
+            $funcoesServidor = LegacyEmployeeRole::query()
+                ->with('role')
+                ->whereIn('cod_servidor_funcao', array_filter(array_column($lista, 'ref_cod_servidor_funcao'), 'is_numeric'))
+                ->get()
+                ->keyBy('cod_servidor_funcao');
+
             foreach ($lista as $registro) {
                 $path = 'educar_servidor_alocacao_det.php';
                 $options = [
@@ -133,9 +139,7 @@ return new class extends clsListagem
                 ];
 
                 // Função
-                $funcaoServidor = LegacyEmployeeRole::query()->with('role')->find($registro['ref_cod_servidor_funcao']);
-
-                $funcao = $funcaoServidor?->role?->getAttributes();
+                $funcao = $funcoesServidor->get($registro['ref_cod_servidor_funcao'])?->role?->getAttributes();
 
                 // Vinculo
                 $funcionarioVinculo = LegacyBondType::whereKey($registro['ref_cod_funcionario_vinculo'])->value('nm_vinculo');
