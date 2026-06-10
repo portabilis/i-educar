@@ -9,8 +9,6 @@ class CreateViewComponenteCurricularView extends Migration
 
     public function up(): void
     {
-        $this->down();
-
         $this->createView('relatorio.view_componente_curricular');
     }
 
