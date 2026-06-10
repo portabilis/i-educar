@@ -1916,6 +1916,8 @@ function canShowParentsFields() {
                   <td valign="top">
                     <fieldset>
                       <legend>Dados básicos</legend>
+                      <label for="cpf-pessoa-aluno">CPF</label>
+                      <input type="text" name="cpf-pessoa-aluno" id="cpf-pessoa-aluno" size="16" maxlength="14" class="text" placeholder="000.000.000-00">
                       <label for="nome-pessoa-aluno">Nome<span class="campo_obrigatorio">*</span> </label>
                       <input type="text" name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="49" maxlength="255" class="text">
                       <label for="nome-social-pessoa-aluno">Nome social e/ou afetivo</label>
@@ -2045,6 +2047,7 @@ function canShowParentsFields() {
       apartamento = $j("#apartamento"),
       bloco = $j("#bloco"),
       andar = $j("#andar"),
+      cpfAluno = $j("#cpf-pessoa-aluno"),
       allFields = $j([])
         .add(name)
         .add(observacao)
@@ -2063,7 +2066,19 @@ function canShowParentsFields() {
         .add(letra)
         .add(apartamento)
         .add(bloco)
-        .add(andar);
+        .add(andar)
+        .add(cpfAluno);
+
+    // CPF obrigatorio no modal do aluno quando o parametro "Exigir CPF" esta ativo
+    var obrigarCPFModalAluno = obrigarCPF.val() == 1;
+
+    if ($j.fn.mask) {
+      cpfAluno.mask("000.000.000-00");
+    }
+
+    if (obrigarCPFModalAluno) {
+      $j('label[for="cpf-pessoa-aluno"]').append(' <span style="color:#cc0000">*</span>');
+    }
 
     municipio
       .show()
@@ -2403,6 +2418,21 @@ function canShowParentsFields() {
               );
           }
 
+          var cpfValAluno = cpfAluno.val().trim();
+          if (obrigarCPFModalAluno && cpfValAluno === "") {
+            bValid = false;
+            cpfAluno.addClass("error");
+            messageUtils.error("O campo CPF é obrigatório.");
+          } else if (
+            cpfValAluno !== "" &&
+            typeof validationUtils !== "undefined" &&
+            !validationUtils.validatesCpf(cpfValAluno)
+          ) {
+            bValid = false;
+            cpfAluno.addClass("error");
+            messageUtils.error("CPF inválido.");
+          }
+
           if (bValid) {
             postPessoa(
               $j(this),
@@ -2427,6 +2457,7 @@ function canShowParentsFields() {
               nome_social.val(),
               $j("#pais_residencia").val(),
               $j("#povo_indigena_educacenso_id").val(),
+              cpfAluno.val().trim()
             );
           }
         },
@@ -2454,7 +2485,7 @@ function canShowParentsFields() {
     });
 
     $j("body").append(
-      '<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>'
+      '<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="cpf-pessoa-parent">CPF</label> <input type="text" name="cpf-pessoa-parent" id="cpf-pessoa-parent" size="16" maxlength="14" class="text" placeholder="000.000.000-00"> <label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>'
     );
 
     $j("#dialog-form-pessoa-parent").find(":input").css("display", "block");
@@ -2464,12 +2495,25 @@ function canShowParentsFields() {
       estadocivilParent = $j("#estado-civil-pessoa-parent"),
       datanascParent = $j("#data-nasc-pessoa-parent"),
       falecidoParent = $j("#falecido-parent"),
+      cpfParent = $j("#cpf-pessoa-parent"),
       allFields = $j([])
         .add(nameParent)
         .add(sexoParent)
         .add(estadocivilParent)
         .add(datanascParent)
-        .add(falecidoParent);
+        .add(falecidoParent)
+        .add(cpfParent);
+
+    // CPF obrigatorio no modal quando o parametro da instituicao "Exigir CPF" esta ativo
+    var obrigarCPFModalParent = obrigarCPF.val() == 1;
+
+    if ($j.fn.mask) {
+      cpfParent.mask("000.000.000-00");
+    }
+
+    if (obrigarCPFModalParent) {
+      $j('label[for="cpf-pessoa-parent"]').append(' <span style="color:#cc0000">*</span>');
+    }
 
     $j("#dialog-form-pessoa-parent").dialog({
       autoOpen: false,
@@ -2499,6 +2543,21 @@ function canShowParentsFields() {
               );
           }
 
+          var cpfValParent = cpfParent.val().trim();
+          if (obrigarCPFModalParent && cpfValParent === "") {
+            bValid = false;
+            cpfParent.addClass("error");
+            messageUtils.error("O campo CPF é obrigatório.");
+          } else if (
+            cpfValParent !== "" &&
+            typeof validationUtils !== "undefined" &&
+            !validationUtils.validatesCpf(cpfValParent)
+          ) {
+            bValid = false;
+            cpfParent.addClass("error");
+            messageUtils.error("CPF inválido.");
+          }
+
           if (bValid) {
             postPessoa(
               $(this),
@@ -2516,7 +2575,16 @@ function canShowParentsFields() {
               null,
               null,
               null,
-              falecidoParent.is(":checked")
+              falecidoParent.is(":checked"),
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              cpfParent.val().trim()
             );
           }
         },
@@ -2983,10 +3051,12 @@ function canShowParentsFields() {
     localizacao_diferenciada,
     nome_social,
     pais_residencia,
-    povo_indigena_educacenso_id
+    povo_indigena_educacenso_id,
+    cpf
   ) {
     var data = {
       nome: nome,
+      cpf: cpf,
       sexo: sexo,
       estadocivil: estadocivil,
       datanasc: datanasc,
