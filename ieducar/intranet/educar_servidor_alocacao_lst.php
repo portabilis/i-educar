@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\LegacyBondType;
+use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyPerson;
-use App\Models\LegacyRole;
 
 return new class extends clsListagem
 {
@@ -133,10 +133,9 @@ return new class extends clsListagem
                 ];
 
                 // Função
-                $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $registro['ref_cod_servidor_funcao']);
-                $funcaoServidor = $funcaoServidor->detalhe();
+                $funcaoServidor = LegacyEmployeeRole::query()->with('role')->find($registro['ref_cod_servidor_funcao']);
 
-                $funcao = LegacyRole::find($funcaoServidor['ref_cod_funcao'])?->getAttributes();
+                $funcao = $funcaoServidor?->role?->getAttributes();
 
                 // Vinculo
                 $funcionarioVinculo = LegacyBondType::whereKey($registro['ref_cod_funcionario_vinculo'])->value('nm_vinculo');
