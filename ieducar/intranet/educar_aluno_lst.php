@@ -2,6 +2,7 @@
 
 use App\Models\DataSearch\StudentFilter;
 use App\Models\LegacyStudent;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 return new class extends clsListagem
 {
@@ -100,6 +101,7 @@ return new class extends clsListagem
         $this->inputsHelper()->dynamic(helperNames: 'escolaSemFiltroPorUsuario', inputOptions: ['required' => false, 'value' => $this->ref_cod_escola, 'label_hint' => 'Retorna alunos com matrículas na escola selecionada']);
         $this->inputsHelper()->dynamic(helperNames: 'curso', inputOptions: ['required' => false, 'label_hint' => 'Retorna alunos com matrículas no curso selecionado']);
         $this->inputsHelper()->dynamic(helperNames: 'serie', inputOptions: ['required' => false, 'label_hint' => 'Retorna alunos com matrículas na série selecionada']);
+        $this->inputsHelper()->dynamic(helperNames: 'situacaoMatricula', inputOptions: ['required' => false, 'label_hint' => 'Retorna alunos com matrículas compatíveis com esta situação']);
 
         $obj_permissoes = new clsPermissoes;
         $cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
@@ -134,6 +136,7 @@ return new class extends clsListagem
         $dataFilter = [
             'rg' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->rg_aluno),
             'year' => $this->ano,
+            'enrollmentStatus' => ((int) $this->situacao_matricula_id && (int) $this->situacao_matricula_id !== EnrollmentStatusFilter::ALL) ? (int) $this->situacao_matricula_id : null,
             'cpf' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno),
             'inep' => $this->cod_inep,
             'grade' => $this->ref_cod_serie,
