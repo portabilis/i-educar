@@ -2,10 +2,10 @@
 
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
-use App\Models\LegacyStageType;
 use App\Models\View\Discipline;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
@@ -276,11 +276,13 @@ return new class extends clsDetalhe
                 );
             }
         } elseif ($padrao_ano_escolar == 0) {
-            $obj = new clsPmieducarTurmaModulo;
-            $obj->setOrderby(strNomeCampo: 'sequencial ASC');
-            $lst = $obj->lista(int_ref_cod_turma: $this->cod_turma);
+            $lst = LegacySchoolClassStage::query()
+                ->whereSchoolClass($this->cod_turma)
+                ->orderBySequencial()
+                ->with('stageType:cod_modulo,nm_tipo')
+                ->get(['ref_cod_modulo', 'data_inicio', 'data_fim', 'dias_letivos']);
 
-            if ($lst) {
+            if ($lst->isNotEmpty()) {
                 $tabela = '
           <table>
             <tr align="center">
@@ -299,10 +301,10 @@ return new class extends clsDetalhe
                         $color = ' bgcolor="#FFFFFF" ';
                     }
 
-                    $nm_modulo = LegacyStageType::find($valor['ref_cod_modulo'])->nm_tipo;
+                    $nm_modulo = $valor->stageType->nm_tipo;
 
-                    $valor['data_inicio'] = dataFromPgToBr(data_original: $valor['data_inicio']);
-                    $valor['data_fim'] = dataFromPgToBr(data_original: $valor['data_fim']);
+                    $data_inicio = $valor['data_inicio']->format('d/m/Y');
+                    $data_fim = $valor['data_fim']->format('d/m/Y');
 
                     $tabela .= sprintf(
                         '
@@ -315,9 +317,9 @@ return new class extends clsDetalhe
                         $color,
                         $nm_modulo,
                         $color,
-                        $valor['data_inicio'],
+                        $data_inicio,
                         $color,
-                        $valor['data_fim'],
+                        $data_fim,
                         $color,
                         $valor['dias_letivos']
                     );
