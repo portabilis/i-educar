@@ -11,6 +11,7 @@ use App\Services\SchoolClassInepService;
 use App\Services\SchoolClassStageService;
 use ComponenteCurricular_Model_TurmaDataMapper;
 use Exception;
+use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\SchoolClass\Period;
 use Illuminate\Http\Request;
@@ -195,6 +196,18 @@ class SchoolClassController extends Controller
             $params['atividades_complementares'] = null;
         }
 
+        $organizacaoCurricular = is_array($params['organizacao_curricular'] ?? null)
+            ? array_map('intval', $params['organizacao_curricular'])
+            : [];
+        $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
+
+        $cargaHorariaTotal = $params['carga_horaria_total'] ?? null;
+        if (!$iftpAtivo || $cargaHorariaTotal === null || $cargaHorariaTotal === '') {
+            $params['carga_horaria_total'] = null;
+        } else {
+            $params['carga_horaria_total'] = (int) $cargaHorariaTotal;
+        }
+
         if (isset($params['organizacao_curricular'])) {
             $params['organizacao_curricular'] = '{' . implode(',', $params['organizacao_curricular']) . '}';
         } else {
@@ -205,15 +218,22 @@ class SchoolClassController extends Controller
             $params['formas_organizacao_turma'] = null;
         }
 
-        if (isset($params['tipo_atendimento']) && !in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $params['tipo_atendimento'])) {
+        if (isset($params['tipo_atendimento']) && !is_array($params['tipo_atendimento'])) {
+            $params['tipo_atendimento'] = $params['tipo_atendimento'] !== '' ? [$params['tipo_atendimento']] : [];
+        }
+
+        $tiposComAtividadeComplementar = [TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR];
+        $tiposComCurricular = [TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR];
+
+        if (isset($params['tipo_atendimento']) && empty(array_intersect($tiposComAtividadeComplementar, $params['tipo_atendimento']))) {
             $params['atividades_complementares'] = '{}';
         }
 
-        if (isset($params['tipo_atendimento']) && !in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $params['tipo_atendimento'])) {
+        if (isset($params['tipo_atendimento']) && empty(array_intersect($tiposComCurricular, $params['tipo_atendimento']))) {
             $params['classe_especial'] = null;
         }
 
-        if (isset($params['tipo_atendimento'])) {
+        if (isset($params['tipo_atendimento']) && !empty($params['tipo_atendimento'])) {
             $params['tipo_atendimento'] = '{' . implode(',', $params['tipo_atendimento']) . '}';
         } else {
             $params['tipo_atendimento'] = null;
@@ -225,7 +245,7 @@ class SchoolClassController extends Controller
             $params['cod_curso_profissional'] = null;
         }
 
-        $etapasCursoTecnico = [39, 40, 64];
+        $etapasCursoTecnico = [39, 40, 64, 74];
 
         if (isset($params['etapa_educacenso'])
             && !in_array($params['etapa_educacenso'], $etapasCursoTecnico)) {

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyPerson;
+
 return new class extends clsDetalhe
 {
     public function Gerar()
@@ -18,11 +20,8 @@ return new class extends clsDetalhe
         if ($cod_agenda && $db->ProximoRegistro()) {
             [$cod_agenda, $nm_agenda, $publica, $envia_alerta, $pessoa_cad, $data_cad, $pessoa_own] = $db->Tupla();
 
-            $objPessoa = new clsPessoaFisica;
-            [$nome] = $objPessoa->queryRapida($pessoa_cad, 'nome');
-
-            $objPessoa_ = new clsPessoaFisica;
-            [$nm_pessoa_own] = $objPessoa_->queryRapida($pessoa_own, 'nome');
+            $nome = LegacyPerson::whereKey($pessoa_cad)->value('nome');
+            $nm_pessoa_own = LegacyPerson::whereKey($pessoa_own)->value('nome');
 
             $this->addDetalhe(detalhe: ['Código da Agenda', $cod_agenda]);
             $this->addDetalhe(detalhe: ['Agenda', $nm_agenda]);
@@ -37,20 +36,22 @@ return new class extends clsDetalhe
                 $editores .= "<b>$nm_pessoa_own</b><br>";
             }
 
-            $edit_array = [];
+            $editorIds = [];
             $db2->Consulta(consulta: "SELECT ref_ref_cod_pessoa_fj FROM portal.agenda_responsavel WHERE ref_cod_agenda = '{$cod_agenda}'");
             while ($db2->ProximoRegistro()) {
-                [$nome] = $objPessoa->queryRapida($db2->Campo(Nome: 'ref_ref_cod_pessoa_fj'), 'nome');
-                $edit_array[] = $nome;
+                $editorIds[] = $db2->Campo(Nome: 'ref_ref_cod_pessoa_fj');
             }
+
+            $edit_array = LegacyPerson::whereIn('idpes', $editorIds)
+                ->orderBy('nome')
+                ->pluck('nome')
+                ->all();
 
             if (!count(value: $edit_array)) {
                 if (!$nm_pessoa_own) {
                     $editores .= 'Nenhum editor cadastrado';
                 }
             } else {
-                asort(array: $edit_array);
-                reset(array: $edit_array);
                 $editores .= implode(separator: '<br>', array: $edit_array);
             }
             $this->addDetalhe(detalhe: ['Editores autorizados', $editores]);

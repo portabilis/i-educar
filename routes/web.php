@@ -6,8 +6,10 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\SocialiteCallbackController;
 use App\Http\Controllers\SocialiteRedirectController;
+use App\Http\Controllers\TransferWebhookCallbackController;
 use App\Http\Controllers\WebController;
 use App\Http\Middleware\AnnouncementMiddleware;
+use App\Http\Middleware\ValidToken;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +38,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/user', [WebController::class, 'user']);
     Route::get('/institution', [WebController::class, 'institution']);
     Route::get('/menus', [WebController::class, 'menus']);
+    Route::get('/authorization', [WebController::class, 'authorization']);
 
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_lst.php')
@@ -210,3 +213,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
 Route::get('/auth/redirect', SocialiteRedirectController::class)->name('socialite.redirect');
 Route::get('/auth/callback', SocialiteCallbackController::class)->name('socialite.callback');
+
+Route::post('/webhook/transfer/{id}', TransferWebhookCallbackController::class)
+    ->name('webhook.transfer.callback')
+    ->middleware(ValidToken::class);
