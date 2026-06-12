@@ -85,7 +85,6 @@ return new class extends clsCadastro
         $classType->desc_beneficio = $this->desc_beneficio;
         $classType->bolsa_familia = !is_null($this->bolsa_familia);
 
-
         if ($classType->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');
