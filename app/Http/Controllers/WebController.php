@@ -14,6 +14,29 @@ class WebController extends Controller
         return $request->user()->load('type');
     }
 
+    public function authorization(Request $request)
+    {
+        return $request->user()->processes->map(function ($process) {
+            $ability = $process->process;
+
+            $data = [];
+
+            if ($process->pivot->visualiza) {
+                $data[] = "view:$ability";
+            }
+
+            if ($process->pivot->cadastra) {
+                $data[] = "modify:$ability";
+            }
+
+            if ($process->pivot->exclui) {
+                $data[] = "remove:$ability";
+            }
+
+            return $data;
+        })->flatten();
+    }
+
     public function menus(MenuCacheService $menus, Request $request)
     {
         return $menus->getMenuByUser($request->user());
