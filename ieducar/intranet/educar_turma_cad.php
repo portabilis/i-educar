@@ -651,6 +651,7 @@ return new class extends clsCadastro
             3 => 'Ciclo(s)',
             4 => 'Grupos não seriados com base na idade ou competência',
             5 => 'Módulos',
+            6 => 'Turma de Formação por alternância (alternância regular de períodos de estudos)',
         ];
 
         $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70];
