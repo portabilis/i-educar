@@ -439,6 +439,31 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    public function campoCor(
+        $nome,
+        $campo,
+        $valor,
+        $opcoes = [],
+        $descricao = '',
+        $obrigatorio = true,
+    ) {
+        $arr_componente = [
+            'color',
+            $this->__adicionando_tabela ? $nome : $campo,
+            $obrigatorio,
+            $opcoes,
+            $valor,
+            null,
+            $descricao,
+        ];
+
+        if (!$this->__adicionando_tabela) {
+            $this->campos[$nome] = $arr_componente;
+        } else {
+            $this->__campos_tabela[] = $arr_componente;
+        }
+    }
+
     /**
      * Configurar campo do tipo ListaPesquisa
      *
@@ -1677,6 +1702,18 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= implode('<br>', $tmpRetorno);
+                        break;
+
+                    case 'color':
+                        $opcoes = '<datalist id="cores">';
+                        foreach ($componente[3] as $cor) {
+                            $cor = '#' . ltrim($cor, '#'); // garante que tenha #
+                            $opcoes .= "<option value=\"$cor\"></option>";
+                        }
+                        $opcoes .= '</datalist>';
+
+                        $retorno .= $opcoes;
+                        $retorno .= "<input class=\"{$class}\" type='color' list='cores' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[4]}\" style='height: 40px; width: 40px; padding: 3px'>";
                         break;
                 } // endswitch
 

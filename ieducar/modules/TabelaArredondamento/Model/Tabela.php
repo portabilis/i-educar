@@ -7,6 +7,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
         'nome' => null,
         'tipoNota' => null,
         'arredondarNota' => null,
+        'normalizarMedia' => null,
     ];
 
     protected $_references = [
@@ -68,7 +69,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
      *
      * @return mixed
      */
-    public function round($value, $tipoNota, $limitDecimalRound = 1)
+    public function round($value, $tipoNota, $limitDecimalRound = 1, $qtdeEtapas = null)
     {
         // carrega tabela de arredondamento, caso ainda não tenha sido carregada.
         if (count($this->_tabelaValores) == 0) {
@@ -96,6 +97,15 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
         }
 
         if ($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL) {
+            // Normaliza a média dividindo pela quantidade de etapas
+            // tipoNota: 1 = nota de etapa, 2 = média
+            if ($tipoNota == 2
+                && $this->get('normalizarMedia') == 1
+                && $qtdeEtapas > 0) {
+                $value = $value / $qtdeEtapas;
+                $value = Portabilis_Utils_Float::limitDecimal($value, ['limit' => $limitDecimalRound ?? 1]);
+            }
+
             // Multiplicador para transformar os números em uma escala inteira.
             $scale = pow(10, $this->_precision);
 

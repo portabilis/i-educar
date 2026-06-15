@@ -184,7 +184,7 @@ return new class extends clsCadastro
             nome: 'ref_cod_modulo',
             campo: 'Etapa',
             valor: $opcoesCampoModulo,
-            default: \Request::get('ref_cod_modulo', $this->ref_cod_modulo),
+            default: Request::get('ref_cod_modulo', $this->ref_cod_modulo),
             acao: null,
             duplo: null,
             descricao: null,
@@ -204,9 +204,9 @@ return new class extends clsCadastro
 
             if (Request::has('data_inicio')) {
                 foreach (Request::get('data_inicio') as $key => $campo) {
-                    $this->ano_letivo_modulo[$qtd_registros][] = \Request::get('data_inicio')[$key] ?? null;
-                    $this->ano_letivo_modulo[$qtd_registros][] = \Request::get('data_fim')[$key] ?? null;
-                    $this->ano_letivo_modulo[$qtd_registros][] = \Request::get('dias_letivos')[$key] ?? null;
+                    $this->ano_letivo_modulo[$qtd_registros][] = Request::get('data_inicio')[$key] ?? null;
+                    $this->ano_letivo_modulo[$qtd_registros][] = Request::get('data_fim')[$key] ?? null;
+                    $this->ano_letivo_modulo[$qtd_registros][] = Request::get('dias_letivos')[$key] ?? null;
                     $qtd_registros++;
                 }
             } else {

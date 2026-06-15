@@ -4,13 +4,13 @@ class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
 {
     public function test_instancia_lanca_excecao_caso_codigo_de_matricula_nao_seja_informado()
     {
-        $this->expectException(\CoreExt_Service_Exception::class);
+        $this->expectException(CoreExt_Service_Exception::class);
         new Avaliacao_Service_Boletim;
     }
 
     public function test_instancia_lanca_excecao_com_opcao_nao_aceita_pela_classe()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new Avaliacao_Service_Boletim(['matricula' => 1, 'foo' => 'bar']);
     }
 

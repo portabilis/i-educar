@@ -131,7 +131,7 @@ return new class extends clsCadastro
                 ->prepend(value: 'Selecione', key: '');
         }
 
-        $script = 'javascript:showExpansivelIframe(520, 230, \'educar_nivel_ensino_cad_pop.php\');';
+        $script = "javascript:showExpansivelIframe(520, 230, 'educar_nivel_ensino_cad_pop.php?ref_cod_instituicao=' + document.getElementById('ref_cod_instituicao').value);";
         if ($this->ref_cod_instituicao) {
             $script = "<img id='img_nivel_ensino' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
         } else {
@@ -157,7 +157,7 @@ return new class extends clsCadastro
                 ->prepend(value: 'Selecione', key: '');
         }
 
-        $script = 'javascript:showExpansivelIframe(520, 150, \'educar_tipo_ensino_cad_pop.php\');';
+        $script = "javascript:showExpansivelIframe(520, 150, 'educar_tipo_ensino_cad_pop.php?ref_cod_instituicao=' + document.getElementById('ref_cod_instituicao').value);";
         if ($this->ref_cod_instituicao) {
             $script = "<img id='img_tipo_ensino' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
         } else {
@@ -184,7 +184,7 @@ return new class extends clsCadastro
                 ->prepend(value: 'Selecione', key: '');
         }
 
-        $script = 'javascript:showExpansivelIframe(520, 120, \'educar_tipo_regime_cad_pop.php\');';
+        $script = "javascript:showExpansivelIframe(520, 120, 'educar_tipo_regime_cad_pop.php?ref_cod_instituicao=' + document.getElementById('ref_cod_instituicao').value);";
 
         if ($this->ref_cod_instituicao) {
             $script = "<img id='img_tipo_regime' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";

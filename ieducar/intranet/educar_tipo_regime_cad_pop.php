@@ -27,6 +27,7 @@ return new class extends clsCadastro
         $retorno = 'Novo';
 
         $this->cod_tipo_regime = $_GET['cod_tipo_regime'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(568, $this->pessoa_logada, 3, 'educar_tipo_regime_lst.php');

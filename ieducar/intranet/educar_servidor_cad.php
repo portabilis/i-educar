@@ -5,13 +5,17 @@ use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeePosgraduate;
 use App\Models\LegacyAbsenceDelay;
+use App\Models\LegacyDeficiency;
 use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyIndividual;
+use App\Models\LegacyPerson;
 use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
 use App\Services\EmployeePosgraduateService;
 use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
+use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
 use iEducar\Modules\Educacenso\Model\PosGraduacao;
 use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 use iEducar\Modules\ValueObjects\EmployeePosgraduateValueObject;
@@ -217,11 +221,7 @@ return new class extends clsCadastro
          */
         $opcoes = ['' => 'Para procurar, clique na lupa ao lado.'];
         if ($this->cod_servidor) {
-            $servidor = new clsFuncionario($this->cod_servidor);
-            $servidor->detalhe();
-            // $detalhe = $detalhe['idpes']->detalhe();
-
-            $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
+            $this->campoRotulo('nm_servidor', 'Pessoa', LegacyPerson::whereKey($this->cod_servidor)->value('nome'));
             $this->campoOculto('cod_servidor', $this->cod_servidor);
             $this->campoOculto(
                 'ref_cod_instituicao_original',
@@ -380,16 +380,7 @@ return new class extends clsCadastro
             }
         }
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsCadastroEscolaridade;
-        $lista = $objTemp->lista();
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['idesco']] = $registro['descricao'];
-            }
-        }
+        $opcoes = LegacySchoolingDegree::query()->orderBy('descricao')->pluck('descricao', 'idesco')->prepend('Selecione', '')->toArray();
 
         $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4)) {
@@ -416,27 +407,7 @@ return new class extends clsCadastro
             'required' => $obrigarCamposCenso,
             'options' => [
                 'values' => $this->curso_formacao_continuada,
-                'all_values' => [
-                    1 => 'Creche (0 a 3 anos)',
-                    2 => 'Pré-escola (4 e 5 anos)',
-                    3 => 'Anos iniciais do ensino fundamental',
-                    4 => 'Anos finais do ensino fundamental',
-                    5 => 'Ensino médio',
-                    6 => 'Educação de jovens e adultos',
-                    7 => 'Educação especial',
-                    8 => 'Educação indígena',
-                    9 => 'Educação do campo',
-                    10 => 'Educação ambiental',
-                    11 => 'Educação em direitos humanos',
-                    18 => 'Educação bilíngue de surdos',
-                    19 => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
-                    12 => 'Gênero e diversidade sexual',
-                    13 => 'Direitos de criança e adolescente',
-                    14 => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',
-                    17 => 'Gestão Escolar',
-                    15 => 'Outros',
-                    16 => 'Nenhum',
-                ],
+                'all_values' => FormacaoContinuada::getDescriptiveValues(),
             ],
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
@@ -918,8 +889,27 @@ JS;
             ->delete();
     }
 
+    /**
+     * Remove a referência de função em registros inativos de falta_atraso.
+     *
+     * A validação (validaExclusaoFuncoes) só verifica registros ativos (ativo = 1),
+     * mas a FK no banco verifica todos. Sem isso, o DELETE em servidor_funcao
+     * falha com FK violation por causa dos registros inativos.
+     */
+    public function limpaFuncaoFaltaAtrasoInativos($funcoesMantidasIds)
+    {
+        LegacyAbsenceDelay::query()
+            ->onlyTrashed()
+            ->whereEmployee($this->cod_servidor)
+            ->whereNotNull('ref_cod_servidor_funcao')
+            ->when(!empty($funcoesMantidasIds), fn ($q) => $q->whereNotIn('ref_cod_servidor_funcao', $funcoesMantidasIds))
+            ->update(['ref_cod_servidor_funcao' => null]);
+    }
+
     public function excluiFuncoesRemovidas($funcoes)
     {
+        $this->limpaFuncaoFaltaAtrasoInativos($funcoes);
+
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
         $obj_servidor_funcao->excluirFuncoesRemovidas($funcoes);
     }
@@ -967,16 +957,22 @@ JS;
 
     protected function createOrUpdateDeficiencias()
     {
-        $servidorId = $this->cod_servidor;
+        if (!is_numeric($this->cod_servidor)) {
+            return;
+        }
 
-        $sql = 'delete from cadastro.fisica_deficiencia where ref_idpes = $1';
-        Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$servidorId]], false);
+        $individual = LegacyIndividual::find($this->cod_servidor, ['idpes']);
+        if (!$individual) {
+            return;
+        }
 
-        foreach ($this->getRequest()->deficiencias as $id) {
-            if (!empty($id)) {
-                $deficiencia = new clsCadastroFisicaDeficiencia($servidorId, $id);
-                $deficiencia->cadastra();
-            }
+        $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
+        $news = array_values(array_filter((array) $this->getRequest()->deficiencias, 'is_numeric'));
+        $individual->deficiency()->sync($news);
+
+        $diff = array_merge(array_diff($old, $news), array_diff($news, $old));
+        if (!empty($diff)) {
+            LegacyDeficiency::whereIn('cod_deficiencia', $diff)->update(['updated_at' => now()]);
         }
     }
 

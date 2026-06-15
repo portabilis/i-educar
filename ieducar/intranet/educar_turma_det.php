@@ -2,10 +2,13 @@
 
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStageType;
 use App\Models\View\Discipline;
+use App\Process;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe
@@ -371,7 +374,7 @@ return new class extends clsDetalhe
             $this->array_botao[] = 'Lançar pareceres da turma';
             $this->array_botao_url_script[] = sprintf('go("educar_parecer_turma_cad.php?cod_turma=%d");', $registro['cod_turma']);
 
-            $doesntExist = \App\Models\LegacySchoolClassTeacher::query()
+            $doesntExist = LegacySchoolClassTeacher::query()
                 ->where('ano', $registro['ano'])
                 ->where('turma_id', $registro['cod_turma'])
                 ->doesntExist();
@@ -379,6 +382,11 @@ return new class extends clsDetalhe
             if ($doesntExist) {
                 $this->array_botao[] = 'Copiar vínculo de servidores';
                 $this->array_botao_url_script[] = sprintf('go("copia_vinculos_servidores_cad.php?cod_turma=%d");', $registro['cod_turma']);
+            }
+
+            if (Auth::user()->can('view', Process::TIMETABLE)) {
+                $this->array_botao[] = 'Quadro de horários';
+                $this->array_botao_url_script[] = sprintf('go("/new/quadro-de-horarios/%d");', $registro['cod_turma']);
             }
         }
 

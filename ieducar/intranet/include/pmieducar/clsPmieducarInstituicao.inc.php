@@ -87,6 +87,8 @@ class clsPmieducarInstituicao extends Model
 
     public $obrigar_cpf;
 
+    public $proibir_reclassificacao_educacao_infantil_primeiro_ano;
+
     public $orgao_regional;
 
     public $exigir_lancamentos_anteriores;
@@ -133,7 +135,8 @@ class clsPmieducarInstituicao extends Model
         $permitir_matricula_fora_periodo_letivo = null,
         $ordenar_alunos_sequencial_enturmacao = null,
         $obrigar_telefone_pessoa = null,
-        $obrigar_cpf = null
+        $obrigar_cpf = null,
+        $proibir_reclassificacao_educacao_infantil_primeiro_ano = null
     ) {
 
         $this->_schema = 'pmieducar.';
@@ -191,7 +194,8 @@ class clsPmieducarInstituicao extends Model
             bloquear_vinculo_professor_sem_alocacao_escola,
             permitir_matricula_fora_periodo_letivo,
             ordenar_alunos_sequencial_enturmacao,
-            obrigar_telefone_pessoa
+            obrigar_telefone_pessoa,
+            proibir_reclassificacao_educacao_infantil_primeiro_ano
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -291,6 +295,10 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($obrigar_cpf)) {
             $this->obrigar_cpf = $obrigar_cpf;
+        }
+
+        if (is_bool($proibir_reclassificacao_educacao_infantil_primeiro_ano)) {
+            $this->proibir_reclassificacao_educacao_infantil_primeiro_ano = $proibir_reclassificacao_educacao_infantil_primeiro_ano;
         }
 
         if (is_bool($exigir_lancamentos_anteriores)) {
@@ -669,6 +677,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             } else {
                 $campos .= "{$gruda}obrigar_cpf";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->proibir_reclassificacao_educacao_infantil_primeiro_ano)) {
+                $campos .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano";
                 $valores .= "{$gruda} false ";
                 $gruda = ', ';
             }
@@ -1070,6 +1088,14 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}obrigar_cpf = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->proibir_reclassificacao_educacao_infantil_primeiro_ano)) {
+                $set .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano = false ";
                 $gruda = ', ';
             }
 
