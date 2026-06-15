@@ -3,7 +3,39 @@
 namespace App\Http;
 
 use App\Http\Middleware\AcceptJson;
+use App\Http\Middleware\AnnouncementMiddleware;
+use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\Authorize;
+use App\Http\Middleware\ChangeAppName;
+use App\Http\Middleware\CheckResetPassword;
+use App\Http\Middleware\CheckToken;
+use App\Http\Middleware\ConnectTenantDatabase;
+use App\Http\Middleware\Footer;
+use App\Http\Middleware\LoadSettings;
+use App\Http\Middleware\Navigation;
+use App\Http\Middleware\PreventIframe;
+use App\Http\Middleware\PreventRequestsDuringMaintenance;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\SetLayoutVariables;
+use App\Http\Middleware\Suspended;
+use App\Http\Middleware\TrimStrings;
+use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\XssByPass;
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use Illuminate\Auth\Middleware\RequirePassword;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Http\Middleware\HandleCors;
+use Illuminate\Http\Middleware\SetCacheHeaders;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Routing\Middleware\ValidateSignature;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class Kernel extends HttpKernel
 {
@@ -15,15 +47,15 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \App\Http\Middleware\TrustProxies::class,
-        \Illuminate\Http\Middleware\HandleCors::class,
-        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
-        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\ChangeAppName::class,
-        \App\Http\Middleware\ConnectTenantDatabase::class,
-        \App\Http\Middleware\LoadSettings::class,
+        TrustProxies::class,
+        HandleCors::class,
+        PreventRequestsDuringMaintenance::class,
+        ValidatePostSize::class,
+        TrimStrings::class,
+        ConvertEmptyStringsToNull::class,
+        ChangeAppName::class,
+        ConnectTenantDatabase::class,
+        LoadSettings::class,
     ];
 
     /**
@@ -33,17 +65,17 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\SetLayoutVariables::class,
-            \App\Http\Middleware\AnnouncementMiddleware::class,
-            \App\Http\Middleware\PreventIframe::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            ShareErrorsFromSession::class,
+            SubstituteBindings::class,
+            SetLayoutVariables::class,
+            AnnouncementMiddleware::class,
+            PreventIframe::class,
         ],
 
         'api' => [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            EnsureFrontendRequestsAreStateful::class,
             AcceptJson::class,
             'bindings',
             'throttle:60,1',
@@ -51,7 +83,7 @@ class Kernel extends HttpKernel
 
         'api:rest' => [
             'bindings',
-            \App\Http\Middleware\CheckToken::class,
+            CheckToken::class,
             'throttle:60,1',
         ],
     ];
@@ -64,21 +96,21 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareAliases = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can' => \App\Http\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'ieducar.navigation' => \App\Http\Middleware\Navigation::class,
-        'ieducar.setlayoutvariables' => \App\Http\Middleware\SetLayoutVariables::class,
-        'ieducar.footer' => \App\Http\Middleware\Footer::class,
-        'ieducar.xssbypass' => \App\Http\Middleware\XssByPass::class,
-        'ieducar.suspended' => \App\Http\Middleware\Suspended::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'ieducar.checkresetpassword' => \App\Http\Middleware\CheckResetPassword::class,
+        'auth' => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'bindings' => SubstituteBindings::class,
+        'cache.headers' => SetCacheHeaders::class,
+        'can' => Authorize::class,
+        'guest' => RedirectIfAuthenticated::class,
+        'password.confirm' => RequirePassword::class,
+        'signed' => ValidateSignature::class,
+        'throttle' => ThrottleRequests::class,
+        'ieducar.navigation' => Navigation::class,
+        'ieducar.setlayoutvariables' => SetLayoutVariables::class,
+        'ieducar.footer' => Footer::class,
+        'ieducar.xssbypass' => XssByPass::class,
+        'ieducar.suspended' => Suspended::class,
+        'verified' => EnsureEmailIsVerified::class,
+        'ieducar.checkresetpassword' => CheckResetPassword::class,
     ];
 }

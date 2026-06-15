@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateRegistrationStatusRequest;
 use App\Models\LegacyRegistration;
 use App\Process;
 use App\Services\RegistrationService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -30,7 +31,7 @@ class UpdateRegistrationStatusController extends Controller
      * Atualiza a situação das matrículas de acordo com o filtro
      *
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function updateStatus(UpdateRegistrationStatusRequest $request, RegistrationService $registrationService)
     {

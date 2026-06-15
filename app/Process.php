@@ -44,6 +44,8 @@ class Process
 
     public const DOCUMENT_EXPORT = 1026;
 
+    public const TIMETABLE = 1028;
+
     public const UNDO_STUDENT_UNIFICATION = 2001;
 
     public const EXEMPTION_LIST = 2002;
@@ -95,4 +97,6 @@ class Process
     public const RELOCATE = 695;
 
     public const UNENROLLMENT = 696;
+
+    public const COMPONENT_BATCH_MANAGER = 9999121;
 }

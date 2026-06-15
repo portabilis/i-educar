@@ -2,6 +2,7 @@
 
 use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
+use App\Models\LegacyPerson;
 use App\Services\EmployeeService;
 
 return new class extends clsListagem
@@ -53,11 +54,10 @@ return new class extends clsListagem
             'Minutos',
         ]);
 
-        $fisica = new clsPessoaFisica($this->ref_cod_servidor);
-        $fisica = $fisica->detalhe();
+        $nome = LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome');
 
         $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
-        $this->campoRotulo(nome: 'nm_servidor', campo: 'Servidor', valor: $fisica['nome']);
+        $this->campoRotulo(nome: 'nm_servidor', campo: 'Servidor', valor: $nome);
 
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: [
             'required' => false,

@@ -780,7 +780,7 @@ class clsPmieducarServidor extends Model
         AND qhh.ativo = '1'
         {$whereAno}";
             if (is_string($lst_matriculas)) {
-                $filtros .= "AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
+                $filtros .= " AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
             }
             $filtros .= ' ) OR s.multi_seriado) ';
             $whereAnd = ' AND ';
@@ -936,7 +936,9 @@ class clsPmieducarServidor extends Model
             $disciplinas[] = $row['ref_cod_disciplina'];
         }
         if (count($disciplinas)) {
-            return asort($disciplinas);
+            asort($disciplinas);
+
+            return $disciplinas;
         }
 
         return false;
@@ -1008,7 +1010,9 @@ class clsPmieducarServidor extends Model
             $disciplinas[] = $row['ref_cod_disciplina'];
         }
         if (count($disciplinas)) {
-            return asort($disciplinas);
+            asort($disciplinas);
+
+            return $disciplinas;
         }
 
         return false;

@@ -23,6 +23,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
         'codigo_educacenso' => 'codigo_educacenso',
         'ordenamento' => 'ordenamento',
         'desconsidera_para_progressao' => 'desconsidera_para_progressao',
+        'color' => 'color',
     ];
 
     protected $_notPersistable = [

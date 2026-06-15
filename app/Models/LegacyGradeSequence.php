@@ -2,37 +2,40 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyGradeSequenceBuilder;
 use App\Traits\Ativo;
-use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array<int, string> $fillable
+ */
 class LegacyGradeSequence extends LegacyModel
 {
     use Ativo;
-    use HasLegacyDates;
 
-    public const CREATED_AT = 'data_cadastro';
-
-    public const UPDATED_AT = null;
+    /** @use HasBuilder<LegacyGradeSequenceBuilder> */
+    use HasBuilder;
 
     protected $table = 'pmieducar.sequencia_serie';
 
-    protected $primaryKey = 'ref_serie_origem';
+    public const CREATED_AT = 'data_cadastro';
+
+    protected static string $builder = LegacyGradeSequenceBuilder::class;
 
     protected $fillable = [
-        'ref_usuario_exc',
-        'ref_usuario_cad',
         'ref_serie_origem',
         'ref_serie_destino',
-        'ativo',
-        'data_cadastro',
+        'ref_usuario_cad',
+        'ref_usuario_exc',
         'data_exclusao',
+        'ativo',
     ];
 
     /**
      * @return BelongsTo<LegacyGrade, $this>
      */
-    public function from(): BelongsTo
+    public function gradeOrigin(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_serie_origem');
     }
@@ -40,7 +43,7 @@ class LegacyGradeSequence extends LegacyModel
     /**
      * @return BelongsTo<LegacyGrade, $this>
      */
-    public function to(): BelongsTo
+    public function gradeDestiny(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_serie_destino');
     }

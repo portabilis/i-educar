@@ -723,7 +723,7 @@ class AcademicYearService
             if ($this->isLeapYear($adjustedDate)) {
                 $adjustedDate = str_replace('-02-29', '-02-28', $adjustedDate);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return $adjustedDate;
@@ -735,7 +735,7 @@ class AcademicYearService
             $year = Carbon::createFromFormat('Y-m-d', $date)->year;
 
             return $year % 4 === 0 && ($year % 100 !== 0 || $year % 400 === 0);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -1133,7 +1133,7 @@ class AcademicYearService
                 ],
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $schoolName = $school ? $school->nome : "Escola ID {$schoolId}";
 
             return [
@@ -1398,7 +1398,7 @@ class AcademicYearService
                 ],
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $schoolName = $school->nome ?? "Escola ID {$schoolId}";
 
             return $this->createSchoolValidationError($schoolId, "Escola '{$schoolName}': {$e->getMessage()}", $schoolName);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolingDegree;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro
@@ -30,9 +31,8 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(int_processo_ap: 632, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_escolaridade_lst.php');
 
         if (is_numeric($this->idesco)) {
-            $obj = new clsCadastroEscolaridade($this->idesco);
-            $registro = $obj->detalhe();
-            $this->findUsage = $obj->findUsages();
+            $registro = LegacySchoolingDegree::find($this->idesco)?->getAttributes();
+            $this->findUsage = $this->findUsages($this->idesco);
 
             if ($this->findUsage) {
                 $this->script_excluir = 'modalOpen();';
@@ -90,8 +90,12 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj = new clsCadastroEscolaridade(idesco: null, descricao: $this->descricao, escolaridade: $this->escolaridade);
-        $cadastrou = $obj->cadastra();
+        $data = ['descricao' => $this->descricao];
+        if (is_numeric($this->escolaridade)) {
+            $data['escolaridade'] = $this->escolaridade;
+        }
+        $model = LegacySchoolingDegree::create($data);
+        $cadastrou = $model->idesco;
 
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -105,8 +109,14 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj = new clsCadastroEscolaridade(idesco: $this->idesco, descricao: $this->descricao, escolaridade: $this->escolaridade);
-        $editou = $obj->edita();
+        $data = [];
+        if (is_string($this->descricao)) {
+            $data['descricao'] = $this->descricao;
+        }
+        if (is_numeric($this->escolaridade)) {
+            $data['escolaridade'] = $this->escolaridade;
+        }
+        $editou = !empty($data) ? LegacySchoolingDegree::whereKey($this->idesco)->update($data) : false;
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escolaridade_lst.php');
@@ -119,15 +129,13 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj = new clsCadastroEscolaridade(idesco: $this->idesco, descricao: $this->descricao);
-
-        if ($obj->findUsages()) {
+        if ($this->findUsages($this->idesco)) {
             $this->mensagem = 'Exclusão não realizada - Ainda existe vínculos.<br>';
 
             return false;
         }
 
-        $excluiu = $obj->excluir();
+        $excluiu = LegacySchoolingDegree::whereKey($this->idesco)->delete();
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escolaridade_lst.php');
@@ -142,5 +150,17 @@ return new class extends clsCadastro
     {
         $this->title = 'Servidores - Escolaridade';
         $this->processoAp = '632';
+    }
+
+    private function findUsages($idesco)
+    {
+        if (!is_numeric($idesco)) {
+            return false;
+        }
+
+        return LegacySchoolingDegree::query()
+            ->join('pmieducar.servidor', 'ref_idesco', 'idesco')
+            ->whereKey($idesco)
+            ->exists();
     }
 };

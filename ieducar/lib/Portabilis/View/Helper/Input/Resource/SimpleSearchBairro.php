@@ -19,7 +19,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabili
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql = 'select nome, zona_localizacao from public.bairro where idbai = $1';
+            $sql = 'SELECT neighborhood as nome, 1 as zona_localizacao FROM places WHERE id = $1';
             $options = ['params' => $id, 'return_only' => 'first-row'];
             $municipio = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
             $nome = $municipio['nome'];

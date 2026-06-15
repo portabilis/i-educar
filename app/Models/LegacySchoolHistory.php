@@ -10,6 +10,7 @@ use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $aprovado
@@ -79,16 +80,44 @@ class LegacySchoolHistory extends LegacyModel
     }
 
     /**
-     * @return BelongsTo<LegacySchoolHistoryDiscipline, $this>
+     * @return HasMany<LegacySchoolHistoryDiscipline, $this>
      */
-    public function disciplines(): BelongsTo
+    public function disciplines(): HasMany
     {
-        return $this->belongsTo(LegacySchoolHistoryDiscipline::class, 'ref_cod_aluno');
+        return $this->hasMany(LegacySchoolHistoryDiscipline::class, 'historico_escolar_id');
     }
 
     public function school(): void
     {
         $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
+    }
+
+    protected function escola(): Attribute
+    {
+        return Attribute::make(
+            set: fn (?string $value) => $value ? mb_strtoupper($value) : $value,
+        );
+    }
+
+    protected function escolaCidade(): Attribute
+    {
+        return Attribute::make(
+            set: fn (?string $value) => $value ? mb_strtoupper($value) : $value,
+        );
+    }
+
+    protected function frequencia(): Attribute
+    {
+        return Attribute::make(
+            set: function ($value) {
+                if ($value && str_contains((string) $value, ',')) {
+                    $value = str_replace('.', '', $value);
+                    $value = str_replace(',', '.', $value);
+                }
+
+                return is_numeric($value) ? $value : null;
+            },
+        );
     }
 
     protected function status(): Attribute
