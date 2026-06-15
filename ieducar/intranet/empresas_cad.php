@@ -187,6 +187,16 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!empty($this->insc_est)) {
+            $inscricaoLimpa = trim(strtoupper($this->insc_est));
+            if ($inscricaoLimpa !== 'ISENTO' && !is_numeric(str_replace(['.', '-', ' '], '', $inscricaoLimpa))) {
+                $this->mensagem = 'O campo Inscrição Estadual deve conter apenas números ou a palavra ISENTO.';
+                $this->busca_empresa = true;
+
+                return false;
+            }
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
@@ -378,6 +388,16 @@ return new class extends clsCadastro
             $this->busca_empresa = true;
 
             return false;
+        }
+
+        if (!empty($this->insc_est)) {
+            $inscricaoLimpa = trim(strtoupper($this->insc_est));
+            if ($inscricaoLimpa !== 'ISENTO' && !is_numeric(str_replace(['.', '-', ' '], '', $inscricaoLimpa))) {
+                $this->mensagem = 'O campo Inscrição Estadual deve conter apenas números ou a palavra ISENTO.';
+                $this->busca_empresa = true;
+
+                return false;
+            }
         }
 
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
