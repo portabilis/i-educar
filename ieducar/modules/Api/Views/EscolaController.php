@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchool;
+use App\Models\LegacyUserSchool;
 use Illuminate\Support\Facades\Auth;
 
 class EscolaController extends ApiCoreController
@@ -543,14 +544,7 @@ class EscolaController extends ApiCoreController
             return null;
         }
 
-        $escolasUsuario = new clsPmieducarEscolaUsuario;
-        $escolasUsuario = $escolasUsuario->lista($ref_cod_usuario);
-
-        $escolas = [];
-
-        foreach ($escolasUsuario as $escola) {
-            $escolas[] = $escola['ref_cod_escola'];
-        }
+        $escolas = LegacyUserSchool::query()->where('ref_cod_usuario', $ref_cod_usuario)->pluck('ref_cod_escola')->all();
 
         return ['escolas' => $escolas];
     }

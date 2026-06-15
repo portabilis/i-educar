@@ -102,6 +102,9 @@ class LegacyIndividual extends Model
         'ideciv',
         'observacao',
         'povo_indigena_educacenso_id',
+        'pai_restricao_judicial',
+        'mae_restricao_judicial',
+        'responsavel_restricao_judicial',
     ];
 
     /**

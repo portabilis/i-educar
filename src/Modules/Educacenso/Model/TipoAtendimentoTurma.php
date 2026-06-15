@@ -16,6 +16,8 @@ class TipoAtendimentoTurma
 
     public const AEE = 5;
 
+    public const CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR = 9;
+
     /**
      * @return array
      */
@@ -25,6 +27,7 @@ class TipoAtendimentoTurma
             self::CURRICULAR_ETAPA_ENSINO => 'Curricular (etapa de ensino)',
             self::ATIVIDADE_COMPLEMENTAR => 'Atividade complementar',
             self::AEE => 'Atendimento educacional especializado (AEE)',
+            self::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR => 'Curricular (etapa de ensino) com Atividade Complementar',
         ];
     }
 
