@@ -541,11 +541,7 @@ class PessoaController extends ApiCoreController
     private function validateCpf()
     {
         $cpf = $this->getRequest()->cpf;
-
-        $user = Auth::user();
-        $obrigarCpf = $user->ref_cod_instituicao
-            ? LegacyInstitution::query()->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf
-            : LegacyInstitution::query()->first(['obrigar_cpf'])?->obrigar_cpf;
+        $obrigarCpf = app(LegacyInstitution::class)->obrigar_cpf;
 
         if (empty($cpf)) {
             if ($obrigarCpf) {
