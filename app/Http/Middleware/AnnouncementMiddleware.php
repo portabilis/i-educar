@@ -5,16 +5,26 @@ namespace App\Http\Middleware;
 use App\Models\Announcement;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class AnnouncementMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        if (!$request->isMethod('GET') || $request->expectsJson() || $request->pjax()) {
+            return $next($request);
+        }
+
         if ($user = $request->user()) {
-            $announcement = Announcement::query()
-                ->whereHas('userTypes', fn ($q) => $q->whereKey($user->ref_cod_tipo_usuario)
-                )->latest()->first();
+            $announcement = Cache::remember(
+                "announcement.user_type.{$user->ref_cod_tipo_usuario}",
+                now()->addWeek(),
+                fn () => Announcement::query()
+                    ->whereHas('userTypes', fn ($q) => $q->whereKey($user->ref_cod_tipo_usuario))
+                    ->latest()
+                    ->first()
+            );
 
             if ($announcement?->show_confirmation && !$this->userConfirmedAnnouncement($announcement, $user)) {
                 Session::flash('error', 'Confirme a ciência do aviso antes de prosseguir!');

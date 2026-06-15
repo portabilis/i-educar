@@ -9,10 +9,10 @@ if (is_numeric(value: $_GET['idmun'])) {
     $db = new clsBanco;
     $db->Consulta(
         consulta: "
-            SELECT iddis, nome
-            FROM public.distrito
-            WHERE idmun = '{$_GET['idmun']}'
-            ORDER BY nome ASC
+            SELECT id as iddis, name as nome
+            FROM districts
+            WHERE city_id = '{$_GET['idmun']}'
+            ORDER BY name ASC
         "
     );
 

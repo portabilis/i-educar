@@ -12,6 +12,7 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
         'codigo_educacenso' => null,
         'ordenamento' => 99999,
         'desconsidera_para_progressao' => false,
+        'color' => '#FFFFFF',
     ];
 
     protected $_references = [

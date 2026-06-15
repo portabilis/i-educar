@@ -1,4 +1,4 @@
-create view public.exporter_student as
+create or replace view public.exporter_student as
 SELECT  p.id,
         p.name,
         p.social_name,
@@ -52,6 +52,7 @@ SELECT  p.id,
         END AS modalidade_ensino,
         me.cod_aluno_inep AS inep_id,
         a.codigo_sistema,
+        rt.name as regional_type,
         a.utiliza_transporte_rural AS uses_rural_transport
 FROM exporter_person p
         JOIN pmieducar.aluno a ON p.id = a.ref_idpes::numeric
@@ -68,5 +69,6 @@ FROM exporter_person p
         LEFT JOIN pmieducar.turma_turno tm ON tm.id = mt.turno_id
         LEFT JOIN modules.moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
         LEFT JOIN modules.educacenso_cod_aluno me ON me.cod_aluno = a.cod_aluno
+        LEFT JOIN public.regional_types rt ON rt.id = e.regional_type_id
 WHERE true AND a.ativo = 1 AND m.ativo = 1
 ORDER BY a.ref_idpes;

@@ -11,9 +11,9 @@ class EnrollmentTest extends ViewTestCase
     public function test_enrollment(): void
     {
         $found = Enrollment::query()->where('id', $this->model->id)->get();
-        $this->assertEquals(9, $found[0]->status);
-        $this->assertEquals(10, $found[1]->status);
-        $this->assertEquals(3, $found[2]->status);
+        $this->assertEquals(3, $found[0]->status);
+        $this->assertEquals(9, $found[1]->status);
+        $this->assertEquals(10, $found[2]->status);
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }
 
@@ -262,6 +262,7 @@ class EnrollmentTest extends ViewTestCase
                 'status_text' => 'Situação da Matrícula',
                 'period' => 'Turno',
                 'school_class_stage' => 'Etapa Educacenso',
+                'regional_type' => 'Regional',
             ],
             'Informações' => [
                 'nationality' => 'Nacionalidade',

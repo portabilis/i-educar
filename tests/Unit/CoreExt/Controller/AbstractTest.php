@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_Controller_AbstractTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_Controller_AbstractTest extends TestCase
 {
     protected $_controller = null;
 

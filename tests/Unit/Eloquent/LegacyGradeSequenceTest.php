@@ -8,12 +8,15 @@ use Tests\EloquentTestCase;
 
 class LegacyGradeSequenceTest extends EloquentTestCase
 {
-    public $relations = [
-        'from' => LegacyGrade::class,
-        'to' => LegacyGrade::class,
+    protected $relations = [
+        'gradeOrigin' => LegacyGrade::class,
+        'gradeDestiny' => LegacyGrade::class,
     ];
 
-    protected function getEloquentModelName(): string
+    /**
+     * @return string
+     */
+    protected function getEloquentModelName()
     {
         return LegacyGradeSequence::class;
     }

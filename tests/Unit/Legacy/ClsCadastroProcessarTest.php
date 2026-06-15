@@ -12,9 +12,13 @@ class StubCadastro extends clsCadastro
     }
 
     public $novoReturn = false;
+
     public $editarReturn = false;
+
     public $excluirReturn = false;
+
     public $inicializarReturn = '';
+
     public $formularCalled = false;
 
     public function Inicializar()
@@ -43,16 +47,14 @@ class StubCadastro extends clsCadastro
     }
 
     // Avoid calling Session facades in tests
-    protected function setFlashMessage()
-    {
-        return;
-    }
+    protected function setFlashMessage() {}
 
     // Helper para ler a mensagem privada
     public function getMensagem()
     {
         $rp = new ReflectionProperty(clsCadastro::class, '_mensagem');
         $rp->setAccessible(true);
+
         return $rp->getValue($this);
     }
 }
@@ -74,7 +76,7 @@ afterEach(function () {
 });
 
 it('CT-01: GET sem tipoacao chama Inicializar e Formular', function () {
-    $stub = new StubCadastro();
+    $stub = new StubCadastro;
     $stub->inicializarReturn = '';
 
     $stub->Processar();
@@ -86,7 +88,7 @@ it('CT-01: GET sem tipoacao chama Inicializar e Formular', function () {
 it('CT-02: Novo sucesso com script_sucesso gera script de fechamento', function () {
     $_POST['tipoacao'] = 'Novo';
 
-    $stub = new StubCadastro();
+    $stub = new StubCadastro;
     $stub->novoReturn = true;
     $stub->script_sucesso = 'alert(1);';
 
@@ -99,7 +101,7 @@ it('CT-02: Novo sucesso com script_sucesso gera script de fechamento', function 
 it('CT-03: Novo falha sem erros e sem mensagem preexistente define CAD01', function () {
     $_POST['tipoacao'] = 'Novo';
 
-    $stub = new StubCadastro();
+    $stub = new StubCadastro;
     $stub->novoReturn = false;
     $stub->erros = null;
     // garantir que nao ha mensagem preexistente
@@ -113,7 +115,7 @@ it('CT-03: Novo falha sem erros e sem mensagem preexistente define CAD01', funct
 it('CT-04: Novo sucesso com script_sucesso vazio nao cria script', function () {
     $_POST['tipoacao'] = 'Novo';
 
-    $stub = new StubCadastro();
+    $stub = new StubCadastro;
     $stub->novoReturn = true;
     $stub->script_sucesso = '';
 
@@ -127,7 +129,7 @@ it('CT-04: Novo sucesso com script_sucesso vazio nao cria script', function () {
 it('CT-05: Novo falha mesmo com script_sucesso preenchido nao cria script', function () {
     $_POST['tipoacao'] = 'Novo';
 
-    $stub = new StubCadastro();
+    $stub = new StubCadastro;
     $stub->novoReturn = false;
     $stub->script_sucesso = 'alert(1);';
 
@@ -141,7 +143,7 @@ it('CT-05: Novo falha mesmo com script_sucesso preenchido nao cria script', func
 it('CT-06: Novo falha com erros nao sobrescreve mensagem padrao', function () {
     $_POST['tipoacao'] = 'Novo';
 
-    $stub = new StubCadastro();
+    $stub = new StubCadastro;
     $stub->novoReturn = false;
     $stub->erros = ['algum erro'];
     // garantir que nao ha mensagem preexistente
@@ -156,7 +158,7 @@ it('CT-06: Novo falha com erros nao sobrescreve mensagem padrao', function () {
 it('CT-07: Novo falha e mensagem preexistente nao e sobrescrita', function () {
     $_POST['tipoacao'] = 'Novo';
 
-    $stub = new StubCadastro();
+    $stub = new StubCadastro;
     $stub->novoReturn = false;
     $stub->erros = null;
     // setar mensagem preexistente diretamente no atributo privado via Reflection para evitar facades

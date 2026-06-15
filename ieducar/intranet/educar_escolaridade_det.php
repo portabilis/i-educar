@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolingDegree;
+
 return new class extends clsDetalhe
 {
     /**
@@ -26,8 +28,7 @@ return new class extends clsDetalhe
 
         $this->idesco = $_GET['idesco'];
 
-        $tmp_obj = new clsCadastroEscolaridade($this->idesco);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacySchoolingDegree::find($this->idesco)?->getAttributes();
 
         if (!$registro) {
             $this->simpleRedirect('educar_escolaridade_lst.php');

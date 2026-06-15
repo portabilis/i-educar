@@ -21,6 +21,7 @@ class CreatePersonHasPlaceTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->unique(['person_id', 'type']);
+            $table->index(['person_id']);
         });
     }
 

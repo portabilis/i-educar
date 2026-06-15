@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 header('Content-type: text/xml');
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
@@ -7,7 +9,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 echo '<?xml version="1.0" encoding=""?>' . "\n";
 echo '<query xmlns="sugestoes">' . "\n";
 
-$pessoa_logada = \Illuminate\Support\Facades\Auth::id();
+$pessoa_logada = Auth::id();
 
 /**
  * @param string $index

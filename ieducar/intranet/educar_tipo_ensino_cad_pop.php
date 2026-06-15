@@ -33,6 +33,7 @@ return new class extends clsCadastro
         // **
 
         $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         if (is_numeric($this->cod_tipo_ensino)) {
             $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();

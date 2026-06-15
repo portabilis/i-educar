@@ -5,7 +5,7 @@ class PaisController extends ApiCoreController
     // search options
     protected function searchOptions()
     {
-        return ['namespace' => 'public', 'idAttr' => 'idpais'];
+        return ['namespace' => 'public', 'table' => 'countries', 'idAttr' => 'id', 'labelAttr' => 'name'];
     }
 
     public function Gerar()

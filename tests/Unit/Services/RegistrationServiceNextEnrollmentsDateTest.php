@@ -7,10 +7,10 @@ use DateTime;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use PHPUnit\Framework\TestCase;
 
-
 class RegistrationServiceNextEnrollmentsDateTest extends TestCase
 {
     private const TARGET_DATE = '2024-03-01';
+
     private const EARLIER_DATE = '2024-02-01';
 
     private function makeServiceWithoutConstructor(): RegistrationService
@@ -91,7 +91,7 @@ class EnrollmentStub
     public function __construct(?string $enturmacao, ?string $exclusao)
     {
         $this->dataEnturmacao = $enturmacao ? new DateTime($enturmacao) : null;
-        $this->dataExclusao   = $exclusao ? new DateTime($exclusao) : null;
+        $this->dataExclusao = $exclusao ? new DateTime($exclusao) : null;
     }
 
     public function __set(string $name, $value): void
@@ -102,6 +102,7 @@ class EnrollmentStub
             $this->$prop = $value === null
                 ? null
                 : ($value instanceof DateTime ? $value : new DateTime($value));
+
             return;
         }
 
@@ -111,6 +112,7 @@ class EnrollmentStub
     public function __get(string $name)
     {
         $prop = $this->mapProp($name);
+
         return $this->$prop ?? null;
     }
 
@@ -118,7 +120,7 @@ class EnrollmentStub
     {
         return match ($name) {
             'data_enturmacao' => 'dataEnturmacao',
-            'data_exclusao'   => 'dataExclusao',
+            'data_exclusao' => 'dataExclusao',
             'dataEnturmacao', 'dataExclusao' => $name,
             default => $name,
         };

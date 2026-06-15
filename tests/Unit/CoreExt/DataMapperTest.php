@@ -18,7 +18,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
     public function test_db_adapter_lanca_excecao_quando_nao_e_do_tipo_esperado()
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         $db = new stdClass;
         $mapper = new CoreExt_EntityDataMapperStub($db);
     }
@@ -221,7 +221,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
     public function test_registro_nao_existente_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_db->expects($this->once())
             ->method('ProximoRegistro')
             ->willReturn(false);

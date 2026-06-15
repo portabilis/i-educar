@@ -129,7 +129,7 @@ return new class extends clsCadastro
 
     public function validaDataEnturmacao($matriculaId, $turmaDestinoId, $transferir = false)
     {
-        $dataObj = new \DateTime(datetime: $this->data_enturmacao . ' 23:59:59');
+        $dataObj = new DateTime(datetime: $this->data_enturmacao . ' 23:59:59');
         $matriculaObj = new clsPmieducarMatricula;
         $enturmacaoObj = new clsPmieducarMatriculaTurma;
         $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio(cod_turma: $turmaDestinoId);
@@ -137,11 +137,11 @@ return new class extends clsCadastro
         $exclusaoEnturmacao = $enturmacaoObj->getDataExclusaoUltimaEnturmacao(codMatricula: $matriculaId);
         $maiorDataEnturmacao = $enturmacaoObj->getMaiorDataEnturmacao(codMatricula: $matriculaId);
         $dataSaidaDaTurma = !empty($exclusaoEnturmacao)
-            ? new \DateTime(datetime: $exclusaoEnturmacao)
+            ? new DateTime(datetime: $exclusaoEnturmacao)
             : null;
 
         $maiorDataEnturmacao = !empty($maiorDataEnturmacao)
-            ? new \DateTime(datetime: $maiorDataEnturmacao)
+            ? new DateTime(datetime: $maiorDataEnturmacao)
             : null;
 
         if ($dataObj > $dataAnoLetivoFim) {

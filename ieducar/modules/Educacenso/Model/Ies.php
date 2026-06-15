@@ -1,6 +1,6 @@
 <?php
 
-class Educacenso_Model_Ies extends CoreExt_Entity implements \Stringable
+class Educacenso_Model_Ies extends CoreExt_Entity implements Stringable
 {
     protected $_data = [
         'ies' => null,

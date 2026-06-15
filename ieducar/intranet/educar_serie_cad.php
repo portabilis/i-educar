@@ -96,6 +96,8 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
+                $this->carga_horaria = formatDecimalBr($this->carga_horaria) ?? $this->carga_horaria;
+
                 $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
                 $obj_curso_det = $obj_curso->detalhe();
                 $this->ref_cod_instituicao = $obj_curso_det['ref_cod_instituicao'];
@@ -255,8 +257,13 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
-        $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+        $this->carga_horaria = parseDecimalBr($this->carga_horaria);
+
+        if ($this->carga_horaria === null) {
+            $this->mensagem = 'Carga horária inválida.';
+
+            return false;
+        }
 
         if ($this->regras_avaliacao_id === null) {
             $this->mensagem = 'Regra de avaliação não cadastrada';
@@ -307,8 +314,13 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
-        $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+        $this->carga_horaria = parseDecimalBr($this->carga_horaria);
+
+        if ($this->carga_horaria === null) {
+            $this->mensagem = 'Carga horária inválida.';
+
+            return false;
+        }
 
         if ($this->regras_avaliacao_id === null) {
             $this->mensagem = 'Regra de avaliação não cadastrada';

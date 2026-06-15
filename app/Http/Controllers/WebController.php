@@ -28,9 +28,12 @@ class WebController extends Controller
 
     public function institution()
     {
+        $institution = app(LegacyInstitution::class);
+
         return [
-            'name' => LegacyInstitution::value('nm_instituicao'),
+            'name' => $institution->nm_instituicao,
             'logo' => config('legacy.report.logo_file_name'),
+            'city' => $institution->cidade . '/' . $institution->ref_sigla_uf,
         ];
     }
 
@@ -41,5 +44,10 @@ class WebController extends Controller
         }
 
         return abort(404);
+    }
+
+    public function home()
+    {
+        return redirect(config('app.home'));
     }
 }

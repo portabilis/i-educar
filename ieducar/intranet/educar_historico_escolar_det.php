@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolHistory;
+use App\Models\LegacyUserSchool;
 use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 return new class extends clsDetalhe
@@ -55,12 +57,13 @@ return new class extends clsDetalhe
         $this->sequencial = $_GET['sequencial'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
-        $tmp_obj = new clsPmieducarHistoricoEscolar(ref_cod_aluno: $this->ref_cod_aluno, sequencial: $this->sequencial);
-        $registro = $tmp_obj->detalhe();
+        $historicoModel = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
 
-        if (!$registro) {
+        if (!$historicoModel) {
             $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
+
+        $registro = $historicoModel->getAttributes();
 
         $obj_aluno = new clsPmieducarAluno;
         $lst_aluno = $obj_aluno->lista(int_cod_aluno: $registro['ref_cod_aluno'], int_ativo: 1);
@@ -161,11 +164,9 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Folha', "{$registro['folha']}"]);
         }
 
-        $obj = new clsPmieducarHistoricoDisciplinas;
-        $obj->setOrderby('nm_disciplina ASC');
-        $lst = $obj->lista(int_ref_ref_cod_aluno: $this->ref_cod_aluno, int_ref_sequencial: $this->sequencial);
+        $lst = $historicoModel->disciplines()->orderBy('nm_disciplina')->get()->toArray();
 
-        $qtd_disciplinas = $obj->_total;
+        $qtd_disciplinas = count($lst ?? []);
         if ($lst) {
             $tabela = '<table>
                            <tr align=\'center\'>
@@ -224,13 +225,7 @@ return new class extends clsDetalhe
             // Verifica se a escola foi digitada manualmente no histórico
             $escola_usuario = '';
             if ($ref_cod_escola == '') {
-                $escolasUsuario = new clsPmieducarEscolaUsuario;
-                $escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
-
-                $idEscolasUsuario = [];
-                foreach ($escolasUsuario as $escola) {
-                    $idEscolasUsuario[] = $escola['ref_cod_escola'];
-                }
+                $idEscolasUsuario = LegacyUserSchool::query()->where('ref_cod_usuario', $this->pessoa_logada)->pluck('ref_cod_escola');
 
                 $escola_ultima_matricula = $db->CampoUnico("SELECT ref_ref_cod_escola
                                                               FROM pmieducar.matricula
@@ -238,7 +233,7 @@ return new class extends clsDetalhe
                                                           ORDER BY cod_matricula DESC
                                                              LIMIT 1");
 
-                $possuiVinculoComEscolaUltimaMatricula = in_array(needle: $escola_ultima_matricula, haystack: $idEscolasUsuario);
+                $possuiVinculoComEscolaUltimaMatricula = $idEscolasUsuario->contains($escola_ultima_matricula);
 
                 if (($possuiVinculoComEscolaUltimaMatricula) || $this->nivel_usuario == 1 || $this->nivel_usuario == 2) {
                     if ($registro['origem']) {

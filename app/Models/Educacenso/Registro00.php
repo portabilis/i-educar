@@ -187,21 +187,6 @@ class Registro00 implements RegistroEducacenso
     /**
      * @var string
      */
-    public $esferaFederal;
-
-    /**
-     * @var string
-     */
-    public $esferaEstadual;
-
-    /**
-     * @var string
-     */
-    public $esferaMunicipal;
-
-    /**
-     * @var string
-     */
     public $unidadeVinculada;
 
     /**
