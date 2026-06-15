@@ -6,6 +6,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolYearLock;
 use App\Process;
 use App\Services\ReleasePeriodService;
 use App\Services\RemoveHtmlTagsStringService;
@@ -50,8 +51,10 @@ class DiarioApiController extends ApiCoreController
             return false;
         }
 
-        $objBloqueioAnoLetivo = new clsPmieducarBloqueioAnoLetivo($this->getRequest()->instituicao_id, $this->getRequest()->ano);
-        $bloqueioAnoLetivo = $objBloqueioAnoLetivo->detalhe();
+        $bloqueioAnoLetivo = LegacySchoolYearLock::query()
+            ->whereInstitution($this->getRequest()->instituicao_id)
+            ->whereYear($this->getRequest()->ano)
+            ->first(['data_inicio', 'data_fim']);
 
         if ($bloqueioAnoLetivo) {
             $dataAtual = strtotime(date('Y-m-d'));
