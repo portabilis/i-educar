@@ -200,9 +200,7 @@ return new class extends clsCadastro
             phone: $this->celular
         );
 
-        $pessoa = new clsPessoa_($this->pessoa_logada);
-        $pessoa->nome = $this->nome;
-        $pessoa->edita();
+        LegacyPerson::find($this->pessoa_logada)?->update(['nome' => $this->nome]);
 
         $fisica = LegacyIndividual::find($this->pessoa_logada, ['idpes', 'sexo']);
         $fisica?->update(['sexo' => $this->sexo]);
@@ -300,7 +298,14 @@ return new class extends clsCadastro
             $rdAPI->updateLeadStage($this->email, 2);
         }
 
-        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+        $loggedUser = Session::get('logged_user');
+        if ($loggedUser) {
+            $loggedUser->name = $this->nome;
+            Session::put('logged_user', $loggedUser);
+            Session::save();
+        }
+
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
         header('Location: index.php');
         exit();
     }

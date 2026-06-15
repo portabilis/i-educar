@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassTeacher;
@@ -167,13 +168,10 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_cod_regente']) {
-            $obj_pessoa = new clsPessoa_(int_idpes: $registro['ref_cod_regente']);
-            $det = $obj_pessoa->detalhe();
-
             $this->addDetalhe(
                 detalhe: [
                     'Professor/Regente',
-                    $det['nome'],
+                    LegacyPerson::query()->whereKey($registro['ref_cod_regente'])->value('nome'),
                 ]
             );
         }

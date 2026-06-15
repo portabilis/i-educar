@@ -178,21 +178,18 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->razao_social) {
+            return false;
+        }
+
         $this->insc_est = idFederal2int(str: $this->insc_est);
-        $this->idpes_cad = $this->pessoa_logada;
 
-        $objPessoa = new clsPessoa_(
-            int_idpes: false,
-            str_nome: $this->razao_social,
-            int_idpes_cad: $this->idpes_cad,
-            str_url: $this->url,
-            int_tipo: 'J',
-            int_idpes_rev: false,
-            str_data_rev: false,
-            str_email: $this->email
-        );
-
-        $this->cod_pessoa_fj = $objPessoa->cadastra();
+        $this->cod_pessoa_fj = LegacyPerson::create([
+            'nome' => $this->razao_social,
+            'tipo' => 'J',
+            'url' => $this->url ?: null,
+            'email' => $this->email ?: null,
+        ])->idpes;
 
         if (is_numeric($this->cod_pessoa_fj) && Auth::check() && LegacyPerson::whereKey($this->cod_pessoa_fj)->exists()) {
             LegacyOrganization::create([
@@ -313,19 +310,17 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->razao_social) {
+            return false;
+        }
+
         $this->insc_est = idFederal2int(str: $this->insc_est);
 
-        $objPessoa = new clsPessoa_(
-            int_idpes: $this->cod_pessoa_fj,
-            str_nome: $this->razao_social,
-            int_idpes_cad: $this->idpes_cad,
-            str_url: $this->url,
-            int_tipo: 'J',
-            int_idpes_rev: false,
-            str_data_rev: false,
-            str_email: $this->email
-        );
-        $objPessoa->edita();
+        LegacyPerson::find($this->cod_pessoa_fj)?->update([
+            'nome' => $this->razao_social,
+            'url' => $this->url ?: null,
+            'email' => $this->email ?: null,
+        ]);
 
         if (is_numeric($this->cod_pessoa_fj) && Auth::check()) {
             LegacyOrganization::find($this->cod_pessoa_fj)?->update([

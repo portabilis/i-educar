@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyPerson;
 use App\Models\WithdrawalReason;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
@@ -238,6 +239,11 @@ return new class extends clsCadastro
                         $script = "<script>\nvar num_alocacao = {$tamanho};\n";
                         $script .= "var array_servidores = Array();\n";
 
+                        $idsSubstitutos = collect($this->alocacao_array)->pluck('ref_cod_substituto')->filter('is_numeric')->unique()->all();
+                        $nomesPorSubstituto = $idsSubstitutos
+                            ? LegacyPerson::query()->whereIn('idpes', $idsSubstitutos)->pluck('nome', 'idpes')
+                            : collect();
+
                         foreach ($this->alocacao_array as $key => $alocacao) {
                             $script .= "array_servidores[{$key}] = new Array();\n";
 
@@ -260,8 +266,7 @@ return new class extends clsCadastro
                             $det_escola = $det_escola['nome'];
                             $nm_dia_semana = $this->dias_da_semana[$alocacao['dia_semana']];
 
-                            $obj_subst = new clsPessoa_($alocacao['ref_cod_substituto']);
-                            $det_subst = $obj_subst->detalhe();
+                            $nomeSubstituto = $nomesPorSubstituto[$alocacao['ref_cod_substituto']] ?? null;
 
                             if ($this->status == clsCadastro::NOVO) {
                                 $this->campoTextoInv(
@@ -331,7 +336,7 @@ return new class extends clsCadastro
                                 $this->campoTextoInv(
                                     "ref_cod_servidor_substituto_{$key}_",
                                     '',
-                                    $det_subst['nome'],
+                                    $nomeSubstituto,
                                     30,
                                     255,
                                     false,
