@@ -10,18 +10,18 @@ Este guia tem o intuido de auxiliar no processo de atualização do i-Educar par
 
 Os requisitos que foram testados para utilizar a versão [2.11](https://github.com/portabilis/i-educar/tree/2.11) são:
 
-| Software                                                 | Versão  | Comando                    | Descrição                   |
-|----------------------------------------------------------|---------|----------------------------|-----------------------------|
-| [Laravel](https://laravel.com/)                          | `12`    | `php artisan --version`    | Framework                   |
-| [PHP](http://php.net/)                                   | `8.4`   | `php --version`            | Linguagem de programação    |
-| [Composer](https://getcomposer.org/)                     | `2.8`   | `composer --version`       | Gerenciador de dependências |
-| [Nginx](https://www.nginx.com/)                          | `1.28`  | `nginx -v`                 | Servidor web                |
-| [Postgres](https://www.postgresql.org/)                  | `17`    | `psql --version`           | Banco de dados              |
-| [Redis](https://redis.io/)                               | `8`     | `redis-cli --version`      | Banco de dados              |
-| [Git](https://git-scm.com/)                              | `2.49`  | `git --version`            | Controle de versão          |
-| [Ubuntu](https://ubuntu.com/)                            | `24.04` | `lsb_release -a`           | Sistema operacional         |
-| [Docker](https://www.docker.com/) `dev`                  | `28`    | `docker --version`         | Conteinerização             |
-| [Docker Compose](https://docs.docker.com/compose/) `dev` | `2.36`  | `docker compose --version` | Orquestração de containers  |
+| Software                                                 | Versão  | Comando                  | Descrição                   |
+|----------------------------------------------------------|---------|--------------------------|-----------------------------|
+| [Laravel](https://laravel.com/)                          | `13`    | `php artisan --version`  | Framework                   |
+| [PHP](http://php.net/)                                   | `8.5`   | `php --version`          | Linguagem de programação    |
+| [Composer](https://getcomposer.org/)                     | `2.10`  | `composer --version`     | Gerenciador de dependências |
+| [Nginx](https://www.nginx.com/)                          | `1.30`  | `nginx -v`               | Servidor web                |
+| [Postgres](https://www.postgresql.org/)                  | `18`    | `psql --version`         | Banco de dados              |
+| [Redis](https://redis.io/)                               | `8`     | `redis-cli --version`    | Banco de dados              |
+| [Git](https://git-scm.com/)                              | `2.50`  | `git --version`          | Controle de versão          |
+| [Ubuntu](https://ubuntu.com/)                            | `26.04` | `lsb_release -a`         | Sistema operacional         |
+| [Docker](https://www.docker.com/) `dev`                  | `29`    | `docker --version`       | Conteinerização             |
+| [Docker Compose](https://docs.docker.com/compose/) `dev` | `5.1`   | `docker compose version` | Orquestração de containers  |
 
 `dev`: requisito para ambiente de desenvolvimento.
 

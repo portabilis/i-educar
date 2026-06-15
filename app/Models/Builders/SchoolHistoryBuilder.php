@@ -12,6 +12,16 @@ class SchoolHistoryBuilder extends LegacyBuilder
         return $this->where('historico_escolar.ativo', 1);
     }
 
+    public function forStudent(int $studentId): self
+    {
+        return $this->where('ref_cod_aluno', $studentId);
+    }
+
+    public function forStudentSequential(int $studentId, int $sequential): self
+    {
+        return $this->forStudent($studentId)->where('sequencial', $sequential);
+    }
+
     public function whereDependency(bool $dependency): self
     {
         if ($dependency) {

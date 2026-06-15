@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyPerson;
+
 return new class extends clsCadastro
 {
     public $cod_agenda;
@@ -75,7 +77,6 @@ return new class extends clsCadastro
     public function Gerar()
     {
         $db = new clsBanco;
-        $objPessoa = new clsPessoaFisica;
 
         $this->campoOculto(nome: 'pessoaFj', valor: $this->pessoaFj);
         $this->campoOculto(nome: 'cod_agenda', valor: $this->cod_agenda);
@@ -88,19 +89,25 @@ return new class extends clsCadastro
 
         $i = 0;
         if ($this->ref_ref_cod_pessoa_own) {
-            [$nome] = $objPessoa->queryRapida($this->ref_ref_cod_pessoa_own, 'nome');
+            $nome = LegacyPerson::whereKey($this->ref_ref_cod_pessoa_own)->value('nome');
             $this->campoTextoInv(nome: "editor{$i}", campo: 'Editores', valor: $nome, tamanhovisivel: 50, tamanhomaximo: 255);
         }
 
         $lista = ['Pesquise a pessoa clicando no botao ao lado'];
 
         if ($this->cod_agenda) {
+            $editorIds = [];
             $db->Consulta(consulta: "SELECT ref_ref_cod_pessoa_fj FROM portal.agenda_responsavel WHERE ref_cod_agenda = '{$this->cod_agenda}'");
             while ($db->ProximoRegistro()) {
-                $i++;
                 [$idpes] = $db->Tupla();
-                [$nome] = $objPessoa->queryRapida($idpes, 'nome');
-                $this->campoTextoInv(nome: "editor{$i}", campo: 'Editores', valor: $nome, tamanhovisivel: 50, tamanhomaximo: 255, obrigatorio: false, expressao: false, duplo: false, descricao: false, descricao2: "<a href=\"agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_rem=$idpes\">remover</a>");
+                $editorIds[] = $idpes;
+            }
+
+            $nomesPorId = LegacyPerson::whereIn('idpes', $editorIds)->pluck('nome', 'idpes');
+
+            foreach ($editorIds as $idpes) {
+                $i++;
+                $this->campoTextoInv(nome: "editor{$i}", campo: 'Editores', valor: $nomesPorId[$idpes] ?? null, tamanhovisivel: 50, tamanhomaximo: 255, obrigatorio: false, expressao: false, duplo: false, descricao: false, descricao2: "<a href=\"agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_rem=$idpes\">remover</a>");
             }
             // $this->campoListaPesq( "novo_editor", "Novo Editor", $lista, 0, "pesquisa_funcionario.php", false, false, false, "&nbsp; &nbsp; &nbsp; <a href=\"javascript:var idpes = document.getElementById('novo_editor').value; if( idpes != 0 ) { document.location.href='agenda_admin_cad.php?cod_agenda={$this->cod_agenda}&edit_add=' + idpes; } else { alert( 'Selecione a pessoa clicando na imagem da Lupa' ); }\">Adicionar</a>" );
             $parametros = new clsParametrosPesquisas;

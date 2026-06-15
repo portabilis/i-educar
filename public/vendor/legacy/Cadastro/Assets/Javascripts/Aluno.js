@@ -1296,6 +1296,7 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#termo_certidao_civil").val(dataResponse.num_termo);
   $j("#livro_certidao_civil").val(dataResponse.num_livro);
   $j("#folha_certidao_civil").val(dataResponse.num_folha);
+  $j("#passaporte").val(dataResponse.passaporte);
 
   if (
     dataResponse.certidao_nascimento != null &&

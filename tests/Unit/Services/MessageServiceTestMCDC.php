@@ -3,6 +3,7 @@
 use App\Services\MessageService;
 use Illuminate\Support\Facades\Auth;
 use Mockery as m;
+use Mockery\MockInterface;
 
 uses()->group('mcdc', 'message-service');
 
@@ -39,7 +40,7 @@ function mockAuthUser(int $authId, bool $isAdmin, bool $isInstitutional): void
  * Usamos alias para "App\User" (classe importada no service original).
  * Se o projeto usar outra classe (ex.: App\Models\LegacyUser), ajuste o alias aqui.
  */
-function userAlias(): \Mockery\MockInterface
+function userAlias(): MockInterface
 {
     return m::mock('alias:App\User');
 }

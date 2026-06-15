@@ -1,6 +1,6 @@
 <?php
 
-class Educacenso_Model_OrgaoRegional extends CoreExt_Entity implements \Stringable
+class Educacenso_Model_OrgaoRegional extends CoreExt_Entity implements Stringable
 {
     protected $_data = [
         'sigla_uf' => null,

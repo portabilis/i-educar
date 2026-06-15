@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.10.0",
+    "version": "2.12.0",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -23,27 +23,26 @@
         "ext-pdo": "*",
         "ext-pgsql": "*",
         "ext-zip": "*",
-        "ankurk91/laravel-eloquent-relationships": "^2.1",
-        "aws/aws-sdk-php-laravel": "^3.7",
+        "aws/aws-sdk-php-laravel": "^3.11",
         "composer/semver": "^3.2",
-        "dex/composer-plug-and-play": "^0.24",
-        "dex/frontier": "^0.16.0",
+        "dex/composer-plug-and-play": "^0.26",
+        "dex/frontier": "^0.17.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
-        "honeybadger-io/honeybadger-laravel": "^4.0",
+        "honeybadger-io/honeybadger-laravel": "^5.0",
         "intervention/image": "^2.6",
-        "laravel/framework": "^12.5",
+        "laravel/framework": "^13.0",
         "laravel/horizon": "^5.15",
         "laravel/sanctum": "^4.0",
-        "laravel/socialite": "^5.16",
-        "laravel/tinker": "^2.6",
+        "laravel/socialite": "^5.26",
+        "laravel/tinker": "^3.0",
         "laravel/ui": "^4.2",
         "league/csv": "^9.7",
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/flysystem-ftp": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
         "maatwebsite/excel": "^3.1",
-        "phpoffice/phpspreadsheet": "^1.8",
+        "phpoffice/phpspreadsheet": "1.30.0",
         "predis/predis": "^2.3",
         "psr/simple-cache": "^3.0",
         "socialiteproviders/laravelpassport": "^4.3",
@@ -52,12 +51,13 @@
         "symfony/mailgun-mailer": "^6.0"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.15",
-        "laravel/pint": "^1.10",
-        "laravel/sail": "^1.18",
-        "laravel/telescope": "^5.0",
-        "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^8.1",
+        "fakerphp/faker": "^1.23",
+        "laravel/pail": "^1.2.2",
+        "laravel/pint": "^1.24",
+        "laravel/sail": "^1.41",
+        "laravel/telescope": "^5.18",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.0",
         "spatie/laravel-ignition": "^2.0",
         "symfony/yaml": "^7.0"
@@ -123,6 +123,11 @@
             "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
+        "testing-install": [
+            "@composer install",
+            "@php artisan key:generate --ansi",
+            "@php artisan migrate --force --ansi --env=testing"
+        ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
@@ -135,12 +140,13 @@
         ]
     },
     "config": {
+        "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true,
         "allow-plugins": {
             "dex/composer-plug-and-play": true,
             "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true,
             "php-http/discovery": true
         },
         "audit": {
@@ -149,7 +155,8 @@
                 "PKSA-x13r-n4wc-4gcr",
                 "PKSA-8cfg-tzhf-fr83",
                 "PKSA-hznc-gbby-6w16",
-                "PKSA-jtdk-dcr5-f11n"
+                "PKSA-jtdk-dcr5-f11n",
+                "PKSA-x678-4z45-v3d5"
             ]
         }
     },

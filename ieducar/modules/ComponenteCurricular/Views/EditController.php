@@ -53,6 +53,11 @@ class EditController extends Core_Controller_Page_EditController
             'help' => '',
             'entity' => 'desconsidera_para_progressao',
         ],
+        'color' => [
+            'label' => 'Cor do componente',
+            'help' => '',
+            'entity' => 'color',
+        ],
     ];
 
     protected function _preRender()
@@ -170,6 +175,15 @@ class EditController extends Core_Controller_Page_EditController
             false,
             $this->_getHelp('desconsidera_para_progressao')
         );
+
+        $this->campoCor(
+            'color',
+            'Cor do componente',
+            $this->getEntity()->color ?: '#FFFFFF',
+            config('colors.components'),
+            'Cor utilizada para representar o componente em gráficos e relatórios.',
+            false
+        );
     }
 
     /**
@@ -214,6 +228,7 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         if (isset($entity)) {
+            // dd($data, $this->getEntity());
             $this->getEntity()->setOptions($data);
         } else {
             $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));

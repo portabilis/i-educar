@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use Illuminate\Database\Connection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Context;
 
 class ConfigureAuthenticatedUserForAudit
 {
@@ -57,5 +58,10 @@ class ConfigureAuthenticatedUserForAudit
     public function handle($event)
     {
         $this->setContext($event->user->id, $event->user->name);
+
+        // Propaga para Jobs via Context facade
+        Context::add('audit_user_id', $event->user->id);
+        Context::add('audit_user_name', $event->user->name);
+        Context::add('audit_origin', $this->request->fullUrl());
     }
 }

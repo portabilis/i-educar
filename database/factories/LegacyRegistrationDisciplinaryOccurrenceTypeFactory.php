@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LegacyRegistrationDisciplinaryOccurrenceType>
+ * @extends Factory<LegacyRegistrationDisciplinaryOccurrenceType>
  */
 class LegacyRegistrationDisciplinaryOccurrenceTypeFactory extends Factory
 {

@@ -60,7 +60,7 @@ class FileService
         $files = $relation->files;
 
         foreach ($files as $file) {
-            $file->url = $this->urlPresigner->getPresignedUrl($file->url);
+            $file->url = $this->urlPresigner->getPresignedUrl($file->url, $file->original_name);
         }
 
         return $files;

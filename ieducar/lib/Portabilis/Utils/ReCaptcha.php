@@ -1,5 +1,7 @@
 <?php
 
+use ReCaptcha\ReCaptcha;
+
 class Portabilis_Utils_ReCaptcha
 {
     public static function getWidget()
@@ -11,7 +13,7 @@ class Portabilis_Utils_ReCaptcha
 
     public static function check($response)
     {
-        $recaptcha = new \ReCaptcha\ReCaptcha(config('legacy.app.recaptcha.private_key'));
+        $recaptcha = new ReCaptcha(config('legacy.app.recaptcha.private_key'));
         $resp = $recaptcha->verify($response, $_SERVER['REMOTE_ADDR']);
 
         return $resp->isSuccess();

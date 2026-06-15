@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_View_TableHelperTest extends TestCase
 {
     protected $_headerExpected = '
 <thead>

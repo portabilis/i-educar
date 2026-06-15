@@ -2,28 +2,32 @@
 
 namespace Database\Seeders;
 
+use App\Models\LegacyAbandonmentType;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DefaultPmieducarAbandonoTipoTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        DB::table('pmieducar.abandono_tipo')->insert([
-            'cod_abandono_tipo' => 1,
-            'ref_cod_instituicao' => 1,
-            'nome' => 'Desistência',
-        ]);
+        $types = [
+            'Evasão Escolar',
+            'Vulnerabilidade Social Extrema',
+            'Violência no Trajeto ou na Escola',
+            'Conflito Familiar',
+            'Gravidez na Adolescência',
+            'Mudança de Residência sem Comunicação Prévia',
+            'Inserção no Mercado de Trabalho',
+            'Doença / Tratamento de Saúde',
+            'Outro(a)',
+        ];
 
-        DB::table('pmieducar.abandono_tipo')->insert([
-            'cod_abandono_tipo' => 2,
-            'ref_cod_instituicao' => 1,
-            'nome' => 'Falecimento',
-        ]);
+        foreach ($types as $type) {
+            LegacyAbandonmentType::updateOrCreate([
+                'nome' => $type,
+            ], [
+                'ref_cod_instituicao' => 1,
+                'ativo' => 1,
+            ]);
+        }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyActiveLooking;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
@@ -237,12 +238,17 @@ class MatriculaController extends ApiCoreController
         return $matriculaTurma;
     }
 
+    protected function getNomeSituacaoMatricula(int $situacao): ?string
+    {
+        return App_Model_MatriculaSituacao::getInstance()
+            ->getValue($situacao);
+    }
+
     protected function loadMatriculasAluno($alunoId, $escolaId)
     {
-        // #TODO mostrar o nome da situação da matricula
         // seleciona somente matriculas em andamento, aprovado, reprovado, em exame, aprovado apos exame e retido faltas
         $sql = 'select cod_matricula as id, ano, ref_cod_instituicao as instituicao_id, ref_ref_cod_escola as
-            escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id from pmieducar.matricula,
+            escola_id, ref_cod_curso as curso_id, ref_ref_cod_serie as serie_id, matricula.aprovado as aprovado from pmieducar.matricula,
             pmieducar.escola where cod_escola = ref_ref_cod_escola and ref_cod_aluno = $1 and ref_ref_cod_escola =
             $2 and matricula.ativo = 1 and matricula.aprovado in (1, 2, 3, 7, 8, 9) order by ano desc, id';
 
@@ -250,14 +256,14 @@ class MatriculaController extends ApiCoreController
         $matriculas = $this->fetchPreparedQuery($sql, $params, false);
 
         if (is_array($matriculas) && count($matriculas) > 0) {
-            $attrs = ['id', 'ano', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id'];
+            $attrs = ['id', 'ano', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aprovado'];
             $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
             foreach ($matriculas as $key => $matricula) {
                 $matriculas[$key]['nome_curso'] = $this->loadNameFor('curso', $matricula['curso_id']);
                 $matriculas[$key]['nome_escola'] = $this->loadNomeEscola($this->getRequest()->escola_id);
                 $matriculas[$key]['nome_serie'] = $this->loadNameFor('serie', $matricula['serie_id']);
-                $matriculas[$key]['situacao'] = '#TODO';
+                $matriculas[$key]['situacao'] = $this->getNomeSituacaoMatricula((int) $matricula['aprovado']);
 
                 $turma = $this->tryLoadMatriculaTurma($matricula['id']);
 
@@ -770,19 +776,21 @@ class MatriculaController extends ApiCoreController
         $aluno = new clsPmieducarAluno($codAluno);
         $aluno = $aluno->detalhe();
 
-        $pessoaFisica = new clsFisica($aluno['ref_idpes']);
+        $individual = LegacyIndividual::find($aluno['ref_idpes'], ['idpes', 'falecido']);
+
+        if (!$individual) {
+            return;
+        }
 
         foreach ($matriculas as $matricula) {
             if ($matricula['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
-                $pessoaFisica->falecido = true;
-                $pessoaFisica->edita();
+                $individual->update(['falecido' => true]);
 
                 return;
             }
         }
 
-        $pessoaFisica->falecido = false;
-        $pessoaFisica->edita();
+        $individual->update(['falecido' => false]);
     }
 
     protected function canGetMatriculasDependencia()

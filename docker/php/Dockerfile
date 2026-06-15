@@ -25,10 +25,8 @@ RUN apk add --update \
     libpng-dev  \
     libzip-dev  \
     linux-headers \
-    openjdk8  \
-    postgresql17-client \
+    postgresql18-client \
     postgresql-dev \
-    ttf-dejavu \
     unzip \
     openssh \
     git

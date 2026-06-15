@@ -24,10 +24,12 @@ class LegacySchoolClassTeacher extends Model
         'servidor_id',
         'funcao_exercida',
         'tipo_vinculo',
+        'permite_lancar_faltas_componente',
         'data_inicial',
         'data_fim',
         'area_itinerario',
         'leciona_itinerario_tecnico_profissional',
+        'turno_id',
     ];
 
     protected $table = 'modules.professor_turma';
