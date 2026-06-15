@@ -5,7 +5,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPais extends Portabilis_
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql = 'select nome from public.pais where idpais = $1';
+            $sql = 'SELECT name as nome FROM countries WHERE id = $1';
             $options = ['params' => $id, 'return_only' => 'first-field'];
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);

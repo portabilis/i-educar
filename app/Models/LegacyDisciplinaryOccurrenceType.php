@@ -24,6 +24,8 @@ class LegacyDisciplinaryOccurrenceType extends LegacyModel
         'max_ocorrencias',
         'data_exclusao',
         'ativo',
+        'ref_usuario_cad',
+        'ref_cod_instituicao',
     ];
 
     public array $legacy = [

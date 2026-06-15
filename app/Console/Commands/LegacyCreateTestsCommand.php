@@ -213,6 +213,7 @@ class LegacyCreateTestsCommand extends Command
             'educar_configuracoes_gerais.php',
             'educar_comunicados_escolares_det.php',
             'educar_comunicados_escolares_lst.php',
+            'educar_regional_det.php',
         ];
     }
 
@@ -236,7 +237,6 @@ class LegacyCreateTestsCommand extends Command
             'EducarBibliotecaDadosDet',
             'EducarBibliotecaDet',
             'EducarBloqueioAnoLetivoDet',
-            'EducarBloqueioLancamentoFaltasNotasDet',
             'EducarCalendarioAnotacaoCad',
             'EducarCalendarioAnotacaoDet',
             'EducarCalendarioAnotacaoLst',

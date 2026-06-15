@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 class CursoController extends ApiCoreController
 {
     protected function canGetCursos()
@@ -12,7 +14,7 @@ class CursoController extends ApiCoreController
     protected function getCursos()
     {
         if ($this->canGetCursos()) {
-            $userId = \Illuminate\Support\Facades\Auth::id();
+            $userId = Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id;
             $ano = $this->getRequest()->ano;

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyBondType;
+use App\Models\LegacyPerson;
 use App\Models\LegacyRole;
 
 return new class extends clsListagem
@@ -55,11 +57,10 @@ return new class extends clsListagem
             'Vínculo',
         ]);
 
-        $fisica = new clsPessoaFisica($this->ref_cod_servidor);
-        $fisica = $fisica->detalhe();
+        $nome = LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome');
 
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
-        $this->campoRotulo('nm_servidor', 'Servidor', $fisica['nome']);
+        $this->campoRotulo('nm_servidor', 'Servidor', $nome);
 
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
@@ -138,8 +139,7 @@ return new class extends clsListagem
                 $funcao = LegacyRole::find($funcaoServidor['ref_cod_funcao'])?->getAttributes();
 
                 // Vinculo
-                $funcionarioVinculo = new clsPortalFuncionario;
-                $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
+                $funcionarioVinculo = LegacyBondType::whereKey($registro['ref_cod_funcionario_vinculo'])->value('nm_vinculo');
 
                 $this->addLinhas([
                     $url->l($escola['nome'], $path, $options),

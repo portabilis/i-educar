@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Support\Exceptions\Exception as iEducarException;
+use Illuminate\Support\Facades\Auth;
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -62,7 +63,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function validatesUserIsLoggedIn()
     {
-        $canAccess = is_numeric(\Illuminate\Support\Facades\Auth::id());
+        $canAccess = is_numeric(Auth::id());
 
         if (!$canAccess) {
             $canAccess = ($this->validatesAccessKey() && $this->validatesSignature());
@@ -94,7 +95,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_excluir(
             $this->getBaseProcessoAp(),
-            \Illuminate\Support\Facades\Auth::id(),
+            Auth::id(),
             $this->_nivelAcessoOption
         );
 
@@ -109,7 +110,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_cadastra(
             $this->getBaseProcessoAp(),
-            \Illuminate\Support\Facades\Auth::id(),
+            Auth::id(),
             $this->_nivelAcessoOption
         );
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolingDegree;
+
 return new class extends clsListagem
 {
     /**
@@ -55,15 +57,15 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_escolaridade = new clsCadastroEscolaridade;
-        $obj_escolaridade->setOrderby('descricao ASC');
-        $obj_escolaridade->setLimite($this->limite, $this->offset);
-        $lista = $obj_escolaridade->lista(
-            null,
-            $this->descricao
-        );
+        $query = LegacySchoolingDegree::query()->orderBy('descricao');
 
-        $total = $obj_escolaridade->_total;
+        if (is_string($this->descricao) && !empty($this->descricao)) {
+            $query->where('descricao', 'ILIKE', '%' . $this->descricao . '%');
+        }
+
+        $total = $query->count();
+        $registros = $query->offset($this->offset)->limit($this->limite)->get();
+        $lista = $registros->isNotEmpty() ? $registros->map(fn ($m) => $m->getAttributes())->toArray() : false;
 
         // Monta a lista
         if (is_array($lista) && count($lista)) {

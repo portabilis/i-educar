@@ -49,6 +49,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCampoLocalFuncionamentoDiferenciado($params)) {
                 return false;
             }
+            if (!$this->validaCargaHorariaTotal($params)) {
+                return false;
+            }
         }
 
         return true;
@@ -118,8 +121,8 @@ class CheckMandatoryCensoFields implements Rule
 
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
             isset($params->etapa_educacenso) &&
-            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 67, 70, 71, 73], true)) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 67, 70, 71 ou 73';
+            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 75, 67, 70, 71, 73, 74], true)) {
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 75, 67, 70, 71, 73 ou 74';
 
             return false;
         }
@@ -212,6 +215,54 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
+    protected function validaCargaHorariaTotal($params)
+    {
+        $organizacaoCurricular = array_map('intval', (array) $this->getOrganizacaoCurricularValues($params));
+        $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
+
+        if (!$iftpAtivo) {
+            return true;
+        }
+
+        $carga = $params->carga_horaria_total;
+
+        if ($carga === null || $carga === '') {
+            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> é obrigatório quando o campo: <b>Organização curricular da turma</b> incluir: <b>Itinerário de formação técnica e profissional</b>.';
+
+            return false;
+        }
+
+        $carga = (int) $carga;
+
+        if ($carga <= 0 || $carga > 9999) {
+            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve ser um número maior que zero, com no máximo 4 dígitos.';
+
+            return false;
+        }
+
+        $tipoCurso = (int) $params->tipo_curso_intinerario;
+
+        if ($tipoCurso === 1) {
+            $cursoSelecionado = (int) $params->cod_curso_profissional_intinerario;
+            $cursos = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/cursos_carga_horaria_minima.json');
+            $cargaMinima = (int) ($cursos[$cursoSelecionado]['carga_minima'] ?? 0);
+
+            if ($cargaMinima > 0 && $carga < $cargaMinima && $carga <= 2000) {
+                $this->message = "O campo: <b>Carga horária total do curso (em horas)</b> deve ser maior ou igual à carga horária mínima do curso ({$cargaMinima} horas) ou superior a 2000 horas.";
+
+                return false;
+            }
+        }
+
+        if ($tipoCurso === 2 && ($carga < 160 || $carga > 800)) {
+            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve estar entre 160 e 800 horas quando o <b>Tipo do curso do itinerário</b> for: <b>Qualificação Profissional Técnica</b>.';
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function validaCampoOrganizacaoCurricularDaTurma(mixed $params)
     {
         $organizacaoCurricular = $this->getOrganizacaoCurricularValues($params);
@@ -243,6 +294,7 @@ class CheckMandatoryCensoFields implements Rule
         $etapaEnsinoCanContainsWithEnsinoMedioEFormacaoGeralBasica = [25, 26, 27, 28, 29];
         if (is_array($organizacaoCurricular) &&
             in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular) &&
+            !in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular) &&
             $params->etapa_agregada &&
             ((int) $params->etapa_agregada === EtapaAgregada::ENSINO_MEDIO) &&
             isset($params->etapa_educacenso) &&

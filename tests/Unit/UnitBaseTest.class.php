@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 abstract class UnitBaseTest extends TestCase
@@ -78,7 +79,7 @@ abstract class UnitBaseTest extends TestCase
      * @param bool   $callOriginalConstructor
      * @param bool   $callOriginalClone
      * @param bool   $callOriginalAutoload
-     * @return PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     public function getCleanMock(
         $className,

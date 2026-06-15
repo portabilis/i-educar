@@ -1,6 +1,6 @@
 <?php
 
-class AreaConhecimento_Model_Area extends CoreExt_Entity implements \Stringable
+class AreaConhecimento_Model_Area extends CoreExt_Entity implements Stringable
 {
     protected $_data = [
         'instituicao' => null,

@@ -11,6 +11,7 @@ use App\Models\LegacyGrade;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
 use App\Models\LegacyStudentAbsence;
 use App\Models\LegacyStudentDescriptiveOpinion;
@@ -20,6 +21,7 @@ use App_Model_MatriculaSituacao;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
 use Database\Factories\LegacyIndividualFactory;
 use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacyStudentFactory;
 use Tests\EloquentTestCase;
 
@@ -166,5 +168,32 @@ class LegacyRegistrationTest extends EloquentTestCase
         $found = $this->instanceNewEloquentModel()->currentYear()->get();
 
         $this->assertCount(1, $found);
+    }
+
+    public function test_belongs_to_one_lazy_loading(): void
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create();
+        $registration = LegacyRegistrationFactory::new()->withEnrollment($schoolClass)->create();
+
+        $this->assertInstanceOf(LegacySchoolClass::class, $registration->schoolClass);
+        $this->assertEquals($schoolClass->cod_turma, $registration->schoolClass->cod_turma);
+    }
+
+    public function test_belongs_to_one_eager_loading(): void
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create();
+        $registration = LegacyRegistrationFactory::new()->withEnrollment($schoolClass)->create();
+
+        $found = LegacyRegistration::with('schoolClass')->find($registration->cod_matricula);
+
+        $this->assertInstanceOf(LegacySchoolClass::class, $found->schoolClass);
+        $this->assertEquals($schoolClass->cod_turma, $found->schoolClass->cod_turma);
+    }
+
+    public function test_belongs_to_one_returns_null_without_enrollment(): void
+    {
+        $registration = LegacyRegistrationFactory::new()->create();
+
+        $this->assertNull($registration->schoolClass);
     }
 }

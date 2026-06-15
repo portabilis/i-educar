@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyDiscipline;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro
@@ -117,14 +118,18 @@ return new class extends clsCadastro
         if ($this->ref_cod_curso) {
             $cursosDifferente = array_unique(array: $this->ref_cod_curso);
             foreach ($cursosDifferente as $curso) {
-                $obj_componentes = new clsModulesComponenteCurricular;
-                $componentes = $obj_componentes->listaComponentesPorCurso(instituicao_id: $this->ref_cod_instituicao, curso: $curso);
+                $componentes = LegacyDiscipline::query()
+                    ->select('componente_curricular.id', 'componente_curricular.nome')
+                    ->join('modules.componente_curricular_ano_escolar as mca', 'mca.componente_curricular_id', '=', 'componente_curricular.id')
+                    ->join('pmieducar.serie as s', 's.cod_serie', '=', 'mca.ano_escolar_id')
+                    ->where('componente_curricular.instituicao_id', $this->ref_cod_instituicao)
+                    ->where('s.ref_cod_curso', $curso)
+                    ->distinct()
+                    ->get();
                 $opcoes_disc = [];
                 $opcoes_disc['todas_disciplinas'] = 'Todas as disciplinas';
-
-                $total_componentes = count(value: $componentes);
-                for ($i = 0; $i < $total_componentes; $i++) {
-                    $opcoes_disc[$componentes[$i]['id']] = $componentes[$i]['nome'];
+                foreach ($componentes as $componente) {
+                    $opcoes_disc[$componente->id] = $componente->nome;
                 }
                 $disciplinasCurso[$curso] = [$opcoes_curso, $opcoes_disc];
             }
