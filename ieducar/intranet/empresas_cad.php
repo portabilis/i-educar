@@ -180,6 +180,13 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->validaValorPositivo(valor: $this->capital_social)) {
+            $this->mensagem = 'O campo Capital Social não pode conter valores negativos.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
@@ -296,6 +303,22 @@ return new class extends clsCadastro
         return !empty($valor) && strlen(trim(string: $valor)) >= $tamanhoMinimo;
     }
 
+    /**
+     * Valida se um valor numérico é positivo (maior ou igual a zero)
+     *
+     * @param string|float $valor O valor a validar
+     * @return bool True se válido (positivo ou zero), false caso contrário
+     */
+    private function validaValorPositivo($valor)
+    {
+        if (empty($valor)) {
+            return true;
+        }
+
+        $valorNumerico = (float) str_replace(search: [',', '.'], replace: ['.', ''], subject: $valor);
+        return $valorNumerico >= 0;
+    }
+
     protected function validaCaracteresPermitidosComplemento()
     {
         if (empty($this->complement)) {
@@ -345,6 +368,13 @@ return new class extends clsCadastro
 
         if (!empty($this->capital_social) && !is_numeric(str_replace(search: [',', '.'], replace: '', subject: $this->capital_social))) {
             $this->mensagem = 'O campo Capital Social deve conter apenas valores numéricos.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
+        if (!$this->validaValorPositivo(valor: $this->capital_social)) {
+            $this->mensagem = 'O campo Capital Social não pode conter valores negativos.';
             $this->busca_empresa = true;
 
             return false;
