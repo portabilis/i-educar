@@ -17,7 +17,7 @@ class CoreExt_SessionTest extends TestCase
 
     public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->_session->setOptions(['foo' => 'bar']);
     }
 

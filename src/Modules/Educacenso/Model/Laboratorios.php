@@ -10,12 +10,15 @@ class Laboratorios
 
     public const EDUCACAO_PROFISSIONAL = 3;
 
+    public const ROBOTICA = 4;
+
     public static function getDescriptiveValues()
     {
         return [
             self::INFORMATICA => 'Laboratório de informática',
             self::CIENCIAS => 'Laboratório de ciências',
             self::EDUCACAO_PROFISSIONAL => 'Laboratório específico para a educação profissional',
+            self::ROBOTICA => 'Laboratório de robótica',
         ];
     }
 }

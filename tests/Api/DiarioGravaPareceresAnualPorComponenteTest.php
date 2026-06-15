@@ -162,10 +162,10 @@ class DiarioGravaPareceresAnualPorComponenteTest extends TestCase
         $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
 
         // alterando a regra de avaliação da série
-        $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
+        $evaluationRuleAnualGeral = LegacyEvaluationRuleFactory::new()->create([
             'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
         ]);
-        $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
+        $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRuleAnualGeral->getKey()]);
         $response = $this->getResource('/module/Api/Diario', $data);
         $response->assertSuccessful()
             ->assertJson(

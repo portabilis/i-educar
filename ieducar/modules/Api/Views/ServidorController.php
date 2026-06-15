@@ -95,10 +95,12 @@ class ServidorController extends ApiCoreController
             SELECT
                 s.cod_servidor as servidor_id,
                 p.nome as nome,
+                formata_cpf(f.cpf) as cpf,
                 s.ativo as ativo,
                 greatest(p.data_rev::timestamp(0), s.updated_at) as updated_at
             FROM pmieducar.servidor s
             INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
+            INNER JOIN cadastro.fisica f ON p.idpes = f.idpes
             WHERE s.ref_cod_instituicao = $1
             {$where}
             order by updated_at
@@ -106,7 +108,7 @@ class ServidorController extends ApiCoreController
 
         $servidores = $this->fetchPreparedQuery($sql, $params);
 
-        $attrs = ['servidor_id', 'nome', 'ativo', 'updated_at'];
+        $attrs = ['servidor_id', 'nome', 'cpf', 'ativo', 'updated_at'];
 
         $servidores = Portabilis_Array_Utils::filterSet($servidores, $attrs);
 
@@ -269,18 +271,42 @@ class ServidorController extends ApiCoreController
     protected function getDadosServidor()
     {
         $servidor = $this->getRequest()->servidor_id;
+        $cpf = $this->getRequest()->cpf;
 
-        $sql = 'SELECT pessoa.nome,
-                       pessoa.email,
-                       educacenso_cod_docente.cod_docente_inep AS inep
-                FROM pmieducar.servidor
-                JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
-                JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
-                WHERE servidor.cod_servidor = $1';
+        $sql = 'SELECT
+                    s.cod_servidor as servidor_id,
+                    formata_cpf(f.cpf) as cpf,
+                    s.ativo as ativo,
+                    p.nome as nome,
+                    p.email as email,
+                    educacenso_cod_docente.cod_docente_inep AS inep,
+                    greatest(p.data_rev::timestamp(0), s.updated_at) as updated_at
+                FROM pmieducar.servidor s
+                JOIN cadastro.pessoa p ON p.idpes = s.cod_servidor
+                JOIN cadastro.fisica f ON p.idpes = f.idpes
+                LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = s.cod_servidor';
 
-        $result = $this->fetchPreparedQuery($sql, [$servidor]);
+        $param = null;
 
-        return ['result' => $result[0]];
+        if ($servidor) {
+            $sql .= ' WHERE s.cod_servidor = $1';
+            $param = $servidor;
+        } elseif ($cpf) {
+            $param = (int) str_replace(['.', '-'], '', $cpf);
+            $sql .= ' WHERE f.cpf = $1';
+        } else {
+            $this->messenger->append('É necessário informar o servidor_id ou o cpf do servidor para consultar seus dados.');
+
+            return false;
+        }
+
+        $result = $this->fetchPreparedQuery($sql, [$param]);
+
+        $attrs = ['servidor_id', 'nome', 'cpf', 'ativo', 'updated_at', 'inep', 'email'];
+
+        $servidor = Portabilis_Array_Utils::filterSet($result, $attrs);
+
+        return ['result' => $servidor[0]];
     }
 
     protected function getUnificacoes()

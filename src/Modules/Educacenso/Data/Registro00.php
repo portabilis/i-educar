@@ -4,8 +4,6 @@ namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro00 as Registro00Model;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
-use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
-use iEducar\Modules\Educacenso\ExportRule\PoderPublicoConveniado as ExportRulePoderPublicoConveniado;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Formatters;
@@ -66,10 +64,8 @@ class Registro00 extends AbstractRegistro
         $this->situacaoFuncionamento = $record->situacaoFuncionamento;
 
         $record = SituacaoFuncionamento::handle($record);
-        $record = ExportRulePoderPublicoConveniado::handle($record);
         $record = DependenciaAdministrativa::handle($record);
         $record = Regulamentacao::handle($record);
-        $record = EsferaAdministrativa::handle($record);
 
         return [
             $record->registro, // 1	Tipo de registro
@@ -106,28 +102,25 @@ class Registro00 extends AbstractRegistro
             $record->categoriaEscolaPrivada, // 32	Categoria da escola privada
             $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::ESTADUAL, $record->poderPublicoConveniado) : '', // 33	Secretaria estadual
             $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::MUNICIPAL, $record->poderPublicoConveniado) : '', // 34	Secretaria Municipal
-            $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::NAO_POSSUI, $record->poderPublicoConveniado) : '', // 35	Não possui parceria ou convênio
-            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublicoEstadual) : '', // 36	Termo de colaboração (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublicoEstadual) : '', // 37	Termo de fomento (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublicoEstadual) : '', // 38	Acordo de cooperação (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_PRESTACAO_SERVICO, $record->formasContratacaoPoderPublicoEstadual) : '', // 39	Contrato de prestação de serviço
-            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COOPERACAO_TECNICA, $record->formasContratacaoPoderPublicoEstadual) : '', // 40	Termo de cooperação técnica e financeira
-            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_CONSORCIO, $record->formasContratacaoPoderPublicoEstadual) : '', // 41	Contrato de consórcio público/Convênio de cooperação
-            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 42	Termo de colaboração (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 43	Termo de fomento (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 44	Acordo de cooperação (Lei nº 13.019/2014)
-            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_PRESTACAO_SERVICO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 45 Contrato de prestação de serviço
-            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COOPERACAO_TECNICA, $record->formasContratacaoPoderPublicoMunicipal) : '', // 46 Termo de cooperação técnica e financeira
-            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_CONSORCIO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 47 Contrato de consórcio público/Convênio de cooperação
-            $record->cnpjMantenedoraPrincipal, // 48	CNPJ da mantenedora principal da escola privada
-            $record->cnpjEscolaPrivada, // 49	Número do CNPJ da escola privada
-            $record->regulamentacao, // 50	Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educaçãof
-            $record->esferaFederal, // 51	Federal
-            $record->esferaEstadual, // 52	Estadual
-            $record->esferaMunicipal, // 53	Municipal
-            $record->unidadeVinculada, // 54	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
-            $record->inepEscolaSede, // 55	Código da Escola Sede
-            $record->codigoIes, // 56	Código da IES
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublicoEstadual) : '', // 35	Termo de colaboração (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublicoEstadual) : '', // 36	Termo de fomento (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublicoEstadual) : '', // 37	Acordo de cooperação (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_PRESTACAO_SERVICO, $record->formasContratacaoPoderPublicoEstadual) : '', // 38	Contrato de prestação de serviço
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COOPERACAO_TECNICA, $record->formasContratacaoPoderPublicoEstadual) : '', // 39	Termo de cooperação técnica e financeira
+            $record->formasContratacaoPoderPublicoEstadual ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_CONSORCIO, $record->formasContratacaoPoderPublicoEstadual) : '', // 40	Contrato de consórcio público/Convênio de cooperação
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 41	Termo de colaboração (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 42	Termo de fomento (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 43	Acordo de cooperação (Lei nº 13.019/2014)
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_PRESTACAO_SERVICO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 44 Contrato de prestação de serviço
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COOPERACAO_TECNICA, $record->formasContratacaoPoderPublicoMunicipal) : '', // 45 Termo de cooperação técnica e financeira
+            $record->formasContratacaoPoderPublicoMunicipal ? (int) in_array(FormasContratacaoPoderPublico::CONTRATO_CONSORCIO, $record->formasContratacaoPoderPublicoMunicipal) : '', // 46 Contrato de consórcio público/Convênio de cooperação
+            $record->cnpjMantenedoraPrincipal, // 47	CNPJ da mantenedora principal da escola privada
+            $record->cnpjEscolaPrivada, // 48	Número do CNPJ da escola privada
+            $record->regulamentacao, // 49	Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educaçãof
+            $record->esferaAdministrativa, // 50	Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização
+            $record->unidadeVinculada, // 50	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
+            $record->inepEscolaSede, // 51	Código da Escola Sede
+            $record->codigoIes, // 52	Código da IES
         ];
     }
 

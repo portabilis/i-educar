@@ -1,4 +1,4 @@
-CREATE VIEW public.educacenso_record50 AS
+CREATE OR REPLACE VIEW public.educacenso_record50 AS
 SELECT DISTINCT
     '50' AS registro,
     educacenso_cod_escola.cod_escola_inep AS "inepEscola",

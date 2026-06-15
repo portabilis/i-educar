@@ -5,27 +5,19 @@ use Illuminate\Support\Facades\DB;
 
 class AddFunctionRelatorioExibeAlunoConformeParametroAlunosDiferenciados extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
+        $this->down();
+
         DB::unprepared(
             file_get_contents(database_path('sqls/functions/relatorio.exibe_aluno_conforme_parametro_alunos_diferenciados.sql'))
         );
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         DB::unprepared(
-            'DROP FUNCTION relatorio.exibe_aluno_conforme_parametro_alunos_diferenciados(codigo_aluno integer, alunos_diferenciados integer);'
+            'DROP FUNCTION IF EXISTS relatorio.exibe_aluno_conforme_parametro_alunos_diferenciados(codigo_aluno integer, alunos_diferenciados integer);'
         );
     }
 }

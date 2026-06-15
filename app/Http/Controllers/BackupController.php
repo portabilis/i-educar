@@ -10,8 +10,6 @@ class BackupController extends Controller
 {
     public function download(Request $request, BackupUrlPresigner $backupUrlPresigner)
     {
-        $presignedUrl = $backupUrlPresigner->getPresignedUrl($request->url);
-
-        return Redirect::away($presignedUrl);
+        return Redirect::away($request->url);
     }
 }

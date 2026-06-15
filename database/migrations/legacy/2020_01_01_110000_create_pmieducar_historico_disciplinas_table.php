@@ -32,12 +32,6 @@ class CreatePmieducarHistoricoDisciplinasTable extends Migration
 
                 ALTER TABLE ONLY pmieducar.historico_disciplinas
                     ADD CONSTRAINT historico_disciplinas_pkey PRIMARY KEY (id);
-
-                CREATE INDEX idx_historico_disciplinas_id ON pmieducar.historico_disciplinas USING btree (sequencial, ref_ref_cod_aluno, ref_sequencial);
-
-                CREATE INDEX idx_historico_disciplinas_id1 ON pmieducar.historico_disciplinas USING btree (ref_ref_cod_aluno, ref_sequencial);
-
-                CREATE UNIQUE INDEX pmieducar_historico_disciplinas_sequencial_ref_ref_cod_aluno_re ON pmieducar.historico_disciplinas USING btree (sequencial, ref_ref_cod_aluno, ref_sequencial);
             '
         );
     }

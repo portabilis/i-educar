@@ -1,6 +1,6 @@
 <?php
 
-class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract implements \Stringable
+class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract implements Stringable
 {
     protected $_header = [];
 

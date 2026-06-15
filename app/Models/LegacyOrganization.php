@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -40,6 +41,11 @@ class LegacyOrganization extends LegacyModel
         'capital_social',
     ];
 
+    protected $attributes = [
+        'origem_gravacao' => 'M',
+        'operacao' => 'I',
+    ];
+
     /**
      * {@inheritDoc}
      */
@@ -48,7 +54,19 @@ class LegacyOrganization extends LegacyModel
         parent::boot();
 
         static::creating(function ($model) {
-            if (config('legacy.app.uppercase_names')) {
+            if (Auth::check()) {
+                $model->idpes_cad = Auth::id();
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                $model->idpes_rev = Auth::id();
+            }
+        });
+
+        static::saving(function ($model) {
+            if ($model->isDirty('fantasia') && config('legacy.app.uppercase_names')) {
                 $model->fantasia = Str::upper($model->fantasia);
             }
         });
@@ -59,6 +77,16 @@ class LegacyOrganization extends LegacyModel
         return Attribute::make(
             get: fn () => $this->fantasia
         );
+    }
+
+    protected function fantasia(): Attribute
+    {
+        return Attribute::set(fn (?string $value) => $value ?: null);
+    }
+
+    protected function capitalSocial(): Attribute
+    {
+        return Attribute::set(fn (?string $value) => $value ?: null);
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 
-class ClsCalendarioTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class ClsCalendarioTest extends TestCase
 {
     public function test_generate_form_values()
     {

@@ -34,6 +34,7 @@ return new class extends clsCadastro
         $retorno = 'Novo';
 
         $this->cod_nivel_ensino = $_GET['cod_nivel_ensino'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 571, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_nivel_ensino_lst.php');

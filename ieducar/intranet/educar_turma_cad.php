@@ -79,6 +79,8 @@ return new class extends clsCadastro
 
     public $cod_curso_profissional;
 
+    public $carga_horaria_total;
+
     public $etapa_agregada;
 
     public $etapa_educacenso;
@@ -581,18 +583,18 @@ return new class extends clsCadastro
             'max_length' => 14,
             'value' => $this->codigo_inep_educacenso]);
 
-        $helperOptions = ['objectName' => 'tipo_atendimento'];
+        $resources = TipoAtendimentoTurma::getDescriptiveValues();
+        $resources = array_replace([null => 'Selecione'], $resources);
+
         $options = [
             'label' => 'Tipo de turma',
+            'resources' => $resources,
+            'value' => is_array($this->tipo_atendimento) ? ($this->tipo_atendimento[0] ?? null) : $this->tipo_atendimento,
             'required' => $obrigarCamposCenso,
             'size' => 70,
-            'options' => [
-                'values' => $this->tipo_atendimento,
-                'all_values' => TipoAtendimentoTurma::getDescriptiveValues(),
-            ],
         ];
 
-        $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
+        $this->inputsHelper()->select(attrName: 'tipo_atendimento', inputOptions: $options);
 
         $atividadesComplementares = loadJson(file: 'educacenso_json/atividades_complementares.json');
         $helperOptions = ['objectName' => 'atividades_complementares'];
@@ -670,10 +672,20 @@ return new class extends clsCadastro
         ];
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
+        $options = [
+            'label' => 'Carga horária total do curso (em horas)',
+            'placeholder' => 'em horas',
+            'required' => false,
+            'max_length' => 4,
+            'value' => $this->carga_horaria_total,
+            'size' => 50,
+        ];
+        $this->inputsHelper()->integer(attrName: 'carga_horaria_total', inputOptions: $options);
+
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70];
+        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => $obrigarCamposCenso, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'local_funcionamento_diferenciado', inputOptions: $options);
 
         $resources = [
@@ -692,7 +704,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'classe_especial', inputOptions: $options);
 
         $options = [
-            'label' => 'Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade',
+            'label' => 'Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade)',
             'resources' => $resources,
             'value' => (string) $this->formacao_alternancia,
             'required' => false,

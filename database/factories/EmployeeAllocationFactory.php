@@ -34,9 +34,10 @@ class EmployeeAllocationFactory extends Factory
             'ref_cod_funcionario_vinculo' => $this->faker->randomDigitNotZero(),
             'hora_atividade' => $this->faker->time(),
             'horas_excedentes' => $this->faker->time(),
-            'data_saida' => now(),
+            'data_saida' => null,
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),
+            'data_cadastro' => now(),
         ];
     }
 }

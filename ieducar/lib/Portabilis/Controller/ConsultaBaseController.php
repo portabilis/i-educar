@@ -16,7 +16,7 @@ class ConsultaBaseController extends ApiCoreController
             $base->FraseConexao();
             $connectionString = 'pgsql:' . $base->getFraseConexao();
 
-            $this->pdo = new \PDO($connectionString);
+            $this->pdo = new PDO($connectionString);
         }
 
         return $this->pdo;

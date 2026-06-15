@@ -16,8 +16,10 @@ class FinalStatusImportController extends Controller
         $this->service = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->validateAccessLevel($request);
+
         $this->menu(Process::FINAL_STATUS_IMPORT);
         $this->breadcrumb('Importação de Situação Final', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
@@ -34,6 +36,8 @@ class FinalStatusImportController extends Controller
 
     public function upload(Request $request)
     {
+        $this->validateAccessLevel($request);
+
         $this->authorize('modify', Process::FINAL_STATUS_IMPORT);
         $validator = Validator::make($request->all(), [
             'file' => 'required|file|mimes:csv|max:20480',
@@ -66,8 +70,9 @@ class FinalStatusImportController extends Controller
         }
     }
 
-    public function analysis()
+    public function analysis(Request $request)
     {
+        $this->validateAccessLevel($request);
         $this->authorize('view', Process::FINAL_STATUS_IMPORT);
 
         if (!session('import_analysis')) {
@@ -86,8 +91,9 @@ class FinalStatusImportController extends Controller
         return view('final-status-import.analysis', compact('analysis'));
     }
 
-    public function showMapping()
+    public function showMapping(Request $request)
     {
+        $this->validateAccessLevel($request);
         $this->authorize('modify', Process::FINAL_STATUS_IMPORT);
 
         if (!session('import_analysis')) {
@@ -112,6 +118,7 @@ class FinalStatusImportController extends Controller
 
     public function import(Request $request)
     {
+        $this->validateAccessLevel($request);
         $this->authorize('modify', Process::FINAL_STATUS_IMPORT);
 
         if (!session('import_analysis')) {
@@ -168,8 +175,9 @@ class FinalStatusImportController extends Controller
         }
     }
 
-    public function status()
+    public function status(Request $request)
     {
+        $this->validateAccessLevel($request);
         $this->authorize('view', Process::FINAL_STATUS_IMPORT);
 
         if (!session('import_result')) {
@@ -188,5 +196,12 @@ class FinalStatusImportController extends Controller
         session()->forget(['import_analysis', 'import_file_temp', 'import_original_name', 'import_result']);
 
         return view('final-status-import.status', compact('result'));
+    }
+
+    private function validateAccessLevel(Request $request)
+    {
+        if (!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
+            abort(403, 'A importação de situação final das matrículas está disponível apenas para administradores e usuários institucionais.');
+        }
     }
 }

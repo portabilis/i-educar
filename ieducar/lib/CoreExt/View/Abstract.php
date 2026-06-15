@@ -1,6 +1,6 @@
 <?php
 
-abstract class CoreExt_View_Abstract implements \Stringable
+abstract class CoreExt_View_Abstract implements Stringable
 {
     /**
      * Conteúdo gerado pela execução de um controller.

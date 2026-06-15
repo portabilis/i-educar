@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\UniformDistribution;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UniformDistribution>
+ * @extends Factory<UniformDistribution>
  */
 class UniformDistributionFactory extends Factory
 {

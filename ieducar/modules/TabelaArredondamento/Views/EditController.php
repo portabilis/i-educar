@@ -67,6 +67,10 @@ class EditController extends Core_Controller_Page_EditController
             'label' => '<span style="padding-left: 10px"></span>Casa decimal exata:',
             'help' => 'A casa decimal a ser arredondada.',
         ],
+        'normalizarMedia' => [
+            'label' => 'Calcular média para obter o conceito',
+            'help' => 'Divide a soma das notas pela quantidade de etapas antes de converter para conceito.',
+        ],
     ];
 
     /**
@@ -216,6 +220,19 @@ class EditController extends Core_Controller_Page_EditController
             [0 => 'Não', 1 => 'Sim'],
             $this->getEntity()->get('arredondarNota')
         );
+
+        // Select para normalizar média (só para CONCEITUAL)
+        if ($this->getEntity()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL) {
+            $this->campoLista(
+                'normalizarMedia',
+                $this->_getLabel('normalizarMedia'),
+                [0 => 'Não', 1 => 'Sim'],
+                $this->getEntity()->get('normalizarMedia') ? 1 : 0,
+                '',
+                '',
+                $this->_getHelp('normalizarMedia')
+            );
+        }
 
         // Parte condicional
         if (!$this->getEntity()->isNew()) {
@@ -494,6 +511,9 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         $entity->arredondarNota = $this->getRequest()->arredondarNota;
+        if (!is_null($this->getRequest()->normalizarMedia)) {
+            $entity->normalizarMedia = $this->getRequest()->normalizarMedia;
+        }
 
         $this->getDataMapper()->save($entity);
 

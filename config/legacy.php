@@ -4,19 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Legacy Code
-    |--------------------------------------------------------------------------
-    |
-    | This value determines which application is running. Default is the new
-    | version using Laravel structure. Another case your application is running
-    | using i-Educar legacy code.
-    |
-    */
-
-    'code' => env('LEGACY_CODE', true),
-
-    /*
-    |--------------------------------------------------------------------------
     | Display Errors
     |--------------------------------------------------------------------------
     |
@@ -54,8 +41,6 @@ return [
         database_path('migrations/legacy'),
     ],
 
-    'env' => env('LEGACY_ENV', 'local'),
-
     'gtm' => env('GOOGLE_TAG_MANAGER'),
 
     'apis' => [
@@ -77,15 +62,6 @@ return [
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
         ],
-        'administrative_pending' => [
-            'exist' => '',
-            'msg' => '',
-        ],
-        'aws' => [
-            'bucketname' => env('AWS_BUCKET'),
-            'awsacesskey' => env('AWS_ACCESS_KEY_ID'),
-            'awssecretkey' => env('AWS_SECRET_ACCESS_KEY'),
-        ],
         'template' => [
             'vars' => [
                 'instituicao' => 'Prefeitura Municipal',
@@ -94,7 +70,6 @@ return [
                 'titulo' => 'Relatório i-Educar',
                 'logo' => '',
             ],
-            'layout' => 'login.tpl',
         ],
         'gtm' => [
             'id' => env('GOOGLE_TAG_MANAGER'),
@@ -108,26 +83,11 @@ return [
             'province' => 'SP',
             'timezone' => 'America/Sao_Paulo',
         ],
-        'admin' => [
-            'reports' => [
-                'sql_tempo' => '3',
-                'pagina_tempo' => '5',
-                'emails' => '',
-            ],
-        ],
         'entity' => [
             'name' => 'Prefeitura Municipal',
         ],
-        'superuser' => 'admin',
         'user_accounts' => [
             'default_password_expiration_period' => '180',
-        ],
-        'instituicao' => [
-            'data_base_deslocamento' => '1',
-        ],
-        'novoeducacao' => [
-            'url' => '',
-            'caminho_api' => '',
         ],
         'auditoria' => [
             'notas' => '1',
@@ -153,19 +113,6 @@ return [
         ],
         'faltas_notas' => [
             'mostrar_botao_replicar' => '1',
-        ],
-        'mailer' => [
-            'smtp' => [
-                'from_name' => env('MAIL_FROM_NAME', 'Example'),
-                'from_email' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-                'port' => env('MAIL_PORT', 587),
-                'auth' => boolval(env('MAIL_ENCRYPTION', 'tls')),
-                'username' => env('MAIL_USERNAME'),
-                'password' => env('MAIL_PASSWORD'),
-                'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            ],
-            'debug' => false,
         ],
         'recaptcha' => [
             'public_key' => '',
