@@ -1,4 +1,4 @@
-create view public.exporter_teacher as
+create or replace view public.exporter_teacher as
 select
     distinct  p.*,
               pt.ano as year,

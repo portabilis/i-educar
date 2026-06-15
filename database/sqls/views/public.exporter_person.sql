@@ -1,4 +1,4 @@
-create view public.exporter_person as
+create or replace view public.exporter_person as
 select
     p.idpes as id,
     p.nome as name,
