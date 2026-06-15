@@ -136,8 +136,6 @@ class clsPmieducarEscola extends Model
 
     public $materiais_didaticos_especificos;
 
-    public $educacao_indigena;
-
     public $lingua_ministrada;
 
     public $codigo_lingua_indigena;
@@ -250,6 +248,8 @@ class clsPmieducarEscola extends Model
 
     public $qtd_orientador_comunitario;
 
+    public $qtd_assistente_social;
+
     public $qtd_tradutor_interprete_libras_outro_ambiente;
 
     public $qtd_revisor_braile;
@@ -298,6 +298,8 @@ class clsPmieducarEscola extends Model
 
     public $caracteristica_escolar;
 
+    public $regional_type_id;
+
     public function __construct(
         $cod_escola = null,
         $ref_usuario_cad = null,
@@ -322,7 +324,7 @@ class clsPmieducarEscola extends Model
             e.alimentacao_escolar_alunos, e.compartilha_espacos_atividades_integracao, e.usa_espacos_equipamentos_atividades_regulares,
             e.salas_gerais, e.salas_funcionais, e.banheiros, e.laboratorios, e.salas_atividades, e.dormitorios, e.areas_externas, e.recursos_acessibilidade, e.possui_dependencias, e.numero_salas_utilizadas_dentro_predio,
             e.numero_salas_utilizadas_fora_predio, e.numero_salas_climatizadas, e.numero_salas_acessibilidade, e.numero_salas_cantinho_leitura,
-            e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.acao_area_ambiental, e.acoes_area_ambiental, e.projeto_politico_pedagogico, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada,
+            e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.acao_area_ambiental, e.acoes_area_ambiental, e.projeto_politico_pedagogico, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.lingua_ministrada,
             e.codigo_lingua_indigena, e.atividade_complementar, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4,
             e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som,
             e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
@@ -345,6 +347,7 @@ class clsPmieducarEscola extends Model
             e.qtd_fonoaudiologo,
             e.qtd_vice_diretor,
             e.qtd_orientador_comunitario,
+            e.qtd_assistente_social,
             e.qtd_tradutor_interprete_libras_outro_ambiente,
             e.qtd_revisor_braile,
             e.nao_ha_funcionarios_para_funcoes,
@@ -367,7 +370,8 @@ class clsPmieducarEscola extends Model
             e.qtd_edu_especial_classe_especial_par,
             e.qtd_edu_especial_classe_especial_int,
             e.qtd_edu_eja_ensino_fund,
-            e.qtd_edu_eja_ensino_med
+            e.qtd_edu_eja_ensino_med,
+            e.regional_type_id
           ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -452,6 +456,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->zona_localizacao)) {
                 $campos .= "{$gruda}zona_localizacao";
                 $valores .= "{$gruda}{$this->zona_localizacao}";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->regional_type_id)) {
+                $campos .= "{$gruda}regional_type_id";
+                $valores .= "{$gruda}{$this->regional_type_id}";
                 $gruda = ', ';
             }
 
@@ -850,12 +860,6 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->educacao_indigena)) {
-                $campos .= "{$gruda}educacao_indigena";
-                $valores .= "{$gruda}'{$this->educacao_indigena}'";
-                $gruda = ', ';
-            }
-
             if (is_numeric($this->lingua_ministrada)) {
                 $campos .= "{$gruda}lingua_ministrada";
                 $valores .= "{$gruda}'{$this->lingua_ministrada}'";
@@ -1153,6 +1157,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->qtd_orientador_comunitario)) {
                 $campos .= "{$gruda}qtd_orientador_comunitario";
                 $valores .= "{$gruda}$this->qtd_orientador_comunitario";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->qtd_assistente_social)) {
+                $campos .= "{$gruda}qtd_assistente_social";
+                $valores .= "{$gruda}$this->qtd_assistente_social";
                 $gruda = ', ';
             }
 
@@ -1857,12 +1867,6 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->educacao_indigena)) {
-                $set .= "{$gruda}educacao_indigena = '{$this->educacao_indigena}'";
-            } else {
-                $set .= "{$gruda}educacao_indigena = NULL ";
-            }
-
             $gruda = ', ';
             if (is_numeric($this->lingua_ministrada)) {
                 $set .= "{$gruda}lingua_ministrada = '{$this->lingua_ministrada}'";
@@ -2224,6 +2228,14 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}qtd_orientador_comunitario = NULL ";
             }
 
+            if (is_numeric($this->qtd_assistente_social) && $this->qtd_assistente_social > 0) {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_assistente_social = '{$this->qtd_assistente_social}'";
+            } elseif (is_null($this->qtd_assistente_social) || $this->qtd_assistente_social == '') {
+                $gruda = ', ';
+                $set .= "{$gruda}qtd_assistente_social = NULL ";
+            }
+
             if (is_numeric($this->qtd_tradutor_interprete_libras_outro_ambiente) && $this->qtd_tradutor_interprete_libras_outro_ambiente > 0) {
                 $gruda = ', ';
                 $set .= "{$gruda}qtd_tradutor_interprete_libras_outro_ambiente = '{$this->qtd_tradutor_interprete_libras_outro_ambiente}'";
@@ -2387,6 +2399,13 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}qtd_edu_eja_ensino_med = NULL";
+            }
+
+            if (is_numeric($this->regional_type_id)) {
+                $set .= "{$gruda}regional_type_id = '{$this->regional_type_id}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}regional_type_id = NULL";
             }
 
             if (is_string($this->lei_conclusao_ensino_medio)) {

@@ -2,6 +2,7 @@
 
 use App\Models\EducacensoIndigenousPeople;
 use App\Models\LegacyDocument;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
@@ -47,6 +48,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     public $rota_transporte;
 
     public $renda_mensal;
+
+    public $pai_restricao_judicial;
+
+    public $mae_restricao_judicial;
+
+    public $responsavel_restricao_judicial;
 
     protected $_formMap = [
         'pessoa' => [
@@ -332,9 +339,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $foto = false;
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $personObject = new clsFisica($this->cod_pessoa_fj);
-            $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
-            $this->renda_mensal = (empty($personObject->detalhe()['renda_mensal']) == false) ? $personObject->detalhe()['renda_mensal'] : '';
+            $personObject = LegacyIndividual::find($this->cod_pessoa_fj, ['observacao', 'renda_mensal', 'pai_restricao_judicial', 'mae_restricao_judicial', 'responsavel_restricao_judicial']);
+            $this->observacao = !empty($personObject?->observacao) ? $personObject->observacao : '';
+            $this->renda_mensal = !empty($personObject?->renda_mensal) ? $personObject->renda_mensal : '';
+            $this->pai_restricao_judicial = $personObject->pai_restricao_judicial;
+            $this->mae_restricao_judicial = $personObject->mae_restricao_judicial;
+            $this->responsavel_restricao_judicial = $personObject->responsavel_restricao_judicial;
             $foto = LegacyIndividualPicture::whereKey($this->cod_pessoa_fj)->value('caminho') ?? false;
         } else {
             $this->observacao = '';
@@ -440,10 +450,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $nisPisPasep = '';
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $fisica = new clsFisica($this->cod_pessoa_fj);
-            $fisica = $fisica->detalhe();
-            $valorCpf = is_numeric($fisica['cpf']) ? int2CPF($fisica['cpf']) : '';
-            $nisPisPasep = int2Nis($fisica['nis_pis_pasep']);
+            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep']);
+            $valorCpf = is_numeric($fisica?->getRawOriginal('cpf')) ? int2CPF($fisica->getRawOriginal('cpf')) : '';
+            $nisPisPasep = int2Nis($fisica?->nis_pis_pasep);
         }
 
         /** @var User $user */
@@ -459,6 +468,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
         $this->campoOculto('renda_mensal', (int) $this->renda_mensal);
+        $this->campoOculto('pai_restricao_judicial_value', (int) $this->pai_restricao_judicial);
+        $this->campoOculto('mae_restricao_judicial_value', (int) $this->mae_restricao_judicial);
+        $this->campoOculto('responsavel_restricao_judicial_value', (int) $this->responsavel_restricao_judicial);
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
         $options = [
