@@ -46,10 +46,21 @@ const ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP = ['25', '26', '27', '28', '29'];
 const ETAPAS_EIXO_CURSO_PROFISSIONAL = ['67', '68', '73', '75'];
 
 let habilitaFormacaoAlternancia = ()=>{
-  $j('#formacao_alternancia').makeUnrequired();
+  const etapasBloqueiamSim = ['1', '2', '3', '4', '14', '15', '16', '17', '18', '56'];
+  const $campo = $j('#formacao_alternancia');
+  const bloqueada = $j.inArray($j('#etapa_educacenso').val(), etapasBloqueiamSim) != -1;
 
+  $campo.makeUnrequired();
   if (obrigarCamposCenso) {
-    $j('#formacao_alternancia').makeRequired();
+    $campo.makeRequired();
+  }
+
+  $campo.find('option').prop('disabled', false);
+  if (bloqueada) {
+    $campo.find('option[value="1"]').prop('disabled', true);
+    if ($campo.val() === '1') {
+      $campo.val('');
+    }
   }
 }
 
@@ -175,6 +186,7 @@ verificaLocalFuncionamentoDiferenciado();
 $j('#etapa_educacenso').change(function() {
   habilitaCursoTecnico();
   habilitaFormaOrganizacaoTurma();
+  habilitaFormacaoAlternancia();
   habilitaEixoCursoProfissional();
 });
 
