@@ -4,6 +4,7 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
@@ -516,17 +517,17 @@ return new class extends clsCadastro
             }
         }
 
-        $registros = [];
+        $registros = collect();
 
         if (is_numeric(value: $this->cod_turma)) {
-            $objTurma = new clsPmieducarTurmaModulo;
-            $objTurma->setOrderBy(strNomeCampo: 'sequencial ASC');
-
-            $registros = $objTurma->lista(int_ref_cod_turma: $this->cod_turma);
+            $registros = LegacySchoolClassStage::query()
+                ->whereSchoolClass($this->cod_turma)
+                ->orderBySequencial()
+                ->get(['ref_cod_modulo', 'data_inicio', 'data_fim', 'dias_letivos']);
         }
 
         if (
-            empty($registros)
+            $registros->isEmpty()
             && is_numeric(value: $this->ano)
             && is_numeric(value: $this->ref_cod_escola)
         ) {
@@ -537,7 +538,7 @@ return new class extends clsCadastro
             $qtd_registros = 0;
             $moduloSelecionado = 0;
 
-            if ($registros) {
+            if ($registros->isNotEmpty()) {
                 $moduloSelecionado = $registros[0]['ref_cod_modulo'];
 
                 foreach ($registros as $campo) {
