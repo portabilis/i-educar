@@ -1,7 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 #[AllowDynamicProperties]
-class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Framework\TestCase
+class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends TestCase
 {
     protected $_frontController = null;
 
@@ -17,7 +19,7 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Fr
 
     public function test_requisicao_a_controller_nao_existente_lanca_excecao()
     {
-        $this->expectException(\CoreExt_Exception_FileNotFoundException::class);
+        $this->expectException(CoreExt_Exception_FileNotFoundException::class);
         $_SERVER['REQUEST_URI'] = 'http://www.example.com/PageController/view';
         $this->_pageStrategy->dispatch();
     }

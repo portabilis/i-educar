@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEmployee;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -111,7 +112,7 @@ return new class extends clsListagem
         $this->ano_alocacao = Session::get(key: 'ano_alocacao');
         $this->lst_matriculas = Session::get(key: 'lst_matriculas');
 
-        Session::put(key: 'tipo', value: $_GET['tipo'] ?? Session::get(key: 'tipo'));
+        Session::put(key: 'tipo', value: $_GET['tipo'] ?? Session::get(key: 'tipo') ?? '');
 
         $this->titulo = 'Servidores P&uacute;blicos - Listagem';
         // Passa todos os valores obtidos no GET para atributos do objeto
@@ -164,7 +165,7 @@ return new class extends clsListagem
         $this->campoOculto(nome: 'tipo', valor: $_GET['tipo']);
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_{$this->nome}']) ? $_GET['pagina_{$this->nome}'] * $this->limite - $this->limite : 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
         $obj_servidor = new clsPmieducarServidor;
         $obj_servidor->setOrderby(strNomeCampo: 'carga_horaria ASC');
         $obj_servidor->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
@@ -229,15 +230,16 @@ return new class extends clsListagem
 
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
+            $matriculasPorServidor = LegacyEmployee::whereIn('ref_cod_pessoa_fj', array_column($lista, 'cod_servidor'))
+                ->pluck('matricula', 'ref_cod_pessoa_fj');
+
             foreach ($lista as $registro) {
-                $obj_cod_servidor = new clsFuncionario(int_idpes: $registro['cod_servidor']);
-                $det_cod_servidor = $obj_cod_servidor->detalhe();
-                $registro['matricula'] = $det_cod_servidor['matricula'];
+                $registro['matricula'] = $matriculasPorServidor[$registro['cod_servidor']] ?? null;
                 // Se servidor for professor, verifica se possui as mesmas
                 // disciplinas do servidor a ser substituido (este passo somente Ã©
                 // executado ao buscar um servidor substituto)
                 if ($this->professor == 'true') {
-                    $disciplinasSubstituto = clsPmieducarServidor::getServidorDisciplinas(
+                    $disciplinasSubstituto = $obj_servidor->getServidorDisciplinas(
                         codServidor: $registro['cod_servidor'],
                         codInstituicao: $this->ref_cod_instituicao
                     );
@@ -260,9 +262,9 @@ return new class extends clsListagem
                     }
                 } else {
                     if (is_string(value: $campo1) && is_string(value: $campo2)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
+                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}','{$registro['cod_servidor']}'); fecha();\"";
                     } elseif (is_string(value: $campo2)) {
-                        $script = " onclick=\"addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
+                        $script = " onclick=\"addVal1('{$campo2}','{$registro['nome']}','{$registro['cod_servidor']}'); fecha();\"";
                     } elseif (is_string(value: $campo1)) {
                         $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                     }

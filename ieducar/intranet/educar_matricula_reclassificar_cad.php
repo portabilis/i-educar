@@ -2,7 +2,10 @@
 
 use App\Events\RegistrationCopyEvent;
 use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchool;
 use App\Process;
 
 return new class extends clsCadastro
@@ -147,6 +150,59 @@ return new class extends clsCadastro
         $this->acao_executa_submit = false;
     }
 
+    /**
+     * Bloqueio (LDB): a reclassificação é vedada na educação infantil e no 1º ano do
+     * ensino fundamental. Quando o parâmetro da instituição está ativo e a série ATUAL
+     * (origem) do aluno é educação infantil (etapa_educacenso 1, 2 ou 3) ou 1º ano do EF
+     * (etapa_educacenso 14), retorna a mensagem impeditiva com a base legal. Caso
+     * contrário (ou sem dados para decidir), retorna null.
+     */
+    private function bloqueioReclassificacaoLdb(array $detMatricula): ?string
+    {
+        $serieAtual = $detMatricula['ref_ref_cod_serie'] ?? null;
+        $escola = $detMatricula['ref_ref_cod_escola'] ?? $this->ref_cod_escola;
+
+        if (!$serieAtual || !$escola) {
+            return null;
+        }
+
+        $codInstituicao = LegacySchool::query()
+            ->where('cod_escola', $escola)
+            ->value('ref_cod_instituicao');
+
+        if (!$codInstituicao) {
+            return null;
+        }
+
+        $proibir = LegacyInstitution::query()
+            ->where('cod_instituicao', $codInstituicao)
+            ->value('proibir_reclassificacao_educacao_infantil_primeiro_ano');
+
+        if (!dbBool($proibir)) {
+            return null;
+        }
+
+        $etapaEducacenso = (int) LegacyGrade::query()
+            ->where('cod_serie', $serieAtual)
+            ->value('etapa_educacenso');
+
+        // Educação infantil: creche (1), pré-escola (2), unificada (3)
+        if (in_array($etapaEducacenso, [1, 2, 3], true)) {
+            return 'De acordo com a Lei nº 9.394/1996 (LDB), art. 31, inciso I, a avaliação na '
+                . 'educação infantil não tem objetivo de promoção. Fica vedada a reclassificação '
+                . 'de alunos da educação infantil.';
+        }
+
+        // 1º ano do ensino fundamental de 9 anos
+        if ($etapaEducacenso === 14) {
+            return 'De acordo com a Lei nº 9.394/1996 (LDB), art. 23, §1º, e a Resolução CNE/CEB '
+                . 'nº 7/2010, é vedada a reclassificação no 1º ano do ensino fundamental '
+                . '(ciclo de alfabetização).';
+        }
+
+        return null;
+    }
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes;
@@ -160,6 +216,12 @@ return new class extends clsCadastro
 
         $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
         $det_matricula = $obj_matricula->detalhe();
+
+        if ($mensagemBloqueio = $this->bloqueioReclassificacaoLdb($det_matricula)) {
+            $this->mensagem = $mensagemBloqueio;
+
+            return false;
+        }
 
         if (is_null($det_matricula['data_matricula'])) {
             if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {

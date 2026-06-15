@@ -37,6 +37,8 @@ class DefaultEmployeeGraduationDisciplines extends Seeder
             29 => 'Sociologia',
             16 => 'Informática/Computação',
             17 => 'Disciplinas Áreas do conhecimento profissionalizantes',
+            20 => 'Disciplinas voltadas ao atendimento às necessidades educacionais específicas dos alunos que são público alvo da educação especial e às práticas educacionais inclusivas.',
+            21 => 'Disciplinas voltadas à diversidade sociocultural (disciplinas pedagógicas)',
             25 => 'Disciplinas Áreas do conhecimento pedagógicas',
             26 => 'Ensino religioso',
             32 => 'Estágio curricular supervisionado',

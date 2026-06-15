@@ -7,6 +7,7 @@ use App\Models\Announcement;
 use App\Rules\ReCaptchaV3;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -63,7 +64,7 @@ class LoginController extends Controller
      *
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function validateLogin(Request $request)
     {

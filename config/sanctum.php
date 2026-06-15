@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\SkipMiddleware;
 use Laravel\Sanctum\Sanctum;
 
 return [
@@ -60,10 +61,10 @@ return [
     */
 
     'middleware' => [
-        'verify_csrf_token' => App\Http\Middleware\SkipMiddleware::class,
-        'authenticate_session' => App\Http\Middleware\SkipMiddleware::class,
-        'encrypt_cookies' => App\Http\Middleware\SkipMiddleware::class,
-        'validate_csrf_token' => App\Http\Middleware\SkipMiddleware::class,
+        'verify_csrf_token' => SkipMiddleware::class,
+        'authenticate_session' => SkipMiddleware::class,
+        'encrypt_cookies' => SkipMiddleware::class,
+        'validate_csrf_token' => SkipMiddleware::class,
     ],
 
 ];

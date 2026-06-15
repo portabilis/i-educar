@@ -7,6 +7,7 @@ use App\Models\Traits\HasMessages;
 use Carbon\Carbon;
 use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon                 $data_fim
  * @property int                 $result
  * @property bool                $aluno_incluso_programa_evasao
- * @property \Illuminate\Database\Eloquent\Collection<Message> $messages
+ * @property Collection<Message> $messages
  */
 class LegacyActiveLooking extends LegacyModel
 {

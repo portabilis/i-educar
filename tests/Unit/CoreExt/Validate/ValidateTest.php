@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_ValidateTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_ValidateTest extends TestCase
 {
     protected $_validator = null;
 
@@ -11,7 +13,7 @@ class CoreExt_ValidateTest extends PHPUnit\Framework\TestCase
 
     public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->_validator->setOptions(['invalidOption' => true]);
     }
 
@@ -27,20 +29,20 @@ class CoreExt_ValidateTest extends PHPUnit\Framework\TestCase
 
     public function test_valor_string_somente_espaco_requerido()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         // Um espaço ASCII
         $this->assertTrue($this->_validator->isValid(' '));
     }
 
     public function test_valor_nulo_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->assertTrue($this->_validator->isValid(null));
     }
 
     public function test_valor_array_vazio_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->assertTrue($this->_validator->isValid([]));
     }
 

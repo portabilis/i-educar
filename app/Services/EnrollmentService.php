@@ -25,6 +25,7 @@ use iEducar\Support\Exceptions\Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use SequencialEnturmacao;
 use Throwable;
 
@@ -311,6 +312,19 @@ class EnrollmentService
     }
 
     /**
+     * @throws Throwable
+     */
+    public function markWithSituation(LegacyEnrollment $enrollment, string $situation): void
+    {
+        $enrollment->transferido = $situation === 'transferido';
+        $enrollment->remanejado = $situation === 'remanejado';
+        $enrollment->reclassificado = $situation === 'reclassificado';
+        $enrollment->abandono = $situation === 'abandono';
+        $enrollment->falecido = $situation === 'falecido';
+        $enrollment->saveOrFail();
+    }
+
+    /**
      * Verifica se a matrícula tem enturmação anterior, com data de saída posterior a data base,
      * ou data base vazia
      *
@@ -406,7 +420,7 @@ class EnrollmentService
     }
 
     /**
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function updateExitDate(LegacyEnrollment $enrollment, DateTime $exitDate)
     {

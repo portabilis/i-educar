@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 class Core_Controller_Page_ListController extends clsListagem implements Core_View_Tabulable
 {
     /**
@@ -74,7 +76,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
 
     protected function getPessoaLogada()
     {
-        return \Illuminate\Support\Facades\Auth::id();
+        return Auth::id();
     }
 
     /**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd" backupGlobals="true" bootstrap="vendor/autoload.php" colors="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd" backupGlobals="true" bootstrap="vendor/autoload.php" colors="true" cacheDirectory=".phpunit.cache">
   <testsuites>
     <testsuite name="Diario">
       <directory suffix="Test.php">./tests/Api</directory>
@@ -18,7 +18,7 @@
       <directory suffix="Test.php">./tests/Unit</directory>
     </testsuite>
   </testsuites>
-  <coverage/>
+  <!-- 🔍 Cobertura explícita -->
   <php>
     <ini name="memory_limit" value="512M"/>
     <server name="APP_ENV" value="testing"/>
@@ -42,6 +42,7 @@
     <exclude>
       <directory>./packages</directory>
       <directory>./public</directory>
+      <directory>./tests</directory>
       <directory suffix="_xml.php">./ieducar</directory>
       <directory suffix="_xml2.php">./ieducar</directory>
       <file>ieducar/intranet/educar_busca_ativa_cad.php</file>

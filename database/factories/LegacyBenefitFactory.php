@@ -6,7 +6,7 @@ use App\Models\LegacyBenefit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LegacyBenefit>
+ * @extends Factory<LegacyBenefit>
  */
 class LegacyBenefitFactory extends Factory
 {
