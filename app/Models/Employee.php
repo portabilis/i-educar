@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builders\EmployeeBuilder;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
+use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -71,27 +72,9 @@ class Employee extends LegacyModel
     protected function continuedTrainingCourse(): Attribute
     {
         return Attribute::make(
-            get: fn () => collect(transformStringFromDBInArray($this->curso_formacao_continuada) ?? [])->map(fn ($course) => match ($course) {
-                '1' => 'Creche (0 a 3 anos)',
-                '2' => 'Pré-escola (4 e 5 anos)',
-                '3' => 'Anos iniciais do ensino fundamental',
-                '4' => 'Anos finais do ensino fundamental',
-                '5' => 'Ensino médio',
-                '6' => 'Educação de jovens e adultos',
-                '7' => 'Educação especial',
-                '8' => 'Educação indígena',
-                '9' => 'Educação do campo',
-                '10' => 'Educação ambiental',
-                '11' => 'Educação em direitos humanos',
-                '18' => 'Educação bilíngue de surdos',
-                '19' => 'Educação e Tecnologia de Informação e Comunicação (TIC)',
-                '12' => 'Gênero e diversidade sexual',
-                '13' => 'Direitos de criança e adolescente',
-                '14' => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',
-                '17' => 'Gestão Escolar',
-                '15' => 'Outros',
-                default => null
-            })->filter(),
+            get: fn () => collect(transformStringFromDBInArray($this->curso_formacao_continuada) ?? [])
+                ->map(fn ($course) => FormacaoContinuada::getDescriptiveValues()[(int) $course] ?? null)
+                ->filter(),
         );
     }
 

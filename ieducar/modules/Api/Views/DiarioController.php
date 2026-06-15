@@ -1,15 +1,19 @@
 <?php
 
+use App\Models\ComponentBatchOperation;
+use App\Models\Enums\ComponentBatchStatus;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\RegistrationStatus;
 use App\Models\View\Discipline;
+use App\Services\ComponentBatchManagerService;
 use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class DiarioController extends ApiCoreController
 {
@@ -42,7 +46,7 @@ class DiarioController extends ApiCoreController
     {
         $turmaId = $componentesTurma->value('cod_turma');
 
-        return Cache::remember('valid_component_' . $componenteCurricularId . '_schoolclass_' . $turmaId . '_grade_' . $registration->ref_ref_cod_serie, now()->addMinute(), function () use ($componenteCurricularId, $componentesTurma, $turmaId, $registration) {
+        return Cache::remember('valid_component_' . $componenteCurricularId . '_schoolclass_' . $turmaId . '_grade_' . $registration->ref_ref_cod_serie, now()->addMinutes(5), function () use ($componenteCurricularId, $componentesTurma, $turmaId, $registration) {
             $valid = $componentesTurma->when($registration->ref_ref_cod_serie, function (Collection $collection, int $serieId) {
                 return $collection->where('cod_serie', $serieId);
             })->contains($componenteCurricularId);
@@ -84,7 +88,7 @@ class DiarioController extends ApiCoreController
 
     protected function findMatricula($turmaId, $alunoId)
     {
-        return Cache::remember('matricula_id_' . $turmaId . '_' . $alunoId, now()->addMinute(), function () use ($turmaId, $alunoId) {
+        return Cache::remember('matricula_id_' . $turmaId . '_' . $alunoId, now()->addMinutes(5), function () use ($turmaId, $alunoId) {
             return LegacyRegistration::query()
                 ->active()
                 ->whereHas('enrollments', function ($q) use ($turmaId) {
@@ -382,21 +386,24 @@ class DiarioController extends ApiCoreController
 
     protected function getComponentesTurma(int $turmaId): Collection
     {
-        $disciplinaDispensada = LegacySchoolClass::query()->whereKey($turmaId)->value('ref_cod_disciplina_dispensada');
+        return Cache::remember('componentes_turma_id_' . $turmaId, now()->addMinutes(5), function () use ($turmaId) {
+            $disciplinaDispensada = LegacySchoolClass::query()
+                ->whereKey($turmaId)->value('ref_cod_disciplina_dispensada');
 
-        return Discipline::query()
-            ->where('cod_turma', $turmaId)
-            ->when($disciplinaDispensada, function ($q, $disciplinaDispensada) {
-                $q->where('id', '<>', $disciplinaDispensada);
-            })
-            ->with('knowledgeArea:id,agrupar_descritores')
-            ->orderBy('nome')
-            ->get([
-                'id',
-                'cod_turma',
-                'cod_serie',
-                'area_conhecimento_id',
-            ]);
+            return Discipline::query()
+                ->where('cod_turma', $turmaId)
+                ->when($disciplinaDispensada, function ($q, $disciplinaDispensada) {
+                    $q->where('id', '<>', $disciplinaDispensada);
+                })
+                ->with('knowledgeArea:id,agrupar_descritores')
+                ->orderBy('nome')
+                ->get([
+                    'id',
+                    'cod_turma',
+                    'cod_serie',
+                    'area_conhecimento_id',
+                ]);
+        });
     }
 
     protected function postFaltasPorComponente()
@@ -661,11 +668,17 @@ class DiarioController extends ApiCoreController
             $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
 
         if (!empty($notaExame) && $situacaoEmExame) {
-            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId, $notaExame);
-            $obj->existe() ? $obj->edita() : $obj->cadastra();
-        } else {
-            $obj = new clsModulesNotaExame($matricula->cod_matricula, $componenteCurricularId);
-            $obj->excluir();
+            if (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId) && is_numeric($notaExame)) {
+                DB::table('modules.nota_exame')->updateOrInsert(
+                    ['ref_cod_matricula' => $matricula->cod_matricula, 'ref_cod_componente_curricular' => $componenteCurricularId],
+                    ['nota_exame' => $notaExame]
+                );
+            }
+        } elseif (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId)) {
+            DB::table('modules.nota_exame')
+                ->where('ref_cod_matricula', $matricula->cod_matricula)
+                ->where('ref_cod_componente_curricular', $componenteCurricularId)
+                ->delete();
         }
     }
 
@@ -681,6 +694,44 @@ class DiarioController extends ApiCoreController
     public function removeHtmlTags(string $text = ''): string
     {
         return (new RemoveHtmlTagsStringService)->execute($text);
+    }
+
+    protected function postComponentBatchCallback()
+    {
+        $operationId = $this->getRequest()->operation_id ?? null;
+
+        if (!$operationId) {
+            $this->messenger->append('Parâmetro operation_id é obrigatório.', 'error');
+
+            return;
+        }
+
+        $operation = ComponentBatchOperation::find($operationId);
+
+        if (!$operation) {
+            $this->messenger->append('Operação não encontrada.', 'error');
+
+            return;
+        }
+
+        if ($operation->status_id !== ComponentBatchStatus::RUNNING->value) {
+            $this->appendResponse('message', 'Operação não está em execução. Status atual: ' . ComponentBatchStatus::from($operation->status_id)->label());
+
+            return;
+        }
+
+        $idiarioResult = [
+            'success' => filter_var($this->getRequest()->success ?? false, FILTER_VALIDATE_BOOLEAN),
+            'deleted' => (int) ($this->getRequest()->deleted ?? 0),
+        ];
+
+        if (!empty($this->getRequest()->error)) {
+            $idiarioResult['error'] = $this->getRequest()->error;
+        }
+
+        app(ComponentBatchManagerService::class)->processCallback($operation, $idiarioResult);
+
+        $this->appendResponse('message', 'Callback processado com sucesso.');
     }
 
     public function Gerar()
@@ -701,6 +752,8 @@ class DiarioController extends ApiCoreController
             $this->appendResponse($this->postPareceresAnualPorComponente());
         } elseif ($this->isRequestFor('post', 'pareceres-anual-geral')) {
             $this->appendResponse($this->postPareceresAnualGeral());
+        } elseif ($this->isRequestFor('post', 'component-batch-callback')) {
+            $this->postComponentBatchCallback();
         } else {
             $this->notImplementedOperationError();
         }

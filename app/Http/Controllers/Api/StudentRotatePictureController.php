@@ -32,7 +32,11 @@ class StudentRotatePictureController extends Controller
         $filename = end($segments);
 
         // http://image.intervention.io/
-        $image = (string) Image::make($url)->rotate($angle)->encode();
+        try {
+            $image = (string) Image::make($url)->rotate($angle)->encode();
+        } catch (Exception) {
+            throw new HttpException(422, 'Ocorreu um erro no servidor ao girar e enviar foto. Tente novamente.');
+        }
 
         $filename = config('legacy.app.database.dbname') . '/' . $filename;
 
@@ -48,6 +52,6 @@ class StudentRotatePictureController extends Controller
             ];
         }
 
-        throw new HttpException(422, 'Ocorreu um erro no servidor ao girar a enviar foto. Tente novamente.');
+        throw new HttpException(422, 'Ocorreu um erro no servidor ao girar e enviar foto. Tente novamente.');
     }
 }

@@ -22,6 +22,14 @@ class LegacyPhone extends Model
 {
     protected $table = 'cadastro.fone_pessoa';
 
+    public const TYPE_LANDLINE = 1;
+
+    public const TYPE_MOBILE = 2;
+
+    public const TYPE_MOBILE_ALT = 3;
+
+    public const TYPE_FAX = 4;
+
     public const CREATED_AT = 'data_cad';
 
     public const UPDATED_AT = 'data_rev';
@@ -76,5 +84,16 @@ class LegacyPhone extends Model
                 return null;
             },
         );
+    }
+
+    protected function legacySuffix(): Attribute
+    {
+        return Attribute::get(fn () => match ((int) $this->tipo) {
+            self::TYPE_LANDLINE => '1',
+            self::TYPE_MOBILE => '2',
+            self::TYPE_MOBILE_ALT => 'mov',
+            self::TYPE_FAX => 'fax',
+            default => null,
+        });
     }
 }

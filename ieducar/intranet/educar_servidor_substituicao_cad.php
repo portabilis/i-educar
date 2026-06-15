@@ -68,7 +68,7 @@ return new class extends clsCadastro
             $lista = $obj->lista(
                 int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
                 int_ref_cod_servidor: $this->ref_cod_servidor,
-                ano: 1
+                ano: date('Y')
             );
 
             if ($lista) {
@@ -132,10 +132,9 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'professor', valor: $this->professor);
 
         $url = sprintf(
-            'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d&professor=%d',
+            'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d',
             $this->ref_ref_cod_instituicao,
-            $this->ref_cod_servidor,
-            $this->professor
+            $this->ref_cod_servidor
         );
 
         $img = sprintf(
@@ -220,7 +219,7 @@ return new class extends clsCadastro
             }
         }
 
-        $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+        $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
         $destination = 'educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s';
         $destination = sprintf($destination, $this->ref_cod_servidor, $this->ref_ref_cod_instituicao);
         $this->simpleRedirect(url: $destination);

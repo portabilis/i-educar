@@ -95,6 +95,8 @@ return new class extends clsCadastro
 
     public $obrigar_cpf;
 
+    public $proibir_reclassificacao_educacao_infantil_primeiro_ano;
+
     public $orgao_regional;
 
     public $exigir_lancamentos_anteriores;
@@ -155,6 +157,7 @@ return new class extends clsCadastro
         $this->obrigar_campos_censo = dbBool($this->obrigar_campos_censo);
         $this->obrigar_documento_pessoa = dbBool($this->obrigar_documento_pessoa);
         $this->obrigar_cpf = dbBool($this->obrigar_cpf);
+        $this->proibir_reclassificacao_educacao_infantil_primeiro_ano = dbBool($this->proibir_reclassificacao_educacao_infantil_primeiro_ano);
         $this->exigir_lancamentos_anteriores = dbBool($this->exigir_lancamentos_anteriores);
         $this->exibir_apenas_professores_alocados = dbBool($this->exibir_apenas_professores_alocados);
         $this->bloquear_vinculo_professor_sem_alocacao_escola = dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola);
@@ -351,6 +354,14 @@ return new class extends clsCadastro
 
         $this->campoCheck(nome: 'bloqueia_matricula_serie_nao_seguinte', campo: 'Não permitir matrículas que não respeitem a sequência de enturmação', valor: $this->bloqueia_matricula_serie_nao_seguinte);
 
+        $this->campoCheck(
+            nome: 'proibir_reclassificacao_educacao_infantil_primeiro_ano',
+            campo: 'Proibir reclassificação na educação infantil e no 1º ano do ensino fundamental (LDB)',
+            valor: $this->proibir_reclassificacao_educacao_infantil_primeiro_ano,
+            desc: null,
+            dica: 'Conforme a LDB (Lei nº 9.394/1996, art. 31, I) e a Resolução CNE/CEB nº 7/2010, não há reclassificação na educação infantil nem no 1º ano do EF (ciclo de alfabetização). Caso marcado, o sistema impede a reclassificação de alunos cuja série atual seja educação infantil ou 1º ano do EF.'
+        );
+
         $this->campoCheck(nome: 'obrigar_campos_censo', campo: 'Obrigar e validar o preenchimento dos campos exigidos pelo Censo escolar', valor: $this->obrigar_campos_censo);
 
         $this->campoCheck(
@@ -419,6 +430,7 @@ return new class extends clsCadastro
             obrigar_campos_censo: $this->obrigar_campos_censo,
             obrigar_documento_pessoa: $this->obrigar_documento_pessoa,
             obrigar_cpf: $this->obrigar_cpf,
+            proibir_reclassificacao_educacao_infantil_primeiro_ano: $this->proibir_reclassificacao_educacao_infantil_primeiro_ano,
             exigir_lancamentos_anteriores: $this->exigir_lancamentos_anteriores,
             exibir_apenas_professores_alocados: $this->exibir_apenas_professores_alocados,
             bloquear_vinculo_professor_sem_alocacao_escola: $this->bloquear_vinculo_professor_sem_alocacao_escola,
@@ -453,6 +465,7 @@ return new class extends clsCadastro
         $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
         $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
         $obj->obrigar_cpf = !is_null($this->obrigar_cpf);
+        $obj->proibir_reclassificacao_educacao_infantil_primeiro_ano = !is_null($this->proibir_reclassificacao_educacao_infantil_primeiro_ano);
         $obj->orgao_regional = $this->orgao_regional;
         $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
         $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);

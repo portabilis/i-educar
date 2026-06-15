@@ -92,6 +92,9 @@ return new class extends clsListagem
                 $det = array_shift(array: $lst_matricula_turma);
                 $this->ref_cod_turma = $det['ref_cod_turma'];
                 $this->ref_sequencial = $det['sequencial'];
+            } else {
+                $this->mensagem .= 'Matrícula sem enturmações ativas.<br>';
+                $this->simpleRedirect(url: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
         }
 

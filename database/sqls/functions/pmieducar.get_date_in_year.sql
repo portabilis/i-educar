@@ -4,7 +4,7 @@ as
 $$
 BEGIN
     IF TO_CHAR(date, 'mm-dd') <> '02-29' THEN
-        RETURN year || TO_CHAR(date - INTERVAL '1 DAY', '-mm-dd');
+        RETURN year || TO_CHAR(date, '-mm-dd');
     END IF;
 
     IF (SELECT (year % 4 = 0) AND ((year % 100 <> 0) or (year % 400 = 0))) THEN
