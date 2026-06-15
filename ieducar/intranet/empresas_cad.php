@@ -166,6 +166,20 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (empty($this->fantasia) || strlen(trim(string: $this->fantasia)) < 3) {
+            $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
+        if (!empty($this->capital_social) && !is_numeric(str_replace(search: [',', '.'], replace: '', subject: $this->capital_social))) {
+            $this->mensagem = 'O campo Capital Social deve conter apenas valores numéricos.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (!empty($this->cnpj) && validaCNPJ(cnpj: $this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
 
@@ -317,6 +331,20 @@ return new class extends clsCadastro
 
         if (!$this->validaTamanhoMinimoCampo(valor: $this->fantasia)) {
             $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
+        if (empty($this->fantasia) || strlen(trim(string: $this->fantasia)) < 3) {
+            $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
+        if (!empty($this->capital_social) && !is_numeric(str_replace(search: [',', '.'], replace: '', subject: $this->capital_social))) {
+            $this->mensagem = 'O campo Capital Social deve conter apenas valores numéricos.';
             $this->busca_empresa = true;
 
             return false;
