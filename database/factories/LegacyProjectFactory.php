@@ -6,7 +6,7 @@ use App\Models\LegacyProject;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LegacyProject>
+ * @extends Factory<LegacyProject>
  */
 class LegacyProjectFactory extends Factory
 {

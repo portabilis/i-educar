@@ -5,27 +5,19 @@ use Illuminate\Support\Facades\DB;
 
 class AddFunctionRelatorioGetSituacaoComponente extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
+        $this->down();
+
         DB::unprepared(
             file_get_contents(database_path('sqls/functions/relatorio.get_situacao_componente.sql'))
         );
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         DB::unprepared(
-            'DROP FUNCTION relatorio.get_situacao_componente(cod_situacao numeric);'
+            'DROP FUNCTION IF EXISTS relatorio.get_situacao_componente(cod_situacao numeric);'
         );
     }
 }

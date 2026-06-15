@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_EnumTest extends TestCase
 {
     public function test_retorna_todos_os_valores_do_enum()
     {
@@ -59,14 +61,14 @@ class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
 
     public function test_enum_e_apenas_leitura()
     {
-        $this->expectException(\CoreExt_Exception::class);
+        $this->expectException(CoreExt_Exception::class);
         $enum = CoreExt_Enum1Stub::getInstance();
         $enum['foo'] = 'bar';
     }
 
     public function test_enum_nao_permite_remover_entrada()
     {
-        $this->expectException(\CoreExt_Exception::class);
+        $this->expectException(CoreExt_Exception::class);
         $enum = CoreExt_Enum1Stub::getInstance();
         unset($enum['foo']);
     }

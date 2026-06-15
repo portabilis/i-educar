@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_EditController
 {
@@ -149,7 +150,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
                 $tracker->notify($e, $data);
             }
 
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
+            $nivelUsuario = (new clsPermissoes)->nivel_acesso(Auth::id());
 
             if ((bool) config('legacy.report.show_error_details') === true || (int) $nivelUsuario === 1) {
                 $details = 'Detalhes: ' . $e->getMessage();
@@ -212,7 +213,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     protected function validatesIfUserIsLoggedIn()
     {
-        if (!\Illuminate\Support\Facades\Auth::id()) {
+        if (!Auth::id()) {
             $this->simpleRedirect('logof.php');
         }
     }

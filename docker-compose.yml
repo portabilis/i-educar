@@ -2,11 +2,11 @@ x-php: &php
   build:
     context: docker/php
     args:
-      PHP_VERSION: 8.4
-      COMPOSER_VERSION: 2.8
+      PHP_VERSION: "8.5"
+      COMPOSER_VERSION: "2.10"
       HOST_UID: ${HOST_UID:-1001}
       HOST_GID: ${HOST_GID:-1001}
-  image: php:8.4-ieducar
+  image: php:8.5-ieducar
   working_dir: /var/www/ieducar
   volumes:
     - ./:/var/www/ieducar
@@ -22,7 +22,7 @@ x-php: &php
     CACHE_DRIVER: redis
     REDIS_HOST: redis
     DB_HOST: postgres
-    PGPASSWORD: ${DB_PASSWORD}
+    PGPASSWORD: ${DB_PASSWORD:-ieducar}
   extra_hosts:
     - host.docker.internal:host-gateway
 
@@ -46,7 +46,7 @@ services:
 
   nginx:
     container_name: ieducar-nginx
-    image: nginx:1.28-alpine
+    image: nginx:1.30-alpine
     links:
       - fpm
     working_dir: /var/www/ieducar
@@ -60,14 +60,14 @@ services:
 
   postgres:
     container_name: ieducar-postgres
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      PGUSER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE:-ieducar}
+      POSTGRES_USER: ${DB_USERNAME:-ieducar}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ieducar}
+      PGUSER: ${DB_USERNAME:-ieducar}
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/18/docker
     ports:
       - ${DOCKER_POSTGRES_PORT:-5432}:5432
 

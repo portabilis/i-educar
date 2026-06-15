@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolingDegree;
+
 return new class extends clsCadastro
 {
     /**
@@ -25,8 +27,7 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4, 'educar_escolaridade_lst.php');
 
         if (is_numeric($this->idesco)) {
-            $obj = new clsCadastroEscolaridade($this->idesco);
-            $registro = $obj->detalhe();
+            $registro = LegacySchoolingDegree::find($this->idesco)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -67,8 +68,12 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $obj = new clsCadastroEscolaridade(null, $this->descricao, $this->escolaridade);
-        $cadastrou = $obj->cadastra();
+        $data = ['descricao' => $this->descricao];
+        if (is_numeric($this->escolaridade)) {
+            $data['escolaridade'] = $this->escolaridade;
+        }
+        $model = LegacySchoolingDegree::create($data);
+        $cadastrou = $model->idesco;
         if ($cadastrou) {
             echo "<script>
                         parent.document.getElementById('ref_idesco').options[parent.document.getElementById('ref_idesco').options.length] = new Option('$this->descricao', '$cadastrou', false, false);

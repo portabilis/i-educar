@@ -5,6 +5,7 @@ namespace App\Services\Exemption;
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyExemptionStage;
 use App\Models\LegacyRegistration;
 use App\Services\PromotionService;
 use App\User;
@@ -14,7 +15,6 @@ use Avaliacao_Model_FaltaComponenteDataMapper;
 use Avaliacao_Model_NotaAlunoDataMapper;
 use Avaliacao_Model_NotaComponenteDataMapper;
 use clsPmieducarDispensaDisciplina;
-use clsPmieducarDispensaDisciplinaEtapa;
 use Exception;
 
 class ExemptionService
@@ -73,8 +73,7 @@ class ExemptionService
 
         if ($objetoDispensa->existe()) {
             $exemption = LegacyDisciplineExemption::findOrFail($objetoDispensa->detalhe()['cod_dispensa']);
-            $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa;
-            $objDispensaEtapa->excluirTodos($exemption->getKey());
+            LegacyExemptionStage::query()->where('ref_cod_dispensa', $exemption->getKey())->delete();
             $objetoDispensa->edita();
             $this->cadastraEtapasDaDispensa($exemption, $stages);
             $exemption->batch = $this->isBatch;
@@ -146,8 +145,12 @@ class ExemptionService
                 $exemption->ref_cod_disciplina,
                 $stage
             );
-            $objetoEtapaDaDispensa = new clsPmieducarDispensaDisciplinaEtapa($exemption->getKey(), $stage);
-            $objetoEtapaDaDispensa->cadastra();
+            if (is_numeric($stage)) {
+                LegacyExemptionStage::create([
+                    'ref_cod_dispensa' => $exemption->getKey(),
+                    'etapa' => $stage,
+                ]);
+            }
         }
     }
 

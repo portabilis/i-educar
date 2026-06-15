@@ -12,11 +12,11 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_PROCESS_TIMEOUT 900
 ENV COMPOSER_DISABLE_XDEBUG_WARN=1
 
-ENV XDEBUG_IDEKEY xdebug
-ENV XDEBUG_CLIENT_HOST 127.0.0.1
-ENV XDEBUG_CLIENT_PORT 9003
-ENV XDEBUG_MODE dev,debug,coverage
-ENV XDEBUG_START_WITH_REQUEST off
+ENV XDEBUG_IDEKEY=xdebug
+ENV XDEBUG_CLIENT_HOST=host.docker.internal
+ENV XDEBUG_CLIENT_PORT=9003
+ENV XDEBUG_MODE=debug
+ENV XDEBUG_START_WITH_REQUEST=off
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
@@ -25,10 +25,8 @@ RUN apk add --update \
     libpng-dev  \
     libzip-dev  \
     linux-headers \
-    openjdk8  \
-    postgresql17-client \
+    postgresql18-client \
     postgresql-dev \
-    ttf-dejavu \
     unzip \
     openssh \
     git

@@ -134,15 +134,7 @@ class LegacyController extends Controller
             //
             // http://php.net/manual/en/class.throwable.php
         } catch (Throwable $throwable) {
-            // Converte uma exceção que implementa apenas Throwable para
-            // Exception nativa do PHP. Isto é feito devido o Exception
-            // Handler do Laravel aceitar apenas exceções nativas.
-
-            $exception = new Exception(
-                $throwable->getMessage(),
-                $throwable->getCode(),
-                $throwable
-            );
+            throw $throwable;
         }
 
         throw $exception;

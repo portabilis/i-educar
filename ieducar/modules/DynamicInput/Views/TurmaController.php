@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolAcademicYear;
+use Illuminate\Support\Facades\Auth;
 
 class TurmaController extends ApiCoreController
 {
@@ -22,7 +23,7 @@ class TurmaController extends ApiCoreController
     protected function getTurmas()
     {
         if ($this->canGetTurmas()) {
-            $userId = \Illuminate\Support\Facades\Auth::id();
+            $userId = Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id;
             $serieId = $this->getRequest()->serie_id;

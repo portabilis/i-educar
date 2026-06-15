@@ -1,7 +1,7 @@
 CREATE OR REPLACE VIEW relatorio.view_dados_escola AS
 SELECT
     escola.cod_escola,
-    relatorio.get_nome_escola(escola.cod_escola) AS nome,
+    COALESCE(fcn_upper(pessoa.nome),fcn_upper(juridica.fantasia))::varchar AS nome,
     pessoa.email,
     a.postal_code AS cep,
     a."number" AS numero,

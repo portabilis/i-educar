@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEmployee;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,24 +87,66 @@ return new class extends clsListagem
         $limite = 10;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
-        $obj_func = new clsFuncionario;
-        $obj_func->setOrderby(strNomeCampo: '(nome) ASC');
-        $obj_func->setLimite(intLimiteQtd: $limite, intLimiteOffset: $iniciolimit);
-        $lst_func = $obj_func->listaFuncionarioUsuario(
-            str_matricula: pg_escape_string(connection: $_GET['matricula']),
-            str_nome: pg_escape_string(connection: $_GET['nm_pessoa']),
-            matricula_interna: pg_escape_string(connection: $_GET['matricula_interna']),
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao,
-            int_ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario,
-            int_nivel: $this->ref_cod_nivel_usuario,
-            int_ativo: $this->int_ativo
-        );
+        $strMatricula = $_GET['matricula'] ?? null;
+        $strNome = $_GET['nm_pessoa'] ?? null;
+        $strMatriculaInterna = $_GET['matricula_interna'] ?? null;
 
-        if ($lst_func) {
+        $query = LegacyEmployee::query()
+            ->join('cadastro.pessoa', 'cadastro.pessoa.idpes', 'portal.funcionario.ref_cod_pessoa_fj')
+            ->leftJoin('pmieducar.usuario', 'pmieducar.usuario.cod_usuario', 'portal.funcionario.ref_cod_pessoa_fj')
+            ->leftJoin('pmieducar.tipo_usuario', 'pmieducar.tipo_usuario.cod_tipo_usuario', 'pmieducar.usuario.ref_cod_tipo_usuario')
+            ->leftJoin('pmieducar.escola_usuario', 'pmieducar.escola_usuario.ref_cod_usuario', 'pmieducar.usuario.cod_usuario')
+            ->select([
+                'portal.funcionario.ref_cod_pessoa_fj',
+                'cadastro.pessoa.nome',
+                'portal.funcionario.matricula',
+                'portal.funcionario.matricula_interna',
+                'portal.funcionario.ativo',
+                'pmieducar.tipo_usuario.nm_tipo',
+                'pmieducar.tipo_usuario.nivel',
+            ])
+            ->distinct()
+            ->orderBy('cadastro.pessoa.nome');
+
+        if (is_string($strMatricula) && $strMatricula !== '') {
+            $query->where('portal.funcionario.matricula', 'like', "%{$strMatricula}%");
+        }
+
+        if (is_string($strMatriculaInterna) && $strMatriculaInterna !== '') {
+            $query->where('portal.funcionario.matricula_interna', 'like', "%{$strMatriculaInterna}%");
+        }
+
+        if (is_string($strNome)) {
+            $query->whereRaw('f_unaccent(cadastro.pessoa.nome) ILIKE f_unaccent(?)', ["%{$strNome}%"]);
+        }
+
+        if (is_numeric($this->ref_cod_escola)) {
+            $query->where('pmieducar.escola_usuario.ref_cod_escola', $this->ref_cod_escola);
+        }
+
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('pmieducar.usuario.ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+
+        if (is_numeric($this->ref_cod_tipo_usuario)) {
+            $query->where('pmieducar.usuario.ref_cod_tipo_usuario', $this->ref_cod_tipo_usuario);
+        }
+
+        if (is_numeric($this->ref_cod_nivel_usuario)) {
+            $query->where('pmieducar.tipo_usuario.nivel', $this->ref_cod_nivel_usuario);
+        }
+
+        if (is_numeric($this->int_ativo)) {
+            $query->where('portal.funcionario.ativo', $this->int_ativo);
+            $query->where('pmieducar.usuario.ativo', $this->int_ativo);
+        }
+
+        $total = (clone $query)->count();
+        $lst_func = $query->offset($iniciolimit)->limit($limite)->get();
+
+        if ($lst_func->isNotEmpty()) {
             foreach ($lst_func as $pessoa) {
                 $ativo = ($pessoa['ativo'] == '1') ? 'Ativo' : 'Inativo';
-                $total = $pessoa['_total'];
 
                 if ($pessoa['nivel'] == 1) {
                     $nivel = 'Poli-Institucional';

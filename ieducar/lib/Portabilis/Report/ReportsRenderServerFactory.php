@@ -118,6 +118,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         if ($report->useHtml()) {
             $data = $report->getHtmlData();
             $payload = [
+                'html' => $data['html'] ?? '',
                 'view' => str_contains($templateName, '::') ? $templateName : 'reports::' . $templateName,
                 'parameters' => $data['main'],
                 'orientation' => $data['orientation'] ?? null,

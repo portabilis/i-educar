@@ -3,12 +3,15 @@
 use App\Models\DeficiencyType;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyDocument;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
 use App\Models\LegacyStudentHistoricalHeightWeight;
+use App\Models\LegacyStudentMedicalRecord;
 use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
 use App\Models\SchoolInep;
@@ -23,6 +26,7 @@ use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AlunoController extends ApiCoreController
 {
@@ -424,97 +428,83 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdateFichaMedica($id)
     {
-        $obj = new clsModulesFichaMedicaAluno;
+        if (!is_numeric($id)) {
+            return;
+        }
 
-        $obj->ref_cod_aluno = $id;
-        $obj->altura = $this->getRequest()->altura;
-        $obj->peso = $this->getRequest()->peso;
-        $obj->grupo_sanguineo = $this->getRequest()->grupo_sanguineo;
-        $obj->grupo_sanguineo = trim($obj->grupo_sanguineo);
-        $obj->fator_rh = $this->getRequest()->fator_rh;
-        $obj->alergia_medicamento = ($this->getRequest()->alergia_medicamento == 'on' ? 'S' : 'N');
-        $obj->desc_alergia_medicamento = $this->getRequest()->desc_alergia_medicamento;
-        $obj->alergia_alimento = ($this->getRequest()->alergia_alimento == 'on' ? 'S' : 'N');
-        $obj->desc_alergia_alimento = $this->getRequest()->desc_alergia_alimento;
-        $obj->doenca_congenita = ($this->getRequest()->doenca_congenita == 'on' ? 'S' : 'N');
-        $obj->desc_doenca_congenita = $this->getRequest()->desc_doenca_congenita;
-        $obj->fumante = ($this->getRequest()->fumante == 'on' ? 'S' : 'N');
-        $obj->doenca_caxumba = ($this->getRequest()->doenca_caxumba == 'on' ? 'S' : 'N');
-        $obj->doenca_sarampo = ($this->getRequest()->doenca_sarampo == 'on' ? 'S' : 'N');
-        $obj->doenca_rubeola = ($this->getRequest()->doenca_rubeola == 'on' ? 'S' : 'N');
-        $obj->doenca_catapora = ($this->getRequest()->doenca_catapora == 'on' ? 'S' : 'N');
-        $obj->doenca_escarlatina = ($this->getRequest()->doenca_escarlatina == 'on' ? 'S' : 'N');
-        $obj->doenca_coqueluche = ($this->getRequest()->doenca_coqueluche == 'on' ? 'S' : 'N');
-        $obj->doenca_outras = $this->getRequest()->doenca_outras;
-        $obj->epiletico = ($this->getRequest()->epiletico == 'on' ? 'S' : 'N');
-        $obj->epiletico_tratamento = ($this->getRequest()->epiletico_tratamento == 'on' ? 'S' : 'N');
-        $obj->hemofilico = ($this->getRequest()->hemofilico == 'on' ? 'S' : 'N');
-        $obj->hipertenso = ($this->getRequest()->hipertenso == 'on' ? 'S' : 'N');
-        $obj->asmatico = ($this->getRequest()->asmatico == 'on' ? 'S' : 'N');
-        $obj->diabetico = ($this->getRequest()->diabetico == 'on' ? 'S' : 'N');
-        $obj->insulina = ($this->getRequest()->insulina == 'on' ? 'S' : 'N');
-        $obj->tratamento_medico = ($this->getRequest()->tratamento_medico == 'on' ? 'S' : 'N');
-        $obj->desc_tratamento_medico = $this->getRequest()->desc_tratamento_medico;
-        $obj->medicacao_especifica = ($this->getRequest()->medicacao_especifica == 'on' ? 'S' : 'N');
-        $obj->desc_medicacao_especifica = $this->getRequest()->desc_medicacao_especifica;
-        $obj->acomp_medico_psicologico = ($this->getRequest()->acomp_medico_psicologico == 'on' ? 'S' : 'N');
-        $obj->desc_acomp_medico_psicologico = $this->getRequest()->desc_acomp_medico_psicologico;
-        $obj->acomp_medico_psicologico = ($this->getRequest()->acomp_medico_psicologico == 'on' ? 'S' : 'N');
-        $obj->desc_acomp_medico_psicologico = $this->getRequest()->desc_acomp_medico_psicologico;
-        $obj->restricao_atividade_fisica = ($this->getRequest()->restricao_atividade_fisica == 'on' ? 'S' : 'N');
-        $obj->desc_restricao_atividade_fisica = $this->getRequest()->desc_restricao_atividade_fisica;
-        $obj->fratura_trauma = ($this->getRequest()->fratura_trauma == 'on' ? 'S' : 'N');
-        $obj->desc_fratura_trauma = $this->getRequest()->desc_fratura_trauma;
-        $obj->plano_saude = ($this->getRequest()->plano_saude == 'on' ? 'S' : 'N');
-        $obj->desc_plano_saude = $this->getRequest()->desc_plano_saude;
-        $obj->responsavel = $this->getRequest()->responsavel;
-        $obj->responsavel_parentesco = $this->getRequest()->responsavel_parentesco;
-        $obj->responsavel_parentesco_telefone = $this->getRequest()->responsavel_parentesco_telefone;
-        $obj->responsavel_parentesco_celular = $this->getRequest()->responsavel_parentesco_celular;
-        $obj->aceita_hospital_proximo = ($this->getRequest()->aceita_hospital_proximo == 'on' ? 'S' : 'N');
-        $obj->desc_aceita_hospital_proximo = $this->getRequest()->desc_aceita_hospital_proximo;
+        $boolFields = [
+            'alergia_medicamento', 'alergia_alimento', 'doenca_congenita', 'fumante',
+            'doenca_caxumba', 'doenca_sarampo', 'doenca_rubeola', 'doenca_catapora',
+            'doenca_escarlatina', 'doenca_coqueluche', 'epiletico', 'epiletico_tratamento',
+            'hemofilico', 'hipertenso', 'asmatico', 'diabetico', 'insulina',
+            'tratamento_medico', 'medicacao_especifica', 'acomp_medico_psicologico',
+            'restricao_atividade_fisica', 'fratura_trauma', 'plano_saude', 'aceita_hospital_proximo',
+        ];
 
-        return $obj->existe() ? $obj->edita() : $obj->cadastra();
+        $data = [
+            'grupo_sanguineo' => trim($this->getRequest()->grupo_sanguineo),
+            'fator_rh' => $this->getRequest()->fator_rh,
+            'desc_alergia_medicamento' => $this->getRequest()->desc_alergia_medicamento,
+            'desc_alergia_alimento' => $this->getRequest()->desc_alergia_alimento,
+            'desc_doenca_congenita' => $this->getRequest()->desc_doenca_congenita,
+            'doenca_outras' => $this->getRequest()->doenca_outras,
+            'desc_tratamento_medico' => $this->getRequest()->desc_tratamento_medico,
+            'desc_medicacao_especifica' => $this->getRequest()->desc_medicacao_especifica,
+            'desc_acomp_medico_psicologico' => $this->getRequest()->desc_acomp_medico_psicologico,
+            'desc_restricao_atividade_fisica' => $this->getRequest()->desc_restricao_atividade_fisica,
+            'desc_fratura_trauma' => $this->getRequest()->desc_fratura_trauma,
+            'desc_plano_saude' => $this->getRequest()->desc_plano_saude,
+            'responsavel' => $this->getRequest()->responsavel,
+            'responsavel_parentesco' => $this->getRequest()->responsavel_parentesco,
+            'responsavel_parentesco_telefone' => $this->getRequest()->responsavel_parentesco_telefone,
+            'responsavel_parentesco_celular' => $this->getRequest()->responsavel_parentesco_celular,
+            'desc_aceita_hospital_proximo' => $this->getRequest()->desc_aceita_hospital_proximo,
+        ];
+
+        foreach ($boolFields as $field) {
+            $data[$field] = ($this->getRequest()->{$field} == 'on') ? 'S' : 'N';
+        }
+
+        LegacyStudentMedicalRecord::updateOrCreate(['ref_cod_aluno' => $id], $data);
     }
 
     protected function createOrUpdateMoradia($id)
     {
-        $obj = new clsModulesMoradiaAluno;
+        if (!is_numeric($id)) {
+            return;
+        }
 
-        $obj->ref_cod_aluno = $id;
-        $obj->moradia = $this->getRequest()->moradia;
-        $obj->material = $this->getRequest()->material;
-        $obj->casa_outra = $this->getRequest()->casa_outra;
-        $obj->moradia_situacao = $this->getRequest()->moradia_situacao;
-        $obj->quartos = $this->getRequest()->quartos;
-        $obj->sala = $this->getRequest()->sala;
-        $obj->copa = $this->getRequest()->copa;
-        $obj->banheiro = $this->getRequest()->banheiro;
-        $obj->garagem = $this->getRequest()->garagem;
-        $obj->empregada_domestica = ($this->getRequest()->empregada_domestica == 'on' ? 'S' : 'N');
-        $obj->automovel = ($this->getRequest()->automovel == 'on' ? 'S' : 'N');
-        $obj->motocicleta = ($this->getRequest()->motocicleta == 'on' ? 'S' : 'N');
-        $obj->geladeira = ($this->getRequest()->geladeira == 'on' ? 'S' : 'N');
-        $obj->fogao = ($this->getRequest()->fogao == 'on' ? 'S' : 'N');
-        $obj->maquina_lavar = ($this->getRequest()->maquina_lavar == 'on' ? 'S' : 'N');
-        $obj->microondas = ($this->getRequest()->microondas == 'on' ? 'S' : 'N');
-        $obj->video_dvd = ($this->getRequest()->video_dvd == 'on' ? 'S' : 'N');
-        $obj->televisao = ($this->getRequest()->televisao == 'on' ? 'S' : 'N');
-        $obj->telefone = ($this->getRequest()->telefone == 'on' ? 'S' : 'N');
+        $boolFields = [
+            'empregada_domestica', 'automovel', 'motocicleta', 'geladeira', 'fogao',
+            'maquina_lavar', 'microondas', 'video_dvd', 'televisao', 'telefone',
+            'agua_encanada', 'poco', 'energia', 'esgoto', 'fossa', 'lixo',
+        ];
+
+        $data = [
+            'moradia' => $this->getRequest()->moradia,
+            'material' => $this->getRequest()->material,
+            'casa_outra' => $this->getRequest()->casa_outra,
+            'moradia_situacao' => is_numeric($this->getRequest()->moradia_situacao) ? $this->getRequest()->moradia_situacao : null,
+            'quartos' => is_numeric($this->getRequest()->quartos) ? $this->getRequest()->quartos : null,
+            'sala' => is_numeric($this->getRequest()->sala) ? $this->getRequest()->sala : null,
+            'copa' => is_numeric($this->getRequest()->copa) ? $this->getRequest()->copa : null,
+            'banheiro' => is_numeric($this->getRequest()->banheiro) ? $this->getRequest()->banheiro : null,
+            'garagem' => is_numeric($this->getRequest()->garagem) ? $this->getRequest()->garagem : null,
+            'quant_pessoas' => is_numeric($this->getRequest()->quant_pessoas) ? $this->getRequest()->quant_pessoas : null,
+            'renda' => floatval(preg_replace("/[^0-9\.]/", '', str_replace(',', '.', $this->getRequest()->renda))),
+        ];
+
+        foreach ($boolFields as $field) {
+            $data[$field] = ($this->getRequest()->{$field} == 'on') ? 'S' : 'N';
+        }
 
         $recursosTeconologicos = array_filter((array) $this->getRequest()->recursos_tecnologicos__);
-        $obj->recursos_tecnologicos = json_encode(array_values($recursosTeconologicos));
+        $data['recursos_tecnologicos'] = json_encode(array_values($recursosTeconologicos));
 
-        $obj->quant_pessoas = $this->getRequest()->quant_pessoas;
-        $obj->renda = floatval(preg_replace("/[^0-9\.]/", '', str_replace(',', '.', $this->getRequest()->renda)));
-        $obj->agua_encanada = ($this->getRequest()->agua_encanada == 'on' ? 'S' : 'N');
-        $obj->poco = ($this->getRequest()->poco == 'on' ? 'S' : 'N');
-        $obj->energia = ($this->getRequest()->energia == 'on' ? 'S' : 'N');
-        $obj->esgoto = ($this->getRequest()->esgoto == 'on' ? 'S' : 'N');
-        $obj->fossa = ($this->getRequest()->fossa == 'on' ? 'S' : 'N');
-        $obj->lixo = ($this->getRequest()->lixo == 'on' ? 'S' : 'N');
-
-        return $obj->existe() ? $obj->edita() : $obj->cadastra();
+        DB::table('modules.moradia_aluno')->updateOrInsert(
+            ['ref_cod_aluno' => $id],
+            array_filter($data, fn ($v) => $v !== null)
+        );
     }
 
     protected function loadAlunoInepId($alunoId)
@@ -551,23 +541,21 @@ class AlunoController extends ApiCoreController
     // #TODO mover updateResponsavel e updateDeficiencias para API pessoa ?
     protected function updateResponsavel()
     {
-        $pessoa = new clsFisica;
-        $pessoa->idpes = $this->getRequest()->pessoa_id;
-        $pessoa->nome_responsavel = '';
+        $pessoaId = $this->getRequest()->pessoa_id;
+        $individual = LegacyIndividual::find($pessoaId, ['idpes', 'idpes_pai', 'idpes_mae', 'idpes_responsavel']);
 
-        $_pessoa = $pessoa->detalhe();
-
-        if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
-            $pessoa->idpes_responsavel = $this->getRequest()->responsavel_id;
-        } elseif ($this->getRequest()->tipo_responsavel == 'pai' && $_pessoa['idpes_pai']) {
-            $pessoa->idpes_responsavel = $_pessoa['idpes_pai'];
-        } elseif ($this->getRequest()->tipo_responsavel == 'mae' && $_pessoa['idpes_mae']) {
-            $pessoa->idpes_responsavel = $_pessoa['idpes_mae'];
-        } else {
-            $pessoa->idpes_responsavel = 'NULL';
+        if (!$individual) {
+            return false;
         }
 
-        return $pessoa->edita();
+        $idpesResponsavel = match ($this->getRequest()->tipo_responsavel) {
+            'outra_pessoa' => $this->getRequest()->responsavel_id,
+            'pai' => $individual->idpes_pai ?: null,
+            'mae' => $individual->idpes_mae ?: null,
+            default => null,
+        };
+
+        return $individual->update(['idpes_responsavel' => $idpesResponsavel]);
     }
 
     protected function updateDeficiencias()
@@ -626,7 +614,7 @@ class AlunoController extends ApiCoreController
 
         $aluno->emancipado = (bool) $this->getRequest()->emancipado;
         $aluno->tipo_responsavel = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
-        $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
+        $aluno->ref_usuario_exc = Auth::id();
 
         // INFORAMÇÕES PROVA INEP
         $recursosProvaInepRequest = $this->getRequest()->recursos_prova_inep__;
@@ -1075,15 +1063,13 @@ class AlunoController extends ApiCoreController
         // responsavel um destes, na respectiva ordem, sendo assim esta api mantem
         // compatibilidade com o antigo cadastro.
         if (!$tipo) {
-            $pessoa = new clsFisica;
-            $pessoa->idpes = $aluno['pessoa_id'];
-            $pessoa = $pessoa->detalhe();
+            $pessoa = LegacyIndividual::find($aluno['pessoa_id'], ['idpes_responsavel', 'nome_responsavel', 'idpes_pai', 'nome_pai', 'idpes_mae', 'nome_mae']);
 
-            if ($pessoa['idpes_responsavel'] || $pessoa['nome_responsavel']) {
+            if ($pessoa?->idpes_responsavel || $pessoa?->nome_responsavel) {
                 $tipo = $tipos['r'];
-            } elseif ($pessoa['idpes_pai'] || $pessoa['nome_pai']) {
+            } elseif ($pessoa?->idpes_pai || $pessoa?->nome_pai) {
                 $tipo = $tipos['p'];
-            } elseif ($pessoa['idpes_mae'] || $pessoa['nome_mae']) {
+            } elseif ($pessoa?->idpes_mae || $pessoa?->nome_mae) {
                 $tipo = $tipos['m'];
             }
         }
@@ -1224,22 +1210,14 @@ class AlunoController extends ApiCoreController
             $aluno['destroyed_by'] = is_null($entity) ? null : $entity->get('matricula');
             $aluno['destroyed_at'] = Portabilis_Date_Utils::pgSQLToBr($aluno['destroyed_at']);
 
-            $objFichaMedica = new clsModulesFichaMedicaAluno($id);
-
-            if ($objFichaMedica->existe()) {
-                $objFichaMedica = $objFichaMedica->detalhe();
-
-                foreach ($objFichaMedica as $chave => $value) {
-                    $objFichaMedica[$chave] = Portabilis_String_Utils::toUtf8($value);
-                }
-
-                $aluno = Portabilis_Array_Utils::merge($objFichaMedica, $aluno);
+            $fichaMedica = LegacyStudentMedicalRecord::whereKey($id)->first()?->toArray();
+            if ($fichaMedica) {
+                $aluno = array_merge($aluno, $fichaMedica);
             }
 
-            $objMoradia = new clsModulesMoradiaAluno($id);
-            if ($objMoradia->existe()) {
-                $objMoradia = $objMoradia->detalhe();
-                $aluno = Portabilis_Array_Utils::merge($objMoradia, $aluno);
+            $moradia = DB::table('modules.moradia_aluno')->where('ref_cod_aluno', $id)->first();
+            if ($moradia) {
+                $aluno = array_merge($aluno, (array) $moradia);
             }
 
             // TODO remover no futuro #transport-package
@@ -1262,11 +1240,9 @@ class AlunoController extends ApiCoreController
             $aluno['projetos'] = $this->loadProjetos($id);
             $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
 
-            $objFoto = new clsCadastroFisicaFoto($aluno['pessoa_id']);
-            $detalheFoto = $objFoto->detalhe();
-
-            if ($detalheFoto) {
-                $aluno['url_foto_aluno'] = $detalheFoto['caminho'];
+            $caminhoFoto = LegacyIndividualPicture::whereKey($aluno['pessoa_id'])->value('caminho');
+            if ($caminhoFoto) {
+                $aluno['url_foto_aluno'] = $caminhoFoto;
             }
 
             return $aluno;
@@ -1678,6 +1654,7 @@ class AlunoController extends ApiCoreController
     protected function post()
     {
         if ($this->canPost()) {
+            DB::beginTransaction();
             $id = $this->createOrUpdateAluno();
             $pessoaId = $this->getRequest()->pessoa_id;
 
@@ -1703,6 +1680,7 @@ class AlunoController extends ApiCoreController
             } else {
                 $this->messenger->append('Aparentemente o aluno não pode ser cadastrado, por favor, verifique.');
             }
+            DB::commit();
         }
 
         return ['id' => $id];
@@ -1717,6 +1695,7 @@ class AlunoController extends ApiCoreController
             return [];
         }
 
+        DB::beginTransaction();
         if ($this->canPut() && $this->createOrUpdateAluno($id)) {
             $this->updateBeneficios($id);
             $this->updateResponsavel();
@@ -1735,6 +1714,7 @@ class AlunoController extends ApiCoreController
         } else {
             $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.', 'error', false, 'error');
         }
+        DB::commit();
 
         return ['id' => $id];
     }
@@ -1769,7 +1749,7 @@ class AlunoController extends ApiCoreController
         if ($this->canEnable()) {
             $aluno = new clsPmieducarAluno;
             $aluno->cod_aluno = $id;
-            $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
+            $aluno->ref_usuario_exc = Auth::id();
             $aluno->ativo = 1;
 
             if ($aluno->edita()) {
@@ -1791,7 +1771,7 @@ class AlunoController extends ApiCoreController
             if ($this->canDelete()) {
                 $aluno = new clsPmieducarAluno;
                 $aluno->cod_aluno = $id;
-                $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
+                $aluno->ref_usuario_exc = Auth::id();
 
                 $detalheAluno = $aluno->detalhe();
 
@@ -1823,14 +1803,8 @@ class AlunoController extends ApiCoreController
             $caminhoFoto = $this->objPhoto->sendPicture();
 
             if ($caminhoFoto != '') {
-                // new clsCadastroFisicaFoto($id)->exclui();
-                $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
-                $detalheFoto = $obj->detalhe();
-
-                if (is_array($detalheFoto) && count($detalheFoto) > 0) {
-                    $obj->edita();
-                } else {
-                    $obj->cadastra();
+                if (is_numeric($id) && is_string($caminhoFoto)) {
+                    LegacyIndividualPicture::updateOrCreate(['idpes' => $id], ['caminho' => $caminhoFoto]);
                 }
 
                 return true;
@@ -1840,8 +1814,7 @@ class AlunoController extends ApiCoreController
                 return false;
             }
         } elseif ($this->del_foto == 'on') {
-            $obj = new clsCadastroFisicaFoto($id);
-            $obj->excluir();
+            LegacyIndividualPicture::whereKey($id)->delete();
         }
     }
 
@@ -1870,8 +1843,9 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdateDocumentos($pessoaId)
     {
-        $documentos = new clsDocumento;
-        $documentos->idpes = $pessoaId;
+        if (!is_numeric($pessoaId)) {
+            return;
+        }
 
         // o tipo certidão novo padrão é apenas para exibição ao usuário,
         // não precisa ser gravado no banco
@@ -1879,61 +1853,51 @@ class AlunoController extends ApiCoreController
         // quando selecionado um tipo diferente do novo formato,
         // é removido o valor de certidao_nascimento.
         if ($this->getRequest()->tipo_certidao_civil == CertificateType::BIRTH_NEW_FORMAT) {
-            $documentos->tipo_cert_civil = null;
-            $documentos->certidao_casamento = '';
-            $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
+            $tipoCertCivil = null;
+            $certidaoCasamento = '';
+            $certidaoNascimento = $this->getRequest()->certidao_nascimento;
         } elseif ($this->getRequest()->tipo_certidao_civil == CertificateType::MARRIAGE_NEW_FORMAT) {
-            $documentos->tipo_cert_civil = null;
-            $documentos->certidao_nascimento = '';
-            $documentos->certidao_casamento = $this->getRequest()->certidao_casamento;
+            $tipoCertCivil = null;
+            $certidaoNascimento = '';
+            $certidaoCasamento = $this->getRequest()->certidao_casamento;
         } else {
-            $documentos->tipo_cert_civil = $this->getRequest()->tipo_certidao_civil;
-            $documentos->certidao_nascimento = '';
-            $documentos->certidao_casamento = '';
+            $tipoCertCivil = $this->getRequest()->tipo_certidao_civil;
+            $certidaoNascimento = '';
+            $certidaoCasamento = '';
         }
 
-        $documentos->num_termo = $this->getRequest()->termo_certidao_civil;
-        $documentos->num_livro = $this->getRequest()->livro_certidao_civil;
-        $documentos->num_folha = $this->getRequest()->folha_certidao_civil;
-
-        $documentos->rg = trim($this->getRequest()->rg);
-        $documentos->data_exp_rg = Portabilis_Date_Utils::brToPgSQL(
-            $this->getRequest()->data_emissao_rg
+        LegacyDocument::updateOrCreate(
+            ['idpes' => $pessoaId],
+            [
+                'rg' => trim($this->getRequest()->rg) ?: null,
+                'data_exp_rg' => Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_emissao_rg) ?: null,
+                'sigla_uf_exp_rg' => $this->getRequest()->uf_emissao_rg ?: null,
+                'idorg_exp_rg' => (is_numeric($this->getRequest()->orgao_emissao_rg) && !empty($this->getRequest()->orgao_emissao_rg)) ? $this->getRequest()->orgao_emissao_rg : null,
+                'tipo_cert_civil' => $tipoCertCivil ?: null,
+                'certidao_nascimento' => $certidaoNascimento,
+                'certidao_casamento' => $certidaoCasamento,
+                'num_termo' => (is_numeric($this->getRequest()->termo_certidao_civil) && !empty($this->getRequest()->termo_certidao_civil)) ? $this->getRequest()->termo_certidao_civil : null,
+                'num_livro' => $this->getRequest()->livro_certidao_civil ?: null,
+                'num_folha' => (is_numeric($this->getRequest()->folha_certidao_civil) && !empty($this->getRequest()->folha_certidao_civil)) ? $this->getRequest()->folha_certidao_civil : null,
+                'data_emissao_cert_civil' => Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_emissao_certidao_civil) ?: null,
+                'sigla_uf_cert_civil' => $this->getRequest()->uf_emissao_certidao_civil ?: null,
+                'cartorio_cert_civil' => addslashes($this->getRequest()->cartorio_emissao_certidao_civil) ?: null,
+                'cartorio_cert_civil_inep' => null,
+                'passaporte' => addslashes($this->getRequest()->passaporte),
+            ]
         );
-        $documentos->sigla_uf_exp_rg = $this->getRequest()->uf_emissao_rg;
-        $documentos->idorg_exp_rg = $this->getRequest()->orgao_emissao_rg;
-
-        $documentos->data_emissao_cert_civil = Portabilis_Date_Utils::brToPgSQL(
-            $this->getRequest()->data_emissao_certidao_civil
-        );
-
-        $documentos->sigla_uf_cert_civil = $this->getRequest()->uf_emissao_certidao_civil;
-        $documentos->cartorio_cert_civil = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
-        $documentos->passaporte = addslashes($this->getRequest()->passaporte);
-
-        // Alteração de documentos compativel com a versão anterior do cadastro,
-        // onde era possivel criar uma pessoa, não informando os documentos,
-        // o que não criaria o registro do documento, sendo assim, ao editar uma pessoa,
-        // o registro do documento será criado, caso não exista.
-
-        $sql = 'select 1 from cadastro.documento WHERE idpes = $1 limit 1';
-
-        if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
-            $documentos->cadastra();
-        } else {
-            $documentos->edita_aluno();
-        }
     }
 
     protected function createOrUpdatePessoa($idPessoa)
     {
-        $fisica = new clsFisica($idPessoa);
-        $fisica->cpf = $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : 'NULL';
-        $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
-        $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep ?: 'NULL';
-        $fisica->observacao = $this->getRequest()->observacao_aluno ?: 'NULL';
-        $fisica->renda_mensal = $this->getRequest()->renda_mensal ?: 'NULL';
-        $fisica = $fisica->edita();
+        $individual = LegacyIndividual::find($idPessoa, ['idpes', 'cpf', 'ref_cod_religiao', 'nis_pis_pasep', 'observacao', 'renda_mensal']);
+        $individual?->update([
+            'cpf' => idFederal2int($this->getRequest()->id_federal) ?: null,
+            'ref_cod_religiao' => $this->getRequest()->religiao_id ?: null,
+            'nis_pis_pasep' => $this->getRequest()->nis_pis_pasep ?: null,
+            'observacao' => $this->getRequest()->observacao_aluno ?: null,
+            'renda_mensal' => $this->getRequest()->renda_mensal ?: null,
+        ]);
     }
 
     protected function loadAcessoDataEntradaSaida()
@@ -2091,12 +2055,13 @@ class AlunoController extends ApiCoreController
                 coalesce(to_char(f.data_nasc, 'dd/mm/yyyy'), 'Não consta') AS data_nascimento,
                 coalesce(f.cpf::varchar, 'Não consta') AS cpf,
                 coalesce(d.rg, 'Não consta') AS rg,
-                coalesce(relatorio.get_mae_aluno(a.cod_aluno), 'Não consta') AS mae_aluno
+                coalesce(mae.nome, a.nm_mae, 'Não consta') AS mae_aluno
             FROM pmieducar.aluno a
             JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
             JOIN cadastro.fisica f ON f.idpes = a.ref_idpes
             LEFT JOIN cadastro.documento d ON d.idpes = a.ref_idpes
             LEFT JOIN modules.educacenso_cod_aluno eca ON eca.cod_aluno = a.cod_aluno
+            LEFT JOIN cadastro.pessoa mae ON mae.idpes = f.idpes_mae
             WHERE a.cod_aluno IN ($alunosIds);
         ";
 

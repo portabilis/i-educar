@@ -25,5 +25,24 @@ class DatabaseSeeder extends Seeder
         $this->incrementSequence('states');
         $this->incrementSequence('cities');
         $this->incrementSequence('districts');
+
+        $this->call(DefaultCadastroRacaTableSeeder::class);
+        $this->call(DefaultPmieducarReligionTableSeeder::class);
+        $this->call(DefaultCadastroDeficienciaTableSeeder::class);
+        $this->call(DefaultPmieducarProjetoTableSeeder::class);
+        $this->call(DefaultPmieducarAlunoBeneficioTableSeeder::class);
+        $this->call(DefaultPmieducarTipoOcorrenciaDisciplinarTableSeeder::class);
+        $this->call(DefaultPmieducarAbandonoTipoTableSeeder::class);
+        $this->call(DefaultPmieducarTransferenciaTipoTableSeeder::class);
+        $this->call(DefaultPmieducarTipoDispensaTableSeeder::class);
+        $this->call(DefaultPmieducarTipoRegimeTableSeeder::class);
+        $this->call(DefaultPmieducarNivelEnsinoTableSeeder::class);
+        $this->call(DefaultPmieducarTipoEnsinoTableSeeder::class);
+        $this->call(DefaultPmieducarModuloTableSeeder::class);
+        $this->call(DefaultPmieducarTurmaTipoTableSeeder::class);
+        $this->call(DefaultPmieducarFuncaoTableSeeder::class);
+        $this->call(DefaultCadastroEscolaridadeTableSeeder::class);
+        $this->call(DefaultPmieducarMotivoAfastamentoTableSeeder::class);
+        $this->call(DefaultPortalFuncionarioVinculoTableSeeder::class);
     }
 }

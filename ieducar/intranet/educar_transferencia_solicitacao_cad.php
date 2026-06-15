@@ -7,6 +7,7 @@ use App\Models\LegacyTransferRequest;
 use App\Models\LegacyTransferType;
 use App\Models\LegacyUser;
 use App\Services\PromotionService;
+use App\Services\SchoolHistoryService;
 use iEducar\Modules\School\Model\ActiveLooking;
 use Illuminate\Support\Facades\DB;
 
@@ -259,7 +260,7 @@ return new class extends clsCadastro
                 }
             }
         }
-        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia(ref_cod_matricula: $this->ref_cod_matricula, pessoa_logada: $this->pessoa_logada);
+        app(SchoolHistoryService::class)->gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
         if ($this->escola_em_outro_municipio === 'on') {
             $this->ref_cod_escola = null;
@@ -269,13 +270,30 @@ return new class extends clsCadastro
             $this->municipio_escola_destino_externa = null;
         }
 
-        $obj = new clsPmieducarTransferenciaSolicitacao(cod_transferencia_solicitacao: null, ref_cod_transferencia_tipo: $this->ref_cod_transferencia_tipo, ref_usuario_exc: null, ref_usuario_cad: $this->pessoa_logada, ref_cod_matricula_entrada: null, ref_cod_matricula_saida: $this->ref_cod_matricula, observacao: $this->observacao, data_cadastro: null, data_exclusao: null, ativo: $this->ativo, data_transferencia: $this->data_transferencia, escola_destino_externa: $this->escola_destino_externa, ref_cod_escola_destino: $this->ref_cod_escola, estado_escola_destino_externa: $this->estado_escola_destino_externa, municipio_escola_destino_externa: $this->municipio_escola_destino_externa);
-        if ($obj->existSolicitacaoTransferenciaAtiva()) {
-            $this->mensagem = 'Já existe uma solitação de transferência ativa.<br>';
+        if (is_numeric($this->ref_cod_matricula) && LegacyTransferRequest::where('ref_cod_matricula_saida', $this->ref_cod_matricula)->exists()) {
+            $this->mensagem = 'Já existe uma solicitação de transferência ativa.<br>';
 
             return false;
         }
-        $cadastrou = $obj->cadastra();
+
+        $cadastrou = false;
+
+        if (is_numeric($this->ref_cod_transferencia_tipo) && is_numeric($this->pessoa_logada) && is_numeric($this->ref_cod_matricula)) {
+            $transferencia = LegacyTransferRequest::create([
+                'ref_cod_transferencia_tipo' => $this->ref_cod_transferencia_tipo,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ref_cod_matricula_saida' => $this->ref_cod_matricula,
+                'observacao' => $this->observacao,
+                'ativo' => $this->ativo,
+                'data_transferencia' => $this->data_transferencia,
+                'escola_destino_externa' => $this->escola_destino_externa,
+                'ref_cod_escola_destino' => $this->ref_cod_escola ?: null,
+                'estado_escola_destino_externa' => $this->estado_escola_destino_externa,
+                'municipio_escola_destino_externa' => $this->municipio_escola_destino_externa,
+            ]);
+
+            $cadastrou = $transferencia->cod_transferencia_solicitacao;
+        }
 
         if ($cadastrou) {
             $registration = LegacyRegistration::find($this->ref_cod_matricula);
@@ -297,7 +315,7 @@ return new class extends clsCadastro
                 try {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper)
                         ->updateSituation(notaAlunoId: $notaAlunoId, situacao: App_Model_MatriculaSituacao::TRANSFERIDO);
-                } catch (\Throwable) {
+                } catch (Throwable) {
                     DB::rollback();
                 }
             }
@@ -330,15 +348,24 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
-        $obj_transferencia = new clsPmieducarTransferenciaSolicitacao;
-        $lst_transferencia = $obj_transferencia->lista(int_ref_cod_matricula_saida: $this->ref_cod_matricula, int_ativo: 1, int_ref_cod_aluno: $this->ref_cod_aluno);
-        if (is_array(value: $lst_transferencia)) {
+        $transferencia = null;
+
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_aluno)) {
+            $transferencia = LegacyTransferRequest::query()
+                ->where('ref_cod_matricula_saida', $this->ref_cod_matricula)
+                ->whereHas('oldRegistration', fn ($query) => $query->where('ref_cod_aluno', $this->ref_cod_aluno))
+                ->first();
+        }
+
+        if ($transferencia) {
             try {
                 DB::beginTransaction();
-                $det_transferencia = array_shift(array: $lst_transferencia);
-                $this->cod_transferencia_solicitacao = $det_transferencia['cod_transferencia_solicitacao'];
-                $obj = new clsPmieducarTransferenciaSolicitacao(cod_transferencia_solicitacao: $this->cod_transferencia_solicitacao, ref_cod_transferencia_tipo: null, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, ref_cod_matricula_entrada: null, ref_cod_matricula_saida: null, observacao: null, data_cadastro: null, data_exclusao: null, ativo: 0);
-                $excluiu = $obj->excluir();
+                $this->cod_transferencia_solicitacao = $transferencia->cod_transferencia_solicitacao;
+                $excluiu = $transferencia->update([
+                    'ativo' => 0,
+                    'ref_usuario_exc' => $this->pessoa_logada,
+                    'data_exclusao' => now(),
+                ]);
                 // Desfaz a busca ativa com transferencia
                 LegacyActiveLooking::query()
                     ->where('ref_cod_matricula', $this->ref_cod_matricula)
