@@ -13,6 +13,7 @@ use App\Models\LegacyUserType;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -1172,7 +1173,7 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @param int $codMatricula
      * @param int $codSerie
      * @param int $codEscola
-     * @return \Illuminate\Support\Collection<int, int>
+     * @return Collection<int, int>
      */
     public static function getDisciplinasDependenciaPorMatricula(
         $codMatricula,
