@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyEmployeeRoleBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $cod_servidor_funcao
+ *
+ * @method static LegacyEmployeeRoleBuilder query()
  */
 class LegacyEmployeeRole extends LegacyModel
 {
+    protected static string $builder = LegacyEmployeeRoleBuilder::class;
+
     protected $table = 'pmieducar.servidor_funcao';
 
     protected $primaryKey = 'cod_servidor_funcao';
