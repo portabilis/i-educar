@@ -539,7 +539,7 @@ return new class extends clsCadastro
         } catch (Exception $e) {
             $this->mensagem = explode(separator: "\n", string: $e->getMessage());
 
-            $this->simpleRedirect(\Request::getRequestUri());
+            $this->simpleRedirect(Request::getRequestUri());
         }
 
         $editou = $obj->edita();
@@ -901,7 +901,7 @@ return new class extends clsCadastro
         if ($erros) {
             $msg = implode(separator: "\n", array: $erros);
 
-            throw new \Exception($msg);
+            throw new Exception($msg);
         }
 
         return true;

@@ -14,6 +14,7 @@ laravel-echo-server.json
 package-lock.json
 
 ieducar-*.tar.gz
+.phpunit.cache
 .env
 .env.host
 .env.testing

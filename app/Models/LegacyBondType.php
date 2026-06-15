@@ -19,6 +19,8 @@ class LegacyBondType extends Model
 
     protected $primaryKey = 'cod_funcionario_vinculo';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'nm_vinculo',
         'abreviatura',

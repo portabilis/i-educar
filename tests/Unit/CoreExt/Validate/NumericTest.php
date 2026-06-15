@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_Validate_NumericTest extends TestCase
 {
     protected $_validator = null;
 
@@ -11,26 +13,26 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
 
     public function test_valor_string_vazia_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_validator->isValid('');
     }
 
     public function test_valor_string_espaco_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         // São três espaço ascii 20
         $this->_validator->isValid('   ');
     }
 
     public function test_valor_null_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_validator->isValid(null);
     }
 
     public function test_valor_nao_numerico_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_validator->isValid('zero');
     }
 
@@ -60,28 +62,28 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
 
     public function test_valor_menor_que_o_permitido_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_validator->setOptions(['min' => 0]);
         $this->_validator->isValid(-1);
     }
 
     public function test_valor_ponto_flutuante_menor_que_o_permitido_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_validator->setOptions(['min' => 0]);
         $this->_validator->isValid(-1.5);
     }
 
     public function test_valor_maior_que_o_permitido_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_validator->setOptions(['max' => 0]);
         $this->_validator->isValid(1);
     }
 
     public function test_valor_ponto_flutuante_maior_que_o_permitido_lanca_excecao()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->_validator->setOptions(['max' => 0]);
         $this->_validator->isValid(1.5);
     }

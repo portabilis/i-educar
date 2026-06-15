@@ -1,12 +1,14 @@
 <?php
 
 use App\Models\LegacyDiscipline;
+use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
+use Illuminate\Support\Facades\DB;
 
 class ComponentesSerieController extends ApiCoreController
 {
@@ -24,24 +26,20 @@ class ComponentesSerieController extends ApiCoreController
             $arrayComponentes[$key]['anos_letivos'] = $componente->anos_letivos;
         }
 
-        $obj = new clsModulesComponenteCurricularAnoEscolar(ano_escolar_id: $serieId, componentes: $arrayComponentes);
-
-        $updateInfo = $obj->updateInfo();
-        $componentesAtualizados = $updateInfo['update'];
-        $componentesInseridos = $updateInfo['insert'];
+        $updateInfo = $this->buildUpdateInfo($serieId, $arrayComponentes);
 
         try {
             $valido = $this->validaAtualizacao($serieId, $updateInfo);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['msgErro' => $e->getMessage()];
         }
 
         if ($valido) {
-            $obj->atualizaComponentesDaSerie();
+            $this->executaAtualizacaoComponentes($serieId, $updateInfo);
 
             return [
-                'update' => $componentesAtualizados,
-                'insert' => $componentesInseridos,
+                'update' => $updateInfo['update'],
+                'insert' => $updateInfo['insert'],
             ];
         }
 
@@ -120,7 +118,7 @@ class ComponentesSerieController extends ApiCoreController
         if ($erros) {
             $errosDisplay = implode("\n", $erros);
 
-            throw new \Exception($errosDisplay);
+            throw new Exception($errosDisplay);
         }
 
         return true;
@@ -265,9 +263,9 @@ class ComponentesSerieController extends ApiCoreController
     public function excluiComponentesSerie()
     {
         $serieId = $this->getRequest()->serie_id;
-        $obj = new clsModulesComponenteCurricularAnoEscolar(null, $serieId);
 
-        if ($obj->exclui()) {
+        if (is_numeric($serieId)) {
+            LegacyDisciplineAcademicYear::where('ano_escolar_id', $serieId)->delete();
             $this->excluiTodosComponenteDaTurma($serieId);
             $this->excluiTodasDisciplinasEscolaSerie($serieId);
         }
@@ -440,14 +438,126 @@ SQL;
 
         try {
             $valido = $this->validaAtualizacao($serieId, $componentes);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['msgErro' => $e->getMessage()];
         }
 
         if ($valido) {
-            $obj = new clsModulesComponenteCurricularAnoEscolar(ano_escolar_id: $serieId, componentes: $componente);
-            $obj->excluiComponente($this->getRequest()->componente);
+            $componenteId = $this->getRequest()->componente;
+            if (is_numeric($componenteId)) {
+                LegacyDisciplineAcademicYear::where('componente_curricular_id', $componenteId)
+                    ->where('ano_escolar_id', $serieId)
+                    ->delete();
+            }
             $this->atualizaExclusoesDeComponentes($serieId, $componente);
+        }
+    }
+
+    private function buildUpdateInfo($serieId, $componentes)
+    {
+        $updateInfo = ['update' => [], 'insert' => []];
+        $componentesSerie = LegacyDisciplineAcademicYear::where('ano_escolar_id', $serieId)
+            ->pluck('componente_curricular_id')
+            ->toArray();
+
+        foreach ($componentes as $componente) {
+            if (in_array($componente['id'], $componentesSerie)) {
+                $diff = $this->calcularDiffAnosLetivos($serieId, $componente['id'], $componente['anos_letivos']);
+                $updateInfo['update'][] = [
+                    'id' => $componente['id'],
+                    'carga_horaria' => $componente['carga_horaria'],
+                    'hora_falta' => $componente['hora_falta'],
+                    'tipo_nota' => $componente['tipo_nota'],
+                    'anos_letivos' => $componente['anos_letivos'],
+                    'anos_letivos_inseridos' => $diff['inseridos'],
+                    'anos_letivos_removidos' => $diff['removidos'],
+                ];
+            } else {
+                $updateInfo['insert'][] = [
+                    'id' => $componente['id'],
+                    'carga_horaria' => $componente['carga_horaria'],
+                    'hora_falta' => $componente['hora_falta'],
+                    'tipo_nota' => $componente['tipo_nota'],
+                    'anos_letivos' => $componente['anos_letivos'],
+                ];
+            }
+        }
+
+        return $updateInfo;
+    }
+
+    // DB::selectOne pra buscar array_to_json() — chave composta impede uso de find()
+    private function calcularDiffAnosLetivos($serieId, $componenteId, $novosAnos)
+    {
+        $existentes = DB::selectOne(
+            'SELECT array_to_json(anos_letivos) as anos_letivos FROM modules.componente_curricular_ano_escolar WHERE ano_escolar_id = ? AND componente_curricular_id = ?',
+            [$serieId, $componenteId]
+        );
+
+        $anosExistentes = $existentes ? json_decode($existentes->anos_letivos, true) : [];
+
+        return [
+            'inseridos' => array_values(array_diff($novosAnos, $anosExistentes)),
+            'removidos' => array_values(array_diff($anosExistentes, $novosAnos)),
+        ];
+    }
+
+    private function executaAtualizacaoComponentes($serieId, $updateInfo)
+    {
+        foreach ($updateInfo['update'] as $comp) {
+            $componenteId = intval($comp['id']);
+            $cargaHoraria = (float) $comp['carga_horaria'];
+            $tipoNota = intval($comp['tipo_nota']);
+            $anosLetivos = $comp['anos_letivos'];
+            $horaFalta = $comp['hora_falta'] ? (float) $comp['hora_falta'] : null;
+
+            if (!is_numeric($componenteId)) {
+                continue;
+            }
+
+            $data = [];
+
+            if (is_numeric($cargaHoraria)) {
+                $data['carga_horaria'] = $cargaHoraria;
+            }
+
+            $data['hora_falta'] = is_numeric($horaFalta) ? $horaFalta : null;
+
+            if (is_numeric($tipoNota)) {
+                $tipoNota = (int) $tipoNota;
+                $data['tipo_nota'] = $tipoNota === 0 ? null : $tipoNota;
+            }
+
+            if (is_array($anosLetivos)) {
+                $data['anos_letivos'] = DB::raw("'{" . implode(',', $anosLetivos) . "}'::smallint[]");
+            }
+
+            if (!empty($data)) {
+                LegacyDisciplineAcademicYear::where('componente_curricular_id', $componenteId)
+                    ->where('ano_escolar_id', $serieId)
+                    ->update($data);
+            }
+        }
+
+        foreach ($updateInfo['insert'] as $comp) {
+            $componenteId = (int) $comp['id'];
+            $cargaHoraria = (float) $comp['carga_horaria'];
+            $tipoNota = (int) $comp['tipo_nota'];
+            $anosLetivos = $comp['anos_letivos'];
+            $horaFalta = $comp['hora_falta'] ? (float) $comp['hora_falta'] : null;
+
+            if (!is_numeric($componenteId) || !is_numeric($cargaHoraria)) {
+                continue;
+            }
+
+            LegacyDisciplineAcademicYear::create([
+                'componente_curricular_id' => $componenteId,
+                'ano_escolar_id' => $serieId,
+                'carga_horaria' => $cargaHoraria,
+                'tipo_nota' => $tipoNota === 0 ? null : $tipoNota,
+                'anos_letivos' => DB::raw("'{" . implode(',', $anosLetivos) . "}'::smallint[]"),
+                'hora_falta' => $horaFalta,
+            ]);
         }
     }
 }

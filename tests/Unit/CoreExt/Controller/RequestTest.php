@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_Controller_RequestTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_Controller_RequestTest extends TestCase
 {
     protected $_request = null;
 
@@ -11,7 +13,7 @@ class CoreExt_Controller_RequestTest extends PHPUnit\Framework\TestCase
 
     public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->_request->setOptions(['foo' => 'bar']);
     }
 

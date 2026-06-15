@@ -71,29 +71,27 @@ return new class extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
         $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_vinculo = new clsModulesProfessorTurma;
+        $codUsuario = App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)
+            ? $this->pessoa_logada
+            : null;
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
-            $obj_vinculo->codUsuario = $this->pessoa_logada;
-        }
-
-        $obj_vinculo->setOrderby(strNomeCampo: ' nm_escola, nm_curso, nm_serie, nm_turma ASC');
-
-        $obj_vinculo->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
-
-        $lista = $obj_vinculo->lista(
-            servidor_id: $this->servidor_id,
-            instituicao_id: $this->ref_cod_instituicao,
+        $result = $this->listarVinculos(
+            servidorId: $this->servidor_id,
+            instituicaoId: $this->ref_cod_instituicao,
             ano: $this->ano,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_curso: $this->ref_cod_curso,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_cod_turma: $this->ref_cod_turma,
-            funcao_exercida: $this->funcao_exercida,
-            tipo_vinculo: $this->tipo_vinculo
+            escolaId: $this->ref_cod_escola,
+            cursoId: $this->ref_cod_curso,
+            serieId: $this->ref_cod_serie,
+            turmaId: $this->ref_cod_turma,
+            funcaoExercida: $this->funcao_exercida,
+            tipoVinculo: $this->tipo_vinculo,
+            codUsuario: $codUsuario,
+            limite: $this->limite,
+            offset: $this->offset
         );
 
-        $total = $obj_vinculo->_total;
+        $lista = $result['lista'];
+        $total = $result['total'];
 
         // UrlHelper
         $url = CoreExt_View_Helper_UrlHelper::getInstance();
@@ -152,5 +150,95 @@ return new class extends clsListagem
     {
         $this->title = 'Servidores - Servidor Vínculo Turma';
         $this->processoAp = 635;
+    }
+
+    private function listarVinculos(
+        $servidorId = null,
+        $instituicaoId = null,
+        $ano = null,
+        $escolaId = null,
+        $cursoId = null,
+        $serieId = null,
+        $turmaId = null,
+        $funcaoExercida = null,
+        $tipoVinculo = null,
+        $codUsuario = null,
+        $limite = 20,
+        $offset = 0
+    ) {
+        $filtros = '
+            JOIN pmieducar.turma t ON pt.turma_id = t.cod_turma
+            LEFT JOIN pmieducar.turma_serie ts ON ts.turma_id = t.cod_turma
+            JOIN pmieducar.serie s ON s.cod_serie = coalesce(ts.serie_id, t.ref_ref_cod_serie)
+            JOIN pmieducar.curso c ON s.ref_cod_curso = c.cod_curso
+            JOIN pmieducar.escola e ON t.ref_ref_cod_escola = e.cod_escola
+            JOIN cadastro.pessoa p ON e.ref_idpes = p.idpes
+        WHERE true';
+        $params = [];
+
+        if (is_numeric($servidorId)) {
+            $filtros .= ' AND pt.servidor_id = ?';
+            $params[] = $servidorId;
+        }
+        if (is_numeric($instituicaoId)) {
+            $filtros .= ' AND pt.instituicao_id = ?';
+            $params[] = $instituicaoId;
+        }
+        if (is_numeric($ano)) {
+            $filtros .= ' AND pt.ano = ?';
+            $params[] = $ano;
+        }
+        if (is_numeric($escolaId)) {
+            $filtros .= ' AND t.ref_ref_cod_escola = ?';
+            $params[] = $escolaId;
+        } elseif ($codUsuario) {
+            $filtros .= ' AND EXISTS (SELECT 1 FROM pmieducar.escola_usuario WHERE escola_usuario.ref_cod_escola = t.ref_ref_cod_escola AND escola_usuario.ref_cod_usuario = ?)';
+            $params[] = $codUsuario;
+        }
+        if (is_numeric($cursoId)) {
+            $filtros .= ' AND t.ref_cod_curso = ?';
+            $params[] = $cursoId;
+        }
+        if (is_numeric($serieId)) {
+            $filtros .= ' AND t.ref_ref_cod_serie = ?';
+            $params[] = $serieId;
+        }
+        if (is_numeric($turmaId)) {
+            $filtros .= ' AND t.cod_turma = ?';
+            $params[] = $turmaId;
+        }
+        if (is_numeric($funcaoExercida)) {
+            $filtros .= ' AND pt.funcao_exercida = ?';
+            $params[] = $funcaoExercida;
+        }
+        if (is_numeric($tipoVinculo)) {
+            $filtros .= ' AND pt.tipo_vinculo = ?';
+            $params[] = $tipoVinculo;
+        }
+
+        $total = DB::selectOne("SELECT COUNT(0) as total FROM modules.professor_turma pt {$filtros}", $params)->total ?? 0;
+
+        $sql = "SELECT pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id, pt.data_inicial, pt.data_fim, pt.leciona_itinerario_tecnico_profissional, pt.area_itinerario,
+            t.nm_turma, t.cod_turma as ref_cod_turma, t.ref_ref_cod_serie as ref_cod_serie,
+            textcat_all(s.nm_serie) AS nm_serie, t.ref_cod_curso, textcat_all(DISTINCT c.nm_curso) AS nm_curso,
+            t.ref_ref_cod_escola as ref_cod_escola, p.nome as nm_escola
+            FROM modules.professor_turma pt
+            {$filtros}
+            GROUP BY pt.id, t.cod_turma, p.nome
+            ORDER BY nm_escola, nm_curso, nm_serie, nm_turma ASC
+            LIMIT ? OFFSET ?";
+
+        $params[] = $limite;
+        $params[] = $offset;
+
+        $registros = DB::select($sql, $params);
+
+        if (empty($registros)) {
+            return ['lista' => false, 'total' => 0];
+        }
+
+        $lista = array_map(fn ($r) => array_merge((array) $r, ['_total' => $total]), $registros);
+
+        return ['lista' => $lista, 'total' => $total];
     }
 };

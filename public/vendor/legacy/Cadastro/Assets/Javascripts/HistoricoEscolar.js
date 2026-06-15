@@ -39,8 +39,10 @@ $j(document).ready(function(){
 	function habilitaPosicao(){
 		if ($j('#dependencia')[0].checked) {
 			$j('#posicao').closest('tr').hide();
+			makeUnrequired('posicao');
 		} else{
 			$j('#posicao').closest('tr').show();
+			makeRequired('posicao');
 		}
 	}
 

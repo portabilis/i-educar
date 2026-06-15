@@ -99,6 +99,11 @@ function int2CEP($int)
     }
 }
 
+function onlyDigits($valor)
+{
+    return preg_replace('/\D/', '', $valor ?? '');
+}
+
 function limpa_acentos($str_nome)
 {
     $procura1 = ['á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ç', 'ã', 'õ', 'ô', 'ê'];
@@ -421,6 +426,49 @@ function transformStringFromDBInArray($string): ?array
 function transformDBArrayInString($value): ?string
 {
     return is_array($value) ? '{' . implode(',', array_filter($value)) . '}' : null;
+}
+
+/**
+ * Formats a decimal value for display in Brazilian format.
+ *
+ * @param mixed $value   numeric value (ex: 689.2)
+ * @param int   $decimals number of decimal places
+ * @return string|null formatted value (ex: "689,20") or null if invalid
+ */
+function formatDecimalBr($value, int $decimals = 2): ?string
+{
+    if (!is_numeric($value)) {
+        return null;
+    }
+
+    return number_format((float) $value, $decimals, ',', '.');
+}
+
+/**
+ * Converts a decimal value from Brazilian format to database format.
+ *
+ * Accepts Brazilian format ("689,20" or "1.000,50") or ISO ("689.20" or "1000.5").
+ *
+ * @param mixed $value value in BR or ISO format
+ * @return string|null value in ISO format (ex: "689.20") or null if invalid
+ */
+function parseDecimalBr($value): ?string
+{
+    if ($value === null || $value === '') {
+        return null;
+    }
+
+    $value = trim((string) $value);
+
+    if (str_contains($value, ',')) {
+        $value = str_replace(',', '.', str_replace('.', '', $value));
+    }
+
+    if (!is_numeric($value)) {
+        return null;
+    }
+
+    return $value;
 }
 
 if (!function_exists('formatDateParse')) {

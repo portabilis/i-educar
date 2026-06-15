@@ -42,8 +42,8 @@ return new class extends clsCadastro
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: '/intranet/styles/agenda.css');
 
         if ($_REQUEST['cod_agenda']) {
-            $this->agenda = $_REQUEST['cod_agenda'];
-            $objAgenda = new clsAgenda(int_cod_editor: $this->editor, int_cod_pessoa_dono: false, int_cod_agenda: $_REQUEST['cod_agenda']);
+            $this->agenda = (int) $_REQUEST['cod_agenda'];
+            $objAgenda = new clsAgenda(int_cod_editor: $this->editor, int_cod_pessoa_dono: false, int_cod_agenda: $this->agenda);
         } else {
             $objAgenda = new clsAgenda(int_cod_editor: $this->editor, int_cod_pessoa_dono: $this->editor, int_cod_agenda: false);
             $this->agenda = $objAgenda->getCodAgenda();
@@ -347,12 +347,13 @@ return new class extends clsCadastro
             $conteudo .= "<tr><td colspan=\"3\" class=\"{$classe}\" align=\"center\" height=\"60\"><br><input type=\"button\" name=\"agenda_novo\" class=\"agenda_rap_botao btn-green\" id=\"agenda_novo\" value=\"Novo Compromisso\" onclick=\"novoForm();\"></td></tr>";
         } else {
             $this->versoes = $objAgenda->listaVersoes(cod_compromisso: $_GET['versoes']);
+            $filtered_versoes = (int) $_GET['versoes'];
 
             // verifica se o compromisso eh mesmo dessa agenda
-            $db->Consulta(consulta: "SELECT 1 FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$_GET['versoes']}'");
+            $db->Consulta(consulta: "SELECT 1 FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$filtered_versoes}'");
             if ($db->numLinhas()) {
                 // seleciona as versoes desse compromisso
-                $db->Consulta(consulta: "SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET['versoes']}' ORDER BY versao DESC");
+                $db->Consulta(consulta: "SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$filtered_versoes}' ORDER BY versao DESC");
                 while ($db->ProximoRegistro()) {
                     unset($versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim);
                     [$versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim] = $db->Tupla();
@@ -376,7 +377,7 @@ return new class extends clsCadastro
                     $conteudo .= "<tr><td>Importante:</td><td>{$importante}</td></tr>\n";
                     $conteudo .= "<tr><td>Publico:</td><td>{$publico}</td></tr>\n";
                     $conteudo .= "<tr><td>Responsável:</td><td>$nome</td></tr>\n";
-                    $conteudo .= "<tr><td>Reativar?</td><td><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&restaura={$_GET['versoes']}&versao={$versao}\">Clique aqui para reativar esta versão</a></td></tr>\n";
+                    $conteudo .= "<tr><td>Reativar?</td><td><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&restaura={$filtered_versoes}&versao={$versao}\">Clique aqui para reativar esta versão</a></td></tr>\n";
                     $conteudo .= "<tr><td colspan=\"2\"><hr></td></tr>\n";
                 }
                 $conteudo .= "<tr><td colspan=\"2\" align=\"center\"><input type=\"button\" name=\"voltar\" value=\"Voltar\" class=\"agenda_rap_botao\" onclick=\"document.location.href='{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}'\"></td></tr>";

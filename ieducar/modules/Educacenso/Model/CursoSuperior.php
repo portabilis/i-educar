@@ -1,6 +1,6 @@
 <?php
 
-class Educacenso_Model_CursoSuperior extends CoreExt_Entity implements \Stringable
+class Educacenso_Model_CursoSuperior extends CoreExt_Entity implements Stringable
 {
     protected $_data = [
         'curso' => null,

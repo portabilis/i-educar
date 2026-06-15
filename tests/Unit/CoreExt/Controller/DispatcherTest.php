@@ -1,6 +1,8 @@
 <?php
 
-class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class CoreExt_Controller_DispatcherTest extends TestCase
 {
     protected $_dispatcher = null;
 
@@ -53,7 +55,7 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
 
     public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->_dispatcher->setOptions(['foo' => 'bar']);
     }
 
