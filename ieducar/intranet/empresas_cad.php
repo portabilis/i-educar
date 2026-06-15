@@ -159,6 +159,13 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->validaTamanhoMinimoCampo(valor: $this->fantasia)) {
+            $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
         if (empty($this->fantasia) || strlen(trim(string: $this->fantasia)) < 3) {
             $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
             $this->busca_empresa = true;
@@ -277,6 +284,18 @@ return new class extends clsCadastro
         return filter_var(value: $url, options: FILTER_VALIDATE_URL) !== false;
     }
 
+    /**
+     * Valida se um campo de texto possui tamanho mínimo
+     *
+     * @param string $valor O valor do campo a validar
+     * @param int $tamanhoMinimo O tamanho mínimo permitido
+     * @return bool True se válido, false caso contrário
+     */
+    private function validaTamanhoMinimoCampo($valor, $tamanhoMinimo = 3)
+    {
+        return !empty($valor) && strlen(trim(string: $valor)) >= $tamanhoMinimo;
+    }
+
     protected function validaCaracteresPermitidosComplemento()
     {
         if (empty($this->complement)) {
@@ -305,6 +324,13 @@ return new class extends clsCadastro
 
         if (empty($this->razao_social) || strlen(trim(string: $this->razao_social)) < 3) {
             $this->mensagem = 'O campo Razão Social deve conter no mínimo 3 caracteres.';
+            $this->busca_empresa = true;
+
+            return false;
+        }
+
+        if (!$this->validaTamanhoMinimoCampo(valor: $this->fantasia)) {
+            $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
             $this->busca_empresa = true;
 
             return false;
