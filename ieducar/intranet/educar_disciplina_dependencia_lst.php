@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDisciplineDependence;
+
 return new class extends clsListagem
 {
     public $pessoa_logada;
@@ -7,8 +9,6 @@ return new class extends clsListagem
     public $titulo;
 
     public $limite;
-
-    public $offset;
 
     public $ref_cod_matricula;
 
@@ -113,25 +113,20 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = $_GET['pagina_' . $this->nome] ?
-            $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_disciplina_dependencia = new clsPmieducarDisciplinaDependencia;
-        $obj_disciplina_dependencia->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $result = LegacyDisciplineDependence::query()
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->when(is_numeric($this->ref_cod_disciplina), fn ($q) => $q->whereDiscipline($this->ref_cod_disciplina))
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $lista = $obj_disciplina_dependencia->lista(
-            int_ref_cod_matricula: $this->ref_cod_matricula,
-            int_ref_cod_disciplina: $this->ref_cod_disciplina
-        );
-
-        $total = $obj_disciplina_dependencia->_total;
+        $total = $result->total();
 
         // Mapper de componente curricular
         $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
+        if ($result->isNotEmpty()) {
+            foreach ($result as $registro) {
 
                 $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
                 // Dados para a url

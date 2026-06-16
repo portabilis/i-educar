@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyDisciplineAcademicYear;
+use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 
 return new class extends clsCadastro
@@ -56,20 +59,19 @@ return new class extends clsCadastro
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
-            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina)
+            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
+            $this->dependenciaValida()
         ) {
-            $obj = new clsPmieducarDisciplinaDependencia(
-                ref_cod_matricula: $this->ref_cod_matricula,
-                ref_cod_serie: $this->ref_cod_serie,
-                ref_cod_escola: $this->ref_cod_escola,
-                ref_cod_disciplina: $this->ref_cod_disciplina
-            );
-
-            $registro = $obj->detalhe();
+            $registro = LegacyDisciplineDependence::query()
+                ->whereRegistration($this->ref_cod_matricula)
+                ->whereGrade($this->ref_cod_serie)
+                ->whereSchool($this->ref_cod_escola)
+                ->whereDiscipline($this->ref_cod_disciplina)
+                ->first(['cod_disciplina_dependencia', 'ref_cod_matricula', 'ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina', 'observacao']);
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
-                foreach ($registro as $campo => $val) {
+                foreach ($registro->getAttributes() as $campo => $val) {
                     $this->$campo = $val;
                 }
 
@@ -190,6 +192,22 @@ return new class extends clsCadastro
         $this->campoMemo(nome: 'observacao', campo: 'Observação', valor: $this->observacao, colunas: 60, linhas: 10);
     }
 
+    /**
+     * Uma dependência só é válida quando a matrícula existe e o componente
+     * curricular está vinculado ao ano/série.
+     */
+    private function dependenciaValida(): bool
+    {
+        if (!LegacyRegistration::query()->whereKey($this->ref_cod_matricula)->exists()) {
+            return false;
+        }
+
+        return LegacyDisciplineAcademicYear::query()
+            ->whereGrade($this->ref_cod_serie)
+            ->whereDiscipline($this->ref_cod_disciplina)
+            ->count() === 1;
+    }
+
     public function existeComponenteSerie()
     {
         $db = new clsBanco;
@@ -270,42 +288,43 @@ SQL;
             return false;
         }
 
-        $sql = 'SELECT MAX(cod_disciplina_dependencia) + 1 FROM pmieducar.disciplina_dependencia';
-        $db = new clsBanco;
-        $max_cod_disciplina_dependencia = $db->CampoUnico($sql);
+        if (!is_numeric($this->ref_cod_matricula) || !is_numeric($this->ref_cod_serie) ||
+            !is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_disciplina) ||
+            !$this->dependenciaValida()
+        ) {
+            $this->mensagem = 'Cadastro não realizado.<br />';
 
-        // Caso não exista nenhuma dispensa, atribui o cÃ³digo 1, tabela não utiliza sequences
-        $max_cod_disciplina_dependencia = $max_cod_disciplina_dependencia > 0 ? $max_cod_disciplina_dependencia : 1;
+            return false;
+        }
 
-        $obj = new clsPmieducarDisciplinaDependencia(
-            ref_cod_matricula: $this->ref_cod_matricula,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: $this->ref_cod_disciplina,
-            observacao: $this->observacao,
-            cod_disciplina_dependencia: $max_cod_disciplina_dependencia
-        );
+        $dependencia = LegacyDisciplineDependence::query()
+            ->whereRegistration($this->ref_cod_matricula)
+            ->whereGrade($this->ref_cod_serie)
+            ->whereSchool($this->ref_cod_escola)
+            ->whereDiscipline($this->ref_cod_disciplina)
+            ->first();
 
-        if ($obj->existe()) {
-            $obj = new clsPmieducarDisciplinaDependencia(
-                ref_cod_matricula: $this->ref_cod_matricula,
-                ref_cod_serie: $this->ref_cod_serie,
-                ref_cod_escola: $this->ref_cod_escola,
-                ref_cod_disciplina: $this->ref_cod_disciplina,
-                observacao: $this->observacao
-            );
+        if ($dependencia) {
+            if (is_string($this->observacao)) {
+                $dependencia->update(['observacao' => $this->observacao]);
+            }
 
-            $obj->edita();
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-        }
+        $cod = (LegacyDisciplineDependence::query()->max('cod_disciplina_dependencia') ?? 0) + 1;
 
-        $this->mensagem = 'Cadastro não realizado.<br />';
+        LegacyDisciplineDependence::query()->create([
+            'ref_cod_matricula' => $this->ref_cod_matricula,
+            'ref_cod_serie' => $this->ref_cod_serie,
+            'ref_cod_escola' => $this->ref_cod_escola,
+            'ref_cod_disciplina' => $this->ref_cod_disciplina,
+            'observacao' => $this->observacao,
+            'cod_disciplina_dependencia' => $cod,
+        ]);
+
+        $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+        $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
         return false;
     }
@@ -320,15 +339,21 @@ SQL;
             str_pagina_redirecionar: 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula
         );
 
-        $obj = new clsPmieducarDisciplinaDependencia(
-            ref_cod_matricula: $this->ref_cod_matricula,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: $this->ref_cod_disciplina,
-            observacao: $this->observacao
-        );
+        $editou = false;
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
+            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
+            is_string($this->observacao) && $this->dependenciaValida()
+        ) {
+            $dependencia = LegacyDisciplineDependence::query()
+                ->whereRegistration($this->ref_cod_matricula)
+                ->whereGrade($this->ref_cod_serie)
+                ->whereSchool($this->ref_cod_escola)
+                ->whereDiscipline($this->ref_cod_disciplina)
+                ->first();
 
-        $editou = $obj->edita();
+            $editou = (bool) $dependencia?->update(['observacao' => $this->observacao]);
+        }
+
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
@@ -349,15 +374,20 @@ SQL;
             str_pagina_redirecionar: 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula
         );
 
-        $obj = new clsPmieducarDisciplinaDependencia(
-            ref_cod_matricula: $this->ref_cod_matricula,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: $this->ref_cod_disciplina,
-            observacao: $this->observacao
-        );
+        $excluiu = false;
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
+            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
+            $this->dependenciaValida()
+        ) {
+            $dependencia = LegacyDisciplineDependence::query()
+                ->whereRegistration($this->ref_cod_matricula)
+                ->whereGrade($this->ref_cod_serie)
+                ->whereSchool($this->ref_cod_escola)
+                ->whereDiscipline($this->ref_cod_disciplina)
+                ->first();
 
-        $excluiu = $obj->excluir();
+            $excluiu = (bool) $dependencia?->delete();
+        }
 
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';

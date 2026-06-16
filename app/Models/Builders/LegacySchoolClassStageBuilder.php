@@ -13,6 +13,14 @@ class LegacySchoolClassStageBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por Etapa
+     */
+    public function whereStageType(int $stageType): self
+    {
+        return $this->where('ref_cod_modulo', $stageType);
+    }
+
+    /**
      * Ordena por Sequencial
      */
     public function orderBySequencial(): self

@@ -42,6 +42,8 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Descrição', nl2br(string: "{$registro['desc_beneficio']}")]);
         }
 
+        $this->addDetalhe(detalhe: ['Bolsa Família', $registro['bolsa_familia'] ? 'Sim' : 'Não']);
+
         $obj_permissao = new clsPermissoes;
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {

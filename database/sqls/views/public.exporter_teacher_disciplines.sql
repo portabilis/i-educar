@@ -1,4 +1,4 @@
-create view public.exporter_teacher_disciplines as
+create or replace view public.exporter_teacher_disciplines as
 select
 	ptd.professor_turma_id as pivot_id,
 	string_agg(cc.nome, ', ') as disciplines

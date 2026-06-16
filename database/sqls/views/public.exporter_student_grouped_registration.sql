@@ -1,4 +1,4 @@
-CREATE VIEW public.exporter_student_grouped_registration as
+CREATE OR REPLACE VIEW public.exporter_student_grouped_registration as
 SELECT p.id,
        p.name,
        p.social_name,

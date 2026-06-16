@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyStageType;
 
 return new class extends clsCadastro
@@ -210,14 +211,9 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj = new clsPmieducarTurmaModulo($this->cod_modulo);
-        $result = $obj->lista(int_ref_cod_modulo: $this->cod_modulo);
-
-        if (!$result > 0) {
-            return false;
-        }
-
-        return true;
+        return LegacySchoolClassStage::query()
+            ->whereStageType($this->cod_modulo)
+            ->exists();
     }
 
     public function Formular()

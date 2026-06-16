@@ -5,6 +5,8 @@ use App\Models\LegacyEducacensoStages;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyRegimeType;
+use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassStage;
 
 return new class extends clsCadastro
 {
@@ -373,7 +375,7 @@ return new class extends clsCadastro
                 $this->gravaEtapacurso(cod_curso: $this->cod_curso);
 
                 if ($alterouPadraoAnoEscolar) {
-                    $this->updateClassStepsForCourse(courseCode: $this->cod_curso, standerdSchoolYear: $this->padrao_ano_escolar, currentYear: date(format: 'Y'));
+                    $this->atualizaEtapasDasTurmasDoCurso(curso: $this->cod_curso, padraoAnoEscolar: $this->padrao_ano_escolar, ano: date(format: 'Y'));
                 }
 
                 $this->mensagem = 'Edição efetuada com sucesso.<br>';
@@ -430,15 +432,56 @@ return new class extends clsCadastro
             ->delete();
     }
 
-    public function updateClassStepsForCourse($courseCode, $standerdSchoolYear, $currentYear)
+    public function atualizaEtapasDasTurmasDoCurso($curso, $padraoAnoEscolar, $ano): void
     {
-        $classStepsObject = new clsPmieducarTurmaModulo;
+        $this->removeEtapasDasTurmasDoCurso(curso: $curso, ano: $ano);
 
-        $classStepsObject->removeStepsOfClassesForCourseAndYear(courseCode: $courseCode, year: $currentYear);
-
-        if ($standerdSchoolYear == 0) {
-            $classStepsObject->copySchoolStepsIntoClassesForCourseAndYear(courseCode: $courseCode, year: $currentYear);
+        if ($padraoAnoEscolar == 0) {
+            $this->copiaEtapasDaEscolaParaTurmasDoCurso(curso: $curso, ano: $ano);
         }
+    }
+
+    private function removeEtapasDasTurmasDoCurso($curso, $ano): void
+    {
+        if (!is_numeric($curso) || !is_numeric($ano)) {
+            return;
+        }
+
+        LegacySchoolClassStage::query()
+            ->whereHas('schoolClass', fn ($q) => $q->whereCourse($curso)->whereYearEq($ano))
+            ->delete();
+    }
+
+    private function copiaEtapasDaEscolaParaTurmasDoCurso($curso, $ano): void
+    {
+        if (!is_numeric($curso) || !is_numeric($ano)) {
+            return;
+        }
+
+        $etapasDaEscola = LegacySchoolClass::query()
+            ->join('pmieducar.ano_letivo_modulo', function ($j) {
+                $j->on('pmieducar.ano_letivo_modulo.ref_ref_cod_escola', 'pmieducar.turma.ref_ref_cod_escola');
+                $j->on('pmieducar.ano_letivo_modulo.ref_ano', 'pmieducar.turma.ano');
+            })
+            ->whereCourse($curso)
+            ->whereYearEq($ano)
+            ->select([
+                'cod_turma',
+                'ref_cod_modulo',
+                'sequencial',
+                'data_inicio',
+                'data_fim',
+                'dias_letivos',
+            ]);
+
+        LegacySchoolClassStage::query()->insertUsing([
+            'ref_cod_turma',
+            'ref_cod_modulo',
+            'sequencial',
+            'data_inicio',
+            'data_fim',
+            'dias_letivos',
+        ], $etapasDaEscola);
     }
 
     public function makeExtra()

@@ -208,6 +208,16 @@ class SchoolClassController extends Controller
             $params['carga_horaria_total'] = (int) $cargaHorariaTotal;
         }
 
+        $etapasEixoCursoProfissional = [67, 68, 73, 75];
+        $codEixoCursoProfissional = $params['cod_eixo_curso_profissional'] ?? null;
+        if ($codEixoCursoProfissional === null || $codEixoCursoProfissional === ''
+            || !isset($params['etapa_educacenso'])
+            || !in_array((int) $params['etapa_educacenso'], $etapasEixoCursoProfissional, true)) {
+            $params['cod_eixo_curso_profissional'] = null;
+        } else {
+            $params['cod_eixo_curso_profissional'] = (int) $codEixoCursoProfissional;
+        }
+
         if (isset($params['organizacao_curricular'])) {
             $params['organizacao_curricular'] = '{' . implode(',', $params['organizacao_curricular']) . '}';
         } else {

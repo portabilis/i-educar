@@ -6,7 +6,7 @@ class LegacyPersonBuilder extends LegacyBuilder
 {
     public function whereName(string $name): self
     {
-        return $this->whereRaw('slug ~* unaccent(?)', $name);
+        return $this->whereRaw('f_unaccent(nome) ILIKE f_unaccent(?)', ["%{$name}%"]);
     }
 
     public function whereCpf(string $cpf): self

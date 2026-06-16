@@ -146,12 +146,15 @@ return new class extends clsCadastro
                 $this->total_horas_alocadas = str_pad($cargaHoraria, 2, 0, STR_PAD_LEFT);
 
                 // Funções
-                $obj_funcoes = new clsPmieducarServidorFuncao;
-                $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
+                $lst_funcoes = LegacyEmployeeRole::query()
+                    ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+                    ->when(is_numeric($this->cod_servidor), fn ($q) => $q->whereEmployee($this->cod_servidor))
+                    ->with('role')
+                    ->get(['cod_servidor_funcao', 'ref_cod_funcao', 'matricula']);
 
-                if ($lst_funcoes) {
+                if ($lst_funcoes->isNotEmpty()) {
                     foreach ($lst_funcoes as $funcao) {
-                        $det_funcao = LegacyRole::find($funcao['ref_cod_funcao'])?->getAttributes();
+                        $det_funcao = $funcao->role?->getAttributes();
 
                         $this->ref_cod_funcao[] = [$funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula'], $funcao['cod_servidor_funcao']];
 
@@ -793,10 +796,9 @@ JS;
                 }
 
                 $cod_servidor_funcao = $this->cod_servidor_funcao[$k];
-                $obj_servidor_funcao = new clsPmieducarServidorFuncao(null, null, null, null, $cod_servidor_funcao);
 
-                if ($obj_servidor_funcao->existe()) {
-                    $this->atualizaFuncao($obj_servidor_funcao, $funcao, $this->matricula[$k]);
+                if (is_numeric($cod_servidor_funcao) && LegacyEmployeeRole::query()->whereKey($cod_servidor_funcao)->exists()) {
+                    $this->atualizaFuncao($cod_servidor_funcao, $funcao, $this->matricula[$k]);
                 } else {
                     $cod_servidor_funcao = $this->cadastraFuncao($funcao, $this->matricula[$k]);
 
@@ -805,8 +807,11 @@ JS;
                 }
 
                 if (empty($cod_servidor_funcao)) {
-                    $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao);
-                    $cod_servidor_funcao = $obj_servidor_funcao->detalhe()['cod_servidor_funcao'];
+                    $cod_servidor_funcao = LegacyEmployeeRole::query()
+                        ->whereInstitution($this->ref_cod_instituicao)
+                        ->whereEmployee($this->cod_servidor)
+                        ->whereRole($funcao)
+                        ->value('cod_servidor_funcao');
                 }
 
                 $listFuncoesCadastradas[] = $cod_servidor_funcao;
@@ -878,8 +883,7 @@ JS;
 
     public function excluiFuncoes()
     {
-        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
-        $obj_servidor_funcao->excluirTodos();
+        $this->deletaFuncoesDoServidor();
     }
 
     public function excluiFaltaAtraso()
@@ -910,23 +914,47 @@ JS;
     {
         $this->limpaFuncaoFaltaAtrasoInativos($funcoes);
 
-        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
-        $obj_servidor_funcao->excluirFuncoesRemovidas($funcoes);
+        if (is_array($funcoes)) {
+            $this->deletaFuncoesDoServidor($funcoes);
+        }
     }
 
-    public function atualizaFuncao($obj_servidor_funcao, $funcao, $matricula)
+    private function deletaFuncoesDoServidor(?array $funcoesMantidasIds = null)
     {
-        $obj_servidor_funcao->ref_cod_funcao = $funcao;
-        $obj_servidor_funcao->matricula = $matricula;
+        if (!is_numeric($this->ref_cod_instituicao) || !is_numeric($this->cod_servidor)) {
+            return;
+        }
 
-        $obj_servidor_funcao->edita();
+        LegacyEmployeeRole::query()
+            ->whereInstitution($this->ref_cod_instituicao)
+            ->whereEmployee($this->cod_servidor)
+            ->when(!empty($funcoesMantidasIds), fn ($q) => $q->whereNotIn('cod_servidor_funcao', $funcoesMantidasIds))
+            ->delete();
+    }
+
+    public function atualizaFuncao($cod_servidor_funcao, $funcao, $matricula)
+    {
+        $dados = ['matricula' => $matricula ?: null];
+
+        if (is_numeric($funcao)) {
+            $dados['ref_cod_funcao'] = $funcao;
+        }
+
+        LegacyEmployeeRole::query()->find($cod_servidor_funcao)?->update($dados);
     }
 
     public function cadastraFuncao($funcao, $matricula)
     {
-        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $matricula);
+        if (!is_numeric($this->ref_cod_instituicao) || !is_numeric($this->cod_servidor) || !is_numeric($funcao)) {
+            return false;
+        }
 
-        return $obj_servidor_funcao->cadastra();
+        return LegacyEmployeeRole::query()->create([
+            'ref_ref_cod_instituicao' => $this->ref_cod_instituicao,
+            'ref_cod_servidor' => $this->cod_servidor,
+            'ref_cod_funcao' => $funcao,
+            'matricula' => $matricula ?: null,
+        ])->cod_servidor_funcao;
     }
 
     public function excluiDisciplinas($funcao)

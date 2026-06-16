@@ -3,6 +3,7 @@
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
+use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
@@ -12,6 +13,7 @@ use App\Models\LegacyUserType;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -1049,7 +1051,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                         continue;
                     }
 
-                    if (!in_array($id, $disciplinasDependencia)) {
+                    if (!$disciplinasDependencia->contains($id)) {
                         continue;
                     }
 
@@ -1165,13 +1167,13 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     /**
-     * Retorna array com as referências de pmieducar.disciplina_dependencia
+     * Retorna as referências de pmieducar.disciplina_dependencia
      * a modules.componente_curricular ('ref_ref_cod_disciplina').
      *
      * @param int $codMatricula
      * @param int $codSerie
      * @param int $codEscola
-     * @return array
+     * @return Collection<int, int>
      */
     public static function getDisciplinasDependenciaPorMatricula(
         $codMatricula,
@@ -1180,29 +1182,13 @@ class App_Model_IedFinder extends CoreExt_Entity
     ) {
         $key = json_encode(compact('codMatricula', 'codSerie', 'codEscola'));
 
-        $disciplinas = Cache::store('array')->remember("getDisciplinasDependenciaPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola) {
-            $disciplinas = self::addClassToStorage(
-                'clsPmieducarDisciplinaDependencia',
-                null,
-                'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php'
-            );
-
-            $disciplinas = $disciplinas->lista($codMatricula, $codSerie, $codEscola);
-
-            if ($disciplinas === false) {
-                return [];
-            }
-
-            return $disciplinas;
+        return Cache::store('array')->remember("getDisciplinasDependenciaPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola) {
+            return LegacyDisciplineDependence::query()
+                ->when(is_numeric($codMatricula), fn ($q) => $q->whereRegistration($codMatricula))
+                ->when(is_numeric($codSerie), fn ($q) => $q->whereGrade($codSerie))
+                ->when(is_numeric($codEscola), fn ($q) => $q->whereSchool($codEscola))
+                ->pluck('ref_cod_disciplina');
         });
-
-        $disciplinasDependencia = [];
-
-        foreach ($disciplinas as $disciplina) {
-            $disciplinasDependencia[] = $disciplina['ref_cod_disciplina'];
-        }
-
-        return $disciplinasDependencia;
     }
 
     /**
