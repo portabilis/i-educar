@@ -286,15 +286,12 @@ return new class extends clsCadastro
     public function Novo()
     {
         if ($this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
-            $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
-            $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
-            $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
+            // Refatoração: Centraliza limpeza e flags
+            $this->prepararDados();
 
-            $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
-            $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
-            $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
-            $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
+            if (! $this->validarHoraFalta()) {
+                return false;
+            }
 
             $obj = new clsPmieducarCurso(
                 ref_usuario_cad: $this->pessoa_logada,
@@ -338,15 +335,12 @@ return new class extends clsCadastro
     public function Editar()
     {
         if ($this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
-            $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
-            $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
-            $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
+            // Refatoração: Usa o mesmo método de preparação
+            $this->prepararDados();
 
-            $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
-            $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
-            $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
-            $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
+            if (! $this->validarHoraFalta()) {
+                return false;
+            }
 
             $obj = new clsPmieducarCurso(
                 cod_curso: $this->cod_curso,
@@ -456,5 +450,31 @@ return new class extends clsCadastro
     {
         $this->title = 'Curso';
         $this->processoAp = '566';
+    }
+
+    // Método auxiliar criado na refatoração
+    private function validarHoraFalta()
+    {
+        if ($this->hora_falta < 0) {
+            $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
+            return false;
+        }
+        return true;
+    }
+
+    // Método novo para reduzir a Complexidade e Duplicação
+    private function prepararDados()
+    {
+        // Sanitização de números (troca vírgula por ponto, etc)
+        $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
+        $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
+        $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
+        $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
+
+        // Definição de flags/booleanos
+        $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
+        $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
+        $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
+        $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
     }
 };
