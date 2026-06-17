@@ -224,4 +224,40 @@ class CheckMandatoryCensoFieldsTest extends TestCase
         $this->assertFalse($result);
         $this->assertStringContainsString('35, 36, 37 ou 38', $this->rule->message());
     }
+
+    public function test_carga_horaria_total_opcional_quando_iftp_sem_valor()
+    {
+        $params = $this->createDefaultParams();
+        $params->organizacao_curricular = '{' . OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL . '}';
+        $params->carga_horaria_total = null;
+
+        $result = $this->rule->validaCargaHorariaTotal($params);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_carga_horaria_total_qualificacao_invalida_fora_da_faixa()
+    {
+        $params = $this->createDefaultParams();
+        $params->organizacao_curricular = '{' . OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL . '}';
+        $params->carga_horaria_total = 100;
+        $params->tipo_curso_intinerario = 2;
+
+        $result = $this->rule->validaCargaHorariaTotal($params);
+
+        $this->assertFalse($result);
+        $this->assertStringContainsString('160 e 800', $this->rule->message());
+    }
+
+    public function test_carga_horaria_total_qualificacao_valida_dentro_da_faixa()
+    {
+        $params = $this->createDefaultParams();
+        $params->organizacao_curricular = '{' . OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL . '}';
+        $params->carga_horaria_total = 400;
+        $params->tipo_curso_intinerario = 2;
+
+        $result = $this->rule->validaCargaHorariaTotal($params);
+
+        $this->assertTrue($result);
+    }
 }
