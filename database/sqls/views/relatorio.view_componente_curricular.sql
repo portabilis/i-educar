@@ -39,4 +39,5 @@ CREATE OR REPLACE VIEW relatorio.view_componente_curricular AS
         ) THEN cct.turma_id IS NOT NULL
         ELSE true
     END
+    AND array[t.ano::smallint] <@ esd.anos_letivos
 );
