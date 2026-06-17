@@ -345,24 +345,26 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->posGraduacaoNaoPossui, // 88 - Não tem pós-graduação concluída
                 $pessoa->formacaoContinuadaCreche, // 89 - Creche (0 a 3 anos)
                 $pessoa->formacaoContinuadaPreEscola, // 90 - Pré-escola (4 e 5 anos)
-                $pessoa->formacaoContinuadaAnosIniciaisFundamental, // 91 - Anos iniciais do ensino fundamental
-                $pessoa->formacaoContinuadaAnosFinaisFundamental, // 92 - Anos finais do ensino fundamental
-                $pessoa->formacaoContinuadaEnsinoMedio, // 93 - Ensino médio
-                $pessoa->formacaoContinuadaEducacaoJovensAdultos, // 94 - Educação de jovens e adultos
-                $pessoa->formacaoContinuadaEducacaoEspecial, // 95 - Educação especial
-                $pessoa->formacaoContinuadaEducacaoIndigena, // 96 - Educação Indígena
-                $pessoa->formacaoContinuadaEducacaoCampo, // 97 - Educação do campo
-                $pessoa->formacaoContinuadaEducacaoAmbiental, // 98 - Educação ambiental
-                $pessoa->formacaoContinuadaEducacaoDireitosHumanos, // 99 - Educação em direitos humanos
-                $pessoa->formacaoContinuadaEducacaoBilingueSurdos, // 100 - Educação bilíngue de surdos
-                $pessoa->formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao, // 101 - Educação e Tecnologia de Informação e Comunicação (TIC)
-                $pessoa->formacaoContinuadaGeneroDiversidadeSexual, // 102 - Gênero e diversidade sexual
-                $pessoa->formacaoContinuadaDireitosCriancaAdolescente, // 103 - Direitos de criança e adolescente
-                $pessoa->formacaoContinuadaEducacaoRelacoesEticoRaciais, // 104 - Educação para as relações étnico-raciais e História e cultura afro-brasileira e africana
-                $pessoa->formacaoContinuadaEducacaoGestaoEscolar, // 105 - Gestão escolar
-                $pessoa->formacaoContinuadaEducacaoOutros, // 106 - Outros
-                $pessoa->formacaoContinuadaEducacaoNenhum, // 107 - Nenhum
-                $pessoa->email, // 108 - E-mail
+                $pessoa->formacaoContinuadaAlfabetizacao, // 91 - Alfabetização
+                $pessoa->formacaoContinuadaAnosIniciaisFundamental, // 92 - Anos iniciais do ensino fundamental
+                $pessoa->formacaoContinuadaAnosFinaisFundamental, // 93 - Anos finais do ensino fundamental
+                $pessoa->formacaoContinuadaEnsinoMedio, // 95 - Ensino médio
+                $pessoa->formacaoContinuadaEducacaoJovensAdultos, // 95 - Educação de jovens e adultos
+                $pessoa->formacaoContinuadaEducacaoEspecial, // 96 - Educação especial
+                $pessoa->formacaoContinuadaEducacaoIndigena, // 97 - Educação Indígena
+                $pessoa->formacaoContinuadaEducacaoCampo, // 98 - Educação do campo
+                $pessoa->formacaoContinuadaEducacaoAmbiental, // 99 - Educação ambiental
+                $pessoa->formacaoContinuadaEducacaoDireitosHumanos, // 100 - Educação em direitos humanos
+                $pessoa->formacaoContinuadaEducacaoBilingueSurdos, // 101 - Educação bilíngue de surdos
+                $pessoa->formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao, // 102 - Educação e Tecnologia de Informação e Comunicação (TIC)
+                $pessoa->formacaoEducacaoEmTempoIntegral, // 103 - Educação integral em tempo integral
+                $pessoa->formacaoContinuadaGeneroDiversidadeSexual, // 104 - Gênero e diversidade sexual
+                $pessoa->formacaoContinuadaDireitosCriancaAdolescente, // 105 - Direitos de criança e adolescente
+                $pessoa->formacaoContinuadaEducacaoRelacoesEticoRaciais, // 106 - Educação para as relações étnico-raciais e História e cultura afro-brasileira e africana
+                $pessoa->formacaoContinuadaEducacaoGestaoEscolar, // 107 - Gestão escolar
+                $pessoa->formacaoContinuadaEducacaoOutros, // 108 - Outros
+                $pessoa->formacaoContinuadaEducacaoNenhum, // 109 - Nenhum
+                $pessoa->email, // 110 - E-mail
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;

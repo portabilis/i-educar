@@ -561,6 +561,8 @@ SQL;
                 (ARRAY[14] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoRelacoesEticoRaciais",
                 (ARRAY[17] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoGestaoEscolar",
                 (ARRAY[15] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoOutros",
+                (ARRAY[21] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaAlfabetizacao",
+                (ARRAY[20] <@ servidor.curso_formacao_continuada)::INT "formacaoEducacaoEmTempoIntegral",
                 (ARRAY[16] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoNenhum",
                 pessoa.email AS "email",
                 educacenso_cod_docente.cod_docente_inep AS "inepServidor"

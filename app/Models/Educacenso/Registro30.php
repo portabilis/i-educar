@@ -150,6 +150,10 @@ class Registro30 implements RegistroEducacenso
 
     public $formacaoContinuadaPreEscola;
 
+    public $formacaoContinuadaAlfabetizacao;
+
+    public $formacaoEducacaoEmTempoIntegral;
+
     public $formacaoContinuadaAnosIniciaisFundamental;
 
     public $formacaoContinuadaAnosFinaisFundamental;
