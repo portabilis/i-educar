@@ -1250,4 +1250,14 @@ class Registro10 extends Registro10Fields
             !empty($this->quantidadeComputadoresAlunosPortateis) ||
             !empty($this->quantidadeComputadoresAlunosTablets);
     }
+
+    public function redeLocal(): int
+    {
+        return match (true) {
+            $this->redeLocalACabo() => 1,
+            $this->redeLocalWireless() => 2,
+            $this->redeLocalACaboEWireless() => 3,
+            default => 0,
+        };
+    }
 }
