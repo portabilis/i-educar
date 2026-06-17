@@ -8,7 +8,6 @@ SELECT
     null "inepTurma",
     null "matriculaAluno",
     matricula_turma.etapa_educacenso "etapaAluno",
-    matricula_turma.carga_horaria_integralizada "cargaHorariaIntegralizada",
     COALESCE((ARRAY [1] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoFuncoesGognitivas",
     COALESCE((ARRAY [2] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoVidaAutonoma",
     COALESCE((ARRAY [3] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnriquecimentoCurricular",

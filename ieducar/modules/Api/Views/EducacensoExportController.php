@@ -478,30 +478,31 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->inepTurma, // 06 - Código da turma no INEP
                 $aluno->matriculaAluno, // 07 - Código da Matrícula do(a) aluno(a)
                 $aluno->etapaAluno, // 08 - Turma multi
-                $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas, // 09 - Desenvolvimento de funções cognitivas
-                $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma, // 10 - Desenvolvimento de vida autônoma
-                $aluno->tipoAtendimentoEnriquecimentoCurricular, // 11 - Enriquecimento curricular
-                $aluno->tipoAtendimentoEnsinoInformaticaAcessivel, // 12 - Ensino de informática acessível
-                $aluno->tipoAtendimentoEnsinoLibras, // 13 - Ensino da Língua Brasileira de Sinais (Libras)
-                $aluno->tipoAtendimentoEnsinoLinguaPortuguesa, // 14 - Ensino da Língua Portuguesa como Segunda Língua
-                $aluno->tipoAtendimentoEnsinoSoroban, // 15 - Ensino das técnicas do cálculo no Soroban
-                $aluno->tipoAtendimentoEnsinoBraile, // 16 - Ensino de Sistema Braille
-                $aluno->tipoAtendimentoEnsinoOrientacaoMobilidade, // 17 - Ensino de técnicas para orientação e mobilidade
-                $aluno->tipoAtendimentoEnsinoCaa, // 18 - Ensino de uso da Comunicação Alternativa e Aumentativa (CAA)
-                $aluno->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos, // 19 - Ensino de uso de recursos ópticos e não ópticos
-                $aluno->recebeEscolarizacaoOutroEspacao, // 20 - Recebe escolarização em outro espaço (diferente da escola)
-                $aluno->transportePublico, // 21 - Transporte escolar público
-                $aluno->poderPublicoResponsavelTransporte, // 22 - Poder Público responsável pelo transporte escolar
-                $aluno->veiculoTransporteBicicleta, // 23 - Rodoviário - Bicicleta
-                $aluno->veiculoTransporteMicroonibus, // 24 - Rodoviário - Microônibus
-                $aluno->veiculoTransporteOnibus, // 25 - Rodoviário - Ônibus
-                $aluno->veiculoTransporteTracaoAnimal, // 26 - Rodoviário – Tração Animal
-                $aluno->veiculoTransporteVanKonbi, // 27 - Rodoviário - Vans/Kombis
-                $aluno->veiculoTransporteOutro, // 28 - Rodoviário - Outro
-                $aluno->veiculoTransporteAquaviarioCapacidade5, // 29 - Aquaviário - Capacidade de até 5 aluno(a)s
-                $aluno->veiculoTransporteAquaviarioCapacidade5a15, // 30 - Aquaviário - Capacidade entre 5 a 15 aluno(a)s
-                $aluno->veiculoTransporteAquaviarioCapacidade15a35, // 31 - Aquaviário - Capacidade entre 15 a 35 aluno(a)s
-                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35, // 32 - Aquaviário - Capacidade acima de 35 aluno(a)s
+                $aluno->cargaHorariaIntegralizada, // 09 - Carga horária integralizada pelo(a) aluno(a) no curso técnico ou de qualificação profissional (em horas)
+                $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas, // 10 - Desenvolvimento de funções cognitivas
+                $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma, // 11 - Desenvolvimento de vida autônoma
+                $aluno->tipoAtendimentoEnriquecimentoCurricular, // 12 - Enriquecimento curricular
+                $aluno->tipoAtendimentoEnsinoInformaticaAcessivel, // 13 - Ensino de informática acessível
+                $aluno->tipoAtendimentoEnsinoLibras, // 14 - Ensino da Língua Brasileira de Sinais (Libras)
+                $aluno->tipoAtendimentoEnsinoLinguaPortuguesa, // 15 - Ensino da Língua Portuguesa como Segunda Língua
+                $aluno->tipoAtendimentoEnsinoSoroban, // 16 - Ensino das técnicas do cálculo no Soroban
+                $aluno->tipoAtendimentoEnsinoBraile, // 17 - Ensino de Sistema Braille
+                $aluno->tipoAtendimentoEnsinoOrientacaoMobilidade, // 18 - Ensino de técnicas para orientação e mobilidade
+                $aluno->tipoAtendimentoEnsinoCaa, // 19 - Ensino de uso da Comunicação Alternativa e Aumentativa (CAA)
+                $aluno->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos, // 20 - Ensino de uso de recursos ópticos e não ópticos
+                $aluno->recebeEscolarizacaoOutroEspacao, // 21 - Recebe escolarização em outro espaço (diferente da escola)
+                $aluno->transportePublico, // 22 - Transporte escolar público
+                $aluno->poderPublicoResponsavelTransporte, // 23 - Poder Público responsável pelo transporte escolar
+                $aluno->veiculoTransporteBicicleta, // 24 - Rodoviário - Bicicleta
+                $aluno->veiculoTransporteMicroonibus, // 25 - Rodoviário - Microônibus
+                $aluno->veiculoTransporteOnibus, // 26 - Rodoviário - Ônibus
+                $aluno->veiculoTransporteTracaoAnimal, // 27 - Rodoviário – Tração Animal
+                $aluno->veiculoTransporteVanKonbi, // 28 - Rodoviário - Vans/Kombis
+                $aluno->veiculoTransporteOutro, // 29 - Rodoviário - Outro
+                $aluno->veiculoTransporteAquaviarioCapacidade5, // 30 - Aquaviário - Capacidade de até 5 aluno(a)s
+                $aluno->veiculoTransporteAquaviarioCapacidade5a15, // 31 - Aquaviário - Capacidade entre 5 a 15 aluno(a)s
+                $aluno->veiculoTransporteAquaviarioCapacidade15a35, // 32 - Aquaviário - Capacidade entre 15 a 35 aluno(a)s
+                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35, // 33 - Aquaviário - Capacidade acima de 35 aluno(a)s
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
