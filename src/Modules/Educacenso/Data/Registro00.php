@@ -118,9 +118,9 @@ class Registro00 extends AbstractRegistro
             $record->cnpjEscolaPrivada, // 48	Número do CNPJ da escola privada
             $record->regulamentacao, // 49	Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educaçãof
             $record->esferaAdministrativa, // 50	Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização
-            $record->unidadeVinculada, // 50	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
-            $record->inepEscolaSede, // 51	Código da Escola Sede
-            $record->codigoIes, // 52	Código da IES
+            $record->unidadeVinculada, // 51	Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
+            $record->inepEscolaSede, // 52	Código da Escola Sede
+            $record->codigoIes, // 53	Código da IES
         ];
     }
 
