@@ -230,6 +230,8 @@ class Registro20 implements RegistroEducacenso
 
     public $codCursoProfissionalIntinerario;
 
+    public $cargaHorariaTotal;
+
     /**
      * @return bool
      */

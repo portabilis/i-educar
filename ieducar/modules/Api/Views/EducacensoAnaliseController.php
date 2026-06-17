@@ -41,6 +41,7 @@ use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
+use iEducar\Modules\Educacenso\Validator\CargaHorariaTotalValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
@@ -774,6 +775,82 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        // Censo 2026: campos do registro 10 de preenchimento obrigatório
+        if (is_null($escola->exameSelecaoIngresso)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Escola faz exame de seleção para ingresso de seus aluno(a)s foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Escola faz exame de seleção para ingresso de seus aluno(a)s)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if (is_null($escola->compartilhaEspacosAtividadesIntegracao)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Escola compartilha espaços para atividades de integração escola-comunidade foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Escola compartilha espaços para atividades de integração escola-comunidade)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if (is_null($escola->usaEspacosEquipamentosAtividadesRegulares)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Escola usa espaços e equipamentos do entorno escolar para atividades regulares com os aluno(a)s foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Escola usa espaços e equipamentos do entorno escolar para atividades regulares com os aluno(a)s)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if (is_null($escola->projetoPoliticoPedagogico)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Projeto político pedagógico ou a proposta pedagógica da escola atualizado nos últimos 12 meses até a data de referência foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Projeto político pedagógico ou a proposta pedagógica da escola atualizado nos últimos 12 meses até a data de referência)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if (is_null($escola->linguaMinistrada)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Língua em que o ensino é ministrado foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if (empty(array_filter($escola->redeLocal))) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Rede local de interligação de computadores foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        // Censo 2026: restrição das opções da Rede local de interligação de computadores
+        if (($escola->redeLocalACabo() || $escola->redeLocalACaboEWireless()) &&
+            !$escola->possuiComputadores() && empty(array_filter($escola->equipamentosAcessoInternet))) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. As opções A cabo e A cabo e Wireless do campo: Rede local de interligação de computadores só podem ser selecionadas quando Computadores for selecionado no campo: Equipamentos da escola ou quando o campo: Equipamentos que os aluno(a)s usam para acessar a internet da escola não for nulo.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        if (($escola->redeLocalWireless() || $escola->redeLocalACaboEWireless()) &&
+            !$escola->equipamentosAcessoInternetDispositivosPessoais() && !$escola->equipamentosAcessoInternetAmbos()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. As opções Wireless e A cabo e Wireless do campo: Rede local de interligação de computadores só podem ser selecionadas quando o campo: Equipamentos que os aluno(a)s usam para acessar a internet da escola for preenchido com Dispositivos pessoais ou Computadores de mesa, portáteis e tablets da escola e Dispositivos pessoais.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
         return ['mensagens' => $mensagem,
             'title' => 'Análise exportação - Registro 10'];
     }
@@ -1115,6 +1192,22 @@ class EducacensoAnaliseController extends ApiCoreController
                         'fail' => true,
                     ];
                 }
+            }
+
+            // Censo 2026: carga horária total do curso, mesma regra do cadastro de turma (CheckMandatoryCensoFields)
+            $cargaHorariaTotalValidator = new CargaHorariaTotalValidator(
+                $turma->itinerarioFormacaoTecnicaProfissional(),
+                $turma->cargaHorariaTotal,
+                $turma->tipoCursoIntinerario
+            );
+
+            if (!$cargaHorariaTotalValidator->isValid()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola}: " . $cargaHorariaTotalValidator->getMessage(),
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Carga horária total do curso (em horas))',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true,
+                ];
             }
 
             if ($curricularEtapaEnsino && is_null($turma->classeEspecial)) {
