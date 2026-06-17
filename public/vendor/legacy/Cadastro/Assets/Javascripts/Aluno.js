@@ -2657,6 +2657,7 @@ function canShowParentsFields() {
       datanasc.val(person_details.data_nascimento);
       estadocivil.val(person_details.estadocivil);
       sexo.val(person_details.sexo);
+      cpfAluno.val(person_details.cpf || "");
 
       if (person_details.idmun_nascimento) {
         $j("#naturalidade_aluno_id").val(
@@ -2842,6 +2843,7 @@ function canShowParentsFields() {
         "checked",
         window[parentType + "_details"].falecido
       );
+      cpfParent.val(window[parentType + "_details"].cpf || "");
 
       if (parentType == "responsavel") {
         $j("#falecido-modal").hide();
