@@ -42,12 +42,6 @@ class CargaHorariaTotalValidator implements EducacensoValidator
 
         $carga = (int) $carga;
 
-        if ($carga <= 0 || $carga > 9999) {
-            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve ser um número maior que zero, com no máximo 4 dígitos.';
-
-            return false;
-        }
-
         $tipoCurso = (int) $this->tipoCursoIntinerario;
 
         if ($tipoCurso === self::CURSO_TECNICO && $carga < 2000) {

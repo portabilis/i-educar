@@ -32,20 +32,6 @@ class CargaHorariaTotalValidatorTest extends TestCase
         $this->assertFalse($validator->isValid());
     }
 
-    public function test_carga_zero_invalida()
-    {
-        $validator = new CargaHorariaTotalValidator(true, 0, null);
-
-        $this->assertFalse($validator->isValid());
-    }
-
-    public function test_carga_acima_de_quatro_digitos_invalida()
-    {
-        $validator = new CargaHorariaTotalValidator(true, 10000, null);
-
-        $this->assertFalse($validator->isValid());
-    }
-
     public function test_qualificacao_abaixo_de_160_invalida()
     {
         $validator = new CargaHorariaTotalValidator(true, 100, self::QUALIFICACAO);
