@@ -146,9 +146,9 @@ class Registro10 extends AbstractRegistro
             $data->usoInternetAlunos() ?: 0, // 113	Para uso dos aluno(a)s
             $data->usoInternetComunidade() ?: 0, // 114	Para uso da comunidade
             $data->usoInternetNaoPossui() ?: 0, // 115 Não possui acesso à internet
-            $data->equipamentosAcessoInternet ?: 0, // 116	Equipamentos que os alunos usam para acessar a internet da escola
+            $data->equipamentosAcessoInternet[0] ?: 0, // 116	Equipamentos que os alunos usam para acessar a internet da escola
             $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 117 Internet banda larga
-            $data->redeLocal ?: 0, // 118 Rede local de interligação de computadores
+            $data->redeLocal[0] ?: 0, // 118 Rede local de interligação de computadores
             $data->semFuncionariosParaFuncoes ? null : $data->qtdAgronomosHorticultores, // 119	Agrônomos(as), horticultores(as), técnicos ou monitores(as) responsáveis pela gestão da área de horta, plantio e/ou produção agrícola
             $data->semFuncionariosParaFuncoes ? null : $data->qtdAssistenteSocial, // 120 Assistente social
             $data->semFuncionariosParaFuncoes ? null : $data->qtdAuxiliarAdministrativo, // 121	Auxiliares de secretaria ou auxiliares administrativos, atendentes
