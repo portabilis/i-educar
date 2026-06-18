@@ -55,10 +55,9 @@ return new class extends clsDetalhe
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         if ($registro['ref_idpes']) {
-            $obj_escola = new clsPessoa_(int_idpes: $registro['ref_idpes']);
-            $obj_escola_det = $obj_escola->detalhe();
-            $url = $obj_escola_det['url'];
-            $email = $obj_escola_det['email'];
+            $pessoa = LegacyPerson::find($registro['ref_idpes'], ['idpes', 'url', 'email']);
+            $url = $pessoa?->url;
+            $email = $pessoa?->email;
             $nm_escola = LegacyOrganization::whereKey($registro['ref_idpes'])->value('fantasia');
 
             $place = PersonHasPlace::query()

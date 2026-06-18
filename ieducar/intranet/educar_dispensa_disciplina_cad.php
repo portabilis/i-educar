@@ -5,6 +5,7 @@ use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionStage;
 use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyStageType;
 use App\Services\Exemption\ExemptionService;
 
@@ -334,8 +335,9 @@ return new class extends clsCadastro
         // Pega etapas definidas na escola
         $dadosAnoLetivoMod = LegacyAcademicYearStage::query()->whereSchool($escolaId)->whereYearEq($ano)->get();
         // Pega etapas definida na turma
-        $objTurmaModulo = new clsPmieducarTurmaModulo;
-        $dadosTurmaModulo = $objTurmaModulo->lista($dadosMatriculaTurma[0]['ref_cod_turma']);
+        $dadosTurmaModulo = LegacySchoolClassStage::query()
+            ->whereSchoolClass($dadosMatriculaTurma[0]['ref_cod_turma'])
+            ->get(['ref_cod_modulo', 'sequencial']);
         // Define de onde as etapas serão pegas
         if ($padraoAnoEscolar == 1) {
             $dadosEtapa = $dadosAnoLetivoMod;

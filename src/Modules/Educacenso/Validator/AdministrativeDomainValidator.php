@@ -62,30 +62,14 @@ class AdministrativeDomainValidator implements EducacensoValidator
         }
 
         /**
-         * Se a dependência administrativa da escola for: 3 (Municipal)
-         * a esfera administrativa deve ser 2, 4 ou 5
-         */
-        if (
-            $this->administrativeDependence == DependenciaAdministrativaEscola::MUNICIPAL &&
-            !in_array($this->administrativeDomain, [
-                EsferaAdministrativa::ESTADUAL,
-                EsferaAdministrativa::ESTADUAL_E_MUNICIPAL,
-                EsferaAdministrativa::FEDERAL_E_ESTADUAL,
-            ])
-        ) {
-            return false;
-        }
-
-        /**
          * Se o município da escola for: Brasília
-         * a esfera administrativa não pode ser 2, 4 ou 5
+         * a esfera administrativa não pode ser 3 (Municipal) ou 4 (Estadual e Municipal)
          */
         if (
             $this->cityIbgeCode == self::BRASILIA &&
             in_array($this->administrativeDomain, [
-                EsferaAdministrativa::ESTADUAL,
+                EsferaAdministrativa::MUNICIPAL,
                 EsferaAdministrativa::ESTADUAL_E_MUNICIPAL,
-                EsferaAdministrativa::FEDERAL_E_ESTADUAL,
             ])
         ) {
             return false;

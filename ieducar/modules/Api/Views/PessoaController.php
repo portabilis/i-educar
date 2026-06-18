@@ -2,6 +2,7 @@
 
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\PersonHasPlace;
 use App\Services\PhoneService;
@@ -555,23 +556,23 @@ class PessoaController extends ApiCoreController
 
     protected function createOrUpdatePessoa($pessoaId = null)
     {
-        $pessoa = new clsPessoa_;
-        $pessoa->idpes = $pessoaId;
-        $pessoa->nome = $this->getRequest()->nome;
+        $nome = $this->getRequest()->nome;
 
-        $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
-
-        if (!$pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
-            $pessoa->tipo = 'F';
-            $pessoa->idpes_cad = $this->currentUserId();
-            $pessoaId = $pessoa->cadastra();
-        } else {
-            $pessoa->idpes_rev = $this->currentUserId();
-            $pessoa->data_rev = date('Y-m-d H:i:s', time());
-            $pessoa->edita();
+        if (!$nome) {
+            return $pessoaId;
         }
 
-        return $pessoaId;
+        $dados = ['nome' => $nome];
+
+        if ($pessoaId && LegacyPerson::whereKey($pessoaId)->exists()) {
+            LegacyPerson::find($pessoaId)?->update($dados);
+
+            return $pessoaId;
+        }
+
+        $dados['tipo'] = 'F';
+
+        return LegacyPerson::create($dados)->idpes;
     }
 
     protected function createOrUpdatePessoaFisica($pessoaId)

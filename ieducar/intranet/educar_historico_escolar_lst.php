@@ -118,6 +118,8 @@ return new class extends clsListagem
                                          ORDER BY data_cadastro DESC
                                          LIMIT 1;");
 
+        $historicoRestringido = false;
+
         if ($escolaAluno) {
             $historicoRestringido = $db->CampoUnico("SELECT restringir_historico_escolar
                                                        FROM pmieducar.instituicao
@@ -130,7 +132,6 @@ return new class extends clsListagem
         $usuarioEscolaAluno = $escolasUsuario->contains($escolaAluno);
 
         $permissaoCadastra = $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
-        $historicoRestringido = Portabilis_Date_Utils::brToPgSQL($historico_restringido);
         $nivelUsuarioSuperior = ($this->nivel_usuario == 1 || $this->nivel_usuario == 2);
 
         if ($permissaoCadastra && ($nivelUsuarioSuperior || !$historicoRestringido || $usuarioEscolaAluno)) {

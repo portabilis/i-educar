@@ -16,20 +16,25 @@ class EnrollmentInepController extends Controller
 
         $this->menu(578); // dd($enrollment->toArray());
 
-        return view('enrollments.enrollmentInep', compact('enrollment'));
+        $podePreencherCargaHoraria = $enrollment->schoolClass->permiteCargaHorariaIntegralizada();
+
+        return view('enrollments.enrollmentInep', compact('enrollment', 'podePreencherCargaHoraria'));
     }
 
     public function update(Request $request, LegacyEnrollment $enrollment)
     {
-        if ($request->has('desconsiderar_educacenso')) {
-            $enrollment->update([
-                'desconsiderar_educacenso' => true,
-            ]);
-        } else {
-            $enrollment->update([
-                'desconsiderar_educacenso' => false,
-            ]);
-        }
+        $cargaHorariaIntegralizada = $request->input('carga_horaria_integralizada');
+        $cargaHorariaIntegralizada = $enrollment->schoolClass->permiteCargaHorariaIntegralizada()
+            && is_numeric($cargaHorariaIntegralizada)
+            && $cargaHorariaIntegralizada >= 0
+            && $cargaHorariaIntegralizada <= 9999
+                ? (int) $cargaHorariaIntegralizada
+                : null;
+
+        $enrollment->update([
+            'desconsiderar_educacenso' => $request->has('desconsiderar_educacenso'),
+            'carga_horaria_integralizada' => $cargaHorariaIntegralizada,
+        ]);
 
         EnrollmentInep::query()
             ->updateOrCreate(

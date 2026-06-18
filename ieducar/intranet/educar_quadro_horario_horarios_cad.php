@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyCalendarDay;
+use App\Models\LegacyPerson;
 
 return new class extends clsCadastro
 {
@@ -352,6 +353,11 @@ return new class extends clsCadastro
         $this->min_mat = $this->min_ves = $this->min_not = 0;
 
         if (is_array(value: $this->quadro_horario)) {
+            $idsServidores = collect($this->quadro_horario)->pluck('ref_servidor_')->filter('is_numeric')->unique()->all();
+            $nomesPorServidor = $idsServidores
+                ? LegacyPerson::query()->whereIn('idpes', $idsServidores)->pluck('nome', 'idpes')
+                : collect();
+
             foreach ($this->quadro_horario as $campo) {
                 if ($this->excluir_horario == $campo['qtd_horario_']) {
                     $obj_horario = new clsPmieducarQuadroHorarioHorarios;
@@ -475,14 +481,13 @@ return new class extends clsCadastro
                         duplo: true
                     );
 
-                    $obj_pes = new clsPessoa_(int_idpes: $campo['ref_servidor_']);
-                    $det_pes = $obj_pes->detalhe();
+                    $nomeServidor = $nomesPorServidor[$campo['ref_servidor_']] ?? null;
 
                     if (is_numeric(value: $campo['ref_servidor_substituto_'])) {
                         $this->campoTextoInv(
                             nome: $campo['qtd_horario_'] . '_ref_cod_servidor',
                             campo: '',
-                            valor: $det_pes['nome'],
+                            valor: $nomeServidor,
                             tamanhovisivel: 30,
                             tamanhomaximo: 255
                         );
@@ -490,7 +495,7 @@ return new class extends clsCadastro
                         $this->campoTextoInv(
                             nome: $campo['qtd_horario_'] . '_ref_cod_servidor',
                             campo: '',
-                            valor: $det_pes['nome'],
+                            valor: $nomeServidor,
                             tamanhovisivel: 30,
                             tamanhomaximo: 255,
                             descricao2: "<a href='#' onclick=\"getElementById('excluir_horario').value = '{$campo['qtd_horario_']}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>"

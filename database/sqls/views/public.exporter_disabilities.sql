@@ -1,4 +1,4 @@
-create view public.exporter_disabilities as
+create or replace view public.exporter_disabilities as
 select
 	fd.ref_idpes as person_id,
 	string_agg(d.nm_deficiencia, ', ') as disabilities

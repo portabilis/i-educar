@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyBondType;
+use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyPerson;
 
 return new class extends clsCadastro
@@ -217,13 +218,19 @@ return new class extends clsCadastro
         $this->inputsHelper()->date('data_saida', $options);
 
         // Funções
-        $obj_funcoes = new clsPmieducarServidorFuncao;
-
-        $lista_funcoes = $obj_funcoes->funcoesDoServidor($this->ref_ref_cod_instituicao, $this->ref_cod_servidor);
+        $lista_funcoes = LegacyEmployeeRole::query()
+            ->when(is_numeric($this->ref_ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_ref_cod_instituicao))
+            ->when(is_numeric($this->ref_cod_servidor), fn ($q) => $q->whereEmployee($this->ref_cod_servidor))
+            ->join('pmieducar.funcao', 'pmieducar.funcao.cod_funcao', 'pmieducar.servidor_funcao.ref_cod_funcao')
+            ->get([
+                'pmieducar.servidor_funcao.cod_servidor_funcao',
+                'pmieducar.servidor_funcao.matricula',
+                'pmieducar.funcao.nm_funcao as funcao',
+            ]);
 
         $opcoes = ['' => 'Selecione'];
 
-        if ($lista_funcoes) {
+        if ($lista_funcoes->isNotEmpty()) {
             foreach ($lista_funcoes as $funcao) {
                 $opcoes[$funcao['cod_servidor_funcao']] = (!empty($funcao['matricula']) ? "{$funcao['funcao']} - {$funcao['matricula']}" : $funcao['funcao']);
             }

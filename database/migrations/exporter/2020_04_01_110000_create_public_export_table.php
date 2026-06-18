@@ -21,6 +21,7 @@ class CreatePublicExportTable extends Migration
             $table->string('hash')->nullable();
             $table->string('filename')->nullable();
             $table->string('url')->nullable();
+            $table->json('filters')->nullable();
             $table->timestamps();
         });
     }

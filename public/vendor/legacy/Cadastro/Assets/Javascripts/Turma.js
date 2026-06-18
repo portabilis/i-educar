@@ -43,6 +43,7 @@ const ETAPA_AGREGADA_ENSINO_MEDIO = '304';
 
 const ETAPAS_VALIDAS_MEDIACAO_EAD = ['25', '26', '27', '28', '29', '35', '36', '37', '38', '39', '40', '64', '68', '75', '67', '70', '71', '73', '74'];
 const ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP = ['25', '26', '27', '28', '29'];
+const ETAPAS_EIXO_CURSO_PROFISSIONAL = ['67', '68', '73', '75'];
 
 let habilitaFormacaoAlternancia = ()=>{
   const etapasBloqueiamSim = ['1', '2', '3', '4', '14', '15', '16', '17', '18', '56'];
@@ -100,25 +101,53 @@ let verificaHorariosTurnoParcial = ()=>{
 const TIPOS_COM_CURRICULAR = ['0', '9'];
 const TIPOS_COM_ATIVIDADE_COMPLEMENTAR = ['4', '9'];
 
+const FORMAS_ORGANIZACAO_TURMA = {
+  SERIE_ANO: '1',
+  SEMESTRAL: '2',
+  CICLOS: '3',
+  NAO_SERIADO: '4',
+  MODULES: '5',
+  ALTERNANCIA_REGULAR: '6',
+};
+
+const ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO = {
+  [FORMAS_ORGANIZACAO_TURMA.SERIE_ANO]:   ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','67','68','69','70','71','72','73','74','75'],
+  [FORMAS_ORGANIZACAO_TURMA.SEMESTRAL]:   ['25','26','27','28','29','35','36','37','38','39','40','64','67','68','69','70','71','72','73','74','75'],
+  [FORMAS_ORGANIZACAO_TURMA.CICLOS]:      ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','41','56'],
+  [FORMAS_ORGANIZACAO_TURMA.NAO_SERIADO]: ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','67','68','69','70','71','72','73','74','75'],
+  [FORMAS_ORGANIZACAO_TURMA.MODULES]:     ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','67','68','69','70','71','72','73','74','75'],
+  [FORMAS_ORGANIZACAO_TURMA.ALTERNANCIA_REGULAR]: ['19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','64','67','68','69','70','71','72','73','74','75'],
+};
+
 let habilitaFormaOrganizacaoTurma = ()=> {
   const etapasInvalidas = ['1', '2', '3', '24', '62'];
   const tipoAtendimento = $j('#tipo_atendimento').val();
   const escolarizacao = TIPOS_COM_CURRICULAR.includes(tipoAtendimento);
-  const etapaEducacenso = $j('#etapa_educacenso').val()
+  const etapaEducacenso = $j('#etapa_educacenso').val();
+  const $campo = $j('#formas_organizacao_turma');
 
-  $j('#formas_organizacao_turma').makeUnrequired();
-  if (obrigarCamposCenso &&
-      escolarizacao &&
-      etapaEducacenso &&
-     !etapasInvalidas.includes(etapaEducacenso)
-  ) {
-    $j('#formas_organizacao_turma').makeRequired();
-  }
-
-  $j("#formas_organizacao_turma").prop('disabled', false);
+  $campo.makeUnrequired();
+  $campo.find('option').prop('disabled', false);
 
   if (!escolarizacao || !etapaEducacenso || etapasInvalidas.includes(etapaEducacenso)) {
-    $j("#formas_organizacao_turma").prop('disabled', true).val("");
+    $campo.prop('disabled', true).val('');
+    return;
+  }
+
+  $campo.prop('disabled', false);
+  if (obrigarCamposCenso) {
+    $campo.makeRequired();
+  }
+
+  Object.entries(ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO).forEach(([forma, etapasValidas]) => {
+    if (!etapasValidas.includes(etapaEducacenso)) {
+      $campo.find(`option[value="${forma}"]`).prop('disabled', true);
+    }
+  });
+
+  const valorAtual = $campo.val();
+  if (valorAtual && ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO[valorAtual] && !ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO[valorAtual].includes(etapaEducacenso)) {
+    $campo.val('');
   }
 }
 
@@ -186,6 +215,7 @@ $j('#etapa_educacenso').change(function() {
   habilitaCursoTecnico();
   habilitaFormaOrganizacaoTurma();
   habilitaFormacaoAlternancia();
+  habilitaEixoCursoProfissional();
 });
 
 function habilitaAtividadesComplementares(){
@@ -221,6 +251,20 @@ function habilitaCursoTecnico() {
   }
 
   $j('#cod_curso_profissional').trigger('change');
+}
+
+function habilitaEixoCursoProfissional() {
+  var mostraCampo = $j.inArray($j('#etapa_educacenso').val(), ETAPAS_EIXO_CURSO_PROFISSIONAL) != -1;
+  $j('#cod_eixo_curso_profissional').makeUnrequired();
+  if (mostraCampo) {
+    $j('#cod_eixo_curso_profissional').prop('disabled', false);
+    if (obrigarCamposCenso) {
+      $j('#cod_eixo_curso_profissional').makeRequired();
+    }
+  } else {
+    $j('#cod_eixo_curso_profissional').val('');
+    $j('#cod_eixo_curso_profissional').prop('disabled', true);
+  }
 }
 
 function validaHorarioInicialFinal() {
@@ -683,6 +727,7 @@ $j(document).ready(function() {
       habilitaFormaOrganizacaoTurma();
       habilitaCodigoCursoTecnico();
       habilitaCargaHorariaTotal();
+      habilitaEixoCursoProfissional();
       habilitaFormacaoAlternancia();
     });
 

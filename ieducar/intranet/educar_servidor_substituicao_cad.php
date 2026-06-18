@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyPerson;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -120,10 +122,8 @@ return new class extends clsCadastro
             }
         }
 
-        if ($this->ref_cod_servidor) {
-            $objPessoa = new clsPessoa_(int_idpes: $this->ref_cod_servidor);
-            $detalhePessoa = $objPessoa->detalhe();
-            $nm_servidor = $detalhePessoa['nome'];
+        if (is_numeric($this->ref_cod_servidor)) {
+            $nm_servidor = LegacyPerson::query()->whereKey($this->ref_cod_servidor)->value('nome');
         }
 
         $this->campoRotulo(nome: 'nm_servidor', campo: 'Servidor', valor: $nm_servidor);

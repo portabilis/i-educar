@@ -6,6 +6,7 @@ use App\Models\Builders\LegacySchoolClassBuilder;
 use App\Models\Enums\DayOfWeek;
 use App\Models\View\Discipline;
 use Carbon\Carbon;
+use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -125,6 +126,7 @@ class LegacySchoolClass extends Model
         'aee_lingua_escrita',
         'aee_autonomia',
         'cod_curso_profissional',
+        'cod_eixo_curso_profissional',
         'carga_horaria_total',
         'etapa_educacenso',
         'ref_cod_disciplina_dispensada',
@@ -644,5 +646,19 @@ class LegacySchoolClass extends Model
     public function inep(): HasOne
     {
         return $this->hasOne(SchoolClassInep::class, 'cod_turma');
+    }
+
+    /**
+     * Indica se a turma permite preencher a carga horária integralizada do aluno
+     * na enturmação (Registro 60). Liberado quando a turma tem itinerário de
+     * formação técnica e profissional (IFTP) ou está em etapa de curso técnico/FIC.
+     */
+    public function permiteCargaHorariaIntegralizada(): bool
+    {
+        $organizacaoCurricular = array_map('intval', (array) transformStringFromDBInArray($this->organizacao_curricular));
+        $temIftp = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
+        $etapaValida = in_array((int) $this->etapa_educacenso, [39, 40, 67, 68, 73, 75], strict: true);
+
+        return $temIftp || $etapaValida;
     }
 }

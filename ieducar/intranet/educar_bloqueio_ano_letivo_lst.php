@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolYearLock;
+
 return new class extends clsListagem
 {
     public $pessoa_logada;
@@ -7,8 +9,6 @@ return new class extends clsListagem
     public $titulo;
 
     public $limite;
-
-    public $offset;
 
     public $ref_instituicao;
 
@@ -42,21 +42,22 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj = new clsPmieducarBloqueioAnoLetivo;
-        $obj->setOrderby(strNomeCampo: 'instituicao ASC, ref_ano DESC');
-        $obj->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $query = LegacySchoolYearLock::query()
+            ->join('pmieducar.instituicao', 'pmieducar.instituicao.cod_instituicao', '=', 'pmieducar.bloqueio_ano_letivo.ref_cod_instituicao')
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+            ->when(is_numeric($this->ref_ano), fn ($q) => $q->whereYear($this->ref_ano))
+            ->orderBy('pmieducar.instituicao.nm_instituicao')
+            ->orderBy('pmieducar.bloqueio_ano_letivo.ref_ano', 'desc')
+            ->select('pmieducar.bloqueio_ano_letivo.*', 'pmieducar.instituicao.nm_instituicao as instituicao');
 
-        $lista = $obj->lista(
-            ref_cod_instituicao: $this->ref_cod_instituicao,
-            ref_ano: $this->ref_ano
-        );
+        $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $total = $obj->_total;
+        $lista = $result->getCollection();
+        $total = $result->total();
 
         // monta a lista
-        if (is_array(value: $lista) && count(value: $lista)) {
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
                 $data_inicio = dataToBrasil(data_original: $registro['data_inicio']);
                 $data_fim = dataToBrasil(data_original: $registro['data_fim']);

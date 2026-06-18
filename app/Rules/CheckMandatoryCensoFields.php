@@ -52,6 +52,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCargaHorariaTotal($params)) {
                 return false;
             }
+            if (!$this->validaEixoCursoProfissional($params)) {
+                return false;
+            }
         }
 
         return true;
@@ -263,6 +266,24 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
+    protected function validaEixoCursoProfissional($params)
+    {
+        $etapasEixo = [67, 68, 73, 75];
+
+        if (!isset($params->etapa_educacenso)
+            || !in_array((int) $params->etapa_educacenso, $etapasEixo, true)) {
+            return true;
+        }
+
+        if ($params->cod_eixo_curso_profissional === null || $params->cod_eixo_curso_profissional === '') {
+            $this->message = 'O campo: <b>Código do eixo do curso de qualificação profissional</b> é obrigatório quando o campo: <b>Etapa de ensino</b> for de qualificação profissional (67, 68, 73 ou 75).';
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function validaCampoOrganizacaoCurricularDaTurma(mixed $params)
     {
         $organizacaoCurricular = $this->getOrganizacaoCurricularValues($params);
@@ -327,23 +348,27 @@ class CheckMandatoryCensoFields implements Rule
             3 => 'Ciclo(s)',
             4 => 'Grupos não seriados com base na idade ou competência',
             5 => 'Módulos',
+            6 => 'Turma de Formação por alternância (alternância regular de períodos de estudos)',
         ];
 
         $validOptionCorrelationForEtapaEnsino = [
             FormaOrganizacaoTurma::SERIE_ANO => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 41, 56, 64, 68, 69, 70, 71, 72, 73, 74,
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 41, 56, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
             FormaOrganizacaoTurma::SEMESTRAL => [
-                25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 69, 70, 71, 72, 73, 74,
+                25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
             FormaOrganizacaoTurma::CICLOS => [
                 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56,
             ],
             FormaOrganizacaoTurma::NAO_SERIADO => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 69, 70, 71, 72, 73, 74,
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
             FormaOrganizacaoTurma::MODULES => [
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 56, 68, 69, 70, 71, 72, 73, 74,
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 56, 67, 68, 69, 70, 71, 72, 73, 74, 75,
+            ],
+            FormaOrganizacaoTurma::ALTERNANCIA_REGULAR => [
+                19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 41, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
         ];
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolYearLock;
+
 return new class extends clsDetalhe
 {
     public $titulo;
@@ -19,8 +21,14 @@ return new class extends clsDetalhe
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
         $this->ref_ano = $_GET['ref_ano'];
 
-        $tmp_obj = new clsPmieducarBloqueioAnoLetivo(ref_cod_instituicao: $this->ref_cod_instituicao, ref_ano: $this->ref_ano);
-        $registro = $tmp_obj->detalhe();
+        $registro = null;
+        if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano)) {
+            $registro = LegacySchoolYearLock::query()
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->whereYear($this->ref_ano)
+                ->join('pmieducar.instituicao', 'pmieducar.instituicao.cod_instituicao', '=', 'pmieducar.bloqueio_ano_letivo.ref_cod_instituicao')
+                ->first(['pmieducar.bloqueio_ano_letivo.*', 'pmieducar.instituicao.nm_instituicao as instituicao']);
+        }
 
         if (!$registro) {
             $this->simpleRedirect(url: 'educar_bloqueio_ano_letivo_lst.php');
