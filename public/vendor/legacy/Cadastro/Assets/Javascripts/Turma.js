@@ -39,9 +39,7 @@ let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 const ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA = '5';
 const ORGANIZACAO_CURRICULAR_FORMACAO_GERAL_BASICA = '1';
-const ETAPA_AGREGADA_ENSINO_MEDIO = '304';
 
-const ETAPAS_VALIDAS_MEDIACAO_EAD = ['25', '26', '27', '28', '29', '35', '36', '37', '38', '39', '40', '64', '68', '75', '67', '70', '71', '73', '74'];
 const ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP = ['25', '26', '27', '28', '29'];
 const ETAPAS_EIXO_CURSO_PROFISSIONAL = ['67', '68', '73', '75'];
 
@@ -191,6 +189,7 @@ $j('#tipo_atendimento').change(function() {
   habilitaFormaOrganizacaoTurma();
   habilitaEtapaAgregada();
   habilitaClasseEspecial();
+  verificaOpcoesEtapaEducacenso();
 });
 
 $j('#organizacao_curricular').change(function() {
@@ -363,22 +362,55 @@ function habilitaEtapaEducacenso() {
   $j("#etapa_educacenso").trigger('change');
 }
 
+function etapasPermitidasAnexo7(mediacao, tipoAtendimento, etapaAgregada, temFormacaoGeralBasica) {
+  const curricular = tipoAtendimento === '0';
+  const curricularComAtividadeComplementar = tipoAtendimento === '9';
+
+  if (mediacao === TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.EDUCACAO_A_DISTANCIA && curricular) {
+    if (etapaAgregada === '304') return temFormacaoGeralBasica ? ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP : null;
+    if (etapaAgregada === '306') return ['71', '74', '67'];
+    if (etapaAgregada === '308') return ['39', '40', '64', '68', '75'];
+    return null;
+  }
+
+  if (mediacao === TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.SEMIPRESENCIAL && curricular) {
+    if (etapaAgregada === '306') return ['69', '70', '71', '72'];
+    return null;
+  }
+
+  if (mediacao === TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.PRESENCIAL && curricular) {
+    if (etapaAgregada === '301') return ['1', '2', '3'];
+    if (etapaAgregada === '302') return ['14', '15', '16', '17', '18', '19', '20', '21', '41'];
+    if (etapaAgregada === '303') return ['22', '23', '56'];
+    if (etapaAgregada === '304') return temFormacaoGeralBasica ? ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP : null;
+    if (etapaAgregada === '305') return temFormacaoGeralBasica ? ['35', '36', '37', '38'] : null;
+    if (etapaAgregada === '306') return ['69', '70', '72', '71', '74', '73', '67'];
+    if (etapaAgregada === '308') return ['39', '40', '64', '68', '75'];
+    return null;
+  }
+
+  if (curricularComAtividadeComplementar) {
+    if (etapaAgregada === '302') return ['14', '15', '16', '17', '18', '19', '20', '21', '41'];
+    if (etapaAgregada === '303') return ['22', '23'];
+    if (etapaAgregada === '304') return temFormacaoGeralBasica ? ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP : null;
+    if (etapaAgregada === '305') return temFormacaoGeralBasica ? ['35', '36', '37', '38'] : null;
+    return null;
+  }
+
+  return null;
+}
+
 function verificaOpcoesEtapaEducacenso() {
   const $campo = $j('#etapa_educacenso');
   $campo.find('option').prop('disabled', false);
 
   const mediacao = +$j('#tipo_mediacao_didatico_pedagogico').val();
+  const tipoAtendimento = $j('#tipo_atendimento').val();
   const organizacaoCurricular = $j('#organizacao_curricular').val() || [];
   const etapaAgregada = $j('#etapa_agregada').val();
   const temFormacaoGeralBasica = organizacaoCurricular.includes(ORGANIZACAO_CURRICULAR_FORMACAO_GERAL_BASICA);
-  const temItinerarioFormacaoTecnica = organizacaoCurricular.includes(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA);
 
-  let etapasPermitidas = null;
-  if (mediacao === TIPO_MEDIACAO_DIDATICO_PEDAGOGICO.EDUCACAO_A_DISTANCIA) {
-    etapasPermitidas = ETAPAS_VALIDAS_MEDIACAO_EAD;
-  } else if (etapaAgregada === ETAPA_AGREGADA_ENSINO_MEDIO && temFormacaoGeralBasica && !temItinerarioFormacaoTecnica) {
-    etapasPermitidas = ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP;
-  }
+  const etapasPermitidas = etapasPermitidasAnexo7(mediacao, tipoAtendimento, etapaAgregada, temFormacaoGeralBasica);
 
   if (!etapasPermitidas) {
     return;
