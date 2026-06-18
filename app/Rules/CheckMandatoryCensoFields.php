@@ -218,7 +218,7 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
-    protected function validaCargaHorariaTotal($params)
+    public function validaCargaHorariaTotal($params)
     {
         $organizacaoCurricular = array_map('intval', (array) $this->getOrganizacaoCurricularValues($params));
         $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
@@ -229,10 +229,9 @@ class CheckMandatoryCensoFields implements Rule
 
         $carga = $params->carga_horaria_total;
 
+        // Censo 2026: carga horária total deixou de ser obrigatória; sem valor não bloqueia
         if ($carga === null || $carga === '') {
-            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> é obrigatório quando o campo: <b>Organização curricular da turma</b> incluir: <b>Itinerário de formação técnica e profissional</b>.';
-
-            return false;
+            return true;
         }
 
         $carga = (int) $carga;
