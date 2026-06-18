@@ -816,6 +816,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $tipoAtendimento = $turma->tipoAtendimento;
             $atividadeComplementar = in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento); // Código 4 fixo no cadastro de turma
             $curricularEtapaEnsino = in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $tipoAtendimento);
+            $curricularComAtividadeComplementar = in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR, $tipoAtendimento);
             $existeAtividadeComplementar = !empty(array_filter($turma->atividadesComplementares));
 
             $chaveTurma = "{$nomeTurma}|{$turma->tipoMediacaoDidaticoPedagogico}|{$turma->horaInicial}|{$turma->horaFinal}|{$turma->tipoAtendimento}|{$turma->localFuncionamentoDiferenciado}|{$turma->modalidadeCurso}|{$turma->etapaEducacenso}";
@@ -1071,14 +1072,51 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
+            if ($curricularComAtividadeComplementar && !is_null($turma->etapaAgregada) && !in_array($turma->etapaAgregada, [EtapaAgregada::ENSINO_FUNDAMENTAL, EtapaAgregada::MULTI_CORRECAO_FLUXO, EtapaAgregada::ENSINO_MEDIO, EtapaAgregada::ENSINO_MEDIO_NORMAL_MAGISTERIO])) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de turma {$nomeTurma} é Curricular (etapa de ensino) com Atividade Complementar, portanto a etapa agregada deve ser Ensino Fundamental, Multi e correção de fluxo, Ensino Médio ou Ensino Médio - Normal/ Magistério.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa agregada)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true,
+                ];
+            }
+
+            if ($turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL && $curricularEtapaEnsino && !is_null($turma->etapaAgregada) && !in_array($turma->etapaAgregada, [EtapaAgregada::EDUCACAO_JOVENS_ADULTOS])) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação da turma {$nomeTurma} é semipresencial, portanto a etapa agregada deve ser obrigatoriamente Educação de Jovens e Adultos (EJA).",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa agregada)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true,
+                ];
+            }
+
+            if ($turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && $curricularEtapaEnsino && !is_null($turma->etapaAgregada) && !in_array($turma->etapaAgregada, [EtapaAgregada::ENSINO_MEDIO, EtapaAgregada::EDUCACAO_JOVENS_ADULTOS, EtapaAgregada::CURSO_TECNICO_FIC])) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a etapa agregada deve ser Ensino Médio, Educação de Jovens e Adultos (EJA) ou Curso Técnico e Qualificação Profissional (Curso FIC).",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa agregada)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true,
+                ];
+            }
+
+            if (($atividadeComplementar || in_array(TipoAtendimentoTurma::AEE, $tipoAtendimento)) && !$curricularEtapaEnsino && !$curricularComAtividadeComplementar && !is_null($turma->etapaAgregada)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a etapa agregada da turma {$nomeTurma} foi informada, porém o tipo de turma (Atividade Complementar ou Atendimento Educacional Especializado) não permite etapa agregada.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa agregada)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true,
+                ];
+            }
+
             if (
                 ($turma->etapaAgregada === 301 && !in_array($turma->etapaEducacenso, [1, 2, 3])) ||
                     ($turma->etapaAgregada === 302 && !in_array($turma->etapaEducacenso, [14, 15, 16, 17, 18, 19, 20, 21, 41])) ||
-                        ($turma->etapaAgregada === 303 && !in_array($turma->etapaEducacenso, [22, 23, 56])) ||
+                        ($turma->etapaAgregada === 303 && $curricularEtapaEnsino && !in_array($turma->etapaEducacenso, [22, 23, 56])) ||
+                        ($turma->etapaAgregada === 303 && $curricularComAtividadeComplementar && !in_array($turma->etapaEducacenso, [22, 23])) ||
                             ($turma->etapaAgregada === 304 && !in_array($turma->etapaEducacenso, [25, 26, 27, 28, 29]) && $turma->formacaoGeralBasica()) ||
                                 ($turma->etapaAgregada === 305 && !in_array($turma->etapaEducacenso, [35, 36, 37, 38]) && $turma->formacaoGeralBasica()) ||
                                     ($turma->etapaAgregada === 306 && !in_array($turma->etapaEducacenso, [69, 70, 72, 71, 74, 73, 67])) ||
-                                        ($turma->etapaAgregada === 308 && !in_array($turma->etapaEducacenso, [39, 40, 64, 68]))
+                                        ($turma->etapaAgregada === 308 && !in_array($turma->etapaEducacenso, [39, 40, 64, 68, 75]))
             ) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a etapa de ensino da turma {$nomeTurma} foi informada de forma condizente com a etapa agregada.",
@@ -1133,7 +1171,9 @@ class EducacensoAnaliseController extends ApiCoreController
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true,
                 ];
-            } elseif ($turma->formacaoGeralBasica()) {
+            }
+
+            if (!is_null($turma->etapaEducacenso)) {
                 $valid = true;
                 $opcoesEtapaEducacenso = '';
 
@@ -1146,8 +1186,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
                         break;
                     case App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA:
-                        if (!in_array($turma->etapaEducacenso, [25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 67, 70, 71, 73])) {
-                            $opcoesEtapaEducacenso = '25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 67, 70, 71, 73';
+                        if (!in_array($turma->etapaEducacenso, [25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74, 75])) {
+                            $opcoesEtapaEducacenso = '25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74 ou 75';
                             $valid = false;
                         }
 
