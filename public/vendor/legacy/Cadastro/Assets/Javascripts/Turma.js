@@ -477,9 +477,6 @@ function habilitaCargaHorariaTotal() {
 
   if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA)) {
     $j('#carga_horaria_total').prop('disabled', false);
-    if (obrigarCamposCenso) {
-      $j('#carga_horaria_total').makeRequired();
-    }
   } else {
     $j('#carga_horaria_total').val('');
   }
