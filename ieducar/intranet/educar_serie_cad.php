@@ -265,6 +265,10 @@ return new class extends clsCadastro
             return false;
         }
 
+        if ($this->possuiFaixaEtariaInvalida()) {
+            return false;
+        }
+
         if ($this->regras_avaliacao_id === null) {
             $this->mensagem = 'Regra de avaliação não cadastrada';
 
@@ -319,6 +323,10 @@ return new class extends clsCadastro
         if ($this->carga_horaria === null) {
             $this->mensagem = 'Carga horária inválida.';
 
+            return false;
+        }
+
+        if ($this->possuiFaixaEtariaInvalida()) {
             return false;
         }
 
@@ -391,6 +399,25 @@ return new class extends clsCadastro
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
+
+        return false;
+    }
+
+    protected function possuiFaixaEtariaInvalida()
+    {
+        $campos = [
+            'idade_ideal' => 'Idade padrão',
+            'idade_inicial' => 'Idade inicial',
+            'idade_final' => 'Idade final',
+        ];
+
+        foreach ($campos as $campo => $label) {
+            if ($this->$campo !== null && $this->$campo !== '' && (int) $this->$campo < 0) {
+                $this->mensagem = "$label deve ser maior ou igual a zero.";
+
+                return true;
+            }
+        }
 
         return false;
     }
