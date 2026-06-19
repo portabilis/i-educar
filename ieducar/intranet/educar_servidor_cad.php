@@ -886,11 +886,19 @@ JS;
         $this->deletaFuncoesDoServidor();
     }
 
+    /**
+     * Remove fisicamente as faltas/atrasos do servidor.
+     *
+     * A remoção precisa ser física e abranger os inativos, pois logo em seguida
+     * a exclusão das funções faz hard delete em servidor_funcao. Registros de
+     * falta_atraso apenas marcados como inativos violariam a chave estrangeira.
+     */
     public function excluiFaltaAtraso()
     {
         LegacyAbsenceDelay::query()
+            ->withTrashed()
             ->where('ref_cod_servidor', $this->cod_servidor)
-            ->delete();
+            ->forceDelete();
     }
 
     /**
