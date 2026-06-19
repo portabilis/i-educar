@@ -830,21 +830,21 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        // Censo 2026: restrição das opções da Rede local de interligação de computadores
-        if (($escola->redeLocalACabo() || $escola->redeLocalACaboEWireless()) &&
-            !$escola->possuiComputadores() && empty(array_filter($escola->equipamentosAcessoInternet))) {
+        // Censo 2026: restrição das opções da Rede local de interligação de computadores (mesma regra da tela, #7595)
+        if (($escola->equipamentosAcessoInternetDispositivosPessoais() || $escola->equipamentosAcessoInternetAmbos()) &&
+            ($escola->redeLocalNenhuma() || $escola->redeLocalACabo())) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. As opções A cabo e A cabo e Wireless do campo: Rede local de interligação de computadores só podem ser selecionadas quando Computadores for selecionado no campo: Equipamentos da escola ou quando o campo: Equipamentos que os aluno(a)s usam para acessar a internet da escola não for nulo.",
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que, quando os equipamentos que os aluno(a)s usam para acessar a internet da escola são Dispositivos pessoais ou Computadores de mesa, portáteis e tablets da escola e Dispositivos pessoais, a rede local de interligação de computadores só pode ser Wireless ou A cabo e Wireless.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
             ];
         }
 
-        if (($escola->redeLocalWireless() || $escola->redeLocalACaboEWireless()) &&
-            !$escola->equipamentosAcessoInternetDispositivosPessoais() && !$escola->equipamentosAcessoInternetAmbos()) {
+        if ($escola->quantidadeComputadoresAlunosNaoPreenchida() && empty(array_filter($escola->equipamentosAcessoInternet)) &&
+            ($escola->redeLocalACabo() || $escola->redeLocalACaboEWireless())) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. As opções Wireless e A cabo e Wireless do campo: Rede local de interligação de computadores só podem ser selecionadas quando o campo: Equipamentos que os aluno(a)s usam para acessar a internet da escola for preenchido com Dispositivos pessoais ou Computadores de mesa, portáteis e tablets da escola e Dispositivos pessoais.",
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que, quando não há computadores de uso dos aluno(a)s e os equipamentos que os aluno(a)s usam para acessar a internet da escola não foram informados, a rede local de interligação de computadores não pode ser A cabo ou A cabo e Wireless.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
@@ -1198,12 +1198,13 @@ class EducacensoAnaliseController extends ApiCoreController
             $cargaHorariaTotalValidator = new CargaHorariaTotalValidator(
                 $turma->itinerarioFormacaoTecnicaProfissional(),
                 $turma->cargaHorariaTotal,
-                $turma->tipoCursoIntinerario
+                $turma->tipoCursoIntinerario,
+                $turma->codCursoProfissionalIntinerario
             );
 
             if (!$cargaHorariaTotalValidator->isValid()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola}: " . $cargaHorariaTotalValidator->getMessage(),
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que " . $cargaHorariaTotalValidator->getMessage(),
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Carga horária total do curso (em horas))',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true,
