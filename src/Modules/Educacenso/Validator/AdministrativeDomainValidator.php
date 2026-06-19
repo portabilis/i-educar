@@ -36,41 +36,33 @@ class AdministrativeDomainValidator implements EducacensoValidator
             return true;
         }
 
+        $esferasNaoPermitidas = [
+            EsferaAdministrativa::MUNICIPAL,
+            EsferaAdministrativa::ESTADUAL_E_MUNICIPAL,
+        ];
+
         /**
-         * Se a dependência administrativa da escola for: 2 (Estadual)
-         * a esfera administrativa também deve ser 2
+         * Layout do Censo (campo 50): a esfera administrativa não pode ser
+         * 3 (Municipal) ou 4 (Estadual e Municipal) quando a dependência
+         * administrativa for 1 (Federal) ou 2 (Estadual).
          */
         if (
-            $this->administrativeDependence == DependenciaAdministrativaEscola::ESTADUAL &&
-            $this->administrativeDomain != EsferaAdministrativa::ESTADUAL
+            in_array($this->administrativeDependence, [
+                DependenciaAdministrativaEscola::FEDERAL,
+                DependenciaAdministrativaEscola::ESTADUAL,
+            ]) &&
+            in_array($this->administrativeDomain, $esferasNaoPermitidas)
         ) {
             return false;
         }
 
         /**
-         * Se a dependência administrativa da escola for: 1 (Federal)
-         * a esfera administrativa deve ser 1 ou 2
-         */
-        if (
-            $this->administrativeDependence == DependenciaAdministrativaEscola::FEDERAL &&
-            (
-                $this->administrativeDomain != EsferaAdministrativa::FEDERAL &&
-                $this->administrativeDomain != EsferaAdministrativa::ESTADUAL
-            )
-        ) {
-            return false;
-        }
-
-        /**
-         * Se o município da escola for: Brasília
-         * a esfera administrativa não pode ser 3 (Municipal) ou 4 (Estadual e Municipal)
+         * Layout do Censo (campo 50): a esfera administrativa não pode ser
+         * 3 (Municipal) ou 4 (Estadual e Municipal) quando o município for Brasília.
          */
         if (
             $this->cityIbgeCode == self::BRASILIA &&
-            in_array($this->administrativeDomain, [
-                EsferaAdministrativa::MUNICIPAL,
-                EsferaAdministrativa::ESTADUAL_E_MUNICIPAL,
-            ])
+            in_array($this->administrativeDomain, $esferasNaoPermitidas)
         ) {
             return false;
         }

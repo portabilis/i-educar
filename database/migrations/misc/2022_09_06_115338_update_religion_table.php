@@ -1,13 +1,10 @@
 <?php
 
-use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    use AsView;
-
     /**
      * Run the migrations.
      *
@@ -15,7 +12,6 @@ return new class extends Migration
      */
     public function up()
     {
-        $this->dropView('religions');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.religiao ADD COLUMN deleted_at timestamp without time zone;');
         DB::unprepared('UPDATE pmieducar.religiao SET deleted_at = coalesce(data_exclusao, now()) WHERE ativo != 1;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.religiao RENAME cod_religiao TO id;');
@@ -45,6 +41,5 @@ return new class extends Migration
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.religiao RENAME updated_at TO data_exclusao;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.religiao ADD COLUMN ref_usuario_exc integer;');
         DB::unprepared('ALTER TABLE IF EXISTS pmieducar.religiao ADD COLUMN ref_usuario_cad integer;');
-        $this->createView('religions');
     }
 };

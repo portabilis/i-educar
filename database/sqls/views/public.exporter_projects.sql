@@ -1,4 +1,4 @@
-create view public.exporter_projects as
+create or replace view public.exporter_projects as
 select
 	pa.ref_cod_aluno as student_id,
 	string_agg(p.nome, ', ') as projects
