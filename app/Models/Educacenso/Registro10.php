@@ -1262,7 +1262,7 @@ class Registro10 extends Registro10Fields
             !empty($this->quantidadeComputadoresAlunosTablets);
     }
 
-    public function redeLocal(): int
+    public function redeLocal(): ?int
     {
         return match (true) {
             $this->redeLocalACabo() => 1,
