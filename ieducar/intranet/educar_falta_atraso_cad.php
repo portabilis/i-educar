@@ -150,6 +150,33 @@ return new class extends clsCadastro
             ->toArray();
     }
 
+    private function validarQuantidadeHorasMinutos(): bool
+    {
+        if ((int) $this->tipo !== AbsenceDelayType::DELAY->value) {
+            return true;
+        }
+
+        if ($this->qtd_horas == '' || $this->qtd_min == '') {
+            $this->mensagem = 'Preencha os campos de quantidade de horas e minutos.<br>';
+
+            return false;
+        }
+
+        if (!is_numeric($this->qtd_horas) || !is_numeric($this->qtd_min)) {
+            $this->mensagem = 'Informe valores numéricos para quantidade de horas e minutos.<br>';
+
+            return false;
+        }
+
+        if ((int) $this->qtd_horas < 0 || (int) $this->qtd_min < 0) {
+            $this->mensagem = 'Quantidade de horas e minutos não pode ser negativa.<br>';
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes;
@@ -176,9 +203,7 @@ return new class extends clsCadastro
 
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
 
-        if ($this->tipo == 1 && ($this->qtd_horas == '' || $this->qtd_min == '')) {
-            $this->mensagem = 'Preencha os campos de quantidade de horas e minutos.<br>';
-
+        if (!$this->validarQuantidadeHorasMinutos()) {
             return false;
         }
 
@@ -265,9 +290,7 @@ return new class extends clsCadastro
             )
         );
 
-        if ($this->tipo == 1 && ($this->qtd_horas == '' || $this->qtd_min == '')) {
-            $this->mensagem = 'Preencha os campos de quantidade de horas e minutos.<br>';
-
+        if (!$this->validarQuantidadeHorasMinutos()) {
             return false;
         }
 
