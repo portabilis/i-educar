@@ -1268,7 +1268,7 @@ class Registro10 extends Registro10Fields
             $this->redeLocalACabo() => 1,
             $this->redeLocalWireless() => 2,
             $this->redeLocalACaboEWireless() => 3,
-            default => 0,
+            default => null,
         };
     }
 }
