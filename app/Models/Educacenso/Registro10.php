@@ -73,6 +73,17 @@ class Registro10 extends Registro10Fields
         return in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->localFuncionamento);
     }
 
+    public function linguaEnsinoMinistrado(): ?int
+    {
+        return match ($this->linguaMinistrada) {
+            LinguaMinistrada::NAO_OFERECE_EDUCACAO_INDIGENA => 0,
+            LinguaMinistrada::INDIGENA => 1,
+            LinguaMinistrada::PORTUGUESA => 2,
+            LinguaMinistrada::INDIGENA_E_PORTUGUESA => 3,
+            default => null,
+        };
+    }
+
     /**
      * @return bool
      */

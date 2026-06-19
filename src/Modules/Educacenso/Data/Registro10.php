@@ -190,7 +190,7 @@ class Registro10 extends AbstractRegistro
             $data->instrumentosPedagogicosEducacaoQuilombola() ?: 0, // 157 Materiais pedagógicos para a educação escolar quilombola
             $data->instrumentosPedagogicosEducacaoEspecial() ?: 0, // 158 Materiais pedagógicos para a educação especial
             $data->instrumentosPedagogicosNenhum() ?: 0, // 159	Nenhum dos instrumentos listados
-            $data->linguaMinistrada, // 160	Língua em que o ensino é ministrado
+            $data->linguaEnsinoMinistrado(), // 160	Língua em que o ensino é ministrado
             $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[0] ?? null) : null, // 161 Código da língua indígena 1
             $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[1] ?? null) : null, // 162 Código da língua indígena 2
             $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[2] ?? null) : null, // 163 Código da língua indígena 3
