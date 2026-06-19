@@ -1174,36 +1174,6 @@ class EducacensoAnaliseController extends ApiCoreController
             }
 
             if (!is_null($turma->etapaEducacenso)) {
-                $valid = true;
-                $opcoesEtapaEducacenso = '';
-
-                switch ($turma->tipoMediacaoDidaticoPedagogico) {
-                    case App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL:
-                        if (!in_array($turma->etapaEducacenso, [69, 70, 71, 72])) {
-                            $opcoesEtapaEducacenso = '69, 70, 71 ou 72';
-                            $valid = false;
-                        }
-
-                        break;
-                    case App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA:
-                        if (!in_array($turma->etapaEducacenso, [25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74, 75])) {
-                            $opcoesEtapaEducacenso = '25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74 ou 75';
-                            $valid = false;
-                        }
-
-                        break;
-                }
-
-                if (!$valid) {
-                    $descricaoTipoMediacao = (App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums())[$turma->tipoMediacaoDidaticoPedagogico];
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação didático-pedagógica da turma {$nomeTurma} é {$descricaoTipoMediacao}, portanto a etapa de ensino deve ser uma das seguintes opções: {$opcoesEtapaEducacenso}.",
-                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
-                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                        'fail' => true,
-                    ];
-                }
-
                 if (in_array($turma->localFuncionamentoDiferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) && in_array($turma->etapaEducacenso, [1, 2, 3, 56])) {
                     $descricaoLocalDiferenciado = $turma->getLocalFuncionamentoDiferenciadoDescription();
                     $mensagem[] = [
