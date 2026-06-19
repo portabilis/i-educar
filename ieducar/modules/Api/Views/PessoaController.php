@@ -305,7 +305,7 @@ class PessoaController extends ApiCoreController
     protected function loadPessoaParent()
     {
         if ($this->getRequest()->id) {
-            $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido FROM cadastro.fisica WHERE idpes = $1; ';
+            $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido, cpf FROM cadastro.fisica WHERE idpes = $1; ';
 
             $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
 
@@ -313,6 +313,7 @@ class PessoaController extends ApiCoreController
             $details['nome'] = Portabilis_String_Utils::toUtf8($details['nome']);
             $details['id'] = $this->getRequest()->id;
             $details['falecido'] = dbBool($details['falecido']);
+            $details['cpf'] = $details['cpf'] ? int2CPF($details['cpf']) : '';
 
             return $details;
         } else {
@@ -538,9 +539,41 @@ class PessoaController extends ApiCoreController
         return true;
     }
 
+    private function validateCpf()
+    {
+        $cpf = $this->getRequest()->cpf;
+        $obrigarCpf = app(LegacyInstitution::class)->obrigar_cpf;
+
+        if (empty($cpf)) {
+            if ($obrigarCpf) {
+                $this->messenger->append('É necessário o preenchimento do CPF.');
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (!Portabilis_Utils_Validation::validatesCpf(cpf: $cpf)) {
+            $this->messenger->append('CPF inválido.');
+
+            return false;
+        }
+
+        $existing = LegacyIndividual::findByCpf($cpf);
+
+        if ($existing && (int) $existing->idpes !== (int) $this->getRequest()->pessoa_id) {
+            $this->messenger->append("CPF já utilizado pela pessoa {$existing->idpes}.");
+
+            return false;
+        }
+
+        return true;
+    }
+
     protected function canPost()
     {
-        return $this->validateName() && $this->validaNomeSocial() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
+        return $this->validateName() && $this->validaNomeSocial() && $this->validateBirthDate() && $this->validateDifferentiatedLocation() && $this->validateCpf();
     }
 
     protected function post()
@@ -601,6 +634,11 @@ class PessoaController extends ApiCoreController
             $povo_indigena_educacenso_id = $this->getRequest()->povo_indigena_educacenso_id;
         }
         $individual->povo_indigena_educacenso_id = $povo_indigena_educacenso_id;
+
+        $cpf = $this->getRequest()->cpf;
+        if (!empty($cpf)) {
+            $individual->cpf = idFederal2int(str: $cpf);
+        }
 
         $individual->saveOrFail();
 

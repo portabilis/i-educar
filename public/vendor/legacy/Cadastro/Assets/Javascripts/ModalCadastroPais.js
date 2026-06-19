@@ -107,6 +107,7 @@ function openEditModalParent(parentType) {
     sexoParent.val(personDetails.sexo);
     datanascParent.val(personDetails.data_nascimento);
     falecidoParent.prop('checked', (personDetails.falecido));
+    cpfParent.val(personDetails.cpf || '');
 
     $j('#dialog-form-pessoa-parent form h2:first-child').html('Editar pessoa ' + (parentType == 'mae' ? 'mãe' : parentType)).css('margin-left', '0.75em');
 
@@ -114,7 +115,7 @@ function openEditModalParent(parentType) {
     editar_pessoa = true;
 }
 
-$j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>');
+$j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="cpf-pessoa-parent">CPF</label> <input type="text" name="cpf-pessoa-parent" id="cpf-pessoa-parent" size="16" maxlength="14" class="text" placeholder="000.000.000-00"> <label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>');
 
 $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 
@@ -122,8 +123,20 @@ var nameParent = $j("#nome-pessoa-parent"),
     sexoParent = $j("#sexo-pessoa-parent"),
     estadocivilParent = $j("#estado-civil-pessoa-parent"),
     datanascParent = $j("#data-nasc-pessoa-parent"),
+    cpfParent = $j("#cpf-pessoa-parent"),
     falecidoParent = $j("#falecido-parent"),
-    allFields = $j([]).add(nameParent).add(sexoParent).add(estadocivilParent).add(datanascParent).add(falecidoParent);
+    allFields = $j([]).add(nameParent).add(sexoParent).add(estadocivilParent).add(datanascParent).add(cpfParent).add(falecidoParent);
+
+// CPF obrigatório no modal quando o parâmetro da instituição "Exigir CPF" está ativo
+var obrigarCPFModal = $j("#obrigarCPF").val() == 1;
+
+if ($j.fn.mask) {
+    cpfParent.mask('000.000.000-00');
+}
+
+if (obrigarCPFModal) {
+    $j('label[for="cpf-pessoa-parent"]').append(' <span style="color:#cc0000">*</span>');
+}
 
 $j("#dialog-form-pessoa-parent").dialog({
     autoOpen: false,
@@ -145,6 +158,17 @@ $j("#dialog-form-pessoa-parent").dialog({
                 bValid = bValid && checkRegexp(datanascParent, /(^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$)/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy.");
             }
 
+            var cpfVal = cpfParent.val().trim();
+            if (obrigarCPFModal && cpfVal === '') {
+                bValid = false;
+                cpfParent.addClass("error");
+                messageUtils.error("O campo CPF é obrigatório.");
+            } else if (cpfVal !== '' && typeof validationUtils !== 'undefined' && !validationUtils.validatesCpf(cpfVal)) {
+                bValid = false;
+                cpfParent.addClass("error");
+                messageUtils.error("CPF inválido.");
+            }
+
             if (bValid) {
                 postPessoa(
                     $(this),
@@ -160,7 +184,8 @@ $j("#dialog-form-pessoa-parent").dialog({
                     null,
                     null,
                     null,
-                    falecidoParent.is(':checked')
+                    falecidoParent.is(':checked'),
+                    cpfParent.val().trim()
                 );
             }
         },
@@ -214,7 +239,8 @@ function postPessoa(
     telefone_1,
     ddd_telefone_mov,
     telefone_mov,
-    falecido
+    falecido,
+    cpf
 ) {
     var data = {
         nome: nome,
@@ -227,7 +253,8 @@ function postPessoa(
         telefone_1: telefone_1,
         ddd_telefone_mov: ddd_telefone_mov,
         telefone_mov: telefone_mov,
-        falecido: falecido
+        falecido: falecido,
+        cpf: cpf
     };
 
     var options = {
