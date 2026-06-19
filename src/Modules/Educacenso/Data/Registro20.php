@@ -80,7 +80,7 @@ class Registro20 extends AbstractRegistro
             $record->presencial() && in_array(5, $record->diasSemana) ? $horaInicial . '-' . $horaFinal : '', // 11 - Quinta-feira
             $record->presencial() && in_array(6, $record->diasSemana) ? $horaInicial . '-' . $horaFinal : '', // 12 - Sexta-feira
             $record->presencial() && in_array(7, $record->diasSemana) ? $horaInicial . '-' . $horaFinal : '', // 13 - Sábado
-            $record->tipoAtendimento[0], // 14 - Tipo de turma
+            $record->tipoTurma(), // 14 - Tipo de turma
             $record->atividadeComplementar() ? ($record->atividadesComplementares[0] ?? '') : '', // 15 - Código 1 - Tipos de atividades complementares
             $record->atividadeComplementar() ? ($record->atividadesComplementares[1] ?? '') : '', // 16 - Código 2 - Tipos de atividades complementares
             $record->atividadeComplementar() ? ($record->atividadesComplementares[2] ?? '') : '', // 17 - Código 3 - Tipos de atividades complementares
@@ -91,8 +91,8 @@ class Registro20 extends AbstractRegistro
             $record->curricularEtapaDeEnsino() ? $record->classeEspecial ?: 0 : null, // 22 - Turma de Educação Especial (classe especial)
             $record->etapaAgregada, // 23 - Etapa agregada
             $record->etapaEducacenso, // 24 - Etapa
-            $record->codEixoCursoProfissional, // 25 - Código do eixo do curso de qualificação profissional
-            in_array($record->etapaEducacenso, [39, 40, 64]) ? $record->codCursoProfissional : '', // 26 - Código do curso
+            in_array($record->etapaEducacenso, [67, 68, 73, 75]) ? $record->codEixoCursoProfissional : '', // 25 - Código do eixo do curso de qualificação profissional
+            in_array($record->etapaEducacenso, [39, 40, 64, 74]) ? $record->codCursoProfissional : '', // 26 - Código do curso
             $record->cargaHorariaTotal, // 27 - Carga horária total do curso (em horas)
             $record->requereFormasOrganizacaoTurma() ? $record->formasOrganizacaoTurma : '', // 28 - Formas de organização da turma
             $record->formacaoAlternancia ?: 0, // 29 - Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade)

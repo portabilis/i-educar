@@ -169,6 +169,11 @@ class Registro20 implements RegistroEducacenso
     /**
      * @var string
      */
+    public $codEixoCursoProfissional;
+
+    /**
+     * @var string
+     */
     public $codCursoProfissional;
 
     /**
@@ -455,6 +460,21 @@ class Registro20 implements RegistroEducacenso
     public function presencial()
     {
         return $this->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL;
+    }
+
+    public function tipoTurma()
+    {
+        if(! is_array($this->tipoAtendimento)) {
+            return null;
+        }
+
+        return match ((int) $this->tipoAtendimento[0]) {
+            TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO => 6,
+            TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR => 4,
+            TipoAtendimentoTurma::AEE => 5,
+            TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR => 9,
+            default => null,
+        };
     }
 
     /**
