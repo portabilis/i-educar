@@ -245,6 +245,11 @@ $j(document).ready(function() {
   verificaCampoZonaResidencia();
   $j('#pais_residencia').on('change', verificaCampoZonaResidencia);
 
+  // CPF obrigatório quando o parâmetro da instituição "Exigir CPF" está ativo
+  if (obrigarCPF.val() == 1) {
+    $cpfField.makeRequired();
+  }
+
   // style fixup
 
   // agrupado zebra por tipo documento, branco => .formlttd, colorido => .formmdtd
