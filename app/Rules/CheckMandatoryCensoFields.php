@@ -31,9 +31,6 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCamposHorario($params)) {
                 return false;
             }
-            if (!$this->validaEtapaAgregada($params)) {
-                return false;
-            }
             if (!$this->validaEtapaEducacenso($params)) {
                 return false;
             }
@@ -47,9 +44,6 @@ class CheckMandatoryCensoFields implements Rule
                 return false;
             }
             if (!$this->validaCampoTipoAtendimento($params)) {
-                return false;
-            }
-            if (!$this->validaEtapaEnsinoPorEtapaAgregada($params)) {
                 return false;
             }
             if (!$this->validaCampoLocalFuncionamentoDiferenciado($params)) {
@@ -116,6 +110,22 @@ class CheckMandatoryCensoFields implements Rule
             is_array($organizacaoCurricular) &&
             in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular)) {
             $this->message = 'O campo <b>"Etapa de ensino"</b> deve ser obrigatório quando o campo "Organização Curricular da Turma" for preenchido com "Formação geral básica"';
+
+            return false;
+        }
+
+        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
+            isset($params->etapa_educacenso) &&
+            !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
+
+            return false;
+        }
+
+        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
+            isset($params->etapa_educacenso) &&
+            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74, 75], true)) {
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74 ou 75';
 
             return false;
         }
@@ -367,99 +377,6 @@ class CheckMandatoryCensoFields implements Rule
         ) {
             $todasEtapasEducacenso = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/etapas_ensino.json');
             $this->message = "Não é possível selecionar a opção: <b>{$validOption[(int) $params->formas_organizacao_turma]}</b>, no campo: <b>Formas de organização da turma</b> quando o campo: Etapa for: {$todasEtapasEducacenso[$params->etapa_educacenso]}.";
-
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function validaEtapaAgregada($params)
-    {
-        $tipoAtendimento = $this->getTipoAtendimentoValues($params);
-
-        if (!is_array($tipoAtendimento)) {
-            return true;
-        }
-
-        $curricular = in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $tipoAtendimento);
-        $curricularComAtividadeComplementar = in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR, $tipoAtendimento);
-
-        if ((in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento) || in_array(TipoAtendimentoTurma::AEE, $tipoAtendimento)) &&
-            !$curricular &&
-            !$curricularComAtividadeComplementar &&
-            !empty($params->etapa_agregada)) {
-            $this->message = 'Quando o campo: Tipo de turma é: Atividade complementar ou Atendimento educacional especializado (AEE), o campo: Etapa agregada não deve ser preenchido.';
-
-            return false;
-        }
-
-        if (empty($params->etapa_agregada)) {
-            return true;
-        }
-
-        $etapaAgregada = (int) $params->etapa_agregada;
-
-        if ($curricularComAtividadeComplementar &&
-            !in_array($etapaAgregada, [EtapaAgregada::ENSINO_FUNDAMENTAL, EtapaAgregada::MULTI_CORRECAO_FLUXO, EtapaAgregada::ENSINO_MEDIO, EtapaAgregada::ENSINO_MEDIO_NORMAL_MAGISTERIO])) {
-            $this->message = 'Quando o campo: Tipo de turma é: Curricular (etapa de ensino) com Atividade Complementar, o campo: Etapa agregada deve ser uma das seguintes opções: 302, 303, 304 ou 305.';
-
-            return false;
-        }
-
-        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
-            $curricular &&
-            !in_array($etapaAgregada, [EtapaAgregada::EDUCACAO_JOVENS_ADULTOS])) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa agregada deve ser: 306.';
-
-            return false;
-        }
-
-        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
-            $curricular &&
-            !in_array($etapaAgregada, [EtapaAgregada::ENSINO_MEDIO, EtapaAgregada::EDUCACAO_JOVENS_ADULTOS, EtapaAgregada::CURSO_TECNICO_FIC])) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa agregada deve ser uma das seguintes opções: 304, 306 ou 308.';
-
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function validaEtapaEnsinoPorEtapaAgregada($params)
-    {
-        if (empty($params->etapa_agregada) || !isset($params->etapa_educacenso)) {
-            return true;
-        }
-
-        $tipoAtendimento = $this->getTipoAtendimentoValues($params);
-        $curricularComAtividadeComplementar = is_array($tipoAtendimento) &&
-            in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR, $tipoAtendimento);
-        $etapaAgregada = (int) $params->etapa_agregada;
-        $etapa = (int) $params->etapa_educacenso;
-
-        if ($etapaAgregada === EtapaAgregada::MULTI_CORRECAO_FLUXO) {
-            $opcoes = $curricularComAtividadeComplementar ? [22, 23] : [22, 23, 56];
-
-            if (!in_array($etapa, $opcoes)) {
-                $this->message = 'Quando o campo: Etapa agregada é: 303 (Multi e correção de fluxo), o campo: Etapa de ensino deve ser uma das seguintes opções: ' . implode(', ', $opcoes) . '.';
-
-                return false;
-            }
-
-            return true;
-        }
-
-        $opcoesPorEtapaAgregada = [
-            EtapaAgregada::EDUCACAO_INFANTIL => [1, 2, 3],
-            EtapaAgregada::ENSINO_FUNDAMENTAL => [14, 15, 16, 17, 18, 19, 20, 21, 41],
-            EtapaAgregada::EDUCACAO_JOVENS_ADULTOS => [69, 70, 72, 71, 74, 73, 67],
-            EtapaAgregada::CURSO_TECNICO_FIC => [39, 40, 64, 68, 75],
-        ];
-
-        if (isset($opcoesPorEtapaAgregada[$etapaAgregada]) &&
-            !in_array($etapa, $opcoesPorEtapaAgregada[$etapaAgregada])) {
-            $this->message = "Quando o campo: Etapa agregada é: {$etapaAgregada}, o campo: Etapa de ensino deve ser uma das seguintes opções: " . implode(', ', $opcoesPorEtapaAgregada[$etapaAgregada]) . '.';
 
             return false;
         }
