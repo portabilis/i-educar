@@ -120,22 +120,6 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
-            isset($params->etapa_educacenso) &&
-            !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
-
-            return false;
-        }
-
-        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
-            isset($params->etapa_educacenso) &&
-            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74, 75], true)) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 39, 40, 64, 67, 68, 71, 74 ou 75';
-
-            return false;
-        }
-
         $localDeFuncionamentoData = [
             App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO,
             App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL,
