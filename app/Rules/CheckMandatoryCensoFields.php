@@ -151,7 +151,7 @@ class CheckMandatoryCensoFields implements Rule
     {
         $tipoAtendimento = $this->getTipoAtendimentoValues($params);
 
-        if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento)
+        if (is_array($tipoAtendimento) && TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento)
             && empty($params->atividades_complementares)
         ) {
             $this->message = 'Campo atividades complementares é obrigatório.';
@@ -166,7 +166,7 @@ class CheckMandatoryCensoFields implements Rule
     {
         $tipoAtendimento = $this->getTipoAtendimentoValues($params);
 
-        if (is_array($tipoAtendimento) && !in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $tipoAtendimento) && in_array(
+        if (is_array($tipoAtendimento) && !TipoAtendimentoTurma::possuiCurricular($tipoAtendimento) && in_array(
             $params->tipo_mediacao_didatico_pedagogico,
             [
                 App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA,
@@ -178,7 +178,7 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         $course = LegacyCourse::find($params->ref_cod_curso);
-        if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento) && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
+        if (is_array($tipoAtendimento) && TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento) && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
             $this->message = 'Quando a modalidade do curso é: <b>Educação de Jovens e Adultos (EJA)</b>, o campo <b>Tipo de turma</b> não pode ser <b>Atividade complementar</b>';
 
             return false;
