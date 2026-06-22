@@ -107,7 +107,6 @@ const FORMAS_ORGANIZACAO_TURMA = {
   CICLOS: '3',
   NAO_SERIADO: '4',
   MODULES: '5',
-  ALTERNANCIA_REGULAR: '6',
 };
 
 const ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO = {
@@ -116,7 +115,6 @@ const ETAPAS_VALIDAS_POR_FORMA_ORGANIZACAO = {
   [FORMAS_ORGANIZACAO_TURMA.CICLOS]:      ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','41','56'],
   [FORMAS_ORGANIZACAO_TURMA.NAO_SERIADO]: ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','67','68','69','70','71','72','73','74','75'],
   [FORMAS_ORGANIZACAO_TURMA.MODULES]:     ['14','15','16','17','18','19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','56','64','67','68','69','70','71','72','73','74','75'],
-  [FORMAS_ORGANIZACAO_TURMA.ALTERNANCIA_REGULAR]: ['19','20','21','22','23','25','26','27','28','29','35','36','37','38','39','40','41','64','67','68','69','70','71','72','73','74','75'],
 };
 
 let habilitaFormaOrganizacaoTurma = ()=> {
@@ -237,10 +235,10 @@ function habilitaAtividadesComplementares(){
 function habilitaCursoTecnico() {
   var etapasEnsinoTecnico = ['39', '40', '64', '74'];
   var mostraCampo = $j.inArray($j('#etapa_educacenso').val(),etapasEnsinoTecnico) != -1;
+  $j('#cod_curso_profissional').makeUnrequired();
   if (mostraCampo) {
     $j('#cod_curso_profissional').prop('disabled', false);
     $j('#cod_curso_profissional').trigger('chosen:updated');
-    $j('#cod_curso_profissional').makeUnrequired();
     if (obrigarCamposCenso) {
       $j('#cod_curso_profissional').makeRequired();
     }
