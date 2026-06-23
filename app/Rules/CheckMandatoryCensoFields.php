@@ -218,7 +218,7 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
-    protected function validaCargaHorariaTotal($params)
+    public function validaCargaHorariaTotal($params)
     {
         $organizacaoCurricular = array_map('intval', (array) $this->getOrganizacaoCurricularValues($params));
         $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
@@ -229,10 +229,9 @@ class CheckMandatoryCensoFields implements Rule
 
         $carga = $params->carga_horaria_total;
 
+        // Censo 2026: carga horária total deixou de ser obrigatória; sem valor não bloqueia
         if ($carga === null || $carga === '') {
-            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> é obrigatório quando o campo: <b>Organização curricular da turma</b> incluir: <b>Itinerário de formação técnica e profissional</b>.';
-
-            return false;
+            return true;
         }
 
         $carga = (int) $carga;
@@ -348,7 +347,6 @@ class CheckMandatoryCensoFields implements Rule
             3 => 'Ciclo(s)',
             4 => 'Grupos não seriados com base na idade ou competência',
             5 => 'Módulos',
-            6 => 'Turma de Formação por alternância (alternância regular de períodos de estudos)',
         ];
 
         $validOptionCorrelationForEtapaEnsino = [
@@ -366,9 +364,6 @@ class CheckMandatoryCensoFields implements Rule
             ],
             FormaOrganizacaoTurma::MODULES => [
                 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 56, 67, 68, 69, 70, 71, 72, 73, 74, 75,
-            ],
-            FormaOrganizacaoTurma::ALTERNANCIA_REGULAR => [
-                19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 41, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
         ];
 
