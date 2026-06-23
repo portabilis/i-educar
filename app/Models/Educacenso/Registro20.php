@@ -169,6 +169,11 @@ class Registro20 implements RegistroEducacenso
     /**
      * @var string
      */
+    public $codEixoCursoProfissional;
+
+    /**
+     * @var string
+     */
     public $codCursoProfissional;
 
     /**
@@ -389,7 +394,7 @@ class Registro20 implements RegistroEducacenso
      */
     public function curricularEtapaDeEnsino()
     {
-        return in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $this->tipoAtendimento);
+        return TipoAtendimentoTurma::possuiCurricular($this->tipoAtendimento);
     }
 
     /**
@@ -397,7 +402,7 @@ class Registro20 implements RegistroEducacenso
      */
     public function atividadeComplementar()
     {
-        return in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $this->tipoAtendimento);
+        return TipoAtendimentoTurma::possuiAtividadeComplementar($this->tipoAtendimento);
     }
 
     /**
@@ -405,7 +410,7 @@ class Registro20 implements RegistroEducacenso
      */
     public function atendimentoEducacionalEspecializado()
     {
-        return in_array(TipoAtendimentoTurma::AEE, $this->tipoAtendimento);
+        return TipoAtendimentoTurma::possuiAee($this->tipoAtendimento);
     }
 
     /**
@@ -457,6 +462,24 @@ class Registro20 implements RegistroEducacenso
     public function presencial()
     {
         return $this->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL;
+    }
+
+    public function tipoTurma()
+    {
+        if (!is_array($this->tipoAtendimento)) {
+            return null;
+        }
+
+        $possuiCurricular = TipoAtendimentoTurma::possuiCurricular($this->tipoAtendimento);
+        $possuiAtividadeComplementar = TipoAtendimentoTurma::possuiAtividadeComplementar($this->tipoAtendimento);
+
+        return match (true) {
+            $possuiCurricular && $possuiAtividadeComplementar => 9,
+            $possuiCurricular => 6,
+            $possuiAtividadeComplementar => 4,
+            TipoAtendimentoTurma::possuiAee($this->tipoAtendimento) => 5,
+            default => null,
+        };
     }
 
     /**

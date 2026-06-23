@@ -11,7 +11,7 @@ class CreateEducacensoRecordsView extends Migration
     {
         $this->down();
 
-        $this->createView('public.educacenso_record20');
+        $this->createView('public.educacenso_record20', '2026-06-16');
         $this->createView('public.educacenso_record40');
         $this->createView('public.educacenso_record50');
         $this->createView('public.educacenso_record60', '2026-06-16');
