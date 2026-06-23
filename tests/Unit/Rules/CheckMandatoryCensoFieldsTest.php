@@ -3,6 +3,7 @@
 namespace Tests\Unit\Rules;
 
 use App\Rules\CheckMandatoryCensoFields;
+use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\EtapaAgregada;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use Tests\TestCase;
@@ -259,5 +260,105 @@ class CheckMandatoryCensoFieldsTest extends TestCase
         $result = $this->rule->validaCargaHorariaTotal($params);
 
         $this->assertTrue($result);
+    }
+
+    private function paramsTurma(int $mediacao, string $tipoAtendimento, ?int $etapaAgregada, ?string $organizacao, $etapa): \stdClass
+    {
+        $params = new \stdClass;
+        $params->tipo_mediacao_didatico_pedagogico = $mediacao;
+        $params->tipo_atendimento = $tipoAtendimento;
+        $params->etapa_agregada = $etapaAgregada;
+        $params->organizacao_curricular = $organizacao;
+        $params->etapa_educacenso = $etapa;
+
+        return $params;
+    }
+
+    public function test_save_impedimento_2_ead_com_educacao_infantil_bloqueia()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA, '{0}', EtapaAgregada::EDUCACAO_INFANTIL, null, 1);
+
+        $this->assertFalse($this->rule->validaEtapaEnsinoPorCombinacao($params));
+        $this->assertStringContainsString('Educação a distância', $this->rule->message());
+        $this->assertStringContainsString('não se aplica a essa combinação', $this->rule->message());
+    }
+
+    public function test_save_impedimento_3_semipresencial_eja_com_etapa_invalida_bloqueia()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL, '{0}', EtapaAgregada::EDUCACAO_JOVENS_ADULTOS, null, 14);
+
+        $this->assertFalse($this->rule->validaEtapaEnsinoPorCombinacao($params));
+        $this->assertStringContainsString('Semipresencial', $this->rule->message());
+        $this->assertStringContainsString('69, 70, 71 ou 72', $this->rule->message());
+    }
+
+    public function test_save_semipresencial_eja_com_etapa_valida_passa()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL, '{0}', EtapaAgregada::EDUCACAO_JOVENS_ADULTOS, null, 70);
+
+        $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
+    }
+
+    public function test_save_ead_eja_com_etapa_valida_passa()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA, '{0}', EtapaAgregada::EDUCACAO_JOVENS_ADULTOS, null, 71);
+
+        $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
+    }
+
+    public function test_save_ead_eja_com_etapa_da_uniao_de_outra_agregada_bloqueia()
+    {
+        // 25 é válida para EAD+304 (com FGB), mas NÃO para EAD+306 (EJA): a união antiga deixava passar.
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA, '{0}', EtapaAgregada::EDUCACAO_JOVENS_ADULTOS, null, 25);
+
+        $this->assertFalse($this->rule->validaEtapaEnsinoPorCombinacao($params));
+        $this->assertStringContainsString('71, 74 ou 67', $this->rule->message());
+    }
+
+    public function test_save_presencial_ensino_medio_sem_fgb_bloqueia()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, '{0}', EtapaAgregada::ENSINO_MEDIO, null, 25);
+
+        $this->assertFalse($this->rule->validaEtapaEnsinoPorCombinacao($params));
+        $this->assertStringContainsString('Formação geral básica', $this->rule->message());
+    }
+
+    public function test_save_presencial_ensino_medio_com_fgb_passa()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, '{0}', EtapaAgregada::ENSINO_MEDIO, '{' . OrganizacaoCurricular::FORMACAO_GERAL_BASICA . '}', 25);
+
+        $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
+    }
+
+    public function test_save_tipo_turma_curricular_com_atividade_complementar_multi_bloqueia_56()
+    {
+        // Curricular com Atividade Complementar + Multi (303) permite só 22 e 23 (não 56).
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, '{9}', EtapaAgregada::MULTI_CORRECAO_FLUXO, null, 56);
+
+        $this->assertFalse($this->rule->validaEtapaEnsinoPorCombinacao($params));
+        $this->assertStringContainsString('com Atividade Complementar', $this->rule->message());
+        $this->assertStringContainsString('22 ou 23', $this->rule->message());
+    }
+
+    public function test_save_etapa_vazia_passa()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, '{0}', EtapaAgregada::ENSINO_MEDIO, null, null);
+
+        $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
+    }
+
+    public function test_save_tipo_turma_nao_curricular_passa()
+    {
+        // AEE ({5}) não possui etapa de ensino: a validação por combinação não se aplica.
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, '{5}', EtapaAgregada::EDUCACAO_INFANTIL, null, 1);
+
+        $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
+    }
+
+    public function test_save_curricular_com_atividade_complementar_multi_etapa_valida_passa()
+    {
+        $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, '{9}', EtapaAgregada::MULTI_CORRECAO_FLUXO, null, 22);
+
+        $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
     }
 }

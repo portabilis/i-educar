@@ -28,6 +28,7 @@ use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EtapaAgregada;
+use iEducar\Modules\Educacenso\Model\EtapaEnsino;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -1185,18 +1186,21 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (
-                ($turma->etapaAgregada === 301 && !in_array($turma->etapaEducacenso, [1, 2, 3])) ||
-                    ($turma->etapaAgregada === 302 && !in_array($turma->etapaEducacenso, [14, 15, 16, 17, 18, 19, 20, 21, 41])) ||
-                        ($turma->etapaAgregada === 303 && $curricularEtapaEnsino && !in_array($turma->etapaEducacenso, [22, 23, 56])) ||
-                        ($turma->etapaAgregada === 303 && $curricularComAtividadeComplementar && !in_array($turma->etapaEducacenso, [22, 23])) ||
-                            ($turma->etapaAgregada === 304 && !in_array($turma->etapaEducacenso, [25, 26, 27, 28, 29]) && $turma->formacaoGeralBasica()) ||
-                                ($turma->etapaAgregada === 305 && !in_array($turma->etapaEducacenso, [35, 36, 37, 38]) && $turma->formacaoGeralBasica()) ||
-                                    ($turma->etapaAgregada === 306 && !in_array($turma->etapaEducacenso, [69, 70, 72, 71, 74, 73, 67])) ||
-                                        ($turma->etapaAgregada === 308 && !in_array($turma->etapaEducacenso, [39, 40, 64, 68, 75]))
-            ) {
+            $possuiCurricular = TipoAtendimentoTurma::possuiCurricular($tipoAtendimento);
+            $possuiAtividadeComplementar = TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento);
+            $etapasPermitidasEnsino = EtapaEnsino::getEtapasPermitidas(
+                (int) $turma->tipoMediacaoDidaticoPedagogico,
+                $possuiCurricular && !$possuiAtividadeComplementar,
+                $possuiCurricular && $possuiAtividadeComplementar,
+                (int) $turma->etapaAgregada,
+                $turma->formacaoGeralBasica()
+            );
+
+            if (!is_null($turma->etapaAgregada) && !is_null($etapasPermitidasEnsino) && !in_array((int) $turma->etapaEducacenso, $etapasPermitidasEnsino, true)) {
+                $combinacao = EtapaEnsino::descreverCombinacaoParaAnalise((int) $turma->tipoMediacaoDidaticoPedagogico, $possuiCurricular && $possuiAtividadeComplementar, (int) $turma->etapaAgregada);
+                $opcoes = EtapaEnsino::descreverOpcoes($etapasPermitidasEnsino);
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a etapa de ensino da turma {$nomeTurma} foi informada de forma condizente com a etapa agregada.",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} tem {$combinacao}, portanto a etapa de ensino deve ser uma das seguintes opções: {$opcoes}.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true,
