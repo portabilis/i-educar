@@ -10,15 +10,6 @@ return new class extends Migration
         Setting::query()
             ->where('key', 'legacy.educacenso.enable_export')
             ->update([
-                'value' => false,
-            ]);
-    }
-
-    public function down(): void
-    {
-        Setting::query()
-            ->where('key', 'legacy.educacenso.enable_export')
-            ->update([
                 'value' => true,
             ]);
     }
