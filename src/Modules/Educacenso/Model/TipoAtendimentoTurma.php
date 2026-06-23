@@ -38,4 +38,32 @@ class TipoAtendimentoTurma
             ->filter()
             ->implode(', ');
     }
+
+    /**
+     * Indica se o tipo de atendimento inclui Curricular (etapa de ensino), considerando
+     * tanto o código próprio quanto o combinado (Curricular com Atividade Complementar).
+     */
+    public static function possuiCurricular(array $tiposAtendimento): bool
+    {
+        return in_array(self::CURRICULAR_ETAPA_ENSINO, $tiposAtendimento)
+            || in_array(self::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR, $tiposAtendimento);
+    }
+
+    /**
+     * Indica se o tipo de atendimento inclui Atividade Complementar, considerando
+     * tanto o código próprio quanto o combinado (Curricular com Atividade Complementar).
+     */
+    public static function possuiAtividadeComplementar(array $tiposAtendimento): bool
+    {
+        return in_array(self::ATIVIDADE_COMPLEMENTAR, $tiposAtendimento)
+            || in_array(self::CURRICULAR_ETAPA_ENSINO_COM_ATIVIDADE_COMPLEMENTAR, $tiposAtendimento);
+    }
+
+    /**
+     * Indica se o tipo de atendimento inclui Atendimento Educacional Especializado (AEE).
+     */
+    public static function possuiAee(array $tiposAtendimento): bool
+    {
+        return in_array(self::AEE, $tiposAtendimento);
+    }
 }

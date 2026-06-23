@@ -151,7 +151,7 @@ class CheckMandatoryCensoFields implements Rule
     {
         $tipoAtendimento = $this->getTipoAtendimentoValues($params);
 
-        if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento)
+        if (is_array($tipoAtendimento) && TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento)
             && empty($params->atividades_complementares)
         ) {
             $this->message = 'Campo atividades complementares é obrigatório.';
@@ -166,7 +166,7 @@ class CheckMandatoryCensoFields implements Rule
     {
         $tipoAtendimento = $this->getTipoAtendimentoValues($params);
 
-        if (is_array($tipoAtendimento) && !in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $tipoAtendimento) && in_array(
+        if (is_array($tipoAtendimento) && !TipoAtendimentoTurma::possuiCurricular($tipoAtendimento) && in_array(
             $params->tipo_mediacao_didatico_pedagogico,
             [
                 App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA,
@@ -179,7 +179,7 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         $course = LegacyCourse::find($params->ref_cod_curso);
-        if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento) && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
+        if (is_array($tipoAtendimento) && TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento) && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
             $this->message = 'Quando a modalidade do curso é: <b>Educação de Jovens e Adultos (EJA)</b>, o campo <b>Tipo de turma</b> não pode ser <b>Atividade complementar</b>';
 
             return false;
@@ -347,7 +347,6 @@ class CheckMandatoryCensoFields implements Rule
             3 => 'Ciclo(s)',
             4 => 'Grupos não seriados com base na idade ou competência',
             5 => 'Módulos',
-            6 => 'Turma de Formação por alternância (alternância regular de períodos de estudos)',
         ];
 
         $validOptionCorrelationForEtapaEnsino = [
@@ -365,9 +364,6 @@ class CheckMandatoryCensoFields implements Rule
             ],
             FormaOrganizacaoTurma::MODULES => [
                 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 56, 67, 68, 69, 70, 71, 72, 73, 74, 75,
-            ],
-            FormaOrganizacaoTurma::ALTERNANCIA_REGULAR => [
-                19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 41, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
         ];
 
