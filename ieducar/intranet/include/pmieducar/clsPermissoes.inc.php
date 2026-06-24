@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyUserSchool;
+use App\Models\LegacyUserType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -98,10 +99,9 @@ class clsPermissoes
         $detalhe_usuario = $obj_usuario->detalhe();
 
         if ($detalhe_usuario) {
-            $obj_tipo_usuario = new clsPmieducarTipoUsuario($detalhe_usuario['ref_cod_tipo_usuario']);
-            $detalhe_tipo_usuario = $obj_tipo_usuario->detalhe();
-
-            return $detalhe_tipo_usuario['nivel'];
+            return LegacyUserType::query()
+                ->whereKey($detalhe_usuario['ref_cod_tipo_usuario'])
+                ->value('nivel');
         }
 
         return false;

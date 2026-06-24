@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Menu;
+use App\Models\Builders\LegacyUserTypeBuilder;
 use App\Traits\HasLegacyDates;
 use App\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as SupportCollection;
@@ -22,10 +24,17 @@ use Illuminate\Support\Collection as SupportCollection;
  * @property bool              $active
  * @property Collection|Menu[] $menus
  * @property Collection|User[] $users
+ *
+ * @method static LegacyUserTypeBuilder query()
  */
 class LegacyUserType extends LegacyModel
 {
+    /** @use HasBuilder<LegacyUserTypeBuilder> */
+    use HasBuilder;
+
     use HasLegacyDates;
+
+    protected static string $builder = LegacyUserTypeBuilder::class;
 
     public const LEVEL_ADMIN = 1;
 

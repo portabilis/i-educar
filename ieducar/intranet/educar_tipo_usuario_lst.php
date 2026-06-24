@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyUserType;
+
 return new class extends clsListagem
 {
     /**
@@ -22,13 +24,6 @@ return new class extends clsListagem
      * @var int
      */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
-    public $offset;
 
     public $cod_tipo_usuario;
 
@@ -79,23 +74,20 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_tipo_usuario = new clsPmieducarTipoUsuario;
-        $obj_tipo_usuario->setOrderby(strNomeCampo: 'nm_tipo ASC');
-        $obj_tipo_usuario->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $result = LegacyUserType::query()
+            ->active()
+            ->when(is_string($this->nm_tipo), fn ($q) => $q->whereName($this->nm_tipo))
+            ->when(is_string($this->descricao), fn ($q) => $q->whereDescription($this->descricao))
+            ->when(is_numeric($this->nivel), fn ($q) => $q->whereLevel((int) $this->nivel))
+            ->whereLevelAtLeast($this->user()->type->level)
+            ->orderBy('nm_tipo')
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $lista = $obj_tipo_usuario->lista(
-            str_nm_tipo: $this->nm_tipo,
-            str_descricao: $this->descricao,
-            int_nivel: $this->nivel,
-            int_ativo: 1,
-            int_nivel_menor: $this->user()->type->level
-        );
+        $lista = $result->getCollection();
+        $total = $result->total();
 
-        $total = $obj_tipo_usuario->_total;
-
-        if (is_array(value: $lista) && count(value: $lista)) {
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
 
                 // pega detalhes de foreign_keys
