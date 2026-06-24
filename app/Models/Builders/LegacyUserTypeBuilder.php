@@ -17,7 +17,7 @@ class LegacyUserTypeBuilder extends LegacyBuilder
      */
     public function whereName(string $name): self
     {
-        return $this->whereRaw('unaccent(nm_tipo) ~* unaccent(?)', $name);
+        return $this->whereRaw('f_unaccent(nm_tipo) ILIKE f_unaccent(?)', ["%{$name}%"]);
     }
 
     /**
@@ -25,7 +25,7 @@ class LegacyUserTypeBuilder extends LegacyBuilder
      */
     public function whereDescription(string $description): self
     {
-        return $this->whereRaw('unaccent(descricao) ~* unaccent(?)', $description);
+        return $this->whereRaw('f_unaccent(descricao) ILIKE f_unaccent(?)', ["%{$description}%"]);
     }
 
     /**
