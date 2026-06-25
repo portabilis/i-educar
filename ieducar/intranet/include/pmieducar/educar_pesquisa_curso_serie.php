@@ -12,6 +12,9 @@
  *
  * @author Adriano Erik Weiguert Nagasava
  */
+
+use App\Models\LegacySchoolCourse;
+
 $permissoes = new clsPermissoes;
 $privilegio = $permissoes->nivel_acesso($this->pessoa_logada);
 
@@ -26,19 +29,21 @@ if ($editar) {
 
 if ($privilegio == 4) {
     $opcoes = ['' => 'Selecione'];
-    $objTemp = new clsPmieducarEscolaCurso;
-    $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, 1);
-    if ($lista) {
+    $lista = LegacySchoolCourse::query()
+        ->active()
+        ->whereSchool((int) $permissoes->getEscola($this->pessoa_logada))
+        ->with('course:cod_curso,nm_curso')
+        ->get();
+    if ($lista->isNotEmpty()) {
         $series = '';
         $ESeries = '';
         foreach ($lista as $registro) {
-            $objTemp = new clsPmieducarCurso($registro['ref_cod_curso']);
-            $detalhe = $objTemp->detalhe();
+            $nomeCurso = $registro->course->nm_curso;
             if ($editar) {
-                $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                $opcoes["{$registro['ref_cod_curso']}"] = $nomeCurso;
             } else {
                 $opcoes[''] = 'Selecione um curso';
-                $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                $opcoes["{$registro['ref_cod_curso']}"] = $nomeCurso;
             }
             $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
             $obj_esc_ser = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, null, 1);
@@ -79,20 +84,22 @@ if ($privilegio == 4) {
         $cursos = '';
         $series = '';
         foreach ($lst_escola as $escola) {
-            $objTemp = new clsPmieducarEscolaCurso;
-            $lista = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
+            $lista = LegacySchoolCourse::query()
+                ->active()
+                ->whereSchool((int) $escola['cod_escola'])
+                ->with('course:cod_curso,nm_curso')
+                ->get();
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
-            if ($lista) {
+            if ($lista->isNotEmpty()) {
                 foreach ($lista as $registro) {
-                    $objTemp = new clsPmieducarCurso($registro['ref_cod_curso']);
-                    $detalhe = $objTemp->detalhe();
+                    $nomeCurso = $registro->course->nm_curso;
                     if ($editar) {
-                        $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                        $opcoes["{$registro['ref_cod_curso']}"] = $nomeCurso;
                     } else {
                         $opcoes[''] = 'Selecione um curso';
                     }
                     $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
-                    $cursos .= " escola['_{$registro['ref_cod_escola']}'][escola['_{$registro['ref_cod_escola']}'].length] = new Array( {$detalhe['cod_curso']}, '{$detalhe['nm_curso']}' );\n";
+                    $cursos .= " escola['_{$registro['ref_cod_escola']}'][escola['_{$registro['ref_cod_escola']}'].length] = new Array( {$registro['ref_cod_curso']}, '{$nomeCurso}' );\n";
                     $objSe = new clsPmieducarSerie(null, null, null, $registro['ref_cod_curso'], null, null, null, null, null, null, 1);
                     $listaSe = $objSe->lista(null, null, null, $registro['ref_cod_curso'], null, null, null, null, null, null, null, null, 1);
                     if ($listaSe) {
@@ -139,17 +146,19 @@ if ($privilegio == 4) {
         $cursos = '';
         $series = '';
         foreach ($lst_escola as $escola) {
-            $objTemp = new clsPmieducarEscolaCurso;
-            $lista = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
+            $lista = LegacySchoolCourse::query()
+                ->active()
+                ->whereSchool((int) $escola['cod_escola'])
+                ->with('course:cod_curso,nm_curso')
+                ->get();
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
-            if ($lista) {
+            if ($lista->isNotEmpty()) {
                 foreach ($lista as $registro) {
-                    $objTemp = new clsPmieducarCurso($registro['ref_cod_curso']);
-                    $detalhe = $objTemp->detalhe();
+                    $nomeCurso = $registro->course->nm_curso;
                     $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
-                    $cursos .= " escola['_{$registro['ref_cod_escola']}'][escola['_{$registro['ref_cod_escola']}'].length] = new Array( {$detalhe['cod_curso']}, '{$detalhe['nm_curso']}' );\n";
+                    $cursos .= " escola['_{$registro['ref_cod_escola']}'][escola['_{$registro['ref_cod_escola']}'].length] = new Array( {$registro['ref_cod_curso']}, '{$nomeCurso}' );\n";
                     if ($editar) {
-                        $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                        $opcoes["{$registro['ref_cod_curso']}"] = $nomeCurso;
                     } else {
                         $opcoes[''] = 'Selecione um curso';
                     }

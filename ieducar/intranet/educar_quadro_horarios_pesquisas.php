@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolCourse;
 use App\Models\LegacyUserSchool;
 
 $obj_permissoes = new clsPermissoes;
@@ -191,11 +192,14 @@ if ($get_curso) {
 
     // EDITAR
     if ($this->ref_cod_escola) {
-        $obj_esc_cur = new clsPmieducarEscolaCurso;
-        $lst_esc_cur = $obj_esc_cur->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ativo: 1);
-        if (is_array($lst_esc_cur) && count($lst_esc_cur)) {
+        $lst_esc_cur = LegacySchoolCourse::query()
+            ->active()
+            ->whereSchool((int) $this->ref_cod_escola)
+            ->with('course:cod_curso,nm_curso')
+            ->get();
+        if ($lst_esc_cur->isNotEmpty()) {
             foreach ($lst_esc_cur as $detalhe) {
-                $opcoes_curso["{$detalhe['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                $opcoes_curso["{$detalhe->ref_cod_curso}"] = $detalhe->course->nm_curso;
             }
         }
     }

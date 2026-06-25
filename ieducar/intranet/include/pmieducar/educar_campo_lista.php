@@ -111,8 +111,6 @@ if ($get_curso) {
 
     // EDITAR
     if ($this->ref_cod_escola) {
-        $obj_escola_curso = new clsPmieducarEscolaCurso;
-
         $lst_escola_curso = LegacyCourse::query()
             ->active()
             ->whereSchool($this->ref_cod_escola, $this->ano)
