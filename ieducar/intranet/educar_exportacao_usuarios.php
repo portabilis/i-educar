@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyUserType;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -37,17 +39,16 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'status', inputOptions: $optionsStatus);
 
         $opcoes = ['' => 'Selecione'];
+        $opcoes_ = [];
 
-        $objTemp = new clsPmieducarTipoUsuario;
-        $objTemp->setOrderby('nm_tipo ASC');
+        $lista = LegacyUserType::query()
+            ->active()
+            ->orderBy('nm_tipo')
+            ->get(['cod_tipo_usuario', 'nm_tipo', 'nivel']);
 
-        $lista = $objTemp->lista(int_ativo: 1);
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
-                $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
-            }
+        foreach ($lista as $registro) {
+            $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
+            $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
         }
 
         $tamanho = count($opcoes_);

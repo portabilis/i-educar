@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEmployee;
+use App\Models\LegacyUserType;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,13 +24,13 @@ return new class extends clsListagem
 
         $opcoes = ['' => 'Selecione'];
 
-        $objTemp = new clsPmieducarTipoUsuario;
-        $objTemp->setOrderby(strNomeCampo: 'nm_tipo ASC');
-        $lista = $objTemp->lista(int_ativo: 1);
-        if (is_array(value: $lista) && count(value: $lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
-            }
+        $lista = LegacyUserType::query()
+            ->active()
+            ->orderBy('nm_tipo')
+            ->get(['cod_tipo_usuario', 'nm_tipo']);
+
+        foreach ($lista as $registro) {
+            $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
         }
 
         $this->campoLista(nome: 'ref_cod_tipo_usuario', campo: 'Tipo Usuário', valor: $opcoes, default: $this->ref_cod_tipo_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
@@ -38,21 +39,38 @@ return new class extends clsListagem
         $detalhe = $obj_usuario->detalhe();
 
         // filtro de nivel de acesso
-        $obj_tipo_usuario = new clsPmieducarTipoUsuario(cod_tipo_usuario: $detalhe['ref_cod_tipo_usuario']);
-        $tipo_usuario = $obj_tipo_usuario->detalhe();
+        $nivelUsuario = LegacyUserType::query()
+            ->whereKey($detalhe['ref_cod_tipo_usuario'])
+            ->value('nivel');
 
         /** @var User $user */
         $user = Auth::user();
 
-        if ($user->isAdmin()) {
-            $opcoes = ['' => 'Selecione', '1' => 'Poli-Institucional', '2' => 'Institucional', '4' => 'Escolar', '8' => 'Biblioteca'];
-        } elseif ($tipo_usuario['nivel'] == 1) {
-            $opcoes = ['' => 'Selecione', '2' => 'Institucional', '4' => 'Escolar', '8' => 'Biblioteca'];
-        } elseif ($tipo_usuario['nivel'] == 2) {
-            $opcoes = ['' => 'Selecione', '4' => 'Escolar', '8' => 'Biblioteca'];
-        } elseif ($tipo_usuario['nivel'] == 4) {
-            $opcoes = ['' => 'Selecione', '8' => 'Biblioteca'];
-        }
+        $opcoes = match (true) {
+            $user->isAdmin() => [
+                '' => 'Selecione',
+                LegacyUserType::LEVEL_ADMIN => 'Poli-Institucional',
+                LegacyUserType::LEVEL_INSTITUTIONAL => 'Institucional',
+                LegacyUserType::LEVEL_SCHOOLING => 'Escolar',
+                LegacyUserType::LEVEL_LIBRARY => 'Biblioteca',
+            ],
+            $nivelUsuario == LegacyUserType::LEVEL_ADMIN => [
+                '' => 'Selecione',
+                LegacyUserType::LEVEL_INSTITUTIONAL => 'Institucional',
+                LegacyUserType::LEVEL_SCHOOLING => 'Escolar',
+                LegacyUserType::LEVEL_LIBRARY => 'Biblioteca',
+            ],
+            $nivelUsuario == LegacyUserType::LEVEL_INSTITUTIONAL => [
+                '' => 'Selecione',
+                LegacyUserType::LEVEL_SCHOOLING => 'Escolar',
+                LegacyUserType::LEVEL_LIBRARY => 'Biblioteca',
+            ],
+            $nivelUsuario == LegacyUserType::LEVEL_SCHOOLING => [
+                '' => 'Selecione',
+                LegacyUserType::LEVEL_LIBRARY => 'Biblioteca',
+            ],
+            default => $opcoes,
+        };
         $this->campoLista(nome: 'ref_cod_nivel_usuario', campo: 'Nível de Acesso', valor: $opcoes, default: $this->ref_cod_nivel_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
 
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);

@@ -3,6 +3,7 @@
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
 use App\Models\LegacyUserSchool;
+use App\Models\LegacyUserType;
 
 return new class extends clsDetalhe
 {
@@ -49,9 +50,9 @@ return new class extends clsDetalhe
         $ativo_f = ($registro['ativo'] == '1') ? 'Ativo' : 'Inativo';
         $this->addDetalhe(detalhe: ['Status', $ativo_f]);
 
-        $obj_ref_cod_tipo_usuario = new clsPmieducarTipoUsuario(cod_tipo_usuario: $registro['ref_cod_tipo_usuario']);
-        $det_ref_cod_tipo_usuario = $obj_ref_cod_tipo_usuario->detalhe();
-        $registro['ref_cod_tipo_usuario'] = $det_ref_cod_tipo_usuario['nm_tipo'];
+        $registro['ref_cod_tipo_usuario'] = LegacyUserType::query()
+            ->whereKey($registro['ref_cod_tipo_usuario'])
+            ->value('nm_tipo');
 
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
