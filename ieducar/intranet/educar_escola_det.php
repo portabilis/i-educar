@@ -4,6 +4,7 @@ use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolCourse;
 use App\Models\PersonHasPlace;
 
 return new class extends clsDetalhe
@@ -138,10 +139,13 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Fax', "{$telefone_fax}"]);
         }
 
-        $obj = new clsPmieducarEscolaCurso;
-        $lst = $obj->lista(int_ref_cod_escola: $this->cod_escola);
+        $lst = LegacySchoolCourse::query()
+            ->active()
+            ->when(is_numeric($this->cod_escola), fn ($q) => $q->whereSchool((int) $this->cod_escola))
+            ->with('course:cod_curso,nm_curso')
+            ->get();
 
-        if ($lst) {
+        if ($lst->isNotEmpty()) {
             $tabela = '<table>
                            <tr align=\'center\'>
                                <td bgcolor=\'#ccdce6\'><b>nome</b></td>
@@ -154,10 +158,7 @@ return new class extends clsDetalhe
                 } else {
                     $color = ' bgcolor=\'#ffffff\' ';
                 }
-                $obj_curso = new clsPmieducarCurso(cod_curso: $valor['ref_cod_curso']);
-                $obj_curso->setorderby(strNomeCampo: 'nm_curso asc');
-                $obj_curso_det = $obj_curso->detalhe();
-                $nm_curso = $obj_curso_det['nm_curso'];
+                $nm_curso = $valor->course?->nm_curso;
 
                 $tabela .= "<tr>
                                 <td {$color} align=left>{$nm_curso}</td>
