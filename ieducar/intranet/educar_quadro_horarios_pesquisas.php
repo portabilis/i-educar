@@ -199,7 +199,7 @@ if ($get_curso) {
             ->get();
         if ($lst_esc_cur->isNotEmpty()) {
             foreach ($lst_esc_cur as $detalhe) {
-                $opcoes_curso["{$detalhe->ref_cod_curso}"] = (string) $detalhe->course?->nm_curso;
+                $opcoes_curso["{$detalhe->ref_cod_curso}"] = $detalhe->course->nm_curso;
             }
         }
     }

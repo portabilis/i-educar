@@ -38,7 +38,7 @@ if ($privilegio == 4) {
         $series = '';
         $ESeries = '';
         foreach ($lista as $registro) {
-            $nomeCurso = (string) $registro->course?->nm_curso;
+            $nomeCurso = $registro->course->nm_curso;
             if ($editar) {
                 $opcoes["{$registro['ref_cod_curso']}"] = $nomeCurso;
             } else {
@@ -92,7 +92,7 @@ if ($privilegio == 4) {
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
             if ($lista->isNotEmpty()) {
                 foreach ($lista as $registro) {
-                    $nomeCurso = (string) $registro->course?->nm_curso;
+                    $nomeCurso = $registro->course->nm_curso;
                     if ($editar) {
                         $opcoes["{$registro['ref_cod_curso']}"] = $nomeCurso;
                     } else {
@@ -154,7 +154,7 @@ if ($privilegio == 4) {
             $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
             if ($lista->isNotEmpty()) {
                 foreach ($lista as $registro) {
-                    $nomeCurso = (string) $registro->course?->nm_curso;
+                    $nomeCurso = $registro->course->nm_curso;
                     $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
                     $cursos .= " escola['_{$registro['ref_cod_escola']}'][escola['_{$registro['ref_cod_escola']}'].length] = new Array( {$registro['ref_cod_curso']}, '{$nomeCurso}' );\n";
                     if ($editar) {

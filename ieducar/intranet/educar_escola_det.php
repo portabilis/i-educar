@@ -158,7 +158,7 @@ return new class extends clsDetalhe
                 } else {
                     $color = ' bgcolor=\'#ffffff\' ';
                 }
-                $nm_curso = $valor->course?->nm_curso;
+                $nm_curso = $valor->course->nm_curso;
 
                 $tabela .= "<tr>
                                 <td {$color} align=left>{$nm_curso}</td>
