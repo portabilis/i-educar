@@ -6,6 +6,7 @@ use App\Models\LegacyBondType;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
 use App\Models\LegacyUserSchool;
+use App\Models\LegacyUserType;
 use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
 use App\User;
@@ -171,24 +172,20 @@ return new class extends clsCadastro
         }
 
         $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPmieducarTipoUsuario;
-        $objTemp->setOrderby('nm_tipo ASC');
+        $opcoes_ = [];
 
         /** @var User $user */
         $user = Auth::user();
-        // verifica se pessoa logada é super-usuario
-        if ($user->isAdmin()) {
-            $lista = $objTemp->lista(int_ativo: 1);
-        } else {
-            $lista = $objTemp->lista(int_ativo: 1, int_nivel_menor: $obj_permissao->nivel_acesso($this->pessoa_logada));
-        }
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
-                $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
-            }
+        $lista = LegacyUserType::query()
+            ->active()
+            ->when(!$user->isAdmin(), fn ($q) => $q->whereLevelAtLeast($obj_permissao->nivel_acesso($this->pessoa_logada)))
+            ->orderBy('nm_tipo')
+            ->get(['cod_tipo_usuario', 'nm_tipo', 'nivel']);
+
+        foreach ($lista as $registro) {
+            $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
+            $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
         }
 
         $tamanho = count($opcoes_);

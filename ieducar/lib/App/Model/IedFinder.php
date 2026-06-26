@@ -8,6 +8,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
+use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
 use App\Models\LegacyUserType;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
@@ -176,28 +177,14 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getCursos($escolaId = null)
     {
-        $escola_curso = self::addClassToStorage(
-            'clsPmieducarEscolaCurso',
-            null,
-            'include/pmieducar/clsPmieducarEscolaCurso.inc.php'
-        );
-
-        // Carrega os cursos
-        $escola_curso->setOrderby('ref_cod_escola ASC, cod_curso ASC');
-        $escola_curso = $escola_curso->lista($escolaId);
-
-        if (!$escola_curso) {
-            return [];
-        }
-
-        $cursos = [];
-
-        foreach ($escola_curso as $val) {
-            $nomeCurso = self::getCurso($val['ref_cod_curso']);
-            $cursos[$val['ref_cod_curso']] = $nomeCurso;
-        }
-
-        return $cursos;
+        return LegacySchoolCourse::query()
+            ->active()
+            ->when(is_numeric($escolaId), fn ($q) => $q->whereSchool((int) $escolaId))
+            ->orderBySchoolCourse()
+            ->with('course:cod_curso,nm_curso,descricao')
+            ->get()
+            ->pluck('course.name', 'ref_cod_curso')
+            ->all();
     }
 
     /**

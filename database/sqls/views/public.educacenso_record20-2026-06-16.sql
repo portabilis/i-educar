@@ -145,8 +145,6 @@ SELECT
     escola.local_funcionamento as "localFuncionamento",
     curso.modalidade_curso as "modalidadeCurso",
     turma.cod_curso_profissional as "codCursoProfissional",
-    turma.cod_eixo_curso_profissional as "codEixoCursoProfissional",
-    turma.carga_horaria_total as "cargaHorariaTotal",
     turma.formacao_alternancia as "formacaoAlternancia",
     turma.area_itinerario as "areaItinerario",
     turma.tipo_curso_intinerario as "tipoCursoIntinerario",
