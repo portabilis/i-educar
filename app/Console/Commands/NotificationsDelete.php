@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Notification;
 use App\Support\Database\Connections;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class NotificationsDelete extends Command
 {
@@ -30,11 +29,10 @@ class NotificationsDelete extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
-        foreach ($this->getConnections() as $connection) {
-            DB::setDefaultConnection($connection);
-            Notification::whereDate('created_at', '<', now()->subMonths(6))->delete();
-        }
+        $this->eachConnection(fn () => Notification::whereDate('created_at', '<', now()->subMonths(6))->delete());
+
+        return self::SUCCESS;
     }
 }

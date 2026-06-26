@@ -8,7 +8,6 @@ use App\Services\ImportUsersService;
 use App\Support\Database\Connections;
 use iEducar\Support\Output\NullOutput;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -45,17 +44,15 @@ class ResetPasswordCommand extends Command
         $newPassword = Str::random(8);
 
         $employee = null;
-        foreach ($this->getConnections() as $connection) {
-            DB::setDefaultConnection($connection);
-
+        $this->eachConnection(function () use ($username, $newPassword, &$employee) {
             if (!LegacyEmployee::where('matricula', $username)->exists()) {
-                continue;
+                return;
             }
 
             $employee = LegacyEmployee::where('matricula', $username)->first();
             $employee->senha = Hash::make($newPassword);
             $employee->save();
-        }
+        });
 
         if ($employee) {
             $service->sendPasswordEmail(
