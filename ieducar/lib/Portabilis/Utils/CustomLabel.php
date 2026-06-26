@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyGeneralConfiguration;
+
 class CustomLabel
 {
     protected static $instance;
@@ -27,10 +29,11 @@ class CustomLabel
 
     protected function getFromDatabase()
     {
-        $configs = new clsPmieducarConfiguracoesGerais;
-        $detalhe = $configs->detalhe();
+        $customLabels = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('custom_labels');
 
-        return $detalhe['custom_labels'];
+        return !empty($customLabels) ? json_decode($customLabels, true) : $customLabels;
     }
 
     public static function getInstance()

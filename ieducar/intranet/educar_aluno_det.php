@@ -6,6 +6,7 @@ use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyMaritalStatus;
@@ -270,10 +271,11 @@ return new class extends clsDetalhe
         try {
             $alunoInep = $alunoMapper->find(pkey: ['aluno' => $this->cod_aluno]);
 
-            $configuracoes = new clsPmieducarConfiguracoesGerais;
-            $configuracoes = $configuracoes->detalhe();
+            $mostrarCodigoInep = LegacyGeneralConfiguration::query()
+                ->forActiveInstitution()
+                ->value('mostrar_codigo_inep_aluno');
 
-            if ($configuracoes['mostrar_codigo_inep_aluno']) {
+            if ($mostrarCodigoInep) {
                 $this->addDetalhe(detalhe: ['Código inep', $alunoInep->alunoInep]);
             }
         } catch (Exception $e) {

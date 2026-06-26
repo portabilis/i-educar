@@ -4,6 +4,7 @@ use App\Models\DeficiencyType;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
@@ -152,12 +153,13 @@ class AlunoController extends ApiCoreController
             }
 
             $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
-            $configuracoes = new clsPmieducarConfiguracoesGerais;
-            $configuracoes = $configuracoes->detalhe();
+            $tamanhoMinRedeEstadual = LegacyGeneralConfiguration::query()
+                ->forActiveInstitution()
+                ->value('tamanho_min_rede_estadual');
 
-            if (!empty($configuracoes['tamanho_min_rede_estadual'])) {
+            if (!empty($tamanhoMinRedeEstadual)) {
                 $count = strlen($this->getRequest()->aluno_estado_id);
-                if ($count < $configuracoes['tamanho_min_rede_estadual']) {
+                if ($count < $tamanhoMinRedeEstadual) {
                     $this->messenger->append("O Código rede estadual informado é inválido. {$this->getRequest()->aluno_estado_id}.");
 
                     return false;

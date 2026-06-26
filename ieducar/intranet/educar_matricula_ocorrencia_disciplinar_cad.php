@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use Illuminate\Validation\ValidationException;
 
@@ -275,8 +276,9 @@ return new class extends clsCadastro
 
     protected function enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar)
     {
-        $tmp_obj = new clsPmieducarConfiguracoesGerais($this->ref_cod_instituicao);
-        $instituicao = $tmp_obj->detalhe();
+        $urlNovoEducacao = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('url_novo_educacao');
 
         $obj_tmp = new clsPmieducarMatricula($this->ref_cod_matricula);
         $det_tmp = $obj_tmp->detalhe();
@@ -299,7 +301,7 @@ return new class extends clsCadastro
 
         $requisicao = new ApiExternaController(
             [
-                'url' => $instituicao['url_novo_educacao'],
+                'url' => $urlNovoEducacao,
                 'recurso' => 'ocorrencias-disciplinares',
                 'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
                 'params' => $params,
@@ -313,10 +315,11 @@ return new class extends clsCadastro
 
     protected function possuiConfiguracaoNovoEducacao()
     {
-        $tmp_obj = new clsPmieducarConfiguracoesGerais($this->ref_cod_instituicao);
-        $instituicao = $tmp_obj->detalhe();
+        $urlNovoEducacao = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('url_novo_educacao');
 
-        return strlen($instituicao['url_novo_educacao']) > 0;
+        return strlen((string) $urlNovoEducacao) > 0;
     }
 
     public function Formular()
