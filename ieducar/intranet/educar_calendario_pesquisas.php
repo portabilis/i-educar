@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyUser;
 use App\Models\LegacyUserSchool;
 
 $obj_permissoes = new clsPermissoes;
@@ -96,9 +97,9 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
             );
         }
     } elseif ($nivel_usuario != 1) {
-        $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-        $det_usuario = $obj_usuario->detalhe();
-        $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
+        $this->ref_cod_instituicao = LegacyUser::query()
+            ->whereKey($this->pessoa_logada)
+            ->value('ref_cod_instituicao');
     }
 
     if ($get_escola) {

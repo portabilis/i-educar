@@ -26,6 +26,11 @@ class LegacyUser extends DefaultUser
     /**
      * @var bool
      */
+    public $incrementing = false;
+
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
     /**
@@ -37,8 +42,10 @@ class LegacyUser extends DefaultUser
         'cod_usuario',
         'ref_cod_instituicao',
         'ref_funcionario_cad',
+        'ref_funcionario_exc',
         'ref_cod_tipo_usuario',
         'data_cadastro',
+        'data_exclusao',
         'ativo',
     ];
 

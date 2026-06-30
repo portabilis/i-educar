@@ -2,6 +2,7 @@
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -77,15 +78,13 @@ if ($nivel_usuario == 1 || $cad_usuario) {
     }
 } // se nao eh administrador
 elseif ($nivel_usuario != 1) {
-    $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
-    $det_usuario = $obj_usuario->detalhe();
-    $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
+    $this->ref_cod_instituicao = LegacyUser::query()
+        ->whereKey($pessoa_logada)
+        ->value('ref_cod_instituicao');
     $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
     // se eh institucional - admin
     if ($nivel_usuario == 4 || $nivel_usuario == 8) {
-        $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
-        $det_usuario = $obj_usuario->detalhe();
-        $this->ref_cod_escola = $det_usuario['ref_cod_escola'];
+        $this->ref_cod_escola = null;
         $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         if ($exibe_nm_escola == true) {
             $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);

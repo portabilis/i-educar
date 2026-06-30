@@ -87,10 +87,6 @@ return new class
 
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
 
-        if (!$this->ref_cod_escola) {
-            $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
-        }
-
         if (!is_numeric(value: $this->ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         }
