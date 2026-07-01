@@ -1329,12 +1329,14 @@ return new class extends clsCadastro
         ];
 
         if ($pessoaId && LegacyPerson::whereKey($pessoaId)->exists()) {
+            $dados['idpes_rev'] = Auth::id();
             LegacyPerson::find($pessoaId)?->update($dados);
 
             return $pessoaId;
         }
 
         $dados['tipo'] = 'F';
+        $dados['idpes_cad'] = Auth::id();
 
         return LegacyPerson::create($dados)->idpes;
     }
