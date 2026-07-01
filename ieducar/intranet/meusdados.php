@@ -200,7 +200,10 @@ return new class extends clsCadastro
             phone: $this->celular
         );
 
-        LegacyPerson::find($this->pessoa_logada)?->update(['nome' => $this->nome]);
+        LegacyPerson::find($this->pessoa_logada)?->update([
+            'nome' => $this->nome,
+            'idpes_rev' => Auth::id(),
+        ]);
 
         $fisica = LegacyIndividual::find($this->pessoa_logada, ['idpes', 'sexo']);
         $fisica?->update(['sexo' => $this->sexo]);
