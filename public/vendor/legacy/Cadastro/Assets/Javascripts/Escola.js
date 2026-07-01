@@ -1368,9 +1368,7 @@ $j('#uso_internet').on('change', function () {
 
 function aplicaRestricoesRedeLocal() {
     const equipamentos = parseInt($j('#equipamentos_acesso_internet').val(), 10);
-    const computadoresZero = (parseInt($j('#quantidade_computadores_alunos_mesa').val(), 10) || 0) === 0
-        && (parseInt($j('#quantidade_computadores_alunos_portateis').val(), 10) || 0) === 0
-        && (parseInt($j('#quantidade_computadores_alunos_tablets').val(), 10) || 0) === 0;
+    const naoPossuiComputadores = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) === -1;
 
     let opcoesPermitidas = [
         REDE_LOCAL.NENHUMA,
@@ -1382,7 +1380,7 @@ function aplicaRestricoesRedeLocal() {
     if (equipamentos === EQUIPAMENTOS_ACESSO_INTERNET.DISPOSITIVOS_PESSOAIS
         || equipamentos === EQUIPAMENTOS_ACESSO_INTERNET.AMBOS) {
         opcoesPermitidas = [REDE_LOCAL.WIRELESS, REDE_LOCAL.A_CABO_E_WIRELESS];
-    } else if (computadoresZero && isNaN(equipamentos)) {
+    } else if (naoPossuiComputadores && isNaN(equipamentos)) {
         opcoesPermitidas = opcoesPermitidas.filter(function (v) {
             return v !== REDE_LOCAL.A_CABO && v !== REDE_LOCAL.A_CABO_E_WIRELESS;
         });
@@ -1433,8 +1431,12 @@ $j('#equipamentos_acesso_internet').on('change', function () {
 });
 
 $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').on('change input', function () {
-    aplicaRestricoesRedeLocal();
     aplicaRestricoesEquipamentosAcessoInternet();
+});
+
+// O campo "Computadores" (equipamentos administrativos) altera as opções válidas da rede local
+$j('#equipamentos').on('change', function () {
+    aplicaRestricoesRedeLocal();
 });
 
 function habilitaCampoLinguaMinistrada() {
