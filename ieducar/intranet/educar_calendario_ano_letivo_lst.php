@@ -95,6 +95,10 @@ return new class extends clsListagem
             $this->ano = date(format: 'Y');
         }
 
+        if (!$this->ref_cod_escola) {
+            $this->ref_cod_escola = false;
+        }
+
         if (!$this->ref_cod_instituicao) {
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         }
