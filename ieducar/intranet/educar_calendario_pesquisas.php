@@ -115,9 +115,9 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $todas_escolas .= sprintf(
-                    'escola[escola.length] = new Array(%s, \'%s\', %s);' . "\n",
+                    'escola[escola.length] = new Array(%s, %s, %s);' . "\n",
                     $registro['cod_escola'],
-                    $registro['nome'],
+                    json_encode($registro['nome']),
                     $registro['ref_cod_instituicao']
                 );
             }
@@ -161,7 +161,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
             $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
-            $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 ? 'disabled="true" ' : '';
+            $disabled = !$this->ref_cod_escola && !$this->ref_cod_instituicao && $nivel_usuario == 1 ? 'disabled="true" ' : '';
             $retorno .= sprintf(
                 ' <select class="geral" name="ref_cod_escola" %s id="ref_cod_escola">',
                 $disabled
