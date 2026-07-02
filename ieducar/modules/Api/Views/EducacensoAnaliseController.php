@@ -688,7 +688,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->equipamentosAcessoInternetComputadorMesa() && $escola->quantidadeComputadoresAlunosNaoPreenchida()) {
+        if (($escola->equipamentosAcessoInternetComputadorMesa() || $escola->equipamentosAcessoInternetAmbos()) && $escola->quantidadeComputadoresAlunosNaoPreenchida()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se pelo menos um dos campos da seção Quantidade de computadores de uso dos alunos foi preenchido.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Seção: Quantidade de computadores de uso dos alunos)',
@@ -842,10 +842,10 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->quantidadeComputadoresAlunosNaoPreenchida() && empty(array_filter($escola->equipamentosAcessoInternet)) &&
+        if (!$escola->possuiComputadores() && empty(array_filter($escola->equipamentosAcessoInternet)) &&
             ($escola->redeLocalACabo() || $escola->redeLocalACaboEWireless())) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que, quando não há computadores de uso dos aluno(a)s e os equipamentos que os aluno(a)s usam para acessar a internet da escola não foram informados, a rede local de interligação de computadores não pode ser A cabo ou A cabo e Wireless.",
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que, quando a escola não possui Computadores no campo Equipamentos da escola e os equipamentos que os aluno(a)s usam para acessar a internet da escola não foram informados, a rede local de interligação de computadores não pode ser A cabo ou A cabo e Wireless.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
