@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -52,18 +51,6 @@ class LegacyOrganization extends LegacyModel
     protected static function boot()
     {
         parent::boot();
-
-        static::creating(function ($model) {
-            if (Auth::check()) {
-                $model->idpes_cad = Auth::id();
-            }
-        });
-
-        static::updating(function ($model) {
-            if (Auth::check()) {
-                $model->idpes_rev = Auth::id();
-            }
-        });
 
         static::saving(function ($model) {
             if ($model->isDirty('fantasia') && config('legacy.app.uppercase_names')) {

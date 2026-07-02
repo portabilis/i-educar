@@ -89,9 +89,9 @@ class ImportUsersService implements ToCollection
         }
 
         $userArray = [];
-        foreach ($this->getConnections() as $connection) {
+        $this->eachConnection(function ($connection) use ($name, $user, $password, $email, $forceResetPassword, &$userArray) {
             $userArray[] = $this->createUserByConnection($name, $user, $password, $email, $forceResetPassword, $connection);
-        }
+        });
 
         $userArray = array_filter($userArray);
 
