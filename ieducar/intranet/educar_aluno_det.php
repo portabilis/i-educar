@@ -618,7 +618,9 @@ return new class extends clsDetalhe
         }
 
         if ($this->obj_permissao->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
-            $bloquearCadastroAluno = dbBool(val: $configuracoes['bloquear_cadastro_aluno']);
+            $bloquearCadastroAluno = dbBool(val: LegacyGeneralConfiguration::query()
+                ->forActiveInstitution()
+                ->value('bloquear_cadastro_aluno'));
 
             if ($bloquearCadastroAluno == false) {
                 $this->url_novo = '/module/Cadastro/aluno';

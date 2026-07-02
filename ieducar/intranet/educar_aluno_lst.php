@@ -66,9 +66,9 @@ return new class extends clsListagem
     {
         $this->titulo = 'Aluno - Listagem';
 
-        $mostrarCodigoInep = LegacyGeneralConfiguration::query()
+        $configuracoes = LegacyGeneralConfiguration::query()
             ->forActiveInstitution()
-            ->value('mostrar_codigo_inep_aluno');
+            ->first(['mostrar_codigo_inep_aluno', 'bloquear_cadastro_aluno']);
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -76,7 +76,7 @@ return new class extends clsListagem
 
         $this->campoNumero(nome: 'cod_aluno', campo: _cl(key: 'aluno.detalhe.codigo_aluno'), valor: $this->cod_aluno, tamanhovisivel: 20, tamanhomaximo: 9);
 
-        if ($mostrarCodigoInep) {
+        if ($configuracoes['mostrar_codigo_inep_aluno']) {
             $this->campoNumero(nome: 'cod_inep', campo: 'Código INEP', valor: $this->cod_inep, tamanhovisivel: 20, tamanhomaximo: 255);
         }
 

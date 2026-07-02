@@ -367,7 +367,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = ['label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 12];
 
-        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
+        $mostrarCodigoInep = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('mostrar_codigo_inep_aluno');
+
+        if (!$mostrarCodigoInep) {
             $this->inputsHelper()->hidden('aluno_inep_id', ['value' => null]);
         } else {
             $this->inputsHelper()->integer('aluno_inep_id', $options);
