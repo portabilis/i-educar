@@ -46,6 +46,7 @@ class S3BackupUrlPresigner
     private function getKeyFromUrl(string $url): string
     {
         $path = implode('/', array_slice(explode('/', $url), 4));
+
         return urldecode(urldecode($path));
     }
 

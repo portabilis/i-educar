@@ -8,6 +8,7 @@ use App\Models\LegacySchool;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\EtapaAgregada;
+use iEducar\Modules\Educacenso\Model\EtapaEnsino;
 use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
@@ -103,7 +104,6 @@ class CheckMandatoryCensoFields implements Rule
 
     private function validaEtapaEducacenso($params)
     {
-        $course = LegacyCourse::find($params->ref_cod_curso);
         $organizacaoCurricular = $this->getOrganizacaoCurricularValues($params);
 
         if (empty($params->etapa_educacenso) &&
@@ -114,19 +114,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
-            isset($params->etapa_educacenso) &&
-            !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
-
-            return false;
-        }
-
-        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
-            isset($params->etapa_educacenso) &&
-            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 75, 67, 70, 71, 73, 74], true)) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 68, 75, 67, 70, 71, 73 ou 74';
-
+        if (!$this->validaEtapaEnsinoPorCombinacao($params)) {
             return false;
         }
 
@@ -147,11 +135,64 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
+    /**
+     * Valida a etapa de ensino pela combinação de mediação didático-pedagógica,
+     * tipo de turma e etapa agregada. Substitui a validação por mediação dos anos
+     * anteriores, que ignorava a etapa agregada.
+     */
+    public function validaEtapaEnsinoPorCombinacao($params)
+    {
+        if (empty($params->etapa_educacenso) || empty($params->etapa_agregada)) {
+            return true;
+        }
+
+        $tipoAtendimento = $this->getTipoAtendimentoValues($params);
+
+        if (!is_array($tipoAtendimento) || !TipoAtendimentoTurma::possuiCurricular($tipoAtendimento)) {
+            return true;
+        }
+
+        $organizacaoCurricular = $this->getOrganizacaoCurricularValues($params);
+        $temAtividadeComplementar = TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento);
+        $temFormacaoGeralBasica = is_array($organizacaoCurricular)
+            && in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular);
+
+        $etapasPermitidas = EtapaEnsino::getEtapasPermitidas(
+            (int) $params->tipo_mediacao_didatico_pedagogico,
+            !$temAtividadeComplementar,
+            $temAtividadeComplementar,
+            (int) $params->etapa_agregada,
+            $temFormacaoGeralBasica
+        );
+
+        if (in_array((int) $params->etapa_educacenso, $etapasPermitidas ?? [], true)) {
+            return true;
+        }
+
+        $contexto = 'Quando o campo: ' . EtapaEnsino::descreverCombinacao(
+            (int) $params->tipo_mediacao_didatico_pedagogico,
+            $temAtividadeComplementar,
+            (int) $params->etapa_agregada
+        );
+
+        $ensinoMedio = [EtapaAgregada::ENSINO_MEDIO, EtapaAgregada::ENSINO_MEDIO_NORMAL_MAGISTERIO];
+
+        if ($etapasPermitidas) {
+            $this->message = "{$contexto}, o campo: Etapa de ensino deve ser uma das seguintes opções: " . EtapaEnsino::descreverOpcoes($etapasPermitidas) . '.';
+        } elseif (!$temFormacaoGeralBasica && in_array((int) $params->etapa_agregada, $ensinoMedio, true)) {
+            $this->message = "{$contexto}, o campo: Etapa de ensino só se aplica quando o campo: Organização Curricular da Turma for preenchido com: Formação geral básica.";
+        } else {
+            $this->message = "{$contexto}, o campo: Etapa de ensino não se aplica a essa combinação.";
+        }
+
+        return false;
+    }
+
     protected function validaCampoAtividadesComplementares($params)
     {
         $tipoAtendimento = $this->getTipoAtendimentoValues($params);
 
-        if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento)
+        if (is_array($tipoAtendimento) && TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento)
             && empty($params->atividades_complementares)
         ) {
             $this->message = 'Campo atividades complementares é obrigatório.';
@@ -166,19 +207,20 @@ class CheckMandatoryCensoFields implements Rule
     {
         $tipoAtendimento = $this->getTipoAtendimentoValues($params);
 
-        if (is_array($tipoAtendimento) && !in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $tipoAtendimento) && in_array(
+        if (is_array($tipoAtendimento) && !TipoAtendimentoTurma::possuiCurricular($tipoAtendimento) && in_array(
             $params->tipo_mediacao_didatico_pedagogico,
             [
                 App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA,
+                App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
             ]
         )) {
-            $this->message = 'O campo: Tipo de Turma deve ser: Curricular (etapa de ensino) quando o campo: Tipo de mediação didático-pedagógica for: Educação a Distância.';
+            $this->message = 'O campo: Tipo de Turma deve ser: Curricular (etapa de ensino) quando o campo: Tipo de mediação didático-pedagógica for: Educação a Distância ou Semipresencial.';
 
             return false;
         }
 
         $course = LegacyCourse::find($params->ref_cod_curso);
-        if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR, $tipoAtendimento) && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
+        if (is_array($tipoAtendimento) && TipoAtendimentoTurma::possuiAtividadeComplementar($tipoAtendimento) && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
             $this->message = 'Quando a modalidade do curso é: <b>Educação de Jovens e Adultos (EJA)</b>, o campo <b>Tipo de turma</b> não pode ser <b>Atividade complementar</b>';
 
             return false;
@@ -218,7 +260,7 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
-    protected function validaCargaHorariaTotal($params)
+    public function validaCargaHorariaTotal($params)
     {
         $organizacaoCurricular = array_map('intval', (array) $this->getOrganizacaoCurricularValues($params));
         $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
@@ -229,10 +271,9 @@ class CheckMandatoryCensoFields implements Rule
 
         $carga = $params->carga_horaria_total;
 
+        // Censo 2026: carga horária total deixou de ser obrigatória; sem valor não bloqueia
         if ($carga === null || $carga === '') {
-            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> é obrigatório quando o campo: <b>Organização curricular da turma</b> incluir: <b>Itinerário de formação técnica e profissional</b>.';
-
-            return false;
+            return true;
         }
 
         $carga = (int) $carga;
@@ -315,7 +356,6 @@ class CheckMandatoryCensoFields implements Rule
         $etapaEnsinoCanContainsWithEnsinoMedioEFormacaoGeralBasica = [25, 26, 27, 28, 29];
         if (is_array($organizacaoCurricular) &&
             in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular) &&
-            !in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular) &&
             $params->etapa_agregada &&
             ((int) $params->etapa_agregada === EtapaAgregada::ENSINO_MEDIO) &&
             isset($params->etapa_educacenso) &&
@@ -348,7 +388,6 @@ class CheckMandatoryCensoFields implements Rule
             3 => 'Ciclo(s)',
             4 => 'Grupos não seriados com base na idade ou competência',
             5 => 'Módulos',
-            6 => 'Turma de Formação por alternância (alternância regular de períodos de estudos)',
         ];
 
         $validOptionCorrelationForEtapaEnsino = [
@@ -366,9 +405,6 @@ class CheckMandatoryCensoFields implements Rule
             ],
             FormaOrganizacaoTurma::MODULES => [
                 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 64, 56, 67, 68, 69, 70, 71, 72, 73, 74, 75,
-            ],
-            FormaOrganizacaoTurma::ALTERNANCIA_REGULAR => [
-                19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 40, 41, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75,
             ],
         ];
 
