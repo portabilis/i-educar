@@ -145,10 +145,13 @@ SELECT
     escola.local_funcionamento as "localFuncionamento",
     curso.modalidade_curso as "modalidadeCurso",
     turma.cod_curso_profissional as "codCursoProfissional",
+    turma.cod_eixo_curso_profissional as "codEixoCursoProfissional",
+    turma.carga_horaria_total as "cargaHorariaTotal",
     turma.formacao_alternancia as "formacaoAlternancia",
     turma.area_itinerario as "areaItinerario",
     turma.tipo_curso_intinerario as "tipoCursoIntinerario",
-    turma.cod_curso_profissional_intinerario as "codCursoProfissionalIntinerario"
+    turma.cod_curso_profissional_intinerario as "codCursoProfissionalIntinerario",
+    turma.carga_horaria_total as "cargaHorariaTotal"
 FROM pmieducar.escola
 LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
 JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)

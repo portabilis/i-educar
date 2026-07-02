@@ -2,12 +2,12 @@
 
 namespace Tests\Api;
 
+use App_Model_MatriculaSituacao;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
-use App_Model_MatriculaSituacao;
 
 class DiarioRecuperaMatriculaAlunoTest extends TestCase
 {
@@ -80,45 +80,14 @@ class DiarioRecuperaMatriculaAlunoTest extends TestCase
         );
     }
 
-
-public function test_retorna_situacao_aprovado()
-{
-    $schoolClass = LegacySchoolClassFactory::new()->create();
-
-    $registration = LegacyRegistrationFactory::new()
-        ->withEnrollment($schoolClass)
-        ->create([
-            'aprovado' => App_Model_MatriculaSituacao::APROVADO,
-        ]);
-
-    $response = $this->getResource('/module/Api/Matricula', [
-        'oper' => 'get',
-        'resource' => 'matriculas',
-        'aluno_id' => $registration->ref_cod_aluno,
-        'escola_id' => $schoolClass->school_id,
-    ]);
-
-    $response->assertJsonPath(
-        'matriculas.0.situacao',
-        App_Model_MatriculaSituacao::getInstance()
-            ->getValue(App_Model_MatriculaSituacao::APROVADO)
-    );
-}
-public function test_retorna_todas_situacoes_permitidas()
-{
-    $situacoes = [
-        App_Model_MatriculaSituacao::REPROVADO,
-        App_Model_MatriculaSituacao::EM_EXAME,
-        App_Model_MatriculaSituacao::APROVADO_APOS_EXAME,
-    ];
-
-    foreach ($situacoes as $situacao) {
+    public function test_retorna_situacao_aprovado()
+    {
         $schoolClass = LegacySchoolClassFactory::new()->create();
 
         $registration = LegacyRegistrationFactory::new()
             ->withEnrollment($schoolClass)
             ->create([
-                'aprovado' => $situacao,
+                'aprovado' => App_Model_MatriculaSituacao::APROVADO,
             ]);
 
         $response = $this->getResource('/module/Api/Matricula', [
@@ -130,9 +99,39 @@ public function test_retorna_todas_situacoes_permitidas()
 
         $response->assertJsonPath(
             'matriculas.0.situacao',
-            App_Model_MatriculaSituacao::getInstance()->getValue($situacao)
+            App_Model_MatriculaSituacao::getInstance()
+                ->getValue(App_Model_MatriculaSituacao::APROVADO)
         );
     }
-}
 
+    public function test_retorna_todas_situacoes_permitidas()
+    {
+        $situacoes = [
+            App_Model_MatriculaSituacao::REPROVADO,
+            App_Model_MatriculaSituacao::EM_EXAME,
+            App_Model_MatriculaSituacao::APROVADO_APOS_EXAME,
+        ];
+
+        foreach ($situacoes as $situacao) {
+            $schoolClass = LegacySchoolClassFactory::new()->create();
+
+            $registration = LegacyRegistrationFactory::new()
+                ->withEnrollment($schoolClass)
+                ->create([
+                    'aprovado' => $situacao,
+                ]);
+
+            $response = $this->getResource('/module/Api/Matricula', [
+                'oper' => 'get',
+                'resource' => 'matriculas',
+                'aluno_id' => $registration->ref_cod_aluno,
+                'escola_id' => $schoolClass->school_id,
+            ]);
+
+            $response->assertJsonPath(
+                'matriculas.0.situacao',
+                App_Model_MatriculaSituacao::getInstance()->getValue($situacao)
+            );
+        }
+    }
 }

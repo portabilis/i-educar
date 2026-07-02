@@ -2100,6 +2100,7 @@ return new class extends clsCadastro
         LegacyOrganization::find($idpes)?->update([
             'cnpj' => null,
             'fantasia' => $this->fantasia,
+            'idpes_rev' => Auth::id(),
         ]);
     }
 
@@ -2670,6 +2671,7 @@ return new class extends clsCadastro
     {
         $pessoa = LegacyPerson::find($employeeId);
         $pessoa->email = $email;
+        $pessoa->idpes_rev = Auth::id();
         $pessoa->save();
     }
 

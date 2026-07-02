@@ -23,6 +23,8 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
 
     public $etapaAluno;
 
+    public $cargaHorariaIntegralizada;
+
     public $tipoItinerarioLinguagens;
 
     public $tipoItinerarioMatematica;

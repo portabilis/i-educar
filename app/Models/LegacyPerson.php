@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -37,6 +36,8 @@ class LegacyPerson extends LegacyModel
         'idpes',
         'nome',
         'data_cad',
+        'idpes_cad',
+        'idpes_rev',
         'tipo',
         'situacao',
         'origem_gravacao',
@@ -80,16 +81,6 @@ class LegacyPerson extends LegacyModel
             $model->situacao ??= 'I';
             $model->origem_gravacao ??= 'M';
             $model->operacao = 'I';
-
-            if (Auth::check() && empty($model->idpes_cad)) {
-                $model->idpes_cad = Auth::id();
-            }
-        });
-
-        static::updating(function ($model) {
-            if (Auth::check()) {
-                $model->idpes_rev = Auth::id();
-            }
         });
     }
 
