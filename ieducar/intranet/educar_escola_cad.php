@@ -749,7 +749,9 @@ return new class extends clsCadastro
                 $this->cnpj = $cnpjPessoaJuridica;
             }
 
-            $orgPessoaJuridica = LegacyOrganization::whereKey($this->pessoaj_id)->first(['idpes', 'fantasia']);
+            $orgPessoaJuridica = is_numeric($this->pessoaj_id)
+                ? LegacyOrganization::whereKey($this->pessoaj_id)->first(['idpes', 'fantasia'])
+                : null;
             $this->ref_idpes = $orgPessoaJuridica?->idpes;
 
             if (!$this->fantasia) {
