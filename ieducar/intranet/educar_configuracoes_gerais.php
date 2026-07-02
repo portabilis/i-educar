@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyGeneralConfiguration;
 use iEducar\Reports\Contracts\TeacherReportCard;
 use Illuminate\Support\Facades\Cache;
 
@@ -80,15 +81,11 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $obj_permissoes = new clsPermissoes;
-        $ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
-
-        $configuracoes = new clsPmieducarConfiguracoesGerais(ref_cod_instituicao: $ref_cod_instituicao);
-        $configuracoes = $configuracoes->detalhe();
+        $configuracoes = LegacyGeneralConfiguration::query()->forActiveInstitution()->first();
 
         $this->permite_relacionamento_posvendas = $configuracoes['permite_relacionamento_posvendas'];
-        $this->bloquear_cadastro_aluno = dbBool(val: $configuracoes['bloquear_cadastro_aluno']);
-        $this->situacoes_especificas_atestados = dbBool(val: $configuracoes['situacoes_especificas_atestados']);
+        $this->bloquear_cadastro_aluno = $configuracoes['bloquear_cadastro_aluno'];
+        $this->situacoes_especificas_atestados = $configuracoes['situacoes_especificas_atestados'];
         $this->url_novo_educacao = $configuracoes['url_novo_educacao'];
         $this->token_novo_educacao = $configuracoes['token_novo_educacao'];
         $this->mostrar_codigo_inep_aluno = $configuracoes['mostrar_codigo_inep_aluno'];
@@ -106,8 +103,8 @@ return new class extends clsCadastro
         $this->twitter_url = $configuracoes['twitter_url'];
         $this->linkedin_url = $configuracoes['linkedin_url'];
         $this->ieducar_suspension_message = $configuracoes['ieducar_suspension_message'];
-        $this->emitir_ato_autorizativo = dbBool(val: $configuracoes['emitir_ato_autorizativo']);
-        $this->emitir_ato_criacao_credenciamento = dbBool(val: $configuracoes['emitir_ato_criacao_credenciamento']);
+        $this->emitir_ato_autorizativo = $configuracoes['emitir_ato_autorizativo'];
+        $this->emitir_ato_criacao_credenciamento = $configuracoes['emitir_ato_criacao_credenciamento'];
 
         $this->inputsHelper()->checkbox(attrName: 'permite_relacionamento_posvendas', inputOptions: [
             'label' => 'Permite relacionamento direto no pós-venda?',
@@ -277,46 +274,68 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $obj_permissoes = new clsPermissoes;
-        $ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
-        $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
+        $permiteRelacionamentoPosvendas = $this->permite_relacionamento_posvendas == 'on' ? 1 : 0;
         $bloquearCadastroAluno = $this->bloquear_cadastro_aluno == 'on' ? 1 : 0;
         $situacoesEspecificasAtestados = $this->situacoes_especificas_atestados == 'on' ? 1 : 0;
-        $emitir_ato_autorizativo = $this->emitir_ato_autorizativo == 'on' ? 1 : 0;
-        $emitir_ato_criacao_credenciamento = $this->emitir_ato_criacao_credenciamento == 'on' ? 1 : 0;
+        $emitirAtoAutorizativo = $this->emitir_ato_autorizativo == 'on' ? 1 : 0;
+        $emitirAtoCriacaoCredenciamento = $this->emitir_ato_criacao_credenciamento == 'on' ? 1 : 0;
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais(ref_cod_instituicao: $ref_cod_instituicao, campos: [
+        $dados = [
             'permite_relacionamento_posvendas' => $permiteRelacionamentoPosvendas,
-            'bloquear_cadastro_aluno' => $bloquearCadastroAluno,
-            'situacoes_especificas_atestados' => $situacoesEspecificasAtestados,
-            'url_novo_educacao' => $this->url_novo_educacao,
-            'token_novo_educacao' => $this->token_novo_educacao,
-            'mostrar_codigo_inep_aluno' => $this->mostrar_codigo_inep_aluno,
-            'justificativa_falta_documentacao_obrigatorio' => $this->justificativa_falta_documentacao_obrigatorio,
-            'tamanho_min_rede_estadual' => $this->tamanho_min_rede_estadual,
-            'modelo_boletim_professor' => $this->modelo_boletim_professor,
-            'url_cadastro_usuario' => $this->url_cadastro_usuario,
-            'active_on_ieducar' => $this->active_on_ieducar,
-            'ieducar_image' => $this->ieducar_image,
-            'ieducar_entity_name' => $this->ieducar_entity_name,
-            'ieducar_login_footer' => $this->ieducar_login_footer,
-            'ieducar_external_footer' => $this->ieducar_external_footer,
-            'ieducar_internal_footer' => $this->ieducar_internal_footer,
-            'facebook_url' => $this->facebook_url,
-            'twitter_url' => $this->twitter_url,
-            'linkedin_url' => $this->linkedin_url,
-            'ieducar_suspension_message' => $this->ieducar_suspension_message,
-            'emitir_ato_autorizativo' => $emitir_ato_autorizativo,
-            'emitir_ato_criacao_credenciamento' => $emitir_ato_criacao_credenciamento,
-        ]);
+            'token_novo_educacao' => !empty($this->token_novo_educacao) ? $this->token_novo_educacao : null,
+            'tamanho_min_rede_estadual' => !empty($this->tamanho_min_rede_estadual) && is_numeric($this->tamanho_min_rede_estadual) ? $this->tamanho_min_rede_estadual : null,
+            'ieducar_image' => $this->ieducar_image ?: null,
+            'ieducar_login_footer' => $this->ieducar_login_footer ?: null,
+            'ieducar_external_footer' => $this->ieducar_external_footer ?: null,
+            'ieducar_internal_footer' => $this->ieducar_internal_footer ?: null,
+            'facebook_url' => $this->facebook_url ?: null,
+            'twitter_url' => $this->twitter_url ?: null,
+            'linkedin_url' => $this->linkedin_url ?: null,
+            'bloquear_cadastro_aluno' => (bool) $bloquearCadastroAluno,
+            'situacoes_especificas_atestados' => (bool) $situacoesEspecificasAtestados,
+            'emitir_ato_autorizativo' => (bool) $emitirAtoAutorizativo,
+            'emitir_ato_criacao_credenciamento' => (bool) $emitirAtoCriacaoCredenciamento,
+        ];
 
-        $editou = $configuracoes->edita();
+        if (!empty($this->url_novo_educacao)) {
+            $dados['url_novo_educacao'] = $this->url_novo_educacao;
+        }
+
+        if (is_numeric($this->mostrar_codigo_inep_aluno)) {
+            $dados['mostrar_codigo_inep_aluno'] = $this->mostrar_codigo_inep_aluno;
+        }
+
+        if (is_numeric($this->justificativa_falta_documentacao_obrigatorio)) {
+            $dados['justificativa_falta_documentacao_obrigatorio'] = $this->justificativa_falta_documentacao_obrigatorio;
+        }
+
+        if (is_numeric($this->modelo_boletim_professor)) {
+            $dados['modelo_boletim_professor'] = $this->modelo_boletim_professor;
+        }
+
+        if (!empty($this->url_cadastro_usuario)) {
+            $dados['url_cadastro_usuario'] = $this->url_cadastro_usuario;
+        }
+
+        if (is_numeric($this->active_on_ieducar)) {
+            $dados['active_on_ieducar'] = $this->active_on_ieducar;
+        }
+
+        if (!empty($this->ieducar_entity_name)) {
+            $dados['ieducar_entity_name'] = $this->ieducar_entity_name;
+        }
+
+        if (!empty($this->ieducar_suspension_message)) {
+            $dados['ieducar_suspension_message'] = $this->ieducar_suspension_message;
+        }
+
+        $editou = LegacyGeneralConfiguration::query()->forActiveInstitution()->first()?->update($dados);
 
         if ($editou) {
             // Reseta o cache de configurações
             Cache::invalidateByTags(['configurations']);
 
-            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+            $this->mensagem = 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect(url: 'index.php');
         }
 

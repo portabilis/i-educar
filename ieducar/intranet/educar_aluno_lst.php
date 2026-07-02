@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\DataSearch\StudentFilter;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyStudent;
 
 return new class extends clsListagem
@@ -65,8 +66,9 @@ return new class extends clsListagem
     {
         $this->titulo = 'Aluno - Listagem';
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais;
-        $configuracoes = $configuracoes->detalhe();
+        $configuracoes = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->first(['mostrar_codigo_inep_aluno', 'bloquear_cadastro_aluno']);
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;

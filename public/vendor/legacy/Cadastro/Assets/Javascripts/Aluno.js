@@ -311,6 +311,19 @@ function formularioValido() {
     return false;
   }
 
+  var justificativaFaltaDocumentacao = $j("#justificativa_falta_documentacao");
+
+  if (
+    $j("#justificativa_falta_documentacao_obrigatorio").length > 0 &&
+    !justificativaFaltaDocumentacao.attr("disabled") &&
+    !justificativaFaltaDocumentacao.val()
+  ) {
+    messageUtils.error(
+      "O campo Justificativa para a falta de documentação deve ser preenchido"
+    );
+    return false;
+  }
+
   submitFormExterno();
 }
 
@@ -1411,11 +1424,16 @@ var checkTipoCertidaoCivil = function () {
 function disableJustificativaFields() {
   $jField = $j("#justificativa_falta_documentacao");
   $jField.attr("disabled", "disabled");
+  $jField.makeUnrequired();
 }
 
 function enableJustificativaFields() {
   $jField = $j("#justificativa_falta_documentacao");
   $jField.removeAttr("disabled");
+
+  if ($j("#justificativa_falta_documentacao_obrigatorio").length > 0) {
+    $jField.makeRequired();
+  }
 }
 
 var handleGetPersonParentDetails = function (dataResponse, parentType) {

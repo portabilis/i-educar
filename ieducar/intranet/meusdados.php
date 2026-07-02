@@ -2,6 +2,7 @@
 
 use App\Facades\Asset;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyPerson;
@@ -271,10 +272,9 @@ return new class extends clsCadastro
             $escola = $escola['nome'];
         }
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais;
-        $configuracoes = $configuracoes->detalhe();
-
-        $permiteRelacionamentoPosvendas = $configuracoes['permite_relacionamento_posvendas'] ? 'Sim' : 'Não';
+        $permiteRelacionamentoPosvendas = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('permite_relacionamento_posvendas') ? 'Sim' : 'Não';
 
         $dados = [
             'nome' => $this->nome,
