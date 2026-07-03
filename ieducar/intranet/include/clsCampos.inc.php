@@ -2,6 +2,13 @@
 
 class clsCampos extends Core_Controller_Page_Abstract
 {
+    /**
+     * CNPJ com máscara: 12 posições alfanuméricas e 2 dígitos verificadores numéricos.
+     */
+    private const REGEX_CNPJ = '/[0-9A-Za-z]{2}\.[0-9A-Za-z]{3}\.[0-9A-Za-z]{3}\/[0-9A-Za-z]{4}\-[0-9]{2}/';
+
+    private const REGEX_CPF = '/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/';
+
     public $campos = [];
 
     public $num_espaco = 1;
@@ -184,7 +191,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'cnpj',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : '',
+            $obrigatorio ? self::REGEX_CNPJ : '',
             $valor,
             20,
             18,
@@ -209,7 +216,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->campos[$nome] = [
             'cnpj_pesq',
             $campo,
-            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : "*(/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/)",
+            $obrigatorio ? self::REGEX_CNPJ : '*(' . self::REGEX_CNPJ . ')',
             $valor,
             20,
             18,
@@ -224,7 +231,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'cpf',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/" : '',
+            $obrigatorio ? self::REGEX_CPF : '',
             $valor,
             16,
             14,
@@ -273,7 +280,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'idFederal',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/+/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : '',
+            $obrigatorio ? self::REGEX_CPF . '+' . self::REGEX_CNPJ : '',
             $valor,
             20,
             18,

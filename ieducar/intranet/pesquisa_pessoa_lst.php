@@ -169,13 +169,7 @@ return new class extends clsListagem
 
             // Filtros de Busca
             $this->campoTexto(nome: 'campo_busca', campo: 'Pessoa', valor: $this->campo_busca, tamanhovisivel: 35, tamanhomaximo: 255, descricao: 'Código/Nome');
-            if ($this->cnpj) {
-                if (is_numeric($this->cnpj)) {
-                    $this->cnpj = int2CNPJ($this->cnpj);
-                }
-            } else {
-                $this->cnpj = '';
-            }
+            $this->cnpj = $this->cnpj ? int2CNPJ($this->cnpj) : '';
             $this->campoCnpj(nome: 'cnpj', campo: 'CNPJ', valor: $this->cnpj);
 
             $chave_busca = @$_GET['campo_busca'];
@@ -186,15 +180,12 @@ return new class extends clsListagem
             $limite = 10;
             $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
-            $cnpjInt = $cnpj ? idFederal2int($cnpj) : null;
-
             $query = LegacyOrganization::query()
                 ->join('cadastro.pessoa', 'cadastro.pessoa.idpes', 'cadastro.juridica.idpes')
                 ->select(['cadastro.juridica.idpes', 'cadastro.juridica.fantasia', 'cadastro.juridica.cnpj', 'cadastro.pessoa.nome']);
 
-            if ($busca == 'S' && is_numeric($cnpjInt)) {
-                $cnpjLimpo = ltrim((string) $cnpjInt, '0');
-                $query->whereRaw('cadastro.juridica.cnpj::varchar ILIKE ?', ["%$cnpjLimpo%"]);
+            if ($busca == 'S') {
+                $query->when(limpaCnpj($cnpj), fn ($query, $cnpj) => $query->whereCnpj($cnpj));
             }
 
             if ($busca == 'S' && is_numeric($chave_busca)) {
@@ -216,7 +207,7 @@ return new class extends clsListagem
                     $funcao = ' set_campo_pesquisa(';
                     $virgula = '';
                     $cont = 0;
-                    $pessoa['cnpj'] = (is_numeric($pessoa['cnpj'])) ? int2CNPJ($pessoa['cnpj']) : null;
+                    $pessoa['cnpj'] = $pessoa['cnpj'] ? int2CNPJ($pessoa['cnpj']) : null;
                     foreach ($parametros->getCampoNome() as $campo) {
                         $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
                         if ($parametros->getCampoTipo($cont) === 'text') {
@@ -271,12 +262,12 @@ return new class extends clsListagem
                 }
 
                 if ($id_federal) {
-                    $idFederalInt = idFederal2int($id_federal);
-                    if (is_numeric($idFederalInt)) {
-                        $query->whereIn('cadastro.pessoa.idpes', function ($q) use ($idFederalInt) {
+                    $idFederalBusca = limpaCnpj($id_federal);
+                    if ($idFederalBusca !== '') {
+                        $query->whereIn('cadastro.pessoa.idpes', function ($q) use ($idFederalBusca) {
                             $q->select('idpes')
                                 ->from('cadastro.juridica')
-                                ->whereRaw('cnpj::varchar LIKE ?', ["%{$idFederalInt}%"]);
+                                ->whereRaw('cnpj LIKE ?', ["%{$idFederalBusca}%"]);
                         });
                     }
                 }
@@ -285,7 +276,7 @@ return new class extends clsListagem
             if (is_numeric($parametros->getCodSistema())) {
                 $query->where(function ($q) use ($parametros) {
                     $q->where('cadastro.fisica.ref_cod_sistema', $parametros->getCodSistema())
-                        ->orWhereRaw('COALESCE(cadastro.fisica.cpf, cadastro.juridica.cnpj) IS NOT NULL');
+                        ->orWhereRaw('COALESCE(cadastro.fisica.cpf::varchar, cadastro.juridica.cnpj) IS NOT NULL');
                 });
             }
 
