@@ -34,7 +34,6 @@ use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\PoderPublicoConveniado;
-use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
@@ -228,18 +227,8 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true,
-            ];
-        }
-
         if (!(new AdministrativeDomainValidator(
             $escola->esferaAdministrativa,
-            $escola->regulamentacao,
             $escola->dependenciaAdministrativa,
             $escola->codigoIbgeMunicipio
         ))->isValid()) {

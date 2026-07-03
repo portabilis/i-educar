@@ -10,6 +10,14 @@ const DEPENDENCIA_ADMINISTRATIVA = {
   PRIVADA: 4
 }
 
+const ESFERA_ADMINISTRATIVA = {
+  FEDERAL: 1,
+  ESTADUAL: 2,
+  MUNICIPAL: 3,
+  ESTADUAL_E_MUNICIPAL: 4,
+  FEDERAL_SETEC: 6
+}
+
 const SITUACAO_FUNCIONAMENTO = {
   EM_ATIVIDADE : 1,
   PARALISADA : 2,
@@ -499,19 +507,34 @@ function obrigaCampoOrgaoVinculadoEscola() {
   }
 }
 
-function habilitaCampoEsferaAdministrativa() {
-  let regulamentacao = $j('#regulamentacao').val();
+// A esfera administrativa (campo 50) depende da dependência administrativa da escola
+function aplicaRestricoesEsferaAdministrativa() {
+  const dependencia = parseInt($j('#dependencia_administrativa').val(), 10);
 
-  if (regulamentacao === '0') {
-    $j("#esfera_administrativa").prop('disabled', true);
-    $j('#esfera_administrativa').makeUnrequired();
-    $j("#esfera_administrativa").val('');
-  } else {
-    $j("#esfera_administrativa").prop('disabled', false);
-    if (obrigarCamposCenso) {
-      $j('#esfera_administrativa').makeRequired();
-    }
+  let opcoesPermitidas = [];
+  if (dependencia === DEPENDENCIA_ADMINISTRATIVA.FEDERAL) {
+    opcoesPermitidas = [ESFERA_ADMINISTRATIVA.FEDERAL, ESFERA_ADMINISTRATIVA.FEDERAL_SETEC];
+  } else if (dependencia === DEPENDENCIA_ADMINISTRATIVA.ESTADUAL) {
+    opcoesPermitidas = [ESFERA_ADMINISTRATIVA.ESTADUAL];
+  } else if (dependencia === DEPENDENCIA_ADMINISTRATIVA.MUNICIPAL || dependencia === DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+    opcoesPermitidas = [ESFERA_ADMINISTRATIVA.ESTADUAL, ESFERA_ADMINISTRATIVA.MUNICIPAL, ESFERA_ADMINISTRATIVA.ESTADUAL_E_MUNICIPAL];
   }
+
+  const $campo = $j('#esfera_administrativa');
+  $campo.find('option').each(function () {
+    const valor = parseInt($j(this).val(), 10);
+    if (isNaN(valor)) {
+      return;
+    }
+    $j(this).prop('disabled', !opcoesPermitidas.includes(valor));
+  });
+
+  const valorAtual = parseInt($campo.val(), 10);
+  if (!isNaN(valorAtual) && !opcoesPermitidas.includes(valorAtual)) {
+    $campo.val('');
+  }
+
+  $campo.trigger('chosen:updated');
 }
 function changeNumeroDeSalas() {
   const containsPredioEscolar = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) > -1;
@@ -852,6 +875,7 @@ $j(document).ready(function() {
       habilitaCampoOrgaoVinculadoEscola();
       obrigaCampoOrgaoVinculadoEscola();
       aplicaRestricoesFormasContratacao();
+      aplicaRestricoesEsferaAdministrativa();
     }
   );
 
@@ -959,14 +983,8 @@ $j(document).ready(function() {
     }
   }
 
-  $j('#regulamentacao').change(
-    function(){
-      habilitaCampoEsferaAdministrativa();
-    }
-  );
-
   verificaCamposDepAdm();
-  habilitaCampoEsferaAdministrativa();
+  aplicaRestricoesEsferaAdministrativa();
 
   let verificaLatitudeLongitude = () => {
     let regex = new RegExp('^(\\-?\\d+(\\.\\d+)?)\\.\\s*(\\-?\\d+(\\.\\d+)?)\$');
