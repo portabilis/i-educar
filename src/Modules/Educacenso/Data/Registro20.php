@@ -93,7 +93,7 @@ class Registro20 extends AbstractRegistro
             $record->etapaEducacenso, // 24 - Etapa
             in_array($record->etapaEducacenso, [67, 68, 73, 75]) ? $record->codEixoCursoProfissional : '', // 25 - Código do eixo do curso de qualificação profissional
             in_array($record->etapaEducacenso, [39, 40, 64, 74]) ? $record->codCursoProfissional : '', // 26 - Código do curso
-            $record->cargaHorariaTotal, // 27 - Carga horária total do curso (em horas)
+            $record->cargaHorariaTotal, // 27 - Carga horária total (em horas)
             $record->requereFormasOrganizacaoTurma() ? $record->formasOrganizacaoTurma : '', // 28 - Formas de organização da turma
             $record->formacaoAlternancia ?: 0, // 29 - Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade)
             in_array($record->etapaAgregada, [304, 305]) ? ($record->formacaoGeralBasica() ? 1 : 0) : '', // 30 - Formação geral básica

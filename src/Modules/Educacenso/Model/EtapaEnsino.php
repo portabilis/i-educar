@@ -19,6 +19,25 @@ class EtapaEnsino
 
     public const ETAPAS_CURSO_TECNICO_FIC = [39, 40, 64, 68, 75];
 
+    /**
+     * Etapas que, além do itinerário de formação técnica e profissional (IFTP),
+     * habilitam o preenchimento da carga horária total da turma (registro 20).
+     */
+    public const ETAPAS_PERMITEM_CARGA_HORARIA = [39, 40, 67, 68, 73, 75];
+
+    /**
+     * Carga horária total mínima (em horas) por etapa, conforme o Anexo 8 do
+     * layout do Censo.
+     */
+    public const CARGA_HORARIA_MINIMA_POR_ETAPA = [
+        39 => 100,
+        40 => 100,
+        67 => 1200,
+        68 => 160,
+        73 => 760,
+        75 => 160,
+    ];
+
     public static function getEtapasPermitidas(
         ?int $mediacao,
         bool $curricular,

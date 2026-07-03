@@ -7,94 +7,84 @@ use Tests\TestCase;
 
 class CargaHorariaTotalValidatorTest extends TestCase
 {
-    private const CURSO_TECNICO = 1;
-
-    private const QUALIFICACAO = 2;
-
-    // Curso técnico com carga mínima 1200 na Tabela INEP (cursos_carga_horaria_minima.json)
-    private const COD_CURSO_TECNICO = 1001;
-
-    public function test_iftp_inativo_sempre_valido()
-    {
-        $validator = new CargaHorariaTotalValidator(false, null, null, null);
-
-        $this->assertTrue($validator->isValid());
+    private function validator(
+        bool $iftpAtivo,
+        int $etapa,
+        $carga,
+        int $tipoCurso = 0,
+        int $codCurso = 0
+    ): CargaHorariaTotalValidator {
+        return new CargaHorariaTotalValidator($iftpAtivo, $etapa, $carga, $tipoCurso, $codCurso);
     }
 
-    public function test_carga_nula_e_opcional_quando_iftp()
+    public function test_campo_nao_aplicavel_sempre_valido(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, null, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
+        // Sem IFTP e etapa fora do conjunto: o campo não se aplica, não valida nada
+        $this->assertTrue($this->validator(false, 25, 99999)->isValid());
+        $this->assertTrue($this->validator(false, 0, null)->isValid());
     }
 
-    public function test_carga_vazia_e_opcional_quando_iftp()
+    public function test_iftp_habilita_o_campo(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, '', self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertTrue($this->validator(true, 0, 200)->isValid());
     }
 
-    public function test_carga_zero_invalida()
+    public function test_etapa_do_conjunto_habilita_o_campo_sem_iftp(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 0, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($this->validator(false, 39, 100)->isValid());
     }
 
-    public function test_carga_acima_de_9999_invalida()
+    public function test_valor_vazio_nao_bloqueia(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 10000, self::QUALIFICACAO, null);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($this->validator(true, 0, null)->isValid());
+        $this->assertTrue($this->validator(false, 39, '')->isValid());
     }
 
-    public function test_qualificacao_abaixo_de_160_invalida()
+    public function test_valor_fora_de_um_a_9999_e_invalido(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 100, self::QUALIFICACAO, null);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertFalse($this->validator(true, 0, 0)->isValid());
+        $this->assertFalse($this->validator(true, 0, 10000)->isValid());
     }
 
-    public function test_qualificacao_acima_de_800_invalida()
+    public function test_minimo_por_etapa_conforme_anexo_8(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 900, self::QUALIFICACAO, null);
-
-        $this->assertFalse($validator->isValid());
+        // 39 e 40 -> 100
+        $this->assertFalse($this->validator(false, 39, 99)->isValid());
+        $this->assertTrue($this->validator(false, 39, 100)->isValid());
+        $this->assertFalse($this->validator(false, 40, 99)->isValid());
+        $this->assertTrue($this->validator(false, 40, 100)->isValid());
+        // 68 e 75 -> 160
+        $this->assertFalse($this->validator(false, 68, 159)->isValid());
+        $this->assertTrue($this->validator(false, 68, 160)->isValid());
+        $this->assertFalse($this->validator(false, 75, 159)->isValid());
+        $this->assertTrue($this->validator(false, 75, 160)->isValid());
+        // 73 -> 760
+        $this->assertFalse($this->validator(false, 73, 759)->isValid());
+        $this->assertTrue($this->validator(false, 73, 760)->isValid());
+        // 67 -> 1200
+        $this->assertFalse($this->validator(false, 67, 1199)->isValid());
+        $this->assertTrue($this->validator(false, 67, 1200)->isValid());
     }
 
-    public function test_qualificacao_dentro_da_faixa_valida()
+    public function test_regra_2_curso_tecnico_usa_carga_minima_do_curso(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 400, self::QUALIFICACAO, null);
-
-        $this->assertTrue($validator->isValid());
+        // Código 1001 tem carga mínima 1200 (tipo 1); etapa 0 isola da regra do Anexo 8
+        $this->assertFalse($this->validator(true, 0, 500, 1, 1001)->isValid());
+        $this->assertTrue($this->validator(true, 0, 1200, 1, 1001)->isValid());
+        // Superior a 2000 é permitido
+        $this->assertTrue($this->validator(true, 0, 2500, 1, 1001)->isValid());
     }
 
-    public function test_tecnico_abaixo_da_carga_minima_do_curso_invalida()
+    public function test_regra_2_curso_sem_carga_minima_cadastrada_e_valido(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 1000, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($this->validator(true, 0, 500, 1, 999999)->isValid());
     }
 
-    public function test_tecnico_igual_a_carga_minima_do_curso_valida()
+    public function test_regra_3_qualificacao_profissional_entre_160_e_800(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 1200, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
-    }
-
-    public function test_tecnico_acima_de_2000_valida()
-    {
-        $validator = new CargaHorariaTotalValidator(true, 2500, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
-    }
-
-    public function test_tecnico_sem_carga_minima_cadastrada_valida()
-    {
-        $validator = new CargaHorariaTotalValidator(true, 500, self::CURSO_TECNICO, 999999);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertFalse($this->validator(true, 0, 159, 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 160, 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 800, 2)->isValid());
+        $this->assertFalse($this->validator(true, 0, 801, 2)->isValid());
     }
 }

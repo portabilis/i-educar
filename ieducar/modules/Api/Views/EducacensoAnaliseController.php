@@ -1236,9 +1236,10 @@ class EducacensoAnaliseController extends ApiCoreController
                 }
             }
 
-            // Censo 2026: carga horária total do curso, mesma regra do cadastro de turma (CheckMandatoryCensoFields)
+            // Censo 2026: carga horária total, mesma regra do cadastro de turma (CheckMandatoryCensoFields)
             $cargaHorariaTotalValidator = new CargaHorariaTotalValidator(
                 $turma->itinerarioFormacaoTecnicaProfissional(),
+                $turma->etapaEducacenso,
                 $turma->cargaHorariaTotal,
                 $turma->tipoCursoIntinerario,
                 $turma->codCursoProfissionalIntinerario
@@ -1247,7 +1248,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$cargaHorariaTotalValidator->isValid()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que " . $cargaHorariaTotalValidator->getMessage(),
-                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Carga horária total do curso (em horas))',
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Carga horária total (em horas))',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true,
                 ];
