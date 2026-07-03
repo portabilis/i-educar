@@ -521,6 +521,10 @@ function aplicaRestricoesEsferaAdministrativa() {
   }
 
   const $campo = $j('#esfera_administrativa');
+  // Lê o valor antes de desabilitar as opções: com a opção selecionada
+  // desabilitada, o .val() do jQuery passa a retornar null
+  const valorAtual = parseInt($campo.val(), 10);
+
   $campo.find('option').each(function () {
     const valor = parseInt($j(this).val(), 10);
     if (isNaN(valor)) {
@@ -529,7 +533,6 @@ function aplicaRestricoesEsferaAdministrativa() {
     $j(this).prop('disabled', !opcoesPermitidas.includes(valor));
   });
 
-  const valorAtual = parseInt($campo.val(), 10);
   if (!isNaN(valorAtual) && !opcoesPermitidas.includes(valorAtual)) {
     $campo.val('');
   }
