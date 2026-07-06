@@ -10,16 +10,6 @@ const DEPENDENCIA_ADMINISTRATIVA = {
   PRIVADA: 4
 }
 
-const ESFERA_ADMINISTRATIVA = {
-  FEDERAL: 1,
-  ESTADUAL: 2,
-  MUNICIPAL: 3,
-  ESTADUAL_E_MUNICIPAL: 4,
-  FEDERAL_SETEC: 6
-}
-
-const MUNICIPIO_BRASILIA_IBGE = '5300108';
-
 const SITUACAO_FUNCIONAMENTO = {
   EM_ATIVIDADE : 1,
   PARALISADA : 2,
@@ -509,42 +499,6 @@ function obrigaCampoOrgaoVinculadoEscola() {
   }
 }
 
-// A esfera administrativa (campo 50) depende da dependência administrativa da
-// escola e, para escolas privadas, do município do endereço (Brasília)
-function aplicaRestricoesEsferaAdministrativa() {
-  const dependencia = parseInt($j('#dependencia_administrativa').val(), 10);
-  const municipioBrasilia = $j('#city_ibge_code').val() === MUNICIPIO_BRASILIA_IBGE;
-
-  let opcoesPermitidas = [];
-  if (dependencia === DEPENDENCIA_ADMINISTRATIVA.FEDERAL) {
-    opcoesPermitidas = [ESFERA_ADMINISTRATIVA.FEDERAL, ESFERA_ADMINISTRATIVA.FEDERAL_SETEC];
-  } else if (dependencia === DEPENDENCIA_ADMINISTRATIVA.ESTADUAL) {
-    opcoesPermitidas = [ESFERA_ADMINISTRATIVA.ESTADUAL];
-  } else if (dependencia === DEPENDENCIA_ADMINISTRATIVA.PRIVADA && municipioBrasilia) {
-    opcoesPermitidas = [ESFERA_ADMINISTRATIVA.ESTADUAL];
-  } else if (dependencia === DEPENDENCIA_ADMINISTRATIVA.MUNICIPAL || dependencia === DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
-    opcoesPermitidas = [ESFERA_ADMINISTRATIVA.ESTADUAL, ESFERA_ADMINISTRATIVA.MUNICIPAL, ESFERA_ADMINISTRATIVA.ESTADUAL_E_MUNICIPAL];
-  }
-
-  const $campo = $j('#esfera_administrativa');
-  // Lê o valor antes de desabilitar as opções: com a opção selecionada
-  // desabilitada, o .val() do jQuery passa a retornar null
-  const valorAtual = parseInt($campo.val(), 10);
-
-  $campo.find('option').each(function () {
-    const valor = parseInt($j(this).val(), 10);
-    if (isNaN(valor)) {
-      return;
-    }
-    $j(this).prop('disabled', !opcoesPermitidas.includes(valor));
-  });
-
-  if (!isNaN(valorAtual) && !opcoesPermitidas.includes(valorAtual)) {
-    $campo.val('');
-  }
-
-  $campo.trigger('chosen:updated');
-}
 function changeNumeroDeSalas() {
   const containsPredioEscolar = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) > -1;
 
@@ -884,7 +838,6 @@ $j(document).ready(function() {
       habilitaCampoOrgaoVinculadoEscola();
       obrigaCampoOrgaoVinculadoEscola();
       aplicaRestricoesFormasContratacao();
-      aplicaRestricoesEsferaAdministrativa();
     }
   );
 
@@ -993,7 +946,6 @@ $j(document).ready(function() {
   }
 
   verificaCamposDepAdm();
-  aplicaRestricoesEsferaAdministrativa();
 
   let verificaLatitudeLongitude = () => {
     let regex = new RegExp('^(\\-?\\d+(\\.\\d+)?)\\.\\s*(\\-?\\d+(\\.\\d+)?)\$');
@@ -1464,34 +1416,6 @@ $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portat
 // O campo "Computadores" (equipamentos administrativos) altera as opções válidas da rede local
 $j('#equipamentos').on('change', function () {
     aplicaRestricoesRedeLocal();
-});
-
-// Ao trocar o município do endereço, atualiza o código IBGE e reaplica as
-// restrições da esfera administrativa (caso de escola privada em Brasília)
-function atualizaMunicipioIbge() {
-  const cityId = $j('#city_id').val();
-
-  if (!cityId) {
-    $j('#city_ibge_code').val('');
-    aplicaRestricoesEsferaAdministrativa();
-    return;
-  }
-
-  $j.get('/api/city/' + cityId, function (resposta) {
-    const cidade = resposta && resposta.data ? resposta.data : resposta;
-    $j('#city_ibge_code').val(cidade && cidade.ibge_code ? cidade.ibge_code : '');
-    aplicaRestricoesEsferaAdministrativa();
-  });
-}
-
-$j('#city_id').on('change', atualizaMunicipioIbge);
-
-// A limpeza manual do campo de busca não dispara o change do campo oculto
-$j('#city_city').on('change', function () {
-  if (!$j(this).val()) {
-    $j('#city_ibge_code').val('');
-    aplicaRestricoesEsferaAdministrativa();
-  }
 });
 
 function habilitaCampoLinguaMinistrada() {

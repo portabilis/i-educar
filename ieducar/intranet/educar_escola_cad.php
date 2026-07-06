@@ -884,13 +884,6 @@ return new class extends clsCadastro
             ];
             $this->inputsHelper()->select(attrName: 'esfera_administrativa', inputOptions: $options);
 
-            // Código IBGE do município do endereço, usado pelo JS para restringir a
-            // esfera administrativa quando a escola privada fica em Brasília
-            $cityIbgeCode = $this->city_id
-                ? City::query()->whereKey($this->city_id)->value('ibge_code')
-                : null;
-            $this->campoOculto(nome: 'city_ibge_code', valor: $cityIbgeCode);
-
             $options = ['label' => 'Ato de criação', 'value' => $this->ato_criacao, 'size' => 70, 'required' => false];
             $this->inputsHelper()->text(attrNames: 'ato_criacao', inputOptions: $options);
 
