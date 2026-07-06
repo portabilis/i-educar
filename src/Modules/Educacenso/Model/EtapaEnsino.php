@@ -20,23 +20,41 @@ class EtapaEnsino
     public const ETAPAS_CURSO_TECNICO_FIC = [39, 40, 64, 68, 75];
 
     /**
-     * Etapas que, além do itinerário de formação técnica e profissional (IFTP),
-     * habilitam o preenchimento da carga horária total da turma (registro 20).
+     * Etapas que habilitam a carga horária integralizada do aluno (registro 60).
      */
-    public const ETAPAS_PERMITEM_CARGA_HORARIA = [39, 40, 67, 68, 73, 75];
+    public const ETAPAS_PERMITEM_CARGA_HORARIA_INTEGRALIZADA = [39, 40, 67, 68, 73, 75];
 
     /**
-     * Carga horária total mínima (em horas) por etapa, conforme o Anexo 8 do
-     * layout do Censo.
+     * Etapas que habilitam a carga horária total da turma (registro 20).
      */
-    public const CARGA_HORARIA_MINIMA_POR_ETAPA = [
-        39 => 100,
-        40 => 100,
+    public const ETAPAS_CARGA_HORARIA_TURMA = [39, 40, 64, 67, 68, 73, 74, 75];
+
+    /**
+     * Etapas cujo mínimo vem do código do curso informado, não de valor fixo.
+     */
+    public const ETAPAS_CARGA_HORARIA_POR_CURSO = [39, 40, 64];
+
+    /**
+     * Carga horária mínima por etapa, quando o valor é fixo. As etapas de
+     * ETAPAS_CARGA_HORARIA_POR_CURSO usam o mínimo do curso e não entram aqui.
+     */
+    public const CARGA_HORARIA_MINIMA_FIXA_POR_ETAPA = [
         67 => 1200,
         68 => 160,
         73 => 760,
+        74 => 2400,
         75 => 160,
     ];
+
+    /**
+     * Carga horária mínima da qualificação profissional técnica.
+     */
+    public const CARGA_HORARIA_MINIMA_QUALIFICACAO = 160;
+
+    /**
+     * Carga horária mínima do curso técnico com formação geral básica.
+     */
+    public const CARGA_HORARIA_MINIMA_TECNICO_FGB = 3000;
 
     public static function getEtapasPermitidas(
         ?int $mediacao,

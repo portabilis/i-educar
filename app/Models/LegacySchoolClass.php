@@ -658,7 +658,7 @@ class LegacySchoolClass extends Model
     {
         $organizacaoCurricular = array_map('intval', (array) transformStringFromDBInArray($this->organizacao_curricular));
         $temIftp = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
-        $etapaValida = in_array((int) $this->etapa_educacenso, EtapaEnsino::ETAPAS_PERMITEM_CARGA_HORARIA, strict: true);
+        $etapaValida = in_array((int) $this->etapa_educacenso, EtapaEnsino::ETAPAS_PERMITEM_CARGA_HORARIA_INTEGRALIZADA, strict: true);
 
         return $temIftp || $etapaValida;
     }

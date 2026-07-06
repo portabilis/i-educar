@@ -12,79 +12,107 @@ class CargaHorariaTotalValidatorTest extends TestCase
         int $etapa,
         $carga,
         int $tipoCurso = 0,
-        int $codCurso = 0
+        bool $fgbAtivo = false,
+        int $cod26 = 0,
+        int $cod38 = 0
     ): CargaHorariaTotalValidator {
-        return new CargaHorariaTotalValidator($iftpAtivo, $etapa, $carga, $tipoCurso, $codCurso);
+        return new CargaHorariaTotalValidator(
+            iftpAtivo: $iftpAtivo,
+            fgbAtivo: $fgbAtivo,
+            etapaEducacenso: $etapa,
+            cargaHorariaTotal: $carga,
+            tipoCursoIntinerario: $tipoCurso,
+            codCursoProfissional: $cod26,
+            codCursoProfissionalIntinerario: $cod38,
+        );
     }
 
     public function test_campo_nao_aplicavel_sempre_valido(): void
     {
-        // Sem IFTP e etapa fora do conjunto: o campo não se aplica, não valida nada
         $this->assertTrue($this->validator(false, 25, 99999)->isValid());
         $this->assertTrue($this->validator(false, 0, null)->isValid());
     }
 
-    public function test_iftp_habilita_o_campo(): void
+    public function test_habilitacao_por_iftp_ou_por_etapa(): void
     {
         $this->assertTrue($this->validator(true, 0, 200)->isValid());
-    }
-
-    public function test_etapa_do_conjunto_habilita_o_campo_sem_iftp(): void
-    {
-        $this->assertTrue($this->validator(false, 39, 100)->isValid());
+        $this->assertTrue($this->validator(false, 39, null)->isValid());
+        $this->assertTrue($this->validator(false, 64, null)->isValid());
+        $this->assertTrue($this->validator(false, 74, null)->isValid());
     }
 
     public function test_valor_vazio_nao_bloqueia(): void
     {
         $this->assertTrue($this->validator(true, 0, null)->isValid());
-        $this->assertTrue($this->validator(false, 39, '')->isValid());
+        $this->assertTrue($this->validator(false, 74, '')->isValid());
     }
 
     public function test_valor_fora_de_um_a_9999_e_invalido(): void
     {
         $this->assertFalse($this->validator(true, 0, 0)->isValid());
         $this->assertFalse($this->validator(true, 0, 10000)->isValid());
+        $this->assertTrue($this->validator(true, 0, 1)->isValid());
+        $this->assertTrue($this->validator(true, 0, 9999)->isValid());
     }
 
-    public function test_minimo_por_etapa_conforme_anexo_8(): void
+    public function test_minimo_fixo_por_etapa(): void
     {
-        // 39 e 40 -> 100
-        $this->assertFalse($this->validator(false, 39, 99)->isValid());
-        $this->assertTrue($this->validator(false, 39, 100)->isValid());
-        $this->assertFalse($this->validator(false, 40, 99)->isValid());
-        $this->assertTrue($this->validator(false, 40, 100)->isValid());
-        // 68 e 75 -> 160
-        $this->assertFalse($this->validator(false, 68, 159)->isValid());
-        $this->assertTrue($this->validator(false, 68, 160)->isValid());
-        $this->assertFalse($this->validator(false, 75, 159)->isValid());
-        $this->assertTrue($this->validator(false, 75, 160)->isValid());
-        // 73 -> 760
-        $this->assertFalse($this->validator(false, 73, 759)->isValid());
-        $this->assertTrue($this->validator(false, 73, 760)->isValid());
-        // 67 -> 1200
         $this->assertFalse($this->validator(false, 67, 1199)->isValid());
         $this->assertTrue($this->validator(false, 67, 1200)->isValid());
+        $this->assertFalse($this->validator(false, 68, 159)->isValid());
+        $this->assertTrue($this->validator(false, 68, 160)->isValid());
+        $this->assertFalse($this->validator(false, 73, 759)->isValid());
+        $this->assertTrue($this->validator(false, 73, 760)->isValid());
+        $this->assertFalse($this->validator(false, 74, 2399)->isValid());
+        $this->assertTrue($this->validator(false, 74, 2400)->isValid());
+        $this->assertFalse($this->validator(false, 75, 159)->isValid());
+        $this->assertTrue($this->validator(false, 75, 160)->isValid());
     }
 
-    public function test_regra_2_curso_tecnico_usa_carga_minima_do_curso(): void
+    public function test_minimo_pelo_codigo_do_curso_campo_26(): void
     {
-        // Código 1001 tem carga mínima 1200 (tipo 1); etapa 0 isola da regra do Anexo 8
-        $this->assertFalse($this->validator(true, 0, 500, 1, 1001)->isValid());
-        $this->assertTrue($this->validator(true, 0, 1200, 1, 1001)->isValid());
-        // Superior a 2000 é permitido
-        $this->assertTrue($this->validator(true, 0, 2500, 1, 1001)->isValid());
+        // Cursos: 1001 exige 1200, 1000 exige 160, 1013 exige 800
+        $this->assertFalse($this->validator(false, 39, 1199, cod26: 1001)->isValid());
+        $this->assertTrue($this->validator(false, 39, 1200, cod26: 1001)->isValid());
+        $this->assertFalse($this->validator(false, 40, 159, cod26: 1000)->isValid());
+        $this->assertTrue($this->validator(false, 40, 160, cod26: 1000)->isValid());
+        $this->assertFalse($this->validator(false, 64, 799, cod26: 1013)->isValid());
+        $this->assertTrue($this->validator(false, 64, 800, cod26: 1013)->isValid());
+        // Curso não cadastrado não impõe mínimo
+        $this->assertTrue($this->validator(false, 39, 1, cod26: 999999)->isValid());
     }
 
-    public function test_regra_2_curso_sem_carga_minima_cadastrada_e_valido(): void
+    public function test_iftp_qualificacao_minimo_160_sem_teto(): void
     {
-        $this->assertTrue($this->validator(true, 0, 500, 1, 999999)->isValid());
+        $this->assertFalse($this->validator(true, 0, 159, tipoCurso: 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 160, tipoCurso: 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 801, tipoCurso: 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 9999, tipoCurso: 2)->isValid());
     }
 
-    public function test_regra_3_qualificacao_profissional_entre_160_e_800(): void
+    public function test_iftp_tecnico_com_fgb_minimo_3000(): void
     {
-        $this->assertFalse($this->validator(true, 0, 159, 2)->isValid());
-        $this->assertTrue($this->validator(true, 0, 160, 2)->isValid());
-        $this->assertTrue($this->validator(true, 0, 800, 2)->isValid());
-        $this->assertFalse($this->validator(true, 0, 801, 2)->isValid());
+        $this->assertFalse($this->validator(true, 25, 2999, tipoCurso: 1, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 25, 3000, tipoCurso: 1, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 27, 3000, tipoCurso: 1, fgbAtivo: true)->isValid());
+    }
+
+    public function test_iftp_tecnico_sem_fgb_minimo_pelo_codigo_do_curso_campo_38(): void
+    {
+        $this->assertFalse($this->validator(true, 0, 1199, tipoCurso: 1, cod38: 1001)->isValid());
+        $this->assertTrue($this->validator(true, 0, 1200, tipoCurso: 1, cod38: 1001)->isValid());
+        // Sem FGB na etapa 25: usa o mínimo do campo 38 (1200), não os 3000
+        $this->assertFalse($this->validator(true, 25, 1199, tipoCurso: 1, fgbAtivo: false, cod38: 1001)->isValid());
+        $this->assertTrue($this->validator(true, 25, 1200, tipoCurso: 1, fgbAtivo: false, cod38: 1001)->isValid());
+    }
+
+    public function test_etapa_tem_precedencia_sobre_iftp(): void
+    {
+        // Etapa 39 com IFTP ativo: usa o mínimo do campo 26 (1200), não do campo 38 (160)
+        $this->assertFalse($this->validator(true, 39, 200, tipoCurso: 1, cod26: 1001, cod38: 1000)->isValid());
+        $this->assertTrue($this->validator(true, 39, 1200, tipoCurso: 1, cod26: 1001, cod38: 1000)->isValid());
+        // Etapa 74 (mínimo fixo 2400) tem precedência sobre o campo 38
+        $this->assertFalse($this->validator(true, 74, 200, tipoCurso: 1, cod38: 1000)->isValid());
+        $this->assertTrue($this->validator(true, 74, 2400, tipoCurso: 1, cod38: 1000)->isValid());
     }
 }

@@ -203,7 +203,7 @@ class SchoolClassController extends Controller
         $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
         $etapaEducacenso = (int) ($params['etapa_educacenso'] ?? 0);
         $permiteCargaHoraria = $iftpAtivo
-            || in_array($etapaEducacenso, EtapaEnsino::ETAPAS_PERMITEM_CARGA_HORARIA, true);
+            || in_array($etapaEducacenso, EtapaEnsino::ETAPAS_CARGA_HORARIA_TURMA, true);
 
         $cargaHorariaTotal = $params['carga_horaria_total'] ?? null;
         if (!$permiteCargaHoraria || $cargaHorariaTotal === null || $cargaHorariaTotal === '') {
