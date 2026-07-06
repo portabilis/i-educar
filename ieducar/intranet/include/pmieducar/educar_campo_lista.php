@@ -48,6 +48,7 @@ $nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 if ($nivel_usuario == 1 || $cad_usuario) {
     $opcoes = Cache::remember('select_instituicao', now()->addMinutes(180), function () use ($get_select_name_full) {
         return LegacyInstitution::query()
+            ->active()
             ->select([
                 'cod_instituicao',
                 'nm_instituicao',
