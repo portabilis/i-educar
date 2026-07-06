@@ -98,7 +98,7 @@ class clsPermissoes
     {
         return LegacyUserType::query()
             ->whereHas('users', fn ($q) => $q->whereKey($int_idpes_usuario))
-            ->value('nivel');
+            ->value('nivel') ?: false;
     }
 
     /**
