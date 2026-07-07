@@ -29,6 +29,7 @@ use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EtapaAgregada;
 use iEducar\Modules\Educacenso\Model\EtapaEnsino;
+use iEducar\Modules\Educacenso\Model\FaixaEtariaEducacenso;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -45,6 +46,7 @@ use iEducar\Modules\Educacenso\Validator\CargaHorariaTotalValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
+use iEducar\Modules\Educacenso\Validator\IdadePermitidaValidator;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\SchoolClass\Period;
@@ -1488,6 +1490,91 @@ class EducacensoAnaliseController extends ApiCoreController
                 $teacherAndManagerDataAnalysis = new Register30TeacherAndManagerDataAnalysis($pessoa);
                 $teacherAndManagerDataAnalysis->run();
                 $mensagem = array_merge($mensagem, $teacherAndManagerDataAnalysis->getMessages());
+            }
+        }
+
+        // Idade permitida pelo layout do Censo, calculada pela regra do Censo (ano do
+        // Censo menos o ano de nascimento). Alunos são validados pela faixa da etapa ou
+        // da característica da turma (registro 60). Uma mensagem por aluno em cada turma.
+        $alunosAvaliados = [];
+        foreach ($alunos as $aluno) {
+            $chaveAluno = $aluno->codigoPessoa . '-' . $aluno->codigoTurma;
+            if (isset($alunosAvaliados[$chaveAluno])) {
+                continue;
+            }
+            $alunosAvaliados[$chaveAluno] = true;
+
+            $dataNascimento = $pessoas[$aluno->codigoPessoa]->dataNascimento ?? null;
+            $idade = FaixaEtariaEducacenso::idadeNoCenso((int) $ano, $dataNascimento);
+
+            $regra = FaixaEtariaEducacenso::regraDeIdadeDoAluno(
+                $aluno->etapaTurma === null ? null : (int) $aluno->etapaTurma,
+                $aluno->organizacaoCurricularTurma,
+                $aluno->localFuncionamentoDiferenciadoTurma === null ? null : (int) $aluno->localFuncionamentoDiferenciadoTurma
+            );
+
+            if ($regra === null) {
+                continue;
+            }
+
+            $contexto = match ($regra['origem']) {
+                FaixaEtariaEducacenso::ORIGEM_PRISIONAL => 'turmas em unidade prisional',
+                FaixaEtariaEducacenso::ORIGEM_SOCIOEDUCATIVO => 'turmas em unidade de atendimento socioeducativo',
+                FaixaEtariaEducacenso::ORIGEM_ITINERARIO_SEM_FORMACAO_GERAL_BASICA => 'o itinerário formativo sem formação geral básica',
+                default => "a etapa de ensino {$aluno->etapaTurmaDescritiva()}",
+            };
+
+            $validator = new IdadePermitidaValidator($idade, $regra['faixa'], $contexto);
+
+            if (!$validator->isValid()) {
+                $mensagem[] = [
+                    'text' => "O(a) aluno(a) {$aluno->nomeAluno}, da turma {$aluno->nomeTurma}, {$validator->getMessage()}",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Data de nascimento) ou (Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$aluno->codigoAluno}",
+                    'fail' => true,
+                ];
+            }
+        }
+
+        // Gestores (registro 40) e profissionais escolares em sala de aula (registro 50)
+        // são validados pela faixa de idade da própria função. A faixa não depende da
+        // turma, então cada pessoa é avaliada uma única vez por função.
+        $servidoresPorFuncao = [
+            [
+                'registros' => $gestores,
+                'faixa' => FaixaEtariaEducacenso::FAIXA_GESTOR,
+                'funcao' => 'a função de gestor(a) escolar (registro 40)',
+                'rotulo' => 'gestor(a)',
+            ],
+            [
+                'registros' => $docentes,
+                'faixa' => FaixaEtariaEducacenso::FAIXA_PROFISSIONAL,
+                'funcao' => 'a função de profissional escolar em sala de aula (registro 50)',
+                'rotulo' => 'profissional',
+            ],
+        ];
+
+        foreach ($servidoresPorFuncao as $grupo) {
+            $servidoresAvaliados = [];
+            foreach ($grupo['registros'] as $servidor) {
+                if (isset($servidoresAvaliados[$servidor->codigoPessoa])) {
+                    continue;
+                }
+                $servidoresAvaliados[$servidor->codigoPessoa] = true;
+
+                $pessoa = $pessoas[$servidor->codigoPessoa] ?? null;
+                $idade = FaixaEtariaEducacenso::idadeNoCenso((int) $ano, $pessoa->dataNascimento ?? null);
+
+                $validator = new IdadePermitidaValidator($idade, $grupo['faixa'], $grupo['funcao']);
+
+                if (!$validator->isValid()) {
+                    $mensagem[] = [
+                        'text' => "O(a) {$grupo['rotulo']} {$pessoa->nomePessoa} {$validator->getMessage()}",
+                        'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Data de nascimento)',
+                        'linkPath' => '/intranet/atendidos_lst.php',
+                        'fail' => true,
+                    ];
+                }
             }
         }
 
