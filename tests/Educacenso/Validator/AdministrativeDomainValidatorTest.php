@@ -2,9 +2,8 @@
 
 namespace Tests\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
-use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
-use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola as Dep;
+use iEducar\Modules\Educacenso\Model\EsferaAdministrativa as Esfera;
 use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use Tests\TestCase;
 
@@ -14,75 +13,64 @@ class AdministrativeDomainValidatorTest extends TestCase
 
     private const OUTRO_MUNICIPIO = 4205407;
 
-    private function validator(
-        int $domain,
-        int $dependence,
-        int $city = self::OUTRO_MUNICIPIO,
-        int $regulations = Regulamentacao::SIM
-    ): AdministrativeDomainValidator {
-        return new AdministrativeDomainValidator($domain, $regulations, $dependence, $city);
+    private function validator(int $domain, int $dependence, int $city = self::OUTRO_MUNICIPIO): AdministrativeDomainValidator
+    {
+        return new AdministrativeDomainValidator($domain, $dependence, $city);
     }
 
-    public function test_dependencia_federal_aceita_esfera_federal_e_estadual()
+    public function test_dependencia_federal_aceita_apenas_federal_e_federal_setec(): void
     {
-        $validator = $this->validator(EsferaAdministrativa::FEDERAL_E_ESTADUAL, DependenciaAdministrativaEscola::FEDERAL);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertTrue($this->validator(Esfera::FEDERAL, Dep::FEDERAL)->isValid());
+        $this->assertTrue($this->validator(Esfera::FEDERAL_SETEC, Dep::FEDERAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::ESTADUAL, Dep::FEDERAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::MUNICIPAL, Dep::FEDERAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::ESTADUAL_E_MUNICIPAL, Dep::FEDERAL)->isValid());
     }
 
-    public function test_dependencia_estadual_aceita_esfera_federal_e_estadual()
+    public function test_dependencia_estadual_aceita_apenas_estadual(): void
     {
-        $validator = $this->validator(EsferaAdministrativa::FEDERAL_E_ESTADUAL, DependenciaAdministrativaEscola::ESTADUAL);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertTrue($this->validator(Esfera::ESTADUAL, Dep::ESTADUAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::FEDERAL, Dep::ESTADUAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::FEDERAL_SETEC, Dep::ESTADUAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::MUNICIPAL, Dep::ESTADUAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::ESTADUAL_E_MUNICIPAL, Dep::ESTADUAL)->isValid());
     }
 
-    public function test_dependencia_estadual_aceita_esfera_federal()
+    public function test_dependencia_municipal_aceita_estadual_municipal_e_estadual_e_municipal(): void
     {
-        $validator = $this->validator(EsferaAdministrativa::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertTrue($this->validator(Esfera::ESTADUAL, Dep::MUNICIPAL)->isValid());
+        $this->assertTrue($this->validator(Esfera::MUNICIPAL, Dep::MUNICIPAL)->isValid());
+        $this->assertTrue($this->validator(Esfera::ESTADUAL_E_MUNICIPAL, Dep::MUNICIPAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::FEDERAL, Dep::MUNICIPAL)->isValid());
+        $this->assertFalse($this->validator(Esfera::FEDERAL_SETEC, Dep::MUNICIPAL)->isValid());
     }
 
-    public function test_dependencia_federal_aceita_esfera_estadual()
+    public function test_dependencia_privada_aceita_estadual_municipal_e_estadual_e_municipal(): void
     {
-        $validator = $this->validator(EsferaAdministrativa::ESTADUAL, DependenciaAdministrativaEscola::FEDERAL);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertTrue($this->validator(Esfera::ESTADUAL, Dep::PRIVADA)->isValid());
+        $this->assertTrue($this->validator(Esfera::MUNICIPAL, Dep::PRIVADA)->isValid());
+        $this->assertTrue($this->validator(Esfera::ESTADUAL_E_MUNICIPAL, Dep::PRIVADA)->isValid());
+        $this->assertFalse($this->validator(Esfera::FEDERAL, Dep::PRIVADA)->isValid());
+        $this->assertFalse($this->validator(Esfera::FEDERAL_SETEC, Dep::PRIVADA)->isValid());
     }
 
-    public function test_dependencia_federal_nao_aceita_esfera_municipal()
+    public function test_dependencia_privada_em_brasilia_aceita_apenas_estadual(): void
     {
-        $validator = $this->validator(EsferaAdministrativa::MUNICIPAL, DependenciaAdministrativaEscola::FEDERAL);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($this->validator(Esfera::ESTADUAL, Dep::PRIVADA, self::BRASILIA)->isValid());
+        $this->assertFalse($this->validator(Esfera::MUNICIPAL, Dep::PRIVADA, self::BRASILIA)->isValid());
+        $this->assertFalse($this->validator(Esfera::ESTADUAL_E_MUNICIPAL, Dep::PRIVADA, self::BRASILIA)->isValid());
     }
 
-    public function test_dependencia_estadual_nao_aceita_esfera_estadual_e_municipal()
+    public function test_esfera_vazia_e_sempre_valida(): void
     {
-        $validator = $this->validator(EsferaAdministrativa::ESTADUAL_E_MUNICIPAL, DependenciaAdministrativaEscola::ESTADUAL);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($this->validator(0, Dep::FEDERAL)->isValid());
     }
 
-    public function test_dependencia_municipal_aceita_esfera_municipal()
+    public function test_valor_legado_cinco_e_invalido_em_qualquer_dependencia(): void
     {
-        $validator = $this->validator(EsferaAdministrativa::MUNICIPAL, DependenciaAdministrativaEscola::MUNICIPAL);
-
-        $this->assertTrue($validator->isValid());
-    }
-
-    public function test_brasilia_nao_aceita_esfera_municipal()
-    {
-        $validator = $this->validator(EsferaAdministrativa::MUNICIPAL, DependenciaAdministrativaEscola::MUNICIPAL, self::BRASILIA);
-
-        $this->assertFalse($validator->isValid());
-    }
-
-    public function test_regulamentacao_nao_sempre_valido()
-    {
-        $validator = $this->validator(EsferaAdministrativa::MUNICIPAL, DependenciaAdministrativaEscola::FEDERAL, self::OUTRO_MUNICIPIO, Regulamentacao::NAO);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertFalse($this->validator(5, Dep::FEDERAL)->isValid());
+        $this->assertFalse($this->validator(5, Dep::ESTADUAL)->isValid());
+        $this->assertFalse($this->validator(5, Dep::MUNICIPAL)->isValid());
+        $this->assertFalse($this->validator(5, Dep::PRIVADA)->isValid());
     }
 }

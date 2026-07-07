@@ -993,15 +993,6 @@ return new class extends clsCadastro
             $options = ['label' => 'Lei de conclusão do ensino médio', 'value' => $this->lei_conclusao_ensino_medio, 'size' => 200, 'required' => false];
             $this->inputsHelper()->text(attrNames: 'lei_conclusao_ensino_medio', inputOptions: $options);
 
-            $resources = SelectOptions::esferasAdministrativasEscola();
-            $options = [
-                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
-                'resources' => $resources,
-                'value' => $this->esfera_administrativa,
-                'required' => false,
-            ];
-            $this->inputsHelper()->select(attrName: 'esfera_administrativa', inputOptions: $options);
-
             $this->campoQuebra();
             $this->addSchoolManagersTable();
             $this->campoQuebra();
@@ -2326,7 +2317,6 @@ return new class extends clsCadastro
 
         $esferaAdministrativaValidator = (new AdministrativeDomainValidator(
             administrativeDomain: $this->esfera_administrativa,
-            regulations: $this->regulamentacao,
             administrativeDependence: $this->dependencia_administrativa,
             cityIbgeCode: $cityIBGE
         ));
