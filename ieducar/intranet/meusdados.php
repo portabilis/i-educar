@@ -7,6 +7,7 @@ use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
+use App\Models\LegacyUser;
 use App\Services\ChangeUserPasswordService;
 use App\Services\PhoneService;
 use App\Services\UrlPresigner;
@@ -257,20 +258,13 @@ return new class extends clsCadastro
         $funcionario = LegacyEmployee::find($this->pessoa_logada);
         $funcionario?->update($dadosAtualizar);
 
-        $usuario = new clsPmieducarUsuario($this->pessoa_logada);
-        $usuario = $usuario->detalhe();
+        $codInstituicao = LegacyUser::query()
+            ->whereKey($this->pessoa_logada)
+            ->value('ref_cod_instituicao');
 
-        if ($usuario) {
-            $instituicao = new clsPmieducarInstituicao($usuario['ref_cod_instituicao']);
-            $instituicao = $instituicao->detalhe();
-
-            $instituicao = $instituicao['nm_instituicao'];
-
-            $escola = new clsPmieducarEscola($usuario['ref_cod_escola']);
-            $escola = $escola->detalhe();
-
-            $escola = $escola['nome'];
-        }
+        $instituicao = new clsPmieducarInstituicao($codInstituicao);
+        $instituicao = $instituicao->detalhe();
+        $instituicao = $instituicao['nm_instituicao'];
 
         $permiteRelacionamentoPosvendas = LegacyGeneralConfiguration::query()
             ->forActiveInstitution()
@@ -279,7 +273,7 @@ return new class extends clsCadastro
         $dados = [
             'nome' => $this->nome,
             'empresa' => $instituicao,
-            'cargo' => $escola,
+            'cargo' => null,
             'telefone' => $this->telefone ? "$this->ddd_telefone $this->telefone" : null,
             'celular' => $this->celular ? "$this->ddd_celular $this->celular" : null,
             'Assuntos de interesse' => $this->receber_novidades ? 'Todos os assuntos relacionados ao i-Educar' : 'Nenhum',

@@ -90,7 +90,6 @@ return new class extends clsCadastro
         $obrigatorio = true;
         $exibe_nm_escola = true;
 
-        $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao(int_idpes_usuario: $this->pessoa_logada);
         include 'include/pmieducar/educar_campo_lista.php';
         $this->campoRotulo(nome: 'cursos_', campo: 'Cursos', valor: '<div id=\'cursos\'>Selecione uma escola</div>');

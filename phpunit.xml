@@ -54,8 +54,6 @@
       <file>ieducar/intranet/educar_tombo_automatico.ajax.php</file>
       <file>ieducar/intranet/include/pmieducar/educar_campo_lista.php</file>
       <file>ieducar/intranet/include/pmieducar/educar_pesquisa_biblioteca_cliente.php</file>
-      <file>ieducar/intranet/include/pmieducar/educar_pesquisa_curso_serie.php</file>
-      <file>ieducar/intranet/include/pmieducar/educar_pesquisa_instituicao_escola.php</file>
       <file>ieducar/intranet/logof.php</file>
       <file>ieducar/intranet/manutencao.php</file>
       <file>ieducar/intranet/migra_alunos.php</file>

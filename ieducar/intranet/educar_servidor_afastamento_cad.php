@@ -239,7 +239,7 @@ return new class extends clsCadastro
                         $script = "<script>\nvar num_alocacao = {$tamanho};\n";
                         $script .= "var array_servidores = Array();\n";
 
-                        $idsSubstitutos = collect($this->alocacao_array)->pluck('ref_cod_substituto')->filter('is_numeric')->unique()->all();
+                        $idsSubstitutos = collect($this->alocacao_array)->pluck('ref_cod_substituto')->filter(fn ($id) => is_numeric($id))->unique()->all();
                         $nomesPorSubstituto = $idsSubstitutos
                             ? LegacyPerson::query()->whereIn('idpes', $idsSubstitutos)->pluck('nome', 'idpes')
                             : collect();
