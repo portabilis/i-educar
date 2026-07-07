@@ -1529,8 +1529,8 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$validator->isValid()) {
                 $mensagem[] = [
                     'text' => "O(a) aluno(a) {$aluno->nomeAluno}, da turma {$aluno->nomeTurma}, {$validator->getMessage()}",
-                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Data de nascimento) ou (Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
-                    'linkPath' => "/module/Cadastro/aluno?id={$aluno->codigoAluno}",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$aluno->codigoTurma}",
                     'fail' => true,
                 ];
             }
