@@ -92,13 +92,13 @@ class clsPermissoes
      * - 8: Biblioteca
      *
      * @param int $int_idpes_usuario
-     * @return bool|int Retorna FALSE caso o usuário não exista
+     * @return int|null Retorna NULL caso o usuário não exista
      */
     public function nivel_acesso($int_idpes_usuario)
     {
         return LegacyUserType::query()
             ->whereHas('users', fn ($q) => $q->whereKey($int_idpes_usuario))
-            ->value('nivel') ?: false;
+            ->value('nivel');
     }
 
     /**
@@ -106,7 +106,7 @@ class clsPermissoes
      * vinculado.
      *
      * @param int $int_idpes_usuario
-     * @return bool|int Retorna FALSE caso o usuário não exista
+     * @return int|null Retorna NULL caso o usuário não exista ou não esteja vinculado a uma instituição
      */
     public function getInstituicao($int_idpes_usuario)
     {
