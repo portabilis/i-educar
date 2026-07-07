@@ -291,7 +291,7 @@ return new class extends clsCadastro
             // Refatoração: Centraliza limpeza e flags
             $this->prepararDados();
 
-            if (! $this->validarQuantidadeEtapas() || ! $this->validarHoraFalta()) {
+            if (!$this->validarQuantidadeEtapas() || !$this->validarHoraFalta() || !$this->validarCargaHoraria()) {
                 return false;
             }
 
@@ -340,7 +340,7 @@ return new class extends clsCadastro
             // Refatoração: Usa o mesmo método de preparação
             $this->prepararDados();
 
-            if (! $this->validarQuantidadeEtapas() || ! $this->validarHoraFalta()) {
+            if (!$this->validarQuantidadeEtapas() || !$this->validarHoraFalta() || !$this->validarCargaHoraria()) {
                 return false;
             }
 
@@ -500,15 +500,29 @@ return new class extends clsCadastro
     {
         if ($this->hora_falta < 0) {
             $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
+
             return false;
         }
+
         return true;
     }
 
     private function validarQuantidadeEtapas()
     {
-        if (! is_numeric(value: $this->qtd_etapas) || (int) $this->qtd_etapas <= 0) {
+        if (!is_numeric(value: $this->qtd_etapas) || (int) $this->qtd_etapas <= 0) {
             $this->mensagem = "O campo 'Quantidade Etapas' deve ser maior que zero.<br>";
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validarCargaHoraria()
+    {
+        if (!is_numeric(value: $this->carga_horaria) || (float) $this->carga_horaria <= 0) {
+            $this->mensagem = "O campo 'Carga Horária' deve ser maior que zero.<br>";
+
             return false;
         }
 
