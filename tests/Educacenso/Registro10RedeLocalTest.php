@@ -12,8 +12,6 @@ class Registro10RedeLocalTest extends TestCase
     {
         $registro = new Registro10;
 
-        // "Não há rede local" (valor interno 1) deve exportar 0 no arquivo do INEP.
-        // Antes ficava em branco (caía no default), fazendo o Censo recusar (issue #7904).
         $registro->redeLocal = [RedeLocal::NENHUMA];
         $this->assertSame(0, $registro->redeLocal());
 
