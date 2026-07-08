@@ -97,6 +97,16 @@ class CargaHorariaTotalValidatorTest extends TestCase
         $this->assertTrue($this->validator(true, 27, 3000, tipoCurso: 1, fgbAtivo: true)->isValid());
     }
 
+    public function test_iftp_com_fgb_exige_3000_independente_do_tipo_do_curso(): void
+    {
+        // Censo 2026 (escopo revisado): turma de ensino médio (25-29) com formação geral
+        // básica e itinerário exige 3000h para qualquer tipo, inclusive qualificação (2).
+        $this->assertFalse($this->validator(true, 25, 2999, tipoCurso: 2, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 25, 3000, tipoCurso: 2, fgbAtivo: true)->isValid());
+        $this->assertFalse($this->validator(true, 29, 2999, tipoCurso: 2, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 29, 3000, tipoCurso: 2, fgbAtivo: true)->isValid());
+    }
+
     public function test_iftp_tecnico_sem_fgb_minimo_pelo_codigo_do_curso_campo_38(): void
     {
         $this->assertFalse($this->validator(true, 0, 1199, tipoCurso: 1, cod38: 1001)->isValid());
