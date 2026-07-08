@@ -499,20 +499,6 @@ function obrigaCampoOrgaoVinculadoEscola() {
   }
 }
 
-function habilitaCampoEsferaAdministrativa() {
-  let regulamentacao = $j('#regulamentacao').val();
-
-  if (regulamentacao === '0') {
-    $j("#esfera_administrativa").prop('disabled', true);
-    $j('#esfera_administrativa').makeUnrequired();
-    $j("#esfera_administrativa").val('');
-  } else {
-    $j("#esfera_administrativa").prop('disabled', false);
-    if (obrigarCamposCenso) {
-      $j('#esfera_administrativa').makeRequired();
-    }
-  }
-}
 function changeNumeroDeSalas() {
   const containsPredioEscolar = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) > -1;
 
@@ -959,14 +945,7 @@ $j(document).ready(function() {
     }
   }
 
-  $j('#regulamentacao').change(
-    function(){
-      habilitaCampoEsferaAdministrativa();
-    }
-  );
-
   verificaCamposDepAdm();
-  habilitaCampoEsferaAdministrativa();
 
   let verificaLatitudeLongitude = () => {
     let regex = new RegExp('^(\\-?\\d+(\\.\\d+)?)\\.\\s*(\\-?\\d+(\\.\\d+)?)\$');

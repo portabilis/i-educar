@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyUser;
+
 return new class extends clsCadastro
 {
     /**
@@ -32,9 +34,9 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
-        $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-        $obj_usuario_det = $obj_usuario->detalhe();
-        $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
+        $this->ref_cod_instituicao = LegacyUser::query()
+            ->whereKey($this->pessoa_logada)
+            ->value('ref_cod_instituicao');
 
         $obj_permissoes = new clsPermissoes;
 

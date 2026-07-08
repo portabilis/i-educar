@@ -105,6 +105,11 @@ class LegacySchool extends LegacyModel
         );
     }
 
+    protected function cnpjMantenedoraPrincipal(): Attribute
+    {
+        return Attribute::set(fn ($value) => normalizaCnpj($value));
+    }
+
     /**
      * @return BelongsTo<LegacyInstitution, $this>
      */

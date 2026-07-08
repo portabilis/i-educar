@@ -85,7 +85,7 @@
                 <tr style="min-height: 45px">
                     <td class="formlttd" valign="top">
                         <span class="form">
-                            Carga horária integralizada pelo(a) aluno(a) no curso técnico ou de qualificação profissional (em horas)
+                            Carga horária integralizada pelo(a) aluno(a) (em horas)
                         </span>
                         @unless ($podePreencherCargaHoraria)
                             <br>

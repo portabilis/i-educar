@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyUser;
 use iEducar\Legacy\Model;
 
 class clsPmieducarServidorAlocacao extends Model
@@ -109,18 +110,12 @@ class clsPmieducarServidorAlocacao extends Model
 
         $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano, data_admissao, hora_inicial, hora_final, hora_atividade, horas_excedentes, data_saida ';
 
-        if (is_numeric($ref_usuario_cad)) {
-            $usuario = new clsPmieducarUsuario($ref_usuario_cad);
-            if ($usuario->existe()) {
-                $this->ref_usuario_cad = $ref_usuario_cad;
-            }
+        if (is_numeric($ref_usuario_cad) && LegacyUser::query()->whereKey($ref_usuario_cad)->exists()) {
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
-        if (is_numeric($ref_usuario_exc)) {
-            $usuario = new clsPmieducarUsuario($ref_usuario_exc);
-            if ($usuario->existe()) {
-                $this->ref_usuario_exc = $ref_usuario_exc;
-            }
+        if (is_numeric($ref_usuario_exc) && LegacyUser::query()->whereKey($ref_usuario_exc)->exists()) {
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_cod_escola)) {
