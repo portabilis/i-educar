@@ -680,7 +680,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->multipleSearchCustom(attrName: '', inputOptions: $options, helperOptions: $helperOptions);
 
         $options = [
-            'label' => 'Carga horária total do curso (em horas)',
+            'label' => 'Carga horária total (em horas)',
             'placeholder' => 'em horas',
             'required' => false,
             'max_length' => 4,

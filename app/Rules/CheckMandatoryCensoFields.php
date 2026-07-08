@@ -13,6 +13,7 @@ use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Validator\CargaHorariaTotalValidator;
 use Illuminate\Contracts\Validation\Rule;
 
 class CheckMandatoryCensoFields implements Rule
@@ -264,47 +265,25 @@ class CheckMandatoryCensoFields implements Rule
     {
         $organizacaoCurricular = array_map('intval', (array) $this->getOrganizacaoCurricularValues($params));
         $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
+        $fgbAtivo = in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular, strict: true);
 
-        if (!$iftpAtivo) {
+        $validator = new CargaHorariaTotalValidator(
+            iftpAtivo: $iftpAtivo,
+            fgbAtivo: $fgbAtivo,
+            etapaEducacenso: $params->etapa_educacenso ?? null,
+            cargaHorariaTotal: $params->carga_horaria_total ?? null,
+            tipoCursoIntinerario: $params->tipo_curso_intinerario ?? null,
+            codCursoProfissional: $params->cod_curso_profissional ?? null,
+            codCursoProfissionalIntinerario: $params->cod_curso_profissional_intinerario ?? null,
+        );
+
+        if ($validator->isValid()) {
             return true;
         }
 
-        $carga = $params->carga_horaria_total;
+        $this->message = 'O campo: <b>Carga horária total (em horas)</b> ' . $validator->getMessage();
 
-        // Censo 2026: carga horária total deixou de ser obrigatória; sem valor não bloqueia
-        if ($carga === null || $carga === '') {
-            return true;
-        }
-
-        $carga = (int) $carga;
-
-        if ($carga <= 0 || $carga > 9999) {
-            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve ser um número maior que zero, com no máximo 4 dígitos.';
-
-            return false;
-        }
-
-        $tipoCurso = (int) $params->tipo_curso_intinerario;
-
-        if ($tipoCurso === 1) {
-            $cursoSelecionado = (int) $params->cod_curso_profissional_intinerario;
-            $cursos = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/cursos_carga_horaria_minima.json');
-            $cargaMinima = (int) ($cursos[$cursoSelecionado]['carga_minima'] ?? 0);
-
-            if ($cargaMinima > 0 && $carga < $cargaMinima && $carga <= 2000) {
-                $this->message = "O campo: <b>Carga horária total do curso (em horas)</b> deve ser maior ou igual à carga horária mínima do curso ({$cargaMinima} horas) ou superior a 2000 horas.";
-
-                return false;
-            }
-        }
-
-        if ($tipoCurso === 2 && ($carga < 160 || $carga > 800)) {
-            $this->message = 'O campo: <b>Carga horária total do curso (em horas)</b> deve estar entre 160 e 800 horas quando o <b>Tipo do curso do itinerário</b> for: <b>Qualificação Profissional Técnica</b>.';
-
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     protected function validaEixoCursoProfissional($params)
