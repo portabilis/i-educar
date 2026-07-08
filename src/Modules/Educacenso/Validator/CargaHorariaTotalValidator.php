@@ -112,9 +112,9 @@ class CargaHorariaTotalValidator implements EducacensoValidator
         }
 
         if ($this->iftpAtivo) {
-            // Censo 2026 (Anexo 8): turma de ensino médio (etapas 25 a 29) com formação
-            // geral básica e itinerário formativo tem a carga do curso completo (formação
-            // geral básica mais o itinerário), independente do tipo do curso do itinerário.
+            // Turma de ensino médio (etapas 25 a 29) com formação geral básica e itinerário
+            // formativo tem a carga do curso completo (formação geral básica mais o
+            // itinerário), independente do tipo do curso do itinerário.
             if ($this->fgbAtivo && in_array($etapa, EtapaEnsino::ETAPAS_ENSINO_MEDIO_COM_FORMACAO_GERAL_BASICA, true)) {
                 $this->motivoMinimo = 'para o itinerário de formação técnica e profissional com formação geral básica';
 

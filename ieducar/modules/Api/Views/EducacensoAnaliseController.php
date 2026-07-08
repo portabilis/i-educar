@@ -1225,7 +1225,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 }
             }
 
-            // Censo 2026: carga horária total, mesma regra do cadastro de turma (CheckMandatoryCensoFields)
+            // Carga horária total: mesma regra do cadastro de turma.
             $cargaHorariaTotalValidator = new CargaHorariaTotalValidator(
                 iftpAtivo: $turma->itinerarioFormacaoTecnicaProfissional(),
                 fgbAtivo: $turma->formacaoGeralBasica(),

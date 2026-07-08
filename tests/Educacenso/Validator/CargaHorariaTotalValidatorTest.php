@@ -107,8 +107,6 @@ class CargaHorariaTotalValidatorTest extends TestCase
 
     public function test_iftp_com_fgb_exige_3000_independente_do_tipo_do_curso(): void
     {
-        // Censo 2026 (escopo revisado): turma de ensino médio (25-29) com formação geral
-        // básica e itinerário exige 3000h para qualquer tipo, inclusive qualificação (2).
         $this->assertFalse($this->validator(true, 25, 2999, tipoCurso: 2, fgbAtivo: true)->isValid());
         $this->assertTrue($this->validator(true, 25, 3000, tipoCurso: 2, fgbAtivo: true)->isValid());
         $this->assertFalse($this->validator(true, 29, 2999, tipoCurso: 2, fgbAtivo: true)->isValid());
@@ -119,17 +117,17 @@ class CargaHorariaTotalValidatorTest extends TestCase
     {
         $this->assertFalse($this->validator(true, 0, 1199, tipoCurso: 1, cod38: 1001)->isValid());
         $this->assertTrue($this->validator(true, 0, 1200, tipoCurso: 1, cod38: 1001)->isValid());
-        // Sem FGB na etapa 25: usa o mínimo do campo 38 (1200), não os 3000
+        // Sem formação geral básica na etapa 25: usa o mínimo do curso técnico (1200), não os 3000
         $this->assertFalse($this->validator(true, 25, 1199, tipoCurso: 1, fgbAtivo: false, cod38: 1001)->isValid());
         $this->assertTrue($this->validator(true, 25, 1200, tipoCurso: 1, fgbAtivo: false, cod38: 1001)->isValid());
     }
 
     public function test_etapa_tem_precedencia_sobre_iftp(): void
     {
-        // Etapa 39 com IFTP ativo: usa o mínimo do campo 26 (1200), não do campo 38 (160)
+        // Etapa 39 com IFTP ativo: usa o mínimo do curso da etapa (1200), não do curso do itinerário (160)
         $this->assertFalse($this->validator(true, 39, 200, tipoCurso: 1, cod26: 1001, cod38: 1000)->isValid());
         $this->assertTrue($this->validator(true, 39, 1200, tipoCurso: 1, cod26: 1001, cod38: 1000)->isValid());
-        // Etapa 74 (mínimo fixo 2400) tem precedência sobre o campo 38
+        // Etapa 74 (mínimo fixo 2400) tem precedência sobre o curso do itinerário
         $this->assertFalse($this->validator(true, 74, 200, tipoCurso: 1, cod38: 1000)->isValid());
         $this->assertTrue($this->validator(true, 74, 2400, tipoCurso: 1, cod38: 1000)->isValid());
     }
