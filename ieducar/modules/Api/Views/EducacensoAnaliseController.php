@@ -1495,7 +1495,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         // Idade permitida pelo layout do Censo, calculada pela regra do Censo (ano do
         // Censo menos o ano de nascimento). Alunos são validados pela faixa da etapa ou
-        // da característica da turma (registro 60). Uma mensagem por aluno em cada turma.
+        // da característica da turma. Uma mensagem por aluno em cada turma.
         $alunosAvaliados = [];
         foreach ($alunos as $aluno) {
             $chaveAluno = $aluno->codigoPessoa . '-' . $aluno->codigoTurma;
@@ -1536,9 +1536,9 @@ class EducacensoAnaliseController extends ApiCoreController
             }
         }
 
-        // Gestores (registro 40) e profissionais escolares em sala de aula (registro 50)
-        // são validados pela faixa de idade da própria função. A faixa não depende da
-        // turma, então cada pessoa é avaliada uma única vez por função.
+        // Gestores e profissionais escolares em sala de aula são validados pela faixa de
+        // idade da própria função. A faixa não depende da turma, então cada pessoa é
+        // avaliada uma única vez por função.
         $servidoresPorFuncao = [
             [
                 'registros' => $gestores,
