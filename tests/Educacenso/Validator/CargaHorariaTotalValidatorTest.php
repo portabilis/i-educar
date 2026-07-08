@@ -27,10 +27,18 @@ class CargaHorariaTotalValidatorTest extends TestCase
         );
     }
 
-    public function test_campo_nao_aplicavel_sempre_valido(): void
+    public function test_campo_nao_aplicavel_vazio_e_valido(): void
     {
-        $this->assertTrue($this->validator(false, 25, 99999)->isValid());
+        $this->assertTrue($this->validator(false, 25, null)->isValid());
         $this->assertTrue($this->validator(false, 0, null)->isValid());
+    }
+
+    public function test_campo_nao_aplicavel_preenchido_e_invalido(): void
+    {
+        $validator = $this->validator(false, 25, 200);
+
+        $this->assertFalse($validator->isValid());
+        $this->assertSame('não deve ser preenchida para esta turma.', $validator->getMessage());
     }
 
     public function test_habilitacao_por_iftp_ou_por_etapa(): void

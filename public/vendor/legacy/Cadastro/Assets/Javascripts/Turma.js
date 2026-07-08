@@ -480,8 +480,6 @@ function habilitaCargaHorariaTotal() {
 
   if (temIftp || etapaPermiteCarga) {
     $j('#carga_horaria_total').prop('disabled', false);
-  } else {
-    $j('#carga_horaria_total').val('');
   }
 }
 

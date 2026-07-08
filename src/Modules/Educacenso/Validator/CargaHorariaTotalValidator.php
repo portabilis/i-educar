@@ -50,13 +50,18 @@ class CargaHorariaTotalValidator implements EducacensoValidator
 
     public function isValid(): bool
     {
-        if (!$this->permitePreenchimento()) {
-            return true;
-        }
-
         $carga = $this->cargaHorariaTotal;
 
-        // Campo opcional: sem valor não bloqueia
+        if (!$this->permitePreenchimento()) {
+            if ($carga === null || $carga === '') {
+                return true;
+            }
+
+            $this->message = 'não deve ser preenchida para esta turma.';
+
+            return false;
+        }
+
         if ($carga === null || $carga === '') {
             return true;
         }

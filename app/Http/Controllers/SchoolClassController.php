@@ -11,8 +11,6 @@ use App\Services\SchoolClassInepService;
 use App\Services\SchoolClassStageService;
 use ComponenteCurricular_Model_TurmaDataMapper;
 use Exception;
-use iEducar\Modules\Educacenso\Model\EtapaEnsino;
-use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\SchoolClass\Period;
 use Illuminate\Http\Request;
@@ -197,20 +195,10 @@ class SchoolClassController extends Controller
             $params['atividades_complementares'] = null;
         }
 
-        $organizacaoCurricular = is_array($params['organizacao_curricular'] ?? null)
-            ? array_map('intval', $params['organizacao_curricular'])
-            : [];
-        $iftpAtivo = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
-        $etapaEducacenso = (int) ($params['etapa_educacenso'] ?? 0);
-        $permiteCargaHoraria = $iftpAtivo
-            || in_array($etapaEducacenso, EtapaEnsino::ETAPAS_CARGA_HORARIA_TURMA, true);
-
         $cargaHorariaTotal = $params['carga_horaria_total'] ?? null;
-        if (!$permiteCargaHoraria || $cargaHorariaTotal === null || $cargaHorariaTotal === '') {
-            $params['carga_horaria_total'] = null;
-        } else {
-            $params['carga_horaria_total'] = (int) $cargaHorariaTotal;
-        }
+        $params['carga_horaria_total'] = ($cargaHorariaTotal === null || $cargaHorariaTotal === '')
+            ? null
+            : (int) $cargaHorariaTotal;
 
         $etapasEixoCursoProfissional = [67, 68, 73, 75];
         $codEixoCursoProfissional = $params['cod_eixo_curso_profissional'] ?? null;
