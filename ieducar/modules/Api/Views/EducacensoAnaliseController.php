@@ -1543,13 +1543,13 @@ class EducacensoAnaliseController extends ApiCoreController
             [
                 'registros' => $gestores,
                 'faixa' => FaixaEtariaEducacenso::FAIXA_GESTOR,
-                'funcao' => 'a função de gestor(a) escolar (registro 40)',
+                'funcao' => 'a função de gestor(a) escolar',
                 'rotulo' => 'gestor(a)',
             ],
             [
                 'registros' => $docentes,
                 'faixa' => FaixaEtariaEducacenso::FAIXA_PROFISSIONAL,
-                'funcao' => 'a função de profissional escolar em sala de aula (registro 50)',
+                'funcao' => 'a função de profissional escolar em sala de aula',
                 'rotulo' => 'profissional',
             ],
         ];
