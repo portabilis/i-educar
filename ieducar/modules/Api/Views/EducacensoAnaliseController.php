@@ -1528,7 +1528,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (!$validator->isValid()) {
                 $mensagem[] = [
-                    'text' => "Dados da escola {$aluno->nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) " . mb_strtoupper($aluno->nomeAluno) . ', da turma ' . mb_strtoupper($aluno->nomeTurma) . ", {$validator->getMessage()}",
+                    'text' => "Dados para formular o registro 30 da escola {$aluno->nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) " . mb_strtoupper($aluno->nomeAluno) . ', da turma ' . mb_strtoupper($aluno->nomeTurma) . ", {$validator->getMessage()}",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$aluno->codigoTurma}",
                     'fail' => true,
@@ -1569,7 +1569,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
                 if (!$validator->isValid()) {
                     $mensagem[] = [
-                        'text' => "Dados da escola {$pessoa->nomeEscola} possui valor inválido. Verificamos que o(a) {$grupo['rotulo']} {$pessoa->nomePessoa} {$validator->getMessage()}",
+                        'text' => "Dados para formular o registro 30 da escola {$pessoa->nomeEscola} possui valor inválido. Verificamos que o(a) {$grupo['rotulo']} {$pessoa->nomePessoa} {$validator->getMessage()}",
                         'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Data de nascimento)',
                         'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$servidor->codigoPessoa}",
                         'fail' => true,
