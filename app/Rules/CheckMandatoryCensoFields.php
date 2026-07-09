@@ -113,16 +113,10 @@ class CheckMandatoryCensoFields implements Rule
     {
         $campos = [
             'hora_inicial' => 'hora inicial',
-            'hora_inicio_intervalo' => 'hora inicial do intervalo',
-            'hora_fim_intervalo' => 'hora final do intervalo',
             'hora_final' => 'hora final',
             'hora_inicial_matutino' => 'hora inicial do turno matutino',
-            'hora_inicio_intervalo_matutino' => 'hora inicial do intervalo do turno matutino',
-            'hora_fim_intervalo_matutino' => 'hora final do intervalo do turno matutino',
             'hora_final_matutino' => 'hora final do turno matutino',
             'hora_inicial_vespertino' => 'hora inicial do turno vespertino',
-            'hora_inicio_intervalo_vespertino' => 'hora inicial do intervalo do turno vespertino',
-            'hora_fim_intervalo_vespertino' => 'hora final do intervalo do turno vespertino',
             'hora_final_vespertino' => 'hora final do turno vespertino',
         ];
 

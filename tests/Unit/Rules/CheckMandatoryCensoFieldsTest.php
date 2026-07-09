@@ -408,8 +408,17 @@ class CheckMandatoryCensoFieldsTest extends TestCase
     {
         $params = new \stdClass;
         $params->hora_inicial = '07:00';
-        $params->hora_inicio_intervalo = '09:05';
-        $params->hora_fim_intervalo = '09:55';
+        $params->hora_final = '12:30';
+
+        $this->assertTrue($this->rule->validaMinutosHorario($params));
+    }
+
+    public function test_horario_de_intervalo_nao_e_validado()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '07:00';
+        $params->hora_inicio_intervalo = '09:12';
+        $params->hora_fim_intervalo = '09:27';
         $params->hora_final = '12:30';
 
         $this->assertTrue($this->rule->validaMinutosHorario($params));
