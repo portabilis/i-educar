@@ -403,4 +403,69 @@ class CheckMandatoryCensoFieldsTest extends TestCase
 
         $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
     }
+
+    public function test_horario_minutos_multiplos_de_cinco_passa()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '07:00';
+        $params->hora_inicio_intervalo = '09:05';
+        $params->hora_fim_intervalo = '09:55';
+        $params->hora_final = '12:30';
+
+        $this->assertTrue($this->rule->validaMinutosHorario($params));
+    }
+
+    public function test_horario_minutos_nao_multiplos_de_cinco_bloqueia()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '07:31';
+
+        $this->assertFalse($this->rule->validaMinutosHorario($params));
+        $this->assertStringContainsString('hora inicial', $this->rule->message());
+        $this->assertStringContainsString('múltiplos de 5', $this->rule->message());
+    }
+
+    public function test_horario_vazio_ou_nulo_nao_bloqueia()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '';
+        $params->hora_final = null;
+
+        $this->assertTrue($this->rule->validaMinutosHorario($params));
+    }
+
+    public function test_horario_bordas_dos_minutos()
+    {
+        $bom = new \stdClass;
+        $bom->hora_inicial = '07:55';
+        $this->assertTrue($this->rule->validaMinutosHorario($bom));
+
+        $ruim = new \stdClass;
+        $ruim->hora_inicial = '07:56';
+        $this->assertFalse($this->rule->validaMinutosHorario($ruim));
+
+        $ruimBaixo = new \stdClass;
+        $ruimBaixo->hora_inicial = '07:03';
+        $this->assertFalse($this->rule->validaMinutosHorario($ruimBaixo));
+    }
+
+    public function test_horario_turno_matutino_usa_rotulo_correto()
+    {
+        $params = new \stdClass;
+        $params->hora_final_matutino = '11:22';
+
+        $this->assertFalse($this->rule->validaMinutosHorario($params));
+        $this->assertStringContainsString('hora final do turno matutino', $this->rule->message());
+    }
+
+    public function test_horario_com_segundos_valida_pelos_minutos()
+    {
+        $ok = new \stdClass;
+        $ok->hora_inicial = '07:30:00';
+        $this->assertTrue($this->rule->validaMinutosHorario($ok));
+
+        $nok = new \stdClass;
+        $nok->hora_inicial = '07:31:00';
+        $this->assertFalse($this->rule->validaMinutosHorario($nok));
+    }
 }

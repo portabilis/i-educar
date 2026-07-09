@@ -33,6 +33,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCamposHorario($params)) {
                 return false;
             }
+            if (!$this->validaMinutosHorario($params)) {
+                return false;
+            }
             if (!$this->validaEtapaEducacenso($params)) {
                 return false;
             }
@@ -101,6 +104,59 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         return true;
+    }
+
+    /**
+     * Os minutos dos horários de funcionamento da turma devem ser múltiplos de 5.
+     */
+    public function validaMinutosHorario($params)
+    {
+        $campos = [
+            'hora_inicial' => 'hora inicial',
+            'hora_inicio_intervalo' => 'hora inicial do intervalo',
+            'hora_fim_intervalo' => 'hora final do intervalo',
+            'hora_final' => 'hora final',
+            'hora_inicial_matutino' => 'hora inicial do turno matutino',
+            'hora_inicio_intervalo_matutino' => 'hora inicial do intervalo do turno matutino',
+            'hora_fim_intervalo_matutino' => 'hora final do intervalo do turno matutino',
+            'hora_final_matutino' => 'hora final do turno matutino',
+            'hora_inicial_vespertino' => 'hora inicial do turno vespertino',
+            'hora_inicio_intervalo_vespertino' => 'hora inicial do intervalo do turno vespertino',
+            'hora_fim_intervalo_vespertino' => 'hora final do intervalo do turno vespertino',
+            'hora_final_vespertino' => 'hora final do turno vespertino',
+        ];
+
+        foreach ($campos as $campo => $rotulo) {
+            $hora = $params->{$campo} ?? null;
+
+            if (empty($hora)) {
+                continue;
+            }
+
+            if (!$this->minutosMultiplosDeCinco($hora)) {
+                $this->message = "O campo {$rotulo} deve ter os minutos múltiplos de 5. Exemplo: 08:00, 08:05, 08:10, 08:15.";
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Verifica se os minutos da hora informada são múltiplos de 5 (de 00 a 55).
+     */
+    private function minutosMultiplosDeCinco($hora): bool
+    {
+        $partes = explode(':', $hora);
+
+        if (count($partes) < 2 || strlen($partes[1]) !== 2) {
+            return false;
+        }
+
+        $minutos = (int) $partes[1];
+
+        return $minutos <= 55 && $minutos % 5 === 0;
     }
 
     private function validaEtapaEducacenso($params)
