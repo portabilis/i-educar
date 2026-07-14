@@ -1337,19 +1337,21 @@ class EducacensoAnaliseController extends ApiCoreController
                         'fail' => true,
                     ];
                 } else {
-                    $codigosEducacenso = $turma->componentesCodigosEducacenso();
+                    $exportaComponentes = $turma->curricularEtapaDeEnsino() && !in_array($turma->etapaEducacenso, [1, 2, 3]);
 
-                    $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
+                    if ($exportaComponentes) {
+                        $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
 
-                    $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
+                        $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
 
-                    foreach ($disciplinesWithoutTeacher as $discipline) {
-                        $mensagem[] = [
-                            'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
-                            'path' => '(Servidores > Cadastros > Servidores)',
-                            'linkPath' => '/intranet/educar_servidor_lst.php',
-                            'fail' => $educacaoDistancia,
-                        ];
+                        foreach ($disciplinesWithoutTeacher as $discipline) {
+                            $mensagem[] = [
+                                'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
+                                'path' => '(Servidores > Cadastros > Servidores)',
+                                'linkPath' => '/intranet/educar_servidor_lst.php',
+                                'fail' => $educacaoDistancia,
+                            ];
+                        }
                     }
 
                     $componenteNulo = null;
