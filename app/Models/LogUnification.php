@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LogUnificationBuilder;
+use App\User;
 use Exception;
 use iEducar\Modules\Unification\LogUnificationTypeInterface;
 use iEducar\Modules\Unification\PersonLogUnification;
@@ -41,6 +42,14 @@ class LogUnification extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(LegacyIndividual::class, 'created_by');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function createdByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'cod_usuario');
     }
 
     /**

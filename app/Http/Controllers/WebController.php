@@ -14,6 +14,29 @@ class WebController extends Controller
         return $request->user()->load('type');
     }
 
+    public function authorization(Request $request)
+    {
+        return $request->user()->processes->map(function ($process) {
+            $ability = $process->process;
+
+            $data = [];
+
+            if ($process->pivot->visualiza) {
+                $data[] = "view:$ability";
+            }
+
+            if ($process->pivot->cadastra) {
+                $data[] = "modify:$ability";
+            }
+
+            if ($process->pivot->exclui) {
+                $data[] = "remove:$ability";
+            }
+
+            return $data;
+        })->flatten();
+    }
+
     public function menus(MenuCacheService $menus, Request $request)
     {
         return $menus->getMenuByUser($request->user());
@@ -28,9 +51,12 @@ class WebController extends Controller
 
     public function institution()
     {
+        $institution = app(LegacyInstitution::class);
+
         return [
-            'name' => LegacyInstitution::value('nm_instituicao'),
+            'name' => $institution->nm_instituicao,
             'logo' => config('legacy.report.logo_file_name'),
+            'city' => $institution->cidade . '/' . $institution->ref_sigla_uf,
         ];
     }
 
@@ -41,5 +67,10 @@ class WebController extends Controller
         }
 
         return abort(404);
+    }
+
+    public function home()
+    {
+        return redirect(config('app.home'));
     }
 }

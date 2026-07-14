@@ -1,4 +1,4 @@
-create view public.exporter_benefits as
+create or replace view public.exporter_benefits as
 select
 	aab.aluno_id as student_id,
 	string_agg(ab.nm_beneficio, ', ') as benefits

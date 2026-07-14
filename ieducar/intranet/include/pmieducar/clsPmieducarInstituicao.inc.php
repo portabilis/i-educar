@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\CacheService;
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -87,6 +88,8 @@ class clsPmieducarInstituicao extends Model
 
     public $obrigar_cpf;
 
+    public $proibir_reclassificacao_educacao_infantil_primeiro_ano;
+
     public $orgao_regional;
 
     public $exigir_lancamentos_anteriores;
@@ -133,7 +136,8 @@ class clsPmieducarInstituicao extends Model
         $permitir_matricula_fora_periodo_letivo = null,
         $ordenar_alunos_sequencial_enturmacao = null,
         $obrigar_telefone_pessoa = null,
-        $obrigar_cpf = null
+        $obrigar_cpf = null,
+        $proibir_reclassificacao_educacao_infantil_primeiro_ano = null
     ) {
 
         $this->_schema = 'pmieducar.';
@@ -191,7 +195,8 @@ class clsPmieducarInstituicao extends Model
             bloquear_vinculo_professor_sem_alocacao_escola,
             permitir_matricula_fora_periodo_letivo,
             ordenar_alunos_sequencial_enturmacao,
-            obrigar_telefone_pessoa
+            obrigar_telefone_pessoa,
+            proibir_reclassificacao_educacao_infantil_primeiro_ano
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -291,6 +296,10 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($obrigar_cpf)) {
             $this->obrigar_cpf = $obrigar_cpf;
+        }
+
+        if (is_bool($proibir_reclassificacao_educacao_infantil_primeiro_ano)) {
+            $this->proibir_reclassificacao_educacao_infantil_primeiro_ano = $proibir_reclassificacao_educacao_infantil_primeiro_ano;
         }
 
         if (is_bool($exigir_lancamentos_anteriores)) {
@@ -673,6 +682,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->proibir_reclassificacao_educacao_infantil_primeiro_ano)) {
+                $campos .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (dbBool($this->exigir_lancamentos_anteriores)) {
                 $campos .= "{$gruda}exigir_lancamentos_anteriores";
                 $valores .= "{$gruda} true ";
@@ -741,7 +760,11 @@ class clsPmieducarInstituicao extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
+            $cod = $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
+
+            CacheService::clearInstitution($cod);
+
+            return $cod;
         }
 
         return false;
@@ -755,9 +778,6 @@ class clsPmieducarInstituicao extends Model
     public function edita()
     {
         if (is_numeric($this->cod_instituicao)) {
-
-            Cache::forget('instituicao_' . $this->cod_instituicao);
-
             $db = new clsBanco;
             $gruda = '';
             $set = '';
@@ -1073,6 +1093,14 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->proibir_reclassificacao_educacao_infantil_primeiro_ano)) {
+                $set .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}proibir_reclassificacao_educacao_infantil_primeiro_ano = false ";
+                $gruda = ', ';
+            }
+
             if (dbBool($this->exigir_lancamentos_anteriores)) {
                 $set .= "{$gruda}exigir_lancamentos_anteriores = true ";
                 $gruda = ', ';
@@ -1123,6 +1151,8 @@ class clsPmieducarInstituicao extends Model
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
+
+                CacheService::clearInstitution($this->cod_instituicao);
 
                 return true;
             }

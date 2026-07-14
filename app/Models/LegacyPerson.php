@@ -36,6 +36,8 @@ class LegacyPerson extends LegacyModel
         'idpes',
         'nome',
         'data_cad',
+        'idpes_cad',
+        'idpes_rev',
         'tipo',
         'situacao',
         'origem_gravacao',
@@ -56,16 +58,29 @@ class LegacyPerson extends LegacyModel
     {
         parent::boot();
 
+        static::saving(function ($model) {
+            if (!$model->isDirty('nome')) {
+                return;
+            }
+
+            if (is_string($model->nome) && $model->nome !== '') {
+                $cleaned = trim(preg_replace('/\s+/', ' ', $model->nome));
+
+                if (config('legacy.app.uppercase_names')) {
+                    $cleaned = Str::upper($cleaned);
+                }
+
+                $model->nome = $cleaned;
+            }
+
+            $model->slug = Str::lower(Str::slug((string) $model->nome, ' '));
+        });
+
         static::creating(function ($model) {
             $model->data_cad = now();
-            $model->situacao = 'I';
-            $model->origem_gravacao = 'M';
+            $model->situacao ??= 'I';
+            $model->origem_gravacao ??= 'M';
             $model->operacao = 'I';
-            $model->slug = Str::lower(Str::slug($model->nome, ' '));
-
-            if (config('legacy.app.uppercase_names')) {
-                $model->nome = Str::upper($model->nome);
-            }
         });
     }
 
@@ -126,6 +141,14 @@ class LegacyPerson extends LegacyModel
     public function individual(): HasOne
     {
         return $this->hasOne(LegacyIndividual::class, 'idpes', 'idpes');
+    }
+
+    /**
+     * @return HasOne<LegacyOrganization, $this>
+     */
+    public function organization(): HasOne
+    {
+        return $this->hasOne(LegacyOrganization::class, 'idpes', 'idpes');
     }
 
     /**

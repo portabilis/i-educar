@@ -23,9 +23,7 @@ return new class extends clsCadastro
     {
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: ['/vendor/legacy/Cadastro/Assets/Javascripts/DocumentacaoPadrao.js']);
 
-        $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-        $obj_usuario_det = $obj_usuario->detalhe();
-        $this->ref_cod_escola = $obj_usuario_det['ref_cod_escola'];
+        $this->ref_cod_escola = null;
 
         $this->campoOculto(nome: 'cod_instituicao', valor: $this->cod_instituicao);
         $this->campoOculto(nome: 'pessoa_logada', valor: $this->pessoa_logada);

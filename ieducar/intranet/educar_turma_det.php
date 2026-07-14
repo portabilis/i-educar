@@ -1,11 +1,15 @@
 <?php
 
+use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassStage;
+use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGradeDiscipline;
-use App\Models\LegacyStageType;
 use App\Models\View\Discipline;
+use App\Process;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe
@@ -164,13 +168,10 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_cod_regente']) {
-            $obj_pessoa = new clsPessoa_(int_idpes: $registro['ref_cod_regente']);
-            $det = $obj_pessoa->detalhe();
-
             $this->addDetalhe(
                 detalhe: [
                     'Professor/Regente',
-                    $det['nome'],
+                    LegacyPerson::query()->whereKey($registro['ref_cod_regente'])->value('nome'),
                 ]
             );
         }
@@ -273,11 +274,13 @@ return new class extends clsDetalhe
                 );
             }
         } elseif ($padrao_ano_escolar == 0) {
-            $obj = new clsPmieducarTurmaModulo;
-            $obj->setOrderby(strNomeCampo: 'sequencial ASC');
-            $lst = $obj->lista(int_ref_cod_turma: $this->cod_turma);
+            $lst = LegacySchoolClassStage::query()
+                ->whereSchoolClass($this->cod_turma)
+                ->orderBySequencial()
+                ->with('stageType:cod_modulo,nm_tipo')
+                ->get(['ref_cod_modulo', 'data_inicio', 'data_fim', 'dias_letivos']);
 
-            if ($lst) {
+            if ($lst->isNotEmpty()) {
                 $tabela = '
           <table>
             <tr align="center">
@@ -296,10 +299,10 @@ return new class extends clsDetalhe
                         $color = ' bgcolor="#FFFFFF" ';
                     }
 
-                    $nm_modulo = LegacyStageType::find($valor['ref_cod_modulo'])->nm_tipo;
+                    $nm_modulo = $valor->stageType->nm_tipo;
 
-                    $valor['data_inicio'] = dataFromPgToBr(data_original: $valor['data_inicio']);
-                    $valor['data_fim'] = dataFromPgToBr(data_original: $valor['data_fim']);
+                    $data_inicio = $valor['data_inicio']->format('d/m/Y');
+                    $data_fim = $valor['data_fim']->format('d/m/Y');
 
                     $tabela .= sprintf(
                         '
@@ -312,9 +315,9 @@ return new class extends clsDetalhe
                         $color,
                         $nm_modulo,
                         $color,
-                        $valor['data_inicio'],
+                        $data_inicio,
                         $color,
-                        $valor['data_fim'],
+                        $data_fim,
                         $color,
                         $valor['dias_letivos']
                     );
@@ -371,7 +374,7 @@ return new class extends clsDetalhe
             $this->array_botao[] = 'Lançar pareceres da turma';
             $this->array_botao_url_script[] = sprintf('go("educar_parecer_turma_cad.php?cod_turma=%d");', $registro['cod_turma']);
 
-            $doesntExist = \App\Models\LegacySchoolClassTeacher::query()
+            $doesntExist = LegacySchoolClassTeacher::query()
                 ->where('ano', $registro['ano'])
                 ->where('turma_id', $registro['cod_turma'])
                 ->doesntExist();
@@ -379,6 +382,11 @@ return new class extends clsDetalhe
             if ($doesntExist) {
                 $this->array_botao[] = 'Copiar vínculo de servidores';
                 $this->array_botao_url_script[] = sprintf('go("copia_vinculos_servidores_cad.php?cod_turma=%d");', $registro['cod_turma']);
+            }
+
+            if (Auth::user()->can('view', Process::TIMETABLE)) {
+                $this->array_botao[] = 'Quadro de horários';
+                $this->array_botao_url_script[] = sprintf('go("/new/quadro-de-horarios/%d");', $registro['cod_turma']);
             }
         }
 

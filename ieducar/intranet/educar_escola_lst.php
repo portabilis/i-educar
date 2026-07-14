@@ -28,6 +28,7 @@ return new class extends clsListagem
         if ($nivel == 1) {
             $cabecalhos[] = 'Instituição';
             $opcoes = LegacyInstitution::query()
+                ->active()
                 ->select([
                     'cod_instituicao',
                     'nm_instituicao',

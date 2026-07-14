@@ -22,7 +22,7 @@ return new class extends clsCadastro
         $retorno = 'Novo';
 
         if ($_GET['cod_funcionario_vinculo']) {
-            $this->cod_vinculo = $_GET['cod_funcionario_vinculo'];
+            $this->cod_vinculo = (int) $_GET['cod_funcionario_vinculo'];
             $this->db->Consulta(consulta: "SELECT nm_vinculo, abreviatura FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = $this->cod_vinculo");
 
             if ($this->db->ProximoRegistro()) {

@@ -71,7 +71,7 @@ function loadJson($file)
 
 function int2CNPJ($int)
 {
-    $int = preg_replace('/[\D]/', '', $int);
+    $int = limpaCnpj($int);
     if (strlen($int) < 14) {
         $str = str_repeat('0', 14 - strlen($int)) . $int;
     } else {
@@ -80,6 +80,32 @@ function int2CNPJ($int)
 
     return substr($str, 0, 2) . '.' . substr($str, 2, 3). '.' . substr($str, 5, 3)
         . '/' . substr($str, 8, 4) . '-' . substr($str, 12, 2);
+}
+
+/**
+ * Normaliza um CNPJ (numérico ou alfanumérico) para gravação: sem máscara, maiúsculo,
+ * com 14 posições. Retorna null para valor vazio ou inválido.
+ */
+function normalizaCnpj($cnpj): ?string
+{
+    $cnpj = limpaCnpj($cnpj);
+
+    if ($cnpj === '') {
+        return null;
+    }
+
+    $cnpj = str_pad($cnpj, 14, '0', STR_PAD_LEFT);
+
+    return strlen($cnpj) === 14 && $cnpj !== '00000000000000' ? $cnpj : null;
+}
+
+/**
+ * Remove a máscara do CNPJ e converte em maiúsculo, sem preencher zeros à esquerda.
+ * Indicada para busca parcial; para gravação, usar normalizaCnpj.
+ */
+function limpaCnpj($cnpj): string
+{
+    return strtoupper(preg_replace('/[^0-9A-Za-z]/', '', (string) $cnpj));
 }
 
 /**
@@ -97,6 +123,11 @@ function int2CEP($int)
     } else {
         return '';
     }
+}
+
+function onlyDigits($valor)
+{
+    return preg_replace('/\D/', '', $valor ?? '');
 }
 
 function limpa_acentos($str_nome)
@@ -341,10 +372,14 @@ function validaCNPJ($cnpj = null)
         return false;
     }
 
-    $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
+    $cnpj = limpaCnpj($cnpj);
     $cnpj = str_pad($cnpj, 14, '0', STR_PAD_LEFT);
 
     if (strlen($cnpj) != 14) {
+        return false;
+    }
+
+    if (!preg_match('/^[0-9A-Z]{12}[0-9]{2}$/', $cnpj)) {
         return false;
     }
 
@@ -371,6 +406,12 @@ function verificaSequencia($cnpj)
 
 function validaDigitosCNPJ($cnpj): bool
 {
+    $cnpj = strtoupper((string) $cnpj);
+
+    if (strlen($cnpj) !== 14) {
+        return false;
+    }
+
     $j = 5;
     $k = 6;
     $soma1 = 0;
@@ -381,10 +422,10 @@ function validaDigitosCNPJ($cnpj): bool
         $j = $j == 1 ? 9 : $j;
         $k = $k == 1 ? 9 : $k;
 
-        $soma2 += ($cnpj[$i] * $k);
+        $soma2 += ((ord($cnpj[$i]) - 48) * $k);
 
         if ($i < 12) {
-            $soma1 += ($cnpj[$i] * $j);
+            $soma1 += ((ord($cnpj[$i]) - 48) * $j);
         }
 
         $k--;
@@ -421,6 +462,49 @@ function transformStringFromDBInArray($string): ?array
 function transformDBArrayInString($value): ?string
 {
     return is_array($value) ? '{' . implode(',', array_filter($value)) . '}' : null;
+}
+
+/**
+ * Formats a decimal value for display in Brazilian format.
+ *
+ * @param mixed $value   numeric value (ex: 689.2)
+ * @param int   $decimals number of decimal places
+ * @return string|null formatted value (ex: "689,20") or null if invalid
+ */
+function formatDecimalBr($value, int $decimals = 2): ?string
+{
+    if (!is_numeric($value)) {
+        return null;
+    }
+
+    return number_format((float) $value, $decimals, ',', '.');
+}
+
+/**
+ * Converts a decimal value from Brazilian format to database format.
+ *
+ * Accepts Brazilian format ("689,20" or "1.000,50") or ISO ("689.20" or "1000.5").
+ *
+ * @param mixed $value value in BR or ISO format
+ * @return string|null value in ISO format (ex: "689.20") or null if invalid
+ */
+function parseDecimalBr($value): ?string
+{
+    if ($value === null || $value === '') {
+        return null;
+    }
+
+    $value = trim((string) $value);
+
+    if (str_contains($value, ',')) {
+        $value = str_replace(',', '.', str_replace('.', '', $value));
+    }
+
+    if (!is_numeric($value)) {
+        return null;
+    }
+
+    return $value;
 }
 
 if (!function_exists('formatDateParse')) {

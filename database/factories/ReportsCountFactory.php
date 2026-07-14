@@ -6,7 +6,7 @@ use App\Models\ReportsCount;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ReportsCount>
+ * @extends Factory<ReportsCount>
  */
 class ReportsCountFactory extends Factory
 {

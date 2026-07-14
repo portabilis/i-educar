@@ -2,7 +2,12 @@
 
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
+use App\Models\LegacyBondType;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyPerson;
+use App\Models\LegacyUser;
+use App\Models\LegacyUserSchool;
+use App\Models\LegacyUserType;
 use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
 use App\User;
@@ -49,11 +54,10 @@ return new class extends clsCadastro
         }
 
         if (is_numeric($this->ref_pessoa)) {
-            $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
-            $det_funcionario = $obj_funcionario->detalhe();
+            $det_funcionario = LegacyEmployee::find($this->ref_pessoa);
 
             if ($det_funcionario) {
-                foreach ($det_funcionario as $campo => $valor) {
+                foreach ($det_funcionario->getAttributes() as $campo => $valor) {
                     $this->$campo = $valor;
                 }
 
@@ -68,9 +72,8 @@ return new class extends clsCadastro
                 $this->data_inicial = Portabilis_Date_Utils::pgSQLToBr($this->data_inicial);
             }
 
-            $obj = new clsPmieducarUsuario($this->ref_pessoa);
-
-            $registro = $obj->detalhe();
+            $usuario = LegacyUser::query()->find($this->ref_pessoa);
+            $registro = $usuario?->getAttributes();
 
             if ($registro) {
                 foreach ($registro as $campo => $val) {
@@ -80,7 +83,7 @@ return new class extends clsCadastro
                 $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 555, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
             }
 
-            if ($det_funcionario !== false) {
+            if ($det_funcionario) {
                 $retorno = 'Editar';
             }
         }
@@ -115,10 +118,7 @@ return new class extends clsCadastro
         }
 
         if ($_GET['ref_pessoa']) {
-            $obj_funcionario = new clsPessoaFj($this->ref_pessoa);
-            $det_funcionario = $obj_funcionario->detalhe();
-
-            $this->nome = $det_funcionario['nome'];
+            $this->nome = LegacyPerson::query()->whereKey($this->ref_pessoa)->value('nome');
 
             $this->campoRotulo(nome: 'nome', campo: 'Nome', valor: $this->nome);
         } else {
@@ -159,8 +159,7 @@ return new class extends clsCadastro
 
         $this->campoMemo(nome: 'motivo', campo: 'Motivo', valor: $this->motivo, descricao: 'Mensagem que será exibida ao usuário no momento de tentar acessar sua conta.', colunas: 60, linhas: 5);
 
-        $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
-        $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
+        $opcoes = ['' => 'Selecione'] + LegacyBondType::orderBy('cod_funcionario_vinculo')->pluck('nm_vinculo', 'cod_funcionario_vinculo')->all();
         $this->campoLista(nome: 'ref_cod_funcionario_vinculo', campo: 'Vínculo', valor: $opcoes, default: $this->ref_cod_funcionario_vinculo);
 
         $tempoExpiraSenha = config('legacy.app.user_accounts.default_password_expiration_period');
@@ -173,24 +172,20 @@ return new class extends clsCadastro
         }
 
         $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPmieducarTipoUsuario;
-        $objTemp->setOrderby('nm_tipo ASC');
+        $opcoes_ = [];
 
         /** @var User $user */
         $user = Auth::user();
-        // verifica se pessoa logada é super-usuario
-        if ($user->isAdmin()) {
-            $lista = $objTemp->lista(int_ativo: 1);
-        } else {
-            $lista = $objTemp->lista(int_ativo: 1, int_nivel_menor: $obj_permissao->nivel_acesso($this->pessoa_logada));
-        }
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
-                $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
-            }
+        $lista = LegacyUserType::query()
+            ->active()
+            ->when(!$user->isAdmin(), fn ($q) => $q->whereLevelAtLeast($obj_permissao->nivel_acesso($this->pessoa_logada)))
+            ->orderBy('nm_tipo')
+            ->get(['cod_tipo_usuario', 'nm_tipo', 'nivel']);
+
+        foreach ($lista as $registro) {
+            $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
+            $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
         }
 
         $tamanho = count($opcoes_);
@@ -255,20 +250,23 @@ return new class extends clsCadastro
 
         $senha = Hash::make($this->_senha);
 
-        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: $senha, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: 'NOW()', data_reativa_conta: 'NOW()', ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: 1, email: $this->email, matricula_interna: $this->matricula_interna, forceResetPassword: !is_null($this->force_reset_password), motivo: $this->motivo, data_inicial: Portabilis_Date_Utils::brToPgSQL($this->data_inicial));
+        $dadosFuncionario = $this->montaDadosFuncionario($senha);
+        if (is_numeric($this->ref_pessoa)) {
+            $dadosFuncionario['ref_cod_pessoa_fj'] = $this->ref_pessoa;
+        }
+        $dadosFuncionario['ativo'] = 1;
+        $dadosFuncionario['data_troca_senha'] = now();
+        $dadosFuncionario['data_reativa_conta'] = now();
+        $dadosFuncionario['tipo_menu'] = 1;
 
-        if ($obj_funcionario->cadastra()) {
-            if ($this->ref_cod_instituicao) {
-                $obj = new clsPmieducarUsuario(cod_usuario: $this->ref_pessoa, ref_cod_escola: null, ref_cod_instituicao: $this->ref_cod_instituicao, ref_funcionario_cad: $this->pessoa_logada, ref_funcionario_exc: $this->pessoa_logada, ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario, data_cadastro: null, data_exclusao: null, ativo: 1);
-            } else {
-                $obj = new clsPmieducarUsuario(cod_usuario: $this->ref_pessoa, ref_cod_escola: null, ref_cod_instituicao: null, ref_funcionario_cad: $this->pessoa_logada, ref_funcionario_exc: $this->pessoa_logada, ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario, data_cadastro: null, data_exclusao: null, ativo: 1);
-            }
+        // Na antiga clsPortalFuncionario o campo só era incluído no INSERT
+        // quando truthy — assim o default da coluna era respeitado.
+        if ($this->force_reset_password) {
+            $dadosFuncionario['force_reset_password'] = true;
+        }
 
-            if ($obj->existe()) {
-                $cadastrou = $obj->edita();
-            } else {
-                $cadastrou = $obj->cadastra();
-            }
+        if (LegacyEmployee::create($dadosFuncionario)) {
+            $cadastrou = $this->gravaUsuario(ativo: 1);
 
             $this->insereUsuarioEscolas(codUsuario: $this->ref_pessoa, escolas: $this->escola);
 
@@ -342,42 +340,17 @@ return new class extends clsCadastro
             }
         }
 
-        $data_reativa_conta = $this->hasChangeStatusUser() && $this->ativo == '1' ? 'NOW()' : null;
+        $dadosFuncionario = $this->montaDadosFuncionario();
+        if (is_numeric($this->ativo)) {
+            $dadosFuncionario['ativo'] = $this->ativo;
+        }
 
-        $obj_funcionario = new clsPortalFuncionario(ref_cod_pessoa_fj: $this->ref_pessoa, matricula: $this->matricula, senha: null, ativo: $this->ativo, ref_sec: null, ramal: null, sequencial: null, opcao_menu: null, ref_cod_administracao_secretaria: null, ref_ref_cod_administracao_secretaria: null, ref_cod_departamento: null, ref_ref_ref_cod_administracao_secretaria: null, ref_ref_cod_departamento: null, ref_cod_setor: null, ref_cod_funcionario_vinculo: $this->ref_cod_funcionario_vinculo, tempo_expira_senha: $this->tempo_expira_senha, data_expiracao: Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), data_troca_senha: null, data_reativa_conta: $data_reativa_conta, ref_ref_cod_pessoa_fj: $this->pessoa_logada, proibido: 0, ref_cod_setor_new: 0, matricula_new: null, matricula_permanente: 0, tipo_menu: null, email: $this->email, matricula_interna: $this->matricula_interna, motivo: $this->motivo, data_inicial: Portabilis_Date_Utils::brToPgSQL($this->data_inicial));
+        if ($this->hasChangeStatusUser() && $this->ativo == '1') {
+            $dadosFuncionario['data_reativa_conta'] = now();
+        }
 
-        if ($obj_funcionario->edita()) {
-            if ($this->ref_cod_instituicao) {
-                $obj = new clsPmieducarUsuario(
-                    cod_usuario: $this->ref_pessoa,
-                    ref_cod_escola: null,
-                    ref_cod_instituicao: $this->ref_cod_instituicao,
-                    ref_funcionario_cad: $this->pessoa_logada,
-                    ref_funcionario_exc: $this->pessoa_logada,
-                    ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario,
-                    data_cadastro: null,
-                    data_exclusao: null,
-                    ativo: $this->ativo
-                );
-            } else {
-                $obj = new clsPmieducarUsuario(
-                    cod_usuario: $this->ref_pessoa,
-                    ref_cod_escola: null,
-                    ref_cod_instituicao: null,
-                    ref_funcionario_cad: $this->pessoa_logada,
-                    ref_funcionario_exc: $this->pessoa_logada,
-                    ref_cod_tipo_usuario: $this->ref_cod_tipo_usuario,
-                    data_cadastro: null,
-                    data_exclusao: null,
-                    ativo: $this->ativo
-                );
-            }
-
-            if ($obj->existe()) {
-                $editou = $obj->edita();
-            } else {
-                $editou = $obj->cadastra();
-            }
+        if (LegacyEmployee::whereKey($this->ref_pessoa)->update($dadosFuncionario)) {
+            $editou = $this->gravaUsuario(ativo: $this->ativo);
 
             $this->insereUsuarioEscolas(codUsuario: $this->ref_pessoa, escolas: $this->escola);
 
@@ -402,9 +375,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
-
-        if ($obj_funcionario->excluir()) {
+        if (LegacyEmployee::whereKey($this->ref_pessoa)->update(['ativo' => 0])) {
             UserDeleted::dispatch(User::findOrFail($this->ref_pessoa));
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
@@ -432,8 +403,7 @@ return new class extends clsCadastro
 
     public function excluiTodosVinculosEscola($codUsuario)
     {
-        $usuarioEscola = new clsPmieducarEscolaUsuario;
-        $usuarioEscola->excluirTodos($codUsuario);
+        LegacyUserSchool::query()->where('ref_cod_usuario', $codUsuario)->delete();
     }
 
     public function insereUsuarioEscolas($codUsuario, $escolas)
@@ -441,10 +411,11 @@ return new class extends clsCadastro
         $this->excluiTodosVinculosEscola($codUsuario);
 
         foreach ($escolas as $e) {
-            $usuarioEscola = new clsPmieducarEscolaUsuario;
-            $usuarioEscola->ref_cod_usuario = $codUsuario;
-            $usuarioEscola->ref_cod_escola = $e;
-            $usuarioEscola->cadastra();
+            LegacyUserSchool::create([
+                'ref_cod_usuario' => $codUsuario,
+                'ref_cod_escola' => $e,
+                'escola_atual' => 0,
+            ]);
         }
     }
 
@@ -506,15 +477,72 @@ return new class extends clsCadastro
         $validateUserPasswordService->execute($password);
     }
 
+    private function gravaUsuario($ativo): bool
+    {
+        $codUsuario = $this->ref_pessoa;
+
+        if (!is_numeric($codUsuario)) {
+            return false;
+        }
+
+        $instituicao = $this->ref_cod_instituicao;
+        $tipoUsuario = $this->ref_cod_tipo_usuario;
+        $funcionario = $this->pessoa_logada;
+
+        if (LegacyUser::query()->whereKey($codUsuario)->exists()) {
+            if (!is_numeric($funcionario)) {
+                return false;
+            }
+
+            $dados = [
+                'ref_cod_instituicao' => is_numeric($instituicao) ? $instituicao : null,
+                'ref_funcionario_cad' => $funcionario,
+                'ref_funcionario_exc' => $funcionario,
+            ];
+
+            if (is_numeric($tipoUsuario)) {
+                $dados['ref_cod_tipo_usuario'] = $tipoUsuario;
+            }
+
+            if (is_numeric($ativo)) {
+                $dados['ativo'] = $ativo;
+                $dados['data_exclusao'] = ($ativo === 1) ? null : now();
+            }
+
+            LegacyUser::query()->whereKey($codUsuario)->update($dados);
+
+            return true;
+        }
+
+        if (!is_numeric($funcionario) || !is_numeric($tipoUsuario)) {
+            return false;
+        }
+
+        $dados = [
+            'cod_usuario' => $codUsuario,
+            'ref_funcionario_cad' => $funcionario,
+            'ref_cod_tipo_usuario' => $tipoUsuario,
+            'data_cadastro' => now(),
+            'ativo' => 1,
+        ];
+
+        if (is_numeric($instituicao)) {
+            $dados['ref_cod_instituicao'] = $instituicao;
+        }
+
+        LegacyUser::query()->create($dados);
+
+        return true;
+    }
+
     private function montaBotoesDeAcao(): void
     {
-        $funcionario = (new clsPortalFuncionario($this->ref_pessoa))->detalhe();
-        $usuario = (new clsPmieducarUsuario($this->ref_pessoa))->detalhe();
+        $funcionarioExiste = LegacyEmployee::whereKey($this->ref_pessoa)->exists();
+        $usuario = LegacyUser::query()
+            ->whereKey($this->ref_pessoa)
+            ->exists();
 
-        $edita = false;
-        if ($funcionario !== false && $usuario !== false) {
-            $edita = true;
-        }
+        $edita = $funcionarioExiste && $usuario;
 
         $this->url_cancelar = $edita
             ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}"
@@ -523,6 +551,55 @@ return new class extends clsCadastro
         $this->fexcluir = $edita;
 
         $this->nome_url_cancelar = 'Cancelar';
+    }
+
+    private function montaDadosFuncionario(?string $senha = null): array
+    {
+        // Replica os guards da antiga clsPortalFuncionario: só inclui a chave
+        // no array quando o valor passa is_numeric/is_string. Em UPDATE isso
+        // evita sobrescrever colunas com NULL quando o form não envia o campo.
+        $dados = [];
+
+        if (is_string($this->matricula)) {
+            $dados['matricula'] = $this->matricula;
+        }
+        if (is_string($this->matricula_interna)) {
+            $dados['matricula_interna'] = $this->matricula_interna;
+        }
+        if (is_string($senha)) {
+            $dados['senha'] = $senha;
+        }
+        if (is_numeric($this->ref_cod_funcionario_vinculo)) {
+            $dados['ref_cod_funcionario_vinculo'] = $this->ref_cod_funcionario_vinculo;
+        }
+        if (is_numeric($this->tempo_expira_senha)) {
+            $dados['tempo_expira_senha'] = $this->tempo_expira_senha;
+        }
+        if (is_numeric($this->pessoa_logada)) {
+            $dados['ref_ref_cod_pessoa_fj'] = $this->pessoa_logada;
+        }
+        if (is_string($this->email)) {
+            $dados['email'] = $this->email;
+        }
+        if (is_string($this->motivo)) {
+            $dados['motivo'] = $this->motivo;
+        }
+
+        $dataExpiracao = Portabilis_Date_Utils::brToPgSQL($this->data_expiracao);
+        if ($dataExpiracao) {
+            $dados['data_expiracao'] = $dataExpiracao;
+        } elseif ($dataExpiracao === null || $dataExpiracao === '') {
+            $dados['data_expiracao'] = null;
+        }
+
+        $dataInicial = Portabilis_Date_Utils::brToPgSQL($this->data_inicial);
+        if ($dataInicial) {
+            $dados['data_inicial'] = $dataInicial;
+        } elseif ($dataInicial === null || $dataInicial === '') {
+            $dados['data_inicial'] = null;
+        }
+
+        return $dados;
     }
 
     public function makeExtra(): string

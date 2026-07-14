@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\LegacyOrganization;
+use App\Models\LegacyPerson;
+use App\Models\LegacyPhone;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolCourse;
 use App\Models\PersonHasPlace;
 
 return new class extends clsDetalhe
@@ -52,13 +56,10 @@ return new class extends clsDetalhe
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         if ($registro['ref_idpes']) {
-            $obj_escola = new clsPessoa_(int_idpes: $registro['ref_idpes']);
-            $obj_escola_det = $obj_escola->detalhe();
-            $url = $obj_escola_det['url'];
-            $email = $obj_escola_det['email'];
-            $obj_escola1 = new clsPessoaJuridica(int_idpes: $registro['ref_idpes']);
-            $obj_escola_det1 = $obj_escola1->detalhe();
-            $nm_escola = $obj_escola_det1['fantasia'];
+            $pessoa = LegacyPerson::find($registro['ref_idpes'], ['idpes', 'url', 'email']);
+            $url = $pessoa?->url;
+            $email = $pessoa?->email;
+            $nm_escola = LegacyOrganization::whereKey($registro['ref_idpes'])->value('fantasia');
 
             $place = PersonHasPlace::query()
                 ->with(relations: 'place.city.state')
@@ -66,26 +67,25 @@ return new class extends clsDetalhe
                 ->orderBy(column: 'type')
                 ->first();
 
-            $obj_telefone = new clsPessoaTelefone;
-            $telefone_lst = $obj_telefone->lista(int_idpes: $registro['ref_idpes'], str_ordenacao: 'tipo');
-            if ($telefone_lst) {
-                foreach ($telefone_lst as $telefone) {
-                    if ($telefone['tipo'] == 1) {
-                        $telefone_1 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    } elseif ($telefone['tipo'] == 2) {
-                        $telefone_2 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    } elseif ($telefone['tipo'] == 3) {
-                        $telefone_mov = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    } elseif ($telefone['tipo'] == 4) {
-                        $telefone_fax = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                    }
-                }
+            $telefone_lst = LegacyPhone::query()
+                ->where('idpes', $registro['ref_idpes'])
+                ->orderBy('tipo')
+                ->get();
+
+            foreach ($telefone_lst as $telefone) {
+                $numero = '(' . $telefone->ddd . ') ' . $telefone->fone;
+
+                match ((int) $telefone->tipo) {
+                    LegacyPhone::TYPE_LANDLINE => $telefone_1 = $numero,
+                    LegacyPhone::TYPE_MOBILE => $telefone_2 = $numero,
+                    LegacyPhone::TYPE_MOBILE_ALT => $telefone_mov = $numero,
+                    LegacyPhone::TYPE_FAX => $telefone_fax = $numero,
+                    default => null,
+                };
             }
         }
 
-        $obj_ref_idpes = new clsPessoaJuridica(int_idpes: $registro['ref_idpes']);
-        $det_ref_idpes = $obj_ref_idpes->detalhe();
-        $registro['ref_idpes'] = $det_ref_idpes['nome'];
+        $registro['ref_idpes'] = LegacyPerson::whereKey($registro['ref_idpes'])->value('nome');
 
         if ($registro['ref_cod_instituicao']) {
             $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
@@ -139,10 +139,13 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Fax', "{$telefone_fax}"]);
         }
 
-        $obj = new clsPmieducarEscolaCurso;
-        $lst = $obj->lista(int_ref_cod_escola: $this->cod_escola);
+        $lst = LegacySchoolCourse::query()
+            ->active()
+            ->when(is_numeric($this->cod_escola), fn ($q) => $q->whereSchool((int) $this->cod_escola))
+            ->with('course:cod_curso,nm_curso')
+            ->get();
 
-        if ($lst) {
+        if ($lst->isNotEmpty()) {
             $tabela = '<table>
                            <tr align=\'center\'>
                                <td bgcolor=\'#ccdce6\'><b>nome</b></td>
@@ -155,10 +158,7 @@ return new class extends clsDetalhe
                 } else {
                     $color = ' bgcolor=\'#ffffff\' ';
                 }
-                $obj_curso = new clsPmieducarCurso(cod_curso: $valor['ref_cod_curso']);
-                $obj_curso->setorderby(strNomeCampo: 'nm_curso asc');
-                $obj_curso_det = $obj_curso->detalhe();
-                $nm_curso = $obj_curso_det['nm_curso'];
+                $nm_curso = $valor->course->nm_curso;
 
                 $tabela .= "<tr>
                                 <td {$color} align=left>{$nm_curso}</td>

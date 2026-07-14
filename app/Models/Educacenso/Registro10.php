@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
 use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
+use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
@@ -70,6 +71,17 @@ class Registro10 extends Registro10Fields
     public function predioEscolar()
     {
         return in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->localFuncionamento);
+    }
+
+    public function linguaEnsinoMinistrado(): ?int
+    {
+        return match ($this->linguaMinistrada) {
+            LinguaMinistrada::NAO_OFERECE_EDUCACAO_INDIGENA => 0,
+            LinguaMinistrada::INDIGENA => 1,
+            LinguaMinistrada::PORTUGUESA => 2,
+            LinguaMinistrada::INDIGENA_E_PORTUGUESA => 3,
+            default => null,
+        };
     }
 
     /**
@@ -385,6 +397,14 @@ class Registro10 extends Registro10Fields
     public function laboratoriosCiencias()
     {
         return in_array(Laboratorios::CIENCIAS, $this->laboratorios);
+    }
+
+    /**
+     * @return bool
+     */
+    public function laboratoriosRobotica()
+    {
+        return in_array(Laboratorios::ROBOTICA, $this->laboratorios);
     }
 
     /**
@@ -744,6 +764,14 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function equipamentosAcessoInternetAmbos()
+    {
+        return in_array(EquipamentosAcessoInternet::AMBOS, $this->equipamentosAcessoInternet);
+    }
+
+    /**
+     * @return bool
+     */
     public function redeLocalInexistenteEOutrosCamposPreenchidos()
     {
         return in_array(RedeLocal::NENHUMA, $this->redeLocal) && count($this->redeLocal) > 1;
@@ -779,6 +807,14 @@ class Registro10 extends Registro10Fields
     public function redeLocalWireless()
     {
         return in_array(RedeLocal::WIRELESS, $this->redeLocal);
+    }
+
+    /**
+     * @return bool
+     */
+    public function redeLocalACaboEWireless()
+    {
+        return in_array(RedeLocal::A_CABO_E_WIRELESS, $this->redeLocal);
     }
 
     /**
@@ -1028,6 +1064,30 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function instrumentosPedagogicosEquipamentosAudiovisuais()
+    {
+        return in_array(InstrumentosPedagogicos::EQUIPAMENTOS_AUDIOVISUAIS_PRODUCAO_ESTUDANTIL, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosKitsRobotica()
+    {
+        return in_array(InstrumentosPedagogicos::KITS_ROBOTICA, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosEducacaoEmocional()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAIS_EDUCACAO_EMOCIONAL, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
     public function instrumentosPedagogicosAreaHorta()
     {
         return in_array(InstrumentosPedagogicos::MATERIAIS_AREA_HORTA, $this->instrumentosPedagogicos);
@@ -1181,7 +1241,7 @@ class Registro10 extends Registro10Fields
      */
     public function linguaMinistradaPortugues()
     {
-        return $this->linguaMinistrada == 1;
+        return in_array($this->linguaMinistrada, [LinguaMinistrada::PORTUGUESA, LinguaMinistrada::INDIGENA_E_PORTUGUESA]);
     }
 
     /**
@@ -1189,7 +1249,7 @@ class Registro10 extends Registro10Fields
      */
     public function linguaMinistradaIndigena()
     {
-        return $this->linguaMinistrada == 2;
+        return in_array($this->linguaMinistrada, [LinguaMinistrada::INDIGENA, LinguaMinistrada::INDIGENA_E_PORTUGUESA]);
     }
 
     /**
@@ -1200,5 +1260,16 @@ class Registro10 extends Registro10Fields
         return !empty($this->quantidadeComputadoresAlunosMesa) ||
             !empty($this->quantidadeComputadoresAlunosPortateis) ||
             !empty($this->quantidadeComputadoresAlunosTablets);
+    }
+
+    public function redeLocal(): ?int
+    {
+        return match (true) {
+            $this->redeLocalNenhuma() => 0,
+            $this->redeLocalACabo() => 1,
+            $this->redeLocalWireless() => 2,
+            $this->redeLocalACaboEWireless() => 3,
+            default => null,
+        };
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
 use App\Models\Educacenso\Registro60;
 use App\Repositories\EducacensoRepository;
+use iEducar\App\Model\Servidor;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
@@ -344,24 +345,26 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->posGraduacaoNaoPossui, // 88 - Não tem pós-graduação concluída
                 $pessoa->formacaoContinuadaCreche, // 89 - Creche (0 a 3 anos)
                 $pessoa->formacaoContinuadaPreEscola, // 90 - Pré-escola (4 e 5 anos)
-                $pessoa->formacaoContinuadaAnosIniciaisFundamental, // 91 - Anos iniciais do ensino fundamental
-                $pessoa->formacaoContinuadaAnosFinaisFundamental, // 92 - Anos finais do ensino fundamental
-                $pessoa->formacaoContinuadaEnsinoMedio, // 93 - Ensino médio
-                $pessoa->formacaoContinuadaEducacaoJovensAdultos, // 94 - Educação de jovens e adultos
-                $pessoa->formacaoContinuadaEducacaoEspecial, // 95 - Educação especial
-                $pessoa->formacaoContinuadaEducacaoIndigena, // 96 - Educação Indígena
-                $pessoa->formacaoContinuadaEducacaoCampo, // 97 - Educação do campo
-                $pessoa->formacaoContinuadaEducacaoAmbiental, // 98 - Educação ambiental
-                $pessoa->formacaoContinuadaEducacaoDireitosHumanos, // 99 - Educação em direitos humanos
-                $pessoa->formacaoContinuadaEducacaoBilingueSurdos, // 100 - Educação bilíngue de surdos
-                $pessoa->formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao, // 101 - Educação e Tecnologia de Informação e Comunicação (TIC)
-                $pessoa->formacaoContinuadaGeneroDiversidadeSexual, // 102 - Gênero e diversidade sexual
-                $pessoa->formacaoContinuadaDireitosCriancaAdolescente, // 103 - Direitos de criança e adolescente
-                $pessoa->formacaoContinuadaEducacaoRelacoesEticoRaciais, // 104 - Educação para as relações étnico-raciais e História e cultura afro-brasileira e africana
-                $pessoa->formacaoContinuadaEducacaoGestaoEscolar, // 105 - Gestão escolar
-                $pessoa->formacaoContinuadaEducacaoOutros, // 106 - Outros
-                $pessoa->formacaoContinuadaEducacaoNenhum, // 107 - Nenhum
-                $pessoa->email, // 108 - E-mail
+                $pessoa->formacaoContinuadaAlfabetizacao, // 91 - Alfabetização
+                $pessoa->formacaoContinuadaAnosIniciaisFundamental, // 92 - Anos iniciais do ensino fundamental
+                $pessoa->formacaoContinuadaAnosFinaisFundamental, // 93 - Anos finais do ensino fundamental
+                $pessoa->formacaoContinuadaEnsinoMedio, // 95 - Ensino médio
+                $pessoa->formacaoContinuadaEducacaoJovensAdultos, // 95 - Educação de jovens e adultos
+                $pessoa->formacaoContinuadaEducacaoEspecial, // 96 - Educação especial
+                $pessoa->formacaoContinuadaEducacaoIndigena, // 97 - Educação Indígena
+                $pessoa->formacaoContinuadaEducacaoCampo, // 98 - Educação do campo
+                $pessoa->formacaoContinuadaEducacaoAmbiental, // 99 - Educação ambiental
+                $pessoa->formacaoContinuadaEducacaoDireitosHumanos, // 100 - Educação em direitos humanos
+                $pessoa->formacaoContinuadaEducacaoBilingueSurdos, // 101 - Educação bilíngue de surdos
+                $pessoa->formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao, // 102 - Educação e Tecnologia de Informação e Comunicação (TIC)
+                $pessoa->formacaoEducacaoEmTempoIntegral, // 103 - Educação integral em tempo integral
+                $pessoa->formacaoContinuadaGeneroDiversidadeSexual, // 104 - Gênero e diversidade sexual
+                $pessoa->formacaoContinuadaDireitosCriancaAdolescente, // 105 - Direitos de criança e adolescente
+                $pessoa->formacaoContinuadaEducacaoRelacoesEticoRaciais, // 106 - Educação para as relações étnico-raciais e História e cultura afro-brasileira e africana
+                $pessoa->formacaoContinuadaEducacaoGestaoEscolar, // 107 - Gestão escolar
+                $pessoa->formacaoContinuadaEducacaoOutros, // 108 - Outros
+                $pessoa->formacaoContinuadaEducacaoNenhum, // 109 - Nenhum
+                $pessoa->email, // 110 - E-mail
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
@@ -477,30 +480,31 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->inepTurma, // 06 - Código da turma no INEP
                 $aluno->matriculaAluno, // 07 - Código da Matrícula do(a) aluno(a)
                 $aluno->etapaAluno, // 08 - Turma multi
-                $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas, // 09 - Desenvolvimento de funções cognitivas
-                $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma, // 10 - Desenvolvimento de vida autônoma
-                $aluno->tipoAtendimentoEnriquecimentoCurricular, // 11 - Enriquecimento curricular
-                $aluno->tipoAtendimentoEnsinoInformaticaAcessivel, // 12 - Ensino de informática acessível
-                $aluno->tipoAtendimentoEnsinoLibras, // 13 - Ensino da Língua Brasileira de Sinais (Libras)
-                $aluno->tipoAtendimentoEnsinoLinguaPortuguesa, // 14 - Ensino da Língua Portuguesa como Segunda Língua
-                $aluno->tipoAtendimentoEnsinoSoroban, // 15 - Ensino das técnicas do cálculo no Soroban
-                $aluno->tipoAtendimentoEnsinoBraile, // 16 - Ensino de Sistema Braille
-                $aluno->tipoAtendimentoEnsinoOrientacaoMobilidade, // 17 - Ensino de técnicas para orientação e mobilidade
-                $aluno->tipoAtendimentoEnsinoCaa, // 18 - Ensino de uso da Comunicação Alternativa e Aumentativa (CAA)
-                $aluno->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos, // 19 - Ensino de uso de recursos ópticos e não ópticos
-                $aluno->recebeEscolarizacaoOutroEspacao, // 20 - Recebe escolarização em outro espaço (diferente da escola)
-                $aluno->transportePublico, // 21 - Transporte escolar público
-                $aluno->poderPublicoResponsavelTransporte, // 22 - Poder Público responsável pelo transporte escolar
-                $aluno->veiculoTransporteBicicleta, // 23 - Rodoviário - Bicicleta
-                $aluno->veiculoTransporteMicroonibus, // 24 - Rodoviário - Microônibus
-                $aluno->veiculoTransporteOnibus, // 25 - Rodoviário - Ônibus
-                $aluno->veiculoTransporteTracaoAnimal, // 26 - Rodoviário – Tração Animal
-                $aluno->veiculoTransporteVanKonbi, // 27 - Rodoviário - Vans/Kombis
-                $aluno->veiculoTransporteOutro, // 28 - Rodoviário - Outro
-                $aluno->veiculoTransporteAquaviarioCapacidade5, // 29 - Aquaviário - Capacidade de até 5 aluno(a)s
-                $aluno->veiculoTransporteAquaviarioCapacidade5a15, // 30 - Aquaviário - Capacidade entre 5 a 15 aluno(a)s
-                $aluno->veiculoTransporteAquaviarioCapacidade15a35, // 31 - Aquaviário - Capacidade entre 15 a 35 aluno(a)s
-                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35, // 32 - Aquaviário - Capacidade acima de 35 aluno(a)s
+                $aluno->cargaHorariaIntegralizada, // 09 - Carga horária integralizada pelo(a) aluno(a) (em horas)
+                $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas, // 10 - Desenvolvimento de funções cognitivas
+                $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma, // 11 - Desenvolvimento de vida autônoma
+                $aluno->tipoAtendimentoEnriquecimentoCurricular, // 12 - Enriquecimento curricular
+                $aluno->tipoAtendimentoEnsinoInformaticaAcessivel, // 13 - Ensino de informática acessível
+                $aluno->tipoAtendimentoEnsinoLibras, // 14 - Ensino da Língua Brasileira de Sinais (Libras)
+                $aluno->tipoAtendimentoEnsinoLinguaPortuguesa, // 15 - Ensino da Língua Portuguesa como Segunda Língua
+                $aluno->tipoAtendimentoEnsinoSoroban, // 16 - Ensino das técnicas do cálculo no Soroban
+                $aluno->tipoAtendimentoEnsinoBraile, // 17 - Ensino de Sistema Braille
+                $aluno->tipoAtendimentoEnsinoOrientacaoMobilidade, // 18 - Ensino de técnicas para orientação e mobilidade
+                $aluno->tipoAtendimentoEnsinoCaa, // 19 - Ensino de uso da Comunicação Alternativa e Aumentativa (CAA)
+                $aluno->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos, // 20 - Ensino de uso de recursos ópticos e não ópticos
+                $aluno->recebeEscolarizacaoOutroEspacao, // 21 - Recebe escolarização em outro espaço (diferente da escola)
+                $aluno->transportePublico, // 22 - Transporte escolar público
+                $aluno->poderPublicoResponsavelTransporte, // 23 - Poder Público responsável pelo transporte escolar
+                $aluno->veiculoTransporteBicicleta, // 24 - Rodoviário - Bicicleta
+                $aluno->veiculoTransporteMicroonibus, // 25 - Rodoviário - Microônibus
+                $aluno->veiculoTransporteOnibus, // 26 - Rodoviário - Ônibus
+                $aluno->veiculoTransporteTracaoAnimal, // 27 - Rodoviário – Tração Animal
+                $aluno->veiculoTransporteVanKonbi, // 28 - Rodoviário - Vans/Kombis
+                $aluno->veiculoTransporteOutro, // 29 - Rodoviário - Outro
+                $aluno->veiculoTransporteAquaviarioCapacidade5, // 30 - Aquaviário - Capacidade de até 5 aluno(a)s
+                $aluno->veiculoTransporteAquaviarioCapacidade5a15, // 31 - Aquaviário - Capacidade entre 5 a 15 aluno(a)s
+                $aluno->veiculoTransporteAquaviarioCapacidade15a35, // 32 - Aquaviário - Capacidade entre 15 a 35 aluno(a)s
+                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35, // 33 - Aquaviário - Capacidade acima de 35 aluno(a)s
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
@@ -546,7 +550,7 @@ class EducacensoExportController extends ApiCoreController
      */
     private function isCursoSuperiorBachareladoOuTecnologoCompleto($grauAcademico, $situacao): bool
     {
-        if ($situacao != iEducar\App\Model\Servidor::SITUACAO_CURSO_SUPERIOR_CONCLUIDO) {
+        if ($situacao != Servidor::SITUACAO_CURSO_SUPERIOR_CONCLUIDO) {
             return false;
         }
 

@@ -25,6 +25,8 @@ class LegacyBenefit extends LegacyModel
         'desc_beneficio',
         'data_exclusao',
         'ativo',
+        'ref_usuario_cad',
+        'bolsa_familia',
     ];
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\LegacySequenceGrade;
+use App\Models\LegacyGradeSequence;
+use App\Models\LegacyUser;
 
 return new class extends clsListagem
 {
@@ -63,9 +64,9 @@ return new class extends clsListagem
             }
             $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, '', null, null, null, null, false);
         } else {
-            $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-            $obj_usuario_det = $obj_usuario->detalhe();
-            $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
+            $this->ref_cod_instituicao = LegacyUser::query()
+                ->whereKey($this->pessoa_logada)
+                ->value('ref_cod_instituicao');
         }
 
         $opcoes = ['' => 'Selecione'];
@@ -116,7 +117,7 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $lista = LegacySequenceGrade::query()
+        $lista = LegacyGradeSequence::query()
             ->filter([
                 'institution' => $this->ref_cod_instituicao,
                 'grade_origin' => $this->ref_serie_origem,

@@ -2,7 +2,10 @@
 
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyPerson;
+use App\Models\LegacyPhone;
 use App\Models\PersonHasPlace;
+use App\Services\PhoneService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
@@ -120,15 +123,16 @@ class PessoaController extends ApiCoreController
             (select num_folha from cadastro.documento where documento.idpes = fisica.idpes) as num_folha,
             (select certidao_nascimento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_nascimento,
             (select certidao_casamento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_casamento,
+            (select passaporte from cadastro.documento where documento.idpes = fisica.idpes) as passaporte,
               idmun_nascimento,
              fisica.idpais_estrangeiro as pais_origem_id,
            fisica.nacionalidade as tipo_nacionalidade,
            fisica.zona_localizacao_censo,
            fisica.localizacao_diferenciada,
            fisica.nome_social,
-           (SELECT pais.nome
-                   FROM public.pais
-                   WHERE pais.idpais = fisica.idpais_estrangeiro) AS pais_origem_nome,
+           (SELECT countries.name
+                   FROM countries
+                   WHERE countries.id = fisica.idpais_estrangeiro) AS pais_origem_nome,
            (SELECT ref_cod_raca FROM cadastro.fisica_raca WHERE fisica.idpes = fisica_raca.ref_idpes) as cor_raca,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as fone_fixo,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as fone_mov,
@@ -169,6 +173,7 @@ class PessoaController extends ApiCoreController
             'num_folha',
             'certidao_nascimento',
             'certidao_casamento',
+            'passaporte',
             'idmun_nascimento',
             'possui_documento',
             'ddd_fone_fixo',
@@ -262,7 +267,7 @@ class PessoaController extends ApiCoreController
         }
 
         if ($details['idmun_nascimento']) {
-            $_sql = ' SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ';
+            $_sql = ' SELECT c.name as nome, s.abbreviation as sigla_uf FROM cities c JOIN states s ON s.id = c.state_id WHERE c.id = $1; ';
             $mun = $this->fetchPreparedQuery($_sql, $details['idmun_nascimento'], false, 'first-row');
 
             $details['municipio_nascimento'] = $this->toUtf8($mun['nome']);
@@ -551,23 +556,25 @@ class PessoaController extends ApiCoreController
 
     protected function createOrUpdatePessoa($pessoaId = null)
     {
-        $pessoa = new clsPessoa_;
-        $pessoa->idpes = $pessoaId;
-        $pessoa->nome = $this->getRequest()->nome;
+        $nome = $this->getRequest()->nome;
 
-        $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
-
-        if (!$pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
-            $pessoa->tipo = 'F';
-            $pessoa->idpes_cad = $this->currentUserId();
-            $pessoaId = $pessoa->cadastra();
-        } else {
-            $pessoa->idpes_rev = $this->currentUserId();
-            $pessoa->data_rev = date('Y-m-d H:i:s', time());
-            $pessoa->edita();
+        if (!$nome) {
+            return $pessoaId;
         }
 
-        return $pessoaId;
+        $dados = ['nome' => $nome];
+
+        if ($pessoaId && LegacyPerson::whereKey($pessoaId)->exists()) {
+            $dados['idpes_rev'] = Auth::id();
+            LegacyPerson::find($pessoaId)?->update($dados);
+
+            return $pessoaId;
+        }
+
+        $dados['tipo'] = 'F';
+        $dados['idpes_cad'] = Auth::id();
+
+        return LegacyPerson::create($dados)->idpes;
     }
 
     protected function createOrUpdatePessoaFisica($pessoaId)
@@ -599,11 +606,11 @@ class PessoaController extends ApiCoreController
 
         $individual->saveOrFail();
 
-        $raca = new clsCadastroFisicaRaca($pessoaId, $this->getRequest()->cor_raca);
-        if ($raca->existe()) {
-            $this->getRequest()->cor_raca ? $raca->edita() : $raca->excluir();
-        } elseif ($this->getRequest()->cor_raca) {
-            $raca->cadastra();
+        $corRaca = $this->getRequest()->cor_raca;
+        if ($corRaca && is_numeric($corRaca)) {
+            $individual->race()->sync([$corRaca]);
+        } elseif (!$corRaca) {
+            $individual->race()->detach();
         }
 
         $ddd_fone_fixo = $this->getRequest()->ddd_telefone_1;
@@ -612,14 +619,20 @@ class PessoaController extends ApiCoreController
         $fone_mov = $this->getRequest()->telefone_mov;
 
         if ($fone_fixo || $fone_fixo == '') {
-            $ddd_fixo = $ddd_fone_fixo;
-            $telefone = new clsPessoaTelefone($individual->idpes, 1, $fone_fixo, $ddd_fixo);
-            $telefone->cadastra();
+            app(PhoneService::class)->save(
+                personId: $individual->idpes,
+                type: LegacyPhone::TYPE_LANDLINE,
+                ddd: $ddd_fone_fixo,
+                phone: $fone_fixo
+            );
         }
         if ($fone_mov || $fone_mov == '') {
-            $ddd_mov = $ddd_fone_mov;
-            $telefone = new clsPessoaTelefone($individual->idpes, 2, $fone_mov, $ddd_mov);
-            $telefone->cadastra();
+            app(PhoneService::class)->save(
+                personId: $individual->idpes,
+                type: LegacyPhone::TYPE_MOBILE,
+                ddd: $ddd_fone_mov,
+                phone: $fone_mov
+            );
         }
     }
 

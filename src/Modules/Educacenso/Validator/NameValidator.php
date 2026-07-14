@@ -15,6 +15,12 @@ class NameValidator implements EducacensoValidator
 
     public function isValid(): bool
     {
+        if (!empty($this->name) && mb_strlen(trim($this->name)) > 100) {
+            $this->message = 'O Nome deve ter no máximo 100 caracteres.';
+
+            return false;
+        }
+
         if ($this->hasFourRepeatedCharaters()) {
             $this->message = 'Nome não pode ter a repetição de 4 caracteres seguidos.';
 

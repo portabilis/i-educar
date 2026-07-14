@@ -96,7 +96,7 @@ return new class extends clsListagem
         }
 
         if (!$this->ref_cod_escola) {
-            $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
+            $this->ref_cod_escola = false;
         }
 
         if (!$this->ref_cod_instituicao) {

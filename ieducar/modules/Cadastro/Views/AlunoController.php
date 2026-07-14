@@ -1,6 +1,12 @@
 <?php
 
+use App\Models\EducacensoIndigenousPeople;
+use App\Models\LegacyDocument;
+use App\Models\LegacyGeneralConfiguration;
+use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyIssuingBody;
 use App\Models\LegacyRace;
 use App\Services\UrlPresigner;
 use App\User;
@@ -43,6 +49,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     public $rota_transporte;
 
     public $renda_mensal;
+
+    public $pai_restricao_judicial;
+
+    public $mae_restricao_judicial;
+
+    public $responsavel_restricao_judicial;
 
     protected $_formMap = [
         'pessoa' => [
@@ -302,10 +314,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     {
         $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais;
-        $configuracoes = $configuracoes->detalhe();
+        $justificativaObrigatoria = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('justificativa_falta_documentacao_obrigatorio');
 
-        if ($configuracoes['justificativa_falta_documentacao_obrigatorio']) {
+        if ($justificativaObrigatoria) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
@@ -320,22 +333,21 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                 $this->cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
             }
 
-            $documentos = new clsDocumento;
-            $documentos->idpes = $this->cod_pessoa_fj;
-            $documentos = $documentos->detalhe();
+            $documentos = is_numeric($this->cod_pessoa_fj)
+                ? LegacyDocument::find($this->cod_pessoa_fj)?->getAttributes()
+                : null;
         }
 
         $foto = false;
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $personObject = new clsFisica($this->cod_pessoa_fj);
-            $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
-            $this->renda_mensal = (empty($personObject->detalhe()['renda_mensal']) == false) ? $personObject->detalhe()['renda_mensal'] : '';
-            $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
-            $detalheFoto = $objFoto->detalhe();
-            if (is_array($detalheFoto) && count($detalheFoto)) {
-                $foto = $detalheFoto['caminho'];
-            }
+            $personObject = LegacyIndividual::find($this->cod_pessoa_fj, ['observacao', 'renda_mensal', 'pai_restricao_judicial', 'mae_restricao_judicial', 'responsavel_restricao_judicial']);
+            $this->observacao = !empty($personObject?->observacao) ? $personObject->observacao : '';
+            $this->renda_mensal = !empty($personObject?->renda_mensal) ? $personObject->renda_mensal : '';
+            $this->pai_restricao_judicial = $personObject->pai_restricao_judicial;
+            $this->mae_restricao_judicial = $personObject->mae_restricao_judicial;
+            $this->responsavel_restricao_judicial = $personObject->responsavel_restricao_judicial;
+            $foto = LegacyIndividualPicture::whereKey($this->cod_pessoa_fj)->value('caminho') ?? false;
         } else {
             $this->observacao = '';
             $this->renda_mensal = '';
@@ -355,7 +367,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = ['label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 12];
 
-        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
+        $mostrarCodigoInep = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('mostrar_codigo_inep_aluno');
+
+        if (!$mostrarCodigoInep) {
             $this->inputsHelper()->hidden('aluno_inep_id', ['value' => null]);
         } else {
             $this->inputsHelper()->integer('aluno_inep_id', $options);
@@ -407,11 +423,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->date('data_emissao_rg', $options);
 
         $selectOptions = [null => 'Órgão emissor'];
-        $orgaos = new clsOrgaoEmissorRg;
-        $orgaos = $orgaos->lista();
+        $orgaos = LegacyIssuingBody::orderBy('sigla')->get();
 
         foreach ($orgaos as $orgao) {
-            $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
+            $selectOptions[$orgao->idorg_rg] = $orgao->sigla;
         }
 
         $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
@@ -441,10 +456,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $nisPisPasep = '';
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $fisica = new clsFisica($this->cod_pessoa_fj);
-            $fisica = $fisica->detalhe();
-            $valorCpf = is_numeric($fisica['cpf']) ? int2CPF($fisica['cpf']) : '';
-            $nisPisPasep = int2Nis($fisica['nis_pis_pasep']);
+            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep']);
+            $valorCpf = is_numeric($fisica?->getRawOriginal('cpf')) ? int2CPF($fisica->getRawOriginal('cpf')) : '';
+            $nisPisPasep = int2Nis($fisica?->nis_pis_pasep);
         }
 
         /** @var User $user */
@@ -460,6 +474,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
         $this->campoOculto('renda_mensal', (int) $this->renda_mensal);
+        $this->campoOculto('pai_restricao_judicial_value', (int) $this->pai_restricao_judicial);
+        $this->campoOculto('mae_restricao_judicial_value', (int) $this->mae_restricao_judicial);
+        $this->campoOculto('responsavel_restricao_judicial_value', (int) $this->responsavel_restricao_judicial);
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
         $options = [
@@ -1241,7 +1258,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
-        $indigenous = \App\Models\EducacensoIndigenousPeople::query()
+        $indigenous = EducacensoIndigenousPeople::query()
             ->orderBy(column: 'name')
             ->pluck(column: 'name', key: 'id')
             ->prepend(value: 'Selecione', key: '')

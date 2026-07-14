@@ -311,6 +311,19 @@ function formularioValido() {
     return false;
   }
 
+  var justificativaFaltaDocumentacao = $j("#justificativa_falta_documentacao");
+
+  if (
+    $j("#justificativa_falta_documentacao_obrigatorio").length > 0 &&
+    !justificativaFaltaDocumentacao.attr("disabled") &&
+    !justificativaFaltaDocumentacao.val()
+  ) {
+    messageUtils.error(
+      "O campo Justificativa para a falta de documentação deve ser preenchido"
+    );
+    return false;
+  }
+
   submitFormExterno();
 }
 
@@ -473,6 +486,13 @@ var $pessoaResponsavelActionBar = $pessoaPaiActionBar
   .addClass("pessoa-responsavel-links")
   .appendTo($responsavelNomeField.parent());
 
+$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-pai" name="pai_restricao_judicial" value="1"> Pessoa com restrição judicial em relação ao aluno</label>')
+  .appendTo($pessoaPaiActionBar);
+
+if ($j('[name="pai_restricao_judicial_value"]').val() === '1') {
+  $j('#restricao-judicial-pai').prop('checked', true);
+}
+
 var $linkToCreatePessoaPai = $j("<a>")
   .addClass("cadastrar-pessoa-pai decorated")
   .attr("id", "cadastrar-pessoa-pai-link")
@@ -485,6 +505,13 @@ var $linkToEditPessoaPai = $j("<a>")
   .attr("id", "editar-pessoa-pai-link")
   .html("Editar pessoa")
   .appendTo($pessoaPaiActionBar);
+
+$j('<label class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-mae" name="mae_restricao_judicial" value="1"> Pessoa com restrição judicial em relação ao aluno</label>')
+  .appendTo($pessoaMaeActionBar);
+
+if ($j('[name="mae_restricao_judicial_value"]').val() === '1') {
+  $j('#restricao-judicial-mae').prop('checked', true);
+}
 
 var $linkToCreatePessoaMae = $linkToCreatePessoaPai
   .clone()
@@ -499,6 +526,13 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai
   .addClass("editar-pessoa-mae")
   .attr("id", "editar-pessoa-mae-link")
   .appendTo($pessoaMaeActionBar);
+
+$j('<label id="restricao-judicial-responsavel" class="restricao-judicial-label" style="display: block; margin: 0 0 10px -5px"><input type="checkbox" id="restricao-judicial-responsavel" name="responsavel_restricao_judicial" value="1"> Pessoa com restrição judicial em relação ao aluno</label>')
+  .appendTo($pessoaResponsavelActionBar);
+
+if ($j('[name="responsavel_restricao_judicial_value"]').val() === '1') {
+  $j('[name="responsavel_restricao_judicial"]').prop('checked', true);
+}
 
 var $linkToCreatePessoaResponsavel = $linkToCreatePessoaPai
   .clone()
@@ -1296,6 +1330,7 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#termo_certidao_civil").val(dataResponse.num_termo);
   $j("#livro_certidao_civil").val(dataResponse.num_livro);
   $j("#folha_certidao_civil").val(dataResponse.num_folha);
+  $j("#passaporte").val(dataResponse.passaporte);
 
   if (
     dataResponse.certidao_nascimento != null &&
@@ -1389,11 +1424,16 @@ var checkTipoCertidaoCivil = function () {
 function disableJustificativaFields() {
   $jField = $j("#justificativa_falta_documentacao");
   $jField.attr("disabled", "disabled");
+  $jField.makeUnrequired();
 }
 
 function enableJustificativaFields() {
   $jField = $j("#justificativa_falta_documentacao");
   $jField.removeAttr("disabled");
+
+  if ($j("#justificativa_falta_documentacao_obrigatorio").length > 0) {
+    $jField.makeRequired();
+  }
 }
 
 var handleGetPersonParentDetails = function (dataResponse, parentType) {
@@ -1754,9 +1794,11 @@ function canShowParentsFields() {
       if ($j("#tipo_responsavel").val() == "outra_pessoa") {
         $j("#responsavel_nome").show();
         $j("#cadastrar-pessoa-responsavel-link").show();
+        $j("#restricao-judicial-responsavel").show();
       } else {
         $j("#responsavel_nome").hide();
         $j("#cadastrar-pessoa-responsavel-link").hide();
+        $j("#restricao-judicial-responsavel").hide();
       }
     };
 

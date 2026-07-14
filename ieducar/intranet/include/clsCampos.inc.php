@@ -2,6 +2,13 @@
 
 class clsCampos extends Core_Controller_Page_Abstract
 {
+    /**
+     * CNPJ com máscara: 12 posições alfanuméricas e 2 dígitos verificadores numéricos.
+     */
+    private const REGEX_CNPJ = '/[0-9A-Za-z]{2}\.[0-9A-Za-z]{3}\.[0-9A-Za-z]{3}\/[0-9A-Za-z]{4}\-[0-9]{2}/';
+
+    private const REGEX_CPF = '/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/';
+
     public $campos = [];
 
     public $num_espaco = 1;
@@ -184,7 +191,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'cnpj',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : '',
+            $obrigatorio ? self::REGEX_CNPJ : '',
             $valor,
             20,
             18,
@@ -209,7 +216,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->campos[$nome] = [
             'cnpj_pesq',
             $campo,
-            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : "*(/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/)",
+            $obrigatorio ? self::REGEX_CNPJ : '*(' . self::REGEX_CNPJ . ')',
             $valor,
             20,
             18,
@@ -224,7 +231,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'cpf',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/" : '',
+            $obrigatorio ? self::REGEX_CPF : '',
             $valor,
             16,
             14,
@@ -273,7 +280,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'idFederal',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/+/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : '',
+            $obrigatorio ? self::REGEX_CPF . '+' . self::REGEX_CNPJ : '',
             $valor,
             20,
             18,
@@ -430,6 +437,31 @@ class clsCampos extends Core_Controller_Page_Abstract
             $complemento,
             $desabilitado ? 'disabled=\'disabled\'' : '',
             $multiple,
+        ];
+
+        if (!$this->__adicionando_tabela) {
+            $this->campos[$nome] = $arr_componente;
+        } else {
+            $this->__campos_tabela[] = $arr_componente;
+        }
+    }
+
+    public function campoCor(
+        $nome,
+        $campo,
+        $valor,
+        $opcoes = [],
+        $descricao = '',
+        $obrigatorio = true,
+    ) {
+        $arr_componente = [
+            'color',
+            $this->__adicionando_tabela ? $nome : $campo,
+            $obrigatorio,
+            $opcoes,
+            $valor,
+            null,
+            $descricao,
         ];
 
         if (!$this->__adicionando_tabela) {
@@ -1677,6 +1709,18 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= implode('<br>', $tmpRetorno);
+                        break;
+
+                    case 'color':
+                        $opcoes = '<datalist id="cores">';
+                        foreach ($componente[3] as $cor) {
+                            $cor = '#' . ltrim($cor, '#'); // garante que tenha #
+                            $opcoes .= "<option value=\"$cor\"></option>";
+                        }
+                        $opcoes .= '</datalist>';
+
+                        $retorno .= $opcoes;
+                        $retorno .= "<input class=\"{$class}\" type='color' list='cores' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[4]}\" style='height: 40px; width: 40px; padding: 3px'>";
                         break;
                 } // endswitch
 

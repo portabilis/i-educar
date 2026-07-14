@@ -82,6 +82,33 @@
                         </span>
                     </td>
                 </tr>
+                <tr style="min-height: 45px">
+                    <td class="formlttd" valign="top">
+                        <span class="form">
+                            Carga horária integralizada pelo(a) aluno(a) (em horas)
+                        </span>
+                        @unless ($podePreencherCargaHoraria)
+                            <br>
+                            <sub style="vertical-align:top;" class="text-muted">
+                                Disponível apenas quando a turma possui itinerário de formação técnica e profissional ou etapa de curso técnico/qualificação profissional.
+                            </sub>
+                        @endunless
+                    </td>
+                    <td class="formlttd" valign="top">
+                        <span class="form">
+                            <input type="number"
+                                   class="geral"
+                                   name="carga_horaria_integralizada"
+                                   id="carga_horaria_integralizada"
+                                   min="0"
+                                   max="9999"
+                                   inputmode="numeric"
+                                   value="{{ $enrollment->carga_horaria_integralizada ?? null }}"
+                                   {{ $podePreencherCargaHoraria ? '' : 'disabled' }}
+                                   autocomplete="off">
+                        </span>
+                    </td>
+                </tr>
                 <tr>
                     <td class="formmdtd" valign="top">
                         <span class="form">

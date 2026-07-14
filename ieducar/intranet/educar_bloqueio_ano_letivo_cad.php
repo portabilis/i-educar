@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolYearLock;
+
 return new class extends clsCadastro
 {
     /**
@@ -30,9 +32,12 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(int_processo_ap: 21251, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_bloqueio_ano_letivo_lst.php');
 
         if (is_numeric(value: $this->ref_cod_instituicao) && is_numeric(value: $this->ref_ano)) {
-            $obj = new clsPmieducarBloqueioAnoLetivo(ref_cod_instituicao: $this->ref_cod_instituicao, ref_ano: $this->ref_ano);
-            $registro = $obj->detalhe();
-            if ($registro) {
+            $bloqueio = LegacySchoolYearLock::query()
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->whereYear($this->ref_ano)
+                ->first();
+            if ($bloqueio) {
+                $registro = $bloqueio->getAttributes();
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
                 }
@@ -70,8 +75,19 @@ return new class extends clsCadastro
     {
         $this->ref_ano = $this->ano;
 
-        $obj = new clsPmieducarBloqueioAnoLetivo(ref_cod_instituicao: $this->ref_cod_instituicao, ref_ano: $this->ref_ano, data_inicio: dataToBanco(data_original: $this->data_inicio), data_fim: dataToBanco(data_original: $this->data_fim));
-        $cadastrou = $obj->cadastra();
+        $dataInicio = dataToBanco(data_original: $this->data_inicio);
+        $dataFim = dataToBanco(data_original: $this->data_fim);
+
+        $cadastrou = false;
+        if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano) && is_string($dataInicio) && is_string($dataFim)) {
+            LegacySchoolYearLock::query()->create([
+                'ref_cod_instituicao' => $this->ref_cod_instituicao,
+                'ref_ano' => $this->ref_ano,
+                'data_inicio' => $dataInicio,
+                'data_fim' => $dataFim,
+            ]);
+            $cadastrou = true;
+        }
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect(url: 'educar_bloqueio_ano_letivo_lst.php');
@@ -86,8 +102,16 @@ return new class extends clsCadastro
     {
         $this->ref_ano = $this->ano;
 
-        $obj = new clsPmieducarBloqueioAnoLetivo(ref_cod_instituicao: $this->ref_cod_instituicao, ref_ano: $this->ref_ano, data_inicio: dataToBanco(data_original: $this->data_inicio), data_fim: dataToBanco(data_original: $this->data_fim));
-        $editou = $obj->edita();
+        $dataInicio = dataToBanco(data_original: $this->data_inicio);
+        $dataFim = dataToBanco(data_original: $this->data_fim);
+
+        $editou = false;
+        if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano) && is_string($dataInicio) && is_string($dataFim)) {
+            $editou = LegacySchoolYearLock::query()
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->whereYear($this->ref_ano)
+                ->update(['data_inicio' => $dataInicio, 'data_fim' => $dataFim]);
+        }
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect(url: 'educar_bloqueio_ano_letivo_lst.php');
@@ -102,8 +126,13 @@ return new class extends clsCadastro
     {
         $this->ref_ano = $this->ano;
 
-        $obj = new clsPmieducarBloqueioAnoLetivo(ref_cod_instituicao: $this->ref_cod_instituicao, ref_ano: $this->ref_ano);
-        $excluiu = $obj->excluir();
+        $excluiu = false;
+        if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano)) {
+            $excluiu = LegacySchoolYearLock::query()
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->whereYear($this->ref_ano)
+                ->delete();
+        }
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect(url: 'educar_bloqueio_ano_letivo_lst.php');

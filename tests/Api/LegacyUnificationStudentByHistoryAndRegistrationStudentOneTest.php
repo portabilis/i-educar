@@ -44,6 +44,7 @@ class LegacyUnificationStudentByHistoryAndRegistrationStudentOneTest extends Tes
         $schoolHistoryDiscipline = LegacySchoolHistoryDisciplineFactory::new()->create([
             'ref_ref_cod_aluno' => $schoolHistory->student->getKey(),
             'ref_sequencial' => $schoolHistory->sequencial,
+            'historico_escolar_id' => $schoolHistory->id,
         ]);
 
         $request = [

@@ -43,7 +43,7 @@
                 $(document).ready(function() {
                     setTimeout(function() {
                         $('#escola').val([{{$schools->implode(',')}}]);
-                        $('#escola').trigger('chosen:updated');
+                        $('#escola').trigger('chosen:updated').trigger('change');
                     }, 1000);
                 });
             })(jQuery);

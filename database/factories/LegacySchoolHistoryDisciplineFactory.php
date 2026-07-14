@@ -22,6 +22,7 @@ class LegacySchoolHistoryDisciplineFactory extends Factory
         $history = LegacySchoolHistoryFactory::new()->create();
 
         return [
+            'historico_escolar_id' => $history->id,
             'ref_ref_cod_aluno' => $history->ref_cod_aluno,
             'sequencial' => 1,
             'ref_sequencial' => $history->sequencial,

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 class SerieController extends ApiCoreController
 {
     protected function canGetSeries()
@@ -11,7 +13,7 @@ class SerieController extends ApiCoreController
     protected function getSeries()
     {
         if ($this->canGetSeries()) {
-            $userId = \Illuminate\Support\Facades\Auth::id();
+            $userId = Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id;
             $cursoId = $this->getRequest()->curso_id;

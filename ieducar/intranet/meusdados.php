@@ -2,7 +2,14 @@
 
 use App\Facades\Asset;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyGeneralConfiguration;
+use App\Models\LegacyIndividual;
+use App\Models\LegacyIndividualPicture;
+use App\Models\LegacyPerson;
+use App\Models\LegacyPhone;
+use App\Models\LegacyUser;
 use App\Services\ChangeUserPasswordService;
+use App\Services\PhoneService;
 use App\Services\UrlPresigner;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
@@ -45,29 +52,29 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $pessoaFisica = new clsPessoaFisica($this->pessoa_logada);
-        $pessoaFisica = $pessoaFisica->detalhe();
+        $pessoa = LegacyPerson::with('individual', 'phones')->find($this->pessoa_logada);
 
-        if ($pessoaFisica) {
-            $this->nome = $pessoaFisica['nome'];
-            $this->ddd_telefone = $pessoaFisica['ddd_1'];
-            $this->telefone = $pessoaFisica['fone_1'];
-            $this->ddd_celular = $pessoaFisica['ddd_mov'];
-            $this->celular = $pessoaFisica['fone_mov'];
-            $this->sexo = $pessoaFisica['sexo'];
+        if ($pessoa) {
+            $telefones = $pessoa->phones->keyBy('tipo');
 
-            $funcionario = new clsPortalFuncionario($this->pessoa_logada);
-            $funcionario = $funcionario->detalhe();
+            $this->nome = $pessoa->nome;
+            $this->ddd_telefone = $telefones[LegacyPhone::TYPE_LANDLINE]?->ddd;
+            $this->telefone = $telefones[LegacyPhone::TYPE_LANDLINE]?->fone;
+            $this->ddd_celular = $telefones[LegacyPhone::TYPE_MOBILE_ALT]?->ddd;
+            $this->celular = $telefones[LegacyPhone::TYPE_MOBILE_ALT]?->fone;
+            $this->sexo = $pessoa->individual?->sexo;
+
+            $funcionario = LegacyEmployee::find($this->pessoa_logada);
 
             if ($funcionario) {
-                $this->senha = $funcionario['senha'];
-                $this->senha_confirma = $funcionario['senha'];
-                $this->matricula = $funcionario['matricula'];
-                $this->email = $funcionario['email'];
+                $this->senha = $funcionario->senha;
+                $this->senha_confirma = $funcionario->senha;
+                $this->matricula = $funcionario->matricula;
+                $this->email = $funcionario->email;
 
-                $this->senha_old = $funcionario['senha'];
-                $this->matricula_old = $funcionario['matricula'];
-                $this->receber_novidades = $funcionario['receber_novidades'];
+                $this->senha_old = $funcionario->senha;
+                $this->matricula_old = $funcionario->matricula;
+                $this->receber_novidades = $funcionario->receber_novidades;
             }
         }
 
@@ -87,12 +94,7 @@ return new class extends clsCadastro
         $foto = false;
 
         if (is_numeric($this->pessoa_logada)) {
-            $objFoto = new clsCadastroFisicaFoto($this->pessoa_logada);
-            $detalheFoto = $objFoto->detalhe();
-
-            if ($detalheFoto !== false) {
-                $foto = $detalheFoto['caminho'];
-            }
+            $foto = LegacyIndividualPicture::whereKey($this->pessoa_logada)->value('caminho') ?? false;
         }
 
         if ($foto) {
@@ -186,36 +188,40 @@ return new class extends clsCadastro
 
         $this->savePhoto($this->pessoa_logada);
 
-        $telefone = new clsPessoaTelefone($this->pessoa_logada, 1, str_replace('-', '', $this->telefone), $this->ddd_telefone);
-        $telefone->cadastra();
+        app(PhoneService::class)->save(
+            personId: $this->pessoa_logada,
+            type: LegacyPhone::TYPE_LANDLINE,
+            ddd: $this->ddd_telefone,
+            phone: $this->telefone
+        );
 
-        $celular = new clsPessoaTelefone($this->pessoa_logada, 3, str_replace('-', '', $this->celular), $this->ddd_celular);
-        $celular->cadastra();
+        app(PhoneService::class)->save(
+            personId: $this->pessoa_logada,
+            type: LegacyPhone::TYPE_MOBILE_ALT,
+            ddd: $this->ddd_celular,
+            phone: $this->celular
+        );
 
-        $pessoa = new clsPessoa_($this->pessoa_logada);
-        $pessoa->nome = $this->nome;
-        $pessoa->edita();
+        LegacyPerson::find($this->pessoa_logada)?->update([
+            'nome' => $this->nome,
+            'idpes_rev' => Auth::id(),
+        ]);
 
-        $pessoaFisica = new clsFisica($this->pessoa_logada, false, $this->sexo);
-        $pessoaFisica->edita();
-
-        $funcionario = new clsPortalFuncionario;
+        $fisica = LegacyIndividual::find($this->pessoa_logada, ['idpes', 'sexo']);
+        $fisica?->update(['sexo' => $this->sexo]);
 
         if ($this->matricula != $this->matricula_old) {
-            $existeMatricula = $funcionario->lista($this->matricula);
+            $existeMatricula = LegacyEmployee::query()
+                ->where('matricula', 'like', "%{$this->matricula}%")
+                ->where('ativo', 1)
+                ->exists();
 
             if ($existeMatricula) {
-                $this->mensagem = 'A matrícula informada já perdence a outro usuário.';
+                $this->mensagem = 'A matrícula informada já pertence a outro usuário.';
 
                 return false;
             }
-
-            $funcionario->matricula = $this->matricula;
         }
-        $funcionario->ref_cod_pessoa_fj = $this->pessoa_logada;
-        $funcionario->receber_novidades = ($this->receber_novidades ? 1 : 0);
-        $funcionario->atualizou_cadastro = 1;
-        $funcionario->email = $this->email;
 
         $senha_old = urldecode($this->senha_old);
 
@@ -236,32 +242,38 @@ return new class extends clsCadastro
             }
         }
 
-        $funcionario->edita();
+        $dadosAtualizar = [
+            'receber_novidades' => $this->receber_novidades ? 1 : 0,
+            'atualizou_cadastro' => 1,
+        ];
 
-        $usuario = new clsPmieducarUsuario($this->pessoa_logada);
-        $usuario = $usuario->detalhe();
-
-        if ($usuario) {
-            $instituicao = new clsPmieducarInstituicao($usuario['ref_cod_instituicao']);
-            $instituicao = $instituicao->detalhe();
-
-            $instituicao = $instituicao['nm_instituicao'];
-
-            $escola = new clsPmieducarEscola($usuario['ref_cod_escola']);
-            $escola = $escola->detalhe();
-
-            $escola = $escola['nome'];
+        if (is_string($this->email)) {
+            $dadosAtualizar['email'] = $this->email;
         }
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais;
-        $configuracoes = $configuracoes->detalhe();
+        if ($this->matricula != $this->matricula_old && is_string($this->matricula)) {
+            $dadosAtualizar['matricula'] = $this->matricula;
+        }
 
-        $permiteRelacionamentoPosvendas = $configuracoes['permite_relacionamento_posvendas'] ? 'Sim' : 'Não';
+        $funcionario = LegacyEmployee::find($this->pessoa_logada);
+        $funcionario?->update($dadosAtualizar);
+
+        $codInstituicao = LegacyUser::query()
+            ->whereKey($this->pessoa_logada)
+            ->value('ref_cod_instituicao');
+
+        $instituicao = new clsPmieducarInstituicao($codInstituicao);
+        $instituicao = $instituicao->detalhe();
+        $instituicao = $instituicao['nm_instituicao'];
+
+        $permiteRelacionamentoPosvendas = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('permite_relacionamento_posvendas') ? 'Sim' : 'Não';
 
         $dados = [
             'nome' => $this->nome,
             'empresa' => $instituicao,
-            'cargo' => $escola,
+            'cargo' => null,
             'telefone' => $this->telefone ? "$this->ddd_telefone $this->telefone" : null,
             'celular' => $this->celular ? "$this->ddd_celular $this->celular" : null,
             'Assuntos de interesse' => $this->receber_novidades ? 'Todos os assuntos relacionados ao i-Educar' : 'Nenhum',
@@ -283,7 +295,14 @@ return new class extends clsCadastro
             $rdAPI->updateLeadStage($this->email, 2);
         }
 
-        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+        $loggedUser = Session::get('logged_user');
+        if ($loggedUser) {
+            $loggedUser->name = $this->nome;
+            Session::put('logged_user', $loggedUser);
+            Session::save();
+        }
+
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
         header('Location: index.php');
         exit();
     }
@@ -318,12 +337,8 @@ return new class extends clsCadastro
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
-                $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
-                $detalheFoto = $obj->detalhe();
-                if (is_array($detalheFoto) && count($detalheFoto) > 0) {
-                    $obj->edita();
-                } else {
-                    $obj->cadastra();
+                if (is_numeric($id) && is_string($caminhoFoto)) {
+                    LegacyIndividualPicture::updateOrCreate(['idpes' => $id], ['caminho' => $caminhoFoto]);
                 }
             } else {
                 echo '<script>alert(\'Foto não salva.\')</script>';
@@ -332,8 +347,7 @@ return new class extends clsCadastro
             }
             $caminhoFoto = (new UrlPresigner)->getPresignedUrl($caminhoFoto);
         } elseif ($this->file_delete == 'on') {
-            $obj = new clsCadastroFisicaFoto($id);
-            $obj->excluir();
+            LegacyIndividualPicture::whereKey($id)->delete();
         }
 
         Session::put('logged_user_picture', $caminhoFoto);

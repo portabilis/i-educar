@@ -1,6 +1,8 @@
 <?php
 
-use App\Models\LegacyRole;
+use App\Models\LegacyBondType;
+use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyPerson;
 
 return new class extends clsListagem
 {
@@ -55,11 +57,10 @@ return new class extends clsListagem
             'Vínculo',
         ]);
 
-        $fisica = new clsPessoaFisica($this->ref_cod_servidor);
-        $fisica = $fisica->detalhe();
+        $nome = LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome');
 
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
-        $this->campoRotulo('nm_servidor', 'Servidor', $fisica['nome']);
+        $this->campoRotulo('nm_servidor', 'Servidor', $nome);
 
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
@@ -113,6 +114,12 @@ return new class extends clsListagem
 
         // Monta a lista
         if (is_array($lista) && count($lista)) {
+            $funcoesServidor = LegacyEmployeeRole::query()
+                ->with('role')
+                ->whereIn('cod_servidor_funcao', array_filter(array_column($lista, 'ref_cod_servidor_funcao'), 'is_numeric'))
+                ->get()
+                ->keyBy('cod_servidor_funcao');
+
             foreach ($lista as $registro) {
                 $path = 'educar_servidor_alocacao_det.php';
                 $options = [
@@ -132,14 +139,10 @@ return new class extends clsListagem
                 ];
 
                 // Função
-                $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $registro['ref_cod_servidor_funcao']);
-                $funcaoServidor = $funcaoServidor->detalhe();
-
-                $funcao = LegacyRole::find($funcaoServidor['ref_cod_funcao'])?->getAttributes();
+                $funcao = $funcoesServidor->get($registro['ref_cod_servidor_funcao'])?->role?->getAttributes();
 
                 // Vinculo
-                $funcionarioVinculo = new clsPortalFuncionario;
-                $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
+                $funcionarioVinculo = LegacyBondType::whereKey($registro['ref_cod_funcionario_vinculo'])->value('nm_vinculo');
 
                 $this->addLinhas([
                     $url->l($escola['nome'], $path, $options),

@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolCourse;
+use App\Models\LegacyUserSchool;
 
 $obj_permissoes = new clsPermissoes;
 $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -101,18 +103,13 @@ if ($get_escola) {
     $lista = $obj_escola->lista(str_nome: 1);
     if ($nivel_usuario == 4 || $nivel_usuario == 8) {
         $opcoes_escola = ['' => 'Selecione'];
-        $obj_escola = new clsPmieducarEscolaUsuario;
-        $lista = $obj_escola->lista($this->pessoa_logada);
+        $escolasUsuario = LegacyUserSchool::query()->where('ref_cod_usuario', $this->pessoa_logada)->pluck('ref_cod_escola');
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $codEscola = $registro['ref_cod_escola'];
+        foreach ($escolasUsuario as $codEscola) {
+            $escola = new clsPmieducarEscola($codEscola);
+            $escola = $escola->detalhe();
 
-                $escola = new clsPmieducarEscola($codEscola);
-                $escola = $escola->detalhe();
-
-                $opcoes_escola[$codEscola] = $escola['nome'];
-            }
+            $opcoes_escola[$codEscola] = $escola['nome'];
         }
     } elseif ($this->ref_cod_instituicao) {
         $opcoes_escola = ['' => 'Selecione'];
@@ -195,11 +192,14 @@ if ($get_curso) {
 
     // EDITAR
     if ($this->ref_cod_escola) {
-        $obj_esc_cur = new clsPmieducarEscolaCurso;
-        $lst_esc_cur = $obj_esc_cur->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ativo: 1);
-        if (is_array($lst_esc_cur) && count($lst_esc_cur)) {
+        $lst_esc_cur = LegacySchoolCourse::query()
+            ->active()
+            ->whereSchool((int) $this->ref_cod_escola)
+            ->with('course:cod_curso,nm_curso')
+            ->get();
+        if ($lst_esc_cur->isNotEmpty()) {
             foreach ($lst_esc_cur as $detalhe) {
-                $opcoes_curso["{$detalhe['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                $opcoes_curso["{$detalhe->ref_cod_curso}"] = $detalhe->course->nm_curso;
             }
         }
     }

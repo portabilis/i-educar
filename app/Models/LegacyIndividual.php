@@ -102,6 +102,9 @@ class LegacyIndividual extends Model
         'ideciv',
         'observacao',
         'povo_indigena_educacenso_id',
+        'pai_restricao_judicial',
+        'mae_restricao_judicial',
+        'responsavel_restricao_judicial',
     ];
 
     /**
@@ -240,14 +243,6 @@ class LegacyIndividual extends Model
     public function picture(): HasOne
     {
         return $this->hasOne(LegacyIndividualPicture::class, 'idpes');
-    }
-
-    /**
-     * @return BelongsTo<LegacyCity, $this>
-     */
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(LegacyCity::class, 'idmun_nascimento', 'idmun');
     }
 
     /**

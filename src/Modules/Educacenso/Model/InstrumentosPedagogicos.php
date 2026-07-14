@@ -38,6 +38,12 @@ class InstrumentosPedagogicos
 
     public const MATERIAL_EDUCACAO_ESPECIAL = 17;
 
+    public const EQUIPAMENTOS_AUDIOVISUAIS_PRODUCAO_ESTUDANTIL = 18;
+
+    public const KITS_ROBOTICA = 19;
+
+    public const MATERIAIS_EDUCACAO_EMOCIONAL = 20;
+
     public static function getDescriptiveValues()
     {
         return [
@@ -45,9 +51,12 @@ class InstrumentosPedagogicos
             self::BRINQUEDROS_EDUCACAO_INFANTIL => 'Brinquedos para Educação Infantil',
             self::MATERIAIS_CIENTIFICOS => 'Conjunto de materiais científicos',
             self::AMPLIFICACAO_DIFUSAO_SOM => 'Equipamento para amplificação e difusão de som/áudio',
+            self::EQUIPAMENTOS_AUDIOVISUAIS_PRODUCAO_ESTUDANTIL => 'Equipamentos audiovisuais para produção estudantil',
             self::INSTRUMENTOS_MUSICAIS => 'Instrumentos musicais para conjunto, banda/fanfarra e/ou aulas de música',
             self::JOGOS_EDUCATIVOS => 'Jogos educativos',
+            self::KITS_ROBOTICA => 'Kits de robótica',
             self::MATERIAIS_ATIVIDADES_CULTURAIS => 'Materiais para atividades culturais e artísticas',
+            self::MATERIAIS_EDUCACAO_EMOCIONAL => 'Materiais para a educação emocional e mediação de conflitos',
             self::MATERIAL_EDUCACAO_PROFISSIONAL => 'Material para educação profissional',
             self::MATERIAIS_PRATICA_DESPORTIVA => 'Materiais para prática desportiva e recreação',
             self::MATERIAIS_EDUCACAO_SURDOS => 'Materiais pedagógicos para a educação bilíngue de surdos',

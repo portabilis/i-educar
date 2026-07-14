@@ -5,7 +5,7 @@ class MunicipioController extends ApiCoreController
     // search options
     protected function searchOptions()
     {
-        return ['namespace' => 'public', 'idAttr' => 'idmun', 'selectFields' => ['sigla_uf']];
+        return ['namespace' => 'public', 'idAttr' => 'id', 'selectFields' => ['s.abbreviation as sigla_uf']];
     }
 
     // subscreve formatResourceValue para adicionar a sigla do estado ao final do valor,
@@ -38,35 +38,35 @@ class MunicipioController extends ApiCoreController
     {
         if ($this->canSearch()) {
 
-            $fields = ' DISTINCT sigla_uf,
-                    idmun AS id,
-                    nome AS name,
-                    LENGTH(nome) AS size ';
+            $fields = ' DISTINCT s.abbreviation as sigla_uf,
+                    c.id AS id,
+                    c.name AS name,
+                    LENGTH(c.name) AS size ';
 
             if ($onlyName === true) {
                 $fields = '
-                    nome AS id,
-                    nome AS name,
-                    LENGTH(nome) AS size ';
+                    c.name AS id,
+                    c.name AS name,
+                    LENGTH(c.name) AS size ';
             }
 
             if (is_numeric($this->getRequest()->query)) {
-                $where = 'AND idmun = :idmun';
+                $where = 'AND c.id = :idmun';
                 $field = 'idmun';
             } else {
-                $where = "AND LOWER(UNACCENT(nome)) LIKE '%' || LOWER(UNACCENT(:nome)) || '%'";
+                $where = "AND LOWER(UNACCENT(c.name)) LIKE '%' || LOWER(UNACCENT(:nome)) || '%'";
                 $field = 'nome';
             }
             $sql = "
                 SELECT
                     {$fields}
                 FROM
-                    public.municipio
+                    cities c JOIN states s ON s.id = c.state_id
                 WHERE TRUE
                     {$where}
                 ORDER BY
                     size,
-                    nome
+                    c.name
                 LIMIT 15";
 
             $tmpResults = $this->fetchPreparedQuery($sql, [$field => trim($this->getRequest()->query)], false);

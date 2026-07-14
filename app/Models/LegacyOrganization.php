@@ -2,15 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyOrganizationBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
  * @property string $fantasia
+ *
+ * @method static LegacyOrganizationBuilder query()
  */
 class LegacyOrganization extends LegacyModel
 {
+    /** @use HasBuilder<LegacyOrganizationBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = LegacyOrganizationBuilder::class;
+
     protected $table = 'cadastro.juridica';
 
     public const CREATED_AT = 'data_cad';
@@ -40,6 +49,11 @@ class LegacyOrganization extends LegacyModel
         'capital_social',
     ];
 
+    protected $attributes = [
+        'origem_gravacao' => 'M',
+        'operacao' => 'I',
+    ];
+
     /**
      * {@inheritDoc}
      */
@@ -47,8 +61,8 @@ class LegacyOrganization extends LegacyModel
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            if (config('legacy.app.uppercase_names')) {
+        static::saving(function ($model) {
+            if ($model->isDirty('fantasia') && config('legacy.app.uppercase_names')) {
                 $model->fantasia = Str::upper($model->fantasia);
             }
         });
@@ -59,6 +73,21 @@ class LegacyOrganization extends LegacyModel
         return Attribute::make(
             get: fn () => $this->fantasia
         );
+    }
+
+    protected function fantasia(): Attribute
+    {
+        return Attribute::set(fn (?string $value) => $value ?: null);
+    }
+
+    protected function capitalSocial(): Attribute
+    {
+        return Attribute::set(fn (?string $value) => $value ?: null);
+    }
+
+    protected function cnpj(): Attribute
+    {
+        return Attribute::set(fn ($value) => normalizaCnpj($value));
     }
 
     /**

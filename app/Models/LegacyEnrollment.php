@@ -60,6 +60,7 @@ class LegacyEnrollment extends LegacyModel
         'itinerario_concomitante',
         'etapa_educacenso',
         'cod_curso_profissional',
+        'carga_horaria_integralizada',
         'desconsiderar_educacenso',
         'transferido',
         'remanejado',
@@ -74,7 +75,13 @@ class LegacyEnrollment extends LegacyModel
         'composicao_itinerario' => LegacyArray::class,
         'data_enturmacao' => 'date',
         'data_exclusao' => 'date',
+        'carga_horaria_integralizada' => 'integer',
         'desconsiderar_educacenso' => 'boolean',
+        'transferido' => 'boolean',
+        'remanejado' => 'boolean',
+        'reclassificado' => 'boolean',
+        'abandono' => 'boolean',
+        'falecido' => 'boolean',
     ];
 
     protected function date(): Attribute

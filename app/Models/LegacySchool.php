@@ -67,11 +67,11 @@ class LegacySchool extends LegacyModel
         'codigo_ies',
         'qtd_vice_diretor',
         'qtd_orientador_comunitario',
+        'qtd_assistente_social',
         'qtd_tradutor_interprete_libras_outro_ambiente',
         'latitude',
         'longitude',
         'predio_compartilhado_outra_escola',
-        'educacao_indigena',
         'compartilha_espacos_atividades_integracao',
         'usa_espacos_equipamentos_atividades_regulares',
         'exame_selecao_ingresso',
@@ -88,6 +88,7 @@ class LegacySchool extends LegacyModel
         'acoes_area_ambiental',
         'caracteristica_escolar',
         'lei_conclusao_ensino_medio',
+        'numero_salas_cantinho_leitura',
     ];
 
     protected function id(): Attribute
@@ -102,6 +103,11 @@ class LegacySchool extends LegacyModel
         return Attribute::make(
             get: fn () => $this->person->nome ?? $this->organization?->fantasia, // @phpstan-ignore-line
         );
+    }
+
+    protected function cnpjMantenedoraPrincipal(): Attribute
+    {
+        return Attribute::set(fn ($value) => normalizaCnpj($value));
     }
 
     /**
@@ -246,5 +252,10 @@ class LegacySchool extends LegacyModel
     public function registrations(): HasMany
     {
         return $this->hasMany(LegacyRegistration::class, 'ref_ref_cod_escola');
+    }
+
+    public function activeSearches()
+    {
+        return $this->hasManyThrough(LegacyActiveLooking::class, LegacyRegistration::class, 'ref_ref_cod_escola', 'ref_cod_matricula');
     }
 }

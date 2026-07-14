@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Models\LegacyPerson;
+use App\Models\LegacyUser;
+use App\Models\LegacyUserSchool;
+use App\Models\LegacyUserType;
+
 return new class extends clsDetalhe
 {
     public $cod_usuario;
@@ -24,51 +30,45 @@ return new class extends clsDetalhe
 
         $cod_pessoa = $this->cod_usuario = $_GET['ref_pessoa'];
 
-        $obj_pessoa = new clsPessoa_(int_idpes: $cod_pessoa);
-        $det_pessoa = $obj_pessoa->detalhe();
+        $pessoa = LegacyPerson::with('individual')->whereKey($cod_pessoa)->first(['idpes', 'nome']);
+        $funcionario = LegacyEmployee::whereKey($cod_pessoa)->first(['email', 'matricula', 'matricula_interna']);
 
-        $this->addDetalhe(detalhe: ['Nome', $det_pessoa['nome']]);
+        $this->addDetalhe(detalhe: ['Nome', $pessoa?->nome]);
+        $this->addDetalhe(detalhe: ['CPF', $pessoa?->individual?->cpf]);
+        $this->addDetalhe(detalhe: ['E-mail usuário', $funcionario?->email]);
 
-        $obj_fisica = new clsFisica(idpes: $cod_pessoa);
-        $det_fisica = $obj_fisica->detalhe();
-        $this->addDetalhe(detalhe: ['CPF', int2CPF(int: $det_fisica['cpf'])]);
-
-        $obj_funcionario = new clsFuncionario(int_idpes: $cod_pessoa);
-        $det_funcionario = $obj_funcionario->detalhe();
-
-        $this->addDetalhe(detalhe: ['E-mail usuário', $det_funcionario['email']]);
-
-        if (!empty($det_funcionario['matricula_interna'])) {
-            $this->addDetalhe(detalhe: ['Matrícula interna', $det_funcionario['matricula_interna']]);
+        if (!empty($funcionario?->matricula_interna)) {
+            $this->addDetalhe(detalhe: ['Matrícula interna', $funcionario->matricula_interna]);
         }
 
-        $obj_fisica = new clsFisica(idpes: $cod_pessoa);
-        $det_fisica = $obj_fisica->detalhe();
-
-        $sexo = ($det_fisica['sexo'] == 'M') ? 'Masculino' : 'Feminino';
+        $sexo = ($pessoa?->individual?->sexo == 'M') ? 'Masculino' : 'Feminino';
         $this->addDetalhe(detalhe: ['Sexo', $sexo]);
-        $this->addDetalhe(detalhe: ['Matrícula', $det_funcionario['matricula']]);
+        $this->addDetalhe(detalhe: ['Matrícula', $funcionario?->matricula]);
 
-        $tmp_obj = new clsPmieducarUsuario(cod_usuario: $this->cod_usuario);
-        $registro = $tmp_obj->detalhe();
+        $usuario = LegacyUser::query()
+            ->find($this->cod_usuario, [
+                'ativo',
+                'ref_cod_tipo_usuario',
+                'ref_cod_instituicao',
+            ]);
+        $registro = $usuario?->getAttributes() ?? [];
 
         $ativo_f = ($registro['ativo'] == '1') ? 'Ativo' : 'Inativo';
         $this->addDetalhe(detalhe: ['Status', $ativo_f]);
 
-        $obj_ref_cod_tipo_usuario = new clsPmieducarTipoUsuario(cod_tipo_usuario: $registro['ref_cod_tipo_usuario']);
-        $det_ref_cod_tipo_usuario = $obj_ref_cod_tipo_usuario->detalhe();
-        $registro['ref_cod_tipo_usuario'] = $det_ref_cod_tipo_usuario['nm_tipo'];
+        $registro['ref_cod_tipo_usuario'] = LegacyUserType::query()
+            ->whereKey($registro['ref_cod_tipo_usuario'])
+            ->value('nm_tipo');
 
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
-        $escolasUsuario = new clsPmieducarEscolaUsuario;
-        $escolasUsuario = $escolasUsuario->lista(ref_cod_usuario: $cod_pessoa);
+        $escolasUsuario = LegacyUserSchool::query()->where('ref_cod_usuario', $cod_pessoa)->pluck('ref_cod_escola');
 
         $nomesEscola = [];
-        foreach ($escolasUsuario as $escola) {
-            $escolaDetalhe = new clsPmieducarEscola(cod_escola: $escola['ref_cod_escola']);
+        foreach ($escolasUsuario as $codEscola) {
+            $escolaDetalhe = new clsPmieducarEscola(cod_escola: $codEscola);
             $escolaDetalhe = $escolaDetalhe->detalhe();
             $nomesEscola[] = $escolaDetalhe['nome'];
         }

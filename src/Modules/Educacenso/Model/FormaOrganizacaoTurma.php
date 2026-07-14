@@ -14,8 +14,6 @@ class FormaOrganizacaoTurma
 
     public const MODULES = 5;
 
-    public const ALTERNANCIA_REGULAR = 6;
-
     public static function getDescriptiveValues()
     {
         return [

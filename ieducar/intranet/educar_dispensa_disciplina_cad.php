@@ -2,8 +2,10 @@
 
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyExemptionStage;
 use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyStageType;
 use App\Services\Exemption\ExemptionService;
 
@@ -267,8 +269,9 @@ return new class extends clsCadastro
         $dadosDaDispensa = $this->obtemDadosDaDispensa();
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa;
-        $objDispensaEtapa->excluirTodos($dadosDaDispensa['cod_dispensa']);
+        if (is_numeric($dadosDaDispensa['cod_dispensa'])) {
+            LegacyExemptionStage::query()->where('ref_cod_dispensa', $dadosDaDispensa['cod_dispensa'])->delete();
+        }
 
         $exemptionService = new ExemptionService($this->user());
         $exemption = LegacyDisciplineExemption::findOrFail($objetoDispensa->detalhe()['cod_dispensa']);
@@ -295,8 +298,9 @@ return new class extends clsCadastro
         $dadosDaDispensa = $this->obtemDadosDaDispensa();
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa;
-        $objDispensaEtapa->excluirTodos($this->cod_dispensa);
+        if (is_numeric($this->cod_dispensa)) {
+            LegacyExemptionStage::query()->where('ref_cod_dispensa', $this->cod_dispensa)->delete();
+        }
         $excluiu = $objetoDispensa->excluir();
 
         if ($excluiu) {
@@ -331,8 +335,9 @@ return new class extends clsCadastro
         // Pega etapas definidas na escola
         $dadosAnoLetivoMod = LegacyAcademicYearStage::query()->whereSchool($escolaId)->whereYearEq($ano)->get();
         // Pega etapas definida na turma
-        $objTurmaModulo = new clsPmieducarTurmaModulo;
-        $dadosTurmaModulo = $objTurmaModulo->lista($dadosMatriculaTurma[0]['ref_cod_turma']);
+        $dadosTurmaModulo = LegacySchoolClassStage::query()
+            ->whereSchoolClass($dadosMatriculaTurma[0]['ref_cod_turma'])
+            ->get(['ref_cod_modulo', 'sequencial']);
         // Define de onde as etapas serão pegas
         if ($padraoAnoEscolar == 1) {
             $dadosEtapa = $dadosAnoLetivoMod;
@@ -345,9 +350,12 @@ return new class extends clsCadastro
 
         foreach ($dadosEtapa as $modulo) {
             $checked = '';
-            $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa(ref_cod_dispensa: $this->cod_dispensa, etapa: $modulo['sequencial']);
-            $verificaSeExiste = $objDispensaEtapa->existe();
-            if ($verificaSeExiste) {
+            $etapaJaDispensada = is_numeric($this->cod_dispensa)
+                && LegacyExemptionStage::query()
+                    ->where('ref_cod_dispensa', $this->cod_dispensa)
+                    ->where('etapa', $modulo['sequencial'])
+                    ->exists();
+            if ($etapaJaDispensada) {
                 $checked = 'checked';
             }
             $conteudoHtml .= '<div style="margin-bottom: 10px;">';

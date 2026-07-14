@@ -2,14 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolCourseBuilder;
 use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property array<int, string> $fillable
+ *
+ * @method static LegacySchoolCourseBuilder query()
  */
 class LegacySchoolCourse extends LegacyModel
 {
+    /** @use HasBuilder<LegacySchoolCourseBuilder> */
+    use HasBuilder;
+
     use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';
@@ -17,6 +24,8 @@ class LegacySchoolCourse extends LegacyModel
     protected $table = 'pmieducar.escola_curso';
 
     protected $primaryKey = 'ref_cod_escola';
+
+    protected static string $builder = LegacySchoolCourseBuilder::class;
 
     protected $fillable = [
         'ref_cod_escola',

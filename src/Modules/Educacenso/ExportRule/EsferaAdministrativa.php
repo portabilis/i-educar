@@ -4,28 +4,27 @@ namespace iEducar\Modules\Educacenso\ExportRule;
 
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
-use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 
 class EsferaAdministrativa implements EducacensoExportRule
 {
     /**
+     * Anula a esfera administrativa (campo 50) no arquivo quando o valor
+     * não é permitido para a dependência administrativa da escola, sem
+     * alterar o dado no banco.
+     *
      * @param Registro00 $registro00
      */
     public static function handle(RegistroEducacenso $registro00): RegistroEducacenso
     {
-        $values = [
-            Regulamentacao::SIM,
-            Regulamentacao::EM_TRAMITACAO,
-        ];
+        $validator = new AdministrativeDomainValidator(
+            $registro00->esferaAdministrativa,
+            $registro00->dependenciaAdministrativa,
+            $registro00->codigoIbgeMunicipio
+        );
 
-        if (in_array($registro00->regulamentacao, $values)) {
-            $registro00->esferaFederal = (int) $registro00->esferaFederal;
-            $registro00->esferaEstadual = (int) $registro00->esferaEstadual;
-            $registro00->esferaMunicipal = (int) $registro00->esferaMunicipal;
-        } else {
-            $registro00->esferaFederal = null;
-            $registro00->esferaEstadual = null;
-            $registro00->esferaMunicipal = null;
+        if (!$validator->isValid()) {
+            $registro00->esferaAdministrativa = null;
         }
 
         return $registro00;

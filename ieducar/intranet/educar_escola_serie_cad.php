@@ -3,6 +3,7 @@
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyGrade;
+use App\Models\LegacySchoolCourse;
 use App\Process;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
@@ -539,7 +540,7 @@ return new class extends clsCadastro
         } catch (Exception $e) {
             $this->mensagem = explode(separator: "\n", string: $e->getMessage());
 
-            $this->simpleRedirect(\Request::getRequestUri());
+            $this->simpleRedirect(Request::getRequestUri());
         }
 
         $editou = $obj->edita();
@@ -679,10 +680,13 @@ return new class extends clsCadastro
         $anosLetivosDisponiveis = [];
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso)) {
-            $objEscolaCurso = new clsPmieducarEscolaCurso(ref_cod_escola: $this->ref_cod_escola, ref_cod_curso: $this->ref_cod_curso);
-            if ($escolaCurso = $objEscolaCurso->detalhe()) {
-                $anosLetivosDisponiveis = json_decode($escolaCurso['anos_letivos']) ?: [];
-            }
+            $json = LegacySchoolCourse::query()
+                ->whereSchool((int) $this->ref_cod_escola)
+                ->whereCourse((int) $this->ref_cod_curso)
+                ->selectRaw('array_to_json(anos_letivos) as anos_letivos')
+                ->value('anos_letivos');
+
+            $anosLetivosDisponiveis = $json !== null ? (json_decode($json) ?: []) : [];
         }
 
         return array_combine(keys: $anosLetivosDisponiveis, values: $anosLetivosDisponiveis);
@@ -901,7 +905,7 @@ return new class extends clsCadastro
         if ($erros) {
             $msg = implode(separator: "\n", array: $erros);
 
-            throw new \Exception($msg);
+            throw new Exception($msg);
         }
 
         return true;

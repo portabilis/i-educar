@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
-$pessoa_logada = \Illuminate\Support\Facades\Auth::id();
+$pessoa_logada = Auth::id();
 
 if (!isset($exibe_campo_lista_curso_escola)) {
     $exibe_campo_lista_curso_escola = true;
@@ -46,6 +49,7 @@ $nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 if ($nivel_usuario == 1 || $cad_usuario) {
     $opcoes = Cache::remember('select_instituicao', now()->addMinutes(180), function () use ($get_select_name_full) {
         return LegacyInstitution::query()
+            ->active()
             ->select([
                 'cod_instituicao',
                 'nm_instituicao',
@@ -75,15 +79,13 @@ if ($nivel_usuario == 1 || $cad_usuario) {
     }
 } // se nao eh administrador
 elseif ($nivel_usuario != 1) {
-    $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
-    $det_usuario = $obj_usuario->detalhe();
-    $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
+    $this->ref_cod_instituicao = LegacyUser::query()
+        ->whereKey($pessoa_logada)
+        ->value('ref_cod_instituicao');
     $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
     // se eh institucional - admin
     if ($nivel_usuario == 4 || $nivel_usuario == 8) {
-        $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
-        $det_usuario = $obj_usuario->detalhe();
-        $this->ref_cod_escola = $det_usuario['ref_cod_escola'];
+        $this->ref_cod_escola = null;
         $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         if ($exibe_nm_escola == true) {
             $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
@@ -109,9 +111,7 @@ if ($get_curso) {
 
     // EDITAR
     if ($this->ref_cod_escola) {
-        $obj_escola_curso = new clsPmieducarEscolaCurso;
-
-        $lst_escola_curso = \App\Models\LegacyCourse::query()
+        $lst_escola_curso = LegacyCourse::query()
             ->active()
             ->whereSchool($this->ref_cod_escola, $this->ano)
             ->orderBy('nm_curso')
@@ -127,7 +127,7 @@ if ($get_curso) {
     } elseif ($this->ref_cod_instituicao) {
         $opcoes_curso = ['' => $get_select_name_full ? 'Selecione um curso' : 'Selecione'];
 
-        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->when($sem_padrao, function ($q) {
+        $lst_escola_curso = LegacyCourse::query()->active()->when($sem_padrao, function ($q) {
             $q->whereStandardCalendar(0);
         })->whereInstitution($this->ref_cod_instituicao)->orderBy('nm_curso')->get(['cod_curso', 'nm_curso', 'descricao']);
 

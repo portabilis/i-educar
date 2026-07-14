@@ -17,6 +17,11 @@ class AnnouncementUserController extends Controller
         $this->breadcrumb('Avisos');
         $this->menu(Process::ANNOUNCEMENT);
         $announcement = Announcement::query()->latest()->first();
+
+        if (!$announcement) {
+            return redirect('/');
+        }
+
         $announcement->users()->sync([
             $request->user()->getKey() => ['read_at' => now()],
         ]);
@@ -71,6 +76,11 @@ class AnnouncementUserController extends Controller
     public function confirm(Request $request)
     {
         $announcement = Announcement::query()->latest()->first();
+
+        if (!$announcement) {
+            return redirect('/');
+        }
+
         $announcement->users()->sync([
             $request->user()->getKey() => ['confirmed_at' => now()],
         ]);

@@ -3,15 +3,18 @@
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
+use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
+use App\Models\LegacySchoolCourse;
 use App\Models\LegacyStageType;
 use App\Models\LegacyUserType;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -174,28 +177,14 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getCursos($escolaId = null)
     {
-        $escola_curso = self::addClassToStorage(
-            'clsPmieducarEscolaCurso',
-            null,
-            'include/pmieducar/clsPmieducarEscolaCurso.inc.php'
-        );
-
-        // Carrega os cursos
-        $escola_curso->setOrderby('ref_cod_escola ASC, cod_curso ASC');
-        $escola_curso = $escola_curso->lista($escolaId);
-
-        if (!$escola_curso) {
-            return [];
-        }
-
-        $cursos = [];
-
-        foreach ($escola_curso as $val) {
-            $nomeCurso = self::getCurso($val['ref_cod_curso']);
-            $cursos[$val['ref_cod_curso']] = $nomeCurso;
-        }
-
-        return $cursos;
+        return LegacySchoolCourse::query()
+            ->active()
+            ->when(is_numeric($escolaId), fn ($q) => $q->whereSchool((int) $escolaId))
+            ->orderBySchoolCourse()
+            ->with('course:cod_curso,nm_curso,descricao')
+            ->get()
+            ->pluck('course.name', 'ref_cod_curso')
+            ->all();
     }
 
     /**
@@ -215,13 +204,13 @@ class App_Model_IedFinder extends CoreExt_Entity
             'include/pmieducar/clsPmieducarInstituicao.inc.php'
         );
 
-        // Usa o atributo público para depois chamar o método detalhe()
+        // Usa o atributo público para depois chamar o método detalhe(), que já usa cache
         $instituicao->cod_instituicao = $codInstituicao;
         $instituicao = $instituicao->detalhe();
 
         if ($instituicao === false) {
             throw new App_Model_Exception(
-                sprintf('Série com o código "%d" não existe.', $codInstituicao)
+                sprintf('Instituição com o código "%d" não existe.', $codInstituicao)
             );
         }
 
@@ -858,7 +847,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                 mt.ativo DESC,
                 mt.sequencial DESC
             LIMIT 1
-    ';
+';
 
         $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => [$codMatricula, $codTurma]]);
 
@@ -1046,7 +1035,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                         continue;
                     }
 
-                    if (!in_array($id, $disciplinasDependencia)) {
+                    if (!$disciplinasDependencia->contains($id)) {
                         continue;
                     }
 
@@ -1136,37 +1125,39 @@ class App_Model_IedFinder extends CoreExt_Entity
         $codEscola,
         $disciplina
     ) {
-        $dispensas = self::addClassToStorage(
-            'clsPmieducarDispensaDisciplina',
-            null,
-            'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
-        );
+        return Cache::remember('ie_finder_etapa_dispensada_' . $codMatricula . '_' . $codSerie . '_' . $codEscola . '_' . $disciplina, now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola, $disciplina) {
+            $dispensas = self::addClassToStorage(
+                'clsPmieducarDispensaDisciplina',
+                null,
+                'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
+            );
 
-        $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola);
+            $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola);
 
-        $etapaDispensada = [];
+            $etapaDispensada = [];
 
-        if (!$dispensas) {
-            return [];
-        }
-
-        foreach ($dispensas as $dispensa) {
-            if ($dispensa['ref_cod_disciplina'] == $disciplina) {
-                $etapaDispensada[] = $dispensa['etapa'];
+            if (!$dispensas) {
+                return [];
             }
-        }
 
-        return $etapaDispensada;
+            foreach ($dispensas as $dispensa) {
+                if ($dispensa['ref_cod_disciplina'] == $disciplina) {
+                    $etapaDispensada[] = $dispensa['etapa'];
+                }
+            }
+
+            return $etapaDispensada;
+        });
     }
 
     /**
-     * Retorna array com as referências de pmieducar.disciplina_dependencia
+     * Retorna as referências de pmieducar.disciplina_dependencia
      * a modules.componente_curricular ('ref_ref_cod_disciplina').
      *
      * @param int $codMatricula
      * @param int $codSerie
      * @param int $codEscola
-     * @return array
+     * @return Collection<int, int>
      */
     public static function getDisciplinasDependenciaPorMatricula(
         $codMatricula,
@@ -1175,29 +1166,13 @@ class App_Model_IedFinder extends CoreExt_Entity
     ) {
         $key = json_encode(compact('codMatricula', 'codSerie', 'codEscola'));
 
-        $disciplinas = Cache::store('array')->remember("getDisciplinasDependenciaPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola) {
-            $disciplinas = self::addClassToStorage(
-                'clsPmieducarDisciplinaDependencia',
-                null,
-                'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php'
-            );
-
-            $disciplinas = $disciplinas->lista($codMatricula, $codSerie, $codEscola);
-
-            if ($disciplinas === false) {
-                return [];
-            }
-
-            return $disciplinas;
+        return Cache::store('array')->remember("getDisciplinasDependenciaPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola) {
+            return LegacyDisciplineDependence::query()
+                ->when(is_numeric($codMatricula), fn ($q) => $q->whereRegistration($codMatricula))
+                ->when(is_numeric($codSerie), fn ($q) => $q->whereGrade($codSerie))
+                ->when(is_numeric($codEscola), fn ($q) => $q->whereSchool($codEscola))
+                ->pluck('ref_cod_disciplina');
         });
-
-        $disciplinasDependencia = [];
-
-        foreach ($disciplinas as $disciplina) {
-            $disciplinasDependencia[] = $disciplina['ref_cod_disciplina'];
-        }
-
-        return $disciplinasDependencia;
     }
 
     /**
@@ -1747,46 +1722,48 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getEtapasDaTurma($turma)
     {
-        $sql = '
-            select * from
-            (
-                select
-                    t.cod_turma,
-                    anm.sequencial,
-                    anm.ref_cod_modulo as cod_modulo,
-                    anm.data_inicio,
-                    anm.data_fim,
-                    anm.dias_letivos
-                from pmieducar.turma as t
-                inner join pmieducar.curso as c
-                on t.ref_cod_curso = c.cod_curso
-                inner join pmieducar.ano_letivo_modulo as anm
-                on anm.ref_ref_cod_escola = t.ref_ref_cod_escola
-                and anm.ref_ano = t.ano
-                where c.padrao_ano_escolar = 1
+        return Cache::remember('ie_finder_etapas_turma_' . $turma, now()->addMinutes(5), function () use ($turma) {
+            $sql = '
+                select * from
+                (
+                    select
+                        t.cod_turma,
+                        anm.sequencial,
+                        anm.ref_cod_modulo as cod_modulo,
+                        anm.data_inicio,
+                        anm.data_fim,
+                        anm.dias_letivos
+                    from pmieducar.turma as t
+                    inner join pmieducar.curso as c
+                    on t.ref_cod_curso = c.cod_curso
+                    inner join pmieducar.ano_letivo_modulo as anm
+                    on anm.ref_ref_cod_escola = t.ref_ref_cod_escola
+                    and anm.ref_ano = t.ano
+                    where c.padrao_ano_escolar = 1
 
-                union all
+                    union all
 
-                select
-                    t.cod_turma,
-                    tm.sequencial,
-                    tm.ref_cod_modulo as cod_modulo,
-                    tm.data_inicio,
-                    tm.data_fim,
-                    tm.dias_letivos
-                from pmieducar.turma as t
-                inner join pmieducar.curso as c
-                on t.ref_cod_curso = c.cod_curso
-                inner join pmieducar.turma_modulo as tm
-                on tm.ref_cod_turma = t.cod_turma
-                where c.padrao_ano_escolar = 0
-            ) as etapas
-            where cod_turma = $1;
-        ';
+                    select
+                        t.cod_turma,
+                        tm.sequencial,
+                        tm.ref_cod_modulo as cod_modulo,
+                        tm.data_inicio,
+                        tm.data_fim,
+                        tm.dias_letivos
+                    from pmieducar.turma as t
+                    inner join pmieducar.curso as c
+                    on t.ref_cod_curso = c.cod_curso
+                    inner join pmieducar.turma_modulo as tm
+                    on tm.ref_cod_turma = t.cod_turma
+                    where c.padrao_ano_escolar = 0
+                ) as etapas
+                where cod_turma = $1;
+            ';
 
-        return Portabilis_Utils_Database::fetchPreparedQuery($sql, [
-            'params' => [$turma],
-        ]);
+            return Portabilis_Utils_Database::fetchPreparedQuery($sql, [
+                'params' => [$turma],
+            ]);
+        });
     }
 
     /**
