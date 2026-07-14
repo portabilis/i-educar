@@ -19,6 +19,8 @@ use App\Http\Controllers\Api\SchoolController;
 use App\Http\Controllers\Api\SituationController;
 use App\Http\Controllers\Api\StageController;
 use App\Http\Controllers\Api\StateController;
+use App\Http\Controllers\FaltasGeralController;
+use App\Http\Middleware\ValidToken;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,3 +89,7 @@ Route::group(['prefix' => 'resource', 'as' => 'api.resource.', 'namespace' => 'A
     Route::get('discipline', 'Discipline\ResourceDisciplineController@index')->name('discipline');
     Route::get('country', 'Country\ResourceCountryController@index')->name('country');
 });
+
+Route::post('/i-diario/falta-geral', [FaltasGeralController::class, 'store'])
+    ->name('i-diario.falta-geral.store')
+    ->middleware(ValidToken::class);
