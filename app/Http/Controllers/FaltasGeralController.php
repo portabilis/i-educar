@@ -7,7 +7,7 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbse
 
 class FaltasGeralController extends DiarioController
 {
-    public function store(PostFaltaGeralRequest $request)
+    public function __invoke(PostFaltaGeralRequest $request)
     {
         $etapa = $request->integer('etapa');
         $faltas = $request->integer('faltas');
