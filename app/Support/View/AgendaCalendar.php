@@ -1,8 +1,23 @@
 <?php
 
-class calendario
+namespace App\Support\View;
+
+class AgendaCalendar
 {
-    public $meses = [1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'];
+    public $meses = [
+        1 => 'Janeiro',
+        2 => 'Fevereiro',
+        3 => 'Março',
+        4 => 'Abril',
+        5 => 'Maio',
+        6 => 'Junho',
+        7 => 'Julho',
+        8 => 'Agosto',
+        9 => 'Setembro',
+        10 => 'Outubro',
+        11 => 'Novembro',
+        12 => 'Dezembro',
+    ];
 
     public $meses_dias;
 
@@ -76,8 +91,8 @@ class calendario
             $totalDias += date('t', mktime(0, 0, 0, $i - 1, 1, $this->ano));
             $this->meses_dias[$i] = $totalDias;
         }
-        // mes atual nao tem nenhu mdia de diferenca
-        $this->meses_dias[$this->mes] = 0;
+        // mes atual nao tem nenhum dia de diferenca
+        $this->meses_dias[(int) $this->mes] = 0;
     }
 
     public function gera_calendario()
@@ -113,7 +128,6 @@ class calendario
         for ($i = $sel_ano_atual_real - 1; $i < $sel_ano_atual_real + 5; $i++) {
             $dif_dias = date('L', mktime(0, 0, 0, 1, 1, $i)) ? 31622400 : 31536000;
             $time = $this->time + ($i - $sel_ano_atual) * $dif_dias;
-            // echo ( ( $i - $sel_ano_atual ) * $dif_dias ) . " -<br>";
 
             $selecionado = '';
             if ($i == $sel_ano_atual) {
@@ -161,16 +175,7 @@ class calendario
                 $retorno .= "</tr>\n";
             }
         }
-        $retorno .= '</table></div><!-- dias_mes';
-        foreach ($this->meses_dias as $mes => $dias) {
-            $retorno .= "\n$mes => $dias";
-        }
 
-        return $retorno . "\n-->";
-    }
-
-    public function print_calendario()
-    {
-        echo $this->gera_calendario();
+        return $retorno . '</table></div>';
     }
 }

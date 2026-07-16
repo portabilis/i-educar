@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\AgendaService;
+use App\Support\View\AgendaCalendar;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +24,8 @@ return new class extends clsCadastro
 
     public $publica = 0;
 
+    public $dono;
+
     public $time_amanha;
 
     public $time_ontem;
@@ -41,26 +45,24 @@ return new class extends clsCadastro
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: '/intranet/scripts/agenda.js');
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: '/intranet/styles/agenda.css');
 
-        if ($_REQUEST['cod_agenda']) {
-            $this->agenda = (int) $_REQUEST['cod_agenda'];
-            $objAgenda = new clsAgenda(int_cod_editor: $this->editor, int_cod_pessoa_dono: false, int_cod_agenda: $this->agenda);
+        $agendaService = app(AgendaService::class);
+
+        if (request('cod_agenda')) {
+            $this->agenda = request()->integer('cod_agenda');
+            $agenda = $agendaService->find(agenda: $this->agenda);
         } else {
-            $objAgenda = new clsAgenda(int_cod_editor: $this->editor, int_cod_pessoa_dono: $this->editor, int_cod_agenda: false);
-            $this->agenda = $objAgenda->getCodAgenda();
+            $agenda = $agendaService->firstOrCreate(person: $this->editor);
+            $this->agenda = $agenda->getKey();
         }
 
         // Checa se a pessoa possui permissao (daqui por diante comeca a visualizar, editar, excluir, etc.)
-        if (!$objAgenda->permissao_agenda()) {
+        if (!$agendaService->hasPermission(editor: $this->editor, agenda: $agenda)) {
             throw new HttpResponseException(
                 response: new RedirectResponse(url: $this->scriptNome)
             );
         }
 
-        if (isset($_REQUEST['time'])) {
-            $this->time_atual = $_REQUEST['time'];
-        } else {
-            $this->time_atual = time();
-        }
+        $this->time_atual = request('time') ?? time();
 
         $this->time_amanha = $this->time_atual + 86400;
         $this->time_ontem = $this->time_atual - 86400;
@@ -73,36 +75,69 @@ return new class extends clsCadastro
         /*
             DELETAR
         */
-        if (isset($_GET['deletar'])) {
-            $objAgenda->excluiCompromisso(cod_compromisso: $_GET['deletar']);
+        if (request('deletar') !== null) {
+            $agendaService->deleteCommitment(agenda: $agenda, commitment: request()->integer('deletar'));
         }
 
         /*
             EDITAR
         */
-        if (isset($_POST['agenda_rap_id'])) {
-            $objAgenda->edita_compromisso(cod_compromisso: $_POST['agenda_rap_id'], titulo: pg_escape_string(connection: $_POST['agenda_rap_titulo']), conteudo: pg_escape_string(connection: $_POST['agenda_rap_conteudo']), data: $_POST['agenda_rap_data'], hora_inicio: $_POST['agenda_rap_hora'], hora_fim: $_POST['agenda_rap_horafim'], publico: $_POST['agenda_rap_publico'], importante: $_POST['agenda_rap_importante']);
+        if (request('agenda_rap_id') !== null) {
+            $this->erro_msg .= $agendaService->updateCommitment(
+                agenda: $agenda,
+                editor: $this->editor,
+                commitment: request()->integer('agenda_rap_id'),
+                title: request('agenda_rap_titulo'),
+                description: request('agenda_rap_conteudo'),
+                date: request('agenda_rap_data'),
+                startTime: request('agenda_rap_hora'),
+                endTime: request('agenda_rap_horafim'),
+                public: request()->boolean('agenda_rap_publico'),
+                important: request()->boolean('agenda_rap_importante'),
+            );
         }
 
         /*
             INSERIR
         */
-        if (isset($_POST['novo_hora_inicio'])) {
-            $objAgenda->cadastraCompromisso(cod_compromisso: false, titulo: pg_escape_string(connection: $_POST['novo_titulo']), descricao: pg_escape_string(connection: $_POST['novo_descricao']), data: $_POST['novo_data'], hora_inicio: $_POST['novo_hora_inicio'], hora_fim: $_POST['novo_hora_fim'], publico: $_POST['novo_publico'], importante: $_POST['novo_importante'], repetir_dias: $_POST['novo_repetir_dias'], repetir_qtd: $_POST['novo_repetir_qtd']);
+        if (request('novo_hora_inicio') !== null) {
+            $this->erro_msg .= $agendaService->createCommitment(
+                agenda: $agenda,
+                editor: $this->editor,
+                commitment: null,
+                title: request('novo_titulo'),
+                description: request('novo_descricao'),
+                date: request('novo_data'),
+                startTime: request('novo_hora_inicio'),
+                endTime: request('novo_hora_fim'),
+                public: request()->boolean('novo_publico'),
+                important: request()->boolean('novo_importante'),
+                repeatDays: request('novo_repetir_dias'),
+                repeatCount: request('novo_repetir_qtd'),
+            );
         }
 
         /*
             GRAVA NOTA PARA COMPROMISSO
         */
-        if (isset($_POST['grava_compromisso']) && is_numeric(value: $_POST['grava_compromisso'])) {
-            $objAgenda->edita_nota2compromisso(cod_compromisso: $_POST['grava_compromisso'], hora_fim: $_POST['grava_hora_fim']);
+        if (is_numeric(value: request('grava_compromisso'))) {
+            $this->erro_msg .= $agendaService->saveNoteAsCommitment(
+                agenda: $agenda,
+                editor: $this->editor,
+                commitment: request()->integer('grava_compromisso'),
+                endTime: request('grava_hora_fim'),
+            );
         }
 
         /*
             RESTAURAR UMA VERSAO
         */
-        if (isset($_GET['restaura']) && isset($_GET['versao'])) {
-            $objAgenda->restaura_versao(cod_compromisso: $_GET['restaura'], versao: $_GET['versao']);
+        if (request('restaura') !== null && request('versao') !== null) {
+            $this->erro_msg .= $agendaService->restoreVersion(
+                agenda: $agenda,
+                commitment: request()->integer('restaura'),
+                version: request()->integer('versao'),
+            );
         }
 
         /*
@@ -131,9 +166,9 @@ return new class extends clsCadastro
 
         $this->arr_data_atual = [date(format: 'd', timestamp: $this->time_atual), date(format: 'n', timestamp: $this->time_atual), date(format: 'Y', timestamp: $this->time_atual), date(format: 'w', timestamp: $this->time_atual)];
 
-        $nm_agenda = $objAgenda->getNome();
-        $this->publica = $objAgenda->getPublica();
-        $this->dono = $objAgenda->getCodPessoaDono();
+        $nm_agenda = $agenda->nm_agenda;
+        $this->publica = $agenda->publica;
+        $this->dono = $agenda->ref_ref_cod_pessoa_own;
 
         if ($this->editor == $this->dono) {
             $preferencias = '<a class="small" href="agenda_preferencias.php">
@@ -204,10 +239,12 @@ return new class extends clsCadastro
         /*
         *   COMPROMISSOS
         */
-        if (!isset($_GET['versoes'])) {
-            $this->compromissos = $objAgenda->listaCompromissosDia(data: $this->data_atual);
+        if (request('versoes') === null) {
+            $this->compromissos = $agendaService->getDayCommitments(agenda: $agenda, date: $this->data_atual);
 
-            if ($this->compromissos) {
+            if ($this->compromissos->isNotEmpty()) {
+                $max_versoes = $agendaService->getMaxVersions(commitments: $this->compromissos);
+
                 foreach ($this->compromissos as $compromisso) {
                     $data_inicio = $compromisso['data_inicio'];
                     $cod_agenda_compromisso = $compromisso['cod_agenda_compromisso'];
@@ -288,7 +325,7 @@ return new class extends clsCadastro
                         $extras += 1;
                     }
 
-                    $max_versao = $objAgenda->getCompromissoVersao(cod_compromisso: $cod_agenda_compromisso);
+                    $max_versao = $max_versoes[$cod_agenda_compromisso] ?? 0;
                     if ($max_versao > 1) {
                         $img_versao = "<br><a class=\"small\" href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&versoes={$cod_agenda_compromisso}\">
                                     <div class=\"history\">
@@ -346,8 +383,7 @@ return new class extends clsCadastro
 
             $conteudo .= "<tr><td colspan=\"3\" class=\"{$classe}\" align=\"center\" height=\"60\"><br><input type=\"button\" name=\"agenda_novo\" class=\"agenda_rap_botao btn-green\" id=\"agenda_novo\" value=\"Novo Compromisso\" onclick=\"novoForm();\"></td></tr>";
         } else {
-            $this->versoes = $objAgenda->listaVersoes(cod_compromisso: $_GET['versoes']);
-            $filtered_versoes = (int) $_GET['versoes'];
+            $filtered_versoes = request()->integer('versoes');
 
             // verifica se o compromisso eh mesmo dessa agenda
             $db->Consulta(consulta: "SELECT 1 FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$filtered_versoes}'");
@@ -392,7 +428,7 @@ return new class extends clsCadastro
                 </td>
                 <td width="20%" valign="top" align="center" class="escuro">
         ';
-        $objCalendario = new calendario(time: $this->time_atual, url_default: "{$this->scriptNome}?cod_agenda={$this->agenda}");
+        $objCalendario = new AgendaCalendar(time: $this->time_atual, url_default: "{$this->scriptNome}?cod_agenda={$this->agenda}");
         $conteudo .= $objCalendario->gera_calendario();
 
         $conteudo .= '
