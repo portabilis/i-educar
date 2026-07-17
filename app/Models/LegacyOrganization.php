@@ -2,16 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyOrganizationBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
  * @property string $fantasia
+ *
+ * @method static LegacyOrganizationBuilder query()
  */
 class LegacyOrganization extends LegacyModel
 {
+    /** @use HasBuilder<LegacyOrganizationBuilder> */
+    use HasBuilder;
+
+    protected static string $builder = LegacyOrganizationBuilder::class;
+
     protected $table = 'cadastro.juridica';
 
     public const CREATED_AT = 'data_cad';
@@ -53,18 +61,6 @@ class LegacyOrganization extends LegacyModel
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            if (Auth::check()) {
-                $model->idpes_cad = Auth::id();
-            }
-        });
-
-        static::updating(function ($model) {
-            if (Auth::check()) {
-                $model->idpes_rev = Auth::id();
-            }
-        });
-
         static::saving(function ($model) {
             if ($model->isDirty('fantasia') && config('legacy.app.uppercase_names')) {
                 $model->fantasia = Str::upper($model->fantasia);
@@ -87,6 +83,11 @@ class LegacyOrganization extends LegacyModel
     protected function capitalSocial(): Attribute
     {
         return Attribute::set(fn (?string $value) => $value ?: null);
+    }
+
+    protected function cnpj(): Attribute
+    {
+        return Attribute::set(fn ($value) => normalizaCnpj($value));
     }
 
     /**

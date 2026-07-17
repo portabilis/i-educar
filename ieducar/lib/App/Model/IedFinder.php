@@ -197,19 +197,16 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getInstituicao($codInstituicao)
     {
-        $instituicao = Cache::remember('ie_finder_instituicao' . $codInstituicao, now()->addMinutes(30), function () use ($codInstituicao) {
-            // Recupera clsPmieducarInstituicao do storage de classe estático
-            $instituicao = self::addClassToStorage(
-                'clsPmieducarInstituicao',
-                null,
-                'include/pmieducar/clsPmieducarInstituicao.inc.php'
-            );
+        // Recupera clsPmieducarInstituicao do storage de classe estático
+        $instituicao = self::addClassToStorage(
+            'clsPmieducarInstituicao',
+            null,
+            'include/pmieducar/clsPmieducarInstituicao.inc.php'
+        );
 
-            // Usa o atributo público para depois chamar o método detalhe()
-            $instituicao->cod_instituicao = $codInstituicao;
-
-            return $instituicao->detalhe();
-        });
+        // Usa o atributo público para depois chamar o método detalhe(), que já usa cache
+        $instituicao->cod_instituicao = $codInstituicao;
+        $instituicao = $instituicao->detalhe();
 
         if ($instituicao === false) {
             throw new App_Model_Exception(

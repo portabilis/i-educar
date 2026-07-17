@@ -1052,9 +1052,10 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->cnpj_mantenedora_principal)) {
+            $cnpjMantenedora = normalizaCnpj($this->cnpj_mantenedora_principal);
+            if ($cnpjMantenedora !== null) {
                 $campos .= "{$gruda}cnpj_mantenedora_principal";
-                $valores .= "{$gruda}'{$this->cnpj_mantenedora_principal}'";
+                $valores .= "{$gruda}'{$cnpjMantenedora}'";
                 $gruda = ', ';
             }
 
@@ -2084,8 +2085,9 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->cnpj_mantenedora_principal)) {
-                $set .= "{$gruda}cnpj_mantenedora_principal = '{$this->cnpj_mantenedora_principal}'";
+            $cnpjMantenedora = normalizaCnpj($this->cnpj_mantenedora_principal);
+            if ($cnpjMantenedora !== null) {
+                $set .= "{$gruda}cnpj_mantenedora_principal = '{$cnpjMantenedora}'";
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}cnpj_mantenedora_principal = NULL ";

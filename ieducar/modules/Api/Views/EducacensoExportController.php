@@ -480,7 +480,7 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->inepTurma, // 06 - Código da turma no INEP
                 $aluno->matriculaAluno, // 07 - Código da Matrícula do(a) aluno(a)
                 $aluno->etapaAluno, // 08 - Turma multi
-                $aluno->cargaHorariaIntegralizada, // 09 - Carga horária integralizada pelo(a) aluno(a) no curso técnico ou de qualificação profissional (em horas)
+                $aluno->cargaHorariaIntegralizada, // 09 - Carga horária integralizada pelo(a) aluno(a) (em horas)
                 $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas, // 10 - Desenvolvimento de funções cognitivas
                 $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma, // 11 - Desenvolvimento de vida autônoma
                 $aluno->tipoAtendimentoEnriquecimentoCurricular, // 12 - Enriquecimento curricular

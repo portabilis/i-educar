@@ -13,4 +13,10 @@ class CacheService
             Cache::forget("announcement.user_type.{$userTypeId}");
         }
     }
+
+    public static function clearInstitution(int $institutionId): void
+    {
+        Cache::forget('select_instituicao');
+        Cache::forget('instituicao_' . $institutionId);
+    }
 }

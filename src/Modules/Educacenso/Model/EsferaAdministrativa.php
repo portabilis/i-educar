@@ -12,7 +12,7 @@ class EsferaAdministrativa
 
     public const ESTADUAL_E_MUNICIPAL = 4;
 
-    public const FEDERAL_E_ESTADUAL = 5;
+    public const FEDERAL_SETEC = 6;
 
     public static function getDescriptiveValues()
     {
@@ -21,7 +21,7 @@ class EsferaAdministrativa
             self::ESTADUAL => 'Estadual',
             self::MUNICIPAL => 'Municipal',
             self::ESTADUAL_E_MUNICIPAL => 'Estadual e Municipal',
-            self::FEDERAL_E_ESTADUAL => 'Federal e Estadual',
+            self::FEDERAL_SETEC => 'Federal SETEC',
         ];
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
-$configuracoes = new clsPmieducarConfiguracoesGerais;
-$configuracoes = $configuracoes->detalhe();
-$reason = $configuracoes['ieducar_suspension_message'];
+use App\Models\LegacyGeneralConfiguration;
+
+$reason = LegacyGeneralConfiguration::query()
+    ->forActiveInstitution()
+    ->value('ieducar_suspension_message');
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">

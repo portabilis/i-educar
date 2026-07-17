@@ -857,8 +857,11 @@ return new class extends clsCadastro
             return false;
         }
 
-        $usuario = new clsPmieducarUsuario;
-        $usuario = $usuario->lista(int_cod_usuario: $idPes, int_ref_cod_escola: null, int_ref_cod_instituicao: null, int_ref_funcionario_cad: null, int_ref_funcionario_exc: null, int_ref_cod_tipo_usuario: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: true);
+        $usuario = is_numeric($idPes) && LegacyUser::query()
+            ->whereKey($idPes)
+            ->where('ativo', 1)
+            ->whereHas('type')
+            ->exists();
         $funcionarioAtivo = LegacyEmployee::query()
             ->where('ref_cod_pessoa_fj', $idPes)
             ->where('ativo', 1)
@@ -1329,12 +1332,14 @@ return new class extends clsCadastro
         ];
 
         if ($pessoaId && LegacyPerson::whereKey($pessoaId)->exists()) {
+            $dados['idpes_rev'] = Auth::id();
             LegacyPerson::find($pessoaId)?->update($dados);
 
             return $pessoaId;
         }
 
         $dados['tipo'] = 'F';
+        $dados['idpes_cad'] = Auth::id();
 
         return LegacyPerson::create($dados)->idpes;
     }

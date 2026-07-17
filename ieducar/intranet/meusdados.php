@@ -2,10 +2,12 @@
 
 use App\Facades\Asset;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
+use App\Models\LegacyUser;
 use App\Services\ChangeUserPasswordService;
 use App\Services\PhoneService;
 use App\Services\UrlPresigner;
@@ -200,7 +202,10 @@ return new class extends clsCadastro
             phone: $this->celular
         );
 
-        LegacyPerson::find($this->pessoa_logada)?->update(['nome' => $this->nome]);
+        LegacyPerson::find($this->pessoa_logada)?->update([
+            'nome' => $this->nome,
+            'idpes_rev' => Auth::id(),
+        ]);
 
         $fisica = LegacyIndividual::find($this->pessoa_logada, ['idpes', 'sexo']);
         $fisica?->update(['sexo' => $this->sexo]);
@@ -253,30 +258,22 @@ return new class extends clsCadastro
         $funcionario = LegacyEmployee::find($this->pessoa_logada);
         $funcionario?->update($dadosAtualizar);
 
-        $usuario = new clsPmieducarUsuario($this->pessoa_logada);
-        $usuario = $usuario->detalhe();
+        $codInstituicao = LegacyUser::query()
+            ->whereKey($this->pessoa_logada)
+            ->value('ref_cod_instituicao');
 
-        if ($usuario) {
-            $instituicao = new clsPmieducarInstituicao($usuario['ref_cod_instituicao']);
-            $instituicao = $instituicao->detalhe();
+        $instituicao = new clsPmieducarInstituicao($codInstituicao);
+        $instituicao = $instituicao->detalhe();
+        $instituicao = $instituicao['nm_instituicao'];
 
-            $instituicao = $instituicao['nm_instituicao'];
-
-            $escola = new clsPmieducarEscola($usuario['ref_cod_escola']);
-            $escola = $escola->detalhe();
-
-            $escola = $escola['nome'];
-        }
-
-        $configuracoes = new clsPmieducarConfiguracoesGerais;
-        $configuracoes = $configuracoes->detalhe();
-
-        $permiteRelacionamentoPosvendas = $configuracoes['permite_relacionamento_posvendas'] ? 'Sim' : 'Não';
+        $permiteRelacionamentoPosvendas = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('permite_relacionamento_posvendas') ? 'Sim' : 'Não';
 
         $dados = [
             'nome' => $this->nome,
             'empresa' => $instituicao,
-            'cargo' => $escola,
+            'cargo' => null,
             'telefone' => $this->telefone ? "$this->ddd_telefone $this->telefone" : null,
             'celular' => $this->celular ? "$this->ddd_celular $this->celular" : null,
             'Assuntos de interesse' => $this->receber_novidades ? 'Todos os assuntos relacionados ao i-Educar' : 'Nenhum',

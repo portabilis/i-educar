@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\LegacyEmployee;
-use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -9,8 +8,6 @@ use Illuminate\Support\Facades\Session;
 return new class extends clsListagem
 {
     public $cpf;
-
-    public $cnpj;
 
     public $matricula;
 
@@ -163,80 +160,6 @@ return new class extends clsListagem
                 }
             } else {
                 $this->addLinhas(['Informado um CPF Inválido']);
-            }
-        } elseif ($parametros->getPessoa() == 'J') {
-            $this->addCabecalhos(['CNPJ', 'Nome']);
-
-            // Filtros de Busca
-            $this->campoTexto(nome: 'campo_busca', campo: 'Pessoa', valor: $this->campo_busca, tamanhovisivel: 35, tamanhomaximo: 255, descricao: 'Código/Nome');
-            if ($this->cnpj) {
-                if (is_numeric($this->cnpj)) {
-                    $this->cnpj = int2CNPJ($this->cnpj);
-                }
-            } else {
-                $this->cnpj = '';
-            }
-            $this->campoCnpj(nome: 'cnpj', campo: 'CNPJ', valor: $this->cnpj);
-
-            $chave_busca = @$_GET['campo_busca'];
-            $cnpj = @$_GET['cnpj'];
-            $busca = @$_GET['busca'];
-
-            // Paginador
-            $limite = 10;
-            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
-
-            $cnpjInt = $cnpj ? idFederal2int($cnpj) : null;
-
-            $query = LegacyOrganization::query()
-                ->join('cadastro.pessoa', 'cadastro.pessoa.idpes', 'cadastro.juridica.idpes')
-                ->select(['cadastro.juridica.idpes', 'cadastro.juridica.fantasia', 'cadastro.juridica.cnpj', 'cadastro.pessoa.nome']);
-
-            if ($busca == 'S' && is_numeric($cnpjInt)) {
-                $cnpjLimpo = ltrim((string) $cnpjInt, '0');
-                $query->whereRaw('cadastro.juridica.cnpj::varchar ILIKE ?', ["%$cnpjLimpo%"]);
-            }
-
-            if ($busca == 'S' && is_numeric($chave_busca)) {
-                $query->where('cadastro.juridica.idpes', $chave_busca);
-            } elseif ($busca == 'S' && is_string($chave_busca)) {
-                $query->whereRaw(
-                    '(fcn_upper_nrm(cadastro.juridica.fantasia) LIKE fcn_upper_nrm(?) OR fcn_upper_nrm(cadastro.pessoa.nome) LIKE fcn_upper_nrm(?))',
-                    ["%$chave_busca%", "%$chave_busca%"]
-                );
-            }
-
-            $total = (clone $query)->count();
-            $lst_pessoa = $query->orderBy('cadastro.juridica.fantasia')
-                ->offset($iniciolimit)
-                ->limit($limite)
-                ->get();
-            if ($lst_pessoa->isNotEmpty()) {
-                foreach ($lst_pessoa as $pessoa) {
-                    $funcao = ' set_campo_pesquisa(';
-                    $virgula = '';
-                    $cont = 0;
-                    $pessoa['cnpj'] = (is_numeric($pessoa['cnpj'])) ? int2CNPJ($pessoa['cnpj']) : null;
-                    foreach ($parametros->getCampoNome() as $campo) {
-                        $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
-                        if ($parametros->getCampoTipo($cont) === 'text') {
-                            $funcao .= "{$virgula} '{$campo}', '{$campoTexto}'";
-                        } elseif ($parametros->getCampoTipo($cont) === 'select') {
-                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$campoTexto}'";
-                        }
-                        $virgula = ',';
-                        $cont++;
-                    }
-                    if ($parametros->getSubmit()) {
-                        $funcao .= "{$virgula} 'submit' )";
-                    } else {
-                        $funcao .= ' )';
-                    }
-
-                    $this->addLinhas(["<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cnpj']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>"]);
-                }
-            } else {
-                $this->addLinhas(['Não existe nenhum resultado a ser apresentado.']);
             }
         } elseif ($parametros->getPessoa() == 'FUNC') {
             $this->addCabecalhos(['Matricula', 'Nome']);

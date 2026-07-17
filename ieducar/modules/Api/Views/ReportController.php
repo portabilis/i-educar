@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyGeneralConfiguration;
 use iEducar\Reports\Contracts\TeacherReportCard;
 
 class ReportController extends ApiCoreController
@@ -126,10 +127,9 @@ class ReportController extends ApiCoreController
             $boletimProfessorReport->addArg('situacao', (int) $this->getRequest()->situacao ?? 0);
             $boletimProfessorReport->addArg('situacao_matricula', (bool) $this->getRequest()->situacao_matricula);
 
-            $configuracoes = new clsPmieducarConfiguracoesGerais;
-            $configuracoes = $configuracoes->detalhe();
-
-            $modelo = $configuracoes['modelo_boletim_professor'];
+            $modelo = LegacyGeneralConfiguration::query()
+                ->forActiveInstitution()
+                ->value('modelo_boletim_professor');
 
             $boletimProfessorReport->addArg('modelo', $modelo);
             $boletimProfessorReport->addArg('linha', 0);
