@@ -223,10 +223,14 @@ return new class extends clsListagem
                             $url
                         );
 
-                        if ($dia['ref_cod_calendario_dia_motivo']) {
+                        $motivo = $dia['ref_cod_calendario_dia_motivo']
+                            ? LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])
+                            : null;
+
+                        if ($motivo) {
                             $array_dias[$dia['dia']] = $dia['dia'];
 
-                            $det_motivo = LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])->getAttributes();
+                            $det_motivo = $motivo->getAttributes();
 
                             /**
                              * @todo CoreExt_Enum?

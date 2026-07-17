@@ -202,12 +202,7 @@ return new class extends clsCadastro
                                 </tr>
                             </table>
                         </td>
-                        <td width=\"20%\" valign=\"bottom\" align=\"right\">{$preferencias}
-                            <a class=\"small\" href=\"agenda_imprimir.php?cod_agenda={$this->agenda}\">
-                                <div>
-                                    <i class=\"fa fa-print\" aria-hidden=\"true\"></i> Imprimir
-                                </div>
-                            </a> &nbsp; </td>
+                        <td width=\"20%\" valign=\"bottom\" align=\"right\">{$preferencias} &nbsp; </td>
                     </tr>
                 </table>
             </td>
