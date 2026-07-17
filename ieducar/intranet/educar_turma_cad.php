@@ -1044,15 +1044,6 @@ return new class extends clsCadastro
         );
     }
 
-    protected function getEscolaSerie($escolaId, $serieId)
-    {
-        $escolaSerie = new clsPmieducarEscolaSerie;
-        $escolaSerie->ref_cod_escola = $escolaId;
-        $escolaSerie->ref_cod_serie = $serieId;
-
-        return $escolaSerie->detalhe();
-    }
-
     public function gerarJsonDosModulos()
     {
         $retorno = [];

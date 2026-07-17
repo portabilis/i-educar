@@ -2,6 +2,7 @@
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
+use App\Models\LegacySchoolGrade;
 use App\Models\LegacyUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -142,13 +143,16 @@ if ($get_escola_curso_serie) {
     $opcoes_series_curso_escola = ['' => 'Selecione'];
     // EDITAR
     if ($this->ref_cod_escola && $this->ref_cod_curso) {
-        $obj_escola_serie = new clsPmieducarEscolaSerie;
-        $obj_escola_serie->setOrderby('nm_serie ASC');
-        $lst_escola_serie = $obj_escola_serie->lista($this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, $this->ref_cod_curso);
-        if (is_array($lst_escola_serie) && count($lst_escola_serie)) {
-            foreach ($lst_escola_serie as $escola_curso_serie) {
-                $opcoes_series_curso_escola["{$escola_curso_serie['ref_cod_serie']}"] = $escola_curso_serie['nm_serie'];
-            }
+        $lst_escola_serie = LegacySchoolGrade::query()
+            ->joinGradeCourse()
+            ->whereSchool((int) $this->ref_cod_escola)
+            ->whereCourse((int) $this->ref_cod_curso)
+            ->active()
+            ->orderBy('nm_serie')
+            ->get();
+
+        foreach ($lst_escola_serie as $escola_curso_serie) {
+            $opcoes_series_curso_escola["{$escola_curso_serie['ref_cod_serie']}"] = $escola_curso_serie['nm_serie'];
         }
     }
     $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_series_curso_escola, $this->ref_ref_cod_serie, null, null, null, null, $escola_curso_serie_desabilitado, $escola_curso_serie_obrigatorio);
