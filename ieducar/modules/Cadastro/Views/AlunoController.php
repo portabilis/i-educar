@@ -462,6 +462,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->campoOculto('renda_mensal', (int) $this->renda_mensal);
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
+        $naoPossuiCpf = $this->getRequest()->nao_possui_cpf == 'on';
+        $options = [
+            'label' => 'Não possui CPF',
+            'value' => $naoPossuiCpf ? 'checked' : '',
+        ];
+        $this->inputsHelper()->checkbox('nao_possui_cpf', $options);
+
         $options = [
             'required' => false,
             'label' => 'NIS (PIS/PASEP)',

@@ -22,6 +22,17 @@ $j("#autorizado_dois").change(abriCampoTres);
 $j("#autorizado_tres").change(abriCampoQuatro);
 $j("#autorizado_quatro").change(abriCampoCinco);
 
+$naoPossuiCpf.change(function () {
+  if ($j(this).is(":checked")) {
+    $cpfField.val("").makeUnrequired();
+    aluno_inep_id.makeRequired();
+    $j("#tr_aluno_inep_id").show();
+  } else {
+    $cpfField.makeRequired();
+    aluno_inep_id.makeUnrequired();
+  }
+});
+
 function abriCampoDois() {
   $j("#autorizado_dois").closest("tr").show();
   $j("#parentesco_dois").closest("tr").show();
@@ -54,6 +65,7 @@ var $idField = $j("#id");
 var $nomeField = $j("#pessoa_nome");
 var $cpfField = $j("#id_federal");
 var obrigarCPF = $j("#obrigarCPF");
+var $naoPossuiCpf = $j("#nao_possui_cpf");
 
 var $resourceNotice = $j("<span>")
   .html("")
@@ -242,7 +254,14 @@ function handleShowSubmit() {
 };
 
 function formularioValido() {
-  if ( obrigarCPF.val() == 1 && $j("#tipo_nacionalidade").val() != 3  && !$cpfField.val()) {
+  var semCpf = $naoPossuiCpf.is(":checked");
+
+  if (semCpf) {
+    var codigoInep = $j("#aluno_inep_id").val();
+    if (!codigoInep || codigoInep.length != 12) {
+      return codigoInepInvalido();
+    }
+  } else if (obrigarCPF.val() == 1 && $j("#tipo_nacionalidade").val() != 3 && !$cpfField.val()) {
     messageUtils.error(
       "É necessário o preenchimento do CPF"
     );
