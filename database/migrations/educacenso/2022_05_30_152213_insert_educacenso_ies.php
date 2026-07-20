@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        $file = file(database_path('csv/censo/create_ies.csv'));
+        $file = file(database_path('csvs/educacenso/create_ies.csv'));
 
         foreach ($file as $line) {
             $data = str_getcsv($line);
