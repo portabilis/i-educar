@@ -23,6 +23,7 @@ return new class extends Migration
                     'nome' => $data[1],
                     'dependencia_administrativa_id' => $data[2],
                     'tipo_instituicao_id' => $data[3],
+                    'user_id' => 1,
                 ]
             );
         }
