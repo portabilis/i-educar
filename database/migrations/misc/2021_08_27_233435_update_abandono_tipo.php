@@ -13,18 +13,8 @@ class UpdateAbandonoTipo extends Migration
     public function up()
     {
         DB::unprepared(
-            'UPDATE pmieducar.abandono_tipo abandonoTipo SET ativo = 1 
+            'UPDATE pmieducar.abandono_tipo abandonoTipo SET ativo = 1
             WHERE abandonoTipo.ativo IS NULL;'
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }

@@ -20,14 +20,4 @@ return new class extends Migration
                 WHERE process in (647);'
         );
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
 };
