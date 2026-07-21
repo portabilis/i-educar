@@ -42,14 +42,4 @@ class InsereSeriesMultiInexistentesNasEscolas extends Migration
                 s.cod_serie;
         ');
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
 }
