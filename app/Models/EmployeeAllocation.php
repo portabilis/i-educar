@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property LegacyPeriod $period
  * @property array<int, string> $fillable
+ *
+ * @method static EmployeeAllocationBuilder query()
  */
 class EmployeeAllocation extends LegacyModel
 {
