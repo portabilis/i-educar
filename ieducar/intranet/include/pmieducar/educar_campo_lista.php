@@ -440,48 +440,6 @@ function atualizaLstEscolaCurso(cursos) {
 }
 <?php
 }
-if ($get_escola_curso_serie && $get_matricula && $_GET['ref_cod_aluno']) {
-    // tah matriculando o aluno, seleciona as series que ele pode se matricular?
-    ?>
-function getEscolaCursoSerie() {
-    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-    var campoEscola = document.getElementById('ref_cod_escola').value;
-    var campoCursoValue = document.getElementById('ref_cod_curso').value;
-    var campoCurso = document.getElementById('ref_cod_curso');
-    var campoSerie = document.getElementById('ref_ref_cod_serie');
-    var cod_aluno = <?= intval($_GET['ref_cod_aluno']) ?>;
-
-    campoSerie.length = 1;
-
-    limpaCampos(4);
-    if (campoInstituicao && campoCursoValue && campoEscola && cod_aluno) {
-        campoSerie.disabled = true;
-        campoSerie.options[0].text = 'Carregando séries';
-
-        var xml = new ajax(atualizaLstSerieMatricula);
-        xml.envia('educar_serie_matricula_xml.php?ins=' + campoInstituicao + '&cur=' + campoCursoValue + '&esc=' + campoEscola + '&alu=' + cod_aluno);
-    } else {
-        campoSerie.options[0].text = 'Selecione';
-    }
-}
-
-function atualizaLstSerieMatricula(xml) {
-    var campoSerie = document.getElementById('ref_ref_cod_serie');
-    campoSerie.length = 1;
-    campoSerie.options[0].text = 'Selecione uma série';
-    campoSerie.disabled = false;
-
-    series = xml.getElementsByTagName('serie');
-    if (series.length) {
-        for (var i = 0; i < xml.length; i++) {
-            campoSerie.options[campoSerie.options.length] = new Option(series[i].firstChild.data, series[i].getAttribute('cod_serie'), false, false);
-        }
-    } else {
-        campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
-    }
-}
-<?php
-}
 if ($get_escola_curso_serie && !$get_matricula) {
     ?>
 function getEscolaCursoSerie() {
