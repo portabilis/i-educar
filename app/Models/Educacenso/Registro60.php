@@ -224,10 +224,9 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
      */
     public function recebeEscolarizacaoOutroEspacoIsRequired()
     {
-        return in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $this->tipoAtendimentoTurma) &&
+        return TipoAtendimentoTurma::possuiCurricular($this->tipoAtendimentoTurma) &&
             $this->tipoMediacaoTurma == TipoMediacaoDidaticoPedagogico::PRESENCIAL &&
-            $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA &&
-            $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::SALA_ANEXA;
+            $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA;
     }
 
     /**
