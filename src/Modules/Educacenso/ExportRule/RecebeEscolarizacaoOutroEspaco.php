@@ -16,10 +16,7 @@ class RecebeEscolarizacaoOutroEspaco implements EducacensoExportRule
     {
         if (!TipoAtendimentoTurma::possuiCurricular($registro60->tipoAtendimentoTurma) ||
             $registro60->tipoMediacaoTurma != TipoMediacaoDidaticoPedagogico::PRESENCIAL ||
-            (
-                $registro60->localFuncionamentoDiferenciadoTurma != \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA &&
-                $registro60->localFuncionamentoDiferenciadoTurma != \App_Model_LocalFuncionamentoDiferenciado::SALA_ANEXA
-            )
+            $registro60->localFuncionamentoDiferenciadoTurma != \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA
         ) {
             $registro60->recebeEscolarizacaoOutroEspacao = null;
         }
