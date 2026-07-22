@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyExemptionType;
+use App\Models\LegacyUser;
 use iEducar\Legacy\Model;
 
 class clsPmieducarDispensaDisciplina extends Model
@@ -62,18 +63,12 @@ class clsPmieducarDispensaDisciplina extends Model
             cod_dispensa
         ';
 
-        if (is_numeric($ref_usuario_exc)) {
-            $usuario = new clsPmieducarUsuario($ref_usuario_exc);
-            if ($usuario->existe()) {
-                $this->ref_usuario_exc = $ref_usuario_exc;
-            }
+        if (is_numeric($ref_usuario_exc) && LegacyUser::query()->whereKey($ref_usuario_exc)->exists()) {
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
-        if (is_numeric($ref_usuario_cad)) {
-            $usuario = new clsPmieducarUsuario($ref_usuario_cad);
-            if ($usuario->existe()) {
-                $this->ref_usuario_cad = $ref_usuario_cad;
-            }
+        if (is_numeric($ref_usuario_cad) && LegacyUser::query()->whereKey($ref_usuario_cad)->exists()) {
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($ref_cod_matricula)) {

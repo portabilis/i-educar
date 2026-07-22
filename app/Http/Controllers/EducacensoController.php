@@ -53,6 +53,7 @@ class EducacensoController extends Controller
         if ($record == '20') {
             $paginate = $repository->getBuilderForRecord20($year, $school)
                 ->orderBy('nomeTurma')
+                ->orderBy('codTurma')
                 ->paginate();
 
             $records['record20'] = $paginate->items();
@@ -61,6 +62,7 @@ class EducacensoController extends Controller
         if ($record == '40') {
             $paginate = $repository->getBuilderForRecord40($school)
                 ->orderBy('nomePessoa')
+                ->orderBy('codigoPessoa')
                 ->paginate();
 
             $records['record40'] = $paginate->items();
@@ -68,6 +70,11 @@ class EducacensoController extends Controller
 
         if ($record == '50') {
             $paginate = $repository->getBuilderForRecord50($year, $school)
+                ->orderBy('nomeDocente')
+                ->orderBy('nomeTurma')
+                ->orderBy('codigoPessoa')
+                ->orderBy('codigoTurma')
+                ->orderBy('idAlocacao')
                 ->paginate();
 
             $records['record50'] = collect($paginate->items())
@@ -80,15 +87,15 @@ class EducacensoController extends Controller
 
                     return $item;
                 })
-                ->sortBy(function ($data) {
-                    return "{$data->nomeDocente}{$data->nomeTurma}";
-                })
                 ->values();
         }
 
         if ($record == '60') {
             $paginate = $repository->getBuilderForRecord60($year, $school)
                 ->orderBy('nomeAluno')
+                ->orderBy('codigoPessoa')
+                ->orderBy('codigoTurma')
+                ->orderBy('enturmacaoId')
                 ->paginate();
 
             $records['record60'] = $paginate->items();

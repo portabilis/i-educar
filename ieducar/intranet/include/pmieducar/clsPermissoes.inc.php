@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyUser;
 use App\Models\LegacyUserSchool;
 use App\Models\LegacyUserType;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -91,20 +92,13 @@ class clsPermissoes
      * - 8: Biblioteca
      *
      * @param int $int_idpes_usuario
-     * @return bool|int Retorna FALSE caso o usuário não exista
+     * @return int|null Retorna NULL caso o usuário não exista
      */
     public function nivel_acesso($int_idpes_usuario)
     {
-        $obj_usuario = new clsPmieducarUsuario($int_idpes_usuario);
-        $detalhe_usuario = $obj_usuario->detalhe();
-
-        if ($detalhe_usuario) {
-            return LegacyUserType::query()
-                ->whereKey($detalhe_usuario['ref_cod_tipo_usuario'])
-                ->value('nivel');
-        }
-
-        return false;
+        return LegacyUserType::query()
+            ->whereHas('users', fn ($q) => $q->whereKey($int_idpes_usuario))
+            ->value('nivel');
     }
 
     /**
@@ -112,36 +106,13 @@ class clsPermissoes
      * vinculado.
      *
      * @param int $int_idpes_usuario
-     * @return bool|int Retorna FALSE caso o usuário não exista
+     * @return int|null Retorna NULL caso o usuário não exista ou não esteja vinculado a uma instituição
      */
     public function getInstituicao($int_idpes_usuario)
     {
-        $obj_usuario = new clsPmieducarUsuario($int_idpes_usuario);
-        $detalhe_usuario = $obj_usuario->detalhe();
-
-        if ($detalhe_usuario) {
-            return $detalhe_usuario['ref_cod_instituicao'];
-        }
-
-        return false;
-    }
-
-    /**
-     * Retorna o código identificador da escola ao qual o usuário está vinculado.
-     *
-     * @param int $int_idpes_usuario
-     * @return bool|int Retorna FALSE caso o usuário não exista
-     */
-    public function getEscola($int_idpes_usuario)
-    {
-        $obj_usuario = new clsPmieducarUsuario($int_idpes_usuario);
-        $detalhe_usuario = $obj_usuario->detalhe();
-
-        if ($detalhe_usuario) {
-            return $detalhe_usuario['ref_cod_escola'] ?? false;
-        }
-
-        return false;
+        return LegacyUser::query()
+            ->whereKey($int_idpes_usuario)
+            ->value('ref_cod_instituicao');
     }
 
     /**
@@ -156,28 +127,6 @@ class clsPermissoes
 
         if ($escolas->isNotEmpty()) {
             return $escolas->all();
-        }
-
-        return false;
-    }
-
-    /**
-     * Retorna um array associativo com os códigos identificadores da escola e
-     * da instituição ao qual o usuário está vinculado.
-     *
-     *
-     * @return array|bool Retorna FALSE caso o usuário não exista
-     */
-    public function getInstituicaoEscola($int_idpes_usuario)
-    {
-        $obj_usuario = new clsPmieducarUsuario($int_idpes_usuario);
-        $detalhe_usuario = $obj_usuario->detalhe();
-
-        if ($detalhe_usuario) {
-            return [
-                'instituicao' => $detalhe_usuario['ref_cod_instituicao'],
-                'escola' => $detalhe_usuario['ref_cod_escola'],
-            ];
         }
 
         return false;

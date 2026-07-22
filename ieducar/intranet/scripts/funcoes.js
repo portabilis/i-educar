@@ -22,18 +22,22 @@ function FiltraCampo(codigo) {
 	return s;
 }
 
+function FiltraCampoAlnum(codigo) {
+    return codigo.toUpperCase().replace(/[^0-9A-Z]/g, "");
+}
+
 function DvCnpjOk(e) {
     var dv = false;
 
     controle = "";
-    s = FiltraCampo(e.value);
+    s = FiltraCampoAlnum(e.value);
     tam = s.length
     if ( tam  == 14 ) {
         dv_cnpj = s.substring(tam-2,tam);
         for ( i = 0; i < 2; i++ ) {
             soma = 0;
             for ( j = 0; j < 12; j++ )
-                soma += s.substring(j,j+1)*((11+i-j)%8+2);
+                soma += (s.charCodeAt(j)-48)*((11+i-j)%8+2);
             if ( i == 1 ) soma += digito * 2;
             digito = 11 - soma  % 11;
             if ( digito > 9 ) digito = 0;

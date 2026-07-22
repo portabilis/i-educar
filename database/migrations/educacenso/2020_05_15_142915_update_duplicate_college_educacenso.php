@@ -16,14 +16,4 @@ class UpdateDuplicateCollegeEducacenso extends Migration
             file_get_contents(database_path('sqls/educacenso/2020_instituicoes_ensino.sql'))
         );
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
 }

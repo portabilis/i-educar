@@ -170,7 +170,7 @@ class Portabilis_View_Helper_Input_Core
             return $biblioteca['ref_cod_escola'];
         }
 
-        return $this->getPermissoes()->getEscola($this->getCurrentUserId());
+        return null;
     }
 
     // TODO remover no futuro #library-package

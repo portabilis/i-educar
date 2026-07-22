@@ -203,7 +203,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $this->cnpj = validaCNPJ(cnpj: $this->cnpj) ? idFederal2int(str: urldecode(string: $this->cnpj)) : null;
+        $this->cnpj = validaCNPJ(cnpj: $this->cnpj) ? normalizaCnpj(cnpj: urldecode(string: $this->cnpj)) : null;
 
         if ($this->cnpj !== null && LegacyOrganization::where('cnpj', $this->cnpj)->exists()) {
             $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
@@ -405,7 +405,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        $this->cnpj = validaCNPJ(cnpj: $this->cnpj) ? idFederal2int(str: urldecode(string: $this->cnpj)) : null;
+        $this->cnpj = validaCNPJ(cnpj: $this->cnpj) ? normalizaCnpj(cnpj: urldecode(string: $this->cnpj)) : null;
 
         if (!$this->validaCaracteresPermitidosComplemento()) {
             $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
@@ -445,7 +445,7 @@ return new class extends clsCadastro
 
         if (is_numeric($this->cod_pessoa_fj) && Auth::check()) {
             LegacyOrganization::find($this->cod_pessoa_fj)?->update([
-                'cnpj' => is_numeric($this->cnpj) ? $this->cnpj : null,
+                'cnpj' => $this->cnpj,
                 'fantasia' => $this->fantasia,
                 'capital_social' => $this->capital_social,
                 'insc_estadual' => (is_numeric($this->insc_est) && $this->insc_est) ? $this->insc_est : null,
