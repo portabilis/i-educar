@@ -12,45 +12,27 @@ class NewEducacensoDegree2020 extends Migration
      */
     public function up()
     {
-        $file = file(database_path('csv/cursos_educacenso_2020.csv'));
+        $file = file(database_path('csvs/educacenso/create_cursos.csv'));
 
         foreach ($file as $line) {
-            $data = str_getcsv($line);
+            $data = str_getcsv(
+                string: $line,
+            );
 
-            if (EducacensoDegree::where('curso_id', $data[1])->exists()) {
-                continue;
-            }
-
-            EducacensoDegree::create([
-                'curso_id' => $data[1],
-                'nome' => explode(' - ', $data[2])[0],
+            EducacensoDegree::updateOrCreate([
+                'curso_id' => $data[6],
+            ], [
+                'nome' => $data[7],
                 'classe_id' => $data[0],
                 'user_id' => 1,
-                'created_at' => now(),
-                'grau_academico' => $this->getLevel($data[3]),
+                'grau_academico' => match (mb_strtoupper($data[8])) {
+                    'TECNOLÓGICO' => EducacensoDegree::GRAU_TECNOLOGICO,
+                    'LICENCIATURA' => EducacensoDegree::GRAU_LICENCIATURA,
+                    'BACHARELADO' => EducacensoDegree::GRAU_BACHARELADO,
+                    'SEQUENCIAL' => EducacensoDegree::GRAU_SEQUENCIAL,
+                    default => 0,
+                },
             ]);
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
-
-    private function getLevel($id)
-    {
-        $levels = [
-            'Tecnológico' => EducacensoDegree::GRAU_TECNOLOGICO,
-            'Licenciatura' => EducacensoDegree::GRAU_LICENCIATURA,
-            'Bacharelado' => EducacensoDegree::GRAU_BACHARELADO,
-            'Sequencial' => EducacensoDegree::GRAU_SEQUENCIAL,
-        ];
-
-        return $levels[$id];
     }
 }

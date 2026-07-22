@@ -344,17 +344,7 @@ class AddCollegeEducacenso extends Migration
             (23705,\'FACULDADE DE TECNOLOGIA DE FRANCO DA ROCHA\',1,2,1,now()),
             (23713,\'FACULDADE DE EDUCACAO TECNOLOGICA BARRA MANSA\',1,2,1,now()),
             (23725,\'ESCOLA SUPERIOR DE GESTAO\',1,2,1,now()),
-            (24462,\'CENTRO DE EDUCACAO TECNOLOGICO DA FUNDACAO INDAIATUBANA DE EDUCACAO E CULTURA\',1,3,1,now());     
+            (24462,\'CENTRO DE EDUCACAO TECNOLOGICO DA FUNDACAO INDAIATUBANA DE EDUCACAO E CULTURA\',1,3,1,now());
         ');
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }

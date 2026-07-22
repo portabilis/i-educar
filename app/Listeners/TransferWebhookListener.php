@@ -39,6 +39,7 @@ class TransferWebhookListener
         $response = Http::withHeader('token', trim($this->token))
             ->post(trim($this->url, '/') . '/api/v2/ieducar_api_student_transfers', [
                 'student_enrollment_api_code' => $registration->getKey(),
+                'transfer_date' => $event->transfer?->data_transferencia?->format('Y-m-d'),
                 'callback_url' => $callbackUrl,
             ]);
 

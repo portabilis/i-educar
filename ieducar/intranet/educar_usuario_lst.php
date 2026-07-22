@@ -35,12 +35,9 @@ return new class extends clsListagem
 
         $this->campoLista(nome: 'ref_cod_tipo_usuario', campo: 'Tipo Usuário', valor: $opcoes, default: $this->ref_cod_tipo_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
 
-        $obj_usuario = new clsPmieducarUsuario(cod_usuario: $this->pessoa_logada);
-        $detalhe = $obj_usuario->detalhe();
-
         // filtro de nivel de acesso
         $nivelUsuario = LegacyUserType::query()
-            ->whereKey($detalhe['ref_cod_tipo_usuario'])
+            ->whereHas('users', fn ($q) => $q->whereKey($this->pessoa_logada))
             ->value('nivel');
 
         /** @var User $user */

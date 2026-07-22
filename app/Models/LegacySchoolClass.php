@@ -6,6 +6,7 @@ use App\Models\Builders\LegacySchoolClassBuilder;
 use App\Models\Enums\DayOfWeek;
 use App\Models\View\Discipline;
 use Carbon\Carbon;
+use iEducar\Modules\Educacenso\Model\EtapaEnsino;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -657,7 +658,7 @@ class LegacySchoolClass extends Model
     {
         $organizacaoCurricular = array_map('intval', (array) transformStringFromDBInArray($this->organizacao_curricular));
         $temIftp = in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular, strict: true);
-        $etapaValida = in_array((int) $this->etapa_educacenso, [39, 40, 67, 68, 73, 75], strict: true);
+        $etapaValida = in_array((int) $this->etapa_educacenso, EtapaEnsino::ETAPAS_PERMITEM_CARGA_HORARIA_INTEGRALIZADA, strict: true);
 
         return $temIftp || $etapaValida;
     }

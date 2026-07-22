@@ -2,11 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyGeneralConfigurationBuilder;
 use App\Traits\HasInstitution;
+use Illuminate\Database\Eloquent\HasBuilder;
 
+/**
+ * @method static LegacyGeneralConfigurationBuilder query()
+ */
 class LegacyGeneralConfiguration extends LegacyModel
 {
+    /** @use HasBuilder<LegacyGeneralConfigurationBuilder> */
+    use HasBuilder;
+
     use HasInstitution;
+
+    protected static string $builder = LegacyGeneralConfigurationBuilder::class;
 
     protected $table = 'pmieducar.configuracoes_gerais';
 
@@ -22,7 +32,7 @@ class LegacyGeneralConfiguration extends LegacyModel
         'tamanho_min_rede_estadual',
         'modelo_boletim_professor',
         'custom_labels',
-        'url_cadastro_usuariO',
+        'url_cadastro_usuario',
         'active_on_ieducar',
         'ieducar_image',
         'ieducar_entity_name',
@@ -38,6 +48,13 @@ class LegacyGeneralConfiguration extends LegacyModel
         'situacoes_especificas_atestados',
         'emitir_ato_autorizativo',
         'emitir_ato_criacao_credenciamento',
+    ];
+
+    protected $casts = [
+        'bloquear_cadastro_aluno' => 'boolean',
+        'situacoes_especificas_atestados' => 'boolean',
+        'emitir_ato_autorizativo' => 'boolean',
+        'emitir_ato_criacao_credenciamento' => 'boolean',
     ];
 
     public $timestamps = false;

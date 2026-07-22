@@ -19,7 +19,6 @@ return new class extends clsListagem
         $limite = 10;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
         $par_fantasia = $_GET['fantasia'] ?? null;
-        $par_cnpj = false;
         $opcoes = false;
         if ($_GET['razao_social']) {
             $par_razao = $_GET['razao_social'];
@@ -30,10 +29,6 @@ return new class extends clsListagem
                 ->pluck('idpes')
                 ->all();
         }
-        if ($_GET['id_federal']) {
-            $par_cnpj = idFederal2Int(str: $_GET['id_federal']);
-        }
-
         $db = new clsBanco;
 
         $query = LegacyOrganization::query()
@@ -47,10 +42,7 @@ return new class extends clsListagem
             );
         }
 
-        if (is_numeric($par_cnpj)) {
-            $cnpjLimpo = ltrim((string) $par_cnpj, '0');
-            $query->whereRaw('cadastro.juridica.cnpj::varchar ILIKE ?', ["%$cnpjLimpo%"]);
-        }
+        $query->when(limpaCnpj($_GET['id_federal'] ?? ''), fn ($query, $cnpj) => $query->whereCnpj($cnpj));
 
         if (is_array($opcoes)) {
             $opcoesValidas = array_filter($opcoes, 'is_numeric');

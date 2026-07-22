@@ -96,7 +96,7 @@ return new class extends clsListagem
         }
 
         if (!$this->ref_cod_escola) {
-            $this->ref_cod_escola = $obj_permissoes->getEscola(int_idpes_usuario: $this->pessoa_logada);
+            $this->ref_cod_escola = false;
         }
 
         if (!$this->ref_cod_instituicao) {
@@ -222,10 +222,14 @@ return new class extends clsListagem
                             $url
                         );
 
-                        if ($dia['ref_cod_calendario_dia_motivo']) {
+                        $motivo = $dia['ref_cod_calendario_dia_motivo']
+                            ? LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])
+                            : null;
+
+                        if ($motivo) {
                             $array_dias[$dia['dia']] = $dia['dia'];
 
-                            $det_motivo = LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])->getAttributes();
+                            $det_motivo = $motivo->getAttributes();
 
                             /**
                              * @todo CoreExt_Enum?

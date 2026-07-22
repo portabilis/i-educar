@@ -2,6 +2,7 @@
 
 use App\Models\EducacensoIndigenousPeople;
 use App\Models\LegacyDocument;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
@@ -313,10 +314,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     {
         $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais;
-        $configuracoes = $configuracoes->detalhe();
+        $justificativaObrigatoria = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('justificativa_falta_documentacao_obrigatorio');
 
-        if ($configuracoes['justificativa_falta_documentacao_obrigatorio']) {
+        if ($justificativaObrigatoria) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
@@ -365,7 +367,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = ['label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 12];
 
-        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
+        $mostrarCodigoInep = LegacyGeneralConfiguration::query()
+            ->forActiveInstitution()
+            ->value('mostrar_codigo_inep_aluno');
+
+        if (!$mostrarCodigoInep) {
             $this->inputsHelper()->hidden('aluno_inep_id', ['value' => null]);
         } else {
             $this->inputsHelper()->integer('aluno_inep_id', $options);
