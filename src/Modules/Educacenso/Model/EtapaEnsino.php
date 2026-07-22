@@ -22,7 +22,7 @@ class EtapaEnsino
     /**
      * Etapas que habilitam a carga horária integralizada do aluno (registro 60).
      */
-    public const ETAPAS_PERMITEM_CARGA_HORARIA_INTEGRALIZADA = [39, 40, 67, 68, 73, 75];
+    public const ETAPAS_PERMITEM_CARGA_HORARIA_INTEGRALIZADA = [39, 40, 67, 68, 73, 74, 75];
 
     /**
      * Etapas que habilitam a carga horária total da turma (registro 20).
