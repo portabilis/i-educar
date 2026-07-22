@@ -195,7 +195,7 @@ class Registro60 implements ItemOfRegistro30, RegistroEducacenso
             TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
         ];
 
-        return in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $this->tipoAtendimentoTurma)
+        return TipoAtendimentoTurma::possuiCurricular($this->tipoAtendimentoTurma)
             && in_array($this->tipoMediacaoTurma, $tiposMediacaoPresencial)
             && $this->paisResidenciaAluno == PaisResidencia::BRASIL;
     }
