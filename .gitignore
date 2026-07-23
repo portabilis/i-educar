@@ -72,6 +72,7 @@ website/i18n/*
 ieducar/tests/log
 
 .opencode
+composer.phar
 
 programmatic-types.graphql
 schema-directives.graphql
