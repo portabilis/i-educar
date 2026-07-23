@@ -109,10 +109,11 @@ function changeManagerRole(field) {
         accessCriteria.val('');
     }
 
-    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString() && $j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+    if ($j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE && $j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
         linkType.prop('disabled', false);
     } else {
         linkType.prop('disabled', true);
+        linkType.val('');
     }
 }
 
@@ -142,16 +143,12 @@ function validateLinkType() {
         return true;
     }
 
-    if ($j('select[id="managers_role_id[' + idLastLineUsed + ']"]').val() != SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
-        return true;
-    }
-
     if ($j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
         return true;
     }
 
     if ($j('#managers_link_type_id').val() == '' && $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
-        messageUtils.error("O campo: <b>Tipo de vínculo</b> deve ser preenchido quando <b>Situação de funcionamento</b> for: Em atividade, o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>");
+        messageUtils.error("O campo: <b>Tipo de vínculo</b> deve ser preenchido quando <b>Situação de funcionamento</b> for: Em atividade e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>");
         return false;
     }
 
