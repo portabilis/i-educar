@@ -3,6 +3,7 @@
 namespace App\Models\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
+use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 
 class Registro50 implements ItemOfRegistro30, RegistroEducacenso
@@ -183,7 +184,39 @@ class Registro50 implements ItemOfRegistro30, RegistroEducacenso
      */
     public function getProperty($column)
     {
-        // TODO: Implement getProperty() method.
+        if ($column >= 1 && $column <= 8) {
+            return $this->{[
+                1 => 'registro',
+                2 => 'inepEscola',
+                3 => 'codigoPessoa',
+                4 => 'inepDocente',
+                5 => 'codigoTurma',
+                6 => 'inepTurma',
+                7 => 'funcaoDocente',
+                8 => 'tipoVinculo',
+            ][$column]};
+        }
+
+        if ($column >= 9 && $column <= 33) {
+            return $this->componentes[$column - 9] ?? null;
+        }
+
+        if ($column >= 34 && $column <= 37) {
+            return $this->areaItinerario
+                ? (int) in_array([
+                    34 => TipoItinerarioFormativo::LINGUANGENS,
+                    35 => TipoItinerarioFormativo::MATEMATICA,
+                    36 => TipoItinerarioFormativo::CIENCIAS_NATUREZA,
+                    37 => TipoItinerarioFormativo::CIENCIAS_HUMANAS,
+                ][$column], (array) $this->areaItinerario)
+                : null;
+        }
+
+        if ($column === 38) {
+            return $this->lecionaItinerarioTecnicoProfissional;
+        }
+
+        return null;
     }
 
     public function organizacaoCurricularDescritivas()
