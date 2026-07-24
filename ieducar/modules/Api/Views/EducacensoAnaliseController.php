@@ -409,6 +409,7 @@ class EducacensoAnaliseController extends ApiCoreController
     protected function analisaEducacensoRegistro10()
     {
         $escolaId = $this->getRequest()->escola;
+        $ano = $this->getRequest()->ano;
 
         $educacensoRepository = new EducacensoRepository;
         $registro10Model = new Registro10;
@@ -622,6 +623,30 @@ class EducacensoAnaliseController extends ApiCoreController
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a quantidade de salas de aula utilizadas pela escola fora do prédio escolar da escola foi informado.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Quantidade de salas de aula utilizadas pela escola fora do prédio escolar)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
+        $alunos = (new Registro60Data($educacensoRepository, new Registro60))->getData($escolaId, $ano);
+
+        // Em turma multisseriada a etapa efetiva do aluno vem da enturmação, não da turma.
+        $etapasMatriculas = array_map(
+            static fn ($aluno) => in_array($aluno->etapaTurma, App_Model_Educacenso::etapas_multisseriadas())
+                ? $aluno->etapaAluno
+                : $aluno->etapaTurma,
+            $alunos
+        );
+
+        $temMatriculaInfantilOuAnosIniciais = count(array_intersect(
+            $etapasMatriculas,
+            EtapaEnsino::ETAPAS_EDUCACAO_INFANTIL_E_ANOS_INICIAIS
+        )) > 0;
+
+        if (!$temMatriculaInfantilOuAnosIniciais && $escola->numeroSalasCantinhoLeitura) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que a escola não possui matrículas vinculadas à Educação Infantil ou aos Anos Iniciais do Ensino Fundamental, portanto a quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais) não pode ser informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais))',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
             ];

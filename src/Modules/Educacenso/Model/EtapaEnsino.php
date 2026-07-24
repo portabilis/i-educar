@@ -20,6 +20,11 @@ class EtapaEnsino
     public const ETAPAS_CURSO_TECNICO_FIC = [39, 40, 64, 68, 75];
 
     /**
+     * Etapas da educação infantil e dos anos iniciais do ensino fundamental.
+     */
+    public const ETAPAS_EDUCACAO_INFANTIL_E_ANOS_INICIAIS = [1, 2, 3, 14, 15, 16, 17, 18];
+
+    /**
      * Etapas que habilitam a carga horária integralizada do aluno (registro 60).
      */
     public const ETAPAS_PERMITEM_CARGA_HORARIA_INTEGRALIZADA = [39, 40, 67, 68, 73, 74, 75];
