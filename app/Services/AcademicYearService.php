@@ -273,8 +273,11 @@ class AcademicYearService
 
         $existingActiveSchools = $this->getExistingAcademicYearSchools($schoolIds, $year);
 
+        $lookup = array_flip($existingActiveSchools);
+
         foreach ($schoolIds as $schoolId) {
-            if (in_array($schoolId, $existingActiveSchools)) {
+            if (isset($lookup[$schoolId])) {
+
                 $skippedSchools[] = $schoolId;
 
                 continue;
