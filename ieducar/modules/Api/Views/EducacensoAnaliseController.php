@@ -806,8 +806,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (is_null($escola->linguaMinistrada)) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Língua em que o ensino é ministrado foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Língua em que a educação indígena é ministrada foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que a educação indígena é ministrada)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
             ];
