@@ -1483,7 +1483,7 @@ return new class extends clsCadastro
                 3 => 'Indígena'];
 
             $resources = [null => 'Selecione'] + LinguaMinistrada::getDescriptiveValues();
-            $options = ['label' => 'Língua em que o ensino é ministrado',
+            $options = ['label' => 'Língua em que a educação indígena é ministrada',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
                 'required' => $obrigarCamposCenso,
