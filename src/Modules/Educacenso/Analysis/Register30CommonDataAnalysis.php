@@ -176,6 +176,15 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
+        if ($data->cep && !$data->municipioResidencia) {
+            $this->messages[] = [
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que a pessoa {$data->nomePessoa} possui o CEP preenchido, portanto é necessário informar o município de residência.",
+                'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Município)',
+                'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
+                'fail' => true,
+            ];
+        }
+
         $deficiencyValidator = new DeficiencyValidator(Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias));
         if (!$deficiencyValidator->isValid()) {
             $path = '(Servidores > Cadastros > Servidores > Editar > Aba: Dados gerais > Campo: Deficiências)';
