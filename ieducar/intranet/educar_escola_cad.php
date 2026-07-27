@@ -2801,21 +2801,21 @@ return new class extends clsCadastro
         return true;
     }
 
-    protected function salasDentroEForaDoPredioVazias()
+    protected function salasDentroEForaDoPredioVazias(): bool
     {
         return $this->numero_salas_utilizadas_dentro_predio == '' && $this->numero_salas_utilizadas_fora_predio == '';
     }
 
     protected function validaSalasClimatizadas()
     {
-        if ($this->numero_salas_climatizadas == '0') {
-            $this->mensagem = 'O campo: <b>Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)</b> não pode ser preenchido com 0';
+        if ($this->numero_salas_climatizadas != '' && $this->salasDentroEForaDoPredioVazias()) {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)</b> não pode ser preenchido quando os campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b> não estiverem preenchidos';
 
             return false;
         }
 
-        if ($this->numero_salas_climatizadas != '' && $this->salasDentroEForaDoPredioVazias()) {
-            $this->mensagem = 'O campo: <b>Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)</b> não pode ser preenchido quando os campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b> não estiverem preenchidos';
+        if ($this->numero_salas_climatizadas == '0') {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula climatizadas (com ar-condicionado, aquecedor ou climatizador)</b> não pode ser preenchido com 0';
 
             return false;
         }
@@ -2848,14 +2848,14 @@ return new class extends clsCadastro
 
     protected function validaSalasAcessibilidade()
     {
-        if ($this->numero_salas_acessibilidade == '0') {
-            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido com 0';
+        if ($this->numero_salas_acessibilidade != '' && $this->salasDentroEForaDoPredioVazias()) {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido quando os campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b> não estiverem preenchidos';
 
             return false;
         }
 
-        if ($this->numero_salas_acessibilidade != '' && $this->salasDentroEForaDoPredioVazias()) {
-            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido quando os campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b> não estiverem preenchidos';
+        if ($this->numero_salas_acessibilidade == '0') {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido com 0';
 
             return false;
         }
@@ -2872,14 +2872,14 @@ return new class extends clsCadastro
 
     protected function validaSalasCantinhoLeitura()
     {
-        if ($this->numero_salas_cantinho_leitura == '0') {
-            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)</b> não pode ser preenchido com 0';
+        if ($this->numero_salas_cantinho_leitura != '' && $this->salasDentroEForaDoPredioVazias()) {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)</b> não pode ser preenchido quando os campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b> não estiverem preenchidos';
 
             return false;
         }
 
-        if ($this->numero_salas_cantinho_leitura != '' && $this->salasDentroEForaDoPredioVazias()) {
-            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)</b> não pode ser preenchido quando os campos: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> e <b>Quantidade de salas de aula utilizadas pela escola fora do prédio escolar</b> não estiverem preenchidos';
+        if ($this->numero_salas_cantinho_leitura == '0') {
+            $this->mensagem = 'O campo: <b>Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)</b> não pode ser preenchido com 0';
 
             return false;
         }
