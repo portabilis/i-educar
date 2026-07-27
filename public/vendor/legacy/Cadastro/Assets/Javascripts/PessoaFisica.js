@@ -237,6 +237,15 @@ var changeVisibilityOfLinksToPessoaMae = function () {
 
 // when page is ready
 
+// Município de residência obrigatório quando o CEP está preenchido (regra do censo)
+var checkMunicipioResidenciaObrigatorio = function() {
+  if ($j('#obrigar_campos_censo').val() == 1 && $j.trim($j('#postal_code').val()) !== '') {
+    $j('#city_city').makeRequired();
+  } else {
+    $j('#city_city').makeUnrequired();
+  }
+}
+
 $j(document).ready(function() {
   $cpfField.focus();
 
@@ -259,6 +268,9 @@ $j(document).ready(function() {
 
   checkTipoCertidaoCivil();
   $j('#tipo_certidao_civil').change(checkTipoCertidaoCivil);
+
+  checkMunicipioResidenciaObrigatorio();
+  $j('#postal_code').on('keyup change', checkMunicipioResidenciaObrigatorio);
 
   $cpfField.focusout(function() {
     $j(document).removeData('submit_form_after_ajax_validation');
