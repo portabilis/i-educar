@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\CacheService;
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -759,7 +760,11 @@ class clsPmieducarInstituicao extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
+            $cod = $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
+
+            CacheService::clearInstitution($cod);
+
+            return $cod;
         }
 
         return false;
@@ -773,9 +778,6 @@ class clsPmieducarInstituicao extends Model
     public function edita()
     {
         if (is_numeric($this->cod_instituicao)) {
-
-            Cache::forget('instituicao_' . $this->cod_instituicao);
-
             $db = new clsBanco;
             $gruda = '';
             $set = '';
@@ -1149,6 +1151,8 @@ class clsPmieducarInstituicao extends Model
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
+
+                CacheService::clearInstitution($this->cod_instituicao);
 
                 return true;
             }

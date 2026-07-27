@@ -60,7 +60,7 @@ Route::group([
 Route::get('/school-class/calendars', 'Api\SchoolClassController@getCalendars');
 Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getStages');
 
-Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
+Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove'])->middleware(['auth']);
 
 Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'Api'], static function () {
     Route::resource('institution', InstitutionController::class)->only(['index']);

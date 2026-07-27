@@ -48,6 +48,13 @@ BEGIN
             WHERE falta_aluno_id = v_falta_aluno_id
         );
 
+        /*
+            Evita divisão por zero quando a série está sem dias letivos cadastrados
+        */
+        IF v_qtd_dias_letivos_serie = 0 THEN
+            RETURN 0;
+        END IF;
+
         RETURN TRUNC((((v_qtd_dias_letivos_serie - v_total_faltas) * 100 ) / v_qtd_dias_letivos_serie )::numeric,1);
     ELSE
 
@@ -77,6 +84,13 @@ BEGIN
                     GROUP BY fcc.componente_curricular_id
                 ) as sub_totais
         );
+
+        /*
+            Evita divisão por zero quando a série está sem carga horária cadastrada
+        */
+        IF v_qtd_horas_serie = 0 THEN
+            RETURN 0;
+        END IF;
 
         RETURN  TRUNC((100 - ( v_total_hora_falta / v_qtd_horas_serie))::numeric, 1);
     END IF;

@@ -18,14 +18,4 @@ class CleanOldFieldMult extends Migration
             WHERE ref_ref_cod_serie_mult IS NOT NULL'
         );
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
 }

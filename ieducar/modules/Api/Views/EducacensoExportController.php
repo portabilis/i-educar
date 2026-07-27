@@ -18,6 +18,7 @@ use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
+use iEducar\Modules\Educacenso\ExportRule\CargaHorariaIntegralizada;
 use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
 use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
@@ -464,6 +465,7 @@ class EducacensoExportController extends ApiCoreController
         $stringCenso = '';
         foreach ($alunos as $aluno) {
             $aluno = TurmaMulti::handle($aluno);
+            $aluno = CargaHorariaIntegralizada::handle($aluno);
             $aluno = TiposAee::handle($aluno);
             $aluno = RecebeEscolarizacaoOutroEspaco::handle($aluno);
             $aluno = TransporteEscolarPublico::handle($aluno);
@@ -480,7 +482,7 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->inepTurma, // 06 - Código da turma no INEP
                 $aluno->matriculaAluno, // 07 - Código da Matrícula do(a) aluno(a)
                 $aluno->etapaAluno, // 08 - Turma multi
-                $aluno->cargaHorariaIntegralizada, // 09 - Carga horária integralizada pelo(a) aluno(a) no curso técnico ou de qualificação profissional (em horas)
+                $aluno->cargaHorariaIntegralizada, // 09 - Carga horária integralizada pelo(a) aluno(a) (em horas)
                 $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas, // 10 - Desenvolvimento de funções cognitivas
                 $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma, // 11 - Desenvolvimento de vida autônoma
                 $aluno->tipoAtendimentoEnriquecimentoCurricular, // 12 - Enriquecimento curricular

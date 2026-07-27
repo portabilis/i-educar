@@ -29,12 +29,12 @@ use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EtapaAgregada;
 use iEducar\Modules\Educacenso\Model\EtapaEnsino;
+use iEducar\Modules\Educacenso\Model\FaixaEtariaEducacenso;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\PoderPublicoConveniado;
-use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
@@ -46,6 +46,7 @@ use iEducar\Modules\Educacenso\Validator\CargaHorariaTotalValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
+use iEducar\Modules\Educacenso\Validator\IdadePermitidaValidator;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\SchoolClass\Period;
@@ -228,18 +229,8 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true,
-            ];
-        }
-
         if (!(new AdministrativeDomainValidator(
             $escola->esferaAdministrativa,
-            $escola->regulamentacao,
             $escola->dependenciaAdministrativa,
             $escola->codigoIbgeMunicipio
         ))->isValid()) {
@@ -688,7 +679,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->equipamentosAcessoInternetComputadorMesa() && $escola->quantidadeComputadoresAlunosNaoPreenchida()) {
+        if (($escola->equipamentosAcessoInternetComputadorMesa() || $escola->equipamentosAcessoInternetAmbos()) && $escola->quantidadeComputadoresAlunosNaoPreenchida()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se pelo menos um dos campos da seção Quantidade de computadores de uso dos alunos foi preenchido.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Seção: Quantidade de computadores de uso dos alunos)',
@@ -815,8 +806,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (is_null($escola->linguaMinistrada)) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Língua em que o ensino é ministrado foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Língua em que a educação indígena é ministrada foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que a educação indígena é ministrada)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
             ];
@@ -842,10 +833,10 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->quantidadeComputadoresAlunosNaoPreenchida() && empty(array_filter($escola->equipamentosAcessoInternet)) &&
+        if (!$escola->possuiComputadores() && empty(array_filter($escola->equipamentosAcessoInternet)) &&
             ($escola->redeLocalACabo() || $escola->redeLocalACaboEWireless())) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que, quando não há computadores de uso dos aluno(a)s e os equipamentos que os aluno(a)s usam para acessar a internet da escola não foram informados, a rede local de interligação de computadores não pode ser A cabo ou A cabo e Wireless.",
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que, quando a escola não possui Computadores no campo Equipamentos da escola e os equipamentos que os aluno(a)s usam para acessar a internet da escola não foram informados, a rede local de interligação de computadores não pode ser A cabo ou A cabo e Wireless.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
@@ -1236,18 +1227,21 @@ class EducacensoAnaliseController extends ApiCoreController
                 }
             }
 
-            // Censo 2026: carga horária total do curso, mesma regra do cadastro de turma (CheckMandatoryCensoFields)
+            // Carga horária total: mesma regra do cadastro de turma.
             $cargaHorariaTotalValidator = new CargaHorariaTotalValidator(
-                $turma->itinerarioFormacaoTecnicaProfissional(),
-                $turma->cargaHorariaTotal,
-                $turma->tipoCursoIntinerario,
-                $turma->codCursoProfissionalIntinerario
+                iftpAtivo: $turma->itinerarioFormacaoTecnicaProfissional(),
+                fgbAtivo: $turma->formacaoGeralBasica(),
+                etapaEducacenso: $turma->etapaEducacenso,
+                cargaHorariaTotal: $turma->cargaHorariaTotal,
+                tipoCursoIntinerario: $turma->tipoCursoIntinerario,
+                codCursoProfissional: $turma->codCursoProfissional,
+                codCursoProfissionalIntinerario: $turma->codCursoProfissionalIntinerario,
             );
 
             if (!$cargaHorariaTotalValidator->isValid()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que " . $cargaHorariaTotalValidator->getMessage(),
-                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Carga horária total do curso (em horas))',
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a carga horária total " . $cargaHorariaTotalValidator->getMessage(),
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Carga horária total (em horas))',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true,
                 ];
@@ -1343,19 +1337,21 @@ class EducacensoAnaliseController extends ApiCoreController
                         'fail' => true,
                     ];
                 } else {
-                    $codigosEducacenso = $turma->componentesCodigosEducacenso();
+                    $exportaComponentes = $turma->curricularEtapaDeEnsino() && !in_array($turma->etapaEducacenso, [1, 2, 3]);
 
-                    $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
+                    if ($exportaComponentes) {
+                        $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
 
-                    $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
+                        $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
 
-                    foreach ($disciplinesWithoutTeacher as $discipline) {
-                        $mensagem[] = [
-                            'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
-                            'path' => '(Servidores > Cadastros > Servidores)',
-                            'linkPath' => '/intranet/educar_servidor_lst.php',
-                            'fail' => $educacaoDistancia,
-                        ];
+                        foreach ($disciplinesWithoutTeacher as $discipline) {
+                            $mensagem[] = [
+                                'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 1 (Oferece).</span>",
+                                'path' => '(Servidores > Cadastros > Servidores)',
+                                'linkPath' => '/intranet/educar_servidor_lst.php',
+                                'fail' => $educacaoDistancia,
+                            ];
+                        }
                     }
 
                     $componenteNulo = null;
@@ -1502,6 +1498,91 @@ class EducacensoAnaliseController extends ApiCoreController
             }
         }
 
+        // Idade permitida pelo layout do Censo, calculada pela regra do Censo (ano do
+        // Censo menos o ano de nascimento). Alunos são validados pela faixa da etapa ou
+        // da característica da turma. Uma mensagem por aluno em cada turma.
+        $alunosAvaliados = [];
+        foreach ($alunos as $aluno) {
+            $chaveAluno = $aluno->codigoPessoa . '-' . $aluno->codigoTurma;
+            if (isset($alunosAvaliados[$chaveAluno])) {
+                continue;
+            }
+            $alunosAvaliados[$chaveAluno] = true;
+
+            $dataNascimento = $pessoas[$aluno->codigoPessoa]->dataNascimento ?? null;
+            $idade = FaixaEtariaEducacenso::idadeNoCenso((int) $ano, $dataNascimento);
+
+            $regra = FaixaEtariaEducacenso::regraDeIdadeDoAluno(
+                $aluno->etapaTurma === null ? null : (int) $aluno->etapaTurma,
+                $aluno->organizacaoCurricularTurma,
+                $aluno->localFuncionamentoDiferenciadoTurma === null ? null : (int) $aluno->localFuncionamentoDiferenciadoTurma
+            );
+
+            if ($regra === null) {
+                continue;
+            }
+
+            $contexto = match ($regra['origem']) {
+                FaixaEtariaEducacenso::ORIGEM_PRISIONAL => 'turmas em unidade prisional',
+                FaixaEtariaEducacenso::ORIGEM_SOCIOEDUCATIVO => 'turmas em unidade de atendimento socioeducativo',
+                FaixaEtariaEducacenso::ORIGEM_ITINERARIO_SEM_FORMACAO_GERAL_BASICA => 'o itinerário formativo sem formação geral básica',
+                default => "a etapa de ensino {$aluno->etapaTurmaDescritiva()}",
+            };
+
+            $validator = new IdadePermitidaValidator($idade, $regra['faixa'], $contexto);
+
+            if (!$validator->isValid()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 30 da escola {$aluno->nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) " . mb_strtoupper($aluno->nomeAluno) . ', da turma ' . mb_strtoupper($aluno->nomeTurma) . ", {$validator->getMessage()}",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$aluno->codigoTurma}",
+                    'fail' => true,
+                ];
+            }
+        }
+
+        // Gestores e profissionais escolares em sala de aula são validados pela faixa de
+        // idade da própria função. A faixa não depende da turma, então cada pessoa é
+        // avaliada uma única vez por função.
+        $servidoresPorFuncao = [
+            [
+                'registros' => $gestores,
+                'faixa' => FaixaEtariaEducacenso::FAIXA_GESTOR,
+                'funcao' => 'a função de gestor(a) escolar',
+                'rotulo' => 'gestor(a)',
+            ],
+            [
+                'registros' => $docentes,
+                'faixa' => FaixaEtariaEducacenso::FAIXA_PROFISSIONAL,
+                'funcao' => 'a função de profissional escolar em sala de aula',
+                'rotulo' => 'profissional',
+            ],
+        ];
+
+        foreach ($servidoresPorFuncao as $grupo) {
+            $servidoresAvaliados = [];
+            foreach ($grupo['registros'] as $servidor) {
+                if (isset($servidoresAvaliados[$servidor->codigoPessoa])) {
+                    continue;
+                }
+                $servidoresAvaliados[$servidor->codigoPessoa] = true;
+
+                $pessoa = $pessoas[$servidor->codigoPessoa] ?? null;
+                $idade = FaixaEtariaEducacenso::idadeNoCenso((int) $ano, $pessoa->dataNascimento ?? null);
+
+                $validator = new IdadePermitidaValidator($idade, $grupo['faixa'], $grupo['funcao']);
+
+                if (!$validator->isValid()) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 30 da escola {$pessoa->nomeEscola} possui valor inválido. Verificamos que o(a) {$grupo['rotulo']} {$pessoa->nomePessoa} {$validator->getMessage()}",
+                        'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Data de nascimento)',
+                        'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$servidor->codigoPessoa}",
+                        'fail' => true,
+                    ];
+                }
+            }
+        }
+
         return [
             'mensagens' => $mensagem,
             'title' => 'Análise exportação - Registro 30',
@@ -1597,12 +1678,11 @@ class EducacensoAnaliseController extends ApiCoreController
             }
 
             if (!$gestor->tipoVinculo &&
-                $gestor->cargo === SchoolManagerRole::DIRETOR &&
                 $gestor->isDependenciaAdministrativaPublica() &&
                 $escola->situacao_funcionamento === SituacaoFuncionamento::EM_ATIVIDADE
             ) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} é diretor(a) e a dependência administrativa da escola é {$dependenciaAdministraticaDesc} e a situação de funcionamento da escola é em atividade, portanto é necessário informar o tipo de vínculo.",
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é {$dependenciaAdministraticaDesc} e a situação de funcionamento da escola é em atividade, portanto é necessário informar o tipo de vínculo do(a) gestor(a) escolar {$nomeGestor}.",
                     'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Tipo de vínculo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true,

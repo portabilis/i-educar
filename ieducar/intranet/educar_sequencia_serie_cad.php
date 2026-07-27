@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyGradeSequence;
+use App\Models\LegacyUser;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -104,9 +105,9 @@ return new class extends clsCadastro
             }
             $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
         } else {
-            $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-            $obj_usuario_det = $obj_usuario->detalhe();
-            $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
+            $this->ref_cod_instituicao = LegacyUser::query()
+                ->whereKey($this->pessoa_logada)
+                ->value('ref_cod_instituicao');
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 

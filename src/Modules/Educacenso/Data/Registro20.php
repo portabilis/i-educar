@@ -5,6 +5,7 @@ namespace iEducar\Modules\Educacenso\Data;
 use App\Services\SchoolClass\SchoolClassService;
 use DateTime;
 use iEducar\Modules\Educacenso\Formatters;
+use iEducar\Modules\Educacenso\Model\EtapaEnsino;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\SchoolClass\Period;
 use Portabilis_Utils_Database;
@@ -93,7 +94,7 @@ class Registro20 extends AbstractRegistro
             $record->etapaEducacenso, // 24 - Etapa
             in_array($record->etapaEducacenso, [67, 68, 73, 75]) ? $record->codEixoCursoProfissional : '', // 25 - Código do eixo do curso de qualificação profissional
             in_array($record->etapaEducacenso, [39, 40, 64, 74]) ? $record->codCursoProfissional : '', // 26 - Código do curso
-            $record->cargaHorariaTotal, // 27 - Carga horária total do curso (em horas)
+            ($record->itinerarioFormacaoTecnicaProfissional() || in_array($record->etapaEducacenso, EtapaEnsino::ETAPAS_CARGA_HORARIA_TURMA)) ? $record->cargaHorariaTotal : '', // 27 - Carga horária total (em horas)
             $record->requereFormasOrganizacaoTurma() ? $record->formasOrganizacaoTurma : '', // 28 - Formas de organização da turma
             $record->formacaoAlternancia ?: 0, // 29 - Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade)
             in_array($record->etapaAgregada, [304, 305]) ? ($record->formacaoGeralBasica() ? 1 : 0) : '', // 30 - Formação geral básica
@@ -141,15 +142,9 @@ class Registro20 extends AbstractRegistro
      */
     private function getCensoValueForDiscipline($discipline, $disciplines, $disciplinesWithTeacher)
     {
-        if (in_array($discipline, $disciplines) && in_array($discipline, $disciplinesWithTeacher)) {
-            return 1; // oferece a área do conhecimento/componente curricular com docente vinculado
-        }
-
-        if (in_array($discipline, $disciplines) && !in_array($discipline, $disciplinesWithTeacher)) {
-            return 2; // oferece a área do conhecimento/componente curricular sem docente vinculado
-        }
-
-        return 0;
+        // A área do conhecimento é exportada como 1 quando a turma a oferece e 0
+        // quando não oferece. O vínculo de docente não altera este valor.
+        return in_array($discipline, $disciplines) ? 1 : 0;
     }
 
     /**

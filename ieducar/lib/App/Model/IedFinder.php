@@ -197,19 +197,16 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getInstituicao($codInstituicao)
     {
-        $instituicao = Cache::remember('ie_finder_instituicao' . $codInstituicao, now()->addMinutes(30), function () use ($codInstituicao) {
-            // Recupera clsPmieducarInstituicao do storage de classe estático
-            $instituicao = self::addClassToStorage(
-                'clsPmieducarInstituicao',
-                null,
-                'include/pmieducar/clsPmieducarInstituicao.inc.php'
-            );
+        // Recupera clsPmieducarInstituicao do storage de classe estático
+        $instituicao = self::addClassToStorage(
+            'clsPmieducarInstituicao',
+            null,
+            'include/pmieducar/clsPmieducarInstituicao.inc.php'
+        );
 
-            // Usa o atributo público para depois chamar o método detalhe()
-            $instituicao->cod_instituicao = $codInstituicao;
-
-            return $instituicao->detalhe();
-        });
+        // Usa o atributo público para depois chamar o método detalhe(), que já usa cache
+        $instituicao->cod_instituicao = $codInstituicao;
+        $instituicao = $instituicao->detalhe();
 
         if ($instituicao === false) {
             throw new App_Model_Exception(
@@ -1690,12 +1687,11 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escolas_user = '
             SELECT
                 escola_usuario.ref_cod_escola AS ref_cod_escola,
-                coalesce(juridica.fantasia, escola_complemento.nm_escola) AS nome,
+                juridica.fantasia AS nome,
                 escola.ref_cod_instituicao AS instituicao
             FROM pmieducar.escola_usuario
             INNER JOIN pmieducar.escola ON (escola.cod_escola = escola_usuario.ref_cod_escola)
             LEFT JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-            LEFT JOIN pmieducar.escola_complemento ON (escola_complemento.ref_cod_escola = escola.cod_escola)
             WHERE escola_usuario.ref_cod_usuario = $1
         ';
 

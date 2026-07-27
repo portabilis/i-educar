@@ -7,94 +7,128 @@ use Tests\TestCase;
 
 class CargaHorariaTotalValidatorTest extends TestCase
 {
-    private const CURSO_TECNICO = 1;
-
-    private const QUALIFICACAO = 2;
-
-    // Curso técnico com carga mínima 1200 na Tabela INEP (cursos_carga_horaria_minima.json)
-    private const COD_CURSO_TECNICO = 1001;
-
-    public function test_iftp_inativo_sempre_valido()
-    {
-        $validator = new CargaHorariaTotalValidator(false, null, null, null);
-
-        $this->assertTrue($validator->isValid());
+    private function validator(
+        bool $iftpAtivo,
+        int $etapa,
+        $carga,
+        int $tipoCurso = 0,
+        bool $fgbAtivo = false,
+        int $cod26 = 0,
+        int $cod38 = 0
+    ): CargaHorariaTotalValidator {
+        return new CargaHorariaTotalValidator(
+            iftpAtivo: $iftpAtivo,
+            fgbAtivo: $fgbAtivo,
+            etapaEducacenso: $etapa,
+            cargaHorariaTotal: $carga,
+            tipoCursoIntinerario: $tipoCurso,
+            codCursoProfissional: $cod26,
+            codCursoProfissionalIntinerario: $cod38,
+        );
     }
 
-    public function test_carga_nula_e_opcional_quando_iftp()
+    public function test_campo_nao_aplicavel_vazio_e_valido(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, null, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertTrue($this->validator(false, 25, null)->isValid());
+        $this->assertTrue($this->validator(false, 0, null)->isValid());
     }
 
-    public function test_carga_vazia_e_opcional_quando_iftp()
+    public function test_campo_nao_aplicavel_preenchido_e_invalido(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, '', self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
-    }
-
-    public function test_carga_zero_invalida()
-    {
-        $validator = new CargaHorariaTotalValidator(true, 0, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
+        $validator = $this->validator(false, 25, 200);
 
         $this->assertFalse($validator->isValid());
+        $this->assertSame('não deve ser preenchida para esta turma.', $validator->getMessage());
     }
 
-    public function test_carga_acima_de_9999_invalida()
+    public function test_habilitacao_por_iftp_ou_por_etapa(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 10000, self::QUALIFICACAO, null);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($this->validator(true, 0, 200)->isValid());
+        $this->assertTrue($this->validator(false, 39, null)->isValid());
+        $this->assertTrue($this->validator(false, 64, null)->isValid());
+        $this->assertTrue($this->validator(false, 74, null)->isValid());
     }
 
-    public function test_qualificacao_abaixo_de_160_invalida()
+    public function test_valor_vazio_nao_bloqueia(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 100, self::QUALIFICACAO, null);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($this->validator(true, 0, null)->isValid());
+        $this->assertTrue($this->validator(false, 74, '')->isValid());
     }
 
-    public function test_qualificacao_acima_de_800_invalida()
+    public function test_valor_fora_de_um_a_9999_e_invalido(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 900, self::QUALIFICACAO, null);
-
-        $this->assertFalse($validator->isValid());
+        $this->assertFalse($this->validator(true, 0, 0)->isValid());
+        $this->assertFalse($this->validator(true, 0, 10000)->isValid());
+        $this->assertTrue($this->validator(true, 0, 1)->isValid());
+        $this->assertTrue($this->validator(true, 0, 9999)->isValid());
     }
 
-    public function test_qualificacao_dentro_da_faixa_valida()
+    public function test_minimo_fixo_por_etapa(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 400, self::QUALIFICACAO, null);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertFalse($this->validator(false, 67, 1199)->isValid());
+        $this->assertTrue($this->validator(false, 67, 1200)->isValid());
+        $this->assertFalse($this->validator(false, 68, 159)->isValid());
+        $this->assertTrue($this->validator(false, 68, 160)->isValid());
+        $this->assertFalse($this->validator(false, 73, 759)->isValid());
+        $this->assertTrue($this->validator(false, 73, 760)->isValid());
+        $this->assertFalse($this->validator(false, 74, 2399)->isValid());
+        $this->assertTrue($this->validator(false, 74, 2400)->isValid());
+        $this->assertFalse($this->validator(false, 75, 159)->isValid());
+        $this->assertTrue($this->validator(false, 75, 160)->isValid());
     }
 
-    public function test_tecnico_abaixo_da_carga_minima_do_curso_invalida()
+    public function test_minimo_pelo_codigo_do_curso_campo_26(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 1000, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertFalse($validator->isValid());
+        // Cursos: 1001 exige 1200, 1000 exige 160, 1013 exige 800
+        $this->assertFalse($this->validator(false, 39, 1199, cod26: 1001)->isValid());
+        $this->assertTrue($this->validator(false, 39, 1200, cod26: 1001)->isValid());
+        $this->assertFalse($this->validator(false, 40, 159, cod26: 1000)->isValid());
+        $this->assertTrue($this->validator(false, 40, 160, cod26: 1000)->isValid());
+        $this->assertFalse($this->validator(false, 64, 799, cod26: 1013)->isValid());
+        $this->assertTrue($this->validator(false, 64, 800, cod26: 1013)->isValid());
+        // Curso não cadastrado não impõe mínimo
+        $this->assertTrue($this->validator(false, 39, 1, cod26: 999999)->isValid());
     }
 
-    public function test_tecnico_igual_a_carga_minima_do_curso_valida()
+    public function test_iftp_qualificacao_minimo_160_sem_teto(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 1200, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertFalse($this->validator(true, 0, 159, tipoCurso: 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 160, tipoCurso: 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 801, tipoCurso: 2)->isValid());
+        $this->assertTrue($this->validator(true, 0, 9999, tipoCurso: 2)->isValid());
     }
 
-    public function test_tecnico_acima_de_2000_valida()
+    public function test_iftp_tecnico_com_fgb_minimo_3000(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 2500, self::CURSO_TECNICO, self::COD_CURSO_TECNICO);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertFalse($this->validator(true, 25, 2999, tipoCurso: 1, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 25, 3000, tipoCurso: 1, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 27, 3000, tipoCurso: 1, fgbAtivo: true)->isValid());
     }
 
-    public function test_tecnico_sem_carga_minima_cadastrada_valida()
+    public function test_iftp_com_fgb_exige_3000_independente_do_tipo_do_curso(): void
     {
-        $validator = new CargaHorariaTotalValidator(true, 500, self::CURSO_TECNICO, 999999);
+        $this->assertFalse($this->validator(true, 25, 2999, tipoCurso: 2, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 25, 3000, tipoCurso: 2, fgbAtivo: true)->isValid());
+        $this->assertFalse($this->validator(true, 29, 2999, tipoCurso: 2, fgbAtivo: true)->isValid());
+        $this->assertTrue($this->validator(true, 29, 3000, tipoCurso: 2, fgbAtivo: true)->isValid());
+    }
 
-        $this->assertTrue($validator->isValid());
+    public function test_iftp_tecnico_sem_fgb_minimo_pelo_codigo_do_curso_campo_38(): void
+    {
+        $this->assertFalse($this->validator(true, 0, 1199, tipoCurso: 1, cod38: 1001)->isValid());
+        $this->assertTrue($this->validator(true, 0, 1200, tipoCurso: 1, cod38: 1001)->isValid());
+        // Sem formação geral básica na etapa 25: usa o mínimo do curso técnico (1200), não os 3000
+        $this->assertFalse($this->validator(true, 25, 1199, tipoCurso: 1, fgbAtivo: false, cod38: 1001)->isValid());
+        $this->assertTrue($this->validator(true, 25, 1200, tipoCurso: 1, fgbAtivo: false, cod38: 1001)->isValid());
+    }
+
+    public function test_etapa_tem_precedencia_sobre_iftp(): void
+    {
+        // Etapa 39 com IFTP ativo: usa o mínimo do curso da etapa (1200), não do curso do itinerário (160)
+        $this->assertFalse($this->validator(true, 39, 200, tipoCurso: 1, cod26: 1001, cod38: 1000)->isValid());
+        $this->assertTrue($this->validator(true, 39, 1200, tipoCurso: 1, cod26: 1001, cod38: 1000)->isValid());
+        // Etapa 74 (mínimo fixo 2400) tem precedência sobre o curso do itinerário
+        $this->assertFalse($this->validator(true, 74, 200, tipoCurso: 1, cod38: 1000)->isValid());
+        $this->assertTrue($this->validator(true, 74, 2400, tipoCurso: 1, cod38: 1000)->isValid());
     }
 }
