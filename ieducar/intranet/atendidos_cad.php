@@ -487,7 +487,7 @@ return new class extends clsCadastro
             'inline' => true,
         ];
 
-        $this->inputsHelper()->integer(attrName: 'certidao_nascimento', inputOptions: $options);
+        $this->inputsHelper()->text(attrNames: 'certidao_nascimento', inputOptions: $options);
 
         // certidao casamento (novo padrão)
 
