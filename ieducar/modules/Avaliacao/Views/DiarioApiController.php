@@ -1837,7 +1837,7 @@ class DiarioApiController extends ApiCoreController
         $contexto = "
             '{instituicao:' || COALESCE(i.nm_instituicao, '') ||
             ',instituicao_id:' || COALESCE(i.cod_instituicao::text, '') ||
-            ',escola:' || COALESCE(j.fantasia, ec.nm_escola, '') ||
+            ',escola:' || COALESCE(j.fantasia, '') ||
             ',escola_id:' || COALESCE(e.cod_escola::text, '') ||
             ',curso:' || COALESCE(c.nm_curso, '') ||
             ',curso_id:' || COALESCE(c.cod_curso::text, '') ||
@@ -1867,7 +1867,6 @@ class DiarioApiController extends ApiCoreController
             JOIN pmieducar.escola e ON e.cod_escola = m.ref_ref_cod_escola
             JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
             LEFT JOIN cadastro.juridica j ON j.idpes = e.ref_idpes
-            LEFT JOIN pmieducar.escola_complemento ec ON ec.ref_cod_escola = e.cod_escola
             JOIN pmieducar.curso c ON c.cod_curso = m.ref_cod_curso
             JOIN pmieducar.serie s ON s.cod_serie = m.ref_ref_cod_serie
             JOIN pmieducar.turma t ON t.cod_turma = p.turma_id

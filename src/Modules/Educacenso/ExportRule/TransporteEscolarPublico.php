@@ -20,7 +20,7 @@ class TransporteEscolarPublico implements EducacensoExportRule
             TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
         ];
 
-        if (!in_array(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO, $registro60->tipoAtendimentoTurma) ||
+        if (!TipoAtendimentoTurma::possuiCurricular($registro60->tipoAtendimentoTurma) ||
             !in_array($registro60->tipoMediacaoTurma, $arrayTipoMediacao) ||
             $registro60->paisResidenciaAluno != PaisResidencia::BRASIL) {
             $registro60->transportePublico = null;

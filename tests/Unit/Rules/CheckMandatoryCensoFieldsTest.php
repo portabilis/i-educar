@@ -237,7 +237,7 @@ class CheckMandatoryCensoFieldsTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_carga_horaria_total_qualificacao_invalida_fora_da_faixa()
+    public function test_carga_horaria_total_qualificacao_abaixo_do_minimo_bloqueia()
     {
         $params = $this->createDefaultParams();
         $params->organizacao_curricular = '{' . OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL . '}';
@@ -247,19 +247,61 @@ class CheckMandatoryCensoFieldsTest extends TestCase
         $result = $this->rule->validaCargaHorariaTotal($params);
 
         $this->assertFalse($result);
-        $this->assertStringContainsString('160 e 800', $this->rule->message());
+        $this->assertStringContainsString('no mínimo 160 horas', $this->rule->message());
+        $this->assertStringContainsString('<b>Carga horária total (em horas)</b>', $this->rule->message());
     }
 
-    public function test_carga_horaria_total_qualificacao_valida_dentro_da_faixa()
+    public function test_carga_horaria_total_qualificacao_acima_de_800_agora_e_valida()
     {
         $params = $this->createDefaultParams();
         $params->organizacao_curricular = '{' . OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL . '}';
-        $params->carga_horaria_total = 400;
+        $params->carga_horaria_total = 900;
         $params->tipo_curso_intinerario = 2;
 
         $result = $this->rule->validaCargaHorariaTotal($params);
 
         $this->assertTrue($result);
+    }
+
+    public function test_carga_horaria_total_delega_minimo_fixo_da_etapa_74()
+    {
+        $params = $this->createDefaultParams();
+        $params->organizacao_curricular = null;
+        $params->etapa_educacenso = 74;
+        $params->carga_horaria_total = 2399;
+
+        $result = $this->rule->validaCargaHorariaTotal($params);
+
+        $this->assertFalse($result);
+        $this->assertStringContainsString('no mínimo 2400 horas', $this->rule->message());
+    }
+
+    public function test_carga_horaria_total_delega_lookup_do_curso_campo_26()
+    {
+        $params = $this->createDefaultParams();
+        $params->organizacao_curricular = null;
+        $params->etapa_educacenso = 39;
+        $params->cod_curso_profissional = 1001; // curso de carga mínima 1200
+        $params->carga_horaria_total = 1199;
+
+        $result = $this->rule->validaCargaHorariaTotal($params);
+
+        $this->assertFalse($result);
+        $this->assertStringContainsString('no mínimo 1200 horas', $this->rule->message());
+    }
+
+    public function test_carga_horaria_total_extrai_fgb_da_organizacao_e_exige_3000()
+    {
+        $params = $this->createDefaultParams();
+        $params->organizacao_curricular = '{' . OrganizacaoCurricular::FORMACAO_GERAL_BASICA . ',' . OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL . '}';
+        $params->etapa_educacenso = 25;
+        $params->tipo_curso_intinerario = 1;
+        $params->carga_horaria_total = 2999;
+
+        $result = $this->rule->validaCargaHorariaTotal($params);
+
+        $this->assertFalse($result);
+        $this->assertStringContainsString('no mínimo 3000 horas', $this->rule->message());
     }
 
     private function paramsTurma(int $mediacao, string $tipoAtendimento, ?int $etapaAgregada, ?string $organizacao, $etapa): \stdClass
@@ -360,5 +402,79 @@ class CheckMandatoryCensoFieldsTest extends TestCase
         $params = $this->paramsTurma(App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, '{9}', EtapaAgregada::MULTI_CORRECAO_FLUXO, null, 22);
 
         $this->assertTrue($this->rule->validaEtapaEnsinoPorCombinacao($params));
+    }
+
+    public function test_horario_minutos_multiplos_de_cinco_passa()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '07:00';
+        $params->hora_final = '12:30';
+
+        $this->assertTrue($this->rule->validaMinutosHorario($params));
+    }
+
+    public function test_horario_de_intervalo_nao_e_validado()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '07:00';
+        $params->hora_inicio_intervalo = '09:12';
+        $params->hora_fim_intervalo = '09:27';
+        $params->hora_final = '12:30';
+
+        $this->assertTrue($this->rule->validaMinutosHorario($params));
+    }
+
+    public function test_horario_minutos_nao_multiplos_de_cinco_bloqueia()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '07:31';
+
+        $this->assertFalse($this->rule->validaMinutosHorario($params));
+        $this->assertStringContainsString('hora inicial', $this->rule->message());
+        $this->assertStringContainsString('múltiplos de 5', $this->rule->message());
+    }
+
+    public function test_horario_vazio_ou_nulo_nao_bloqueia()
+    {
+        $params = new \stdClass;
+        $params->hora_inicial = '';
+        $params->hora_final = null;
+
+        $this->assertTrue($this->rule->validaMinutosHorario($params));
+    }
+
+    public function test_horario_bordas_dos_minutos()
+    {
+        $bom = new \stdClass;
+        $bom->hora_inicial = '07:55';
+        $this->assertTrue($this->rule->validaMinutosHorario($bom));
+
+        $ruim = new \stdClass;
+        $ruim->hora_inicial = '07:56';
+        $this->assertFalse($this->rule->validaMinutosHorario($ruim));
+
+        $ruimBaixo = new \stdClass;
+        $ruimBaixo->hora_inicial = '07:03';
+        $this->assertFalse($this->rule->validaMinutosHorario($ruimBaixo));
+    }
+
+    public function test_horario_turno_matutino_usa_rotulo_correto()
+    {
+        $params = new \stdClass;
+        $params->hora_final_matutino = '11:22';
+
+        $this->assertFalse($this->rule->validaMinutosHorario($params));
+        $this->assertStringContainsString('hora final do turno matutino', $this->rule->message());
+    }
+
+    public function test_horario_com_segundos_valida_pelos_minutos()
+    {
+        $ok = new \stdClass;
+        $ok->hora_inicial = '07:30:00';
+        $this->assertTrue($this->rule->validaMinutosHorario($ok));
+
+        $nok = new \stdClass;
+        $nok->hora_inicial = '07:31:00';
+        $this->assertFalse($this->rule->validaMinutosHorario($nok));
     }
 }

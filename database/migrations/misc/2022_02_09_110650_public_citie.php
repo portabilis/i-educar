@@ -15,14 +15,4 @@ class PublicCitie extends Migration
         City::where('id', 3611)
             ->update(['name' => 'Mogi das Cruzes']);
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
 }

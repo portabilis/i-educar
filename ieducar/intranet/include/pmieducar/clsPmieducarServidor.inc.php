@@ -1038,7 +1038,7 @@ class clsPmieducarServidor extends Model
             return false;
         }
         $sql = 'SELECT
-              ec.nm_escola,
+              null as nm_escola,
               c.nm_curso,
               s.nm_serie,
               t.nm_turma,
@@ -1052,14 +1052,12 @@ class clsPmieducarServidor extends Model
               pmieducar.turma t,
               pmieducar.serie s,
               pmieducar.curso c,
-              pmieducar.escola_complemento ec,
               modules.componente_curricular cc
             WHERE
               qh.cod_quadro_horario = qhh.ref_cod_quadro_horario
               AND qh.ref_cod_turma = t.cod_turma
               AND t.ref_ref_cod_serie = s.cod_serie
               AND s.ref_cod_curso = c.cod_curso
-              AND qhh.ref_cod_escola = ec.ref_cod_escola
               AND qhh.ref_cod_disciplina = cc.id
               AND qh.ativo = 1
               AND qhh.ativo = 1
