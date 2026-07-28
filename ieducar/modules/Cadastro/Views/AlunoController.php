@@ -562,7 +562,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'inline' => true,
         ];
 
-        $this->inputsHelper()->integer('certidao_nascimento', $options);
+        $this->inputsHelper()->text('certidao_nascimento', $options);
 
         $placeholderCertidao = 'Certidão casamento';
         $options = [
