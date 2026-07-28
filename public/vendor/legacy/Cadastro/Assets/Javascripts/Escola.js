@@ -1310,6 +1310,7 @@ function habilitaCamposNumeroSalas() {
 
     $j('#numero_salas_climatizadas').prop('disabled', disabled);
     $j('#numero_salas_acessibilidade').prop('disabled', disabled);
+    $j('#numero_salas_cantinho_leitura').prop('disabled', disabled);
 }
 
 $j('#numero_salas_utilizadas_dentro_predio,#numero_salas_utilizadas_fora_predio').blur(function () {
