@@ -32,7 +32,7 @@ class FileService
         );
     }
 
-    public function saveFile($url, $size, $originalName, $extension, $typeFileRelation, $relationId)
+    public function saveFile($url, $size, $originalName, $extension, $typeFileRelation, $relationId, $type = null)
     {
         DB::beginTransaction();
 
@@ -48,6 +48,7 @@ class FileService
                 'relation_type' => $typeFileRelation,
                 'relation_id' => $relationId,
                 'file_id' => $file->id,
+                'type' => $type,
             ]);
             DB::commit();
         } catch (Throwable $e) {
@@ -55,9 +56,13 @@ class FileService
         }
     }
 
-    public function getFiles($relation)
+    public function getFiles($relation, $type = null)
     {
         $files = $relation->files;
+
+        if (!is_null($type)) {
+            $files = $files->where('pivot.type', $type);
+        }
 
         foreach ($files as $file) {
             $file->url = $this->urlPresigner->getPresignedUrl($file->url, $file->original_name);

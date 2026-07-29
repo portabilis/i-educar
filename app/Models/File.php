@@ -16,5 +16,7 @@ class File extends Model
         'size',
         'original_name',
         'extension',
+        'created_at',
+        'updated_at',
     ];
 }

@@ -10,6 +10,7 @@ use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudent;
 use App\Models\LegacyStudentBenefit;
 use App\Models\LegacyStudentHistoricalHeightWeight;
 use App\Models\LegacyStudentMedicalRecord;
@@ -17,6 +18,8 @@ use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
 use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
+use App\Services\FileService;
+use App\Services\UrlPresigner;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -651,7 +654,7 @@ class AlunoController extends ApiCoreController
 
         $aluno->veiculo_transporte_escolar = $veiculoTransporteEscolar;
 
-        $this->file_foto = $_FILES['file'];
+        $this->file_foto = $_FILES['foto'];
         $this->del_foto = $_POST['file_delete'];
 
         if (!$this->validatePhoto()) {
@@ -1674,6 +1677,7 @@ class AlunoController extends ApiCoreController
                 $this->createOrUpdatePessoaTransporte($pessoaId);
                 $this->createOrUpdateDocumentos($pessoaId);
                 $this->createOrUpdatePessoa($pessoaId);
+                $this->createOrUpdateLaudos($id);
 
                 $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
             } else {
@@ -1708,6 +1712,7 @@ class AlunoController extends ApiCoreController
             $this->createOrUpdatePessoaTransporte($pessoaId);
             $this->createOrUpdateDocumentos($pessoaId);
             $this->createOrUpdatePessoa($pessoaId);
+            $this->createOrUpdateLaudos($id);
 
             $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
         } else {
@@ -1837,6 +1842,34 @@ class AlunoController extends ApiCoreController
             $this->objPhoto = null;
 
             return true;
+        }
+    }
+
+    protected function createOrUpdateLaudos($pessoaId)
+    {
+        $fileService = new FileService(urlPresigner: new UrlPresigner);
+
+        $file_url = request('file_url');
+        $file_url_deleted = request('file_url_deleted');
+
+        if ($file_url) {
+            $newFiles = json_decode($file_url);
+            foreach ($newFiles as $file) {
+                $fileService->saveFile(
+                    url: $file->url,
+                    size: $file->size,
+                    originalName: $file->originalName,
+                    extension: $file->extension,
+                    typeFileRelation: LegacyStudent::class,
+                    relationId: $pessoaId,
+                    type: 'laudo'
+                );
+            }
+        }
+
+        if ($file_url_deleted) {
+            $deletedFiles = explode(',', $file_url_deleted);
+            $fileService->deleteFiles(deletedFiles: $deletedFiles);
         }
     }
 

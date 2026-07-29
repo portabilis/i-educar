@@ -29,9 +29,10 @@ use Illuminate\Support\Collection;
 class LegacyStudent extends LegacyModel
 {
     use HasBelongsToOne;
-
     /** @use HasBuilder<LegacyStudentBuilder> */
     use HasBuilder;
+
+    use HasFiles;
 
     use HasLegacyDates;
 

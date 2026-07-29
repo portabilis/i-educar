@@ -1,5 +1,5 @@
 <tr id="tr_file">
-    <td class="formmdtd" valign="top"><span class="form">Arquivos</span></td>
+    <td class="formmdtd" valign="top"><span class="form">{{ $label ?? 'Arquivos' }}</span></td>
     <td class="formmdtd" valign="top">
         <span class="form">
             @if(isset($files))
