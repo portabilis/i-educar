@@ -42,6 +42,7 @@ const ORGANIZACAO_CURRICULAR_FORMACAO_GERAL_BASICA = '1';
 
 const ETAPAS_VALIDAS_ENSINO_MEDIO_FGB_SEM_IFTP = ['25', '26', '27', '28', '29'];
 const ETAPAS_EIXO_CURSO_PROFISSIONAL = ['67', '68', '73', '75'];
+const ETAPAS_CARGA_HORARIA_TURMA = ['39', '40', '64', '67', '68', '73', '74', '75'];
 const ETAPAS_ENSINO_FUNDAMENTAL = ['14', '15', '16', '17', '18', '19', '20', '21', '41'];
 const ETAPAS_NORMAL_MAGISTERIO = ['35', '36', '37', '38'];
 const ETAPAS_CURSO_TECNICO_FIC = ['39', '40', '64', '68', '75'];
@@ -216,6 +217,7 @@ $j('#etapa_educacenso').change(function() {
   habilitaFormaOrganizacaoTurma();
   habilitaFormacaoAlternancia();
   habilitaEixoCursoProfissional();
+  habilitaCargaHorariaTotal();
 });
 
 function habilitaAtividadesComplementares(){
@@ -473,10 +475,11 @@ function habilitaCargaHorariaTotal() {
   $j('#carga_horaria_total').prop('disabled', true).makeUnrequired();
   const notContainData = $j('#organizacao_curricular').val() === null;
 
-  if (!notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA)) {
+  const temIftp = !notContainData && $j('#organizacao_curricular').val().include(ORGANIZACAO_CURRICULAR_ITINERARIO_FORMACAO_TECNICA);
+  const etapaPermiteCarga = $j.inArray($j('#etapa_educacenso').val(), ETAPAS_CARGA_HORARIA_TURMA) != -1;
+
+  if (temIftp || etapaPermiteCarga) {
     $j('#carga_horaria_total').prop('disabled', false);
-  } else {
-    $j('#carga_horaria_total').val('');
   }
 }
 

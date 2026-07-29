@@ -353,7 +353,7 @@ return new class extends clsCadastro
         $this->min_mat = $this->min_ves = $this->min_not = 0;
 
         if (is_array(value: $this->quadro_horario)) {
-            $idsServidores = collect($this->quadro_horario)->pluck('ref_servidor_')->filter('is_numeric')->unique()->all();
+            $idsServidores = collect($this->quadro_horario)->pluck('ref_servidor_')->filter(fn ($id) => is_numeric($id))->unique()->all();
             $nomesPorServidor = $idsServidores
                 ? LegacyPerson::query()->whereIn('idpes', $idsServidores)->pluck('nome', 'idpes')
                 : collect();

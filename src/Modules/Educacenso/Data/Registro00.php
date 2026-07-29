@@ -4,7 +4,7 @@ namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro00 as Registro00Model;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
-use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
+use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\Model\FormasContratacaoPoderPublico;
@@ -65,7 +65,7 @@ class Registro00 extends AbstractRegistro
 
         $record = SituacaoFuncionamento::handle($record);
         $record = DependenciaAdministrativa::handle($record);
-        $record = Regulamentacao::handle($record);
+        $record = EsferaAdministrativa::handle($record);
 
         return [
             $record->registro, // 1	Tipo de registro

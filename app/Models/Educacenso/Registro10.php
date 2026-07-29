@@ -1265,6 +1265,7 @@ class Registro10 extends Registro10Fields
     public function redeLocal(): ?int
     {
         return match (true) {
+            $this->redeLocalNenhuma() => 0,
             $this->redeLocalACabo() => 1,
             $this->redeLocalWireless() => 2,
             $this->redeLocalACaboEWireless() => 3,

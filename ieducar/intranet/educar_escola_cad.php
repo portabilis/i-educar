@@ -740,16 +740,16 @@ return new class extends clsCadastro
             $this->campoOculto(nome: 'com_cnpj', valor: $this->com_cnpj);
 
             if (!$this->cod_escola) {
-                $this->cnpj = urldecode($_POST['cnpj']);
-                $this->cnpj = idFederal2int($this->cnpj);
-                $this->cnpj = empty($this->cnpj) ? $this->cnpj : int2IdFederal($this->cnpj);
+                $this->cnpj = normalizaCnpj(urldecode($_POST['cnpj']));
             }
 
             if (empty($this->cnpj) && $cnpjPessoaJuridica) {
                 $this->cnpj = $cnpjPessoaJuridica;
             }
 
-            $orgPessoaJuridica = LegacyOrganization::whereKey($this->pessoaj_id)->first(['idpes', 'fantasia']);
+            $orgPessoaJuridica = is_numeric($this->pessoaj_id)
+                ? LegacyOrganization::whereKey($this->pessoaj_id)->first(['idpes', 'fantasia'])
+                : null;
             $this->ref_idpes = $orgPessoaJuridica?->idpes;
 
             if (!$this->fantasia) {
@@ -757,11 +757,11 @@ return new class extends clsCadastro
             }
 
             if ($this->cnpj) {
-                $this->cnpj = (is_numeric($this->cnpj)) ? int2CNPJ($this->cnpj) : int2CNPJ(idFederal2int($this->cnpj));
+                $this->cnpj = int2CNPJ($this->cnpj);
             }
 
             $this->campoRotulo(nome: 'cnpj_', campo: 'CNPJ', valor: $this->cnpj);
-            $this->campoOculto(nome: 'cnpj', valor: idFederal2int($this->cnpj));
+            $this->campoOculto(nome: 'cnpj', valor: normalizaCnpj($this->cnpj));
             $this->campoOculto(nome: 'ref_idpes', valor: $this->ref_idpes);
             $this->campoOculto(nome: 'cod_escola', valor: $this->cod_escola);
             $this->campoTexto(nome: 'fantasia', campo: 'Escola', valor: $this->fantasia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -990,15 +990,6 @@ return new class extends clsCadastro
 
             $options = ['label' => 'Lei de conclusão do ensino médio', 'value' => $this->lei_conclusao_ensino_medio, 'size' => 200, 'required' => false];
             $this->inputsHelper()->text(attrNames: 'lei_conclusao_ensino_medio', inputOptions: $options);
-
-            $resources = SelectOptions::esferasAdministrativasEscola();
-            $options = [
-                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
-                'resources' => $resources,
-                'value' => $this->esfera_administrativa,
-                'required' => false,
-            ];
-            $this->inputsHelper()->select(attrName: 'esfera_administrativa', inputOptions: $options);
 
             $this->campoQuebra();
             $this->addSchoolManagersTable();
@@ -1880,7 +1871,7 @@ return new class extends clsCadastro
         $obj->categoria_escola_privada = $this->categoria_escola_privada;
         $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
         $obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
-        $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+        $obj->cnpj_mantenedora_principal = normalizaCnpj($this->cnpj_mantenedora_principal);
         $obj->esfera_administrativa = $this->esfera_administrativa;
         $obj->nao_ha_funcionarios_para_funcoes = $this->nao_ha_funcionarios_para_funcoes !== null;
         $obj->iddis = (int) $this->district_id;
@@ -2098,7 +2089,6 @@ return new class extends clsCadastro
         }
 
         LegacyOrganization::find($idpes)?->update([
-            'cnpj' => null,
             'fantasia' => $this->fantasia,
             'idpes_rev' => Auth::id(),
         ]);
@@ -2324,7 +2314,6 @@ return new class extends clsCadastro
 
         $esferaAdministrativaValidator = (new AdministrativeDomainValidator(
             administrativeDomain: $this->esfera_administrativa,
-            regulations: $this->regulamentacao,
             administrativeDependence: $this->dependencia_administrativa,
             cityIbgeCode: $cityIBGE
         ));

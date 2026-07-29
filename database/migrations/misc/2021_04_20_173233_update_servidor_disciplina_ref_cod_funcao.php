@@ -28,14 +28,4 @@ class UpdateServidorDisciplinaRefCodFuncao extends Migration
             WHERE sd.ref_cod_funcao IS NULL;'
         );
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
 }
