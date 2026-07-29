@@ -352,9 +352,12 @@ class AgendaService
         return sprintf('%04d-%02d-%02d', $parts[2], $parts[1], $parts[0]);
     }
 
+    /**
+     * Valida o horário no formato hh:mm
+     */
     private function isValidTime(?string $time): bool
     {
-        return (bool) preg_match('/[0-9]{2}:[0-9]{2}/', (string) $time);
+        return (bool) preg_match('/^([01][0-9]|2[0-3]):[0-5][0-9]$/', (string) $time);
     }
 
     private function deactivateCommitment(int $commitment): void
