@@ -1187,7 +1187,6 @@ class AlunoController extends ApiCoreController
                 'recebe_escolarizacao_em_outro_espaco',
                 'justificativa_falta_documentacao',
                 'veiculo_transporte_escolar',
-                'url_laudo_medico',
                 'url_documento',
                 'codigo_sistema',
                 'url_foto_aluno',
@@ -1263,6 +1262,17 @@ class AlunoController extends ApiCoreController
             if ($caminhoFoto) {
                 $aluno['url_foto_aluno'] = $caminhoFoto;
             }
+
+            $fileService = new FileService(new UrlPresigner);
+            $files = $fileService->getFiles(LegacyStudent::find($id), type: 'laudo');
+            $aluno['laudos'] = $files->map(fn ($file) => $file->only([
+                'url',
+                'size',
+                'original_name',
+                'extension',
+                'created_at',
+                'updated_at',
+            ]))->toArray();
 
             return $aluno;
         }
