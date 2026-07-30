@@ -30,7 +30,7 @@ return new class extends Migration
                             continue;
                         }
 
-                        $date = Carbon::createFromFormat('d/m/Y', $laudo->data ?? now());
+                        $date = Carbon::createFromFormat('d/m/Y', $laudo->data ?? now()->format('d/m/Y'));
                         $file = File::query()->create([
                             'url' => $laudo->url,
                             'size' => 0,
