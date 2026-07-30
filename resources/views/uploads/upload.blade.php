@@ -100,6 +100,7 @@ function makeUrlFile(url, originalName, extension, size, data) {
 
     arrayPush.push(fileUrlNew);
     $j('#file_url').val(JSON.stringify(arrayPush));
+    $j('#file_count').val(arrayPush.length);
 }
 
 function prepareUpload(event) {
