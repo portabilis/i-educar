@@ -119,11 +119,11 @@ function certidaoCasamentoInvalida() {
 
 var newSubmitForm = function (event) {
   if ($j("#deficiencias").val().length > 1 || $j("#transtornos").val().length > 1) {
-    let laudos = $j("#file_url").val();
+    let laudos = $j("#file_count").val();
     let temLaudos = false;
 
-    if (laudos.length > 0) {
-      temLaudos = JSON.parse(laudos).length > 0;
+    if (laudos > 0) {
+      temLaudos = true;
     }
 
     var additionalVars = {
@@ -633,14 +633,6 @@ resourceOptions.handleGet = function (dataResponse) {
   } else {
     $j("#parentesco_cinco").closest("tr").show();
     $j("#parentesco_cinco").closest("tr").show();
-  }
-
-  if (dataResponse.url_laudo_medico) {
-    var arrayLaudo = JSON.parse(dataResponse.url_laudo_medico);
-
-    for (var i = 0; i < arrayLaudo.length; i++) {
-      addLaudoMedico(arrayLaudo[i].url, arrayLaudo[i].data);
-    }
   }
 
   if (dataResponse.url_documento) {
@@ -1567,70 +1559,13 @@ function canShowParentsFields() {
       return dd + "/" + mm + "/" + yyyy;
     }
 
-    $j("#laudo_medico").on("change", prepareUpload);
-
     $j("#documento").on("change", prepareUploadDocumento);
 
     $j("#deficiencias").trigger("chosen:updated");
 
-    function prepareUpload(event) {
-      $j("#laudo_medico").removeClass("error");
-      uploadFiles(event.target.files);
-    }
-
     function prepareUploadDocumento(event) {
       $j("#documento").removeClass("error");
       uploadFilesDocumento(event.target.files);
-    }
-
-    function uploadFiles(files) {
-      if (files && files.length > 0) {
-        $j("#laudo_medico").attr("disabled", "disabled");
-        $j("#btn_enviar")
-          .attr("disabled", "disabled")
-          .val("Aguarde...");
-        $loadingLaudoMedico.show();
-        messageUtils.notice("Carregando laudo médico...");
-
-        var data = new FormData();
-        $j.each(files, function (key, value) {
-          data.append(key, value);
-        });
-
-        $j.ajax({
-          url: "/intranet/upload.php?files",
-          type: "POST",
-          data: data,
-          cache: false,
-          dataType: "json",
-          processData: false,
-          contentType: false,
-          success: function (dataResponse) {
-            if (dataResponse.error) {
-              $j("#laudo_medico").val("").addClass("error");
-              messageUtils.error(dataResponse.error);
-            } else {
-              messageUtils.success(
-                "Laudo médico carregado com sucesso"
-              );
-              $j("#laudo_medico").addClass("success");
-              addLaudoMedico(
-                dataResponse.file_url,
-                currentDate()
-              );
-            }
-          },
-          error: function () {
-            $j("#laudo_medico").val("").addClass("error");
-            messageUtils.error("Não foi possível enviar o arquivo");
-          },
-          complete: function () {
-            $j("#laudo_medico").removeAttr("disabled");
-            $loadingLaudoMedico.hide();
-            $j("#btn_enviar").removeAttr("disabled").val("Gravar");
-          },
-        });
-      }
     }
 
     function uploadFilesDocumento(files) {

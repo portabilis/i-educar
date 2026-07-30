@@ -19,6 +19,7 @@
             <span id="span-documento" style="font-style: italic; font-size: 10px;">
                 São aceitos arquivos nos formatos jpg, png, jpeg e pdf. Tamanho máximo: 2MB
             </span>
+            <input type="hidden" name="file_count" id="file_count" value="{{ $files->count() }}"/>
             <input type="hidden" name="file_url" id="file_url"/>
             <input type="hidden" name="file_url_deleted" id="file_url_deleted"/>
         </span>
