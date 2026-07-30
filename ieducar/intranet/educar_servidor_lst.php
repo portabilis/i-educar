@@ -51,8 +51,6 @@ return new class extends clsListagem
 
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'anoLetivo'], helperOptions: ['options' => ['required' => false]]);
 
-        $parametros = new clsParametrosPesquisas;
-        $parametros->setSubmit(submit: 0);
         $this->campoTexto(nome: 'nome', campo: 'Nome do servidor', valor: $this->nome, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoTexto(nome: 'matricula_servidor', campo: 'Matrícula', valor: $this->matricula_servidor, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->inputsHelper()->dynamic(helperNames: 'escolaridade', inputOptions: ['required' => false]);

@@ -66,9 +66,6 @@ return new class extends clsListagem
         $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
         $this->inputsHelper()->dynamic('anoLetivo', ['required' => false, 'show-select' => true, 'value' => $this->ano_letivo]);
 
-        $parametros = new clsParametrosPesquisas;
-        $parametros->setSubmit(0);
-
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET['pagina_' . $this->nome]) ?

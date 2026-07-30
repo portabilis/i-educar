@@ -13,6 +13,7 @@ use App\Models\LegacyRole;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
 use App\Services\EmployeePosgraduateService;
+use App\Support\View\SearchParameters;
 use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
@@ -231,7 +232,7 @@ return new class extends clsCadastro
                 $this->ref_cod_instituicao_original
             );
         } else {
-            $parametros = new clsParametrosPesquisas;
+            $parametros = new SearchParameters;
             $parametros->setSubmit(0);
             $parametros->adicionaCampoSelect(
                 'cod_servidor',
