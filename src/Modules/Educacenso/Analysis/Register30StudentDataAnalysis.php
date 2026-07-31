@@ -93,7 +93,8 @@ class Register30StudentDataAnalysis implements AnalysisInterface
         }
 
         $birthCertificateValidator = new BirthCertificateValidator($data->certidaoNascimento, $data->dataNascimento);
-        if ($data->certidaoNascimento && !$birthCertificateValidator->validateCertificateDigits()) {
+        // A validação dos dígitos só faz sentido com o tamanho correto; sem isso a certidão curta gera duas mensagens.
+        if ($data->certidaoNascimento && $birthCertificateValidator->validateCertificateLength() && !$birthCertificateValidator->validateCertificateDigits()) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verifique se a certidão de nascimento (nova) do(a) aluno(a) {$data->nomePessoa} foi preenchida corretamente.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Tipo certidão civil (novo formato))',

@@ -142,15 +142,9 @@ class Registro20 extends AbstractRegistro
      */
     private function getCensoValueForDiscipline($discipline, $disciplines, $disciplinesWithTeacher)
     {
-        if (in_array($discipline, $disciplines) && in_array($discipline, $disciplinesWithTeacher)) {
-            return 1; // oferece a área do conhecimento/componente curricular com docente vinculado
-        }
-
-        if (in_array($discipline, $disciplines) && !in_array($discipline, $disciplinesWithTeacher)) {
-            return 2; // oferece a área do conhecimento/componente curricular sem docente vinculado
-        }
-
-        return 0;
+        // A área do conhecimento é exportada como 1 quando a turma a oferece e 0
+        // quando não oferece. O vínculo de docente não altera este valor.
+        return in_array($discipline, $disciplines) ? 1 : 0;
     }
 
     /**

@@ -2455,10 +2455,6 @@ class clsPmieducarEscola extends Model
             SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
               FROM {$this->_tabela} e, cadastro.juridica j
               WHERE e.ref_idpes = j.idpes
-            UNION
-            SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
-              FROM {$this->_tabela} e, pmieducar.escola_complemento c
-              WHERE e.cod_escola = c.ref_cod_escola
           ) AS sub";
         $filtros = '';
 
@@ -2557,10 +2553,6 @@ class clsPmieducarEscola extends Model
           SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
           FROM {$this->_tabela} e, cadastro.juridica j
           WHERE e.ref_idpes = j.idpes
-        UNION
-          SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
-          FROM {$this->_tabela} e, pmieducar.escola_complemento c
-          WHERE e.cod_escola = c.ref_cod_escola
         ) AS sub
         {$filtros}
     ");
@@ -2589,32 +2581,6 @@ class clsPmieducarEscola extends Model
         return false;
     }
 
-    public function lista_escola()
-    {
-        $db = new clsBanco;
-        $resultado = [];
-        $db->Consulta('SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
-                                      FROM cadastro.pessoa ps, cadastro.juridica
-                                     WHERE escola.ref_idpes = juridica.idpes
-                                       AND juridica.idpes = ps.idpes
-                                       AND ps.idpes = escola.ref_idpes),
-                                   (SELECT nm_escola
-                                      FROM pmieducar.escola_complemento
-                                    WHERE ref_cod_escola = escola.cod_escola)) as nome, escola.cod_escola
-                     FROM pmieducar.escola
-                    WHERE ativo = 1
-                    ORDER BY nome
-                 ');
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla;
-        }
-        if (count($resultado)) {
-            return $resultado;
-        }
-    }
-
     public function possuiTurmasDoEnsinoFundamentalEmCiclos()
     {
         $anoAtual = date('Y');
@@ -2641,17 +2607,9 @@ class clsPmieducarEscola extends Model
                 "
         SELECT * FROM
         (
-          SELECT c.nm_escola AS nome, {$this->_todos_campos}, 2 AS tipo_cadastro
-          FROM {$this->_tabela} e, pmieducar.escola_complemento c
-          WHERE e.cod_escola = c.ref_cod_escola
-
-        UNION
-
           SELECT j.fantasia AS nome, {$this->_todos_campos}, 1 AS tipo_cadastro
           FROM {$this->_tabela} e, cadastro.juridica j
           WHERE e.ref_idpes = j.idpes
-
-
         ) AS sub WHERE cod_escola = '{$this->cod_escola}'"
             );
             $db->ProximoRegistro();

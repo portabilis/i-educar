@@ -4,6 +4,7 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolCourse;
+use App\Models\LegacySchoolGrade;
 use App\Process;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
@@ -75,29 +76,34 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(int_processo_ap: 585, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_escola_serie_lst.php');
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $tmp_obj = new clsPmieducarEscolaSerie;
-            $lst_obj = $tmp_obj->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
+            $registro = LegacySchoolGrade::query()
+                ->joinGradeCourse()
+                ->whereSchool($this->ref_cod_escola)
+                ->whereGrade($this->ref_cod_serie)
+                ->active()
+                ->selectRaw('array_to_json(escola_serie.anos_letivos) as anos_letivos')
+                ->first();
 
-            if (!is_array($lst_obj)) {
+            if (!$registro) {
                 $this->mensagem .= 'Registro não localizado.<br>';
                 $this->simpleRedirect('educar_escola_serie_lst.php');
             }
 
-            $registro = array_shift($lst_obj);
+            $this->hora_inicial = $registro['hora_inicial'];
+            $this->hora_final = $registro['hora_final'];
+            $this->hora_inicio_intervalo = $registro['hora_inicio_intervalo'];
+            $this->hora_fim_intervalo = $registro['hora_fim_intervalo'];
+            $this->bloquear_enturmacao_sem_vagas = $registro['bloquear_enturmacao_sem_vagas'];
+            $this->bloquear_cadastro_turma_para_serie_com_vagas = $registro['bloquear_cadastro_turma_para_serie_com_vagas'];
+            $this->ref_cod_instituicao = $registro['ref_cod_instituicao'];
+            $this->ref_cod_curso = $registro['ref_cod_curso'];
+            $this->anos_letivos = json_decode($registro['anos_letivos']);
 
-            if ($registro) {
-                // passa todos os valores obtidos no registro para atributos do objeto
-                foreach ($registro as $campo => $val) {
-                    $this->$campo = $val;
-                }
-                $this->anos_letivos = json_decode($registro['anos_letivos']);
-
-                $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 585, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
-                $retorno = 'Editar';
-            }
+            $this->fexcluir = $obj_permissoes->permissao_excluir(int_processo_ap: 585, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
+            $retorno = 'Editar';
         }
 
-        $this->url_cancelar = ($retorno == 'Editar') ? sprintf('educar_escola_serie_det.php?ref_cod_escola=%d&ref_cod_serie=%d', $registro['ref_cod_escola'], $registro['ref_cod_serie']) : 'educar_escola_serie_lst.php';
+        $this->url_cancelar = ($retorno == 'Editar') ? sprintf('educar_escola_serie_det.php?ref_cod_escola=%d&ref_cod_serie=%d', $this->ref_cod_escola, $this->ref_cod_serie) : 'educar_escola_serie_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
@@ -439,28 +445,46 @@ return new class extends clsCadastro
             $this->ref_cod_serie = $this->ref_cod_serie_;
         }
 
+        if (!is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_serie)) {
+            $this->mensagem = 'Cadastro não realizado.<br>';
+
+            return false;
+        }
+
         $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
         $this->bloquear_cadastro_turma_para_serie_com_vagas = is_null($this->bloquear_cadastro_turma_para_serie_com_vagas) ? 0 : 1;
 
-        $obj = new clsPmieducarEscolaSerie(
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            hora_inicial: $this->hora_inicial,
-            hora_final: $this->hora_final,
-            ativo: 1,
-            hora_inicio_intervalo: $this->hora_inicio_intervalo,
-            hora_fim_intervalo: $this->hora_fim_intervalo,
-            bloquear_enturmacao_sem_vagas: $this->bloquear_enturmacao_sem_vagas,
-            bloquear_cadastro_turma_para_serie_com_vagas: $this->bloquear_cadastro_turma_para_serie_com_vagas,
-            anos_letivos: $this->anos_letivos ?: []
-        );
+        $anosLetivos = '{' . implode(',', array_map('intval', is_array($this->anos_letivos) ? $this->anos_letivos : [])) . '}';
 
-        if ($obj->existe()) {
-            $cadastrou = $obj->edita();
+        $existe = LegacySchoolGrade::query()
+            ->whereSchool($this->ref_cod_escola)
+            ->whereGrade($this->ref_cod_serie)
+            ->exists();
+
+        if ($existe) {
+            $cadastrou = LegacySchoolGrade::query()
+                ->whereSchool($this->ref_cod_escola)
+                ->whereGrade($this->ref_cod_serie)
+                ->update(array_merge([
+                    'ref_usuario_exc' => $this->pessoa_logada,
+                    'ref_usuario_cad' => $this->pessoa_logada,
+                    'data_exclusao' => now(),
+                    'ativo' => 1,
+                    'bloquear_enturmacao_sem_vagas' => $this->bloquear_enturmacao_sem_vagas,
+                    'bloquear_cadastro_turma_para_serie_com_vagas' => $this->bloquear_cadastro_turma_para_serie_com_vagas,
+                    'anos_letivos' => $anosLetivos,
+                ], $this->montaHorarios()));
         } else {
-            $cadastrou = $obj->cadastra();
+            $cadastrou = LegacySchoolGrade::query()->create(array_merge([
+                'ref_cod_escola' => $this->ref_cod_escola,
+                'ref_cod_serie' => $this->ref_cod_serie,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'data_cadastro' => now(),
+                'ativo' => 1,
+                'bloquear_enturmacao_sem_vagas' => $this->bloquear_enturmacao_sem_vagas,
+                'bloquear_cadastro_turma_para_serie_com_vagas' => $this->bloquear_cadastro_turma_para_serie_com_vagas,
+                'anos_letivos' => $anosLetivos,
+            ], $this->montaHorarios()));
         }
 
         if ($cadastrou) {
@@ -514,22 +538,16 @@ return new class extends clsCadastro
         $this->ref_cod_curso = $this->ref_cod_curso_;
         $this->ref_cod_serie = $this->ref_cod_serie_;
 
+        if (!is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_serie)) {
+            $this->mensagem = 'Edição não realizada.<br>';
+
+            return false;
+        }
+
         $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
         $this->bloquear_cadastro_turma_para_serie_com_vagas = is_null($this->bloquear_cadastro_turma_para_serie_com_vagas) ? 0 : 1;
 
-        $obj = new clsPmieducarEscolaSerie(
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_usuario_exc: $this->pessoa_logada,
-            hora_inicial: $this->hora_inicial,
-            hora_final: $this->hora_final,
-            ativo: 1,
-            hora_inicio_intervalo: $this->hora_inicio_intervalo,
-            hora_fim_intervalo: $this->hora_fim_intervalo,
-            bloquear_enturmacao_sem_vagas: $this->bloquear_enturmacao_sem_vagas,
-            bloquear_cadastro_turma_para_serie_com_vagas: $this->bloquear_cadastro_turma_para_serie_com_vagas,
-            anos_letivos: $this->anos_letivos ?: []
-        );
+        $anosLetivos = '{' . implode(',', array_map('intval', is_array($this->anos_letivos) ? $this->anos_letivos : [])) . '}';
 
         $sombra = json_decode(json: urldecode($this->componentes_sombra), associative: true) ?? [];
         $disciplinas = $this->montaDisciplinas();
@@ -543,7 +561,17 @@ return new class extends clsCadastro
             $this->simpleRedirect(Request::getRequestUri());
         }
 
-        $editou = $obj->edita();
+        $editou = LegacySchoolGrade::query()
+            ->whereSchool($this->ref_cod_escola)
+            ->whereGrade($this->ref_cod_serie)
+            ->update(array_merge([
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'data_exclusao' => now(),
+                'ativo' => 1,
+                'bloquear_enturmacao_sem_vagas' => $this->bloquear_enturmacao_sem_vagas,
+                'bloquear_cadastro_turma_para_serie_com_vagas' => $this->bloquear_cadastro_turma_para_serie_com_vagas,
+                'anos_letivos' => $anosLetivos,
+            ], $this->montaHorarios()));
 
         $obj = new clsPmieducarEscolaSerieDisciplina(
             ref_ref_cod_serie: $this->ref_cod_serie,
@@ -618,12 +646,11 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj = new clsPmieducarEscolaSerie(
-            ref_cod_escola: $this->ref_cod_escola_,
-            ref_cod_serie: $this->ref_cod_serie_,
-            ref_usuario_exc: $this->pessoa_logada,
-            ativo: 0
-        );
+        if (!is_numeric($this->ref_cod_escola_) || !is_numeric($this->ref_cod_serie_)) {
+            $this->mensagem = 'Exclusão não realizada.<br>';
+
+            return false;
+        }
 
         $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina(
             ref_ref_cod_serie: $this->ref_cod_serie_,
@@ -641,7 +668,15 @@ return new class extends clsCadastro
             return false;
         }
 
-        $excluiu = $obj->excluir();
+        $excluiu = LegacySchoolGrade::query()
+            ->whereSchool($this->ref_cod_escola_)
+            ->whereGrade($this->ref_cod_serie_)
+            ->update([
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'data_exclusao' => now(),
+                'ativo' => 0,
+                'anos_letivos' => '{}',
+            ]);
 
         if ($excluiu) {
             $obj = new clsPmieducarEscolaSerieDisciplina(ref_ref_cod_serie: $this->ref_cod_serie_, ref_ref_cod_escola: $this->ref_cod_escola_, ref_cod_disciplina: null, ativo: 0);
@@ -673,6 +708,16 @@ return new class extends clsCadastro
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
+    }
+
+    private function montaHorarios(): array
+    {
+        return array_filter([
+            'hora_inicial' => $this->hora_inicial,
+            'hora_final' => $this->hora_final,
+            'hora_inicio_intervalo' => $this->hora_inicio_intervalo,
+            'hora_fim_intervalo' => $this->hora_fim_intervalo,
+        ]);
     }
 
     private function getAnosLetivosDisponiveis()

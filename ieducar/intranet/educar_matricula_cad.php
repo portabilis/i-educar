@@ -11,6 +11,7 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolGrade;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Services\EnrollmentService;
@@ -398,10 +399,14 @@ return new class extends clsCadastro
         $this->ano = $_POST['ano'];
         $anoLetivoEmAndamentoEscola = LegacySchoolAcademicYear::query()->whereSchool($this->ref_cod_escola)->whereYearEq($this->ano)->inProgress()->active()->exists();
 
-        $objEscolaSerie = new clsPmieducarEscolaSerie;
-        $dadosEscolaSerie = $objEscolaSerie->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
+        $bloquearEnturmacao = LegacySchoolGrade::query()
+            ->joinGradeCourse()
+            ->whereSchool($this->ref_cod_escola)
+            ->whereGrade($this->ref_cod_serie)
+            ->active()
+            ->value('bloquear_enturmacao_sem_vagas');
 
-        if (!$this->existeVagasDisponiveis() && $dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
+        if (!$this->existeVagasDisponiveis() && $bloquearEnturmacao) {
             return false;
         }
 

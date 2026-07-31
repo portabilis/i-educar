@@ -548,23 +548,32 @@ return new class extends clsCadastro
     {
         $turma = LegacySchoolClass::query()->find($this->ref_cod_turma, ['organizacao_curricular']);
         $areaItinerario = $this->area_itinerario ?? [];
-        $organizacaoCurricular = transformStringFromDBInArray($turma->organizacao_curricular) ?? [];
+        $organizacaoCurricular = array_unique(transformStringFromDBInArray($turma->organizacao_curricular) ?? []);
+        $funcaoDesc = FuncaoExercida::getDescription($this->funcao_exercida);
 
-        if (empty($areaItinerario) && in_array($this->funcao_exercida, [
+        $funcaoDocenteOuTitular = in_array($this->funcao_exercida, [
             FuncaoExercida::DOCENTE,
             FuncaoExercida::DOCENTE_TITULAR_EAD,
-        ]) && in_array(OrganizacaoCurricular::ITINERARIO_FORMATIVO_APROFUNDAMENTO, $organizacaoCurricular)) {
-            $funcaoDesc = FuncaoExercida::getDescription($this->funcao_exercida);
-            $this->mensagem = "O campo: <b>Área(s) do itinerário formativo</b> deve ser obrigatório quando o campo: <b>Função que exerce na turma</b> for {$funcaoDesc} e o campo: <b>Organização Curricular</b> da turma for: Itinerário formativo de aprofundamento.";
+        ]);
+        $organizacaoExclusivaAprofundamento = count(array_filter($organizacaoCurricular)) === 1
+            && in_array(OrganizacaoCurricular::ITINERARIO_FORMATIVO_APROFUNDAMENTO, $organizacaoCurricular);
+        $organizacaoFormacaoGeralEAprofundamento = in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular)
+            && in_array(OrganizacaoCurricular::ITINERARIO_FORMATIVO_APROFUNDAMENTO, $organizacaoCurricular);
+        $semComponenteCurricular = empty($this->componentecurricular);
+
+        if (empty($areaItinerario) && $funcaoDocenteOuTitular && $organizacaoExclusivaAprofundamento) {
+            $this->mensagem = "O campo: <b>Área(s) do itinerário formativo</b> deve ser preenchido quando o campo: <b>Função que exerce na turma</b> for {$funcaoDesc} e o campo: <b>Organização Curricular</b> da turma for exclusivamente: Itinerário formativo de aprofundamento.";
 
             return false;
         }
 
-        if (!empty($areaItinerario) && !in_array($this->funcao_exercida, [
-            FuncaoExercida::DOCENTE,
-            FuncaoExercida::DOCENTE_TITULAR_EAD,
-        ])) {
-            $funcaoDesc = FuncaoExercida::getDescription($this->funcao_exercida);
+        if (empty($areaItinerario) && $funcaoDocenteOuTitular && $organizacaoFormacaoGeralEAprofundamento && $semComponenteCurricular) {
+            $this->mensagem = "O campo: <b>Área(s) do itinerário formativo</b> deve ser preenchido quando o campo: <b>Função que exerce na turma</b> for {$funcaoDesc}, o campo: <b>Organização Curricular</b> da turma for: Formação geral básica e Itinerário formativo de aprofundamento e o campo: <b>Áreas do conhecimento/componentes curriculares que leciona</b> não estiver preenchido.";
+
+            return false;
+        }
+
+        if (!empty($areaItinerario) && !$funcaoDocenteOuTitular) {
             $this->mensagem = "O campo: <b>Área(s) do itinerário formativo</b> não pode ser preenchido quando o campo: <b>Função que exerce na turma</b> for <b>{$funcaoDesc}</b>. Este campo só pode ser preenchido para as funções Docente ou Docente titular.";
 
             return false;
