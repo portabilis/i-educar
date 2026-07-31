@@ -1301,7 +1301,7 @@ class AlunoController extends ApiCoreController
             case 'a':
                 $nomesResponsaveis = [
                     $camposFisica['idpes_mae'] ? LegacyPerson::whereKey($camposFisica['idpes_mae'])->value('nome') : null,
-                    $camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null
+                    $camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null,
                 ];
                 break;
         }
