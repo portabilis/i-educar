@@ -8,6 +8,7 @@ use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyPerson;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudent;
@@ -1249,7 +1250,7 @@ class AlunoController extends ApiCoreController
                 }
             }
 
-            $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
+            $sql = 'select sus, ref_cod_religiao, observacao, idpes_mae, idpes_pai, idpes_responsavel from cadastro.fisica where idpes = $1';
             $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
 
             $aluno['sus'] = $camposFisica['sus'];
@@ -1259,6 +1260,8 @@ class AlunoController extends ApiCoreController
             $aluno['projetos'] = $this->loadProjetos($id);
             $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
 
+            $aluno['nomes_responsaveis'] = $this->getNomesResponsaveis($alunoDetalhe['tipo_responsavel'] ?? null, $camposFisica);
+
             $caminhoFoto = LegacyIndividualPicture::whereKey($aluno['pessoa_id'])->value('caminho');
             if ($caminhoFoto) {
                 $aluno['url_foto_aluno'] = $caminhoFoto;
@@ -1266,6 +1269,44 @@ class AlunoController extends ApiCoreController
 
             return $aluno;
         }
+    }
+
+    private function getNomesResponsaveis(?string $tipoResponsavel, array $camposFisica): array
+    {
+        // Compatibilidade com cadastro antigo - mesmo comportamento da função tipoResponsavel
+        if (!$tipoResponsavel) {
+            if ($camposFisica['idpes_responsavel']) {
+                $tipoResponsavel = 'r';
+            } elseif ($camposFisica['idpes_pai']) {
+                $tipoResponsavel = 'p';
+            } elseif ($camposFisica['idpes_mae']) {
+                $tipoResponsavel = 'm';
+            } else {
+                return [];
+            }
+        }
+
+        $nomesResponsaveis = [];
+
+        switch ($tipoResponsavel) {
+            case 'm':
+                $nomesResponsaveis = [$camposFisica['idpes_mae'] ? LegacyPerson::whereKey($camposFisica['idpes_mae'])->value('nome') : null];
+                break;
+            case 'p':
+                $nomesResponsaveis = [$camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null];
+                break;
+            case 'r':
+                $nomesResponsaveis = [$camposFisica['idpes_responsavel'] ? LegacyPerson::whereKey($camposFisica['idpes_responsavel'])->value('nome') : null];
+                break;
+            case 'a':
+                $nomesResponsaveis = [
+                    $camposFisica['idpes_mae'] ? LegacyPerson::whereKey($camposFisica['idpes_mae'])->value('nome') : null,
+                    $camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null
+                ];
+                break;
+        }
+
+        return array_filter($nomesResponsaveis);
     }
 
     protected function getTodosAlunos()
