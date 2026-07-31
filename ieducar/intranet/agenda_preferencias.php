@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\AgendaService;
+
 return new class extends clsCadastro
 {
     public $cod_agenda;
@@ -44,10 +46,10 @@ return new class extends clsCadastro
         $db = new clsBanco;
         $db2 = new clsBanco;
 
-        $objAgenda = new clsAgenda(int_cod_editor: $this->pessoa_logada, int_cod_pessoa_dono: $this->pessoa_logada);
-        $this->cod_agenda = $objAgenda->getCodAgenda();
-        $this->envia_alerta = $objAgenda->getEnviaAlerta();
-        $this->nm_agenda = $objAgenda->getNome();
+        $agenda = app(AgendaService::class)->firstOrCreate(person: $this->pessoa_logada);
+        $this->cod_agenda = $agenda->getKey();
+        $this->envia_alerta = $agenda->envia_alerta;
+        $this->nm_agenda = $agenda->nm_agenda;
 
         $this->campoOculto(nome: 'cod_agenda', valor: $this->cod_agenda);
         $this->campoLista(nome: 'envia_alerta', campo: 'Envia Alerta', valor: ['Não', 'Sim'], default: $this->envia_alerta);
@@ -79,8 +81,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $objAgenda = new clsAgenda(int_cod_editor: $this->pessoa_logada, int_cod_pessoa_dono: $this->pessoa_logada);
-        $this->cod_agenda = $objAgenda->getCodAgenda();
+        $this->cod_agenda = app(AgendaService::class)->firstOrCreate(person: $this->pessoa_logada)->getKey();
 
         $set = '';
         $db = new clsBanco;

@@ -26,6 +26,7 @@ use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
+use iEducar\Modules\Educacenso\Validator\ResidenceCityValidator;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -487,7 +488,7 @@ return new class extends clsCadastro
             'inline' => true,
         ];
 
-        $this->inputsHelper()->integer(attrName: 'certidao_nascimento', inputOptions: $options);
+        $this->inputsHelper()->text(attrNames: 'certidao_nascimento', inputOptions: $options);
 
         // certidao casamento (novo padrão)
 
@@ -1048,6 +1049,10 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->validaMunicipioResidencia()) {
+            return false;
+        }
+
         if (!$this->validaObrigatoriedadeTelefone()) {
             $this->mensagem = 'É necessário informar um Telefone residencial ou Celular.';
 
@@ -1150,6 +1155,22 @@ return new class extends clsCadastro
     private function validaDataNascimento()
     {
         $validator = new BirthDateValidator(birthDate: Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc));
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaMunicipioResidencia()
+    {
+        if (!$this->validarCamposObrigatoriosCenso()) {
+            return true;
+        }
+
+        $validator = new ResidenceCityValidator(postalCode: $this->postal_code, cityId: $this->city_id);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 

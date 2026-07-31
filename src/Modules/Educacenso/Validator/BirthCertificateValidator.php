@@ -47,10 +47,10 @@ class BirthCertificateValidator implements EducacensoValidator
     public function validateCertificateDigits()
     {
         $shouldBeNumericDigits = substr($this->birthCertificate, 0, 30);
-        $shouldBeNumericOrXDigits = substr($this->birthCertificate, 30, 30);
+        $verifyingDigits = substr($this->birthCertificate, 30, 2);
 
-        return ctype_digit($shouldBeNumericDigits) && preg_match('/^[0-9, X]*$/', $shouldBeNumericOrXDigits);
-
+        // O dígito verificador aceita apenas dois números ou o literal "XX".
+        return ctype_digit($shouldBeNumericDigits) && preg_match('/^([0-9]{2}|XX)$/', $verifyingDigits);
     }
 
     public function validateCertificateYear(): bool

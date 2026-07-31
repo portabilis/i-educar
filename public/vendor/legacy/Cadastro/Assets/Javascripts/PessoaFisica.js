@@ -237,6 +237,15 @@ var changeVisibilityOfLinksToPessoaMae = function () {
 
 // when page is ready
 
+// Município de residência obrigatório quando o CEP está preenchido (regra do censo)
+var checkMunicipioResidenciaObrigatorio = function() {
+  if ($j('#obrigar_campos_censo').val() == 1 && $j.trim($j('#postal_code').val()) !== '') {
+    $j('#city_city').makeRequired();
+  } else {
+    $j('#city_city').makeUnrequired();
+  }
+}
+
 $j(document).ready(function() {
   $cpfField.focus();
 
@@ -264,6 +273,9 @@ $j(document).ready(function() {
 
   checkTipoCertidaoCivil();
   $j('#tipo_certidao_civil').change(checkTipoCertidaoCivil);
+
+  checkMunicipioResidenciaObrigatorio();
+  $j('#postal_code').on('keyup change', checkMunicipioResidenciaObrigatorio);
 
   $cpfField.focusout(function() {
     $j(document).removeData('submit_form_after_ajax_validation');
@@ -330,3 +342,19 @@ var simpleSearchMaeOptions = {
   autocompleteOptions : { close : changeVisibilityOfLinksToPessoaMae }
 };
 
+
+// A certidão de nascimento (novo formato) aceita apenas números e o dígito verificador "XX".
+$j(document).ready(function () {
+  $j("#certidao_nascimento").on("keyup change", function () {
+    var valorDigitado = this.value;
+    var valorCorrigido = valorDigitado.toUpperCase().replace(/[^0-9X]/g, "");
+
+    if (valorDigitado !== valorCorrigido) {
+      this.value = valorCorrigido;
+    }
+
+    if (valorDigitado.length !== valorCorrigido.length) {
+      messageUtils.error("Informe apenas números ou a letra X.", this);
+    }
+  });
+});

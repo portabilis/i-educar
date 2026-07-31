@@ -16,7 +16,6 @@ class CargoGestor implements EducacensoExportRule
     {
         if ($registro40->cargo == SchoolManagerRole::OUTRO) {
             $registro40->criterioAcesso = null;
-            $registro40->tipoVinculo = null;
         }
 
         if ($registro40->dependenciaAdministrativa == DependenciaAdministrativaEscola::PRIVADA) {

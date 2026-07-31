@@ -3283,3 +3283,19 @@ aluno_inep_id.on("keyup change", function () {
     $j(this).val("");
   }
 });
+
+// A certidão de nascimento (novo formato) aceita apenas números e o dígito verificador "XX".
+$j(document).ready(function () {
+  $j("#certidao_nascimento").on("keyup change", function () {
+    var valorDigitado = this.value;
+    var valorCorrigido = valorDigitado.toUpperCase().replace(/[^0-9X]/g, "");
+
+    if (valorDigitado !== valorCorrigido) {
+      this.value = valorCorrigido;
+    }
+
+    if (valorDigitado.length !== valorCorrigido.length) {
+      messageUtils.error("Informe apenas números ou a letra X.", this);
+    }
+  });
+});

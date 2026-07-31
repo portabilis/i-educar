@@ -2,6 +2,7 @@
 
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolGrade;
 use App\Models\RegistrationStatus;
 use Illuminate\Support\Facades\Session;
 
@@ -384,17 +385,11 @@ return new class extends clsCadastro
 
     protected function escolaSerieConfigurada($escolaId, $serieId)
     {
-        $escolaSerie = new clsPmieducarEscolaSerie(ref_cod_escola: $escolaId, ref_cod_serie: $serieId);
-
-        $escolaSerie = $escolaSerie->detalhe();
-
-        if (is_array(value: $escolaSerie) && count(value: $escolaSerie) > 0) {
-            if ($escolaSerie['ativo'] == '1') {
-                return true;
-            }
-        }
-
-        return false;
+        return LegacySchoolGrade::query()
+            ->whereSchool($escolaId)
+            ->whereGrade($serieId)
+            ->active()
+            ->exists();
     }
 
     public function Formular()

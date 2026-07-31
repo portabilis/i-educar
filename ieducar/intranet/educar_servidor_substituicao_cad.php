@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\EmployeeAllocation;
 use App\Models\LegacyPerson;
 
 return new class extends clsCadastro
@@ -66,14 +68,14 @@ return new class extends clsCadastro
 
             $this->professor = $obj_servidor->isProfessor() == true ? 'true' : 'false';
 
-            $obj = new clsPmieducarServidorAlocacao;
-            $lista = $obj->lista(
-                int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
-                int_ref_cod_servidor: $this->ref_cod_servidor,
-                ano: date('Y')
-            );
+            $lista = EmployeeAllocation::query()
+                ->when(is_numeric($this->ref_ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_ref_cod_instituicao))
+                ->when(is_numeric($this->ref_cod_servidor), fn ($q) => $q->whereEmployee($this->ref_cod_servidor))
+                ->whereYearEq(date('Y'))
+                ->active()
+                ->get();
 
-            if ($lista) {
+            if ($lista->isNotEmpty()) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($lista as $val) {
                     $temp = [];
@@ -177,29 +179,24 @@ return new class extends clsCadastro
         }
 
         if ($this->alocacao_array) {
+            $escolasComAlocacao = EmployeeAllocation::query()
+                ->when(is_numeric($this->ref_ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_ref_cod_instituicao))
+                ->when(is_numeric($this->ref_cod_servidor), fn ($q) => $q->whereEmployee($this->ref_cod_servidor))
+                ->active()
+                ->pluck('ref_cod_escola');
+
+            $substitutoValido = null;
+
             // Substitui todas as alocações
             foreach ($this->alocacao_array as $alocacao) {
-                $obj = new clsPmieducarServidorAlocacao(
-                    cod_servidor_alocacao: null,
-                    ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
-                    ref_usuario_exc: $this->pessoa_logada,
-                    ref_usuario_cad: $this->pessoa_logada,
-                    ref_cod_escola: $alocacao['ref_cod_escola'],
-                    ref_cod_servidor: $this->ref_cod_servidor,
-                    carga_horaria: $alocacao['carga_horaria'],
-                    periodo: $alocacao['periodo']
-                );
+                $possuiAlocacao = is_numeric($alocacao['ref_cod_escola'])
+                    ? $escolasComAlocacao->contains($alocacao['ref_cod_escola'])
+                    : $escolasComAlocacao->isNotEmpty();
 
-                $return = $obj->lista(
-                    int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
-                    int_ref_cod_escola: $alocacao['ref_cod_escola'],
-                    int_ref_cod_servidor: $this->ref_cod_servidor,
-                    int_ativo: 1,
-                    int_carga_horaria: $alocacao['carga_horaria']
-                );
+                if ($possuiAlocacao) {
+                    $substitutoValido ??= $this->substitutoValido($substituto);
+                    $substituiu = $substitutoValido && $this->substituiServidorNaAlocacao($substituto, $alocacao);
 
-                if ($return !== false) {
-                    $substituiu = $obj->substituir_servidor(int_ref_cod_servidor_substituto: $substituto);
                     if (!$substituiu) {
                         $this->mensagem = 'Substituicao não realizado.<br>';
 
@@ -223,6 +220,39 @@ return new class extends clsCadastro
         $destination = 'educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s';
         $destination = sprintf($destination, $this->ref_cod_servidor, $this->ref_ref_cod_instituicao);
         $this->simpleRedirect(url: $destination);
+    }
+
+    private function substitutoValido($substituto)
+    {
+        if (!is_numeric($substituto) || !is_numeric($this->ref_ref_cod_instituicao)) {
+            return false;
+        }
+
+        return Employee::query()
+            ->where('cod_servidor', $substituto)
+            ->whereInstitution($this->ref_ref_cod_instituicao)
+            ->exists();
+    }
+
+    private function substituiServidorNaAlocacao($substituto, $alocacao)
+    {
+        if (!is_numeric($this->ref_cod_servidor)
+            || !is_numeric($alocacao['ref_cod_escola'])
+            || !is_numeric($alocacao['periodo'])
+            || !is_string($alocacao['carga_horaria'])
+        ) {
+            return false;
+        }
+
+        EmployeeAllocation::query()
+            ->whereEmployee($this->ref_cod_servidor)
+            ->whereInstitution($this->ref_ref_cod_instituicao)
+            ->whereSchool($alocacao['ref_cod_escola'])
+            ->whereWorkload($alocacao['carga_horaria'])
+            ->wherePeriod($alocacao['periodo'])
+            ->update(['ref_cod_servidor' => $substituto]);
+
+        return true;
     }
 
     public function Editar()

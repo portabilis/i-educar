@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolClassType;
+use App\Models\LegacySchoolGrade;
 
 return new class extends clsDetalhe
 {
@@ -211,9 +212,9 @@ return new class extends clsDetalhe
         ]);
 
         if (($totalVagas - $total_alunos <= 0) && !$dependente) {
-            $escolaSerie = $this->getEscolaSerie(escolaId: $det_ref_cod_escola['cod_escola'], serieId: $det_ser['cod_serie']);
+            $bloquearEnturmacao = $this->getBloqueioEnturmacao(escolaId: $det_ref_cod_escola['cod_escola'], serieId: $det_ser['cod_serie']);
 
-            if ($escolaSerie['bloquear_enturmacao_sem_vagas'] != 1) {
+            if ($bloquearEnturmacao != 1) {
                 $msg = sprintf(format: 'Atenção! Turma sem vagas! Deseja continuar com a enturmação mesmo assim?');
                 $jsEnturmacao = sprintf('if (!confirm("%s")) return false;', $msg);
             } else {
@@ -325,13 +326,12 @@ return new class extends clsDetalhe
         ]);
     }
 
-    protected function getEscolaSerie($escolaId, $serieId)
+    protected function getBloqueioEnturmacao($escolaId, $serieId)
     {
-        $escolaSerie = new clsPmieducarEscolaSerie;
-        $escolaSerie->ref_cod_escola = $escolaId;
-        $escolaSerie->ref_cod_serie = $serieId;
-
-        return $escolaSerie->detalhe();
+        return LegacySchoolGrade::query()
+            ->whereSchool((int) $escolaId)
+            ->whereGrade((int) $serieId)
+            ->value('bloquear_enturmacao_sem_vagas');
     }
 
     public function Formular()
