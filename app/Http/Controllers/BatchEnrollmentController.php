@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
+use App\Exceptions\Registration\RegistrationException;
 use App\Http\Requests\BatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchRegistrationRequest;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacyUserType;
+use App\Process;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
 use Carbon\Carbon;
@@ -45,7 +46,7 @@ class BatchEnrollmentController extends Controller
             'enrollments' => $enrollments,
             'fails' => $fails ?? new MessageBag,
             'success' => $success ?? new MessageBag,
-            'canCancelRegistration' => $this->isAdmin(),
+            'canCancelRegistration' => $this->canCancelRegistration(),
         ]);
     }
 
@@ -73,7 +74,7 @@ class BatchEnrollmentController extends Controller
             'registrations' => $registrations,
             'fails' => $fails ?? new MessageBag,
             'success' => $success ?? new MessageBag,
-            'canCancelRegistration' => $this->isAdmin(),
+            'canCancelRegistration' => $this->canCancelRegistration(),
         ]);
     }
 
@@ -207,9 +208,9 @@ class BatchEnrollmentController extends Controller
     public function indexCancelRegistrations(
         LegacySchoolClass $schoolClass
     ) {
-        $this->authorizeAdmin();
+        $this->authorizeSchoolClassAccess($schoolClass);
 
-        return $this->viewCancelRegistrations($schoolClass, $schoolClass->getActiveEnrollments());
+        return $this->viewCancelRegistrations($schoolClass, $schoolClass->getActiveEnrollmentsWithCancellableRegistration());
     }
 
     /**
@@ -222,44 +223,86 @@ class BatchEnrollmentController extends Controller
         LegacySchoolClass $schoolClass,
         RegistrationService $registrationService
     ) {
-        $this->authorizeAdmin();
+        $this->authorizeSchoolClassAccess($schoolClass);
 
         $registrationIds = $request->input('registrations', []);
 
         $fails = new MessageBag;
         $success = new MessageBag;
 
-        $user = auth()->user();
+        // A listagem é carregada antes do cancelamento para que as matrículas
+        // canceladas continuem visíveis na tabela com o resultado de cada uma.
+        $enrollments = $schoolClass->getActiveEnrollmentsWithCancellableRegistration();
 
-        foreach ($registrationService->findAll($registrationIds) as $registration) {
+        // Cancela apenas as matrículas efetivamente listadas para a turma, para
+        // que um POST com identificadores alheios à listagem não alcance
+        // matrículas de outra turma ou fora do critério de cancelamento.
+        $registrations = $enrollments
+            ->pluck('registration')
+            ->unique('cod_matricula')
+            ->whereIn('cod_matricula', $registrationIds);
+
+        foreach ($registrations as $registration) {
             try {
-                $registrationService->cancelRegistration($registration, $user);
+                $registrationService->cancelRegistration($registration, reorderSchoolClasses: false);
                 $success->add($registration->getKey(), 'Matrícula cancelada.');
+            } catch (RegistrationException $exception) {
+                $fails->add($registration->getKey(), $exception->getMessage());
             } catch (Throwable $throwable) {
-                $fails->add($registration->getKey(), $throwable->getMessage());
+                report($throwable);
+
+                $fails->add($registration->getKey(), 'Não foi possível cancelar a matrícula.');
             }
+        }
+
+        // A reordenação dos sequenciais é feita uma única vez por turma, ao
+        // final, evitando renumerar a mesma turma a cada matrícula cancelada.
+        if ($success->isNotEmpty()) {
+            $registrationService->reorderSchoolClassesForRegistrations($success->keys());
         }
 
         return $this->viewCancelRegistrations(
             $schoolClass,
-            $schoolClass->getActiveEnrollments(),
+            $enrollments,
             $fails,
             $success
         );
     }
 
-    private function isAdmin(): bool
+    /**
+     * Garante que usuários de nível escola só operem turmas das próprias escolas.
+     */
+    private function authorizeSchoolClassAccess(LegacySchoolClass $schoolClass): void
     {
-        return auth()->user()?->type?->level === LegacyUserType::LEVEL_ADMIN;
+        $user = auth()->user();
+
+        if (! $user?->isSchooling()) {
+            return;
+        }
+
+        abort_unless(
+            $user->schools()->where('cod_escola', $schoolClass->ref_ref_cod_escola)->exists(),
+            403,
+            'A turma informada não pertence às escolas do usuário.'
+        );
     }
 
-    private function authorizeAdmin(): void
+    /**
+     * Indica se o usuário pode cancelar matrículas, com as mesmas permissões
+     * que o cancelamento individual exige para executar: cadastrar em alunos,
+     * verificada na abertura de `educar_matricula_cad.php`, e excluir em
+     * cancelar matrícula, verificada antes de efetivar o cancelamento.
+     */
+    private function canCancelRegistration(): bool
     {
-        abort_unless(
-            $this->isAdmin(),
-            403,
-            'Apenas usuários poli-institucionais podem cancelar matrículas em lote.'
-        );
+        $user = auth()->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        return $user->can('modify', Process::REGISTRATIONS)
+            && $user->can('remove', Process::CANCEL_REGISTRATION);
     }
 
     /**

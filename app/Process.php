@@ -26,6 +26,8 @@ class Process
 
     public const REGISTRATIONS = 578;
 
+    public const CANCEL_REGISTRATION = 627;
+
     public const ENROLLMENT_HISTORY = 1001;
 
     public const RECLASSIFY_REGISTRATION = 1004;

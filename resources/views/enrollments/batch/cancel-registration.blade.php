@@ -88,7 +88,7 @@
                     <tr>
                         <td>
                         </td>
-                        <td colspan="4">Esta turma não possui nenhum aluno enturmado.</td>
+                        <td colspan="4">Esta turma não possui matrículas que possam ser canceladas.</td>
                     </tr>
                 @endif
             </tbody>
@@ -140,7 +140,8 @@
             makeDialog({
                 title: 'Atenção!',
                 content: 'Você está prestes a cancelar ' + checked + ' matrícula(s). ' +
-                    'Esta ação irá desativar a matrícula e todas as enturmações associadas. ' +
+                    'Prosseguir com o cancelamento de matrícula resultará na perda dos dados ' +
+                    'vinculados a mesma, como lançamentos de notas e frequências. ' +
                     'Deseja continuar?',
                 maxWidth: 860,
                 width: 860,

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\Registration\RegistrationException;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyRegistration;
@@ -15,6 +16,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class RegistrationService
 {
@@ -291,54 +293,137 @@ class RegistrationService
     }
 
     /**
-     * Cancela uma matrícula: desativa enturmações, desativa a matrícula,
-     * reordena sequenciais e re-flagra última matrícula da série de origem.
+     * Cancela uma matrícula reproduzindo o cancelamento individual disponível
+     * em `educar_matricula_cad.php`: desativa as enturmações, re-flagra a
+     * última matrícula da série de origem, reativa a solicitação de
+     * transferência, desativa a matrícula e reordena os sequenciais das turmas.
+     *
+     * Em lote, a reordenação pode ser adiada com `$reorderSchoolClasses = false`
+     * e executada uma única vez por turma ao final, por
+     * `reorderSchoolClassesForRegistrations`.
      */
-    public function cancelRegistration(
-        LegacyRegistration $registration,
-        User $user
-    ): void {
-        $enrollmentService = app(EnrollmentService::class);
+    public function cancelRegistration(LegacyRegistration $registration, bool $reorderSchoolClasses = true): void
+    {
+        if (! $registration->ativo) {
+            throw new RegistrationException('A matrícula já está cancelada.');
+        }
 
-        DB::transaction(function () use ($registration, $user, $enrollmentService) {
-            $enrollments = LegacyEnrollment::query()
-                ->where('ref_cod_matricula', $registration->getKey())
-                ->where('ativo', 1)
-                ->get();
+        DB::transaction(function () use ($registration, $reorderSchoolClasses) {
+            $this->deactivateEnrollments($registration);
+            $this->reflagPreviousGradeRegistration($registration);
 
-            foreach ($enrollments as $enrollment) {
-                $enrollmentService->cancelEnrollment($enrollment, now());
-            }
+            $this->reactivateTransferRequest($registration);
 
             $registration->ativo = 0;
-            $registration->ref_usuario_exc = $user->getKey();
+            $registration->ultima_matricula = 0;
+            $registration->ref_usuario_exc = $this->user->getKey();
             $registration->save();
 
-            $allEnrollments = LegacyEnrollment::query()
-                ->where('ref_cod_matricula', $registration->getKey())
-                ->get();
-
-            foreach ($allEnrollments as $enrollment) {
-                $enrollmentService->reorderSchoolClass($enrollment);
+            if ($reorderSchoolClasses) {
+                $this->reorderSchoolClassesForRegistrations([$registration->getKey()]);
             }
-
-            $this->reflagPreviousGradeRegistration($registration, $user);
         });
+    }
+
+    /**
+     * Reordena os sequenciais de fechamento das turmas das matrículas
+     * informadas, uma única vez por turma.
+     *
+     * Produz o mesmo estado final da reordenação individual por enturmação:
+     * as enturmações que saíram recebem o sequencial 9999 e a última de cada
+     * turma é entregue a `EnrollmentService::reorderSchoolClass`, que renumera
+     * a turma e aplica o 9999 nela.
+     *
+     * @param array<int, int> $registrationIds
+     */
+    public function reorderSchoolClassesForRegistrations(array $registrationIds): void
+    {
+        $enrollmentService = new EnrollmentService($this->user);
+
+        LegacyEnrollment::query()
+            ->whereIn('ref_cod_matricula', $registrationIds)
+            ->get()
+            ->filter(fn ($enrollment) => (bool) $enrollment->sequencial_fechamento)
+            ->groupBy('ref_cod_turma')
+            ->each(function ($enrollments) use ($enrollmentService) {
+                $last = $enrollments->pop();
+
+                foreach ($enrollments as $enrollment) {
+                    $enrollment->sequencial_fechamento = 9999;
+                    $enrollment->save();
+                }
+
+                $enrollmentService->reorderSchoolClass($last);
+            });
+    }
+
+    /**
+     * Desativa as enturmações ativas da matrícula.
+     *
+     * A desativação é feita diretamente, e não por `EnrollmentService::cancelEnrollment`,
+     * porque aquele método valida a data de saída contra o ano letivo da turma. Como a
+     * data usada aqui é a data atual, a validação impediria o cancelamento de matrículas
+     * de anos anteriores, restrição que o cancelamento individual não possui.
+     */
+    private function deactivateEnrollments(LegacyRegistration $registration): void
+    {
+        $enrollments = LegacyEnrollment::query()
+            ->where('ref_cod_matricula', $registration->getKey())
+            ->where('ativo', 1)
+            ->get();
+
+        try {
+            foreach ($enrollments as $enrollment) {
+                $enrollment->ativo = 0;
+                $enrollment->ref_usuario_exc = $this->user->getKey();
+                $enrollment->save();
+            }
+        } catch (Throwable $throwable) {
+            throw new RegistrationException(
+                'Não foi possível desativar as enturmações da matrícula.',
+                previous: $throwable
+            );
+        }
+    }
+
+    /**
+     * Reativa a solicitação de transferência quando o aluno possui outra
+     * matrícula ativa transferida, mantendo o critério do cancelamento
+     * individual. A matrícula alvo é a mesma que satisfaz a condição, em uma
+     * única consulta, para não reativar a solicitação de uma matrícula inativa.
+     */
+    private function reactivateTransferRequest(LegacyRegistration $registration): void
+    {
+        $transferredRegistrationId = LegacyRegistration::query()
+            ->where('ref_cod_aluno', $registration->ref_cod_aluno)
+            ->where('cod_matricula', '<>', $registration->getKey())
+            ->where('ativo', 1)
+            ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
+            ->whereHas('transferEnd', fn ($query) => $query->withTrashed())
+            ->max('cod_matricula');
+
+        if (! $transferredRegistrationId) {
+            return;
+        }
+
+        LegacyTransferRequest::query()
+            ->withTrashed()
+            ->where('ref_cod_matricula_saida', $transferredRegistrationId)
+            ->update(['ativo' => 1]);
     }
 
     /**
      * Quando a série da matrícula cancelada é destino de uma sequência,
      * re-flagra a matrícula anterior (série de origem) como última matrícula.
      */
-    private function reflagPreviousGradeRegistration(
-        LegacyRegistration $registration,
-        User $user
-    ): void {
+    private function reflagPreviousGradeRegistration(LegacyRegistration $registration): void
+    {
         $gradeId = $registration->ref_ref_cod_serie;
 
         $sequence = LegacyGradeSequence::query()
             ->whereGradeDestiny($gradeId)
             ->active()
+            ->orderBy('id')
             ->first();
 
         if (! $sequence) {
@@ -350,14 +435,24 @@ class RegistrationService
             ->where('ref_cod_aluno', $registration->ref_cod_aluno)
             ->where('ativo', 1)
             ->where('ultima_matricula', 0)
+            ->whereHas('student', fn ($query) => $query->where('ativo', 1))
+            ->orderByDesc('ano')
+            ->orderByDesc('cod_matricula')
             ->first();
 
         if (! $previousRegistration) {
             return;
         }
 
-        $previousRegistration->ultima_matricula = 1;
-        $previousRegistration->ref_usuario_exc = $user->getKey();
-        $previousRegistration->save();
+        try {
+            $previousRegistration->ultima_matricula = 1;
+            $previousRegistration->ref_usuario_exc = $this->user->getKey();
+            $previousRegistration->save();
+        } catch (Throwable $throwable) {
+            throw new RegistrationException(
+                'Não foi possível editar a "Última Matrícula da Sequência".',
+                previous: $throwable
+            );
+        }
     }
 }
