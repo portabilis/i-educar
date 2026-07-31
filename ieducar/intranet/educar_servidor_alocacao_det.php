@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\EmployeeAllocation;
 use App\Models\LegacyBondType;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyPerson;
@@ -30,9 +31,9 @@ return new class extends clsDetalhe
 
         $this->cod_servidor_alocacao = $_GET['cod_servidor_alocacao'];
 
-        $tmp_obj = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, $this->ref_cod_instituicao);
-
-        $registro = $tmp_obj->detalhe();
+        $registro = is_numeric($this->cod_servidor_alocacao)
+            ? EmployeeAllocation::query()->with(['school:cod_escola,ref_idpes', 'school.organization:idpes,fantasia'])->find($this->cod_servidor_alocacao)
+            : null;
 
         if (!$registro) {
             $this->simpleRedirect('educar_servidor_lst.php');
@@ -51,10 +52,7 @@ return new class extends clsDetalhe
         $this->addDetalhe(['Servidor', "{$nome}"]);
 
         // Escola
-        $escola = new clsPmieducarEscola($registro['ref_cod_escola']);
-        $escola = $escola->detalhe();
-
-        $this->addDetalhe(['Escola', "{$escola['nome']}"]);
+        $this->addDetalhe(['Escola', "{$registro->school->organization?->fantasia}"]);
 
         // Ano
         $this->addDetalhe(['Ano', "{$registro['ano']}"]);
@@ -74,7 +72,7 @@ return new class extends clsDetalhe
         // Função
         if ($this->ref_cod_servidor_funcao) {
             $employeeRole = LegacyEmployeeRole::find($this->ref_cod_servidor_funcao);
-            $this->addDetalhe(['Função', $employeeRole->role->name]);
+            $this->addDetalhe(['Função', $employeeRole?->role?->name]);
         }
 
         // Vinculo

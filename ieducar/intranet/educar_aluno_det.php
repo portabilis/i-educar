@@ -14,11 +14,13 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
+use App\Models\LegacyStudent;
 use App\Models\LegacyStudentMedicalRecord;
 use App\Models\PersonHasPlace;
 use App\Models\Religion;
 use App\Models\TransportationProvider;
 use App\Models\UniformDistribution;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -519,16 +521,23 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Documentos do aluno', $tabela]);
         }
 
-        if (!empty($registro['url_laudo_medico']) && $registro['url_laudo_medico'] != '[]') {
+        $fileService = new FileService(new UrlPresigner);
+        $files = $fileService->getFiles(
+            relation: LegacyStudent::find($this->cod_aluno),
+            type: 'laudo'
+        );
+
+        if ($files->isNotEmpty()) {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Laudo médico</td></tr>';
 
             $cor = '#D1DADF';
 
-            $arrayLaudoMedico = json_decode(json: $registro['url_laudo_medico']);
-            foreach ($arrayLaudoMedico as $key => $laudoMedico) {
+            $key = 0;
+            foreach ($files as $file) {
                 $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
-                $laudoMedicoUrl = $this->urlPresigner()->getPresignedUrl(url: $laudoMedico->url);
-                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedicoUrl}' target='_blank' > Visualizar laudo " . (count(value: $arrayLaudoMedico) > 1 ? ($key + 1) : '') . ' </a></td></tr>';
+                $laudoMedicoUrl = $file->url;
+                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedicoUrl}' target='_blank' > Visualizar laudo " . ($files->count() > 1 ? ($key + 1) : '') . ' </a></td></tr>';
+                $key++;
             }
 
             $tabela .= '</table>';
