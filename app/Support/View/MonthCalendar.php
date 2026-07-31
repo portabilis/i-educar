@@ -1,6 +1,8 @@
 <?php
 
-class clsCalendario
+namespace App\Support\View;
+
+class MonthCalendar
 {
     /**
      * @var int
@@ -54,7 +56,6 @@ class clsCalendario
             'nome' => 'Anotações',
             'link' => '',
         ],
-        '',
     ];
 
     /**
@@ -91,13 +92,6 @@ class clsCalendario
     public $array_dias = [];
 
     /**
-     * Javascript de um "dia".
-     *
-     * @var array
-     */
-    public $all_days_onclick;
-
-    /**
      * URL de um "dia".
      *
      * @var array
@@ -105,29 +99,11 @@ class clsCalendario
     public $all_days_url;
 
     /**
-     * @var array
-     */
-    public $array_onclick_dias = [];
-
-    /**
      * Div flutuante para dias.
      *
      * @var array
      */
     public $array_div_flutuante_dias = [];
-
-    public function resetAll()
-    {
-        $this->array_div_flutuante_dias = [];
-        $this->array_onclick_dias = [];
-        $this->array_dias = [];
-        $this->array_cor_dia_padrao = [];
-        $this->array_legenda = ['Padrão'];
-        $this->array_cor = ['#F7F7F7'];
-        $this->largura_externa = 400;
-        $this->largura_interna = 250;
-        $this->padding = 5;
-    }
 
     /**
      * @param int $int_largura
@@ -186,7 +162,7 @@ class clsCalendario
 
         $this->array_legenda[] = $str_legenda;
         $str_cor = mb_strtoupper($str_cor);
-        $this->array_cor[] = $this->COR[$str_cor];
+        $this->array_cor[] = $this->COR[$str_cor] ?? null;
     }
 
     /**
@@ -196,7 +172,7 @@ class clsCalendario
     public function setLegendaPadrao($str_legenda, $str_cor = '#F7F7F7')
     {
         $this->array_legenda[0] = $str_legenda;
-        $this->array_cor[0] = $this->COR[$str_cor];
+        $this->array_cor[0] = $this->COR[$str_cor] ?? null;
     }
 
     /**
@@ -209,7 +185,7 @@ class clsCalendario
 
         if (is_array($arr_dia_semana)) {
             foreach ($arr_dia_semana as $dia) {
-                $this->array_cor_dia_padrao[$dia] = $this->COR[$str_cor];
+                $this->array_cor_dia_padrao[$dia] = $this->COR[$str_cor] ?? null;
             }
         } else {
             $this->array_cor_dia_padrao["{$arr_dia_semana}"] = $str_cor;
@@ -224,7 +200,8 @@ class clsCalendario
      */
     public function adicionarArrayDias($str_cod_legenda, $dias)
     {
-        $key = array_shift(array_keys($this->array_legenda, $str_cod_legenda));
+        $keys = array_keys($this->array_legenda, $str_cod_legenda);
+        $key = array_shift($keys);
 
         foreach ($dias as $dia) {
             $dia = (int) $dia;
@@ -316,7 +293,7 @@ class clsCalendario
         if (is_array($mixVariaveisMantidas)) {
             foreach ($mixVariaveisMantidas as $key => $value) {
                 if ($key != "{$nome}_mes" && $key != "{$nome}_ano") {
-                    $linkFixo .= $key = $value . '&';
+                    $linkFixo .= $value . '&';
                 }
             }
         } else {
@@ -485,12 +462,9 @@ class clsCalendario
             $cab = implode("\n", $cab);
         }
 
-        $calendario = sprintf(
-            '
+        $calendario = '
       <div id="d_calendario">
-        <table class="calendar" cellspacing="0" cellpadding="0" border="0">',
-            $this->largura_externa
-        );
+        <table class="calendar" cellspacing="0" cellpadding="0" border="0">';
 
         $calendario .= sprintf(
             '
@@ -571,9 +545,7 @@ class clsCalendario
 
             $onclick = '';
 
-            if ($this->all_days_onclick) {
-                $onclick = sprintf('onclick="%s"', $this->all_days_onclick);
-            } elseif ($this->all_days_url) {
+            if ($this->all_days_url) {
                 $onclick = sprintf(
                     'onclick="document.location=\'%s&dia=%s&mes=%s&ano=%s\';"',
                     $this->all_days_url,
@@ -583,18 +555,10 @@ class clsCalendario
                 );
             }
 
-            if (array_key_exists($diaCorrente, $this->array_onclick_dias)) {
-                $onclick = sprintf('onclick="%s;"', $this->array_onclick_dias[$diaCorrente]);
-            }
-
             $icone = '';
 
             if (array_key_exists($diaCorrente, $this->array_icone_dias)) {
-                $icone = sprintf(
-                    '<i class="fa fa-pencil-square-o anotacao" aria-hidden="true"></i>',
-                    $this->array_icone[$this->array_icone_dias[$diaCorrente]]['link'],
-                    $this->array_icone[$this->array_icone_dias[$diaCorrente]]['nome']
-                );
+                $icone = '<i class="fa fa-pencil-square-o anotacao" aria-hidden="true"></i>';
             }
 
             $message = '';
@@ -692,7 +656,7 @@ class clsCalendario
 
             foreach ($this->array_icone as $key => $legenda) {
                 if (!empty($legenda['utilizado'])) {
-                    $style = sprintf('style="background-color: %s;"', $this->array_cor[$key]);
+                    $style = sprintf('style="background-color: %s;"', $this->array_cor[$key] ?? null);
 
                     $icone = '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>';
 
