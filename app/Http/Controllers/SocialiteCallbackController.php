@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Events\UserSocialiteNotFound;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Contracts\User as UserSocialite;
+use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteCallbackController
 {
