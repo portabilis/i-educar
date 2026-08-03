@@ -35,7 +35,70 @@ class BirthCertificateValidatorTest extends TestCase
         $birthDate = date('Y-m-d', strtotime('-10 years'));
         $validator = new BirthCertificateValidator($number, $birthDate);
 
+        $this->assertFalse($validator->isValid());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+    }
+
+    public function test_double_x_on_verifying_digits()
+    {
+        $certificateYear = date('Y');
+        $number = "1234567890{$certificateYear}5678901234567890XX";
+        $birthDate = date('Y-m-d', strtotime('-10 years'));
+        $validator = new BirthCertificateValidator($number, $birthDate);
+
         $this->assertTrue($validator->isValid());
+    }
+
+    public function test_numeric_verifying_digits()
+    {
+        $certificateYear = date('Y');
+        $number = "1234567890{$certificateYear}567890123456789012";
+        $birthDate = date('Y-m-d', strtotime('-10 years'));
+        $validator = new BirthCertificateValidator($number, $birthDate);
+
+        $this->assertTrue($validator->isValid());
+    }
+
+    public function test_comma_on_verifying_digits()
+    {
+        $certificateYear = date('Y');
+        $number = "1234567890{$certificateYear}56789012345678901,";
+        $birthDate = date('Y-m-d', strtotime('-10 years'));
+        $validator = new BirthCertificateValidator($number, $birthDate);
+
+        $this->assertFalse($validator->isValid());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+    }
+
+    public function test_space_on_verifying_digits()
+    {
+        $certificateYear = date('Y');
+        $number = "1234567890{$certificateYear}5678901234567890X ";
+        $birthDate = date('Y-m-d', strtotime('-10 years'));
+        $validator = new BirthCertificateValidator($number, $birthDate);
+
+        $this->assertFalse($validator->isValid());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+    }
+
+    public function test_lowercase_x_on_verifying_digits()
+    {
+        $certificateYear = date('Y');
+        $number = "1234567890{$certificateYear}5678901234567890xx";
+        $birthDate = date('Y-m-d', strtotime('-10 years'));
+        $validator = new BirthCertificateValidator($number, $birthDate);
+
+        $this->assertFalse($validator->isValid());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+    }
+
+    public function test_digits_validation_with_short_number()
+    {
+        $number = '12345678901234567890';
+        $birthDate = date('Y-m-d', strtotime('-10 years'));
+        $validator = new BirthCertificateValidator($number, $birthDate);
+
+        $this->assertFalse($validator->validateCertificateDigits());
     }
 
     public function test_forbidden_digits_before31_digit()

@@ -2,27 +2,39 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolGradeBuilder;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property array<int, string> $fillable
  * @property int $ref_cod_escola
  * @property int $ref_cod_serie
+ *
+ * @method static LegacySchoolGradeBuilder query()
  */
 class LegacySchoolGrade extends LegacyModel
 {
+    /** @use HasBuilder<LegacySchoolGradeBuilder> */
+    use HasBuilder;
+
     use HasLegacyDates;
+
+    protected static string $builder = LegacySchoolGradeBuilder::class;
 
     protected $table = 'pmieducar.escola_serie';
 
     protected $primaryKey = 'ref_cod_escola';
 
+    public $incrementing = false;
+
     protected $fillable = [
         'ref_cod_escola',
         'ref_cod_serie',
         'ref_usuario_cad',
+        'ref_usuario_exc',
         'anos_letivos',
         'hora_inicial',
         'hora_final',
@@ -30,6 +42,9 @@ class LegacySchoolGrade extends LegacyModel
         'hora_fim_intervalo',
         'bloquear_enturmacao_sem_vagas',
         'bloquear_cadastro_turma_para_serie_com_vagas',
+        'data_cadastro',
+        'data_exclusao',
+        'ativo',
     ];
 
     /**

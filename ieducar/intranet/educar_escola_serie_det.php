@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolGrade;
 use App\Services\SchoolGradeDisciplineService;
 
 return new class extends clsDetalhe
@@ -33,17 +34,15 @@ return new class extends clsDetalhe
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $tmp_obj = new clsPmieducarEscolaSerie;
-        $lst_obj = $tmp_obj->lista(int_ref_cod_escola: $this->ref_cod_escola, int_ref_cod_serie: $this->ref_cod_serie);
-
-        if (!is_array($lst_obj)) {
-            $this->mensagem .= 'Registro não localizado.<br>';
-            $this->simpleRedirect('educar_escola_serie_lst.php');
-        }
-
-        $registro = array_shift($lst_obj);
+        $registro = LegacySchoolGrade::query()
+            ->joinGradeCourse()
+            ->whereSchool((int) $this->ref_cod_escola)
+            ->whereGrade((int) $this->ref_cod_serie)
+            ->active()
+            ->first();
 
         if (!$registro) {
+            $this->mensagem .= 'Registro não localizado.<br>';
             $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 

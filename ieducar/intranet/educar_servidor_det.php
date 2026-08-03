@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\EmployeeAllocation;
 use App\Models\EmployeeWithdrawal;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
@@ -66,29 +67,24 @@ return new class extends clsDetalhe
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         // Alocação do servidor
-        $obj = new clsPmieducarServidorAlocacao;
-        $obj->setOrderby('periodo, carga_horaria');
-        $lista = $obj->lista(
-            null,
-            $this->ref_cod_instituicao,
-            int_ref_cod_servidor: $this->cod_servidor,
-            bool_busca_nome: null,
-            boo_professor: 1,
-            ano: date('Y'),
-            desconsiderarAlocacoesComDataDeSaida: true
-        );
+        $lista = EmployeeAllocation::query()
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+            ->when(is_numeric($this->cod_servidor), fn ($q) => $q->whereEmployee($this->cod_servidor))
+            ->whereYearEq(date('Y'))
+            ->active()
+            ->withoutLeaveDate()
+            ->with(['school:cod_escola,ref_idpes', 'school.organization:idpes,fantasia'])
+            ->orderBy('periodo')
+            ->orderBy('carga_horaria')
+            ->get();
 
-        if ($lista) {
+        if ($lista->isNotEmpty()) {
             // Passa todos os valores do registro para atributos do objeto
             foreach ($lista as $val) {
                 $temp = [];
                 $temp['carga_horaria'] = $val['carga_horaria'];
                 $temp['periodo'] = $val['periodo'];
-
-                $obj_escola = new clsPmieducarEscola($val['ref_cod_escola']);
-                $det_escola = $obj_escola->detalhe();
-                $det_escola = $det_escola['nome'];
-                $temp['ref_cod_escola'] = $det_escola;
+                $temp['ref_cod_escola'] = $val->school->organization?->fantasia;
 
                 $this->alocacao_array[] = $temp;
             }
@@ -291,7 +287,7 @@ return new class extends clsDetalhe
             $this->array_botao[] = 'Alocar Servidor';
             $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_lst.php?{$get_padrao}\");";
 
-            if ($lista) {
+            if ($lista->isNotEmpty()) {
                 $this->array_botao[] = 'Substituir Horário Servidor';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
             }

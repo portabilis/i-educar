@@ -2,6 +2,7 @@
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
+use App\Models\LegacySchoolGrade;
 use App\Models\LegacyUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -142,13 +143,16 @@ if ($get_escola_curso_serie) {
     $opcoes_series_curso_escola = ['' => 'Selecione'];
     // EDITAR
     if ($this->ref_cod_escola && $this->ref_cod_curso) {
-        $obj_escola_serie = new clsPmieducarEscolaSerie;
-        $obj_escola_serie->setOrderby('nm_serie ASC');
-        $lst_escola_serie = $obj_escola_serie->lista($this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, $this->ref_cod_curso);
-        if (is_array($lst_escola_serie) && count($lst_escola_serie)) {
-            foreach ($lst_escola_serie as $escola_curso_serie) {
-                $opcoes_series_curso_escola["{$escola_curso_serie['ref_cod_serie']}"] = $escola_curso_serie['nm_serie'];
-            }
+        $lst_escola_serie = LegacySchoolGrade::query()
+            ->joinGradeCourse()
+            ->whereSchool((int) $this->ref_cod_escola)
+            ->whereCourse((int) $this->ref_cod_curso)
+            ->active()
+            ->orderBy('nm_serie')
+            ->get();
+
+        foreach ($lst_escola_serie as $escola_curso_serie) {
+            $opcoes_series_curso_escola["{$escola_curso_serie['ref_cod_serie']}"] = $escola_curso_serie['nm_serie'];
         }
     }
     $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_series_curso_escola, $this->ref_ref_cod_serie, null, null, null, null, $escola_curso_serie_desabilitado, $escola_curso_serie_obrigatorio);
@@ -436,48 +440,6 @@ function atualizaLstEscolaCurso(cursos) {
         });
     } else {
         campoCurso.options[0].text = 'A escola não possui nenhum curso';
-    }
-}
-<?php
-}
-if ($get_escola_curso_serie && $get_matricula && $_GET['ref_cod_aluno']) {
-    // tah matriculando o aluno, seleciona as series que ele pode se matricular?
-    ?>
-function getEscolaCursoSerie() {
-    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-    var campoEscola = document.getElementById('ref_cod_escola').value;
-    var campoCursoValue = document.getElementById('ref_cod_curso').value;
-    var campoCurso = document.getElementById('ref_cod_curso');
-    var campoSerie = document.getElementById('ref_ref_cod_serie');
-    var cod_aluno = <?= intval($_GET['ref_cod_aluno']) ?>;
-
-    campoSerie.length = 1;
-
-    limpaCampos(4);
-    if (campoInstituicao && campoCursoValue && campoEscola && cod_aluno) {
-        campoSerie.disabled = true;
-        campoSerie.options[0].text = 'Carregando séries';
-
-        var xml = new ajax(atualizaLstSerieMatricula);
-        xml.envia('educar_serie_matricula_xml.php?ins=' + campoInstituicao + '&cur=' + campoCursoValue + '&esc=' + campoEscola + '&alu=' + cod_aluno);
-    } else {
-        campoSerie.options[0].text = 'Selecione';
-    }
-}
-
-function atualizaLstSerieMatricula(xml) {
-    var campoSerie = document.getElementById('ref_ref_cod_serie');
-    campoSerie.length = 1;
-    campoSerie.options[0].text = 'Selecione uma série';
-    campoSerie.disabled = false;
-
-    series = xml.getElementsByTagName('serie');
-    if (series.length) {
-        for (var i = 0; i < xml.length; i++) {
-            campoSerie.options[campoSerie.options.length] = new Option(series[i].firstChild.data, series[i].getAttribute('cod_serie'), false, false);
-        }
-    } else {
-        campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
     }
 }
 <?php

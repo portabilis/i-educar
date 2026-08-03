@@ -16,6 +16,7 @@ class FileRelation extends Model
         'relation_type',
         'relation_id',
         'file_id',
+        'type',
     ];
 
     /**

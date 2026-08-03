@@ -827,14 +827,4 @@ class UpdateCollegeNameEducacenso extends Migration
             UPDATE modules.educacenso_ies SET nome = \'FACULDADE DE TECNOLOGIA FATEC DE RIBEIRAO PRETO\' WHERE ies_id = 21713;
         ');
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-    }
 }

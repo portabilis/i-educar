@@ -71,94 +71,13 @@ var $cpfNotice = $j("<span>")
   .width($j("#pessoa_nome").outerWidth() - 12)
   .appendTo($cpfField.parent());
 
-var $loadingLaudoMedico = $j("<img>")
-  .attr("src", "imagens/indicator.gif")
-  .css("margin-top", "3px")
-  .hide()
-  .insertBefore($j("#span-laudo_medico"));
-
-var $arrayLaudoMedico = [];
-var $arrayUrlLaudoMedico = [];
-var $arrayDataLaudoMedico = [];
-
-function excluirLaudoMedico(event) {
-  $arrayUrlLaudoMedico.splice(event.data.i - 1, 1);
-  $j("#laudo_medico").val("").removeClass("success");
-  messageUtils.notice("Laudo médico excluído com sucesso!");
-  $j("#laudo" + event.data.i).hide();
-  montaUrlLaudoMedico();
-}
-
 function laudoMedicoObrigatorio() {
-  $j("#laudo_medico").addClass("error");
+  $j("#file").addClass("error");
   messageUtils.error(
     "Deve ser anexado um laudo médico para alunos com deficiências ou transtornos"
   );
 }
 
-function addLaudoMedico(url, data) {
-  $index = $arrayLaudoMedico.length;
-  $id = $index + 1;
-  $arrayUrlLaudoMedico[$index] = url;
-  $arrayDataLaudoMedico[$index] = data;
-
-  var dataLaudoMedico = "";
-
-  if (data) {
-    dataLaudoMedico = " adicionado em " + data;
-  }
-
-  $arrayLaudoMedico[$arrayLaudoMedico.length] = $j("<div>")
-    .append(
-      $j("<span>")
-        .html("Laudo " + $id + dataLaudoMedico + ":")
-        .attr("id", "laudo" + $id)
-        .append(
-          $j("<a>")
-            .html("Excluir")
-            .addClass("decorated")
-            .attr("id", "link_excluir_laudo_medico_" + $id)
-            .css("cursor", "pointer")
-            .css("margin-left", "10px")
-            .click({i: $id}, excluirLaudoMedico)
-        )
-        .append(
-          $j("<a>")
-            .html("Visualizar")
-            .addClass("decorated")
-            .attr("id", "link_visualizar_laudo_medico_" + $id)
-            .attr("target", "_blank")
-            .attr("href", linkUrlPrivada(url))
-            .css("cursor", "pointer")
-            .css("margin-left", "10px")
-        )
-    )
-    .insertBefore($j("#laudo_medico"));
-
-  montaUrlLaudoMedico();
-}
-
-function montaUrlLaudoMedico() {
-  var url = "";
-
-  for (var i = 0; i < $arrayUrlLaudoMedico.length; i++) {
-    if ($arrayUrlLaudoMedico[i]) {
-      var dataLaudo = "";
-      var urlLaudo = $arrayUrlLaudoMedico[i];
-
-      if ($arrayDataLaudoMedico[i]) {
-        dataLaudo = '"data" : "' + $arrayDataLaudoMedico[i] + '",';
-      }
-      url += "{" + dataLaudo + '"url" : "' + urlLaudo + '"},';
-    }
-  }
-
-  if (url.substring(url.length - 1, url.length) == ",") {
-    url = url.substring(0, url.length - 1);
-  }
-
-  $j("#url_laudo_medico").val("[" + url + "]");
-}
 
 function codigoInepInvalido() {
   aluno_inep_id.addClass("error");
@@ -200,11 +119,11 @@ function certidaoCasamentoInvalida() {
 
 var newSubmitForm = function (event) {
   if ($j("#deficiencias").val().length > 1 || $j("#transtornos").val().length > 1) {
-    let laudos = $j("#url_laudo_medico").val();
+    let laudos = $j("#file_count").val();
     let temLaudos = false;
 
-    if (laudos.length > 0) {
-      temLaudos = JSON.parse(laudos).length > 0;
+    if (laudos > 0) {
+      temLaudos = true;
     }
 
     var additionalVars = {
@@ -714,14 +633,6 @@ resourceOptions.handleGet = function (dataResponse) {
   } else {
     $j("#parentesco_cinco").closest("tr").show();
     $j("#parentesco_cinco").closest("tr").show();
-  }
-
-  if (dataResponse.url_laudo_medico) {
-    var arrayLaudo = JSON.parse(dataResponse.url_laudo_medico);
-
-    for (var i = 0; i < arrayLaudo.length; i++) {
-      addLaudoMedico(arrayLaudo[i].url, arrayLaudo[i].data);
-    }
   }
 
   if (dataResponse.url_documento) {
@@ -1648,70 +1559,13 @@ function canShowParentsFields() {
       return dd + "/" + mm + "/" + yyyy;
     }
 
-    $j("#laudo_medico").on("change", prepareUpload);
-
     $j("#documento").on("change", prepareUploadDocumento);
 
     $j("#deficiencias").trigger("chosen:updated");
 
-    function prepareUpload(event) {
-      $j("#laudo_medico").removeClass("error");
-      uploadFiles(event.target.files);
-    }
-
     function prepareUploadDocumento(event) {
       $j("#documento").removeClass("error");
       uploadFilesDocumento(event.target.files);
-    }
-
-    function uploadFiles(files) {
-      if (files && files.length > 0) {
-        $j("#laudo_medico").attr("disabled", "disabled");
-        $j("#btn_enviar")
-          .attr("disabled", "disabled")
-          .val("Aguarde...");
-        $loadingLaudoMedico.show();
-        messageUtils.notice("Carregando laudo médico...");
-
-        var data = new FormData();
-        $j.each(files, function (key, value) {
-          data.append(key, value);
-        });
-
-        $j.ajax({
-          url: "/intranet/upload.php?files",
-          type: "POST",
-          data: data,
-          cache: false,
-          dataType: "json",
-          processData: false,
-          contentType: false,
-          success: function (dataResponse) {
-            if (dataResponse.error) {
-              $j("#laudo_medico").val("").addClass("error");
-              messageUtils.error(dataResponse.error);
-            } else {
-              messageUtils.success(
-                "Laudo médico carregado com sucesso"
-              );
-              $j("#laudo_medico").addClass("success");
-              addLaudoMedico(
-                dataResponse.file_url,
-                currentDate()
-              );
-            }
-          },
-          error: function () {
-            $j("#laudo_medico").val("").addClass("error");
-            messageUtils.error("Não foi possível enviar o arquivo");
-          },
-          complete: function () {
-            $j("#laudo_medico").removeAttr("disabled");
-            $loadingLaudoMedico.hide();
-            $j("#btn_enviar").removeAttr("disabled").val("Gravar");
-          },
-        });
-      }
     }
 
     function uploadFilesDocumento(files) {
@@ -3210,4 +3064,20 @@ aluno_inep_id.on("keyup change", function () {
     );
     $j(this).val("");
   }
+});
+
+// A certidão de nascimento (novo formato) aceita apenas números e o dígito verificador "XX".
+$j(document).ready(function () {
+  $j("#certidao_nascimento").on("keyup change", function () {
+    var valorDigitado = this.value;
+    var valorCorrigido = valorDigitado.toUpperCase().replace(/[^0-9X]/g, "");
+
+    if (valorDigitado !== valorCorrigido) {
+      this.value = valorCorrigido;
+    }
+
+    if (valorDigitado.length !== valorCorrigido.length) {
+      messageUtils.error("Informe apenas números ou a letra X.", this);
+    }
+  });
 });

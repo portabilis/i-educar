@@ -409,6 +409,7 @@ class EducacensoAnaliseController extends ApiCoreController
     protected function analisaEducacensoRegistro10()
     {
         $escolaId = $this->getRequest()->escola;
+        $ano = $this->getRequest()->ano;
 
         $educacensoRepository = new EducacensoRepository;
         $registro10Model = new Registro10;
@@ -627,6 +628,30 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        $alunos = (new Registro60Data($educacensoRepository, new Registro60))->getData($escolaId, $ano);
+
+        // Em turma multisseriada a etapa efetiva do aluno vem da enturmação, não da turma.
+        $etapasMatriculas = array_map(
+            static fn ($aluno) => in_array($aluno->etapaTurma, App_Model_Educacenso::etapas_multisseriadas())
+                ? $aluno->etapaAluno
+                : $aluno->etapaTurma,
+            $alunos
+        );
+
+        $temMatriculaInfantilOuAnosIniciais = count(array_intersect(
+            $etapasMatriculas,
+            EtapaEnsino::ETAPAS_EDUCACAO_INFANTIL_E_ANOS_INICIAIS
+        )) > 0;
+
+        if (!$temMatriculaInfantilOuAnosIniciais && $escola->numeroSalasCantinhoLeitura) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que a escola não possui matrículas vinculadas à Educação Infantil ou aos Anos Iniciais do Ensino Fundamental, portanto a quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais) não pode ser informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais))',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true,
+            ];
+        }
+
         if (count(array_filter($escola->equipamentos)) == 0) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se os equipamentos da escola foram informados.",
@@ -806,8 +831,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (is_null($escola->linguaMinistrada)) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Língua em que o ensino é ministrado foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o campo: Língua em que a educação indígena é ministrada foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que a educação indígena é ministrada)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true,
             ];
@@ -1337,19 +1362,21 @@ class EducacensoAnaliseController extends ApiCoreController
                         'fail' => true,
                     ];
                 } else {
-                    $codigosEducacenso = $turma->componentesCodigosEducacenso();
+                    $exportaComponentes = $turma->curricularEtapaDeEnsino() && !in_array($turma->etapaEducacenso, [1, 2, 3]);
 
-                    $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
+                    if ($exportaComponentes) {
+                        $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
 
-                    $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
+                        $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
 
-                    foreach ($disciplinesWithoutTeacher as $discipline) {
-                        $mensagem[] = [
-                            'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
-                            'path' => '(Servidores > Cadastros > Servidores)',
-                            'linkPath' => '/intranet/educar_servidor_lst.php',
-                            'fail' => $educacaoDistancia,
-                        ];
+                        foreach ($disciplinesWithoutTeacher as $discipline) {
+                            $mensagem[] = [
+                                'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 1 (Oferece).</span>",
+                                'path' => '(Servidores > Cadastros > Servidores)',
+                                'linkPath' => '/intranet/educar_servidor_lst.php',
+                                'fail' => $educacaoDistancia,
+                            ];
+                        }
                     }
 
                     $componenteNulo = null;
@@ -1676,12 +1703,11 @@ class EducacensoAnaliseController extends ApiCoreController
             }
 
             if (!$gestor->tipoVinculo &&
-                $gestor->cargo === SchoolManagerRole::DIRETOR &&
                 $gestor->isDependenciaAdministrativaPublica() &&
                 $escola->situacao_funcionamento === SituacaoFuncionamento::EM_ATIVIDADE
             ) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} é diretor(a) e a dependência administrativa da escola é {$dependenciaAdministraticaDesc} e a situação de funcionamento da escola é em atividade, portanto é necessário informar o tipo de vínculo.",
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é {$dependenciaAdministraticaDesc} e a situação de funcionamento da escola é em atividade, portanto é necessário informar o tipo de vínculo do(a) gestor(a) escolar {$nomeGestor}.",
                     'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Tipo de vínculo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true,
@@ -1783,25 +1809,37 @@ class EducacensoAnaliseController extends ApiCoreController
 
             $organizacaoCurricular = $docente->organizacaoCurricular ?? [];
             $areaItinerario = $docente->areaItinerario ?? [];
+            $funcaoDesc = FuncaoExercida::getDescription($docente->funcaoDocente);
 
-            if (empty($areaItinerario) && in_array($docente->funcaoDocente, [
+            $funcaoDocenteOuTitular = in_array($docente->funcaoDocente, [
                 FuncaoExercida::DOCENTE,
                 FuncaoExercida::DOCENTE_TITULAR_EAD,
-            ]) && in_array(OrganizacaoCurricular::ITINERARIO_FORMATIVO_APROFUNDAMENTO, $organizacaoCurricular)) {
-                $funcaoDesc = FuncaoExercida::getDescription($docente->funcaoDocente);
+            ]);
+            $organizacaoExclusivaAprofundamento = count(array_filter($organizacaoCurricular)) === 1
+                && in_array(OrganizacaoCurricular::ITINERARIO_FORMATIVO_APROFUNDAMENTO, $organizacaoCurricular);
+            $organizacaoFormacaoGeralEAprofundamento = in_array(OrganizacaoCurricular::FORMACAO_GERAL_BASICA, $organizacaoCurricular)
+                && in_array(OrganizacaoCurricular::ITINERARIO_FORMATIVO_APROFUNDAMENTO, $organizacaoCurricular);
+            $semComponenteCurricular = empty($docente->componentes);
+
+            if (empty($areaItinerario) && $funcaoDocenteOuTitular && $organizacaoExclusivaAprofundamento) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o(a) docente {$docente->nomeDocente} exerce função {$funcaoDesc} na turma {$docente->nomeTurma} que possui organização curricular de Itinerário formativo de aprofundamento, portanto é necessário informar a(s) área(s) do itinerário formativo.",
+                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o(a) docente {$docente->nomeDocente} exerce função {$funcaoDesc} na turma {$docente->nomeTurma} que possui organização curricular exclusivamente de Itinerário formativo de aprofundamento, portanto é necessário informar a(s) área(s) do itinerário formativo.",
                     'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Área(s) do itinerário formativo)',
                     'linkPath' => "/intranet/educar_servidor_vinculo_turma_cad.php?id={$docente->idAlocacao}&ref_cod_instituicao={$docente->idInstituicao}&ref_cod_servidor={$docente->idServidor}",
                     'fail' => true,
                 ];
             }
 
-            if (!empty($areaItinerario) && !in_array($docente->funcaoDocente, [
-                FuncaoExercida::DOCENTE,
-                FuncaoExercida::DOCENTE_TITULAR_EAD,
-            ])) {
-                $funcaoDesc = FuncaoExercida::getDescription($docente->funcaoDocente);
+            if (empty($areaItinerario) && $funcaoDocenteOuTitular && $organizacaoFormacaoGeralEAprofundamento && $semComponenteCurricular) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o(a) docente {$docente->nomeDocente} exerce função {$funcaoDesc} na turma {$docente->nomeTurma} que possui organização curricular de Formação geral básica e Itinerário formativo de aprofundamento e não possui componente curricular informado, portanto é necessário informar a(s) área(s) do itinerário formativo.",
+                    'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Área(s) do itinerário formativo)',
+                    'linkPath' => "/intranet/educar_servidor_vinculo_turma_cad.php?id={$docente->idAlocacao}&ref_cod_instituicao={$docente->idInstituicao}&ref_cod_servidor={$docente->idServidor}",
+                    'fail' => true,
+                ];
+            }
+
+            if (!empty($areaItinerario) && !$funcaoDocenteOuTitular) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o(a) docente {$docente->nomeDocente} possui área(s) do itinerário formativo informada(s), mas a função exercida na turma {$docente->nomeTurma} é {$funcaoDesc}. A área do itinerário formativo só pode ser preenchida para as funções Docente ou Docente titular.",
                     'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Área(s) do itinerário formativo)',
@@ -1824,7 +1862,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 FuncaoExercida::DOCENTE_TITULAR_EAD,
                 FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL,
             ]) && in_array(OrganizacaoCurricular::ITINERARIO_FORMACAO_TECNICA_PROFISSIONAL, $organizacaoCurricular)) {
-                $funcaoDesc = FuncaoExercida::getDescription($docente->funcaoDocente);
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} não encontrados. Verificamos que o(a) docente {$docente->nomeDocente} exerce função {$funcaoDesc} na turma {$docente->nomeTurma} que possui organização curricular de Itinerário de formação técnica e profissional, portanto é necessário informar se o profissional escolar leciona no Itinerário de formação técnica e profissional (IFTP).",
                     'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Profissional escolar leciona no Itinerário de formação técnica e profissional (IFTP))',
@@ -1838,7 +1875,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 FuncaoExercida::DOCENTE_TITULAR_EAD,
                 FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL,
             ])) {
-                $funcaoDesc = FuncaoExercida::getDescription($docente->funcaoDocente);
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o(a) docente {$docente->nomeDocente} possui informação sobre lecionar no Itinerário de formação técnica e profissional (IFTP), mas a função exercida na turma {$docente->nomeTurma} é {$funcaoDesc}. Este campo só pode ser preenchido para as funções Docente, Docente titular ou Instrutor da Educação Profissional.",
                     'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Profissional escolar leciona no Itinerário de formação técnica e profissional (IFTP))',

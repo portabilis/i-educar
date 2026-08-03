@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\LegacyBondType;
-use App\Models\LegacyEmployeeRole;
+use App\Models\EmployeeAllocation;
 use App\Models\LegacyPerson;
 
 return new class extends clsListagem
@@ -11,8 +10,6 @@ return new class extends clsListagem
     public $titulo;
 
     public $limite;
-
-    public $offset;
 
     public $ref_cod_servidor;
 
@@ -71,55 +68,36 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome]) ?
-            $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_servidor_alocacao = new clsPmieducarServidorAlocacao;
+        $usuarioBiblioteca = App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada);
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
-            $obj_servidor_alocacao->codUsuario = $this->pessoa_logada;
-        }
+        $paginador = EmployeeAllocation::query()
+            ->active()
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+            ->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola))
+            ->when(!is_numeric($this->ref_cod_escola) && $usuarioBiblioteca, fn ($q) => $q->whereUser($this->pessoa_logada))
+            ->when(is_numeric($this->ref_cod_servidor), fn ($q) => $q->whereEmployee($this->ref_cod_servidor))
+            ->when(is_numeric($this->ano_letivo), fn ($q) => $q->whereYearEq($this->ano_letivo))
+            ->with([
+                'school:cod_escola,ref_idpes',
+                'school.organization:idpes,fantasia',
+                'bond:cod_funcionario_vinculo,nm_vinculo',
+                'employeeRole:cod_servidor_funcao,ref_cod_funcao',
+                'employeeRole.role:cod_funcao,nm_funcao',
+            ])
+            ->orderBy('ano')
+            ->orderBy('data_saida')
+            ->orderBy('data_admissao')
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $obj_servidor_alocacao->setOrderby('ano ASC, data_saida, data_admissao');
-        $obj_servidor_alocacao->setLimite($this->limite, $this->offset);
-
-        $lista = $obj_servidor_alocacao->lista(
-            null,
-            $this->ref_cod_instituicao,
-            null,
-            null,
-            $this->ref_cod_escola,
-            $this->ref_cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ano_letivo,
-            $this->data_admissao,
-            $this->hora_inicial,
-            $this->hora_final,
-            $this->hora_atividade,
-            $this->horas_excedentes,
-            $this->data_saida
-        );
-        $total = $obj_servidor_alocacao->_total;
+        $lista = $paginador->getCollection();
+        $total = $paginador->total();
 
         // UrlHelper
         $url = CoreExt_View_Helper_UrlHelper::getInstance();
 
         // Monta a lista
-        if (is_array($lista) && count($lista)) {
-            $funcoesServidor = LegacyEmployeeRole::query()
-                ->with('role')
-                ->whereIn('cod_servidor_funcao', array_filter(array_column($lista, 'ref_cod_servidor_funcao'), 'is_numeric'))
-                ->get()
-                ->keyBy('cod_servidor_funcao');
-
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
                 $path = 'educar_servidor_alocacao_det.php';
                 $options = [
@@ -128,8 +106,7 @@ return new class extends clsListagem
                     ]];
 
                 // Escola
-                $escola = new clsPmieducarEscola($registro['ref_cod_escola']);
-                $escola = $escola->detalhe();
+                $nomeEscola = $registro->school->organization?->fantasia;
 
                 // Periodo
                 $periodo = [
@@ -139,14 +116,14 @@ return new class extends clsListagem
                 ];
 
                 // Função
-                $funcao = $funcoesServidor->get($registro['ref_cod_servidor_funcao'])?->role?->getAttributes();
+                $nomeFuncao = $registro->employeeRole?->role?->nm_funcao;
 
                 // Vinculo
-                $funcionarioVinculo = LegacyBondType::whereKey($registro['ref_cod_funcionario_vinculo'])->value('nm_vinculo');
+                $funcionarioVinculo = $registro->bond?->nm_vinculo;
 
                 $this->addLinhas([
-                    $url->l($escola['nome'], $path, $options),
-                    $url->l($funcao['nm_funcao'], $path, $options),
+                    $url->l($nomeEscola, $path, $options),
+                    $url->l($nomeFuncao, $path, $options),
                     $url->l($registro['ano'], $path, $options),
                     $url->l($periodo[$registro['periodo']], $path, $options),
                     $url->l($horas = substr($registro['carga_horaria'], 0, -3), $path, $options),

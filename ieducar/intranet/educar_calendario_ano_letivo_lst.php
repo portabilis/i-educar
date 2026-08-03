@@ -5,6 +5,7 @@ use App\Models\LegacyCalendarDay;
 use App\Models\LegacyCalendarDayNote;
 use App\Models\LegacyCalendarDayReason;
 use App\Models\LegacyCalendarYear;
+use App\Support\View\MonthCalendar;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -186,7 +187,7 @@ return new class extends clsListagem
                 // Mapper de Calendario_Model_TurmaDataMapper
                 $calendarioTurmaMapper = new Calendario_Model_TurmaDataMapper;
 
-                $obj_calendario = new clsCalendario;
+                $obj_calendario = new MonthCalendar;
                 $obj_calendario->setLargura(int_largura: 600);
                 $obj_calendario->permite_trocar_ano = true;
 
@@ -222,10 +223,14 @@ return new class extends clsListagem
                             $url
                         );
 
-                        if ($dia['ref_cod_calendario_dia_motivo']) {
+                        $motivo = $dia['ref_cod_calendario_dia_motivo']
+                            ? LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])
+                            : null;
+
+                        if ($motivo) {
                             $array_dias[$dia['dia']] = $dia['dia'];
 
-                            $det_motivo = LegacyCalendarDayReason::find($dia['ref_cod_calendario_dia_motivo'])->getAttributes();
+                            $det_motivo = $motivo->getAttributes();
 
                             /**
                              * @todo CoreExt_Enum?

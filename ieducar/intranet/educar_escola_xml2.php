@@ -18,17 +18,7 @@ if (is_numeric($_GET['ins'])) {
                     ref_cod_instituicao = {$_GET['ins']}
                     AND idpes = ref_idpes
                     AND ativo = 1
-            UNION
-                SELECT
-                    cod_escola
-                    , nm_escola
-                FROM
-                    pmieducar.escola
-                    , pmieducar.escola_complemento
-                WHERE
-                    ref_cod_instituicao = {$_GET['ins']}
-                    AND cod_escola = ref_cod_escola
-                    AND escola.ativo = 1
+
                 ORDER BY 2 ASC
             ");
     while ($db->ProximoRegistro()) {
