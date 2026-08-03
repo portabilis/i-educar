@@ -4,14 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Events\UserSocialiteNotFound;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Contracts\User as UserSocialite;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteCallbackController
 {
-    public function __invoke()
+    public function __invoke(Request $request)
     {
+        if ($request->has('error') || !$request->has('code')) {
+            return redirect('/login')->withErrors([
+                'login' => 'Autorização de acesso não concedida.',
+            ]);
+        }
+
         $socialite = Socialite::driver('passport')->user();
 
         $user = $this->findUserByEmail($socialite);
