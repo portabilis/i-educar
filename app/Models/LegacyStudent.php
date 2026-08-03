@@ -33,6 +33,7 @@ class LegacyStudent extends LegacyModel
     /** @use HasBuilder<LegacyStudentBuilder> */
     use HasBuilder;
 
+    use HasFiles;
     use HasLegacyDates;
 
     public const CREATED_AT = 'data_cadastro';
