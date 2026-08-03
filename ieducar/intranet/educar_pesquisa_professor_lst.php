@@ -107,9 +107,11 @@ return new class extends clsListagem
                 ->get();
         }
 
-        $nm_instituicao = LegacyInstitution::query()
-            ->whereKey($lista_professor->first()?->ref_cod_instituicao)
-            ->value('nm_instituicao');
+        $nm_instituicao = $lista_professor->isNotEmpty()
+            ? LegacyInstitution::query()
+                ->whereKey($lista_professor->first()->ref_cod_instituicao)
+                ->value('nm_instituicao')
+            : null;
 
         // monta a lista
         foreach ($lista_professor as $registro) {
