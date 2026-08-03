@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use App\Models\EmployeeAllocation;
 use App\Models\LegacyPerson;
 
@@ -36,10 +37,14 @@ return new class extends clsListagem
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $tmp_obj = new clsPmieducarServidor($this->ref_cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
-        $registro = $tmp_obj->detalhe();
+        $servidorExiste = is_numeric($this->ref_cod_servidor)
+            && is_numeric($this->ref_cod_instituicao)
+            && Employee::query()
+                ->whereEmployee($this->ref_cod_servidor)
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->exists();
 
-        if (!$registro) {
+        if (!$servidorExiste) {
             $this->simpleRedirect('educar_servidor_lst.php');
         }
 

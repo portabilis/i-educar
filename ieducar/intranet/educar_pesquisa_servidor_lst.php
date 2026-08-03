@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\Builders\EmployeeBuilder;
+use App\Models\Employee;
 use App\Models\LegacyEmployee;
+use App\Models\LegacyInstitution;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -10,8 +15,6 @@ return new class extends clsListagem
     public $titulo;
 
     public $limite;
-
-    public $offset;
 
     public $cod_servidor;
 
@@ -165,10 +168,8 @@ return new class extends clsListagem
         $this->campoOculto(nome: 'tipo', valor: $_GET['tipo']);
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
-        $obj_servidor = new clsPmieducarServidor;
-        $obj_servidor->setOrderby(strNomeCampo: 'carga_horaria ASC');
-        $obj_servidor->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $array_hora = null;
+
         if (Session::has(key: ['dia_semana', 'hora_inicial', 'hora_final'])) {
             $array_hora = [
                 Session::get(key: 'dia_semana'),
@@ -184,97 +185,61 @@ return new class extends clsListagem
         // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
         // um anterior (referente a selecionar somente servidores não alocados),
         // selecionando apenas servidores alocados na instituiÃ§Ã£o
-        $lista = $obj_servidor->lista(
-            int_ref_idesco: $this->ref_idesco,
-            int_carga_horaria: $this->carga_horaria,
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao,
-            str_tipo: Session::get(key: 'tipo'),
-            array_horario: $array_hora,
-            str_not_in_servidor: $this->ref_cod_servidor,
-            str_nome_servidor: $this->nome_servidor,
-            boo_professor: true,
-            str_horario: $this->horario,
-            lst_matriculas: $this->lst_matriculas,
-            matutino: $this->matutino,
-            vespertino: $this->vespertino,
-            noturno: $this->noturno,
-            int_ref_cod_escola: $this->ref_cod_escola,
-            str_hr_mat: $hr_mat,
-            str_hr_ves: $hr_ves,
-            str_hr_not: $hr_not,
-            int_dia_semana: Session::get(key: 'dia_semana'),
-            alocacao_escola_instituicao: $this->ref_cod_escola,
-            int_identificador: $this->identificador,
-            int_ref_cod_curso: $this->ref_cod_curso,
-            int_ref_cod_disciplina: $this->ref_cod_disciplina,
-            bool_servidor_sem_alocacao: null,
-            ano_alocacao: $this->ano_alocacao
+        $query = $this->consultaServidores(
+            arrayHorario: $array_hora,
+            horaMatutino: $hr_mat,
+            horaVespertino: $hr_ves,
+            horaNoturno: $hr_not,
+            diaSemana: Session::get(key: 'dia_semana')
         );
 
-        // Se for uma listagem de professores, recupera as disciplinas dadas para
-        // comparaÃ§Ã£o com a de outros professores (somente quando a busca Ã© para
-        // substituiÃ§Ã£o de servidores)
-        $disciplinas = [];
-        if ($this->professor == 'true') {
-            $disciplinas = $obj_servidor->getServidorDisciplinasQuadroHorarioHorarios(
-                codServidor: $this->ref_cod_servidor,
-                codInstituicao: $this->ref_cod_instituicao
-            );
-        }
-        $total = $obj_servidor->_total;
-        // pega detalhes de foreign_keys
-        $obj_ref_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $lista[0]['ref_cod_instituicao']);
-        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-        $nm_instituicao = $det_ref_cod_instituicao['nm_instituicao'];
+        $resultado = $query
+            ->orderBy('pessoa.nome')
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        // monta a lista
-        if (is_array(value: $lista) && count(value: $lista)) {
-            $matriculasPorServidor = LegacyEmployee::whereIn('ref_cod_pessoa_fj', array_column($lista, 'cod_servidor'))
+        $lista = $resultado->getCollection();
+        $total = $resultado->total();
+        $nm_instituicao = null;
+        $matriculasPorServidor = collect();
+
+        if ($lista->isNotEmpty()) {
+            $nm_instituicao = LegacyInstitution::query()
+                ->whereKey($lista->first()->ref_cod_instituicao)
+                ->value('nm_instituicao');
+
+            $matriculasPorServidor = LegacyEmployee::query()
+                ->whereIn('ref_cod_pessoa_fj', $lista->pluck('cod_servidor'))
                 ->pluck('matricula', 'ref_cod_pessoa_fj');
+        }
 
-            foreach ($lista as $registro) {
-                $registro['matricula'] = $matriculasPorServidor[$registro['cod_servidor']] ?? null;
-                // Se servidor for professor, verifica se possui as mesmas
-                // disciplinas do servidor a ser substituido (este passo somente Ã©
-                // executado ao buscar um servidor substituto)
-                if ($this->professor == 'true') {
-                    $disciplinasSubstituto = $obj_servidor->getServidorDisciplinas(
-                        codServidor: $registro['cod_servidor'],
-                        codInstituicao: $this->ref_cod_instituicao
-                    );
-                    // Se os arrays diferirem, passa para o prÃ³ximo resultado
-                    if ($disciplinasSubstituto != $disciplinas) {
-                        continue;
+        foreach ($lista as $registro) {
+            $registro['matricula'] = $matriculasPorServidor[$registro['cod_servidor']] ?? null;
+            $campo1 = Session::get(key: 'campo1');
+            $campo2 = Session::get(key: 'campo2');
+            if (Session::get(key: 'tipo')) {
+                if (is_string(value: $campo1) && is_string(value: $campo2)) {
+                    if (is_string(value: Session::get(key: 'horario'))) {
+                        $script = " onclick=\"addVal1('{$campo1}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
+                    } else {
+                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); fecha();\"";
                     }
+                } elseif (is_string(value: $campo1)) {
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                 }
-                $campo1 = Session::get(key: 'campo1');
-                $campo2 = Session::get(key: 'campo2');
-                if (Session::get(key: 'tipo')) {
-                    if (is_string(value: $campo1) && is_string(value: $campo2)) {
-                        if (is_string(value: Session::get(key: 'horario'))) {
-                            $script = " onclick=\"addVal1('{$campo1}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
-                        } else {
-                            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); fecha();\"";
-                        }
-                    } elseif (is_string(value: $campo1)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
-                    }
-                } else {
-                    if (is_string(value: $campo1) && is_string(value: $campo2)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}','{$registro['cod_servidor']}'); fecha();\"";
-                    } elseif (is_string(value: $campo2)) {
-                        $script = " onclick=\"addVal1('{$campo2}','{$registro['nome']}','{$registro['cod_servidor']}'); fecha();\"";
-                    } elseif (is_string(value: $campo1)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
-                    }
+            } else {
+                if (is_string(value: $campo1) && is_string(value: $campo2)) {
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}','{$registro['cod_servidor']}'); fecha();\"";
+                } elseif (is_string(value: $campo2)) {
+                    $script = " onclick=\"addVal1('{$campo2}','{$registro['nome']}','{$registro['cod_servidor']}'); fecha();\"";
+                } elseif (is_string(value: $campo1)) {
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                 }
-                $this->addLinhas(linha: [
-                    "<a href=\"javascript:void(0);\" $script>{$registro['nome']}</a>",
-                    "<a href=\"javascript:void(0);\" $script>{$registro['matricula']}</a>",
-                    "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>",
-                ]);
             }
+            $this->addLinhas(linha: [
+                "<a href=\"javascript:void(0);\" $script>{$registro['nome']}</a>",
+                "<a href=\"javascript:void(0);\" $script>{$registro['matricula']}</a>",
+                "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>",
+            ]);
         }
         $this->addPaginador2(
             strUrl: 'educar_pesquisa_servidor_lst.php',
@@ -284,6 +249,294 @@ return new class extends clsListagem
             intResultadosPorPagina: $this->limite
         );
         $this->largura = '100%';
+    }
+
+    private function consultaServidores(
+        ?array $arrayHorario,
+        string $horaMatutino,
+        string $horaVespertino,
+        string $horaNoturno,
+        $diaSemana
+    ): EmployeeBuilder {
+        $instituicao = $this->ref_cod_instituicao;
+        $escola = $this->ref_cod_escola;
+        $ano = $this->ano_alocacao;
+        $porHorario = is_string(value: $this->horario) && $this->horario === 'S';
+
+        $query = Employee::query()
+            ->select(['servidor.cod_servidor', 'pessoa.nome', 'servidor.ref_cod_instituicao'])
+            ->leftJoin('cadastro.pessoa', 'pessoa.idpes', 'servidor.cod_servidor')
+            ->when(is_numeric(value: $this->ref_idesco), fn ($q) => $q->whereSchoolingDegree($this->ref_idesco))
+            ->when(is_numeric(value: $this->carga_horaria), fn ($q) => $q->where('carga_horaria', $this->carga_horaria))
+            ->when(is_numeric(value: $instituicao), fn ($q) => $q->whereInstitution($instituicao))
+            ->when(is_string(value: $this->nome_servidor), fn ($q) => $q->whereName($this->nome_servidor))
+            ->whereHas('employeeAllocations', function ($q) use ($instituicao, $escola, $ano) {
+                $q->when(is_numeric(value: $instituicao), fn ($q) => $q->whereInstitution($instituicao));
+                $q->when(is_numeric(value: $escola), fn ($q) => $q->whereSchool($escola));
+                $q->when(is_numeric(value: $ano), fn ($q) => $q->whereYearEq($ano));
+                $q->active();
+            })
+            ->active();
+
+        if (is_array(value: $arrayHorario)) {
+            $horaInicial = explode(separator: ':', string: $arrayHorario[1]);
+            $horaFinal = explode(separator: ':', string: $arrayHorario[2]);
+            $horas = abs(num: (int) $horaFinal[0] - (int) $horaInicial[0]);
+            $minutos = abs(num: (int) $horaFinal[1] - (int) $horaInicial[1]);
+
+            $matutino = $this->matutino;
+            $vespertino = $this->vespertino;
+            $noturno = $this->noturno;
+
+            // Aula que atravessa o limite do período conta só no período em que começa,
+            // senão o docente precisaria de carga disponível nos dois períodos
+            $minutoInicial = (int) $horaInicial[0] * 60 + (int) $horaInicial[1];
+            $minutoFinal = (int) $horaFinal[0] * 60 + (int) $horaFinal[1];
+
+            if ($minutoInicial < 12 * 60 && $minutoFinal > 12 * 60) {
+                $vespertino = false;
+            }
+
+            if ($minutoInicial < 18 * 60 && $minutoFinal > 18 * 60) {
+                $noturno = false;
+            }
+
+            if ($matutino) {
+                $query = $porHorario
+                    ? $this->comCargaDisponivel($query, 1, '06:00', '12:00', $horaMatutino, $diaSemana)
+                    : $this->semAlocacaoNoPeriodo($query, 1);
+            }
+
+            if ($vespertino) {
+                $query = $porHorario
+                    ? $this->comCargaDisponivel($query, 2, '12:00', '18:00', $horaVespertino, $diaSemana)
+                    : $this->semAlocacaoNoPeriodo($query, 2);
+            }
+
+            if ($noturno) {
+                $query = $porHorario
+                    ? $this->comCargaDisponivel($query, 3, '18:00', '23:59', $horaNoturno, $diaSemana)
+                    : $this->semAlocacaoNoPeriodo($query, 3);
+            }
+
+            if (!$porHorario) {
+                $query->whereRaw(
+                    "((servidor.carga_horaria >= COALESCE(
+                        (SELECT sum(hora_final - qhh.hora_inicial) + ?
+                           FROM pmieducar.servidor_alocacao sa
+                          WHERE sa.ref_cod_servidor = servidor.cod_servidor
+                            AND sa.ref_ref_cod_instituicao = ?),'00:00')) OR servidor.multi_seriado)",
+                    [$horas . ':' . $minutos, $instituicao]
+                );
+            }
+        }
+
+        if ($this->ref_cod_servidor) {
+            $query->whereNotIn('servidor.cod_servidor', $this->codigosServidores($this->ref_cod_servidor));
+        }
+
+        $query->whereHas('employeeRoles', function ($q) {
+            $q->whereColumn('servidor_funcao.ref_ref_cod_instituicao', 'servidor.ref_cod_instituicao');
+            $q->whereTeacherRole();
+        });
+
+        $query->whereExists(function ($q) {
+            $this->consultaDisciplinas($q);
+        });
+
+        if ($porHorario) {
+            $matriculas = $this->codigosServidores($this->lst_matriculas);
+
+            $query->whereRaw(
+                '(servidor.cod_servidor NOT IN
+                  (SELECT DISTINCT qhh.ref_servidor
+                     FROM pmieducar.quadro_horario_horarios qhh
+                     INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhh.ref_cod_quadro_horario
+                                                             AND quadro_horario.ativo = 1)
+                     INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                                    AND turma.ativo = 1)
+                    WHERE qhh.ref_servidor = servidor.cod_servidor
+                      AND qhh.ref_cod_instituicao_servidor = servidor.ref_cod_instituicao
+                      AND qhh.dia_semana = ?
+                      AND (((? > qhh.hora_inicial AND ? < qhh.hora_final)
+                            OR (? > qhh.hora_inicial AND ? < qhh.hora_final))
+                           OR (? = qhh.hora_inicial AND ? = qhh.hora_final)
+                           OR (? <= qhh.hora_inicial AND ? >= qhh.hora_final))
+                      AND qhh.ativo = 1'
+                . (is_numeric(value: $ano) ? ' AND quadro_horario.ano = ' . (int) $ano : '')
+                . ($matriculas ? ' AND qhh.ref_servidor NOT IN (' . implode(',', $matriculas) . ')' : '')
+                . ') OR servidor.multi_seriado)',
+                [
+                    $arrayHorario[0],
+                    $arrayHorario[1], $arrayHorario[1],
+                    $arrayHorario[2], $arrayHorario[2],
+                    $arrayHorario[1], $arrayHorario[2],
+                    $arrayHorario[1], $arrayHorario[2],
+                ]
+            );
+        }
+
+        return $query;
+    }
+
+    private function comCargaDisponivel(
+        EmployeeBuilder $query,
+        int $periodo,
+        string $horaDe,
+        string $horaAte,
+        string $horaAula,
+        $diaSemana
+    ): EmployeeBuilder {
+        $instituicao = $this->ref_cod_instituicao;
+        $escola = $this->ref_cod_escola;
+        $ano = $this->ano_alocacao;
+
+        // No vespertino a soma considera o ano do quadro e ignora horários repetidos no mesmo intervalo
+        $anoQuadro = $periodo === 2 && is_numeric(value: $ano) ? ' AND quadro_horario.ano = ' . (int) $ano : '';
+        $desempateSequencial = $periodo === 2
+            ? ' AND qhh.sequencial = (SELECT s_qhh.sequencial
+                    FROM pmieducar.quadro_horario_horarios s_qhh
+                   WHERE s_qhh.dia_semana = qhh.dia_semana
+                     AND s_qhh.hora_inicial = qhh.hora_inicial
+                     AND s_qhh.ref_cod_quadro_horario = quadro_horario.cod_quadro_horario
+                     AND s_qhh.hora_final = qhh.hora_final
+                   ORDER BY s_qhh.sequencial DESC
+                   LIMIT 1)'
+            : '';
+
+        [$condicaoAlocacao, $bindingsAlocacao] = $this->condicaoAlocacao($instituicao, $escola);
+
+        return $query->whereRaw(
+            '(servidor.cod_servidor IN
+              (SELECT a.ref_cod_servidor
+                 FROM pmieducar.servidor_alocacao a
+                WHERE ' . $condicaoAlocacao . '
+                  AND a.periodo = ?'
+            . (is_numeric(value: $ano) ? ' AND a.ano = ' . (int) $ano : '')
+            . ' AND (a.data_saida > now() or a.data_saida is null)
+                  AND a.carga_horaria >= COALESCE(
+                    (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
+                       FROM pmieducar.quadro_horario_horarios qhh
+                       INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhh.ref_cod_quadro_horario
+                                                               AND quadro_horario.ativo = 1)
+                       INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                                      AND turma.ativo = 1)
+                      WHERE qhh.ref_cod_instituicao_servidor = ?
+                        AND qhh.ref_cod_escola = ?
+                        AND qhh.hora_inicial >= ?
+                        AND qhh.hora_inicial <= ?
+                        AND qhh.ativo = 1
+                        AND qhh.dia_semana <> ?
+                        AND qhh.ref_servidor = a.ref_cod_servidor'
+            . $anoQuadro
+            . $desempateSequencial
+            . " GROUP BY qhh.ref_servidor),'00:00') + ? + COALESCE(
+                    (SELECT SUM(qhha.hora_final - qhha.hora_inicial)
+                       FROM pmieducar.quadro_horario_horarios_aux qhha
+                       INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhha.ref_cod_quadro_horario
+                                                               AND quadro_horario.ativo = 1)
+                       INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                                      AND turma.ativo = 1)
+                      WHERE qhha.ref_cod_instituicao_servidor = ?
+                        AND qhha.ref_cod_escola = ?
+                        AND qhha.hora_inicial >= ?
+                        AND qhha.hora_inicial <= ?
+                        AND qhha.ref_servidor = a.ref_cod_servidor"
+            . $anoQuadro
+            . " AND qhha.identificador = ?
+                      GROUP BY qhha.ref_servidor),'00:00')) OR servidor.multi_seriado)",
+            [
+                ...$bindingsAlocacao,
+                $periodo,
+                $instituicao, $escola, $horaDe, $horaAte, $diaSemana,
+                $horaAula,
+                $instituicao, $escola, $horaDe, $horaAte, $this->identificador,
+            ]
+        );
+    }
+
+    private function semAlocacaoNoPeriodo(EmployeeBuilder $query, int $periodo): EmployeeBuilder
+    {
+        $ano = $this->ano_alocacao;
+
+        [$condicaoAlocacao, $bindingsAlocacao] = $this->condicaoAlocacao($this->ref_cod_instituicao, $this->ref_cod_escola);
+
+        return $query->whereRaw(
+            '(servidor.cod_servidor NOT IN
+              (SELECT a.ref_cod_servidor
+                 FROM pmieducar.servidor_alocacao a
+                WHERE ' . $condicaoAlocacao
+            . (is_numeric(value: $ano) ? ' AND a.ano = ' . (int) $ano : '')
+            . ' AND (a.data_saida > now() or a.data_saida is null)
+                  AND a.periodo = ?) OR servidor.multi_seriado)',
+            [...$bindingsAlocacao, $periodo]
+        );
+    }
+
+    private function condicaoAlocacao($instituicao, $escola): array
+    {
+        $condicoes = [];
+        $bindings = [];
+
+        if (is_numeric(value: $instituicao)) {
+            $condicoes[] = 'a.ref_ref_cod_instituicao = ?';
+            $bindings[] = $instituicao;
+        }
+
+        if (is_numeric(value: $escola)) {
+            $condicoes[] = 'a.ref_cod_escola = ?';
+            $bindings[] = $escola;
+        }
+
+        $condicoes[] = 'a.ativo = 1';
+
+        return [implode(' AND ', $condicoes), $bindings];
+    }
+
+    private function consultaDisciplinas(QueryBuilder $query): void
+    {
+        $query->selectRaw('1')
+            ->from('pmieducar.servidor_disciplina')
+            ->whereColumn('servidor_disciplina.ref_cod_servidor', 'servidor.cod_servidor')
+            ->whereColumn('servidor_disciplina.ref_ref_cod_instituicao', 'servidor.ref_cod_instituicao');
+
+        if ($this->ref_cod_disciplina || $this->ref_cod_curso) {
+            $query->whereRaw(
+                '(case when ? = 0 then servidor_disciplina.ref_cod_curso = ?
+                    else (servidor_disciplina.ref_cod_disciplina = ? AND servidor_disciplina.ref_cod_curso = ?) end)',
+                [
+                    (int) $this->ref_cod_disciplina,
+                    (int) $this->ref_cod_curso,
+                    (int) $this->ref_cod_disciplina,
+                    (int) $this->ref_cod_curso,
+                ]
+            );
+
+            return;
+        }
+
+        $disciplinas = DB::table('pmieducar.servidor_disciplina')
+            ->when(is_numeric(value: $this->ref_cod_servidor), fn ($q) => $q->where('ref_cod_servidor', $this->ref_cod_servidor))
+            ->pluck('ref_cod_disciplina');
+
+        if ($disciplinas->isEmpty()) {
+            return;
+        }
+
+        $query->groupBy('servidor_disciplina.ref_cod_servidor')
+            ->havingRaw('?::int[] <@ array_agg(servidor_disciplina.ref_cod_disciplina)', ['{' . $disciplinas->implode(',') . '}']);
+    }
+
+    private function codigosServidores($lista): array
+    {
+        if (!is_string(value: $lista) && !is_numeric(value: $lista)) {
+            return [];
+        }
+
+        return array_values(array_filter(array_map(
+            fn ($codigo) => (int) trim(string: $codigo),
+            explode(separator: ',', string: (string) $lista)
+        )));
     }
 
     public function makeExtra()

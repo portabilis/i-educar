@@ -2,6 +2,8 @@
 
 namespace App\Models\Builders;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class LegacyEmployeeRoleBuilder extends LegacyBuilder
 {
     /**
@@ -26,5 +28,16 @@ class LegacyEmployeeRoleBuilder extends LegacyBuilder
     public function whereRole(int $role): self
     {
         return $this->where('ref_cod_funcao', $role);
+    }
+
+    /**
+     * Filtra por vínculo cuja função é de professor, incluindo funções inativas
+     */
+    public function whereTeacherRole(): self
+    {
+        return $this->whereHas('role', function (Builder $q) {
+            $q->withTrashed();
+            $q->whereIsTeacher();
+        });
     }
 }
