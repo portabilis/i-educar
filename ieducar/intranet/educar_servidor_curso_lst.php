@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro
@@ -41,20 +42,12 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
-            $obj = new clsPmieducarServidor(
-                $this->cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_instituicao
-            );
+            $servidorExiste = Employee::query()
+                ->whereEmployee($this->cod_servidor)
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->exists();
 
-            $registro = $obj->detalhe();
-
-            if ($registro) {
+            if ($servidorExiste) {
                 $retorno = 'Editar';
             }
         }
