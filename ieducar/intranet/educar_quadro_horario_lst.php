@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Auth;
 
@@ -135,6 +136,9 @@ return new class
                                   </tr>";
                     $texto = '<tr>';
 
+                    $horariosPorDia = [];
+                    $codigosServidores = [];
+
                     for ($c = 1; $c <= 7; $c++) {
                         $obj_horarios = new clsPmieducarQuadroHorarioHorarios;
                         $resultado = $obj_horarios->retornaHorario(
@@ -145,10 +149,36 @@ return new class
                             int_dia_semana: $c
                         );
 
+                        if (is_array(value: $resultado)) {
+                            $resultado = $this->organizarHorariosIguais(valores: $resultado);
+
+                            foreach ($resultado as $registro) {
+                                $codServidor = $registro['ref_servidor_substituto'] ?: $registro['ref_servidor'];
+
+                                if (is_numeric(value: $codServidor)) {
+                                    $codigosServidores[] = $codServidor;
+                                }
+                            }
+                        }
+
+                        $horariosPorDia[$c] = $resultado;
+                    }
+
+                    $nomesServidores = $codigosServidores
+                        ? Employee::query()
+                            ->whereIn('servidor.cod_servidor', array_unique($codigosServidores))
+                            ->whereAllocation(withNotAllocation: false)
+                            ->active()
+                            ->join('cadastro.pessoa', 'pessoa.idpes', 'servidor.cod_servidor')
+                            ->pluck('pessoa.nome', 'servidor.cod_servidor')
+                        : collect();
+
+                    for ($c = 1; $c <= 7; $c++) {
+                        $resultado = $horariosPorDia[$c];
+
                         $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro['cod_quadro_horario']}, {$c}, {$this->ano} )'>";
                         $componente = new stdClass;
                         if (is_array(value: $resultado)) {
-                            $resultado = $this->organizarHorariosIguais(valores: $resultado);
                             foreach ($resultado as $registro) {
                                 if ($registro['ref_cod_disciplina'] == 0) {
                                     $componente->abreviatura = 'EDUCAÇÃO INFANTIL';
@@ -157,42 +187,18 @@ return new class
                                 }
 
                                 // Servidor
-                                $obj_servidor = new clsPmieducarServidor;
+                                $codServidor = $registro['ref_servidor_substituto'] ?: $registro['ref_servidor'];
 
-                                $det_servidor = null;
-                                if ($registro['ref_servidor_substituto']) {
-                                    $servidor = $obj_servidor->lista(
-                                        int_cod_servidor: $registro['ref_servidor_substituto'],
-                                        boo_professor: null,
-                                        bool_ordena_por_nome: true
-                                    );
+                                $nomeServidor = $nomesServidores[$codServidor] ?? null;
 
-                                    if (is_array(value: $servidor)) {
-                                        $det_servidor = array_shift(array: $servidor);
-                                    }
-                                } else {
-                                    $servidor = $obj_servidor->lista(
-                                        int_cod_servidor: $registro['ref_servidor'],
-                                        boo_professor: null,
-                                        bool_ordena_por_nome: true
-                                    );
-                                    if (is_array(value: $servidor)) {
-                                        $det_servidor = array_shift(array: $servidor);
-                                    }
-                                }
+                                $primeiroNome = $nomeServidor ? explode(separator: ' ', string: $nomeServidor)[0] : null;
 
-                                if (is_array(value: $det_servidor)) {
-                                    $nomes = explode(separator: ' ', string: $det_servidor['nome']);
-                                    $det_servidor['nome'] = array_shift(array: $nomes);
-                                }
-
-                                // $texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>". substr($registro['hora_inicial'], 0, 5) . ' - ' . substr($registro['hora_final'], 0, 5) . " <br> {$componente->abreviatura} <br> {$det_servidor["nome"]}</div>";
                                 $detalhes = sprintf(
                                     '%s - %s<br />%s<br />%s',
                                     substr(string: $registro['hora_inicial'], offset: 0, length: 5),
                                     substr(string: $registro['hora_final'], offset: 0, length: 5),
                                     $componente->abreviatura,
-                                    $det_servidor['nome']
+                                    $primeiroNome
                                 );
 
                                 $texto .= sprintf(

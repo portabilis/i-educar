@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
 use App\Services\EmployeeService;
@@ -286,15 +287,15 @@ return new class extends clsCadastro
             $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
 
         } elseif ($this->tipo == 2) {
-            $obj_ser = new clsPmieducarServidor(
-                cod_servidor: $this->ref_cod_servidor,
-                ativo: 1,
-                ref_cod_instituicao: $this->ref_cod_instituicao
-            );
+            $cargaHorariaServidor = is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_cod_instituicao)
+                ? Employee::query()
+                    ->whereEmployee($this->ref_cod_servidor)
+                    ->whereInstitution($this->ref_cod_instituicao)
+                    ->value('carga_horaria')
+                : 0;
 
-            $det_ser = $obj_ser->detalhe();
-            $horas = floor($det_ser['carga_horaria']);
-            $minutos = ($det_ser['carga_horaria'] - $horas) * 60;
+            $horas = floor($cargaHorariaServidor);
+            $minutos = ($cargaHorariaServidor - $horas) * 60;
 
             $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
             $obj->ref_cod_escola = $this->ref_cod_escola;
