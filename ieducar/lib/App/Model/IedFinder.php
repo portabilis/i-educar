@@ -4,11 +4,13 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolCourse;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStageType;
 use App\Models\LegacyUserType;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
@@ -540,22 +542,20 @@ class App_Model_IedFinder extends CoreExt_Entity
         $key = json_encode(compact('serieId', 'escolaId', 'disciplinaId', 'etapa', 'ano'));
 
         $disciplinas = Cache::store('array')->remember("getEscolaSerieDisciplina:{$key}", now()->addMinute(), function () use ($serieId, $escolaId, $disciplinaId, $etapa, $ano) {
-            $escolaSerieDisciplina = self::addClassToStorage(
-                'clsPmieducarEscolaSerieDisciplina',
-                null,
-                'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php'
-            );
-
-            $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
-
-            if ($disciplinas === false) {
-                return [];
-            }
-
-            return $disciplinas;
+            return LegacySchoolGradeDiscipline::query()
+                ->when(is_numeric($serieId), fn ($query) => $query->whereGrade($serieId))
+                ->when(is_numeric($escolaId), fn ($query) => $query->whereSchool($escolaId))
+                ->when(is_numeric($disciplinaId), fn ($query) => $query->whereDiscipline($disciplinaId))
+                ->when(is_numeric($etapa), fn ($query) => $query->whereRaw(
+                    'case when etapas_especificas = 1 then ? = ANY (string_to_array(etapas_utilizadas, \',\')::int[]) else true end',
+                    [$etapa]
+                ))
+                ->when(is_numeric($ano), fn ($query) => $query->whereYearEq($ano))
+                ->active()
+                ->get(['ref_cod_disciplina', 'carga_horaria']);
         });
 
-        if (empty($disciplinas)) {
+        if ($disciplinas->isEmpty()) {
             throw new DisciplineNotLinkedToRegistrationException($escolaId, $disciplinaId, $ano, $serieId);
         }
 
@@ -1074,19 +1074,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $key = json_encode(compact('codMatricula', 'codSerie', 'codEscola', 'etapa', 'ignorarDispensasParciais'));
 
         $dispensas = Cache::store('array')->remember("getDisciplinasDispensadasPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais) {
-            $dispensas = self::addClassToStorage(
-                'clsPmieducarDispensaDisciplina',
-                null,
-                'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
-            );
-
-            $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
-
-            if ($dispensas === false) {
-                return [];
-            }
-
-            return $dispensas;
+            return self::getDispensasComEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
         });
 
         $disciplinasDispensa = [];
@@ -1096,6 +1084,64 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $disciplinasDispensa;
+    }
+
+    /**
+     * @param int $codMatricula
+     * @param int $codSerie
+     * @param int $codEscola
+     * @param int $etapa
+     * @param bool $ignorarDispensasParciais
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    private static function getDispensasComEtapa(
+        $codMatricula,
+        $codSerie,
+        $codEscola,
+        $etapa = null,
+        $ignorarDispensasParciais = false
+    ) {
+        return LegacyDisciplineExemption::query()
+            ->withTrashed()
+            ->join('pmieducar.dispensa_etapa', 'pmieducar.dispensa_etapa.ref_cod_dispensa', 'pmieducar.dispensa_disciplina.cod_dispensa')
+            ->when(is_numeric($codMatricula), fn ($query) => $query->whereRegistration($codMatricula))
+            ->when(is_numeric($codSerie), fn ($query) => $query->whereGrade($codSerie))
+            ->when(is_numeric($codEscola), fn ($query) => $query->whereSchool($codEscola))
+            ->when(is_numeric($etapa), fn ($query) => $query->whereStage($etapa))
+            ->when($ignorarDispensasParciais, fn ($query) => $query->whereRaw('(
+            SELECT COALESCE((
+                SELECT count(1)
+                FROM pmieducar.curso
+                INNER JOIN pmieducar.ano_letivo_modulo
+                ON ano_letivo_modulo.ref_ref_cod_escola = matricula.ref_ref_cod_escola
+                AND ano_letivo_modulo.ref_ano = matricula.ano
+                WHERE curso.padrao_ano_escolar = 1
+                AND matricula.ref_cod_curso = curso.cod_curso
+            ), 0) +
+            COALESCE((
+                SELECT count(1)
+                FROM pmieducar.turma
+                INNER JOIN pmieducar.curso
+                ON turma.ref_cod_curso = curso.cod_curso
+                INNER JOIN pmieducar.turma_modulo
+                ON turma_modulo.ref_cod_turma = turma.cod_turma
+                WHERE curso.padrao_ano_escolar = 0
+                AND turma.cod_turma = (
+                    SELECT matricula_turma.ref_cod_turma
+                    FROM pmieducar.matricula_turma
+                    WHERE matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                    ORDER BY ativo DESC, data_enturmacao DESC
+                    LIMIT 1
+                )
+            ), 0)
+            FROM pmieducar.matricula
+            WHERE cod_matricula = ref_cod_matricula
+        ) = (
+            SELECT count(1)
+            FROM pmieducar.dispensa_etapa AS etapa_dispensada
+            WHERE etapa_dispensada.ref_cod_dispensa = dispensa_disciplina.cod_dispensa
+        )'))
+            ->get(['ref_cod_disciplina', 'etapa']);
     }
 
     public static function disciplinaDispensadaDaTurma($codTurma)
@@ -1126,17 +1172,11 @@ class App_Model_IedFinder extends CoreExt_Entity
         $disciplina
     ) {
         return Cache::remember('ie_finder_etapa_dispensada_' . $codMatricula . '_' . $codSerie . '_' . $codEscola . '_' . $disciplina, now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola, $disciplina) {
-            $dispensas = self::addClassToStorage(
-                'clsPmieducarDispensaDisciplina',
-                null,
-                'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
-            );
-
-            $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola);
+            $dispensas = self::getDispensasComEtapa($codMatricula, $codSerie, $codEscola);
 
             $etapaDispensada = [];
 
-            if (!$dispensas) {
+            if ($dispensas->isEmpty()) {
                 return [];
             }
 

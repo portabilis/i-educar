@@ -5,9 +5,11 @@ use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Process;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
+use App\Services\SchoolGradeDisciplineService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
@@ -231,23 +233,25 @@ return new class extends clsCadastro
 
         // Inclui disciplinas
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $obj = new clsPmieducarEscolaSerieDisciplina;
-            $registros = $obj->lista(int_ref_ref_cod_serie: $this->ref_cod_serie, int_ref_ref_cod_escola: $this->ref_cod_escola, int_ativo: 1);
-
-            if ($registros) {
-                $registros = array_map(callback: function ($item) {
-                    foreach ($item as $k => $v) {
-                        if (is_numeric($k)) {
-                            unset($item[$k]);
-                        }
-                    }
-
+            $registros = LegacySchoolGradeDiscipline::query()
+                ->whereGrade($this->ref_cod_serie)
+                ->whereSchool($this->ref_cod_escola)
+                ->active()
+                ->selectRaw('
+                    ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria,
+                    etapas_especificas, etapas_utilizadas, hora_falta, aulas_por_semana,
+                    array_to_json(anos_letivos) AS anos_letivos
+                ')
+                ->get()
+                ->map(function ($registro) {
+                    $item = $registro->getAttributes();
                     $item['anos_letivos'] = json_decode($item['anos_letivos']);
                     $item['carga_horaria'] = (float) $item['carga_horaria'];
 
                     return $item;
-                }, array: $registros);
+                });
 
+            if ($registros->isNotEmpty()) {
                 $this->campoOculto(nome: 'componentes_sombra', valor: json_encode($registros));
 
                 foreach ($registros as $campo) {
@@ -489,25 +493,21 @@ return new class extends clsCadastro
 
         if ($cadastrou) {
             if ($this->disciplinas) {
-                foreach ($this->disciplinas as $key => $campo) {
-                    $obj = new clsPmieducarEscolaSerieDisciplina(
-                        ref_ref_cod_serie: $this->ref_cod_serie,
-                        ref_ref_cod_escola: $this->ref_cod_escola,
-                        ref_cod_disciplina: $campo,
-                        ativo: 1,
-                        carga_horaria: $this->carga_horaria[$key],
-                        etapas_especificas: $this->etapas_especificas[$key],
-                        etapas_utilizadas: $this->etapas_utilizadas[$key],
-                        anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: empty($this->hora_falta[$key]) ? null : $this->hora_falta[$key] / 60,
-                        aulas_por_semana: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
-                    );
+                $componenteService = new SchoolGradeDisciplineService;
 
-                    if ($obj->existe()) {
-                        $cadastrou1 = $obj->edita();
-                    } else {
-                        $cadastrou1 = $obj->cadastra();
-                    }
+                foreach ($this->disciplinas as $key => $campo) {
+                    $cadastrou1 = $componenteService->store(
+                        gradeId: $this->ref_cod_serie,
+                        schoolId: $this->ref_cod_escola,
+                        disciplineId: $campo,
+                        active: 1,
+                        workload: $this->carga_horaria[$key],
+                        specificStages: $this->etapas_especificas[$key],
+                        usedStages: $this->etapas_utilizadas[$key],
+                        academicYears: $this->componente_anos_letivos[$key] ?: [],
+                        absenceHour: empty($this->hora_falta[$key]) ? null : $this->hora_falta[$key] / 60,
+                        weeklyClasses: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
+                    );
 
                     if (!$cadastrou1) {
                         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -573,14 +573,12 @@ return new class extends clsCadastro
                 'anos_letivos' => $anosLetivos,
             ], $this->montaHorarios()));
 
-        $obj = new clsPmieducarEscolaSerieDisciplina(
-            ref_ref_cod_serie: $this->ref_cod_serie,
-            ref_ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: null,
-            ativo: 1
+        $componenteService = new SchoolGradeDisciplineService;
+        $componenteService->deleteNotIn(
+            gradeId: $this->ref_cod_serie,
+            schoolId: $this->ref_cod_escola,
+            keepDisciplines: $this->disciplinas
         );
-
-        $obj->excluirNaoSelecionados($this->disciplinas);
 
         if ($editou) {
             if ($this->disciplinas) {
@@ -597,40 +595,23 @@ return new class extends clsCadastro
                         $hora_falta = $this->hora_falta[$key];
                     }
 
-                    $etapas_especificas = $this->etapas_especificas[$key];
-                    $etapas_utilizadas = $this->etapas_utilizadas[$key];
-
-                    $obj = new clsPmieducarEscolaSerieDisciplina(
-                        ref_ref_cod_serie: $this->ref_cod_serie,
-                        ref_ref_cod_escola: $this->ref_cod_escola,
-                        ref_cod_disciplina: $campo,
-                        ativo: 1,
-                        carga_horaria: $carga_horaria,
-                        etapas_especificas: $etapas_especificas,
-                        etapas_utilizadas: $etapas_utilizadas,
-                        anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: empty($hora_falta) ? null : $hora_falta / 60,
-                        aulas_por_semana: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
+                    $gravou = $componenteService->store(
+                        gradeId: $this->ref_cod_serie,
+                        schoolId: $this->ref_cod_escola,
+                        disciplineId: $campo,
+                        active: 1,
+                        workload: $carga_horaria,
+                        specificStages: $this->etapas_especificas[$key],
+                        usedStages: $this->etapas_utilizadas[$key],
+                        academicYears: $this->componente_anos_letivos[$key] ?: [],
+                        absenceHour: empty($hora_falta) ? null : $hora_falta / 60,
+                        weeklyClasses: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
                     );
 
-                    $existe = $obj->existe();
+                    if (!$gravou) {
+                        $this->mensagem = 'Edição não realizada.<br>';
 
-                    if ($existe) {
-                        $editou1 = $obj->edita();
-
-                        if (!$editou1) {
-                            $this->mensagem = 'Edição não realizada.<br>';
-
-                            return false;
-                        }
-                    } else {
-                        $cadastrou = $obj->cadastra();
-
-                        if (!$cadastrou) {
-                            $this->mensagem = 'Cadastro não realizada.<br>';
-
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
@@ -652,14 +633,14 @@ return new class extends clsCadastro
             return false;
         }
 
-        $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina(
-            ref_ref_cod_serie: $this->ref_cod_serie_,
-            ref_ref_cod_escola: $this->ref_cod_escola_,
-            ref_cod_disciplina: null,
-            ativo: 1
-        );
+        $componenteService = new SchoolGradeDisciplineService;
 
-        $existeDependencia = $objEscolaSerieDisciplina->existeDependencia(listaComponentesSelecionados: $this->disciplinas, exclusao: true);
+        $existeDependencia = $componenteService->hasDependency(
+            gradeId: $this->ref_cod_serie_,
+            schoolId: $this->ref_cod_escola_,
+            disciplines: $this->disciplinas,
+            deleting: true
+        );
 
         if ($existeDependencia) {
             $this->mensagem = 'Não foi possível remover o componente. Existe registros de dependência neste componente.<br>';
@@ -679,8 +660,10 @@ return new class extends clsCadastro
             ]);
 
         if ($excluiu) {
-            $obj = new clsPmieducarEscolaSerieDisciplina(ref_ref_cod_serie: $this->ref_cod_serie_, ref_ref_cod_escola: $this->ref_cod_escola_, ref_cod_disciplina: null, ativo: 0);
-            $excluiu1 = $obj->excluirTodos();
+            $excluiu1 = $componenteService->deleteAll(
+                gradeId: $this->ref_cod_serie_,
+                schoolIds: $this->ref_cod_escola_
+            );
 
             if ($excluiu1) {
                 $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
