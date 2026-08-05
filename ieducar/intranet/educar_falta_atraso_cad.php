@@ -168,7 +168,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        if ((int) $this->qtd_horas < 0 || (int) $this->qtd_min < 0) {
+        if ((float) $this->qtd_horas < 0 || (float) $this->qtd_min < 0) {
             $this->mensagem = 'Quantidade de horas e minutos não pode ser negativa.<br>';
 
             return false;
