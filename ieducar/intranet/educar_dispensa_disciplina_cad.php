@@ -250,7 +250,13 @@ return new class extends clsCadastro
 
         DB::beginTransaction();
 
-        $exemptionService->createExemptionByDisciplineArray(registration: $registration, disciplineArray: $this->componentecurricular, exemptionTypeId: $this->ref_cod_tipo_dispensa, description: $this->observacao, stages: $this->etapa);
+        try {
+            $exemptionService->createExemptionByDisciplineArray(registration: $registration, disciplineArray: $this->componentecurricular, exemptionTypeId: $this->ref_cod_tipo_dispensa, description: $this->observacao, stages: $this->etapa);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
 
         DB::commit();
 
@@ -301,9 +307,7 @@ return new class extends clsCadastro
 
         DB::beginTransaction();
 
-        if (is_numeric($this->cod_dispensa)) {
-            LegacyExemptionStage::query()->where('ref_cod_dispensa', $this->cod_dispensa)->delete();
-        }
+        LegacyExemptionStage::query()->where('ref_cod_dispensa', $exemption->getKey())->delete();
 
         $exemptionService->cadastraEtapasDaDispensa(exemption: $exemption, stages: $this->etapa);
 
@@ -363,9 +367,7 @@ return new class extends clsCadastro
 
         DB::beginTransaction();
 
-        if (is_numeric($this->cod_dispensa)) {
-            LegacyExemptionStage::query()->where('ref_cod_dispensa', $this->cod_dispensa)->delete();
-        }
+        LegacyExemptionStage::query()->where('ref_cod_dispensa', $exemption->getKey())->delete();
 
         $excluiu = $exemptionService->deleteExemption(exemption: $exemption, registration: $registration);
 

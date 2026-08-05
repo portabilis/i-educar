@@ -56,11 +56,6 @@ class LegacyDisciplineExemptionBuilder extends LegacyBuilder
         return $this->where('ref_cod_tipo_dispensa', $exemptionType);
     }
 
-    public function whereStage(int $stage): self
-    {
-        return $this->where('etapa', $stage);
-    }
-
     public function orderByCreatedAt(string $direction = 'desc'): self
     {
         return $this->orderBy('data_cadastro', $direction);

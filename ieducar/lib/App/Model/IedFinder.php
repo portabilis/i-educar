@@ -1107,7 +1107,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             ->when(is_numeric($codMatricula), fn ($query) => $query->whereRegistration($codMatricula))
             ->when(is_numeric($codSerie), fn ($query) => $query->whereGrade($codSerie))
             ->when(is_numeric($codEscola), fn ($query) => $query->whereSchool($codEscola))
-            ->when(is_numeric($etapa), fn ($query) => $query->whereStage($etapa))
+            ->when(is_numeric($etapa), fn ($query) => $query->where('pmieducar.dispensa_etapa.etapa', $etapa))
             ->when($ignorarDispensasParciais, fn ($query) => $query->whereRaw('(
             SELECT COALESCE((
                 SELECT count(1)
