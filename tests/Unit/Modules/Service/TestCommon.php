@@ -4,9 +4,11 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
+use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineExemptionFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyExemptionStageFactory;
+use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
@@ -184,6 +186,13 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->_setRegraOption('tabelaArredondamentoConceitual', $this->_setUpTabelaArredondamentoConceitual());
     }
 
+    protected function tearDown(): void
+    {
+        Portabilis_Utils_Database::$_db = null;
+
+        parent::tearDown();
+    }
+
     protected function _getServiceInstance()
     {
         // Configura mappers das dependências de Avalilacao_Service_Boletim
@@ -325,7 +334,16 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     private function criaCenarioNoBanco(): void
     {
-        $this->escolaSerie = LegacySchoolGradeFactory::new()->create();
+        $curso = LegacyCourseFactory::new()->standardAcademicYear()->create();
+
+        $serie = LegacyGradeFactory::new()->create([
+            'ref_cod_curso' => $curso,
+        ]);
+
+        $this->escolaSerie = LegacySchoolGradeFactory::new()->create([
+            'ref_cod_serie' => $serie,
+            'anos_letivos' => '{' . self::ANO_LETIVO . '}',
+        ]);
 
         $this->componentes = collect([250, 250, 150, 150])->map(function ($cargaHoraria) {
             $componente = LegacyDisciplineFactory::new()->create();
@@ -342,19 +360,21 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         });
 
         $this->matricula = LegacyRegistrationFactory::new()->create([
-            'ref_ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
             'ref_ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
+            'ref_ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+            'ref_cod_curso' => $curso,
+            'ano' => self::ANO_LETIVO,
         ]);
 
         $dispensa = LegacyDisciplineExemptionFactory::new()->create([
-            'ref_cod_matricula' => $this->matricula->getKey(),
-            'ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+            'ref_cod_matricula' => $this->matricula,
             'ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
+            'ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
             'ref_cod_disciplina' => $this->componentes->first()->id,
         ]);
 
         LegacyExemptionStageFactory::new()->create([
-            'ref_cod_dispensa' => $dispensa->getKey(),
+            'ref_cod_dispensa' => $dispensa,
             'etapa' => null,
         ]);
     }

@@ -32,9 +32,4 @@ class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
 
         $this->_getServiceInstance();
     }
-
-    protected function tearDown(): void
-    {
-        Portabilis_Utils_Database::$_db = null;
-    }
 }

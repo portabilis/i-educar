@@ -31,10 +31,4 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 
         $this->_getServiceInstance();
     }
-
-    protected function tearDown(): void
-    {
-        $_GET = [];
-        Portabilis_Utils_Database::$_db = null;
-    }
 }
