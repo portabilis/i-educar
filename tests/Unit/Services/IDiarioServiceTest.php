@@ -35,7 +35,7 @@ class IDiarioServiceTest extends TestCase
 
         $client = $this->createHttpClient();
 
-        new IdiarioService($institution->load('generalConfiguration'), $client);
+        $this->instantiateService($institution->load('generalConfiguration'), $client);
     }
 
     #[DataProvider('activityQueriesProvider')]
@@ -352,7 +352,12 @@ class IDiarioServiceTest extends TestCase
             'token_novo_educacao' => self::API_TOKEN,
         ]);
 
-        return new IdiarioService($institution->load('generalConfiguration'), $client);
+        return $this->instantiateService($institution->load('generalConfiguration'), $client);
+    }
+
+    private function instantiateService($institution, $client): IdiarioService
+    {
+        return new IdiarioService($institution, $client);
     }
 
     private function createHttpClient(array $queue = [], array &$history = [])
