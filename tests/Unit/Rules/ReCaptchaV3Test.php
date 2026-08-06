@@ -3,6 +3,7 @@
 namespace Tests\Unit\Rules;
 
 use App\Rules\ReCaptchaV3;
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -26,7 +27,7 @@ class ReCaptchaV3Test extends TestCase
             'legacy.app.recaptcha_v3.minimum_score' => 0.5,
         ]);
 
-        $client = $this->createMock('GuzzleHttp\\Client');
+        $client = $this->createMock(Client::class);
         $client->expects($this->never())
             ->method('post');
 
@@ -40,7 +41,7 @@ class ReCaptchaV3Test extends TestCase
     {
         $this->configureRecaptcha();
 
-        $client = $this->createMock('GuzzleHttp\\Client');
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('post')
             ->with(
@@ -62,7 +63,7 @@ class ReCaptchaV3Test extends TestCase
     {
         $this->configureRecaptcha();
 
-        $client = $this->createMock('GuzzleHttp\\Client');
+        $client = $this->createMock(Client::class);
         $exceptionClass = 'GuzzleHttp\\Exception\\BadResponseException';
         /** @var \Throwable $exception */
         $exception = new $exceptionClass(
@@ -84,7 +85,7 @@ class ReCaptchaV3Test extends TestCase
     {
         $this->configureRecaptcha();
 
-        $client = $this->createMock('GuzzleHttp\\Client');
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('post')
             ->willThrowException(new RuntimeException('Timeout'));
