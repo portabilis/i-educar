@@ -4,7 +4,7 @@ namespace Tests\Feature\Commands\UpdateDisciplinesCommand;
 
 use App\Services\Discipline\MoveDisciplineDataInterface;
 
-class RecordingMoveDisciplineDataFake implements MoveDisciplineDataInterface
+final class RecordingMoveDisciplineDataFake implements MoveDisciplineDataInterface
 {
     public static array $calls = [];
 
