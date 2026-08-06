@@ -53,6 +53,7 @@ class ImportUsersCommandTest extends TestCase
 
             $this->assertNotNull($user);
             $this->assertSame($institution->getKey(), $user->ref_cod_instituicao);
+            $this->assertSame($employee->getKey(), $user->ref_funcionario_cad);
             $this->assertSame(LegacyUserType::LEVEL_ADMIN, $user->ref_cod_tipo_usuario);
 
             Mail::assertSent(NewUserMail::class, function (NewUserMail $mail) use ($employee, $email, $login): bool {
