@@ -16,7 +16,7 @@ return new class extends Migration
             'description' => 'Menu para acessar a tela de reconhecimento facial',
             'order' => 0,
             'parent_old' => 21205,
-            'link' => '/intranet/educar_reconhecimento_facial_det.php',
+            'type' => 2,
         ]);
     }
 
