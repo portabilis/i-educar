@@ -81,6 +81,10 @@ return new class extends clsCadastro
                     'type' => $type,
                     'file_id' => $file->getKey(),
                 ]);
+
+                LegacyStudent::findOrFail($aluno)->update([
+                    'updated_at' => now(),
+                ]);
             }
 
             $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
