@@ -158,6 +158,7 @@ return new class extends clsListagem
                 $query->whereExemptionType($this->ref_cod_tipo_dispensa);
             })
             ->orderBy('data_cadastro')
+            ->orderBy('cod_dispensa')
             ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
         $total = $resultado->total();
