@@ -26,7 +26,7 @@ jobs:
           php-version: "8.5"
 
       - name: Composer
-        run: composer install
+        run: composer install --ignore-platform-req=php+
 
       - name: Style code fixer
         run: composer format
