@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use Database\Factories\CityFactory;
 use Database\Factories\StateFactory;
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -14,6 +15,12 @@ class PostalCodeControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
+    private const POSTAL_CODE = '88010020';
+
+    private const CITY_NAME = 'Florianópolis';
+
+    private const STREET = 'Rua Felipe Schmidt';
+
     public function test_search_returns_normalized_postal_code_data(): void
     {
         $state = StateFactory::new()->create([
@@ -22,34 +29,28 @@ class PostalCodeControllerTest extends TestCase
 
         $city = CityFactory::new()->create([
             'state_id' => $state,
-            'name' => 'Florianópolis',
+            'name' => self::CITY_NAME,
             'ibge_code' => 4205407,
         ]);
 
-        $client = $this->createMock('GuzzleHttp\\Client');
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('get')
-            ->with('https://opencep.com/v1/88010020')
-            ->willReturn(new Response(200, [], json_encode([
-                'cep' => '88010020',
-                'logradouro' => 'Rua Felipe Schmidt',
+            ->with($this->postalCodeServiceUrl())
+            ->willReturn(new Response(200, [], json_encode($this->openCepPayload([
                 'complemento' => 'Apê à direita #2',
-                'bairro' => 'Centro',
-                'localidade' => 'Florianópolis',
-                'uf' => 'SC',
-                'ibge' => '4205407',
-            ], JSON_UNESCAPED_UNICODE)));
+            ]), JSON_UNESCAPED_UNICODE)));
 
-        $this->app->instance('GuzzleHttp\\Client', $client);
+        $this->app->instance(Client::class, $client);
 
-        $this->getJson('/api/postal-code/88010020')
+        $this->getJson('/api/postal-code/' . self::POSTAL_CODE)
             ->assertOk()
             ->assertJson([
-                'postal_code' => '88010020',
-                'address' => 'Rua Felipe Schmidt',
+                'postal_code' => self::POSTAL_CODE,
+                'address' => self::STREET,
                 'complement' => 'Ape a direita 2',
                 'neighborhood' => 'Centro',
-                'city_name' => 'Florianópolis',
+                'city_name' => self::CITY_NAME,
                 'state_abbreviation' => 'SC',
                 'city_ibge_code' => 4205407,
                 'city' => [
@@ -64,11 +65,11 @@ class PostalCodeControllerTest extends TestCase
     #[DataProvider('postalCodeNotFoundProvider')]
     public function test_search_returns_not_found_when_postal_code_cannot_be_resolved(string $scenario): void
     {
-        $client = $this->createMock('GuzzleHttp\\Client');
+        $client = $this->createMock(Client::class);
 
         $expectation = $client->expects($this->once())
             ->method('get')
-            ->with('https://opencep.com/v1/88010020');
+            ->with($this->postalCodeServiceUrl());
 
         switch ($scenario) {
             case 'erro_payload':
@@ -79,15 +80,10 @@ class PostalCodeControllerTest extends TestCase
                 break;
 
             case 'unknown_city':
-                $expectation->willReturn(new Response(200, [], json_encode([
-                    'cep' => '88010020',
-                    'logradouro' => 'Rua Felipe Schmidt',
+                $expectation->willReturn(new Response(200, [], json_encode($this->openCepPayload([
                     'complemento' => '',
-                    'bairro' => 'Centro',
-                    'localidade' => 'Florianópolis',
-                    'uf' => 'SC',
                     'ibge' => '9999999',
-                ], JSON_UNESCAPED_UNICODE)));
+                ]), JSON_UNESCAPED_UNICODE)));
 
                 break;
 
@@ -95,9 +91,9 @@ class PostalCodeControllerTest extends TestCase
                 $expectation->willThrowException(new RuntimeException('Timeout while contacting postal code service.'));
         }
 
-        $this->app->instance('GuzzleHttp\\Client', $client);
+        $this->app->instance(Client::class, $client);
 
-        $this->getJson('/api/postal-code/88010020')
+        $this->getJson('/api/postal-code/' . self::POSTAL_CODE)
             ->assertNotFound()
             ->assertJson([
                 'message' => 'Not found',
@@ -112,4 +108,26 @@ class PostalCodeControllerTest extends TestCase
             'upstream request fails' => ['exception'],
         ];
     }
+
+    private function postalCodeServiceUrl(): string
+    {
+        return 'https://opencep.com/v1/' . self::POSTAL_CODE;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function openCepPayload(array $overrides = []): array
+    {
+        return array_merge([
+            'cep' => self::POSTAL_CODE,
+            'logradouro' => self::STREET,
+            'complemento' => '',
+            'bairro' => 'Centro',
+            'localidade' => self::CITY_NAME,
+            'uf' => 'SC',
+            'ibge' => '4205407',
+        ], $overrides);
+    }
 }
+
