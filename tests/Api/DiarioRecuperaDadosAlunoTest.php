@@ -46,7 +46,6 @@ class DiarioRecuperaDadosAlunoTest extends TestCase
                 'sus',
                 'tipo_responsavel',
                 'tipo_transporte',
-                'url_laudo_medico',
             ]
         );
     }

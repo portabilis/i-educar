@@ -1,5 +1,5 @@
 <tr id="tr_file">
-    <td class="formmdtd" valign="top"><span class="form">Arquivos</span></td>
+    <td class="formmdtd" valign="top"><span class="form">{{ $label ?? 'Arquivos' }}</span></td>
     <td class="formmdtd" valign="top">
         <span class="form">
             @if(isset($files))
@@ -19,13 +19,12 @@
             <span id="span-documento" style="font-style: italic; font-size: 10px;">
                 São aceitos arquivos nos formatos jpg, png, jpeg e pdf. Tamanho máximo: 2MB
             </span>
+            <input type="hidden" name="file_count" id="file_count" value="{{ isset($files) ? count($files) : 0 }}" />
             <input type="hidden" name="file_url" id="file_url"/>
             <input type="hidden" name="file_url_deleted" id="file_url_deleted"/>
         </span>
-    </td>
-</tr>
 
-<script>
+        <script>
 $j('#file').on('change', prepareUpload);
 var $loadingFile = $j('<img>')
     .attr('src', 'imagens/indicator.gif')
@@ -99,6 +98,7 @@ function makeUrlFile(url, originalName, extension, size, data) {
 
     arrayPush.push(fileUrlNew);
     $j('#file_url').val(JSON.stringify(arrayPush));
+    $j('#file_count').val(arrayPush.length);
 }
 
 function prepareUpload(event) {
@@ -189,4 +189,6 @@ $j('[id^="link_delete_file"]').click(function(id, val){
     $j('#file_info' + idElement).remove();
     $j('#file_url_deleted').val($arrayDeletedFiles);
 });
-</script>
+        </script>
+    </td>
+</tr>
