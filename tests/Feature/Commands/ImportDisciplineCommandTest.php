@@ -22,6 +22,8 @@ class ImportDisciplineCommandTest extends TestCase
     ): void {
         Storage::fake('local');
 
+        $disciplineName = 'História Integrada';
+
         $institution = LegacyInstitutionFactory::new()->create();
         $knowledgeArea = LegacyKnowledgeAreaFactory::new()->create([
             'instituicao_id' => $institution->getKey(),
@@ -33,7 +35,7 @@ class ImportDisciplineCommandTest extends TestCase
             $existingDiscipline = LegacyDisciplineFactory::new()->create([
                 'institution_id' => $institution->getKey(),
                 'knowledge_area_id' => $knowledgeArea->getKey(),
-                'name' => 'História Integrada',
+                'name' => $disciplineName,
                 'abbreviation' => 'OLD',
                 'foundation_type' => 0,
                 'educacenso_code' => 21,
@@ -44,7 +46,7 @@ class ImportDisciplineCommandTest extends TestCase
         $relativePath = $this->createRelativeImportFile([[
             'institution_id' => $institution->getKey(),
             'knowledge_area_id' => $knowledgeArea->getKey(),
-            'name' => 'História Integrada',
+            'name' => $disciplineName,
             'abbreviation' => 'HIS',
             'curriculum_base' => 1,
             'educacenso_discipline' => 42,
@@ -59,7 +61,7 @@ class ImportDisciplineCommandTest extends TestCase
             $discipline = LegacyDiscipline::query()
                 ->where('instituicao_id', $institution->getKey())
                 ->where('area_conhecimento_id', $knowledgeArea->getKey())
-                ->where('nome', 'História Integrada')
+                ->where('nome', $disciplineName)
                 ->first();
 
             $this->assertNotNull($discipline);
@@ -67,7 +69,7 @@ class ImportDisciplineCommandTest extends TestCase
             $this->assertSame(1, LegacyDiscipline::query()
                 ->where('instituicao_id', $institution->getKey())
                 ->where('area_conhecimento_id', $knowledgeArea->getKey())
-                ->where('nome', 'História Integrada')
+                ->where('nome', $disciplineName)
                 ->count());
             $this->assertFalse(file_exists(base_path($relativePath)));
 
@@ -78,7 +80,7 @@ class ImportDisciplineCommandTest extends TestCase
 
             $this->assertCount(1, $exportedRows);
             $this->assertSame($expectedDisciplineId, $exportedRows[0]['discipline_id']);
-            $this->assertSame('História Integrada', $exportedRows[0]['name']);
+            $this->assertSame($disciplineName, $exportedRows[0]['name']);
             $this->assertSame('HIS', $exportedRows[0]['abbreviation']);
         } finally {
             @unlink(base_path($relativePath));
@@ -127,12 +129,16 @@ class ImportDisciplineCommandTest extends TestCase
         ));
 
         $header = str_getcsv(array_shift($lines));
+        $rows = [];
 
-        return array_map(static function (string $line) use ($header): array {
-            /** @var array<string, string> $row */
+        foreach ($lines as $line) {
             $row = array_combine($header, str_getcsv($line));
 
-            return $row;
-        }, $lines);
+            $this->assertNotFalse($row);
+
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 }
