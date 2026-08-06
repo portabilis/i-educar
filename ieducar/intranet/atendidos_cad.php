@@ -4,6 +4,7 @@ use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Facades\Asset;
 use App\Models\EducacensoIndigenousPeople;
+use App\Models\Employee;
 use App\Models\LegacyDocument;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyIndividual;
@@ -26,6 +27,7 @@ use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
+use iEducar\Modules\Educacenso\Validator\ResidenceCityValidator;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -487,7 +489,7 @@ return new class extends clsCadastro
             'inline' => true,
         ];
 
-        $this->inputsHelper()->integer(attrName: 'certidao_nascimento', inputOptions: $options);
+        $this->inputsHelper()->text(attrNames: 'certidao_nascimento', inputOptions: $options);
 
         // certidao casamento (novo padrão)
 
@@ -873,10 +875,13 @@ return new class extends clsCadastro
             return false;
         }
 
-        $servidor = new clsPmieducarServidor;
-        $servidor = $servidor->lista(int_cod_servidor: $idPes, int_ref_cod_deficiencia: null, int_ref_idesco: null, int_carga_horaria: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
+        $servidorAtivo = is_numeric($idPes) && Employee::query()
+            ->whereEmployee($idPes)
+            ->whereAllocation(withNotAllocation: false)
+            ->active()
+            ->exists();
 
-        if ($servidor) {
+        if ($servidorAtivo) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com servidor.';
 
             return false;
@@ -1048,6 +1053,10 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->validaMunicipioResidencia()) {
+            return false;
+        }
+
         if (!$this->validaObrigatoriedadeTelefone()) {
             $this->mensagem = 'É necessário informar um Telefone residencial ou Celular.';
 
@@ -1150,6 +1159,22 @@ return new class extends clsCadastro
     private function validaDataNascimento()
     {
         $validator = new BirthDateValidator(birthDate: Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc));
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaMunicipioResidencia()
+    {
+        if (!$this->validarCamposObrigatoriosCenso()) {
+            return true;
+        }
+
+        $validator = new ResidenceCityValidator(postalCode: $this->postal_code, cityId: $this->city_id);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 

@@ -18,6 +18,7 @@ use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
+use iEducar\Modules\Educacenso\ExportRule\AreaItinerarioFormativo;
 use iEducar\Modules\Educacenso\ExportRule\CargaHorariaIntegralizada;
 use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
 use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
@@ -425,6 +426,8 @@ class EducacensoExportController extends ApiCoreController
             $docente = ComponentesCurriculares::handle($docente);
             /** @var Registro50 $docente */
             $docente = UnidadesCurricularesServidor::handle($docente);
+            /** @var Registro50 $docente */
+            $docente = AreaItinerarioFormativo::handle($docente);
 
             $data = [
                 $docente->registro, // 1 - Tipo de registro

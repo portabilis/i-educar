@@ -1,11 +1,16 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\EmployeeAllocation;
 use App\Models\LegacyBondType;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyPerson;
+use App\Models\LegacySchool;
 
 return new class extends clsCadastro
 {
+    private const CARGA_HORARIA_MAXIMA = 36;
+
     public $pessoa_logada;
 
     public $cod_servidor_alocacao;
@@ -67,24 +72,25 @@ return new class extends clsCadastro
         if (is_numeric($cod_servidor_alocacao)) {
             $this->cod_servidor_alocacao = $cod_servidor_alocacao;
 
-            $servidorAlocacao = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao);
-            $servidorAlocacao = $servidorAlocacao->detalhe();
+            $servidorAlocacao = EmployeeAllocation::query()->find($this->cod_servidor_alocacao);
 
-            $this->ref_ref_cod_instituicao = $servidorAlocacao['ref_ref_cod_instituicao'];
-            $this->ref_cod_servidor = $servidorAlocacao['ref_cod_servidor'];
-            $this->ref_cod_escola = $servidorAlocacao['ref_cod_escola'];
-            $this->periodo = $servidorAlocacao['periodo'];
-            $this->carga_horaria_alocada = $servidorAlocacao['carga_horaria'];
-            $this->cod_servidor_funcao = $servidorAlocacao['ref_cod_servidor_funcao'];
-            $this->ref_cod_funcionario_vinculo = $servidorAlocacao['ref_cod_funcionario_vinculo'];
-            $this->ativo = $servidorAlocacao['ativo'];
-            $this->ano = $servidorAlocacao['ano'];
-            $this->data_admissao = $servidorAlocacao['data_admissao'];
-            $this->data_saida = $servidorAlocacao['data_saida'];
-            $this->hora_inicial = $servidorAlocacao['hora_inicial'];
-            $this->hora_final = $servidorAlocacao['hora_final'];
-            $this->hora_atividade = $servidorAlocacao['hora_atividade'];
-            $this->horas_excedentes = $servidorAlocacao['horas_excedentes'];
+            if ($servidorAlocacao) {
+                $this->ref_ref_cod_instituicao = $servidorAlocacao['ref_ref_cod_instituicao'];
+                $this->ref_cod_servidor = $servidorAlocacao['ref_cod_servidor'];
+                $this->ref_cod_escola = $servidorAlocacao['ref_cod_escola'];
+                $this->periodo = $servidorAlocacao['periodo'];
+                $this->carga_horaria_alocada = $servidorAlocacao['carga_horaria'];
+                $this->cod_servidor_funcao = $servidorAlocacao['ref_cod_servidor_funcao'];
+                $this->ref_cod_funcionario_vinculo = $servidorAlocacao['ref_cod_funcionario_vinculo'];
+                $this->ativo = $servidorAlocacao['ativo'];
+                $this->ano = $servidorAlocacao['ano'];
+                $this->data_admissao = $servidorAlocacao['data_admissao'];
+                $this->data_saida = $servidorAlocacao['data_saida'];
+                $this->hora_inicial = $servidorAlocacao['hora_inicial'];
+                $this->hora_final = $servidorAlocacao['hora_final'];
+                $this->hora_atividade = $servidorAlocacao['hora_atividade'];
+                $this->horas_excedentes = $servidorAlocacao['horas_excedentes'];
+            }
         } elseif (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
             $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
             $this->ref_cod_servidor = $ref_cod_servidor;
@@ -129,21 +135,15 @@ return new class extends clsCadastro
         $this->campoOculto('cod_servidor_alocacao', $this->cod_servidor_alocacao);
 
         // Dados do servidor
-        $objTemp = new clsPmieducarServidor(
-            $this->ref_cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_ref_cod_instituicao
-        );
+        if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao)) {
+            $cargaHorariaServidor = Employee::query()
+                ->whereEmployee($this->ref_cod_servidor)
+                ->whereInstitution($this->ref_ref_cod_instituicao)
+                ->value('carga_horaria');
 
-        $det = $objTemp->detalhe();
-
-        if ($det) {
-            $this->carga_horaria_disponivel = $det['carga_horaria'];
+            if ($cargaHorariaServidor !== null) {
+                $this->carga_horaria_disponivel = $cargaHorariaServidor;
+            }
         }
 
         if ($this->ref_cod_servidor) {
@@ -155,31 +155,10 @@ return new class extends clsCadastro
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
         // Carga horária
-        $servidorAlocacao = new clsPmieducarServidorAlocacao(
-            $this->cod_servidor_alocacao,
-            $this->ref_ref_cod_instituicao,
-            null,
-            null,
-            null,
-            $this->ref_cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ano ?: date('Y'),
-            $this->data_admissao,
-            null,
-            null,
-            $this->data_saida,
-        );
-
         $carga = $this->carga_horaria_disponivel;
         $carga = str_pad($carga, 2, 0, STR_PAD_LEFT);
         $this->campoRotulo('carga_horaria_disponivel', 'Carga horária do servidor', $carga . ':00');
-        $cargadisponivel = $servidorAlocacao->getCargaHorariaAno();
+        $cargadisponivel = $this->cargaHorariaAlocadaNoAno($this->ano ?: date('Y'));
         $this->campoRotulo('carga_horaria_sem_alocacao', 'Carga horária alocada', substr($cargadisponivel, 0, -3));
 
         $this->inputsHelper()->integer('ano', ['value' => $this->ano, 'max_length' => 4]);
@@ -264,61 +243,20 @@ return new class extends clsCadastro
         $dataAdmissao = $this->data_admissao ? Portabilis_Date_Utils::brToPgSql($this->data_admissao) : null;
         $dataSaida = $this->data_saida ? Portabilis_Date_Utils::brToPgSql($this->data_saida) : null;
 
-        $servidorAlocacao = new clsPmieducarServidorAlocacao(
-            $this->cod_servidor_alocacao,
-            $this->ref_ref_cod_instituicao,
-            null,
-            null,
-            null,
-            $this->ref_cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ano,
-            $dataAdmissao
-        );
-
         $carga_horaria_disponivel = $this->hhmmToMinutes($this->carga_horaria_disponivel);
         if ($dataSaida > now() || $dataSaida == null) {
             $carga_horaria_alocada = $this->hhmmToMinutes($this->carga_horaria_alocada);
         }
-        $carga_horaria_alocada += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAnoSemAlocacaoAtual());
+        $carga_horaria_alocada += $this->hhmmToMinutes($this->cargaHorariaAlocadaNoAno($this->ano, $this->cod_servidor_alocacao));
 
         if ($carga_horaria_disponivel >= $carga_horaria_alocada) {
-            $obj_novo = new clsPmieducarServidorAlocacao(
-                $this->cod_servidor_alocacao,
-                $this->ref_ref_cod_instituicao,
-                null,
-                $this->pessoa_logada,
-                $this->ref_cod_escola,
-                $this->ref_cod_servidor,
-                null,
-                null,
-                $this->ativo,
-                $this->carga_horaria_alocada,
-                $this->periodo,
-                $this->cod_servidor_funcao,
-                $this->ref_cod_funcionario_vinculo,
-                $this->ano,
-                $dataAdmissao,
-                $this->hora_inicial,
-                $this->hora_final,
-                $this->hora_atividade,
-                $this->horas_excedentes,
-                $dataSaida
-            );
-
-            if ($obj_novo->periodoAlocado()) {
+            if ($this->periodoAlocado()) {
                 $this->mensagem = 'Período informado já foi alocado. Por favor, selecione outro.<br />';
 
                 return false;
             }
 
-            $cadastrou = $obj_novo->cadastra();
+            $cadastrou = $this->cadastraAlocacao($dataAdmissao, $dataSaida);
 
             if (!$cadastrou) {
                 $this->mensagem = 'Cadastro não realizado.<br />';
@@ -327,9 +265,9 @@ return new class extends clsCadastro
             }
 
             // Excluí alocação existente
-            if ($this->cod_servidor_alocacao) {
-                $obj_tmp = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, null, $this->pessoa_logada);
-                $obj_tmp->excluir();
+            if (is_numeric($this->cod_servidor_alocacao)) {
+                $alocacaoAnterior = EmployeeAllocation::query()->find($this->cod_servidor_alocacao);
+                $alocacaoAnterior?->delete();
             }
 
             // Atualiza código da alocação
@@ -352,19 +290,107 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        if ($this->cod_servidor_alocacao) {
-            $obj_tmp = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, null, $this->pessoa_logada);
-            $excluiu = $obj_tmp->excluir();
+        if (is_numeric($this->cod_servidor_alocacao)) {
+            $alocacao = EmployeeAllocation::query()->find($this->cod_servidor_alocacao);
+            $alocacao?->delete();
 
-            if ($excluiu) {
-                $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-                $this->simpleRedirect(sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
-            }
+            $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
+            $this->simpleRedirect(sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+    }
+
+    private function cargaHorariaAlocadaNoAno($ano, $ignorarAlocacao = null)
+    {
+        if (!is_numeric($this->ref_cod_servidor) || !is_numeric($ano)) {
+            return '';
+        }
+
+        return EmployeeAllocation::query()
+            ->whereEmployee($this->ref_cod_servidor)
+            ->whereYearEq($ano)
+            ->withoutLeaveDate()
+            ->when(is_numeric($ignorarAlocacao), fn ($q) => $q->whereKeyNot($ignorarAlocacao))
+            ->selectRaw('SUM(carga_horaria) as total')
+            ->value('total');
+    }
+
+    private function periodoAlocado()
+    {
+        if (!is_numeric($this->ref_cod_escola)
+            || !is_numeric($this->periodo)
+            || !is_numeric($this->ano)
+            || !is_numeric($this->ref_cod_servidor)
+        ) {
+            return false;
+        }
+
+        return EmployeeAllocation::query()
+            ->whereSchool($this->ref_cod_escola)
+            ->whereEmployee($this->ref_cod_servidor)
+            ->whereYearEq($this->ano)
+            ->wherePeriod($this->periodo)
+            ->active()
+            ->withoutLeaveDate()
+            ->when(is_numeric($this->cod_servidor_alocacao), fn ($q) => $q->whereKeyNot($this->cod_servidor_alocacao))
+            ->exists();
+    }
+
+    private function cadastraAlocacao($dataAdmissao, $dataSaida)
+    {
+        if (!is_numeric($this->ref_ref_cod_instituicao) || !is_numeric($this->ref_cod_servidor)) {
+            return false;
+        }
+
+        $servidorValido = Employee::query()
+            ->where('cod_servidor', $this->ref_cod_servidor)
+            ->whereInstitution($this->ref_ref_cod_instituicao)
+            ->exists();
+
+        if (!$servidorValido) {
+            return false;
+        }
+
+        if (!is_numeric($this->ref_cod_escola) || !LegacySchool::query()->whereKey($this->ref_cod_escola)->exists()) {
+            return false;
+        }
+
+        if (!$this->cargaHorariaValida($this->carga_horaria_alocada) || !is_numeric($this->periodo) || !$this->periodo) {
+            return false;
+        }
+
+        $alocacao = EmployeeAllocation::query()->create([
+            'ref_ref_cod_instituicao' => $this->ref_ref_cod_instituicao,
+            'ref_usuario_cad' => $this->pessoa_logada,
+            'ref_cod_escola' => $this->ref_cod_escola,
+            'ref_cod_servidor' => $this->ref_cod_servidor,
+            'ref_cod_servidor_funcao' => is_numeric($this->cod_servidor_funcao) ? $this->cod_servidor_funcao : null,
+            'ref_cod_funcionario_vinculo' => is_numeric($this->ref_cod_funcionario_vinculo) ? $this->ref_cod_funcionario_vinculo : null,
+            'carga_horaria' => $this->carga_horaria_alocada,
+            'hora_inicial' => $this->hora_inicial ?: null,
+            'hora_final' => $this->hora_final ?: null,
+            'hora_atividade' => $this->hora_atividade ?: null,
+            'horas_excedentes' => $this->horas_excedentes ?: null,
+            'periodo' => $this->periodo,
+            'ano' => is_numeric($this->ano) ? $this->ano : null,
+            'data_admissao' => $dataAdmissao ?: null,
+            'data_saida' => $dataSaida ?: null,
+            'ativo' => 1,
+        ]);
+
+        return $alocacao->cod_servidor_alocacao;
+    }
+
+    private function cargaHorariaValida($cargaHoraria)
+    {
+        if (!is_string($cargaHoraria) || !str_contains($cargaHoraria, ':')) {
+            return false;
+        }
+
+        return self::CARGA_HORARIA_MAXIMA * 60 >= $this->hhmmToMinutes($cargaHoraria);
     }
 
     public function hhmmToMinutes($hhmm)

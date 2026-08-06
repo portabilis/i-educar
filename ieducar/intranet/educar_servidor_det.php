@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\EmployeeAllocation;
 use App\Models\EmployeeWithdrawal;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
@@ -41,9 +43,25 @@ return new class extends clsDetalhe
         $this->cod_servidor = (int) $_GET['cod_servidor'];
         $this->ref_cod_instituicao = (int) $_GET['ref_cod_instituicao'];
 
-        $tmp_obj = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
+        $servidor = Employee::query()
+            ->whereEmployee($this->cod_servidor)
+            ->whereInstitution($this->ref_cod_instituicao)
+            ->first([
+                'cod_servidor',
+                'ref_idesco',
+                'carga_horaria',
+                'data_cadastro',
+                'data_exclusao',
+                'ativo',
+                'ref_cod_instituicao',
+                'pos_graduacao',
+                'curso_formacao_continuada',
+                'multi_seriado',
+                'tipo_ensino_medio_cursado',
+                'complementacao_pedagogica',
+            ]);
 
-        $registro = $tmp_obj->detalhe();
+        $registro = $servidor ? $servidor->getAttributes() : [];
 
         if (empty($registro)) {
             $this->simpleRedirect('educar_servidor_lst.php');
@@ -66,29 +84,24 @@ return new class extends clsDetalhe
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         // Alocação do servidor
-        $obj = new clsPmieducarServidorAlocacao;
-        $obj->setOrderby('periodo, carga_horaria');
-        $lista = $obj->lista(
-            null,
-            $this->ref_cod_instituicao,
-            int_ref_cod_servidor: $this->cod_servidor,
-            bool_busca_nome: null,
-            boo_professor: 1,
-            ano: date('Y'),
-            desconsiderarAlocacoesComDataDeSaida: true
-        );
+        $lista = EmployeeAllocation::query()
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+            ->when(is_numeric($this->cod_servidor), fn ($q) => $q->whereEmployee($this->cod_servidor))
+            ->whereYearEq(date('Y'))
+            ->active()
+            ->withoutLeaveDate()
+            ->with(['school:cod_escola,ref_idpes', 'school.organization:idpes,fantasia'])
+            ->orderBy('periodo')
+            ->orderBy('carga_horaria')
+            ->get();
 
-        if ($lista) {
+        if ($lista->isNotEmpty()) {
             // Passa todos os valores do registro para atributos do objeto
             foreach ($lista as $val) {
                 $temp = [];
                 $temp['carga_horaria'] = $val['carga_horaria'];
                 $temp['periodo'] = $val['periodo'];
-
-                $obj_escola = new clsPmieducarEscola($val['ref_cod_escola']);
-                $det_escola = $obj_escola->detalhe();
-                $det_escola = $det_escola['nome'];
-                $temp['ref_cod_escola'] = $det_escola;
+                $temp['ref_cod_escola'] = $val->school->organization?->fantasia;
 
                 $this->alocacao_array[] = $temp;
             }
@@ -220,9 +233,36 @@ return new class extends clsDetalhe
         }
 
         // Horários do professor
-        $horarios = $tmp_obj->getHorariosServidor($registro['cod_servidor'], $this->ref_cod_instituicao);
+        $horarios = DB::table('pmieducar.quadro_horario_horarios')
+            ->select([
+                'curso.nm_curso',
+                'serie.nm_serie',
+                'turma.nm_turma',
+                'componente_curricular.nome',
+                'quadro_horario_horarios.dia_semana',
+                'quadro_horario_horarios.hora_inicial',
+                'quadro_horario_horarios.hora_final',
+            ])
+            ->selectRaw('null as nm_escola')
+            ->join('pmieducar.quadro_horario', function ($j) {
+                $j->on('quadro_horario.cod_quadro_horario', 'quadro_horario_horarios.ref_cod_quadro_horario');
+                $j->where('quadro_horario.ativo', 1);
+            })
+            ->join('pmieducar.turma', function ($j) {
+                $j->on('turma.cod_turma', 'quadro_horario.ref_cod_turma');
+                $j->where('turma.ativo', 1);
+            })
+            ->join('pmieducar.serie', 'serie.cod_serie', 'turma.ref_ref_cod_serie')
+            ->join('pmieducar.curso', 'curso.cod_curso', 'serie.ref_cod_curso')
+            ->join('modules.componente_curricular', 'componente_curricular.id', 'quadro_horario_horarios.ref_cod_disciplina')
+            ->where('quadro_horario_horarios.ativo', 1)
+            ->where('quadro_horario_horarios.ref_servidor', $registro['cod_servidor'])
+            ->where('quadro_horario_horarios.ref_cod_instituicao_servidor', $this->ref_cod_instituicao)
+            ->orderBy('quadro_horario_horarios.dia_semana')
+            ->orderBy('quadro_horario_horarios.hora_inicial')
+            ->get();
 
-        if ($horarios) {
+        if ($horarios->isNotEmpty()) {
             $tabela = '
         <table cellspacing=\'0\' cellpadding=\'0\' border=\'0\'>
           <tr bgcolor=\'#ccdce6\' align=\'center\'>
@@ -252,14 +292,14 @@ return new class extends clsDetalhe
             <td>%s</td>
           </tr>',
                     $class,
-                    $horario['nm_escola'],
-                    $horario['nm_curso'],
-                    $horario['nm_serie'],
-                    $horario['nm_turma'],
-                    $horario['nome'],
-                    $dias_da_semana[$horario['dia_semana']],
-                    $horario['hora_inicial'],
-                    $horario['hora_final']
+                    $horario->nm_escola,
+                    $horario->nm_curso,
+                    $horario->nm_serie,
+                    $horario->nm_turma,
+                    $horario->nome,
+                    $dias_da_semana[$horario->dia_semana],
+                    $horario->hora_inicial,
+                    $horario->hora_final
                 );
             }
 
@@ -291,7 +331,7 @@ return new class extends clsDetalhe
             $this->array_botao[] = 'Alocar Servidor';
             $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_lst.php?{$get_padrao}\");";
 
-            if ($lista) {
+            if ($lista->isNotEmpty()) {
                 $this->array_botao[] = 'Substituir Horário Servidor';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
             }

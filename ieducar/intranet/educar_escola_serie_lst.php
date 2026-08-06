@@ -1,12 +1,11 @@
 <?php
 
 use App\Models\LegacyGrade;
+use App\Models\LegacySchoolGrade;
 
 return new class extends clsListagem
 {
     public $limite;
-
-    public $offset;
 
     public $ref_cod_serie;
 
@@ -82,59 +81,44 @@ return new class extends clsListagem
             obrigatorio: false
         );
 
-        // Paginador
         $this->limite = 20;
-        $this->offset = $_GET["pagina_{$this->nome}"]
-            ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite
-            : 0;
 
-        $obj_escola_serie = new clsPmieducarEscolaSerie;
-        $obj_escola_serie->setOrderby('nm_serie ASC');
-        $obj_escola_serie->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $usuarioBiblioteca = App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada);
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
-            $obj_escola_serie->codUsuario = $this->pessoa_logada;
-        }
+        $paginador = LegacySchoolGrade::query()
+            ->joinGradeCourse()
+            ->active()
+            ->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola))
+            ->when(!is_numeric($this->ref_cod_escola) && $usuarioBiblioteca, fn ($q) => $q->whereUser($this->pessoa_logada))
+            ->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie))
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+            ->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso))
+            ->with(['grade.course', 'school.organization', 'school.institution'])
+            ->orderBy('nm_serie')
+            ->orderBy('escola_serie.ref_cod_serie')
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $lista = $obj_escola_serie->lista(
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_ref_cod_serie: $this->ref_cod_serie,
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao,
-            int_ref_cod_curso: $this->ref_cod_curso
-        );
+        $total = $paginador->total();
 
-        $total = $obj_escola_serie->_total;
+        foreach ($paginador->getCollection() as $registro) {
+            $serie = $registro->grade;
+            $nm_serie = empty($serie->descricao) ? $serie->nm_serie : "{$serie->nm_serie} ({$serie->descricao})";
 
-        // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
-                $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
-                $nm_serie = empty($det_ref_cod_serie['descricao']) ? $det_ref_cod_serie['nm_serie'] : "{$det_ref_cod_serie['nm_serie']} ({$det_ref_cod_serie['descricao']})";
+            $curso = $serie->course;
+            $nm_curso = empty($curso->descricao) ? $curso->nm_curso : "{$curso->nm_curso} ({$curso->descricao})";
 
-                $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-                $det_curso = $obj_curso->detalhe();
-                $registro['ref_cod_curso'] = empty($det_curso['descricao']) ? $det_curso['nm_curso'] : "{$det_curso['nm_curso']} ({$det_curso['descricao']})";
-                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
-                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                $nm_escola = $det_ref_cod_escola['nome'];
+            $nm_escola = $registro->school->organization->fantasia;
+            $nm_instituicao = $registro->school->institution->nm_instituicao;
 
-                $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
+            $link = "educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}";
 
-                $lista_busca = [
-                    "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_serie}</a>",
-                    "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_curso']}</a>",
-                ];
-
-                $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_escola}</a>";
-                $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
-                $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_escola}</a>";
-
-                $this->addLinhas($lista_busca);
-            }
+            $this->addLinhas([
+                "<a href=\"{$link}\">{$nm_serie}</a>",
+                "<a href=\"{$link}\">{$nm_curso}</a>",
+                "<a href=\"{$link}\">{$nm_escola}</a>",
+                "<a href=\"{$link}\">{$nm_instituicao}</a>",
+                "<a href=\"{$link}\">{$nm_escola}</a>",
+            ]);
         }
 
         $this->addPaginador2(

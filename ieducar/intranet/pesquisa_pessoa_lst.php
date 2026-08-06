@@ -2,6 +2,7 @@
 
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
+use App\Support\View\SearchParameters;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -31,12 +32,12 @@ return new class extends clsListagem
         $this->chave_campo = $_GET['chave_campo'];
 
         if ($_GET['campos']) {
-            $parametros = new clsParametrosPesquisas;
+            $parametros = new SearchParameters;
             $parametros->deserializaCampos($_GET['campos']);
             Session::put('campos', $parametros->geraArrayComAtributos());
             unset($_GET['campos']);
         } else {
-            $parametros = new clsParametrosPesquisas;
+            $parametros = new SearchParameters;
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
 

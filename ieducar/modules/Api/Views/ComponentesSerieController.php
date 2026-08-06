@@ -5,6 +5,7 @@ use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolGrade;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
@@ -129,11 +130,7 @@ class ComponentesSerieController extends ApiCoreController
         $serieId = $this->getRequest()->serie_id;
         $componentes = json_decode($this->getRequest()->componentes);
         $arrayComponentes = $this->handleComponentesArray($componentes);
-        $escolas = $this->getEscolasSerieBySerie($serieId);
-
-        $escolas = array_map(function ($item) {
-            return $item['ref_cod_escola'];
-        }, $escolas);
+        $escolas = $this->getEscolasSerieBySerie($serieId)->pluck('ref_cod_escola');
 
         $this->replicaComponentesAdicionadosNasEscolas($serieId, $arrayComponentes, $escolas);
     }
@@ -154,7 +151,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function replicaComponentesAdicionadosNasEscolas($serieId, $componentes, $escolas)
     {
-        if (!$escolas || !$componentes) {
+        if (!$componentes) {
             return [];
         }
 
@@ -192,14 +189,11 @@ class ComponentesSerieController extends ApiCoreController
 
     public function getEscolasSerieBySerie($serieId)
     {
-        $objEscolaSerie = new clsPmieducarEscolaSerie;
-        $escolasDaSerie = $objEscolaSerie->lista(null, $serieId);
-
-        if ($escolasDaSerie) {
-            return $escolasDaSerie;
-        }
-
-        return false;
+        return LegacySchoolGrade::query()
+            ->joinGradeCourse()
+            ->whereGrade((int) $serieId)
+            ->active()
+            ->get();
     }
 
     public function getTurmasDaSerieNoAnoLetivoAtual($serieId)
@@ -243,7 +237,7 @@ class ComponentesSerieController extends ApiCoreController
         $escolas = $this->getEscolasSerieBySerie($serieId);
         $turmas = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
 
-        if ($escolas && $componentes) {
+        if ($componentes) {
             foreach ($escolas as $escola) {
                 foreach ($componentes as $componente) {
                     $this->excluiEscolaSerieDisciplina($escola['ref_cod_escola'], $serieId, $componente);
@@ -275,11 +269,9 @@ class ComponentesSerieController extends ApiCoreController
     {
         $escolas = $this->getEscolasSerieBySerie($serieId);
 
-        if ($escolas) {
-            foreach ($escolas as $escola) {
-                $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola['ref_cod_escola']);
-                $objEscolaSerieDisciplina->excluirTodos();
-            }
+        foreach ($escolas as $escola) {
+            $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola['ref_cod_escola']);
+            $objEscolaSerieDisciplina->excluirTodos();
         }
     }
 
