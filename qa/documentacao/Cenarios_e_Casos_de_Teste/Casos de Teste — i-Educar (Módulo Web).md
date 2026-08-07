@@ -15,7 +15,7 @@ separados por módulo. Técnicas aplicadas: Particionamento de Equivalência
 | 7. Frequência e Diário de Classe            | [07-frequencia-e-diario-de-classe.md](./07-frequencia-e-diario-de-classe.md) | CT-041 a CT-047 | PE + BVA |
 | 8. Relatórios e Consultas                   | [08-relatorios-e-consultas.md](./08-relatorios-e-consultas.md)         | CT-048 a CT-054 | PE       |
 | 9. Dispensa de Disciplina                   | [09-dispensa-de-disciplina.md](./09-dispensa-de-disciplina.md)         | CT-055 a CT-061 | PE       |
-| 10. Comunicação (Avisos e Notificações)     | [10-comunicacao-avisos-e-notificacoes.md](./10-comunicacao-avisos-e-notificacoes.md) | CT-062 a CT-069 | PE |
+| 10. Comunicação (Avisos e Notificações)     | [10-comunicacao-avisos-e-notificacoes.md](./10-comunicacao.md) | CT-062 a CT-069 | PE |
 | 11. Configurações e Administração           | [11-configuracoes-e-administracao.md](./11-configuracoes-e-administracao.md) | CT-070 a CT-078 | PE + BVA |
 | 12. Upload e Gestão de Arquivos             | [12-upload-e-gestao-de-arquivos.md](./12-upload-e-gestao-de-arquivos.md) | CT-079 a CT-086 | PE + BVA |
 
