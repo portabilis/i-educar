@@ -1103,43 +1103,6 @@ class clsPmieducarMatricula extends Model
         return false;
     }
 
-    /**
-     * Exclui um registro.
-     *
-     * @return bool
-     */
-    public function excluir()
-    {
-        $codAluno = $_GET['ref_cod_aluno'];
-
-        if (is_numeric($this->cod_matricula) && is_numeric($this->ref_usuario_exc)) {
-            $this->ativo = 0;
-            $this->ultima_matricula = 0;
-
-            $db = new clsBanco;
-
-            $existeTransfereciaSolicitacao = $db->CampoUnico("SELECT max(transferencia_solicitacao.cod_transferencia_solicitacao)
-                                                                FROM pmieducar.matricula
-                                                          INNER JOIN pmieducar.transferencia_solicitacao ON (matricula.cod_matricula = transferencia_solicitacao.ref_cod_matricula_saida)
-                                                               WHERE matricula.ativo = 1
-                                                                 AND matricula.ref_cod_aluno = $codAluno
-                                                                 AND matricula.cod_matricula <> $this->cod_matricula
-                                                                 AND matricula.aprovado = 4");
-
-            if (!is_null($existeTransfereciaSolicitacao)) {
-                $getCodMatriculaTransferido = $db->CampoUnico("SELECT max(cod_matricula) FROM pmieducar.matricula WHERE aprovado = 4 AND ref_cod_aluno = $codAluno");
-
-                $db->Consulta("UPDATE pmieducar.transferencia_solicitacao
-                                  SET ativo = 1
-                                WHERE ref_cod_matricula_saida = $getCodMatriculaTransferido");
-            }
-
-            return $this->edita();
-        }
-
-        return false;
-    }
-
     public function verificaMatriculaUltimoAno($codAluno, $codMatricula)
     {
         $db = new clsBanco;
