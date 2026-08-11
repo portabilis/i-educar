@@ -25,7 +25,7 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 581, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_aluno_lst.php');
 
-        $this->url_cancelar = "educar_reconhecimento_facial_det.php?ref_cod_aluno={$this->cod_aluno}";
+        $this->url_cancelar = "educar_reconhecimento_facial_det.php?ref_cod_aluno={$this->ref_cod_aluno}";
 
         $this->breadcrumb(currentPage: 'Reconhecimento Facial - Editar', breadcrumbs: [
             'educar_index.php' => 'Escola',
