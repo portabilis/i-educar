@@ -127,7 +127,6 @@ return new class extends clsListagem
         $this->nome_mae = $this->cleanNameSearch(name: $this->nome_mae);
 
         $cpf = preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno);
-        $cpfInvalido = $cpf && !Portabilis_Utils_Validation::validatesCpf(cpf: $cpf);
 
         $dataFilter = [
             'rg' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->rg_aluno),
@@ -152,40 +151,10 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        if ($cpfInvalido) {
-            // Um CPF inválido nunca deve corresponder a alunos reais. Sem esse
-            // corte, o valor era usado como está na busca (where('cpf', $cpf)),
-            // e um CPF inválido usado como placeholder para "sem CPF cadastrado"
-            // (ex.: 00000000000) pode estar salvo em vários registros, fazendo
-            // a busca por um CPF inválido retornar múltiplos alunos.
-            $students = new LengthAwarePaginator(items: [], total: 0, perPage: $this->limite, options: ['pageName' => 'pagina_' . $this->nome]);
-        } else {
-            $studentFilter = new StudentFilter(...$dataFilter);
-            $students = LegacyStudent::query()->findStudentWithMultipleSearch(studentFilter: $studentFilter);
-        }
+        $students = $this->searchStudents(cpf: $cpf, dataFilter: $dataFilter);
 
         foreach ($students as $student) {
-            $nomeAluno = $student->person->name;
-            $nomeSocial = $student->individual->nome_social;
-
-            if ($nomeSocial) {
-                $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
-            }
-
-            $nomeResponsavel = mb_strtoupper(string: $student->getGuardianName() ?? '-');
-            $cpfResponsavel = ucfirst(string: $student->getGuardianCpf());
-            $nomeMae = mb_strtoupper(string: $student->individual->mother->name ?? '-');
-
-            $linhas = array_filter(array: [
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
-                $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">" . ($student->inepNumber ?? '-'). '</a>' : null,
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>",
-            ]);
-
-            $this->addLinhas(linha: $linhas);
+            $this->addLinhas(linha: $this->studentRow(student: $student, configuracoes: $configuracoes));
         }
 
         $this->addPaginador2(strUrl: 'educar_aluno_lst.php', intTotalRegistros: $students->total(), mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
@@ -212,5 +181,44 @@ return new class extends clsListagem
     public function cleanNameSearch($name)
     {
         return trim(string: preg_replace(pattern: '/\W/', replacement: ' ', subject: limpa_acentos(str_nome: $name)));
+    }
+
+    private function searchStudents(?string $cpf, array $dataFilter)
+    {
+        if ($cpf && !Portabilis_Utils_Validation::validatesCpf(cpf: $cpf)) {
+            // Um CPF inválido nunca deve corresponder a alunos reais. Sem esse
+            // corte, o valor era usado como está na busca (where('cpf', $cpf)),
+            // e um CPF inválido usado como placeholder para "sem CPF cadastrado"
+            // (ex.: 00000000000) pode estar salvo em vários registros, fazendo
+            // a busca por um CPF inválido retornar múltiplos alunos.
+            return new LengthAwarePaginator(items: [], total: 0, perPage: $this->limite, options: ['pageName' => 'pagina_' . $this->nome]);
+        }
+
+        $studentFilter = new StudentFilter(...$dataFilter);
+
+        return LegacyStudent::query()->findStudentWithMultipleSearch(studentFilter: $studentFilter);
+    }
+
+    private function studentRow(LegacyStudent $student, $configuracoes): array
+    {
+        $nomeAluno = $student->person->name;
+        $nomeSocial = $student->individual->nome_social;
+
+        if ($nomeSocial) {
+            $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
+        }
+
+        $nomeResponsavel = mb_strtoupper(string: $student->getGuardianName() ?? '-');
+        $cpfResponsavel = ucfirst(string: $student->getGuardianCpf());
+        $nomeMae = mb_strtoupper(string: $student->individual->mother->name ?? '-');
+
+        return array_filter(array: [
+            "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
+            $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">" . ($student->inepNumber ?? '-'). '</a>' : null,
+            "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
+            "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
+            "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",
+            "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>",
+        ]);
     }
 };
