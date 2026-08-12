@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+
 return new class extends clsListagem
 {
     public $pessoa_logada;
@@ -94,12 +96,14 @@ return new class extends clsListagem
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
+            $cursos = LegacyCourse::query()
+                ->whereIn('cod_curso', array_column($lista, 'ref_cod_curso'))
+                ->get(['cod_curso', 'nm_curso', 'descricao'])
+                ->keyBy('cod_curso');
+
             foreach ($lista as $registro) {
                 // Pega detalhes de foreign_keys
-                $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-                $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                $nomeCurso = empty($det_ref_cod_curso['descricao']) ? $det_ref_cod_curso['nm_curso'] : "{$det_ref_cod_curso['nm_curso']} ({$det_ref_cod_curso['descricao']})";
-                $registro['ref_cod_curso'] = $nomeCurso;
+                $registro['ref_cod_curso'] = $cursos->get($registro['ref_cod_curso'])->name;
 
                 $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();

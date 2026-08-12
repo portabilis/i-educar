@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyAbandonmentType;
+use App\Models\LegacyCourse;
 use App\Models\LegacyTransferRequest;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -72,10 +73,8 @@ return new class extends clsDetalhe
         $existeSaidaEscola = $obj_matricula->existeSaidaEscola(codMatricula: $registro['cod_matricula']);
 
         // Curso
-        $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
         $curso_id = $registro['ref_cod_curso'];
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()->whereKey($curso_id)->value('nm_curso');
 
         // Série
         $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);

@@ -177,11 +177,16 @@ return new class extends clsCadastro
         $this->acao_enviar = 'formUtils.submit()';
     }
 
-    protected function getCurso($id)
+    private function cursoDeAtividadeComplementar($id)
     {
-        $curso = new clsPmieducarCurso(cod_curso: $id);
+        if (!is_numeric(value: $id)) {
+            return false;
+        }
 
-        return $curso->detalhe();
+        return LegacyCourse::query()
+            ->whereKey($id)
+            ->whereHas(relation: 'educationType', callback: fn ($query) => $query->where('atividade_complementar', true))
+            ->exists();
     }
 
     private function getEnturmacoesNaTurma($turma)
@@ -424,16 +429,14 @@ return new class extends clsCadastro
                 ->get(['ref_ref_cod_serie', 'ref_cod_curso']);
 
             if ($matriculas->isNotEmpty() && !$dependencia) {
-                $curso = $this->getCurso(id: $this->ref_cod_curso);
-
-                $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
-                $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+                $multiSeriado = LegacyCourse::query()->whereKey($this->ref_cod_curso)->value('multi_seriado');
+                $cursoDeAtividadeComplementar = $this->cursoDeAtividadeComplementar(id: $this->ref_cod_curso);
 
                 if ($matriculas->firstWhere('ref_ref_cod_serie', $this->ref_cod_serie) && !$cursoDeAtividadeComplementar) {
                     $this->mensagem = 'Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />';
 
                     return false;
-                } elseif ($curso['multi_seriado'] != 1) {
+                } elseif ($multiSeriado != 1) {
                     $nomeSerie = $matriculas->pluck('grade.nm_serie')->unique()->implode(', ');
 
                     $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multisseriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
@@ -448,8 +451,7 @@ return new class extends clsCadastro
 
                 if (is_array(value: $m) && count(value: $m) && !$dependencia) {
                     $mesmoCursoAno = ($m['ref_cod_curso'] == $this->ref_cod_curso && $m['ano'] == $this->ano);
-                    $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
-                    $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+                    $cursoDeAtividadeComplementar = $this->cursoDeAtividadeComplementar(id: $this->ref_cod_curso);
 
                     if (($mesmoCursoAno || config(key: 'legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
                         $serie = new clsPmieducarSerie(cod_serie: $m['ref_ref_cod_serie'], ref_usuario_exc: null, ref_usuario_cad: null, ref_cod_curso: $m['ref_cod_curso']);
@@ -470,14 +472,7 @@ return new class extends clsCadastro
                             $escola = '';
                         }
 
-                        $curso = new clsPmieducarCurso(cod_curso: $m['ref_cod_curso']);
-                        $curso = $curso->detalhe();
-
-                        if (is_array(value: $curso) && count(value: $curso)) {
-                            $curso = $curso['nm_curso'];
-                        } else {
-                            $curso = '';
-                        }
+                        $curso = LegacyCourse::query()->whereKey($m['ref_cod_curso'])->value('nm_curso');
 
                         $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
 

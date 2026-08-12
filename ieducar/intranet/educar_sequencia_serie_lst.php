@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyUser;
 
@@ -73,15 +74,16 @@ return new class extends clsListagem
         $opcoes_ = ['' => 'Selecione'];
 
         // EDITAR
-        if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarCurso;
-            $objTemp->setOrderby('nm_curso');
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'] . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
-                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'] . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
-                }
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $cursos = LegacyCourse::query()
+                ->active()
+                ->whereInstitution((int) $this->ref_cod_instituicao)
+                ->orderByName()
+                ->get(['cod_curso', 'nm_curso', 'descricao']);
+
+            foreach ($cursos as $registro) {
+                $opcoes[$registro->cod_curso] = $registro->nm_curso . (!empty($registro->descricao) ? ' - ' . $registro->descricao : '');
+                $opcoes_[$registro->cod_curso] = $opcoes[$registro->cod_curso];
             }
         }
 

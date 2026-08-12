@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyExemptionType;
 
 return new class extends clsDetalhe
@@ -80,9 +81,9 @@ return new class extends clsDetalhe
         $nm_aluno = $det_aluno['nome_aluno'];
 
         // Dados do curso
-        $obj_ref_cod_curso = new clsPmieducarCurso($detalhe_aluno['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()
+            ->whereKey($detalhe_aluno['ref_cod_curso'])
+            ->value('nm_curso');
 
         // Tipo de dispensa
         $det_ref_cod_tipo_dispensa = LegacyExemptionType::find($registro['ref_cod_tipo_dispensa'])?->getAttributes();

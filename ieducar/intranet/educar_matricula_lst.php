@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\RegistrationStatus;
 
 return new class extends clsListagem
@@ -122,10 +123,12 @@ return new class extends clsListagem
 
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
+            $nomesCursos = LegacyCourse::query()
+                ->whereIn('cod_curso', array_column($lista, 'ref_cod_curso'))
+                ->pluck('nm_curso', 'cod_curso');
+
             foreach ($lista as $registro) {
-                $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
-                $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+                $registro['ref_cod_curso'] = $nomesCursos[$registro['ref_cod_curso']] ?? null;
 
                 $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
                 $det_serie = $obj_serie->detalhe();
