@@ -3,6 +3,7 @@
 use App\Models\DataSearch\StudentFilter;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyStudent;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 return new class extends clsListagem
 {
@@ -125,10 +126,13 @@ return new class extends clsListagem
         $this->nome_pai = $this->cleanNameSearch(name: $this->nome_pai);
         $this->nome_mae = $this->cleanNameSearch(name: $this->nome_mae);
 
+        $cpf = preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno);
+        $cpfInvalido = $cpf && !Portabilis_Utils_Validation::validatesCpf(cpf: $cpf);
+
         $dataFilter = [
             'rg' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->rg_aluno),
             'year' => $this->ano,
-            'cpf' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno),
+            'cpf' => $cpf,
             'inep' => $this->cod_inep,
             'grade' => $this->ref_cod_serie,
             'school' => $this->ref_cod_escola,
@@ -148,8 +152,17 @@ return new class extends clsListagem
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $studentFilter = new StudentFilter(...$dataFilter);
-        $students = LegacyStudent::query()->findStudentWithMultipleSearch(studentFilter: $studentFilter);
+        if ($cpfInvalido) {
+            // Um CPF inválido nunca deve corresponder a alunos reais. Sem esse
+            // corte, o valor era usado como está na busca (where('cpf', $cpf)),
+            // e um CPF inválido usado como placeholder para "sem CPF cadastrado"
+            // (ex.: 00000000000) pode estar salvo em vários registros, fazendo
+            // a busca por um CPF inválido retornar múltiplos alunos.
+            $students = new LengthAwarePaginator(items: [], total: 0, perPage: $this->limite, options: ['pageName' => 'pagina_' . $this->nome]);
+        } else {
+            $studentFilter = new StudentFilter(...$dataFilter);
+            $students = LegacyStudent::query()->findStudentWithMultipleSearch(studentFilter: $studentFilter);
+        }
 
         foreach ($students as $student) {
             $nomeAluno = $student->person->name;
