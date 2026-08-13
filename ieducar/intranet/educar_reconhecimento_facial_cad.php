@@ -23,7 +23,7 @@ return new class extends clsCadastro
         $this->ref_cod_aluno = request('ref_cod_aluno');
 
         $obj_permissoes = new clsPermissoes;
-        $obj_permissoes->permissao_cadastra(int_processo_ap: 5781, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_aluno_lst.php');
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 5781, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: "educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}");
 
         $this->url_cancelar = "educar_reconhecimento_facial_det.php?ref_cod_aluno={$this->ref_cod_aluno}";
 
