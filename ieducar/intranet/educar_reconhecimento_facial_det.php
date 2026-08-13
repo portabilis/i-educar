@@ -20,6 +20,10 @@ return new class extends clsDetalhe
 
         $student = LegacyStudent::find($this->cod_aluno);
 
+        $this->addDetalhe(detalhe: ['Código Aluno', $student->getKey()]);
+
+        $this->addDetalhe(detalhe: ['Nome', $student->name]);
+
         $this->service = new FileService(new UrlPresigner);
 
         foreach (FacialRecognitionPosition::cases() as $position) {
