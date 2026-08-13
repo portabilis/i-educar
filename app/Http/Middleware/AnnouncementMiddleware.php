@@ -23,10 +23,10 @@ class AnnouncementMiddleware
                 fn () => Announcement::query()
                     ->whereHas('userTypes', fn ($q) => $q->whereKey($user->ref_cod_tipo_usuario))
                     ->latest()
-                    ->first()
+                    ->first() ?? false
             );
 
-            if ($announcement?->show_confirmation && !$this->userConfirmedAnnouncement($announcement, $user)) {
+            if ($announcement && $announcement?->show_confirmation && !$this->userConfirmedAnnouncement($announcement, $user)) {
                 Session::flash('error', 'Confirme a ciência do aviso antes de prosseguir!');
 
                 return redirect()->route('announcement.user.show');
