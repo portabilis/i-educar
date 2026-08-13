@@ -61,39 +61,39 @@ return new class extends clsCadastro
         $type = request('type');
         $aluno = request('ref_cod_aluno');
 
-        if ($file_url) {
-            $newFiles = json_decode($file_url);
-            foreach ($newFiles as $file) {
-                $file = File::create([
-                    'url' => $file->url,
-                    'size' => $file->size,
-                    'original_name' => $file->originalName,
-                    'extension' => $file->extension,
-                ]);
+        if(! $file_url) {
+            $this->mensagem = 'Nenhuma imagem enviada.<br>';
 
-                FileRelation::updateOrCreate([
-                    'relation_type' => LegacyStudent::class,
-                    'relation_id' => $aluno,
-                    'type' => $type,
-                ], [
-                    'relation_type' => LegacyStudent::class,
-                    'relation_id' => $aluno,
-                    'type' => $type,
-                    'file_id' => $file->getKey(),
-                ]);
-
-                LegacyStudent::findOrFail($aluno)->update([
-                    'updated_at' => now(),
-                ]);
-            }
-
-            $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_reconhecimento_facial_det.php?ref_cod_aluno=' . $aluno);
+            return false;
         }
 
-        $this->mensagem .= 'Cadastro não realizado.<br>';
+        $newFiles = json_decode($file_url);
+        foreach ($newFiles as $file) {
+            $file = File::create([
+                'url' => $file->url,
+                'size' => $file->size,
+                'original_name' => $file->originalName,
+                'extension' => $file->extension,
+            ]);
 
-        return false;
+            FileRelation::updateOrCreate([
+                'relation_type' => LegacyStudent::class,
+                'relation_id' => $aluno,
+                'type' => $type,
+            ], [
+                'relation_type' => LegacyStudent::class,
+                'relation_id' => $aluno,
+                'type' => $type,
+                'file_id' => $file->getKey(),
+            ]);
+
+            LegacyStudent::findOrFail($aluno)->update([
+                'updated_at' => now(),
+            ]);
+        }
+
+        $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
+        $this->simpleRedirect('educar_reconhecimento_facial_det.php?ref_cod_aluno=' . $aluno);
     }
 
     public function Editar()
