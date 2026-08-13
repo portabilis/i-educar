@@ -44,7 +44,7 @@ class ReportController extends ApiCoreController
                AND ref_cod_matricula = $1
                AND matricula.ativo = 1
                AND (matricula_turma.ativo = 1 OR matricula_turma.transferido = TRUE)
-          ORDER BY matricula_turma.ativo DESC, matricula_turma.sequencial DESC
+          ORDER BY matricula_turma.ativo DESC, matricula_turma.sequencial, matricula_turma.id
              LIMIT 1
         ';
 
