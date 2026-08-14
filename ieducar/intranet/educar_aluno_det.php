@@ -644,8 +644,14 @@ return new class extends clsDetalhe
 
             $this->array_botao[] = 'Atualizar histórico';
             $this->array_botao_url_script[] = sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+
             $this->array_botao[] = 'Distribuição de uniforme';
             $this->array_botao_url_script[] = sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+
+            if ($this->permissaoReconhecimentoFacial()) {
+                $this->array_botao[] = 'Fotos para reconhecimento facial';
+                $this->array_botao_url_script[] = sprintf('go("educar_reconhecimento_facial_det.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+            }
 
             if ($titulo = config(key: 'legacy.app.alunos.sistema_externo.titulo')) {
                 $link = config(key: 'legacy.app.alunos.sistema_externo.link');
@@ -990,6 +996,17 @@ return new class extends clsDetalhe
     {
         $user = Auth::user();
         $allow = Gate::allows(ability: 'view', arguments: 680);
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
+    }
+
+    private function permissaoReconhecimentoFacial()
+    {
+        $user = Auth::user();
+        $allow = Gate::allows(ability: 'view', arguments: 5781);
         if ($user->isLibrary()) {
             return false;
         }
