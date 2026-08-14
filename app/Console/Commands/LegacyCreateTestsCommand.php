@@ -214,6 +214,7 @@ class LegacyCreateTestsCommand extends Command
             'educar_comunicados_escolares_det.php',
             'educar_comunicados_escolares_lst.php',
             'educar_regional_det.php',
+            'educar_reconhecimento_facial_det.php',
         ];
     }
 
