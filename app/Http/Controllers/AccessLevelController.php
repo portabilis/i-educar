@@ -162,6 +162,8 @@ class AccessLevelController extends Controller
                 ->with('error', 'Não foi possível excluir o registro.');
         }
 
+        app(MenuCacheService::class)->flushMenuTag($userType->cod_tipo_usuario);
+
         return redirect()
             ->route('usertype.index')
             ->with('success', 'Registro excluído com sucesso.');
