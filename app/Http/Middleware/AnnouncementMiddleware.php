@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Models\Announcement;
+use App\Services\CacheService;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class AnnouncementMiddleware
@@ -17,16 +17,15 @@ class AnnouncementMiddleware
         }
 
         if ($user = $request->user()) {
-            $announcement = Cache::remember(
-                "announcement.user_type.{$user->ref_cod_tipo_usuario}",
-                now()->addWeek(),
+            $announcement = CacheService::rememberAnnouncementByUserType(
+                $user->ref_cod_tipo_usuario,
                 fn () => Announcement::query()
                     ->whereHas('userTypes', fn ($q) => $q->whereKey($user->ref_cod_tipo_usuario))
                     ->latest()
                     ->first() ?? false
             );
 
-            if ($announcement && $announcement?->show_confirmation && !$this->userConfirmedAnnouncement($announcement, $user)) {
+            if ($announcement && $announcement->show_confirmation && !$this->userConfirmedAnnouncement($announcement, $user)) {
                 Session::flash('error', 'Confirme a ciência do aviso antes de prosseguir!');
 
                 return redirect()->route('announcement.user.show');

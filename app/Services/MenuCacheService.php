@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Collection;
 
 class MenuCacheService
 {
+    private const TTL_MENU_TREE = 86400;
+
+    private const TTL_PROCESS_MENU = 604800;
+
     private ConfigContract $config;
 
     private CacheContract $cache;
@@ -45,7 +49,44 @@ class MenuCacheService
         $key = $this->getUserKey($user);
         $client = $this->config->get('legacy.app.database.dbname');
 
-        $this->cache->tags(['menus', $client, $key])->put($key, $adminMenus, env('CACHE_TTL', 60));
+        $this->cache->tags(['menus', $client, $key])->put($key, $adminMenus, self::TTL_MENU_TREE);
+    }
+
+    /**
+     * @return array{attributes: array, root_id: int, ancestor_ids: array<int>}|false
+     */
+    public function getProcessMenuData(int|string|null $process): array|false
+    {
+        if (empty($process)) {
+            return false;
+        }
+
+        $client = $this->config->get('legacy.app.database.dbname');
+
+        return $this->cache->tags(['menus', $client])->remember(
+            'menu-process-' . $client . '-' . $process,
+            self::TTL_PROCESS_MENU,
+            function () use ($process) {
+                $menu = Menu::query()->where('process', $process)->first();
+
+                if ($menu === null) {
+                    return false;
+                }
+
+                $ancestors = $menu->ancestors()->get();
+
+                return [
+                    'attributes' => $menu->getAttributes(),
+                    'root_id' => $ancestors->whereNull('parent_id')->first()?->getKey() ?? $menu->getKey(),
+                    'ancestor_ids' => $ancestors->pluck('id')->all(),
+                ];
+            }
+        );
+    }
+
+    public function flushAll(): void
+    {
+        $this->cache->tags($this->config->get('legacy.app.database.dbname'))->flush();
     }
 
     public function flushMenuTag($tagMenu)

@@ -1,17 +1,10 @@
-@php
-    use Illuminate\Support\Facades\Cache;
-    use Illuminate\Support\Facades\Request;
-@endphp
+@php use Illuminate\Support\Facades\Request; @endphp
 @if(isset($mainmenu) && isset($menu))
     @php
-        $topmenu = Cache::remember(
-            'topmenu.blade.' . $mainmenu,
-            now()->addDay(),
-            fn () => $menu->where('id', $mainmenu)->first()
-        );
+        $topmenu = $menu->where('id', $mainmenu)->first();
     @endphp
     <div class="ieducar-menu-container">
-        @if($topmenu->children && $topmenu->children->count())
+        @if($topmenu?->children && $topmenu->children->count())
             @if($topmenu->hasLinkInSubmenu())
                 <ul class="ieducar-menu clearfix">
                     @foreach($topmenu->children->sortBy('order') as $submenu)

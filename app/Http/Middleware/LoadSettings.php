@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\CacheService;
 use App\Setting;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -18,9 +18,7 @@ class LoadSettings
      */
     private function getConfig()
     {
-        $config = Cache::remember(
-            'LoadSettings.config',
-            now()->addMinutes(5),
+        $config = CacheService::rememberGeneralConfiguration(
             fn () => (array) DB::table('pmieducar.configuracoes_gerais as cg')
                 ->select('cg.*')
                 ->join('pmieducar.instituicao as i', 'cod_instituicao', '=', 'ref_cod_instituicao')
@@ -57,9 +55,7 @@ class LoadSettings
      */
     public function handle($request, Closure $next)
     {
-        $settings = Cache::remember(
-            'LoadSettings.settings',
-            now()->addMinutes(5),
+        $settings = CacheService::rememberSettings(
             fn () => Setting::all()->pluck('value', 'key')->toArray()
         );
 

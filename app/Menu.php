@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\LegacyUserType;
+use App\Services\MenuCacheService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as LaravelCollection;
-use Illuminate\Support\Facades\Cache;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 /**
@@ -67,19 +67,6 @@ class Menu extends Model
         }, static function () {
             return self::tree()->orderBy('order')->get();
         })->toTree();
-    }
-
-    public static function getMenuAncestors(Menu $menu)
-    {
-        return Cache::remember(
-            'Menu.Ancestors.' . $menu->getKey(),
-            now()->addWeek(),
-            fn () => Menu::find($menu->getKey())
-                ->ancestors()
-                ->get()
-                ->pluck('id')
-                ->toArray()
-        );
     }
 
     private static function getMenusByIds($ids): Collection
@@ -267,6 +254,8 @@ class Menu extends Model
                 $menu->description = str_replace('Declaração', 'Atestado', $menu->description);
                 $menu->save();
             });
+
+        app(MenuCacheService::class)->flushAll();
     }
 
     /**
@@ -297,6 +286,8 @@ class Menu extends Model
                 $menu->description = str_replace('Atestado', 'Declaração', $menu->description);
                 $menu->save();
             });
+
+        app(MenuCacheService::class)->flushAll();
     }
 
     /**
