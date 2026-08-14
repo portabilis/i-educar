@@ -73,6 +73,7 @@ return new class extends clsListagem
         ])->with([
             'institution:cod_instituicao,nm_instituicao',
             'individual:idpes,cpf',
+            'person:idpes,nome',
             'employeeRoles:ref_cod_servidor,matricula',
         ])->active()->orderBy('pessoa.nome')->paginate($this->limite, [
             'pessoa.nome as name',
