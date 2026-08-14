@@ -130,9 +130,13 @@ class clsBase
 
         $menu = app(MenuCacheService::class)->getMenuByUser($user);
 
-        $topmenu = Menu::query()
-            ->where('process', $this->processoAp)
-            ->first();
+        $topmenu = Cache::remember(
+            'clsBase.topmenu.' . $this->processoAp,
+            now()->addWeek(),
+            fn () => Menu::query()
+                ->where('process', $this->processoAp)
+                ->first()
+        );
 
         $ancestors = $topmenu === null ? [] : Menu::getMenuAncestors($topmenu);
 
