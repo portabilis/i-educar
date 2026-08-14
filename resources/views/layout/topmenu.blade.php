@@ -2,8 +2,7 @@
     use Illuminate\Support\Facades\Cache;
     use Illuminate\Support\Facades\Request;
 @endphp
-@if
- (isset($mainmenu) && isset($menu))
+@if(isset($mainmenu) && isset($menu))
     @php
         $topmenu = Cache::remember(
             'topmenu.blade.' . $mainmenu,
