@@ -61,7 +61,7 @@ return new class extends clsCadastro
         $type = request('type');
         $aluno = request('ref_cod_aluno');
 
-        if(! $file_url) {
+        if (!$file_url) {
             $this->mensagem = 'Nenhuma imagem enviada.<br>';
 
             return false;

@@ -20,6 +20,10 @@ return new class extends clsDetalhe
 
         $student = LegacyStudent::find($this->cod_aluno);
 
+        if (!$student) {
+            $this->simpleRedirect(url: '/intranet/index.php');
+        }
+
         $this->addDetalhe(detalhe: ['Código Aluno', $student->getKey()]);
 
         $this->addDetalhe(detalhe: ['Nome', $student->name]);
