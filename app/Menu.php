@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as LaravelCollection;
+use Illuminate\Support\Facades\Cache;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 /**
@@ -70,11 +71,15 @@ class Menu extends Model
 
     public static function getMenuAncestors(Menu $menu)
     {
-        return Menu::find($menu->getKey())
-            ->ancestors()
-            ->get()
-            ->pluck('id')
-            ->toArray();
+        return Cache::remember(
+            'Menu.Ancestors.' . $menu->getKey(),
+            now()->addWeek(),
+            fn () => Menu::find($menu->getKey())
+                ->ancestors()
+                ->get()
+                ->pluck('id')
+                ->toArray()
+        );
     }
 
     private static function getMenusByIds($ids): Collection

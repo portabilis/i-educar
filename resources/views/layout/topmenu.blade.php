@@ -1,7 +1,14 @@
-@php use Illuminate\Support\Facades\Request; @endphp
+@php
+    use Illuminate\Support\Facades\Cache;
+    use Illuminate\Support\Facades\Request;
+@endphp
 @if(isset($mainmenu) && isset($menu))
     @php
-        $topmenu = $menu->where('id', $mainmenu)->first();
+        $topmenu = Cache::remember(
+            'topmenu.blade.' . $mainmenu,
+            now()->addDay(),
+            fn () => $menu->where('id', $mainmenu)->first()
+        );
     @endphp
     <div class="ieducar-menu-container">
         @if($topmenu->children && $topmenu->children->count())
