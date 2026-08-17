@@ -45,9 +45,9 @@ class FaltasGeralController extends DiarioController
             ], 422);
         } catch (\CoreExt_Service_Exception) {
             // Evita Exception ao não promover matrículas pois não houve mudança de situação
-        } catch (\Exception) {
+        } catch (\Exception $exception) {
             return response()->json([
-                'message' => 'Não foi possível salvar as faltas gerais para o aluno e turma informados.',
+                'message' => 'Não foi possível salvar as faltas gerais para o aluno e turma informados. (' . $exception->getMessage() . ')',
             ], 500);
         }
 
