@@ -31,6 +31,11 @@ class CommandsTest extends TestCase
         $this->artisan('notifications:delete')->assertExitCode(0);
     }
 
+    public function test_console_command_audit_reconcile()
+    {
+        $this->artisan('audit:reconcile --dry-run')->assertExitCode(0);
+    }
+
     public function test_console_command_reset_password()
     {
         $this->artisan('reset:password 12345678')->assertExitCode(0);
