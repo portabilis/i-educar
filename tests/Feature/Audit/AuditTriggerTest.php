@@ -12,41 +12,41 @@ class AuditTriggerTest extends AuditTestCase
     {
         parent::setUp();
 
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
         $this->createAuditTrigger(self::TABELA);
     }
 
     public function test_lista_de_tabelas_ignoradas_usa_apenas_nome_qualificado(): void
     {
-        foreach ($this->getSkippedTables() as $entrada) {
-            $schema = explode('.', $entrada)[0];
+        foreach ($this->getSkippedTables() as $entry) {
+            $schema = explode('.', $entry)[0];
 
-            $this->assertStringContainsString('.', $entrada, "A entrada {$entrada} precisa do schema");
-            $this->assertContains($schema, self::SCHEMAS, "O schema de {$entrada} não é auditado");
+            $this->assertStringContainsString('.', $entry, "A entrada {$entry} precisa do schema");
+            $this->assertContains($schema, self::SCHEMAS, "O schema de {$entry} não é auditado");
         }
     }
 
     public function test_lista_de_tabelas_ignoradas_nao_tem_entrada_repetida(): void
     {
-        $lista = $this->getSkippedTables();
+        $list = $this->getSkippedTables();
 
-        $this->assertSame(array_unique($lista), $lista, 'Há entrada repetida na lista');
+        $this->assertSame(array_unique($list), $list, 'Há entrada repetida na lista');
     }
 
     public function test_tabela_ignorada_fica_fora_das_auditadas(): void
     {
-        $auditadas = $this->getAuditedTables();
+        $audited = $this->getAuditedTables();
 
-        foreach ($this->getSkippedTables() as $entrada) {
-            $this->assertNotContains($entrada, $auditadas);
+        foreach ($this->getSkippedTables() as $entry) {
+            $this->assertNotContains($entry, $audited);
         }
 
         // Fixado fora da lista: auditar a própria tabela de auditoria faria a
         // trigger disparar a si mesma em recursão infinita
-        $this->assertNotContains('public.ieducar_audit', $auditadas);
+        $this->assertNotContains('public.ieducar_audit', $audited);
 
-        $this->assertContains('pmieducar.matricula', $auditadas);
-        $this->assertContains('cadastro.fisica', $auditadas);
+        $this->assertContains('pmieducar.matricula', $audited);
+        $this->assertContains('cadastro.fisica', $audited);
     }
 
     /**
@@ -62,122 +62,122 @@ class AuditTriggerTest extends AuditTestCase
 
     public function test_insercao_e_registrada_sem_estado_anterior(): void
     {
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::insert("insert into public.teste_auditoria (nome) values ('inicial');");
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
 
-        $registro = $this->ultimoRegistroDeAuditoria('teste_auditoria');
+        $record = $this->lastAuditRecord('teste_auditoria');
 
-        $this->assertSame('public', $registro->schema);
-        $this->assertNull($registro->before);
-        $this->assertSame('inicial', $registro->after->nome);
-        $this->assertSame(0, $registro->context->user_id);
-        $this->assertNotEmpty($registro->context->user_name);
+        $this->assertSame('public', $record->schema);
+        $this->assertNull($record->before);
+        $this->assertSame('inicial', $record->after->nome);
+        $this->assertSame(0, $record->context->user_id);
+        $this->assertNotEmpty($record->context->user_name);
     }
 
     public function test_alteracao_e_registrada_com_antes_e_depois(): void
     {
         DB::insert("insert into public.teste_auditoria (nome) values ('inicial');");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'alterado';");
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
 
-        $registro = $this->ultimoRegistroDeAuditoria('teste_auditoria');
+        $record = $this->lastAuditRecord('teste_auditoria');
 
-        $this->assertSame('inicial', $registro->before->nome);
-        $this->assertSame('alterado', $registro->after->nome);
+        $this->assertSame('inicial', $record->before->nome);
+        $this->assertSame('alterado', $record->after->nome);
     }
 
     public function test_exclusao_e_registrada_sem_estado_posterior(): void
     {
         DB::insert("insert into public.teste_auditoria (nome) values ('inicial');");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::delete('delete from public.teste_auditoria;');
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
 
-        $registro = $this->ultimoRegistroDeAuditoria('teste_auditoria');
+        $record = $this->lastAuditRecord('teste_auditoria');
 
-        $this->assertSame('inicial', $registro->before->nome);
-        $this->assertNull($registro->after);
+        $this->assertSame('inicial', $record->before->nome);
+        $this->assertNull($record->after);
     }
 
     public function test_alteracao_sem_mudanca_nao_e_registrada(): void
     {
         DB::insert("insert into public.teste_auditoria (nome) values ('inicial');");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update('update public.teste_auditoria set nome = nome;');
         });
 
-        $this->assertSame(0, $registros);
+        $this->assertSame(0, $records);
     }
 
     public function test_alteracao_apenas_de_carimbo_nao_e_registrada(): void
     {
         DB::insert("insert into public.teste_auditoria (nome, updated_at) values ('inicial', now());");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set updated_at = now() + interval '1 hour';");
         });
 
-        $this->assertSame(0, $registros);
+        $this->assertSame(0, $records);
     }
 
     public function test_alteracao_de_carimbo_junto_com_dado_e_registrada(): void
     {
         DB::insert("insert into public.teste_auditoria (nome, updated_at) values ('inicial', now());");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'alterado', updated_at = now() + interval '1 hour';");
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
 
-        $registro = $this->ultimoRegistroDeAuditoria('teste_auditoria');
+        $record = $this->lastAuditRecord('teste_auditoria');
 
-        $this->assertSame('alterado', $registro->after->nome);
-        $this->assertNotSame($registro->before->updated_at, $registro->after->updated_at);
+        $this->assertSame('alterado', $record->after->nome);
+        $this->assertNotSame($record->before->updated_at, $record->after->updated_at);
     }
 
     public function test_alteracao_em_lote_registra_somente_as_linhas_que_mudaram(): void
     {
         DB::insert("insert into public.teste_auditoria (nome) values ('um'), ('dois'), ('alterado');");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'alterado';");
         });
 
-        $this->assertSame(2, $registros);
+        $this->assertSame(2, $records);
     }
 
     public function test_tabela_com_coluna_json_nao_impede_a_comparacao(): void
     {
         DB::insert('insert into public.teste_auditoria (nome, dados) values (\'inicial\', \'{"a": 1}\');');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update('update public.teste_auditoria set dados = \'{"a": 2}\';');
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
     }
 
     public function test_mudanca_minima_de_float_e_registrada(): void
     {
         DB::insert('insert into public.teste_auditoria (nome, valor) values (\'inicial\', 1.0);');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update('update public.teste_auditoria set valor = 1.0000000000000002;');
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
     }
 
     /**
@@ -190,11 +190,11 @@ class AuditTriggerTest extends AuditTestCase
     {
         DB::insert('insert into public.teste_auditoria (nome, valor) values (\'inicial\', 1.0);');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::unprepared('set local extra_float_digits = -15; update public.teste_auditoria set valor = 1.0000000000000002;');
         });
 
-        $this->assertSame(0, $registros);
+        $this->assertSame(0, $records);
         $this->assertTrue(DB::scalar('select valor <> 1.0 from public.teste_auditoria;'));
     }
 
@@ -203,13 +203,13 @@ class AuditTriggerTest extends AuditTestCase
         DB::unprepared('create table public.teste_auditoria_sem_pk (nome varchar(255));');
         $this->createAuditTrigger('public.teste_auditoria_sem_pk');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria_sem_pk', function () {
+        $records = $this->countAuditRecords('teste_auditoria_sem_pk', function () {
             DB::insert("insert into public.teste_auditoria_sem_pk values ('inicial');");
             DB::update("update public.teste_auditoria_sem_pk set nome = 'alterado';");
             DB::delete('delete from public.teste_auditoria_sem_pk;');
         });
 
-        $this->assertSame(3, $registros);
+        $this->assertSame(3, $records);
     }
 
     public function test_tabela_com_coluna_gerada_e_auditada(): void
@@ -219,18 +219,18 @@ class AuditTriggerTest extends AuditTestCase
 
         DB::insert('insert into public.teste_auditoria_gerada (id, base) values (1, 2);');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria_gerada', function () {
+        $records = $this->countAuditRecords('teste_auditoria_gerada', function () {
             DB::update('update public.teste_auditoria_gerada set base = 3;');
         });
 
-        $this->assertSame(1, $registros);
-        $this->assertSame(6, $this->ultimoRegistroDeAuditoria('teste_auditoria_gerada')->after->dobro);
+        $this->assertSame(1, $records);
+        $this->assertSame(6, $this->lastAuditRecord('teste_auditoria_gerada')->after->dobro);
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria_gerada', function () {
+        $records = $this->countAuditRecords('teste_auditoria_gerada', function () {
             DB::update('update public.teste_auditoria_gerada set base = base;');
         });
 
-        $this->assertSame(0, $registros);
+        $this->assertSame(0, $records);
     }
 
     /**
@@ -244,20 +244,20 @@ class AuditTriggerTest extends AuditTestCase
 
         DB::insert("insert into public.teste_auditoria (nome) values ('inicial');");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'alterado';");
         });
 
-        $this->assertSame(1, $registros);
-        $this->assertSame('ALTERADO', $this->ultimoRegistroDeAuditoria('teste_auditoria')->after->nome);
+        $this->assertSame(1, $records);
+        $this->assertSame('ALTERADO', $this->lastAuditRecord('teste_auditoria')->after->nome);
 
         DB::unprepared('create or replace function public.teste_auditoria_before() returns trigger language plpgsql as $$ begin new.nome := old.nome; return new; end; $$;');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'descartado';");
         });
 
-        $this->assertSame(0, $registros);
+        $this->assertSame(0, $records);
     }
 
     /**
@@ -269,11 +269,11 @@ class AuditTriggerTest extends AuditTestCase
     {
         DB::insert("insert into public.teste_auditoria (nome) values ('um'), ('dois');");
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::unprepared('truncate public.teste_auditoria;');
         });
 
-        $this->assertSame(0, $registros);
+        $this->assertSame(0, $records);
         $this->assertSame(0, DB::scalar('select count(*) from public.teste_auditoria;'));
     }
 
@@ -288,21 +288,21 @@ class AuditTriggerTest extends AuditTestCase
 
         DB::unprepared('set "audit.enabled" = \'false\';');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'sem auditoria';");
         });
 
-        $this->assertSame(0, $registros);
+        $this->assertSame(0, $records);
 
         DB::unprepared('reset "audit.enabled";');
 
         $this->assertSame('', DB::scalar("select current_setting('audit.enabled', true);"));
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'com auditoria';");
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
     }
 
     public function test_valor_invalido_no_parametro_nao_interrompe_a_alteracao(): void
@@ -311,11 +311,11 @@ class AuditTriggerTest extends AuditTestCase
 
         DB::unprepared('set "audit.enabled" = \'invalido\';');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'alterado';");
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
     }
 
     public function test_contexto_invalido_usa_o_contexto_padrao(): void
@@ -324,12 +324,12 @@ class AuditTriggerTest extends AuditTestCase
 
         DB::unprepared('set "audit.context" = \'{quebrado\';');
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::update("update public.teste_auditoria set nome = 'alterado';");
         });
 
-        $this->assertSame(1, $registros);
-        $this->assertSame(0, $this->ultimoRegistroDeAuditoria('teste_auditoria')->context->user_id);
+        $this->assertSame(1, $records);
+        $this->assertSame(0, $this->lastAuditRecord('teste_auditoria')->context->user_id);
     }
 
     public function test_contexto_da_sessao_e_gravado_no_registro(): void
@@ -340,10 +340,10 @@ class AuditTriggerTest extends AuditTestCase
 
         DB::update("update public.teste_auditoria set nome = 'alterado';");
 
-        $contexto = $this->ultimoRegistroDeAuditoria('teste_auditoria')->context;
+        $context = $this->lastAuditRecord('teste_auditoria')->context;
 
-        $this->assertSame(123, $contexto->user_id);
-        $this->assertSame('Fulano', $contexto->user_name);
-        $this->assertSame('http://localhost/teste', $contexto->origin);
+        $this->assertSame(123, $context->user_id);
+        $this->assertSame('Fulano', $context->user_name);
+        $this->assertSame('http://localhost/teste', $context->origin);
     }
 }

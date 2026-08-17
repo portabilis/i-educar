@@ -11,7 +11,7 @@ class AuditReconcileTest extends AuditTestCase
 {
     public function test_tabela_nova_aparece_no_delta_e_ganha_trigger_na_reconciliacao(): void
     {
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
 
         $delta = $this->getAuditTriggersDelta();
 
@@ -19,25 +19,25 @@ class AuditReconcileTest extends AuditTestCase
 
         $this->reconcileAuditTriggers();
 
-        $this->assertSame(1, $this->contarTriggersDaTabela(self::TABELA));
-        $this->assertSame('publicteste_auditoria_audit', $this->nomeDaTrigger(self::TABELA));
+        $this->assertSame(1, $this->countTableTriggers(self::TABELA));
+        $this->assertSame('publicteste_auditoria_audit', $this->triggerName(self::TABELA));
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::insert("insert into public.teste_auditoria (nome) values ('inicial');");
         });
 
-        $this->assertSame(1, $registros);
+        $this->assertSame(1, $records);
     }
 
     public function test_reconciliacao_remove_triggers_de_geracoes_antigas(): void
     {
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
         $this->createAuditTrigger(self::TABELA);
 
         DB::unprepared('create trigger teste_auditoria_audit after insert or update or delete on public.teste_auditoria for each row execute procedure public.audit();');
         DB::unprepared('create trigger nome_antigo_audit after insert or update or delete on public.teste_auditoria for each row execute procedure public.audit();');
 
-        $this->assertSame(3, $this->contarTriggersDaTabela(self::TABELA));
+        $this->assertSame(3, $this->countTableTriggers(self::TABELA));
 
         $delta = $this->getAuditTriggersDelta();
 
@@ -46,8 +46,8 @@ class AuditReconcileTest extends AuditTestCase
 
         $this->reconcileAuditTriggers();
 
-        $this->assertSame(1, $this->contarTriggersDaTabela(self::TABELA));
-        $this->assertSame('publicteste_auditoria_audit', $this->nomeDaTrigger(self::TABELA));
+        $this->assertSame(1, $this->countTableTriggers(self::TABELA));
+        $this->assertSame('publicteste_auditoria_audit', $this->triggerName(self::TABELA));
     }
 
     public function test_reconciliacao_converge_para_delta_vazio(): void
@@ -56,21 +56,21 @@ class AuditReconcileTest extends AuditTestCase
 
         $this->assertSame([], $this->getAuditTriggersDelta());
 
-        foreach ($this->getAuditedTables() as $tabela) {
-            $this->assertSame(1, $this->contarTriggersDaTabela($tabela), "A tabela {$tabela} deveria ter exatamente uma trigger");
+        foreach ($this->getAuditedTables() as $table) {
+            $this->assertSame(1, $this->countTableTriggers($table), "A tabela {$table} deveria ter exatamente uma trigger");
         }
     }
 
     public function test_remover_somente_nao_cria_as_triggers_que_faltam(): void
     {
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
 
         DB::unprepared('create trigger sobra_audit after insert or update or delete on public.teste_auditoria for each row execute procedure public.audit();');
 
-        $resultado = $this->reconcileAuditTriggers(false);
+        $result = $this->reconcileAuditTriggers(false);
 
-        $this->assertSame(0, $resultado['created']);
-        $this->assertSame(0, $this->contarTriggersDaTabela(self::TABELA));
+        $this->assertSame(0, $result['created']);
+        $this->assertSame(0, $this->countTableTriggers(self::TABELA));
         $this->assertTrue($this->getAuditTriggersDelta()[self::TABELA]['create']);
     }
 
@@ -84,7 +84,7 @@ class AuditReconcileTest extends AuditTestCase
 
         $this->reconcileAuditTriggers();
 
-        $this->assertSame(0, $this->contarTriggersDaTabela('public.migrations'));
+        $this->assertSame(0, $this->countTableTriggers('public.migrations'));
     }
 
     /**
@@ -93,7 +93,7 @@ class AuditReconcileTest extends AuditTestCase
      */
     public function test_troca_de_geracao_preserva_trigger_de_outra_funcao(): void
     {
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
 
         DB::unprepared('create function public.teste_auditoria_negocio() returns trigger language plpgsql as $$ begin return null; end; $$;');
         DB::unprepared('create trigger teste_auditoria_negocio_audit after insert on public.teste_auditoria for each row execute procedure public.teste_auditoria_negocio();');
@@ -105,7 +105,7 @@ class AuditReconcileTest extends AuditTestCase
 
         $this->reconcileAuditTriggers();
 
-        $this->assertSame('publicteste_auditoria_audit', $this->nomeDaTrigger(self::TABELA));
+        $this->assertSame('publicteste_auditoria_audit', $this->triggerName(self::TABELA));
         $this->assertTrue(DB::scalar(
             'select exists (select 1 from pg_trigger where tgrelid = ?::regclass and tgname = ?);',
             [self::TABELA, 'teste_auditoria_negocio_audit']
@@ -114,7 +114,7 @@ class AuditReconcileTest extends AuditTestCase
 
     public function test_trigger_com_nome_que_exige_aspas_e_removida(): void
     {
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
         $this->createAuditTrigger(self::TABELA);
 
         DB::unprepared('create trigger "Velha_Audit" after insert on public.teste_auditoria for each row execute procedure public.audit();');
@@ -126,8 +126,8 @@ class AuditReconcileTest extends AuditTestCase
 
         $this->reconcileAuditTriggers();
 
-        $this->assertSame(1, $this->contarTriggersDaTabela(self::TABELA));
-        $this->assertSame('publicteste_auditoria_audit', $this->nomeDaTrigger(self::TABELA));
+        $this->assertSame(1, $this->countTableTriggers(self::TABELA));
+        $this->assertSame('publicteste_auditoria_audit', $this->triggerName(self::TABELA));
     }
 
     /**
@@ -145,7 +145,7 @@ class AuditReconcileTest extends AuditTestCase
 
         $this->reconcileAuditTriggers();
 
-        $this->assertSame(1, $this->contarTriggersDaTabela('teste_auditoria_fora.alvo'));
+        $this->assertSame(1, $this->countTableTriggers('teste_auditoria_fora.alvo'));
     }
 
     /**
@@ -154,17 +154,17 @@ class AuditReconcileTest extends AuditTestCase
      */
     public function test_reverter_a_migration_restaura_as_funcoes_da_geracao_anterior(): void
     {
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
         $this->createAuditTrigger(self::TABELA);
 
         (require base_path('database/migrations/audit/2026_08_14_000001_optimize_audit_functions.php'))->down();
 
-        $registros = $this->contarRegistrosDeAuditoria('teste_auditoria', function () {
+        $records = $this->countAuditRecords('teste_auditoria', function () {
             DB::insert("insert into public.teste_auditoria (nome) values ('inicial');");
             DB::update('update public.teste_auditoria set nome = nome;');
         });
 
-        $this->assertSame(2, $registros);
+        $this->assertSame(2, $records);
     }
 
     public function test_comando_encerra_cedo_quando_a_auditoria_esta_desativada(): void
@@ -182,28 +182,28 @@ class AuditReconcileTest extends AuditTestCase
      */
     public function test_reconciliacao_completa_esta_agendada_diariamente(): void
     {
-        $agendados = collect(app(Schedule::class)->events())
-            ->filter(fn ($evento) => str_contains((string) $evento->command, 'audit:reconcile'));
+        $scheduled = collect(app(Schedule::class)->events())
+            ->filter(fn ($event) => str_contains((string) $event->command, 'audit:reconcile'));
 
-        $this->assertCount(1, $agendados);
+        $this->assertCount(1, $scheduled);
 
-        $evento = $agendados->first();
+        $event = $scheduled->first();
 
-        $this->assertSame('30 3 * * *', $evento->expression);
-        $this->assertTrue(str_ends_with($evento->command, 'audit:reconcile'), 'O agendamento deve executar a reconciliação completa, sem opções');
-        $this->assertTrue($evento->withoutOverlapping);
+        $this->assertSame('30 3 * * *', $event->expression);
+        $this->assertTrue(str_ends_with($event->command, 'audit:reconcile'), 'O agendamento deve executar a reconciliação completa, sem opções');
+        $this->assertTrue($event->withoutOverlapping);
     }
 
     public function test_visao_em_schema_auditado_fica_fora_da_reconciliacao(): void
     {
-        $this->criarTabelaDeTeste();
+        $this->createTestTable();
 
         DB::unprepared('create view public.teste_auditoria_visao as select * from public.teste_auditoria;');
 
-        $auditadas = $this->getAuditedTables();
+        $audited = $this->getAuditedTables();
 
-        $this->assertContains(self::TABELA, $auditadas);
-        $this->assertNotContains('public.teste_auditoria_visao', $auditadas);
+        $this->assertContains(self::TABELA, $audited);
+        $this->assertNotContains('public.teste_auditoria_visao', $audited);
         $this->assertArrayNotHasKey('public.teste_auditoria_visao', $this->getAuditTriggersDelta());
     }
 
@@ -239,19 +239,19 @@ class AuditReconcileTest extends AuditTestCase
      */
     public function test_comando_reconcilia_uma_conexao_do_inicio_ao_fim(): void
     {
-        $banco = 'ieducar_teste_audit_reconcile';
-        $padrao = config('database.default');
-        $config = config("database.connections.{$padrao}");
+        $database = 'ieducar_teste_audit_reconcile';
+        $default = config('database.default');
+        $config = config("database.connections.{$default}");
 
         config(['database.connections.auditoria_admin' => array_merge($config, ['database' => 'postgres'])]);
-        config(['database.connections.auditoria_alvo' => array_merge($config, ['database' => $banco])]);
+        config(['database.connections.auditoria_alvo' => array_merge($config, ['database' => $database])]);
 
-        DB::connection('auditoria_admin')->unprepared("drop database if exists {$banco} with (force);");
-        DB::connection('auditoria_admin')->unprepared("create database {$banco};");
+        DB::connection('auditoria_admin')->unprepared("drop database if exists {$database} with (force);");
+        DB::connection('auditoria_admin')->unprepared("create database {$database};");
 
         try {
             DB::usingConnection('auditoria_alvo', function () {
-                $this->instalarFuncoesDeAuditoria();
+                $this->installAuditFunctions();
 
                 DB::unprepared('create table public.alvo (id int);');
                 DB::unprepared('create trigger sobra_audit after insert or update or delete on public.alvo for each row execute procedure public.audit();');
@@ -259,29 +259,29 @@ class AuditReconcileTest extends AuditTestCase
 
             $this->artisan('audit:reconcile', ['--remove-only' => true, '--connection' => 'auditoria_alvo'])->assertExitCode(0);
 
-            $this->assertSame(0, $this->contarTriggersDaTabela('public.alvo', 'auditoria_alvo'));
+            $this->assertSame(0, $this->countTableTriggers('public.alvo', 'auditoria_alvo'));
 
             $this->artisan('audit:reconcile', ['--dry-run' => true, '--connection' => 'auditoria_alvo'])->assertExitCode(1);
 
             $this->artisan('audit:reconcile', ['--connection' => 'auditoria_alvo'])->assertExitCode(0);
 
-            $this->assertSame(1, $this->contarTriggersDaTabela('public.alvo', 'auditoria_alvo'));
-            $this->assertSame('publicalvo_audit', $this->nomeDaTrigger('public.alvo', 'auditoria_alvo'));
+            $this->assertSame(1, $this->countTableTriggers('public.alvo', 'auditoria_alvo'));
+            $this->assertSame('publicalvo_audit', $this->triggerName('public.alvo', 'auditoria_alvo'));
 
             $this->artisan('audit:reconcile', ['--dry-run' => true, '--connection' => 'auditoria_alvo'])->assertExitCode(0);
         } finally {
-            DB::setDefaultConnection($padrao);
+            DB::setDefaultConnection($default);
             DB::purge('auditoria_alvo');
-            DB::connection('auditoria_admin')->unprepared("drop database if exists {$banco} with (force);");
+            DB::connection('auditoria_admin')->unprepared("drop database if exists {$database} with (force);");
             DB::purge('auditoria_admin');
         }
     }
 
-    private function nomeDaTrigger(string $tabela, ?string $conexao = null): string
+    private function triggerName(string $table, ?string $connection = null): string
     {
-        return DB::connection($conexao)->scalar(
+        return DB::connection($connection)->scalar(
             "select tgname from pg_trigger where tgrelid = ?::regclass and tgfoid = 'public.audit()'::regprocedure and not tgisinternal;",
-            [$tabela]
+            [$table]
         );
     }
 }

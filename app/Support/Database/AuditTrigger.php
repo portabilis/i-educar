@@ -60,7 +60,6 @@ trait AuditTrigger
         foreach ($tables as $table) {
             $qualified = $table->table_schema . '.' . $table->table_name;
 
-            // A lista de skip aceita nome qualificado (portal.acesso) e nome puro (migrations)
             if (in_array($qualified, $skipped) || in_array($table->table_name, $skipped)) {
                 continue;
             }
@@ -155,8 +154,7 @@ SQL;
     }
 
     /**
-     * Sem essa verificação, consultar o catálogo por public.audit() lança erro
-     * em vez de devolver conjunto vazio na instalação que não tem auditoria.
+     * Return whether the audit function is installed.
      *
      * @return bool
      */
@@ -172,10 +170,9 @@ SQL;
     }
 
     /**
-     * Compara o estado desejado com o que existe no catálogo e devolve o que
-     * precisa mudar, sem alterar nada.
+     * Return the audit triggers to drop and to create, by table.
      *
-     * @return array<string, array{drop: string[], create: bool}> indexado por schema.tabela
+     * @return array<string, array{drop: string[], create: bool}>
      */
     public function getAuditTriggersDelta()
     {
@@ -220,7 +217,7 @@ SQL;
     }
 
     /**
-     * Aplica o delta calculado por getAuditTriggersDelta().
+     * Apply the audit triggers delta.
      *
      * @return array{dropped: int, created: int}
      */

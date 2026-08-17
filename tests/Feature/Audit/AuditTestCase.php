@@ -33,15 +33,15 @@ abstract class AuditTestCase extends TestCase
             ]);
         }
 
-        $this->instalarFuncoesDeAuditoria();
+        $this->installAuditFunctions();
     }
 
-    protected function instalarFuncoesDeAuditoria(): void
+    protected function installAuditFunctions(): void
     {
         (require base_path('database/migrations/audit/2026_08_14_000001_optimize_audit_functions.php'))->up();
     }
 
-    protected function criarTabelaDeTeste(): void
+    protected function createTestTable(): void
     {
         DB::unprepared('
             create table public.teste_auditoria (
@@ -54,39 +54,39 @@ abstract class AuditTestCase extends TestCase
         ');
     }
 
-    protected function contarRegistrosDeAuditoria(string $tabela, callable $alteracao): int
+    protected function countAuditRecords(string $table, callable $write): int
     {
-        $anterior = DB::scalar('select coalesce(max(id), 0) from public.ieducar_audit;');
+        $previous = DB::scalar('select coalesce(max(id), 0) from public.ieducar_audit;');
 
-        $alteracao();
+        $write();
 
         return DB::scalar(
             'select count(*) from public.ieducar_audit where id > ? and "table" = ?;',
-            [$anterior, $tabela]
+            [$previous, $table]
         );
     }
 
-    protected function ultimoRegistroDeAuditoria(string $tabela): ?object
+    protected function lastAuditRecord(string $table): ?object
     {
-        $registro = DB::selectOne(
+        $record = DB::selectOne(
             'select "schema", "table", context, before, after from public.ieducar_audit where "table" = ? order by id desc limit 1;',
-            [$tabela]
+            [$table]
         );
 
-        if ($registro) {
-            $registro->context = json_decode((string) $registro->context);
-            $registro->before = json_decode((string) $registro->before);
-            $registro->after = json_decode((string) $registro->after);
+        if ($record) {
+            $record->context = json_decode((string) $record->context);
+            $record->before = json_decode((string) $record->before);
+            $record->after = json_decode((string) $record->after);
         }
 
-        return $registro;
+        return $record;
     }
 
-    protected function contarTriggersDaTabela(string $tabela, ?string $conexao = null): int
+    protected function countTableTriggers(string $table, ?string $connection = null): int
     {
-        return DB::connection($conexao)->scalar(
+        return DB::connection($connection)->scalar(
             "select count(*) from pg_trigger where tgrelid = ?::regclass and tgfoid = 'public.audit()'::regprocedure and not tgisinternal;",
-            [$tabela]
+            [$table]
         );
     }
 }

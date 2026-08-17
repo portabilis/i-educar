@@ -40,10 +40,13 @@ class AuditReconcileCommand extends Command
             return self::SUCCESS;
         }
 
-        $divergentes = 0;
-        $falhas = 0;
+        $divergent = 0;
+        $failed = 0;
+        $connections = 0;
 
-        $this->eachConnection(function (string $connection) use (&$divergentes, &$falhas) {
+        $this->eachConnection(function (string $connection) use (&$divergent, &$failed, &$connections) {
+            $connections++;
+
             if ($this->option('connection') && $this->option('connection') !== $connection) {
                 return;
             }
@@ -57,38 +60,37 @@ class AuditReconcileCommand extends Command
             }
 
             try {
-                $divergentes += $this->reconcile($connection);
-            } catch (Throwable $erro) {
-                // Falha em um município, como lock não obtido, não pode impedir os demais
-                $falhas++;
+                $divergent += $this->reconcile($connection);
+            } catch (Throwable $exception) {
+                $failed++;
 
-                $this->error("{$connection}: " . $erro->getMessage());
+                $this->error("{$connection}: " . $exception->getMessage());
 
-                report($erro);
+                report($exception);
             }
         });
 
-        if ($falhas > 0) {
-            $this->error("{$falhas} conexão(ões) com falha. Reexecute o comando: a reconciliação é idempotente.");
+        if ($connections === 0) {
+            $this->warn('Nenhuma conexão encontrada: nada foi verificado.');
 
             return self::FAILURE;
         }
 
-        if ($divergentes === 0) {
+        if ($failed > 0) {
+            $this->error("{$failed} conexão(ões) com falha. Reexecute o comando: a reconciliação é idempotente.");
+
+            return self::FAILURE;
+        }
+
+        if ($divergent === 0) {
             $this->info('Auditoria consistente em todas as conexões.');
 
             return self::SUCCESS;
         }
 
-        // Saída diferente de zero permite que a integração contínua reprove a alteração
         return $this->option('dry-run') ? self::FAILURE : self::SUCCESS;
     }
 
-    /**
-     * Informa ou aplica as diferenças da conexão atual.
-     *
-     * @return int Quantidade de tabelas divergentes
-     */
     private function reconcile(string $connection): int
     {
         $delta = $this->getAuditTriggersDelta();
@@ -97,43 +99,43 @@ class AuditReconcileCommand extends Command
             return 0;
         }
 
-        $remover = 0;
-        $criar = 0;
+        $toDrop = 0;
+        $toCreate = 0;
 
-        foreach ($delta as $tabela => $diferenca) {
-            $remover += count($diferenca['drop']);
-            $criar += (int) $diferenca['create'];
+        foreach ($delta as $table => $change) {
+            $toDrop += count($change['drop']);
+            $toCreate += (int) $change['create'];
 
             if ($this->output->isVerbose()) {
-                $this->line("  {$tabela}: remover " . (implode(', ', $diferenca['drop']) ?: 'nada')
-                    . ($diferenca['create'] ? ', criar trigger' : ''));
+                $this->line("  {$table}: remover " . (implode(', ', $change['drop']) ?: 'nada')
+                    . ($change['create'] ? ', criar trigger' : ''));
             }
         }
 
-        $tabelas = count($delta);
+        $tables = count($delta);
 
         if ($this->option('dry-run')) {
-            $this->warn("{$connection}: {$tabelas} tabela(s) divergente(s), {$remover} trigger(s) a remover e {$criar} a criar.");
+            $this->warn("{$connection}: {$tables} tabela(s) divergente(s), {$toDrop} trigger(s) a remover e {$toCreate} a criar.");
 
-            return $tabelas;
+            return $tables;
         }
 
         if ($this->option('remove-only')) {
-            $resultado = $this->reconcileAuditTriggers(false);
+            $result = $this->reconcileAuditTriggers(false);
 
-            $this->info("{$connection}: {$resultado['dropped']} trigger(s) removida(s).");
+            $this->info("{$connection}: {$result['dropped']} trigger(s) removida(s).");
 
-            if ($criar > 0) {
-                $this->warn("{$connection}: {$criar} tabela(s) sem auditoria aguardando decisão. Ver audit:reconcile --dry-run -v");
+            if ($toCreate > 0) {
+                $this->warn("{$connection}: {$toCreate} tabela(s) sem auditoria aguardando decisão. Ver audit:reconcile --dry-run -v");
             }
 
-            return $tabelas;
+            return $tables;
         }
 
-        $resultado = $this->reconcileAuditTriggers();
+        $result = $this->reconcileAuditTriggers();
 
-        $this->info("{$connection}: {$resultado['dropped']} trigger(s) removida(s), {$resultado['created']} criada(s), em {$tabelas} tabela(s).");
+        $this->info("{$connection}: {$result['dropped']} trigger(s) removida(s), {$result['created']} criada(s), em {$tables} tabela(s).");
 
-        return $tabelas;
+        return $tables;
     }
 }

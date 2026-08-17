@@ -50,7 +50,6 @@ begin
         return json_build_object('user_id', 0, 'user_name', session_user);
     end if;
 
-    -- Só aqui o EXCEPTION é necessário, contra valor inválido definido na sessão
     begin
         return v::json;
     exception when others then
@@ -68,7 +67,6 @@ create or replace function public.audit()
 returns trigger as
 $function$
 declare
-    -- Ignorados ao decidir se houve mudança; havendo, são gravados normalmente
     carimbos constant text[] := array['updated_at', 'data_rev', 'idpes_rev', 'updated_by', 'last_used_at'];
 
     j_old jsonb;
@@ -79,8 +77,6 @@ begin
     end if;
 
     if TG_OP = 'UPDATE' then
-        -- Comparação textual em vez de jsonb: é mais barata e funciona em tabela
-        -- com coluna json, tipo que não tem operador de igualdade
         if old::text is not distinct from new::text then
             return null;
         end if;
