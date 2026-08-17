@@ -13,10 +13,7 @@ class DisciplineAcademicImport implements ToModel, WithHeadingRow, WithProgressB
 {
     use Importable;
 
-    /**
-     * @return Model
-     */
-    public function model(array $row)
+    public function model(array $row): Model
     {
         return LegacyDisciplineAcademicYear::query()->firstOrNew([
             'componente_curricular_id' => $row['discipline_id'],
