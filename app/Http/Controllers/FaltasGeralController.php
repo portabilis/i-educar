@@ -19,26 +19,30 @@ class FaltasGeralController extends DiarioController
         if (empty($matricula)) {
             return response()->json([
                 'message' => 'Matrícula não encontrada para o aluno e turma informados.',
-            ], 404);
+            ]);
         }
 
         $regra = $this->service->getRegraAvaliacaoPorMatricula($matricula->getKey());
 
-        if ($regra->get('tipoPresenca') != \RegraAvaliacao_Model_TipoPresenca::GERAL) {
-            throw new EvaluationRuleNotAllowGeneralAbsence($turmaId);
-        }
-
-        $falta = new \Avaliacao_Model_FaltaGeral([
-            'quantidade' => $faltas,
-            'etapa' => $etapa,
-        ]);
-
-        $boletim = $this->service->getServiceBoletim($turmaId, $alunoId, $matricula);
-
         try {
+            if ($regra->get('tipoPresenca') != \RegraAvaliacao_Model_TipoPresenca::GERAL) {
+                throw new EvaluationRuleNotAllowGeneralAbsence($turmaId);
+            }
+
+            $falta = new \Avaliacao_Model_FaltaGeral([
+                'quantidade' => $faltas,
+                'etapa' => $etapa,
+            ]);
+
+            $boletim = $this->service->getServiceBoletim($turmaId, $alunoId, $matricula);
+
             $boletim->addFalta($falta);
             $boletim->saveFaltas();
             $boletim->promover();
+        } catch (EvaluationRuleNotAllowGeneralAbsence $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
         } catch (\CoreExt_Service_Exception) {
             // Evita Exception ao não promover matrículas pois não houve mudança de situação
         } catch (\Exception) {
@@ -49,6 +53,6 @@ class FaltasGeralController extends DiarioController
 
         return response()->json([
             'message' => 'Faltas gerais salvas com sucesso.',
-        ]);
+        ], 202);
     }
 }
