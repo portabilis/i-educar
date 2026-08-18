@@ -126,7 +126,7 @@ function uploadFiles(files) {
         });
 
         $j.ajax({
-            url: '/upload?file=',
+            url: '/upload',
             type: 'POST',
             data: data,
             cache: false,
