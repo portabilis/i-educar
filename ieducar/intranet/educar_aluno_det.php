@@ -348,6 +348,8 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Naturalidade', $registro['naturalidade']]);
         }
 
+        $tipoNacionalidade = (int) $registro['nacionalidade'];
+
         if ($registro['nacionalidade']) {
             $lista_nacionalidade = [
                 'NULL' => 'Selecione',
@@ -360,7 +362,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nacionalidade', $registro['nacionalidade']]);
         }
 
-        if ($registro['pais_origem'] && $registro['nacionalidade'] != Nacionalidade::BRASILEIRA) {
+        if ($registro['pais_origem'] && $tipoNacionalidade !== Nacionalidade::BRASILEIRA) {
             $this->addDetalhe(detalhe: ['País de Origem', $registro['pais_origem']]);
         }
 
