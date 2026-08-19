@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\DeficiencyType;
+use App\Models\FileRelation;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
@@ -1267,7 +1268,7 @@ class AlunoController extends ApiCoreController
             }
 
             $fileService = new FileService(new UrlPresigner);
-            $files = $fileService->getFiles(LegacyStudent::find($id), type: 'laudo');
+            $files = $fileService->getFiles(LegacyStudent::find($id), type: FileRelation::TYPE_MEDICAL_REPORT);
             $aluno['laudos'] = $files->map(fn ($file) => $file->only([
                 'url',
                 'size',
@@ -1913,7 +1914,7 @@ class AlunoController extends ApiCoreController
                     extension: $file->extension,
                     typeFileRelation: LegacyStudent::class,
                     relationId: $pessoaId,
-                    type: 'laudo'
+                    type: FileRelation::TYPE_MEDICAL_REPORT
                 );
             }
         }
