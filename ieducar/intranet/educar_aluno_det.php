@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\City;
-use App\Models\Country;
 use App\Models\DeficiencyType;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
@@ -22,7 +21,6 @@ use App\Models\TransportationProvider;
 use App\Models\UniformDistribution;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
-use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -106,7 +104,8 @@ return new class extends clsDetalhe
             $cel = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
             $fax = $telefones->get(LegacyPhone::TYPE_FAX);
 
-            $det_fisica = LegacyIndividual::find($this->ref_idpes)?->getAttributes();
+            $fisica = LegacyIndividual::find($this->ref_idpes);
+            $det_fisica = $fisica?->getAttributes();
 
             $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->ref_idpes))->value('nm_raca');
 
@@ -134,8 +133,7 @@ return new class extends clsDetalhe
 
             $registro['naturalidade'] = City::getNameById(id: $det_fisica['idmun_nascimento']);
 
-            $countryName = Country::query()->find(id: $det_fisica['idpais_estrangeiro']);
-            $registro['pais_origem'] = $countryName->name;
+            $registro['pais_origem'] = $fisica?->country_of_origin_name;
 
             $registro['ref_idpes_responsavel'] = $det_fisica['idpes_responsavel'];
 
@@ -348,8 +346,6 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Naturalidade', $registro['naturalidade']]);
         }
 
-        $tipoNacionalidade = (int) $registro['nacionalidade'];
-
         if ($registro['nacionalidade']) {
             $lista_nacionalidade = [
                 'NULL' => 'Selecione',
@@ -362,7 +358,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nacionalidade', $registro['nacionalidade']]);
         }
 
-        if ($registro['pais_origem'] && $tipoNacionalidade !== Nacionalidade::BRASILEIRA) {
+        if ($registro['pais_origem']) {
             $this->addDetalhe(detalhe: ['País de Origem', $registro['pais_origem']]);
         }
 

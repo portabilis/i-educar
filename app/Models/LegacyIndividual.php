@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyIndividualBuilder;
 use Carbon\Carbon;
-use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -304,7 +303,7 @@ class LegacyIndividual extends Model
     protected function countryOfOriginName(): Attribute
     {
         return Attribute::make(
-            get: fn () => (int) $this->nacionalidade === Nacionalidade::BRASILEIRA ? null : $this->foreignCountry?->name
+            get: fn () => in_array((int) $this->nacionalidade, [Nationality::NATURALIZED_BRAZILIAN, Nationality::FOREIGN], true) ? $this->foreignCountry?->name : null
         );
     }
 
