@@ -699,6 +699,7 @@ class AlunoController extends ApiCoreController
              WHERE ref_cod_matricula = $1
                AND turma.cod_turma = ref_cod_turma
                AND (matricula_turma.ativo = 1 OR matricula_turma.transferido = TRUE)
+          ORDER BY matricula_turma.ativo DESC, matricula_turma.sequencial, matricula_turma.id
              LIMIT 1
         ';
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use App\Models\LegacyDiscipline;
 use Illuminate\Support\Facades\Session;
 
@@ -47,13 +48,12 @@ return new class extends clsCadastro
         );
 
         if (is_numeric(value: $this->cod_servidor) && is_numeric(value: $this->ref_cod_instituicao)) {
-            $obj = new clsPmieducarServidor(
-                cod_servidor: $this->cod_servidor,
-                ref_cod_instituicao: $this->ref_cod_instituicao
-            );
+            $servidorExiste = Employee::query()
+                ->whereEmployee($this->cod_servidor)
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->exists();
 
-            $registro = $obj->detalhe();
-            if ($registro) {
+            if ($servidorExiste) {
                 $retorno = 'Editar';
             }
         }

@@ -10,6 +10,7 @@ use App\Models\LegacyUserSchool;
 use App\Models\LegacyUserType;
 use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
+use App\Support\View\SearchParameters;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -122,7 +123,7 @@ return new class extends clsCadastro
 
             $this->campoRotulo(nome: 'nome', campo: 'Nome', valor: $this->nome);
         } else {
-            $parametros = new clsParametrosPesquisas;
+            $parametros = new SearchParameters;
             $parametros->setSubmit(1);
             $parametros->setPessoa('F');
             $parametros->setPessoaNovo('S');

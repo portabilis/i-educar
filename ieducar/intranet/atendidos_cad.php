@@ -4,6 +4,7 @@ use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Facades\Asset;
 use App\Models\EducacensoIndigenousPeople;
+use App\Models\Employee;
 use App\Models\LegacyDocument;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyIndividual;
@@ -227,8 +228,6 @@ return new class extends clsCadastro
             }
         }
 
-        $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal);
-
         $user = Auth::user();
 
         if ($user->ref_cod_instituicao) {
@@ -238,6 +237,8 @@ return new class extends clsCadastro
             $obrigarCpf = LegacyInstitution::query()
                 ->first(['obrigar_cpf'])?->obrigar_cpf;
         }
+
+        $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal, obrigatorio: (bool) $obrigarCpf);
 
         $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
 
@@ -874,10 +875,13 @@ return new class extends clsCadastro
             return false;
         }
 
-        $servidor = new clsPmieducarServidor;
-        $servidor = $servidor->lista(int_cod_servidor: $idPes, int_ref_cod_deficiencia: null, int_ref_idesco: null, int_carga_horaria: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
+        $servidorAtivo = is_numeric($idPes) && Employee::query()
+            ->whereEmployee($idPes)
+            ->whereAllocation(withNotAllocation: false)
+            ->active()
+            ->exists();
 
-        if ($servidor) {
+        if ($servidorAtivo) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com servidor.';
 
             return false;
