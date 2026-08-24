@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class FileRelation extends Model
 {
+    public const TYPE_MEDICAL_REPORT = 'laudo';
+
     protected $table = 'public.files_relations';
 
     protected $fillable = [

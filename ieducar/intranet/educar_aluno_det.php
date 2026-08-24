@@ -2,6 +2,7 @@
 
 use App\Models\City;
 use App\Models\DeficiencyType;
+use App\Models\FileRelation;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
@@ -522,7 +523,7 @@ return new class extends clsDetalhe
         $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(
             relation: LegacyStudent::find($this->cod_aluno),
-            type: 'laudo'
+            type: FileRelation::TYPE_MEDICAL_REPORT
         );
 
         if ($files->isNotEmpty()) {
