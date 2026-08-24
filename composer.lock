@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a68b1229df8da795ce1518be9b729f16",
+    "content-hash": "ca4be44131208b7adc4e5fb5b68f58cd",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -567,16 +567,16 @@
         },
         {
             "name": "dex/frontier",
-            "version": "0.17.0",
+            "version": "0.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/frontier.git",
-                "reference": "4b0cea711006bc680aab15849a3da9a7318a8814"
+                "reference": "0026b01878879ab1ef3f30cd5270e360e9079801"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/frontier/zipball/4b0cea711006bc680aab15849a3da9a7318a8814",
-                "reference": "4b0cea711006bc680aab15849a3da9a7318a8814",
+                "url": "https://api.github.com/repos/edersoares/frontier/zipball/0026b01878879ab1ef3f30cd5270e360e9079801",
+                "reference": "0026b01878879ab1ef3f30cd5270e360e9079801",
                 "shasum": ""
             },
             "require": {
@@ -587,8 +587,8 @@
             },
             "require-dev": {
                 "laravel/pint": "^1.10",
-                "orchestra/testbench": "^8.5|^9",
-                "pestphp/pest": "^2.6|^3"
+                "orchestra/testbench": "^8.5|^9|^10|^11",
+                "pestphp/pest": "^2.6|^3|^4"
             },
             "type": "library",
             "extra": {
@@ -618,9 +618,9 @@
             "description": "The frontier between your Laravel app and your decoupled frontend",
             "support": {
                 "issues": "https://github.com/edersoares/frontier/issues",
-                "source": "https://github.com/edersoares/frontier/tree/0.17.0"
+                "source": "https://github.com/edersoares/frontier/tree/0.18.0"
             },
-            "time": "2026-03-17T21:46:56+00:00"
+            "time": "2026-08-24T13:47:49+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -3521,16 +3521,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SpartnerNL/Laravel-Excel.git",
-                "reference": "5d1c617c9fea810d0c547d69d4dfddd3f0a9fea8"
+                "reference": "3f3e73956f87e3d229b244cec8cbc3bbda4fc8dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/5d1c617c9fea810d0c547d69d4dfddd3f0a9fea8",
-                "reference": "5d1c617c9fea810d0c547d69d4dfddd3f0a9fea8",
+                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/3f3e73956f87e3d229b244cec8cbc3bbda4fc8dd",
+                "reference": "3f3e73956f87e3d229b244cec8cbc3bbda4fc8dd",
                 "shasum": ""
             },
             "require": {
@@ -3594,7 +3594,7 @@
             ],
             "support": {
                 "issues": "https://github.com/SpartnerNL/Laravel-Excel/issues",
-                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/4.0.1"
+                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/4.0.2"
             },
             "funding": [
                 {
@@ -3606,7 +3606,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-18T12:32:09+00:00"
+            "time": "2026-08-24T13:06:48+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
