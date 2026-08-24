@@ -32,7 +32,7 @@ class MoveDisciplineDataService implements ToCollection
     /**
      * {@inheritDoc}
      */
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         $this->output->progressStart($rows->count());
 

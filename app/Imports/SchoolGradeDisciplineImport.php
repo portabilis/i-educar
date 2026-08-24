@@ -26,10 +26,7 @@ class SchoolGradeDisciplineImport implements ToModel, WithHeadingRow, WithProgre
         $this->school = $school;
     }
 
-    /**
-     * @return Model
-     */
-    public function model(array $row)
+    public function model(array $row): Model
     {
         return LegacySchoolGradeDiscipline::query()->updateOrCreate([
             'ref_ref_cod_serie' => $row['grade_id'],
