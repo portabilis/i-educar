@@ -30,7 +30,7 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
     /**
      * @return Model
      */
-    public function model(array $row)
+    public function model(array $row): Model|array|null
     {
         $discipline = LegacyDiscipline::query()->firstOrNew([
             'instituicao_id' => $row['institution_id'],
