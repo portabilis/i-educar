@@ -26,7 +26,7 @@ class DisciplineExport implements FromCollection, WithHeadingRow, WithHeadings, 
     /**
      * @return Collection
      */
-    public function collection()
+    public function collection(): Collection
     {
         return $this->collection;
     }
