@@ -41,8 +41,8 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/flysystem-ftp": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
-        "maatwebsite/excel": "^3.1",
-        "phpoffice/phpspreadsheet": "1.30.6",
+        "maatwebsite/excel": "^4.0",
+        "phpoffice/phpspreadsheet": "^5.8",
         "predis/predis": "^2.3",
         "psr/simple-cache": "^3.0",
         "socialiteproviders/laravelpassport": "^4.3",
@@ -110,7 +110,7 @@
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
-            "@composer install --ignore-platform-req=php+",
+            "@composer install",
             "@composer plug-and-play",
             "@set-permissions",
             "@php artisan key:generate --ansi",
@@ -118,14 +118,14 @@
             "@php artisan migrate --force --ansi"
         ],
         "update-install": [
-            "@composer update --ignore-platform-req=php+",
+            "@composer update",
             "@composer plug-and-play",
             "@set-permissions",
             "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
         "testing-install": [
-            "@composer install --ignore-platform-req=php+",
+            "@composer install",
             "@php artisan key:generate --ansi",
             "@php artisan migrate --force --ansi --env=testing"
         ],
