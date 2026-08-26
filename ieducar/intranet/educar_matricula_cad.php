@@ -3,6 +3,7 @@
 use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
+use App\Jobs\UpdateBlockedSituationRegistration;
 use App\Models\LegacyCourse;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyIndividual;
@@ -682,6 +683,9 @@ return new class extends clsCadastro
                 if ($ultimaMatriculaSerieAno->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO) {
                     /** @var LegacyRegistration $registration */
                     $registration = LegacyRegistration::find(id: $this->cod_matricula);
+                    $registration->update([
+                        'bloquear_troca_de_situacao' => true,
+                    ]);
 
                     $mensagem = '';
 
@@ -698,6 +702,8 @@ return new class extends clsCadastro
 
                     $promocao = new PromotionService(enrollment: $registration->enrollments()->first());
                     $promocao->fakeRequest();
+
+                    UpdateBlockedSituationRegistration::dispatch($registration)->delay(now()->addMinute());
                 }
 
                 $this->mensagem = 'Cadastro efetuado com sucesso.<br />' . $mensagem;
