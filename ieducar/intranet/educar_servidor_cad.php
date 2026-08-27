@@ -480,7 +480,7 @@ JS;
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
         $this->carga_horaria = $hour + $min;
 
-        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
+        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada ?? []);
 
         $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
         $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
@@ -554,7 +554,7 @@ JS;
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
         $this->carga_horaria = $hour + $min;
 
-        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
+        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada ?? []);
 
         $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
         $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;

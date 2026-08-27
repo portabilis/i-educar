@@ -65,3 +65,41 @@ describe('parseDecimalBr', function () {
         expect(parseDecimalBr('689,20,30'))->toBeNull();
     });
 });
+
+describe('transformDBArrayInString', function () {
+    test('converts array to Postgres array literal', function () {
+        expect(transformDBArrayInString(['1', '2']))->toBe('{1,2}');
+        expect(transformDBArrayInString([12]))->toBe('{12}');
+    });
+
+    test('converts empty array to empty Postgres array', function () {
+        expect(transformDBArrayInString([]))->toBe('{}');
+    });
+
+    test('discards empty items', function () {
+        expect(transformDBArrayInString(['1', '', '2']))->toBe('{1,2}');
+    });
+
+    test('returns null when value is not an array', function () {
+        expect(transformDBArrayInString(null))->toBeNull();
+        expect(transformDBArrayInString('{1,2}'))->toBeNull();
+        expect(transformDBArrayInString(12))->toBeNull();
+    });
+});
+
+describe('transformStringFromDBInArray', function () {
+    test('converts Postgres array literal to array', function () {
+        expect(transformStringFromDBInArray('{1,2}'))->toBe(['1', '2']);
+        expect(transformStringFromDBInArray('{12}'))->toBe(['12']);
+    });
+
+    test('converts empty Postgres array to array with one empty item', function () {
+        expect(transformStringFromDBInArray('{}'))->toBe(['']);
+    });
+
+    test('returns null when value is not a string', function () {
+        expect(transformStringFromDBInArray(null))->toBeNull();
+        expect(transformStringFromDBInArray(['1', '2']))->toBeNull();
+        expect(transformStringFromDBInArray(12))->toBeNull();
+    });
+});
