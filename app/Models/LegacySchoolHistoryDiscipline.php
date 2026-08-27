@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacySchoolHistoryDiscipline extends LegacyModel
 {
+    private const DECIMAL_PATTERN = '/^[+-]?(\d+(\.\d*)?|\.\d+)$/';
+
     public $timestamps = false;
 
     protected $table = 'pmieducar.historico_disciplinas';
@@ -49,32 +51,42 @@ class LegacySchoolHistoryDiscipline extends LegacyModel
 
     public function score(int $decimalPlaces = 2): ?string
     {
-        if ($this->nota === null || $this->nota === '') {
+        $score = trim((string) $this->nota);
+
+        if ($score === '') {
             return null;
         }
 
-        $score = str_replace(',', '.', $this->nota);
+        $normalized = str_replace(',', '.', $score);
 
-        if (!is_numeric($score)) {
+        if (!preg_match(self::DECIMAL_PATTERN, $normalized)) {
             return $score;
         }
 
-        return Util::format($score, $decimalPlaces);
+        return Util::format($normalized, $decimalPlaces);
     }
 
     public function scoreNotRounding(int $decimalPlaces = 2): ?string
     {
-        if ($this->nota === null || $this->nota === '') {
+        $score = trim((string) $this->nota);
+
+        if ($score === '') {
             return null;
         }
 
-        $score = str_replace(',', '.', $this->nota);
+        $normalized = str_replace(',', '.', $score);
 
-        if (!is_numeric($score)) {
+        if (!preg_match(self::DECIMAL_PATTERN, $normalized)) {
             return $score;
         }
 
-        return substr($score, 0, strpos($score, '.') + $decimalPlaces + 1);
+        $normalized = bcdiv($normalized, '1', max($decimalPlaces, 0));
+
+        if (!str_contains($normalized, '.')) {
+            return $normalized;
+        }
+
+        return str_replace('.', ',', rtrim(rtrim($normalized, '0'), '.'));
     }
 
     public function isDiversified(): bool
