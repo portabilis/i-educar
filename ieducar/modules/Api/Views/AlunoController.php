@@ -211,7 +211,9 @@ class AlunoController extends ApiCoreController
             $this->validatesResponsavel() &&
             $this->validatesTransporte() &&
             $this->validatesUniquenessOfAlunoInepId() &&
-            $this->validatesUniquenessOfAlunoEstadoId();
+            $this->validatesUniquenessOfAlunoEstadoId() &&
+            $this->validateCpfUniqueness() &&
+            $this->validateCpfOrInep();
     }
 
     protected function canPost()
@@ -233,6 +235,8 @@ class AlunoController extends ApiCoreController
             $this->validateInepExam() &&
             $this->validateTechnologicalResources() &&
             $this->validateCpfCode() &&
+            $this->validateCpfUniqueness() &&
+            $this->validateCpfOrInep() &&
             $this->validateBirthCertificate() &&
             $this->validateInepCode();
     }
@@ -243,6 +247,11 @@ class AlunoController extends ApiCoreController
         $user = Auth::user();
 
         $cpf = $this->getRequest()->id_federal;
+        $naoPossuiCpf = $this->getRequest()->nao_possui_cpf == 'on';
+
+        if ($naoPossuiCpf) {
+            return true;
+        }
 
         if ($user->ref_cod_instituicao) {
             $strictValitation = LegacyInstitution::query()
@@ -259,6 +268,45 @@ class AlunoController extends ApiCoreController
                 return true;
             }
             $this->messenger->append('O CPF informado é inválido');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateCpfUniqueness()
+    {
+        $cpf = $this->getRequest()->id_federal;
+        $pessoaId = $this->getRequest()->pessoa_id;
+
+        if (empty($cpf)) {
+            return true;
+        }
+
+        $cpfInt = idFederal2int($cpf);
+
+        $existing = \DB::table('cadastro.fisica')
+            ->where('cpf', $cpfInt)
+            ->where('idpes', '!=', $pessoaId)
+            ->first();
+
+        if ($existing) {
+            $this->messenger->append("O CPF informado já está cadastrado para outra pessoa (ID: {$existing->idpes}).");
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateCpfOrInep()
+    {
+        $naoPossuiCpf = $this->getRequest()->nao_possui_cpf == 'on';
+        $inep = $this->getRequest()->aluno_inep_id;
+
+        if ($naoPossuiCpf && empty($inep)) {
+            $this->messenger->append('Informe o Código INEP do aluno, pois o CPF não foi informado.');
 
             return false;
         }
