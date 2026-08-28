@@ -773,10 +773,12 @@ class MatriculaController extends ApiCoreController
             1
         );
 
-        $aluno = new clsPmieducarAluno($codAluno);
-        $aluno = $aluno->detalhe();
-
-        $individual = LegacyIndividual::find($aluno['ref_idpes'], ['idpes', 'falecido']);
+        $individual = LegacyIndividual::query()
+            ->whereHas('student', fn ($q) => $q->whereStudent($codAluno))
+            ->first([
+                'idpes',
+                'falecido',
+            ]);
 
         if (!$individual) {
             return;

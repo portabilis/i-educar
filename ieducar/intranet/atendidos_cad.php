@@ -15,6 +15,7 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacyRace;
 use App\Models\LegacySchoolingDegree;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUser;
 use App\Services\FileService;
 use App\Services\PhoneService;
@@ -838,8 +839,7 @@ return new class extends clsCadastro
     {
         $idPes = $this->cod_pessoa_fj;
 
-        $aluno = new clsPmieducarAluno;
-        $aluno = $aluno->lista(int_cod_aluno: null, int_ref_cod_aluno_beneficio: null, int_ref_cod_religiao: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ref_idpes: $idPes, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
+        $aluno = is_numeric($idPes) && LegacyStudent::query()->active()->wherePerson($idPes)->exists();
 
         if ($aluno) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com aluno.';
@@ -924,10 +924,12 @@ return new class extends clsCadastro
 
     protected function loadAlunoByPessoaId($id)
     {
-        $aluno = new clsPmieducarAluno;
-        $aluno->ref_idpes = $id;
-
-        return $aluno->detalhe();
+        return LegacyStudent::query()
+            ->wherePerson($id)
+            ->first([
+                'cod_aluno',
+                'ref_idpes',
+            ]);
     }
 
     protected function inputPai()
@@ -947,7 +949,7 @@ return new class extends clsCadastro
         }
 
         if (!isset($this->_aluno)) {
-            $this->_aluno = $this->loadAlunoByPessoaId(id: $this->cod_pessoa_fj);
+            $this->_aluno = $this->loadAlunoByPessoaId(id: $this->cod_pessoa_fj) ?? false;
         }
 
         $parentId = $this->{$parentType . '_id'};

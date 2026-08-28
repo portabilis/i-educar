@@ -3,6 +3,7 @@
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro
@@ -123,11 +124,13 @@ return new class extends clsCadastro
             if ($detalhe_aluno) {
                 $detalhe_aluno = array_shift($detalhe_aluno);
             }
-            $obj_aluno = new clsPmieducarAluno;
-            $det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
-            $det_aluno = current($det_aluno);
+            $nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+                ->joinPerson()
+                ->value('pessoa.nome');
 
-            $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
+            $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $nm_aluno);
         } else {
             $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
             // FIXME #parameters

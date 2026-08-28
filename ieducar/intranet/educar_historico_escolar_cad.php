@@ -4,6 +4,7 @@ use App\Models\Country;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacySchoolHistoryDiscipline;
+use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Models\State;
 use App\Services\SchoolHistoryService;
@@ -149,12 +150,15 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'nomeEscola', valor: $nomeEscola);
         $this->campoOculto(nome: 'numeroSequencial', valor: $_GET['sequencial']);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
 
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if ($this->nm_aluno) {
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
 
