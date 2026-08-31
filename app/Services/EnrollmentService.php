@@ -420,41 +420,6 @@ class EnrollmentService
     }
 
     /**
-     * Registra a saída por remanejamento, respeitando a data base da instituição.
-     *
-     * Diferente das demais, NÃO zera a marca de falecido.
-     */
-    public function registerRelocation($registrationId, $sequential, ?string $date = null): void
-    {
-        if (!is_numeric($registrationId) || !is_numeric($sequential)) {
-            return;
-        }
-
-        $date = $date ?: date('Y-m-d');
-
-        $relocationDate = LegacyRegistration::query()
-            ->whereKey($registrationId)
-            ->join('pmieducar.escola', 'escola.cod_escola', 'matricula.ref_ref_cod_escola')
-            ->join('pmieducar.instituicao', 'instituicao.cod_instituicao', 'escola.ref_cod_instituicao')
-            ->value('instituicao.data_base_remanejamento');
-
-        if ($relocationDate !== null && strtotime($relocationDate) >= strtotime($date)) {
-            return;
-        }
-
-        LegacyEnrollment::query()
-            ->whereRegistration($registrationId)
-            ->whereSequential($sequential)
-            ->update([
-                'transferido' => false,
-                'remanejado' => true,
-                'abandono' => false,
-                'reclassificado' => false,
-                'data_exclusao' => $date,
-            ]);
-    }
-
-    /**
      * Registra a saída por abandono, zerando as demais marcas.
      */
     public function registerAbandonment($registrationId, $sequential, ?string $date = null): void
